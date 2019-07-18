@@ -42,7 +42,7 @@ has similar concepts than a Java Portal Server.
 
 ## Quick Start
 
-    git clone https://github.com/nonblocking/mashroom-portal-quickstart.git mashroom-portal-quickstart
+    git clone https://github.com/nonblocking/mashroom-portal-quickstart mashroom-portal-quickstart
     cd mashroom-portal-quickstart
     npm run setup
     npm start
