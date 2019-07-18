@@ -1,0 +1,22 @@
+[ignore]
+.*/node_modules/webpack-cli
+.*/node_modules/@angular
+.*/node_modules/@schematics
+
+[include]
+
+[libs]
+flow-typed/
+
+[options]
+sharedmemory.hash_table_pow=21
+module.ignore_non_literal_requires=true
+module.file_ext=.js
+module.file_ext=.jsx
+module.file_ext=.css
+module.file_ext=.scss
+module.name_mapper.extension='css' -> 'empty/object'
+module.name_mapper.extension='scss' -> 'empty/object'
+
+[lints]
+deprecated-utility=off

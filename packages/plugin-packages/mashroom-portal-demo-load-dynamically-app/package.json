@@ -1,0 +1,55 @@
+{
+    "name": "@mashroom/mashroom-portal-demo-load-dynamically-app",
+    "description": "Mashroom Portal Demo Load apps dynamically",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom-portal": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4",
+        "webpack-dev-server": "^3.7.1"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "dev": "webpack-dev-server --hot --mode development",
+        "build": "webpack --mode production --display-error-details"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Load Dynamically App",
+                "title": {
+                    "en": "Demo Load Dynamically",
+                    "de": "Demo dynamisches Laden App"
+                },
+                "type": "portal-app",
+                "bootstrap": "startLoadDynamicallyDemoApp",
+                "requires": [
+                    "Mashroom Portal Demo React App",
+                    "Mashroom Portal Demo Angular App"
+                ],
+                "category": "Demo",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist"
+                }
+            }
+        ]
+    }
+}

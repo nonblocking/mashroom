@@ -1,0 +1,31 @@
+{
+    "/portal/**": {
+        "*": {
+            "allow": ["User"]
+        },
+        "DELETE": {
+            "deny": ["*"]
+        }
+    },
+    "/portal2": {
+        "*": {
+            "allow": ["User"]
+        }
+    },
+    "/foo/*/bar": {
+        "*": {
+            "allow": ["User"],
+            "deny": ["Manager"]
+        }
+    },
+    "/a/*/bit/**/more/complicated": {
+        "*": {
+            "allow": ["User"]
+        }
+    },
+    "invalid/pattern": {
+        "*": {
+            "allow": ["User"]
+        }
+    }
+}

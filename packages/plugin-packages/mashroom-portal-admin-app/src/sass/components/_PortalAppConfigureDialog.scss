@@ -1,0 +1,18 @@
+
+.portal-app-configure-dialog {
+
+    .mashroom-portal-ui-form-row.one-cell {
+        .mashroom-portal-ui-field-label {
+            min-width: 120px;
+        }
+    }
+
+    .mashroom-portal-ui-dialog-content {
+        min-height: 370px;
+    }
+
+    .mashroom-portal-ui-error-message {
+        display: table;
+        margin: 10px auto;
+    }
+}

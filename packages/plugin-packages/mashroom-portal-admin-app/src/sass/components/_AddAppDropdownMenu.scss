@@ -1,0 +1,21 @@
+
+.add-app-dropdown-menu {
+
+    .dropdown-menu-button-label:before {
+        content: '\f067';
+        font-family: $FONT_ICON;
+        font-weight: 900;
+        padding-right: 5px;
+    }
+
+    .add-app-content {
+        min-width: 350px;
+        padding: 15px;
+        padding-bottom: 20px;
+
+        .app-list {
+            padding-top: 10px;
+        }
+    }
+
+}

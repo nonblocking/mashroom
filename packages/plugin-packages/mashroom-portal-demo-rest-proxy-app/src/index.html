@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Demo React App</title>
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="demo-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("demo-app-container");
+                var portalAppConfig = {
+                };
+                var portalAppSetup = {
+                    lang: 'en',
+                    restProxyPaths: {
+                        'spaceXApi': 'https://api.spacexdata.com/v3'
+                    },
+                    appConfig: portalAppConfig
+                };
+                var portalClientServices = {
+                };
+                window.startRestProxyDemoApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Demo Angular App</title>
+</head>
+<body>
+    <div id="demo-angular-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("demo-angular-app-container");
+                var portalAppConfig = {
+                    firstName: 'Walter'
+                };
+                var portalAppSetup = {
+                    resourcesBasePath: '',
+                    appConfig: portalAppConfig
+                };
+                var portalClientServices = {
+                    messageBus: {
+                        publish: function() {},
+                        subscribe: function() {}
+                    }
+                };
+                window.startAngularDemoApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+    </script>
+</body>
+</html>

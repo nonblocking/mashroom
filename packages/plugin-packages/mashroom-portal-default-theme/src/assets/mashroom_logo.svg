@@ -1,0 +1,13 @@
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 269.4 270">
+    <defs>
+        <style>
+            .cls-1{fill:white;}.cls-2,.cls-3{fill:none;stroke-miterlimit:10;}.cls-2{stroke:white;stroke-width:0.5px;}.cls-3{stroke:white;stroke-width:20px;}
+        </style>
+    </defs>
+    <title>mashroom_logo</title>
+    <path class="cls-1"
+          d="M98.16,58.35h27.65v88.31q0,13,6.67,13,8.27,0,8.27-21.41V58.35h27.41V180.8H142V169.45q-5.21,13.1-16.23,13.28v35.62H98.16Z"
+          transform="translate(-0.64 -0.4)"/>
+    <path class="cls-2" d="M116.87,124.37" transform="translate(-0.64 -0.4)"/>
+    <rect class="cls-3" x="10" y="10" width="249.4" height="250"/>
+</svg>

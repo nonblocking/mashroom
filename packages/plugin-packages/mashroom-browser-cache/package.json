@@ -1,0 +1,49 @@
+{
+    "name": "@mashroom/mashroom-browser-cache",
+    "description": "Mashroom services to control browser caching",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**",
+        "type-definitions/*"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom": "1.0.90",
+        "@mashroom/mashroom-security": "1.0.90",
+        "@mashroom/mashroom-utils": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src test",
+        "test": "jest",
+        "build": "babel src -d dist"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Browser Cache Services",
+                "type": "services",
+                "namespace": "browserCache",
+                "bootstrap": "./dist/mashroom-bootstrap-services.js",
+                "defaultConfig": {
+                    "disabled": false,
+                    "disabledWhenAuthenticated": false,
+                    "maxAgeSec": 1800
+                }
+            }
+        ]
+    }
+}

@@ -1,0 +1,104 @@
+
+@import "~@mashroom/mashroom-portal-ui-commons/src/sass/mashroom_portal_defaults";
+
+$COLOR_DROP_ZONE: #645e9d;
+
+.mashroom-portal-admin-app {
+    height: 32px;
+    font-size: 0.9em;
+
+    .menu-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 32px;
+        z-index: 1000;
+        display: flex;
+    }
+
+    @import "components/AdminMenuBar";
+
+    @import "components/I18NStringField";
+    @import "components/CreateDropdownMenu";
+    @import "components/ConfigureDropdownMenu";
+    @import "components/AddAppDropdownMenu";
+    @import "components/AvailableAppsPanel";
+    @import "components/PortalAppControlsToggle";
+    @import "components/PortalAppConfigureDialog";
+    @import "components/PageConfigureDialog";
+    @import "components/SiteConfigureDialog";
+    @import "components/SitesDropdownMenu";
+    @import "components/PagesDropdownMenu";
+    @import "components/RoleInput";
+    @import "components/RolesList";
+    @import "components/Permissions";
+
+}
+
+.mashroom-portal-admin-app-drop-zone {
+    height: 30px;
+    margin-bottom: 10px;
+    border: 1px solid $COLOR_DROP_ZONE;
+    position: relative;
+
+    &:before {
+        content: '\f067';
+        font-family: $FONT_ICON;
+        font-weight: 900;
+        color: $COLOR_DROP_ZONE;
+        display: table;
+        margin: 2px auto;
+    }
+
+    &.drag-over {
+        border: 2px dashed $COLOR_DROP_ZONE;
+
+        &:before {
+            margin: 1px auto;
+        }
+    }
+}
+
+@mixin toolButton($iconCode) {
+    position: absolute;
+    z-index: 100;
+    right: 0;
+    cursor: pointer;
+    font-size: 0.8em;
+    width: 1.6em;
+    height: 1.6em;
+    line-height: 1.6em;
+    text-align: center;
+
+    &:after {
+        content: $iconCode;
+        font-family: $FONT_ICON;
+        font-weight: 900;
+    }
+}
+
+.mashroom-portal-admin-app-controls {
+    position: relative;
+
+    .remove-button {
+        @include toolButton('\f00d');
+        top: 0;
+    }
+
+    .move-button {
+        @include toolButton('\f0b2');
+        cursor: move;
+        right: 1.8em;
+    }
+
+    .configure-button {
+        @include toolButton('\f0ad');
+        right: 3.7em;
+    }
+}
+
+.mashroom-portal-admin-drag-ghost {
+    padding: 5px 10px;
+    min-width: 200px;
+}

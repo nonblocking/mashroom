@@ -1,0 +1,13 @@
+
+.mashroom-portal-ui-dropdown-menu-item {
+    cursor: pointer;
+    padding: 5px 10px;
+
+    &:hover {
+
+    }
+
+    .dropdown-menu-item-label {
+        white-space: nowrap;
+    }
+}

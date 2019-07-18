@@ -1,0 +1,59 @@
+{
+    "name": "@mashroom/mashroom-portal-demo-rest-proxy-app",
+    "description": "Simple app that demonstrates rest proxy usage and i18n",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "sideEffects": false,
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom-portal": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "react-intl": "^2.9.0",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4",
+        "webpack-dev-server": "^3.7.1"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "dev": "webpack-dev-server --hot --mode development",
+        "build": "webpack --mode production --display-error-details"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Rest Proxy App",
+                "title": "Demo REST Proxy App",
+                "type": "portal-app",
+                "bootstrap": "startRestProxyDemoApp",
+                "category": "Demo",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "restProxies": {
+                        "spaceXApi": {
+                            "targetUri": "https://api.spacexdata.com/v3",
+                            "sendUserHeader": false,
+                            "sendPermissionsHeader": false,
+                            "sendRolesHeader": false,
+                            "addHeaders": {}
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

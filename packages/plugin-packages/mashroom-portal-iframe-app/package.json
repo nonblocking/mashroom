@@ -1,0 +1,60 @@
+{
+    "name": "@mashroom/mashroom-portal-iframe-app",
+    "description": "App that shows an arbitrary page in an IFrame. With support for responsiveness.",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "sideEffects": false,
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom-portal": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4",
+        "webpack-dev-server": "^3.7.1"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "dev": "webpack-dev-server  --mode development --hot",
+        "build": "webpack --mode production --display-error-details"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal IFrame App",
+                "title": "IFrame App",
+                "type": "portal-app",
+                "bootstrap": "startPortalIFrameApp",
+                "category": "Content",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "appConfig": {
+                        "url": "https://en.wikipedia.org/wiki/Main_Page",
+                        "width": "100%",
+                        "defaultHeight": "80vh"
+                    }
+                }
+            }
+        ]
+    }
+}

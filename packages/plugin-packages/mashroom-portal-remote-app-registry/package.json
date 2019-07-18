@@ -1,0 +1,89 @@
+{
+    "name": "@mashroom/mashroom-portal-remote-app-registry",
+    "description": "A REST API to dynamically register Mashroom Portal Apps on a remote server",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**",
+        "public/**",
+        "views/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "express-handlebars": "^3.1.0",
+        "request": "^2.88.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom": "1.0.90",
+        "@mashroom/mashroom-csrf-protection": "1.0.90",
+        "@mashroom/mashroom-portal": "1.0.90",
+        "@mashroom/mashroom-storage": "1.0.90",
+        "@mashroom/mashroom-utils": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "node-sass": "^4.12.0",
+        "nodemon": "^1.19.1"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src test",
+        "test": "jest",
+        "build": "babel src/js -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
+        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/webapp/server.js\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Remote App Registry Webapp",
+                "type": "web-app",
+                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+                "requires": [
+                    "Mashroom Portal Remote App Endpoint Services"
+                ],
+                "defaultConfig": {
+                    "path": "/portal-remote-app-registry",
+                    "remotePortalAppUrls": "./remote-portal-apps.json",
+                    "registrationRefreshIntervalSec": 3600,
+                    "removeAfterNumberOrRetries": 100
+                }
+            },
+            {
+                "name": "Mashroom Portal Remote App Endpoint Services",
+                "type": "services",
+                "namespace": "remotePortalAppEndpoint",
+                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+                "requires": [
+                    "Mashroom Portal Services",
+                    "Mashroom Session Middleware",
+                    "Mashroom Storage Services"
+                ]
+            },
+            {
+                "name": "Mashroom Portal Remote App Registry",
+                "type": "remote-portal-app-registry",
+                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
+                "defaultConfig": {
+                    "priority": 100
+                }
+            },
+            {
+                "name": "Mashroom Portal Remote App Registry Gobal Request Middleware",
+                "type": "middleware",
+                "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js"
+            }
+        ]
+    }
+}

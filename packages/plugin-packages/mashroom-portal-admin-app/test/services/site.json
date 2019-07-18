@@ -1,0 +1,50 @@
+{
+    "siteId": "default",
+    "title": "Mashroom Test Server 1",
+    "path": "/web",
+    "defaultTheme": "Mashroom Portal Default Theme",
+    "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
+    "pages": [
+        {
+            "pageId": "home",
+            "title": "Home",
+            "friendlyUrl": "/"
+        },
+        {
+            "pageId": "test1",
+            "title": {
+                "en": "Test Page 1",
+                "de": "Test Seite 1"
+            },
+            "friendlyUrl": "/test1",
+            "subPages": [
+                {
+                    "pageId": "subpage1",
+                    "title": {
+                        "en": "Test Subpage",
+                        "de": "Test Unterseite"
+                    },
+                    "friendlyUrl": "/test1/sub1"
+                },
+                {
+                    "pageId": "subpage2",
+                    "title": {
+                        "en": "Test Subpage 2",
+                        "de": "Test Unterseite 2"
+                    },
+                    "friendlyUrl": "/test1/sub2"
+                }
+            ]
+        },
+        {
+            "pageId": "test2",
+            "title": {
+                "en": "Test Page 2",
+                "de": "Test Seite 2"
+            },
+            "friendlyUrl": "/test2",
+            "subPages": []
+        }
+    ],
+    "_id": "hC8Nlaxg4I"
+}

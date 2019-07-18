@@ -1,0 +1,69 @@
+
+.mashroom-portal-ui-modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+    background-color: rgba(#444, 0.6);
+    z-index: 5000;
+
+    .mashroom-portal-ui-modal-wrapper {
+        position: relative;
+        display: table;
+        margin: 15% auto 0 auto;
+        min-width: 250px;
+        max-width: 90%;
+        min-height: 100px;
+        box-shadow: 4px 4px 8px #444;
+        transition: transform 0.2s ease, opacity 0.2s ease;
+        transform: scale(0.5);
+        opacity: 0;
+
+        &.fade-in {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        &.fade-out {
+            opacity: 0;
+        }
+    }
+
+    .mashroom-portal-ui-modal-header {
+        position: relative;
+        width: 100%;
+        background-color: grey;
+
+        .title {
+            padding: 10px 50px 10px 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .close-button {
+            cursor: pointer;
+            position: absolute;
+            top: 9px;
+            right: 10px;
+            font-size: 16px;
+            color: #fff;
+            height: 1em;
+            width: 1em;
+
+            &:after {
+                content: '\f00d';
+                font-family: $FONT_ICON;
+                font-weight: 900;
+            }
+        }
+    }
+
+    .mashroom-portal-ui-modal-content {
+        overflow: hidden;
+        height: 100%;
+        background-color: white;
+    }
+}

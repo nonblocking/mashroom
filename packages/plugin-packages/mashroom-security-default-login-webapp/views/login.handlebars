@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
+
+    <title>{{loginFormTitle}}</title>
+</head>
+<body>
+    <div class="login">
+        <div class="login-form-title">
+            <h1>{{loginFormTitle}}</h1>
+        </div>
+        <div class="login-form">
+            {{#if error}}
+                <div class="login-error">
+                    {{error}}
+                </div>
+            {{/if}}
+            <form method="POST" action="?{{query}}">
+                <div class="login-form-row">
+                    <div class="login-form-label">
+                        <label for="username">{{__ "username"}}</label>
+                    </div>
+                    <div class="login-form-input">
+                        <input type="text" name="_username" id="username"/>
+                    </div>
+                </div>
+                <div class="login-form-row">
+                    <div class="login-form-label">
+                        <label for="password">{{__ "password"}}</label>
+                    </div>
+                    <div class="login-form-input">
+                        <input type="password" name="_password" id="password"/>
+                    </div>
+                </div>
+                <div class="login-form-row login-form-actions">
+                    <input type="submit" value="{{__ 'login'}}"/>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="application/javascript">
+        document.getElementById('username').focus();
+    </script>
+</body>
+</html>

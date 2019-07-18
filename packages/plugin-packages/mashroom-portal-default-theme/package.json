@@ -1,0 +1,56 @@
+{
+    "name": "@mashroom/mashroom-portal-default-theme",
+    "description": "Default Portal theme",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**",
+        "views/**"
+    ],
+    "dependencies": {
+        "express-handlebars": "^3.1.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@fortawesome/fontawesome-free": "^5.9.0",
+        "@mashroom/mashroom": "1.0.90",
+        "@mashroom/mashroom-portal": "1.0.90",
+        "@mashroom/mashroom-portal-ui-commons": "1.0.90",
+        "bootstrap": "^4.3.1",
+        "copyfiles": "^2.1.0",
+        "core-js": "^3.1.4",
+        "eslint": "^5.16.0",
+        "express": "^4.17.1",
+        "node-sass": "^4.12.0",
+        "node-sass-tilde-importer": "^1.0.2",
+        "nodemon": "^1.19.1",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4",
+        "whatwg-fetch": "^3.0.0"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/standalone-dev.js\"",
+        "build:backend": "babel src/backend -d dist",
+        "build:frontend": "webpack --mode production --display-error-details && node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/frontend/sass/style.scss dist/public/style.css",
+        "build:copy-assets": "copyfiles -u 1 src/assets/* dist/public && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
+        "build": "npm run build:backend && npm run build:frontend  && npm run build:copy-assets"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Default Theme",
+                "type": "portal-theme",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "resourcesRoot": "./dist/public",
+                "views": "./views",
+                "defaultConfig": {
+                    "showEnvAndVersions": false
+                }
+            }
+        ]
+    }
+}

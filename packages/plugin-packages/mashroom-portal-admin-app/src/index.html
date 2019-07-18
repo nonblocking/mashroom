@@ -1,0 +1,345 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Portal Admin App</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div class="page">
+        <div id="admin-app-container">
+            Loading...
+        </div>
+        <main>
+            <div class="container-fluid" style="padding-top: 10px">
+                <div class="row">
+                    <div id="area1" class="col-md-6 mashroom-portal-app-area">
+                        <div id="app1" class="mashroom-portal-app-wrapper">
+                            <div class="mashroom-portal-app-host">
+                                <br/><br/>
+                                <p>App 1</p>
+                                <br/><br/>
+                            </div>
+                        </div>
+                        <div id="app3" class="mashroom-portal-app-wrapper">
+                            <div class="mashroom-portal-app-host">
+                                <br/><br/>
+                                <p>App 3</p>
+                                <br/><br/>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="area2" class="col-md-6 mashroom-portal-app-area">
+                        <div id="app2" class="mashroom-portal-app-wrapper">
+                                <div class="mashroom-portal-app-host">
+                                <br/><br/>
+                                <p>App 2</p>
+                                <br/><br/>
+                            </div>
+                        </div>
+                        <div id="app4" class="mashroom-portal-app-wrapper">
+                            <div class="mashroom-portal-app-host">
+                                <br/><br/>
+                                <p>Dynamically loaded app</p>
+                                <br/><br/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div id="area3" class="col-md-12 mashroom-portal-app-area">
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("admin-app-container");
+                var portalAppSetup = {
+                    lang: "en",
+                    user: {}
+                };
+                var portalClientServices = {
+                    portalUserService: {
+                        getUserLanguage: function() {
+                            return 'en';
+                        },
+                        getAvailableLanguages: function() {
+                            return Promise.resolve(['en', 'de', 'fr', 'es', 'ru']);
+                        },
+                        getDefaultLanguage: function() {
+                            return Promise.resolve('en');
+                        }
+                    },
+                    portalSiteService: {
+                        getCurrentSiteUrl: function() {
+                            return '/site';
+                        },
+                        getSites: function() {
+                            return Promise.resolve([
+                                {siteId: 'site1', title: 'Default site', url: '/site'},
+                                {siteId: 'site2', title: 'Second site', url: '/second'}
+                            ]);
+                        },
+                        getPageTree: function() {
+                            return Promise.resolve([
+                                    {pageId: 'page1', title: 'Page 1', friendlyUrl: '/page1', hidden: false, subPages: [
+                                            {pageId: 'foo', title: 'High Tech', friendlyUrl: '/ht'},
+                                            {pageId: 'foo2', title: 'High Tech 2', friendlyUrl: '/ht2'}
+                                        ]},
+                                    {pageId: 'page2', title: 'Page 2', friendlyUrl: '/page2'}
+                                ]);
+                        }
+                    },
+                    portalAppService: {
+                        getAvailableApps: function() {
+                            return new Promise(function(resolve) {
+                               setTimeout(function() {
+                                   resolve([
+                                       {
+                                           name: 'Mashroom Portal App 1',
+                                           category: 'Demo'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 2',
+                                           category: 'Category II'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 3'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 4',
+                                           category: 'Demo',
+                                           description: 'This is the description of App 4 and so on and so on'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 5',
+                                           category: 'Demo'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 6',
+                                           category: 'Category II',
+                                           description: 'Another description with <strong>tags</strong> that will be escaped'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 7',
+                                           category: 'Category II'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 8',
+                                           category: 'Category III'
+                                       },
+                                       {
+                                           name: 'Mashroom Portal App 9'
+                                       },
+                                       {
+                                           name: 'Hidden App',
+                                           category: 'hidden'
+                                       }
+                                   ]);
+                               }, 250);
+                            });
+                        },
+                        registerAppLoadedListener: function() {
+                            console.info('registerAppLoadedListener() called with: ', arguments);
+                        },
+                        registerAppAboutToUnloadListener: function() {
+                            console.info('registerAppAboutToUnloadListener() called with: ', arguments);
+                        },
+                        loadApp: function() {
+                            console.info('loadApp() called with: ', arguments);
+                        },
+                        unloadApp: function() {
+                            console.info('unloadApp() called with: ', arguments);
+                        },
+                        reloadApp: function() {
+                            console.info('reload() called with: ', arguments);
+                        },
+                        loadedPortalApps: [
+                            {
+                                id: '1000',
+                                pluginName: 'App 1',
+                                instanceId: 'app1',
+                                portalAppAreaId: 'area1',
+                                portalAppWrapperElement: document.getElementById("app1"),
+                                appConfig: {
+                                    foo: 'app1'
+                                }
+                            },
+                            {
+                                id: '1001',
+                                pluginName: 'App 2',
+                                instanceId: 'app2',
+                                portalAppAreaId: 'area2',
+                                portalAppWrapperElement: document.getElementById("app2"),
+                                appConfig: {
+                                    foo: 'app2'
+                                }
+                            },
+                            {
+                                id: '1002',
+                                pluginName: 'App 3',
+                                instanceId: 'app3',
+                                portalAppAreaId: 'area1',
+                                portalAppWrapperElement: document.getElementById("app3"),
+                                appConfig: {
+                                    foo: 'app3'
+                                }
+                            },
+                            {
+                                id: '1003',
+                                pluginName: 'Dynamically loaded app',
+                                instanceId: null,
+                                portalAppAreaId: 'area1',
+                                portalAppWrapperElement: document.getElementById("app4")
+                            }
+                        ]
+                    },
+                    portalAdminService: {
+                        getAvailableThemes: function() {
+                            return Promise.resolve([
+                                {name: 'Theme 1'},
+                                {name: 'Theme 2'}
+                            ]);
+                        },
+                        getAvailableLayouts: function() {
+                            return Promise.resolve([
+                                {name: 'Mashroom Portal Default Layouts 2 Columns with 1 Column Header"'},
+                                {name: 'Mashroom Portal Default Layouts Layout 2'}
+                            ]);
+                        },
+                        getExistingRoles: function() {
+                            return Promise.resolve([
+                                {id: 'Administrator'},
+                                {id: 'Role 1'},
+                                {id: 'Role 2'},
+                                {id: 'Role 3'}
+                            ]);
+                        },
+                        getAppInstances: function() {
+                            return Promise.resolve([
+                            ]);
+                        },
+                        addAppInstance: function(pluginName) {
+                            console.info('Add app instance called with: ', arguments);
+                            return Promise.resolve({
+                                pluginName,
+                                instanceId: 'sdfsdfdsf'
+                            });
+                        },
+                        updateAppInstance: function() {
+                            console.info('updateAppInstance() called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        removeAppInstance: function() {
+                            console.info('Remove app instance called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        getAppInstancePermittedRoles: function() {
+                            return Promise.resolve([
+                                'Role 1'
+                            ]);
+                        },
+                        updateAppInstancePermittedRoles: function() {
+                            console.info('Update app instance permitted roles called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        getCurrentPageId: function() {
+                            return 'foo';
+                        },
+                        getPage: function() {
+                            return Promise.resolve({
+                                pageId: 'foo',
+                                description: null,
+                                keywords: 'high, tech',
+                                theme: 'Theme 2',
+                                layout: null,
+                                extraCss: `
+    body {
+        color: red;
+    }
+                                `
+                            });
+                        },
+                        addPage: function(page) {
+                            console.info('Add page called with: ', arguments);
+                            return Promise.resolve(Object.assign({}, page, {
+                                pageId: 'sdfsdfdsf'
+                            }));
+                        },
+                        updatePage: function() {
+                            console.info('Update page called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        deletePage: function() {
+                            console.info('Delete page called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        getPagePermittedRoles: function() {
+                            return Promise.resolve([
+                                'Role 2'
+                            ]);
+                        },
+                        updatePagePermittedRoles: function() {
+                            console.info('Update page permitted roles called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        getCurrentSiteId: function() {
+                            return 'bar';
+                        },
+                        getSite: function() {
+                            return Promise.resolve({
+                                siteId: 'bar',
+                                title: { en: 'Default site' },
+                                path: '/web',
+                                virtualHosts: null,
+                                defaultTheme: 'Theme 1',
+                                defaultLayout: 'Layout 1',
+                                pages: [
+                                    {pageId: 'page1', title: { en: 'Page 1' }, friendlyUrl: '/page1', hidden: false, subPages: [
+                                            {pageId: 'foo', title: { en: 'High Tech', de: 'Hochtechnologie' }, friendlyUrl: '/ht'},
+                                            {pageId: 'foo2', title: { en: 'High Tech 2' }, friendlyUrl: '/ht2'}
+                                    ]},
+                                    {pageId: 'page2', title: 'Page 2', friendlyUrl: '/page2'}
+                                ]
+                            });
+                        },
+                        addSite: function(site) {
+                            console.info('Add site called with: ', arguments);
+                            return Promise.resolve(Object.assign({}, site, {
+                                siteId: 'sdfsdfdsf'
+                            }));
+                        },
+                        updateSite: function() {
+                            console.info('Update site called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        deleteSite: function() {
+                            console.info('Delete site called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                        getSitePermittedRoles: function() {
+                            return Promise.resolve();
+                        },
+                        updateSitePermittedRoles: function(roles) {
+                            console.info('Update site permitted roles called with: ', arguments);
+                            return Promise.resolve();
+                        },
+                    }
+                };
+
+                window.startPortalAdminApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+    </script>
+</body>
+</html>

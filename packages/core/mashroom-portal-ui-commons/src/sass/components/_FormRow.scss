@@ -1,0 +1,29 @@
+
+.mashroom-portal-ui-form-row {
+    clear: both;
+
+    &.one-cell {
+        .mashroom-portal-ui-form-cell {
+            .mashroom-portal-ui-field-label {
+                margin-bottom: 5px;
+            }
+
+            width: 100%;
+        }
+    }
+
+    &.two-cells {
+        .mashroom-portal-ui-form-cell {
+            float: left;
+            width: 50%;
+        }
+    }
+
+    &.three-cells {
+        .mashroom-portal-ui-form-cell {
+            float: left;
+            width: 33.33%;
+        }
+    }
+
+}

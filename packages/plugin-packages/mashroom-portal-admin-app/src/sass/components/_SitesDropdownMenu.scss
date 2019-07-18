@@ -1,0 +1,43 @@
+
+.sites-dropdown-menu {
+
+    .sites {
+        padding: 5px 0;
+        max-height: 400px;
+        overflow-y: auto;
+
+        .site {
+            display: flex;
+            align-items: center;
+
+            .site-link {
+                flex-grow: 2;
+                white-space: nowrap;
+                padding: 5px 10px;
+                cursor: pointer;
+            }
+
+            .configure {
+                cursor: pointer;
+
+                &:before {
+                    content: '\f0ad';
+                    font-family: $FONT_ICON;
+                    font-weight: 900;
+                    padding: 5px;
+                }
+            }
+
+            .delete {
+                cursor: pointer;
+
+                &:before {
+                    content: '\f00d';
+                    font-family: $FONT_ICON;
+                    font-weight: 900;
+                    padding: 5px;
+                }
+            }
+        }
+    }
+}

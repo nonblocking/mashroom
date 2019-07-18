@@ -1,0 +1,28 @@
+
+.mashroom-portal-ui-source-code-editor-field {
+
+    @import "~codemirror/lib/codemirror.css";
+    @import "~codemirror/theme/blackboard.css";
+
+    .CodeMirror {
+        font-family: monospace;
+        height: 200px;
+        color: #F8F8F8;
+        font-size: 1.1em;
+        border: 2px solid transparent;
+s
+        &.CodeMirror-focused {
+
+        }
+    }
+
+    &.error {
+        .CodeMirror {
+            border: 2px solid red;
+        }
+    }
+
+    .error-message {
+        color: red;
+    }
+}

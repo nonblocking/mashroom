@@ -1,0 +1,9 @@
+{
+    "username": "Benutzername",
+    "password": "Passwort",
+    "login": "Anmelden",
+    "logout": "Abmelden",
+    "autoLogoutWarning": "Sie werden automatisch in <span id='mashroom-portal-auto-logout-seconds'>0</span> Sekunden abgemeldet",
+    "loginFailed": "Anmeldung fehlgeschlagen!",
+    "portalAppLoadingFailed": "Portal app <strong>${name}</strong> steht derzeit nicht zur Verfügung"
+}

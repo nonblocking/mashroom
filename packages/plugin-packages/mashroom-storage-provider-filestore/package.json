@@ -1,0 +1,52 @@
+{
+    "name": "@mashroom/mashroom-storage-provider-filestore",
+    "description": "Session filestore provider",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "fs-extra": "^8.0.1",
+        "lockfile": "^1.0.4",
+        "lodash.filter": "^4.6.0",
+        "shortid": "^2.2.14"
+    },
+    "devDependencies": {
+        "@babel/cli": "7.4.4",
+        "@mashroom/mashroom": "1.0.90",
+        "@mashroom/mashroom-storage": "1.0.90",
+        "@mashroom/mashroom-utils": "1.0.90",
+        "eslint": "5.16.0",
+        "jest": "24.8.0"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src test",
+        "test": "jest",
+        "build": "babel src -d dist"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Storage Filestore Provider",
+                "type": "storage-provider",
+                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
+                "defaultConfig": {
+                    "dataFolder": "./data/storage"
+                }
+            }
+        ]
+    }
+}

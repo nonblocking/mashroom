@@ -1,0 +1,16 @@
+
+.roles-list {
+
+    td:nth-child(2) {
+        width: 50px;
+    }
+
+    .role-remove:before {
+        content: '\f00d';
+        font-family: $FONT_ICON;
+        font-weight: 900;
+        padding-right: 5px;
+        cursor: pointer;
+    }
+
+}

@@ -1,0 +1,27 @@
+
+.available-apps-panel {
+
+    .available-app-list-wrapper {
+        max-height: 350px;
+        overflow-y: auto;
+    }
+
+    .app-category {
+        font-style: italic;
+        padding: 5px 0 10px 0;
+    }
+
+    .available-app {
+        padding: 5px 10px;
+        cursor: move;
+        position: relative;
+
+        .app-description {
+            font-size: 0.8em;
+        }
+
+        .app-name {
+            font-weight: bold;
+        }
+    }
+}

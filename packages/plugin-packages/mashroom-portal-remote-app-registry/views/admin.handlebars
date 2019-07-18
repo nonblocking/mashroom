@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
+    <script type="application/javascript">
+        function removeEndpoint(url) {
+           sendPost(url, "delete");
+        }
+
+        function refreshEndpoint(url) {
+            sendPost(url, "refresh");
+        }
+
+        function sendPost(url, action) {
+            var form = document.createElement("form");
+            form.setAttribute('method',"post");
+            form.setAttribute('action',"?csrfToken={{csrfToken}}");
+            var urlInput = document.createElement("input");
+            urlInput.setAttribute('type',"hidden");
+            urlInput.setAttribute('name',"_url");
+            urlInput.setAttribute("value", url);
+            var actionInput = document.createElement("input");
+            actionInput.setAttribute('type',"hidden");
+            actionInput.setAttribute('name',"_action");
+            actionInput.setAttribute("value", action);
+            form.appendChild(urlInput);
+            form.appendChild(actionInput);
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
+
+    <title>Mashroom Portal Remote App Registry</title>
+</head>
+<body>
+    <div class="add-endpoint-form">
+        <h3>Add a new Remote Portal App Endpoint</h3>
+
+        <form method="POST" action="?csrfToken={{csrfToken}}">
+            <input type="hidden" name="_action" value="add"/>
+            <div class="form-row">
+                <div class="form-label">
+                    <label for="url">URL</label>
+                </div>
+                <div class="form-input">
+                    <input type="text" name="_url" id="url"/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div>
+                    <input type="checkbox" name="_sessionOnly" id="sessionOnly">
+                    <label for="sessionOnly">Only for the current session</label>
+                </div>
+            </div>
+            <div class="form-row form-actions">
+                <input type="submit" value="Add"/>
+            </div>
+        </form>
+
+        <div class="error-message">
+            {{errorMessage}}
+        </div>
+    </div>
+
+    <div class="endpoints">
+        <h3>Remote Portal App Endpoints</h3>
+
+        <table border="1" cellspacing="0" cellpadding="10">
+            <tr>
+                <th>URL</th><th>Session</th><th>Status</th><th>Portal Apps</th><th>&nbsp;</th>
+            </tr>
+            {{#each endpoints}}
+                <tr>
+                    <td>{{this.url}}</td>
+                    <td>{{this.sessionOnly}}</td>
+                    <td>{{{this.status}}}</td>
+                    <td>{{this.portalApps}}</td>
+                    <td>
+                        {{#unless this.sessionOnly}}
+                            <a href="javascript:void(0)" onclick="refreshEndpoint('{{this.url}}')">Refresh</a>
+                            &nbsp;
+                        {{/unless}}
+                        <a href="javascript:void(0)" onclick="removeEndpoint('{{this.url}}')">Remove</a>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+    "name": "@mashroom/mashroom-test-server2",
+    "version": "1.0.90",
+    "private": true,
+    "dependencies": {
+        "@mashroom/mashroom": "1.0.90"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "nodemon": "^1.19.1"
+    },
+    "scripts": {
+        "start": "mashroom",
+        "start-cluster": "pm2 start mashroom -i max && pm2 logs",
+        "stop-cluster": "pm2 stop mashroom"
+    }
+}

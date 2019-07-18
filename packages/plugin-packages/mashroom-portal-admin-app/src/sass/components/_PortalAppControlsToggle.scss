@@ -1,0 +1,19 @@
+
+.portal-apps-control-toggle {
+    padding: 5px 10px;
+    cursor: pointer;
+    display: table;
+
+    span:before {
+        content: '\f070';
+        font-family: $FONT_ICON;
+        font-weight: 900;
+        padding-right: 5px;
+    }
+
+    &.active {
+        span:before {
+            content: '\f06e';
+        }
+    }
+}

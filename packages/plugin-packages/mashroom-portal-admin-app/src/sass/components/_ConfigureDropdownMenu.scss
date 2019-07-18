@@ -1,0 +1,11 @@
+
+.configure-dropdown-menu {
+
+    .dropdown-menu-button-label:before {
+        content: '\f0ad';
+        font-family: $FONT_ICON;
+        font-weight: 900;
+        padding-right: 5px;
+    }
+
+}

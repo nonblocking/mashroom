@@ -1,0 +1,21 @@
+
+.mashroom-demo-angular-app {
+    padding: 10px;
+    display: flex;
+}
+
+.mashroom-demo-angular-app img {
+    height: 80px;
+    margin-right: 5px;
+    margin-left: 20px;
+    align-self: center;
+}
+
+.mashroom-demo-angular-app button {
+    margin-right: 10px;
+}
+
+.mashroom-demo-angular-app .demo-angular-app-content {
+    padding: 0 10px;
+}
+

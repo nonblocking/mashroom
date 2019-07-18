@@ -1,0 +1,62 @@
+{
+    "name": "@mashroom/mashroom-portal-tabify-app",
+    "description": "App that turns an app area into a tabbed dialog",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "sideEffects": false,
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom-portal": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4",
+        "webpack-dev-server": "^3.7.1"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "dev": "webpack-dev-server  --mode development --hot",
+        "build": "webpack --mode production --display-error-details"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Tabify App",
+                "type": "portal-app",
+                "bootstrap": "startPortalTabifyApp",
+                "category": "Layout",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "appConfig": {
+                        "addCloseButtons": false,
+                        "pluginNameTitleMapping": {
+                            "My App Plugin": "My fabulous app"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

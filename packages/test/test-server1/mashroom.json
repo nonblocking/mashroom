@@ -1,0 +1,53 @@
+{
+    "name": "Mashroom Test Server 1",
+    "port": 5050,
+    "pluginPackageFolders": [{
+        "path": "../../plugin-packages",
+        "devMode": true
+    }],
+    "indexPage": "/",
+    "plugins": {
+        "Mashroom Portal WebApp": {
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "autoLogoutAfterInactivitySec": 300
+        },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": true
+        },
+        "Mashroom Session Middleware": {
+            "provider": "memory",
+            "session": {
+            }
+        },
+        "Mashroom Security Services": {
+            "provider": "Mashroom Security Simple Provider",
+            "acl": "./acl.json",
+            "loginPage": "/login"
+        },
+        "Mashroom Security Simple Provider": {
+            "users": "./users.json"
+        },
+        "Mashroom Security Default Login Webapp": {
+            "loginFormTitle": {
+                "en": "Mashroom Test Server Login",
+                "de": "Mashroom Test Server Anmeldung"
+            },
+            "styleFile": "./login_style.css"
+        },
+        "Mashroom Storage Services": {
+            "provider": "Mashroom Storage Filestore Provider"
+        },
+        "Mashroom Storage Filestore Provider": {
+            "dataFolder": "./data/storage"
+        },
+        "Mashroom Internationalization Services": {
+            "availableLanguages": ["en", "de"],
+            "defaultLanguage": "en"
+        },
+        "Mashroom Http Proxy Services": {
+            "rejectUntrustedCerts": false,
+            "poolMaxSockets": 10
+        }
+    }
+}

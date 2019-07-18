@@ -1,0 +1,66 @@
+{
+    "name": "@mashroom/mashroom-http-proxy",
+    "description": "Mashroom http proxy service",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "request": "^2.88.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom": "1.0.90",
+        "@mashroom/mashroom-utils": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "nock": "^10.0.6"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src test",
+        "test": "jest",
+        "build": "babel src -d dist"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Http Proxy Services",
+                "type": "services",
+                "namespace": "proxy",
+                "bootstrap": "./dist/mashroom-bootstrap-services.js",
+                "defaultConfig": {
+                    "forwardMethods": [
+                        "GET",
+                        "POST",
+                        "PUT",
+                        "DELETE"
+                    ],
+                    "forwardHeaders": [
+                        "accept",
+                        "accept-encoding",
+                        "expires",
+                        "cache-control",
+                        "content-type",
+                        "content-encoding"
+                    ],
+                    "rejectUntrustedCerts": false,
+                    "poolMaxSockets": 10,
+                    "socketTimeoutMs": 30000
+                }
+            }
+        ]
+    }
+}

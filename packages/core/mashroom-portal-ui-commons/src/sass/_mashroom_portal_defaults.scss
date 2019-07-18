@@ -1,0 +1,31 @@
+
+$FONT_ICON: 'Font Awesome 5 Free';
+
+$SMALL_DEVICE_MIN: 576px;
+$MEDIUM_DEVICE_MIN: 768px;
+$LARGE_DEVICE_MIN: 992px;
+$X_LARGE_DEVICE_MIN: 1200px;
+
+@mixin small {
+    @media (min-width: #{$SMALL_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin medium {
+    @media (min-width: #{$MEDIUM_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin large {
+    @media (min-width: #{$LARGE_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin xlarge {
+    @media (min-width: #{$X_LARGE_DEVICE_MIN}) {
+        @content;
+    }
+}

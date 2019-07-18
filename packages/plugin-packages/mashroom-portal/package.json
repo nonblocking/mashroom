@@ -1,0 +1,123 @@
+{
+    "name": "@mashroom/mashroom-portal",
+    "description": "Mashroom Portal",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "files": [
+        "dist/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "@mashroom/mashroom-utils": "1.0.90",
+        "body-parser": "^1.19.0",
+        "express": "^4.17.1",
+        "get-uri": "^2.0.3",
+        "lockfile": "^1.0.4",
+        "shortid": "^2.2.14"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@mashroom/mashroom": "1.0.90",
+        "@mashroom/mashroom-browser-cache": "1.0.90",
+        "@mashroom/mashroom-csrf-protection": "1.0.90",
+        "@mashroom/mashroom-http-proxy": "1.0.90",
+        "@mashroom/mashroom-i18n": "1.0.90",
+        "@mashroom/mashroom-security": "1.0.90",
+        "@mashroom/mashroom-storage": "1.0.90",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "nodemon": "^1.19.1",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src test",
+        "test": "jest",
+        "build-backend": "babel src/backend -d dist/backend",
+        "build-frontend": "webpack --mode production --display-error-details",
+        "build": "npm run build-backend && npm run build-frontend",
+        "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node $NODE_DEBUG_OPTION dist/backend/standalone-dev.js\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal WebApp",
+                "type": "web-app",
+                "bootstrap": "./dist/backend/mashroom-bootstrap-webapp.js",
+                "requires": [
+                    "Mashroom Session Middleware",
+                    "Mashroom Storage Services",
+                    "Mashroom Security Services",
+                    "Mashroom Internationalization Services",
+                    "Mashroom Http Proxy Services"
+                ],
+                "defaultConfig": {
+                    "path": "/portal",
+                    "adminApp": "Mashroom Portal Admin App",
+                    "defaultTheme": "Mashroom Portal Default Theme",
+                    "autoLogoutAfterInactivitySec": 1800
+                }
+            },
+            {
+                "name": "Mashroom Portal Services",
+                "type": "services",
+                "bootstrap": "./dist/backend/services/mashroom-bootstrap-services.js",
+                "namespace": "portal"
+            },
+            {
+                "name": "Mashroom Welcome Portal App",
+                "type": "portal-app",
+                "title": {
+                    "en": "Welcome Portal App",
+                    "de": "Willkommen Portal App"
+                },
+                "bootstrap": "startWelcomeApp",
+                "category": "Hello World",
+                "resources": {
+                    "js": [
+                        "welcome-app.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist/frontend"
+                }
+            },
+            {
+                "name": "Mashroom Portal App Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-plugin-loader.js",
+                "loads": "portal-app"
+            },
+            {
+                "name": "Mashroom Portal Theme Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-theme-plugin-loader.js",
+                "loads": "portal-theme"
+            },
+            {
+                "name": "Mashroom Portal Layouts Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-layouts-plugin-loader.js",
+                "loads": "portal-layouts"
+            },
+            {
+                "name": "Mashroom Remote Portal App Registry Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-remote-portal-app-registry-plugin-loader.js",
+                "loads": "remote-portal-app-registry"
+            }
+        ]
+    }
+}

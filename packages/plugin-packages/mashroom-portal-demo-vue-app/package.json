@@ -1,0 +1,57 @@
+{
+    "name": "@mashroom/mashroom-portal-demo-vue-app",
+    "description": "Simple Vue based app that integrates into the Portal",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.90",
+    "sideEffects": false,
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.4.4",
+        "@vue/cli-plugin-eslint": "^3.8.0",
+        "copyfiles": "^2.1.0",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "vue": "^2.6.10",
+        "vue-eslint-parser": "^6.0.4",
+        "vue-loader": "^15.7.0",
+        "vue-template-compiler": "^2.6.10",
+        "webpack": "^4.34.0",
+        "webpack-cli": "^3.3.4",
+        "webpack-dev-server": "^3.7.1"
+    },
+    "scripts": {
+        "lint": "eslint src",
+        "copy-assets": "copyfiles -u 1 src/assets/* dist",
+        "dev": "webpack-dev-server --hot --mode development",
+        "build": "webpack --mode production --display-error-details && npm run copy-assets"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Vue App",
+                "title": "Demo Vue App",
+                "type": "portal-app",
+                "bootstrap": "startVueDemoApp",
+                "category": "Demo",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "restProxies": {},
+                    "appConfig": {
+                        "firstName": "Maria"
+                    }
+                }
+            }
+        ]
+    }
+}

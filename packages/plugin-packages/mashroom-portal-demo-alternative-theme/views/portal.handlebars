@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="{{model.page.description}}">
+    <meta name="keywords" content="{{model.page.keywords}}">
+    {{#if csrfToken}}
+        <meta name="csrf-token" content="{{csrfToken}}">
+    {{/if}}
+
+    <title>{{site.title}} - {{page.title}}</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Domine' rel='stylesheet' type='text/css'>
+
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/regular.css">
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/solid.css">
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/style.css">
+
+    {{{portalResourcesHeader}}}
+
+    {{#if page.extraCss}}
+        <style type="text/css">
+            {{{page.extraCss}}}
+        </style>
+    {{/if}}
+
+    <script type="application/javascript">
+        function toggleMenu() {
+            var nav = document.querySelector('nav');
+            if (nav.classList.contains('show')) {
+                nav.classList.remove('fade-in');
+                setTimeout(() => {
+                    nav.classList.remove('show');
+                }, 200);
+            } else {
+                nav.classList.add('show');
+                setTimeout(() => {
+                    nav.classList.add('fade-in');
+                }, 10);
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="mashroom-portal-admin-app-container">
+        <!-- Admin app goes here -->
+    </div>
+
+    <header>
+        <div class="logo">
+            <img src="{{resourcesBasePath}}/assets/mashroom_logo.svg"/>
+        </div>
+        <div class="site-name">
+            <h1>{{site.title}}</h1>
+        </div>
+        {{#if user.guest}}
+        {{else}}
+            <div class="user">
+                <div class="user-name">
+                    {{user.displayName}}
+                </div>
+                <div class="logout">
+                    <a href="{{portalBasePath}}/_/api/logout">{{__ messages "logout"}}</a>
+                </div>
+            </div>
+        {{/if}}
+        <div class="menu-open" onclick="toggleMenu()"></div>
+    </header>
+
+    <main>
+        {{> navigation}}
+
+        <div class="mashroom-portal-apps-container container-fluid">
+            {{{portalLayout}}}
+        </div>
+    </main>
+
+    <div id="mashroom-portal-modal-overlay">
+        <div class="mashroom-portal-modal-overlay-wrapper">
+            <div class="mashroom-portal-modal-overlay-header">
+                <div id="mashroom-portal-modal-overlay-title">Title</div>
+                <div id="mashroom-portal-modal-overlay-close" class="close-button"></div>
+            </div>
+            <div class="mashroom-portal-modal-overlay-content">
+                <div id="mashroom-portal-modal-overlay-app">
+                    <!-- Modal apps go here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mashroom-portal-auto-logout-warning">
+        <div class="mashroom-portal-auto-logout-warning-message">
+            {{{__ messages "autoLogoutWarning"}}}
+        </div>
+    </div>
+
+    <footer>
+        <div class="powered-by">
+            Powered by: <a href="https://www.mashroom-server.com" target="_blank">Mashroom Portal Server</a>
+        </div>
+    </footer>
+
+    {{{portalResourcesFooter}}}
+</body>
+</html>

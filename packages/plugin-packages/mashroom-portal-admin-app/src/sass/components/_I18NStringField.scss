@@ -1,0 +1,46 @@
+
+.i18nstring-field {
+    display: flex;
+    &>div {
+        flex-grow: 2;
+    }
+
+    .translation {
+        margin: 5px 0;
+        display: flex;
+        align-items: center;
+
+        .lang {
+            width: 30px;
+        }
+
+        .remove {
+            width: 30px;
+            cursor: pointer;
+
+            &:before {
+                content: '\f00d';
+                font-family: $FONT_ICON;
+                font-weight: 900;
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .available-languages {
+        margin-top: 5px;
+
+        .add-language {
+            cursor: pointer;
+            margin-right: 10px;
+
+            &:before {
+                content: '\f067';
+                font-family: $FONT_ICON;
+                font-weight: 900;
+                padding-right: 2px;
+            }
+        }
+    }
+
+}

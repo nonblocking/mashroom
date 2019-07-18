@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Demo React App</title>
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="demo-load-dynamically-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("demo-load-dynamically-app-container");
+                var portalAppSetup = {
+                };
+                var portalClientServices = {
+                    portalAppService: {
+                        registerAppLoadedListener() {},
+                        registerAppAboutToUnloadListener() {},
+                        loadApp() {
+                            console.info('loadApp called', arguments);
+                            return Promise.resolve();
+                        },
+                        loadAppModal() {
+                            console.info('loadAppModal called', arguments);
+                            return Promise.resolve();
+                        },
+                        unloadApp() {
+                            console.info('unloadApp called', arguments);
+                        },
+                        loadedPortalApps: [
+                            {
+                                pluginName: 'Mashroom Portal Demo Angular App',
+                                instanceId: null
+                            }
+                        ]
+                    }
+                };
+
+                window.startLoadDynamicallyDemoApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+    </script>
+</body>
+</html>

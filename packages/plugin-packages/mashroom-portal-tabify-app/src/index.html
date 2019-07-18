@@ -1,0 +1,129 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Mashroom Portal Tabify App</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="area1" class="col-md-6 mashroom-portal-app-area">
+        <div id="tabify" class="mashroom-portal-app-wrapper">
+            <div id="mashroom-portal-tabify-app" class="mashroom-portal-app-host">
+                Loading...
+            </div>
+        </div>
+        <div id="app1" class="mashroom-portal-app-wrapper">
+            <div class="mashroom-portal-app-host">
+                <br/>
+                <p>App 1 Content</p>
+                <br/>
+            </div>
+        </div>
+        <div id="app3" class="mashroom-portal-app-wrapper">
+            <div class="mashroom-portal-app-host">
+                <br/>
+                <p>App 3 Content</p>
+                <br/>
+            </div>
+        </div>
+    </div>
+    <div id="area2" class="col-md-6 mashroom-portal-app-area">
+        <div id="app2" class="mashroom-portal-app-wrapper">
+            <div class="mashroom-portal-app-host">
+                <br/>
+                <p>App 2 Content</p>
+                <br/>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var hostElement = document.getElementById("mashroom-portal-tabify-app");
+
+                var portalAppConfig = {
+                    pluginNameTitleMapping: {
+                        'App 1': 'My first app'
+                    },
+                    addCloseButtons: true
+                };
+                var portalAppSetup = {
+                    lang: 'en',
+                    instanceId: 'tabify',
+                    pluginName: 'Tabify App',
+                    appConfig: portalAppConfig
+                };
+                var portalClientServices = {
+                    messageBus: {
+                        subscribe: function(topic, handler) {
+                            if (topic === 'tabify-add-plugin-name-title-mapping') {
+                                window.PUBLISH_TITLE_MAPPING = handler;
+                            } else if (topic === 'tabify-focus-app') {
+                                window.PUBLISH_FOCUS = handler;
+                            }
+                        }
+                    },
+                    portalAppService: {
+                        registerAppLoadedListener: function() {
+                            console.info('registerAppLoadedListener() called with: ', arguments);
+                        },
+                        registerAppAboutToUnloadListener: function() {
+                            console.info('registerAppAboutToUnloadListener() called with: ', arguments);
+                        },
+                        loadedPortalApps: [
+                            {
+                                id: '1000',
+                                pluginName: 'Tabify App',
+                                instanceId: 'tabify',
+                                portalAppAreaId: 'area1',
+                                portalAppHostElement: hostElement,
+                                portalAppWrapperElement: document.getElementById("tabify"),
+                                appConfig: {
+
+                                }
+                            },
+                            {
+                                id: '1001',
+                                pluginName: 'App 1',
+                                instanceId: 'app1',
+                                portalAppAreaId: 'area1',
+                                portalAppWrapperElement: document.getElementById("app1"),
+                                appConfig: {
+                                    foo: 'app1'
+                                }
+                            },
+                            {
+                                id: '1002',
+                                pluginName: 'App 2',
+                                instanceId: 'app2',
+                                portalAppAreaId: 'area2',
+                                portalAppWrapperElement: document.getElementById("app2"),
+                                appConfig: {
+                                    foo: 'app2'
+                                }
+                            },
+                            {
+                                id: '1003',
+                                pluginName: 'App 3',
+                                instanceId: 'app3',
+                                portalAppAreaId: 'area1',
+                                portalAppWrapperElement: document.getElementById("app3"),
+                                appConfig: {
+                                    foo: 'app3'
+                                }
+                            }
+                        ]
+                    }
+                };
+                window.startPortalTabifyApp(hostElement, portalAppSetup, portalClientServices);
+            });
+        })();
+    </script>
+</body>
+</html>

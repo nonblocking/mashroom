@@ -1,0 +1,138 @@
+
+$COLOR_BLACK: #343633;
+$COLOR_WHITE: white;
+$COLOR_GREY: #888;
+$COLOR_ERROR: red;
+
+$COLOR_PRIMARY: #645e9d;
+$COLOR_PRIMARY_LIGHT: #938bce;
+$COLOR_PRIMARY_DARK: #36346e;
+$COLOR_PRIMARY_EXTRA_LIGHT: lighten($COLOR_PRIMARY_LIGHT, 25);
+
+$COLOR_SECONDARY: #5cc8ff;
+$COLOR_SECONDARY_LIGHT: #96fbff;
+$COLOR_SECONDARY_DARK: #0097cc;
+
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+$FONT_HEADER: Georgia, serif;
+
+@mixin hover-animation() {
+    transition: color 500ms ease-out, background-color 500ms ease-out;
+}
+
+/* Remove Chrome's input focus border */
+:focus {
+    outline: none !important;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: $COLOR_BLACK;
+    font-size: 16px;
+    font-family: $FONT_DEFAULT;
+}
+
+h1, h2, h3 {
+    font-family: $FONT_HEADER;
+}
+
+a, a:visited, a:focus {
+    color: $COLOR_PRIMARY;
+    text-decoration: underline;
+    @include hover-animation();
+
+    &:hover {
+        color: $COLOR_PRIMARY_LIGHT;
+    }
+
+    &:active {
+        color: $COLOR_PRIMARY_LIGHT;
+    }
+}
+
+button, input[type="submit"] {
+    background-color: $COLOR_PRIMARY;
+    color: white;
+    border-radius: 0;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    outline: none !important;
+    font-size: 1em;
+    @include hover-animation();
+
+    &:hover {
+        background-color: $COLOR_PRIMARY_LIGHT;
+    }
+
+    &:active {
+        background-color: $COLOR_PRIMARY_LIGHT;
+    }
+}
+
+input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"] {
+    padding: 6px 11px;
+    border: 1px solid $COLOR_PRIMARY;
+    font-size: 1em;
+    width: 100%;
+
+    &:focus {
+        padding: 5px 10px;
+        border: 2px solid $COLOR_SECONDARY;
+    }
+
+    &:invalid {
+        padding: 5px 10px;
+        border: 2px solid $COLOR_ERROR;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        color: gray !important;
+    }
+}
+
+label {
+    margin: 0;
+}
+
+.add-endpoint-form {
+
+    .form-row {
+        padding: 5px 10px;
+        display: flex;
+
+        .form-label {
+            align-self: center;
+            padding-right: 10px;
+        }
+
+        .form-input {
+            min-width: 400px;
+        }
+    }
+
+    .form-actions {
+       padding-top: 10px;
+    }
+
+    .error-message {
+        padding: 10px;
+        color: $COLOR_ERROR;
+    }
+}
+.endpoints {
+    .error {
+        color: $COLOR_ERROR;
+    }
+
+    .pending {
+        color: $COLOR_SECONDARY;
+    }
+}

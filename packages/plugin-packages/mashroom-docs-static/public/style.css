@@ -1,0 +1,185 @@
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    padding: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Georgia, serif;
+}
+
+h1, h2, h3 {
+    color: #645e9d;
+}
+
+h4, h5, h6 {
+    font-weight: bold;
+}
+
+h2 {
+    margin: 60px 0 10px 0;
+}
+
+h3 {
+    margin: 40px 0 10px 0;
+}
+
+h4 {
+    margin: 30px 0 5px 0;
+}
+
+/* Logo image */
+body>p:first-child {
+    float: left;
+}
+body>p:first-child img {
+    box-shadow: none;
+    margin: 0;
+}
+
+/* Title */
+p+h1 {
+    float: left;
+    margin: 20px 15px;
+    color: black;
+}
+
+p {
+    clear: both;
+    margin: 10px 0;
+}
+
+ul {
+    padding-left: 30px;
+}
+
+li {
+    padding: 2px 0;
+}
+
+a {
+    color: #645e9d;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #36346e;
+}
+
+pre {
+    background-color: #EEE;
+    padding: 10px;
+    font-family:  Consolas, 'Liberation Mono', Courier, monospace;
+}
+
+img {
+    max-width: 80vw;
+    max-height: 100vh;
+    margin: 5px;
+    box-shadow: 2px 2px 10px #CCC;
+}
+
+/*
+   Intellij Idea-like styling (c) Vasily Polovnyov <vast@whiteants.net>
+*/
+
+/* Taken from https://github.com/highlightjs/highlight.js/blob/master/src/styles/idea.css */
+
+.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 0.5em;
+    color: #000;
+    background: #fff;
+}
+
+.hljs-subst,
+.hljs-title {
+    font-weight: normal;
+    color: #000;
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: #808080;
+    font-style: italic;
+}
+
+.hljs-meta {
+    color: #808000;
+}
+
+.hljs-tag {
+    background: #efefef;
+}
+
+.hljs-section,
+.hljs-name,
+.hljs-literal,
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-type,
+.hljs-selector-id,
+.hljs-selector-class {
+    font-weight: bold;
+    color: #000080;
+}
+
+.hljs-attribute,
+.hljs-number,
+.hljs-regexp,
+.hljs-link {
+    font-weight: bold;
+    color: #0000ff;
+}
+
+.hljs-number,
+.hljs-regexp,
+.hljs-link {
+    font-weight: normal;
+}
+
+.hljs-string {
+    color: #008000;
+    font-weight: bold;
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-formula {
+    color: #000;
+    background: #d0eded;
+    font-style: italic;
+}
+
+.hljs-doctag {
+    text-decoration: underline;
+}
+
+.hljs-variable,
+.hljs-template-variable {
+    color: #660e7a;
+}
+
+.hljs-addition {
+    background: #baeeba;
+}
+
+.hljs-deletion {
+    background: #ffc8bd;
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: bold;
+}

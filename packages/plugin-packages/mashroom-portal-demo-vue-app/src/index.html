@@ -1,0 +1,46 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Demo React App</title>
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="demo-react-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("demo-react-app-container");
+                var portalAppConfig = {
+                    firstName: 'Franz'
+                };
+                var portalAppSetup = {
+                    lang: 'en',
+                    resourcesBasePath: '',
+                    appConfig: portalAppConfig
+                };
+                var portalClientServices = {
+                    messageBus: {
+                        publish: function() {
+                            console.info('Publish called with arguemnts: ', arguments);
+                        },
+                        subscribe: function(topic, handler) {
+                            window.PING = function() {
+                                handler();
+                            }
+                        }
+                    }
+                };
+                window.startVueDemoApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+
+    </script>
+</body>
+</html>

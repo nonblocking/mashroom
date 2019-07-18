@@ -1,0 +1,34 @@
+{
+    "name": "@mashroom/mashroom-portal-ui-commons",
+    "description": "Mashroom Portal UI commons",
+    "private": true,
+    "homepage": "https://www.mashroom-server.com",
+    "license": "MIT",
+    "version": "1.0.90",
+    "main": "src/js",
+    "devDependencies": {
+        "codemirror": "^5.47.0",
+        "eslint": "^5.16.0",
+        "jest": "^24.8.0",
+        "react": "^16.8.6",
+        "react-autosuggest": "^9.4.3",
+        "react-click-outside": "^3.0.1",
+        "react-codemirror2": "^6.0.0",
+        "react-dom": "^16.8.6",
+        "react-intl": "^2.9.0",
+        "react-redux": "7.1.0",
+        "redux": "^4.0.1",
+        "redux-form": "^8.2.4"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src"
+    }
+}

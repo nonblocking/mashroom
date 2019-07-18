@@ -1,0 +1,21 @@
+
+.mashroom-welcome-portal-app {
+    padding: 10px;
+
+    .welcome-app-content {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+
+        img {
+            height: 60px;
+            margin-left: 20px;
+            margin-right: 3px;
+        }
+
+        p {
+            padding: 0 20px;
+            margin: 0;
+        }
+    }
+}

@@ -1,0 +1,30 @@
+
+.mashroom-portal-ui-dropdown-menu {
+
+    .dropdown-menu-button {
+        cursor: pointer;
+        padding: 5px 10px;
+    }
+
+    .dropdown-menu-dropdown {
+        position: relative;
+
+        .dropdown-menu-content-wrapper {
+            position: absolute;
+            top: 0;
+            max-height: 0;
+            overflow: hidden;
+            box-shadow: 0 3px 5px rgba(0,0,0,.2);
+            transition: max-height 0.3s ease-in-out;
+            z-index: 9999;
+
+            &.show {
+                max-height: 512px;
+            }
+        }
+
+        .dropdown-menu-content {
+        }
+    }
+
+}

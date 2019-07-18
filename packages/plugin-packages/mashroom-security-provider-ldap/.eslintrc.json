@@ -1,0 +1,21 @@
+{
+    "parser": "babel-eslint",
+    "plugins": [
+        "flowtype",
+        "jest"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:flowtype/recommended"
+    ],
+    "env": {
+        "node": true,
+        "browser": false,
+        "es6": true,
+        "jest": true
+    },
+    "rules": {
+        "no-unused-vars": "off",
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+    }
+}
