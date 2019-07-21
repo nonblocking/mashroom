@@ -31,7 +31,7 @@
         "rimraf": "^2.6.3"
     },
     "scripts": {
-        "setup": "npm install && lerna bootstrap && npm run build:core",
+        "setup": "npm install && lerna bootstrap --no-ci && npm run build:core",
         "flow": "flow check",
         "lint": "lerna run lint",
         "test": "lerna run test",
