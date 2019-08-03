@@ -146,7 +146,7 @@ To register a portal-app plugin add this to _package.json_:
                 },
                 "type": "portal-app",
                 "bootstrap": "startMyApp",
-                "category": "Demo",
+                "category": "My Category",
                 "resources": {
                     "js": [
                         "bundle.js"

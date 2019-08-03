@@ -83,7 +83,7 @@
                     "de": "Willkommen Portal App"
                 },
                 "bootstrap": "startWelcomeApp",
-                "category": "Hello World",
+                "category": "Demo",
                 "resources": {
                     "js": [
                         "welcome-app.js"
