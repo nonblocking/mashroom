@@ -7,7 +7,7 @@ module.exports = (env, argv) => {
 
     if (argv.mode === 'development') {
         // Add portal theme
-        entry = [path.resolve(__dirname, '../mashroom-portal-default-theme/src/sass/style.scss')].concat(entry);
+        entry = [path.resolve(__dirname, '../mashroom-portal-default-theme/src/frontend/sass/style.scss')].concat(entry);
     }
 
     return {
