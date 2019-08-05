@@ -13,6 +13,8 @@ import type {FieldProps} from 'redux-form';
 type Props = {
     labelId: string,
     language: 'javascript' | 'json' | 'css' | 'html',
+    theme?: 'blackboard' | 'idea',
+    height?: number,
     fieldProps: FieldProps
 }
 
@@ -42,7 +44,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
 
         return {
             mode,
-            theme: 'blackboard',
+            theme: this.props.theme || 'blackboard',
             lineNumbers: true
         }
     }
@@ -53,22 +55,24 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
         return (
             <div className={`mashroom-portal-ui-source-code-editor-field ${error ? 'error' : ''}`}>
                 <FieldLabel labelId={this.props.labelId}/>
-                <CodeMirror
-                    value={this.props.fieldProps.input.value}
-                    options={this.getCodeMirrorOptions()}
-                    onBeforeChange={(editor, data, value) => {
-                        this.props.fieldProps.input.onChange(value);
-                    }}
-                    onChange={(editor, data, value) => {
+                <div style={{ width: '100%', height: this.props.height || 200 }}>
+                    <CodeMirror
+                        value={this.props.fieldProps.input.value}
+                        options={this.getCodeMirrorOptions()}
+                        onBeforeChange={(editor, data, value) => {
+                            this.props.fieldProps.input.onChange(value);
+                        }}
+                        onChange={(editor, data, value) => {
 
-                    }}
-                    editorDidMount={(editor: any) => {
-                        // Fixes a problem with the cursor, see https://github.com/codemirror/CodeMirror/issues/5040
-                        setTimeout(() => {
-                            editor.refresh();
-                        }, 200);
-                    }}
-                />
+                        }}
+                        editorDidMount={(editor: any) => {
+                            // Fixes a problem with the cursor, see https://github.com/codemirror/CodeMirror/issues/5040
+                            setTimeout(() => {
+                                editor.refresh();
+                            }, 200);
+                        }}
+                    />
+                </div>
                 {error && <div className='error-message'><FormattedMessage id={this.props.fieldProps.meta.error || ''}/></div>}
             </div>
         );

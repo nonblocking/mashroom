@@ -30,6 +30,8 @@ export default class TextField extends PureComponent<Props> {
             id: this.props.id,
             type: this.props.type || 'text',
             autoComplete: this.props.autoComplete,
+            maxLength: this.props.maxLength,
+            pattern: this.props.pattern,
             placeholder
         });
 

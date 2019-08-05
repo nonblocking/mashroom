@@ -10,7 +10,9 @@ import type {FieldProps} from 'redux-form';
 type Props = {
     name: string,
     labelId: string,
-    language: 'javascript' | 'json' | 'css' | 'html'
+    language: 'javascript' | 'json' | 'css' | 'html',
+    theme?: 'blackboard' | 'idea',
+    height?: number
 }
 
 export default class SourceCodeEditorFieldContainer extends PureComponent<Props> {

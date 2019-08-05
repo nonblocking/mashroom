@@ -318,7 +318,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SourceCodeEditorFieldContainer labelId='extraCss' name='page.extraCss' language='css' height={150} width={350}/>
+                        <SourceCodeEditorFieldContainer labelId='extraCss' name='page.extraCss' language='css' />
                     </FormCell>
                 </FormRow>
             </DialogContent>

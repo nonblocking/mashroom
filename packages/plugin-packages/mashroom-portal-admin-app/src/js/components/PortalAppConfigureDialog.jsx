@@ -131,7 +131,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SourceCodeEditorFieldContainer labelId='appConfig' name='appConfig' language='json' height={150} width={350}/>
+                        <SourceCodeEditorFieldContainer labelId='appConfig' name='appConfig' language='json' />
                     </FormCell>
                 </FormRow>
             </DialogContent>

@@ -3,14 +3,18 @@
 
     @import "~codemirror/lib/codemirror.css";
     @import "~codemirror/theme/blackboard.css";
+    @import "~codemirror/theme/idea.css";
+
+    label {
+        display: block;
+        padding-bottom: 3px;
+    }
 
     .CodeMirror {
         font-family: monospace;
-        height: 200px;
-        color: #F8F8F8;
-        font-size: 1.1em;
-        border: 2px solid transparent;
-s
+        font-size: 0.9em;
+        height: 100%;
+
         &.CodeMirror-focused {
 
         }
