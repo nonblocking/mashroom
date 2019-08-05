@@ -40,12 +40,11 @@ let initialState: State = {
     selectedSite: null
 };
 
-const store: Store = createStore(reducers, initialState);
-
+let storeEnhancer = undefined;
 if (process.env.NODE_ENV !== 'production') {
-    store.subscribe(() => {
-        console.debug('New state:', store.getState());
-    });
+    storeEnhancer = window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
 }
+
+const store: Store = createStore(reducers, initialState, storeEnhancer);
 
 export default store;
