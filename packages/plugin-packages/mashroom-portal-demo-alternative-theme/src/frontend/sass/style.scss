@@ -71,6 +71,7 @@ body {
     font-family: $FONT_DEFAULT;
     background-color: #EEE;
     overflow-x: hidden;
+    font-size: 16px;
 }
 
 
@@ -104,6 +105,8 @@ button, input[type="submit"] {
     padding: 4px 10px;
     cursor: pointer;
     outline: none !important;
+    font-family: $FONT_DEFAULT;
+    font-size: 1em;
     @include hover-animation();
 
     &:hover {
@@ -210,6 +213,8 @@ input[type="text"], input[type="number"], input[type="password"], input[type="te
     padding: 6px 11px;
     border: 1px solid $COLOR_PRIMARY;
     width: 100%;
+    font-family: $FONT_DEFAULT;
+    font-size: 1em;
     @include focus-animation();
 
     &:focus {
@@ -234,7 +239,8 @@ select {
     -webkit-appearance: none;
     appearance: none;
     outline: none;
-
+    font-family: $FONT_DEFAULT;
+    font-size: 1em;
     width: 100%;
     height: 34px;
     padding-left: 10px;
@@ -270,7 +276,7 @@ select {
     }
 }
 
-label {
+label, form {
     margin: 0;
 }
 
@@ -637,7 +643,12 @@ footer {
 
 .mashroom-portal-ui-source-code-editor-field {
     .CodeMirror {
+        border: 1px solid $COLOR_PRIMARY;
+        padding: 1px;
+        @include focus-animation();
+
         &.CodeMirror-focused {
+            padding: 0;
             border: 2px solid $COLOR_SECONDARY;
         }
     }
@@ -917,6 +928,16 @@ footer {
     .mashroom-portal-ui-field-label {
         color: $COLOR_GREY;
 
+    }
+
+    .mashroom-portal-ui-source-code-editor-field {
+        .CodeMirror {
+            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+
+            &.CodeMirror-focused {
+                border-color: $COLOR_SECONDARY;
+            }
+        }
     }
 
     .mashroom-portal-ui-dropdown-menu {
