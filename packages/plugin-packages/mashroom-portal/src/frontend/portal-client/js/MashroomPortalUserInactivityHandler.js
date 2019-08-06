@@ -59,7 +59,7 @@ export default class MashroomPortalUserInactivityHandler {
         }
 
         const timeLeft = this._getTimeLeft();
-        console.debug('Time left until auto logout: ', timeLeft);
+        // console.debug('Time left until auto logout: ', timeLeft);
 
         if (timeLeft <= 0) {
             this._logout();
