@@ -7,7 +7,7 @@ This plugin adds [Express session](https://www.npmjs.com/package/express-session
 
 #### Usage
 
-If _node_modules/@mashroom_ is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
 
 You can override the default config in your Mashroom config file like this:
 

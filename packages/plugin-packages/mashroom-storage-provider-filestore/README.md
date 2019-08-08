@@ -7,7 +7,7 @@ This plugin adds a simple but cluster-safe, JSON based storage provider.
 
 #### Usage
 
-If _node_modules/@mashroom_ is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
 
 To activate this provider configure the _Mashroom Security_ plugin like this:
 

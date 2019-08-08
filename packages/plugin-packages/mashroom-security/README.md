@@ -8,7 +8,7 @@ via ACL and provides a service to manage the access to resources.
 
 #### Usage
 
-If _node_modules/@mashroom_ is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
 
 After that you can add a _acl.json_ file to your server config folder with a content like this:
 

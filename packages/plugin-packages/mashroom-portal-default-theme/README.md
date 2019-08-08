@@ -7,7 +7,7 @@ Adds adds the default theme to the _Mashroom Portal_.
 
 #### Usage
 
-If _node_modules/@mashroom_ is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
 
 You can override the default config in your Mashroom config file like this:
 

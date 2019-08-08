@@ -8,7 +8,7 @@ supports translation of messages.
 
 #### Usage
 
-If _node_modules/@mashroom_ is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
 
 After that you can use the service like this:
 

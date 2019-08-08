@@ -8,5 +8,5 @@ It also shows how a SPA can be internationalized with _react-intl_.
 
 #### Usage
 
-If _node_modules/@mashroom_ is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
 
