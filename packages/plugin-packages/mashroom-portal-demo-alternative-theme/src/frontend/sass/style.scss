@@ -102,7 +102,7 @@ button, input[type="submit"] {
     color: white;
     border-radius: 0;
     border: none;
-    padding: 4px 10px;
+    padding: 6px 12px;
     cursor: pointer;
     outline: none !important;
     font-family: $FONT_DEFAULT;
@@ -282,6 +282,7 @@ label, form {
 
 table {
     width: 100%;
+    border-spacing: 0;
     border: 1px solid $COLOR_PRIMARY;
 
     tr {
@@ -642,6 +643,10 @@ footer {
 }
 
 .mashroom-portal-ui-source-code-editor-field {
+    .react-codemirror2 {
+        height: 100%;
+    }
+
     .CodeMirror {
         border: 1px solid $COLOR_PRIMARY;
         padding: 1px;
