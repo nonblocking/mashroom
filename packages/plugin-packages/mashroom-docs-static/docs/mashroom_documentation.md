@@ -494,6 +494,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-portal-remote-app-registry](../../mashroom-portal-remote-app-registry/README.md) [inc] 
 
+[mashroom-portal-sandbox-app](../../mashroom-portal-sandbox-app/README.md) [inc] 
+
 ## Demo Plugins
 
 [mashroom-demo-webapp](../../mashroom-demo-webapp/README.md) [inc] 

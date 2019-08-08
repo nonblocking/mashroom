@@ -1,0 +1,85 @@
+
+@import "~@mashroom/mashroom-portal-ui-commons/src/sass/mashroom_portal_defaults";
+
+$LABEL_ROW_WIDTH: 140px;
+
+.mashroom-sandbox-app {
+    padding: 10px;
+
+    .mashroom-sandbox-app-form-row {
+        margin: 10px 0;
+
+        label {
+            width: $LABEL_ROW_WIDTH;
+            padding: 0;
+            span {
+                vertical-align: top;
+            }
+        }
+
+        .mashroom-portal-ui-source-code-editor-field {
+
+            label {
+                float: left;
+            }
+        }
+    }
+
+    .mashroom-sandbox-app-form-button-row {
+        margin-left: $LABEL_ROW_WIDTH;
+    }
+
+    .mashroom-sandbox-app-output-row {
+        display: flex;
+        margin: 10px 0;
+
+        &>*:first-child {
+            flex: 0 0 $LABEL_ROW_WIDTH;
+        }
+
+        &>*:last-child {
+            flex-grow: 2;
+        }
+
+        pre {
+            margin: 0;
+            font-size: 0.9em;
+        }
+    }
+
+    .mashroom-sandbox-app-messagebus-send-form {
+        margin-bottom: 30px;
+    }
+
+    .mashroom-sandbox-app-host-wrapper {
+        box-shadow: 2px 2px 8px #AAA;
+        margin-bottom: 30px;
+        display: flex;
+
+        .loading {
+            padding: 20px;
+        }
+
+        .mashroom-sandbox-app-host-resizer {
+            cursor: col-resize;
+            position: relative;
+            width: 10px;
+
+            .grip:before {
+                position: absolute;
+                font-family: $FONT_ICON;
+                font-weight: 900;
+                content: '\f58e';
+                color: #CCC;
+                height: 16px;
+                top: calc(50% - 8px);
+                font-size: 0.8em;
+            }
+        }
+
+        #mashroom-sandbox-app-host-elem {
+            flex-grow: 2;
+            overflow: hidden;
+        }
+    }
+}

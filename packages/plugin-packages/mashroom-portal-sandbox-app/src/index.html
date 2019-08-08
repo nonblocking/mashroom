@@ -1,0 +1,101 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Sandbox App</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="sandbox-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("sandbox-app-container");
+                var portalAppConfig = {
+                    areaForAppUnderTest: 'app-area1'
+                };
+                var portalAppSetup = {
+                    lang: 'en',
+                    appConfig: portalAppConfig
+                };
+                var portalClientServices = {
+                    portalAppService: {
+                        getAvailableApps: function() {
+                            return Promise.resolve([
+                                { name: 'Portal App 1', description: 'foo' },
+                                { name: 'Portal App 2', description: 'foo' },
+                                { name: 'Portal App 3', description: 'foo' }
+                            ]);
+                        },
+                        loadAppSetup: function() {
+                            return Promise.resolve({
+                                pluginName: 'Test Portal App',
+                                title: 'Translated title',
+                                version: '1.0',
+                                instanceId: 'ABCD',
+                                lastReloadTs: 222222222,
+                                restProxyPaths: {
+                                    'bff': '/portal/_/proxy/Test%20Portal%20App/1',
+                                },
+                                resourcesBasePath: '',
+                                globalResourcesBasePath: '/_global_',
+                                resources: {css: [], js: ['dummyAppBundle.js']},
+                                globalLaunchFunction: 'startFoo',
+                                lang: 'en',
+                                user: {
+                                    username: 'admin',
+                                    displayName: 'admin',
+                                    guest: false,
+                                    permissions: {
+                                        delete: true
+                                    },
+                                },
+                                appConfig: {
+                                    name: 'Peter'
+                                },
+                            })
+                        }
+                    },
+                    stateService: {
+                        getStateProperty: function(key) {
+                            if (key === 'sbAppName') {
+                                //return 'Portal App 2';
+                            }
+                            /*
+                            if (key === 'sbWidth') {
+                                return '450px';
+                            }
+                            if (key === 'sbLang') {
+                                return 'de';
+                            }
+                            if (key === 'sbPermissions') {
+                                return btoa(JSON.stringify({
+                                    delete: false
+                                }))
+                            }
+                            if (key === 'sbAppConfig') {
+                                return btoa(JSON.stringify({
+                                    name: 'Ronald'
+                                }))
+                            }
+                            */
+
+                            return null;
+                        }
+                    }
+                };
+                window.startSandboxApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+
+    </script>
+</body>
+</html>

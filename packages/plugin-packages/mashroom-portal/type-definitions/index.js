@@ -564,6 +564,11 @@ export interface MashroomPortalAppService {
      */
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
+    /**
+     * Load the setup for given app/plugin name on the current page
+     */
+    loadAppSetup(pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup>;
+
     +loadedPortalApps: Array<MashroomPortalLoadedPortalApp>;
 }
 

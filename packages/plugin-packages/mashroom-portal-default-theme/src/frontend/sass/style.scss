@@ -5,7 +5,7 @@ $COLOR_BLACK: #343633;
 $COLOR_WHITE: white;
 $COLOR_GREY: #888;
 $COLOR_GREY_LIGHT: #999;
-$COLOR_ERROR: red;
+$COLOR_ERROR: #e23e2b;
 
 $COLOR_PRIMARY: #645e9d;
 $COLOR_PRIMARY_LIGHT: #938bce;
@@ -581,7 +581,7 @@ footer {
 }
 
 .error {
-    input, select {
+    input, select, textarea {
         border-color: $COLOR_ERROR !important;
     }
 

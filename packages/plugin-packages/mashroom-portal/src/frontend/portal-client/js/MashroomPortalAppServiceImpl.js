@@ -262,6 +262,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         this._aboutToUnloadListeners = this._aboutToUnloadListeners.filter((l) => l !== listener);
     }
 
+    loadAppSetup(pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup> {
+        const pageId = this._getPageId();
+        return this._loadAppSetup(pageId, pluginName, instanceId);
+    }
+
     get loadedPortalApps(): Array<MashroomPortalLoadedPortalApp> {
         return loadedPortalAppsInternal.map((loadedAppInternal) => this._toLoadedApp(loadedAppInternal));
     }

@@ -89,6 +89,11 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
                 instanceId: shortid.generate(),
             };
 
+            const sandboxAppInstance: MashroomPortalAppInstance = {
+                pluginName: 'Mashroom Sandbox App',
+                instanceId: shortid.generate(),
+            };
+
             const pageHome: MashroomPortalPage = {
                 pageId: 'home',
                 layout: 'Mashroom Portal Default Layouts 2 Columns with 1 Column Header',
@@ -157,6 +162,17 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
                 },
             };
 
+            const pageSandbox: MashroomPortalPage = {
+                pageId: 'sandbox',
+                layout: 'Mashroom Portal Default Layouts 1 Column',
+                portalApps: {
+                    'app-area1': [{
+                        pluginName: sandboxAppInstance.pluginName,
+                        instanceId: sandboxAppInstance.instanceId,
+                    }],
+                },
+            };
+
             const site: MashroomPortalSite = {
                 siteId: 'default',
                 title: portalName,
@@ -204,6 +220,14 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
                         friendlyUrl: '/test2',
                         subPages: [],
                     },
+                    {
+                        pageId: 'sandbox',
+                        title: {
+                            en: 'Sandbox'
+                        },
+                        friendlyUrl: '/sandbox',
+                        subPages: [],
+                    },
                 ],
             };
 
@@ -216,12 +240,14 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
             await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
             await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);
             await portalAppInstancesCollection.insertOne(tabifyAppInstance1);
+            await portalAppInstancesCollection.insertOne(sandboxAppInstance);
 
             await pagesCollection.insertOne(pageHome);
             await pagesCollection.insertOne(pageTest1);
             await pagesCollection.insertOne(pageTest2);
             await pagesCollection.insertOne(subPage1);
             await pagesCollection.insertOne(subPage2);
+            await pagesCollection.insertOne(pageSandbox);
 
             await sitesCollection.insertOne(site);
         }

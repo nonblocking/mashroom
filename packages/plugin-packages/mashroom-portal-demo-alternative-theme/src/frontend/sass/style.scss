@@ -577,7 +577,7 @@ footer {
 }
 
 .error {
-    input, select {
+    input, select, textarea {
         border-color: $COLOR_ERROR !important;
     }
 

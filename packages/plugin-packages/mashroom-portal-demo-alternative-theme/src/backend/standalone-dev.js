@@ -205,7 +205,7 @@ app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
                             <div class="mashroom-portal-app-header-close"></div>
                         </div>
                         <div class="mashroom-portal-app-host">
-                            <div class="mashroom-portal-app-loading-error" style="color:red">
+                            <div class="mashroom-portal-app-loading-error">
                                 <span>Loading App 4 failed</span>
                             </div>
                         </div>
