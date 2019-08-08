@@ -29,7 +29,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
                     }
                 } else {
                     // Take over other query params as well
-                    this._additionalQueryParams[paramName] = queryParams[paramName];
+                    this._additionalQueryParams[paramName] = decodeURIComponent(queryParams[paramName]);
                 }
             }
         }
