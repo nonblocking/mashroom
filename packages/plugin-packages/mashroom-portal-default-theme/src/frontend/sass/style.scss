@@ -580,6 +580,20 @@ footer {
     padding: 3px 0;
 }
 
+.error {
+    input, select {
+        border-color: $COLOR_ERROR !important;
+    }
+
+    .mashroom-portal-checkbox + label:before, .mashroom-portal-radio + label:before {
+        color: $COLOR_ERROR !important;
+    }
+
+    .CodeMirror {
+        border-color: $COLOR_ERROR !important;
+    }
+}
+
 .mashroom-portal-autocomplete-field {
     .suggestions-container-open {
         background-color: $COLOR_WHITE;
