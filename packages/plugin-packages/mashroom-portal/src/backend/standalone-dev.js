@@ -45,6 +45,7 @@ const welcomeApp: MashroomPortalApp = {
       de: 'Willkommen Portal App'
     },
     description: 'Welcome App',
+    tags: [],
     category: 'demo',
     version: '1.0',
     homepage: null,

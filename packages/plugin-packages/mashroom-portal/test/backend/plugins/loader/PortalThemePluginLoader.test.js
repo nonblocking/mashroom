@@ -17,6 +17,7 @@ describe('PortalThemePluginLoader', () => {
             pluginPackage,
             name: 'Portal Theme 1',
             description: null,
+            tags: [],
             requires: null,
             type: 'portal-theme',
             errorMessage: null,

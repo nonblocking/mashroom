@@ -3,6 +3,7 @@
 
 ## 1.0.91
 
+ * Added optional _tags_ (array) property to the plugin definition 
  * Bunch of small default theme improvements
  * Common UI library: Highlight input fields with validation errors
  * Added a Sandbox App to test Portal Apps. It allows it to load any Portal App with a specific configuration and to interact with the App

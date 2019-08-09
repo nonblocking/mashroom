@@ -14,7 +14,8 @@ describe('PortalAppPluginLoader', () => {
         const appPlugin: MashroomPlugin = {
             pluginPackage,
             name: 'Portal App 1',
-            description: null,
+            description: 'my description',
+            tags: ['tag1', 'tag2'],
             requires: null,
             type: 'portal-app',
             errorMessage: null,
@@ -52,6 +53,8 @@ describe('PortalAppPluginLoader', () => {
 
         expect(registry.portalApps.length).toBe(1);
         expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar');
+        expect(registry.portalApps[0].description).toBe('my description');
+        expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
         expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': []});
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
@@ -63,6 +66,7 @@ describe('PortalAppPluginLoader', () => {
             pluginPackage,
             name: 'Portal App 1',
             description: null,
+            tags: [],
             requires: null,
             type: 'portal-app',
             bootstrap: 'startApp',
@@ -109,6 +113,7 @@ describe('PortalAppPluginLoader', () => {
             pluginPackage,
             name: 'Portal App 1',
             description: null,
+            tags: [],
             requires: null,
             type: 'portal-app',
             bootstrap: 'startApp',

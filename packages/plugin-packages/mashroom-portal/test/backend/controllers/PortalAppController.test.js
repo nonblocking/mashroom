@@ -24,6 +24,7 @@ describe('PortalAppController', () => {
             "de": "Test Test Test"
         },
         description: null,
+        tags: [],
         version: '1.0',
         homepage: null,
         author: null,

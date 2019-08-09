@@ -52,6 +52,10 @@ export interface MashroomPortalApp {
      */
     +description: ?string;
     /**
+     * Optional tags
+     */
+    +tags: Array<string>;
+    /**
      * An optional internationalized title (will be shown in the header)
      */
     +title: ?I18NString,
@@ -124,6 +128,7 @@ export interface MashroomPortalApp {
 export type MashroomAvailablePortalApp = {
     +name: string;
     +description: ?string;
+    +tags: ?Array<string>,
     +category: ?string;
     +lastReloadTs: number;
 }

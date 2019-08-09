@@ -81,6 +81,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             name: plugin.name,
             title: plugin.pluginDefinition.title,
             description: plugin.description,
+            tags: plugin.tags,
             version: plugin.pluginPackage.version,
             homepage: plugin.pluginDefinition.homepage || plugin.pluginPackage.homepage,
             author: plugin.pluginDefinition.author || plugin.pluginPackage.author,

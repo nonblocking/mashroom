@@ -248,13 +248,17 @@ export type MashroomPluginDefinition = {
      */
     +name: string;
     /**
-     * The plugin description
+     * Optional plugin description
      */
-    +description: ?string;
+    +description?: ?string;
     /**
-     * Optional required mashroom plugin
+     * Optional list of tags
      */
-    +requires: ?Array<string>;
+    +tags?: ?Array<string>;
+    /**
+     * Optional required plugins
+     */
+    +requires?: ?Array<string>;
     /**
      * Plugin type
      */
@@ -262,11 +266,11 @@ export type MashroomPluginDefinition = {
     /**
      * The bootstrap method
      */
-    +bootstrap: ?string;
+    +bootstrap?: ?string;
     /**
      * The default config of the plugin
      */
-    +defaultConfig: ?MashroomPluginConfig;
+    +defaultConfig?: ?MashroomPluginConfig;
     /**
      * Other properties
      */
@@ -287,6 +291,10 @@ export interface MashroomPlugin {
      * The plugin description from the plugin definition
      */
     +description: ?string;
+    /**
+     * The tags list from the plugin definition
+     */
+    +tags: Array<string>;
     /**
      * The plugin type from the plugin definition
      */

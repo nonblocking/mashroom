@@ -183,11 +183,12 @@ export default class PortalAppController {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
         const {q, updatedSince} = req.query;
 
-        let apps: Array<MashroomAvailablePortalApp> = this.pluginRegistry.portalApps.map((a) => ({
-            name: a.name,
-            description: a.description,
-            category: a.category,
-            lastReloadTs: a.lastReloadTs,
+        let apps: Array<MashroomAvailablePortalApp> = this.pluginRegistry.portalApps.map((app) => ({
+            name: app.name,
+            description: app.description,
+            tags: app.tags,
+            category: app.category,
+            lastReloadTs: app.lastReloadTs,
         }));
 
         if (typeof(q) === 'string') {

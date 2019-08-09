@@ -91,6 +91,10 @@ export default class MashroomPlugin implements MashroomPluginType {
         return this._pluginDefinition.description;
     }
 
+    get tags(): Array<string> {
+        return this._pluginDefinition.tags || [];
+    }
+
     get type(): MashroomPluginTypeType {
         return this._pluginDefinition.type;
     }

@@ -147,8 +147,8 @@ describe('MashroomPluginPackage', () => {
 
         // Set existing plugins
         pluginPackage._pluginDefinitions = [
-            {name: 'Plugin 3', type: 'foo', bootstrap: 'foo', requires: null, defaultConfig: null, description: null},
-            {name: 'Plugin 4', type: 'foo', bootstrap: 'foo', requires: null, defaultConfig: null, description: null}];
+            {name: 'Plugin 3', type: 'foo', bootstrap: 'foo'},
+            {name: 'Plugin 4', type: 'foo', bootstrap: 'foo'}];
 
         expect(pluginPackage.status).toBe('building');
 

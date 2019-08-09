@@ -123,7 +123,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const mashroomDef: MashroomPluginPackageDefinition = packageJson.mashroom;
         const portalAppDefinitions = mashroomDef.plugins.filter((plugin) => plugin.type === 'portal-app');
-        
+
         if (portalAppDefinitions.length === 0) {
             throw new Error(`No plugin of type portal-app found in remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
         }
@@ -204,6 +204,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             name,
             title: definition.title,
             description: definition.description || packageJson.description,
+            tags: definition.tags || [],
             version: packageJson.version,
             homepage: definition.homepage || packageJson.homepage,
             author: definition.author || packageJson.author,
