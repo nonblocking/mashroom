@@ -79,6 +79,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
+            tags: [],
             version: '5.1.2',
             homepage: 'https://www.mashroom-server.com',
             author: 'juergen.kofler@nonblocking.at',
