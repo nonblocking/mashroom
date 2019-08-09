@@ -1,7 +1,7 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {CircularProgress} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {ActivePortalApp} from '../../../type-definitions';
 
@@ -62,9 +62,7 @@ export default class PortalApp extends PureComponent<Props> {
         return (
             <div className='mashroom-sandbox-app-host-wrapper' style={{ width }} ref={this.wrapperElemRef}>
                 <div id={HOST_ELEMENT_ID}>
-                    <div className='loading'>
-                        <FormattedMessage id='loading' />
-                    </div>
+                   <CircularProgress />
                 </div>
                 <div className='mashroom-sandbox-app-host-resizer' onMouseDown={this.resizerMouseDown.bind(this)}>
                     <div className='grip' />

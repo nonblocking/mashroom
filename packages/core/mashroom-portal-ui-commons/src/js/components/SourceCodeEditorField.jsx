@@ -1,7 +1,7 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 import {Controlled as CodeMirror} from 'react-codemirror2'
 import 'codemirror/mode/css/css';
@@ -53,7 +53,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         return (
-            <div className={`mashroom-portal-ui-source-code-editor-field ${error ? 'error' : ''}`}>
+            <div className={`mashroom-portal-ui-source-code-editor-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
                 <FieldLabel labelId={this.props.labelId}/>
                 <div style={{ width: '100%', height: this.props.height || 200 }}>
                     <CodeMirror
@@ -73,7 +73,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
                         }}
                     />
                 </div>
-                {error && <div className='error-message'><FormattedMessage id={this.props.fieldProps.meta.error || ''}/></div>}
+                {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
             </div>
         );
     }

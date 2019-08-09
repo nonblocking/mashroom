@@ -13,7 +13,8 @@ import {
     Button,
     SelectFieldContainer,
     TextFieldContainer,
-    CircularProgress, ErrorMessage
+    CircularProgress,
+    ErrorMessage
 } from '@mashroom/mashroom-portal-ui-commons';
 import Permissions from './Permissions';
 import I18NStringFieldContainer from '../containers/I18NStringFieldContainer';
@@ -265,17 +266,17 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
 
     renderLoadingError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='loadingFailed'/>
-            </ErrorMessage>
+            <div className='error-panel'>
+                <ErrorMessage messageId='loadingFailed' />
+            </div>
         );
     }
 
     renderUpdatingError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='updateFailed'/>
-            </ErrorMessage>
+            <div className='error-panel'>
+                <ErrorMessage messageId='updateFailed' />
+            </div>
         );
     }
 

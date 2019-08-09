@@ -54,11 +54,8 @@ $LABEL_ROW_WIDTH: 140px;
     .mashroom-sandbox-app-host-wrapper {
         box-shadow: 2px 2px 8px #AAA;
         margin-bottom: 30px;
+        min-height: 60px;
         display: flex;
-
-        .loading {
-            padding: 20px;
-        }
 
         .mashroom-sandbox-app-host-resizer {
             cursor: col-resize;
@@ -69,7 +66,7 @@ $LABEL_ROW_WIDTH: 140px;
                 position: absolute;
                 font-family: $FONT_ICON;
                 font-weight: 900;
-                content: '\f58e';
+                content: '\f7a5';
                 color: #CCC;
                 height: 16px;
                 top: calc(50% - 8px);

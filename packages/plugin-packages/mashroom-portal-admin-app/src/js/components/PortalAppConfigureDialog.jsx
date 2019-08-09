@@ -13,7 +13,8 @@ import {
     Button,
     SourceCodeEditorFieldContainer,
     FieldLabel,
-    CircularProgress, ErrorMessage
+    CircularProgress,
+    ErrorMessage
 } from '@mashroom/mashroom-portal-ui-commons';
 import Permissions from './Permissions';
 import {DIALOG_NAME_PORTAL_APP_CONFIGURE} from '../constants';
@@ -174,17 +175,17 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
 
     renderLoadingError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='loadingFailed'/>
-            </ErrorMessage>
+            <div className='error-panel'>
+                <ErrorMessage messageId='loadingFailed' />
+            </div>
         );
     }
 
     renderUpdatingError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='updateFailed'/>
-            </ErrorMessage>
+            <div className='error-panel'>
+                <ErrorMessage messageId='updateFailed' />
+            </div>
         );
     }
 

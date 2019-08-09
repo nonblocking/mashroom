@@ -60,9 +60,7 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
 
     renderError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='loadingFailed'/>
-            </ErrorMessage>
+            <ErrorMessage messageId='loadingFailed' />
         );
     }
 

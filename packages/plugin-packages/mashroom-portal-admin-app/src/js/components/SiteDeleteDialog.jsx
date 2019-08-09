@@ -54,9 +54,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
 
     renderUpdatingError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='updateFailed'/>
-            </ErrorMessage>
+            <ErrorMessage messageId='updateFailed' />
         );
     }
 

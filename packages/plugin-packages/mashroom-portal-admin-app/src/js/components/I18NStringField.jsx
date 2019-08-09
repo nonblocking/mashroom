@@ -2,7 +2,7 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
-import {FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
+import {FieldLabel, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {FieldProps} from 'redux-form';
 import type {IntlShape} from 'react-intl';
@@ -101,11 +101,11 @@ export default class I18NStringField extends PureComponent<Props> {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         return (
-            <div className={`i18nstring-field ${error ? 'error' : ''}`}>
+            <div className={`i18nstring-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
                 <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
                 <div>
                     {this.renderInputs()}
-                    {error && <div className='error-message'><FormattedMessage id={this.props.fieldProps.meta.error || ''}/></div>}
+                    {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''} />}
                 </div>
             </div>
         );

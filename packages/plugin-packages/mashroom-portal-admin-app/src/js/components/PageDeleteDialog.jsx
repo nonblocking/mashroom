@@ -75,9 +75,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
 
     renderUpdatingError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='updateFailed'/>
-            </ErrorMessage>
+            <ErrorMessage messageId='updateFailed' />
         );
     }
 

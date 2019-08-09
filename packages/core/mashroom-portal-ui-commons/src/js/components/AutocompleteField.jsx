@@ -1,9 +1,9 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
 import AutoSuggest from 'react-autosuggest';
 import FieldLabel from './FieldLabel';
+import ErrorMessage from './ErrorMessage';
 
 import type {Node} from 'react';
 import type {FieldProps} from 'redux-form';
@@ -145,7 +145,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         });
 
         return (
-            <div className={`mashroom-portal-autocomplete-field ${error ? 'error' : ''}`}>
+            <div className={`mashroom-portal-autocomplete-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
                 <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
                 <AutoSuggest
                     suggestions={this.state.suggestions}
@@ -167,7 +167,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                         suggestion: 'suggestion-list-item',
                     }}
                 />
-                {error && <div className='error-message'><FormattedMessage id={this.props.fieldProps.meta.error || ''}/></div>}
+                {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
             </div>
         );
     }

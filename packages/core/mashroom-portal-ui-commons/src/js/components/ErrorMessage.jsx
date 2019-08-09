@@ -1,11 +1,10 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-
-import type {Node} from 'React';
+import {FormattedMessage} from 'react-intl';
 
 type Props = {
-    children: Node,
+    messageId: string,
 };
 
 export default class ErrorMessage extends PureComponent<Props> {
@@ -13,7 +12,7 @@ export default class ErrorMessage extends PureComponent<Props> {
     render() {
         return (
             <div className='mashroom-portal-ui-error-message'>
-                {this.props.children}
+                <FormattedMessage id={this.props.messageId}/>
             </div>
         );
     }

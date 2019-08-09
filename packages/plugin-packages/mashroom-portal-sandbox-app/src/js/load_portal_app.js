@@ -68,6 +68,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
                     messageBus
                 });
 
+
                 const result = bootstrapFn(hostElem, setup, modifiedClientServices);
                 if (typeof(result.then) === 'function') {
                     result.then(

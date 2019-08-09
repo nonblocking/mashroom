@@ -28,9 +28,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
 
     renderError() {
         return (
-            <ErrorMessage>
-                <FormattedMessage id='loadingFailed'/>
-            </ErrorMessage>
+            <ErrorMessage messageId='loadingFailed' />
         );
     }
 

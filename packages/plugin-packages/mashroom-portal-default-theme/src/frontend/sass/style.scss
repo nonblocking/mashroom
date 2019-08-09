@@ -5,7 +5,7 @@ $COLOR_BLACK: #343633;
 $COLOR_WHITE: white;
 $COLOR_GREY: #888;
 $COLOR_GREY_LIGHT: #999;
-$COLOR_ERROR: #e23e2b;
+$COLOR_ERROR: #FF0033;
 
 $COLOR_PRIMARY: #645e9d;
 $COLOR_PRIMARY_LIGHT: #938bce;
@@ -574,13 +574,24 @@ footer {
 
 }
 
-.error-message {
+.mashroom-portal-ui-error-message {
     color: $COLOR_ERROR;
     font-size: 0.9em;
-    padding: 3px 0;
+    padding: 3px 0 3px 12px;
+    position: relative;
+
+    &:before {
+        font-family: $FONT_ICON;
+        font-weight: 900;
+        content: '\f12a';
+        position: absolute;
+        left: 2px;
+        top: 4px;
+        font-size: 0.9em;
+    }
 }
 
-.error {
+.mashroom-portal-ui-input.error {
     input, select, textarea {
         border-color: $COLOR_ERROR !important;
     }

@@ -1,7 +1,7 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
 import type {FieldProps} from 'redux-form';
@@ -31,11 +31,11 @@ export default class TextareaField extends PureComponent<Props> {
         });
 
         return (
-            <div className={`mashroom-portal-ui-textarea-field ${error ? 'error' : ''}`}>
+            <div className={`mashroom-portal-ui-textarea-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
                 <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
                 <div>
                     <textarea {...inputProps}/>
-                    {error && <div className='error-message'><FormattedMessage id={this.props.fieldProps.meta.error || ''}/></div>}
+                    {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
                 </div>
             </div>
         );

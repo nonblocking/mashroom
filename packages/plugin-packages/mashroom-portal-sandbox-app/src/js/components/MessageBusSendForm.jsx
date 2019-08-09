@@ -3,7 +3,6 @@
 import React, {PureComponent} from 'react';
 import {
     Form,
-    TextFieldContainer,
     SelectFieldContainer,
     TextareaFieldContainer,
     Button

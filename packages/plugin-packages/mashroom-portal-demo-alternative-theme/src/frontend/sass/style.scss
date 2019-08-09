@@ -570,13 +570,13 @@ footer {
 
 }
 
-.error-message {
+mashroom-portal-ui-error-message {
     color: $COLOR_ERROR;
     font-size: 0.9em;
     padding: 3px 0;
 }
 
-.error {
+.mashroom-portal-ui-input.error {
     input, select, textarea {
         border-color: $COLOR_ERROR !important;
     }

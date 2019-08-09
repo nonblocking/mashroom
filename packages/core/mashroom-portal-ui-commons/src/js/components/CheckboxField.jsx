@@ -1,7 +1,7 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
 import type {FieldProps} from 'redux-form';
@@ -24,10 +24,10 @@ export default class CheckboxField extends PureComponent<Props> {
         });
 
         return (
-            <div className={`mashroom-portal-ui-checkbox-field ${error ? 'error' : ''}`}>
+            <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
                 <input className='mashroom-portal-checkbox' {...inputProps}/>
                 {this.props.labelId ? <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/> : <label htmlFor={this.props.id}>&nbsp;</label>}
-                {error && <div className='error-message'><FormattedMessage id={this.props.fieldProps.meta.error || ''}/></div>}
+                {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
             </div>
         );
     }
