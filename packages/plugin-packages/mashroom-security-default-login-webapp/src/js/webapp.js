@@ -125,7 +125,10 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
 
 const backToRef = (req: ExpressRequest, res: ExpressResponse) => {
     let backUrl = req.query.ref;
-    if (!backUrl) {
+    if (backUrl) {
+        let buff = new Buffer(backUrl, 'base64');
+        backUrl = buff.toString('ascii');
+    } else {
         backUrl = context.indexPage;
     }
 

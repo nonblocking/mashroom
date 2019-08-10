@@ -38,7 +38,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     async authenticate(request: ExpressRequest, response: ExpressResponse) {
-        response.redirect(`${this._loginPage}?ref=${request.originalUrl}`);
+        let buff = new Buffer(decodeURI(request.originalUrl));
+        const base64encodedReferrer = buff.toString('base64');
+        response.redirect(`${this._loginPage}?ref=${base64encodedReferrer}`);
         return {
             status: 'deferred'
         };

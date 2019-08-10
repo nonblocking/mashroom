@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.0.92
+
+ * Fixed: Initial query parameters got lost during redirect after login
+
 ## 1.0.91
 
  * Added optional _tags_ (array) property to the plugin definition 
