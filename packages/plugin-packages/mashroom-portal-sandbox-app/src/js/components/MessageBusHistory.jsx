@@ -40,15 +40,19 @@ export default class MessageBusHistory extends PureComponent<Props> {
                 <tbody>
                 {
                     messages.map((m, idx) => (
-                        <tr id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}`} key={String(idx)}>
+                        <tr key={String(idx)}>
                             <td>
                                 {String(idx + 1)}
                             </td>
-                            <td id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}-topic`}>
-                                {m.topic}
+                            <td>
+                                <div id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}-topic`}>
+                                    {m.topic}
+                                </div>
                             </td>
-                            <td id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}-message`}>
-                                <pre>{JSON.stringify(m.data, null, 2)}</pre>
+                            <td >
+                                <pre id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}-message`}>
+                                    {JSON.stringify(m.data, null, 2)}
+                                </pre>
                             </td>
                         </tr>
                     ))

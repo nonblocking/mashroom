@@ -20,7 +20,7 @@
                     {{error}}
                 </div>
             {{/if}}
-            <form method="POST" action="?{{query}}">
+            <form id="login-form" method="POST" action="?{{query}}">
                 <div class="login-form-row">
                     <div class="login-form-label">
                         <label for="username">{{__ "username"}}</label>
@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="login-form-row login-form-actions">
-                    <input type="submit" value="{{__ 'login'}}"/>
+                    <input id="login-submit" type="submit" value="{{__ 'login'}}"/>
                 </div>
             </form>
         </div>
