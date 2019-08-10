@@ -26,3 +26,6 @@ btoa(JSON.stringify({
 }))
 ```
 * *sbAppConfig*: The Base64 encoded _appConfig_ object that should be passed to the app.
+
+For an example how to use the sandbox in an end-2-end test see: 
+https://github.com/nonblocking/mashroom-portal-quickstart/tree/master/plugin-packages/example-react-app/test-e2e/app.test.js
