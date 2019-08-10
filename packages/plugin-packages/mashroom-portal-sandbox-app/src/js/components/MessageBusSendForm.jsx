@@ -79,7 +79,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
                         <TextareaFieldContainer id='mashroom-sandbox-send-message-message' name='message' labelId='message' rows={4} />
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
-                        <Button id='send' type='submit' labelId='send'/>
+                        <Button id='mashroom-sandbox-send-message-send' type='submit' labelId='send'/>
                     </div>
                 </Form>
             </div>
