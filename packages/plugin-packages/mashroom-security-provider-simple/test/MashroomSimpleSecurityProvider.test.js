@@ -24,7 +24,7 @@ describe('MashroomSimpleSecurityProvider', () => {
 
         expect(result).toBeTruthy();
         expect(result.status).toBe('deferred');
-        expect(redirectUrl).toBe('/login?ref=/foo/bar');
+        expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=');
     });
 
     it('processes the form login correctly', async () => {

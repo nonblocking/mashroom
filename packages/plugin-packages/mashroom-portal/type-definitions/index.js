@@ -128,7 +128,7 @@ export interface MashroomPortalApp {
 export type MashroomAvailablePortalApp = {
     +name: string;
     +description: ?string;
-    +tags: ?Array<string>,
+    +tags: Array<string>,
     +category: ?string;
     +lastReloadTs: number;
 }
