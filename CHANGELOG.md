@@ -3,8 +3,9 @@
 
 ## 1.0.92
 
- * Portal: The app filter in Admin UI considers now also tags. And categories are sorted alphabetically.
- * Portal: Initial query parameters got lost during redirect after login
+ * Portal: The app filter in Admin UI considers now _tags_ also. 
+   And the categories are sorted alphabetically now.
+ * Portal: All initial query parameters are now added again after login
 
 ## 1.0.91
 
