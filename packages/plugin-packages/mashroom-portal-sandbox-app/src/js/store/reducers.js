@@ -5,9 +5,9 @@ import {
     SET_AVAILABLE_PORTAL_APPS,
     SET_SELECTED_PORTAL_APP,
     SET_ACTIVE_PORTAL_APP,
-    SET_SUBSCRIBED_TOPICS,
-    ADD_RECEIVED_MESSAGE,
-    ADD_SENT_MESSAGE,
+    SET_TOPICS_SUBSCRIBED_BY_APP,
+    ADD_MESSAGE_PUBLISHED_BY_APP,
+    ADD_MESSAGE_PUBLISHED_BY_SANDBOX,
     SET_HOST_WIDTH
 } from './actions';
 
@@ -65,26 +65,26 @@ const activePortalApp = (state: ?ActivePortalApp, action: Action): ?ActivePortal
 const messageBusCom = (state: MessageBusCommunication, action: Action): MessageBusCommunication => {
     if (typeof(state) === 'undefined') {
         return {
-            subscribedTopics: [],
-            receivedMessages: [],
-            sentMessages:[]
+            topicsSubscribedByApp: [],
+            publishedByApp: [],
+            publishedBySandbox:[]
         };
     }
 
     switch (action.type) {
-        case SET_SUBSCRIBED_TOPICS: {
+        case SET_TOPICS_SUBSCRIBED_BY_APP: {
             return Object.assign({}, state, {
-                subscribedTopics: action.topics
+                topicsSubscribedByApp: action.topics
             });
         }
-        case ADD_RECEIVED_MESSAGE: {
+        case ADD_MESSAGE_PUBLISHED_BY_APP: {
             return Object.assign({}, state, {
-                receivedMessages: [...state.receivedMessages, action.message]
+                publishedByApp: [...state.publishedByApp, action.message]
             });
         }
-        case ADD_SENT_MESSAGE: {
+        case ADD_MESSAGE_PUBLISHED_BY_SANDBOX: {
             return Object.assign({}, state, {
-                sentMessages: [...state.sentMessages, action.message]
+                publishedBySandbox: [...state.publishedBySandbox, action.message]
             });
         }
         default:

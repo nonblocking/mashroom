@@ -7,10 +7,10 @@ import type {MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
 export const SET_AVAILABLE_PORTAL_APPS = 'SET_AVAILABLE_PORTAL_APPS';
 export const SET_SELECTED_PORTAL_APP = 'SET_SELECTED_PORTAL_APP';
 export const SET_ACTIVE_PORTAL_APP = 'SET_ACTIVE_PORTAL_APP';
-export const ADD_RECEIVED_MESSAGE = 'ADD_RECEIVED_MESSAGE';
-export const ADD_SENT_MESSAGE = 'ADD_SENT_MESSAGE';
+export const ADD_MESSAGE_PUBLISHED_BY_APP = 'ADD_MESSAGE_PUBLISHED_BY_APP';
+export const ADD_MESSAGE_PUBLISHED_BY_SANDBOX = 'ADD_MESSAGE_PUBLISHED_BY_SANDBOX';
 export const SET_HOST_WIDTH = 'SET_HOST_WIDTH';
-export const SET_SUBSCRIBED_TOPICS = 'SET_SUBSCRIBED_TOPICS';
+export const SET_TOPICS_SUBSCRIBED_BY_APP = 'SET_TOPICS_SUBSCRIBED_BY_APP';
 
 export const setAvailablePortalApps = (availablePortalApps: Array<MashroomAvailablePortalApp>) => {
     return {
@@ -33,16 +33,16 @@ export const setActivePortalApp = (activePortalApp: ?ActivePortalApp) => {
     };
 };
 
-export const addReceivedMessage = (message: MessageBusMessage) => {
+export const addMessagePublishedByApp = (message: MessageBusMessage) => {
     return {
-        type: ADD_RECEIVED_MESSAGE,
+        type: ADD_MESSAGE_PUBLISHED_BY_APP,
         message,
     };
 };
 
-export const addSentMessage = (message: MessageBusMessage) => {
+export const addMessagePublishedBySandbox = (message: MessageBusMessage) => {
     return {
-        type: ADD_SENT_MESSAGE,
+        type: ADD_MESSAGE_PUBLISHED_BY_SANDBOX,
         message,
     };
 };
@@ -54,9 +54,9 @@ export const setHostWidth = (width: string) => {
     };
 };
 
-export const setSubscribedTopics = (topics: Array<string>) => {
+export const setTopicsSubscribedByApp = (topics: Array<string>) => {
     return {
-        type: SET_SUBSCRIBED_TOPICS,
+        type: SET_TOPICS_SUBSCRIBED_BY_APP,
         topics,
     };
 };

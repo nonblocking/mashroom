@@ -5,7 +5,7 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {reset as resetForm} from 'redux-form';
 import MessageBusSendForm from '../components/MessageBusSendForm';
-import {addSentMessage} from '../store/actions';
+import {addMessagePublishedBySandbox} from '../store/actions';
 
 import type {ComponentType} from 'react';
 import type {
@@ -22,23 +22,23 @@ type OwnProps = {
 
 type StateProps = {
     activePortalApp: ?ActivePortalApp,
-    subscribedTopics: Array<string>,
+    topicsSubscribedByApp: Array<string>,
 }
 
 type DispatchProps = {
-    addSentMessage: (MessageBusMessage) => void,
+    addMessagePublishedBySandbox: (MessageBusMessage) => void,
     resetForm: (string) => void,
 }
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
     return {
         activePortalApp: state.activePortalApp,
-        subscribedTopics: state.messageBusCom.subscribedTopics,
+        topicsSubscribedByApp: state.messageBusCom.topicsSubscribedByApp,
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
-    addSentMessage: (message: MessageBusMessage) => { dispatch(addSentMessage(message)); },
+    addMessagePublishedBySandbox: (message: MessageBusMessage) => { dispatch(addMessagePublishedBySandbox(message)); },
     resetForm: (id: string) => { dispatch(resetForm(id)); }
 });
 

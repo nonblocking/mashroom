@@ -9,10 +9,10 @@ export default {
     appSetup: 'App Setup',
     topic: 'Topic',
     message: 'Message',
-    receivedMessages: 'Received Msg',
-    sentMessages: 'Sent Msg',
+    publishedByApp: 'Published by App',
+    publishedBySandbox: 'Published by Sandbox',
     load: 'Load',
-    send: 'Send Message',
+    publishMessage: 'Publish Message',
     loading: 'Loading...',
     errorTopicMandatory: 'Topic is mandatory',
     errorInvalidJSON: 'Error: Invalid JSON'

@@ -14,8 +14,8 @@ import type {ActivePortalApp, MessageBusMessage} from '../../../type-definitions
 type Props = {
     messageBus: MashroomPortalMessageBus,
     activePortalApp: ?ActivePortalApp,
-    subscribedTopics: Array<string>,
-    addSentMessage: (MessageBusMessage) => void,
+    topicsSubscribedByApp: Array<string>,
+    addMessagePublishedBySandbox: (MessageBusMessage) => void,
     resetForm: (string) => void,
 }
 
@@ -47,11 +47,11 @@ export default class MessageBusSendForm extends PureComponent<Props> {
     }
 
     onSubmit(values: any) {
-        const { messageBus, addSentMessage, resetForm } = this.props;
+        const { messageBus, addMessagePublishedBySandbox, resetForm } = this.props;
         const { topic, message } = values;
         const data = JSON.parse(message);
         messageBus.publish(topic, data);
-        addSentMessage({
+        addMessagePublishedBySandbox({
             topic,
             data
         });
@@ -59,27 +59,27 @@ export default class MessageBusSendForm extends PureComponent<Props> {
     }
 
     render() {
-        const { activePortalApp, subscribedTopics} = this.props;
+        const { activePortalApp, topicsSubscribedByApp} = this.props;
         if (!activePortalApp) {
             return null;
         }
 
-        const topicOptions = subscribedTopics.map((t) => ({
+        const topicOptions = topicsSubscribedByApp.map((t) => ({
             value: t,
             label: t
         }));
 
         return (
-            <div className='mashroom-sandbox-app-messagebus-send-form'>
-                <Form formId='mashroom-sandbox-app-send-message-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
+            <div className='mashroom-sandbox-app-messagebus-publish-form'>
+                <Form formId='mashroom-sandbox-app-publish-message-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <SelectFieldContainer id='mashroom-sandbox-send-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
+                        <SelectFieldContainer id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
                     </div>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <TextareaFieldContainer id='mashroom-sandbox-send-message-message' name='message' labelId='message' rows={4} />
+                        <TextareaFieldContainer id='mashroom-sandbox-publish-message-message' name='message' labelId='message' rows={4} />
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
-                        <Button id='mashroom-sandbox-send-message-send' type='submit' labelId='send'/>
+                        <Button id='mashroom-sandbox-publish-message' type='submit' labelId='publishMessage'/>
                     </div>
                 </Form>
             </div>

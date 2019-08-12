@@ -43,9 +43,9 @@ export type MessageBusMessage = {
 }
 
 export type MessageBusCommunication = {
-    +subscribedTopics: Array<string>,
-    +receivedMessages: Array<MessageBusMessage>,
-    +sentMessages: Array<MessageBusMessage>,
+    +topicsSubscribedByApp: Array<string>,
+    +publishedByApp: Array<MessageBusMessage>,
+    +publishedBySandbox: Array<MessageBusMessage>,
 }
 
 export type PortalAppHost = {

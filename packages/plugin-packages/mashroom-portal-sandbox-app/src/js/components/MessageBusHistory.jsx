@@ -12,7 +12,6 @@ import type {
 type Props = {
     activePortalApp: ?ActivePortalApp,
     messageBusCom: MessageBusCommunication,
-    addReceivedMessage: (MessageBusMessage) => void,
 }
 
 export default class MessageBusHistory extends PureComponent<Props> {
@@ -45,12 +44,12 @@ export default class MessageBusHistory extends PureComponent<Props> {
                                 {String(idx + 1)}
                             </td>
                             <td>
-                                <div id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}-topic`}>
+                                <div id={`mashroom-sandbox-app-${id}-${String(idx + 1)}-topic`}>
                                     {m.topic}
                                 </div>
                             </td>
                             <td >
-                                <pre id={`mashroom-sandbox-app-${id}-message-${String(idx + 1)}-message`}>
+                                <pre id={`mashroom-sandbox-app-${id}-${String(idx + 1)}-message`}>
                                     {JSON.stringify(m.data, null, 2)}
                                 </pre>
                             </td>
@@ -63,7 +62,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
     }
 
     render() {
-        const { activePortalApp, messageBusCom : { receivedMessages, sentMessages } } = this.props;
+        const { activePortalApp, messageBusCom : { publishedByApp, publishedBySandbox } } = this.props;
         if (!activePortalApp) {
             return null;
         }
@@ -71,15 +70,15 @@ export default class MessageBusHistory extends PureComponent<Props> {
         return (
             <div className='mashroom-sandbox-app-messagebus-history'>
                 <div className='mashroom-sandbox-app-output-row'>
-                    <FormattedMessage id='receivedMessages' />
+                    <FormattedMessage id='publishedByApp' />
                     <div>
-                        {this.renderMessageTable('received', receivedMessages)}
+                        {this.renderMessageTable('published-by-app', publishedByApp)}
                     </div>
                 </div>
                 <div className='mashroom-sandbox-app-output-row'>
-                    <FormattedMessage id='sentMessages' />
+                    <FormattedMessage id='publishedBySandbox' />
                     <div>
-                        {this.renderMessageTable('sent', sentMessages)}
+                        {this.renderMessageTable('published-by-sandbox', publishedBySandbox)}
                     </div>
                 </div>
             </div>

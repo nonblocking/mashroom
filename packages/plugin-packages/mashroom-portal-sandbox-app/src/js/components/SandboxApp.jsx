@@ -10,7 +10,7 @@ import PortalAppHostContainer from '../containers/PortalAppHostContainer';
 import PortalAppContainer from '../containers/PortalAppContainer';
 import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer';
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
-import {addReceivedMessage, setSubscribedTopics} from '../store/actions';
+import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 
 import type {MashroomPortalAppService, MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
 import type { DummyMessageBus as DummyMessageBusType } from '../../../type-definitions';
@@ -29,13 +29,13 @@ export default class SandboxApp extends PureComponent<Props> {
         super();
         this.messageBus = new DummyMessageBus();
         this.messageBus.onMessageSent((topic, data) => {
-            store.dispatch(addReceivedMessage({
+            store.dispatch(addMessagePublishedByApp({
                 topic,
                 data
             }))
         });
         this.messageBus.onTopicsChanged((topics) => {
-            store.dispatch(setSubscribedTopics(topics));
+            store.dispatch(setTopicsSubscribedByApp(topics));
         });
     }
 

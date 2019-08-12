@@ -10,9 +10,9 @@ let initialState: State = {
     selectedPortalApp: null,
     activePortalApp: null,
     messageBusCom: {
-        subscribedTopics: [],
-        receivedMessages: [],
-        sentMessages:[]
+        topicsSubscribedByApp: [],
+        publishedByApp: [],
+        publishedBySandbox:[]
     },
     host: {
         width:'100%'
