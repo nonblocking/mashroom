@@ -755,11 +755,11 @@ footer {
     }
 }
 
-#mashroom-portal-auto-logout-warning {
+#mashroom-portal-auth-expires-warning {
     position: fixed;
     top: -100px;
-    left: 0;
-    width: 100%;
+    left: calc(50% - 170px);
+    width: 320px;
     transition: top 1s ease-out;
     z-index: 20000;
 
@@ -767,9 +767,7 @@ footer {
         top: 0;
     }
 
-    .mashroom-portal-auto-logout-warning-message {
-        display: table;
-        margin: 0 auto;
+    .mashroom-portal-auth-expires-warning-message {
         background-color: white;
         opacity: 0.8;
         padding: 10px 20px;

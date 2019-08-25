@@ -8,9 +8,9 @@ import type {$Request as Request} from 'express';
 export const dummyLoggerFactory = () => {
     const dummyLogger = {
         debug: console.debug,
-        info: console.debug,
-        warn: console.debug,
-        error: console.debug,
+        info: console.info,
+        warn: console.warn,
+        error: console.error,
         withContext: () => dummyLogger
     };
 

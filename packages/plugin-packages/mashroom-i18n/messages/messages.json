@@ -3,7 +3,7 @@
     "password": "Password",
     "login": "Login",
     "logout": "Logout",
-    "autoLogoutWarning": "You will automatically be logged out in <span id='mashroom-portal-auto-logout-seconds'>0</span> seconds",
+    "authenticationExpiresWarning": "The authentication expires in <span id='mashroom-portal-auth-expires-seconds'>0</span> seconds",
     "loginFailed": "Login failed!",
     "portalAppLoadingFailed": "Portal app <strong>${name}</strong> is temporarily not available"
 }

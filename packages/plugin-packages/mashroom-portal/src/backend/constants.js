@@ -26,7 +26,7 @@ export const WINDOW_VAR_PORTAL_LANGUAGE = 'MashroomPortalLanguage';
 export const WINDOW_VAR_PORTAL_DEV_MODE = 'MashroomPortalDevMode';
 export const WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC = 'MashroomPortalCreateAppWrapperFunc';
 export const WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC = 'MashroomPortalCreateLoadingErrorFunc';
-export const WINDOW_VAR_PORTAL_LOGOUT_AFTER_INACTIVITY_SEC = 'MashroomPortalLogoutAfterInactivitySec';
+export const WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION = 'MashroomPortalCheckAuthenticationExpiration';
 export const WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG = 'MashroomPortalAppLoadingFailedMsg';
 
 export const HTTP_HEADER_REST_PROXY_USER = 'X-USER-NAME';

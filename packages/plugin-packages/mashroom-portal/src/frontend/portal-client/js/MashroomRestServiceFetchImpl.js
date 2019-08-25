@@ -15,33 +15,33 @@ export default class RestServiceFetchImpl implements MashroomRestService {
         this._apiBasePath = apiBasePath || '';
     }
 
-    get(path: string): Promise<any> {
-        return this._fetch(path, 'GET');
+    get(path: string, extraHeaders?: {}): Promise<any> {
+        return this._fetch(path, 'GET', null, extraHeaders);
     }
 
-    post(path: string, data: any): Promise<any> {
-        return this._fetch(path, 'POST', data);
+    post(path: string, data: any, extraHeaders?: {}): Promise<any> {
+        return this._fetch(path, 'POST', data, extraHeaders);
     }
 
-    put(path: string, data: any): Promise<void> {
-        return this._fetch(path, 'PUT', data);
+    put(path: string, data: any, extraHeaders?: {}): Promise<void> {
+        return this._fetch(path, 'PUT', data, extraHeaders);
     }
 
-    delete(path: string): Promise<void> {
-        return this._fetch(path, 'DELETE');
+    delete(path: string, extraHeaders?: {}): Promise<void> {
+        return this._fetch(path, 'DELETE', null, extraHeaders);
     }
 
     withBasePath(apiBasePath: string) {
         return new RestServiceFetchImpl(apiBasePath);
     }
 
-    _fetch(path: string, method: HttpMethod = 'GET', jsonData: ?any): Promise<any> {
+    _fetch(path: string, method: HttpMethod = 'GET', jsonData: ?any, extraHeaders?: {}): Promise<any> {
         return new Promise((resolve, reject) => {
 
-            const headers: any = {
+            const headers: any = Object.assign({},extraHeaders || {}, {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-            };
+            });
 
             if (method !== 'GET') {
                 const metaCsrfToken = document.querySelector('meta[name="csrf-token"]');

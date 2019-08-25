@@ -15,6 +15,7 @@ import PortalRolesController from './controllers/PortalRolesController';
 import PortalRestProxyController from './controllers/PortalRestProxyController';
 import PortalLogoutController from './controllers/PortalLogoutController';
 import PortalLanguageController from './controllers/PortalLanguageController';
+import PortalUserController from './controllers/PortalUserController';
 import PortalLogController from './controllers/PortalLogController';
 import {
     PORTAL_APP_API_PATH,
@@ -42,6 +43,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     const portalRestProxyController = new PortalRestProxyController(pluginRegistry);
     const portalLogoutController = new PortalLogoutController();
     const portalLanguageController = new PortalLanguageController();
+    const portalUserController = new PortalUserController();
     const portalLogController = new PortalLogController(pluginRegistry);
 
     const privateRoutes = express.Router();
@@ -82,7 +84,8 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     restApi.get('/themes', portalThemeController.getAvailablePortalThemes.bind(portalThemeController));
     restApi.get('/layouts', portalLayoutController.getAvailablePortalLayouts.bind(portalLayoutController));
     restApi.get('/roles', portalRolesController.getExistingRoles.bind(portalRolesController));
-    restApi.put('/users/authenticated/lang', portalLanguageController.setUserLanguage.bind(portalLanguageController));
+    restApi.put('/users/authenticated/lang', portalUserController.setAuthenticatedUserLanguage.bind(portalLanguageController));
+    restApi.get('/users/authenticated/authExpiration', portalUserController.getAuthenticatedUserAuthenticationExpiration.bind(portalLanguageController));
     restApi.get('/languages', portalLanguageController.getAvailableLanguages.bind(portalLanguageController));
     restApi.get('/languages/default', portalLanguageController.getDefaultLanguage.bind(portalLanguageController));
     restApi.get('/logout', portalLogoutController.logout.bind(portalLogoutController));

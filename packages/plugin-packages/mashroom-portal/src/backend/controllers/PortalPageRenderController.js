@@ -18,7 +18,7 @@ import {
     WINDOW_VAR_PORTAL_PAGE_ID,
     WINDOW_VAR_PORTAL_SITE_ID,
     WINDOW_VAR_PORTAL_LANGUAGE,
-    WINDOW_VAR_PORTAL_LOGOUT_AFTER_INACTIVITY_SEC,
+    WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION,
     WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG,
     WINDOW_VAR_PORTAL_DEV_MODE,
 } from '../constants';
@@ -141,18 +141,14 @@ export default class PortalPageRenderController {
         }
 
         const devMode = serverConfig.pluginPackageFolders && serverConfig.pluginPackageFolders.some((ppf) => ppf.devMode);
-        let autoLogoutAfterInactivitySec: number = -1;
+        let checkAuthenticationExpiration = false;
         if (user) {
-            try {
-                autoLogoutAfterInactivitySec = parseInt(context.portalPluginConfig.autoLogoutAfterInactivitySec);
-            } catch (error) {
-                logger.error('Could not parse autoLogoutAfterInactivitySec value', {error});
-            }
+            checkAuthenticationExpiration = true;
         }
 
         const appLoadingFailedMsg = i18nService.getMessage('portalAppLoadingFailed', lang);
         const portalLayout = await this._loadLayout(layoutName, logger);
-        const portalResourcesHeader = this._resourcesHeader(req, portalPath, site.siteId, sitePath, pageRef.pageId, lang, appLoadingFailedMsg, autoLogoutAfterInactivitySec, devMode);
+        const portalResourcesHeader = this._resourcesHeader(req, portalPath, site.siteId, sitePath, pageRef.pageId, lang, appLoadingFailedMsg, checkAuthenticationExpiration, devMode);
         const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName);
         const siteBasePath = `${portalPath}${sitePath}`;
         let resourcesBasePath = null;
@@ -261,7 +257,7 @@ export default class PortalPageRenderController {
         return localizedSite;
     }
 
-    _resourcesHeader(req: ExpressRequest, portalPrefix: string, siteId: string, sitePath: string, pageId: string, lang: string, appLoadingFailedMsg: string, autoLogoutAfterInactivitySec: number, devMode: boolean) {
+    _resourcesHeader(req: ExpressRequest, portalPrefix: string, siteId: string, sitePath: string, pageId: string, lang: string, appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, devMode: boolean) {
         return `
             <script>
                 window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${portalPrefix}${PORTAL_PRIVATE_PATH}${PORTAL_APP_API_PATH}';
@@ -270,7 +266,7 @@ export default class PortalPageRenderController {
                 window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
                 window['${WINDOW_VAR_PORTAL_LANGUAGE}'] = '${lang}';
                 window['${WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG}'] = '${appLoadingFailedMsg}';
-                window['${WINDOW_VAR_PORTAL_LOGOUT_AFTER_INACTIVITY_SEC}'] = ${autoLogoutAfterInactivitySec};
+                window['${WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION}'] = ${String(checkAuthenticationExpiration)};
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true` : ''}
             </script>
             <script src="${portalPrefix}${PORTAL_PRIVATE_PATH}/${PORTAL_JS_FILE}?v=${this.startTimestamp}"></script>

@@ -14,7 +14,8 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {GroupToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
 
-const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_AUTH';
+const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_AUTH_USER';
+const AUTHENTICATION_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_AUTH_EXPIRES';
 
 export default class MashroomLdapSecurityProvider implements MashroomSecurityProvider {
 
@@ -24,15 +25,17 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     _groupToRoleMappingPath: ?string;
     _groupToRoleMapping: ?GroupToRoleMapping;
     _ldapClient: LdapClient;
+    _authenticationTimeoutSec: number;
     _logger: MashroomLogger;
 
-    constructor(loginPage: string, userSearchFilter: string, groupSearchFilter: string, groupToRoleMappingPath: ?string, ldapClient: LdapClient, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
+    constructor(loginPage: string, userSearchFilter: string, groupSearchFilter: string, groupToRoleMappingPath: ?string, ldapClient: LdapClient, serverRootFolder: string, authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.security.provider.ldap');
         this._loginPage = loginPage;
         this._userSearchFilter = userSearchFilter;
         this._groupSearchFilter = groupSearchFilter;
         this._groupToRoleMappingPath = groupToRoleMappingPath;
         this._ldapClient = ldapClient;
+        this._authenticationTimeoutSec = authenticationTimeoutSec;
 
         if (groupToRoleMappingPath) {
             if (!path.isAbsolute(groupToRoleMappingPath)) {
@@ -49,12 +52,24 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     async authenticate(request: ExpressRequest, response: ExpressResponse) {
-        let buff = new Buffer(decodeURI(request.originalUrl));
+        let buff = Buffer.from(decodeURI(request.originalUrl));
         const base64encodedReferrer = buff.toString('base64');
         response.redirect(`${this._loginPage}?ref=${base64encodedReferrer}`);
         return {
             status: 'deferred'
         };
+    }
+
+    async refreshAuthentication(request: ExpressRequest) {
+        request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+    }
+
+    getAuthenticationExpiration(request: ExpressRequest) {
+        return request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+    }
+
+    async revokeAuthentication() {
+        // Nothing to do, the session has been regenerated at this point
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
@@ -95,6 +110,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             };
 
             request.session[AUTHENTICATION_RESULT_SESSION_KEY] = mashroomUser;
+            request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
 
             return {
                 success: true
@@ -106,11 +122,15 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         };
     }
 
-    async revokeAuthentication(request: ExpressRequest) {
-        // Nothing to do, the session has been regenerated at this point
-    }
-
     getUser(request: ExpressRequest) {
+        const timeout: ?number = request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        if (!timeout) {
+            return null;
+        }
+        if (timeout < Date.now()) {
+            delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+            return null;
+        }
         return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
     }
 

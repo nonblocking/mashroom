@@ -558,7 +558,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     _checkForAppUpdates() {
         // console.info('Checking for app updates since: ', this._lastUpdatedCheckTs);
 
-        this._restService.get(`/portal-apps?updatedSince=${this._lastUpdatedCheckTs}`).then(
+        this._restService.get(`/portal-apps?updatedSince=${this._lastUpdatedCheckTs}`, {
+            'x-mashroom-does-not-extend-auth': 1
+        }).then(
             (updatedApps: Array<MashroomAvailablePortalApp>) => {
                 if (updatedApps && updatedApps.length > 0) {
                     console.info('Updated apps found:', updatedApps);

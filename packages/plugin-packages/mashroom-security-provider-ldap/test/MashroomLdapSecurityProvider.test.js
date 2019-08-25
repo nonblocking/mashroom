@@ -19,7 +19,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -59,7 +59,7 @@ describe('MashroomLdapSecurityProvider', () => {
             session: {}
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
 
         const result = await provider.login(req, 'username', 'passwd');
 
@@ -68,9 +68,51 @@ describe('MashroomLdapSecurityProvider', () => {
 
         const user = provider.getUser(req);
         expect(user).toBeTruthy();
-        expect(user.username).toBe('username');
-        expect(user.displayName).toBe('User1');
-        expect(user.groups).toEqual(['GROUP1']);
-        expect(user.roles).toEqual(['ROLE1', 'ROLE2']);
+        if (user) {
+            expect(user.username).toBe('username');
+            expect(user.displayName).toBe('User1');
+            expect(user.groups).toEqual(['GROUP1']);
+            expect(user.roles).toEqual(['ROLE1', 'ROLE2']);
+        }
+    });
+
+    it('revokes the authentication after given timeout', () => {
+        const ldapClient: any = {
+        };
+        const req: any = {
+            session: {
+                ['__MASHROOM_SECURITY_AUTH_USER']: { username: 'john' },
+                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: Date.now() + 2000
+            }
+        };
+
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+
+        const user1 = provider.getUser(req);
+        expect(user1).toBeTruthy();
+
+        req.session['__MASHROOM_SECURITY_AUTH_EXPIRES'] = Date.now() - 1;
+        const user2 = provider.getUser(req);
+        expect(user2).toBeFalsy();
+    });
+
+    it('returns the correct expires time', () => {
+        const ldapClient: any = {
+        };
+        const expiresTime = Date.now() + 2000;
+        const req: any = {
+            session: {
+                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: expiresTime
+            }
+        };
+
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+
+        const authExpiration = provider.getAuthenticationExpiration(req);
+
+        expect(authExpiration).toBeTruthy();
+        if (authExpiration) {
+            expect(authExpiration).toBe(expiresTime);
+        }
     });
 });

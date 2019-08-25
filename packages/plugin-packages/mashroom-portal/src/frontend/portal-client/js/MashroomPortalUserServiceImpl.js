@@ -1,5 +1,4 @@
 // @flow
-/* eslint no-unused-vars: off */
 
 import {
     WINDOW_VAR_PORTAL_API_PATH,
@@ -15,6 +14,29 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
     constructor(restService: MashroomRestService) {
         const apiPath = global[WINDOW_VAR_PORTAL_API_PATH];
         this._restService = restService.withBasePath(apiPath);
+    }
+
+    getAuthenticationExpiration() {
+        const path = '/users/authenticated/authExpiration';
+        return this._restService.get(path, {
+            'x-mashroom-does-not-extend-auth': 1
+        }).then(
+            (data) => {
+                if (data && data.expirationTime) {
+                    return Promise.resolve(data.expirationTime);
+                }
+                return Promise.resolve(null);
+            },
+            () => {
+                return Promise.resolve(null);
+            }
+        );
+    }
+
+    extendAuthentication() {
+        // For the moment: Just request the authentication expiration without the x-mashroom-does-not-extend-auth header
+        const path = '/users/authenticated/authExpiration';
+        this._restService.get(path);
     }
 
     logout() {

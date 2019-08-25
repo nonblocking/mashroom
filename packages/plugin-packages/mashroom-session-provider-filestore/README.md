@@ -16,8 +16,7 @@ You can override the default config in your Mashroom config file like this:
 {
   "plugins": {
         "Mashroom Session Filestore Provider": {
-            "path": "../../data/sessions",
-            "ttl": 1200
+            "path": "../../data/sessions"
         }
     }
 }
