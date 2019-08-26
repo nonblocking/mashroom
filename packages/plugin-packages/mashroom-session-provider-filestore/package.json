@@ -31,8 +31,7 @@
                 "type": "session-store-provider",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                    "path": "./data/sessions",
-                    "ttl": 3600
+                    "path": "./data/sessions"
                 }
             }
         ]

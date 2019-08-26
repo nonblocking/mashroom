@@ -15,16 +15,18 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {UserStore} from '../type-definitions';
 
-const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_AUTH';
+const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_AUTH_USER';
+const AUTHENTICATION_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_AUTH_EXPIRES';
 
 export default class MashroomSimpleSecurityProvider implements MashroomSecurityProvider {
 
     _userStore: UserStore;
     _userStorePath: string;
     _loginPage: string;
+    _authenticationTimeoutSec: number;
     _logger: MashroomLogger;
 
-    constructor(userStorePath: string, loginPage: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
+    constructor(userStorePath: string, loginPage: string, serverRootFolder: string, authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.security.provider.simple');
 
         this._userStorePath = userStorePath;
@@ -34,16 +36,29 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         this._logger.info(`Using user store: ${this._userStorePath}`);
 
         this._loginPage = loginPage;
+        this._authenticationTimeoutSec = authenticationTimeoutSec;
         this._logger.info(`Configured login page: ${this._loginPage}`);
     }
 
     async authenticate(request: ExpressRequest, response: ExpressResponse) {
-        let buff = new Buffer(decodeURI(request.originalUrl));
+        let buff = Buffer.from(decodeURI(request.originalUrl));
         const base64encodedReferrer = buff.toString('base64');
         response.redirect(`${this._loginPage}?ref=${base64encodedReferrer}`);
         return {
             status: 'deferred'
         };
+    }
+
+    async refreshAuthentication(request: ExpressRequest) {
+        request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+    }
+
+    getAuthenticationExpiration(request: ExpressRequest) {
+        return request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+    }
+
+    async revokeAuthentication() {
+        // Nothing to do, the session has been regenerated at this point
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
@@ -60,6 +75,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
             };
 
             request.session[AUTHENTICATION_RESULT_SESSION_KEY] = mashroomUser;
+            request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
 
             return {
                 success: true
@@ -72,18 +88,21 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         }
     }
 
-    async revokeAuthentication() {
-        // Nothing to do, the session has been regenerated at this point
-    }
-
     getUser(request: ExpressRequest) {
+        const timeout: ?number = request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        if (!timeout) {
+            return null;
+        }
+        if (timeout < Date.now()) {
+            delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+            return null;
+        }
         return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
     }
 
     _getUserStore(): UserStore {
         if (this._userStore) {
             return this._userStore;
-
         }
 
         if (fs.existsSync(this._userStorePath)) {

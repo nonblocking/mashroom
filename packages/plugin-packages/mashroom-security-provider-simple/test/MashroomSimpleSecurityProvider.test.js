@@ -18,7 +18,7 @@ describe('MashroomSimpleSecurityProvider', () => {
 
         const userStorePath = path.resolve(__dirname, './test_users.json');
 
-        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', dummyLoggerFactory);
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, dummyLoggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -35,19 +35,55 @@ describe('MashroomSimpleSecurityProvider', () => {
 
         const userStorePath = path.resolve(__dirname, './test_users.json');
 
-        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', dummyLoggerFactory);
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, dummyLoggerFactory);
 
         const result = await simpleSecurityProvider.login(req, 'john', 'john');
 
         expect(result).toBeTruthy();
         expect(result.success).toBeTruthy();
 
-        expect(req.session['__MASHROOM_SECURITY_AUTH']).toEqual({
+        expect(req.session['__MASHROOM_SECURITY_AUTH_USER']).toEqual({
             'displayName': 'John Do',
             'roles': [
                 'Editor'
             ],
             'username': 'john'
         });
+    });
+
+    it('revokes the authentication after given timeout', () => {
+        const req: any = {
+            session: {
+                ['__MASHROOM_SECURITY_AUTH_USER']: { username: 'john' },
+                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: Date.now() + 2000
+            }
+        };
+
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, dummyLoggerFactory);
+
+        const user1 = simpleSecurityProvider.getUser(req);
+        expect(user1).toBeTruthy();
+
+        req.session['__MASHROOM_SECURITY_AUTH_EXPIRES'] = Date.now() - 1;
+        const user2 = simpleSecurityProvider.getUser(req);
+        expect(user2).toBeFalsy();
+    });
+
+    it('returns the correct expires time', () => {
+        const expiresTime = Date.now() + 2000;
+        const req: any = {
+            session: {
+                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: expiresTime
+            }
+        };
+
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, dummyLoggerFactory);
+
+        const authExpiration = simpleSecurityProvider.getAuthenticationExpiration(req);
+
+        expect(authExpiration).toBeTruthy();
+        if (authExpiration) {
+            expect(authExpiration).toBe(expiresTime);
+        }
     });
 });

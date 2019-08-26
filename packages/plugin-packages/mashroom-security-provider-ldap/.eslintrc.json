@@ -15,7 +15,6 @@
         "jest": true
     },
     "rules": {
-        "no-unused-vars": "off",
         "quotes": ["error", "single", { "allowTemplateLiterals": true }]
     }
 }

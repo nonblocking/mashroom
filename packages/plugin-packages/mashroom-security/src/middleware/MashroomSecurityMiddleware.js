@@ -3,12 +3,20 @@
 import type {MashroomLogger, MashroomLoggerFactory, ExpressRequest, ExpressResponse, ExpressNextFunction} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityMiddleware as MashroomSecurityMiddlewareType, MashroomSecurityService} from '../../type-definitions';
 
+const HEADER_DOES_NOT_EXTEND_AUTHENTICATION = 'x-mashroom-does-not-extend-auth';
+
 export default class MashroomSecurityMiddleware implements MashroomSecurityMiddlewareType {
 
     _logger: MashroomLogger;
 
     constructor(loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.security.middleware');
+    }
+
+    async refreshAuthentication(securityService: MashroomSecurityService, req: ExpressRequest) {
+        if (!req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
+            await securityService.refreshAuthentication(req);
+        }
     }
 
     middleware() {
@@ -37,6 +45,7 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
                         }
                     }
                 } else {
+                    await this.refreshAuthentication(securityService, req);
                     next();
                     return;
                 }

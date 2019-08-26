@@ -28,7 +28,8 @@ And configure this plugin like this in the Mashroom config file:
   "plugins": {
         "Mashroom Security Simple Provider": {
             "users": "./users.json",
-            "loginPage": "/login"
+            "loginPage": "/login",
+            "authenticationTimeoutSec": 1200
         }
     }
 }
@@ -36,6 +37,7 @@ And configure this plugin like this in the Mashroom config file:
 
  * _users_: The path to the JSON file with user and role definitions (Default: ./users.json)
  * _loginPage_: The path to redirect if a restricted resource is requested but the user not logged in yet (Default: /login)
+ * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value.
  
  The content of the JSON file might look like this.
  

@@ -349,7 +349,7 @@ export type MashroomPortalPluginConfig = {
     +path: string,
     +adminApp: string,
     +defaultTheme: string,
-    +autoLogoutAfterInactivitySec: number
+    +autoExtendAuthentication: boolean,
 }
 
 export type MashroomPortalContext = {
@@ -502,10 +502,10 @@ export type MashroomPortalLoadedPortalApp = {
 export type MashroomPortalAppLoadListener = (MashroomPortalLoadedPortalApp) => void;
 
 export interface MashroomRestService {
-    get(path: string): Promise<any>;
-    post(path: string, data: any): Promise<any>;
-    put(path: string, data: any): Promise<void>;
-    delete(path: string): Promise<void>;
+    get(path: string, extraHeaders?: {}): Promise<any>;
+    post(path: string, data: any, extraHeaders?: {}): Promise<any>;
+    put(path: string, data: any, extraHeaders?: {}): Promise<void>;
+    delete(path: string, extraHeaders?: {}): Promise<void>;
     withBasePath(apiBasePath: string): MashroomRestService;
 }
 
@@ -593,6 +593,15 @@ export interface MashroomPortalSiteService {
 }
 
 export interface MashroomPortalUserService {
+    /**
+     * Get the authentication expiration time in unix time ms
+     */
+    getAuthenticationExpiration(): Promise<?number>;
+    /**
+     * Extend the authentication.
+     * Can be used to update the authentication when no server interaction has occurred for a while and the authentication is about to expire.
+     */
+    extendAuthentication(): void;
     /**
      * Logout the current user
      */

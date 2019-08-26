@@ -22,7 +22,7 @@ The plugin allows the following configuration properties:
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
-            "autoLogoutAfterInactivitySec": 1800
+            "autoExtendAuthentication": false
         }
     }
 }
@@ -31,8 +31,8 @@ The plugin allows the following configuration properties:
  * _path_: The portal base path (Default: /portal)
  * _adminApp_: The admin to use (Default: /Mashroom Portal Admin App)
  * _defaultTheme_: The default theme (Default: Mashroom Portal Default Theme)
- * _autoLogoutAfterInactivitySec_: The idle time after that the user shall be logged out automatically. 
-    Any value <= 0 disables the auto logout.
+ * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
+
  
 #### Browser support
 
@@ -673,9 +673,9 @@ A typical portal view with *Handlebars* might look like this:
         </div>
     </div>
 
-    <div id="mashroom-portal-auto-logout-warning">
-        <div class="mashroom-portal-auto-logout-warning-message">
-            {{{__ messages "autoLogoutWarning"}}}
+    <div id="mashroom-portal-auth-expires-warning">
+        <div class="mashroom-portal-auth-expires-warning-message">
+            {{{__ messages "authenticationExpiresWarning"}}}
         </div>
     </div>
 

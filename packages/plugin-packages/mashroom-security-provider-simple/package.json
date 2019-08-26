@@ -46,7 +46,8 @@
                 ],
                 "defaultConfig": {
                     "users": "./users.json",
-                    "loginPage": "/login"
+                    "loginPage": "/login",
+                    "authenticationTimeoutSec": 1200
                 }
             }
         ]

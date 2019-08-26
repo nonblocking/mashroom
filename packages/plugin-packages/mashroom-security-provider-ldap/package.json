@@ -52,7 +52,8 @@
                     "baseDN": "",
                     "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
                     "groupSearchFilter": "(objectClass=group)",
-                    "groupToRoleMapping": "./groupToRoleMapping.json"
+                    "groupToRoleMapping": "./groupToRoleMapping.json",
+                    "authenticationTimeoutSec": 1200
                 }
             }
         ]

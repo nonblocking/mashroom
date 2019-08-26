@@ -7,8 +7,8 @@ import MashroomPortalStateServiceImpl from './MashroomPortalStateServiceImpl';
 import MashroomRestServiceFetchImpl from './MashroomRestServiceFetchImpl';
 import MashroomPortalUserServiceImpl from './MashroomPortalUserServiceImpl';
 import MashroomPortalSiteServiceImpl from './MashroomPortalSiteServiceImpl';
-import MashroomPortalBrowserErrorHandler from './MashroomPortalBrowserErrorHandler';
-import MashroomPortalUserInactivityHandler from './MashroomPortalUserInactivityHandler';
+import BrowserErrorHandler from './BrowserErrorHandler';
+import AuthenticationExpirationChecker from './AuthenticationExpirationChecker';
 import MashroomPortalRemoteLoggerImpl from './MashroomPortalRemoteLoggerImpl';
 import ResourceManager from './ResourceManager';
 
@@ -39,9 +39,9 @@ const globalMashroomPortalModule: MashroomPortalClientServices = {
 
 global[WINDOW_VAR_PORTAL_SERVICES] = globalMashroomPortalModule;
 
-const errorHandler = new MashroomPortalBrowserErrorHandler(remoteLogger);
+const errorHandler = new BrowserErrorHandler(remoteLogger);
 errorHandler.install();
 
-const inactivityHandler = new MashroomPortalUserInactivityHandler(portalUserService);
-inactivityHandler.start();
+const authenticationExpirationChecker = new AuthenticationExpirationChecker(portalUserService);
+authenticationExpirationChecker.start();
 

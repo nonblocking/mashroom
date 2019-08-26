@@ -66,7 +66,7 @@
                     "path": "/portal",
                     "adminApp": "Mashroom Portal Admin App",
                     "defaultTheme": "Mashroom Portal Default Theme",
-                    "autoLogoutAfterInactivitySec": 1800
+                    "autoExtendAuthentication": false
                 }
             },
             {

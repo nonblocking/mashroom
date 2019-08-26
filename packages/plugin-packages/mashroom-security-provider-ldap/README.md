@@ -34,7 +34,8 @@ And configure this plugin like this in the Mashroom config file:
             "baseDN": "OU=Mashroom",
             "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
             "groupSearchFilter": "(objectClass=group)",
-            "groupToRoleMapping": "./groupToRoleMapping.json"
+            "groupToRoleMapping": "./groupToRoleMapping.json",
+            "authenticationTimeoutSec": 1200
         }
     }
 }
@@ -50,6 +51,7 @@ And configure this plugin like this in the Mashroom config file:
  * _userSearchFilter_: The user search filter, _@username@_ will be replaced by the actual username entered in the login form
  * _groupSearchFilter_: The group search filter (can be empty if you don't want to fetch the user groups)
  * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping
+ * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value.
  
 For a server that requires TLS you have to provide a _tlsOptions_ object:
 

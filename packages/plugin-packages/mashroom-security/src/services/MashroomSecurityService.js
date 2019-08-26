@@ -199,19 +199,26 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         };
     }
 
-    async login(request: ExpressRequest, username: string, password: string) {
+    async refreshAuthentication(request: ExpressRequest) {
         const securityProvider = this._getSecurityProvider();
         if (securityProvider) {
             try {
-                return await securityProvider.login(request, username, password);
+                await securityProvider.refreshAuthentication(request);
             } catch (e) {
                 this._logger.error('Security provider returned error: ', e);
             }
         }
+    }
 
-        return {
-            success: false
-        };
+    getAuthenticationExpiration(request: ExpressRequest) {
+        const securityProvider = this._getSecurityProvider();
+        if (securityProvider) {
+            try {
+                return securityProvider.getAuthenticationExpiration(request);
+            } catch (e) {
+                this._logger.error('Security provider returned error: ', e);
+            }
+        }
     }
 
     async revokeAuthentication(request: ExpressRequest) {
@@ -225,6 +232,21 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 this._logger.error('Security provider returned error: ', e);
             }
         }
+    }
+
+    async login(request: ExpressRequest, username: string, password: string) {
+        const securityProvider = this._getSecurityProvider();
+        if (securityProvider) {
+            try {
+                return await securityProvider.login(request, username, password);
+            } catch (e) {
+                this._logger.error('Security provider returned error: ', e);
+            }
+        }
+
+        return {
+            success: false
+        };
     }
 
     _getSecurityProvider(): ?MashroomSecurityProvider {

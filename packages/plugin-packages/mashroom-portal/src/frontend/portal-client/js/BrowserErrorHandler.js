@@ -6,7 +6,7 @@ import {
     PORTAL_PRIVATE_PATH
 } from '../../../backend/constants';
 
-export default class MashroomPortalBrowserErrorHandler {
+export default class BrowserErrorHandler {
 
     _remoteLogger: MashroomPortalRemoteLogger;
 

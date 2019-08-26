@@ -10,7 +10,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
 
     const {
         loginPage, userSearchFilter, groupSearchFilter, groupToRoleMapping: groupToRoleMappingPath,
-        serverUrl, tlsOptions, baseDN, bindDN, bindCredentials
+        serverUrl, tlsOptions, baseDN, bindDN, bindCredentials, authenticationTimeoutSec,
     } = pluginConfig;
 
     const pluginContext = pluginContextHolder.getPluginContext();
@@ -19,7 +19,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
     const fixedTlsOptions = fixTlsOptions(tlsOptions, serverRootFolder, loggerFactory);
     const ldapClient = new LdapClientImpl(serverUrl, baseDN, bindDN, bindCredentials, fixedTlsOptions, loggerFactory);
 
-    return new MashroomLdapSecurityProvider(loginPage, userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, loggerFactory);
+    return new MashroomLdapSecurityProvider(loginPage, userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, authenticationTimeoutSec, loggerFactory);
 };
 
 export default bootstrap;

@@ -102,6 +102,14 @@ export interface MashroomSecurityService {
      */
     authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
     /**
+     * Refresh the authentication
+     */
+    refreshAuthentication(request: ExpressRequest): Promise<void>;
+    /**
+     * Get the authentication expiration time in unix time ms
+     */
+    getAuthenticationExpiration(request: ExpressRequest): ?number;
+    /**
      * Revoke the current authentication
      */
     revokeAuthentication(request: ExpressRequest): Promise<void>;
@@ -119,12 +127,23 @@ export interface MashroomSecurityProvider {
      */
     authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
     /**
+     * Refresh the authentication. For OAuth that means you have to check here if the token needs to be refreshed for
+     * LDAP and others that means to just to update the expiration time.
+     *
+     * This methods gets called for almost every requests, so do nothing expensive here.
+     */
+    refreshAuthentication(request: ExpressRequest): Promise<void>;
+    /**
+     * Get the authentication expiration time in unix time ms. Return null/undefined if there is no authentication.
+     */
+    getAuthenticationExpiration(request: ExpressRequest): ?number;
+    /**
      * Revoke the current authentication.
      * That typically means to remove the user object from the session.
      */
     revokeAuthentication(request: ExpressRequest): Promise<void>;
     /**
-     * Login user with given credentials (for form login, if supported)
+     * Programmatically login user with given credentials (optional, but necessary if you use the default login page)
      */
     login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult>;
     /**
