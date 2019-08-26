@@ -14,7 +14,7 @@ describe('PortalAppController', () => {
         path: '/portal',
         adminApp: 'admin-portal-app',
         defaultTheme: 'foo',
-        autoLogoutAfterInactivitySec: 1800
+        autoExtendAuthentication: false
     });
 
     const portalApp: MashroomPortalApp = {

@@ -33,7 +33,7 @@ setPortalPluginConfig({
     path: '/portal',
     defaultTheme: 'Portal Default Theme',
     adminApp: '',
-    autoLogoutAfterInactivitySec: 180
+    autoExtendAuthentication: false
 });
 
 // Plugins
