@@ -9,7 +9,7 @@ setPortalPluginConfig({
     path: '/portal',
     adminApp: 'admin-portal-app',
     defaultTheme: 'foo',
-    autoLogoutAfterInactivitySec: 1800
+    autoExtendAuthentication: false
 });
 
 import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
