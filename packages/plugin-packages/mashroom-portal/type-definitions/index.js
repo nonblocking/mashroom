@@ -348,7 +348,8 @@ export interface MashroomPortalPageRenderModel {
 export type MashroomPortalPluginConfig = {
     +path: string,
     +adminApp: string,
-    +defaultTheme: string
+    +defaultTheme: string,
+    +autoExtendAuthentication: boolean,
 }
 
 export type MashroomPortalContext = {

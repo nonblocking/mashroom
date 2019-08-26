@@ -65,7 +65,8 @@
                 "defaultConfig": {
                     "path": "/portal",
                     "adminApp": "Mashroom Portal Admin App",
-                    "defaultTheme": "Mashroom Portal Default Theme"
+                    "defaultTheme": "Mashroom Portal Default Theme",
+                    "autoExtendAuthentication": false
                 }
             },
             {

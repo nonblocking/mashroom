@@ -21,7 +21,8 @@ The plugin allows the following configuration properties:
         "Plugin: Mashroom Portal WebApp": {
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme"
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "autoExtendAuthentication": false
         }
     }
 }
@@ -30,6 +31,7 @@ The plugin allows the following configuration properties:
  * _path_: The portal base path (Default: /portal)
  * _adminApp_: The admin to use (Default: /Mashroom Portal Admin App)
  * _defaultTheme_: The default theme (Default: Mashroom Portal Default Theme)
+ * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
 
  
 #### Browser support

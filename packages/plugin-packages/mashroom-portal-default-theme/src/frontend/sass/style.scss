@@ -768,15 +768,18 @@ footer {
     }
 
     .mashroom-portal-auth-expires-warning-message {
+        position: relative;
         background-color: white;
         opacity: 0.8;
-        padding: 10px 20px;
+        padding: 10px 20px 10px 30px;
         border: 2px solid $COLOR_ERROR;
         border-top: none;
         font-size: 0.8em;
         font-weight: 500;
 
         &:before {
+            position: absolute;
+            left: 10px;
             content: '\f017';
             font-family: $FONT_ICON;
             font-weight: 900;

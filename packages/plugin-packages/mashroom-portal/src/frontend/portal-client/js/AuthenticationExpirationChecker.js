@@ -1,14 +1,21 @@
 // @flow
 
-import { WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION } from '../../../backend/constants';
+import {
+    WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
+    WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION
+} from '../../../backend/constants';
 
 import type {MashroomPortalUserService} from '../../../../type-definitions';
 
 const checkAuthenticationExpiration: boolean = global[WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION];
+const autoExtendAuthentication: boolean = global[WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION];
 
 const AUTH_EXPIRES_WARNING_PANEL_ID = 'mashroom-portal-auth-expires-warning';
 const AUTH_EXPIRES_SECONDS_ELEM_ID = 'mashroom-portal-auth-expires-seconds';
+const EXTEND_AUTHENTICATION_LINK_ID = 'mashroom-portal-auth-expires-extend';
 const SHOW_WARNING_THRESHOLD_SEC = 30;
+
+let extendAuthenticationLinkAttached = false;
 
 export default class MashroomPortalUserInactivityHandler {
 
@@ -44,6 +51,10 @@ export default class MashroomPortalUserInactivityHandler {
         );
     }
 
+    _extendAuthentication() {
+        this._portalUserService.extendAuthentication();
+    }
+
     _handleExpirationTimeUpdate() {
         const timeLeft = this._getTimeLeftSec();
         console.debug(`Authentication expires in ${timeLeft}sec`);
@@ -52,7 +63,12 @@ export default class MashroomPortalUserInactivityHandler {
             this._logout();
             this._hideWarningPanel();
         } else if (timeLeft <= SHOW_WARNING_THRESHOLD_SEC) {
-            this._showTimeLeft();
+            if (autoExtendAuthentication) {
+                console.info('Auto extending authentication');
+                this._extendAuthentication();
+            } else {
+                this._showTimeLeft();
+            }
             this._startCheckTimer(1);
         } else {
             this._hideWarningPanel();
@@ -88,6 +104,13 @@ export default class MashroomPortalUserInactivityHandler {
         if (!this._warningPanelVisible) {
             const panel = document.getElementById(AUTH_EXPIRES_WARNING_PANEL_ID);
             if (panel) {
+                if (!extendAuthenticationLinkAttached) {
+                    const linkElem = document.getElementById(EXTEND_AUTHENTICATION_LINK_ID);
+                    if (linkElem) {
+                        linkElem.onclick = () => this._extendAuthentication();
+                    }
+                    extendAuthenticationLinkAttached = true;
+                }
                 panel.classList.add('show');
                 this._warningPanelVisible = true;
             } else {

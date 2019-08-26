@@ -9,7 +9,8 @@
     "plugins": {
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme"
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "autoExtendAuthentication": false
         },
         "Mashroom Portal Default Theme": {
             "showEnvAndVersions": true
