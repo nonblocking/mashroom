@@ -60,7 +60,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         };
     }
 
-    async refreshAuthentication(request: ExpressRequest) {
+    async checkAuthentication(request: ExpressRequest) {
         request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
     }
 

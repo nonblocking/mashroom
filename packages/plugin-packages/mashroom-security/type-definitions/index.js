@@ -102,9 +102,9 @@ export interface MashroomSecurityService {
      */
     authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
     /**
-     * Refresh the authentication
+     * Check the existing authentication (if any)
      */
-    refreshAuthentication(request: ExpressRequest): Promise<void>;
+    checkAuthentication(request: ExpressRequest): Promise<void>;
     /**
      * Get the authentication expiration time in unix time ms
      */
@@ -127,12 +127,12 @@ export interface MashroomSecurityProvider {
      */
     authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
     /**
-     * Refresh the authentication. For OAuth that means you have to check here if the token needs to be refreshed for
-     * LDAP and others that means to just to update the expiration time.
+     * Check the existing authentication (if any).
+     * Use this to extend the authentication expiration or to periodically refresh the access token.
      *
      * This methods gets called for almost every requests, so do nothing expensive here.
      */
-    refreshAuthentication(request: ExpressRequest): Promise<void>;
+    checkAuthentication(request: ExpressRequest): Promise<void>;
     /**
      * Get the authentication expiration time in unix time ms. Return null/undefined if there is no authentication.
      */

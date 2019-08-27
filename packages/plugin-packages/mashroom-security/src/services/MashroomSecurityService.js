@@ -199,11 +199,11 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         };
     }
 
-    async refreshAuthentication(request: ExpressRequest) {
+    async checkAuthentication(request: ExpressRequest) {
         const securityProvider = this._getSecurityProvider();
         if (securityProvider) {
             try {
-                await securityProvider.refreshAuthentication(request);
+                await securityProvider.checkAuthentication(request);
             } catch (e) {
                 this._logger.error('Security provider returned error: ', e);
             }

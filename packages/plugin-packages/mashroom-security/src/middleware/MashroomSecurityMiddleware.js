@@ -13,9 +13,9 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         this._logger = loggerFactory('mashroom.security.middleware');
     }
 
-    async refreshAuthentication(securityService: MashroomSecurityService, req: ExpressRequest) {
-        if (!req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
-            await securityService.refreshAuthentication(req);
+    async checkAuthentication(securityService: MashroomSecurityService, req: ExpressRequest) {
+        if (securityService.isAuthenticated(req) && !req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
+            await securityService.checkAuthentication(req);
         }
     }
 
@@ -24,6 +24,9 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
 
             try {
                 const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+
+                await this.checkAuthentication(securityService, req);
+
                 const allowed = await securityService.checkACL(req);
 
                 if (!allowed) {
@@ -45,7 +48,6 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
                         }
                     }
                 } else {
-                    await this.refreshAuthentication(securityService, req);
                     next();
                     return;
                 }
