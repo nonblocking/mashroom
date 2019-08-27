@@ -1,5 +1,7 @@
 // @flow
 
+import { isAjaxRequest } from './request_utils';
+
 import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
@@ -50,6 +52,27 @@ export default class PortalLanguageController {
 
             res.end();
 
+        } catch (e) {
+            logger.error(e);
+            res.sendStatus(500);
+        }
+    }
+
+    async logout(req: ExpressRequest, res: ExpressResponse) {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        logger.debug('Logout called');
+
+        try {
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            await securityService.revokeAuthentication(req);
+
+            if (!isAjaxRequest(req)) {
+                // Redirect to start page
+                const indexPage = req.pluginContext.serverConfig.indexPage;
+                res.redirect(indexPage);
+            } else {
+                res.end();
+            }
         } catch (e) {
             logger.error(e);
             res.sendStatus(500);
