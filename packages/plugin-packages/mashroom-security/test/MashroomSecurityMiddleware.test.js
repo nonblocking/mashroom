@@ -8,7 +8,7 @@ const loggerFactory: any = dummyLoggerFactory;
 describe('MashroomSecurityMiddleware', () => {
 
     it('calls next and refreshAuthentication if the access is permitted', async () => {
-        let refreshAuthenticationCalled = false;
+        let checkAuthenticationCalled = false;
 
         const req: any = {
             headers: {},
@@ -19,8 +19,11 @@ describe('MashroomSecurityMiddleware', () => {
                             async checkACL() {
                                 return true;
                             },
-                            async refreshAuthentication() {
-                                refreshAuthenticationCalled = true;
+                            isAuthenticated() {
+                                return true;
+                            },
+                            async checkAuthentication() {
+                                checkAuthenticationCalled = true;
                             }
                         }
                     }
@@ -39,11 +42,11 @@ describe('MashroomSecurityMiddleware', () => {
         await securityMiddleware.middleware()(req, res, next);
 
         expect(next.mock.calls.length).toBe(1);
-        expect(refreshAuthenticationCalled).toBeTruthy();
+        expect(checkAuthenticationCalled).toBeTruthy();
     });
 
     it('doesnt call refreshAuthentication if the x-mashroom-does-not-extend-auth header is set', async () => {
-        let refreshAuthenticationCalled = false;
+        let checkAuthenticationCalled = false;
 
         const req: any = {
             headers: {
@@ -56,8 +59,11 @@ describe('MashroomSecurityMiddleware', () => {
                             async checkACL() {
                                 return true;
                             },
-                            async refreshAuthentication() {
-                                refreshAuthenticationCalled = true;
+                            isAuthenticated() {
+                                return true;
+                            },
+                            async checkAuthentication() {
+                                checkAuthenticationCalled = true;
                             }
                         }
                     }
@@ -75,7 +81,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         await securityMiddleware.middleware()(req, res, next);
 
-        expect(refreshAuthenticationCalled).toBeFalsy();
+        expect(checkAuthenticationCalled).toBeFalsy();
     });
 
     it('starts authentication if access is not permitted for anonymous', async () => {
@@ -85,6 +91,9 @@ describe('MashroomSecurityMiddleware', () => {
                     security: {
                         service: {
                             async checkACL() {
+                                return false;
+                            },
+                            isAuthenticated() {
                                 return false;
                             },
                             async authenticate() {
@@ -124,6 +133,9 @@ describe('MashroomSecurityMiddleware', () => {
                     security: {
                         service: {
                             async checkACL() {
+                                return false;
+                            },
+                            isAuthenticated() {
                                 return false;
                             },
                             async authenticate() {
