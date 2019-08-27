@@ -39,6 +39,6 @@
         "build:plugins": "lerna run build",
         "build": "npm run build:core && npm run flow && npm run lint && npm run test && npm run build:plugins",
         "clean": "rimraf node_modules/ packages/core/*/dist/ packages/core/*/lib/ packages/core/*/node_modules/ packages/plugin-packages/*/dist/ packages/plugin-packages/*/node_modules/ packages/test/*/node_modules/ packages/test/*/data/ packages/test/*/log/",
-        "release:prepare": "lerna version patch --exact --yes --force-publish && npm run build"
+        "release:prepare": "lerna version patch --exact --yes --force-publish && npm run clean && npm run setup && npm run build"
     }
 }
