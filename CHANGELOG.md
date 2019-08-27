@@ -6,7 +6,7 @@
  * Portal: Added configuration property to automatically extend the authentication (so it stays valid as long as the browser page is opened)
  * Portal: Removed the "auto-logout" feature, instead the Portal warns now when the authentication is about to expire.
  * Decoupled authentication from session, in particular the authentication expiration. This simplifies the implementation for
-   providers like OAuth2. **BREAKING CHANGE**: The _MashroomSecurityProvider_ has been extended.
+   providers like OAuth2. **BREAKING CHANGE**: The _MashroomSecurityProvider_ interface has been extended.
 
 ## 1.0.92
 
