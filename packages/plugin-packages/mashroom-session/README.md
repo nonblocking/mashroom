@@ -37,7 +37,8 @@ You can override the default config in your Mashroom config file like this:
  * _provider_: The plugin from type _session-store-provider_ that implements the store (Default: memory)
  * _session_: The properties are just passed to express-session. See [Express session](https://www.npmjs.com/package/express-session) for possible options.
     * _cookie.maxAge_: Max session age in ms
-    
+
+
 **Security hints**
 
 For production you should enable _cookie.secure_ and consider setting _cookie.sameSite_ to either "lax" or "strict" (CSRF protection).
