@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.0.92",
+    "version": "1.0.93",
     "files": [
         "dist/**",
         "public/**",
@@ -17,10 +17,10 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.4.4",
-        "@mashroom/mashroom": "1.0.92",
-        "@mashroom/mashroom-csrf-protection": "1.0.92",
-        "@mashroom/mashroom-i18n": "1.0.92",
-        "@mashroom/mashroom-security": "1.0.92",
+        "@mashroom/mashroom": "1.0.93",
+        "@mashroom/mashroom-csrf-protection": "1.0.93",
+        "@mashroom/mashroom-i18n": "1.0.93",
+        "@mashroom/mashroom-security": "1.0.93",
         "eslint": "^5.16.0",
         "node-sass": "^4.12.0",
         "node-sass-tilde-importer": "^1.0.2",

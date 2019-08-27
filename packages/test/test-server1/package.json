@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-test-server1",
-    "version": "1.0.92",
+    "version": "1.0.93",
     "private": true,
     "devDependencies": {
         "@babel/cli": "^7.4.4",
