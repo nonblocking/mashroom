@@ -3,7 +3,7 @@
     "password": "Passwort",
     "login": "Anmelden",
     "logout": "Abmelden",
-    "authenticationExpiresWarning": "Ihre Anmeldung läuft in <span id='mashroom-portal-auth-expires-seconds'>0</span> Sekunden ab.<br/><a id='mashroom-portal-auth-expires-extend' href='javascript:void(0)'>Anmeldung verlängern</a>.",
+    "authenticationExpiresWarning": "Aufgrund von Inaktivität wird ihre Anmeldung in <span id='mashroom-portal-auth-expires-time'>00:00</span> ablaufen<br/><a id='mashroom-portal-auth-expires-extend' href='javascript:void(0)'>Anmeldung verlängern</a>",
     "loginFailed": "Anmeldung fehlgeschlagen!",
     "portalAppLoadingFailed": "Portal app <strong>${name}</strong> steht derzeit nicht zur Verfügung"
 }

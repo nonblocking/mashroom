@@ -1,4 +1,3 @@
-
 @import "~@mashroom/mashroom-portal-ui-commons/src/sass/mashroom_portal_defaults";
 
 $COLOR_BLACK: #343633;
@@ -30,19 +29,23 @@ $GUTTER_WIDTH: 15px;
 @-webkit-keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
-        transform: rotate(0deg); }
+        transform: rotate(0deg);
+    }
     100% {
         -webkit-transform: rotate(360deg);
-        transform: rotate(360deg); }
+        transform: rotate(360deg);
+    }
 }
 
 @keyframes spin {
     0% {
         -webkit-transform: rotate(0deg);
-        transform: rotate(0deg); }
+        transform: rotate(0deg);
+    }
     100% {
         -webkit-transform: rotate(360deg);
-        transform: rotate(360deg); }
+        transform: rotate(360deg);
+    }
 }
 
 @mixin hover-animation() {
@@ -186,7 +189,7 @@ button, input[type="submit"] {
     }
 
     &:checked + label:before {
-       content: "\f192";
+        content: "\f192";
     }
 
     &:focus + label {
@@ -333,9 +336,9 @@ header {
 
     .site-name {
         h1 {
-           display: inline-block;
-           padding: 16px $GUTTER_WIDTH 0 $GUTTER_WIDTH;
-           font-size: 1.4em;
+            display: inline-block;
+            padding: 16px $GUTTER_WIDTH 0 $GUTTER_WIDTH;
+            font-size: 1.4em;
             font-weight: 400;
         }
     }
@@ -441,7 +444,7 @@ header {
         .mashroom-portal-app-header-close {
             cursor: pointer;
 
-            &:before  {
+            &:before {
                 content: '\f00d';
                 font-family: $FONT_ICON;
                 font-weight: 900;
@@ -900,7 +903,7 @@ footer {
         }
     }
 
-    .mashroom-portal-radio  {
+    .mashroom-portal-radio {
         & + label {
             &:before {
                 color: $ADMIN_APP_COLOR_TEXT_DARK;
@@ -1038,7 +1041,6 @@ footer {
 }
 
 
-
 @include small {
 
     header {
@@ -1095,6 +1097,10 @@ footer {
         }
     }
 
+    #mashroom-portal-auth-expires-warning {
+        left: calc(50% - 240px);
+        width: 480px;
+    }
 }
 
 @include medium {

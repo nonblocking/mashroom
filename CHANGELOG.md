@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.0.94
+
+ * Portal: Made it configurable when the Portal will start to warn that the authentication is about to expire
+
 ## 1.0.93
 
  * Portal: Added configuration property to automatically extend the authentication (so it stays valid as long as the browser page is opened)

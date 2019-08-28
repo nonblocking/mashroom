@@ -33,6 +33,7 @@ setPortalPluginConfig({
     path: '/portal',
     defaultTheme: 'Portal Default Theme',
     adminApp: '',
+    warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false
 });
 

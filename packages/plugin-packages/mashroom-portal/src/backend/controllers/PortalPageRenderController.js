@@ -19,6 +19,7 @@ import {
     WINDOW_VAR_PORTAL_SITE_ID,
     WINDOW_VAR_PORTAL_LANGUAGE,
     WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION,
+    WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC,
     WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
     WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG,
     WINDOW_VAR_PORTAL_DEV_MODE,
@@ -146,12 +147,13 @@ export default class PortalPageRenderController {
         if (user) {
             checkAuthenticationExpiration = true;
         }
+        const warnBeforeAuthenticationExpiresSec = context.portalPluginConfig.warnBeforeAuthenticationExpiresSec;
         const autoExtendAuthentication = context.portalPluginConfig.autoExtendAuthentication;
 
         const appLoadingFailedMsg = i18nService.getMessage('portalAppLoadingFailed', lang);
         const portalLayout = await this._loadLayout(layoutName, logger);
         const portalResourcesHeader = this._resourcesHeader(req, portalPath, site.siteId, sitePath, pageRef.pageId, lang,
-            appLoadingFailedMsg, checkAuthenticationExpiration, autoExtendAuthentication, devMode);
+            appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication, devMode);
         const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName);
         const siteBasePath = `${portalPath}${sitePath}`;
         let resourcesBasePath = null;
@@ -261,7 +263,8 @@ export default class PortalPageRenderController {
     }
 
     _resourcesHeader(req: ExpressRequest, portalPrefix: string, siteId: string, sitePath: string, pageId: string, lang: string,
-                     appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, autoExtendAuthentication: boolean, devMode: boolean) {
+                     appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, warnBeforeAuthenticationExpiresSec: number,
+                     autoExtendAuthentication: boolean, devMode: boolean) {
         return `
             <script>
                 window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${portalPrefix}${PORTAL_PRIVATE_PATH}${PORTAL_APP_API_PATH}';
@@ -271,6 +274,7 @@ export default class PortalPageRenderController {
                 window['${WINDOW_VAR_PORTAL_LANGUAGE}'] = '${lang}';
                 window['${WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG}'] = '${appLoadingFailedMsg}';
                 window['${WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION}'] = ${String(checkAuthenticationExpiration)};
+                window['${WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC}'] = ${String(warnBeforeAuthenticationExpiresSec)};
                 window['${WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION}'] = ${String(autoExtendAuthentication)};
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true` : ''}
             </script>

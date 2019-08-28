@@ -45,6 +45,12 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
             () => {
                 this._reloadPage();
                 return Promise.resolve();
+            },
+            (error) => {
+                console.error('Logout failed', error);
+                // Try to reload anyway
+                this._reloadPage();
+                return Promise.resolve();
             }
         );
     }

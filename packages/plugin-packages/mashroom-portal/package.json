@@ -66,6 +66,7 @@
                     "path": "/portal",
                     "adminApp": "Mashroom Portal Admin App",
                     "defaultTheme": "Mashroom Portal Default Theme",
+                    "warnBeforeAuthenticationExpiresSec": 120,
                     "autoExtendAuthentication": false
                 }
             },

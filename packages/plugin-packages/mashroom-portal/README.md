@@ -22,6 +22,7 @@ The plugin allows the following configuration properties:
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
+            "warnBeforeAuthenticationExpiresSec": 120,
             "autoExtendAuthentication": false
         }
     }
@@ -31,6 +32,7 @@ The plugin allows the following configuration properties:
  * _path_: The portal base path (Default: /portal)
  * _adminApp_: The admin to use (Default: /Mashroom Portal Admin App)
  * _defaultTheme_: The default theme (Default: Mashroom Portal Default Theme)
+ * _warnBeforeAuthenticationExpiresSec_: Defines when the the Portal should start to warn that the authentication is about to expire
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
 
  

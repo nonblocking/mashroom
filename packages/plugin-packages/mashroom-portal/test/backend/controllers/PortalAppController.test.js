@@ -14,6 +14,7 @@ describe('PortalAppController', () => {
         path: '/portal',
         adminApp: 'admin-portal-app',
         defaultTheme: 'foo',
+        warnBeforeAuthenticationExpiresSec: 120,
         autoExtendAuthentication: false
     });
 

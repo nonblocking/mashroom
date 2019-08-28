@@ -2,18 +2,18 @@
 
 import {
     WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
-    WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION
+    WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION, WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC
 } from '../../../backend/constants';
 
 import type {MashroomPortalUserService} from '../../../../type-definitions';
 
 const checkAuthenticationExpiration: boolean = global[WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION];
+const warnBeforeAuthenticationExpiresSec: number = global[WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC] || 120;
 const autoExtendAuthentication: boolean = global[WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION];
 
 const AUTH_EXPIRES_WARNING_PANEL_ID = 'mashroom-portal-auth-expires-warning';
-const AUTH_EXPIRES_SECONDS_ELEM_ID = 'mashroom-portal-auth-expires-seconds';
+const AUTH_EXPIRES_TIME_ELEM_ID = 'mashroom-portal-auth-expires-time';
 const EXTEND_AUTHENTICATION_LINK_ID = 'mashroom-portal-auth-expires-extend';
-const SHOW_WARNING_THRESHOLD_SEC = 30;
 
 let extendAuthenticationLinkAttached = false;
 
@@ -62,7 +62,7 @@ export default class MashroomPortalUserInactivityHandler {
         if (timeLeft <= 0) {
             this._logout();
             this._hideWarningPanel();
-        } else if (timeLeft <= SHOW_WARNING_THRESHOLD_SEC) {
+        } else if (timeLeft <= warnBeforeAuthenticationExpiresSec) {
             if (autoExtendAuthentication) {
                 console.info('Auto extending authentication');
                 this._extendAuthentication();
@@ -72,7 +72,7 @@ export default class MashroomPortalUserInactivityHandler {
             this._startCheckTimer(1);
         } else {
             this._hideWarningPanel();
-            const nextCheck = Math.max(10, timeLeft - 60);
+            const nextCheck = Math.max(10, timeLeft - warnBeforeAuthenticationExpiresSec - 30);
             this._startCheckTimer(nextCheck);
         }
     }
@@ -87,17 +87,19 @@ export default class MashroomPortalUserInactivityHandler {
     _showTimeLeft() {
         this._showWarningPanel();
 
-        const secondsElem = document.getElementById(AUTH_EXPIRES_SECONDS_ELEM_ID);
-        if (secondsElem) {
+        const timeElem = document.getElementById(AUTH_EXPIRES_TIME_ELEM_ID);
+        if (timeElem) {
             const timeLeft = this._getTimeLeftSec();
-            let seconds = String(timeLeft);
-            if (timeLeft < 10) {
-                seconds = '0' + seconds;
-            }
-            secondsElem.innerHTML = seconds;
+            timeElem.innerHTML = this._formatTime(timeLeft);
         } else {
-            console.error(`No element with id ${AUTH_EXPIRES_SECONDS_ELEM_ID} found! Cannot display seconds until logout.`);
+            console.error(`No element with id ${AUTH_EXPIRES_TIME_ELEM_ID} found! Cannot display seconds until logout.`);
         }
+    }
+
+    _formatTime(timeSec: number) {
+        const minutes = Math.trunc(timeSec / 60);
+        const seconds = timeSec - minutes * 60;
+        return `${minutes < 10 ? '0': ''}${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
     }
 
     _showWarningPanel() {
