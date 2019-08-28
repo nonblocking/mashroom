@@ -4,6 +4,7 @@
 ## 1.0.94
 
  * Portal: Made it configurable when the Portal will start to warn that the authentication is about to expire
+ * Renamed _MashroomSecurityProvider.refreshAuthentication()_ to _checkAuthentication()_ 
 
 ## 1.0.93
 
