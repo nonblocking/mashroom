@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.0.93",
+    "version": "1.0.94",
     "main": "dist",
     "files": [
         "dist/**",
@@ -17,7 +17,7 @@
         "mashroom": "./dist/server.js"
     },
     "dependencies": {
-        "@mashroom/mashroom-utils": "1.0.93",
+        "@mashroom/mashroom-utils": "1.0.94",
         "chokidar": "^3.0.1",
         "express": "^4.17.1",
         "fs-extra": "^8.0.1",

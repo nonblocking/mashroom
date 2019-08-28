@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.0.93",
+    "version": "1.0.94",
     "sideEffects": false,
     "files": [
         "dist/**",
@@ -12,9 +12,9 @@
     ],
     "devDependencies": {
         "@babel/cli": "^7.4.4",
-        "@mashroom/mashroom": "1.0.93",
-        "@mashroom/mashroom-portal": "1.0.93",
-        "@mashroom/mashroom-portal-ui-commons": "1.0.93",
+        "@mashroom/mashroom": "1.0.94",
+        "@mashroom/mashroom-portal": "1.0.94",
+        "@mashroom/mashroom-portal-ui-commons": "1.0.94",
         "duplicate-package-checker-webpack-plugin": "^3.0.0",
         "eslint": "^5.16.0",
         "jest": "^24.8.0",
