@@ -1,8 +1,8 @@
 
 module.exports = {
     entry: {
-        'portal-client': __dirname + '/src/frontend/portal-client/js/index',
-        'welcome-app': __dirname + '/src/frontend/welcome-app/js/index'
+        'portal-client': __dirname + '/src/frontend/portal-client/js',
+        'welcome-app': __dirname + '/src/frontend/welcome-app/js'
     },
     output: {
         path: __dirname + '/dist/frontend',

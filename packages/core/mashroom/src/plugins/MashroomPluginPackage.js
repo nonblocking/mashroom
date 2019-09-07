@@ -11,7 +11,7 @@ import type {
     MashroomPluginPackage as MashroomPluginPackageType, MashroomPluginPackageEvent, MashroomPluginPackageEventName,
     MashroomPluginDefinition, MashroomPluginPackageDefinition, MashroomPluginPackageRegistryConnector, MashroomLoggerFactory,
     MashroomLogger, MashroomPluginPackageStatus, MashroomPluginPackageBuilder, MashroomPluginPackageBuilderEvent, Dependencies,
-} from '../../type-definitions/index';
+} from '../../type-definitions';
 
 const readFile = promisify(fs.readFile);
 

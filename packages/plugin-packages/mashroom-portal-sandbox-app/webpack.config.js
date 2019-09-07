@@ -5,7 +5,7 @@ const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack
 module.exports = (env, argv) => {
 
     const entry = {
-        'bundle': [path.resolve(__dirname, 'src/js/index')]
+        'bundle': [path.resolve(__dirname, 'src/js')]
     };
 
     if (argv.mode === 'development') {

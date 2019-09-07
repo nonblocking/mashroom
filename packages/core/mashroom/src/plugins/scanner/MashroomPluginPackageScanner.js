@@ -17,7 +17,7 @@ export const DEFAULT_DEFER_UPDATE_MS = 2000;
 import type {
     MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName,
     MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder,
-} from '../../../type-definitions/index';
+} from '../../../type-definitions';
 
 type DeferredUpdatesTimestamps = {
     [string]: number

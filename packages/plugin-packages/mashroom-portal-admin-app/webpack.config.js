@@ -4,7 +4,7 @@ const DuplicatePackageCheckerPlugin = require('duplicate-package-checker-webpack
 
 module.exports = (env, argv) => {
 
-    let entry = [path.resolve(__dirname, 'src/js/index')];
+    let entry = [path.resolve(__dirname, 'src/js')];
 
     if (argv.mode === 'development') {
         // Add portal theme

@@ -1,6 +1,6 @@
 // @flow
 
-import type {ExpressRequest, ExpressResponse} from '../../../type-definitions/index';
+import type {ExpressRequest, ExpressResponse} from '../../../type-definitions';
 
 const indexRoute = (req: ExpressRequest, res: ExpressResponse) => {
     const pluginContext = req.pluginContext;

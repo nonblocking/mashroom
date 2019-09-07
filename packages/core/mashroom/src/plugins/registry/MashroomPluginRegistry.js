@@ -23,7 +23,7 @@ import type {
     MashroomPluginFactory,
     MashroomPluginPackageRegistryConnector as MashroomPluginPackageRegistryConnectorType,
     MashroomPluginRegistryConnector as MashroomPluginRegistryConnectorType,
-} from '../../../type-definitions/index';
+} from '../../../type-definitions';
 
 export default class MashroomPluginRegistry implements MashroomPluginRegistryType {
 

@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = (env, argv) => {
 
-    let entry = [path.resolve(__dirname, 'src/js/index')];
+    let entry = [path.resolve(__dirname, 'src/js')];
 
     if (argv.mode === 'development') {
         // Add portal theme

@@ -7,6 +7,7 @@ import infoWebappsRoute from './routes/info_webapps_route';
 import infoServicesRoute from './routes/info_services_route';
 import infoMiddlewareStack from './routes/info_middleware_stack';
 
+import type {Server} from 'http';
 import type {
     MashroomServer as MashroomServerType,
     MashroomServerConfig,
@@ -16,7 +17,7 @@ import type {
     ExpressApplication,
     GlobalNodeErrorHandler,
     MashroomServerInfo
-} from '../../type-definitions/index';
+} from '../../type-definitions';
 
 export default class MashroomServer implements MashroomServerType {
 
@@ -26,7 +27,7 @@ export default class MashroomServer implements MashroomServerType {
     _errorHandler: GlobalNodeErrorHandler;
     _log: MashroomLogger;
     _expressApp: ExpressApplication;
-    _server: any;
+    _server: ?Server;
 
     constructor(expressApp: ExpressApplication, serverInfo: MashroomServerInfo, config: MashroomServerConfig,
                 scanner: MashroomPluginPackageScanner, errorHandler: GlobalNodeErrorHandler, loggerFactory: MashroomLoggerFactory) {
@@ -48,7 +49,7 @@ Starting
 /_/  /_/\\_,_/___/_//_/_/  \\___/\\___/_/_/_/ /___/\\__/_/  |___/\\__/_/        
 
 Version ${this._serverInfo.version}                                                 
-        `);
+`);
 
         return new Promise((resolve, reject) => {
             this._server = this._expressApp.listen(this._config.port, (error: ?Error) => {
@@ -74,15 +75,18 @@ Version ${this._serverInfo.version}
         await this._scanner.stop();
 
         return new Promise((resolve, reject) => {
-            this._server.close((error) => {
-                if (error) {
-                    this._log.error('Failed to stop Mashroom server', error);
-                    reject(error);
-                } else {
-                    this._log.info('Mashroom server stopped');
-                    resolve();
-                }
-            });
+            if (this._server) {
+                this._server.close((error) => {
+                    if (error) {
+                        this._log.error('Failed to stop Mashroom server', error);
+                        reject(error);
+                    } else {
+                        this._log.info('Mashroom server stopped');
+                        this._server = null;
+                        resolve();
+                    }
+                });
+            }
         });
     }
 

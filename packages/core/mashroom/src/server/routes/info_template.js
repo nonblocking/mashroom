@@ -1,6 +1,6 @@
 // @flow
 
-import type {ExpressRequest} from '../../../type-definitions/index';
+import type {ExpressRequest} from '../../../type-definitions';
 
 export default (content: string, req: ExpressRequest) => (`
     <!doctype html>
