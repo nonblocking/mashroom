@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
 
-Adds a demo portal app (SPA) based on Angular 7 to the _Mashroom Portal_.
+Adds a demo portal app (SPA) based on Angular 8 to the _Mashroom Portal_.
 
 #### Usage
 

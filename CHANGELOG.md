@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.1.0
+
+ 
+
 ## 1.0.94
 
  * Portal: Made it configurable when the Portal will start to warn that the authentication is about to expire

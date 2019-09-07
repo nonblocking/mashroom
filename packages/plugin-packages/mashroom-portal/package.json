@@ -15,10 +15,10 @@
         "express": "^4.17.1",
         "get-uri": "^2.0.3",
         "lockfile": "^1.0.4",
-        "shortid": "^2.2.14"
+        "shortid": "^2.2.15"
     },
     "devDependencies": {
-        "@babel/cli": "^7.4.4",
+        "@babel/cli": "^7.6.0",
         "@mashroom/mashroom": "1.0.94",
         "@mashroom/mashroom-browser-cache": "1.0.94",
         "@mashroom/mashroom-csrf-protection": "1.0.94",
@@ -26,11 +26,11 @@
         "@mashroom/mashroom-i18n": "1.0.94",
         "@mashroom/mashroom-security": "1.0.94",
         "@mashroom/mashroom-storage": "1.0.94",
-        "eslint": "^5.16.0",
-        "jest": "^24.8.0",
-        "nodemon": "^1.19.1",
-        "webpack": "^4.34.0",
-        "webpack-cli": "^3.3.4"
+        "eslint": "^6.3.0",
+        "jest": "^24.9.0",
+        "nodemon": "^1.19.2",
+        "webpack": "^4.39.3",
+        "webpack-cli": "^3.3.8"
     },
     "jest": {
         "verbose": true,
@@ -41,7 +41,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src test",
+        "lint": "eslint src test --fix",
         "test": "jest",
         "build-backend": "babel src/backend -d dist/backend",
         "build-frontend": "webpack --mode production --display-error-details",

@@ -15,6 +15,7 @@
         "jest": true
     },
     "rules": {
+        "no-prototype-builtins": "off",
         "quotes": ["error", "single", { "allowTemplateLiterals": true }]
     }
 }

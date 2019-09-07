@@ -64,6 +64,8 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
 
         const updatedEndpoint = await registerBackgroundJobHolder.backgroundJob.fetchPortalAppDataAndUpdateEndpoint(portalAppEndpoint);
         portalAppEndpoints.push(updatedEndpoint);
+
+        // eslint-disable-next-line require-atomic-updates
         request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] = portalAppEndpoints;
 
         updatedEndpoint.portalApps.forEach((portalApp) => registry.registerRemotePortalAppForSession(portalApp, request));

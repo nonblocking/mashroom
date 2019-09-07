@@ -113,9 +113,6 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     async updateResourcePermission(request: ExpressRequest, resource: MashroomSecurityProtectedResource) {
-        const resourcePermissionCollection = await this._getResourcePermissionsCollection(request);
-        const existingResourcePermission = await this._findResourcePermission(resourcePermissionCollection, resource.type, resource.key);
-
         // Remove permissions without roles
         if (resource.permissions) {
             resource.permissions = resource.permissions.filter((p) => p.roles && p.roles.length > 0);
@@ -123,6 +120,9 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 resource.permissions = null;
             }
         }
+
+        const resourcePermissionCollection = await this._getResourcePermissionsCollection(request);
+        const existingResourcePermission = await this._findResourcePermission(resourcePermissionCollection, resource.type, resource.key);
 
         if (existingResourcePermission) {
             if (resource.permissions) {

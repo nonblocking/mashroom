@@ -13,12 +13,11 @@
         "csrf": "^3.1.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.4.4",
+        "@babel/cli": "^7.6.0",
         "@mashroom/mashroom": "1.0.94",
         "@mashroom/mashroom-utils": "1.0.94",
-        "eslint": "^5.16.0",
-        "jest": "^24.8.0",
-        "nock": "^10.0.6"
+        "eslint": "^6.3.0",
+        "jest": "^24.9.0"
     },
     "jest": {
         "verbose": true,
@@ -29,7 +28,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src test",
+        "lint": "eslint src test --fix",
         "test": "jest",
         "build": "babel src -d dist"
     },

@@ -18,16 +18,16 @@
         "request": "^2.88.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.4.4",
+        "@babel/cli": "^7.6.0",
         "@mashroom/mashroom": "1.0.94",
         "@mashroom/mashroom-csrf-protection": "1.0.94",
         "@mashroom/mashroom-portal": "1.0.94",
         "@mashroom/mashroom-storage": "1.0.94",
         "@mashroom/mashroom-utils": "1.0.94",
-        "eslint": "^5.16.0",
-        "jest": "^24.8.0",
+        "eslint": "^6.3.0",
+        "jest": "^24.9.0",
         "node-sass": "^4.12.0",
-        "nodemon": "^1.19.1"
+        "nodemon": "^1.19.2"
     },
     "jest": {
         "verbose": true,
@@ -38,7 +38,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src test",
+        "lint": "eslint src test --fix",
         "test": "jest",
         "build": "babel src/js -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
         "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/webapp/server.js\""

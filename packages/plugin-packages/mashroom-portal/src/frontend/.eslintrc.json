@@ -17,6 +17,7 @@
     },
     "rules": {
         "no-console": "off",
+        "no-prototype-builtins": "off",
         "quotes": ["error", "single", { "allowTemplateLiterals": true }]
     }
 }

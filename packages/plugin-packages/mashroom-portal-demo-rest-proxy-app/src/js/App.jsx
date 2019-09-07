@@ -1,13 +1,9 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {IntlProvider, addLocaleData} from 'react-intl';
+import {IntlProvider} from 'react-intl';
 import SpaceXLaunches from './SpaceXLaunches';
 import messages from '../messages/messages';
-import localeEn from 'react-intl/locale-data/en';
-import localeDe from 'react-intl/locale-data/de';
-
-addLocaleData([...localeEn, ...localeDe]);
 
 type Props = {
     lang: string,

@@ -10,13 +10,13 @@
         "dist/**"
     ],
     "devDependencies": {
-        "@babel/cli": "^7.4.4",
+        "@babel/cli": "^7.6.0",
         "@mashroom/mashroom-portal": "1.0.94",
-        "eslint": "^5.16.0",
-        "jest": "^24.8.0",
-        "webpack": "^4.34.0",
-        "webpack-cli": "^3.3.4",
-        "webpack-dev-server": "^3.7.1"
+        "eslint": "^6.3.0",
+        "jest": "^24.9.0",
+        "webpack": "^4.39.3",
+        "webpack-cli": "^3.3.8",
+        "webpack-dev-server": "^3.8.0"
     },
     "jest": {
         "verbose": true,
