@@ -80,6 +80,59 @@ const serverConfig: any = {
 };
 
 
+const mockPortalSitesCollection: any = {
+    findOne: (filter?: {}, limit?: number) => {
+        return Promise.resolve(mockSite);
+    },
+};
+
+const mockPortalPagesCollection: any = {
+    findOne: (filter?: {}, limit?: number) => {
+        return Promise.resolve(mockPage);
+    },
+};
+
+const mockPortalAppCollection: any = {
+    findOne: (filter?: {}, limit?: number) => {
+        return Promise.resolve(welcomeAppInstance1);
+    },
+};
+
+const mockSite: MashroomPortalSite = {
+    siteId: 'default',
+    title: 'Default Site',
+    path: '/web',
+    pages: [
+        {
+            pageId: 'test-page',
+            title: {
+                en: 'Test Page',
+                de: 'Test Seite'
+            },
+            friendlyUrl: '/',
+            subPages: [],
+        },
+    ],
+};
+
+const mockPage: MashroomPortalPage = {
+    pageId: 'test-page',
+    portalApps: {
+        'app-area1': [{
+            pluginName: 'Mashroom Welcome Portal App',
+            instanceId: 'ABCDEF',
+        }],
+    },
+};
+
+const welcomeAppInstance1: MashroomPortalAppInstance = {
+    pluginName: 'Mashroom Welcome Portal App',
+    instanceId: 'ABCDEF',
+    appConfig: {
+        foo: 'bar',
+    },
+};
+
 app.use((req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
 
     const pluginService: any = {};
@@ -173,56 +226,3 @@ app.listen('5050', (err: ?Error) => {
         console.info('Portal standalone test server listening on port 5050');
     }
 });
-
-const mockPortalSitesCollection: any = {
-    findOne: (filter?: {}, limit?: number) => {
-        return Promise.resolve(mockSite);
-    },
-};
-
-const mockPortalPagesCollection: any = {
-    findOne: (filter?: {}, limit?: number) => {
-        return Promise.resolve(mockPage);
-    },
-};
-
-const mockPortalAppCollection: any = {
-    findOne: (filter?: {}, limit?: number) => {
-        return Promise.resolve(welcomeAppInstance1);
-    },
-};
-
-const mockSite: MashroomPortalSite = {
-    siteId: 'default',
-    title: 'Default Site',
-    path: '/web',
-    pages: [
-        {
-            pageId: 'test-page',
-            title: {
-                en: 'Test Page',
-                de: 'Test Seite'
-            },
-            friendlyUrl: '/',
-            subPages: [],
-        },
-    ],
-};
-
-const mockPage: MashroomPortalPage = {
-    pageId: 'test-page',
-    portalApps: {
-        'app-area1': [{
-            pluginName: 'Mashroom Welcome Portal App',
-            instanceId: 'ABCDEF',
-        }],
-    },
-};
-
-const welcomeAppInstance1: MashroomPortalAppInstance = {
-    pluginName: 'Mashroom Welcome Portal App',
-    instanceId: 'ABCDEF',
-    appConfig: {
-        foo: 'bar',
-    },
-};

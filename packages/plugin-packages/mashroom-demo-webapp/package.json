@@ -20,7 +20,7 @@
     "scripts": {
         "lint": "eslint src --fix",
         "build": "babel src -d dist",
-        "start": "node dist/server.js",
+        "start": "node dist/dev_server.js",
         "dev": "nodemon --watch src --exec \"npm run build && npm run start\""
     },
     "mashroom": {

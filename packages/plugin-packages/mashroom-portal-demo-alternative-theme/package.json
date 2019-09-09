@@ -28,7 +28,7 @@
     },
     "scripts": {
         "lint": "eslint src --fix",
-        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/standalone-dev.js\"",
+        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/dev_server.js\"",
         "build:backend": "babel src/backend -d dist",
         "build:frontend": "node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/frontend/sass/style.scss dist/public/style.css",
         "build:copy-assets": "copyfiles -u 1 src/assets/* dist/public && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",

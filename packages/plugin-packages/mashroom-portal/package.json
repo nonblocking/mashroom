@@ -46,7 +46,7 @@
         "build-backend": "babel src/backend -d dist/backend",
         "build-frontend": "webpack --mode production --display-error-details",
         "build": "npm run build-backend && npm run build-frontend",
-        "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node $NODE_DEBUG_OPTION dist/backend/standalone-dev.js\""
+        "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node $NODE_DEBUG_OPTION dist/backend/dev_server.js\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

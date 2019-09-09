@@ -41,7 +41,7 @@
         "lint": "eslint src test --fix",
         "test": "jest",
         "build": "babel src/js -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
-        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/webapp/server.js\""
+        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
     },
     "mashroom": {
         "devModeBuildScript": "build",
