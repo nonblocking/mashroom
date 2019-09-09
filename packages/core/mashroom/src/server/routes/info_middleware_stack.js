@@ -26,13 +26,10 @@ const middlewares = (pluginContext: MashroomPluginContext) => `
 `;
 
 const middlewareRows = (pluginContext: MashroomPluginContext) => {
-    return pluginContext.services.core.pluginService.getPlugins()
-        .filter((p) => p.type === 'middleware')
-        .map((p) => ({ name: p.name, order: p.config && p.config.order || 1}))
-        .sort((m1, m2) => m1.order - m2.order)
+    return pluginContext.services.core.middlewareStackService.getStack()
         .map((m) => (`
             <tr>
-                <td>${m.name}</td>
+                <td>${m.pluginName}</td>
                 <td>${m.order}</td>
             </tr>
         `));

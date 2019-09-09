@@ -16,9 +16,9 @@ describe('MiddlewarePluginDelegate', () => {
 
         expect(middlewarePluginDelegate.middlewareStack.length).toBe(2);
         // $FlowFixMe
-        expect(middlewarePluginDelegate.middlewareStack[0].foo).toBe(2);
+        expect(middlewarePluginDelegate.middlewareStack[0].middleware.foo).toBe(2);
         // $FlowFixMe
-        expect(middlewarePluginDelegate.middlewareStack[1].foo).toBe(1);
+        expect(middlewarePluginDelegate.middlewareStack[1].middleware.foo).toBe(1);
     });
 
     it('replaces existing middleware with the same name', () => {

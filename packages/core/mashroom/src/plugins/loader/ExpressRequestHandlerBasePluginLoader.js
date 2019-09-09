@@ -53,6 +53,7 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
             this.addPluginInstance(this._expressApplication, requestHandlerWrapper.handler(), pluginConfig);
         } else {
             this._log.info(`Updating ${plugin.type} express plugin ${plugin.name}`+ (requirePath ? ` on path: ${pluginConfig.path}` : ''));
+            this.beforeUnload(plugin);
             requestHandlerWrapper = loadedPlugin.requestHandlerWrapper;
 
             if (requirePath && pluginConfig.path !== loadedPlugin.path) {
@@ -76,10 +77,14 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
         const loadedPlugin = this._getLoadedPlugin(plugin);
         if (loadedPlugin) {
             this._log.info(`Removing ${plugin.type} express plugin ${plugin.name}`+ (requirePath ? ` from path: ${loadedPlugin.path}` : ''));
+            this.beforeUnload(plugin);
             removeFromExpressStack(this._expressApplication, plugin);
-
             this._loadedPlugins.delete(plugin.name);
         }
+    }
+
+    _getLoadedPlugin(plugin: MashroomPlugin): ?LoadedPlugin {
+        return this._loadedPlugins.get(plugin.name);
     }
 
     addPluginInstance(expressApplication: ExpressApplication, pluginInstance: ExpressRequestHandler, pluginConfig: MashroomPluginConfig) {
@@ -94,8 +99,8 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
         throw new Error('Not implemented');
     }
 
-    _getLoadedPlugin(plugin: MashroomPlugin): ?LoadedPlugin {
-        return this._loadedPlugins.get(plugin.name);
+    beforeUnload(plugin: MashroomPlugin) {
+        // Empty hook
     }
 
     get name(): string {

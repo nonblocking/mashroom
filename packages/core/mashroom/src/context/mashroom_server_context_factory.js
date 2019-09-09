@@ -3,6 +3,7 @@
 import path from 'path';
 import cluster from 'cluster';
 import express from 'express';
+import http from 'http';
 
 import MashroomPluginContextHolder from './MashroomPluginContextHolder';
 import loggerFactoryFactory from '../logging/mashroom_logger_factory_factory';
@@ -24,6 +25,7 @@ import GlobalNodeErrorHandler from '../server/GlobalNodeErrorHandler';
 import DefaultExpressErrorHandler from '../server/DefaultExpressErrorHandler';
 import ExposePluginContextMiddleware from '../server/ExposePluginContextMiddleware';
 import MiddlewarePluginDelegate from '../server/MiddlewarePluginDelegate';
+import MashroomMiddlewareStackService from '../services/MashroomMiddlewareStackService';
 import XPoweredByHeaderMiddleware from '../server/XPoweredByHeaderMiddleware';
 import MashroomServer from '../server/MashroomServer';
 
@@ -36,6 +38,7 @@ import type {
     ExpressApplication, MashroomServiceRegistry as MashroomServiceRegistryType, MashroomServerConfig,
     MashroomPluginDefinition, MashroomPluginRegistryConnector, MashroomPluginPackage as MashroomPluginPackageType,
     MiddlewarePluginDelegate as MiddlewarePluginDelegateType, MashroomServerInfo,
+    MashroomCoreServices,
 } from '../../type-definitions';
 
 /**
@@ -70,16 +73,17 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const pluginRegistry = new MashroomPluginRegistry(scanner, pluginPackageFactory, pluginFactory, pluginContextHolder, loggerFactory);
 
     const expressApp = express();
+    const httpServer = http.createServer(expressApp);
     addDefaultExpressErrorHandler(expressApp, loggerFactory);
 
     const middlewarePluginDelegate = new MiddlewarePluginDelegate();
     addDefaultMiddleware(expressApp, pluginContextHolder, middlewarePluginDelegate);
 
-    addDefaultPluginLoaders(pluginRegistry, expressApp, serviceRegistry, pluginContextHolder, middlewarePluginDelegate, loggerFactory);
-    addCoreServices(serviceRegistry, serverConfig, pluginRegistry);
+    addDefaultPluginLoaders(pluginRegistry, expressApp, httpServer, serviceRegistry, middlewarePluginDelegate, loggerFactory, pluginContextHolder);
+    addCoreServices(serviceRegistry, pluginRegistry, middlewarePluginDelegate);
 
     const globalNodeErrorHandler = new GlobalNodeErrorHandler(loggerFactory);
-    const server = new MashroomServer(expressApp, serverInfo, serverConfig, scanner, globalNodeErrorHandler, loggerFactory);
+    const server = new MashroomServer(expressApp, httpServer, serverInfo, serverConfig, scanner, globalNodeErrorHandler, loggerFactory);
 
     const serverContext = {
         serverInfo,
@@ -116,24 +120,29 @@ const createBuilder = (config: MashroomServerConfig, loggerFactory: MashroomLogg
     return null;
 };
 
-const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, expressApplication: ExpressApplication, serviceRegistry: MashroomServiceRegistryType,
-                                 pluginContextHolder: MashroomPluginContextHolderType, middlewarePluginDelegate: MiddlewarePluginDelegateType, loggerFactory: MashroomLoggerFactory) => {
+const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, expressApplication: ExpressApplication, httpServer: http$Server,
+                                 serviceRegistry: MashroomServiceRegistryType, middlewarePluginDelegate: MiddlewarePluginDelegateType,
+                                 loggerFactory: MashroomLoggerFactory, pluginContextHolder: MashroomPluginContextHolderType) => {
     pluginRegistry.registerPluginLoader('plugin-loader', new MashroomPluginLoaderLoader(pluginRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('api', new MashroomApiPluginLoader(expressApplication, loggerFactory));
-    pluginRegistry.registerPluginLoader('web-app', new MashroomWebAppPluginLoader(expressApplication, loggerFactory));
+    pluginRegistry.registerPluginLoader('web-app', new MashroomWebAppPluginLoader(expressApplication, httpServer, loggerFactory, pluginContextHolder));
     pluginRegistry.registerPluginLoader('static', new MashroomStaticDocumentsPluginLoader(expressApplication, loggerFactory));
     pluginRegistry.registerPluginLoader('middleware', new MashroomMiddlewarePluginLoader(middlewarePluginDelegate, loggerFactory));
     pluginRegistry.registerPluginLoader('services', new MashroomServicesLoader(serviceRegistry, loggerFactory));
 };
 
-const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType, config: MashroomServerConfig,
-                         pluginRegistry: MashroomPluginRegistryType) => {
+const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType,
+                         pluginRegistry: MashroomPluginRegistryType, middlewareDelegate: MiddlewarePluginDelegate) => {
 
     const pluginService = new MashroomPluginService(pluginRegistry);
+    const middlewareStackService = new MashroomMiddlewareStackService(middlewareDelegate);
 
-    serviceNamespacesRegistry.registerServices('core', {
+    const coreService: MashroomCoreServices = {
         pluginService,
-    });
+        middlewareStackService,
+    };
+
+    serviceNamespacesRegistry.registerServices('core', coreService);
 };
 
 const addDefaultMiddleware = (expressApp: ExpressApplication, pluginContextHolder: MashroomPluginContextHolderType, middlewarePluginDelegate: MiddlewarePluginDelegateType) => {

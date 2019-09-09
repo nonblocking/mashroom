@@ -41,7 +41,7 @@
     },
     "scripts": {
         "lint": "eslint src test --fix",
-        "test": "jest --forceExit",
+        "test": "jest --detectOpenHandles",
         "build": "babel src -d dist",
         "start": "node dist/server.js"
     }

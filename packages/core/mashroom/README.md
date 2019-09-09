@@ -44,7 +44,33 @@ Interface:
       */
      getPluginPackages(): Array<MashroomPluginPackage>;
  }   
+```
 
+##### MashroomMiddlewareStackService
+
+Accessible through _pluginContext.services.core.middlewareStackService_
+
+Interface:
+
+```js
+/**
+ * A service to access and introspect the middleware stack
+ */
+export interface MashroomMiddlewareStackService {
+    /**
+     * Check if the stack has given plugin
+     */
+    has(pluginName: string): boolean;
+    /**
+     * Execute the given middleware.
+     * Throws an exception if it doesn't exists
+     */
+    apply(pluginName: string, req: ExpressRequest, res: ExpressResponse): Promise<void>;
+    /**
+     * Get the ordered list of middleware plugin (first in the list is executed first)
+     */
+    getStack(): Array<{ pluginName: string, order: number }>;
+} 
 ```
 
 #### Plugin Types
@@ -152,6 +178,28 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
 };
 
 export default bootstrap;
+```
+
+** Additional handlers **
+
+It is possible to return handlers in the bootstrap as well. Currently there a two additional handlers:
+ * _upgradeHandler_: Handle HTTP Upgrades (e.g. upgrade to WebSocket)
+ * _onUnload_: Called when the webapp is unloaded or reloaded
+ 
+Example: 
+
+```js
+const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
+    return {
+        expressApp: webapp,
+        upgradeHandler: (request: HttpServerRequest, socket: net$Socket, head: Buffer) => {
+            // TODO
+        },
+        onUnload: () => {
+            // TODO
+        }    
+    };
+};
 
 ```
 
@@ -177,7 +225,6 @@ To register a API plugin add this to _package.json_:
         ]
     }
 }
-
 ```
 
  * _defaultConfig.path_: The default path where the api will be available

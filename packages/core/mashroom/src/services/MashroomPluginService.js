@@ -1,6 +1,6 @@
 // @flow
 
-import type {MashroomPluginService as MashroomPluginServiceType, MashroomPluginRegistry, MashroomPluginConfig, MashroomPlugin} from '../../type-definitions';
+import type {MashroomPluginService as MashroomPluginServiceType, MashroomPluginRegistry} from '../../type-definitions';
 
 export default class MashroomPluginService implements MashroomPluginServiceType {
 

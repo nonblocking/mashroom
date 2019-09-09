@@ -2,6 +2,9 @@
 
 import type {Router, $Request, $Response, $Application, NextFunction} from 'express';
 
+export type HttpServerRequest = $Subtype<http$IncomingMessage<>> & {
+    pluginContext: MashroomPluginContext
+};
 export type ExpressRequest = $Subtype<$Request> & {
     pluginContext: MashroomPluginContext
 };
@@ -425,6 +428,25 @@ export interface MashroomPluginService {
 }
 
 /**
+ * A service to access and introspect the middleware stack
+ */
+export interface MashroomMiddlewareStackService {
+    /**
+     * Check if the stack has given plugin
+     */
+    has(pluginName: string): boolean;
+    /**
+     * Execute the given middleware.
+     * Throws an exception if it doesn't exists
+     */
+    apply(pluginName: string, req: ExpressRequest, res: ExpressResponse): Promise<void>;
+    /**
+     * Get the ordered list of middleware plugin (first in the list is executed first)
+     */
+    getStack(): Array<{ pluginName: string, order: number }>;
+}
+
+/**
  * Mashroom server
  */
 export interface MashroomServer {
@@ -443,7 +465,8 @@ export type MashroomServices = {
 }
 
 export type MashroomCoreServices = {
-    +pluginService: MashroomPluginService
+    +pluginService: MashroomPluginService,
+    +middlewareStackService: MashroomMiddlewareStackService,
 }
 
 export type MashroomServiceNamespaces = {
@@ -459,12 +482,17 @@ export interface MashroomServiceRegistry {
 /**
  * Middleware
  */
-
 export interface MiddlewarePluginDelegate {
-    insertOrReplaceMiddleware(name: string, order: number, middleware: ExpressMiddleware): void;
-    removeMiddleware(name: string): void;
+    insertOrReplaceMiddleware(pluginName: string, order: number, middleware: ExpressMiddleware): void;
+    removeMiddleware(pluginName: string): void;
     middleware(): ExpressMiddleware;
-    +middlewareStack: Array<ExpressMiddleware>;
+    +middlewareStack: Array<MiddlewareStackEntry>;
+}
+
+export type MiddlewareStackEntry = {
+    +pluginName: string,
+    +middleware: ExpressMiddleware,
+    +order: number,
 }
 
 /**
@@ -511,6 +539,17 @@ export interface MashroomPluginContextHolder {
 }
 
 /**
+ * WebSocket support
+ */
+export type MashroomHttpUpgradeHandler = (request: HttpServerRequest, socket: net$Socket, head: Buffer) => void;
+
+export type ExpressApplicationWithCallbacks = {
+    expressApp: ExpressApplication,
+    upgradeHandler?: MashroomHttpUpgradeHandler,
+    onUnload?: () => void
+};
+
+/**
  * Bootstrap method definition for plugin-loader plugins
  */
 export type MashroomPluginLoaderPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomPluginLoader>;
@@ -518,7 +557,7 @@ export type MashroomPluginLoaderPluginBootstrapFunction = (pluginName: string, p
 /**
  * Bootstrap method definition for web-app plugins
  */
-export type MashroomWebAppPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressApplication>;
+export type MashroomWebAppPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressApplication | ExpressApplicationWithCallbacks>;
 
 /**
  * Bootstrap method definition for API plugins

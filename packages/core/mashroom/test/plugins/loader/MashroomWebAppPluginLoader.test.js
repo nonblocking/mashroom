@@ -22,6 +22,24 @@ const ExpressApplicationMock: any = jest.fn(() => ({
     },
 }));
 
+let upgradeHandler = null;
+const httpServerMock: any = {
+    on(event: string, handler: (req: any, socket: any, head: any) => void) {
+        if (event === 'upgrade') {
+            upgradeHandler = handler;
+        }
+    }
+};
+
+const pluginContextHolderMock = {
+    getPluginContext() {
+        const context: any = {
+            foo: 'bar'
+        };
+        return context;
+    }
+};
+
 const RegistryConnectorMock: any = jest.fn(() => ({
     on: () => {},
 }));
@@ -62,7 +80,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), dummyLoggerFactory);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, dummyLoggerFactory, pluginContextHolderMock);
         await loader.load(plugin, {path: '/foo'}, context);
 
         expect(loader._loadedPlugins.size).toBe(1);
@@ -106,7 +124,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), dummyLoggerFactory);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, dummyLoggerFactory, pluginContextHolderMock);
         loader._loadedPlugins.set('Test2', {
             path: '/foo',
             requestHandlerWrapper,
@@ -149,7 +167,7 @@ describe('MashroomWebAppPluginLoader', () => {
             {name: 'bar'},
         ];
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), dummyLoggerFactory);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, dummyLoggerFactory, pluginContextHolderMock);
         loader._loadedPlugins.set('Test3', {
             path: '/foo',
             requestHandlerWrapper,
@@ -162,5 +180,116 @@ describe('MashroomWebAppPluginLoader', () => {
         expect(expressStack.find((e) => e.name === 'Test3')).toBeFalsy();
     });
 
+    it('loads a web-app with a HTTP upgrade handler correctly', async () => {
+        const pluginPackagePath = getPluginPackageFolder();
+
+        const pluginDefinition: any = {
+            bootstrap: 'bootstrap4.js',
+            name: 'Test4',
+            type: 'web-app',
+            defaultConfig: {
+                path: '/websocket',
+            },
+        };
+
+        const pluginPackage: any = {
+            pluginPackagePath,
+        };
+
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), dummyLoggerFactory);
+
+        fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
+            module.exports = () => ({
+                expressApp: (req, res, next) => req.test = 1,
+                upgradeHandler: (req, socket, head) => socket.test = 2,
+            })
+        `);
+
+        const context: any = {};
+
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, dummyLoggerFactory, pluginContextHolderMock);
+        await loader.load(plugin, {path: '/websocket'}, context);
+
+        expect(loader._loadedPlugins.size).toBe(1);
+        expect(loader._upgradeHandlers.length).toBe(1);
+
+        expect(upgradeHandler).toBeTruthy();
+        if (upgradeHandler) {
+            const req: any = {
+                url: '/websocket/test'
+            };
+            const socket: any = {};
+            upgradeHandler(req, socket, {});
+            expect(socket.test).toBe(2);
+        }
+    });
+
+    it('registers onLoad handlers correctly', async () => {
+        const pluginPackagePath = getPluginPackageFolder();
+
+        const pluginDefinition: any = {
+            bootstrap: 'bootstrap5.js',
+            name: 'Test5',
+            type: 'web-app',
+            defaultConfig: {
+                path: '/test5',
+            },
+        };
+
+        const pluginPackage: any = {
+            pluginPackagePath,
+        };
+
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), dummyLoggerFactory);
+
+        fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
+            module.exports = () => ({
+                expressApp: (req, res, next) => req.test = 1,
+                onUnload: () => {}
+            })
+        `);
+
+        const context: any = {};
+
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, dummyLoggerFactory, pluginContextHolderMock);
+        await loader.load(plugin, {path: '/test5'}, context);
+
+        expect(loader._loadedPlugins.size).toBe(1);
+        expect(loader._onUnloadHandlers.length).toBe(1);
+    });
+
+    it('executes onUnload handlers', (done) => {
+        const pluginPackagePath = getPluginPackageFolder();
+
+        const pluginDefinition: any = {
+            bootstrap: 'bootstrap2.js',
+            name: 'Test3',
+            type: 'web-app',
+            defaultConfig: {
+                path: '/foo',
+            },
+        };
+
+        const pluginPackage: any = {
+            pluginPackagePath,
+        };
+
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), dummyLoggerFactory);
+        const requestHandlerWrapper: any = {};
+
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, dummyLoggerFactory, pluginContextHolderMock);
+        loader._loadedPlugins.set('Test3', {
+            path: '/foo',
+            requestHandlerWrapper,
+        });
+        loader._onUnloadHandlers.push({
+            pluginName: 'Test3',
+            handler: () => {
+                done();
+            }
+        });
+
+        loader.unload(plugin);
+    });
 
 });

@@ -136,6 +136,7 @@ const welcomeAppInstance1: MashroomPortalAppInstance = {
 app.use((req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
 
     const pluginService: any = {};
+    const middlewareStackService: any = {};
     const storageService: MashroomStorageService = {
         getCollection: async (collection: string) => {
             switch (collection) {
@@ -191,6 +192,7 @@ app.use((req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) =
         services: {
             core: {
                 pluginService,
+                middlewareStackService,
             },
             storage: {
                 service: storageService,

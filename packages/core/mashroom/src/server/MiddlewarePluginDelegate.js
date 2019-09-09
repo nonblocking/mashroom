@@ -1,32 +1,33 @@
 // @flow
 
-import type {MiddlewarePluginDelegate as MiddlewarePluginDelegateType, ExpressRequest, ExpressResponse, ExpressNextFunction, ExpressMiddleware} from '../../type-definitions';
-
-type MiddlewareHolder = {
-    +name: string,
-    +middleware: ExpressMiddleware,
-    +order: number,
-}
+import type {
+    MiddlewarePluginDelegate as MiddlewarePluginDelegateType,
+    ExpressRequest,
+    ExpressResponse,
+    ExpressNextFunction,
+    ExpressMiddleware,
+    MiddlewareStackEntry
+} from '../../type-definitions';
 
 export default class MiddlewarePluginDelegate implements MiddlewarePluginDelegateType {
 
-    _middlewareStack: Array<MiddlewareHolder>;
+    _middlewareStack: Array<MiddlewareStackEntry>;
 
     constructor() {
         this._middlewareStack = [];
     }
 
-    insertOrReplaceMiddleware(name: string, order: number, middleware: ExpressMiddleware) {
+    insertOrReplaceMiddleware(pluginName: string, order: number, middleware: ExpressMiddleware) {
         // Remove existing
-        this.removeMiddleware(name);
+        this.removeMiddleware(pluginName);
 
         let inserted = false;
 
-        const newMiddlewareStack: Array<MiddlewareHolder> = [];
+        const newMiddlewareStack: Array<MiddlewareStackEntry> = [];
         for (const existingMiddleware of this._middlewareStack) {
            if (!inserted && order < existingMiddleware.order) {
                newMiddlewareStack.push({
-                   name,
+                   pluginName,
                    middleware,
                    order,
                });
@@ -37,7 +38,7 @@ export default class MiddlewarePluginDelegate implements MiddlewarePluginDelegat
         }
         if (!inserted) {
             newMiddlewareStack.push({
-                name,
+                pluginName,
                 middleware,
                 order,
             });
@@ -46,8 +47,8 @@ export default class MiddlewarePluginDelegate implements MiddlewarePluginDelegat
         this._middlewareStack = newMiddlewareStack;
     }
 
-    removeMiddleware(name: string) {
-        this._middlewareStack = this._middlewareStack.filter((ms) => ms.name !== name);
+    removeMiddleware(pluginName: string) {
+        this._middlewareStack = this._middlewareStack.filter((ms) => ms.pluginName !== pluginName);
     }
 
     middleware(): ExpressMiddleware {
@@ -63,8 +64,12 @@ export default class MiddlewarePluginDelegate implements MiddlewarePluginDelegat
         };
     }
 
-    get middlewareStack(): Array<ExpressMiddleware> {
-        return Object.freeze(this._middlewareStack.map((ms) => ms.middleware));
+    get middlewareStack(): Array<MiddlewareStackEntry> {
+        return this._middlewareStack.map((me) => ({
+            pluginName: me.pluginName,
+            order: me.order,
+            middleware: Object.freeze(me.middleware),
+        }));
     }
 
 }
