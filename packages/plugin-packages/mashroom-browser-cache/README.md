@@ -16,8 +16,13 @@ After that you can use the service like this:
 
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 
-const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
-await cacheControlService.addCacheControlHeader(req, res);
+export default async (req: ExpressRequest, res: ExpressResponse) => {
+
+    const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
+    await cacheControlService.addCacheControlHeader(req, res);
+        
+    // ..
+};
 ```
 
 You can override the default config in your Mashroom config file like this:

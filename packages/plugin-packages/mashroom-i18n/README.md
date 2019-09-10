@@ -17,11 +17,15 @@ After that you can use the service like this:
     
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 
-const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+export default (req: ExpressRequest, res: ExpressResponse) => {
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
-const currentLang = i18nService.getLanguage(req);
-const message =  i18nService.getMessage('username', 'de');
-// message will be 'Benutzernamen'
+    const currentLang = i18nService.getLanguage(req);
+    const message =  i18nService.getMessage('username', 'de');
+    // message will be 'Benutzernamen'
+
+    // ...
+}
 ```
 
 You can override the default config in your Mashroom config file like this:

@@ -16,11 +16,13 @@ After that you can use the service like this:
 
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 
-const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
+export default async (req: ExpressRequest, res: ExpressResponse) => {
+    const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
 
-const targetURI = 'http://foo.bar/api/test';
-const additionalHeaders = {};
-await httpProxyService.forward(req, res, targetURI, additionalHeaders);
+    const targetURI = 'http://foo.bar/api/test';
+    const additionalHeaders = {};
+    await httpProxyService.forward(req, res, targetURI, additionalHeaders);
+}
 ```
 
 You can override the default config in your Mashroom config file like this:

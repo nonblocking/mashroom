@@ -16,11 +16,15 @@ Then use the security service like this:
 
 import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 
-const storageService: MashroomStorageService = req.pluginContext.services.storage.service;
+export default async (req: ExpressRequest, res: ExpressResponse) => {
+    const storageService: MashroomStorageService = req.pluginContext.services.storage.service;
+    
+    const pagesCollection = await storageService.getCollection('mashroom-portal-pages');
+    
+    const page = await pagesCollection.findOne({pageId});
 
-const pagesCollection = await storageService.getCollection('mashroom-portal-pages');
-
-const page = await pagesCollection.findOne({pageId});
+    // ...
+}
 ```
 
 You can override the default config in your Mashroom config file like this:

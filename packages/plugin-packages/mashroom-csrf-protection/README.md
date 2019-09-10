@@ -26,8 +26,13 @@ After that you can use the service like this:
 
 import type {MashroomCacheControlService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 
-const csrfService: MashroomCacheControlService = req.pluginContext.services.csrf.service;
-const token = csrfService.getCSRFToken(req);
+export default (req: ExpressRequest, res: ExpressResponse) => {
+
+    const csrfService: MashroomCacheControlService = req.pluginContext.services.csrf.service;
+    const token = csrfService.getCSRFToken(req);
+ 
+    // ...
+}
 ```
 
 You can override the default config in your Mashroom config file like this:
