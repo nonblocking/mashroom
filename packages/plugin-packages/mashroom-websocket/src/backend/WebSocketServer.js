@@ -98,7 +98,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         return this._server;
     }
 
-    async sendMessage(client: MashroomWebSocketClient, message: {}) {
+    async sendMessage(client: MashroomWebSocketClient, message: any) {
         const webSocket = this._getWebSocket(client);
         if (webSocket) {
             return new Promise((resolve, reject) => {

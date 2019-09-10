@@ -85,7 +85,7 @@ export interface MashroomWebSocketService {
     /**
      * Send a (JSON) message to given client.
      */
-    sendMessage(client: MashroomWebSocketClient, message: {}): Promise<void>;
+    sendMessage(client: MashroomWebSocketClient, message: any): Promise<void>;
     /**
      * Get all clients on given connect path
      */

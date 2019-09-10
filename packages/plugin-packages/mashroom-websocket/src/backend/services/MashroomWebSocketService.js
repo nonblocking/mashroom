@@ -34,7 +34,7 @@ export default class MashroomWebSocketService implements MashroomWebSocketServic
         context.server.removeDisconnectListener(listener);
     }
 
-    async sendMessage(client: MashroomWebSocketClient, message: {}) {
+    async sendMessage(client: MashroomWebSocketClient, message: any) {
         await context.server.sendMessage(client, message);
     }
 

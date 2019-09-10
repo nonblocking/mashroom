@@ -3,9 +3,9 @@
 import type {Server, WebSocket} from 'ws';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
-export type MashroomWebSocketMatcher = (connectPath: string, message: {}) => boolean;
+export type MashroomWebSocketMatcher = (connectPath: string, message: any) => boolean;
 
-export type MashroomWebSocketMessageListener = (message: {}, client: MashroomWebSocketClient) => void;
+export type MashroomWebSocketMessageListener = (message: any, client: MashroomWebSocketClient) => void;
 export type MashroomWebSocketDisconnectListener = (client: MashroomWebSocketClient) => void;
 
 /**
@@ -35,7 +35,7 @@ export interface MashroomWebSocketService {
     /**
      * Send a (JSON) message to given client.
      */
-    sendMessage(client: MashroomWebSocketClient, message: {}): Promise<void>;
+    sendMessage(client: MashroomWebSocketClient, message: any): Promise<void>;
     /**
      * Get all clients on given connect path
      */
@@ -71,7 +71,7 @@ export interface MashroomWebSocketServer {
     removeDisconnectListener(listener: MashroomWebSocketDisconnectListener): void;
     createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser): void;
     getServer(): Server;
-    sendMessage(client: MashroomWebSocketClient, message: {}): Promise<void>;
+    sendMessage(client: MashroomWebSocketClient, message: any): Promise<void>;
     close(client: MashroomWebSocketClient): void;
     closeAll(): void;
     getClientsOnPath(connectPath: string): Array<MashroomWebSocketClient>;
