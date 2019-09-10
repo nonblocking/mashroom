@@ -474,6 +474,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc] 
 
+[mashroom-http-proxy](../../mashroom-websocket/README.md) [inc] 
+
 [mashroom-i18n](../../mashroom-i18n/README.md) [inc] 
 
 [mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc] 
