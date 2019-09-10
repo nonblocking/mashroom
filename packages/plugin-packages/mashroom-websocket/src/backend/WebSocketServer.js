@@ -36,7 +36,9 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         this._clients = [];
         this._messageListener = [];
         this._disconnectListeners = [];
-        setInterval(() => this._checkAlive(), context.pingIntervalSec * 1000);
+        if (context.pingIntervalSec > 0) {
+            setInterval(() => this._checkAlive(), context.pingIntervalSec * 1000);
+        }
     }
 
     addMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener) {
