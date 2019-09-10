@@ -53,6 +53,8 @@ You can override the default config in your Mashroom config file like this:
  * _pingIntervalSec_: Interval for ping messages to clients to check if they are alive (default: 30, <= 0 disables pings)
  * _maxConnections_: Max allowed WebSocket connections (default: 2000)
  
+There will also be a **test page** available under: _/websocket/test_
+ 
 #### Services
 
 ##### MashroomWebSocketService

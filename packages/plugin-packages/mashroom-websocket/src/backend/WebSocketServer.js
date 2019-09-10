@@ -158,6 +158,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             return;
         }
 
+        let handled = false;
         this._messageListener.forEach((wrapper) => {
             let match = false;
             try {
@@ -171,8 +172,13 @@ export default class WebSocketServer implements MashroomWebSocketServer {
                 } catch (e) {
                     this._logger.error('Message listener threw error', e);
                 }
+                handled = true;
             }
         });
+
+        if (!handled) {
+            this._logger.warn(`No message listener found to handle message from client connected to: ${client.connectPath}. Message: `, message);
+        }
     }
 
     _removeClient(client: MashroomWebSocketClient) {
