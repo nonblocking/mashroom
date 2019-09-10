@@ -75,7 +75,23 @@ The config file contains just an array of URL's:
 ]
 ``` 
 
-**REST API**
+The **Service** can be used like this:
+
+```js
+// @flow
+    
+import type {MashroomPortalRemoteAppEndpointService} from '@mashroom/mashroom-portal-remote-app-registry/type-definitions';
+
+export default async (req: ExpressRequest, res: ExpressResponse) => {
+    const remoteAppService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
+
+    const remoteApps = await remoteAppService.findAll();
+
+    // ...
+}
+```
+
+The **REST API** can be used like this:
 
 Available at _/portal-remote-app-registry/api_. Methods:
 
@@ -89,3 +105,43 @@ Available at _/portal-remote-app-registry/api_. Methods:
     ```
  * _DELETE /&lt;url&gt;_ : Delete given URL 
 
+#### Services
+
+##### MashroomPortalRemoteAppEndpointService
+
+The exposed service is accessible through _pluginContext.services.remotePortalAppEndpoint.service_
+
+**Interface:**
+
+```js
+export interface MashroomPortalRemoteAppEndpointService {
+    /**
+     * Register a new Remote App URL
+     */
+    registerRemoteAppUrl(url: string): Promise<void>;
+    /**
+     * Register a Remote App URL only for the current session (useful for testing)
+     */
+    synchronousRegisterRemoteAppUrlInSession(url: string, request: ExpressRequest): Promise<void>;
+    /**
+     * Unregister a Remote App
+     */
+    unregisterRemoteAppUrl(url: string): Promise<void>;
+    /**
+     * Find Remote App by URL
+     */
+    findRemotePortalAppByUrl(url: string): Promise<?RemotePortalAppEndpoint>;
+    /**
+     * Return all known Remote App endpoints
+     */
+    findAll(): Promise<Array<RemotePortalAppEndpoint>>;
+    /**
+     * Update an existing Remote App endpoint
+     */
+    updateRemotePortalAppEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
+    /**
+     * Refresh (fetch new metadata) from given endpoint
+     */
+    refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
+}
+```

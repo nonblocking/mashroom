@@ -49,20 +49,24 @@ And you can use the security service like this:
 
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 
-const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+export default async (req: ExpressRequest, res: ExpressResponse) => {
+    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-// Create a permission
-await securityService.updateResourcePermission(req, {
-    type: 'Page',
-    key: pageId,
-    permissions: [{
-        permissions: ['View'],
-        roles: ['Role1', 'Role2']
-    }]
-});
+    // Create a permission
+    await securityService.updateResourcePermission(req, {
+        type: 'Page',
+        key: pageId,
+        permissions: [{
+            permissions: ['View'],
+            roles: ['Role1', 'Role2']
+        }]
+    });
 
-// Check a permission
-const mayAccess = await securityService.checkResourcePermission(req, 'Page', pageId, 'View');
+    // Check a permission
+    const mayAccess = await securityService.checkResourcePermission(req, 'Page', pageId, 'View');
+
+    // ...
+}
 ```
 
 You can override the default config in your Mashroom config file like this:
