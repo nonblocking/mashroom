@@ -3,6 +3,7 @@
 
 ## 1.1.0
 
+ * Added a service plugin to handle WebSocket connections (mashroom-websocket)
  * Core: web-app Plugins can now additionally have handlers for upgrade requests (WebSocket support) and for unload
  * Core: The _Middleware_ tab in the admin UI shows now the actual order of the stack (until now the order was just calculated) 
 

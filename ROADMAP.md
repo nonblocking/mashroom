@@ -5,16 +5,16 @@
 
 ### Core
 
-
 ### Portal
 
  * Declaration and loading of global (shared) portal app resources 
- * Support of proxy'ing websocket connections
+ * Use the new WebSocket proxy to handle restProxy targetUri's beginning with ws://
  * Admin Portal App
     * Responsive design
 
 ### Plugins
-
+ 
+ * WebSocket proxy similar to mashroom-http-proxy based on mashroom-websocket
  * CMS content rendering app with a pluggable backend connector (e.g. for a headless CMS or Typo 3)
  * Asset rendering app with a pluggable backend connector (e.g. for a DMS or S3)
  * MongoDb storage implementation

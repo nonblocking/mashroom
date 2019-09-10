@@ -3,5 +3,10 @@
         "*": {
             "allow": ["Authenticated"]
         }
+    },
+    "/websocket/test/**": {
+        "*": {
+            "allow": ["Authenticated"]
+        }
     }
 }

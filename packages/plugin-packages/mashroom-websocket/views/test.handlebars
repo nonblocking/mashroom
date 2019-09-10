@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <script type="application/javascript" src="test_client.js"></script>
+
+    <style type="text/css">
+        body {
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            -webkit-font-smoothing: antialiased;
+            -moz-font-smoothing: antialiased;
+            -ms-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+            color: black;
+            font-size: 16px;
+            font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+        }
+
+        button {
+            background-color: #645e9d;
+            color: white;
+            border-radius: 0;
+            border: none;
+            padding: 8px 16px;
+            cursor: pointer;
+            outline: none !important;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #7b73aa;
+        }
+
+        #status {
+            margin-bottom: 10px;
+        }
+
+        #log {
+            margin-top: 10px;
+            font-family: 'Courier New', sans-serif;
+            font-size: 0.9em;
+        }
+    </style>
+
+    <title>Mashroom WebSocket Test Page</title>
+</head>
+<body>
+    <h2>Mashroom WebSocket Test Page</h2>
+
+    <div>
+        <div id="status">Status: Not connected</div>
+        <div>
+            <button onclick="connect()">Connect</button>
+            <button onclick="ping()">Send Greeting</button>
+        </div>
+        <div id="log">
+
+        </div>
+    </div>
+</body>
+</html>

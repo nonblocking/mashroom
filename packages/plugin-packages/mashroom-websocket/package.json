@@ -1,0 +1,74 @@
+{
+    "name": "@mashroom/mashroom-websocket",
+    "description": "Adds a WebSocket server with a simple Service that can be used to interact with clients",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "public/**",
+        "views/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "express": "^4.17.1",
+        "express-handlebars": "^3.1.0",
+        "ws": "^7.1.2"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.6.0",
+        "@mashroom/mashroom": "1.0.94",
+        "@mashroom/mashroom-security": "1.0.94",
+        "@mashroom/mashroom-utils": "1.0.94",
+        "eslint": "^6.3.0",
+        "jest": "^24.9.0",
+        "nodemon": "^1.19.2",
+        "webpack": "^4.39.3",
+        "webpack-cli": "^3.3.8"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src test --fix",
+        "test": "jest",
+        "build:backend": "babel src/backend -d dist",
+        "build:frontend": "webpack --mode production --display-error-details",
+        "build": "npm run build:backend && npm run build:frontend",
+        "dev": "nodemon --watch src -e js --exec \"npm run build && node dist/webapp/dev_server.js\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom WebSocket Webapp",
+                "type": "web-app",
+                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+                "requires": [
+                    "Mashroom Security Services"
+                ],
+                "defaultConfig": {
+                    "path": "/websocket",
+                    "restrictToRoles": null,
+                    "pingIntervalSec": 30,
+                    "maxConnections": 2000
+                }
+            },
+            {
+                "name": "Mashroom WebSocket Services",
+                "type": "services",
+                "namespace": "websocket",
+                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+                "requires": [
+                    "Mashroom Security Services"
+                ]
+            }
+        ]
+    }
+}
