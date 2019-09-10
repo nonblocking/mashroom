@@ -2,8 +2,11 @@
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import WebSocketServer from '../src/backend/WebSocketServer';
+import context from '../src/backend/context';
 
 describe('WebSocketServer', () => {
+
+    context.pingIntervalSec = -1;
 
     it('creates a client', () => {
         const webSocketServer = new WebSocketServer(dummyLoggerFactory);
