@@ -26,14 +26,8 @@ function createReadonlyProxyImpl<T: Object>(target: T, logger?: { warn: (msg: st
             }
             return val;
         },
-        set: function(target, name, value) {
+        set: function(target, name) {
             throw new ReadOnlyError(`Attempt to set property on read-only object: ${name}`);
         },
     }): any);
 }
-
-export default {
-    cloneAndFreezeObject,
-    cloneAndFreezeArray,
-    createReadonlyProxy,
-};
