@@ -24,9 +24,11 @@ describe('MashroomPluginService', () => {
             }, 0);
         });
 
-        loadedHandler({
-            pluginName: 'test-plugin',
-        })
+        if (loadedHandler) {
+            loadedHandler({
+                pluginName: 'test-plugin',
+            });
+        }
     });
 
     it('fires and removes unUnload listeners', (done) => {
@@ -49,9 +51,11 @@ describe('MashroomPluginService', () => {
             }, 0);
         });
 
-        unloadHandler({
-            pluginName: 'test-plugin',
-        })
+        if (unloadHandler) {
+            unloadHandler({
+                pluginName: 'test-plugin',
+            });
+        }
     });
 
 });
