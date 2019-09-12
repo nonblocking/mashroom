@@ -1,5 +1,6 @@
 // @flow
 
+import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {Server} from 'ws';
 import context from './context';
 
@@ -61,10 +62,11 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser) {
-        this._logger.debug(`WebSocket connection opened. Path: ${connectPath}, User: ${user.username}`);
+        const contextLogger = this._logger.withContext(userContext(user));
+        contextLogger.debug(`WebSocket connection opened on path: ${connectPath}. User: ${user.username}`);
 
         if (this.getClientCount() > context.maxConnections) {
-            this._logger.warn(`Max WebSocket connections (${context.maxConnections}) reached. Closing new connection.`);
+            contextLogger.warn(`Max WebSocket connections (${context.maxConnections}) reached. Closing new connection.`);
             webSocket.close();
             return;
         }
@@ -81,7 +83,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         });
 
         webSocket.on('error', (error) => {
-            this._logger.error('WebSocket error', error);
+            contextLogger.error('WebSocket error', error);
         });
         webSocket.on('close', () => {
             this._removeClient(client);
@@ -101,7 +103,9 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     async sendMessage(client: MashroomWebSocketClient, message: any) {
         const webSocket = this._getWebSocket(client);
         if (webSocket) {
+            const contextLogger = this._logger.withContext(userContext(client.user));
             return new Promise((resolve, reject) => {
+                contextLogger.debug(`Sending WebSocket message to client:`, message);
                 webSocket.send(JSON.stringify(message), (err) => {
                     if (err) {
                         reject(err);
@@ -145,8 +149,10 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     _handleMessage(textMsg: string, client: MashroomWebSocketClient) {
+        const contextLogger = this._logger.withContext(userContext(client.user));
+
         if (typeof (textMsg) !== 'string') {
-            this._logger.warn('Ignoring WebSocket message because currently binary is not supported');
+            contextLogger.warn('Ignoring WebSocket message because currently binary is not supported');
             return;
         }
 
@@ -154,9 +160,11 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         try {
             message = JSON.parse(textMsg);
         } catch (e) {
-            this._logger.warn('Ignoring WebSocket message because it is no valid JSON', e);
+            contextLogger.warn('Ignoring WebSocket message because it is no valid JSON', e);
             return;
         }
+
+        contextLogger.debug('Received WebSocket message from client:', message);
 
         let handled = false;
         this._messageListener.forEach((wrapper) => {
@@ -164,20 +172,20 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             try {
                 match = wrapper.matcher(client.connectPath, message);
             } catch (e) {
-                this._logger.warn('Matcher execution failed', e);
+                contextLogger.warn('Matcher execution failed', e);
             }
             if (match) {
                 try {
                     wrapper.listener(message, client);
                 } catch (e) {
-                    this._logger.error('Message listener threw error', e);
+                    contextLogger.error('Message listener threw error', e);
                 }
                 handled = true;
             }
         });
 
         if (!handled) {
-            this._logger.warn(`No message listener found to handle message from client connected to: ${client.connectPath}. Message: `, message);
+            contextLogger.warn(`No message listener found to handle message from client connected to: ${client.connectPath}. Message: `, message);
         }
     }
 
@@ -202,14 +210,16 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     _checkAlive() {
-        this._logger.info(`Currently open WebSocket connections: ${this.getClientCount()}`);
-        this._clients.forEach((wrapper) => {
-            if (!wrapper.client.alive) {
-                this.close(wrapper.client);
-            } else {
-                wrapper.client.alive = false;
-                wrapper.webSocket.ping();
-            }
-        });
+        if (this._clients) {
+            this._logger.info(`Currently open WebSocket connections: ${this.getClientCount()}`);
+            this._clients.forEach((wrapper) => {
+                if (!wrapper.client.alive) {
+                    this.close(wrapper.client);
+                } else {
+                    wrapper.client.alive = false;
+                    wrapper.webSocket.ping();
+                }
+            });
+        }
     }
 }

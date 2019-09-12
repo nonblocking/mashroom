@@ -17,6 +17,17 @@ export const dummyLoggerFactory = () => {
     return dummyLogger;
 };
 
+export const userContext = (mashroomUser: ?any) => {
+    let username = null;
+    if (mashroomUser) {
+        username = mashroomUser.username
+    }
+
+    return {
+        username
+    }
+};
+
 export const userAndAgentContext = (req: Request) => {
     const clientIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 

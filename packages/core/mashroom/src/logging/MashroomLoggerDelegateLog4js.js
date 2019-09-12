@@ -67,17 +67,17 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
         try {
             switch (level) {
                 case 'error':
-                    args && args.length > 0 ? logger.error(message, args) : logger.error(message);
+                    args && args.length > 0 ? logger.error(message, ...args) : logger.error(message);
                     break;
                 case 'warn':
-                    args && args.length > 0 ? logger.warn(message, args) : logger.warn(message);
+                    args && args.length > 0 ? logger.warn(message, ...args) : logger.warn(message);
                     break;
                 case 'info':
-                    args && args.length > 0 ? logger.info(message, args) : logger.info(message);
+                    args && args.length > 0 ? logger.info(message, ...args) : logger.info(message);
                     break;
                 default:
                 case 'debug':
-                    args && args.length > 0 ? logger.debug(message, args) : logger.debug(message);
+                    args && args.length > 0 ? logger.debug(message, ...args) : logger.debug(message);
                     break;
             }
 
