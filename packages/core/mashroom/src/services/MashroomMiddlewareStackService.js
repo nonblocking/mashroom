@@ -1,29 +1,42 @@
 // @flow
 
 import type {
-    ExpressRequest, ExpressResponse,
+    ExpressRequest, ExpressResponse, MashroomLogger, MashroomLoggerFactory,
     MashroomMiddlewareStackService as MashroomMiddlewareStackServiceType,
     MiddlewarePluginDelegate
 } from '../../type-definitions';
 
+const privatePropsMap: WeakMap<MashroomMiddlewareStackService, {
+    middlewarePluginDelegate: MiddlewarePluginDelegate;
+}> = new WeakMap();
+
 export default class MashroomMiddlewareStackService implements MashroomMiddlewareStackServiceType {
 
-    _getMiddlewarePluginDelegate: MiddlewarePluginDelegate;
+    _log: MashroomLogger;
 
-    constructor(middlewarePluginDelegate: MiddlewarePluginDelegate) {
-        this._getMiddlewarePluginDelegate = middlewarePluginDelegate;
+    constructor(middlewarePluginDelegate: MiddlewarePluginDelegate, loggerFactory: MashroomLoggerFactory) {
+        privatePropsMap.set(this, {
+            middlewarePluginDelegate
+        });
+        this._log = loggerFactory('mashroom.middleware.service');
     }
 
     has(pluginName: string) {
-        return !!this._getMiddlewarePluginDelegate.middlewareStack.find((me) => me.pluginName === pluginName);
+        const privateProps = privatePropsMap.get(this);
+        if (privateProps) {
+            return !!privateProps.middlewarePluginDelegate.middlewareStack.find((me) => me.pluginName === pluginName);
+        }
+        return false;
     }
 
     async apply(pluginName: string, req: ExpressRequest, res: ExpressResponse) {
-        const middlewareEntry = this._getMiddlewarePluginDelegate.middlewareStack.find((me) => me.pluginName === pluginName);
+        const privateProps = privatePropsMap.get(this);
+        const middlewareEntry = privateProps && privateProps.middlewarePluginDelegate.middlewareStack.find((me) => me.pluginName === pluginName);
         if (!middlewareEntry) {
             throw new Error(`No middleware plugin '${pluginName} found!`);
         }
 
+        this._log.debug(`Applying middleware: ${pluginName}`);
         return new Promise((resolve, reject) => {
             try {
                 middlewareEntry.middleware(req, res, () => {
@@ -36,9 +49,13 @@ export default class MashroomMiddlewareStackService implements MashroomMiddlewar
     }
 
     getStack(): Array<{ pluginName: string, order: number }> {
-        return this._getMiddlewarePluginDelegate.middlewareStack.map((me) => ({
-            pluginName: me.pluginName,
-            order: me.order,
-        }));
+        const privateProps = privatePropsMap.get(this);
+        if (privateProps) {
+            return privateProps.middlewarePluginDelegate.middlewareStack.map((me) => ({
+                pluginName: me.pluginName,
+                order: me.order,
+            }));
+        }
+        return [];
     }
 }

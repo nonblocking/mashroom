@@ -1,48 +1,84 @@
 // @flow
 
-import type {MashroomPluginService as MashroomPluginServiceType, MashroomPluginRegistry} from '../../type-definitions';
+import type {
+    MashroomPluginService as MashroomPluginServiceType,
+    MashroomPluginRegistry,
+    MashroomLogger,
+    MashroomLoggerFactory
+} from '../../type-definitions';
 
 type Listeners = {
     [pluginName: string]: Array<() => void>
 }
 
+const privatePropsMap: WeakMap<MashroomPluginService, {
+    pluginRegistry: MashroomPluginRegistry;
+}> = new WeakMap();
+
 export default class MashroomPluginService implements MashroomPluginServiceType {
 
-    _getPluginRegistry: MashroomPluginRegistry;
     _loadedListeners: Listeners;
-    _unloadlisteners: Listeners;
+    _unloadListeners: Listeners;
+    _log: MashroomLogger;
 
-    constructor(pluginRegistry: MashroomPluginRegistry) {
-        this._getPluginRegistry = pluginRegistry;
+    constructor(pluginRegistry: MashroomPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        privatePropsMap.set(this, {
+            pluginRegistry
+        });
+        this._log = loggerFactory('mashroom.plugins.service');
         this._loadedListeners = {};
-        this._unloadlisteners = {};
+        this._unloadListeners = {};
 
-        this._getPluginRegistry.on('loaded', (event) => {
+        pluginRegistry.on('loaded', (event) => {
             const listeners = this._loadedListeners[event.pluginName];
             if (listeners) {
-                listeners.forEach((l) => l());
+                listeners.forEach((l) => {
+                    try {
+                        l();
+                    } catch (error) {
+                        this._log.error('Loaded event listener threw error', error);
+                    }
+                });
                 delete this._loadedListeners[event.pluginName];
             }
         });
-        this._getPluginRegistry.on('unload', (event) => {
-            const listeners = this._unloadlisteners[event.pluginName];
+        pluginRegistry.on('unload', (event) => {
+            const listeners = this._unloadListeners[event.pluginName];
             if (listeners) {
-                listeners.forEach((l) => l());
-                delete this._unloadlisteners[event.pluginName];
+                listeners.forEach((l) => {
+                    try {
+                        l();
+                    } catch (error) {
+                        this._log.error('Unload event listener threw error', error);
+                    }
+                });
+                delete this._unloadListeners[event.pluginName];
             }
         });
     }
 
     getPluginLoaders() {
-        return this._getPluginRegistry.pluginLoaders;
+        const privateProps = privatePropsMap.get(this);
+        if (privateProps) {
+            return privateProps.pluginRegistry.pluginLoaders;
+        }
+        return {};
     }
 
     getPlugins() {
-        return this._getPluginRegistry.plugins;
+        const privateProps = privatePropsMap.get(this);
+        if (privateProps) {
+            return privateProps.pluginRegistry.plugins;
+        }
+        return [];
     }
 
     getPluginPackages() {
-        return this._getPluginRegistry.pluginPackages;
+        const privateProps = privatePropsMap.get(this);
+        if (privateProps) {
+            return privateProps.pluginRegistry.pluginPackages;
+        }
+        return [];
     }
 
     onLoadedOnce(pluginName: string, listener: () => void) {
@@ -51,7 +87,7 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
     }
 
     onUnloadOnce(pluginName: string, listener: () => void) {
-        this._unloadlisteners[pluginName] = this._unloadlisteners[pluginName] || [];
-        this._unloadlisteners[pluginName].push(listener);
+        this._unloadListeners[pluginName] = this._unloadListeners[pluginName] || [];
+        this._unloadListeners[pluginName].push(listener);
     }
 }

@@ -26,9 +26,12 @@ export const ROLE_AUTHENTICATED_USER = 'Authenticated';
 const RESOURCE_PERMISSIONS_COLLECTION_NAME = 'mashroom-security-resource-permissions';
 const ROLE_DEFINITIONS_COLLECTION_NAME = 'mashroom-security-role-definitions';
 
+const privatePropsMap: WeakMap<MashroomSecurityService, {
+    securityProviderRegistry: MashroomSecurityProviderRegistry;
+}> = new WeakMap();
+
 export default class MashroomSecurityService implements MashroomSecurityServiceType {
 
-    _securityProviderRegistry: MashroomSecurityProviderRegistry;
     _securityProviderName: string;
     _aclPath: string;
     _aclChecker: MashroomSecurityACLCheckerType;
@@ -36,9 +39,10 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
 
     constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclPath: string, serverRootFolder: string, loginPage: string, loggerFactory: MashroomLoggerFactory) {
         this._securityProviderName = securityProviderName;
-        this._securityProviderRegistry = securityProviderRegistry;
+        privatePropsMap.set(this, {
+            securityProviderRegistry,
+        });
         this._logger = loggerFactory('mashroom.security.service');
-
         this._aclPath = aclPath;
         if (!path.isAbsolute(this._aclPath)) {
             this._aclPath = path.resolve(serverRootFolder, this._aclPath);
@@ -99,9 +103,9 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         const roleDefinitionsCollection = await this._getRoleDefinitionsCollection(request);
         const existingRole = await this._findRole(roleDefinitionsCollection, roleDefinition.id);
         if (!existingRole) {
-            roleDefinitionsCollection.insertOne(roleDefinition);
+            await roleDefinitionsCollection.insertOne(roleDefinition);
         } else {
-            roleDefinitionsCollection.updateOne({id: roleDefinition.id}, Object.assign({}, existingRole, {
+            await roleDefinitionsCollection.updateOne({id: roleDefinition.id}, Object.assign({}, existingRole, {
                 description: roleDefinition.description
             }));
         }
@@ -142,12 +146,13 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 roles = roles.concat(p.roles)
             });
         }
-        roles.forEach(async (roleId) => {
+        for (let i = 0; i < roles.length; i++) {
+            const roleId = roles[i];
             const exists = await this._findRole(roleDefinitionsCollection, roleId) !== null;
             if (!exists) {
                 await roleDefinitionsCollection.insertOne({id :roleId});
             }
-        });
+        }
     }
 
     async getResourcePermissions(request: ExpressRequest, resourceType: MashroomSecurityResourceType, resourceKey: string) {
@@ -250,7 +255,8 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     _getSecurityProvider(): ?MashroomSecurityProvider {
-        const securityProvider = this._securityProviderRegistry.findProvider(this._securityProviderName);
+        const privateProps = privatePropsMap.get(this);
+        const securityProvider = privateProps && privateProps.securityProviderRegistry.findProvider(this._securityProviderName);
         if (!securityProvider) {
             this._logger.warn(`Cannot authenticate because the security provider is not (yet) loaded: ${this._securityProviderName}`);
             return null;
