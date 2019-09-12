@@ -3,6 +3,9 @@
 
 ## 1.1.0
 
+ * Core: Added the possibility to listen on Plugin load and unload events via MashroomPluginService.
+   Useful if you want to cleanup when your plugin unloads or in the rare case where you have to hold
+   a plugin instance and want to get notified about an unload or reload.
  * Added a service plugin to handle WebSocket connections (mashroom-websocket)
  * Core: web-app Plugins can now additionally have handlers for upgrade requests (WebSocket support) and for unload
  * Core: The _Middleware_ tab in the admin UI shows now the actual order of the stack (until now the order was just calculated) 

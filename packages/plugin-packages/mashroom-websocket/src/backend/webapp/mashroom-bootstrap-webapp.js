@@ -23,15 +23,14 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
 
     const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn(pluginContext.loggerFactory);
 
-    const onUnload = () => {
+    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close all connections when the plugin reloads
         server.closeAll();
-    };
+    });
 
     return {
         expressApp,
         upgradeHandler,
-        onUnload,
     };
 };
 

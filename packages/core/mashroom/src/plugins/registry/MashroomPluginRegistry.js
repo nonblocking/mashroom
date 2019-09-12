@@ -1,5 +1,6 @@
 // @flow
 
+import EventEmitter from 'events';
 import {cloneAndFreezeObject, cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {createPluginConfig} from '../plugin_utils';
 import MashroomPluginPackageRegistryConnector from './MashroomPluginPackageRegistryConnector';
@@ -23,6 +24,8 @@ import type {
     MashroomPluginFactory,
     MashroomPluginPackageRegistryConnector as MashroomPluginPackageRegistryConnectorType,
     MashroomPluginRegistryConnector as MashroomPluginRegistryConnectorType,
+     MashroomPluginRegistryEvent,
+    MashroomPluginRegistryEventName,
 } from '../../../type-definitions';
 
 export default class MashroomPluginRegistry implements MashroomPluginRegistryType {
@@ -38,6 +41,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
     _pluginLoaders: MashroomPluginLoaderMap;
     _pluginsNoLoader: Array<MashroomPluginType>;
     _pluginsMissingRequirements: Array<MashroomPluginType>;
+    _eventEmitter: EventEmitter;
 
     _boundOnPackageReady: MashroomPluginPackageEvent => void;
     _boundOnPackageError: MashroomPluginPackageEvent => void;
@@ -55,6 +59,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         this._pluginLoaders = {};
         this._pluginsNoLoader = [];
         this._pluginsMissingRequirements = [];
+        this._eventEmitter = new EventEmitter();
 
         this._boundOnPackageReady = this._onPackageReady.bind(this);
         this._boundOnPackageError = this._onPackageError.bind(this);
@@ -71,6 +76,14 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         if (this._pluginLoaders[type] && this._pluginLoaders[type].name === loader.name) {
             delete this._pluginLoaders[type];
         }
+    }
+
+    on(eventName: MashroomPluginRegistryEventName, listener: MashroomPluginRegistryEvent => void) {
+        this._eventEmitter.on(eventName, listener);
+    }
+
+    removeListener(eventName: MashroomPluginRegistryEventName, listener: MashroomPluginRegistryEvent => void): void {
+        this._eventEmitter.removeListener(eventName, listener);
     }
 
     _init() {
@@ -223,12 +236,21 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
             return;
         }
 
+        if (this._loadedPlugins().find((p) => p.name === plugin.name)) {
+            this._eventEmitter.emit('unload', {
+                pluginName: plugin.name,
+            });
+        }
+
         const pluginConfig = createPluginConfig(plugin, loader, this._pluginContextHolder.getPluginContext());
 
         try {
             await loader.load(plugin, pluginConfig, this._pluginContextHolder);
             pluginConnector.emitLoaded({
                 pluginConfig,
+            });
+            this._eventEmitter.emit('loaded', {
+                pluginName: plugin.name,
             });
         } catch (error) {
             this._log.error(`Loading plugin: ${plugin.name}, type: ${plugin.type} failed!`, error);
@@ -244,6 +266,10 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
             this._log.info(`No loader found for plugin: ${plugin.name}, type: ${plugin.type}. Cannot unload!`);
             return;
         }
+
+        this._eventEmitter.emit('unload', {
+            pluginName: plugin.name,
+        });
 
         try {
             await loader.unload(plugin);

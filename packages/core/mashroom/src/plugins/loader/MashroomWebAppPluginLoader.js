@@ -24,10 +24,6 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         path: string,
         handler: MashroomHttpUpgradeHandler
     }>;
-    _onUnloadHandlers: Array<{
-        pluginName: string,
-        handler: () => void,
-    }>;
 
     constructor(expressApplication: ExpressApplication, httpServer: http$Server, loggerFactory: MashroomLoggerFactory, pluginContextHolder: MashroomPluginContextHolder) {
         super(expressApplication, loggerFactory);
@@ -35,7 +31,6 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         this._log = loggerFactory('mashroom.plugins.loader');
         this._httpServer = httpServer;
         this._upgradeHandlers = [];
-        this._onUnloadHandlers = [];
 
         const upgradeHandler = this._upgradeHandler.bind(this);
         httpServer.on('upgrade', upgradeHandler);
@@ -50,13 +45,9 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         const bootstrapResult: any = await webAppBootstrap(plugin.name, pluginConfig, contextHolder);
         const webapp: ExpressApplication = bootstrapResult.expressApp ? bootstrapResult.expressApp : bootstrapResult;
         const upgradeHandler: ?MashroomHttpUpgradeHandler = bootstrapResult.upgradeHandler ? bootstrapResult.upgradeHandler : null;
-        const onUnloadHandler: ?() => void =  bootstrapResult.onUnload ? bootstrapResult.onUnload : null;
 
         if (upgradeHandler) {
             this._installUpgradeHandler(plugin, pluginConfig, upgradeHandler);
-        }
-        if (onUnloadHandler) {
-            this._installOnUnloadHandler(plugin, onUnloadHandler);
         }
 
         if (webapp && typeof(webapp.disable) === 'function') {
@@ -74,18 +65,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
     }
 
     beforeUnload(plugin: MashroomPlugin) {
-        const wrapper = this._onUnloadHandlers.find((h) => h.pluginName === plugin.name);
-        if (wrapper) {
-            try {
-                this._log.info(`Executing onUnload handler of webapp: ${plugin.name}`);
-                wrapper.handler();
-            } catch (error) {
-                this._log.error(`Error when executing onUnload handler of webapp: ${plugin.name}`)
-            }
-        }
-
         this._uninstallUpgradeHandler(plugin);
-        this._uninstallOnUnloadHandler(plugin);
     }
 
     _upgradeHandler(req: http$IncomingMessage<>, socket: net$Socket, head: Buffer) {
@@ -122,16 +102,4 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         this._upgradeHandlers = this._upgradeHandlers.filter((uh) => uh.pluginName !== plugin.name);
     }
 
-    _installOnUnloadHandler(plugin: MashroomPlugin, handler: () => void) {
-        this._log.info(`Installing onUnload handler for webapp ${plugin.name}`);
-        this._uninstallOnUnloadHandler(plugin);
-        this._onUnloadHandlers.push({
-            pluginName: plugin.name,
-            handler,
-        });
-    }
-
-    _uninstallOnUnloadHandler(plugin: MashroomPlugin) {
-        this._onUnloadHandlers = this._onUnloadHandlers.filter((uh) => uh.pluginName !== plugin.name);
-    }
 }

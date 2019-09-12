@@ -364,10 +364,15 @@ export type MashroomPluginLoaderMap = {
     [pluginType: MashroomPluginType]: MashroomPluginLoader
 }
 
+export type MashroomPluginRegistryEventName = 'loaded' | 'unload';
+export type MashroomPluginRegistryEvent = {|
+    +pluginName: string,
+|}
+
 /**
  * Mashroom plugin registry
  */
-export interface MashroomPluginRegistry {
+export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPluginRegistryEventName, MashroomPluginRegistryEvent> {
     /**
      * The currently known plugin packages
      */
@@ -425,6 +430,14 @@ export interface MashroomPluginService {
      * Get all currently known plugin packages
      */
     getPluginPackages(): Array<MashroomPluginPackage>;
+    /**
+     * Register for the next loaded event of given plugin (fired AFTER the plugin has been loaded).
+     */
+    onLoadedOnce(pluginName: string, listener: () => void): void;
+    /**
+     * Register for the next unload event of given plugin (fired BEFORE the plugin is going to be unloaded).
+     */
+    onUnloadOnce(pluginName: string, listener: () => void): void;
 }
 
 /**
@@ -543,10 +556,9 @@ export interface MashroomPluginContextHolder {
  */
 export type MashroomHttpUpgradeHandler = (request: HttpServerRequest, socket: net$Socket, head: Buffer) => void;
 
-export type ExpressApplicationWithCallbacks = {
+export type ExpressApplicationWithUpgradeHandler = {
     expressApp: ExpressApplication,
-    upgradeHandler?: MashroomHttpUpgradeHandler,
-    onUnload?: () => void
+    upgradeHandler?: MashroomHttpUpgradeHandler
 };
 
 /**
@@ -557,7 +569,7 @@ export type MashroomPluginLoaderPluginBootstrapFunction = (pluginName: string, p
 /**
  * Bootstrap method definition for web-app plugins
  */
-export type MashroomWebAppPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressApplication | ExpressApplicationWithCallbacks>;
+export type MashroomWebAppPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressApplication | ExpressApplicationWithUpgradeHandler>;
 
 /**
  * Bootstrap method definition for API plugins
