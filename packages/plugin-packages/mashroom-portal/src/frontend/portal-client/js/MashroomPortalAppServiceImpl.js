@@ -562,7 +562,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             'x-mashroom-does-not-extend-auth': 1
         }).then(
             (updatedApps: Array<MashroomAvailablePortalApp>) => {
-                if (updatedApps && updatedApps.length > 0) {
+                if (Array.isArray(updatedApps) && updatedApps.length > 0) {
                     console.info('Updated apps found:', updatedApps);
                     let promise: ?Promise<any> = null;
                     updatedApps
