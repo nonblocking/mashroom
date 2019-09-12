@@ -65,8 +65,9 @@ After cloning the repository just run
     
 to install all dependencies and build the core packages.
 
-To start the test server run
+To start the test server:
 
+    cd packages/test/test-server1
     npm run dev 
     
-in packages/test/test-server1. The test server will be available at http://localhost:5050
+The test server will be available at http://localhost:5050
