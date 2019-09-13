@@ -6,12 +6,12 @@ import RoleInput from '../components/RoleInput';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {setExistingRoles} from '../store/actions';
 
-import type {FieldProps} from 'redux-form';
-import type {Node, ComponentType} from 'react';
+import type {ComponentType} from 'react';
 import type {Dispatch, State} from '../../../type-definitions';
 
 type OwnProps = {
-    onRoleChange?: (role: ?string) => void
+    onRoleChange?: (role: ?string) => void,
+    resetRef?: (() => void) => void,
 }
 
 type StateProps = {

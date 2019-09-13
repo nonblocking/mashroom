@@ -17,10 +17,13 @@ export default class Permissions extends PureComponent<Props, State> {
 
     addRole: (role: string) => void;
     onRoleChange: (?string) => void;
+    inputReset: () => void;
+    boundOnResetRef: () => void;
 
     constructor() {
         super();
         this.onRoleChange = this.onRoleChange.bind(this);
+        this.boundOnResetRef = this.onResetRef.bind(this);
         this.state = {
             enteredRole: null
         }
@@ -35,7 +38,12 @@ export default class Permissions extends PureComponent<Props, State> {
     onAddRole() {
         if (this.state.enteredRole) {
             this.addRole(this.state.enteredRole);
+            this.inputReset();
         }
+    }
+
+    onResetRef(resetRef: () => void) {
+        this.inputReset = resetRef;
     }
 
     render() {
@@ -44,7 +52,7 @@ export default class Permissions extends PureComponent<Props, State> {
                 <FormattedMessage id='restrictViewPermission'/>
 
                 <div className='add-role-panel'>
-                    <RoleInputContainer onRoleChange={this.onRoleChange}/>
+                    <RoleInputContainer onRoleChange={this.onRoleChange} resetRef={this.boundOnResetRef}/>
                     <Button id='addButton' labelId='add' onClick={this.onAddRole.bind(this)} disabled={!this.state.enteredRole}/>
                 </div>
 

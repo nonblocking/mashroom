@@ -12,7 +12,7 @@ type Props = {
     addRoleRef?: ((role: string) => void) => void
 }
 
-export default class CheckboxFieldContainer extends PureComponent<Props> {
+export default class RolesListContainer extends PureComponent<Props> {
 
     render() {
         return <FieldArray name={this.props.name} component={(fieldArrayProps: FieldArrayProps): Node => <RolesList fieldArrayProps={fieldArrayProps} {...this.props}/>}/>;

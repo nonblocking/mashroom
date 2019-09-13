@@ -21,6 +21,7 @@ type Props = {
     onValueChange?: (value: ?string) => void,
     onSuggestionSelect?: (any) => void,
     fieldProps: FieldProps,
+    resetRef?: (() => void) => void,
     intl: IntlShape
 }
 
@@ -33,8 +34,11 @@ export default class AutocompleteField extends PureComponent<Props, State> {
 
     inputRef: HTMLInputElement;
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
+        if (props.resetRef) {
+            props.resetRef(() => this.reset());
+        }
         this.state = {
             value: '',
             suggestions: []
@@ -83,6 +87,16 @@ export default class AutocompleteField extends PureComponent<Props, State> {
             if (this.props.onValueChange) {
                 this.props.onValueChange(value);
             }
+        }
+    }
+
+    reset() {
+        this.setState({
+            value: '',
+        });
+        this.props.fieldProps.input.onChange('');
+        if (this.props.onValueChange) {
+            this.props.onValueChange('');
         }
     }
 

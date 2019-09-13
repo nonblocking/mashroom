@@ -21,7 +21,7 @@ type OwnProps = {
     suggestionHandler: SuggestionHandler<*>,
     onValueChange?: (value: ?string) => void,
     onSuggestionSelect?: (any) => void,
-
+    resetRef?: (() => void) => void,
 }
 
 type IntlProps = {

@@ -13,14 +13,10 @@ type Props = {
 
 export default class RolesList extends PureComponent<Props> {
 
-    componentDidMount() {
-        this.updateAddRoleRef();
-    }
-
-    updateAddRoleRef() {
-        const addRoleRef = this.props.addRoleRef;
-        if (typeof(addRoleRef) === 'function') {
-            addRoleRef(this.onAddRole.bind(this, this.props.fieldArrayProps));
+    constructor(props: Props) {
+        super(props);
+        if (this.props.addRoleRef) {
+            this.props.addRoleRef((role) => this.onAddRole(props.fieldArrayProps, role));
         }
     }
 
