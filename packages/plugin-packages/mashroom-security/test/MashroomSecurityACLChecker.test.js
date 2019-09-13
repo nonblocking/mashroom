@@ -1,6 +1,5 @@
 // @flow
 
-import path from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityACLChecker from '../src/acl/MashroomSecurityACLChecker';
 import type {MashroomSecurityUser} from '../type-definitions';
@@ -8,9 +7,8 @@ import type {MashroomSecurityUser} from '../type-definitions';
 describe('MashroomSecurityACLChecker', () => {
 
     it('should not allow anonymous at a protected path', async () => {
-        const aclPath = path.resolve(__dirname, './test_acl.json');
-
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, dummyLoggerFactory);
+        const aclPath = './test_acl.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, dummyLoggerFactory);
         const user: ?MashroomSecurityUser = null;
 
         const req: any = {
@@ -45,9 +43,8 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('should allow anonymous at a unprotected path', async () => {
-        const aclPath = path.resolve(__dirname, './test_acl.json');
-
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, dummyLoggerFactory);
+        const aclPath = './test_acl.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, dummyLoggerFactory);
         const user: ?MashroomSecurityUser = null;
 
         const req: any = {
@@ -78,9 +75,8 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('should allow a user with the required role at a protected path', async () => {
-        const aclPath = path.resolve(__dirname, './test_acl.json');
-
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, dummyLoggerFactory);
+        const aclPath = './test_acl.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const req: any = {
             path: '/portal/foo/bar',
@@ -99,9 +95,8 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('should not allow http method when denied for all', async () => {
-        const aclPath = path.resolve(__dirname, './test_acl.json');
-
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, dummyLoggerFactory);
+        const aclPath = './test_acl.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const req: any = {
             path: '/portal/foo/bar',
@@ -120,9 +115,8 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('should not allow denied role even if the user has an allowed role', async () => {
-        const aclPath = path.resolve(__dirname, './test_acl.json');
-
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, dummyLoggerFactory);
+        const aclPath = './test_acl.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const req: any = {
             path: '/foo/x/bar',

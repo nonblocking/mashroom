@@ -8,7 +8,7 @@ describe('MashroomSecurityService', () => {
     it('returns the user from the provider', () => {
         const req: any = {
         };
-
+        const aclChecker: any = {};
         const securityProviderRegistry: any = {
             findProvider() {
                 return {
@@ -21,7 +21,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, '', '', 'login', dummyLoggerFactory);
+        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker, dummyLoggerFactory);
 
         const user = securityService.getUser(req);
 
@@ -36,7 +36,7 @@ describe('MashroomSecurityService', () => {
         const user: any = {
             roles: ['Role2']
         };
-
+        const aclChecker: any = {};
         const securityProviderRegistry: any = {
             findProvider() {
                 return {
@@ -81,7 +81,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, '', '', 'login', dummyLoggerFactory);
+        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker, dummyLoggerFactory);
 
         const permittedPage1 = await securityService.checkResourcePermission(request, 'Page', 'page1', 'View', false);
         const permittedPage2 = await securityService.checkResourcePermission(request, 'Page', 'page2', 'View', false);
@@ -90,6 +90,38 @@ describe('MashroomSecurityService', () => {
         expect(permittedPage1).toBeTruthy();
         expect(permittedPage2).toBeFalsy();
         expect(permittedUndefinedResource).toBeFalsy();
+    });
+
+    it('delegates to the acl checker', async () => {
+        const req: any = {
+            path: '/test',
+            method: 'GET'
+        };
+        const aclChecker: any = {
+            allowed: jest.fn()
+        };
+        const securityProviderRegistry: any = {
+            findProvider() {
+                return {
+                    getUser() {
+                        return {
+                            username: 'john',
+                            roles: ['Role2']
+                        };
+                    }
+                }
+            }
+        };
+
+        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker, dummyLoggerFactory);
+
+        expect(await securityService.checkACL(req)).toBeFalsy();
+        expect(aclChecker.allowed.mock.calls.length).toBe(1);
+        expect(aclChecker.allowed.mock.calls[0][0]).toEqual(req);
+        expect(aclChecker.allowed.mock.calls[0][1]).toEqual({
+            username: 'john',
+            roles: ['Role2', 'Authenticated']
+        });
     });
 
 });

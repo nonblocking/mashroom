@@ -2,15 +2,18 @@
 
 import context from '../context/global_context';
 import MashroomSecurityService from './MashroomSecurityService';
+import MashroomSecurityACLChecker from '../acl/MashroomSecurityACLChecker';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const securityProvider = pluginConfig.provider;
+    const { provider, acl } = pluginConfig;
 
     const pluginContext = pluginContextHolder.getPluginContext();
-    const service = new MashroomSecurityService(securityProvider, context.pluginRegistry,
-        pluginConfig.acl, pluginContext.serverConfig.serverRootFolder, pluginConfig.loginPage, pluginContext.loggerFactory);
+
+    const aclChecker = new MashroomSecurityACLChecker(acl, pluginContext.serverConfig.serverRootFolder, pluginContext.loggerFactory);
+
+    const service = new MashroomSecurityService(provider, context.pluginRegistry, aclChecker, pluginContext.loggerFactory);
 
     return {
         service,

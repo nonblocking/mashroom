@@ -16,7 +16,7 @@ After that you can add a _acl.json_ file to your server config folder with a con
 {
     "/portal/**": {
         "*": {
-            "allow": ["User"]
+            "allow": ["Authenticated"]
         }
     },
     "/foo/bar/**": {

@@ -1,6 +1,7 @@
 // @flow
 
 import fs from 'fs';
+import path from 'path';
 
 import type {ExpressRequest, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
@@ -22,10 +23,14 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
     _aclPath: string;
     _logger: MashroomLogger;
 
-    constructor(aclPath: string, loggerFactory: MashroomLoggerFactory) {
+    constructor(aclPath: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._aclPath = aclPath;
+        if (!path.isAbsolute(this._aclPath)) {
+            this._aclPath = path.resolve(serverRootFolder, this._aclPath);
+        }
         this._pathRuleList = null;
         this._logger = loggerFactory('mashroom.security.acl');
+        this._logger.info(`Configured ACL definition: ${this._aclPath}`);
     }
 
     async allowed(req: ExpressRequest, user: ?MashroomSecurityUser) {
@@ -62,11 +67,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         const allowMatch = permission.allow && Array.isArray(permission.allow) && permission.allow.find((r) => user && user.roles.find((upr) => upr === r || upr === '*'));
         const denyMatch = permission.deny && Array.isArray(permission.deny) && permission.deny.find((r) => user && user.roles.find((upr) => upr === r || upr === '*'));
 
-        if (allowMatch && !denyMatch) {
-            return true;
-        }
-
-        return false;
+        return !!(allowMatch && !denyMatch);
     }
 
     _getPathRuleList(): Array<ACLPathRuleRegexp> {

@@ -1,16 +1,14 @@
 // @flow
 
-import path from 'path';
-import MashroomSecurityACLChecker from '../acl/MashroomSecurityACLChecker';
-
 import type {
-    MashroomSecurityACLChecker as MashroomSecurityACLCheckerType,
+    MashroomSecurityACLChecker,
     MashroomSecurityProviderRegistry,
     MashroomSecurityService as MashroomSecurityServiceType,
     MashroomSecurityPermission,
     MashroomSecurityProtectedResource,
     MashroomSecurityResourceType,
-    MashroomSecurityRoleDefinition, MashroomSecurityProvider,
+    MashroomSecurityRoleDefinition,
+    MashroomSecurityProvider,
 } from '../../type-definitions';
 import type {
     MashroomLogger,
@@ -33,23 +31,16 @@ const privatePropsMap: WeakMap<MashroomSecurityService, {
 export default class MashroomSecurityService implements MashroomSecurityServiceType {
 
     _securityProviderName: string;
-    _aclPath: string;
-    _aclChecker: MashroomSecurityACLCheckerType;
+    _aclChecker: MashroomSecurityACLChecker;
     _logger: MashroomLogger;
 
-    constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclPath: string, serverRootFolder: string, loginPage: string, loggerFactory: MashroomLoggerFactory) {
+    constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker, loggerFactory: MashroomLoggerFactory) {
         this._securityProviderName = securityProviderName;
         privatePropsMap.set(this, {
             securityProviderRegistry,
         });
+        this._aclChecker = aclChecker;
         this._logger = loggerFactory('mashroom.security.service');
-        this._aclPath = aclPath;
-        if (!path.isAbsolute(this._aclPath)) {
-            this._aclPath = path.resolve(serverRootFolder, this._aclPath);
-        }
-        this._aclChecker = new MashroomSecurityACLChecker(this._aclPath, loggerFactory);
-
-        this._logger.info(`Configured ACL definition: ${this._aclPath}`);
     }
 
     getUser(request: ExpressRequest) {
