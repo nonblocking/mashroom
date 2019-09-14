@@ -120,12 +120,20 @@ export default class PortalApp extends PureComponent<Props> {
         return (
             <>
                 <div className='mashroom-sandbox-app-output-row'>
-                    <FormattedMessage id='appName' />
-                    <strong id='mashroom-sandbox-app-name'>{activePortalApp.appName}</strong>
+                    <div>
+                        <FormattedMessage id='appName' />
+                    </div>
+                    <div>
+                        <strong id='mashroom-sandbox-app-name'>{activePortalApp.appName}</strong>
+                    </div>
                 </div>
                 <div className='mashroom-sandbox-app-output-row'>
-                    <FormattedMessage id='appSetup' />
-                    <pre id='mashroom-sandbox-app-setup'>{JSON.stringify(activePortalApp.setup, null, 2)}</pre>
+                    <div>
+                        <FormattedMessage id='appSetup' />
+                    </div>
+                    <div>
+                        <pre id='mashroom-sandbox-app-setup'>{JSON.stringify(activePortalApp.setup, null, 2)}</pre>
+                    </div>
                 </div>
             </>
         );
