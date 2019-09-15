@@ -10,7 +10,7 @@
         "@babel/preset-react": "^7.0.0",
         "@babel/plugin-syntax-dynamic-import": "^7.2.0",
         "flow-bin": "^0.107.0",
-        "eslint": "^6.3.0",
+        "eslint": "^6.4.0",
         "eslint-plugin-import": "^2.18.2",
         "eslint-plugin-jsx-a11y": "^6.2.3",
         "eslint-plugin-flowtype": "^4.3.0",
