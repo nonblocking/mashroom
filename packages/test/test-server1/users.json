@@ -12,6 +12,7 @@
         "displayName": "John Do",
         "passwordHash": "96d9632f363564cc3032521409cf22a852f2032eec099ed5967c0d000cec607a",
         "roles": [
+            "Role2", "Role5"
         ]
     }
 ]

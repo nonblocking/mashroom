@@ -1,3 +1,5 @@
 {
-
+    "external2/#": {
+        "allow": ["Administrator"]
+    }
 }
