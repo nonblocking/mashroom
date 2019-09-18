@@ -1,6 +1,6 @@
 // @flow
 
-import shortId from 'shortId';
+import shortId from 'shortid';
 
 import type {
     MashroomMessagingWebSocketSubscribeRequest,
