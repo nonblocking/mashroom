@@ -77,7 +77,7 @@ With a config like that you can place a file _topic_acl.json_ in your server con
 }
 ```
 
-You can use here _+_ as a wildcard for a single level and _#_ for multiple levels at the end.
+You can use here _+_ or _*_ as a wildcard for a single level and _#_ for multiple levels.
 
 ##### WebSocket interface
 
@@ -124,7 +124,7 @@ Otherwise a error message like this:
 }
 ```
 
-Success and error reponse messages are the same as above.
+Success and error response messages are the same as above.
 
 **Publish**
 
@@ -139,7 +139,7 @@ Success and error reponse messages are the same as above.
 }
 ```
 
-Success and error reponse messages are the same as above.
+Success and error response messages are the same as above.
 
 And the server will push the following **if a message for a subscribed topic arrives**:
 
