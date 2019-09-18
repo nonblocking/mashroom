@@ -47,7 +47,7 @@ describe('MashroomPluginService', () => {
 
         pluginService.onUnloadOnce('test-plugin', () => {
             setTimeout(() => {
-                expect(Object.keys(pluginService._loadedListeners).length).toBe(0);
+                expect(Object.keys(pluginService._unloadListeners).length).toBe(0);
                 done();
             }, 0);
         });

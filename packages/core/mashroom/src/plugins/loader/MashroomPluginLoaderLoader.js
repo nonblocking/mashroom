@@ -2,7 +2,6 @@
 
 import builtInLoaders from './built_in_loaders';
 import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
-import {createPluginConfig} from '../plugin_utils';
 
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomLoggerFactory,
@@ -50,8 +49,6 @@ export default class MashroomPluginLoaderLoader implements MashroomPluginLoader 
         this._log.info(`Registering loader plugin for type: ${targetPluginType}`);
         this._pluginRegistry.registerPluginLoader(targetPluginType, pluginLoaderInstance);
         this._loadedPlugins.set(targetPluginType, pluginLoaderInstance);
-
-        this._reRegisterLoadedPlugins(targetPluginType, pluginLoaderInstance, contextHolder);
     }
 
     async unload(plugin: MashroomPlugin) {
@@ -64,17 +61,6 @@ export default class MashroomPluginLoaderLoader implements MashroomPluginLoader 
             this._pluginRegistry.unregisterPluginLoader(targetPluginType, loadedPlugin);
 
             this._loadedPlugins.delete(targetPluginType);
-        }
-    }
-
-    _reRegisterLoadedPlugins(pluginType: MashroomPluginType, pluginLoader: MashroomPluginLoader, contextHolder: MashroomPluginContextHolder) {
-        const loadedPlugins = this._pluginRegistry.plugins.filter((p) => p.type === pluginType);
-        if (loadedPlugins.length > 0) {
-            this._log.debug(`Re-registering loaded plugins of type ${pluginType}`, loadedPlugins);
-            loadedPlugins.forEach((p) => {
-                const pluginConfig = createPluginConfig(p, pluginLoader, contextHolder.getPluginContext());
-                pluginLoader.load(p, pluginConfig, contextHolder);
-            });
         }
     }
 

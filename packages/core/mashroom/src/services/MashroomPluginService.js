@@ -31,6 +31,7 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
 
         pluginRegistry.on('loaded', (event) => {
             const listeners = this._loadedListeners[event.pluginName];
+            delete this._loadedListeners[event.pluginName];
             if (listeners) {
                 listeners.forEach((l) => {
                     try {
@@ -39,11 +40,11 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
                         this._log.error('Loaded event listener threw error', error);
                     }
                 });
-                delete this._loadedListeners[event.pluginName];
             }
         });
         pluginRegistry.on('unload', (event) => {
             const listeners = this._unloadListeners[event.pluginName];
+            delete this._unloadListeners[event.pluginName];
             if (listeners) {
                 listeners.forEach((l) => {
                     try {
@@ -52,7 +53,6 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
                         this._log.error('Unload event listener threw error', error);
                     }
                 });
-                delete this._unloadListeners[event.pluginName];
             }
         });
     }

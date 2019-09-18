@@ -70,6 +70,8 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
     registerPluginLoader(type: MashroomPluginTypeType, loader: MashroomPluginLoader) {
         this._pluginLoaders[type] = loader;
         this._checkPluginsNoLoader();
+        // If the loader was reloaded re-register all plugins
+        this._reRegisterLoadedPlugins(type, loader);
     }
 
     unregisterPluginLoader(type: MashroomPluginTypeType, loader: MashroomPluginLoader) {
@@ -278,6 +280,31 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         }
     }
 
+    async _reRegisterLoadedPlugins(pluginType: MashroomPluginTypeType, pluginLoader: MashroomPluginLoader) {
+        const loadedPlugins = this._findLoadedPluginsByType(pluginType);
+        if (loadedPlugins.length > 0) {
+            this._log.debug(`Re-registering loaded plugins of type ${String(pluginType)}`, loadedPlugins);
+            for (let i = 0; i < loadedPlugins.length; i++) {
+                const plugin = loadedPlugins[i];
+                const pluginConfig = createPluginConfig(plugin, pluginLoader, this._pluginContextHolder.getPluginContext());
+                try {
+                    await pluginLoader.load(plugin, pluginConfig, this._pluginContextHolder);
+                    this._eventEmitter.emit('loaded', {
+                        pluginName: plugin.name,
+                    });
+                } catch (error) {
+                    this._log.error(`Loading plugin: ${plugin.name}, type: ${plugin.type} failed!`, error);
+                    const pluginConnector = this._plugins.get(plugin);
+                    if (pluginConnector) {
+                        pluginConnector.emitError({
+                            errorMessage: `Loading failed (${error.toString()}`,
+                        });
+                    }
+                }
+            }
+        }
+    }
+
     async _checkPluginsNoLoader() {
         const unloadedPlugins = [...this._pluginsNoLoader];
         for (const unloadedPlugin of unloadedPlugins) {
@@ -350,6 +377,10 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
             }
         }
         return null;
+    }
+
+    _findLoadedPluginsByType(type: MashroomPluginTypeType): Array<MashroomPluginType> {
+        return this._loadedPlugins().filter((p) => p.type === type);
     }
 
     _loadedPlugins(): Array<MashroomPluginType> {
