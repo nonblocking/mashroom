@@ -14,13 +14,10 @@
 
 ### Plugins
  
- * WebSocket proxy similar to mashroom-http-proxy based on mashroom-websocket
- * CMS content rendering app with a pluggable backend connector (e.g. for a headless CMS or Typo 3)
- * Asset rendering app with a pluggable backend connector (e.g. for a DMS or S3)
- * MongoDb storage implementation
- * Security: Add IP based ACL rules
- * OAuth2 security provider
  * Redis Session provider
+ * MongoDb storage implementation
+ * WebSocket proxy similar to mashroom-http-proxy based on mashroom-websocket
+ * OAuth2 security provider
 
 
 ## Version 1.2
@@ -32,19 +29,21 @@
 
 ### Portal
 
- * Support for vhosts (map a site to a virtual host)
+ * CMS content rendering app with a pluggable backend connector (e.g. for a headless CMS or Typo 3)
+ * Asset rendering app with a pluggable backend connector (e.g. for a DMS or S3)
  * Language switcher (available languages)
- * App store
- 
 
 ### Plugins
+
+ * Security: Add IP based ACL rules
+ * Support for vhosts (map a site to a virtual host)
+
 
 ## Later
 
 ### Core
 
  * Add TypeScript types
- 
- 
+ * App store
  
 
