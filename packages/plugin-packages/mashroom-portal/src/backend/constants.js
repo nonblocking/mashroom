@@ -30,6 +30,8 @@ export const WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION = 'MashroomPortal
 export const WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION = 'MashroomPortalAutoExtendAuthentication';
 export const WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC = 'MashroomPortalWarnBeforeAuthExpiresSec';
 export const WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG = 'MashroomPortalAppLoadingFailedMsg';
+export const WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH = 'MashroomPortalRemoteMessagingConnectPath';
+export const WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC = 'MashroomPortalRemoteMessagingPrivateUserTopic';
 
 export const HTTP_HEADER_REST_PROXY_USER = 'X-USER-NAME';
 export const HTTP_HEADER_REST_PROXY_ROLES = 'X-USER-ROLES';

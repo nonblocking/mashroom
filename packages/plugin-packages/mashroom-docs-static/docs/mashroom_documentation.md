@@ -474,7 +474,11 @@ this in the _Mashroom_ config file:
 
 [mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc] 
 
-[mashroom-http-proxy](../../mashroom-websocket/README.md) [inc] 
+[mashroom-websocket](../../mashroom-websocket/README.md) [inc] 
+
+[mashroom-messaging](../../mashroom-messaging/README.md) [inc] 
+
+[mashroom-messaging-external-provider-mqtt](../../mashroom-messaging-external-provider-mqtt/README.md) [inc] 
 
 [mashroom-i18n](../../mashroom-i18n/README.md) [inc] 
 
@@ -513,6 +517,8 @@ this in the _Mashroom_ config file:
 [mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc] 
 
 [mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc] 
+
+[mashroom-portal-demo-remote-messaging](../../mashroom-portal-demo-remote-messaging/README.md) [inc] 
 
 ## 3rd Party Plugins
 

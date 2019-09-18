@@ -1,0 +1,61 @@
+
+@import "~@mashroom/mashroom-portal-ui-commons/src/sass/mashroom_portal_defaults";
+
+$LABEL_ROW_WIDTH: 170px;
+
+.mashroom-demo-remote-messaging-app {
+    padding: 10px;
+
+    .mashroom-demo-remote-messaging-app-form-row {
+        margin: 10px 0;
+
+        label {
+            width: $LABEL_ROW_WIDTH;
+            padding: 0;
+            span {
+                vertical-align: top;
+            }
+        }
+
+        .mashroom-portal-ui-source-code-editor-field {
+
+            label {
+                float: left;
+            }
+        }
+    }
+
+    .mashroom-demo-remote-messaging-app-form-button-row {
+        margin-left: $LABEL_ROW_WIDTH;
+    }
+
+    .mashroom-demo-remote-messaging-app-output-row {
+        display: flex;
+        margin: 10px 0;
+
+        &>*:first-child {
+            flex: 0 0 $LABEL_ROW_WIDTH;
+        }
+
+        &>*:last-child {
+            flex-grow: 2;
+        }
+
+        pre {
+            margin: 0;
+        }
+    }
+
+    .mashroom-demo-remote-messaging-app-subscription-status {
+        margin: 20px 0;
+
+        .remote-topic {
+            font-weight: 500;
+        }
+
+        .subscription-error {
+            color: red;
+        }
+    }
+
+}

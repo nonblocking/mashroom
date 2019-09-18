@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Remote Messaging Demo App</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css">
+
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="remote-messaging-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+            var subscriptionCallback = null;
+            window.RemoteMessagingAppPublish = function(topic, message) {
+                if (subscriptionCallback) {
+                    subscriptionCallback(topic, message);
+                }
+            };
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("remote-messaging-app-container");
+                var portalAppConfig = {
+                };
+                var portalAppSetup = {
+                    lang: 'en',
+                    appConfig: portalAppConfig
+                };
+                var portalClientServices = {
+                    messageBus: {
+                        subscribe: (topic, cb) => {
+                            subscriptionCallback = cb;
+                            console.info('App subscribed to topic: ', topic);
+                            return Promise.resolve();
+                        },
+                        publish: (topic, message) => {
+                            console.info('App published to topic: ', topic, message);
+                            return Promise.resolve();
+                        },
+                        getRemoteUserPrivateTopic: () => 'user/testuser',
+                        getRemotePrefix: () => 'remote'
+                    }
+                };
+                window.startRemoteMessagingDemoApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+
+    </script>
+</body>
+</html>

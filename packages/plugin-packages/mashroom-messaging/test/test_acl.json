@@ -1,0 +1,8 @@
+{
+    "/my/topic": {
+        "deny": ["Role5"]
+    },
+    "/foo/#": {
+        "allow": ["GroupX", "GroupY"]
+    }
+}

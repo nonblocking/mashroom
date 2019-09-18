@@ -1,0 +1,67 @@
+{
+    "name": "@mashroom/mashroom-portal-demo-remote-messaging",
+    "description": "Simple app that demonstrates remote messaging",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "sideEffects": false,
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@babel/cli": "^7.6.0",
+        "@mashroom/mashroom": "1.0.94",
+        "@mashroom/mashroom-utils": "1.0.94",
+        "@mashroom/mashroom-portal": "1.0.94",
+        "@mashroom/mashroom-portal-ui-commons": "1.0.94",
+        "duplicate-package-checker-webpack-plugin": "^3.0.0",
+        "eslint": "^6.4.0",
+        "jest": "^24.9.0",
+        "react": "^16.9.0",
+        "react-dom": "^16.9.0",
+        "react-intl": "^3.2.0",
+        "react-redux": "7.1.1",
+        "redux": "^4.0.4",
+        "redux-form": "^8.2.6",
+        "shortid": "^2.2.15",
+        "webpack": "^4.39.3",
+        "webpack-cli": "^3.3.8",
+        "webpack-dev-server": "^3.8.0"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.js$"
+    },
+    "scripts": {
+        "lint": "eslint src --fix",
+        "dev": "webpack-dev-server --mode development --hot",
+        "build": "webpack --mode production --display-error-details"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Remote Messaging App",
+                "title": "Demo Remote Messaging App",
+                "type": "portal-app",
+                "bootstrap": "startRemoteMessagingDemoApp",
+                "category": "Demo",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "appConfig": {}
+                }
+            }
+        ]
+    }
+}

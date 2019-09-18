@@ -3,10 +3,17 @@
 
 ## 1.1.0
 
- * Core: Added the possibility to listen on Plugin load and unload events via MashroomPluginService.
+ * Added a provider plugin to support MQTT as external messaging system
+ * Added a demo portal app to demonstrate remote messaging
+ * Portal: Added support for remote messaging. Portal apps can now subscribe to server side topics (prefixed with :remote) 
+   and communicate with apps on other pages and browser tabs. If the service side messaging is connected to an external 
+   messaging system (e.g. MQTT) it is also possible to subscribe and publish messages to the external system.
+ * Added a Service plugin for server-side messaging that comes with a WebSocket interface which allows sending messages
+   across clients (and browser tabs). Furthermore it be connected to an external messaging system (such as MQTT) via provider plugin.
+ * Core: Added the possibility to listen on Plugin load and unload events via _MashroomPluginService_.
    Useful if you want to cleanup when your plugin unloads or in the rare case where you have to hold
    a plugin instance and want to get notified about an unload or reload.
- * Added a service plugin to handle WebSocket connections (mashroom-websocket)
+ * Added a Service plugin to handle WebSocket connections (_mashroom-websocket_)
  * Core: web-app Plugins can now additionally have handlers for upgrade requests (WebSocket support) and for unload
  * Core: The _Middleware_ tab in the admin UI shows now the actual order of the stack (until now the order was just calculated) 
 

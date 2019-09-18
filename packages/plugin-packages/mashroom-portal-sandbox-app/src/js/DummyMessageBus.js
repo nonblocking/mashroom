@@ -37,19 +37,27 @@ export default class DummyMessageBus implements DummyMessageBusType {
     }
 
     subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-        this._subscribe(topic, callback, false);
+        return this._subscribe(topic, callback, false);
     }
 
     subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-        this._subscribe(topic, callback, true);
+        return this._subscribe(topic, callback, true);
     }
 
     unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-        this._unsubscribe(topic, callback);
+        return this._unsubscribe(topic, callback);
     }
 
     publish(topic: string, data: any) {
-        this._publish(topic, data);
+        return this._publish(topic, data);
+    }
+
+    getRemoteUserPrivateTopic() {
+        return 'user/mock';
+    }
+
+    getRemotePrefix() {
+        return 'remote:';
     }
 
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
@@ -65,19 +73,25 @@ export default class DummyMessageBus implements DummyMessageBusType {
 
         return {
             subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                master._subscribe(topic, callback, false);
+                return master._subscribe(topic, callback, false);
             },
             subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                master._subscribe(topic, callback, true);
+                return master._subscribe(topic, callback, true);
             },
             unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                master.unsubscribe(topic, callback);
+                return master.unsubscribe(topic, callback);
             },
             publish(topic: string, data: any) {
-                master._publish(topic, data);
                 if (master._onMessageSentCallback) {
                     master._onMessageSentCallback(topic, data);
                 }
+                return master._publish(topic, data);
+            },
+            getRemoteUserPrivateTopic() {
+                return master.getRemoteUserPrivateTopic();
+            },
+            getRemotePrefix() {
+                return master.getRemotePrefix();
             },
             registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
                 master.registerMessageInterceptor(interceptor);
@@ -105,12 +119,16 @@ export default class DummyMessageBus implements DummyMessageBusType {
                 once,
             });
         }
+
+        return Promise.resolve();
     }
 
     _unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
         if (this._subscriptionMap[topic]) {
             this._subscriptionMap[topic] = this._subscriptionMap[topic].filter((subscription) => subscription.callback !== callback);
         }
+
+        return Promise.resolve();
     }
 
     _publish(topic: string, data: any) {
@@ -121,12 +139,14 @@ export default class DummyMessageBus implements DummyMessageBusType {
 
         if (subscriptions) {
             subscriptions.forEach((subscription) => {
-                setTimeout(() =>  subscription.callback(data), 0);
+                setTimeout(() =>  subscription.callback(data, topic), 0);
                 if (subscription.once) {
                     this._unsubscribe(topic, subscription.callback);
                 }
             });
         }
+
+        return Promise.resolve();
     }
 
 }

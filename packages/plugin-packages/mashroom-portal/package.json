@@ -26,6 +26,7 @@
         "@mashroom/mashroom-i18n": "1.0.94",
         "@mashroom/mashroom-security": "1.0.94",
         "@mashroom/mashroom-storage": "1.0.94",
+        "@mashroom/mashroom-messaging": "1.0.0",
         "eslint": "^6.4.0",
         "jest": "^24.9.0",
         "nodemon": "^1.19.2",
@@ -46,7 +47,7 @@
         "build-backend": "babel src/backend -d dist/backend",
         "build-frontend": "webpack --mode production --display-error-details",
         "build": "npm run build-backend && npm run build-frontend",
-        "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node $NODE_DEBUG_OPTION dist/backend/dev_server.js\""
+        "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node dist/backend/dev_server.js\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

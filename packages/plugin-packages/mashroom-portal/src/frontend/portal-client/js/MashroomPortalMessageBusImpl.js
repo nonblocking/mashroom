@@ -1,10 +1,18 @@
 // @flow
 
+import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging_utils';
+import {WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH, WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC} from '../../../backend/constants';
+import RemoteMessagingClient, {webSocketSupport} from './RemoteMessagingClient';
+
 import type {
     MashroomPortalMessageBus,
     MashroomPortalMessageBusInterceptor,
     MashroomPortalMessageBusSubscriberCallback
 } from '../../../../type-definitions';
+
+const REMOTE_MESSAGING_TOPIC_PREFIX = 'remote:';
+const REMOTE_MESSAGING_CONNECT_PATH: ?string = global[WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH];
+const REMOTE_MESSAGING_PRIVATE_USER_TOPIC: ?string = global[WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC];
 
 type Subscription = {
     callback: MashroomPortalMessageBusSubscriberCallback,
@@ -20,26 +28,47 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
 
     _subscriptionMap: SubscriptionMap;
     _interceptors: Array<MashroomPortalMessageBusInterceptor>;
+    _remoteMessageClient: ?RemoteMessagingClient;
 
     constructor() {
         this._subscriptionMap = {};
         this._interceptors = [];
+
+        if (webSocketSupport && REMOTE_MESSAGING_CONNECT_PATH) {
+            const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
+            const host = global.document.location.hostname;
+            const port = global.document.location.port ? ':' + global.document.location.port : '';
+            const connectUrl = `${socketProtocol}//${host}${port}${REMOTE_MESSAGING_CONNECT_PATH}`;
+            console.info('Enable remote messaging. WebSocket connect url: ', connectUrl);
+            this._remoteMessageClient = new RemoteMessagingClient(connectUrl);
+            this._remoteMessageClient.onMessage(this._handleRemoteMessage.bind(this));
+        } else {
+            console.info('Remote messaging not supported');
+        }
     }
 
-    subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-        this._subscribe(topic, callback, false);
+    subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
+        return this._subscribe(topic, callback, false);
     }
 
-    subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-        this._subscribe(topic, callback, true);
+    subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
+        return this._subscribe(topic, callback, true);
     }
 
-    unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-        this._unsubscribe(topic, callback);
+    unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
+        return this._unsubscribe(topic, callback);
     }
 
-    publish(topic: string, data: any) {
-        this._publish(topic, data);
+    publish(topic: string, data: any): Promise<void> {
+        return this._publish(topic, data);
+    }
+
+    getRemoteUserPrivateTopic() {
+        return this._remoteMessageClient && REMOTE_MESSAGING_PRIVATE_USER_TOPIC;
+    }
+
+    getRemotePrefix() {
+        return 'remote:';
     }
 
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
@@ -58,16 +87,22 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
 
         return {
             subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                master._subscribe(topic, callback, false, appId);
+                return master._subscribe(topic, callback, false, appId);
             },
             subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                master._subscribe(topic, callback, true, appId);
+                return master._subscribe(topic, callback, true, appId);
             },
             unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                master.unsubscribe(topic, callback);
+                return master.unsubscribe(topic, callback);
             },
             publish(topic: string, data: any) {
-                master._publish(topic, data, appId);
+                return master._publish(topic, data, appId);
+            },
+            getRemoteUserPrivateTopic() {
+                return master.getRemoteUserPrivateTopic();
+            },
+            getRemotePrefix() {
+                return master.getRemotePrefix();
             },
             registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
                 master.registerMessageInterceptor(interceptor);
@@ -81,7 +116,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
         };
     }
 
-    _subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback, once: boolean, appId?: string) {
+    _subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback, once: boolean, appId?: string): Promise<void> {
         if (!this._subscriptionMap[topic]) {
             this._subscriptionMap[topic] = [];
         }
@@ -93,38 +128,90 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
                 appId,
             });
         }
+
+        if (topic.indexOf(REMOTE_MESSAGING_TOPIC_PREFIX) === 0) {
+            if (this._remoteMessageClient) {
+                return this._remoteMessageClient.subscribe(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length));
+            } else {
+                return Promise.reject('Remote messaging is not enabled');
+            }
+        }
+
+        return Promise.resolve();
     }
 
-    _unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
+    _unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
         if (this._subscriptionMap[topic]) {
             this._subscriptionMap[topic] = this._subscriptionMap[topic].filter((subscription) => subscription.callback !== callback);
         }
+
+        if (topic.indexOf(REMOTE_MESSAGING_TOPIC_PREFIX) === 0) {
+            if (this._remoteMessageClient) {
+                return this._remoteMessageClient.unsubscribe(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length));
+            } else {
+                return Promise.reject('Remote messaging is not enabled');
+            }
+        }
+
+        return Promise.resolve();
     }
 
-    _publish(topic: string, data: any, appId?: string) {
+    _publish(topic: string, data: any, appId?: string): Promise<void> {
         console.info(`Published to topic ${topic} by app ${appId || '<unknown>'}: `, data);
 
+        if (topic.indexOf(REMOTE_MESSAGING_TOPIC_PREFIX) === 0) {
+            if (this._remoteMessageClient) {
+                return this._remoteMessageClient.publish(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length), data);
+            } else {
+                return Promise.reject('Remote messaging is not enabled');
+            }
+        }
+
         const subscriptions = this._subscriptionMap[topic];
-        console.debug(`# of subscriptions for topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
+        console.debug(`Subscriptions for topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
 
         if (subscriptions) {
             subscriptions.forEach((subscription) => {
-                setTimeout(() => this._sendMessage(topic, data, appId, subscription), 0);
+                setTimeout(() => this._deliverMessage(topic, data, appId, subscription), 0);
                 if (subscription.once) {
                     this._unsubscribe(topic, subscription.callback);
                 }
             });
         }
+
+        return Promise.resolve();
     }
 
-    _sendMessage(topic: string, data: any, senderAppId: ?string, subscription: Subscription) {
+    _deliverMessage(topic: string, data: any, senderAppId: ?string, subscription: Subscription) {
         let resultData = data;
         this._interceptors.forEach((interceptor) => {
-            resultData = interceptor(topic, resultData, senderAppId, subscription.appId);
+            resultData = interceptor(resultData, topic, senderAppId, subscription.appId);
         });
 
         if (resultData) {
-            subscription.callback(resultData, senderAppId);
+            subscription.callback(resultData, topic, senderAppId);
+        }
+    }
+
+    _handleRemoteMessage(data: any, remoteTopic: string) {
+        const topic = REMOTE_MESSAGING_TOPIC_PREFIX + remoteTopic;
+        console.info('Received remote message for topic: ', topic);
+
+        let subscriptions = [];
+        Object.keys(this._subscriptionMap)
+            .filter((t) => topicMatcher(t, topic))
+            .forEach((t) => {
+                subscriptions = subscriptions.concat(this._subscriptionMap[t]);
+            });
+        console.debug(`Subscriptions for remote topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
+
+        if (subscriptions) {
+            subscriptions.forEach((subscription) => {
+                setTimeout(() => this._deliverMessage(topic, data, 'server', subscription), 0);
+                if (subscription.once) {
+                    this._unsubscribe(topic, subscription.callback);
+                }
+            });
         }
     }
 }

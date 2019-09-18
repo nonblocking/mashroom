@@ -723,26 +723,41 @@ export interface MashroomPortalAdminService {
     updateSitePermittedRoles(siteId: string, roles: ?string[]): Promise<void>;
 }
 
-export type MashroomPortalMessageBusSubscriberCallback = (data: any, senderAppId: ?string) => void;
-export type MashroomPortalMessageBusInterceptor = (topic: string, data: any, senderAppId: ?string, receiverAppId: ?string) => ?any;
+export type MashroomPortalMessageBusSubscriberCallback = (data: any, topic: string, senderAppId: ?string) => void;
+export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string) => ?any;
 
 export interface MashroomPortalMessageBus {
     /**
-     * Subscribe to given topic
+     * Subscribe to given topic.
+     * Topics starting with getRemotePrefix() will be subscribed server side via WebSocket (if available).
+     * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
+     * (e.g. remote:/foo/+/bar)
      */
-    subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): void;
+    subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
     /**
      * Subscribe once to given topic. The handler will be removed after the first message has been received.
+     * Remote topics are accepted.
      */
-    subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): void;
+    subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
     /**
-     * Unsubscribe from given topic
+     * Unsubscribe from given topic.
+     * Remote topics are accepted.
      */
-    unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): void;
+    unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
     /**
-     * Publish to given topic
+     * Publish to given topic.
+     * Remote topics are accepted.
      */
-    publish(topic: string, data: any): void;
+    publish(topic: string, data: any): Promise<void>;
+    /**
+     * Get the private user topic for the currently authenticated user.
+     * You can subscribe to "sub" topics as well, e.g. <private_topic>/foo
+     */
+    getRemoteUserPrivateTopic(): ?string;
+    /**
+     * The prefix for remote topics
+     */
+    getRemotePrefix(): string;
 
     /**
      * Get an app specific instance.

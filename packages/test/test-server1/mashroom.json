@@ -53,6 +53,13 @@
         "Mashroom Http Proxy Services": {
             "rejectUntrustedCerts": false,
             "poolMaxSockets": 10
+        },
+        "Mashroom Messaging Services": {
+            "externalProvider": null,
+            "externalTopics": ["external1", "external2"],
+            "userPrivateBaseTopic": "user",
+            "enableWebSockets": true,
+            "topicACL": "./topic_acl.json"
         }
     }
 }

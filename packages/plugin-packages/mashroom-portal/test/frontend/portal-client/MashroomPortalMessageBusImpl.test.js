@@ -91,7 +91,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         const messageBusApp1 = messageBus.getAppInstance('app1');
         const messageBusApp2 = messageBus.getAppInstance('app2');
 
-        messageBusApp1.subscribe('foo3', (data, senderAppId) => {
+        messageBusApp1.subscribe('foo3', (data, topic, senderAppId) => {
             expect(senderAppId).toBe('app2');
             done();
         });
@@ -106,7 +106,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         const messageBusApp1 = messageBus.getAppInstance('app1');
         const messageBusApp2 = messageBus.getAppInstance('app2');
 
-        messageBus.registerMessageInterceptor((topic, data, senderAppId, receiverAppId) => {
+        messageBus.registerMessageInterceptor((data, topic, senderAppId, receiverAppId) => {
             expect(senderAppId).toBe('app2');
             expect(receiverAppId).toBe('app1');
             expect(topic).toBe('foo3');
@@ -116,7 +116,7 @@ describe('MashroomPortalMessageBusImpl', () => {
             done();
         });
 
-        messageBusApp1.subscribe('foo3', (data, senderAppId) => {
+        messageBusApp1.subscribe('foo3', (data, topic, senderAppId) => {
             expect(senderAppId).toBe('app2');
         });
 

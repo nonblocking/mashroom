@@ -23,6 +23,8 @@ import {
     WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
     WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG,
     WINDOW_VAR_PORTAL_DEV_MODE,
+    WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
+    WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
 } from '../constants';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 import {getPortalPath, getSiteAndFriendlyUrl} from '../utils/path_utils';
@@ -45,6 +47,7 @@ import type {
 } from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
+import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
 import type {
     MashroomPortalSite,
     MashroomPortalPage,
@@ -131,6 +134,8 @@ export default class PortalPageRenderController {
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
+        const messagingService: MashroomMessagingService = req.pluginContext.services.messaging && req.pluginContext.services.messaging.service;
+        const webSocketSupport = !!req.pluginContext.services.websocket;
 
         const user: ?MashroomSecurityUser = securityService.getUser(req);
         const lang = i18nService.getLanguage(req);
@@ -149,11 +154,14 @@ export default class PortalPageRenderController {
         }
         const warnBeforeAuthenticationExpiresSec = context.portalPluginConfig.warnBeforeAuthenticationExpiresSec;
         const autoExtendAuthentication = context.portalPluginConfig.autoExtendAuthentication;
+        const messagingConnectPath = webSocketSupport && messagingService && messagingService.getWebSocketConnectPath(req);
+        const privateUserTopic = messagingService && messagingService.getUserPrivateTopic(req);
 
         const appLoadingFailedMsg = i18nService.getMessage('portalAppLoadingFailed', lang);
         const portalLayout = await this._loadLayout(layoutName, logger);
         const portalResourcesHeader = this._resourcesHeader(req, portalPath, site.siteId, sitePath, pageRef.pageId, lang,
-            appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication, devMode);
+            appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
+            messagingConnectPath, privateUserTopic, devMode);
         const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName);
         const siteBasePath = `${portalPath}${sitePath}`;
         let resourcesBasePath = null;
@@ -264,7 +272,7 @@ export default class PortalPageRenderController {
 
     _resourcesHeader(req: ExpressRequest, portalPrefix: string, siteId: string, sitePath: string, pageId: string, lang: string,
                      appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, warnBeforeAuthenticationExpiresSec: number,
-                     autoExtendAuthentication: boolean, devMode: boolean) {
+                     autoExtendAuthentication: boolean, messagingConnectPath: ?string, privateUserTopic: ?string, devMode: boolean) {
         return `
             <script>
                 window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${portalPrefix}${PORTAL_PRIVATE_PATH}${PORTAL_APP_API_PATH}';
@@ -276,6 +284,8 @@ export default class PortalPageRenderController {
                 window['${WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION}'] = ${String(checkAuthenticationExpiration)};
                 window['${WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC}'] = ${String(warnBeforeAuthenticationExpiresSec)};
                 window['${WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION}'] = ${String(autoExtendAuthentication)};
+                ${messagingConnectPath ? `window['${WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH}'] = '${messagingConnectPath}';` : ''};
+                ${privateUserTopic ? `window['${WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC}'] = '${privateUserTopic}';` : ''};
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true` : ''}
             </script>
             <script src="${portalPrefix}${PORTAL_PRIVATE_PATH}/${PORTAL_JS_FILE}?v=${this.startTimestamp}"></script>

@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  mosqitto:
+    container_name: eclipse-mosquitto
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+
