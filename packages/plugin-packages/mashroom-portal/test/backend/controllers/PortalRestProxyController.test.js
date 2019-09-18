@@ -131,7 +131,7 @@ describe('PortalPageController', () => {
                         return {
                             username: 'john',
                             roles: ['User', 'Role2'],
-                            extraHttpHeaders: {
+                            securityHttpHeaders: {
                                 'Authorization': 'Bearer mytoken123'
                             }
                         };

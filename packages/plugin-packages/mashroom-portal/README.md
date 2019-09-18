@@ -200,6 +200,7 @@ To register a portal-app plugin add this to _package.json_:
          * _sendRolesHeader_: Adds the header _X-USER-ROLES_ with a comma separated list of roles of the authenticated user
          * _sendPermissionsHeader_: Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_
          * _addHeaders_: Optional add some extra headers to each request (e.g. BASIC Authentication)
+           The _securityHttpHeaders_ of the authenticated user (e.g. Bearer) are passed automatically.
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
             If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL). 
      * _appConfig_: The default app configuration
@@ -248,7 +249,8 @@ export type MashroomPortalAppSetup = {
 ```
 
  * _title_: Translated title (according to current _lang_)
- * _restProxyPaths_: The base paths to the proxies defined in the plugin config. In the example below the base path to the _spaceXApi_ would be in _portalAppSetup.restProxyPaths.spaceXApi._
+ * _restProxyPaths_: The base paths to the proxies defined in the plugin config. 
+   In the example below the base path to the _spaceXApi_ would be in _portalAppSetup.restProxyPaths.spaceXApi._
  * _resourceBasePath_: Base path to access assets in _resourceRoot_ such as images
  * _lang_: The current user language (e.g.: en)
  * _user_: User information such as user name, user display name and roles

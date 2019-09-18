@@ -98,8 +98,8 @@ export default class PortalRestProxyController {
                         headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
                     }
                 }
-                if (typeof (user.extraHttpHeaders) === 'object') {
-                    headers = Object.assign({}, headers, user.extraHttpHeaders);
+                if (typeof (user.securityHttpHeaders) === 'object') {
+                    headers = Object.assign({}, headers, user.securityHttpHeaders);
                 }
             }
 

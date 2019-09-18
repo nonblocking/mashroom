@@ -25,7 +25,7 @@ export type MashroomSecurityUser = {
      * Headers that shall be passed to backends for this user (e.g. REST APIs).
      * For example, in case of OAuth this could be a Bearer Authentication header.
      */
-    +extraHttpHeaders?: {
+    +securityHttpHeaders?: {
         [headerName: string]: string
     },
     +[string]: any
