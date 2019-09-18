@@ -35,9 +35,9 @@
 
 ### Plugins
 
- * Security: Add IP based ACL rules
+ * Security Plugin: Add IP based ACL rules
+ * STOMP external messaging provider (to connect to ActiveMQ, RabbitMQ, HornetQ and so on)
  * Support for vhosts (map a site to a virtual host)
-
 
 ## Later
 
