@@ -159,7 +159,7 @@ To register a portal-app plugin add this to _package.json_:
                 },
                 "defaultConfig": {
                     "resourcesRoot": "./dist",
-                    "defaultRestrictedToRoles": ["Role1"],
+                    "defaultRestrictViewToRoles": ["Role1"],
                     "rolePermissions": {
                         "doSomethingSpecial": ["Role2", "Role3"]
                     },
@@ -167,9 +167,10 @@ To register a portal-app plugin add this to _package.json_:
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v3",
                             "sendUserHeader": false,
-                            "sendPermissionsHeader": false,
                             "sendRolesHeader": false,
-                            "addHeaders": {}
+                            "sendPermissionsHeader": false,
+                            "addHeaders": {},
+                            "restrictToRoles": ["Role1"]
                        }
                     },
                     "metaInfo": null,
@@ -188,14 +189,21 @@ To register a portal-app plugin add this to _package.json_:
  * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked
  * _globalResources_: Optional. Same as _resources_ but a global resource with a given name is only loaded once, even if multiple apps define it. 
     This is useful if many apps share the same resources. **NOT YET IMPLEMENTED**
- * _defaultConfig.resourcesRoot_: The root path for app resources such as Javascript files and images. This can be a local file path or a http, https or ftp URI.
- * _defaultConfig.defaultRestrictedToRoles_: Optional list of roles a user must have to be allowed to see the app.
- * _defaultConfig.rolePermissions_: Optional mapping between app specific roles. This corresponds to the permission object passed with the user information to the app.
- * _defaultConfig.restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions. 
-    It is possible to pass security tokens (such as an OAuth2 Bearer token) to the backend or user and role information.
-    If the backend requires other headers such as a BASIC authorization this can be defined as well.
- * _defaultConfig.appConfig_: The default app configuration
- * _defaultConfig.metaInfo_: Optional meta info (any type)    
+ * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
+     * _resourcesRoot_: The root path for app resources such as Javascript files and images. This can be a local file path or a http, https or ftp URI.
+     * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App. 
+       If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL). 
+     * _rolePermissions_: Optional mapping between app specific roles. This corresponds to the permission object passed with the user information to the app.
+     * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions. 
+         * _targetUri_: The target URI
+         * _sendUserHeader_: Adds the header _X-USER-NAME_ that contains the authenticated user name
+         * _sendRolesHeader_: Adds the header _X-USER-ROLES_ with a comma separated list of roles of the authenticated user
+         * _sendPermissionsHeader_: Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_
+         * _addHeaders_: Optional add some extra headers to each request (e.g. BASIC Authentication)
+         * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
+            If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL). 
+     * _appConfig_: The default app configuration
+     * _metaInfo_: Optional meta info (any type)    
 
 The bootstrap is in this case a global function that starts the app within the given host element. Here for example a React app:
 

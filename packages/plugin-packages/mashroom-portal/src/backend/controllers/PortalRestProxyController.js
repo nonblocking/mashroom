@@ -67,10 +67,10 @@ export default class PortalRestProxyController {
                 return;
             }
 
-            if (!isAdmin(req) && portalApp.defaultRestrictedToRoles && Array.isArray(portalApp.defaultRestrictedToRoles)) {
-                const permitted = portalApp.defaultRestrictedToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
+            if (restProxyDef.restrictToRoles && Array.isArray(restProxyDef.restrictToRoles) && restProxyDef.restrictToRoles.length > 0) {
+                const permitted = restProxyDef.restrictToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
                 if (!permitted) {
-                    contextLogger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access portal app: ${portalApp.name}`);
+                    contextLogger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access rest proxy: ${portalApp.name}/${restApiId}`);
                     res.sendStatus(403);
                     return;
                 }
@@ -95,8 +95,7 @@ export default class PortalRestProxyController {
                     }
                     if (restProxyDef.sendPermissionsHeader && portalApp.rolePermissions) {
                         const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
-                        const permissionsList = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
-                        headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = permissionsList;
+                        headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
                     }
                 }
                 if (typeof (user.extraHttpHeaders) === 'object') {

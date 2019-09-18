@@ -43,13 +43,11 @@
                 },
                 "defaultConfig": {
                     "resourcesRoot": "./dist",
+                    "defaultRestrictViewToRoles": ["Authenticated"],
                     "restProxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v3",
-                            "sendUserHeader": false,
-                            "sendPermissionsHeader": false,
-                            "sendRolesHeader": false,
-                            "addHeaders": {}
+                            "restrictToRoles": ["Authenticated"]
                         }
                     }
                 }

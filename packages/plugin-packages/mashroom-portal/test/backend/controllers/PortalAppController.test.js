@@ -18,8 +18,8 @@ describe('PortalAppController', () => {
         autoExtendAuthentication: false
     });
 
-    const portalApp: MashroomPortalApp = {
-        name: 'Test Portal App',
+    const portalApp1: MashroomPortalApp = {
+        name: 'Test Portal App 1',
         title: {
             "en": "Test Portal App",
             "de": "Test Test Test"
@@ -44,7 +44,7 @@ describe('PortalAppController', () => {
             css: [],
         },
         screenshots: null,
-        defaultRestrictedToRoles: null,
+        defaultRestrictViewToRoles: ["Role1"],
         rolePermissions: {
             'edit': ['Role1'],
             'delete': ['Administrator']
@@ -60,8 +60,37 @@ describe('PortalAppController', () => {
         },
     };
 
+    const portalApp2: MashroomPortalApp = {
+        name: 'Test Portal App 2',
+        title: {} ,
+        description: null,
+        tags: [],
+        version: '1.0',
+        homepage: null,
+        author: null,
+        license: null,
+        category: null,
+        metaInfo: null,
+        lastReloadTs: 222222222,
+        globalLaunchFunction: 'foo',
+        resourcesRootUri: `file:/${__dirname}`,
+        resources: {
+            js: ['bundle.js'],
+            css: [],
+        },
+        globalResources: {
+            js: [],
+            css: [],
+        },
+        screenshots: null,
+        defaultRestrictViewToRoles: ["OtherRole"],
+        rolePermissions: {},
+        restProxies: {},
+        defaultAppConfig: {},
+    };
+
     const portalAppInstance1: MashroomPortalAppInstance = {
-        pluginName: 'Test Portal App',
+        pluginName: 'Test Portal App 1',
         instanceId: 'ABCD',
         appConfig: {
             'hello': 'peter',
@@ -73,14 +102,14 @@ describe('PortalAppController', () => {
         pageId: 'foo',
         portalApps: {
             'area1': [{
-                pluginName: 'Test Portal App',
+                pluginName: 'Test Portal App 1',
                 instanceId: 'ABCD',
             }],
         },
     };
 
     const pluginRegistry: any = {
-        portalApps: [portalApp],
+        portalApps: [portalApp1, portalApp2],
     };
 
     const pluginContext: any = {
@@ -91,8 +120,11 @@ describe('PortalAppController', () => {
                     getPage() {
                         return page1;
                     },
-                    getPortalAppInstance() {
-                        return portalAppInstance1;
+                    getPortalAppInstance(name, id) {
+                        if (id) {
+                            return portalAppInstance1;
+                        }
+                        return null;
                     },
 
                 },
@@ -101,12 +133,12 @@ describe('PortalAppController', () => {
                 service: {
                     getUser() {
                         return {
-                            username: 'admin',
-                            roles: ['Administrator'],
+                            username: 'test',
+                            roles: ['Role1'],
                         };
                     },
                     isAdmin() {
-                        return true
+                        return false
                     },
                     async checkResourcePermission() {
                         return true;
@@ -132,7 +164,7 @@ describe('PortalAppController', () => {
             },
             params: {
                 pageId: '123',
-                pluginName: 'Test Portal App',
+                pluginName: 'Test Portal App 1',
                 portalAppInstanceId: 'ABCD',
             },
             headers: {
@@ -151,25 +183,25 @@ describe('PortalAppController', () => {
 
         expect(json).toBeTruthy();
         expect(json).toEqual({
-            pluginName: 'Test Portal App',
+            pluginName: 'Test Portal App 1',
             title: 'Translated title',
             version: '1.0',
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
             restProxyPaths: {
-                '1': '/portal/_/proxy/Test%20Portal%20App/1',
+                '1': '/portal/_/proxy/Test%20Portal%20App%201/1',
             },
-            resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App',
+            resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App%201',
             globalResourcesBasePath: '/portal/_/app-resources/_global_',
             resources: {css: [], js: ['bundle.js']},
             globalLaunchFunction: 'foo',
             lang: 'en',
             user: {
-                username: 'admin',
-                displayName: 'admin',
+                username: 'test',
+                displayName: 'test',
                 guest: false,
                 permissions: {
-                    delete: true
+                    edit: true
                 },
             },
             appConfig: {
@@ -179,13 +211,96 @@ describe('PortalAppController', () => {
         });
     });
 
+    it('generates portal app setup for a dynamically loaded app', async () => {
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            connection: {
+                remoteAddress: '127.0.0.1'
+            },
+            params: {
+                pluginName: 'Test Portal App 1',
+            },
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+            },
+            pluginContext,
+        };
+
+        let json = null;
+        const res: any = {
+            json: (data: string) => json = data,
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        await controller.getPortalAppSetup(req, res);
+
+        expect(json).toBeTruthy();
+        expect(json).toEqual({
+            pluginName: 'Test Portal App 1',
+            title: 'Translated title',
+            version: '1.0',
+            instanceId: null,
+            lastReloadTs: 222222222,
+            restProxyPaths: {
+                '1': '/portal/_/proxy/Test%20Portal%20App%201/1',
+            },
+            resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App%201',
+            globalResourcesBasePath: '/portal/_/app-resources/_global_',
+            resources: {css: [], js: ['bundle.js']},
+            globalLaunchFunction: 'foo',
+            lang: 'en',
+            user: {
+                username: 'test',
+                displayName: 'test',
+                guest: false,
+                permissions: {
+                    edit: true
+                },
+            },
+            appConfig: {
+                hello: 'world',
+                foo: 'bar',
+            },
+        });
+    });
+
+    it('rejects dynamical app setup when the user has none of defaultRestrictViewToRoles', (done) => {
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            connection: {
+                remoteAddress: '127.0.0.1'
+            },
+            params: {
+                pluginName: 'Test Portal App 2',
+            },
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            sendStatus: (status) => {
+                expect(status).toBe(403);
+                done();
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        controller.getPortalAppSetup(req, res);
+    });
+
     it('loads resources from filesystem', (done) => {
         const req: any = {
             connection: {
                 remoteAddress: '127.0.0.1'
             },
             params: {
-                'pluginName': 'Test Portal App',
+                'pluginName': 'Test Portal App 1',
                 '0': '/PortalAppController.test.js',
             },
             pluginContext,

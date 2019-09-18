@@ -65,7 +65,7 @@ const welcomeApp: MashroomPortalApp = {
         css: [],
     },
     screenshots: null,
-    defaultRestrictedToRoles: null,
+    defaultRestrictViewToRoles: null,
     rolePermissions: null,
     restProxies: null,
     defaultAppConfig: {},

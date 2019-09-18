@@ -3,6 +3,11 @@
 
 ## 1.1.0
 
+ * Portal: Added two new (optional) security related properties to the default config of portal apps:
+     * _defaultRestrictViewToRoles_: Same as the previous _defaultRestrictedToRoles_ but renamed to make its purpose clearer. 
+       These roles can be overwritten via Admin App per App instance in the UI.
+     * _restProxy.restrictToRoles_: If this is set only users with one of the given roles can access the rest proxy.
+       In contrast to all other permissions the _Administrator_ role has _not_ automatically access.
  * Added a provider plugin to support MQTT as external messaging system
  * Added a demo portal app to demonstrate remote messaging
  * Portal: Added support for remote messaging. Portal apps can now subscribe to server side topics (prefixed with :remote) 

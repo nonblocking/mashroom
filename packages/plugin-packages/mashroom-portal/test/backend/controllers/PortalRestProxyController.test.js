@@ -30,7 +30,7 @@ describe('PortalPageController', () => {
         },
         globalResources: null,
         screenshots: null,
-        defaultRestrictedToRoles: null,
+        defaultRestrictViewToRoles: null,
         rolePermissions: null,
         restProxies: {
             'my-proxy': {
@@ -63,7 +63,7 @@ describe('PortalPageController', () => {
         },
         globalResources: null,
         screenshots: null,
-        defaultRestrictedToRoles: null,
+        defaultRestrictViewToRoles: null,
         rolePermissions: {
             'edit': ['Role2'],
             'delete': ['Administrator']
@@ -85,8 +85,39 @@ describe('PortalPageController', () => {
         },
     };
 
+    const portalApp3: MashroomPortalApp = {
+        name: 'Test Portal App 3',
+        title: null,
+        description: null,
+        tags: [],
+        version: '1.0',
+        homepage: null,
+        author: null,
+        license: null,
+        category: null,
+        metaInfo: null,
+        lastReloadTs: 222222222,
+        globalLaunchFunction: 'foo',
+        resourcesRootUri: `file://${__dirname}`,
+        resources: {
+            js: ['bundle.js'],
+            css: [],
+        },
+        globalResources: null,
+        screenshots: null,
+        defaultRestrictViewToRoles: null,
+        rolePermissions: {},
+        restProxies: {
+            'my-proxy': {
+                targetUri: 'https://www.mashroom-server.com/api',
+                restrictToRoles: ["Role5"],
+            },
+        },
+        defaultAppConfig: {},
+    };
+
     const pluginRegistry: any = {
-        portalApps: [portalApp1, portalApp2],
+        portalApps: [portalApp1, portalApp2, portalApp3],
     };
 
     const pluginContext: any = {
@@ -186,5 +217,33 @@ describe('PortalPageController', () => {
             'X-EXTRA': 'test',
         });
     });
+
+    it('does not forwards calls if the user has not on of the restrictToRoles', async () => {
+
+        const req: any = {
+            params: {
+                '0': 'Test Portal App 3/my-proxy/foo',
+            },
+            connection: {
+                remoteAddress: '127.0.0.1'
+            },
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+            },
+            pluginContext,
+        };
+
+        let status = null;
+        const res: any = {
+            sendStatus: (s) => status = s,
+        };
+
+        const controller = new PortalRestProxyController(pluginRegistry);
+
+        await controller.forward(req, res);
+
+        expect(status).toBe(403);
+    });
+
 
 });

@@ -15,7 +15,7 @@ import {
 } from '../constants';
 import {getPortalPath} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage} from '../utils/model_utils';
-import {isAppPermitted, getPortalAppResourceKey, calculatePermissions} from '../utils/security_utils';
+import {isAppPermitted, calculatePermissions} from '../utils/security_utils';
 
 import type {ReadStream} from 'fs';
 import type {
@@ -58,15 +58,14 @@ export default class PortalAppController {
             const pluginName = req.params.pluginName;
             const portalAppInstanceId = req.params.portalAppInstanceId;
 
-            if (!await isAppPermitted(req, pluginName, portalAppInstanceId)) {
-                res.sendStatus(403);
-                return;
-            }
-
             const portalApp = this._getPortalApp(pluginName);
             if (!portalApp) {
                 contextLogger.error(`Portal app not found: ${pluginName}`);
                 res.sendStatus(404);
+                return;
+            }
+            if (!await isAppPermitted(req, portalApp, portalAppInstanceId)) {
+                res.sendStatus(403);
                 return;
             }
 
@@ -76,7 +75,7 @@ export default class PortalAppController {
             if (portalAppInstanceId) {
                 portalAppInstance = await this._getPortalAppInstance(pageId, portalApp, portalAppInstanceId, req);
             } else {
-                portalAppInstance = await this._getGlobalPortalAppInstance(portalApp, req, logger);
+                portalAppInstance = await this._getDynamicallyLoadedPortalAppInstance(portalApp, req);
             }
             if (!portalAppInstance) {
                 contextLogger.warn(`Portal app instance not found: ${portalAppInstanceId}`);
@@ -228,36 +227,22 @@ export default class PortalAppController {
         return portalService.getPortalAppInstance(portalApp.name, instanceId);
     }
 
-    async _getGlobalPortalAppInstance(portalApp: MashroomPortalApp, req: ExpressRequest, logger: MashroomLogger) {
+    async _getDynamicallyLoadedPortalAppInstance(portalApp: MashroomPortalApp, req: ExpressRequest) {
         const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
+        // Maybe there was created a instance in the storage
         const appInstance = await portalService.getPortalAppInstance(portalApp.name, null);
         if (appInstance) {
             return appInstance;
         }
 
-        logger.info(`Creating new default instance for global app: ${portalApp.name}`);
-        const newDefaultInstance: MashroomPortalAppInstance = {
+        const globalAppInstance: MashroomPortalAppInstance = {
             pluginName: portalApp.name,
             instanceId: null,
             appConfig: portalApp.defaultAppConfig,
         };
 
-        await portalService.insertPortalAppInstance(newDefaultInstance);
-
-        if (portalApp.defaultRestrictedToRoles && Array.isArray(portalApp.defaultRestrictedToRoles)) {
-            await securityService.updateResourcePermission(req, {
-                type: 'Portal-App',
-                key: getPortalAppResourceKey(portalApp.name, null),
-                permissions: [{
-                    permissions: ['View'],
-                    roles: portalApp.defaultRestrictedToRoles || []
-                }]
-            });
-        }
-
-        return newDefaultInstance;
+        return globalAppInstance;
     }
 
     async _getLang(req: ExpressRequest) {

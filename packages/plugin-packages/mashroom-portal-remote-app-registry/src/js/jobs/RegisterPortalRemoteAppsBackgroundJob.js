@@ -184,6 +184,12 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const definedRestProxies = config.restProxies;
         const restProxies: MashroomPortalProxyDefinitions = {};
 
+        let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
+        if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {
+            // Backward compatibility
+            defaultRestrictViewToRoles = config.defaultRestrictedToRoles;
+        }
+
         // Fix proxy target urls
         if (definedRestProxies) {
             for (const proxyName in definedRestProxies) {
@@ -217,7 +223,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             resources,
             globalResources,
             screenshots,
-            defaultRestrictedToRoles: config.defaultRestrictedToRoles,
+            defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,
             restProxies,
             defaultAppConfig: config.appConfig

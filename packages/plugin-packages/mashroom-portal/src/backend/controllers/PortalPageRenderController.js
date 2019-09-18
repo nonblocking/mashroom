@@ -298,18 +298,21 @@ export default class PortalPageRenderController {
             for (const areaId in page.portalApps) {
                 if (areaId && page.portalApps.hasOwnProperty(areaId)) {
                     for (const portalAppInstance of page.portalApps[areaId]) {
-                        if (! await isAppPermitted(req, portalAppInstance.pluginName, portalAppInstance.instanceId)) {
-                            continue;
-                        }
+                        const portalApp = this._getPortalApp(portalAppInstance.pluginName);
+                        if (portalApp) {
+                            if (!await isAppPermitted(req, portalApp, portalAppInstance.instanceId)) {
+                                continue;
+                            }
 
-                        if (portalAppInstance.instanceId) {
-                            loadStatements.push(
-                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${portalAppInstance.instanceId}', null, null);`
-                            );
-                        } else {
-                            loadStatements.push(
-                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', null, null, null);`
-                            );
+                            if (portalAppInstance.instanceId) {
+                                loadStatements.push(
+                                    `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${portalAppInstance.instanceId}', null, null);`
+                                );
+                            } else {
+                                loadStatements.push(
+                                    `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', null, null, null);`
+                                );
+                            }
                         }
                     }
                 }
@@ -330,4 +333,7 @@ export default class PortalPageRenderController {
         `;
     }
 
+    _getPortalApp(pluginName: string) {
+        return this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+    }
 }

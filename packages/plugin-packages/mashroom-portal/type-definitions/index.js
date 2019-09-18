@@ -26,7 +26,8 @@ export type MashroomPortalProxyDefinition = {
     +sendUserHeader?: boolean,
     +sendPermissionsHeader?: boolean,
     +sendRolesHeader?: boolean,
-    +addHeaders?: any
+    +addHeaders?: any,
+    +restrictToRoles?: Array<string>,
 }
 
 export type MashroomPortalProxyDefinitions = {
@@ -108,9 +109,10 @@ export interface MashroomPortalApp {
      */
     +screenshots: ?Array<string>,
     /**
-     * If no restrictions are defined for this app use this array as minimal required roles for the View permission
+     * If no role restrictions were defined via Admin App in the UI only these roles can view the app.
+     * If not set every user can load the app.
      */
-    +defaultRestrictedToRoles: ?Array<string>;
+    +defaultRestrictViewToRoles: ?Array<string>;
     /**
      * A mapping between app specific permissions and existing roles
      */

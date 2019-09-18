@@ -331,13 +331,13 @@ export default class PortalPageController {
 
             await portalService.insertPortalAppInstance(appInstance);
 
-            if (portalApp.defaultRestrictedToRoles && Array.isArray(portalApp.defaultRestrictedToRoles)) {
+            if (portalApp.defaultRestrictViewToRoles && Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
                 await securityService.updateResourcePermission(req, {
                     type: 'Portal-App',
                     key: getPortalAppResourceKey(data.pluginName, instanceId),
                     permissions: [{
                         permissions: ['View'],
-                        roles: portalApp.defaultRestrictedToRoles || []
+                        roles: portalApp.defaultRestrictViewToRoles || []
                     }]
                 });
             }

@@ -76,6 +76,11 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         if (plugin.pluginDefinition.defaultConfig && plugin.pluginDefinition.defaultConfig.appConfig) {
             defaultAppConfig = Object.assign({}, plugin.pluginDefinition.defaultConfig.appConfig, config.appConfig || {});
         }
+        let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
+        if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {
+            // Backward compatibility
+            defaultRestrictViewToRoles = config.defaultRestrictedToRoles;
+        }
 
         const portalApp: MashroomPortalApp = {
             name: plugin.name,
@@ -94,7 +99,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             resourcesRootUri,
             resources,
             globalResources,
-            defaultRestrictedToRoles: config.defaultRestrictedToRoles,
+            defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,
             restProxies: config.restProxies,
             defaultAppConfig

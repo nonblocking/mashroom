@@ -2,7 +2,12 @@
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
-import type {MashroomPortalAppUserPermissions, MashroomPortalRolePermissions} from '../../../type-definitions';
+import type {
+    MashroomPortalApp,
+    MashroomPortalAppUserPermissions,
+    MashroomPortalRolePermissions,
+    MashroomPortalService
+} from '../../../type-definitions';
 
 export const isAdmin = (req: ExpressRequest) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
@@ -39,12 +44,26 @@ export const getPortalAppResourceKey = (pluginName: string, instanceId: ?string)
     return `${pluginName}_${instanceId || 'global'}`;
 };
 
-export const isAppPermitted = async (req: ExpressRequest, pluginName: string, instanceId: ?string) => {
+export const isAppPermitted = async (req: ExpressRequest, portalApp: MashroomPortalApp, instanceId: ?string) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const logger = req.pluginContext.loggerFactory('portal');
 
-    logger.debug(`Checking permission for app ${pluginName} and instance: ${instanceId || 'global'}`);
-    return await securityService.checkResourcePermission(req, 'Portal-App', getPortalAppResourceKey(pluginName, instanceId), 'View', true);
+    if (isAdmin(req)) {
+        return true;
+    }
+
+    logger.debug(`Checking permission for app ${portalApp.name} and instance: ${instanceId || 'global'}`);
+    if (instanceId) {
+        return await securityService.checkResourcePermission(req, 'Portal-App', getPortalAppResourceKey(portalApp.name, instanceId), 'View', true);
+    }
+
+    // Dynamically loaded app without an instanceId
+    const user = securityService.getUser(req);
+    if (portalApp.defaultRestrictViewToRoles && Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
+        return portalApp.defaultRestrictViewToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
+    }
+
+    return true;
 };
 
 export const calculatePermissions = (rolePermissions: ?MashroomPortalRolePermissions, user: ?MashroomSecurityUser): MashroomPortalAppUserPermissions => {

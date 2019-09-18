@@ -38,6 +38,12 @@ describe('PortalPageRenderController', () => {
     const pluginRegistry1: any = {
         themes: [],
         layouts: [],
+        portalApps: [{
+            name: 'Mashroom Welcome Portal App',
+            defaultAppConfig: {
+                firstName: 'John',
+            },
+        }],
     };
 
     const pluginRegistry2: any = {
