@@ -87,8 +87,6 @@ describe('MashroomPluginLoaderLoader', () => {
         expect(registeredPlugin).toBeTruthy();
         expect(registeredPlugin && registeredPlugin.name).toBe('the test loader');
         expect(loaderLoader._loadedPlugins.size).toBe(1);
-        // Already loaded plugin of type custom-plugin re-loaded
-        expect(registeredPlugin.loadCalled()).toBeTruthy();
     });
 
     it('unloads a loader plugin', () => {

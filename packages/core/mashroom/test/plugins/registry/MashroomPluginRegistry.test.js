@@ -92,7 +92,10 @@ describe('MashroomPluginRegistry', () => {
         }));
 
         const contextHolder = new PluginContextHolderMock();
+        const onLoadedMock = jest.fn();
+
         const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, contextHolder, dummyLoggerFactory);
+        registry.on('loaded', onLoadedMock);
         registry.registerPluginLoader('foo', new PluginLoaderMock());
 
         packageAddedCallback('/packages/plugin2');
@@ -104,6 +107,7 @@ describe('MashroomPluginRegistry', () => {
 
         setTimeout(() => {
             expect(loaded).toBeTruthy();
+            expect(onLoadedMock.mock.calls.length).toBe(1);
             done();
         }, 100);
     });
@@ -247,10 +251,14 @@ describe('MashroomPluginRegistry', () => {
             connector.on('loaded', () => loaded = true);
             return newPlugin;
         });
+        const onLoadedMock = jest.fn();
+        const onUnloadMock = jest.fn();
 
         const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
         registry._plugins.set(existingPlugin, new ConnectorMock());
+        registry.on('loaded', onLoadedMock);
+        registry.on('unload', onUnloadMock);
         registry.registerPluginLoader('foo', new PluginLoaderMock());
         registry.registerPluginLoader('bar', new PluginLoaderMock());
 
@@ -265,6 +273,8 @@ describe('MashroomPluginRegistry', () => {
             expect(pluginLoaderUnloadMock.mock.calls.length).toBe(1);
             expect(pluginLoaderUnloadMock.mock.calls[0][0]).toBe(existingPlugin);
             expect(loaded).toBeTruthy();
+            expect(onLoadedMock.mock.calls.length).toBe(1);
+            expect(onUnloadMock.mock.calls.length).toBe(1);
             done();
         }, 200);
     });
@@ -303,6 +313,55 @@ describe('MashroomPluginRegistry', () => {
 
         expect(pluginLoaderLoadMock.mock.calls.length).toBe(1);
         expect(registry._pluginsNoLoader.length).toBe(0);
+    });
+
+    it('re-load all loaded plugins if the responsible loader gets reloaded', (done) => {
+        const pluginPackage: any = {
+            pluginPackagePath: '/foo2',
+        };
+        const loadedPlugin: any = {
+            name: 'plugin10',
+            type: 'foo10',
+            status: 'loaded',
+            pluginDefinition: {
+            },
+        };
+        const otherPlugin: any = {
+            name: 'plugin11',
+            type: 'foo11',
+            status: 'loaded',
+            pluginDefinition: {
+            },
+        };
+
+        const context = {
+            serverConfig: {
+                plugins: [],
+            },
+        };
+        PluginContextHolderMock.mockImplementation(() => ({
+            getPluginContext: () => context,
+        }));
+
+        const connectorEmitLoadedMock = jest.fn();
+        const onLoadedMock = jest.fn();
+        const ConnectorMock: any = jest.fn(() => ({
+            emitLoaded: connectorEmitLoadedMock,
+        }));
+
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        registry._pluginPackages.set(pluginPackage, new ConnectorMock());
+        registry._pluginPackages.set(otherPlugin, new ConnectorMock());
+        registry._plugins.set(loadedPlugin, new ConnectorMock());
+        registry.on('loaded', onLoadedMock);
+
+        registry.registerPluginLoader('foo10', new PluginLoaderMock());
+
+        setTimeout(() => {
+            expect(pluginLoaderLoadMock.mock.calls.length).toBe(1);
+            expect(onLoadedMock.mock.calls.length).toBe(1);
+            done();
+        }, 100);
     });
 
     it('doesn\'t load a plugin if a required plugin is not loaded', () => {
