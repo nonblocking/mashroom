@@ -6,6 +6,9 @@
         "devMode": true
     }],
     "indexPage": "/portal",
+    "ignorePlugins": [
+        "Mashroom Messaging External Provider MQTT"
+    ],
     "plugins": {
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",
