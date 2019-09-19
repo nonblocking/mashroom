@@ -1,12 +1,12 @@
 // @flow
 
-import type { MashroomAvailablePortalApp, MashroomPortalAppUserPermissions } from '@mashroom/mashroom-portal/type-definitions';
+import type { MashroomAvailablePortalApp } from '@mashroom/mashroom-portal/type-definitions';
 import type {SelectedPortalApp, ActivePortalApp, MessageBusMessage} from '../../../type-definitions';
-import type {MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
 
 export const SET_AVAILABLE_PORTAL_APPS = 'SET_AVAILABLE_PORTAL_APPS';
 export const SET_SELECTED_PORTAL_APP = 'SET_SELECTED_PORTAL_APP';
 export const SET_ACTIVE_PORTAL_APP = 'SET_ACTIVE_PORTAL_APP';
+export const SET_APP_LOADING_ERROR = 'SET_APP_LOADING_ERROR';
 export const ADD_MESSAGE_PUBLISHED_BY_APP = 'ADD_MESSAGE_PUBLISHED_BY_APP';
 export const ADD_MESSAGE_PUBLISHED_BY_SANDBOX = 'ADD_MESSAGE_PUBLISHED_BY_SANDBOX';
 export const SET_HOST_WIDTH = 'SET_HOST_WIDTH';
@@ -30,6 +30,13 @@ export const setActivePortalApp = (activePortalApp: ?ActivePortalApp) => {
     return {
         type: SET_ACTIVE_PORTAL_APP,
         activePortalApp,
+    };
+};
+
+export const setAppLoadingError = (error: boolean) => {
+    return {
+        type: SET_APP_LOADING_ERROR,
+        error,
     };
 };
 

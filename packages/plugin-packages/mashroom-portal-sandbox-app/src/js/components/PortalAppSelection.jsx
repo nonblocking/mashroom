@@ -1,19 +1,20 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {Form, SelectFieldContainer} from '@mashroom/mashroom-portal-ui-commons';
+import {Form, SelectFieldContainer, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
     availablePortalApps: Array<MashroomAvailablePortalApp>,
-    selectionChanged: (?string) => void,
+    appLoadingError: boolean,
+    onSelectionChanged: (?string) => void,
 }
 
 export default class PortalAppSelection extends PureComponent<Props> {
 
     render() {
-        const { availablePortalApps, selectionChanged } = this.props;
+        const { availablePortalApps, onSelectionChanged, appLoadingError } = this.props;
         const options = availablePortalApps.map((a) => ({
             value: a.name,
             label: a.name
@@ -23,8 +24,13 @@ export default class PortalAppSelection extends PureComponent<Props> {
             <div>
                 <Form formId='portal-app-selection'>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <SelectFieldContainer id='appName' name='appName' labelId='appName' options={options} emptyOption={true} onValueChange={selectionChanged} />
+                        <SelectFieldContainer id='appName' name='appName' labelId='appName' options={options} emptyOption={true} onValueChange={onSelectionChanged} />
                     </div>
+                    {appLoadingError && (
+                        <div className='app-loading-error'>
+                            <ErrorMessage messageId='errorLoadingApp' />
+                        </div>
+                    )}
                 </Form>
             </div>
         )

@@ -79,4 +79,8 @@ $LABEL_ROW_WIDTH: 240px;
             overflow: hidden;
         }
     }
+
+    .app-loading-error {
+        padding-left: $LABEL_ROW_WIDTH;
+    }
 }

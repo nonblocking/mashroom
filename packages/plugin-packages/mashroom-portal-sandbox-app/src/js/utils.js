@@ -1,7 +1,7 @@
 // @flow
 
 import type {PortalAppParams, SelectedPortalApp} from '../../type-definitions';
-import type {MashroomPortalAppSetup, MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
 
 export const getQueryParams = (portalStateService: MashroomPortalStateService): ?PortalAppParams =>  {
     const appName = portalStateService.getStateProperty('sbAppName');

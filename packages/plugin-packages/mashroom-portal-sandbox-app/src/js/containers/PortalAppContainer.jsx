@@ -7,7 +7,8 @@ import {
     setAvailablePortalApps,
     setActivePortalApp,
     setSelectedPortalApp,
-    setHostWidth
+    setHostWidth,
+    setAppLoadingError
 } from '../store/actions';
 
 import type {ComponentType} from 'react';
@@ -31,10 +32,7 @@ type OwnProps = {
 }
 
 type StateProps = {
-    availablePortalApps: Array<MashroomAvailablePortalApp>,
-    selectedPortalApp: ?SelectedPortalApp,
     activePortalApp: ?ActivePortalApp,
-    hostWidth: string,
 }
 
 type DispatchProps = {
@@ -42,14 +40,12 @@ type DispatchProps = {
     setSelectedPortalApp: (?SelectedPortalApp) => void,
     setActivePortalApp: (?ActivePortalApp) => void,
     setHostWidth: (string) => void,
+    setAppLoadingError: (boolean) => void,
 }
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
   return {
-      availablePortalApps: state.availablePortalApps,
-      selectedPortalApp: state.selectedPortalApp,
       activePortalApp: state.activePortalApp,
-      hostWidth: state.host.width,
   };
 };
 
@@ -57,7 +53,8 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchPro
     setAvailablePortalApps: (availableApps: Array<MashroomAvailablePortalApp>) => { dispatch(setAvailablePortalApps(availableApps)); },
     setSelectedPortalApp: (app: ?SelectedPortalApp) => { dispatch(setSelectedPortalApp(app)); },
     setActivePortalApp: (app: ?ActivePortalApp) => { dispatch(setActivePortalApp(app)); },
-    setHostWidth: (hostWidth: string) => { dispatch(setHostWidth(hostWidth)); }
+    setHostWidth: (hostWidth: string) => { dispatch(setHostWidth(hostWidth)); },
+    setAppLoadingError: (error: boolean) => { dispatch(setAppLoadingError(error)); }
 });
 
 export default (connect(mapStateToProps, mapDispatchToProps)(PortalApp): ComponentType<OwnProps>);

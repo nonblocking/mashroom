@@ -5,6 +5,7 @@ import {
     SET_AVAILABLE_PORTAL_APPS,
     SET_SELECTED_PORTAL_APP,
     SET_ACTIVE_PORTAL_APP,
+    SET_APP_LOADING_ERROR,
     SET_TOPICS_SUBSCRIBED_BY_APP,
     ADD_MESSAGE_PUBLISHED_BY_APP,
     ADD_MESSAGE_PUBLISHED_BY_SANDBOX,
@@ -28,6 +29,20 @@ const availablePortalApps = (state: Array<MashroomAvailablePortalApp>, action: A
     switch (action.type) {
         case SET_AVAILABLE_PORTAL_APPS: {
             return action.availablePortalApps;
+        }
+        default:
+            return state;
+    }
+};
+
+const appLoadingError = (state: ?boolean, action: Action): ?boolean => {
+    if (typeof(state) === 'undefined') {
+        return false;
+    }
+
+    switch (action.type) {
+        case SET_APP_LOADING_ERROR: {
+            return action.error;
         }
         default:
             return state;
@@ -114,6 +129,7 @@ const host = (state: PortalAppHost, action: Action): PortalAppHost => {
 export default mashroomPortalCommonsCombineReducers({
     availablePortalApps,
     selectedPortalApp,
+    appLoadingError,
     activePortalApp,
     messageBusCom,
     host

@@ -10,6 +10,7 @@ import type {
 export type State = {|
     +availablePortalApps: Array<MashroomAvailablePortalApp>,
     +selectedPortalApp: ?SelectedPortalApp,
+    +appLoadingError: boolean,
     +activePortalApp: ?ActivePortalApp,
     +messageBusCom: MessageBusCommunication,
     +host: PortalAppHost,

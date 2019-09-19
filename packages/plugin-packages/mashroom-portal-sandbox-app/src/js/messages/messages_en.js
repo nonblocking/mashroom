@@ -14,6 +14,7 @@ export default {
     load: 'Load',
     publishMessage: 'Publish Message',
     loading: 'Loading...',
+    errorLoadingApp: 'Could not load app (not found or no permission)',
     errorTopicMandatory: 'Topic is mandatory',
     errorInvalidJSON: 'Error: Invalid JSON'
 };

@@ -2,8 +2,8 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
-import PortalAppConfig from'./PortalAppConfig';
-import PortalAppSelection from'./PortalAppSelection';
+import PortalAppConfigContainer from'../containers/PortalAppConfigContainer';
+import PortalAppSelectionContainer from'../containers/PortalAppSelectionContainer';
 import loadPortalApp from '../load_portal_app';
 import {getQueryParams, mergeAppConfig} from '../utils';
 
@@ -17,14 +17,12 @@ import type {ActivePortalApp, DummyMessageBus, SelectedPortalApp} from '../../..
 type Props = {
     portalAppService: MashroomPortalAppService,
     portalStateService: MashroomPortalStateService,
-    hostWidth: string,
     messageBus: DummyMessageBus,
-    availablePortalApps: Array<MashroomAvailablePortalApp>,
-    selectedPortalApp: ?SelectedPortalApp,
     activePortalApp: ?ActivePortalApp,
     setAvailablePortalApps: (Array<MashroomAvailablePortalApp>) => void,
     setSelectedPortalApp: (?SelectedPortalApp) => void,
     setActivePortalApp: (?ActivePortalApp) => void,
+    setAppLoadingError: (boolean) => void,
     setHostWidth: (string) => void,
 }
 
@@ -53,12 +51,13 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     selectionChanged(appName: ?string) {
-        const { portalAppService, setSelectedPortalApp } = this.props;
+        const { portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
         if (!appName) {
             setSelectedPortalApp(null);
             return;
         }
 
+        setAppLoadingError(false);
         portalAppService.loadAppSetup(appName, null).then(
             (setup) => {
                 const selectedPortalApp = {
@@ -76,6 +75,7 @@ export default class PortalApp extends PureComponent<Props> {
                 }
             },
             (error) => {
+                setAppLoadingError(true);
                 console.error('Loading app setup failed', error);
             }
         );
@@ -101,12 +101,10 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     renderNoActivePortalApp() {
-        const { availablePortalApps, selectedPortalApp, hostWidth } = this.props;
-
         return (
             <>
-                <PortalAppSelection availablePortalApps={availablePortalApps} selectionChanged={(appName) => this.selectionChanged(appName)} />
-                <PortalAppConfig selectedPortalApp={selectedPortalApp} hostWidth={hostWidth} onConfigSubmit={(app, hostWidth) => this.loadPortalApp(app, hostWidth)} />
+                <PortalAppSelectionContainer onSelectionChanged={(appName) => this.selectionChanged(appName)} />
+                <PortalAppConfigContainer onConfigSubmit={(app, hostWidth) => this.loadPortalApp(app, hostWidth)} />
             </>
         );
     }

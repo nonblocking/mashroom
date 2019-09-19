@@ -8,6 +8,7 @@ import type {State, Store} from '../../../type-definitions';
 let initialState: State = {
     availablePortalApps: [],
     selectedPortalApp: null,
+    appLoadingError: false,
     activePortalApp: null,
     messageBusCom: {
         topicsSubscribedByApp: [],
