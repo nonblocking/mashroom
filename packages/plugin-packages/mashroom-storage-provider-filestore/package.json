@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.0.94",
+    "version": "1.1.0",
     "files": [
         "dist/**",
         "type-definitions/*"
@@ -17,9 +17,9 @@
     },
     "devDependencies": {
         "@babel/cli": "7.6.0",
-        "@mashroom/mashroom": "1.0.94",
-        "@mashroom/mashroom-storage": "1.0.94",
-        "@mashroom/mashroom-utils": "1.0.94",
+        "@mashroom/mashroom": "1.1.0",
+        "@mashroom/mashroom-storage": "1.1.0",
+        "@mashroom/mashroom-utils": "1.1.0",
         "eslint": "6.3.0",
         "jest": "24.9.0"
     },

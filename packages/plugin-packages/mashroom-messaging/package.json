@@ -4,20 +4,17 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
-    "dependencies": {
-
-    },
     "devDependencies": {
         "@babel/cli": "^7.6.0",
-        "@mashroom/mashroom": "1.0.94",
-        "@mashroom/mashroom-security": "1.0.94",
-        "@mashroom/mashroom-websocket": "1.0.0",
-        "@mashroom/mashroom-utils": "1.0.94",
+        "@mashroom/mashroom": "1.1.0",
+        "@mashroom/mashroom-security": "1.1.0",
+        "@mashroom/mashroom-utils": "1.1.0",
+        "@mashroom/mashroom-websocket": "1.1.0",
         "eslint": "^6.4.0",
         "jest": "^24.9.0",
         "nodemon": "^1.19.2",
