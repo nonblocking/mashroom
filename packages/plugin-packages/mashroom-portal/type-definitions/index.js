@@ -752,10 +752,10 @@ export interface MashroomPortalMessageBus {
      */
     publish(topic: string, data: any): Promise<void>;
     /**
-     * Get the private user topic for the currently authenticated user.
+     * Get the private user topic for the given user or the currently authenticated user if no argument given.
      * You can subscribe to "sub" topics as well, e.g. <private_topic>/foo
      */
-    getRemoteUserPrivateTopic(): ?string;
+    getRemoteUserPrivateTopic(username?: string): ?string;
     /**
      * The prefix for remote topics
      */

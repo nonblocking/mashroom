@@ -39,6 +39,9 @@
         "roots": [
             "<rootDir>/test"
         ],
+        "globals": {
+            "MashroomPortalRemoteMessagingPrivateUserTopic": "user/testuser"
+        },
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {

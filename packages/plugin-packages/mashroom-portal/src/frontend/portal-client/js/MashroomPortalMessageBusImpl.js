@@ -63,12 +63,22 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
         return this._publish(topic, data);
     }
 
-    getRemoteUserPrivateTopic() {
-        return this._remoteMessageClient && REMOTE_MESSAGING_PRIVATE_USER_TOPIC;
+    getRemoteUserPrivateTopic(username?: string) {
+        const privateTopicAuthenticatedUser = REMOTE_MESSAGING_PRIVATE_USER_TOPIC;
+        if (!this._remoteMessageClient || !privateTopicAuthenticatedUser) {
+            return null;
+        }
+        if (!username) {
+            return privateTopicAuthenticatedUser;
+        }
+
+        const topicLevels = privateTopicAuthenticatedUser.split('/');
+        topicLevels.pop();
+        return `${topicLevels.join('/')}/${username}`;
     }
 
     getRemotePrefix() {
-        return 'remote:';
+        return REMOTE_MESSAGING_TOPIC_PREFIX;
     }
 
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
@@ -98,8 +108,8 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
             publish(topic: string, data: any) {
                 return master._publish(topic, data, appId);
             },
-            getRemoteUserPrivateTopic() {
-                return master.getRemoteUserPrivateTopic();
+            getRemoteUserPrivateTopic(username?: string) {
+                return master.getRemoteUserPrivateTopic(username);
             },
             getRemotePrefix() {
                 return master.getRemotePrefix();

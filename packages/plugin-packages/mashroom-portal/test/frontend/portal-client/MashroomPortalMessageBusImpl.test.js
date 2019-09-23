@@ -145,4 +145,23 @@ describe('MashroomPortalMessageBusImpl', () => {
         setTimeout(() => done(), 500);
     });
 
+    it('returns the remote prefix', () => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        expect(messageBus.getRemotePrefix()).toBe('remote:');
+    });
+
+    it('returns the user private topic of the authenticated user', () => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        messageBus._remoteMessageClient = ({}: any);
+
+        expect(messageBus.getRemoteUserPrivateTopic()).toBe('user/testuser');
+    });
+
+    it('returns the user private topic of another user', () => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        messageBus._remoteMessageClient = ({}: any);
+
+        expect(messageBus.getRemoteUserPrivateTopic('foo@test.com')).toBe('user/foo@test.com');
+    });
+
 });

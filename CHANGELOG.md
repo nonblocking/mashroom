@@ -1,6 +1,11 @@
 
 # Change Log
 
+## 1.1.1
+
+ * Portal: _MashroomMessageBus.getRemoteUserPrivateTopic()_ takes now an optional argument _username_ if you want to obtain the private 
+   topic of a particular user instead of the "own" (the private topic of the authenticated user)
+
 ## 1.1.0
 
  * Portal: Added two new (optional) security related properties to the default config of portal apps:
