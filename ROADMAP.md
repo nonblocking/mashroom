@@ -1,49 +1,32 @@
 
 # Mashroom Roadmap
 
-## Version 1.1
-
-### Core
-
-### Portal
-
- * Declaration and loading of global (shared) portal app resources 
- * Use the new WebSocket proxy to handle restProxy targetUri's beginning with ws://
- * Admin Portal App
-    * Responsive design
-
-### Plugins
- 
- * Redis Session provider
- * MongoDb storage implementation
- * WebSocket proxy similar to mashroom-http-proxy based on mashroom-websocket
- * OAuth2 security provider
-
-
 ## Version 1.2
 
-### Core
-
- * Handle path collisions of express apps
- * Vhost middleware
-
-### Portal
-
+ * Portal: Declaration and loading of global (shared) portal app resources 
+ * Redis Session provider plugin
+ * OpenId Connect (OAuth) security provider
+ * MongoDb storage provider
+ 
+## Version 1.3
+ 
+ * Portal: Default theme: Language switcher
  * CMS content rendering app with a pluggable backend connector (e.g. for a headless CMS or Typo 3)
  * Asset rendering app with a pluggable backend connector (e.g. for a DMS or S3)
- * Language switcher (available languages)
+ 
+## Version 1.4
 
-### Plugins
-
- * Security Plugin: Add IP based ACL rules
+ * WebSocket proxy similar to mashroom-http-proxy based on mashroom-websocket 
+ * Use the new WebSocket proxy to handle restProxy targetUri's beginning with ws://
  * STOMP external messaging provider (to connect to ActiveMQ, RabbitMQ, HornetQ and so on)
- * Support for vhosts (map a site to a virtual host)
 
-## Later
 
-### Core
+## Post 1.4
 
- * Add TypeScript types
+ * Portal: Responsive Admin App
+ * Core: Handle path collisions of express apps
+ * Core: Add possibility to map sites to virtual hosts
+ * Security Plugin: Add IP based ACL rules
+ * TypeScript types
  * App store
  
-
