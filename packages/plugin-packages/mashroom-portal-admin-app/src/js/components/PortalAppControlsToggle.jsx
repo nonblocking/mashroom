@@ -43,7 +43,7 @@ export default class PortalAppControlsToggle extends PureComponent<Props> {
     render() {
         return (
            <div className={`portal-apps-control-toggle ${this.props.portalAppControls ? 'active' : ''}`} onClick={this.toggle.bind(this)}>
-                <FormattedMessage id='portalAppControls'/>
+                <span><FormattedMessage id='portalAppControls'/></span>
            </div>
         );
     }
