@@ -11,21 +11,21 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
-    const { path, restrictToRoles, pingIntervalSec, maxConnections } = pluginConfig;
+    const { path, restrictToRoles, enableKeepAlive, keepAliveIntervalSec, maxConnections } = pluginConfig;
     const pluginContext = contextHolder.getPluginContext();
 
-    const server = new WebSocketServer(pluginContext.loggerFactory);
-    context.server = server;
     context.restrictToRoles = restrictToRoles;
     context.basePath = path;
-    context.pingIntervalSec = pingIntervalSec;
+    context.enableKeepAlive = enableKeepAlive;
+    context.keepAliveIntervalSec = keepAliveIntervalSec;
     context.maxConnections = maxConnections;
+    context.server = new WebSocketServer(pluginContext.loggerFactory);
 
     const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn(pluginContext.loggerFactory);
 
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close all connections when the plugin reloads
-        server.closeAll();
+        context.server.closeAll();
     });
 
     return {

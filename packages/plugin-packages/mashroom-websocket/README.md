@@ -41,7 +41,8 @@ You can override the default config in your Mashroom config file like this:
         "Mashroom WebSocket Webapp": {
             "path": "/websocket",
             "restrictToRoles": ["WebSocketRole"],
-            "pingIntervalSec": 15,
+            "enableKeepAlive": true,
+            "keepAliveIntervalSec": 15,
             "maxConnections": 2000
         }
     }
@@ -50,7 +51,9 @@ You can override the default config in your Mashroom config file like this:
 
  * _path_: The path where the clients can connect 
  * _restrictToRoles_: An optional array of roles that are required to connect (default: null)
- * _pingIntervalSec_: Interval for ping messages to clients to check if they are alive (default: 15, <= 0 disables pings)
+ * _enableKeepAlive_: Enable a periodic keep alive message where the server will send "keepalive" to all clients.
+   This is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)
+ * _keepAliveIntervalSec_: Interval for keepalive messages in seconds (default: 15)
  * _maxConnections_: Max allowed WebSocket connections (default: 2000)
  
 There will also be a **test page** available under: _/websocket/test_

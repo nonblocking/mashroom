@@ -148,6 +148,13 @@ export default class RemoteMessagingClient {
     }
 
     _handleData(data: string) {
+        if (data === '' || data === 'keepalive' || data === '"keepalive"' || data === 'keep-alive' || data === '"keep-alive"') {
+            // Ignore keep alive messages
+            return;
+        }
+
+        console.log('Received WebSocket message:', data);
+
         try {
             const message = JSON.parse(data);
             if (message.messageId && message.success) {
@@ -167,9 +174,11 @@ export default class RemoteMessagingClient {
                 if (this._messageHandler) {
                     this._messageHandler(publishMessage.message, publishMessage.topic);
                 }
+            } else {
+                console.warn(`Don't know how to handle WebSocket message: `, message);
             }
         } catch (error) {
-            console.error('Received WebSocket data is no JSON', error);
+            console.error('Received WebSocket data is no valid JSON', error);
         }
     }
 
@@ -198,12 +207,11 @@ export default class RemoteMessagingClient {
                 this._tryReconnect();
             };
             this._webSocket.onmessage = (event: MessageEvent) => {
-                console.log('Received WebSocket message:', event);
                 if (typeof (event.data) === 'string') {
                     const data: string = event.data;
                     this._handleData(data);
                 } else {
-                    console.error('Ignoring non string data: ', event.data);
+                    console.error('Ignoring non string WebSocket message: ', event.data);
                 }
             };
         }

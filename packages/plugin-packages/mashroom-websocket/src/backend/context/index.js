@@ -5,7 +5,8 @@ import type {MashroomWebSocketServer} from '../../../type-definitions';
 let server: any = null;
 let restrictToRoles: ?Array<string> = null;
 let basePath = '/websocket';
-let pingIntervalSec = 30;
+let enableKeepAlive = false;
+let keepAliveIntervalSec = 15;
 let maxConnections = 2000;
 
 export default {
@@ -27,11 +28,17 @@ export default {
     set basePath(path: string) {
         basePath = path;
     },
-    get pingIntervalSec(): number {
-        return pingIntervalSec;
+    get enableKeepAlive(): boolean {
+        return enableKeepAlive;
     },
-    set pingIntervalSec(interval: number) {
-        pingIntervalSec = interval;
+    set enableKeepAlive(enable: boolean) {
+        enableKeepAlive = enable;
+    },
+    get keepAliveIntervalSec(): number {
+        return keepAliveIntervalSec;
+    },
+    set keepAliveIntervalSec(interval: number) {
+        keepAliveIntervalSec = interval;
     },
     get maxConnections(): number {
         return maxConnections;

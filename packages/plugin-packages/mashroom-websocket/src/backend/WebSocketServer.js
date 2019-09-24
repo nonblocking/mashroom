@@ -15,6 +15,9 @@ import type {
     MashroomWebSocketDisconnectListener,
 } from '../../type-definitions';
 
+const CHECK_CONNECTION_INTERVAL_MS = 10 * 1000;
+const KEEP_ALIVE_MESSAGE = 'keepalive';
+
 export default class WebSocketServer implements MashroomWebSocketServer {
 
     _logger: MashroomLogger;
@@ -28,6 +31,8 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         listener: MashroomWebSocketMessageListener
     }>;
     _disconnectListeners: Array<MashroomWebSocketDisconnectListener>;
+    _checkConnectionInterval: IntervalID;
+    _keepAliveInterval: IntervalID;
 
     constructor(loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.websocket.server');
@@ -37,8 +42,10 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         this._clients = [];
         this._messageListener = [];
         this._disconnectListeners = [];
-        if (context.pingIntervalSec > 0) {
-            setInterval(() => this._checkAlive(), context.pingIntervalSec * 1000);
+
+        this._checkConnectionInterval = setInterval(() => this._checkConnection(), CHECK_CONNECTION_INTERVAL_MS);
+        if (context.enableKeepAlive) {
+            this._keepAliveInterval = setInterval(() => this._sendKeepAlive(), context.keepAliveIntervalSec * 1000);
         }
     }
 
@@ -142,6 +149,12 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     closeAll() {
+        if (this._checkConnectionInterval) {
+            clearInterval(this._checkConnectionInterval);
+        }
+        if (this._keepAliveInterval) {
+            clearInterval(this._keepAliveInterval);
+        }
         this._logger.info('Closing all WebSocket connections');
         this._clients.forEach((cw) => {
             this.close(cw.client);
@@ -209,7 +222,16 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         return clientWrapper ? clientWrapper.webSocket : null;
     }
 
-    _checkAlive() {
+    _sendKeepAlive() {
+        if (this._clients) {
+            this._clients.forEach((wrapper) => {
+                console.info('SENDING KEEP ALIVE');
+                this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE);
+            });
+        }
+    }
+
+    _checkConnection() {
         if (this._clients) {
             this._logger.info(`Currently open WebSocket connections: ${this.getClientCount()}`);
             this._clients.forEach((wrapper) => {

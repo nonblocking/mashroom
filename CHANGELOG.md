@@ -3,6 +3,7 @@
 
 ## 1.1.1
 
+ * WebSocket server now sends keep alive messages to prevent reverse proxies and firewalls from closing the connection
  * Portal: _MashroomMessageBus.getRemoteUserPrivateTopic()_ takes now an optional argument _username_ if you want to obtain the private 
    topic of a particular user instead of the "own" (the private topic of the authenticated user)
 

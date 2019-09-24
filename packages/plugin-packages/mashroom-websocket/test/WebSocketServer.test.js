@@ -6,7 +6,7 @@ import context from '../src/backend/context';
 
 describe('WebSocketServer', () => {
 
-    context.pingIntervalSec = -1;
+    context.enableKeepAlive = false;
 
     it('creates a client', () => {
         const webSocketServer = new WebSocketServer(dummyLoggerFactory);
