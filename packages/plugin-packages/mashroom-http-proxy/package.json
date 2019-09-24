@@ -54,7 +54,9 @@
                         "expires",
                         "cache-control",
                         "content-type",
-                        "content-encoding"
+                        "content-length",
+                        "content-encoding",
+                        "content-disposition"
                     ],
                     "rejectUntrustedCerts": false,
                     "poolMaxSockets": 10,
