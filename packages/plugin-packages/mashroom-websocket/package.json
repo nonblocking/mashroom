@@ -55,7 +55,7 @@
                 "defaultConfig": {
                     "path": "/websocket",
                     "restrictToRoles": null,
-                    "pingIntervalSec": 30,
+                    "pingIntervalSec": 15,
                     "maxConnections": 2000
                 }
             },

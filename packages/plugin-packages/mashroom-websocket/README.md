@@ -41,7 +41,7 @@ You can override the default config in your Mashroom config file like this:
         "Mashroom WebSocket Webapp": {
             "path": "/websocket",
             "restrictToRoles": ["WebSocketRole"],
-            "pingIntervalSec": 30,
+            "pingIntervalSec": 15,
             "maxConnections": 2000
         }
     }
@@ -50,7 +50,7 @@ You can override the default config in your Mashroom config file like this:
 
  * _path_: The path where the clients can connect 
  * _restrictToRoles_: An optional array of roles that are required to connect (default: null)
- * _pingIntervalSec_: Interval for ping messages to clients to check if they are alive (default: 30, <= 0 disables pings)
+ * _pingIntervalSec_: Interval for ping messages to clients to check if they are alive (default: 15, <= 0 disables pings)
  * _maxConnections_: Max allowed WebSocket connections (default: 2000)
  
 There will also be a **test page** available under: _/websocket/test_
