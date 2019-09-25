@@ -148,7 +148,7 @@ export default class RemoteMessagingClient {
     }
 
     _handleData(data: string) {
-        if (data === '' || data === 'keepalive' || data === '"keepalive"' || data === 'keep-alive' || data === '"keep-alive"') {
+        if (data === '""' || data === '"keepalive"') {
             // Ignore keep alive messages
             return;
         }
