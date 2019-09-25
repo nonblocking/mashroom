@@ -51,11 +51,17 @@
                     "forwardHeaders": [
                         "accept",
                         "accept-encoding",
+                        "accept-charset",
+                        "accept-language",
+                        "accept-ranges",
+                        "range",
                         "expires",
                         "cache-control",
+                        "last-modified",
                         "content-type",
                         "content-length",
                         "content-encoding",
+                        "content-range",
                         "content-disposition"
                     ],
                     "rejectUntrustedCerts": false,

@@ -38,14 +38,20 @@ You can override the default config in your Mashroom config file like this:
                 "DELETE"
             ],
             "forwardHeaders": [
-                "accept",
-                "accept-encoding",
-                "expires",
-                "cache-control",
-                "content-type",
-                "content-length",
-                "content-encoding",
-                "content-disposition"
+               "accept",
+               "accept-encoding",
+               "accept-charset",
+               "accept-language",
+               "accept-ranges",
+               "range",
+               "expires",
+               "cache-control",
+               "last-modified",
+               "content-type",
+               "content-length",
+               "content-encoding",
+               "content-range",
+               "content-disposition"
             ],
             "rejectUntrustedCerts": true,
             "poolMaxSockets": 10,
