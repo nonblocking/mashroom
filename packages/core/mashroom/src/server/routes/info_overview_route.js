@@ -12,7 +12,7 @@ const overviewRoute = (req: ExpressRequest, res: ExpressResponse) => {
 export default overviewRoute;
 
 const overview = (pluginContext: MashroomPluginContext) => `
-    <table border="1" cellspacing="0" cellpadding="10">
+    <table>
         <tr>
             <th>Server name</th>
             <td>${pluginContext.serverConfig.name}</td>

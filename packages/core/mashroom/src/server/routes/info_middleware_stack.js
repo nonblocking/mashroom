@@ -16,7 +16,7 @@ const middlewares = (pluginContext: MashroomPluginContext) => `
     <p>
         (The middleware on top of the list is executed first)
     </p>
-    <table border="1" cellspacing="0" cellpadding="10">
+    <table>
         <tr>
             <th>Middleware</th>
             <th>Order</th>

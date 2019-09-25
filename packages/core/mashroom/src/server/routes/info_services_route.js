@@ -12,7 +12,7 @@ const servicesRoute = (req: ExpressRequest, res: ExpressResponse) => {
 export default servicesRoute;
 
 const services = (pluginContext: MashroomPluginContext) => `
-    <table border="1" cellspacing="0" cellpadding="10">
+    <table>
         <tr>
             <th>Service</th>
             <th>Methods</th>

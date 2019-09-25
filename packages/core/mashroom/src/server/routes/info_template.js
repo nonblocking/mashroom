@@ -39,14 +39,14 @@ export default (content: string, req: ExpressRequest) => (`
             nav ul {
                 display: flex; 
                 padding: 0;
-                border-bottom: 1px solid #888;
-                max-width: 800px;
             }
         
             .menu-item {
                 list-style-type: none;
-                padding: 3px 10px;
-                margin: 0 5px;
+                padding: 5px 10px;
+                margin: 0 5px 0 0;
+                border-bottom: 2px solid transparent;
+                background-color: #EFEFEF;
             }
             
             .menu-item a {
@@ -58,8 +58,7 @@ export default (content: string, req: ExpressRequest) => (`
             }
             
             .menu-item.active {
-                border-bottom: 2px solid #0097cc;
-                margin-bottom: -1px;
+                border-color: #0097cc;
             }
             
             .menu-item.active a {
@@ -69,6 +68,15 @@ export default (content: string, req: ExpressRequest) => (`
                 cursor: default;
             }
             
+            .menu-item.external {
+                background: none;
+                margin-left: 5px;
+            }
+            
+            .menu-item.external a {
+                text-decoration: underline;
+            }
+            
             th {
                 text-align: left;
                 vertical-align: top;
@@ -76,7 +84,7 @@ export default (content: string, req: ExpressRequest) => (`
             }
             
             main {
-                margin: 30px 0;
+                margin: 20px 0;
             }
             
             main ul {
@@ -85,6 +93,24 @@ export default (content: string, req: ExpressRequest) => (`
             
             main li {
                 padding: 3px 0;
+            }
+            
+            table, th, td {
+                border: 1px solid #CCC;
+            }
+            
+            table {
+                border-spacing: 0;
+                border-collapse: collapse;
+            }
+            
+            td {
+                padding: 6px 10px;
+            }
+            
+            th {
+                background-color: #EFEFEF;
+                padding: 8px 10px;
             }
         </style>
     </head>
@@ -97,7 +123,7 @@ export default (content: string, req: ExpressRequest) => (`
                 <li class="menu-item ${req.path === '/mashroom/middleware' ? 'active' : ''}"><a href="/mashroom/middleware">Middleware</a></li>
                 <li class="menu-item ${req.path === '/mashroom/services' ? 'active' : ''}"><a href="/mashroom/services">Services</a></li>
                 <li class="menu-item ${req.path === '/mashroom/webapps' ? 'active' : ''}"><a href="/mashroom/webapps">Webapps</a></li>
-                <li class="menu-item "><a href="/mashroom/docs" target="_blank">Documentation</a></li>
+                <li class="menu-item external"><a href="/mashroom/docs" target="_blank">Documentation</a></li>
             </ul>
         </nav>
         <main>

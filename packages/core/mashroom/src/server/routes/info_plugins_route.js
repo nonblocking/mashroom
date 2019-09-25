@@ -30,7 +30,7 @@ const pluginLoadersTable = (pluginContext: MashroomPluginContext) => {
         }
     }
 
-    return `<table border="1" cellspacing="0" cellpadding="10"><tr><th>Name</th><th>Loads</th></tr>${pluginLoaderRows.join('')}</table>`;
+    return `<table><tr><th>Name</th><th>Loads</th></tr>${pluginLoaderRows.join('')}</table>`;
 };
 
 const pluginTable = (pluginContext: MashroomPluginContext) => {
@@ -47,7 +47,7 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
         pluginRows.push(`<tr><td>${p.name}</td><td>${p.type}</td><td>${p.pluginPackage.name}</td><td style="${statusStyle}">${p.status}</td><td>${errorMessage}</td><td>${lastReload}</td><td><pre>${def}</pre></td><td><pre>${config}</pre></td></tr>`);
     });
 
-    return `<table border="1" cellspacing="0" cellpadding="10"><tr><th>Name</th><th>Type</th><th>Package</th><th>Status</th><th>Error</th><th>Last Reload</th><th>Definition</th><th>Config</th></tr>${pluginRows.join('')}</table>`;
+    return `<table><tr><th>Name</th><th>Type</th><th>Package</th><th>Status</th><th>Error</th><th>Last Reload</th><th>Definition</th><th>Config</th></tr>${pluginRows.join('')}</table>`;
 };
 
 const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
@@ -59,5 +59,5 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         pluginPackagesRows.push(`<tr><td>${pp.name}</td><td>${homepageLink}</td><td>${pp.license || '&nbsp;'}</td><td>${pp.version}</td><td>${pp.status}</td><td>${errorMessage}</td></tr>`);
     });
 
-    return `<table border="1" cellspacing="0" cellpadding="10"><tr><th>Name</th><th>Homepage</th><th>License</th><th>Version</th><th>Status</th><th>Error</th></tr>${pluginPackagesRows.join('')}</table>`;
+    return `<table><tr><th>Name</th><th>Homepage</th><th>License</th><th>Version</th><th>Status</th><th>Error</th></tr>${pluginPackagesRows.join('')}</table>`;
 };
