@@ -54,7 +54,7 @@ You can override the default config in your Mashroom config file like this:
  * _enableKeepAlive_: Enable a periodic keep alive message where the server will send "keepalive" to all clients.
    This is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)
  * _keepAliveIntervalSec_: Interval for keepalive messages in seconds (default: 15)
- * _maxConnections_: Max allowed WebSocket connections (default: 2000)
+ * _maxConnections_: Max allowed WebSocket connections per node (default: 2000)
  
 There will also be a **test page** available under: _/websocket/test_
  

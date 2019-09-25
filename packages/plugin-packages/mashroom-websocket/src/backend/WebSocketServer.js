@@ -15,7 +15,7 @@ import type {
     MashroomWebSocketDisconnectListener,
 } from '../../type-definitions';
 
-const CHECK_CONNECTION_INTERVAL_MS = 10 * 1000;
+const CHECK_CONNECTIONS_INTERVAL_MS = 30 * 1000;
 const KEEP_ALIVE_MESSAGE = 'keepalive';
 
 export default class WebSocketServer implements MashroomWebSocketServer {
@@ -43,7 +43,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         this._messageListener = [];
         this._disconnectListeners = [];
 
-        this._checkConnectionInterval = setInterval(() => this._checkConnection(), CHECK_CONNECTION_INTERVAL_MS);
+        this._checkConnectionInterval = setInterval(() => this._checkConnections(), CHECK_CONNECTIONS_INTERVAL_MS);
         if (context.enableKeepAlive) {
             this._keepAliveInterval = setInterval(() => this._sendKeepAlive(), context.keepAliveIntervalSec * 1000);
         }
@@ -226,12 +226,14 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         if (this._clients) {
             this._clients.forEach((wrapper) => {
                 console.info('SENDING KEEP ALIVE');
-                this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE);
+                this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE).then(
+                    () => {}, () => {}
+                );
             });
         }
     }
 
-    _checkConnection() {
+    _checkConnections() {
         if (this._clients) {
             this._logger.info(`Currently open WebSocket connections: ${this.getClientCount()}`);
             this._clients.forEach((wrapper) => {
