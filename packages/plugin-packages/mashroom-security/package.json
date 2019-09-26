@@ -4,16 +4,16 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
     "devDependencies": {
         "@babel/cli": "^7.6.0",
-        "@mashroom/mashroom": "1.1.0",
-        "@mashroom/mashroom-storage": "1.1.0",
-        "@mashroom/mashroom-utils": "1.1.0",
+        "@mashroom/mashroom": "1.1.1",
+        "@mashroom/mashroom-storage": "1.1.1",
+        "@mashroom/mashroom-utils": "1.1.1",
         "eslint": "^6.4.0",
         "express": "^4.17.1",
         "jest": "^24.9.0"
