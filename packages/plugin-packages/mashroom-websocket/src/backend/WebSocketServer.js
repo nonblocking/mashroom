@@ -225,7 +225,6 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     _sendKeepAlive() {
         if (this._clients) {
             this._clients.forEach((wrapper) => {
-                console.info('SENDING KEEP ALIVE');
                 this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE).then(
                     () => {}, () => {}
                 );
