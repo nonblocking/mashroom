@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.1.2
+
+ * Fixed security vulnerabilities in dependencies
+
 ## 1.1.1
 
  * WebSocket server now sends keep alive messages to prevent reverse proxies and firewalls from closing the connection
