@@ -10,7 +10,7 @@ import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
 import type {
     MashroomPluginPackage as MashroomPluginPackageType, MashroomPluginPackageEvent, MashroomPluginPackageEventName,
     MashroomPluginDefinition, MashroomPluginPackageDefinition, MashroomPluginPackageRegistryConnector, MashroomLoggerFactory,
-    MashroomLogger, MashroomPluginPackageStatus, MashroomPluginPackageBuilder, MashroomPluginPackageBuilderEvent, Dependencies,
+    MashroomLogger, MashroomPluginPackageStatus, MashroomPluginPackageBuilder, MashroomPluginPackageBuilderEvent,
 } from '../../type-definitions';
 
 const readFile = promisify(fs.readFile);
@@ -27,7 +27,6 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
     _description: string;
     _version: string;
     _homepage: ?string;
-    _dependencies: ?Dependencies;
     _author: ?string;
     _license: ?string;
     _pluginDefinitions: Array<MashroomPluginDefinition>;
@@ -102,7 +101,6 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         this._description = packageJson.description;
         this._version = packageJson.version;
         this._homepage = packageJson.homepage;
-        this._dependencies = packageJson.dependencies;
         this._author = packageJson.author ? JSON.stringify(packageJson.author) : null;
         this._license = packageJson.license;
 
@@ -265,10 +263,6 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
 
     get homepage(): ?string {
         return this._homepage;
-    }
-
-    get dependencies(): ?Dependencies {
-        return this._dependencies;
     }
 
     get author(): ?string {

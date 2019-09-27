@@ -16,10 +16,6 @@ export type ExpressErrorHandler = (error: Error, req: ExpressRequest, res: Expre
 export type ExpressRouter = Router;
 export type ExpressRequestHandler = ExpressApplication | ExpressRouter | ExpressMiddleware | ExpressErrorHandler;
 
-export type Dependencies = {
-    [module: string]: string
-};
-
 export type PluginPackageFolder = {
     +path: string,
     +watch?: boolean,
@@ -200,10 +196,6 @@ export interface MashroomPluginPackage extends MashroomEventEmitter<MashroomPlug
      * Homepage (npm package homepage)
      */
     +homepage: ?string;
-    /**
-     * Dependencies to other packages (npm package dependencies)
-     */
-    +dependencies: ?Dependencies;
     /**
      * The author
      */
