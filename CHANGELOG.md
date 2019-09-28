@@ -3,7 +3,7 @@
 
 ## 1.1.2
 
- * Fixed security vulnerabilities in dependencies
+ * Upgraded some dependencies because of security vulnerabilities
 
 ## 1.1.1
 
