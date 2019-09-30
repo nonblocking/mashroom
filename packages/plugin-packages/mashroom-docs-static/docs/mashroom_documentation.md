@@ -30,7 +30,7 @@ has similar concepts than a Java Portal Server.
 
  * Integration of existing _Express_ webapps
  * Shared middleware and services
- * Out of the box services for security, internationalization, storage and more 
+ * Out of the box services for security, internationalization, messaging, storage and more 
  * Pluggable providers for security, storage and and many other services
  * Role based permissions for URL's (ACL's)
  * Single configuration file to override plugin default configurations
@@ -40,7 +40,8 @@ has similar concepts than a Java Portal Server.
  * Fast and lightweight 
  * Portal plugin
     * Build pages from independent SPA's, even written in different technologies
-    * Client-side message bus for inter-app communication
+    * Client-side message bus for inter-app communication which can be extended to server-side messaging
+      to communicate with apps in other browsers or even 3rd party systems
     * Proxying of REST API calls to prevent CORS problems
     * Life registration of _Remote Apps_ (SPA's that run on a different server)
     * JS API to programmatically load portal apps into an arbitrary DOM node (even within another app)
