@@ -1,5 +1,5 @@
 
-### Mashroom Helment
+### Mashroom Helmet
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
 
