@@ -3,6 +3,8 @@
 
 ## 1.1.2
 
+ * Added a middleware plugin that introduces [Helmet](https://helmetjs.github.io) which sets a bunch of protective 
+   HTTP headers on each response
  * Upgraded some dependencies because of security vulnerabilities
 
 ## 1.1.1

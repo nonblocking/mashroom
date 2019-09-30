@@ -486,6 +486,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-csrf-protection](../../mashroom-csrf-protection/README.md) [inc] 
 
+[mashroom-helmet](../../mashroom-helmet/README.md) [inc] 
+
 [mashroom-portal](../../mashroom-portal/README.md) [inc] 
 
 [mashroom-portal-default-layouts](../../mashroom-portal-default-layouts/README.md) [inc] 
