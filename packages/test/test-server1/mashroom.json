@@ -43,6 +43,9 @@
             },
             "styleFile": "./login_style.css"
         },
+        "Mashroom Helmet Middleware": {
+
+        },
         "Mashroom Storage Services": {
             "provider": "Mashroom Storage Filestore Provider"
         },
@@ -56,6 +59,12 @@
         "Mashroom Http Proxy Services": {
             "rejectUntrustedCerts": false,
             "poolMaxSockets": 10
+        },
+        "Mashroom WebSocket Services": {
+            "restrictToRoles": null,
+            "enableKeepAlive": true,
+            "keepAliveIntervalSec": 15,
+            "maxConnections": 20
         },
         "Mashroom Messaging Services": {
             "externalProvider": null,
