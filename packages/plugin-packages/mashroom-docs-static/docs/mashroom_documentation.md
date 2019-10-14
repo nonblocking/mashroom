@@ -253,7 +253,7 @@ module.exports = {
 }
 ```
 
-#### Properties:
+#### Properties
 
  * _name_: The server name
  * _port_: The port, default: 5050
@@ -394,9 +394,9 @@ The API proxy allows the portal app to access it's REST API. The API can be depl
 
 The access to a proxy url can be restricted to specific roles. 
 
-#### "Remote" apps
+#### Remote apps
 
-The portal app resources (JavaScript and CSS files) can be remote. The *resourcesRoot* parameter of local pluings accept HTTP, HTTPS and FTP urls.
+The Portal App resources (JavaScript and CSS files) can be remote. The *resourcesRoot* parameter of local pluings accept HTTP, HTTPS and FTP urls.
 
 There is also a plugin to register portal apps running on a remote server. The remote apps have to expose the _package.json_
 with the plugin definition at _http://&lt;remote-server&gt;/package.json_
@@ -412,6 +412,16 @@ Open _/portal-remote-app-registry_, paste the URL into the input and lick _Add_:
 After that you can add the new portal app via Drag'n'Drop where ever you want:
 
 ![Register remote portal app](mashroom_portal_register_remote_app2.png =350x*)
+
+#### Messaging 
+
+The Portal comes with a client-side _MessageBus_ that can be used by Portal Apps to communicate with each other locally.
+
+If server-side messaging (_mashroom-messaging_) and Websocket support (_mashroom-websocket_) is installed, the _MessageBus_ is
+automatically connected to the server-side messaging facility and like this Portal Apps can communicate with Apps in other 
+browsers and even with 3rd party systems (when a external messaging system such as MQTT is connected).
+
+![Messaging](mashroom_messaging.png)
 
 ### User Interface
 
