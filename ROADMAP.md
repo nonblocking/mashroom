@@ -4,24 +4,28 @@
 ## Version 1.2
 
  * Portal: Declaration and loading of global (shared) portal app resources 
- * Redis Session provider plugin
- * OpenId Connect (OAuth) security provider
- * MongoDb storage provider
+ * Redis session provider plugin
+ * mongoDB session provider plugin
  
 ## Version 1.3
+
+ * OpenId Connect (OAuth) security provider
+ * mongoDB storage provider
+ 
+## Version 1.4
  
  * Portal: Default theme: Language switcher
  * CMS content rendering app with a pluggable backend connector (e.g. for a headless CMS or Typo 3)
  * Asset rendering app with a pluggable backend connector (e.g. for a DMS or S3)
  
-## Version 1.4
+## Version 1.5
 
  * WebSocket proxy similar to mashroom-http-proxy based on mashroom-websocket 
  * Use the new WebSocket proxy to handle restProxy targetUri's beginning with ws://
  * STOMP external messaging provider (to connect to ActiveMQ, RabbitMQ, HornetQ and so on)
 
 
-## Post 1.4
+## Post 1.5
 
  * Portal: Responsive Admin App
  * Core: Handle path collisions of express apps
