@@ -54,6 +54,10 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 https://www.mashroom-server.com
 
+## Blog
+
+https://medium.com/mashroom-server
+
 ## Full Documentation 
 
 https://www.mashroom-server.com/documentation
