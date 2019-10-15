@@ -36,16 +36,17 @@ h4 {
 }
 
 /* Logo image */
-body>p:first-child {
+body > p:first-child {
     float: left;
 }
-body>p:first-child img {
+
+body > p:first-child img {
     box-shadow: none;
     margin: 0;
 }
 
 /* Title */
-p+h1 {
+p + h1 {
     float: left;
     margin: 20px 15px;
     color: black;
@@ -76,7 +77,7 @@ a:hover {
 pre {
     background-color: #EEE;
     padding: 10px;
-    font-family:  Consolas, 'Liberation Mono', Courier, monospace;
+    font-family: Consolas, 'Liberation Mono', Courier, monospace;
 }
 
 img {
@@ -84,6 +85,45 @@ img {
     max-height: 100vh;
     margin: 5px;
     box-shadow: 2px 2px 10px #CCC;
+}
+
+table {
+    width: 100%;
+    border-spacing: 0;
+    border: 1px solid #645e9d;
+}
+
+table tr {
+    border-bottom: 1px solid #645e9d;
+}
+
+table tr:nth-child(even) {
+    background-color: #eee;
+}
+
+table tr:last-child {
+    border-bottom: none;
+}
+
+table th {
+    text-align: left;
+    padding: 7px 10px;
+    background-color: #645e9d;
+    color: white;
+    border-right: 1px solid white;
+}
+
+table th:last-child {
+    border-right: none;
+}
+
+table td {
+    padding: 5px 10px;
+    border-right: 1px solid #645e9d;
+}
+
+table td:last-child {
+    border-right: none;
 }
 
 /*

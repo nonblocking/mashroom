@@ -22,7 +22,8 @@ async function main() {
 
     const converter = new showdown.Converter({
         extensions: ['highlightjs', 'toc', 'showdown-include', 'showdown-replace-version'],
-        parseImgDimensions: true
+        parseImgDimensions: true,
+        tables: true
     });
     //converter.setFlavor('github');
     const html = converter.makeHtml(markdown.toString());

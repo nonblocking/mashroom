@@ -51,6 +51,24 @@ has similar concepts than a Java Portal Server.
     * Admin UI to create pages and place apps via Drag'n'Drop
     * Hot reload of apps in development mode
     
+### Feature/Compatibility Matrix
+
+|                     | Supported                                                                                     | Planned *)                   |
+| ------------------- | --------------------------------------------------------------------------------------------- | ---------------------------- |
+| Operating Systems   | Linux, MacOS, Windows                                                                         |                              |
+| Node.js             | 8.x, 10.x, 12.x                                                                               |                              | 
+| Authentication      | LDAP (Active Directory), JSON File                                                            |  Open ID Connect             |
+| Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          | 
+| Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                            |                              |
+| Storage             | JSON Files                                                                                    |  mongoDB                     |  
+| Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0)                                                                    |  STOMP (ActiveMQ, RabbitMQ)  |
+| Session Storage     | in Memory (no Cluster support), shared Filesystem                                             |  Redis, mongoDB              |
+| Clustering          | yes (tested with PM2)                                                                         |                              |
+| Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only) |                              |
+| Mobile Browsers     | Chrome (latest), Safari (latest)                                                              |                              |
+
+*) See [Roadmap](https://github.com/nonblocking/mashroom/blob/master/ROADMAP.md)
+    
 ## Architecture
 
 ![Mashroom Server Architecture](mashroom_server.png "Mashroom Server Architecture")
