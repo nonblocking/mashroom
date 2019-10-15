@@ -4,7 +4,7 @@
     "private": true,
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "main": "src/js",
     "devDependencies": {
         "codemirror": "^5.48.4",
