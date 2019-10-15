@@ -179,7 +179,13 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 
 ## Setup
 
-Checkout the [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart) repo for a typical portal setup.
+### Minimum Requirements
+
+ * Node.js >= 8
+
+### Install 
+
+Just checkout the [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart) repo for a typical portal setup.
 Or [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart) if you don't need the portal plugin.
 
 A single _package.json_ is enough to setup a server instance. Plugins are just npm dependencies.
