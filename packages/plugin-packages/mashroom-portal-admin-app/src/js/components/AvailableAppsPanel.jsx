@@ -14,6 +14,7 @@ type AppsGroupedByCategory = Array<{
 }>
 
 type FilterTokens = {
+    tokens: Array<string>,
     anyMatch: Array<RegExp>,
     fullMatch: Array<RegExp>,
 }
@@ -58,17 +59,19 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
     getFilterTokens(): FilterTokens {
         if (!this.props.filter) {
             return {
+                tokens: [],
                 anyMatch: [],
                 fullMatch: []
             };
         }
-        const plainTokens = this.props.filter
+        const tokens = this.props.filter
             .split(' ')
             .filter((t) => t !== '')
             .map((t) => escapeForRegExp(t));
         return {
-            anyMatch: plainTokens.map((t) => new RegExp(`(${t})`, 'ig')),
-            fullMatch: plainTokens.map((t) => new RegExp(`^${t}$`, 'ig'))
+            tokens,
+            anyMatch: tokens.map((t) => new RegExp(`(${t})`, 'ig')),
+            fullMatch: tokens.map((t) => new RegExp(`^${t}$`, 'ig'))
         };
     }
 
@@ -119,10 +122,11 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         return apps.map((app) => {
             let appName = escapeForHtml(app.name);
             let description = escapeForHtml(app.description || '');
-            tokens.anyMatch.forEach((matcher) => {
-                appName = appName.replace(matcher, filterReplacement);
-                description = description.replace(matcher, filterReplacement);
-            });
+            if (tokens.tokens.length > 0) {
+                const replaceExpr = new RegExp(`(${tokens.tokens.join('|')})`, 'gi');
+                appName = appName.replace(replaceExpr, filterReplacement);
+                description = description.replace(replaceExpr, filterReplacement);
+            }
 
             return (
                 <div key={app.name} className='available-app' onDragStart={(e) => this.onDragStart(e, app.name)} onDragEnd={this.onDragEnd.bind(this)} draggable>

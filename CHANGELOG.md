@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.1.3
+
+ * Portal: Fixed a problem with token highlighting in the add app panel
+
 ## 1.1.2
 
  * Added a middleware plugin that introduces [Helmet](https://helmetjs.github.io) which sets a bunch of protective 
