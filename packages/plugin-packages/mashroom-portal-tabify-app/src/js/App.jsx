@@ -29,8 +29,13 @@ type Props = {
 type State = {
     activeTabIndex: ?number,
     pluginNameTitleMapping: {[string]: string},
+    appIdTitleMapping: {[string]: string},
     tabs: Array<Tab>
 }
+
+const ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC = 'tabify-add-plugin-name-title-mapping';
+const ADD_APP_ID_TITLE_MAPPING_TOPIC = 'tabify-add-app-id-title-mapping';
+const FOCUS_APP_TOPIC = 'tabify-focus-app';
 
 export default class App extends PureComponent<Props, State> {
 
@@ -38,6 +43,7 @@ export default class App extends PureComponent<Props, State> {
     boundOnAppLoaded: MashroomPortalAppLoadListener;
     boundOnAppUnload: MashroomPortalAppLoadListener;
     boundOnPluginNameTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
+    boundOnAppIdTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
     boundOnFocusAppMessage: MashroomPortalMessageBusSubscriberCallback;
 
     constructor() {
@@ -45,12 +51,14 @@ export default class App extends PureComponent<Props, State> {
         this.state = {
             activeTabIndex: null,
             pluginNameTitleMapping: {},
+            appIdTitleMapping: {},
             tabs: [],
         };
 
         this.boundOnAppLoaded = this.onAppLoaded.bind(this);
         this.boundOnAppUnload = this.onAppUnload.bind(this);
         this.boundOnPluginNameTitleMappingMessage = this.onPluginNameTitleMappingMessage.bind(this);
+        this.boundOnAppIdTitleMappingMessage = this.onAppIdTitleMappingMessage.bind(this);
         this.boundOnFocusAppMessage = this.onFocusAppMessage.bind(this);
     }
 
@@ -131,8 +139,9 @@ export default class App extends PureComponent<Props, State> {
             this.props.portalAppService.registerAppLoadedListener(this.boundOnAppLoaded);
             this.props.portalAppService.registerAppAboutToUnloadListener(this.boundOnAppUnload);
 
-            this.props.messageBus.subscribe('tabify-add-plugin-name-title-mapping', this.boundOnPluginNameTitleMappingMessage);
-            this.props.messageBus.subscribe('tabify-focus-app', this.boundOnFocusAppMessage);
+            this.props.messageBus.subscribe(ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC, this.boundOnPluginNameTitleMappingMessage);
+            this.props.messageBus.subscribe(ADD_APP_ID_TITLE_MAPPING_TOPIC, this.boundOnAppIdTitleMappingMessage);
+            this.props.messageBus.subscribe(FOCUS_APP_TOPIC, this.boundOnFocusAppMessage);
         }
     }
 
@@ -140,8 +149,9 @@ export default class App extends PureComponent<Props, State> {
         this.props.portalAppService.unregisterAppLoadedListener(this.boundOnAppLoaded);
         this.props.portalAppService.unregisterAppAboutToUnloadListener(this.boundOnAppUnload);
 
-        this.props.messageBus.unsubscribe('tabify-add-plugin-name-title-mapping', this.boundOnPluginNameTitleMappingMessage);
-        this.props.messageBus.unsubscribe('tabify-focus-app', this.boundOnFocusAppMessage);
+        this.props.messageBus.unsubscribe(ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC, this.boundOnPluginNameTitleMappingMessage);
+        this.props.messageBus.unsubscribe(ADD_APP_ID_TITLE_MAPPING_TOPIC, this.boundOnAppIdTitleMappingMessage);
+        this.props.messageBus.unsubscribe(FOCUS_APP_TOPIC, this.boundOnFocusAppMessage);
     }
 
     onPluginNameTitleMappingMessage(message: any) {
@@ -149,6 +159,16 @@ export default class App extends PureComponent<Props, State> {
             this.setState({
                 pluginNameTitleMapping: Object.assign({}, this.state.pluginNameTitleMapping, {
                     [message.pluginName]: message.title,
+                })
+            });
+        }
+    }
+
+    onAppIdTitleMappingMessage(message: any) {
+        if (message && message.appId && message.title) {
+            this.setState({
+                appIdTitleMapping: Object.assign({}, this.state.appIdTitleMapping, {
+                    [message.appId]: message.title,
                 })
             });
         }
@@ -279,7 +299,7 @@ export default class App extends PureComponent<Props, State> {
         }
 
         const buttons = this.state.tabs.map((tab, idx) => {
-            const title = this.state.pluginNameTitleMapping[tab.app.pluginName] || tab.app.title || tab.app.pluginName;
+            const title = this.state.appIdTitleMapping[tab.app.id] || this.state.pluginNameTitleMapping[tab.app.pluginName] || tab.app.title || tab.app.pluginName;
 
             return (
                 <div key={tab.app.instanceId} className={`tab-dialog-button ${idx === this.state.activeTabIndex ? 'active' : ''}`}>

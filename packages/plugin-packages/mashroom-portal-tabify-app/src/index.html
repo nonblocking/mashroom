@@ -63,7 +63,9 @@
                     messageBus: {
                         subscribe: function(topic, handler) {
                             if (topic === 'tabify-add-plugin-name-title-mapping') {
-                                window.PUBLISH_TITLE_MAPPING = handler;
+                                window.PUBLISH_PLUGIN_NAME_TITLE_MAPPING = handler;
+                            } else if (topic === 'tabify-add-app-id-title-mapping') {
+                                window.PUBLISH_APP_ID_TITLE_MAPPING = handler;
                             } else if (topic === 'tabify-focus-app') {
                                 window.PUBLISH_FOCUS = handler;
                             }

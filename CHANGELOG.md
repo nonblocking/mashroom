@@ -3,6 +3,8 @@
 
 ## 1.1.3
 
+ * Tabify App: Allow to update the title for a specific app id. This is useful for dynamic cockpits where you might
+   want to load the same App multiple times in a tabbed area.
  * Portal: Fixed a problem with token highlighting in the add app panel
 
 ## 1.1.2
