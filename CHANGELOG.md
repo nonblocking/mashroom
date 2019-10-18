@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.1.4
+
+ * HTTP Proxy: Fixed the problem that all requests headers got forwarded to the target, even _cookie_ and other security relevant ones
+
 ## 1.1.3
 
  * Tabify App: Allow to update the title for a specific app id. This is useful for dynamic cockpits where you might

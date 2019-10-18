@@ -49,20 +49,25 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
-        let headers = {};
         for (const headerName in req.headers) {
-            if (req.headers.hasOwnProperty(headerName) && this._forwardHeaders.find((h) => h === headerName)) {
-                headers[headerName] = req.headers[headerName];
+            if (req.headers.hasOwnProperty(headerName) && !this._forwardHeaders.find((h) => h === headerName)) {
+                delete req.headers[headerName];
             }
         }
-        headers = Object.assign({}, headers, additionalHeaders);
+        if (additionalHeaders) {
+            for (const headerName in additionalHeaders) {
+                if (additionalHeaders.hasOwnProperty(headerName)) {
+                    req.headers[headerName] = additionalHeaders[headerName];
+                }
+            }
+        }
+
         const qs = Object.assign({}, req.query);
 
         const options = {
             pool: this._pool,
             method,
             uri,
-            headers,
             qs,
             rejectUnauthorized: this._rejectUntrustedCerts,
             resolveWithFullResponse: true,
