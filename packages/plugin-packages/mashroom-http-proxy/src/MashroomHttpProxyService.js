@@ -54,13 +54,6 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
                 delete req.headers[headerName];
             }
         }
-        if (additionalHeaders) {
-            for (const headerName in additionalHeaders) {
-                if (additionalHeaders.hasOwnProperty(headerName)) {
-                    req.headers[headerName] = additionalHeaders[headerName];
-                }
-            }
-        }
 
         const qs = Object.assign({}, req.query);
 
@@ -69,6 +62,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             method,
             uri,
             qs,
+            headers: additionalHeaders,
             rejectUnauthorized: this._rejectUntrustedCerts,
             resolveWithFullResponse: true,
             timeout: this._socketTimeoutMs,
