@@ -481,6 +481,7 @@ header {
         line-height: 1.2em;
         padding: 2px 4px;
         opacity: 0.9;
+        z-index: 20000;
     }
 }
 
@@ -789,6 +790,17 @@ footer {
             padding-right: 5px;
             color: $COLOR_ERROR;
         }
+    }
+}
+
+// Tabify app styles
+
+.portal-app-mashroom-portal-tabify-app {
+    background-color: transparent;
+
+    .mashroom-portal-app-loading {
+        // Don't show the loading animation
+        display: none;
     }
 }
 
