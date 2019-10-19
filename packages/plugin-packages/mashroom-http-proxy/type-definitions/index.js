@@ -6,6 +6,10 @@ export type HttpHeaders = {
     [string]: string,
 }
 
+export interface HttpHeaderFilter {
+    filter(headers: HttpHeaders): void;
+}
+
 export interface MashroomHttpProxyService {
 
     /**

@@ -3,6 +3,7 @@
 
 ## 1.1.4
 
+ * HTTP Proxy: White listed _Jaeger_, _OpenZipkin_ and W3C Trace Context HTTP headers by default
  * HTTP Proxy: Fixed the problem that all requests headers got forwarded to the target, even _cookie_ and other security relevant ones
 
 ## 1.1.3

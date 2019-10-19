@@ -2,6 +2,7 @@
 
 import http from 'http';
 import request from 'request';
+import HttpHeaderFilter from './HttpHeaderFilter';
 
 import type {
     MashroomLogger,
@@ -9,24 +10,24 @@ import type {
     ExpressRequest,
     ExpressResponse,
 } from '@mashroom/mashroom/type-definitions';
-import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
+import type {HttpHeaders, HttpHeaderFilter as HttpHeaderFilterType, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
 
 export default class MashroomHttpProxyService implements MashroomHttpProxyServiceType {
 
     _forwardMethods: Array<string>;
-    _forwardHeaders: Array<string>;
     _rejectUntrustedCerts: boolean;
     _poolMaxSockets: number;
     _socketTimeoutMs: number;
     _pool: any;
+    _httpHeaderFilter: HttpHeaderFilterType;
     _logger: MashroomLogger;
 
     constructor(forwardMethods: Array<string>, forwardHeaders: Array<string>, rejectUntrustedCerts: boolean, poolMaxSockets: number, socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
         this._forwardMethods = forwardMethods;
-        this._forwardHeaders = forwardHeaders;
         this._rejectUntrustedCerts = rejectUntrustedCerts;
         this._poolMaxSockets = poolMaxSockets || 10;
         this._socketTimeoutMs = socketTimeoutMs || 0;
+        this._httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
         this._logger = loggerFactory('mashroom.httpProxy');
 
         this._logger.info(`Initializing http proxy with maxSockets: ${this._poolMaxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
@@ -49,12 +50,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
-        for (const headerName in req.headers) {
-            if (req.headers.hasOwnProperty(headerName) && !this._forwardHeaders.find((h) => h === headerName)) {
-                delete req.headers[headerName];
-            }
-        }
-
+        this._httpHeaderFilter.filter(req.headers);
         const qs = Object.assign({}, req.query);
 
         const options = {
@@ -75,12 +71,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             req.pipe(
                 request(options)
                     .on('response', (targetResponse) => {
-                        for (const headerName in targetResponse.headers) {
-                            if (targetResponse.headers.hasOwnProperty(headerName) && !this._forwardHeaders.find((h) => h === headerName)) {
-                                delete targetResponse.headers[headerName];
-                            }
-                        }
-
+                        this._httpHeaderFilter.filter(targetResponse.headers);
                         const endTime = process.hrtime(startTime);
                         this._logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
                         res.status(targetResponse.statusCode);

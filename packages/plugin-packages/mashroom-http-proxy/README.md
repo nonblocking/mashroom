@@ -38,20 +38,18 @@ You can override the default config in your Mashroom config file like this:
                 "DELETE"
             ],
             "forwardHeaders": [
-               "accept",
-               "accept-encoding",
-               "accept-charset",
-               "accept-language",
-               "accept-ranges",
-               "range",
-               "expires",
-               "cache-control",
-               "last-modified",
-               "content-type",
-               "content-length",
-               "content-encoding",
-               "content-range",
-               "content-disposition"
+              "accept",
+              "accept-*",
+              "range",
+              "expires",
+              "cache-control",
+              "last-modified",
+              "content-*",
+              "uber-trace-id",
+              "uberctx-",
+              "b3",
+              "x-b3-*",
+              "trace*"
             ],
             "rejectUntrustedCerts": true,
             "poolMaxSockets": 10,
@@ -61,7 +59,7 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
  * _forwardMethods_: The methods that should be forwarded
- * _forwardHeaders_: The http headers that should be forwarded
+ * _forwardHeaders_: The http headers that should be forwarded. May contain a _*_ as wildcard.
  * _rejectUntrustedCerts_: Set to false to allow self signed certificates (Default: false)
  * _poolMaxSockets_: Max pool size for connections (Default: 10)
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
