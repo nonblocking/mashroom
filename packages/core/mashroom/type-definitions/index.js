@@ -80,7 +80,7 @@ export interface MashroomLogger {
     withContext(context: {}): MashroomLogger;
 }
 
-export type MashroomLoggerFactory = (category: string, context?: {}) => MashroomLogger;
+export type MashroomLoggerFactory = (category: string) => MashroomLogger;
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -534,8 +534,8 @@ export interface MashroomPluginContext {
     +serverConfig: MashroomServerConfig;
     +loggerFactory: MashroomLoggerFactory;
     +services: {
-        +core: MashroomCoreServices,
-        +[string]: MashroomServices
+        +core: MashroomCoreServices;
+        +[string]: MashroomServices;
     }
 }
 
