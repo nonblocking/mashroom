@@ -5,21 +5,21 @@ import context from '../context';
 
 import type {
     HttpServerRequest,
-    MashroomHttpUpgradeHandler,
-    MashroomLoggerFactory,
     MashroomLogger,
+    MashroomHttpUpgradeHandler,
     MashroomMiddlewareStackService
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
-export default (loggerFactory: MashroomLoggerFactory): MashroomHttpUpgradeHandler => {
-    const logger = loggerFactory('mashroom.websocket.service');
+export default (): MashroomHttpUpgradeHandler => {
     return (req, socket, head) => {
-        handle(req, socket, head, logger);
+        handle(req, socket, head);
     };
 }
 
-const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer, logger: MashroomLogger) => {
+const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) => {
+    const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.websocket.service');
+
     logger.debug('Upgrade request received: ', req.url);
     let user: ?MashroomSecurityUser = null;
     try {

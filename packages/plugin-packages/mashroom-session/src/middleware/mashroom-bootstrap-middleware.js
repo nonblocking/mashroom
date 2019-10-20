@@ -4,11 +4,10 @@ import MashroomSessionMiddleware from './MashroomSessionMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
-const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig) => {
     const storeProvider = pluginConfig.provider;
     const options = Object.assign({}, pluginConfig.session);
-    const pluginContext = pluginContextHolder.getPluginContext();
-    const middleware = new MashroomSessionMiddleware(storeProvider, options, pluginContext.loggerFactory);
+    const middleware = new MashroomSessionMiddleware(storeProvider, options);
     return middleware.middleware();
 };
 

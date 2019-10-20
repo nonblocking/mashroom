@@ -1,7 +1,7 @@
 // @flow
 
 import path from 'path';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSimpleSecurityProvider from '../src/MashroomSimpleSecurityProvider';
 
 describe('MashroomSimpleSecurityProvider', () => {
@@ -10,7 +10,10 @@ describe('MashroomSimpleSecurityProvider', () => {
         let redirectUrl = null;
 
         const req: any = {
-            originalUrl: '/foo/bar'
+            originalUrl: '/foo/bar',
+            pluginContext: {
+                loggerFactory,
+            }
         };
         const res: any = {
             redirect: (url) => redirectUrl = url
@@ -18,7 +21,7 @@ describe('MashroomSimpleSecurityProvider', () => {
 
         const userStorePath = path.resolve(__dirname, './test_users.json');
 
-        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, dummyLoggerFactory);
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -30,12 +33,15 @@ describe('MashroomSimpleSecurityProvider', () => {
     it('processes the form login correctly', async () => {
         const req: any = {
             session: {
+            },
+            pluginContext: {
+                loggerFactory,
             }
         };
 
         const userStorePath = path.resolve(__dirname, './test_users.json');
 
-        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, dummyLoggerFactory);
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.login(req, 'john', 'john');
 
@@ -59,7 +65,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
 
-        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, dummyLoggerFactory);
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, loggerFactory);
 
         const user1 = simpleSecurityProvider.getUser(req);
         expect(user1).toBeTruthy();
@@ -77,7 +83,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
 
-        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, dummyLoggerFactory);
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, loggerFactory);
 
         const authExpiration = simpleSecurityProvider.getAuthenticationExpiration(req);
 

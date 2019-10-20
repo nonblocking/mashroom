@@ -79,7 +79,6 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
     }
 
     async subscribe(user: MashroomSecurityUser, topic: string, callback: MashroomMessagingSubscriberCallback) {
-        const contextLogger = this._logger.withContext(userContext(user));
         if (!this._isValidTopic(topic, true)) {
             throw new Error(`Invalid topic (must not start or end with /, must not start with a wildcard): ${topic}`);
         }
@@ -89,6 +88,8 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         if (this._isTopicOfDifferentUser(topic, user) || !this._isTopicPermitted(topic, user)) {
             throw new Error(`User is not permitted to subscribe to ${topic}`);
         }
+
+        const contextLogger = this._logger.withContext(userContext(user));
 
         contextLogger.debug(`User ${user.username} subscribes to topic: ${topic}`);
 
@@ -117,6 +118,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         }
 
         const contextLogger = this._logger.withContext(userContext(user));
+
         contextLogger.debug(`User ${user.username} publishes message to topic ${topic}:`, message);
 
         const external = this._isExternalTopic(topic);

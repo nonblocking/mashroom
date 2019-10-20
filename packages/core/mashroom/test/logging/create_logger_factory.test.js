@@ -1,12 +1,11 @@
 // @flow
 
+import GlobalLoggerContext from '../../src/logging/context/GlobalLoggerContext';
 import createLoggerFactory from '../../src/logging/create_logger_factory';
 
 import type {LogLevel, MashroomLoggerDelegate} from '../../type-definitions';
 
-describe('create_logger_factory', () => {
-
-    let lastLogEntry = {};
+describe('logger_factory', () => {
 
     const delegate: MashroomLoggerDelegate = {
         init(serverRootPath: string) {
@@ -14,30 +13,27 @@ describe('create_logger_factory', () => {
         },
 
         log(category: string, level: LogLevel, context: ?{}, message: string, ...args: any[]) {
-            lastLogEntry = {
-                category,
-                level,
-                context,
-                message,
-                args
-            };
         }
     };
 
-    it('merges the context correctly', async () => {
-        const factory = await createLoggerFactory('', delegate);
+    const loggerFactory = createLoggerFactory(delegate);
 
-        const logger = factory('test.test');
+    it('creates by default logger instances without context', () => {
+       const logger = loggerFactory('test.test');
 
-        const loggerWithContext = logger.withContext({ a: 'b' }).withContext({ c: 'd' });
-        loggerWithContext.info('Just another message', 1, 2);
+       expect(() => logger.addContext({ a: 2 })).toThrowError('No logger context present. Please create a context logger with withContext()');
+    });
 
-        expect(lastLogEntry.category).toBe('test.test');
-        expect(lastLogEntry.message).toBe('Just another message');
-        expect(lastLogEntry.context).toBeTruthy();
-        const context: any = lastLogEntry.context;
-        expect(context.a).toBeTruthy();
-        expect(context.c).toBeTruthy();
+    it('creates a context aware logger if bound to a context instance', () => {
+        const context = new GlobalLoggerContext({ test: 'x' });
+        const logger = loggerFactory.bindToContext(context)('test.test');
+
+        logger.addContext({ a: 2 });
+
+        expect(context.get()).toEqual({
+            test: 'x',
+            a: 2,
+        });
     });
 
 });

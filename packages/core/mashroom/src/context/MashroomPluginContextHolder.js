@@ -1,6 +1,10 @@
 // @flow
 
-import type {MashroomPluginContextHolder as MashroomPluginContextHolderType, MashroomServerContextHolder, MashroomPluginContext} from '../../type-definitions';
+import type {
+    MashroomPluginContextHolder as MashroomPluginContextHolderType,
+    MashroomServerContextHolder,
+    MashroomPluginContext
+} from '../../type-definitions';
 
 export default class MashroomPluginContextHolder implements MashroomPluginContextHolderType {
 
@@ -19,7 +23,7 @@ export default class MashroomPluginContextHolder implements MashroomPluginContex
     }
 
     getPluginContext() {
-        return this._createFromServerContext();
+        return Object.freeze(this._createFromServerContext());
     }
 
 }

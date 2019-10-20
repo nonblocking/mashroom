@@ -77,10 +77,20 @@ export interface MashroomLogger {
     info(msg: string, ...args: any[]): void;
     warn(msg: string, ...args: any[]): void;
     error(msg: string, ...args: any[]): void;
+    addContext(context: {}): void;
     withContext(context: {}): MashroomLogger;
 }
 
-export type MashroomLoggerFactory = (category: string) => MashroomLogger;
+export interface MashroomLoggerContext {
+    add(context: {}): void;
+    get(): {};
+    clone(): MashroomLoggerContext;
+}
+
+export type MashroomLoggerFactory = {
+    (category: string): MashroomLogger;
+    bindToContext(context: MashroomLoggerContext): MashroomLoggerFactory;
+}
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -526,10 +536,10 @@ export interface MashroomServerContextHolder {
 /**
  * Mashroom plugin context
  *
- * This context will be available within expressjs via req.ctx and
- * is also passed to the bootstrap functions as first argument.
+ * This context will be available in the plugin bootstrap methods
+ * and via req.pluginContext.loggerFactory
  */
-export interface MashroomPluginContext {
+export type MashroomPluginContext = {
     +serverInfo: MashroomServerInfo;
     +serverConfig: MashroomServerConfig;
     +loggerFactory: MashroomLoggerFactory;
@@ -540,7 +550,7 @@ export interface MashroomPluginContext {
 }
 
 export interface MashroomPluginContextHolder {
-    getPluginContext(): MashroomPluginContext
+    getPluginContext(): MashroomPluginContext;
 }
 
 /**

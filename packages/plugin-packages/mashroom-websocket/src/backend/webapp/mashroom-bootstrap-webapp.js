@@ -21,7 +21,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
     context.maxConnections = maxConnections;
     context.server = new WebSocketServer(pluginContext.loggerFactory);
 
-    const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn(pluginContext.loggerFactory);
+    const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn();
 
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close all connections when the plugin reloads

@@ -317,7 +317,13 @@ The first config file found from this list will be used. A file logger would be 
     {
         "appenders": {
             "file1": {"type": "file", "filename": "log/mashroom.log", "maxLogSize": 10485760, "numBackups": 3},
-            "file2": {"type": "file", "filename": "log/my-stuff.log", "maxLogSize": 10485760, "numBackups": 3},
+            "file2": {
+              "type": "file", "filename": "log/my-stuff.log", "maxLogSize": 10485760, "numBackups": 3,
+              "layout":  {
+                "type": "pattern",
+                "pattern": "%d %p %X{sessionID} %X{clientIP} %X{username} %c - %m"
+              }
+            },
             "console": {"type": "console"}
         },
         "categories": {
@@ -327,7 +333,18 @@ The first config file found from this list will be used. A file logger would be 
     }
 ```
 
-For configuration details and possible appenders see [log4js-node homepage](https://log4js-node.github.io/log4js-node/).
+The following built in context properties can be used with %X{<name>} or a custom layout:
+* _clientIP_
+* _browser_ (e.g. Chrome, Firefox)
+* _browserVersion_
+* _os_ (e.g. Windows)
+* _sessionID_ (if a session is available)
+* _portalAppName_ (if the request is related to a portal app)
+* _portalAppVersion_ (if the request is related to a portal app)
+
+You can use _logger.withContext()_ or _logger.addContext()_ to add context information.
+
+For configuration details and possible appenders see [log4js-node Homepage](https://log4js-node.github.io/log4js-node/).
 
 #### Logstash
 

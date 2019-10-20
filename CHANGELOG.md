@@ -3,6 +3,27 @@
 
 ## 1.1.4
 
+ * Core: Logger instances created via _req.pluginContext.loggerFactory('category')_ share now the context with all other loggers created 
+   from the same request. This can for example be used to output tracing information with each log entry.
+   The following context properties will be added automatically to each request:
+    * _clientIP_
+    * _browser_ (e.g. Chrome, Firefox)
+    * _browserVersion_
+    * _os_ (e.g. Windows)
+    * _sessionID_ (if a session is available)
+    * _portalAppName_ (if the request is related to a portal app)
+    * _portalAppVersion_ (if the request is related to a portal app)
+   To add additional properties to the logger context use the new _logger.addContext()_ method (e.g. within a middleware).
+   If you want to output context properties with the log entries you could configure the _log4js_ appender like this:
+```
+"console": {
+    "type": "console",
+    "layout": {
+        "type": "pattern",
+        "pattern": "%d %p %X{sessionID} %X{browser} %X{browserVersion} %X{username} %X{portalAppName} %X{portalAppVersion} %c - %m"
+    }
+}
+```
  * HTTP Proxy: White listed _Jaeger_, _OpenZipkin_ and W3C Trace Context HTTP headers by default
  * HTTP Proxy: Fixed the problem that all requests headers got forwarded to the target, even _cookie_ and other security relevant ones
 

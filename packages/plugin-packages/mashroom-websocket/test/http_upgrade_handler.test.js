@@ -1,6 +1,6 @@
 // @flow
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import httpUpgradeHandlerFn from '../src/backend/webapp/http_upgrade_handler';
 import context from '../src/backend/context';
 
@@ -12,11 +12,12 @@ describe('http_upgrade_handler', () => {
     context.restrictToRoles = ['Role1'];
 
     it('reject requests from unauthenticated users', (done) => {
-        const upgradeHandler = httpUpgradeHandlerFn(dummyLoggerFactory);
+        const upgradeHandler = httpUpgradeHandlerFn();
 
         const req: any = {
             url: '/websocket/demo2',
             pluginContext: {
+                loggerFactory,
                 services: {
                     core: {
                         middlewareStackService: {
@@ -48,11 +49,12 @@ describe('http_upgrade_handler', () => {
     });
 
     it('reject requests when the user has not required role', (done) => {
-        const upgradeHandler = httpUpgradeHandlerFn(dummyLoggerFactory);
+        const upgradeHandler = httpUpgradeHandlerFn();
 
         const req: any = {
             url: '/websocket/demo2',
             pluginContext: {
+                loggerFactory,
                 services: {
                     core: {
                         middlewareStackService: {
@@ -91,11 +93,12 @@ describe('http_upgrade_handler', () => {
     });
 
     it('handles the upgrade', (done) => {
-        const upgradeHandler = httpUpgradeHandlerFn(dummyLoggerFactory);
+        const upgradeHandler = httpUpgradeHandlerFn();
 
         const req: any = {
             url: '/websocket/demo2',
             pluginContext: {
+                loggerFactory,
                 services: {
                     core: {
                         middlewareStackService: {

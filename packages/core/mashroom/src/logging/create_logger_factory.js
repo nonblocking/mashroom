@@ -1,21 +1,16 @@
 // @flow
 
-import MashroomLoggerDelegateLog4js from './MashroomLoggerDelegateLog4js';
 import MashroomLogger from './MashroomLogger';
 
-import type {MashroomLoggerDelegate, MashroomLoggerFactory} from '../../type-definitions';
+import type {MashroomLoggerContext, MashroomLoggerDelegate, MashroomLoggerFactory} from '../../type-definitions';
 
-// For the moment, we use log4js by default
-// Change this to make the log framework to use configurable
-const DEFAULT_LOGGER_DELEGATE_CLASS = MashroomLoggerDelegateLog4js;
+const create = (delegate: MashroomLoggerDelegate): MashroomLoggerFactory => {
+   const factory = (category: string) => new MashroomLogger(category, null, delegate);
 
-const loggerFactory = async (serverRootPath: string, overrideLoggerDelegate?: MashroomLoggerDelegate): Promise<MashroomLoggerFactory> => {
-    const loggerDelegate = overrideLoggerDelegate || new DEFAULT_LOGGER_DELEGATE_CLASS();
-    await loggerDelegate.init(serverRootPath);
+   const contextBoundFactory = (context: MashroomLoggerContext) => (category: string) => new MashroomLogger(category, context, delegate);
+   factory.bindToContext = (context: MashroomLoggerContext) => contextBoundFactory(context);
 
-    return (category: string) => {
-        return new MashroomLogger(category, null, loggerDelegate);
-    };
+   return factory;
 };
 
-export default loggerFactory;
+export default create;

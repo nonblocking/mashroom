@@ -12,7 +12,7 @@ import type {
     MashroomLogger,
     MashroomLoggerFactory,
     ExpressRequest,
-    I18NString
+    I18NString,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService as MashroomI18NServiceType} from '../type-definitions';
 
@@ -119,9 +119,10 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
     }
 
     _detectBrowserLanguage(req: ExpressRequest) {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.i18n.service');
         const acceptLanguageHeader = req.headers['accept-language'];
         const language = acceptLanguageParser.pick(this._availableLanguages, acceptLanguageHeader, {loose: true}) || this._defaultLanguage;
-        this._logger.debug(`Detected browser language based on the accept-language header: ${language}`);
+        logger.debug(`Detected browser language based on the accept-language header: ${language}`);
         return language;
     }
 

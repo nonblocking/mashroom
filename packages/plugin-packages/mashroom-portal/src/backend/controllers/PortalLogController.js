@@ -1,11 +1,13 @@
 // @flow
 
-import {userAndAgentContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {portalAppContext} from '../utils/logging_utils';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLogger
+} from '@mashroom/mashroom/type-definitions';
 import type {ClientLogMessage, MashroomPortalPluginRegistry} from '../../../type-definitions';
-
 
 export default class PortalLogController {
 
@@ -17,7 +19,6 @@ export default class PortalLogController {
 
     async log(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal.client');
-        let contextLogger = logger.withContext(userAndAgentContext(req));
 
         const body: any = req.body;
         const logMessages: Array<ClientLogMessage> = body;
@@ -32,24 +33,24 @@ export default class PortalLogController {
             if (logMessage.portalAppName) {
                 const portalApp = this._getPortalApp(logMessage.portalAppName);
                 if (portalApp) {
-                    contextLogger = contextLogger.withContext(portalAppContext(portalApp));
+                    logger.addContext(portalAppContext(portalApp));
                     sourceAppInfo = `Caused by portal app: ${portalApp.name} v${portalApp.version}`;
                 }
             }
 
             switch (logMessage.level) {
                 case 'error':
-                    contextLogger.error(logMessage.message, sourceAppInfo);
+                    logger.error(logMessage.message, sourceAppInfo);
                     break;
                 case 'warn':
-                    contextLogger.warn(logMessage.message, sourceAppInfo);
+                    logger.warn(logMessage.message, sourceAppInfo);
                     break;
                 case 'info':
-                    contextLogger.info(logMessage.message, sourceAppInfo);
+                    logger.info(logMessage.message, sourceAppInfo);
                     break;
                 default:
                 case 'debug':
-                    contextLogger.debug(logMessage.message, sourceAppInfo);
+                    logger.debug(logMessage.message, sourceAppInfo);
                     break;
             }
         }

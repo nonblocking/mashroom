@@ -6,6 +6,7 @@ import express from 'express';
 import http from 'http';
 
 import MashroomPluginContextHolder from './MashroomPluginContextHolder';
+import createLoggerDelegate from '../logging/delegates/create_logger_delegate';
 import createLoggerFactory from '../logging/create_logger_factory';
 import MashroomServerConfigLoader from '../config/MashroomServerConfigLoader';
 import MashroomPluginPackage from '../plugins/MashroomPluginPackage';
@@ -49,7 +50,8 @@ import type {
  */
 const contextFactory: MashroomServerContextFactory = async (serverRootPath: string) => {
 
-    const loggerFactory = await createLoggerFactory(serverRootPath);
+    const loggerDelegate = await createLoggerDelegate(serverRootPath);
+    const loggerFactory = await createLoggerFactory(loggerDelegate);
 
     const serverInfo = createServerInfo();
 

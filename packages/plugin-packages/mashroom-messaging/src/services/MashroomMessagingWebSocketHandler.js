@@ -63,6 +63,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
 
     _handleMessage(message: any, client: MashroomWebSocketClient) {
         const contextLogger = this._logger.withContext(userContext(client.user));
+
         if (!this._clients.get(client)) {
             contextLogger.debug(`Registering new WebSocket client for user: ${client.user.username}`);
             this._clients.set(client, {
@@ -87,6 +88,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
 
     _processSubscribe(request: MashroomMessagingWebSocketSubscribeRequest, client: MashroomWebSocketClient) {
         const contextLogger = this._logger.withContext(userContext(client.user));
+
         const clientData = this._clients.get(client);
         if (!clientData) {
             // Just to satisfy flow, cannot happen
@@ -119,6 +121,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
 
     _processUnsubscribe(request: MashroomMessagingWebSocketUnsubscribeRequest, client: MashroomWebSocketClient) {
         const contextLogger = this._logger.withContext(userContext(client.user));
+
         const clientData = this._clients.get(client);
         if (!clientData) {
             // Just to satisfy flow, cannot happen
@@ -177,6 +180,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         const webSocketService = this._webSocketService;
         if (webSocketService) {
             const contextLogger = this._logger.withContext(userContext(client.user));
+
             const response: MashroomMessagingWebSocketSuccessResponse = {
                 messageId,
                 success: true,
@@ -195,6 +199,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         const webSocketService = this._webSocketService;
         if (webSocketService) {
             const contextLogger = this._logger.withContext(userContext(client.user));
+
             const response: MashroomMessagingWebSocketErrorResponse = {
                 messageId,
                 error: true,

@@ -2,10 +2,10 @@
 
 import context from '../context/global_portal_context';
 
-import type {ExpressRequest as Request, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest as Request} from '@mashroom/mashroom/type-definitions';
 
-export const getPortalPath = (req: Request, logger: MashroomLogger) => {
-    // We just get the path from the plugin config
+export const getPortalPath = () => {
+    // We just take the path from the plugin config
     return context.portalPluginConfig.path;
 };
 

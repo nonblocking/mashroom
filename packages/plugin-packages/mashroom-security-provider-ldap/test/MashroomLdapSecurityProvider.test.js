@@ -1,10 +1,8 @@
 // @flow
 
 import path from 'path';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomLdapSecurityProvider from '../src/MashroomLdapSecurityProvider';
-
-const loggerFactory: any = dummyLoggerFactory;
 
 describe('MashroomLdapSecurityProvider', () => {
 
@@ -56,7 +54,10 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const req: any = {
-            session: {}
+            session: {},
+            pluginContext: {
+                loggerFactory,
+            },
         };
 
         const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);

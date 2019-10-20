@@ -4,9 +4,8 @@ import MashroomSecurityMiddleware from './MashroomSecurityMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
-const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const pluginContext = pluginContextHolder.getPluginContext();
-    const middleware = new MashroomSecurityMiddleware(pluginContext.loggerFactory);
+const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async () => {
+    const middleware = new MashroomSecurityMiddleware();
     return middleware.middleware();
 };
 

@@ -10,7 +10,7 @@ import type {
     MashroomLogger,
     MashroomLoggerFactory,
     ExpressRequest,
-    ExpressResponse
+    ExpressResponse,
 } from '@mashroom/mashroom/type-definitions';
 import type {GroupToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
 
@@ -26,10 +26,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     _groupToRoleMapping: ?GroupToRoleMapping;
     _ldapClient: LdapClient;
     _authenticationTimeoutSec: number;
-    _logger: MashroomLogger;
 
     constructor(loginPage: string, userSearchFilter: string, groupSearchFilter: string, groupToRoleMappingPath: ?string, ldapClient: LdapClient, serverRootFolder: string, authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.security.provider.ldap');
         this._loginPage = loginPage;
         this._userSearchFilter = userSearchFilter;
         this._groupSearchFilter = groupSearchFilter;
@@ -38,13 +36,14 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         this._authenticationTimeoutSec = authenticationTimeoutSec;
 
         if (groupToRoleMappingPath) {
+            const logger = loggerFactory('mashroom.security.provider.ldap');
             if (!path.isAbsolute(groupToRoleMappingPath)) {
                 this._groupToRoleMappingPath = path.resolve(serverRootFolder, groupToRoleMappingPath);
             }
             if (this._groupToRoleMappingPath && fs.existsSync(this._groupToRoleMappingPath)) {
-                this._logger.info(`Using user to role mapping: ${this._groupToRoleMappingPath}`);
+                logger.info(`Using user to role mapping: ${this._groupToRoleMappingPath}`);
             } else {
-                this._logger.warn(`Group to role mapping file not found: ${groupToRoleMappingPath}`);
+                logger.warn(`Group to role mapping file not found: ${groupToRoleMappingPath}`);
                 this._groupToRoleMappingPath = null;
             }
         }
@@ -73,21 +72,23 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.ldap');
+
         let user: ?LdapEntry = null;
         const userSearchFilter = this._userSearchFilter.replace('@username@', username);
-        this._logger.debug(`Search for users: ${userSearchFilter}`);
+        logger.debug(`Search for users: ${userSearchFilter}`);
         const users = await this._ldapClient.search(userSearchFilter);
         if (users.length > 0) {
             if (users.length === 1) {
                 user = users[0]
             } else {
-                this._logger.warn(`Multiple users found for search query: ${userSearchFilter}`);
+                logger.warn(`Multiple users found for search query: ${userSearchFilter}`);
                 return {
                     success: false
                 };
             }
         } else {
-            this._logger.warn(`No users found for search query: ${userSearchFilter}`);
+            logger.warn(`No users found for search query: ${userSearchFilter}`);
             return {
                 success: false
             };
@@ -96,11 +97,11 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         if (user) {
             await this._ldapClient.login(user, password);
 
-            const groups = await this._getUserGroups(user);
-            this._logger.debug(`Found user groups for user ${username}: `, groups);
+            const groups = await this._getUserGroups(user, logger);
+            logger.debug(`Found user groups for user ${username}: `, groups);
 
-            const roles = this.getRolesForUserGroups(groups);
-            this._logger.debug(`Found roles for user ${username}: `, roles);
+            const roles = this.getRolesForUserGroups(groups, logger);
+            logger.debug(`Found roles for user ${username}: `, roles);
 
             const mashroomUser: MashroomSecurityUser = {
                 username,
@@ -134,24 +135,24 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
     }
 
-    async _getUserGroups(user: LdapEntry): Promise<Array<string>> {
+    async _getUserGroups(user: LdapEntry, logger: MashroomLogger): Promise<Array<string>> {
         if (!this._groupSearchFilter || !this._groupSearchFilter.trim()) {
             return [];
         }
 
         const groupSearchFilter = `(&${this._groupSearchFilter}(member=${user.dn}))`;
-        this._logger.debug(`Search for user groups: ${groupSearchFilter}`);
+        logger.debug(`Search for user groups: ${groupSearchFilter}`);
         const groupEntries = await this._ldapClient.search(groupSearchFilter);
         return groupEntries.map((e) => e.cn);
     }
 
-    getRolesForUserGroups(groups: Array<string>): Array<string> {
+    getRolesForUserGroups(groups: Array<string>, logger: MashroomLogger): Array<string> {
         if (!groups || groups.length === 0) {
             return [];
         }
 
         const roles = [];
-        const groupToRoles = this._getGroupToRoleMapping();
+        const groupToRoles = this._getGroupToRoleMapping(logger);
         if (groupToRoles) {
             groups.forEach((group) => {
                 if (groupToRoles.hasOwnProperty(group)) {
@@ -168,7 +169,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return roles;
     }
 
-    _getGroupToRoleMapping(): ?GroupToRoleMapping {
+    _getGroupToRoleMapping(logger: MashroomLogger): ?GroupToRoleMapping {
         if (!this._groupToRoleMappingPath) {
             return null;
         }
@@ -179,7 +180,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         if (fs.existsSync(this._groupToRoleMappingPath)) {
             this._groupToRoleMapping = require(this._groupToRoleMappingPath);
         } else {
-            this._logger.warn(`No group to roles definition found: ${this._groupToRoleMappingPath || '-'}.`);
+            logger.warn(`No group to roles definition found: ${this._groupToRoleMappingPath || '-'}.`);
             this._groupToRoleMapping = null;
         }
 

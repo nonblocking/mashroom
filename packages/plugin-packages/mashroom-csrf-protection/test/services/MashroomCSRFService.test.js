@@ -10,7 +10,7 @@ describe('MashroomCSRFService', () => {
             session: {}
         };
 
-        const mashroomCSRFService = new MashroomCSRFService(8, 18, dummyLoggerFactory);
+        const mashroomCSRFService = new MashroomCSRFService(8, 18);
 
         const token = mashroomCSRFService.getCSRFToken(req);
 
@@ -22,7 +22,7 @@ describe('MashroomCSRFService', () => {
             session: {}
         };
 
-        const mashroomCSRFService = new MashroomCSRFService(8, 18, dummyLoggerFactory);
+        const mashroomCSRFService = new MashroomCSRFService(8, 18);
 
         const token = mashroomCSRFService.getCSRFToken(req);
 

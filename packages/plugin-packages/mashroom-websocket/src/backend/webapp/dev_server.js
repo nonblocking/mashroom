@@ -3,7 +3,7 @@
 
 import http from 'http';
 import express from 'express';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import WebSocketServer from '../WebSocketServer';
 import context from '../context';
 import app from './webapp';
@@ -11,7 +11,7 @@ import httpUpgradeHandlerFn from './http_upgrade_handler';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
-context.server = new WebSocketServer(dummyLoggerFactory);
+context.server = new WebSocketServer(loggerFactory);
 context.restrictToRoles = ['Role1'];
 context.basePath = '/websocket';
 
@@ -20,6 +20,7 @@ const httpServer = http.createServer(wrapperApp);
 
 // Dummy context
 const pluginContext: any = {
+    loggerFactory,
     services: {
         core: {
             middlewareStackService: {
@@ -61,7 +62,7 @@ context.server.addMessageListener((path) => path === '/test', (message, client) 
     }, 500);
 });
 
-const upgradeHandler = httpUpgradeHandlerFn(dummyLoggerFactory);
+const upgradeHandler = httpUpgradeHandlerFn();
 httpServer.on('upgrade', (req, socket, head) => {
     const reqWithContext = Object.assign({}, req, {
         pluginContext

@@ -1,7 +1,8 @@
 // @flow
 
 import type {
-    ExpressRequest, ExpressResponse,
+    ExpressRequest,
+    ExpressResponse,
     MashroomLogger,
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
@@ -15,22 +16,23 @@ export default class MashroomCacheControlService implements MashroomCacheControl
     _disabled: boolean;
     _disabledWhenAuthenticated: boolean;
     _maxAgeSec: number;
-    _logger: MashroomLogger;
 
     constructor(devMode: boolean, disabled: boolean, disabledWhenAuthenticated: boolean, maxAgeSec: number, loggerFactory: MashroomLoggerFactory) {
         this._disabled = disabled;
         this._disabledWhenAuthenticated = disabledWhenAuthenticated;
         this._maxAgeSec = maxAgeSec;
-        this._logger = loggerFactory('mashroom.browserCache.service');
+        const logger = loggerFactory('mashroom.browserCache.service');
         if (devMode) {
-            this._logger.info('Disabling browser cache because some packages are in dev mode');
+            logger.info('Disabling browser cache because some packages are in dev mode');
             this._disabled = true;
         }
     }
 
     async addCacheControlHeader(request: ExpressRequest, response: ExpressResponse) {
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.browserCache.service');
+
         if (request.method !== 'GET') {
-            this._logger.warn(`Browser caching not possible for ${request.method} requests`);
+            logger.warn(`Browser caching not possible for ${request.method} requests`);
             return;
         }
 

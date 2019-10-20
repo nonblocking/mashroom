@@ -1,6 +1,10 @@
 // @flow
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLogger,
+} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 
 export default class PortalLanguageController {

@@ -3,7 +3,7 @@
 
 import {Readable, Writable} from 'stream';
 import nock from 'nock';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomHttpProxyService from '../src/MashroomHttpProxyService';
 
 describe('MashroomHttpProxyService', () => {
@@ -13,7 +13,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo')
             .reply(200, 'test response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, dummyLoggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -30,7 +30,7 @@ describe('MashroomHttpProxyService', () => {
             .post('/login')
             .reply(200, 'test post response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET', 'POST'], [], false, 10, 60000, dummyLoggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET', 'POST'], [], false, 10, 60000, loggerFactory);
 
         const req = createDummyRequest('POST', '{ "user": "test }');
         const res = createDummyResponse();
@@ -47,7 +47,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo?q=javascript')
             .reply(200, 'test response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, dummyLoggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, loggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
@@ -62,7 +62,7 @@ describe('MashroomHttpProxyService', () => {
     });
 
     it('sets the correct status code if the target is not available', async () => {
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, dummyLoggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -79,7 +79,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo')
             .reply(201, 'resource created');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, dummyLoggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], false, 10, 60000, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -98,6 +98,9 @@ const createDummyRequest = (method: string, data?: string) => {
     req.method = method;
     req.headers = {
         'accept-language': 'de',
+    };
+    req.pluginContext = {
+        loggerFactory,
     };
 
     req.push(data);

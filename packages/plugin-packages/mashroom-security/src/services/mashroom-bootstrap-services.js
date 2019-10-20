@@ -13,7 +13,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
     const aclChecker = new MashroomSecurityACLChecker(acl, pluginContext.serverConfig.serverRootFolder, pluginContext.loggerFactory);
 
-    const service = new MashroomSecurityService(provider, context.pluginRegistry, aclChecker, pluginContext.loggerFactory);
+    const service = new MashroomSecurityService(provider, context.pluginRegistry, aclChecker);
 
     return {
         service,

@@ -2,11 +2,14 @@
 
 import url from 'url';
 import {HTTP_HEADER_REST_PROXY_USER, HTTP_HEADER_REST_PROXY_ROLES, HTTP_HEADER_REST_PROXY_PERMISSIONS} from '../constants';
-import {calculatePermissions, isAdmin} from '../utils/security_utils';
-import {userAndAgentContext} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {calculatePermissions} from '../utils/security_utils';
 import {portalAppContext} from '../utils/logging_utils';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLogger,
+} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {
@@ -25,7 +28,6 @@ export default class PortalRestProxyController {
 
     async forward(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
-        let contextLogger = logger.withContext(userAndAgentContext(req));
 
         try {
             const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
@@ -37,7 +39,7 @@ export default class PortalRestProxyController {
 
             const pathParts = path.split('/');
             if (pathParts.length < 2) {
-                contextLogger.warn(`Invalid rest proxy path: ${path}`);
+                logger.warn(`Invalid rest proxy path: ${path}`);
                 res.sendStatus(400);
                 return;
             }
@@ -46,15 +48,15 @@ export default class PortalRestProxyController {
             const restApiId = pathParts[1];
             const portalApp = this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
             if (!portalApp) {
-                contextLogger.warn('Portal app not found: ', portalApp);
+                logger.warn('Portal app not found: ', portalApp);
                 res.sendStatus(404);
                 return;
             }
 
-            contextLogger = contextLogger.withContext(portalAppContext(portalApp));
+            logger.addContext(portalAppContext(portalApp));
 
             if (!portalApp.restProxies) {
-                contextLogger.warn(`Invalid rest proxy path: ${path}`);
+                logger.warn(`Invalid rest proxy path: ${path}`);
                 res.sendStatus(400);
                 return;
             }
@@ -62,7 +64,7 @@ export default class PortalRestProxyController {
             const restProxyDef: MashroomPortalProxyDefinition = portalApp.restProxies[restApiId];
 
             if (!restProxyDef || !restProxyDef.targetUri) {
-                contextLogger.warn(`Invalid rest proxy path: ${path}`);
+                logger.warn(`Invalid rest proxy path: ${path}`);
                 res.sendStatus(400);
                 return;
             }
@@ -70,7 +72,7 @@ export default class PortalRestProxyController {
             if (restProxyDef.restrictToRoles && Array.isArray(restProxyDef.restrictToRoles) && restProxyDef.restrictToRoles.length > 0) {
                 const permitted = restProxyDef.restrictToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
                 if (!permitted) {
-                    contextLogger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access rest proxy: ${portalApp.name}/${restApiId}`);
+                    logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access rest proxy: ${portalApp.name}/${restApiId}`);
                     res.sendStatus(403);
                     return;
                 }
@@ -107,11 +109,11 @@ export default class PortalRestProxyController {
                 headers = Object.assign({}, headers, restProxyDef.addHeaders);
             }
 
-            contextLogger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);
+            logger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);
             await httpProxyService.forward(req, res, fullTargetUri, headers);
 
         } catch (e) {
-            contextLogger.error(e);
+            logger.error(e);
             res.sendStatus(500);
         }
     }

@@ -6,7 +6,7 @@ import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/t
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();
-    const service = new MashroomWebSocketService(pluginContext.loggerFactory);
+    const service = new MashroomWebSocketService();
 
     addTestListener(service, pluginContext.loggerFactory);
 

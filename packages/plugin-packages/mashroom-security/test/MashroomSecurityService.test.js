@@ -1,12 +1,15 @@
 // @flow
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityService from '../src/services/MashroomSecurityService';
 
 describe('MashroomSecurityService', () => {
 
     it('returns the user from the provider', () => {
         const req: any = {
+            pluginContext: {
+                loggerFactory
+            }
         };
         const aclChecker: any = {};
         const securityProviderRegistry: any = {
@@ -21,7 +24,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker, dummyLoggerFactory);
+        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker);
 
         const user = securityService.getUser(req);
 
@@ -47,6 +50,7 @@ describe('MashroomSecurityService', () => {
 
         const request: any = {
             pluginContext: {
+                loggerFactory,
                 services: {
                     storage: {
                         service: {
@@ -81,7 +85,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker, dummyLoggerFactory);
+        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker);
 
         const permittedPage1 = await securityService.checkResourcePermission(request, 'Page', 'page1', 'View', false);
         const permittedPage2 = await securityService.checkResourcePermission(request, 'Page', 'page2', 'View', false);
@@ -94,6 +98,9 @@ describe('MashroomSecurityService', () => {
 
     it('delegates to the acl checker', async () => {
         const req: any = {
+            pluginContext: {
+                loggerFactory
+            },
             path: '/test',
             method: 'GET'
         };
@@ -113,7 +120,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker, dummyLoggerFactory);
+        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker);
 
         expect(await securityService.checkACL(req)).toBeFalsy();
         expect(aclChecker.allowed.mock.calls.length).toBe(1);

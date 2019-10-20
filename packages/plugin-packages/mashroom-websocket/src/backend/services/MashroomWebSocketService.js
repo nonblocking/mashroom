@@ -8,15 +8,8 @@ import type {
     MashroomWebSocketMatcher, MashroomWebSocketMessageListener,
     MashroomWebSocketService as MashroomWebSocketServiceType
 } from '../../../type-definitions';
-import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 
 export default class MashroomWebSocketService implements MashroomWebSocketServiceType {
-
-    _logger: MashroomLogger;
-
-    constructor(loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.websocket.service');
-    }
 
     addMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener) {
         context.server.addMessageListener(matcher, listener);

@@ -11,10 +11,9 @@ import type {
     MashroomSecurityProvider,
 } from '../../type-definitions';
 import type {
-    MashroomLogger,
-    MashroomLoggerFactory,
     ExpressRequest,
     ExpressResponse,
+    MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 
@@ -32,19 +31,19 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
 
     _securityProviderName: string;
     _aclChecker: MashroomSecurityACLChecker;
-    _logger: MashroomLogger;
 
-    constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker, loggerFactory: MashroomLoggerFactory) {
+    constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker) {
         this._securityProviderName = securityProviderName;
         privatePropsMap.set(this, {
             securityProviderRegistry,
         });
         this._aclChecker = aclChecker;
-        this._logger = loggerFactory('mashroom.security.service');
     }
 
     getUser(request: ExpressRequest) {
-        const securityProvider = this._getSecurityProvider();
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
+        const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {
                 const user = securityProvider.getUser(request);
@@ -58,7 +57,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 }
                 return user;
             } catch (error) {
-                this._logger.error('Security provider threw an error', error);
+                logger.error('Security provider threw an error', error);
                 return null;
             }
         }
@@ -82,7 +81,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             return true;
         }
 
-        const user = await this.getUser(request);
+        const user = this.getUser(request);
         return this._aclChecker.allowed(request, user);
     }
 
@@ -173,20 +172,22 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     async authenticate(request: ExpressRequest, response: ExpressResponse) {
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
         if (this.isAuthenticated(request)) {
             return {
                 status: 'authenticated'
             };
         }
 
-        const securityProvider = this._getSecurityProvider();
+        const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {
                 // To prevent phishing, create a new session
                 request.session.destroy();
                 return await securityProvider.authenticate(request, response);
             } catch (e) {
-                this._logger.error('Security provider returned error: ', e);
+                logger.error('Security provider returned error: ', e);
             }
         }
 
@@ -196,47 +197,55 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     async checkAuthentication(request: ExpressRequest) {
-        const securityProvider = this._getSecurityProvider();
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
+        const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {
                 await securityProvider.checkAuthentication(request);
             } catch (e) {
-                this._logger.error('Security provider returned error: ', e);
+                logger.error('Security provider returned error: ', e);
             }
         }
     }
 
     getAuthenticationExpiration(request: ExpressRequest) {
-        const securityProvider = this._getSecurityProvider();
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
+        const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {
                 return securityProvider.getAuthenticationExpiration(request);
             } catch (e) {
-                this._logger.error('Security provider returned error: ', e);
+                logger.error('Security provider returned error: ', e);
             }
         }
     }
 
     async revokeAuthentication(request: ExpressRequest) {
-        const securityProvider = this._getSecurityProvider();
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
+        const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {
                 await securityProvider.revokeAuthentication(request);
                 // Create a new session to make sure no data of the authenticated user remains
                 request.session.destroy();
             } catch (e) {
-                this._logger.error('Security provider returned error: ', e);
+                logger.error('Security provider returned error: ', e);
             }
         }
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
-        const securityProvider = this._getSecurityProvider();
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
+        const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {
                 return await securityProvider.login(request, username, password);
             } catch (e) {
-                this._logger.error('Security provider returned error: ', e);
+                logger.error('Security provider returned error: ', e);
             }
         }
 
@@ -245,11 +254,11 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         };
     }
 
-    _getSecurityProvider(): ?MashroomSecurityProvider {
+    _getSecurityProvider(logger: MashroomLogger): ?MashroomSecurityProvider {
         const privateProps = privatePropsMap.get(this);
         const securityProvider = privateProps && privateProps.securityProviderRegistry.findProvider(this._securityProviderName);
         if (!securityProvider) {
-            this._logger.warn(`Cannot authenticate because the security provider is not (yet) loaded: ${this._securityProviderName}`);
+            logger.warn(`Cannot authenticate because the security provider is not (yet) loaded: ${this._securityProviderName}`);
             return null;
         }
         return securityProvider;

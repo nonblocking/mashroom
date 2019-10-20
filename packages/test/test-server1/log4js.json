@@ -7,7 +7,7 @@
             "numBackups": 3,
             "layout": {
                 "type": "pattern",
-                "pattern": "%d %p %X{clientIP} %X{username} %c - %m"
+                "pattern": "%d %p %X{sessionID} %X{clientIP} %X{username} %c - %m"
             }
         },
         "console": {

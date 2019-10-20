@@ -3,7 +3,11 @@
 import fs from 'fs';
 import path from 'path';
 
-import type {ExpressRequest, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    MashroomLogger,
+    MashroomLoggerFactory
+} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityACLChecker as MashroomSecurityACLCheckerType,
     MashroomSecurityACLPathRule,
@@ -21,7 +25,6 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
 
     _pathRuleList: ?Array<ACLPathRuleRegexp>;
     _aclPath: string;
-    _logger: MashroomLogger;
 
     constructor(aclPath: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._aclPath = aclPath;
@@ -29,25 +32,27 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
             this._aclPath = path.resolve(serverRootFolder, this._aclPath);
         }
         this._pathRuleList = null;
-        this._logger = loggerFactory('mashroom.security.acl');
-        this._logger.info(`Configured ACL definition: ${this._aclPath}`);
+        const logger = loggerFactory('mashroom.security.acl');
+        logger.info(`Configured ACL definition: ${this._aclPath}`);
     }
 
     async allowed(req: ExpressRequest, user: ?MashroomSecurityUser) {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.security.acl');
+
         const path = req.path;
         const effectivePath = path.endsWith('/') ? path.substr(0, path.length - 1) : path;
         const method = req.method;
         const username = user ? user.username : 'anonymous';
 
-        this._logger.debug(`ACL check: url: ${path}, method: ${method}, user: ${username}`);
+        logger.debug(`ACL check: url: ${path}, method: ${method}, user: ${username}`);
 
-        const pathRuleList = this._getPathRuleList();
+        const pathRuleList = this._getPathRuleList(logger);
         const matchingRule = pathRuleList.find((r) => !!effectivePath.match(r.regexp));
 
         if (matchingRule) {
             const allowed = this._checkRule(matchingRule.pathRule, method, user);
             if (!allowed) {
-                this._logger.debug(`ACL check: Access denied for user '${username}' at url '${path}' with method: '${method}'`);
+                logger.debug(`ACL check: Access denied for user '${username}' at url '${path}' with method: '${method}'`);
             }
             return allowed;
         }
@@ -70,7 +75,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         return !!(allowMatch && !denyMatch);
     }
 
-    _getPathRuleList(): Array<ACLPathRuleRegexp> {
+    _getPathRuleList(logger: MashroomLogger): Array<ACLPathRuleRegexp> {
         if (this._pathRuleList) {
             return this._pathRuleList;
         }
@@ -88,13 +93,13 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
                             regexp,
                         });
                     } else {
-                        this._logger.error('Ignoring invalid path pattern: ', pathPattern);
+                        logger.error('Ignoring invalid path pattern: ', pathPattern);
                     }
                 }
             }
             this._pathRuleList = pathRuleList;
         } else {
-            this._logger.warn(`No ACL definition found: ${this._aclPath}. Disabling path based security.`);
+            logger.warn(`No ACL definition found: ${this._aclPath}. Disabling path based security.`);
         }
 
         return this._pathRuleList || [];

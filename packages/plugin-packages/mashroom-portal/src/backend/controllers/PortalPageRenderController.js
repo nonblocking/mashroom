@@ -2,7 +2,6 @@
 
 import {promisify} from 'util';
 import fs from 'fs';
-import {userAndAgentContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {determineUserAgent} from '@mashroom/mashroom-utils/lib/user_agent_utils';
 import context from '../context/global_portal_context';
 import minimalLayout from '../layouts/minimal_layout';
@@ -72,21 +71,20 @@ export default class PortalPageRenderController {
 
     async renderPortalPage(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
-        const contextLogger = logger.withContext(userAndAgentContext(req));
 
         try {
             const serverConfig = req.pluginContext.serverConfig;
 
             const path = req.path;
-            const portalPath = getPortalPath(req, contextLogger);
+            const portalPath = getPortalPath();
 
-            contextLogger.info('Sending portal page:', path);
+            logger.info('Sending portal page:', path);
             const {sitePath, friendlyUrl} = getSiteAndFriendlyUrl(req);
 
             if (!sitePath) {
-                const defaultSite = await getDefaultSite(req, contextLogger);
+                const defaultSite = await getDefaultSite(req, logger);
                 if (defaultSite) {
-                    contextLogger.debug(`Redirecting to default site: ${defaultSite.siteId}`);
+                    logger.debug(`Redirecting to default site: ${defaultSite.siteId}`);
                     res.redirect(portalPath + defaultSite.path);
                 } else {
                     res.sendStatus(404);
@@ -96,13 +94,13 @@ export default class PortalPageRenderController {
 
             logger.debug(`Determined: Site path: ${sitePath}, Friendly URL: ${friendlyUrl || '/'}`);
 
-            const {site, pageRef, page} = await getPageData(sitePath, friendlyUrl, req, contextLogger);
+            const {site, pageRef, page} = await getPageData(sitePath, friendlyUrl, req, logger);
             logger.debug('Site:', site);
             logger.debug('PageRef:', pageRef);
             logger.debug('Page:', page);
 
             if (!site || !pageRef || !page) {
-                contextLogger.warn('Page not found:', path);
+                logger.warn('Page not found:', path);
                 res.sendStatus(404);
                 return;
             }
@@ -119,12 +117,12 @@ export default class PortalPageRenderController {
             const themeName = page.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
             const layoutName = page.layout || site.defaultLayout;
 
-            const model = await this._createPortalPageModel(req, serverConfig, portalPath, sitePath, site, pageRef, page, themeName, layoutName, contextLogger);
+            const model = await this._createPortalPageModel(req, serverConfig, portalPath, sitePath, site, pageRef, page, themeName, layoutName, logger);
 
-            this._render(themeName, model, res, contextLogger);
+            this._render(themeName, model, res, logger);
 
         } catch (e) {
-            contextLogger.error(e);
+            logger.error(e);
             res.sendStatus(500);
         }
     }

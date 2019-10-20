@@ -6,7 +6,7 @@ import log4js from 'log4js';
 import {existsSync} from 'fs';
 import defaultConfig from './log4js_default_config';
 
-import type {LogLevel, MashroomLoggerDelegate} from '../../type-definitions';
+import type {LogLevel, MashroomLoggerDelegate} from '../../../../type-definitions';
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const HOSTNAME = os.hostname() || 'localhost';

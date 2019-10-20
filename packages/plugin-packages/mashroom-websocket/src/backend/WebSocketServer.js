@@ -70,6 +70,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
 
     createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser) {
         const contextLogger = this._logger.withContext(userContext(user));
+
         contextLogger.debug(`WebSocket connection opened on path: ${connectPath}. User: ${user.username}`);
 
         if (this.getClientCount() > context.maxConnections) {
@@ -111,6 +112,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         const webSocket = this._getWebSocket(client);
         if (webSocket) {
             const contextLogger = this._logger.withContext(userContext(client.user));
+
             return new Promise((resolve, reject) => {
                 contextLogger.debug(`Sending WebSocket message to client:`, message);
                 webSocket.send(JSON.stringify(message), (err) => {
@@ -223,18 +225,17 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     _sendKeepAlive() {
-        if (this._clients) {
-            this._clients.forEach((wrapper) => {
-                this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE).then(
-                    () => {}, () => {}
-                );
-            });
-        }
+        this._clients.forEach((wrapper) => {
+            this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE).then(
+                () => {}, () => {}
+            );
+        });
     }
 
     _checkConnections() {
-        if (this._clients) {
-            this._logger.info(`Currently open WebSocket connections: ${this.getClientCount()}`);
+        const clientCount = this.getClientCount();
+        if (clientCount > 0) {
+            this._logger.info(`Currently open WebSocket connections: ${clientCount}`);
             this._clients.forEach((wrapper) => {
                 if (!wrapper.client.alive) {
                     this.close(wrapper.client);

@@ -13,6 +13,7 @@ describe('MashroomSecurityMiddleware', () => {
         const req: any = {
             headers: {},
             pluginContext: {
+                loggerFactory,
                 services: {
                     security: {
                         service: {
@@ -24,6 +25,9 @@ describe('MashroomSecurityMiddleware', () => {
                             },
                             async checkAuthentication() {
                                 checkAuthenticationCalled = true;
+                            },
+                            getUser() {
+                                return null;
                             }
                         }
                     }
@@ -37,7 +41,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const next = jest.fn();
 
-        const securityMiddleware = new MashroomSecurityMiddleware(loggerFactory);
+        const securityMiddleware = new MashroomSecurityMiddleware();
 
         await securityMiddleware.middleware()(req, res, next);
 
@@ -53,6 +57,7 @@ describe('MashroomSecurityMiddleware', () => {
                 ['x-mashroom-does-not-extend-auth']: 1
             },
             pluginContext: {
+                loggerFactory,
                 services: {
                     security: {
                         service: {
@@ -64,6 +69,9 @@ describe('MashroomSecurityMiddleware', () => {
                             },
                             async checkAuthentication() {
                                 checkAuthenticationCalled = true;
+                            },
+                            getUser() {
+                                return null;
                             }
                         }
                     }
@@ -77,7 +85,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const next = () => {};
 
-        const securityMiddleware = new MashroomSecurityMiddleware(loggerFactory);
+        const securityMiddleware = new MashroomSecurityMiddleware();
 
         await securityMiddleware.middleware()(req, res, next);
 
@@ -87,6 +95,7 @@ describe('MashroomSecurityMiddleware', () => {
     it('starts authentication if access is not permitted for anonymous', async () => {
         const req: any = {
             pluginContext: {
+                loggerFactory,
                 services: {
                     security: {
                         service: {
@@ -117,7 +126,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const next = jest.fn();
 
-        const securityMiddleware = new MashroomSecurityMiddleware(loggerFactory);
+        const securityMiddleware = new MashroomSecurityMiddleware();
 
         await securityMiddleware.middleware()(req, res, next);
 
@@ -129,6 +138,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const req: any = {
             pluginContext: {
+                loggerFactory,
                 services: {
                     security: {
                         service: {
@@ -159,7 +169,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const next = jest.fn();
 
-        const securityMiddleware = new MashroomSecurityMiddleware(loggerFactory);
+        const securityMiddleware = new MashroomSecurityMiddleware();
 
         await securityMiddleware.middleware()(req, res, next);
 

@@ -10,7 +10,7 @@ describe('PortalLogController', () => {
         let context = {};
         const logger: any = {
             error: (...args) => errorMessage = args.join(' '),
-            withContext: (c) => {
+            addContext: (c) => {
                 context = Object.assign({}, context, c);
                 return logger;
             }
@@ -59,13 +59,8 @@ describe('PortalLogController', () => {
 
         expect(errorMessage).toBe('This is the error message Caused by portal app: App2 v2.2.4');
         expect(context).toEqual({
-            clientIP: '127.0.0.1',
-            browser: 'Chrome',
-            browserVersion: '73.0.3683.103',
-            os: 'Mac OS',
             portalAppName: 'App2',
-            portalAppVersion: '2.2.4',
-            username: 'admin'
+            portalAppVersion: '2.2.4'
         });
     });
 

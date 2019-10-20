@@ -20,7 +20,6 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
     _socketTimeoutMs: number;
     _pool: any;
     _httpHeaderFilter: HttpHeaderFilterType;
-    _logger: MashroomLogger;
 
     constructor(forwardMethods: Array<string>, forwardHeaders: Array<string>, rejectUntrustedCerts: boolean, poolMaxSockets: number, socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
         this._forwardMethods = forwardMethods;
@@ -28,9 +27,10 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         this._poolMaxSockets = poolMaxSockets || 10;
         this._socketTimeoutMs = socketTimeoutMs || 0;
         this._httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
-        this._logger = loggerFactory('mashroom.httpProxy');
 
-        this._logger.info(`Initializing http proxy with maxSockets: ${this._poolMaxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
+        const logger = loggerFactory('mashroom.httpProxy');
+        logger.info(`Initializing http proxy with maxSockets: ${this._poolMaxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
+
         this._pool = new http.Agent({
             keepAlive: true,
             maxSockets: this._poolMaxSockets,
@@ -38,6 +38,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
     }
 
     forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders?: HttpHeaders = {}) {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
         const method = req.method;
         if (!this._forwardMethods.find((m) => m === method)) {
@@ -45,7 +46,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
         if (req.headers.upgrade) {
-            this._logger.error(`Client requested upgrade to '${req.headers.upgrade}' which is not supported by the proxy!`);
+            logger.error(`Client requested upgrade to '${req.headers.upgrade}' which is not supported by the proxy!`);
             res.sendStatus(406);
             return Promise.resolve();
         }
@@ -65,7 +66,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         };
 
         const startTime = process.hrtime();
-        this._logger.info(`Forwarding ${options.method} request to: ${options.uri}`);
+        logger.info(`Forwarding ${options.method} request to: ${options.uri}`);
 
         return new Promise<void>((resolve) => {
             req.pipe(
@@ -73,15 +74,15 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
                     .on('response', (targetResponse) => {
                         this._httpHeaderFilter.filter(targetResponse.headers);
                         const endTime = process.hrtime(startTime);
-                        this._logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
+                        logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
                         res.status(targetResponse.statusCode);
                     })
                     .on('error', (error) => {
                         if (error.code === 'ETIMEDOUT') {
-                            this._logger.error(`Target endpoint '${uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
+                            logger.error(`Target endpoint '${uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
                             res.sendStatus(504);
                         } else {
-                            this._logger.error(`Forwarding to '${uri}' failed!`, error);
+                            logger.error(`Forwarding to '${uri}' failed!`, error);
                             res.sendStatus(503);
                         }
                         resolve();
@@ -92,7 +93,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
                             resolve();
                         })
                         .on('error', (error) => {
-                            this._logger.error('Error sending the response to the client', error);
+                            logger.error('Error sending the response to the client', error);
                             res.sendStatus(500);
                             resolve();
                         })

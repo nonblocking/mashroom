@@ -2,7 +2,6 @@
 
 import {promisify} from 'util';
 import getUriCbStyle from 'get-uri';
-import {userAndAgentContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {portalAppContext} from '../utils/logging_utils';
 
 const getUri = promisify(getUriCbStyle);
@@ -50,7 +49,6 @@ export default class PortalAppController {
 
     async getPortalAppSetup(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
-        let contextLogger = logger.withContext(userAndAgentContext(req));
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
         try {
@@ -60,7 +58,7 @@ export default class PortalAppController {
 
             const portalApp = this._getPortalApp(pluginName);
             if (!portalApp) {
-                contextLogger.error(`Portal app not found: ${pluginName}`);
+                logger.error(`Portal app not found: ${pluginName}`);
                 res.sendStatus(404);
                 return;
             }
@@ -69,7 +67,7 @@ export default class PortalAppController {
                 return;
             }
 
-            contextLogger = contextLogger.withContext(portalAppContext(portalApp));
+            logger.addContext(portalAppContext(portalApp));
             let portalAppInstance = null;
 
             if (portalAppInstanceId) {
@@ -78,12 +76,12 @@ export default class PortalAppController {
                 portalAppInstance = await this._getDynamicallyLoadedPortalAppInstance(portalApp, req);
             }
             if (!portalAppInstance) {
-                contextLogger.warn(`Portal app instance not found: ${portalAppInstanceId}`);
+                logger.warn(`Portal app instance not found: ${portalAppInstanceId}`);
                 res.sendStatus(404);
                 return;
             }
 
-            let portalPath = getPortalPath(req, contextLogger);
+            let portalPath = getPortalPath();
 
             const encodedPortalAppName = encodeURIComponent(portalApp.name);
             const resourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
@@ -119,12 +117,12 @@ export default class PortalAppController {
                 appConfig
             };
 
-            contextLogger.info(`Sending portal app: ${portalApp.name}`);
+            logger.info(`Sending portal app setup for: ${portalApp.name}`);
 
             res.json(portalAppSetup);
 
         } catch (e) {
-            contextLogger.error(e);
+            logger.error(e);
             res.sendStatus(500);
         }
     }
@@ -144,6 +142,8 @@ export default class PortalAppController {
                 res.sendStatus(404);
                 return;
             }
+
+            logger.addContext(portalAppContext(portalApp));
 
             if (cacheControlService) {
                 await cacheControlService.addCacheControlHeader(req, res);

@@ -3,8 +3,7 @@
 import {DEFAULT_SITE_ID} from '../constants';
 
 import type {
-    ExpressRequest,
-    MashroomLogger,
+    ExpressRequest, MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomPortalAppInstanceRef,

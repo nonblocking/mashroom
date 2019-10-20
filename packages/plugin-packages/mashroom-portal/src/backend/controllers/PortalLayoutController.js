@@ -2,7 +2,11 @@
 
 import {isAdmin} from '../utils/security_utils';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLogger,
+} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomPortalPluginRegistry,
     MashroomPortalService,

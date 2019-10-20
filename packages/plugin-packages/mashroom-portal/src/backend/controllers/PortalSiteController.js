@@ -5,7 +5,11 @@ import {isAdmin, isSitePermitted} from '../utils/security_utils';
 import {getPortalPath} from '../utils/path_utils';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLogger,
+} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {
     MashroomSecurityResourcePermissions,
@@ -304,7 +308,7 @@ export default class PortalSiteController {
     _determineSiteUrl(req: ExpressRequest, site: MashroomPortalSite) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
 
-        const portalPath = getPortalPath(req, logger);
+        const portalPath = getPortalPath();
         return `${portalPath}${site.path}`;
     }
 }

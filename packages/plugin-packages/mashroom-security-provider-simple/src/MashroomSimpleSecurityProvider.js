@@ -24,20 +24,19 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     _userStorePath: string;
     _loginPage: string;
     _authenticationTimeoutSec: number;
-    _logger: MashroomLogger;
 
     constructor(userStorePath: string, loginPage: string, serverRootFolder: string, authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.security.provider.simple');
+        const logger = loggerFactory('mashroom.security.provider.simple');
 
         this._userStorePath = userStorePath;
         if (!path.isAbsolute(this._userStorePath)) {
             this._userStorePath = path.resolve(serverRootFolder, this._userStorePath);
         }
-        this._logger.info(`Using user store: ${this._userStorePath}`);
+        logger.info(`Using user store: ${this._userStorePath}`);
 
         this._loginPage = loginPage;
         this._authenticationTimeoutSec = authenticationTimeoutSec;
-        this._logger.info(`Configured login page: ${this._loginPage}`);
+        logger.info(`Configured login page: ${this._loginPage}`);
     }
 
     async authenticate(request: ExpressRequest, response: ExpressResponse) {
@@ -62,12 +61,14 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.simple');
+
         const passwordHash = shajs('sha256').update(password).digest('hex');
 
-        const user = this._getUserStore().find((u) => u.username === username && u.passwordHash === passwordHash);
+        const user = this._getUserStore(logger).find((u) => u.username === username && u.passwordHash === passwordHash);
 
         if (user) {
-            this._logger.debug('User successfully authenticated:', username);
+            logger.debug('User successfully authenticated:', username);
             const mashroomUser: MashroomSecurityUser = {
                 username,
                 displayName: user.displayName,
@@ -81,7 +82,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
                 success: true
             }
         } else {
-            this._logger.warn('User Authentication failed', username);
+            logger.warn('User Authentication failed', username);
             return {
                 success: false
             }
@@ -100,7 +101,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
     }
 
-    _getUserStore(): UserStore {
+    _getUserStore(logger: MashroomLogger): UserStore {
         if (this._userStore) {
             return this._userStore;
         }
@@ -108,7 +109,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         if (fs.existsSync(this._userStorePath)) {
             this._userStore = require(this._userStorePath);
         } else {
-            this._logger.warn(`No user definition found: ${this._userStorePath}.`);
+            logger.warn(`No user definition found: ${this._userStorePath}.`);
             this._userStore = [];
         }
 
