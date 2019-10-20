@@ -1,4 +1,5 @@
 // @flow
+/* eslint require-atomic-updates: warn */
 
 import fs from 'fs';
 import path from 'path';
