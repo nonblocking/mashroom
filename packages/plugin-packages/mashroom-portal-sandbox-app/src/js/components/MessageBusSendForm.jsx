@@ -55,7 +55,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             topic,
             data
         });
-        // resetForm('mashroom-sandbox-app-publish-message-form');
+        resetForm('mashroom-sandbox-app-publish-message-form');
     }
 
     render() {
