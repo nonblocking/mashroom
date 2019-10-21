@@ -13,7 +13,6 @@ showdown.extension('showdown-include', () => {
                 .split('\n')
                 .map((line) => {
                     if (line.indexOf('[inc]') !== -1) {
-                        // TODO
                         const match = line.match(/\((.+md)\)/);
                         if (match.length === 2) {
                             const include = match[1];

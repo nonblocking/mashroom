@@ -38,7 +38,6 @@ const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) 
         return;
     }
 
-    // TODO
     const connectPath = req.url.substr(context.basePath.length);
 
     context.server.getServer().handleUpgrade(req, socket, head, (ws) => {
