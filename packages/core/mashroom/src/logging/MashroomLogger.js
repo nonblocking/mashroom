@@ -52,5 +52,7 @@ export default class MashroomLogger implements MashroomLoggerType {
         return new MashroomLogger(this._category, cloneContext, this._delegate);
     }
 
+    getContext() {
+        return this._context ? this._context.get() : {};
+    }
 }
-

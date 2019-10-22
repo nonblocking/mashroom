@@ -1,5 +1,6 @@
 // @flow
 
+import requestPluginContext from '../../context/request_plugin_context';
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
 
 import type {
@@ -17,7 +18,7 @@ import type {
 export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 
     _log: MashroomLogger;
-    _pluginContextHolder: MashroomPluginContextHolder
+    _pluginContextHolder: MashroomPluginContextHolder;
     _httpServer: http$Server;
     _upgradeHandlers: Array<{
         pluginName: string,
@@ -73,7 +74,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         const entry = this._upgradeHandlers.find((ul) => path.startsWith(ul.path));
         if (entry) {
             const reqWithContext: any = Object.assign({}, req, {
-                pluginContext: this._pluginContextHolder.getPluginContext()
+                pluginContext: requestPluginContext(req, this._pluginContextHolder),
             });
             entry.handler(reqWithContext, socket, head);
         } else {

@@ -1,6 +1,5 @@
 // @flow
 
-import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {Server} from 'ws';
 import context from './context';
 
@@ -68,8 +67,8 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         this._disconnectListeners = this._disconnectListeners.filter((l) => l !== listener);
     }
 
-    createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser) {
-        const contextLogger = this._logger.withContext(userContext(user));
+    createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser, loggerContext: {}) {
+        const contextLogger = this._logger.withContext(loggerContext);
 
         contextLogger.debug(`WebSocket connection opened on path: ${connectPath}. User: ${user.username}`);
 
@@ -83,6 +82,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         const client = {
             connectPath,
             user,
+            loggerContext,
             alive,
         };
         this._clients.push({
@@ -111,7 +111,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     async sendMessage(client: MashroomWebSocketClient, message: any) {
         const webSocket = this._getWebSocket(client);
         if (webSocket) {
-            const contextLogger = this._logger.withContext(userContext(client.user));
+            const contextLogger = this._logger.withContext(client.loggerContext);
 
             return new Promise((resolve, reject) => {
                 contextLogger.debug(`Sending WebSocket message to client:`, message);
@@ -164,7 +164,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     _handleMessage(textMsg: string, client: MashroomWebSocketClient) {
-        const contextLogger = this._logger.withContext(userContext(client.user));
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
         if (typeof (textMsg) !== 'string') {
             contextLogger.warn('Ignoring WebSocket message because currently binary is not supported');

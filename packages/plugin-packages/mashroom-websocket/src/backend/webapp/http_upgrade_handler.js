@@ -1,6 +1,7 @@
 // @flow
 
 import {ServerResponse} from 'http';
+import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import context from '../context';
 
 import type {
@@ -32,6 +33,7 @@ const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) 
         sendError(socket, 403, 'Unauthenticated');
         return;
     }
+
     if (context.restrictToRoles && context.restrictToRoles.length > 0 && !context.restrictToRoles.some((role) => user && user.roles.indexOf(role) !== -1)) {
         logger.error(`User ${user.username} has not required roles to upgrade to WebSocket`);
         sendError(socket, 401, 'Forbidden');
@@ -42,7 +44,8 @@ const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) 
 
     context.server.getServer().handleUpgrade(req, socket, head, (ws) => {
         if (user) {
-            context.server.createClient(ws, connectPath, user);
+            const loggerContext = Object.assign({}, logger.getContext(), userContext(user));
+            context.server.createClient(ws, connectPath, user, loggerContext);
         }
     });
 };

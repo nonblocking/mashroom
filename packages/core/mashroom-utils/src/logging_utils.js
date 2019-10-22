@@ -8,12 +8,14 @@ export const dummyLoggerFactory = () => {
         warn: console.warn,
         error: console.error,
         addContext: () => {},
-        withContext: () => dummyLogger
+        withContext: () => dummyLogger,
+        getContext: () => ({}),
     };
 
     return dummyLogger;
 };
 
+dummyLoggerFactory.bindToContext = () => dummyLoggerFactory;
 
 export const userContext = (mashroomUser: ?any) => {
     let username = null;

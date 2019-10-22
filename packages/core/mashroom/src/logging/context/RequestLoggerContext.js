@@ -2,7 +2,6 @@
 
 import defaultRequestContext from './default_request_context';
 
-import type {$Request} from 'express';
 import type {MashroomLoggerContext} from '../../../type-definitions';
 
 const MASHROOM_LOGGER_CONTEXT_KEY = 'mashroomLoggerContext';
@@ -11,7 +10,7 @@ export default class RequestLoggerContext implements MashroomLoggerContext {
 
     _request: any;
 
-    constructor(req: $Request) {
+    constructor(req: http$IncomingMessage<>) {
         this._request = req;
         this.add(defaultRequestContext(req));
     }

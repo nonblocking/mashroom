@@ -1,6 +1,5 @@
 // @flow
 
-import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {WEBSOCKET_CONNECT_PATH} from './constants';
 
 import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
@@ -62,7 +61,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     }
 
     _handleMessage(message: any, client: MashroomWebSocketClient) {
-        const contextLogger = this._logger.withContext(userContext(client.user));
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
         if (!this._clients.get(client)) {
             contextLogger.debug(`Registering new WebSocket client for user: ${client.user.username}`);
@@ -87,7 +86,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     }
 
     _processSubscribe(request: MashroomMessagingWebSocketSubscribeRequest, client: MashroomWebSocketClient) {
-        const contextLogger = this._logger.withContext(userContext(client.user));
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
         const clientData = this._clients.get(client);
         if (!clientData) {
@@ -120,7 +119,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     }
 
     _processUnsubscribe(request: MashroomMessagingWebSocketUnsubscribeRequest, client: MashroomWebSocketClient) {
-        const contextLogger = this._logger.withContext(userContext(client.user));
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
         const clientData = this._clients.get(client);
         if (!clientData) {
@@ -147,7 +146,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     }
 
     _processPublish(request: MashroomMessagingWebSocketPublishRequest, client: MashroomWebSocketClient) {
-        const contextLogger = this._logger.withContext(userContext(client.user));
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
         this._messagingService.publish(client.user, request.topic, request.message).then(
             () => {
@@ -179,7 +178,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     _sendSuccessResponse(messageId: string, client: MashroomWebSocketClient) {
         const webSocketService = this._webSocketService;
         if (webSocketService) {
-            const contextLogger = this._logger.withContext(userContext(client.user));
+            const contextLogger = this._logger.withContext(client.loggerContext);
 
             const response: MashroomMessagingWebSocketSuccessResponse = {
                 messageId,
@@ -198,7 +197,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     _sendErrorResponse(messageId: string, message: string, client: MashroomWebSocketClient) {
         const webSocketService = this._webSocketService;
         if (webSocketService) {
-            const contextLogger = this._logger.withContext(userContext(client.user));
+            const contextLogger = this._logger.withContext(client.loggerContext);
 
             const response: MashroomMessagingWebSocketErrorResponse = {
                 messageId,

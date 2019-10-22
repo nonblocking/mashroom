@@ -79,6 +79,7 @@ export interface MashroomLogger {
     error(msg: string, ...args: any[]): void;
     addContext(context: {}): void;
     withContext(context: {}): MashroomLogger;
+    getContext(): {};
 }
 
 export interface MashroomLoggerContext {

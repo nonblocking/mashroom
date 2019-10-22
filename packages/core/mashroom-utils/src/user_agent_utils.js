@@ -2,8 +2,6 @@
 
 import uaParser from 'ua-parser-js';
 
-import type {$Request as Request} from 'express';
-
 export type UserAgent = {
     +browser: {
         +name: ? 'Android Browser' | 'Chrome' | 'Chromium' | 'Edge' | 'Firefox' | 'IE' | 'IEMobile' | 'Konqueror' | 'Mobile Safari' | 'Opera Mini' | 'Opera' | 'Safari' | 'Samsung Browser' | 'Tizen Browser' | string,
@@ -14,7 +12,7 @@ export type UserAgent = {
     }
 }
 
-export const determineUserAgent = (req: Request): UserAgent => {
+export const determineUserAgent = (req: http$IncomingMessage<>): UserAgent => {
     const ua = uaParser(req.headers['user-agent']);
 
     return {

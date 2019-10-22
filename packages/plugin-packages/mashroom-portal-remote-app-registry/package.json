@@ -81,7 +81,7 @@
                 }
             },
             {
-                "name": "Mashroom Portal Remote App Registry Gobal Request Middleware",
+                "name": "Mashroom Portal Remote App Registry Request Context Middleware",
                 "type": "middleware",
                 "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js"
             }

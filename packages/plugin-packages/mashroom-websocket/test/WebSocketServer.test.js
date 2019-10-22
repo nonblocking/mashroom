@@ -17,7 +17,7 @@ describe('WebSocketServer', () => {
             username: 'foo'
         };
 
-        webSocketServer.createClient(webSocket, '/test', user);
+        webSocketServer.createClient(webSocket, '/test', user, {});
 
         expect(webSocketServer.getClientCount()).toBe(1);
         expect(webSocketServer.getClientsOnPath('/test')).toEqual([{
@@ -25,6 +25,7 @@ describe('WebSocketServer', () => {
             user: {
                 username: 'foo'
             },
+            loggerContext: {},
             alive: true
         }]);
     });
@@ -44,7 +45,7 @@ describe('WebSocketServer', () => {
             username: 'foo'
         };
 
-        webSocketServer.createClient(webSocket, '/test', user);
+        webSocketServer.createClient(webSocket, '/test', user, {});
         webSocketServer.addMessageListener((path, message) => path === '/test' && message.test === 1, (msg) => {
             expect(msg).toEqual({
                 test: 1
@@ -72,7 +73,7 @@ describe('WebSocketServer', () => {
             username: 'foo'
         };
 
-        webSocketServer.createClient(webSocket, '/test', user);
+        webSocketServer.createClient(webSocket, '/test', user, {});
         webSocketServer.addDisconnectListener(() => {
             done();
         });
