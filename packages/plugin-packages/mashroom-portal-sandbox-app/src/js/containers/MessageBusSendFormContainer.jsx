@@ -20,15 +20,15 @@ type OwnProps = {
     messageBus: MashroomPortalMessageBus,
 }
 
-type StateProps = {
+type StateProps = {|
     activePortalApp: ?ActivePortalApp,
     topicsSubscribedByApp: Array<string>,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     addMessagePublishedBySandbox: (MessageBusMessage) => void,
     resetForm: (string) => void,
-}
+|}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
     return {

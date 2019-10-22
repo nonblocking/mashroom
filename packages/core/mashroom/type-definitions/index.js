@@ -10,10 +10,10 @@ export type ExpressRequest = $Subtype<$Request> & {
 };
 export type ExpressResponse = $Response;
 export type ExpressNextFunction = NextFunction;
-export type ExpressApplication = $Application;
+export type ExpressApplication = $Application<ExpressRequest, ExpressResponse>;
 export type ExpressMiddleware = (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => mixed;
 export type ExpressErrorHandler = (error: Error, req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => mixed;
-export type ExpressRouter = Router;
+export type ExpressRouter = Router<ExpressRequest, ExpressResponse>;
 export type ExpressRequestHandler = ExpressApplication | ExpressRouter | ExpressMiddleware | ExpressErrorHandler;
 
 export type PluginPackageFolder = {

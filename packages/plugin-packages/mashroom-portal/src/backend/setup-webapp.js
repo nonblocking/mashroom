@@ -26,8 +26,10 @@ import {
     PORTAL_THEME_RESOURCES_BASE_PATH
 } from './constants';
 
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+
 export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: number) => {
-    const portalWebapp = express();
+    const portalWebapp = express<ExpressRequest, ExpressResponse>();
 
     portalWebapp.enable('etag');
 

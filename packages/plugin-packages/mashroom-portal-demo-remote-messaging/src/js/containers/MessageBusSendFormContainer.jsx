@@ -18,16 +18,13 @@ type OwnProps = {
     messageBus: MashroomPortalMessageBus,
 }
 
-type StateProps = {
-}
-
-type DispatchProps = {
+type DispatchProps = {|
     resetForm: (string) => void,
     addPublishedMessage: (message: PublishedMessage) => void,
     updateMessageStatus: (messageId: string, status: PublishedMessageStatus, errorMessage?: string) => void,
-}
+|}
 
-const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: State, ownProps: OwnProps) => {
     return {
     };
 };

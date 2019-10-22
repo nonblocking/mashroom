@@ -20,7 +20,7 @@ export default class MashroomStaticDocumentsPluginLoader extends ExpressRequestH
         }
 
         const fullDocumentRoot = path.resolve(plugin.pluginPackage.pluginPackagePath, documentRoot);
-        return express.static(fullDocumentRoot);
+        return express.static<*, *>(fullDocumentRoot);
     }
 
     isMiddleware() {

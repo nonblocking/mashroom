@@ -17,9 +17,9 @@ type OwnProps = {
     name: string
 }
 
-type StateProps = {
+type StateProps = {|
     languages: Languages,
-}
+|}
 
 class I18NStringFieldContainer extends PureComponent<OwnProps & StateProps> {
 
@@ -30,7 +30,6 @@ class I18NStringFieldContainer extends PureComponent<OwnProps & StateProps> {
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => ({
     languages: state.languages,
-    selectedPage: state.selectedPage
 });
 
 export default (connect(mapStateToProps)(I18NStringFieldContainer): ComponentType<OwnProps>);

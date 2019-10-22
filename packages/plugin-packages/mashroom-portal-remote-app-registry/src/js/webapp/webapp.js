@@ -9,7 +9,9 @@ import index from './routes/index';
 import {adminIndex, adminUpdate} from './routes/admin';
 import {getRemotePortalApps, addRemotePortalAppUrl, deleteRemotePortalAppUrl} from './routes/api';
 
-const app = express();
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+
+const app = express<ExpressRequest, ExpressResponse>();
 
 const admin = express();
 admin.use(bodyParser.urlencoded({

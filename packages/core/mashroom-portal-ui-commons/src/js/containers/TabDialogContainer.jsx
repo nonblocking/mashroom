@@ -18,13 +18,13 @@ type OwnProps = {
     className?: string
 }
 
-type StateProps = {
+type StateProps = {|
     activeTab?: string,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setActiveTab: (name: string) => void,
-}
+|}
 
 const mapStateToProps = (state: CommonState, ownProps: OwnProps): StateProps => ({
     activeTab: state.tabDialogs && state.tabDialogs[ownProps.name] && state.tabDialogs[ownProps.name].active,

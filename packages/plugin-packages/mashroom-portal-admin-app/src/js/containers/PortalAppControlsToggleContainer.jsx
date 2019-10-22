@@ -12,13 +12,13 @@ import type {Dispatch, State} from '../../../type-definitions';
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     portalAppControls: boolean,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setShowPortalAppControls: (show: boolean) => void,
-}
+|}
 
 class PortalAppControlsToggleContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

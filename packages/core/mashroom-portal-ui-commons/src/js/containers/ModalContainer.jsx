@@ -21,13 +21,13 @@ type OwnProps = {
     minHeight?: number
 }
 
-type StateProps = {
+type StateProps = {|
     show: boolean,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     onClose: () => void,
-}
+|}
 
 const mapStateToProps = (state: CommonState, ownProps: OwnProps): StateProps => ({
     show: state.modals && state.modals[ownProps.name] && state.modals[ownProps.name].show,

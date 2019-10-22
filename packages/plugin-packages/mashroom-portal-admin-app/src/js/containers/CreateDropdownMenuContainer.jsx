@@ -9,19 +9,16 @@ import {setSelectedPageNew, setSelectedSiteNew} from '../store/actions';
 import type {ComponentType} from 'react';
 import type {Dispatch, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
-type StateProps = {
-}
-
-type DispatchProps = {
+type DispatchProps = {|
     showModal: (name: string) => void,
     initConfigureSite: () => void,
     initConfigurePage: () => void
-}
+|}
 
-const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => ({
+const mapStateToProps = (state: State, ownProps: OwnProps) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({

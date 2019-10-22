@@ -31,17 +31,17 @@ type OwnProps = {
     messageBus: DummyMessageBus,
 }
 
-type StateProps = {
+type StateProps = {|
     activePortalApp: ?ActivePortalApp,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setAvailablePortalApps: (Array<MashroomAvailablePortalApp>) => void,
     setSelectedPortalApp: (?SelectedPortalApp) => void,
     setActivePortalApp: (?ActivePortalApp) => void,
     setHostWidth: (string) => void,
     setAppLoadingError: (boolean) => void,
-}
+|}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
   return {

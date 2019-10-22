@@ -19,14 +19,14 @@ type OwnProps = {
     messageBus: MashroomPortalMessageBus,
 }
 
-type StateProps = {
+type StateProps = {|
     subscription: Subscription,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setSubscription: (subscription: Subscription) => void,
     addReceivedMessage: (message: ReceivedMessage) => void,
-}
+|}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
     return {

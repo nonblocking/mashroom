@@ -13,16 +13,13 @@ import type {Dispatch, State} from '../../../type-definitions';
 type OwnProps = {
 }
 
-type StateProps = {
-}
-
-type DispatchProps = {
+type DispatchProps = {|
     showModal: (name: string) => void,
     initConfigureSite: (siteId: string) => void,
     initConfigurePage: (pageId: string) => void
-}
+|}
 
-class ConfigureDropdownMenuContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+class ConfigureDropdownMenuContainer extends PureComponent<OwnProps & DispatchProps> {
 
     render() {
         return (
@@ -33,7 +30,7 @@ class ConfigureDropdownMenuContainer extends PureComponent<OwnProps & StateProps
     }
 }
 
-const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => ({
+const mapStateToProps = (state: State, ownProps: OwnProps) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({

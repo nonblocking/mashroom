@@ -12,19 +12,14 @@ type OwnProps = {
     onDragEnd: ?() => void,
 }
 
-type StateProps = {
+type StateProps = {|
     availableApps: AvailableApps,
-}
+|}
 
-type DispatchProps = {
-}
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
   return {
       availableApps: state.availableApps,
   };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
-});
-
-export default (connect(mapStateToProps, mapDispatchToProps)(AvailableAppsPanel): ComponentType<OwnProps>);
+export default (connect(mapStateToProps)(AvailableAppsPanel): ComponentType<OwnProps>);

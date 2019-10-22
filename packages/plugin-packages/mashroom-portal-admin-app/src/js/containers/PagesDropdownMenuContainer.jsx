@@ -13,14 +13,14 @@ import type {Dispatch, Pages, State} from '../../../type-definitions';
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     pages: Pages,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     showModal: (name: string) => void,
     initConfigurePage: (pageId: string) => void
-}
+|}
 
 class PagesDropdownMenuContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

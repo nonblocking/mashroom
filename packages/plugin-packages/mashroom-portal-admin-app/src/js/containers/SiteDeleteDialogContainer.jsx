@@ -12,14 +12,14 @@ import type {Dispatch, SelectedSite, Sites, State} from '../../../type-definitio
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     sites: Sites,
     selectedSite: ?SelectedSite
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setErrorUpdating: (boolean) => void
-}
+|}
 
 class SiteDeleteDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

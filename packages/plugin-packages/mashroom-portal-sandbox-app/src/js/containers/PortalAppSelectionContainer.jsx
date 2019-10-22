@@ -15,13 +15,10 @@ type OwnProps = {
     onSelectionChanged: (?string) => void,
 }
 
-type StateProps = {
+type StateProps = {|
     availablePortalApps: Array<MashroomAvailablePortalApp>,
     appLoadingError: boolean,
-}
-
-type DispatchProps = {
-}
+|}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
     return {
@@ -30,7 +27,4 @@ const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
-});
-
-export default (connect(mapStateToProps, mapDispatchToProps)(PortalAppSelection): ComponentType<OwnProps>);
+export default (connect(mapStateToProps)(PortalAppSelection): ComponentType<OwnProps>);

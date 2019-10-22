@@ -15,14 +15,14 @@ import type {
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     width: string,
     activePortalApp: ?ActivePortalApp,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setHostWidth: (string) => void,
-}
+|}
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => {
   return {

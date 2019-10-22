@@ -14,13 +14,13 @@ type OwnProps = {
     resetRef?: (() => void) => void,
 }
 
-type StateProps = {
+type StateProps = {|
     existingRoles: Array<string>
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setExistingRoles: (Array<string>) => void
-}
+|}
 
 class RoleInputContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

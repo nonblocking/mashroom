@@ -12,16 +12,16 @@ import type {Dispatch, SelectedPortalApp, State} from '../../../type-definitions
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     selectedPortalApp: ?SelectedPortalApp,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setLoading: (boolean) => void,
     setErrorLoading: (boolean) => void,
     setErrorUpdating: (boolean) => void,
     setPermittedRoles: (?Array<string>) => void
-}
+|}
 
 class PortalAppConfigureDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

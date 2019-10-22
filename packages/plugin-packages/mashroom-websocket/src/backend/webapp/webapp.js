@@ -4,24 +4,24 @@ import path from 'path';
 import express from 'express';
 import exphbs from 'express-handlebars';
 
-import type {$Request as Request, $Response as Response} from 'express';
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
-const app = express();
+const app = express<ExpressRequest, ExpressResponse>();
 
 app.engine('handlebars', exphbs({
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, '../../views'));
 
-app.get('/', (req: Request, res: Response) => {
+app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
     res.sendStatus(405);
 });
 
-app.get('/test', (req: Request, res: Response) => {
+app.get('/test', (req: ExpressRequest, res: ExpressResponse) => {
     res.render('test');
 });
 
-app.get('/test_client.js', (req: Request, res: Response) => {
+app.get('/test_client.js', (req: ExpressRequest, res: ExpressResponse) => {
     res.sendFile(path.resolve(__dirname, '../public/test_client.js'));
 });
 

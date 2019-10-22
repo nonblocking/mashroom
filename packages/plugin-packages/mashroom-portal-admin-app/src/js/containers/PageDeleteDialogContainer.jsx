@@ -12,14 +12,14 @@ import type {Dispatch, Pages, SelectedPage, State} from '../../../type-definitio
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     pages: Pages,
     selectedPage: ?SelectedPage
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setErrorUpdating: (boolean) => void
-}
+|}
 
 class PageDeleteDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

@@ -23,20 +23,20 @@ import type {Dispatch, Languages, SelectedSite, State} from '../../../type-defin
 type OwnProps = {
 }
 
-type StateProps = {
+type StateProps = {|
     selectedSite: ?SelectedSite,
     languages: Languages,
     availableThemes: Array<MashroomAvailablePortalTheme>,
     availableLayouts: Array<MashroomAvailablePortalLayout>,
-}
+|}
 
-type DispatchProps = {
+type DispatchProps = {|
     setLoading: (boolean) => void,
     setErrorLoading: (boolean) => void,
     setErrorUpdating: (boolean) => void,
     setSite: (MashroomPortalSite) => void,
     setPermittedRoles: (?Array<string>) => void
-}
+|}
 
 class PageConfigureDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
 

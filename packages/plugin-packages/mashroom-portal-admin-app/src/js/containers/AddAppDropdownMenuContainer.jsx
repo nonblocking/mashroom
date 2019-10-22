@@ -14,17 +14,11 @@ import type {Dispatch, State} from '../../../type-definitions';
 type OwnProps = {
 }
 
-type StateProps = {
-}
-
-type DispatchProps = {
-}
-
 type IntlProps = {
     intl: IntlShape
 }
 
-class AddAppDropdownMenuContainer extends PureComponent<IntlProps & OwnProps & StateProps & DispatchProps> {
+class AddAppDropdownMenuContainer extends PureComponent<IntlProps & OwnProps> {
 
     render() {
         return (
@@ -35,11 +29,8 @@ class AddAppDropdownMenuContainer extends PureComponent<IntlProps & OwnProps & S
     }
 }
 
-const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => ({
+const mapStateToProps = (state: State, ownProps: OwnProps) => ({
 });
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
 
-});
-
-export default (connect(mapStateToProps, mapDispatchToProps)(injectIntl(AddAppDropdownMenuContainer)): ComponentType<OwnProps>);
+export default (connect(mapStateToProps)(injectIntl(AddAppDropdownMenuContainer)): ComponentType<OwnProps>);

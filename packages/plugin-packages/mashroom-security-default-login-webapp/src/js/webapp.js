@@ -12,7 +12,7 @@ import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-def
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 
-const app = express();
+const app = express<ExpressRequest, ExpressResponse>();
 
 app.use(bodyParser.urlencoded({
     extended: true,
