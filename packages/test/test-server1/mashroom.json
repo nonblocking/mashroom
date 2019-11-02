@@ -7,7 +7,9 @@
     }],
     "indexPage": "/",
     "ignorePlugins": [
-        "Mashroom Messaging External Provider MQTT"
+        "Mashroom Messaging External Provider MQTT",
+        "Mashroom Session MongoDB Provider",
+        "Mashroom Session Redis Provider"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {

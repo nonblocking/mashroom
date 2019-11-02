@@ -60,9 +60,9 @@ has similar concepts than a Java Portal Server.
 | Authentication      | LDAP (Active Directory), JSON File                                                            |  Open ID Connect             |
 | Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          | 
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                            |                              |
-| Storage             | JSON Files                                                                                    |  mongoDB                     |  
+| Storage             | JSON Files                                                                                    |  MongoDB                     |  
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0)                                                                    |  STOMP (ActiveMQ, RabbitMQ)  |
-| Session Storage     | in Memory (no Cluster support), shared Filesystem                                             |  Redis, mongoDB              |
+| Session Storage     | in Memory (no Cluster support), shared Filesystem, Redis, MongoDB                             |                              |
 | Clustering          | yes (tested with PM2)                                                                         |                              |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only) |                              |
 | Mobile Browsers     | Chrome (latest), Safari (latest)                                                              |                              |
@@ -523,6 +523,10 @@ this in the _Mashroom_ config file:
 [mashroom-session](../../mashroom-session/README.md) [inc] 
 
 [mashroom-session-provider-filestore](../../mashroom-session-provider-filestore/README.md) [inc] 
+
+[mashroom-session-provider-redis](../../mashroom-session-provider-redis/README.md) [inc] 
+
+[mashroom-session-provider-mongodb](../../mashroom-session-provider-mongodb/README.md) [inc] 
 
 [mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc] 
 

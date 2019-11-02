@@ -3,6 +3,8 @@
 
 ## 1.2.0 (Next release)
 
+ * Added MongoDB session provider plugin
+ * Added Redis session provider plugin
  * Portal: Show a proper error if a configured Portal App on a page cannot be loaded (instead of showing nothing)
 
 ## 1.1.4

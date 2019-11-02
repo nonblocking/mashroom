@@ -1,5 +1,5 @@
-// flow-typed signature: 5c17cfda258a9db73cd2282d14ff18d0
-// flow-typed version: 2f514ea8dd/express_v4.x.x/flow_>=v0.104.x
+// flow-typed signature: 53fbc99af5ac2f0732fc7c8641f3e128
+// flow-typed version: 2f514ea8dd/express_v4.17.x/flow_>=v0.104.x
 
 declare type express$RouterOptions = {
   caseSensitive?: boolean,
@@ -13,7 +13,7 @@ declare class express$RequestResponseBase {
   get(field: string): string | void;
 }
 
-declare type express$RequestParams = { [param: string]: string, ... }
+declare type express$RequestParams = { [param: string]: string, ... };
 
 /*
   NOTE: Use caution when extending `express$Request` or `express$Response`. When
@@ -55,7 +55,7 @@ declare class express$Request extends http$IncomingMessage mixins express$Reques
   originalUrl: string;
   params: express$RequestParams;
   path: string;
-  protocol: 'https' | 'http';
+  protocol: "https" | "http";
   query: { [name: string]: string | Array<string>, ... };
   route: string;
   secure: boolean;
@@ -87,14 +87,17 @@ declare type express$CookieOptions = {
 
 declare type express$Path = string | RegExp;
 
-declare type express$RenderCallback = (err: Error | null, html?: string) => mixed;
+declare type express$RenderCallback = (
+  err: Error | null,
+  html?: string
+) => mixed;
 
 declare type express$SendFileOptions = {
   maxAge?: number,
   root?: string,
   lastModified?: boolean,
   headers?: { [name: string]: string, ... },
-  dotfiles?: 'allow' | 'deny' | 'ignore',
+  dotfiles?: "allow" | "deny" | "ignore",
   ...
 };
 
@@ -105,7 +108,11 @@ declare class express$Response extends http$ServerResponse mixins express$Reques
   attachment(filename?: string): this;
   cookie(name: string, value: string, options?: express$CookieOptions): this;
   clearCookie(name: string, options?: express$CookieOptions): this;
-  download(path: string, filename?: string, callback?: (err?: ?Error) => void): this;
+  download(
+    path: string,
+    filename?: string,
+    callback?: (err?: ?Error) => void
+  ): this;
   format(typesObject: { [type: string]: Function, ... }): this;
   json(body?: mixed): this;
   jsonp(body?: mixed): this;
@@ -113,13 +120,21 @@ declare class express$Response extends http$ServerResponse mixins express$Reques
   location(path: string): this;
   redirect(url: string, ...args: Array<void>): this;
   redirect(status: number, url: string, ...args: Array<void>): this;
-  render(view: string, locals?: { [name: string]: mixed, ... }, callback?: express$RenderCallback): this;
+  render(
+    view: string,
+    locals?: { [name: string]: mixed, ... },
+    callback?: express$RenderCallback
+  ): this;
   send(body?: mixed): this;
-  sendFile(path: string, options?: express$SendFileOptions, callback?: (err?: ?Error) => mixed): this;
+  sendFile(
+    path: string,
+    options?: express$SendFileOptions,
+    callback?: (err?: ?Error) => mixed
+  ): this;
   sendStatus(statusCode: number): this;
   header(field: string, value?: string): this;
   header(headers: { [name: string]: string, ... }): this;
-  set(field: string, value?: string|string[]): this;
+  set(field: string, value?: string | string[]): this;
   set(headers: { [name: string]: string, ... }): this;
   status(statusCode: number): this;
   type(type: string): this;
@@ -127,7 +142,7 @@ declare class express$Response extends http$ServerResponse mixins express$Reques
   req: express$Request;
 }
 
-declare type express$NextFunction = (err?: ?Error | 'route') => mixed;
+declare type express$NextFunction = (err?: ?Error | "route") => mixed;
 declare type express$Middleware<
   Req: express$Request = express$Request,
   Res: express$Response = express$Response,
@@ -199,7 +214,11 @@ declare class express$Router<
     ...middleware: Array<express$Middleware<Req, Res>>
   ): this;
   use(path: string, router: express$Router<Req, Res>): this;
-  handle(req: http$IncomingMessage<>, res: http$ServerResponse, next: express$NextFunction): void;
+  handle(
+    req: http$IncomingMessage<>,
+    res: http$ServerResponse,
+    next: express$NextFunction
+  ): void;
   param(
     param: string,
     callback: (
@@ -210,8 +229,20 @@ declare class express$Router<
       paramName: string,
     ) => mixed
   ): void;
-  (req: http$IncomingMessage<>, res: http$ServerResponse, next?: ?express$NextFunction): void;
+  (
+    req: http$IncomingMessage<>,
+    res: http$ServerResponse,
+    next?: ?express$NextFunction
+  ): void;
 }
+
+/*
+With flow-bin ^0.59, express app.listen() is deemed to return any and fails flow type coverage.
+Which is ironic because https://github.com/facebook/flow/blob/master/Changelog.md#misc-2 (release notes for 0.59)
+says "Improves typings for Node.js HTTP server listen() function."  See that?  IMPROVES!
+To work around this issue, we changed Server to ?Server here, so that our invocations of express.listen() will
+not be deemed to lack type coverage.
+*/
 
 declare class express$Application<
   Req: express$Request = express$Request,
@@ -220,8 +251,17 @@ declare class express$Application<
   constructor(): void;
   locals: { [name: string]: mixed, ... };
   mountpath: string;
-  listen(port: number, hostname?: string, backlog?: number, callback?: (err?: ?Error) => mixed): ?http$Server;
-  listen(port: number, hostname?: string, callback?: (err?: ?Error) => mixed): ?http$Server;
+  listen(
+    port: number,
+    hostname?: string,
+    backlog?: number,
+    callback?: (err?: ?Error) => mixed
+  ): ?http$Server;
+  listen(
+    port: number,
+    hostname?: string,
+    callback?: (err?: ?Error) => mixed
+  ): ?http$Server;
   listen(port: number, callback?: (err?: ?Error) => mixed): ?http$Server;
   listen(path: string, callback?: (err?: ?Error) => mixed): ?http$Server;
   listen(handle: Object, callback?: (err?: ?Error) => mixed): ?http$Server;
@@ -235,13 +275,55 @@ declare class express$Application<
    */
   //   get(name: string): mixed;
   set(name: string, value: mixed): mixed;
-  render(name: string, optionsOrFunction: { [name: string]: mixed, ... }, callback: express$RenderCallback): void;
-  handle(req: http$IncomingMessage<>, res: http$ServerResponse, next?: ?express$NextFunction): void;
+  render(
+    name: string,
+    optionsOrFunction: { [name: string]: mixed, ... },
+    callback: express$RenderCallback
+  ): void;
+  handle(
+    req: http$IncomingMessage<>,
+    res: http$ServerResponse,
+    next?: ?express$NextFunction
+  ): void;
   // callable signature is not inherited
-  (req: http$IncomingMessage<>, res: http$ServerResponse, next?: ?express$NextFunction): void;
+  (
+    req: http$IncomingMessage<>,
+    res: http$ServerResponse,
+    next?: ?express$NextFunction
+  ): void;
 }
 
-declare module 'express' {
+declare type JsonOptions = {
+  inflate?: boolean,
+  limit?: string | number,
+  reviver?: (key: string, value: mixed) => mixed,
+  strict?: boolean,
+  type?: string | Array<string> | ((req: express$Request) => boolean),
+  verify?: (
+    req: express$Request,
+    res: express$Response,
+    buf: Buffer,
+    encoding: string
+  ) => mixed,
+  ...
+};
+
+declare type express$UrlEncodedOptions = {
+  extended?: boolean,
+  inflate?: boolean,
+  limit?: string | number,
+  parameterLimit?: number,
+  type?: string | Array<string> | ((req: express$Request) => boolean),
+  verify?: (
+    req: express$Request,
+    res: express$Response,
+    buf: Buffer,
+    encoding: string
+  ) => mixed,
+  ...
+}
+
+declare module "express" {
   declare export type RouterOptions = express$RouterOptions;
   declare export type CookieOptions = express$CookieOptions;
   declare export type Middleware<
@@ -260,10 +342,12 @@ declare module 'express' {
   declare module.exports: {
     // If you try to call like a function, it will use this signature
     <Req: express$Request, Res: express$Response>(): express$Application<Req, Res>,
+    json: (opts: ?JsonOptions) => express$Middleware<>,
     // `static` property on the function
     static: <Req: express$Request, Res: express$Response>(root: string, options?: Object) => express$Middleware<Req, Res>,
     // `Router` property on the function
     Router: typeof express$Router,
+    urlencoded: (opts: ?express$UrlEncodedOptions) => express$Middleware<>,
     ...
   };
 }

@@ -6,6 +6,7 @@ import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroo
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.filestore');
+    logger.info('Using file store options:', pluginConfig);
     const options = Object.assign({}, pluginConfig, {
         logFn: () => logger.info
     });

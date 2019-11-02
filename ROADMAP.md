@@ -4,8 +4,6 @@
 ## Version 1.2
 
  * Portal: Declaration and loading of global (shared) portal app resources 
- * Redis session provider plugin
- * mongoDB session provider plugin
  
 ## Version 1.3
 
