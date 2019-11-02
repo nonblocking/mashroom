@@ -1,7 +1,7 @@
 
 # Change Log
 
-## 1.2.0
+## 1.2.0 (Next release)
 
  * Portal: Show a proper error if a configured Portal App on a page cannot be loaded (instead of showing nothing)
 
