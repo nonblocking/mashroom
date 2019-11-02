@@ -31,18 +31,26 @@ Interface:
   * Mashroom plugin service
   */
  export interface MashroomPluginService {
-     /**
-      * The currently known plugin loaders
-      */
-     getPluginLoaders(): MashroomPluginLoaderMap;
-     /**
-      * Get all currently known plugins
-      */
-     getPlugins(): Array<MashroomPlugin>;
-     /**
-      * Get all currently known plugin packages
-      */
-     getPluginPackages(): Array<MashroomPluginPackage>;
+    /**
+     * The currently known plugin loaders
+     */
+    getPluginLoaders(): MashroomPluginLoaderMap;
+    /**
+     * Get all currently known plugins
+     */
+    getPlugins(): Array<MashroomPlugin>;
+    /**
+     * Get all currently known plugin packages
+     */
+    getPluginPackages(): Array<MashroomPluginPackage>;
+    /**
+     * Register for the next loaded event of given plugin (fired AFTER the plugin has been loaded).
+     */
+    onLoadedOnce(pluginName: string, listener: () => void): void;
+    /**
+     * Register for the next unload event of given plugin (fired BEFORE the plugin is going to be unloaded).
+     */
+    onUnloadOnce(pluginName: string, listener: () => void): void;
  }   
 ```
 
@@ -180,11 +188,10 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
 export default bootstrap;
 ```
 
-** Additional handlers **
+*Additional handlers*
 
-It is possible to return handlers in the bootstrap as well. Currently there a two additional handlers:
+It is also possible to return handlers in the bootstrap. Currently there is only one:
  * _upgradeHandler_: Handle HTTP Upgrades (e.g. upgrade to WebSocket)
- * _onUnload_: Called when the webapp is unloaded or reloaded
  
 Example: 
 
@@ -195,9 +202,6 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
         upgradeHandler: (request: HttpServerRequest, socket: net$Socket, head: Buffer) => {
             // TODO
         },
-        onUnload: () => {
-            // TODO
-        }    
     };
 };
 

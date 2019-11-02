@@ -7,7 +7,7 @@ This plugin adds a LDAP security provider.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-ldap** as *dependency*.
 
 To activate this provider configure the _Mashroom Security_ plugin like this:
 

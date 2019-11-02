@@ -7,7 +7,7 @@ Contains a demo Express web-app plugin.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-demo-webapp** as *dependency*.
 
 After that the webapp will be available at _/demo/webapp_
 

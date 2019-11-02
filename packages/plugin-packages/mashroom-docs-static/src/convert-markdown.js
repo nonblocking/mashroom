@@ -52,7 +52,10 @@ async function main() {
         printBackground: true,
         displayHeaderFooter: true,
         footerTemplate: `
-          <div style="font-size: 8px;margin: 0 auto;">Mashroom Server ${serverPackageJson.version} Documentation</div>
+            <div style="width: 85%;margin: 0 auto; display: flex;">
+                  <div style="font-size: 8px;flex-grow: 2">Mashroom Server ${serverPackageJson.version}</div>
+                  <div style="font-size: 8px;">Page <span class="pageNumber">1</span>/<span class="totalPages">2</span></div>
+            </div>
         `,
         margin: {
             left: '10px',

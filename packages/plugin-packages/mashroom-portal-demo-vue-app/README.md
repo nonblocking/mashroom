@@ -7,5 +7,6 @@ Adds a demo portal app (SPA) based on Vue to the _Mashroom Portal_.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-demo-vue-app** as *dependency*.
 
+Then you can place it on any page via Admin UI.

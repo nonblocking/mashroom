@@ -8,7 +8,7 @@ This enables cluster support and also allows communication with 3rd party system
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging-external-provider-mqtt** as *dependency*.
 
 To activate this provider configure the _Mashroom Messaging_ plugin like this:
 

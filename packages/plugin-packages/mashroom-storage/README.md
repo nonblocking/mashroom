@@ -7,7 +7,7 @@ This plugin adds a storage service.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-storage** as *dependency*.
 
 Then use the security service like this:
 

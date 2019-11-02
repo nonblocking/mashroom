@@ -11,7 +11,7 @@ Optionally it supports sending and receiving messages via WebSocket (Requires _m
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging** as *dependency*.
 
 And you can use the messaging service like this:
 

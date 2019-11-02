@@ -9,7 +9,7 @@ You can also pass the desired portal app and configuration via query parameter w
 
 #### Usage
 
-* If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+* If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-sandbox-app** as *dependency*.
 * Add the _Mashroom Sandbox App_ app on an empty page
 * Select the app you want to run within the sandbox
 

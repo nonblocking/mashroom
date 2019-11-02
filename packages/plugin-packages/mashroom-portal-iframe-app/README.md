@@ -7,7 +7,7 @@ Adds a (responsive) iFrame portal app to the _Mashroom Portal_.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-iframe-app** as *dependency*.
 
 After placing it on a page use the Admin UI to set the following properties:
 

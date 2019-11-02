@@ -7,7 +7,7 @@ Adds a portal app that turns the app area it is placed in automatically into a t
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-tabify-app** as *dependency*.
 
 After placing it on a page use the Admin UI to set the following properties:
 

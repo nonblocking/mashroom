@@ -8,7 +8,7 @@ _mashroom-messaging_ and _mashroom-websocket_ plugins to be installed.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-demo-remote-messaging** as *dependency*.
 
 After adding the app to a page you can send a message to another user (or another browser tab)
 by using the (remote) topic _user/<other_username>/<something>_. 

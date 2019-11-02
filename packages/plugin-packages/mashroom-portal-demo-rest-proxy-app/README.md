@@ -8,5 +8,6 @@ It also shows how a SPA can be internationalized with _react-intl_.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-demo-rest-proxy-app** as *dependency*.
 
+Then you can place it on any page via Admin UI.

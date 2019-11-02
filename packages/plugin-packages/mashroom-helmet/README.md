@@ -8,7 +8,7 @@ on each response.
 
 #### Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add this package as _dependency_.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-helmet** as *dependency*.
 
 You can override the default config in your Mashroom config file like this:
 
