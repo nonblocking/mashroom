@@ -35,7 +35,7 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Portal Demo Angular App2",
+                "name": "Mashroom Portal Demo Angular App",
                 "title": "Demo Angular App",
                 "type": "portal-app",
                 "bootstrap": "startAngularDemoApp",
