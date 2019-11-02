@@ -6,7 +6,6 @@ import type {
     MashroomPortalApp,
     MashroomPortalAppUserPermissions,
     MashroomPortalRolePermissions,
-    MashroomPortalService
 } from '../../../type-definitions';
 
 export const isAdmin = (req: ExpressRequest) => {
@@ -44,7 +43,7 @@ export const getPortalAppResourceKey = (pluginName: string, instanceId: ?string)
     return `${pluginName}_${instanceId || 'global'}`;
 };
 
-export const isAppPermitted = async (req: ExpressRequest, portalApp: MashroomPortalApp, instanceId: ?string) => {
+export const isAppPermitted = async (req: ExpressRequest, pluginName: string, portalAppInstanceId: ?string, existingPortalApp: ?MashroomPortalApp) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const logger = req.pluginContext.loggerFactory('portal');
 
@@ -52,15 +51,18 @@ export const isAppPermitted = async (req: ExpressRequest, portalApp: MashroomPor
         return true;
     }
 
-    logger.debug(`Checking permission for app ${portalApp.name} and instance: ${instanceId || 'global'}`);
-    if (instanceId) {
-        return await securityService.checkResourcePermission(req, 'Portal-App', getPortalAppResourceKey(portalApp.name, instanceId), 'View', true);
+    logger.debug(`Checking permission for app ${pluginName} and instance: ${pluginName || 'global'}`);
+    if (portalAppInstanceId) {
+        return await securityService.checkResourcePermission(req, 'Portal-App', getPortalAppResourceKey(pluginName, portalAppInstanceId), 'View', true);
     }
 
     // Dynamically loaded app without an instanceId
+    if (!existingPortalApp) {
+        return false;
+    }
     const user = securityService.getUser(req);
-    if (portalApp.defaultRestrictViewToRoles && Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
-        return portalApp.defaultRestrictViewToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
+    if (existingPortalApp.defaultRestrictViewToRoles && Array.isArray(existingPortalApp.defaultRestrictViewToRoles) && existingPortalApp.defaultRestrictViewToRoles.length > 0) {
+        return existingPortalApp.defaultRestrictViewToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
     }
 
     return true;

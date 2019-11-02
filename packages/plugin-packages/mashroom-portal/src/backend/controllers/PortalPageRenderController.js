@@ -297,20 +297,18 @@ export default class PortalPageRenderController {
                 if (areaId && page.portalApps.hasOwnProperty(areaId)) {
                     for (const portalAppInstance of page.portalApps[areaId]) {
                         const portalApp = this._getPortalApp(portalAppInstance.pluginName);
-                        if (portalApp) {
-                            if (!await isAppPermitted(req, portalApp, portalAppInstance.instanceId)) {
-                                continue;
-                            }
+                        if (!await isAppPermitted(req, portalAppInstance.pluginName, portalAppInstance.instanceId, portalApp)) {
+                            continue;
+                        }
 
-                            if (portalAppInstance.instanceId) {
-                                loadStatements.push(
-                                    `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${portalAppInstance.instanceId}', null, null);`
-                                );
-                            } else {
-                                loadStatements.push(
-                                    `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', null, null, null);`
-                                );
-                            }
+                        if (portalAppInstance.instanceId) {
+                            loadStatements.push(
+                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${portalAppInstance.instanceId}', null, null);`
+                            );
+                        } else {
+                            loadStatements.push(
+                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', null, null, null);`
+                            );
                         }
                     }
                 }

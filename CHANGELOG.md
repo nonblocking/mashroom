@@ -1,6 +1,10 @@
 
 # Change Log
 
+## 1.2.0
+
+ * Portal: Show a proper error if a configured Portal App on a page cannot be loaded (instead of showing nothing)
+
 ## 1.1.4
 
  * Core: Logger instances created via _req.pluginContext.loggerFactory('category')_ share now the context with all other loggers created 

@@ -62,7 +62,7 @@ export default class PortalAppController {
                 res.sendStatus(404);
                 return;
             }
-            if (!await isAppPermitted(req, portalApp, portalAppInstanceId)) {
+            if (!await isAppPermitted(req, pluginName, portalAppInstanceId, portalApp)) {
                 res.sendStatus(403);
                 return;
             }
