@@ -13,19 +13,19 @@
     "dependencies": {
         "express": "^4.17.1",
         "express-handlebars": "^3.1.0",
-        "handlebars": "^4.3.1",
-        "ws": "^7.1.2"
+        "handlebars": "^4.5.1",
+        "ws": "^7.2.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.6.0",
-        "@mashroom/mashroom": "1.1.4",
-        "@mashroom/mashroom-security": "1.1.4",
-        "@mashroom/mashroom-utils": "1.1.4",
-        "eslint": "^6.4.0",
+        "@babel/cli": "^7.6.4",
+        "@mashroom/mashroom": "^1.1.4",
+        "@mashroom/mashroom-security": "^1.1.4",
+        "@mashroom/mashroom-utils": "^1.1.4",
+        "eslint": "^6.6.0",
         "jest": "^24.9.0",
-        "nodemon": "^1.19.2",
-        "webpack": "^4.39.3",
-        "webpack-cli": "^3.3.8"
+        "nodemon": "^1.19.4",
+        "webpack": "^4.41.2",
+        "webpack-cli": "^3.3.10"
     },
     "jest": {
         "verbose": true,

@@ -3,8 +3,8 @@
     "version": "1.1.4",
     "private": true,
     "devDependencies": {
-        "@babel/cli": "^7.6.0",
-        "nodemon": "^1.19.2"
+        "@babel/cli": "^7.6.4",
+        "nodemon": "^1.19.4"
     },
     "scripts": {
         "dev": "nodemon --watch ../../core/mashroom/src --exec \"npm run --prefix ../../core/mashroom build && npm run start\"",

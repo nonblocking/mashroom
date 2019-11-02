@@ -9,21 +9,21 @@
         "dist/**"
     ],
     "devDependencies": {
-        "@angular-devkit/build-angular": "^0.803.3",
-        "@angular/cli": "^8.3.3",
-        "@angular/common": "^8.2.5",
-        "@angular/compiler": "^8.2.5",
-        "@angular/compiler-cli": "^8.2.5",
-        "@angular/core": "^8.2.5",
-        "@angular/forms": "^8.2.5",
+        "@angular-devkit/build-angular": "^0.803.17",
+        "@angular/cli": "^8.3.17",
+        "@angular/common": "^8.2.13",
+        "@angular/compiler": "^8.2.13",
+        "@angular/compiler-cli": "^8.2.13",
+        "@angular/core": "^8.2.13",
+        "@angular/forms": "^8.2.13",
         "@angular/http": "^7.2.15",
-        "@angular/language-service": "^8.2.5",
-        "@angular/platform-browser": "^8.2.5",
-        "@angular/platform-browser-dynamic": "^8.2.5",
-        "core-js": "^3.2.1",
+        "@angular/language-service": "^8.2.13",
+        "@angular/platform-browser": "^8.2.13",
+        "@angular/platform-browser-dynamic": "^8.2.13",
+        "core-js": "^3.3.6",
         "rxjs": "^6.5.3",
-        "tslint": "^5.19.0",
-        "typescript": "3.4.5",
+        "tslint": "^5.20.0",
+        "typescript": "3.5.3",
         "zone.js": "^0.10.2"
     },
     "scripts": {
@@ -35,7 +35,7 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Portal Demo Angular App",
+                "name": "Mashroom Portal Demo Angular App2",
                 "title": "Demo Angular App",
                 "type": "portal-app",
                 "bootstrap": "startAngularDemoApp",

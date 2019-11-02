@@ -13,12 +13,12 @@
         "request": "^2.88.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.6.0",
-        "@mashroom/mashroom": "1.1.4",
-        "@mashroom/mashroom-utils": "1.1.4",
-        "eslint": "^6.4.0",
+        "@babel/cli": "^7.6.4",
+        "@mashroom/mashroom": "^1.1.4",
+        "@mashroom/mashroom-utils": "^1.1.4",
+        "eslint": "^6.6.0",
         "jest": "^24.9.0",
-        "nock": "^11.3.3"
+        "nock": "^11.7.0"
     },
     "jest": {
         "verbose": true,

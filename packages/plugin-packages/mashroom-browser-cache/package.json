@@ -10,11 +10,11 @@
         "type-definitions/*"
     ],
     "devDependencies": {
-        "@babel/cli": "^7.6.0",
+        "@babel/cli": "^7.6.4",
         "@mashroom/mashroom": "1.1.4",
         "@mashroom/mashroom-security": "1.1.4",
         "@mashroom/mashroom-utils": "1.1.4",
-        "eslint": "^6.4.0",
+        "eslint": "^6.6.0",
         "jest": "^24.9.0"
     },
     "jest": {

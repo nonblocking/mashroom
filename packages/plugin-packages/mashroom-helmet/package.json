@@ -9,12 +9,12 @@
         "dist/**"
     ],
     "dependencies": {
-        "helmet": "^3.21.1"
+        "helmet": "^3.21.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.6.0",
-        "@mashroom/mashroom": "1.1.4",
-        "eslint": "^6.4.0",
+        "@babel/cli": "^7.6.4",
+        "@mashroom/mashroom": "^1.1.4",
+        "eslint": "^6.6.0",
         "express": "^4.17.1"
     },
     "scripts": {
