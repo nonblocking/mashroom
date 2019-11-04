@@ -10,7 +10,19 @@ Actually this is just a wrapper for the [session-file-store](https://github.com/
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-filestore** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+Activate this session provider in your Mashroom config file like this:
+
+```json
+{
+  "plugins": {
+        "Mashroom Session Middleware": {
+            "provider": "Mashroom Session Filestore Provider"
+        }
+    }
+}
+```
+
+And to change the default config of this plugin add:
 
 ```json
 {

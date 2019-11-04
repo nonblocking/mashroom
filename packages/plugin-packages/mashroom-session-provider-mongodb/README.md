@@ -10,7 +10,19 @@ Actually this is just a wrapper for the [connect-mongodb-session](https://github
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-mongodb** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+Activate this session provider in your Mashroom config file like this:
+
+```json
+{
+  "plugins": {
+        "Mashroom Session Middleware": {
+            "provider": "Mashroom Session MongoDB Provider"
+        }
+    }
+}
+```
+
+And to change the default config of this plugin add:
 
 ```json
 {
