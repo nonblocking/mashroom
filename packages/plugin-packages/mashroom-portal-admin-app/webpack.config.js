@@ -92,7 +92,8 @@ module.exports = (env, argv) => {
                 'react-is': path.resolve(__dirname, 'node_modules/react-is'),
                 'hoist-non-react-statics': path.resolve(__dirname, 'node_modules/hoist-non-react-statics'),
                 'object-assign': path.resolve(__dirname, 'node_modules/object-assign'),
-                '@mashroom/mashroom-portal-ui-commons': path.resolve(__dirname, 'node_modules/@mashroom/mashroom-portal-ui-commons'),
+                // Allow treeshaking of lodash modules
+                'lodash': path.resolve(__dirname, 'node_modules/lodash-es'),
             },
         },
         plugins: [
