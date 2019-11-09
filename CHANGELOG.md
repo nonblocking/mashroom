@@ -3,6 +3,8 @@
 
 ## 1.2.0 (Next release)
 
+ * Portal: A remote Portal App which is not reachable for a long time is now unregistered instead of complete removed from the 
+   list of remote Apps
  * Added MongoDB session provider plugin
  * Added Redis session provider plugin
  * Portal: Show a proper error if a configured Portal App on a page cannot be loaded (instead of showing nothing)

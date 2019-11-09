@@ -57,8 +57,8 @@
                 "defaultConfig": {
                     "path": "/portal-remote-app-registry",
                     "remotePortalAppUrls": "./remote-portal-apps.json",
-                    "registrationRefreshIntervalSec": 3600,
-                    "removeAfterNumberOrRetries": 100
+                    "checkIntervalSec": 30,
+                    "registrationRefreshIntervalSec": 3600
                 }
             },
             {

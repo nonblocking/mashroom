@@ -56,16 +56,16 @@ You can override the default config in your Mashroom config file like this:
         "Mashroom Portal Remote App Registry Webapp": {
             "path": "/portal-remote-app-registry",
             "remotePortalAppUrls": "./remote-portal-apps.json",
-            "registrationRefreshIntervalSec": 600,
-            "removeAfterNumberOrRetries": 10
+            "checkIntervalSec": 30,
+            "registrationRefreshIntervalSec": 3600
         }
     }
 }
 ```
  * _path_: Path of the Admin UI and the REST API (Default: /portal-remote-app-registry)
  * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (Default: ./remote-portal-apps.json)
+ * _checkIntervalSec_: The interval to check new or invalid registrations
  * _registrationRefreshIntervalSec_: Scan interval (Default: 3600)
- * _removeAfterNumberOrRetries_: Remove remote URL after a number of retries (Default: 100)
  
 The config file contains just an array of URL's:
 

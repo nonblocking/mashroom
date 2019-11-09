@@ -15,10 +15,10 @@ import type {
 import type {MashroomPortalRemoteAppEndpointService} from '../../../type-definitions';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => {
-    const { remotePortalAppUrls, registrationRefreshIntervalSec, removeAfterNumberOrRetries } = pluginConfig;
+    const { remotePortalAppUrls, checkIntervalSec, registrationRefreshIntervalSec } = pluginConfig;
     const pluginContext = contextHolder.getPluginContext();
 
-    const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(registrationRefreshIntervalSec, removeAfterNumberOrRetries, contextHolder);
+    const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(checkIntervalSec, registrationRefreshIntervalSec, contextHolder);
     registerBackgroundJobHolder.backgroundJob = registerBackgroundJob;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = contextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
 

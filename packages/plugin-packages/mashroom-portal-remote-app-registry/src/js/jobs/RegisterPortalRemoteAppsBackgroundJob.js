@@ -18,19 +18,17 @@ import type {
     RemotePortalAppEndpoint
 } from '../../../type-definitions';
 
-const RUN_INTERVAL_MS = 30 * 1000; // 30 sec
-
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
+    _checkIntervalSec: number;
     _registrationRefreshIntervalSec: number;
-    _removeAfterNumberOrRetries: number;
     _pluginContextHolder: MashroomPluginContextHolder;
     _logger: MashroomLogger;
     _timeout: ?TimeoutID;
 
-    constructor(registrationRefreshIntervalSec: number, removeAfterNumberOrRetries: number, pluginContextHolder: MashroomPluginContextHolder) {
+    constructor(checkIntervalSec: number, registrationRefreshIntervalSec: number, pluginContextHolder: MashroomPluginContextHolder) {
+        this._checkIntervalSec = checkIntervalSec;
         this._registrationRefreshIntervalSec = registrationRefreshIntervalSec;
-        this._removeAfterNumberOrRetries = removeAfterNumberOrRetries;
         this._pluginContextHolder = pluginContextHolder;
         this._logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.remoteAppRegistry');
         this._timeout = null;
@@ -63,7 +61,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         if (this._timeout) {
             clearTimeout(this._timeout);
         }
-        this._timeout = setTimeout(() => this._processInBackground(), RUN_INTERVAL_MS);
+        this._timeout = setTimeout(() => this._processInBackground(), this._checkIntervalSec * 1000);
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint) {
@@ -77,15 +75,14 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                 registry.registerRemotePortalApp(portalApp)
             });
         } else {
-            this._logger.error(`Registering apps for remote portal apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries} of ${this._removeAfterNumberOrRetries}`);
+            this._logger.error(`Registering apps for remote portal apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
+            remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
+                this._logger.info('Unregister remote portal app:', {portalApp});
+                registry.unregisterRemotePortalApp(portalApp.name)
+            });
         }
 
-        if (updatedEndpoint.lastError && updatedEndpoint.retries >= this._removeAfterNumberOrRetries) {
-            this._logger.warn(`Removing remote portal app endpoint after ${updatedEndpoint.retries} retries: ${remotePortalAppEndpoint.url}`);
-            await portalRemoteAppEndpointService.unregisterRemoteAppUrl(remotePortalAppEndpoint.url);
-        } else {
-            await portalRemoteAppEndpointService.updateRemotePortalAppEndpoint(updatedEndpoint);
-        }
+        await portalRemoteAppEndpointService.updateRemotePortalAppEndpoint(updatedEndpoint);
     }
 
     async fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint) {
@@ -130,7 +127,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
 
-        const mergedPortalApps = portalApps.map((portalApp) => {
+        return portalApps.map((portalApp) => {
            const existingApp = remotePortalAppEndpoint.portalApps.find((existingApp) => existingApp.name === portalApp.name);
            if (existingApp && existingApp.version === portalApp.version) {
                // Keep reload timestamp for browser caching
@@ -141,8 +138,6 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
            return portalApp;
         });
-
-        return mergedPortalApps;
     }
 
     _mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
