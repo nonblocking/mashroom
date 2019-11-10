@@ -239,7 +239,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     const packageJson = JSON.parse(body);
                     resolve(packageJson);
                 } catch (parseError) {
-                    reject(parseError);
+                    reject(new Error('Parsing /package.json failed! Did you forget to expose it? \n' + parseError.message));
                 }
             });
         });
