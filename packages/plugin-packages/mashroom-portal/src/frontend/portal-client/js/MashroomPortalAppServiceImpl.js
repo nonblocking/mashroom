@@ -400,10 +400,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     (lifecycleMethods: void | MashroomPortalAppLifecycleHooks) => {
                         console.info(`App successfully loaded: ${pluginName}`);
                         return lifecycleMethods;
-                    },
-                    (error) => {
-                        handleError(error);
-                        return Promise.reject(error);
                     }
                 ).catch((error) => {
                     handleError(error);

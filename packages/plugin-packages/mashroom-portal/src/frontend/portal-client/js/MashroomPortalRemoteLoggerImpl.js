@@ -43,9 +43,10 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
         }
     }
 
-    _log(level: LogLevel, message: string, error?: Error, portalAppName: ?string) {
+    _log(level: LogLevel, message: string, error?: Error | string, portalAppName: ?string) {
         if (error) {
-            message = message + '\n' + this._serializeError(error);
+            const serializedError = typeof (error) === 'string' ? error : this._serializeError(error);
+            message = message + '\n' + serializedError;
         }
 
         const logMessage: ClientLogMessage = {
