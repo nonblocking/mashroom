@@ -46,15 +46,14 @@ export default class RestServiceFetchImpl implements MashroomRestService {
             if (method !== 'GET') {
                 const metaCsrfToken = document.querySelector('meta[name="csrf-token"]');
                 if (metaCsrfToken) {
-                    const token = metaCsrfToken.getAttribute('content');
-                    headers['X-CSRF-Token'] = token;
+                    headers['X-CSRF-Token'] = metaCsrfToken.getAttribute('content');
                 }
             }
 
             const config: any = {
                 method,
                 headers,
-                credentials: 'include',
+                credentials: 'same-origin',
             };
 
             if (jsonData) {
@@ -96,8 +95,6 @@ export default class RestServiceFetchImpl implements MashroomRestService {
             });
         });
     }
-
-    // TODO: improve error handling
 
     _createError(status: number, message: string): Error {
         return new Error(`HTTP ${status}: ${message}`);
