@@ -20,7 +20,7 @@ type State = {
 
 const APPS = [
     'Mashroom Portal Demo React App',
-    'Mashroom Portal Demo Angular App'
+    'Mashroom Portal Demo Vue App'
 ];
 
 export default class App extends PureComponent<Props, State> {
