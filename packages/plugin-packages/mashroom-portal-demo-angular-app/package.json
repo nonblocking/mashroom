@@ -20,6 +20,7 @@
         "@angular/language-service": "^8.2.13",
         "@angular/platform-browser": "^8.2.13",
         "@angular/platform-browser-dynamic": "^8.2.13",
+        "@types/node": "^8.10.59",
         "core-js": "^3.3.6",
         "rxjs": "^6.5.3",
         "tslint": "^5.20.0",
