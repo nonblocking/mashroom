@@ -38,6 +38,9 @@ const bootstrap = (hostElement: HTMLElement, portalAppSetup: PortalAppSetup, por
     ];
 
     return platformBrowserDynamic().bootstrapModule(DynamicAppModule, {
+        /*
+         * Disable zone.js because it would be installed globally and Microfrontends shouldn't do that
+         */
         ngZone: 'noop',
     }).then(
         (module) => {
