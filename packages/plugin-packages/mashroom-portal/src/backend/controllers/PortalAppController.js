@@ -8,7 +8,7 @@ const getUri = promisify(getUriCbStyle);
 
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
-    PORTAL_APP_RESOURCES_GLOBAL_PATH,
+    PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_PRIVATE_PATH
 } from '../constants';
@@ -85,7 +85,7 @@ export default class PortalAppController {
 
             const encodedPortalAppName = encodeURIComponent(portalApp.name);
             const resourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
-            const globalResourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_GLOBAL_PATH}`;
+            const sharedResourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
             const restProxyBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
             const restProxyPaths = {};
             if (portalApp.restProxies) {
@@ -108,8 +108,9 @@ export default class PortalAppController {
                 instanceId: portalAppInstance.instanceId,
                 lastReloadTs: portalApp.lastReloadTs,
                 restProxyPaths,
+                sharedResourcesBasePath,
+                sharedResources: portalApp.sharedResources,
                 resourcesBasePath,
-                globalResourcesBasePath,
                 resources: portalApp.resources,
                 globalLaunchFunction: portalApp.globalLaunchFunction,
                 lang,
@@ -129,53 +130,51 @@ export default class PortalAppController {
 
     async getPortalAppResource(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
-        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
 
-        try {
-            const pluginName = req.params.pluginName;
-            const resourcePath = req.params['0'];
-            const fileName = resourcePath.split('/').pop();
+        const pluginName = req.params.pluginName;
+        const resourcePath = req.params['0'];
 
-            const portalApp = this._getPortalApp(pluginName);
-            if (!portalApp) {
-                logger.warn(`Portal app not found: ${pluginName}`);
-                res.sendStatus(404);
-                return;
-            }
-
-            logger.addContext(portalAppContext(portalApp));
-
-            if (cacheControlService) {
-                await cacheControlService.addCacheControlHeader(req, res);
-            }
-
-            const resourceUri = portalApp.resourcesRootUri + '/' + resourcePath;
-            logger.debug(`Sending app resource: ${resourceUri}`);
-
-            try {
-                const rs: ReadStream = await getUri(resourceUri);
-                res.type(fileName);
-                rs.pipe(res);
-            } catch (err) {
-                logger.error(`Cannot load app resource: ${resourceUri}`, err);
-                if (cacheControlService) {
-                    cacheControlService.removeCacheControlHeader(res);
-                }
-                res.sendStatus(500);
-            }
-        } catch (e) {
-            logger.error(e);
-            if (cacheControlService) {
-                cacheControlService.removeCacheControlHeader(res);
-            }
-            res.sendStatus(500);
+        const portalApp = this._getPortalApp(pluginName);
+        if (!portalApp) {
+            logger.warn(`Portal app not found: ${pluginName}`);
+            res.sendStatus(404);
+            return;
         }
+
+        logger.addContext(portalAppContext(portalApp));
+
+        await this._sendResource(resourcePath, portalApp, req, res);
     }
 
-    async getGlobalPortalAppResource(req: ExpressRequest, res: ExpressResponse) {
+    async getSharedPortalAppResource(req: ExpressRequest, res: ExpressResponse) {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
 
-        // TODO
-        res.sendStatus(501);
+        const typeAndResourcePath = req.params['0'];
+        const parts = typeAndResourcePath.split('/');
+        if (parts.length < 2 || ['js', 'css'].indexOf(parts[0]) === -1) {
+            logger.error('Invalid shared resource: ', typeAndResourcePath);
+            res.sendStatus(404);
+            return;
+        }
+
+        const resourceType = parts[0];
+        const resourcePath = parts.slice(1).join('/');
+
+        // Find portal apps that provide the shared resource
+        const portalApps = this.pluginRegistry.portalApps.filter((portalApp) =>
+            portalApp.sharedResources && portalApp.sharedResources[resourceType] && portalApp.sharedResources[resourceType].find((js) => js === resourcePath));
+
+        let sent = false;
+        while (portalApps.length > 0 && !sent) {
+            const portalApp = portalApps.pop();
+            logger.debug(`Take the shared resource ${resourcePath} from portal app: ${portalApp.name}`);
+            sent = await this._sendResource(resourcePath, portalApp, req, res);
+        }
+
+        if (!sent) {
+            logger.error('Shared resource not found: ', resourcePath);
+            res.sendStatus(404);
+        }
     }
 
     getAvailablePortalApps(req: ExpressRequest, res: ExpressResponse) {
@@ -243,6 +242,37 @@ export default class PortalAppController {
         };
 
         return globalAppInstance;
+    }
+
+    async _sendResource(resourcePath: string, portalApp: MashroomPortalApp, req: ExpressRequest, res: ExpressResponse): Promise<boolean> {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
+
+        if (cacheControlService) {
+            await cacheControlService.addCacheControlHeader(req, res);
+        }
+
+        const resourceUri = portalApp.resourcesRootUri + '/' + resourcePath;
+        logger.debug(`Sending portal app resource: ${resourceUri}`);
+
+        try {
+            const fileName = resourcePath.split('/').pop();
+
+            const rs: ReadStream = await getUri(resourceUri);
+            res.type(fileName);
+            rs.pipe(res);
+
+            return true;
+
+        } catch (err) {
+            logger.error(`Cannot load portal app resource: ${resourceUri}`, err);
+            if (cacheControlService) {
+                cacheControlService.removeCacheControlHeader(res);
+            }
+            res.sendStatus(500);
+        }
+
+        return false;
     }
 
     async _getLang(req: ExpressRequest) {

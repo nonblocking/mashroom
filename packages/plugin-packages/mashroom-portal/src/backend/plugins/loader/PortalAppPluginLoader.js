@@ -45,12 +45,12 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No resources.js defined`);
         }
 
-        const globalResourcesDef = plugin.pluginDefinition.globalResources;
-        let globalResources = null;
-        if (globalResourcesDef) {
-            globalResources = {
-                js: globalResourcesDef.js,
-                css: globalResourcesDef.css,
+        const sharedResourcesDef = plugin.pluginDefinition.sharedResources;
+        let sharedResources = null;
+        if (sharedResourcesDef) {
+            sharedResources = {
+                js: sharedResourcesDef.js,
+                css: sharedResourcesDef.css,
             };
         }
 
@@ -97,8 +97,8 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             globalLaunchFunction,
             screenshots,
             resourcesRootUri,
+            sharedResources,
             resources,
-            globalResources,
             defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,
             restProxies: config.restProxies,

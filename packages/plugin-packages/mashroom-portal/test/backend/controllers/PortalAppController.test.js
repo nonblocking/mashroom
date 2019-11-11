@@ -39,7 +39,7 @@ describe('PortalAppController', () => {
             js: ['bundle.js'],
             css: [],
         },
-        globalResources: {
+        sharedResources: {
             js: [],
             css: [],
         },
@@ -78,7 +78,7 @@ describe('PortalAppController', () => {
             js: ['bundle.js'],
             css: [],
         },
-        globalResources: {
+        sharedResources: {
             js: [],
             css: [],
         },
@@ -192,7 +192,11 @@ describe('PortalAppController', () => {
                 '1': '/portal/_/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App%201',
-            globalResourcesBasePath: '/portal/_/app-resources/_global_',
+            sharedResourcesBasePath: '/portal/_/app-resources/_shared_',
+            sharedResources: {
+                js: [],
+                css: [],
+            },
             resources: {css: [], js: ['bundle.js']},
             globalLaunchFunction: 'foo',
             lang: 'en',
@@ -247,7 +251,11 @@ describe('PortalAppController', () => {
                 '1': '/portal/_/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App%201',
-            globalResourcesBasePath: '/portal/_/app-resources/_global_',
+            sharedResourcesBasePath: '/portal/_/app-resources/_shared_',
+            sharedResources: {
+                js: [],
+                css: [],
+            },
             resources: {css: [], js: ['bundle.js']},
             globalLaunchFunction: 'foo',
             lang: 'en',

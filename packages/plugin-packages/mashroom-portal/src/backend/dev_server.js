@@ -60,7 +60,7 @@ const welcomeApp: MashroomPortalApp = {
         js: ['welcome-app.js'],
         css: [],
     },
-    globalResources: {
+    sharedResources: {
         js: [],
         css: [],
     },

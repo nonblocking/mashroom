@@ -155,7 +155,7 @@ To register a portal-app plugin add this to _package.json_:
                     ],
                     "css": []
                 },
-                "globalResources": {
+                "sharedResources": {
                 },
                 "defaultConfig": {
                     "resourcesRoot": "./dist",
@@ -187,8 +187,8 @@ To register a portal-app plugin add this to _package.json_:
  * _title_: Optional human readable title of the App. Can be a string or a object with translations.
  * _category_: Optional category to group the apps in the admin app
  * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked
- * _globalResources_: Optional. Same as _resources_ but a global resource with a given name is only loaded once, even if multiple apps define it. 
-    This is useful if many apps share the same resources. **NOT YET IMPLEMENTED**
+ * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it. 
+    This is useful if apps want to share vendor libraries or styles or such.
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
      * _resourcesRoot_: The root path for app resources such as Javascript files and images. This can be a local file path or a http, https or ftp URI.
      * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App. 
@@ -238,10 +238,9 @@ export type MashroomPortalAppSetup = {
     +title: ?string,
     +version: string,
     +instanceId: ?string,
+    +lastReloadTs: number,
     +restProxyPaths: MashroomRestProxyPaths,
     +resourcesBasePath: string,
-    +globalResourcesBasePath: string,
-    +resources: MashroomPortalAppResources,
     +lang: string,
     +user: MashroomPortalAppUser,
     +appConfig: MashroomPluginConfig

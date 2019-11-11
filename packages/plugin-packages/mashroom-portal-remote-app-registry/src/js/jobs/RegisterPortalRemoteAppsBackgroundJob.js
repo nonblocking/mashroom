@@ -165,12 +165,12 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             throw new Error(`Invalid configuration of plugin ${name}: No resources.js defined. Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
-        const globalResourcesDef = definition.globalResources;
-        let globalResources = null;
-        if (globalResourcesDef) {
-            globalResources = {
-                js: globalResourcesDef.js,
-                css: globalResourcesDef.css,
+        const sharedResourcesDef = definition.sharedResources;
+        let sharedResources = null;
+        if (sharedResourcesDef) {
+            sharedResources = {
+                js: sharedResourcesDef.js,
+                css: sharedResourcesDef.css,
             };
         }
 
@@ -215,8 +215,8 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             lastReloadTs: Date.now(),
             globalLaunchFunction,
             resourcesRootUri: remotePortalAppEndpoint.url,
+            sharedResources,
             resources,
-            globalResources,
             screenshots,
             defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,

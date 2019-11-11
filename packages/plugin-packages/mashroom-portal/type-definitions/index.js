@@ -103,7 +103,7 @@ export interface MashroomPortalApp {
     /**
      * Shared JS libraries (only loaded once on a page)
      */
-    +globalResources: ?MashroomPortalAppResources;
+    +sharedResources: ?MashroomPortalAppResources;
     /**
      * An optional list of screenshots (relative to resourcesRootUri)
      */
@@ -472,8 +472,9 @@ export type MashroomPortalAppSetup = {
     +instanceId: ?string,
     +lastReloadTs: number,
     +restProxyPaths: MashroomRestProxyPaths,
+    +sharedResourcesBasePath: string,
+    +sharedResources: ?MashroomPortalAppResources,
     +resourcesBasePath: string,
-    +globalResourcesBasePath: string,
     +resources: MashroomPortalAppResources,
     +globalLaunchFunction: string,
     +lang: string,

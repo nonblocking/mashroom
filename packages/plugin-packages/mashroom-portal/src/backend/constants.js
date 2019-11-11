@@ -10,7 +10,7 @@ export const PORTAL_THEME_RESOURCES_BASE_PATH = '/theme-resources';
 
 export const PORTAL_APP_API_PATH = '/api';
 export const PORTAL_APP_RESOURCES_BASE_PATH = '/app-resources';
-export const PORTAL_APP_RESOURCES_GLOBAL_PATH = '/_global_';
+export const PORTAL_APP_RESOURCES_SHARED_PATH = '/_shared_';
 export const PORTAL_APP_REST_PROXY_BASE_PATH = '/proxy';
 
 export const PORTAL_JS_FILE = 'client.js';

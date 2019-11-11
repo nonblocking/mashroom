@@ -19,7 +19,7 @@ import PortalLogController from './controllers/PortalLogController';
 import {
     PORTAL_APP_API_PATH,
     PORTAL_APP_RESOURCES_BASE_PATH,
-    PORTAL_APP_RESOURCES_GLOBAL_PATH,
+    PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_JS_FILE,
     PORTAL_PRIVATE_PATH,
@@ -105,7 +105,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     // Portal app resources
 
     const portalAppResourcesRoutes = express.Router();
-    portalAppResourcesRoutes.get(`${PORTAL_APP_RESOURCES_GLOBAL_PATH}/*`, portalAppController.getGlobalPortalAppResource.bind(portalAppController));
+    portalAppResourcesRoutes.get(`${PORTAL_APP_RESOURCES_SHARED_PATH}/*`, portalAppController.getSharedPortalAppResource.bind(portalAppController));
     portalAppResourcesRoutes.get('/:pluginName/*', portalAppController.getPortalAppResource.bind(portalAppController));
     privateRoutes.use(PORTAL_APP_RESOURCES_BASE_PATH, portalAppResourcesRoutes);
 

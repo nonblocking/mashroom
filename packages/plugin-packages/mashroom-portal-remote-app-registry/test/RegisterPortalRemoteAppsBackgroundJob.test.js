@@ -32,6 +32,14 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         type: 'portal-app',
         category: 'Test App',
         bootstrap: 'startTestApp',
+        title: {
+            en: 'Title'
+        },
+        sharedResources: {
+            js: [
+                'my-lib-dll-a1ef123a.js'
+            ]
+        },
         resources: {
             js: [
                 'bundle.js'
@@ -80,6 +88,9 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             name: 'Test App',
             description: 'Test App',
             tags: [],
+            title: {
+                en: 'Title'
+            },
             version: '5.1.2',
             homepage: 'https://www.mashroom-server.com',
             author: 'juergen.kofler@nonblocking.at',
@@ -95,9 +106,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 js: ['bundle.js'],
                 css: undefined
             },
-            globalResources: null,
+            sharedResources: {
+                js: ['my-lib-dll-a1ef123a.js'],
+                css: undefined
+            },
             screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
-            defaultRestrictedToRoles: undefined,
+            defaultRestrictViewToRoles: undefined,
             rolePermissions: {},
             restProxies:
                 {

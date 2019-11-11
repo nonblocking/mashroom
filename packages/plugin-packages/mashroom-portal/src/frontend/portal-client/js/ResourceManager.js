@@ -1,70 +1,85 @@
 // @flow
 
 import type {LoadedPortalAppInternal} from './MashroomPortalAppServiceImpl';
-import type {MashroomPortalRemoteLogger, MashroomRestService} from '../../../../type-definitions';
+import type {MashroomPortalRemoteLogger} from '../../../../type-definitions';
 
-type LoadedResources<T> = {
+type Resources<T> = {
     [path: string]: {
         elem: T,
+        loaded: boolean,
+        onLoadCallbacks: Array<() => void>;
+        onErrorCallbacks: Array<() => void>;
         refs: Array<LoadedPortalAppInternal>
     }
 }
 
-const LOADED_JS_RESOURCES: LoadedResources<HTMLScriptElement> = {};
-const LOADED_CSS_RESOURCES: LoadedResources<HTMLLinkElement> = {};
+const LOADED_JS_RESOURCES: Resources<HTMLScriptElement> = {};
+const LOADED_CSS_RESOURCES: Resources<HTMLLinkElement> = {};
 
 export default class ResourceManager {
 
+    _htmlDoc: Document;
     _remoteLogger: MashroomPortalRemoteLogger;
 
-    constructor(restService: MashroomRestService, remoteLogger: MashroomPortalRemoteLogger) {
+    constructor(remoteLogger: MashroomPortalRemoteLogger, htmlDoc?: Document = document) {
         this._remoteLogger = remoteLogger;
+        this._htmlDoc = htmlDoc;
     }
 
     loadJs(path: string, loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
         return new Promise((resolve, reject) => {
-            const loadedResource = LOADED_JS_RESOURCES[path];
-            if (loadedResource) {
+            const existingResource = LOADED_JS_RESOURCES[path];
+            if (existingResource) {
                 console.info('JS resource is already loaded: ', path);
-                loadedResource.refs.push(loadedPortalApp);
-                if (loadedPortalApp.appSetup && window[loadedPortalApp.appSetup.globalLaunchFunction]) {
-                    resolve();
+                if (existingResource.refs.indexOf(loadedPortalApp) === -1) {
+                    existingResource.refs.push(loadedPortalApp);
+                }
+                if (!existingResource.loaded) {
+                    existingResource.onLoadCallbacks.push(resolve);
+                    existingResource.onErrorCallbacks.push(resolve);
                 } else {
-                    loadedResource.elem.addEventListener('load', () => resolve());
-                    loadedResource.elem.addEventListener('error', () => reject());
+                    resolve();
                 }
                 return;
             }
 
             console.info('Loading JS resource: ', path);
-            const scriptElem = document.createElement('script');
+            const scriptElem = this._htmlDoc.createElement('script');
+            const resource = {
+                elem: scriptElem,
+                loaded: false,
+                onLoadCallbacks: [resolve],
+                onErrorCallbacks: [reject],
+                refs: [loadedPortalApp]
+            };
+
             scriptElem.src = path;
             scriptElem.addEventListener('error', (error: any) => {
                 console.error('Error loading JS resource: ', path, error);
                 this._remoteLogger.error('Error loading JS resource: ' + path, error, loadedPortalApp.pluginName);
                 delete LOADED_JS_RESOURCES[path];
-                reject(error)
+                resource.onErrorCallbacks.forEach((cb) => cb());
             });
-            scriptElem.addEventListener('load', () => resolve());
-            document.head ? document.head.appendChild(scriptElem) : null;
+            scriptElem.addEventListener('load', () => {
+                resource.loaded = true;
+                resource.onLoadCallbacks.forEach((cb) => cb());
+            });
+            this._htmlDoc.head ? this._htmlDoc.head.appendChild(scriptElem) : null;
 
-            LOADED_JS_RESOURCES[path] = {
-                elem: scriptElem,
-                refs: [loadedPortalApp]
-            };
+            LOADED_JS_RESOURCES[path] = resource;
         });
     }
 
     loadStyle(path: string, loadedPortalApp: LoadedPortalAppInternal): void {
-        const loadedResource = LOADED_CSS_RESOURCES[path];
-        if (loadedResource) {
+        const resource = LOADED_CSS_RESOURCES[path];
+        if (resource) {
             console.info('CSS resource is already loaded: ', path);
-            loadedResource.refs.push(loadedPortalApp);
+            resource.refs.push(loadedPortalApp);
             return;
         }
 
         console.info('Loading CSS resource: ', path);
-        const linkElem = document.createElement('link');
+        const linkElem = this._htmlDoc.createElement('link');
         linkElem.rel = 'stylesheet';
         linkElem.href = path;
         linkElem.addEventListener('error', (error: any) => {
@@ -72,10 +87,13 @@ export default class ResourceManager {
             this._remoteLogger.error('Error loading style sheet: ' + path, error, loadedPortalApp.pluginName);
             delete LOADED_CSS_RESOURCES[path];
         });
-        document.head ? document.head.appendChild(linkElem) : null;
+        this._htmlDoc.head ? this._htmlDoc.head.appendChild(linkElem) : null;
 
         LOADED_CSS_RESOURCES[path] = {
             elem: linkElem,
+            loaded: true,
+            onLoadCallbacks: [],
+            onErrorCallbacks: [],
             refs: [loadedPortalApp]
         };
     }
@@ -84,14 +102,14 @@ export default class ResourceManager {
         const unloadResources = (resources) => {
             for (const path in resources) {
                 if (resources.hasOwnProperty(path)) {
-                    const loadedResource = LOADED_JS_RESOURCES[path];
-                    if (loadedResource) {
-                        const idx = loadedResource.refs.indexOf(loadedPortalApp);
+                    const resource = LOADED_JS_RESOURCES[path];
+                    if (resource) {
+                        const idx = resource.refs.indexOf(loadedPortalApp);
                         if (idx !== -1) {
-                            loadedResource.refs.splice(idx, 1);
-                            if (loadedResource.refs.length === 0) {
+                            resource.refs.splice(idx, 1);
+                            if (resource.refs.length === 0) {
                                 console.info('Removing resource because it is no longer referenced: ', path);
-                                loadedResource.elem.parentElement ? loadedResource.elem.parentElement.removeChild(loadedResource.elem) : null;
+                                resource.elem.parentElement ? resource.elem.parentElement.removeChild(resource.elem) : null;
                                 delete resources[path];
                             }
                         }

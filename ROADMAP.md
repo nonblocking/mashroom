@@ -1,10 +1,6 @@
 
 # Mashroom Roadmap
 
-## Version 1.2
-
- * Portal: Declaration and loading of global (shared) portal app resources 
- 
 ## Version 1.3
 
  * OpenId Connect (OAuth) security provider

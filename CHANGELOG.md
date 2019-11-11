@@ -3,6 +3,22 @@
 
 ## 1.2.0 (Next release)
 
+ * Portal: Added support for sharing resources between portal apps (e.g. vendor libraries or styles). 
+   A shared resource with a given name will only loaded once, even if multiple Portal Apps declare it. 
+   A shared resource can be added like this in the plugin definition:
+```json
+{
+    "name": "Demo Shared DLL App 1",
+    "type": "portal-app",
+    "bootstrap": "startupDemoSharedDLLApp1",
+    "sharedResources": {
+        "js": [
+            "demo_shared_dll_910502a6fce2f139eff8.js"
+        ]
+    }
+}
+```   
+   Check out the demo project here: https://github.com/nonblocking/mashroom-demo-shared-dll
  * Portal: A remote Portal App which is not reachable for a long time is now unregistered instead of complete removed from the 
    list of remote Apps
  * Added MongoDB session provider plugin
