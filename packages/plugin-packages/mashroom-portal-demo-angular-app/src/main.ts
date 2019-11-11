@@ -11,19 +11,15 @@ if (process.env.NODE_ENV === 'production') {
 
 let moduleCreated = false;
 
-const bootstrap = (element: HTMLElement, portalAppSetup: PortalAppSetup, portalClientServices: PortalClientServices) => {
+const bootstrap = (hostElement: HTMLElement, portalAppSetup: PortalAppSetup, portalClientServices: PortalClientServices) => {
     if (moduleCreated) {
         return Promise.reject('Due to framework limitations an Angular module can only be created once on a page!');
     }
 
-    element.innerHTML = `
-        <angular-demo-app>
-        </angular-demo-app>
-    `;
-
     moduleCreated = true;
 
     return platformBrowserDynamic([
+        {provide: 'host.element', useValue: hostElement },
         {provide: 'app.setup', useValue: portalAppSetup},
         {provide: 'client.services', useValue: portalClientServices}
     ]).bootstrapModule(AppModule).then(
