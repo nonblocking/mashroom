@@ -29,7 +29,7 @@
     },
     "scripts": {
         "dev": "ng serve",
-        "build": "ng build",
+        "build": "ng build --prod=true",
         "lint": "ng lint"
     },
     "mashroom": {
@@ -43,13 +43,13 @@
                 "category": "Demo",
                 "resources": {
                     "js": [
-                        "runtime.js",
                         "polyfills.js",
-                        "styles.js",
-                        "vendor.js",
+                        "runtime.js",
                         "main.js"
                     ],
-                    "css": []
+                    "css": [
+                        "styles.css"
+                    ]
                 },
                 "defaultConfig": {
                     "resourcesRoot": "./dist",

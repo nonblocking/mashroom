@@ -15,13 +15,15 @@ const bootstrap = (hostElement: HTMLElement, portalAppSetup: PortalAppSetup, por
 
     /*
      * We dynamically create a module per Portal App instance
-     * otherwise there could only be one instance per page
+     * otherwise there could only be one instance per page.
+     *
+     * TODO: Check why this is not compatible with AOT
      */
     const DynamicAppModule: any = function() {};
     DynamicAppModule.prototype.ngDoBootstrap = (app: ApplicationRef) => {
         app.bootstrap(AppComponent, hostElement);
     };
-    Object.defineProperty (DynamicAppModule, 'name', {value: 'Random' + Math.trunc(Math.random() * 100000) });
+    Object.defineProperty (DynamicAppModule, 'name', {value: 'DemoAngularAppModule' + Math.trunc(Math.random() * 1000) });
     DynamicAppModule.annotations = [
         new NgModule({
             imports: [BrowserModule, FormsModule, HttpClientModule],
@@ -35,7 +37,9 @@ const bootstrap = (hostElement: HTMLElement, portalAppSetup: PortalAppSetup, por
         })
     ];
 
-    return platformBrowserDynamic().bootstrapModule(DynamicAppModule).then(
+    return platformBrowserDynamic().bootstrapModule(DynamicAppModule, {
+        ngZone: 'noop',
+    }).then(
         (module) => {
             return {
                 willBeRemoved: () => {
