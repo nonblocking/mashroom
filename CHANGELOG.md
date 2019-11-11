@@ -3,6 +3,8 @@
 
 ## 1.2.0 (Next release)
 
+ * Portal: The Angular 8 demo App can now be loaded multiple times on the same page with a different 
+   configuration (bootstrap fixed).
  * Portal: Added support for sharing resources between portal apps (e.g. vendor libraries or styles). 
    A shared resource with a given name will only loaded once, even if multiple Portal Apps declare it. 
    A shared resource can be added like this in the plugin definition:

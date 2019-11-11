@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-angular-app",
-    "description": "Simple Angular 7 based app that integrates into the Portal",
+    "description": "Simple Angular 8 based app that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

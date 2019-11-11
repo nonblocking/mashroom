@@ -1,8 +1,9 @@
 
 export interface PortalAppSetup {
     resourcesBasePath: string,
-    firstName: string,
-    appConfig: any
+    appConfig: {
+        firstName: string,
+    }
 }
 
 export interface PortalClientServices {
