@@ -23,7 +23,7 @@ export default (content: string, req: ExpressRequest) => (`
                 font-family: Georgia, serif;
             }
             
-            pre {
+            pre, .json {
                 font-family:  Consolas, 'Liberation Mono', Courier, monospace;
             }
             

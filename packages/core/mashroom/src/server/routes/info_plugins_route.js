@@ -1,6 +1,7 @@
 // @flow
 
 import infoTemplate from './info_template';
+import jsonToHtml from './json_to_html';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
 
@@ -37,17 +38,44 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
     const pluginRows = [];
 
     pluginContext.services.core.pluginService.getPlugins().forEach((p) => {
-        const config = p.config ? JSON.stringify(p.config, null, 2) : '-';
-        const def = JSON.stringify(p.pluginDefinition, null, 2);
+        const config = p.config ? jsonToHtml(p.config) : '-';
         const lastReload = p.lastReloadTs ? new Date(p.lastReloadTs).toLocaleString() : '';
         const errorMessage = p.errorMessage || '-';
         let statusStyle = '';
-        if (p.status === 'loaded') statusStyle = 'color:green';
-        if (p.status === 'error') statusStyle = 'color:red';
-        pluginRows.push(`<tr><td>${p.name}</td><td>${p.type}</td><td>${p.pluginPackage.name}</td><td style="${statusStyle}">${p.status}</td><td>${errorMessage}</td><td>${lastReload}</td><td><pre>${def}</pre></td><td><pre>${config}</pre></td></tr>`);
+        let rowBackgroundStyle = '';
+        if (p.status === 'loaded') {
+            statusStyle = 'color:green';
+        }
+        if (p.status === 'error') {
+            statusStyle = 'color:red';
+            rowBackgroundStyle = 'background-color:#FFDDDD';
+        }
+        pluginRows.push(`
+            <tr style="${rowBackgroundStyle}">
+                <td>${p.name}</td>
+                <td>${p.type}</td>
+                <td>${p.pluginPackage.name}</td>
+                <td style="${statusStyle}">${p.status}</td>
+                <td>${errorMessage}</td><td>${lastReload}</td>
+                <td><div class="json">${config}</div></td>
+            </tr>
+        `);
     });
 
-    return `<table><tr><th>Name</th><th>Type</th><th>Package</th><th>Status</th><th>Error</th><th>Last Reload</th><th>Definition</th><th>Config</th></tr>${pluginRows.join('')}</table>`;
+    return `
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Package</th>
+                <th>Status</th>
+                <th>Error</th>
+                <th>Last Reload</th>
+                <th>Config</th>
+            </tr>
+            ${pluginRows.join('')}
+        </table>
+    `;
 };
 
 const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
@@ -56,8 +84,37 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
     pluginContext.services.core.pluginService.getPluginPackages().forEach((pp) => {
         const errorMessage = pp.errorMessage || '-';
         const homepageLink = pp.homepage ? `<a target='_blank' href="${pp.homepage}">${pp.homepage}</a>` : '&nbsp;';
-        pluginPackagesRows.push(`<tr><td>${pp.name}</td><td>${homepageLink}</td><td>${pp.license || '&nbsp;'}</td><td>${pp.version}</td><td>${pp.status}</td><td>${errorMessage}</td></tr>`);
+        let statusStyle = '';
+        let rowBackgroundStyle = '';
+        if (pp.status === 'ready') {
+            statusStyle = 'color:green';
+        }
+        if (pp.status === 'error') {
+            statusStyle = 'color:red';
+            rowBackgroundStyle = 'background-color:#FFDDDD';
+        }
+        pluginPackagesRows.push(`
+            <tr style="${rowBackgroundStyle}">
+                <td>${pp.name}</td>
+                <td>${homepageLink}</td>
+                <td>${pp.license || '&nbsp;'}</td>
+                <td>${pp.version}</td>
+                <td style="${statusStyle}">${pp.status}</td>
+                <td>${errorMessage}</td>
+            </tr>`);
     });
 
-    return `<table><tr><th>Name</th><th>Homepage</th><th>License</th><th>Version</th><th>Status</th><th>Error</th></tr>${pluginPackagesRows.join('')}</table>`;
+    return `
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Homepage</th>
+                <th>License</th>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Error</th>
+            </tr>
+            ${pluginPackagesRows.join('')}
+        </table>
+    `;
 };

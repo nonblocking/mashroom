@@ -1,6 +1,7 @@
 // @flow
 
 import infoTemplate from './info_template';
+import jsonToHtml from './json_to_html';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
 
@@ -35,11 +36,11 @@ const overview = (pluginContext: MashroomPluginContext) => `
         </tr>
         <tr>
             <th>Server configuration</th>
-            <td><pre>${JSON.stringify(pluginContext.serverConfig, null, 2)}</pre></td>
+            <td><div class="json">${jsonToHtml(pluginContext.serverConfig)}</div></td>
         </tr>
         <tr>
             <th>Environment</th>
-            <td><pre>${JSON.stringify(process.env, null, 2)}</pre></td>
+            <td><div class="json">${jsonToHtml(process.env)}</div></td>
         </tr>
     </table>
 `;
