@@ -101,7 +101,7 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         this._description = packageJson.description;
         this._version = packageJson.version;
         this._homepage = packageJson.homepage;
-        this._author = packageJson.author ? JSON.stringify(packageJson.author) : null;
+        this._author = this._authorToString(packageJson.author);
         this._license = packageJson.license;
 
         if (!packageJson.mashroom) {
@@ -247,6 +247,16 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         });
 
         return fixedPluginDefinitions;
+    }
+
+    _authorToString(author: string | any): ?string {
+        if (!author) {
+            return null;
+        }
+        if (typeof (author) === 'string') {
+            return author;
+        }
+        return `${author.name || ''} <${author.email || '??'}>`;
     }
 
     get name(): string {
