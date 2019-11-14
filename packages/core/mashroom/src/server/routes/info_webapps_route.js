@@ -1,6 +1,6 @@
 // @flow
 
-import infoTemplate from './info_template';
+import infoTemplate from './template';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
 
@@ -12,6 +12,7 @@ const webappsRoute = (req: ExpressRequest, res: ExpressResponse) => {
 export default webappsRoute;
 
 const webapps = (pluginContext: MashroomPluginContext) => `
+    <h2>Loaded Webapp Plugins</h2>
     ${webappsList(pluginContext)}         
 `;
 

@@ -1,6 +1,6 @@
 // @flow
 
-import infoTemplate from './info_template';
+import infoTemplate from './template';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
 

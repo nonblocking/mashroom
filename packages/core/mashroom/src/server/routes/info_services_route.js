@@ -1,6 +1,6 @@
 // @flow
 
-import infoTemplate from './info_template';
+import infoTemplate from './template';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
 
@@ -12,6 +12,7 @@ const servicesRoute = (req: ExpressRequest, res: ExpressResponse) => {
 export default servicesRoute;
 
 const services = (pluginContext: MashroomPluginContext) => `
+    <h2>Registered Services</h2>
     <table>
         <tr>
             <th>Service</th>

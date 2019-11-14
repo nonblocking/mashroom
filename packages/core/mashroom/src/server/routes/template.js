@@ -16,6 +16,7 @@ export default (content: string, req: ExpressRequest) => (`
             h1 {
                 color: #645e9d;
                 font-family: Georgia, serif;
+                margin: 10px 0 15px 0;
             }
             
             h2 {
@@ -23,7 +24,7 @@ export default (content: string, req: ExpressRequest) => (`
                 font-family: Georgia, serif;
             }
             
-            pre, .json {
+            pre, .json, .console {
                 font-family:  Consolas, 'Liberation Mono', Courier, monospace;
             }
             
@@ -39,6 +40,7 @@ export default (content: string, req: ExpressRequest) => (`
             nav ul {
                 display: flex; 
                 padding: 0;
+                margin: 0;
             }
         
             .menu-item {
@@ -84,7 +86,7 @@ export default (content: string, req: ExpressRequest) => (`
             }
             
             main {
-                margin: 20px 0;
+                margin: 25px 0;
             }
             
             main ul {
@@ -112,7 +114,65 @@ export default (content: string, req: ExpressRequest) => (`
                 background-color: #EFEFEF;
                 padding: 8px 10px;
             }
+            
+            #modal {
+                position: fixed;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(68, 68, 68, 0.6);
+                z-index: 5000;
+            }
+            
+            #modal .modal-wrapper {
+                position: relative;
+                display: table;
+                margin: 15% auto;
+                min-width: 250px;
+                max-width: 90%;
+                box-shadow: 2px 4px 4px #444;
+                background-color: white;
+            }
+            
+            #modal .modal-header {
+                position: relative;
+                width: 100%;
+            }
+            
+            #modal .modal-header .modal-close {
+                position: absolute;
+                right: 10px;
+                top: 10px;
+                color: black;
+                cursor: pointer;
+            }
+            
+            #modal-content {
+                min-width: 250px;
+                min-height: 250px;
+                padding: 30px;
+            }
         </style>
+        
+        <script type="application/javascript">
+            function openModal(content) {
+                 document.getElementById('modal-content').innerHTML = content;
+                 document.getElementById('modal').style.display = 'block';
+            }
+            
+            function closeModal() {
+                document.getElementById('modal').style.display = 'none';
+            }
+            
+            document.addEventListener('keydown', function (e) {
+                 if (e.key === 'Escape'|| e.key === 'Esc') {
+                    closeModal();
+                }
+            });
+        </script>
     </head>
     <html>
         <h1>Mashroom Administration</h1>
@@ -129,5 +189,15 @@ export default (content: string, req: ExpressRequest) => (`
         <main>
             ${content}
         </main>
+        <div id="modal" style="display: none">
+            <div class="modal-wrapper">
+                <div class="modal-header">
+                    <div class="modal-close" onclick="closeModal()">x</div>
+                </div>
+                <div id="modal-content">
+               
+                </div>
+            </div>
+        </div>
     </html>
 `);
