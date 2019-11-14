@@ -30,7 +30,6 @@ export default (content: string, req: ExpressRequest) => (`
             
             a {
                 color: #645e9d;
-                text-decoration: none;
             }
     
             a:hover {
@@ -53,6 +52,7 @@ export default (content: string, req: ExpressRequest) => (`
             
             .menu-item a {
                 color: #444;
+                text-decoration: none;
             }
          
             .menu-item a:hover, .menu-item a:active {
@@ -77,12 +77,6 @@ export default (content: string, req: ExpressRequest) => (`
             
             .menu-item.external a {
                 text-decoration: underline;
-            }
-            
-            th {
-                text-align: left;
-                vertical-align: top;
-                white-space: nowrap;
             }
             
             main {
@@ -113,6 +107,9 @@ export default (content: string, req: ExpressRequest) => (`
             th {
                 background-color: #EFEFEF;
                 padding: 8px 10px;
+                text-align: left;
+                vertical-align: top;
+                white-space: nowrap;
             }
             
             #modal {

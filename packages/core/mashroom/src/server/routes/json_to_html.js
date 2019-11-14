@@ -1,8 +1,11 @@
 // @flow
 
-export default (obj: any) => {
-    const json = JSON.stringify(obj, null, '  ');
-    return json
-        .replace(/ /g, '&nbsp;')
-        .replace(/\n/g, '<br/>');
+import escapeHtml from './escape_html';
+
+export default (obj: any): string => {
+    let json = JSON.stringify(obj, null, '  ');
+    json = escapeHtml(json);
+    json = json.replace(/ /g, '&nbsp;');
+    json = json.replace(/\n/g, '<br/>');
+    return json;
 };

@@ -1,5 +1,6 @@
 // @flow
 
+import escapeHtml from './escape_html';
 import infoTemplate from './template';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
@@ -29,7 +30,7 @@ const middlewareRows = (pluginContext: MashroomPluginContext) => {
     return pluginContext.services.core.middlewareStackService.getStack()
         .map((m) => (`
             <tr>
-                <td>${m.pluginName}</td>
+                <td>${escapeHtml(m.pluginName)}</td>
                 <td>${m.order}</td>
             </tr>
         `));

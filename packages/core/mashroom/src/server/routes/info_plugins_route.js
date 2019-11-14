@@ -1,6 +1,7 @@
 // @flow
 
 import infoTemplate from './template';
+import escapeHtml from './escape_html';
 import jsonToHtml from './json_to_html';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
@@ -51,8 +52,7 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
     const pluginPackagesRows = [];
 
     pluginContext.services.core.pluginService.getPluginPackages().forEach((pp) => {
-        const errorMessage = pp.errorMessage || '&nbsp;';
-        const homepageLink = pp.homepage ? `<a target='_blank' href="${pp.homepage}">${pp.homepage}</a>` : '&nbsp;';
+        const homepageLink = pp.homepage ? `<a target='_blank' href="${pp.homepage}">${pp.homepage}</a>` : '';
         let statusStyle = '';
         let rowBackgroundStyle = '';
         if (pp.status === 'ready') {
@@ -64,13 +64,13 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         }
         pluginPackagesRows.push(`
             <tr style="${rowBackgroundStyle}">
-                <td>${pp.name}</td>
+                <td>${escapeHtml(pp.name)}</td>
                 <td>${homepageLink}</td>
-                <td>${pp.author || '&nbsp;'}</td>
-                <td>${pp.license || '&nbsp;'}</td>
+                <td>${escapeHtml(pp.author || '')}</td>
+                <td>${pp.license || ''}</td>
                 <td>${pp.version}</td>
                 <td style="${statusStyle}">${pp.status}</td>
-                <td>${errorMessage}</td>
+                <td>${escapeHtml(pp.errorMessage || '')}</td>
             </tr>`);
     });
 
@@ -96,8 +96,7 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
     pluginContext.services.core.pluginService.getPlugins().forEach((plugin, pluginIndex) => {
         const config = plugin.config ? jsonToHtml(plugin.config) : '&nbsp;';
         const def = jsonToHtml(plugin.pluginDefinition);
-        const lastReload = plugin.lastReloadTs ? new Date(plugin.lastReloadTs).toLocaleString() : '&nbsp;';
-        const errorMessage = plugin.errorMessage || '&nbsp;';
+        const lastReload = plugin.lastReloadTs ? new Date(plugin.lastReloadTs).toLocaleString() : '';
         let statusStyle = '';
         let rowBackgroundStyle = '';
         if (plugin.status === 'loaded') {
@@ -109,12 +108,12 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
         }
         pluginRows.push(`
             <tr style="${rowBackgroundStyle}">
-                <td>${plugin.name}</td>
-                <td>${plugin.description || '&nbsp;'}</td>
+                <td>${escapeHtml(plugin.name)}</td>
+                <td>${escapeHtml(plugin.description || '')}</td>
                 <td>${plugin.type}</td>
-                <td>${plugin.pluginPackage.name}</td>
+                <td>${escapeHtml(plugin.pluginPackage.name)}</td>
                 <td style="${statusStyle}">${plugin.status}</td>
-                <td>${errorMessage}</td>
+                <td>${escapeHtml(plugin.errorMessage || '')}</td>
                 <td>${lastReload}</td>
                 <td>
                    <script type="application/javascript">
