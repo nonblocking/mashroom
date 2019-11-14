@@ -157,7 +157,7 @@ describe('MashroomPluginPackage', () => {
             expect(pluginPackage.description).toBe('description test3');
             expect(pluginPackage.version).toBe('1.1.3');
             expect(pluginPackage.license).toBe('BSD-3-Clause');
-            expect(pluginPackage.author).toBe('{"name":"Jürgen Kofler","email":"juergen.kofler@nonblocking.at","url":"http://www.nonblocking.at"}');
+            expect(pluginPackage.author).toBe('Jürgen Kofler <juergen.kofler@nonblocking.at>');
             expect(pluginPackage.status).toBe('ready');
             expect(pluginPackage.pluginPackagePath).toBe(pluginPackagePath);
             expect(pluginPackage.pluginDefinitions).toBeTruthy();
