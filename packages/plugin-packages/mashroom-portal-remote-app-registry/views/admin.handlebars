@@ -74,10 +74,10 @@
                 <th>URL</th><th>Session</th><th>Status</th><th>Portal Apps</th><th>&nbsp;</th>
             </tr>
             {{#each endpoints}}
-                <tr>
+                <tr class="{{this.rowClass}}">
                     <td>{{this.url}}</td>
                     <td>{{this.sessionOnly}}</td>
-                    <td>{{{this.status}}}</td>
+                    <td class="{{this.statusClass}}">{{this.status}}</td>
                     <td>{{this.portalApps}}</td>
                     <td>
                         {{#unless this.sessionOnly}}

@@ -102,6 +102,27 @@ label {
     margin: 0;
 }
 
+table, th, td {
+    border: 1px solid #CCC;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 6px 10px;
+}
+
+th {
+    background-color: #EFEFEF;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
 .add-endpoint-form {
 
     .form-row {
@@ -128,6 +149,10 @@ label {
     }
 }
 .endpoints {
+    .row-error {
+        background-color: #FFDDDD;
+    }
+
     .error {
         color: $COLOR_ERROR;
     }

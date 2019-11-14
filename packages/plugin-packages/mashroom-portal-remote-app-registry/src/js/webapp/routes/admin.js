@@ -12,6 +12,8 @@ const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorM
         url: endpoint.url,
         sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
         status: status(endpoint),
+        statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
+        rowClass: endpoint.lastError ? 'row-error' : '',
         portalApps: endpoint.portalApps.map((app) => `${app.name} (${app.version})`).join(', ')
     }));
 
@@ -25,12 +27,12 @@ const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorM
 
 const status = (endpoint: RemotePortalAppEndpoint) => {
     if (endpoint.lastError) {
-        return `<span class="error">Error: ${endpoint.lastError}</span>`;
+        return `Error: ${endpoint.lastError}`;
     }
     if (endpoint.registrationTimestamp) {
-        return `<span class="registered">Registered at ${new Date(endpoint.registrationTimestamp).toLocaleString()}</span>`;
+        return `Registered at ${new Date(endpoint.registrationTimestamp).toLocaleString()}`;
     }
-    return '<span class="pending">Pending...</span>';
+    return 'Pending...';
 };
 
 export const adminIndex = async (req: ExpressRequest, res: ExpressResponse) => {
