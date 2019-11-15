@@ -1,7 +1,7 @@
 
 # Change Log
 
-## 1.2.0 (Next release)
+## 1.2.0
 
  * Portal: The Angular 8 demo App can now be loaded multiple times on the same page with a different 
    configuration (bootstrap fixed).
