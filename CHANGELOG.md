@@ -1,7 +1,9 @@
 
 # Change Log
 
-## 1.2.0
+## [unreleased]
+
+## 1.2.0 (15. November 2019)
 
  * Portal: The Angular 8 demo App can now be loaded multiple times on the same page with a different 
    configuration (bootstrap fixed).
@@ -53,25 +55,25 @@
  * HTTP Proxy: White listed _Jaeger_, _OpenZipkin_ and W3C Trace Context HTTP headers by default
  * HTTP Proxy: Fixed the problem that all requests headers got forwarded to the target, even _cookie_ and other security relevant ones
 
-## 1.1.3
+## 1.1.3 (15. October 2019)
 
  * Tabify App: Allow to update the title for a specific app id. This is useful for dynamic cockpits where you might
    want to load the same App multiple times in a tabbed area.
  * Portal: Fixed a problem with token highlighting in the add app panel
 
-## 1.1.2
+## 1.1.2 (30. September 2019)
 
  * Added a middleware plugin that introduces [Helmet](https://helmetjs.github.io) which sets a bunch of protective 
    HTTP headers on each response
  * Upgraded some dependencies because of security vulnerabilities
 
-## 1.1.1
+## 1.1.1 (26. September 2019)
 
  * WebSocket server now sends keep alive messages to prevent reverse proxies and firewalls from closing the connection
  * Portal: _MashroomMessageBus.getRemoteUserPrivateTopic()_ takes now an optional argument _username_ if you want to obtain the private 
    topic of a particular user instead of the "own" (the private topic of the authenticated user)
 
-## 1.1.0
+## 1.1.0 (19. September 2019)
 
  * Portal: Added two new (optional) security related properties to the default config of portal apps:
      * _defaultRestrictViewToRoles_: Same as the previous _defaultRestrictedToRoles_ but renamed to make its purpose clearer. 
@@ -92,25 +94,25 @@
  * Core: web-app Plugins can now additionally have handlers for upgrade requests (WebSocket support) and for unload
  * Core: The _Middleware_ tab in the admin UI shows now the actual order of the stack (until now the order was just calculated) 
 
-## 1.0.94
+## 1.0.94 (28. August 2019)
 
  * Portal: Made it configurable when the Portal will start to warn that the authentication is about to expire
  * Renamed _MashroomSecurityProvider.refreshAuthentication()_ to _checkAuthentication()_ 
 
-## 1.0.93
+## 1.0.93 (27. August 2019)
 
  * Portal: Added configuration property to automatically extend the authentication (so it stays valid as long as the browser page is opened)
  * Portal: Removed the "auto-logout" feature, instead the Portal warns now when the authentication is about to expire.
  * Decoupled authentication from session, in particular the authentication expiration. This simplifies the implementation for
    providers like OAuth2. **BREAKING CHANGE**: The _MashroomSecurityProvider_ interface has been extended.
 
-## 1.0.92
+## 1.0.92 (12. August 2019)
 
  * Portal: The app filter in Admin UI considers now _tags_ also. 
    And the categories are sorted alphabetically now.
  * Portal: All initial query parameters are now added again after login
 
-## 1.0.91
+## 1.0.91 (9. August 2019)
 
  * Core: Added optional _tags_ (array) property to the plugin definition 
  * Bunch of small default theme improvements
@@ -119,6 +121,6 @@
    It allows it to load any Portal App with a specific configuration and to interact with the App
    via Message Bus. Can also be used for end-2-end testing with tools such as Selenium.
 
-## 1.0.90
+## 1.0.90 (18. July 2019)
 
 First public release
