@@ -17,7 +17,9 @@ const bootstrap = (hostElement: HTMLElement, portalAppSetup: PortalAppSetup, por
      * We dynamically create a module per Portal App instance
      * otherwise there could only be one instance per page.
      *
-     * TODO: Check why this is not compatible with AOT
+     * This approach seems not to work with the AOT compiler!
+     * So, if you don't need the same App multiple times on a page replace this by a "static" App module
+     * and activate aot in angular.json to reduce the bundle size.
      */
     const DynamicAppModule: any = function() {};
     DynamicAppModule.prototype.ngDoBootstrap = (app: ApplicationRef) => {
