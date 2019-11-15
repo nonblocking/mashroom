@@ -7,21 +7,28 @@
     }],
     "indexPage": "/portal",
     "ignorePlugins": [
-        "Mashroom Messaging External Provider MQTT"
+        "Mashroom Messaging External Provider MQTT",
+        "Mashroom Session MongoDB Provider",
+        "Mashroom Session Redis Provider"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme"
         },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": false
+        },
         "Mashroom Session Middleware": {
             "provider": "Mashroom Session Filestore Provider",
             "session": {
+                "cookie": {
+                    "maxAge": 3600000
+                }
             }
         },
         "Mashroom Session Filestore Provider": {
-            "path": "./data/sessions",
-            "ttl": 1200
+            "path": "./data/sessions"
         },
         "Mashroom Security Services": {
             "provider": "Mashroom Security Simple Provider",
@@ -29,7 +36,8 @@
             "loginPage": "/login"
         },
         "Mashroom Security Simple Provider": {
-            "users": "./users.json"
+            "users": "./users.json",
+            "authenticationTimeoutSec": 1200
         },
         "Mashroom Storage Services": {
             "provider": "Mashroom Storage Filestore Provider"
