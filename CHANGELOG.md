@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Session Middleware: Log error messages of providers (Redis, MongoDB) properly
+
 ## 1.2.0 (15. November 2019)
 
  * Portal: The Angular 8 demo App can now be loaded multiple times on the same page with a different 

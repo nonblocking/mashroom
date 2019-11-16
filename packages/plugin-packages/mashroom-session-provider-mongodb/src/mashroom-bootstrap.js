@@ -8,7 +8,11 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.mongodb');
     logger.info('Using mongoDB connection options:', pluginConfig);
     const MongoDBStore = createMongoDBStore(expressSession);
-    return new MongoDBStore(pluginConfig);
+    const store = new MongoDBStore(pluginConfig);
+    store.on('error', (err: any) => {
+        logger.error('MongoDB store error:', err);
+    });
+    return store;
 };
 
 export default bootstrap;

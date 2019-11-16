@@ -8,7 +8,9 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.filestore');
     logger.info('Using file store options:', pluginConfig);
     const options = Object.assign({}, pluginConfig, {
-        logFn: () => logger.info
+        logFn: (msg: any) => {
+            logger.info('File store message:', msg);
+        }
     });
     const FileStore = sessionFileStore(expressSession);
     return new FileStore(options);
