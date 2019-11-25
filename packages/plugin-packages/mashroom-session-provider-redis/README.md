@@ -27,16 +27,48 @@ And to change the default config of this plugin add:
 ```json
 {
   "plugins": {
-        "Mashroom Session Redis Provider": {
-           "host": "localhost",
-           "port": "6379",
-           "prefix": "mashroom:",
-           "connect_timeout": 1000
-        }
-    }
+      "Mashroom Session Redis Provider": {
+          "redisOptions": {
+              "host": "localhost",
+              "port": "6379",
+              "keyPrefix": "mashroom:"
+          } 
+      }
+  }
 }
 ```
 
-All config options are directly passed to the Redis client. 
-See the _redis.createClient()_ section on [session-file-store](https://github.com/NodeRedis/node_redis) for available options.
+Or for a Redis Cluster:
 
+```json
+{
+  "plugins": {
+      "Mashroom Session Redis Provider": {
+          "redisOptions": {
+              "keyPrefix": "mashroom:"
+          },
+          "cluster": true,
+          "clusterNodes": [
+              {
+                  "host": "redis-node1",
+                  "port": "6379"
+              },   
+              {
+                  "host": "redis-node2",
+                  "port": "6379"
+              }     
+          ],
+          "clusterOptions": {
+              "maxRedirections": 3
+          }
+      }
+  }
+}
+```
+
+* *redisOptions*: Passed to the *Redis* constructor of *ioredis*
+* *cluster*: Enables cluster support
+* *clusterNodes*: Cluster start nodes
+* *clusterOptions*: Passed as second argument of the *Redis.Cluster* constructor of *ioredis*
+
+Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.

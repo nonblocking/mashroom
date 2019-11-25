@@ -11,7 +11,7 @@
     ],
     "dependencies": {
         "connect-redis": "^4.0.3",
-        "redis": "^2.8.0"
+        "ioredis": "^4.14.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.6.4",
@@ -32,10 +32,15 @@
                 "type": "session-store-provider",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                    "host": "localhost",
-                    "port": "6379",
-                    "prefix": "mashroom:",
-                    "connect_timeout": 1000
+                    "redisOptions": {
+                        "host": "localhost",
+                        "port": "6379",
+                        "keyPrefix": "mashroom:",
+                        "maxRetriesPerRequest": 3
+                    },
+                    "cluster": false,
+                    "clusterNodes": null,
+                    "clusterOptions": null
                 }
             }
         ]
