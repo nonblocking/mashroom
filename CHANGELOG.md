@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+## 1.2.1 (25. November 2019)
+
+ * Redis Session Provider: Added cluster support
  * Session Middleware: Log error messages of providers (Redis, MongoDB) properly
 
 ## 1.2.0 (15. November 2019)
