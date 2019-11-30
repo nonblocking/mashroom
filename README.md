@@ -3,8 +3,8 @@
 ## About ##
 
 *Mashroom Server* is *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps and API's on the
-server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such 
-as logging, i18n, storage and security out of the box and supports custom middleware and services in form of plugins.
+server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as 
+security, communication (publish/subscribe), i18n, storage, and logging out of the box and supports custom middleware and services in form of plugins.
 
 From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for 
 plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally 
@@ -57,6 +57,12 @@ https://www.mashroom-server.com
 ## Blog
 
 https://medium.com/mashroom-server
+
+## Who is using Mashroom Server in production
+
+ * [A1 Telekom Austria Group](https://www.a1.group/)
+
+If you too are using *Mashroom Server* in production; please submit a PR to add your organization to the list!
 
 ## Full Documentation 
 
