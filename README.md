@@ -52,7 +52,7 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 ## Who is using Mashroom Server in production
 
- * [A1 Telekom Austria Group](https://www.a1.group/)
+ * [A1 Telekom Austria](https://www.a1.group/)
 
 If you too are using *Mashroom Server* in production; please submit a PR to add your organization to the list!
 
