@@ -50,6 +50,12 @@ has similar concepts than a Java Portal Server.
 
 Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
+## Who is using Mashroom Server in production
+
+ * [A1 Telekom Austria Group](https://www.a1.group/)
+
+If you too are using *Mashroom Server* in production; please submit a PR to add your organization to the list!
+
 ## Homepage
 
 https://www.mashroom-server.com
@@ -57,12 +63,6 @@ https://www.mashroom-server.com
 ## Blog
 
 https://medium.com/mashroom-server
-
-## Who is using Mashroom Server in production
-
- * [A1 Telekom Austria Group](https://www.a1.group/)
-
-If you too are using *Mashroom Server* in production; please submit a PR to add your organization to the list!
 
 ## Full Documentation 
 
