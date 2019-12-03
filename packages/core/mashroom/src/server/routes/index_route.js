@@ -8,7 +8,15 @@ const indexRoute = (req: ExpressRequest, res: ExpressResponse) => {
     if (!pluginContext.serverConfig.indexPage || pluginContext.serverConfig.indexPage.length < 2) {
         res.redirect('/mashroom');
     } else {
-        res.redirect(pluginContext.serverConfig.indexPage);
+        let redirectPath = pluginContext.serverConfig.indexPage;
+        const { originalUrl } = req;
+        const queryIdx = originalUrl.indexOf('?');
+
+        if (queryIdx > -1) {
+            redirectPath += originalUrl.substr(queryIdx);
+        }
+
+        res.redirect(redirectPath);
     }
 };
 
