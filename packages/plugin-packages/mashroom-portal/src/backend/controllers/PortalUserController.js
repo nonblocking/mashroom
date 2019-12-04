@@ -64,13 +64,12 @@ export default class PortalLanguageController {
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-            const securityContext = securityService.getSecurityContext();
             await securityService.revokeAuthentication(req);
 
             if (!isAjaxRequest(req)) {
                 // Redirect to start page
                 const indexPage = req.pluginContext.serverConfig.indexPage;
-                res.redirect(securityContext ? `${indexPage}${securityContext}` : indexPage);
+                res.redirect(indexPage);
             } else {
                 res.end();
             }

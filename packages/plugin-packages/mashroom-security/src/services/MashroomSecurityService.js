@@ -64,14 +64,6 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    getSecurityContext(): string {
-        return this._securityContext;
-    }
-
-    setSecurityContext(securityContext: string) {
-        this._securityContext = securityContext;
-    }
-
     isAuthenticated(request: ExpressRequest) {
         return !!this.getUser(request);
     }
