@@ -61,20 +61,16 @@ export default class PortalLanguageController {
     async logout(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
         logger.debug('Logout called');
-        let originalUrl;
-
-        if (req.session && req.session.originalUrl) {
-            originalUrl = req.session.originalUrl;
-        }
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const securityContext = securityService.getSecurityContext();
             await securityService.revokeAuthentication(req);
 
             if (!isAjaxRequest(req)) {
                 // Redirect to start page
                 const indexPage = req.pluginContext.serverConfig.indexPage;
-                res.redirect(originalUrl || indexPage);
+                res.redirect(securityContext ? `${indexPage}${securityContext}` : indexPage);
             } else {
                 res.end();
             }

@@ -31,6 +31,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
 
     _securityProviderName: string;
     _aclChecker: MashroomSecurityACLChecker;
+    _securityContext: string;
 
     constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker) {
         this._securityProviderName = securityProviderName;
@@ -61,6 +62,14 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 return null;
             }
         }
+    }
+
+    getSecurityContext(): string {
+        return this._securityContext;
+    }
+
+    setSecurityContext(securityContext: string) {
+        this._securityContext = securityContext;
     }
 
     isAuthenticated(request: ExpressRequest) {
