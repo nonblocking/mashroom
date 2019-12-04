@@ -31,7 +31,6 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
 
     _securityProviderName: string;
     _aclChecker: MashroomSecurityACLChecker;
-    _securityContext: string;
 
     constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker) {
         this._securityProviderName = securityProviderName;
