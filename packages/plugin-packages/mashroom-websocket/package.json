@@ -13,7 +13,7 @@
     "dependencies": {
         "express": "^4.17.1",
         "express-handlebars": "^3.1.0",
-        "handlebars": "^4.5.1",
+        "handlebars": "^4.5.3",
         "ws": "^7.2.0"
     },
     "devDependencies": {
