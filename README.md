@@ -2,9 +2,14 @@
 
 ## About ##
 
-*Mashroom Server* is *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps and API's on the
+*Mashroom Server* is *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps on the
 server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as 
-security, communication (publish/subscribe), i18n, storage, and logging out of the box and supports custom middleware and services in form of plugins.
+security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and supports custom middleware and services via plugins.
+
+Mashroom Server allows it to implemented SPA's (and express webapps) completely independent and without any vendor lock-in and to use it on arbitrary pages 
+later with different configurations and even multiple times on the same page. It also allows it to restrict the access to apps based on user roles. 
+
+It is even possible to integrate SPA's deployed on a different server (e.g. a different docker container) which allows independent release cycles. 
 
 From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for 
 plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally 
@@ -12,7 +17,7 @@ all kind of code it knows how to load, which is determined by the available plug
 Plugin loaders itself are also just plugins so it is possible to extend the list of known plugin types.
 
 Compared with the concepts in the Java world *Mashroom Server* would be an Application Server. And the *Mashroom Portal* plugin
-has similar concepts than a Java Portal Server.
+has similar concepts than a Java Portal Server such as [Liferay](https://www.liferay.com/).
 
 ![Mashroom Portal](mashroom_portal_ui.png)
 
