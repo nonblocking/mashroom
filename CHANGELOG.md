@@ -3,7 +3,10 @@
 
 ## [unreleased]
 
-* forward query parameter to the index page
+## 1.2.2 (7. December 2019)
+
+* Forward query parameters to the index page
+* Upgraded some dependencies because of security vulnerabilities
 
 ## 1.2.1 (25. November 2019)
 
