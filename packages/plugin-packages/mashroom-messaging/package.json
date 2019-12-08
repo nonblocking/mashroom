@@ -4,17 +4,17 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.2.1",
+    "version": "1.2.2",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
     "devDependencies": {
         "@babel/cli": "^7.6.4",
-        "@mashroom/mashroom": "1.2.1",
-        "@mashroom/mashroom-security": "1.2.1",
-        "@mashroom/mashroom-utils": "1.2.1",
-        "@mashroom/mashroom-websocket": "1.2.1",
+        "@mashroom/mashroom": "1.2.2",
+        "@mashroom/mashroom-security": "1.2.2",
+        "@mashroom/mashroom-utils": "1.2.2",
+        "@mashroom/mashroom-websocket": "1.2.2",
         "eslint": "^6.6.0",
         "jest": "^24.9.0",
         "nodemon": "^1.19.4",
