@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Sandbox App: Loads now also shared resources properly
  * Portal: When a portal app gets unloaded all its message bus listeners will automatically be unregistered
    (in case the app does not unregister properly on onmount)
 
