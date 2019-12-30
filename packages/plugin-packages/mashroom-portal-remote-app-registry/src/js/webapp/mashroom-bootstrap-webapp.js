@@ -30,7 +30,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName: stri
 };
 
 async function registerRemotePortalAppsFromConfigFile(configFilePath: string, serverRootFolder: string, portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService, loggerFactory: MashroomLoggerFactory) {
-    const logger = loggerFactory('mashroom.portal.remoteAppRegistry')
+    const logger = loggerFactory('mashroom.portal.remoteAppRegistry');
 
     if (!configFilePath) {
         return;
