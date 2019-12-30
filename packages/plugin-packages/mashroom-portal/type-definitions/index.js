@@ -761,24 +761,28 @@ export interface MashroomPortalMessageBus {
      * The prefix for remote topics
      */
     getRemotePrefix(): string;
-
-    /**
-     * Get an app specific instance.
-     * The returned instance will set the senderId on the MashroomPortalMessageBusSubscriberCallback to the given id.
-     */
-    getAppInstance(appId: string): MashroomPortalMessageBus;
-
     /**
      * Register a message interceptor.
      * A interceptor can be useful for debugging or to manipulate the messages.
      * It is also possible to block messages by returning 'undefined' or 'null'.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
-
     /**
      * Unregister a message interceptor.
      */
     unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
+}
+
+export interface MashroomPortalMasterMessageBus extends MashroomPortalMessageBus {
+    /**
+     * Get an app specific instance.
+     * The returned instance will set the senderId on the MashroomPortalMessageBusSubscriberCallback to the given id.
+     */
+    getAppInstance(appId: string): MashroomPortalMessageBus;
+    /**
+     * Unsubscribe/Unregister everything from given app (for cleanup after unload)
+     */
+    unsubscribeEverythingFromApp(appId: string): void;
 }
 
 export interface MashroomPortalStateService {

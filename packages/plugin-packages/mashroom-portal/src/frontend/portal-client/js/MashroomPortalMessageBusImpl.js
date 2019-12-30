@@ -5,7 +5,7 @@ import {WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH, WINDOW_VAR_REMOTE_MESSAGING_PR
 import RemoteMessagingClient, {webSocketSupport} from './RemoteMessagingClient';
 
 import type {
-    MashroomPortalMessageBus,
+    MashroomPortalMasterMessageBus,
     MashroomPortalMessageBusInterceptor,
     MashroomPortalMessageBusSubscriberCallback
 } from '../../../../type-definitions';
@@ -24,10 +24,15 @@ type SubscriptionMap = {
     [topic: string]: Array<Subscription>
 }
 
-export default class MashroomPortalMessageBusImpl implements MashroomPortalMessageBus {
+type Interceptor = {
+    interceptor: MashroomPortalMessageBusInterceptor,
+    appId: ?string,
+}
+
+export default class MashroomPortalMessageBusImpl implements MashroomPortalMasterMessageBus {
 
     _subscriptionMap: SubscriptionMap;
-    _interceptors: Array<MashroomPortalMessageBusInterceptor>;
+    _interceptors: Array<Interceptor>;
     _remoteMessageClient: ?RemoteMessagingClient;
 
     constructor() {
@@ -82,14 +87,11 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
     }
 
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-        this._interceptors.push(interceptor);
+        this._registerMessageInterceptor(interceptor);
     }
 
     unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-        const index = this._interceptors.indexOf(interceptor);
-        if (index !== -1) {
-            this._interceptors.splice(index, 1);
-        }
+        this._unregisterMessageInterceptor(interceptor);
     }
 
     getAppInstance(appId: string) {
@@ -115,15 +117,40 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
                 return master.getRemotePrefix();
             },
             registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-                master.registerMessageInterceptor(interceptor);
+                return master._registerMessageInterceptor(interceptor, appId);
             },
             unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-                master.unregisterMessageInterceptor(interceptor);
+                return master._unregisterMessageInterceptor(interceptor);
             },
             getAppInstance() {
                 throw new Error('Not available');
             }
         };
+    }
+
+    unsubscribeEverythingFromApp(appId: string) {
+        console.info('Unregistering all MessageBus handlers from app:', appId);
+
+        for (const topic in this._subscriptionMap) {
+            if (this._subscriptionMap.hasOwnProperty(topic)) {
+                this._subscriptionMap[topic].forEach((subscription) => {
+                    if (subscription.appId === appId) {
+                        this._unsubscribe(topic, subscription.callback).then(
+                            () => {},
+                            (error) => {
+                                console.error(`Unsubscribing app ${appId} from topic ${topic} failed`, error);
+                            }
+                        );
+                    }
+                });
+            }
+        }
+
+        this._interceptors.forEach((wrapper) => {
+           if (wrapper.appId === appId) {
+               this._unregisterMessageInterceptor(wrapper.interceptor);
+           }
+        });
     }
 
     _subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback, once: boolean, appId?: string): Promise<void> {
@@ -194,8 +221,8 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
 
     _deliverMessage(topic: string, data: any, senderAppId: ?string, subscription: Subscription) {
         let resultData = data;
-        this._interceptors.forEach((interceptor) => {
-            resultData = interceptor(resultData, topic, senderAppId, subscription.appId);
+        this._interceptors.forEach((wrapper) => {
+            resultData = wrapper.interceptor(resultData, topic, senderAppId, subscription.appId);
         });
 
         if (resultData) {
@@ -222,6 +249,20 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMessa
                     this._unsubscribe(topic, subscription.callback);
                 }
             });
+        }
+    }
+
+    _registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor, appId?: string) {
+        this._interceptors.push({
+            interceptor,
+            appId,
+        });
+    }
+
+    _unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
+        const wrapper = this._interceptors.find((wrapper) => wrapper.interceptor === interceptor);
+        if (wrapper) {
+            this._interceptors.splice(this._interceptors.indexOf(wrapper), 1);
         }
     }
 }

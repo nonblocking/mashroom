@@ -4,7 +4,7 @@ import type {Store as ReduxStore, Dispatch as ReduxDispatch} from 'redux';
 import type {
     MashroomAvailablePortalApp,
     MashroomPortalAppSetup,
-    MashroomPortalMessageBus,
+    MashroomPortalMasterMessageBus,
 } from '@mashroom/mashroom-portal/type-definitions';
 
 export type State = {|
@@ -32,7 +32,7 @@ export type ActivePortalApp = {
     +setup: MashroomPortalAppSetup,
 }
 
-export interface DummyMessageBus extends MashroomPortalMessageBus {
+export interface DummyMessageBus extends MashroomPortalMasterMessageBus {
     onMessageSent(callback: (topic: string, data: any) => void): void;
     onTopicsChanged(callback: (topics: Array<string>) => void): void;
     reset(): void;

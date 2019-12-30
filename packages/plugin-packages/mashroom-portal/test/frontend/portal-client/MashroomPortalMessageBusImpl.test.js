@@ -164,4 +164,22 @@ describe('MashroomPortalMessageBusImpl', () => {
         expect(messageBus.getRemoteUserPrivateTopic('foo@test.com')).toBe('user/foo@test.com');
     });
 
+    it('should unsubscribe after app unload', () => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        const messageBusApp1 = messageBus.getAppInstance('app1');
+        const messageBusApp2 = messageBus.getAppInstance('app2');
+
+        messageBusApp1.subscribe('foo', () => { });
+        messageBusApp1.registerMessageInterceptor(() => { });
+        messageBusApp2.subscribe('foo', () => { });
+
+        expect(messageBus._subscriptionMap['foo'].length).toBe(2);
+        expect(messageBus._interceptors.length).toBe(1);
+
+        messageBus.unsubscribeEverythingFromApp('app1');
+
+        expect(messageBus._subscriptionMap['foo'].length).toBe(1);
+        expect(messageBus._interceptors.length).toBe(0);
+    });
+
 });

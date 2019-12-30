@@ -3,10 +3,13 @@
 
 ## [unreleased]
 
+ * Portal: When a portal app gets unloaded all its message bus listeners will automatically be unregistered
+   (in case the app does not unregister properly on onmount)
+
 ## 1.2.2 (7. December 2019)
 
-* Forward query parameters to the index page
-* Upgraded some dependencies because of security vulnerabilities
+ * Forward query parameters to the index page
+ * Upgraded some dependencies because of security vulnerabilities
 
 ## 1.2.1 (25. November 2019)
 

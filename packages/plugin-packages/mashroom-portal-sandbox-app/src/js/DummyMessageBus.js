@@ -105,6 +105,10 @@ export default class DummyMessageBus implements DummyMessageBusType {
         };
     }
 
+    unsubscribeEverythingFromApp() {
+        // Not implemented
+    }
+
     _subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback, once: boolean) {
         if (!this._subscriptionMap[topic]) {
             this._subscriptionMap[topic] = [];

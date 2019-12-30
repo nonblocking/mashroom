@@ -4,9 +4,10 @@ import {HOST_ELEMENT_ID} from './components/PortalAppHost';
 
 import type {
     MashroomPortalAppLifecycleHooks,
-    MashroomPortalAppSetup, MashroomPortalClientServices,
-    MashroomPortalMessageBus
+    MashroomPortalAppSetup,
+    MashroomPortalClientServices,
 } from '@mashroom/mashroom-portal/type-definitions';
+import type {DummyMessageBus} from '../../type-definitions';
 
 const WINDOW_VAR_PORTAL_SERVICES = 'MashroomPortalServices';
 
@@ -43,7 +44,7 @@ const loadStyle = (path: string) => {
     LOADED_STYLES.push(linkElem);
 };
 
-export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, dummyMessageBus: MashroomPortalMessageBus): Promise<void> => {
+export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, dummyMessageBus: DummyMessageBus): Promise<void> => {
     try {
         const {resources: {js, css}, resourcesBasePath, globalLaunchFunction} = setup;
         const scripts = js.map((jsResource) => loadJs(`${resourcesBasePath}/${jsResource}?v=${Date.now()}`));
