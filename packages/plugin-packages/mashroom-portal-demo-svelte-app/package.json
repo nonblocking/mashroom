@@ -1,0 +1,65 @@
+{
+  "name": "mashroom-portal-demo-svelte-app",
+  "version": "1.0.0",
+  "description": "Simple Svelte based app that integrates into the Portal",
+  "main": "index.js",
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "webpack-dev-server --content-base public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonblocking/mashroom.git"
+  },
+  "keywords": [
+    "mashroom",
+    "svelte"
+  ],
+  "author": "Milan Heimschild",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nonblocking/mashroom/issues"
+  },
+  "homepage": "https://github.com/nonblocking/mashroom#readme",
+  "devDependencies": {
+    "@babel/preset-flow": "^7.7.4",
+    "@babel/preset-react": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "cross-env": "^6.0.3",
+    "css-loader": "^3.4.0",
+    "flow-bin": "^0.114.0",
+    "style-loader": "^1.1.2",
+    "svelte": "^3.16.7",
+    "svelte-loader": "^2.13.6",
+    "svg-inline-loader": "^0.8.0",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "dependencies": {},
+  "mashroom": {
+    "devModeBuildScript": "build",
+    "plugins": [
+      {
+        "name": "Mashroom Portal Demo Svelte App",
+        "title": "Demo Svelte App",
+        "type": "portal-app",
+        "bootstrap": "startSvelteDemoApp",
+        "category": "Demo",
+        "resources": {
+          "js": [
+            "bundle.js"
+          ],
+          "css": []
+        },
+        "defaultConfig": {
+          "resourcesRoot": "./public",
+          "restProxies": {},
+          "appConfig": {
+            "firstName": "Jimmy"
+          }
+        }
+      }
+    ]
+  }
+}
