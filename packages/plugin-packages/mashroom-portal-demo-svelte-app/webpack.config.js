@@ -35,8 +35,7 @@ module.exports = {
                 use: {
                     loader: 'svelte-loader',
                     options: {
-                        emitCss: true,
-                        hotReload: true
+                        hotReload: true,
                     }
                 }
             },
@@ -54,5 +53,13 @@ module.exports = {
         ]
     },
     mode,
-    devtool: prod ? false : 'source-map'
+    devtool: prod ? false : 'source-map',
+    devServer: {
+        inline: true,
+        host: '0.0.0.0',
+        disableHostCheck: true,
+        port: 8081,
+        contentBase: 'public',
+        open: true,
+    },
 };
