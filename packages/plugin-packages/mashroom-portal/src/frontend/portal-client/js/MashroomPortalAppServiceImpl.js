@@ -22,7 +22,9 @@ import type {
     MashroomPortalAppLoadListener,
     ModalAppCloseCallback,
     MashroomPortalAppLifecycleHooks,
-    MashroomAvailablePortalApp, MashroomPortalRemoteLogger,
+    MashroomAvailablePortalApp,
+    MashroomPortalRemoteLogger,
+    MashroomPortalMasterMessageBus,
 } from '../../../../type-definitions';
 
 export type LoadedPortalAppInternal = {
@@ -162,6 +164,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 parent.removeChild(loadedAppInternal.portalAppWrapperElement);
             }
 
+            this._unsubscribeFromMessageBus(loadedAppInternal);
             this._stopCheckForAppUpdates(loadedAppInternal);
             this._resourceManager.unloadAppResources(loadedAppInternal);
 
@@ -392,7 +395,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
         const clonedServices = Object.freeze(Object.assign({}, clientServices, {
-            messageBus: clientServices.messageBus.getAppInstance(appId),
+            messageBus: this._getMasterMessageBus(clientServices).getAppInstance(appId),
             remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName)
         }));
 
@@ -541,6 +544,17 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     _findLoadedApp(id: string) {
         return loadedPortalAppsInternal.find((app) => app.id === id);
+    }
+
+    _getMasterMessageBus(clientServices: MashroomPortalClientServices): MashroomPortalMasterMessageBus {
+        const mmb: MashroomPortalMasterMessageBus = (clientServices.messageBus: any);
+        return mmb;
+    }
+
+    _unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal): void {
+        const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
+        const mmb = this._getMasterMessageBus(clientServices);
+        mmb.unsubscribeEverythingFromApp(loadedAppInternal.id);
     }
 
     _getPageId() {

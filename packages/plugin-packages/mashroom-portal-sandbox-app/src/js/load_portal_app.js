@@ -4,9 +4,10 @@ import {HOST_ELEMENT_ID} from './components/PortalAppHost';
 
 import type {
     MashroomPortalAppLifecycleHooks,
-    MashroomPortalAppSetup, MashroomPortalClientServices,
-    MashroomPortalMessageBus
+    MashroomPortalAppSetup,
+    MashroomPortalClientServices,
 } from '@mashroom/mashroom-portal/type-definitions';
+import type {DummyMessageBus} from '../../type-definitions';
 
 const WINDOW_VAR_PORTAL_SERVICES = 'MashroomPortalServices';
 
@@ -21,7 +22,7 @@ const loadJs = (path: string): Promise<void> => {
         scriptElem.src = path;
         scriptElem.addEventListener('error', (error: any) => {
             console.error('Error loading JS resource: ', path, error);
-            reject(error)
+            reject('Error loading JS resource: ' + path);
         });
         scriptElem.addEventListener('load', () => resolve());
         document.head ? document.head.appendChild(scriptElem) : null;
@@ -43,51 +44,62 @@ const loadStyle = (path: string) => {
     LOADED_STYLES.push(linkElem);
 };
 
-export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, dummyMessageBus: MashroomPortalMessageBus): Promise<void> => {
+export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, dummyMessageBus: DummyMessageBus): Promise<void> => {
     try {
-        const {resources: {js, css}, resourcesBasePath, globalLaunchFunction} = setup;
-        const scripts = js.map((jsResource) => loadJs(`${resourcesBasePath}/${jsResource}?v=${Date.now()}`));
-        css && css.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${Date.now()}`));
-        return Promise.all(scripts).then(
+        const {sharedResources, resources, resourcesBasePath, globalLaunchFunction, lastReloadTs} = setup;
+
+        let sharedJsResources = [];
+        if (sharedResources && sharedResources.js) {
+            sharedJsResources = sharedResources.js.map((jsResource) => loadJs(`${resourcesBasePath}/${jsResource}?v=${lastReloadTs}`));
+        }
+        const jsResources = resources.js.map((jsResource) => loadJs(`${resourcesBasePath}/${jsResource}?v=${lastReloadTs}`));
+
+        sharedResources && sharedResources.css && sharedResources.css.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${lastReloadTs}`));
+        resources.css && resources.css.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${lastReloadTs}`));
+
+        return Promise.all(sharedJsResources).then(
             () => {
-                const bootstrapFn = window[globalLaunchFunction];
-                if (!(typeof (bootstrapFn) === 'function')) {
-                    return Promise.reject('Invalid bootstrap function: ' + globalLaunchFunction);
-                }
-
-                const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
-                const hostElem = document.createElement('div');
-                if (wrapperElem) {
-                    wrapperElem.innerHTML = '';
-                    wrapperElem.appendChild(hostElem);
-                }
-
-                const messageBus = dummyMessageBus.getAppInstance('portalAppUnderTest');
-                const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES] || {};
-                const modifiedClientServices = Object.assign({}, clientServices, {
-                    messageBus
-                });
-
-
-                const result = bootstrapFn(hostElem, setup, modifiedClientServices);
-                if (typeof(result.then) === 'function') {
-                    result.then(
-                        (hooks) => {
-                            loadedAppHooks = hooks
+                return Promise.all(jsResources).then(
+                    () => {
+                        const bootstrapFn = window[globalLaunchFunction];
+                        if (!(typeof (bootstrapFn) === 'function')) {
+                            return Promise.reject('Invalid bootstrap function: ' + globalLaunchFunction);
                         }
-                    );
-                } else {
-                    loadedAppHooks = result;
-                }
-            },
-            (error) => {
-                console.error('Loading failed', error);
-                const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
-                if (wrapperElem) {
-                    wrapperElem.innerHTML = `<div>Error: ${error}</div>`;
-                }
+
+                        const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
+                        const hostElem = document.createElement('div');
+                        if (wrapperElem) {
+                            wrapperElem.innerHTML = '';
+                            wrapperElem.appendChild(hostElem);
+                        }
+
+                        const messageBus = dummyMessageBus.getAppInstance('portalAppUnderTest');
+                        const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES] || {};
+                        const modifiedClientServices = Object.assign({}, clientServices, {
+                            messageBus
+                        });
+
+
+                        const result = bootstrapFn(hostElem, setup, modifiedClientServices);
+                        if (typeof(result.then) === 'function') {
+                            result.then(
+                                (hooks) => {
+                                    loadedAppHooks = hooks
+                                }
+                            );
+                        } else {
+                            loadedAppHooks = result;
+                        }
+                    },
+                );
             }
-        );
+        ).catch((error) => {
+            console.error('Error loading app into sandbox: ', error);
+            const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
+            if (wrapperElem) {
+                wrapperElem.innerHTML = `<div class="mashroom-portal-app-loading-error">Loading ${appName} failed: ${error}</div>`;
+            }
+        });
     } catch (e) {
         return Promise.reject(e);
     }
