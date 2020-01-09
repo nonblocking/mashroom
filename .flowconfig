@@ -11,6 +11,7 @@ flow-typed/
 [options]
 sharedmemory.hash_table_pow=21
 module.ignore_non_literal_requires=true
+module.file_ext=.svelte
 module.file_ext=.js
 module.file_ext=.jsx
 module.file_ext=.css
