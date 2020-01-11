@@ -15,12 +15,12 @@ Version: [version]
 ## About
 
 *Mashroom Server* is a *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps and API's on the
-server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such 
+server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such
 as logging, i18n, storage and security out of the box and supports custom middleware and services in form of plugins.
 
-From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for 
-plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally 
-all kind of code it knows how to load, which is determined by the available plugin loaders. 
+From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for
+plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally
+all kind of code it knows how to load, which is determined by the available plugin loaders.
 Plugin loaders itself are also just plugins so it is possible to extend the list of known plugin types.
 
 Compared with the concepts in the Java world *Mashroom Server* would be an Application Server. And the *Mashroom Portal* plugin
@@ -30,14 +30,14 @@ has similar concepts than a Java Portal Server.
 
  * Integration of existing _Express_ webapps
  * Shared middleware and services
- * Out of the box services for security, internationalization, messaging, storage and more 
+ * Out of the box services for security, internationalization, messaging, storage and more
  * Pluggable providers for security, storage and and many other services
  * Role based permissions for URL's (ACL's)
  * Single configuration file to override plugin default configurations
  * Hot deploy, undeploy and reload of all kind of plugins
- * No compile or runtime dependencies to the server 
+ * No compile or runtime dependencies to the server
  * Support for custom plugin types
- * Fast and lightweight 
+ * Fast and lightweight
  * Portal plugin
     * Build pages from independent SPA's, even written in different technologies
     * Client-side message bus for inter-app communication which can be extended to server-side messaging
@@ -50,17 +50,17 @@ has similar concepts than a Java Portal Server.
     * Support for theming
     * Admin UI to create pages and place apps via Drag'n'Drop
     * Hot reload of apps in development mode
-    
+
 ### Feature/Compatibility Matrix
 
 |                     | Supported                                                                                     | Planned *)                   |
 | ------------------- | --------------------------------------------------------------------------------------------- | ---------------------------- |
 | Operating Systems   | Linux, MacOS, Windows                                                                         |                              |
-| Node.js             | 8.x, 10.x, 12.x                                                                               |                              | 
+| Node.js             | 8.x, 10.x, 12.x                                                                               |                              |
 | Authentication      | LDAP (Active Directory), JSON File                                                            |  Open ID Connect             |
-| Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          | 
+| Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                            |                              |
-| Storage             | JSON Files                                                                                    |  MongoDB                     |  
+| Storage             | JSON Files                                                                                    |  MongoDB                     |
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0)                                                                    |  STOMP (ActiveMQ, RabbitMQ)  |
 | Session Storage     | in Memory (no Cluster support), shared Filesystem, Redis, MongoDB                             |                              |
 | Clustering          | yes (tested with PM2)                                                                         |                              |
@@ -68,7 +68,7 @@ has similar concepts than a Java Portal Server.
 | Mobile Browsers     | Chrome (latest), Safari (latest)                                                              |                              |
 
 *) See [Roadmap](https://github.com/nonblocking/mashroom/blob/master/ROADMAP.md)
-    
+
 ## Architecture
 
 ![Mashroom Server Architecture](mashroom_server.png "Mashroom Server Architecture")
@@ -86,12 +86,12 @@ A _package.json_ with a _Mashroom Server_ plugin definition looks like this:
 
 ```json
 {
-    "name": "my-webapp",  
+    "name": "my-webapp",
     "version": "1.0.0",
     "dependencies": {
         "express": "4.16.4"
     },
-    "devDependencies": {   
+    "devDependencies": {
     },
     "scripts": {
         "build": "babel src -d dist"
@@ -117,10 +117,10 @@ A _package.json_ with a _Mashroom Server_ plugin definition looks like this:
 Multiple plugins can be defined within a npm module.
 
 The _type_ element determines which plugin loader will be used to load the plugin. The optional _requires_ defines plugins
-that must be loaded before this plugin can be loaded. 
+that must be loaded before this plugin can be loaded.
 The content _defaultConfig_ differs per plugin type. It can be overwritten in the _plugins_ section of the server configuration.
 
-The _devModeBuildScript_ property is optional. If present _npm run &lt;devModeBuildScript&gt;_ is executed in _devMode_ after every change in the package. 
+The _devModeBuildScript_ property is optional. If present _npm run &lt;devModeBuildScript&gt;_ is executed in _devMode_ after every change in the package.
 
 The bootstrap script for this case might look like this:
 
@@ -154,27 +154,27 @@ import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    
+
     const pluginContext = pluginContextHolder.getPluginContext();
     const logger: MashroomLogger = pluginContext.loggerFactory('my.log.category');
-    const storageService: MashroomStorageService = pluginContext.services.storage.service; 
-        
+    const storageService: MashroomStorageService = pluginContext.services.storage.service;
+
         //...
 };
 ```
 
 ```js
 app.get('/', (req, res) => {
-    
+
     const pluginContext = req.pluginContext;
     const logger: MashroomLogger = pluginContext.loggerFactory('my.log.category');
-    const storageService: MashroomStorageService = pluginContext.services.storage.service; 
-    
+    const storageService: MashroomStorageService = pluginContext.services.storage.service;
+
     //...
-});  
+});
 ```
 
-**IMPORTANT NOTE**: Never store the *pluginContext* outside a bootstrap or request handler because service references my change over time 
+**IMPORTANT NOTE**: Never store the *pluginContext* outside a bootstrap or request handler because service references my change over time
 when plugins are reloaded. But it save to store the *pluginContextHolder* instance.
 
 ## Setup
@@ -183,13 +183,13 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 
  * Node.js >= 8
 
-### Install 
+### Install
 
 Just checkout the [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart) repo for a typical portal setup.
 Or [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart) if you don't need the portal plugin.
 
 A single _package.json_ is enough to setup a server instance. Plugins are just npm dependencies.
- 
+
 ### Configuration
 
 The configuration files are expected in the folder where _mashroom_ is executed. Alternatively you can pass the root folder as argument:
@@ -272,7 +272,7 @@ module.exports = {
     ignorePlugins: [],
     indexPage: "/portal",
     plugins: {
-        
+
     }
 }
 ```
@@ -290,7 +290,7 @@ module.exports = {
 
 To enable security you have to add the *mashroom-security* package and a provider package such as *mashroom-security-provide-simple*.
 
-The security package provides access control lists based on URLs and a Service for managing and checking resource permissions manually. 
+The security package provides access control lists based on URLs and a Service for managing and checking resource permissions manually.
 Please read the *mashroom-security* documentation for more details.
 
 The portal uses the security plugin to control the access to pages and portal apps. It also introduced a concept of fain grain
@@ -298,7 +298,7 @@ permissions (mapped to roles) which can be checked in portal apps and in backend
 
 ### Logging
 
-The logger is currently backed by [log4js](https://www.npmjs.com/package/log4js). 
+The logger is currently backed by [log4js](https://www.npmjs.com/package/log4js).
 
 The configuration is expected to be in the same folder as *mashroom.cfg*. Possible config files are:
 
@@ -356,7 +356,7 @@ To push the logs to logstash you can use the _logstash-http_ package:
     }
 ```
 
-And configure log4js like this: 
+And configure log4js like this:
 
 ```json
 {
@@ -376,15 +376,21 @@ And configure log4js like this:
 }
 ```
 
-### Clustering 
+### Health checks
+
+There are a few integrated health checks available that can be used as probes for monitoring tools or to check the readiness/liveness of Kubernetes pods.
+
+An overview of the health checks is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/health
+
+### Clustering
 
 When you're going to run _Mashroom Server_ in a cluster you should keep in mind:
 
  * Use as session provider that provides clustering (such as _mashroom-session-provider-filestore_)
- * If you use file appenders you either have to make sure that your _log4js_ config creates a file per node process or 
+ * If you use file appenders you either have to make sure that your _log4js_ config creates a file per node process or
  you have to install _pm2-intercom_ if you're using _pm2_. Read the _log4js_ clustering documentation for details:
  [https://github.com/log4js-node/log4js-node/blob/master/docs/clustering.md](https://github.com/log4js-node/log4js-node/blob/master/docs/clustering.md)
- 
+
 A cluster safe log configuration could look like this:
 
 ```json
@@ -400,11 +406,11 @@ module.exports = {
     },
     disableClustering: true
 };
-``` 
+```
 
 ## Admin UI
 
-The _Mashroom Server_ Admin UI is available under http://&lt;host&gt;:&lt;port&gt;/mashroom. 
+The _Mashroom Server_ Admin UI is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/admin
 
 ![Mashroom Admin UI](mashroom_admin_ui.png "Mashroom Admin UI")
 
@@ -413,8 +419,8 @@ It contains:
  * General server information
  * Plugins with state and configuration
  * Middleware stack (with order)
- * All available services 
- * All loaded webapps 
+ * All available services
+ * All loaded webapps
  * Documentation
 
 ## Mashroom Portal
@@ -425,7 +431,7 @@ It contains:
 
 #### How does it work?
 
-Every portal app (SPA) has to expose a global _bootstrap_ method. The _Portal Client_ fetches the app metadata from the 
+Every portal app (SPA) has to expose a global _bootstrap_ method. The _Portal Client_ fetches the app metadata from the
 server, loads all required resources and calls then the _bootstrap_ with the configuration object and the DOM element
 where the app should run in.
 
@@ -433,7 +439,7 @@ where the app should run in.
 
 The API proxy allows the portal app to access it's REST API. The API can be deploy within *Mashroom Server* or be remote.
 
-The access to a proxy url can be restricted to specific roles. 
+The access to a proxy url can be restricted to specific roles.
 
 #### Remote apps
 
@@ -454,12 +460,12 @@ After that you can add the new portal app via Drag'n'Drop where ever you want:
 
 ![Register remote portal app](mashroom_portal_register_remote_app2.png =350x*)
 
-#### Messaging 
+#### Messaging
 
 The Portal comes with a client-side _MessageBus_ that can be used by Portal Apps to communicate with each other locally.
 
 If server-side messaging (_mashroom-messaging_) and Websocket support (_mashroom-websocket_) is installed, the _MessageBus_ is
-automatically connected to the server-side messaging facility and like this Portal Apps can communicate with Apps in other 
+automatically connected to the server-side messaging facility and like this Portal Apps can communicate with Apps in other
 browsers and even with 3rd party systems (when a external messaging system such as MQTT is connected).
 
 ![Messaging](mashroom_messaging.png)
@@ -470,7 +476,7 @@ browsers and even with 3rd party systems (when a external messaging system such 
 
 ![Mashroom Portal Layout](mashroom_portal_layout.png)
 
-The *theme* is responsible for rendering the page. It defines where the main content is. 
+The *theme* is responsible for rendering the page. It defines where the main content is.
 The portal adds the selected layout to the main content and the configured portal apps within the app areas of this layout.
 
 #### Default start page with demo apps
@@ -502,81 +508,81 @@ this in the _Mashroom_ config file:
 
 ![Mashroom Portal show versions](mashroom_portal_show_versions.png)
 
-## Core 
+## Core
 
-[mashroom](../../../core/mashroom/README.md) [inc] 
+[mashroom](../../../core/mashroom/README.md) [inc]
 
 ## Plugins
 
-[mashroom-security](../../mashroom-security/README.md) [inc] 
+[mashroom-security](../../mashroom-security/README.md) [inc]
 
-[mashroom-security-provider-simple](../../mashroom-security-provider-simple/README.md) [inc] 
+[mashroom-security-provider-simple](../../mashroom-security-provider-simple/README.md) [inc]
 
-[mashroom-security-provider-ldap](../../mashroom-security-provider-ldap/README.md) [inc] 
+[mashroom-security-provider-ldap](../../mashroom-security-provider-ldap/README.md) [inc]
 
-[mashroom-security-default-login-webapp](../../mashroom-security-default-login-webapp/README.md) [inc] 
+[mashroom-security-default-login-webapp](../../mashroom-security-default-login-webapp/README.md) [inc]
 
-[mashroom-storage](../../mashroom-storage/README.md) [inc] 
+[mashroom-storage](../../mashroom-storage/README.md) [inc]
 
-[mashroom-storage-provider-filestore](../../mashroom-storage-provider-filestore/README.md) [inc] 
+[mashroom-storage-provider-filestore](../../mashroom-storage-provider-filestore/README.md) [inc]
 
-[mashroom-session](../../mashroom-session/README.md) [inc] 
+[mashroom-session](../../mashroom-session/README.md) [inc]
 
-[mashroom-session-provider-filestore](../../mashroom-session-provider-filestore/README.md) [inc] 
+[mashroom-session-provider-filestore](../../mashroom-session-provider-filestore/README.md) [inc]
 
-[mashroom-session-provider-redis](../../mashroom-session-provider-redis/README.md) [inc] 
+[mashroom-session-provider-redis](../../mashroom-session-provider-redis/README.md) [inc]
 
-[mashroom-session-provider-mongodb](../../mashroom-session-provider-mongodb/README.md) [inc] 
+[mashroom-session-provider-mongodb](../../mashroom-session-provider-mongodb/README.md) [inc]
 
-[mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc] 
+[mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc]
 
-[mashroom-websocket](../../mashroom-websocket/README.md) [inc] 
+[mashroom-websocket](../../mashroom-websocket/README.md) [inc]
 
-[mashroom-messaging](../../mashroom-messaging/README.md) [inc] 
+[mashroom-messaging](../../mashroom-messaging/README.md) [inc]
 
-[mashroom-messaging-external-provider-mqtt](../../mashroom-messaging-external-provider-mqtt/README.md) [inc] 
+[mashroom-messaging-external-provider-mqtt](../../mashroom-messaging-external-provider-mqtt/README.md) [inc]
 
-[mashroom-i18n](../../mashroom-i18n/README.md) [inc] 
+[mashroom-i18n](../../mashroom-i18n/README.md) [inc]
 
-[mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc] 
+[mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc]
 
-[mashroom-csrf-protection](../../mashroom-csrf-protection/README.md) [inc] 
+[mashroom-csrf-protection](../../mashroom-csrf-protection/README.md) [inc]
 
-[mashroom-helmet](../../mashroom-helmet/README.md) [inc] 
+[mashroom-helmet](../../mashroom-helmet/README.md) [inc]
 
-[mashroom-portal](../../mashroom-portal/README.md) [inc] 
+[mashroom-portal](../../mashroom-portal/README.md) [inc]
 
-[mashroom-portal-default-layouts](../../mashroom-portal-default-layouts/README.md) [inc] 
+[mashroom-portal-default-layouts](../../mashroom-portal-default-layouts/README.md) [inc]
 
-[mashroom-portal-default-theme](../../mashroom-portal-default-theme/README.md) [inc] 
+[mashroom-portal-default-theme](../../mashroom-portal-default-theme/README.md) [inc]
 
-[mashroom-portal-admin-app](../../mashroom-portal-admin-app/README.md) [inc] 
+[mashroom-portal-admin-app](../../mashroom-portal-admin-app/README.md) [inc]
 
-[mashroom-portal-tabify-app](../../mashroom-portal-tabify-app/README.md) [inc] 
+[mashroom-portal-tabify-app](../../mashroom-portal-tabify-app/README.md) [inc]
 
-[mashroom-portal-iframe-app](../../mashroom-portal-iframe-app/README.md) [inc] 
+[mashroom-portal-iframe-app](../../mashroom-portal-iframe-app/README.md) [inc]
 
-[mashroom-portal-remote-app-registry](../../mashroom-portal-remote-app-registry/README.md) [inc] 
+[mashroom-portal-remote-app-registry](../../mashroom-portal-remote-app-registry/README.md) [inc]
 
-[mashroom-portal-sandbox-app](../../mashroom-portal-sandbox-app/README.md) [inc] 
+[mashroom-portal-sandbox-app](../../mashroom-portal-sandbox-app/README.md) [inc]
 
 ## Demo Plugins
 
-[mashroom-demo-webapp](../../mashroom-demo-webapp/README.md) [inc] 
+[mashroom-demo-webapp](../../mashroom-demo-webapp/README.md) [inc]
 
-[mashroom-portal-demo-alternative-theme](../../mashroom-portal-demo-alternative-theme/README.md) [inc] 
+[mashroom-portal-demo-alternative-theme](../../mashroom-portal-demo-alternative-theme/README.md) [inc]
 
-[mashroom-portal-demo-react-app](../../mashroom-portal-demo-react-app/README.md) [inc] 
+[mashroom-portal-demo-react-app](../../mashroom-portal-demo-react-app/README.md) [inc]
 
-[mashroom-portal-demo-angular-app](../../mashroom-portal-demo-angular-app/README.md) [inc] 
+[mashroom-portal-demo-angular-app](../../mashroom-portal-demo-angular-app/README.md) [inc]
 
-[mashroom-portal-demo-vue-app](../../mashroom-portal-demo-vue-app/README.md) [inc] 
+[mashroom-portal-demo-vue-app](../../mashroom-portal-demo-vue-app/README.md) [inc]
 
-[mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc] 
+[mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc]
 
-[mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc] 
+[mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc]
 
-[mashroom-portal-demo-remote-messaging](../../mashroom-portal-demo-remote-messaging/README.md) [inc] 
+[mashroom-portal-demo-remote-messaging](../../mashroom-portal-demo-remote-messaging/README.md) [inc]
 
 ## 3rd Party Plugins
 

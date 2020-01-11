@@ -3,7 +3,7 @@
 import escapeHtml from './escape_html';
 import infoTemplate from './template';
 
-import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
+import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
 
 const middlewareStack = (req: ExpressRequest, res: ExpressResponse) => {
     res.type('text/html');

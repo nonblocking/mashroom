@@ -1,11 +1,7 @@
 // @flow
 
 import indexRoute from './routes/index_route';
-import infoOverviewRoute from './routes/info_overview_route';
-import infoPluginsRoute from './routes/info_plugins_route';
-import infoWebappsRoute from './routes/info_webapps_route';
-import infoServicesRoute from './routes/info_services_route';
-import infoMiddlewareStack from './routes/info_middleware_stack';
+import mashroomRouter from './routes/mashroom';
 
 import type {
     MashroomServer as MashroomServerType,
@@ -37,18 +33,18 @@ export default class MashroomServer implements MashroomServerType {
         this._scanner = scanner;
         this._errorHandler = errorHandler;
         this._log = loggerFactory('mashroom.server');
-        this._addBaseRoutes();
+        this._addServerRoutes();
     }
 
     async start() {
         this._log.info(`
 Starting
-   __  ___         __                         ____                    
+   __  ___         __                         ____
   /  |/  /__ ____ / /  _______  ___  __ _    / __/__ _____  _____ ____
  / /|_/ / _ \`(_-</ _ \\/ __/ _ \\/ _ \\/  ' \\  _\\ \\/ -_) __/ |/ / -_) __/
-/_/  /_/\\_,_/___/_//_/_/  \\___/\\___/_/_/_/ /___/\\__/_/  |___/\\__/_/        
+/_/  /_/\\_,_/___/_//_/_/  \\___/\\___/_/_/_/ /___/\\__/_/  |___/\\__/_/
 
-Version ${this._serverInfo.version}                                                 
+Version ${this._serverInfo.version}
 `);
 
         return new Promise((resolve, reject) => {
@@ -60,8 +56,6 @@ Version ${this._serverInfo.version}
                     this._log.info(`Mashroom server started at port ${this._config.port}`);
                     this._scanner.start();
                     this._errorHandler.install();
-                    setInterval(() => this._showMemoryConsumption(), 60000);
-
                     resolve();
                 }
             });
@@ -87,18 +81,9 @@ Version ${this._serverInfo.version}
         });
     }
 
-    _showMemoryConsumption() {
-        const residentSetMB = Math.trunc(process.memoryUsage().rss / 1024 / 1024);
-        this._log.debug(`Current memory consumption: ${residentSetMB} MB`);
-    }
-
-    _addBaseRoutes() {
+    _addServerRoutes() {
         this._expressApp.get('/', indexRoute);
-        this._expressApp.get('/mashroom', infoOverviewRoute);
-        this._expressApp.get('/mashroom/plugins', infoPluginsRoute);
-        this._expressApp.get('/mashroom/middleware', infoMiddlewareStack);
-        this._expressApp.get('/mashroom/webapps', infoWebappsRoute);
-        this._expressApp.get('/mashroom/services', infoServicesRoute);
+        this._expressApp.use('/mashroom', mashroomRouter);
     }
 
 }

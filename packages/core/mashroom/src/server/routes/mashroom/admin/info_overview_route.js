@@ -3,7 +3,7 @@
 import infoTemplate from './template';
 import jsonToHtml from './json_to_html';
 
-import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
+import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
 
 const overviewRoute = (req: ExpressRequest, res: ExpressResponse) => {
     res.type('text/html');
@@ -11,6 +11,12 @@ const overviewRoute = (req: ExpressRequest, res: ExpressResponse) => {
 };
 
 export default overviewRoute;
+
+const getUptime = () => {
+    const date = new Date(0);
+    date.setSeconds(process.uptime());
+    return date.toISOString().substr(11, 8);
+};
 
 const overview = (pluginContext: MashroomPluginContext) => `
     <table>
@@ -20,19 +26,19 @@ const overview = (pluginContext: MashroomPluginContext) => `
         </tr>
         <tr>
             <th>Server uptime (sec)</th>
-            <td>${Math.floor(process.uptime())}</td>
+            <td>${getUptime()}</td>
         </tr>
         <tr>
             <th>Process ID</th>
             <td>${process.pid}</td>
         </tr>
         <tr>
-            <th>Node.js version</th>
-            <td>${process.version}</td>
-        </tr>
-        <tr>
             <th>Mashroom Server version</th>
             <td>${pluginContext.serverInfo.version}</td>
+        </tr>
+        <tr>
+            <th>Node.js version</th>
+            <td>${process.versions['node']}</td>
         </tr>
         <tr>
             <th>Server configuration</th>

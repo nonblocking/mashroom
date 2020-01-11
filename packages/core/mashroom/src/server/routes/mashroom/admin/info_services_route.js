@@ -2,7 +2,7 @@
 
 import infoTemplate from './template';
 
-import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
+import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
 
 const servicesRoute = (req: ExpressRequest, res: ExpressResponse) => {
     res.type('text/html');

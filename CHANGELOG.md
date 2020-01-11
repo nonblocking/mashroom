@@ -3,10 +3,14 @@
 
 ## [unreleased]
 
+## 1.2.3 (11. January 2020)
+
+ * Core: Added health checks that can for example be used as readiness/liveness probes in Kubernetes (*/mashroom/health*)
+ * Core: Moved Admin UI from */mashroom* to */mashroom/admin*
  * Svelte based demo Portal App added
  * Sandbox App: Loads now also shared resources properly
  * Portal: When a portal app gets unloaded all its message bus listeners will automatically be unregistered
-   (in case the app does not unregister properly on onmount)
+   (in case the app does not unregister the listeners properly on onmount)
 
 ## 1.2.2 (7. December 2019)
 

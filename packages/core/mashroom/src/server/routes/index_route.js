@@ -6,7 +6,8 @@ const indexRoute = (req: ExpressRequest, res: ExpressResponse) => {
     const pluginContext = req.pluginContext;
 
     if (!pluginContext.serverConfig.indexPage || pluginContext.serverConfig.indexPage.length < 2) {
-        res.redirect('/mashroom');
+        // Forward to Admin UI
+        res.redirect('/mashroom/admin');
     } else {
         let redirectPath = pluginContext.serverConfig.indexPage;
         const { originalUrl } = req;

@@ -2,7 +2,7 @@
 
 import infoTemplate from './template';
 
-import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
+import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
 
 const webappsRoute = (req: ExpressRequest, res: ExpressResponse) => {
     res.type('text/html');
@@ -13,7 +13,7 @@ export default webappsRoute;
 
 const webapps = (pluginContext: MashroomPluginContext) => `
     <h2>Loaded Webapp Plugins</h2>
-    ${webappsList(pluginContext)}         
+    ${webappsList(pluginContext)}
 `;
 
 const webappsList = (pluginContext: MashroomPluginContext) => {

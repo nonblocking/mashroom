@@ -4,7 +4,7 @@ import infoTemplate from './template';
 import escapeHtml from './escape_html';
 import jsonToHtml from './json_to_html';
 
-import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../type-definitions';
+import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
 
 const pluginsRoute = (req: ExpressRequest, res: ExpressResponse) => {
     res.type('text/html');
@@ -19,7 +19,7 @@ const plugins = (pluginContext: MashroomPluginContext) => `
     <h2>Plugin Packages</h2>
     ${pluginPackagesTable(pluginContext)}
     <h2>Plugins</h2>
-    ${pluginTable(pluginContext)}         
+    ${pluginTable(pluginContext)}
 `;
 
 const pluginLoadersTable = (pluginContext: MashroomPluginContext) => {
