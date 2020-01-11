@@ -1,5 +1,5 @@
 {
-    "name": "mashroom-portal-demo-svelte-app",
+    "name": "@mashroom/mashroom-portal-demo-svelte-app",
     "version": "1.2.3",
     "description": "Simple Svelte based app that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
