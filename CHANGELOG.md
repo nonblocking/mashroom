@@ -111,7 +111,7 @@
    a plugin instance and want to get notified about an unload or reload.
  * Added a Service plugin to handle WebSocket connections (_mashroom-websocket_)
  * Core: web-app Plugins can now additionally have handlers for upgrade requests (WebSocket support) and for unload
- * Core: The _Middleware_ tab in the admin UI shows now the actual order of the stack (until now the order was just calculated)
+ * Core: The _Middleware_ tab in the Admin UI shows now the actual order of the stack (until now the order was just calculated)
 
 ## 1.0.94 (28. August 2019)
 
@@ -127,7 +127,7 @@
 
 ## 1.0.92 (12. August 2019)
 
- * Portal: The app filter in Admin UI considers now _tags_ also.
+ * Portal: The app filter in Portal Admin Toolbar considers now _tags_ also.
    And the categories are sorted alphabetically now.
  * Portal: All initial query parameters are now added again after login
 

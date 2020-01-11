@@ -1,18 +1,18 @@
 
 ### Mashroom Portal Remote App Registry
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a remote app registry to _Mashroom Portal_. Scans periodically a list of remote servers for Portal Apps. 
+Adds a remote app registry to _Mashroom Portal_. Scans periodically a list of remote servers for Portal Apps.
 It expects the _package.json_ (containing the _mashroom_ property) to be exposed at _/_. You can find an example
 remote app here: [Mashroom Demo Remote Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
 
-It also comes with an Admin Ui (_/portal-remote-app-registry/admin_) and a REST API to add and remote URL's. The Admin UI allows adding a URL 
+It also comes with an Admin UI (_/portal-remote-app-registry/admin_) and a REST API to add and remote URL's. The Admin UI allows adding a URL
 temporary only for the current session.
 
 Rewrites the _resourcesRoot_ and rest proxy _targetUri_ properties if necessary (when they point to the local filesystem or localhost).
 
-*Example:* 
+*Example:*
 
 ```json
 {
@@ -67,20 +67,20 @@ You can override the default config in your Mashroom config file like this:
  * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (Default: ./remote-portal-apps.json)
  * _checkIntervalSec_: The interval to check new or invalid registrations
  * _registrationRefreshIntervalSec_: Scan interval (Default: 3600)
- 
+
 The config file contains just an array of URL's:
 
 ```json
 [
     "http://demo-remote-app.mashroom-server.com"
 ]
-``` 
+```
 
 The **Service** can be used like this:
 
 ```js
 // @flow
-    
+
 import type {MashroomPortalRemoteAppEndpointService} from '@mashroom/mashroom-portal-remote-app-registry/type-definitions';
 
 export default async (req: ExpressRequest, res: ExpressResponse) => {
@@ -104,7 +104,7 @@ Available at _/portal-remote-app-registry/api_. Methods:
        "sessionOnly": false
     }
     ```
- * _DELETE /&lt;url&gt;_ : Delete given URL 
+ * _DELETE /&lt;url&gt;_ : Delete given URL
 
 #### Services
 

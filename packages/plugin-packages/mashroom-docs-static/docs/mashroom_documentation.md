@@ -48,7 +48,7 @@ has similar concepts than a Java Portal Server.
     * Role based permissions for pages and apps
     * Support for global libraries that can be shared between the apps
     * Support for theming
-    * Admin UI to create pages and place apps via Drag'n'Drop
+    * Admin Toolbar to create pages and place apps via Drag'n'Drop
     * Hot reload of apps in development mode
 
 ### Feature/Compatibility Matrix
@@ -577,6 +577,8 @@ this in the _Mashroom_ config file:
 [mashroom-portal-demo-angular-app](../../mashroom-portal-demo-angular-app/README.md) [inc]
 
 [mashroom-portal-demo-vue-app](../../mashroom-portal-demo-vue-app/README.md) [inc]
+
+[mashroom-portal-demo-svelte-app](../../mashroom-portal-demo-svelte-app/README.md) [inc]
 
 [mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc]
 
