@@ -7,10 +7,10 @@ import RolesList from '../components/RolesList';
 import type {FieldArrayProps} from 'redux-form';
 import type {Node} from 'react';
 
-type Props = {
+type Props = {|
     name: string,
     addRoleRef?: ((role: string) => void) => void
-}
+|}
 
 export default class RolesListContainer extends PureComponent<Props> {
 

@@ -7,13 +7,13 @@ import SourceCodeEditorField from '../components/SourceCodeEditorField';
 import type {Node} from 'react';
 import type {FieldProps} from 'redux-form';
 
-type Props = {
+type Props = {|
     name: string,
     labelId: string,
     language: 'javascript' | 'json' | 'css' | 'html',
     theme?: 'blackboard' | 'idea',
     height?: number
-}
+|}
 
 export default class SourceCodeEditorFieldContainer extends PureComponent<Props> {
 

@@ -9,8 +9,8 @@ import PageDeleteDialog from '../components/PageDeleteDialog';
 import type {ComponentType} from 'react';
 import type {Dispatch, Pages, SelectedPage, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
 type StateProps = {|
     pages: Pages,
@@ -21,7 +21,9 @@ type DispatchProps = {|
     setErrorUpdating: (boolean) => void
 |}
 
-class PageDeleteDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class PageDeleteDialogContainer extends PureComponent<Props> {
 
     render() {
         return (

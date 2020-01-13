@@ -9,16 +9,18 @@ import {DependencyContextConsumer} from '../DependencyContext';
 import type {IntlShape} from 'react-intl';
 
 import type {ComponentType} from 'react';
-import type {Dispatch, State} from '../../../type-definitions';
+import type {State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
-type IntlProps = {
+type IntlProps = {|
     intl: IntlShape
-}
+|}
 
-class AddAppDropdownMenuContainer extends PureComponent<IntlProps & OwnProps> {
+type Props = IntlProps & OwnProps;
+
+class AddAppDropdownMenuContainer extends PureComponent<Props> {
 
     render() {
         return (

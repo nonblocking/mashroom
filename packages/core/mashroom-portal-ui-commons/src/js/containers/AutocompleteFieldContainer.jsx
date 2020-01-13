@@ -10,7 +10,7 @@ import type {IntlShape} from 'react-intl';
 import type {FieldProps} from 'redux-form';
 import type {SuggestionHandler} from '../../../type-definitions';
 
-type OwnProps = {
+type OwnProps = {|
     id: string,
     name: string,
     labelId: string,
@@ -22,17 +22,19 @@ type OwnProps = {
     onValueChange?: (value: ?string) => void,
     onSuggestionSelect?: (any) => void,
     resetRef?: (() => void) => void,
-}
+|}
 
-type IntlProps = {
+type IntlProps = {|
     intl: IntlShape
-}
+|}
+
+type Props = OwnProps & IntlProps;
 
 type State = {
     suggestions: Array<any>;
 }
 
-class AutocompleteFieldContainer extends PureComponent<OwnProps & IntlProps, State> {
+class AutocompleteFieldContainer extends PureComponent<Props, State> {
 
     render() {
         return <Field name={this.props.name} component={(fieldProps: FieldProps): Node => <AutocompleteField fieldProps={fieldProps} {...this.props}/>}/>;

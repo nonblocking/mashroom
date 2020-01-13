@@ -7,11 +7,11 @@ import CheckboxField from '../components/CheckboxField';
 import type {FieldProps} from 'redux-form';
 import type {Node} from 'react';
 
-type Props = {
+type Props = {|
     name: string,
     id: string,
     labelId?: string
-}
+|}
 
 export default class CheckboxFieldContainer extends PureComponent<Props> {
 

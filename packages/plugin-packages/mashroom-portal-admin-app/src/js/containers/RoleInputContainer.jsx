@@ -9,10 +9,10 @@ import {setExistingRoles} from '../store/actions';
 import type {ComponentType} from 'react';
 import type {Dispatch, State} from '../../../type-definitions';
 
-type OwnProps = {
+type OwnProps = {|
     onRoleChange?: (role: ?string) => void,
     resetRef?: (() => void) => void,
-}
+|}
 
 type StateProps = {|
     existingRoles: Array<string>
@@ -22,7 +22,9 @@ type DispatchProps = {|
     setExistingRoles: (Array<string>) => void
 |}
 
-class RoleInputContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class RoleInputContainer extends PureComponent<Props> {
 
     render() {
         return (

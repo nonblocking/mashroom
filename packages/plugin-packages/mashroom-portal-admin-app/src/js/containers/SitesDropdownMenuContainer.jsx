@@ -10,8 +10,8 @@ import {setSelectedSite} from '../store/actions';
 import type {ComponentType} from 'react';
 import type {Dispatch, Sites, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
 type StateProps = {|
     sites: Sites
@@ -22,7 +22,9 @@ type DispatchProps = {|
     initConfigureSite: (siteId: string) => void
 |}
 
-class SitesDropdownMenuContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class SitesDropdownMenuContainer extends PureComponent<Props> {
 
     render() {
         return (

@@ -11,17 +11,19 @@ import I18NStringField from '../components/I18NStringField';
 import type {Node, ComponentType} from 'react';
 import type {Languages, State} from '../../../type-definitions';
 
-type OwnProps = {
+type OwnProps = {|
     id: string,
     labelId: string,
     name: string
-}
+|}
 
 type StateProps = {|
     languages: Languages,
 |}
 
-class I18NStringFieldContainer extends PureComponent<OwnProps & StateProps> {
+type Props = OwnProps & StateProps;
+
+class I18NStringFieldContainer extends PureComponent<Props> {
 
     render() {
         return <Field name={this.props.name} component={(fieldProps: FieldProps): Node => <I18NStringField fieldProps={fieldProps} {...this.props}/>}/>;

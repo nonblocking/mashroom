@@ -9,7 +9,7 @@ import type {FieldProps} from 'redux-form';
 import type {Node, ComponentType} from 'react';
 import type {IntlShape} from 'react-intl';
 
-type OwnProps = {
+type OwnProps = {|
     id: string,
     name: string,
     labelId: string,
@@ -18,13 +18,15 @@ type OwnProps = {
     emptyOption?: boolean,
     placeholder?: string,
     onValueChange?: (value: ?string) => void,
-}
+|}
 
-type IntlProps = {
+type IntlProps = {|
     intl: IntlShape
-}
+|}
 
-class SelectFieldContainer extends PureComponent<OwnProps & IntlProps> {
+type Props = OwnProps & IntlProps;
+
+class SelectFieldContainer extends PureComponent<Props> {
 
     render() {
         return <Field

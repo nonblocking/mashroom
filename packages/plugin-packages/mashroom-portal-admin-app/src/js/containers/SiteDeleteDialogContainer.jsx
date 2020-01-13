@@ -9,8 +9,8 @@ import SiteDeleteDialog from '../components/SiteDeleteDialog';
 import type {ComponentType} from 'react';
 import type {Dispatch, SelectedSite, Sites, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
 type StateProps = {|
     sites: Sites,
@@ -21,7 +21,9 @@ type DispatchProps = {|
     setErrorUpdating: (boolean) => void
 |}
 
-class SiteDeleteDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class SiteDeleteDialogContainer extends PureComponent<Props> {
 
     render() {
         return (

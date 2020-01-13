@@ -9,8 +9,8 @@ import {setSelectedPortalAppLoading, setSelectedPortalAppLoadingError, setSelect
 import type {ComponentType} from 'react';
 import type {Dispatch, SelectedPortalApp, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
 type StateProps = {|
     selectedPortalApp: ?SelectedPortalApp,
@@ -23,7 +23,9 @@ type DispatchProps = {|
     setPermittedRoles: (?Array<string>) => void
 |}
 
-class PortalAppConfigureDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class PortalAppConfigureDialogContainer extends PureComponent<Props> {
 
     render() {
         return (

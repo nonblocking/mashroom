@@ -20,8 +20,8 @@ import type {
 } from '@mashroom/mashroom-portal/type-definitions';
 import type {Dispatch, Languages, SelectedSite, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
 type StateProps = {|
     selectedSite: ?SelectedSite,
@@ -38,7 +38,9 @@ type DispatchProps = {|
     setPermittedRoles: (?Array<string>) => void
 |}
 
-class PageConfigureDialogContainer extends PureComponent<OwnProps & StateProps & DispatchProps> {
+type Props = OwnProps & StateProps & DispatchProps;
+
+class PageConfigureDialogContainer extends PureComponent<Props> {
 
     render() {
         return (

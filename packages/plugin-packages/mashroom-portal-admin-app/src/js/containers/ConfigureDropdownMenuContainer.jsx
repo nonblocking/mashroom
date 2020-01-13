@@ -10,8 +10,8 @@ import {setSelectedPage, setSelectedSite} from '../store/actions';
 import type {ComponentType} from 'react';
 import type {Dispatch, State} from '../../../type-definitions';
 
-type OwnProps = {
-}
+type OwnProps = {|
+|}
 
 type DispatchProps = {|
     showModal: (name: string) => void,
@@ -19,7 +19,9 @@ type DispatchProps = {|
     initConfigurePage: (pageId: string) => void
 |}
 
-class ConfigureDropdownMenuContainer extends PureComponent<OwnProps & DispatchProps> {
+type Props = OwnProps & DispatchProps;
+
+class ConfigureDropdownMenuContainer extends PureComponent<Props> {
 
     render() {
         return (

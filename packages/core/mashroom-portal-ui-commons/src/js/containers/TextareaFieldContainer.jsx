@@ -9,20 +9,22 @@ import type {Node, ComponentType} from 'react';
 import type {FieldProps} from 'redux-form';
 import type {IntlShape} from 'react-intl';
 
-type OwnProps = {
+type OwnProps = {|
     id: string,
     name: string,
     labelId: string,
     rows?: number,
     maxLength?: number,
     placeholder?: string,
-}
+|}
 
-type IntlProps = {
+type IntlProps = {|
     intl: IntlShape
-}
+|}
 
-class TextareaFieldContainer extends PureComponent<OwnProps & IntlProps> {
+type Props = OwnProps & IntlProps;
+
+class TextareaFieldContainer extends PureComponent<Props> {
 
     render() {
         return <Field name={this.props.name} component={(fieldProps: FieldProps): Node => <TextareaField fieldProps={fieldProps} {...this.props}/>}/>;
