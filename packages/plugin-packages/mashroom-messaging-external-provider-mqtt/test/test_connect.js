@@ -1,3 +1,4 @@
+
 /* eslint-disable */
 
 var {connect} = require('mqtt');
@@ -10,7 +11,6 @@ const client = connect('mqtt://localhost:1883', {
     username: null,
     password: null,
 });
-console.info('test');
 
 client.on('message', (topic, payload) => {
     let message = null;

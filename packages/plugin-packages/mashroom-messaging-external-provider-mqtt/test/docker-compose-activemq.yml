@@ -1,0 +1,9 @@
+version: "3"
+
+services:
+    activemq-mqtt:
+        container_name: activemq-mqtt
+        image: rmohr/activemq
+        ports:
+            - "1883:1883"
+            - "8161:8161"
