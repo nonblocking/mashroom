@@ -6,8 +6,7 @@
     "license": "MIT",
     "version": "1.2.3",
     "files": [
-        "dist/**",
-        "type-definitions/*"
+        "dist/**"
     ],
     "dependencies": {
         "connect-redis": "^4.0.3",
