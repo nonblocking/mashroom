@@ -7,8 +7,7 @@
     "version": "1.2.3",
     "sideEffects": false,
     "files": [
-        "dist/**",
-        "type-definitions/*"
+        "dist/**"
     ],
     "devDependencies": {
         "@babel/cli": "^7.6.4",

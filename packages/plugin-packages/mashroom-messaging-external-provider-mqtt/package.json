@@ -6,8 +6,7 @@
     "license": "MIT",
     "version": "1.2.3",
     "files": [
-        "dist/**",
-        "type-definitions/*"
+        "dist/**"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "1.2.3",
