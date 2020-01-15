@@ -5,7 +5,7 @@ import context from '../context/global_context';
 
 const PROVIDER_NAME_MEMORY = 'memory';
 
-import type {MashroomSessionMiddleware as MashroomSessionMiddlewareType} from '../../type-definitions';
+import type {MashroomSessionMiddleware as MashroomSessionMiddlewareType} from '../../type-definitions/internal';
 import type {ExpressRequest, ExpressResponse, ExpressNextFunction} from '@mashroom/mashroom/type-definitions';
 
 export default class MashroomSessionMiddleware implements MashroomSessionMiddlewareType {

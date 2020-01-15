@@ -10,7 +10,8 @@ import type {
     ExpressRequest,
     ExpressResponse,
 } from '@mashroom/mashroom/type-definitions';
-import type {HttpHeaders, HttpHeaderFilter as HttpHeaderFilterType, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
+import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
+import type {HttpHeaderFilter as HttpHeaderFilterType} from '../type-definitions/internal';
 
 export default class MashroomHttpProxyService implements MashroomHttpProxyServiceType {
 

@@ -3,6 +3,16 @@
 
 ## [unreleased]
 
+ * Added TypeScript definitions for all API's. Works now similar than with flow:
+```js
+// index.ts
+import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement: HTMLElement, portalAppSetup, portalClientServices) => {
+    // ...
+}
+```
+ * Separated API types from internal ones and hid internal types
+
 ## 1.2.3 (11. January 2020)
 
  * Core: Added health checks that can for example be used as readiness/liveness probes in Kubernetes (*/mashroom/health*)

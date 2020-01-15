@@ -15,9 +15,11 @@ const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/bui
 export const DEFAULT_DEFER_UPDATE_MS = 2000;
 
 import type {
-    MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName,
     MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder,
 } from '../../../type-definitions';
+import type {
+    MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName,
+} from '../../../type-definitions/internal';
 
 type DeferredUpdatesTimestamps = {
     [string]: number

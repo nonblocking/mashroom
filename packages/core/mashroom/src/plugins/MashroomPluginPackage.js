@@ -8,10 +8,20 @@ import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
 
 import type {
-    MashroomPluginPackage as MashroomPluginPackageType, MashroomPluginPackageEvent, MashroomPluginPackageEventName,
-    MashroomPluginDefinition, MashroomPluginPackageDefinition, MashroomPluginPackageRegistryConnector, MashroomLoggerFactory,
-    MashroomLogger, MashroomPluginPackageStatus, MashroomPluginPackageBuilder, MashroomPluginPackageBuilderEvent,
+    MashroomPluginPackage as MashroomPluginPackageType,
+    MashroomPluginPackageEvent,
+    MashroomPluginPackageEventName,
+    MashroomPluginDefinition,
+    MashroomLoggerFactory,
+    MashroomLogger,
+    MashroomPluginPackageStatus,
+    MashroomPluginPackageDefinition,
 } from '../../type-definitions';
+import type {
+    MashroomPluginPackageRegistryConnector,
+    MashroomPluginPackageBuilder,
+    MashroomPluginPackageBuilderEvent,
+} from '../../type-definitions/internal';
 
 const readFile = promisify(fs.readFile);
 

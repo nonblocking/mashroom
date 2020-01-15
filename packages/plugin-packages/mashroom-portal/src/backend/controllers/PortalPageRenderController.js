@@ -50,12 +50,14 @@ import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-d
 import type {
     MashroomPortalSite,
     MashroomPortalPage,
-    MashroomPortalPageRenderModel,
     MashroomPortalPageRef,
-    MashroomPortalPluginRegistry,
     MashroomPortalPageRefLocalized,
     MashroomPortalSiteLocalized,
+    MashroomPortalPageRenderModel,
 } from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry,
+} from '../../../type-definitions/internal';
 
 export default class PortalPageRenderController {
 

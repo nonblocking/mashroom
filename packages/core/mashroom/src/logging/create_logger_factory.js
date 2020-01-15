@@ -2,7 +2,8 @@
 
 import MashroomLogger from './MashroomLogger';
 
-import type {MashroomLoggerContext, MashroomLoggerDelegate, MashroomLoggerFactory} from '../../type-definitions';
+import type {MashroomLoggerContext, MashroomLoggerFactory} from '../../type-definitions';
+import type {MashroomLoggerDelegate} from '../../type-definitions/internal';
 
 const create = (delegate: MashroomLoggerDelegate): MashroomLoggerFactory => {
    const factory = (category: string) => new MashroomLogger(category, null, delegate);

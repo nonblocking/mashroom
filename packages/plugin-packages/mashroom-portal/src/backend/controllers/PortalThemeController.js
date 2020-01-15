@@ -8,7 +8,13 @@ import type {
     MashroomLogger
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
-import type {MashroomPortalPluginRegistry, MashroomPortalService, MashroomAvailablePortalTheme} from '../../../type-definitions';
+import type {
+    MashroomPortalService,
+    MashroomAvailablePortalTheme
+} from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry,
+} from '../../../type-definitions/internal';
 
 export default class PortalThemeController {
 

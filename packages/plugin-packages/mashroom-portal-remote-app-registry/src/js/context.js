@@ -3,7 +3,7 @@
 import RemotePortalAppRegistry from './registry/RemotePortalAppRegistry';
 
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
-import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob} from '../../type-definitions';
+import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob} from '../../type-definitions/internal';
 
 let currentRequest: ?ExpressRequest = null;
 let registerBackgroundJob: any = null;

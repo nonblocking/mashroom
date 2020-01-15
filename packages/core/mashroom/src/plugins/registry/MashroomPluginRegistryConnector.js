@@ -4,7 +4,7 @@ import EventEmitter from 'events';
 
 import type {
     MashroomPluginRegistryConnectorEventName, MashroomPluginRegistryConnectorEvent, MashroomPluginRegistryConnector as MashroomPluginRegistryConnectorType,
-} from '../../../type-definitions';
+} from '../../../type-definitions/internal';
 
 export default class MashroomPluginPackageRegistryConnector implements MashroomPluginRegistryConnectorType {
 

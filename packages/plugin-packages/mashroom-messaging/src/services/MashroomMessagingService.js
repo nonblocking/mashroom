@@ -2,13 +2,16 @@
 
 import {WEBSOCKET_CONNECT_PATH} from './constants';
 
-import type {
-    MashroomMessagingService as MashroomMessagingServiceType,
-    MashroomMessagingSubscriberCallback, MashroomMessagingInternalService,
-} from '../../type-definitions';
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomWebSocketService} from '@mashroom/mashroom-websocket/type-definitions';
+import type {
+    MashroomMessagingService as MashroomMessagingServiceType,
+    MashroomMessagingSubscriberCallback,
+} from '../../type-definitions';
+import type {
+    MashroomMessagingInternalService,
+} from '../../type-definitions/internal';
 
 const privatePropsMap: WeakMap<MashroomMessagingService, {
     internalService: MashroomMessagingInternalService

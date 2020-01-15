@@ -33,14 +33,24 @@ import MashroomServer from '../server/MashroomServer';
 import InitializationError from '../errors/InitializationError';
 
 import type {
-    MashroomServerContextFactory, MashroomPluginPackageRegistryConnector,
-    MashroomPluginRegistry as MashroomPluginRegistryType,
-    MashroomServerContext, MashroomPluginContextHolder as MashroomPluginContextHolderType, MashroomLoggerFactory,
-    ExpressApplication, MashroomServiceRegistry as MashroomServiceRegistryType, MashroomServerConfig,
-    MashroomPluginDefinition, MashroomPluginRegistryConnector, MashroomPluginPackage as MashroomPluginPackageType,
-    MiddlewarePluginDelegate as MiddlewarePluginDelegateType, MashroomServerInfo,
+    MashroomLoggerFactory,
+    ExpressApplication,
+    MashroomServerConfig,
+    MashroomPluginDefinition,
+    MashroomPluginPackage as MashroomPluginPackageType,
+    MashroomServerInfo,
     MashroomCoreServices,
+    MashroomPluginContextHolder as MashroomPluginContextHolderType,
 } from '../../type-definitions';
+import type {
+    MashroomServerContextFactory,
+    MashroomPluginPackageRegistryConnector,
+    MashroomPluginRegistry as MashroomPluginRegistryType,
+    MashroomServerContext,
+    MashroomServiceRegistry as MashroomServiceRegistryType,
+    MiddlewarePluginDelegate as MiddlewarePluginDelegateType,
+    MashroomPluginRegistryConnector,
+} from '../../type-definitions/internal';
 
 /**
  * Server context factory

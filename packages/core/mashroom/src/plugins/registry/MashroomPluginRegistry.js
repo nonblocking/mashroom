@@ -7,12 +7,9 @@ import MashroomPluginPackageRegistryConnector from './MashroomPluginPackageRegis
 import MashroomPluginRegistryConnector from './MashroomPluginRegistryConnector';
 
 import type {
-    MashroomPluginRegistry as MashroomPluginRegistryType,
-    MashroomPluginPackageScanner,
     MashroomPluginPackagePath,
     MashroomPluginPackage,
     MashroomPluginLoaderMap,
-    MashroomPluginPackageFactory,
     MashroomLogger,
     MashroomLoggerFactory,
     MashroomPluginLoader,
@@ -21,12 +18,17 @@ import type {
     MashroomPluginDefinition,
     MashroomPlugin as MashroomPluginType,
     MashroomPluginType as MashroomPluginTypeType,
+} from '../../../type-definitions';
+import type {
+    MashroomPluginPackageFactory,
+    MashroomPluginRegistry as MashroomPluginRegistryType,
+    MashroomPluginPackageScanner,
     MashroomPluginFactory,
     MashroomPluginPackageRegistryConnector as MashroomPluginPackageRegistryConnectorType,
     MashroomPluginRegistryConnector as MashroomPluginRegistryConnectorType,
-     MashroomPluginRegistryEvent,
+    MashroomPluginRegistryEvent,
     MashroomPluginRegistryEventName,
-} from '../../../type-definitions';
+} from '../../../type-definitions/internal';
 
 export default class MashroomPluginRegistry implements MashroomPluginRegistryType {
 

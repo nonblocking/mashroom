@@ -11,8 +11,10 @@ import type {
 import type {
     MashroomMessagingExternalProvider,
     MashroomExternalMessagingProviderPluginBootstrapFunction,
-    MashroomExternalMessagingProviderRegistry,
 } from '../../../type-definitions';
+import type {
+    MashroomExternalMessagingProviderRegistry,
+} from '../../../type-definitions/internal';
 
 export default class MashroomExternalMessagingProviderPluginLoader implements MashroomPluginLoader {
 

@@ -18,6 +18,12 @@ module.file_ext=.css
 module.file_ext=.scss
 module.name_mapper.extension='css' -> 'empty/object'
 module.name_mapper.extension='scss' -> 'empty/object'
+module.name_mapper='^@mashroom/mashroom\/\(.*\)$' -> '<PROJECT_ROOT>/packages/core/mashroom/\1'
+module.name_mapper='^@mashroom/mashroom-utils\/\(.*\)$' -> '<PROJECT_ROOT>/packages/core/mashroom-utils/\1'
+module.name_mapper='^@mashroom/mashroom-portal\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-portal/\1'
+module.name_mapper='^@mashroom/mashroom-security\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-security/\1'
+module.name_mapper='^@mashroom/mashroom-storage\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-storage/\1'
+module.name_mapper='^@mashroom/mashroom-browser-cache\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-browser-cache/\1'
 
 [lints]
 deprecated-utility=off

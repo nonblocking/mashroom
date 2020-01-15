@@ -3,8 +3,10 @@
 import type {
     ExpressRequest, ExpressResponse, MashroomLogger, MashroomLoggerFactory,
     MashroomMiddlewareStackService as MashroomMiddlewareStackServiceType,
-    MiddlewarePluginDelegate
 } from '../../type-definitions';
+import type {
+    MiddlewarePluginDelegate,
+} from '../../type-definitions/internal';
 
 const privatePropsMap: WeakMap<MashroomMiddlewareStackService, {
     middlewarePluginDelegate: MiddlewarePluginDelegate;

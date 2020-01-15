@@ -2,10 +2,12 @@
 
 import type {
     MashroomPluginService as MashroomPluginServiceType,
-    MashroomPluginRegistry,
     MashroomLogger,
     MashroomLoggerFactory
 } from '../../type-definitions';
+import type {
+    MashroomPluginRegistry,
+} from '../../type-definitions/internal';
 
 type Listeners = {
     [pluginName: string]: Array<() => void>

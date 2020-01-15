@@ -7,7 +7,7 @@ import type {
     ExpressResponse,
     MashroomLogger
 } from '@mashroom/mashroom/type-definitions';
-import type {ClientLogMessage, MashroomPortalPluginRegistry} from '../../../type-definitions';
+import type {ClientLogMessage, MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalLogController {
 

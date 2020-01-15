@@ -7,10 +7,12 @@ import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashro
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {
     MashroomPortalAppInstance, MashroomPortalPage,
-    MashroomPortalPluginRegistry,
     MashroomPortalService as MashroomPortalServiceType,
     MashroomPortalSite,
 } from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry,
+} from '../../../type-definitions/internal';
 
 export default class MashroomPortalService implements MashroomPortalServiceType {
 

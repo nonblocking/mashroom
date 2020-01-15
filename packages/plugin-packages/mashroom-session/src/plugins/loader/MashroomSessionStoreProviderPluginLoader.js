@@ -6,8 +6,10 @@ import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, Mashroo
 import type {
     MashroomSessionStoreProvider,
     MashroomSessionStoreProviderPluginBootstrapFunction,
-    MashroomSessionStoreProviderRegistry,
 } from '../../../type-definitions';
+import type {
+    MashroomSessionStoreProviderRegistry,
+} from '../../../type-definitions/internal';
 
 export default class MashroomSessionStoreProviderPluginLoader implements MashroomPluginLoader {
 

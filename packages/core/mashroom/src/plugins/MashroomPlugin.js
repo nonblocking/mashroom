@@ -6,9 +6,11 @@ import PluginBootstrapError from '@mashroom/mashroom-utils/lib/PluginBootstrapEr
 
 import type {
     MashroomPlugin as MashroomPluginType, MashroomPluginType as MashroomPluginTypeType, MashroomPluginDefinition, MashroomPluginConfig,
-    MashroomPluginRegistryConnector, MashroomPluginStatus, MashroomPluginPackage, MashroomLoggerFactory, MashroomLogger,
-    MashroomPluginRegistryConnectorEvent,
+    MashroomPluginStatus, MashroomPluginPackage, MashroomLoggerFactory, MashroomLogger,
 } from '../../type-definitions';
+import type {
+    MashroomPluginRegistryConnector, MashroomPluginRegistryConnectorEvent,
+} from '../../type-definitions/internal';
 
 export default class MashroomPlugin implements MashroomPluginType {
 

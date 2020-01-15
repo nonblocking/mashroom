@@ -5,16 +5,18 @@ import {WEBSOCKET_CONNECT_PATH} from './constants';
 import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomWebSocketClient, MashroomWebSocketService} from '@mashroom/mashroom-websocket/type-definitions';
 import type {
-    MashroomMessagingInternalService,
     MashroomMessagingSubscriberCallback,
-    MashroomMessagingWebSocketErrorResponse,
-    MashroomMessagingWebSocketHandler as MashroomMessagingWebSocketHandlerType,
     MashroomMessagingWebSocketPublishMessage,
     MashroomMessagingWebSocketPublishRequest,
     MashroomMessagingWebSocketSubscribeRequest,
     MashroomMessagingWebSocketSuccessResponse,
-    MashroomMessagingWebSocketUnsubscribeRequest
+    MashroomMessagingWebSocketUnsubscribeRequest,
+    MashroomMessagingWebSocketErrorResponse,
 } from '../../type-definitions';
+import type {
+    MashroomMessagingInternalService,
+    MashroomMessagingWebSocketHandler as MashroomMessagingWebSocketHandlerType,
+} from '../../type-definitions/internal';
 
 const WEBSOCKET_SERVICE_PLUGIN_NAME = 'Mashroom WebSocket Services';
 const WEBSOCKET_MESSAGE_MATCHER = (path: string) => path === WEBSOCKET_CONNECT_PATH;

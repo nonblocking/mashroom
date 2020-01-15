@@ -18,9 +18,15 @@ const MAX_PARALLEL_BUILDS = 5;
 const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
 
 import type {
-    MashroomPluginPackageBuilder as MashroomPluginPackageBuilderType, MashroomLogger, MashroomLoggerFactory,
-    MashroomPluginPackageBuilderEventName, MashroomPluginPackageBuilderEvent, MashroomServerConfig,
+    MashroomLogger,
+    MashroomLoggerFactory,
+    MashroomServerConfig,
 } from '../../../type-definitions';
+import type {
+    MashroomPluginPackageBuilder as MashroomPluginPackageBuilderType,
+    MashroomPluginPackageBuilderEventName,
+    MashroomPluginPackageBuilderEvent,
+} from '../../../type-definitions/internal';
 
 type BuildQueueEntry = {
     pluginPackageName: string,

@@ -4,8 +4,10 @@ import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, Mashroo
 import type {
     MashroomSecurityProvider,
     MashroomSecurityProviderPluginBootstrapFunction,
-    MashroomSecurityProviderRegistry,
 } from '../../../type-definitions';
+import type {
+    MashroomSecurityProviderRegistry,
+} from '../../../type-definitions/internal';
 
 export default class MashroomSecurityProviderPluginLoader implements MashroomPluginLoader {
 

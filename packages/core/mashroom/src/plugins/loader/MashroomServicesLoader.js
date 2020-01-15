@@ -4,8 +4,11 @@ import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigu
 
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLoggerFactory,
-    MashroomLogger, MashroomServiceRegistry, MashroomServicesPluginBootstrapFunction, MashroomServices,
+    MashroomLogger, MashroomServicesPluginBootstrapFunction, MashroomServices,
 } from '../../../type-definitions';
+import type {
+    MashroomServiceRegistry,
+} from '../../../type-definitions/internal';
 
 export default class MashroomServicesLoader implements MashroomPluginLoader {
 

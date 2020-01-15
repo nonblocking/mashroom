@@ -1,8 +1,12 @@
 // @flow
 
 import type {
-    MashroomSecurityACLChecker,
-    MashroomSecurityProviderRegistry,
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLogger,
+} from '@mashroom/mashroom/type-definitions';
+import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
+import type {
     MashroomSecurityService as MashroomSecurityServiceType,
     MashroomSecurityPermission,
     MashroomSecurityProtectedResource,
@@ -11,11 +15,9 @@ import type {
     MashroomSecurityProvider,
 } from '../../type-definitions';
 import type {
-    ExpressRequest,
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
+    MashroomSecurityACLChecker,
+    MashroomSecurityProviderRegistry,
+} from '../../type-definitions/internal';
 
 export const ROLE_ADMINISTRATOR = 'Administrator';
 export const ROLE_AUTHENTICATED_USER = 'Authenticated';

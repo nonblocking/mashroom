@@ -2,8 +2,10 @@
 
 import type {
     MashroomSessionStoreProvider,
-    MashroomSessionStoreProviderRegistry as MashroomSessionStoreProviderRegistryType,
 } from '../../type-definitions';
+import type {
+    MashroomSessionStoreProviderRegistry as MashroomSessionStoreProviderRegistryType,
+} from '../../type-definitions/internal';
 
 type MashroomSessionStoreProviderHolder = {
     +pluginName: string,

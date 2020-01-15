@@ -2,7 +2,8 @@
 
 import {cloneAndFreezeObject} from '@mashroom/mashroom-utils/lib/readonly_utils';
 
-import type {MashroomServiceRegistry as MashroomServiceRegistryType, MashroomServices} from '../../type-definitions';
+import type {MashroomServices} from '../../type-definitions';
+import type {MashroomServiceRegistry as MashroomServiceRegistryType} from '../../type-definitions/internal';
 
 export default class MashroomServiceRegistry implements MashroomServiceRegistryType {
 

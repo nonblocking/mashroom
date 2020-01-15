@@ -4,7 +4,8 @@ import path from 'path';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
 import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalLayout, MashroomPortalPluginRegistry} from '../../../../type-definitions';
+import type {MashroomPortalLayout} from '../../../../type-definitions';
+import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
 export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
 

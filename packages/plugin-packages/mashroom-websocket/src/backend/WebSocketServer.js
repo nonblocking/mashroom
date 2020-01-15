@@ -9,10 +9,12 @@ import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-defini
 import type {
     MashroomWebSocketClient,
     MashroomWebSocketMatcher,
-    MashroomWebSocketServer,
     MashroomWebSocketMessageListener,
     MashroomWebSocketDisconnectListener,
 } from '../../type-definitions';
+import type {
+    MashroomWebSocketServer,
+} from '../../type-definitions/internal';
 
 const CHECK_CONNECTIONS_INTERVAL_MS = 30 * 1000;
 const KEEP_ALIVE_MESSAGE = 'keepalive';

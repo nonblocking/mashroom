@@ -1,6 +1,7 @@
 // @flow
 
-import type {HttpHeaderFilter as HttpHeaderFilterType, HttpHeaders} from '../type-definitions';
+import type {HttpHeaders} from '../type-definitions';
+import type {HttpHeaderFilter as HttpHeaderFilterType} from '../type-definitions/internal';
 
 export default class HttpHeaderFilter implements HttpHeaderFilterType {
 

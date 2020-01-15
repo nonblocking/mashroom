@@ -2,9 +2,11 @@
 
 import type {
     MashroomPluginContextHolder as MashroomPluginContextHolderType,
-    MashroomServerContextHolder,
     MashroomPluginContext
 } from '../../type-definitions';
+import type {
+    MashroomServerContextHolder,
+} from '../../type-definitions/internal';
 
 export default class MashroomPluginContextHolder implements MashroomPluginContextHolderType {
 

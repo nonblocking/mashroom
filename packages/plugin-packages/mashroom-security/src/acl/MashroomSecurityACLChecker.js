@@ -9,12 +9,14 @@ import type {
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
 import type {
+    MashroomSecurityUser,
+} from '../../type-definitions';
+import type {
     MashroomSecurityACLChecker as MashroomSecurityACLCheckerType,
     MashroomSecurityACLPathRule,
     MashroomSecurityACLPathRulePermission,
     HttpMethod,
-    MashroomSecurityUser,
-} from '../../type-definitions';
+} from '../../type-definitions/internal';
 
 type ACLPathRuleRegexp = {
     regexp: RegExp,

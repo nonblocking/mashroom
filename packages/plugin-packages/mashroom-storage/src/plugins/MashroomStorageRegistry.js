@@ -2,7 +2,8 @@
 
 import {createReadonlyProxy} from '@mashroom/mashroom-utils/lib/readonly_utils';
 
-import type {MashroomStorageRegistry as MashroomStorageRegistryType, MashroomStorage, MashroomStorageProviderMap} from '../../type-definitions';
+import type {MashroomStorage} from '../../type-definitions';
+import type {MashroomStorageRegistry as MashroomStorageRegistryType, MashroomStorageProviderMap} from '../../type-definitions/internal';
 
 export default class MashroomStorageRegistry implements MashroomStorageRegistryType {
 

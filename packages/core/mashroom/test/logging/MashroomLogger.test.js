@@ -2,7 +2,8 @@
 
 import MashroomLogger from '../../src/logging/MashroomLogger';
 
-import type {LogLevel, MashroomLoggerDelegate} from '../../type-definitions';
+import type {LogLevel} from '../../type-definitions';
+import type {MashroomLoggerDelegate} from '../../type-definitions/internal';
 
 describe('create_logger_factory', () => {
 

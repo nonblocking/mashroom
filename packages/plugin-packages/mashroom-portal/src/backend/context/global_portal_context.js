@@ -3,7 +3,7 @@
 import MashroomPortalPluginRegistry from '../plugins/MashroomPortalPluginRegistry';
 import setupWebapp from '../setup-webapp';
 
-import type {MashroomPortalContext, MashroomPortalPluginConfig} from '../../../type-definitions';
+import type {MashroomPortalContext, MashroomPortalPluginConfig} from '../../../type-definitions/internal';
 
 const startTimestamp = Date.now();
 

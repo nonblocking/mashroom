@@ -1,7 +1,8 @@
 // @flow
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorageService as MashroomStorageServiceType, MashroomStorageRegistry, MashroomStorage} from '../../type-definitions';
+import type {MashroomStorageService as MashroomStorageServiceType, MashroomStorage} from '../../type-definitions';
+import type {MashroomStorageRegistry} from '../../type-definitions/internal';
 
 const MAX_WAIT_FOR_STORAGE = 10000;
 

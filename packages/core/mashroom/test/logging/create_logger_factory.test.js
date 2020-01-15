@@ -3,7 +3,8 @@
 import GlobalLoggerContext from '../../src/logging/context/GlobalLoggerContext';
 import createLoggerFactory from '../../src/logging/create_logger_factory';
 
-import type {LogLevel, MashroomLoggerDelegate} from '../../type-definitions';
+import type {LogLevel} from '../../type-definitions';
+import type {MashroomLoggerDelegate} from '../../type-definitions/internal';
 
 describe('logger_factory', () => {
 

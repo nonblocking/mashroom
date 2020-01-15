@@ -1,7 +1,7 @@
 import {ApplicationRef, enableProdMode, NgModule} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import {PortalAppSetup, PortalClientServices} from './types';
+import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 import {BrowserModule} from "@angular/platform-browser";
 import {FormsModule} from "@angular/forms";
 import {HttpClientModule} from '@angular/common/http';
@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
     enableProdMode();
 }
 
-const bootstrap = (hostElement: HTMLElement, portalAppSetup: PortalAppSetup, portalClientServices: PortalClientServices) => {
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement: HTMLElement, portalAppSetup, portalClientServices) => {
 
     /*
      * We dynamically create a module per Portal App instance

@@ -4,15 +4,17 @@ import indexRoute from './routes/index_route';
 import mashroomRouter from './routes/mashroom';
 
 import type {
-    MashroomServer as MashroomServerType,
     MashroomServerConfig,
-    MashroomPluginPackageScanner,
     MashroomLogger,
     MashroomLoggerFactory,
     ExpressApplication,
-    GlobalNodeErrorHandler,
-    MashroomServerInfo
+    MashroomServerInfo,
 } from '../../type-definitions';
+import type {
+    MashroomServer as MashroomServerType,
+    GlobalNodeErrorHandler,
+    MashroomPluginPackageScanner,
+} from  '../../type-definitions/internal';
 
 export default class MashroomServer implements MashroomServerType {
 

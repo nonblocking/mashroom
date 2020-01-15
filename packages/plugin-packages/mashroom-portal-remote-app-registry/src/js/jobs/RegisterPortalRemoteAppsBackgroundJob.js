@@ -14,9 +14,11 @@ import type {
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
 import type {
     MashroomPortalRemoteAppEndpointService,
-    RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,
     RemotePortalAppEndpoint
 } from '../../../type-definitions';
+import type {
+    RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,
+} from '../../../type-definitions/internal';
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 

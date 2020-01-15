@@ -5,8 +5,10 @@ import GlobalLoggerContext from './context/GlobalLoggerContext';
 import type {
     MashroomLogger as MashroomLoggerType,
     MashroomLoggerContext,
-    MashroomLoggerDelegate
 } from '../../type-definitions';
+import type {
+    MashroomLoggerDelegate,
+} from '../../type-definitions/internal';
 
 export default class MashroomLogger implements MashroomLoggerType {
 

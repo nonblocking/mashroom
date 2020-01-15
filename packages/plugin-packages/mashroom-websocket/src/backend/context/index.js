@@ -1,6 +1,6 @@
 // @flow
 
-import type {MashroomWebSocketServer} from '../../../type-definitions';
+import type {MashroomWebSocketServer} from '../../../type-definitions/internal';
 
 let server: any = null;
 let restrictToRoles: ?Array<string> = null;

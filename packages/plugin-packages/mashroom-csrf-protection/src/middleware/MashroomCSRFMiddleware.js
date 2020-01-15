@@ -1,8 +1,8 @@
 // @flow
 
-
-import type {MashroomCSRFMiddleware as MashroomCSRFMiddlewareType, MashroomCSRFService} from '../../type-definitions';
 import type {MashroomLogger, MashroomLoggerFactory, ExpressRequest, ExpressResponse, ExpressNextFunction} from '@mashroom/mashroom/type-definitions';
+import type {MashroomCSRFService} from '../../type-definitions';
+import type {MashroomCSRFMiddleware as MashroomCSRFMiddlewareType} from '../../type-definitions/internal';
 
 const CSRF_HEADER_NAME = 'x-csrf-token';
 const CSRF_QUERY_PARM_NAME = 'csrfToken';

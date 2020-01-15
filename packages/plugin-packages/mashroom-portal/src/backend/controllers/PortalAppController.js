@@ -31,13 +31,15 @@ import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache
 import type {
     MashroomPortalAppSetup,
     MashroomPortalApp,
-    MashroomPortalPluginRegistry,
     MashroomAvailablePortalApp,
     MashroomPortalAppInstance,
     MashroomPortalService,
     MashroomPortalAppUserPermissions,
     MashroomPortalAppUser,
 } from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry,
+} from '../../../type-definitions/internal';
 
 export default class PortalAppController {
 

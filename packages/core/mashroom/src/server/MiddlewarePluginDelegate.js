@@ -1,13 +1,15 @@
 // @flow
 
 import type {
-    MiddlewarePluginDelegate as MiddlewarePluginDelegateType,
     ExpressRequest,
     ExpressResponse,
     ExpressNextFunction,
     ExpressMiddleware,
-    MiddlewareStackEntry
 } from '../../type-definitions';
+import type {
+    MiddlewarePluginDelegate as MiddlewarePluginDelegateType,
+    MiddlewareStackEntry
+} from '../../type-definitions/internal';
 
 export default class MiddlewarePluginDelegate implements MiddlewarePluginDelegateType {
 

@@ -7,13 +7,15 @@ import type {MashroomLogger, MashroomLoggerFactory, MashroomPluginService} from 
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions'
 import type {
-    MashroomMessagingInternalService as MashroomMessagingInternalServiceType,
     MashroomMessagingExternalProvider,
-    MashroomExternalMessagingProviderRegistry,
     MashroomMessagingSubscriberCallback,
-    MashroomMessageTopicACLChecker,
     MashroomExternalMessageListener,
 } from '../../type-definitions';
+import type {
+    MashroomMessagingInternalService as MashroomMessagingInternalServiceType,
+    MashroomExternalMessagingProviderRegistry,
+    MashroomMessageTopicACLChecker,
+} from '../../type-definitions/internal';
 
 type SubscriptionWrapper = {
     user: MashroomSecurityUser,

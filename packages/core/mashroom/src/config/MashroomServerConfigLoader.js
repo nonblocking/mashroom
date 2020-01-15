@@ -7,7 +7,8 @@ import {createReadonlyProxy} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
 import defaultConfig from './mashroom_default_config';
 
-import type {MashroomServerConfigLoader as MashroomServerConfigLoaderType, MashroomServerConfigHolder, MashroomLogger, MashroomLoggerFactory} from '../../type-definitions';
+import type {MashroomLogger, MashroomLoggerFactory} from '../../type-definitions';
+import type {MashroomServerConfigLoader as MashroomServerConfigLoaderType, MashroomServerConfigHolder} from '../../type-definitions/internal';
 import ServerConfigurationError from '../errors/ServerConfigurationError';
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';

@@ -2,8 +2,10 @@
 
 import type {
     MashroomMessagingExternalProvider,
-    MashroomExternalMessagingProviderRegistry as MashroomExternalMessagingProviderRegistryType,
 } from '../../type-definitions';
+import type {
+    MashroomExternalMessagingProviderRegistry as MashroomExternalMessagingProviderRegistryType,
+} from '../../type-definitions/internal';
 
 type MashroomExternalMessagingProviderHolder = {
     +pluginName: string,

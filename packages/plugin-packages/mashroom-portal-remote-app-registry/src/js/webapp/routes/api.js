@@ -3,8 +3,10 @@
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomPortalRemoteAppEndpointService,
-    RemotePortalAppEndpointAddRequest
 } from '../../../../type-definitions';
+import type {
+    RemotePortalAppEndpointAddRequest
+} from '../../../../type-definitions/internal';
 
 export const getRemotePortalApps = async (req: ExpressRequest, res: ExpressResponse) => {
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;

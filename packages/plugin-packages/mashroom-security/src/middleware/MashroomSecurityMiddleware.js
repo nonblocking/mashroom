@@ -9,10 +9,12 @@ import type {
     MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {
-    MashroomSecurityMiddleware as MashroomSecurityMiddlewareType,
     MashroomSecurityService,
     MashroomSecurityUser
 } from '../../type-definitions';
+import type {
+    MashroomSecurityMiddleware as MashroomSecurityMiddlewareType,
+} from '../../type-definitions/internal';
 
 const HEADER_DOES_NOT_EXTEND_AUTHENTICATION = 'x-mashroom-does-not-extend-auth';
 

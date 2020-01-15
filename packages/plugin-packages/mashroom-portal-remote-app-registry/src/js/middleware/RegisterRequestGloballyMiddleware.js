@@ -3,7 +3,7 @@
 import {globalRequestHolder} from '../context';
 
 import type {MashroomLogger, MashroomLoggerFactory, ExpressRequest, ExpressResponse, ExpressNextFunction} from '@mashroom/mashroom/type-definitions';
-import type {RegisterRequestGloballyMiddleware as RegisterRequestGloballyMiddlewareType} from '../../../type-definitions';
+import type {RegisterRequestGloballyMiddleware as RegisterRequestGloballyMiddlewareType} from '../../../type-definitions/internal';
 
 export default class RegisterRequestGloballyMiddleware implements RegisterRequestGloballyMiddlewareType {
 

@@ -8,7 +8,7 @@ import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/typ
 import type {MashroomSecurityRoles, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomMessageTopicACLChecker as MashroomMessageTopicACLCheckerType, MashroomMessagingACLTopicRules,
-} from '../../type-definitions';
+} from '../../type-definitions/internal';
 
 type Rules = Array<{
     topic: string,

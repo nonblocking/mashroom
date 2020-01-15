@@ -2,9 +2,11 @@
 
 import type {
     MashroomLogger,
-    MashroomLoggerFactory,
-    GlobalNodeErrorHandler as GlobalNodeErrorHandlerType
+    MashroomLoggerFactory
 } from '../../type-definitions';
+import type {
+    GlobalNodeErrorHandler as GlobalNodeErrorHandlerType
+} from '../../type-definitions/internal';
 
 let unhandledRejection = false;
 let uncaughtException = false;

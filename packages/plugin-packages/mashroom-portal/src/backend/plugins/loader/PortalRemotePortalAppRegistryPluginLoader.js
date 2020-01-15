@@ -1,8 +1,8 @@
 // @flow
 
 import type {MashroomLogger, MashroomLoggerFactory, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomPluginLoader} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalPluginRegistry, MashroomRemotePortalAppRegistryBootstrapFunction, MashroomRemotePortalAppRegistryHolder} from '../../../../type-definitions';
-
+import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '../../../../type-definitions';
+import type {MashroomPortalPluginRegistry, MashroomRemotePortalAppRegistryHolder} from '../../../../type-definitions/internal';
 
 export default class PortalRemotePortalAppRegistryPluginLoader implements MashroomPluginLoader {
 

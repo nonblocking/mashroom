@@ -5,10 +5,12 @@ import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import type {
     MashroomPortalApp,
     MashroomPortalLayout,
-    MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
     MashroomPortalTheme,
-    MashroomRemotePortalAppRegistryHolder
 } from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
+    MashroomRemotePortalAppRegistryHolder
+} from '../../../type-definitions/internal';
 
 export default class MashroomPortalPluginRegistry implements MashroomPortalPluginRegistryType {
 

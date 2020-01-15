@@ -8,10 +8,12 @@ import type {
     MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {
-    MashroomPortalPluginRegistry,
     MashroomPortalService,
     MashroomAvailablePortalLayout
 } from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry,
+} from '../../../type-definitions/internal';
 
 export default class PortalLayoutController {
 

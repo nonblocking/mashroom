@@ -16,7 +16,6 @@ import type {
 } from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomPortalPage,
-    MashroomPortalPluginRegistry,
     MashroomPagePortalAppInstance,
     MashroomPortalAppInstanceRef,
     MashroomCreatePagePortalAppInstance,
@@ -24,6 +23,9 @@ import type {
     MashroomPortalAppInstance,
     MashroomPortalService
 } from '../../../type-definitions';
+import type {
+    MashroomPortalPluginRegistry,
+} from '../../../type-definitions/internal';
 
 export default class PortalPageController {
 

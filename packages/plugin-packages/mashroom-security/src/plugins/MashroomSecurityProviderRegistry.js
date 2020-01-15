@@ -2,8 +2,10 @@
 
 import type {
     MashroomSecurityProvider,
-    MashroomSecurityProviderRegistry as MashroomSecurityProviderRegistryType,
 } from '../../type-definitions';
+import type {
+    MashroomSecurityProviderRegistry as MashroomSecurityProviderRegistryType,
+} from '../../type-definitions/internal';
 
 type MashroomSecurityProviderHolder = {
     +pluginName: string,

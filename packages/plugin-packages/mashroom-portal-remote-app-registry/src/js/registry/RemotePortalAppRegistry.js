@@ -2,7 +2,7 @@
 
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
-import type { RemotePortalAppRegistry as RemotePortalAppRegistryType, GlobalRequestHolder } from '../../../type-definitions';
+import type {RemotePortalAppRegistry as RemotePortalAppRegistryType, GlobalRequestHolder} from '../../../type-definitions/internal';
 
 const SESSION_KEY_PORTAL_REMOTE_APPS = '__MASHROOM_PORTAL_REMOTE_APPS';
 

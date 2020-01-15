@@ -2,8 +2,11 @@
 
 import type {
     MashroomPluginContextHolder, MashroomPluginLoader, MashroomPluginConfig, MashroomPlugin,
-    MashroomMiddlewarePluginBootstrapFunction, MiddlewarePluginDelegate, MashroomLoggerFactory, MashroomLogger,
+    MashroomMiddlewarePluginBootstrapFunction, MashroomLoggerFactory, MashroomLogger,
 } from '../../../type-definitions';
+import type {
+    MiddlewarePluginDelegate
+} from '../../../type-definitions/internal';
 
 const DEFAULT_ORDER = 1000;
 

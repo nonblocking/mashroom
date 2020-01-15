@@ -2,7 +2,7 @@
 
 import MashroomLoggerDelegateLog4js from './log4js/MashroomLoggerDelegateLog4js';
 
-import type {MashroomLoggerDelegate} from '../../../type-definitions';
+import type {MashroomLoggerDelegate} from '../../../type-definitions/internal';
 
 // For the moment, we use log4js by default
 // Change this to make the log framework to use configurable

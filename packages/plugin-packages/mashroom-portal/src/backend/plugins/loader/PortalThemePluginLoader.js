@@ -3,7 +3,8 @@
 import path from 'path';
 
 import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalTheme, MashroomPortalPluginRegistry, MashroomPortalThemePluginBootstrapFunction} from '../../../../type-definitions';
+import type {MashroomPortalTheme, MashroomPortalThemePluginBootstrapFunction} from '../../../../type-definitions';
+import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
 export default class PortalThemePluginLoader implements MashroomPluginLoader {
 

@@ -4,7 +4,8 @@ import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig,
     MashroomPluginContextHolder, MashroomLoggerFactory, MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomStoragePluginBootstrapFunction, MashroomStorageRegistry} from '../../../type-definitions';
+import type {MashroomStoragePluginBootstrapFunction} from '../../../type-definitions';
+import type {MashroomStorageRegistry} from '../../../type-definitions/internal';
 
 export default class MashroomStorageProviderLoader implements MashroomPluginLoader {
 
