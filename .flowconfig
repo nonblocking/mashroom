@@ -23,6 +23,7 @@ module.name_mapper='^@mashroom/mashroom-utils\/\(.*\)$' -> '<PROJECT_ROOT>/packa
 module.name_mapper='^@mashroom/mashroom-portal\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-portal/\1'
 module.name_mapper='^@mashroom/mashroom-security\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-security/\1'
 module.name_mapper='^@mashroom/mashroom-storage\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-storage/\1'
+module.name_mapper='^@mashroom/mashroom-messaging\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-messaging/\1'
 module.name_mapper='^@mashroom/mashroom-browser-cache\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-browser-cache/\1'
 
 [lints]
