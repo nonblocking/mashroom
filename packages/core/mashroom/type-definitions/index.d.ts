@@ -67,6 +67,7 @@ export interface MashroomLoggerContext {
 }
 
 export type MashroomLoggerFactory = {
+    (category: string): MashroomLogger;
     bindToContext(context: MashroomLoggerContext): MashroomLoggerFactory;
 };
 
