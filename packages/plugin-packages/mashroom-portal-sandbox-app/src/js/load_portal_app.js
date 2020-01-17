@@ -13,6 +13,8 @@ const WINDOW_VAR_PORTAL_SERVICES = 'MashroomPortalServices';
 
 const LOADED_SCRIPTS: Array<HTMLScriptElement> = [];
 const LOADED_STYLES: Array<HTMLLinkElement> = [];
+
+// TODO: implement unloading/loading of a different portal app?
 let loadedAppHooks: ?MashroomPortalAppLifecycleHooks = null;
 
 const loadJs = (path: string): Promise<void> => {
@@ -81,14 +83,16 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
 
 
                         const result = bootstrapFn(hostElem, setup, modifiedClientServices);
-                        if (typeof(result.then) === 'function') {
-                            result.then(
-                                (hooks) => {
-                                    loadedAppHooks = hooks
-                                }
-                            );
-                        } else {
-                            loadedAppHooks = result;
+                        if (result) {
+                            if (typeof (result.then) === 'function') {
+                                result.then(
+                                    (hooks) => {
+                                        loadedAppHooks = hooks
+                                    }
+                                );
+                            } else {
+                                loadedAppHooks = result;
+                            }
                         }
                     },
                 );
