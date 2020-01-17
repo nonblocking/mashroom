@@ -1,6 +1,6 @@
 // @flow
 
-import {MashroomLogger} from '../../type-definitions';
+import type {MashroomLogger} from '../../type-definitions';
 
 const TEMPLATE_CODE_REGEX = /\${(.+?)}/g;
 const TEMPLATE_CODE_ACCESSED_OBJECTS = /(?:^|\W)(\w+?)\./g;
