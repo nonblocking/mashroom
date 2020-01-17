@@ -11,7 +11,7 @@ if (process.env.NODE_ENV === 'production') {
     enableProdMode();
 }
 
-const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement: HTMLElement, portalAppSetup, portalClientServices) => {
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portalAppSetup, portalClientServices) => {
 
     /*
      * We dynamically create a module per Portal App instance
