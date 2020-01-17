@@ -12,10 +12,10 @@
         "connect-mongodb-session": "^2.2.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.6.4",
-        "@mashroom/mashroom": "1.2.3",
-        "@mashroom/mashroom-session": "1.2.3",
-        "eslint": "^6.6.0",
+        "@babel/cli": "^7.8.3",
+        "@mashroom/mashroom": "^1.2.3",
+        "@mashroom/mashroom-session": "^1.2.3",
+        "eslint": "^6.8.0",
         "express": "^4.17.1"
     },
     "scripts": {

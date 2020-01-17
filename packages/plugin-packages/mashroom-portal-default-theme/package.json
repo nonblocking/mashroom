@@ -11,23 +11,23 @@
     ],
     "dependencies": {
         "express-handlebars": "^3.1.0",
-        "handlebars": "^4.5.3"
+        "handlebars": "^4.7.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.6.4",
-        "@fortawesome/fontawesome-free": "^5.11.2",
-        "@mashroom/mashroom": "1.2.3",
-        "@mashroom/mashroom-portal": "1.2.3",
+        "@babel/cli": "^7.8.3",
+        "@fortawesome/fontawesome-free": "^5.12.0",
+        "@mashroom/mashroom": "^1.2.3",
+        "@mashroom/mashroom-portal": "^1.2.3",
         "@mashroom/mashroom-portal-ui-commons": "1.2.3",
-        "bootstrap": "^4.3.1",
+        "bootstrap": "^4.4.1",
         "copyfiles": "^2.1.1",
-        "core-js": "^3.3.6",
-        "eslint": "^6.6.0",
+        "core-js": "^3.6.4",
+        "eslint": "^6.8.0",
         "express": "^4.17.1",
-        "node-sass": "^4.13.0",
+        "node-sass": "^4.13.1",
         "node-sass-tilde-importer": "^1.0.2",
         "nodemon": "^1.19.4",
-        "webpack": "^4.41.2",
+        "webpack": "^4.41.5",
         "webpack-cli": "^3.3.10",
         "whatwg-fetch": "^3.0.0"
     },

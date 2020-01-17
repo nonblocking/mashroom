@@ -90,6 +90,7 @@ module.exports = (env, argv) => {
                 'redux': path.resolve(__dirname, 'node_modules/redux'),
                 'redux-form': path.resolve(__dirname, 'node_modules/redux-form'),
                 'react-is': path.resolve(__dirname, 'node_modules/react-is'),
+                'shallow-equal': path.resolve(__dirname, 'node_modules/shallow-equal'),
                 'hoist-non-react-statics': path.resolve(__dirname, 'node_modules/hoist-non-react-statics'),
                 'object-assign': path.resolve(__dirname, 'node_modules/object-assign'),
                 // Allow treeshaking of lodash modules
