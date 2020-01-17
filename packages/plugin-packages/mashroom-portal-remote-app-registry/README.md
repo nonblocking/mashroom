@@ -4,7 +4,7 @@
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds a remote app registry to _Mashroom Portal_. Scans periodically a list of remote servers for Portal Apps.
-It expects the _package.json_ (containing the _mashroom_ property) to be exposed at _/_. You can find an example
+It expects the _package.json_ (containing a _mashroom_ property) to be exposed at _/_. You can find an example
 remote app here: [Mashroom Demo Remote Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
 
 It also comes with an Admin UI (_/portal-remote-app-registry/admin_) and a REST API to add and remote URL's. The Admin UI allows adding a URL

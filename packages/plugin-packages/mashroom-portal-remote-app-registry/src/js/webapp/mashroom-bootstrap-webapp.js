@@ -25,6 +25,9 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName: stri
     await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, pluginContext.serverConfig.serverRootFolder, portalRemoteAppEndpointService, pluginContext.loggerFactory);
 
     registerBackgroundJob.start();
+    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+        registerBackgroundJob.stop();
+    });
 
     return webapp;
 };

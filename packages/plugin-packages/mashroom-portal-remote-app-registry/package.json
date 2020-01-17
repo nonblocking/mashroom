@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-remote-app-registry",
-    "description": "A REST API to dynamically register Mashroom Portal Apps on a remote server",
+    "description": "A Mashroom Portal plugin to dynamically register Mashroom Portal Apps on a remote server",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -28,7 +28,7 @@
         "eslint": "^6.8.0",
         "jest": "^24.9.0",
         "node-sass": "^4.13.1",
-        "nodemon": "^1.19.4"
+        "nodemon": "^2.0.2"
     },
     "jest": {
         "verbose": true,

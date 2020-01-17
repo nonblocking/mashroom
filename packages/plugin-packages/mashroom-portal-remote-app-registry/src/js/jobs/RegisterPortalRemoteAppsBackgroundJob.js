@@ -40,10 +40,14 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         this.runASAP();
     }
 
-    runASAP() {
+    stop() {
         if (this._timeout) {
             clearTimeout(this._timeout);
         }
+    }
+
+    runASAP() {
+        this.stop();
         this._timeout = setTimeout(() => this._processInBackground(), 2000);
     }
 
