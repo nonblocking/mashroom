@@ -20,6 +20,7 @@
         "@angular/platform-browser": "^8.2.14",
         "@angular/platform-browser-dynamic": "^8.2.14",
         "@mashroom/mashroom-portal": "^1.2.3",
+        "typescript": "^3.7.5",
         "@types/node": "^8.10.59",
         "core-js": "^3.6.4",
         "rxjs": "^6.5.4",
