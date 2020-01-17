@@ -6,6 +6,7 @@ import {existsSync} from 'fs';
 import {createReadonlyProxy} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
 import defaultConfig from './mashroom_default_config';
+import {evaluateTemplatesInConfigObject} from '../utils/config_utils';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '../../type-definitions';
 import type {MashroomServerConfigLoader as MashroomServerConfigLoaderType, MashroomServerConfigHolder} from '../../type-definitions/internal';
@@ -78,6 +79,8 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             serverRootFolder,
             pluginPackageFolders
         });
+
+        evaluateTemplatesInConfigObject(config, this._log);
 
         this._log.info('Loaded server configuration:', {config});
 

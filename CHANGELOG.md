@@ -3,15 +3,23 @@
 
 ## [unreleased]
 
+ * Core: Made it possible to use environment variables in server and plugin configuration. If the config value is a valid
+   [template string](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/template_strings) it gets evaluated and the
+   environment variables are accessible through the *env* object. Example:
+```json
+{
+    "name": "${env.USER}'s Mashroom Server",
+    "port": 5050
+}
+```
  * Added TypeScript definitions for all API's. Works now similar than with flow:
-```js
+```javascript
 // index.ts
 import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement: HTMLElement, portalAppSetup, portalClientServices) => {
     // ...
 }
 ```
- * Separated API types from internal ones and hid internal types
 
 ## 1.2.3 (11. January 2020)
 

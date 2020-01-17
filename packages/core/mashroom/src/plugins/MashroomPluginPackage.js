@@ -6,6 +6,7 @@ import {promisify} from 'util';
 import EventEmitter from 'events';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
+import {evaluateTemplatesInConfigObject} from '../utils/config_utils';
 
 import type {
     MashroomPluginPackage as MashroomPluginPackageType,
@@ -253,6 +254,13 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
                     postfix = ` ${index}`;
                 }
                 p.name = name + postfix;
+            }
+        });
+
+        // Evaluate templates in the config object
+        fixedPluginDefinitions.forEach((p) => {
+            if (p.defaultConfig) {
+                evaluateTemplatesInConfigObject(p.defaultConfig, this._log);
             }
         });
 
