@@ -302,7 +302,7 @@ export default class App extends PureComponent<Props, State> {
             const title = this.state.appIdTitleMapping[tab.app.id] || this.state.pluginNameTitleMapping[tab.app.pluginName] || tab.app.title || tab.app.pluginName;
 
             return (
-                <div key={tab.app.instanceId} className={`tab-dialog-button ${idx === this.state.activeTabIndex ? 'active' : ''}`}>
+                <div key={tab.app.instanceId} className={`tab-dialog-button ${idx === this.state.activeTabIndex ? 'active' : ''}`} data-app-ref={`portal-app-${tab.app.id}`}>
                     <div className='title' onClick={this.onChangeActiveTab.bind(this, idx)}>{title}</div>
                     {this.props.appConfig.addCloseButtons && <div className='close-button' onClick={this.onCloseApp.bind(this, tab.app)}/>}
                 </div>

@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Tabify App: The tab buttons have now a new attribute (*data-app-ref*) that contains the id of the corresponding app wrapper div.
+   This is useful for end-2-end tests to determine if an app is visible.
  * Sandbox App: Fixed loading of portal apps with bootstrap methods that don't return anything
  * Core: Made it possible to use environment variables in server and plugin configuration. If the config value is a valid
    [template string](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/template_strings) it gets evaluated and the
