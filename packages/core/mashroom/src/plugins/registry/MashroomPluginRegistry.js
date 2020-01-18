@@ -2,7 +2,7 @@
 
 import EventEmitter from 'events';
 import {cloneAndFreezeObject, cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import {createPluginConfig} from '../plugin_utils';
+import {createPluginConfig} from '../../utils/plugin_utils';
 import MashroomPluginPackageRegistryConnector from './MashroomPluginPackageRegistryConnector';
 import MashroomPluginRegistryConnector from './MashroomPluginRegistryConnector';
 

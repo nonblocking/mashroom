@@ -6,6 +6,6 @@ import type {MashroomPlugin, MashroomPluginLoader, MashroomPluginContext} from '
 
 export const createPluginConfig = (plugin: MashroomPlugin, loader: MashroomPluginLoader, context: MashroomPluginContext) => {
     const minimumPluginConfig = loader.generateMinimumConfig(plugin);
-    const configFromServerConfig = context.serverConfig.plugins[plugin.name] || {};
+    const configFromServerConfig = context.serverConfig.plugins && context.serverConfig.plugins[plugin.name] || {};
     return deepAssign({}, minimumPluginConfig, plugin.pluginDefinition.defaultConfig || {}, configFromServerConfig);
 };
