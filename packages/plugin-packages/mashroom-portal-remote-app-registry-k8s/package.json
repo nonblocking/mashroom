@@ -64,7 +64,7 @@
                 }
             },
             {
-                "name": "Mashroom Portal Remote App Registry Webapp Kubernetes",
+                "name": "Mashroom Portal Remote App Registry Kubernetes Webapp",
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
                 "defaultConfig": {
