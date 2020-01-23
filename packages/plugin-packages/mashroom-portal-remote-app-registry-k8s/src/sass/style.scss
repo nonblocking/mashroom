@@ -1,0 +1,76 @@
+
+$COLOR_BLACK: #343633;
+$COLOR_WHITE: white;
+$COLOR_GREY: #888;
+$COLOR_ERROR: red;
+
+$COLOR_PRIMARY: #645e9d;
+$COLOR_PRIMARY_LIGHT: #938bce;
+$COLOR_PRIMARY_DARK: #36346e;
+$COLOR_PRIMARY_EXTRA_LIGHT: lighten($COLOR_PRIMARY_LIGHT, 25);
+
+$COLOR_SECONDARY: #5cc8ff;
+$COLOR_SECONDARY_LIGHT: #96fbff;
+$COLOR_SECONDARY_DARK: #0097cc;
+
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+$FONT_HEADER: Georgia, serif;
+
+@mixin hover-animation() {
+    transition: color 500ms ease-out, background-color 500ms ease-out;
+}
+
+/* Remove Chrome's input focus border */
+:focus {
+    outline: none !important;
+}
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    color: $COLOR_BLACK;
+    font-size: 16px;
+    font-family: $FONT_DEFAULT;
+}
+
+h1, h2, h3 {
+    font-family: $FONT_HEADER;
+}
+
+.error-panel {
+    display: table;
+    border: 1px solid $COLOR_ERROR;
+    padding: 10px;
+    background-color: lighten($COLOR_ERROR, 40);
+}
+
+.total-services {
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+table, th, td {
+    border: 1px solid #CCC;
+}
+
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+td {
+    padding: 6px 10px;
+}
+
+th {
+    background-color: #EFEFEF;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+    white-space: nowrap;
+}

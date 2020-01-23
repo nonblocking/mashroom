@@ -1020,7 +1020,7 @@ export type CreateLoadingError = (
 /* Plugin bootstrap functions */
 
 export interface MashroomRemotePortalAppRegistry {
-    readonly portalApps: Array<MashroomPortalApp>;
+    readonly portalApps: readonly MashroomPortalApp[];
 }
 
 export type MashroomPortalThemePluginBootstrapFunction = (

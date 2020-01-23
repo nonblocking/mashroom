@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Added Remote Portal App registry that automatically scans Kubernetes namespaces for apps
  * Tabify App: The tab buttons have now a new attribute (*data-app-ref*) that contains the id of the corresponding app wrapper div.
    This is useful for end-2-end tests to determine if an app is visible.
  * Sandbox App: Fixed loading of portal apps with bootstrap methods that don't return anything

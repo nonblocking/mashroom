@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
+
+    <title>Mashroom Kubernetes Portal Remote App Registry</title>
+</head>
+<body>
+    <h3>Kubernetes Services with Remote Portal Apps</h3>
+
+    {{#if error}}
+        <div class="error-panel">
+            {{error}}
+        </div>
+    {{else}}
+        <table border="1" cellspacing="0" cellpadding="10">
+            <tr>
+                <th>Name</th><th>Namespace</th><th>URL</th><th>Last Check</th><th>Status</th><th>Portal Apps</th>
+            </tr>
+            {{#each services}}
+                <tr class="{{this.rowClass}}">
+                    <td>{{this.name}}</td>
+                    <td>{{this.namespace}}</td>
+                    <td>{{this.url}}</td>
+                    <td>{{this.lastCheck}}</td>
+                    <td class="{{this.statusClass}}">{{this.status}}</td>
+                    <td>{{this.portalApps}}</td>
+                </tr>
+            {{/each}}
+        </table>
+
+        <div class="total-services">
+            Total service matching name filter: {{totalServices}}; last scan: {{lastScan}}
+        </div>
+    {{/if}}
+
+</body>
+</html>

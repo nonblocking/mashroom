@@ -1,30 +1,11 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import RegisterPortalRemoteAppsBackgroundJob from '../src/js/jobs/RegisterPortalRemoteAppsBackgroundJob';
+import ScanK8SPortalRemoteAppsBackgroundJob from '../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
 
-import type {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
+import {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
 
-
-describe('RegisterPortalRemoteAppsBackgroundJob', () => {
-
-    const pluginContextHolder: any = {
-        getPluginContext: () => {
-            return {
-                loggerFactory: dummyLoggerFactory
-            }
-        }
-    };
-
-    const packageJson: any = {
-        name: 'Test',
-        version: '5.1.2',
-        description: 'Test package',
-        author: 'juergen.kofler@nonblocking.at',
-        homepage: 'https://www.mashroom-server.com',
-        license: 'MIT',
-        mashroom: {}
-    };
+describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     const pluginDefinition: MashroomPluginDefinition = {
         name: 'Test App',
@@ -69,18 +50,30 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         }
     };
 
-    const remotePortalAppEndpoint: any = {
-        url: 'https://www.mashroom-server.com/test-remote-app'
+    const packageJson: any = {
+        name: 'Test',
+        version: '5.1.2',
+        description: 'Test package',
+        author: 'juergen.kofler@nonblocking.at',
+        homepage: 'https://www.mashroom-server.com',
+        license: 'MIT',
+        mashroom: {
+            plugins: [
+                pluginDefinition
+            ]
+        }
     };
 
-    it('maps the plugin definition correctly', () => {
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3600, 10, pluginContextHolder);
+    it('processes the package json correctly', () => {
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
+            300, false, dummyLoggerFactory) ;
 
-        const portalApp = backgroundJob._mapPluginDefinition(packageJson, pluginDefinition, remotePortalAppEndpoint);
+        const portalApps = backgroundJob.processPackageJson(packageJson, 'http://my-service.default:6789', 'my-service');
+        expect(portalApps).toBeTruthy();
+        expect(portalApps.length).toBe(1);
 
-        expect(portalApp).toBeTruthy();
+        const portalApp = portalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
-
         const fixedPortalApp = Object.assign({}, portalApp, {
             lastReloadTs: 22
         });
@@ -101,7 +94,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             },
             lastReloadTs: 22,
             globalLaunchFunction: 'startTestApp',
-            resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app',
+            resourcesRootUri: 'http://my-service.default:6789',
             resources: {
                 js: ['bundle.js'],
                 css: undefined
@@ -117,7 +110,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 {
                     bff:
                         {
-                            targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
+                            targetUri: 'http://my-service.default:6789/api',
                             sendUserHeader: true,
                             sendPermissionsHeader: true
                         }

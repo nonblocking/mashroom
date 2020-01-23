@@ -1,0 +1,19 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint/eslint-plugin",
+        "jest"
+    ],
+    "extends": [
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "env": {
+        "node": true,
+        "browser": false,
+        "es6": true,
+        "jest": true
+    },
+    "rules": {
+        "@typescript-eslint/ban-ts-ignore": "off"
+    }
+}
