@@ -231,6 +231,35 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppS
 global.startMyApp = bootstrap;
 ```
 
+And in typescript for an Angular app:
+
+```js
+import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
+import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+import {AppModule} from './app/app.module';
+
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portalAppSetup, portalClientServices) => {
+
+    return platformBrowserDynamic([
+        {provide: 'host.element', useValue: hostElement },
+        {provide: 'app.setup', useValue: portalAppSetup},
+        {provide: 'client.services', useValue: portalClientServices}
+    ]).bootstrapModule(AppModule).then(
+        (module) => {
+            return {
+                willBeRemoved: () => {
+                    console.info('Destroying Angular module');
+                    module.destroy();
+                }
+            };
+        }
+    );
+};
+
+global['startAngularDemoApp'] = bootstrap;
+```
+
+
 The _portalAppSetup_ has the following structure:
 
 ```js

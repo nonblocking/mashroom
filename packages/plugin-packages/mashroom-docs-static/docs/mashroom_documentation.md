@@ -61,7 +61,7 @@ has similar concepts than a Java Portal Server.
 | Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                            |                              |
 | Storage             | JSON Files                                                                                    |  MongoDB                     |
-| Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0)                                                                    |  STOMP (ActiveMQ, RabbitMQ)  |
+| Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                        |                              |
 | Session Storage     | in Memory (no Cluster support), shared Filesystem, Redis, MongoDB                             |                              |
 | Clustering          | yes (tested with PM2)                                                                         |                              |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only) |                              |
@@ -137,6 +137,21 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
 
 export default bootstrap;
 ```
+
+In typescript:
+
+```js
+import webapp from './my-express-webapp';
+
+import {MashroomWebAppPluginBootstrapFunction} from 'mashroom/type-definitions';
+
+const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+    return webapp;
+};
+
+export default bootstrap;
+```
+
 
 The context element allows access to the server configuration, the logger factory and all services.
 
@@ -274,6 +289,15 @@ module.exports = {
     plugins: {
 
     }
+}
+```
+
+Since version 1.3 the property values can also contain string templates and the environment variables are accessible via *env* object:
+
+```json
+{
+    "name": "${env.USER}'s Mashroom Server",
+    "port": 5050
 }
 ```
 
