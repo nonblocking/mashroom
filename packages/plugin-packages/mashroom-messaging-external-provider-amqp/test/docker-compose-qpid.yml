@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+    qpid:
+        container_name: qpid
+        image: itherz/qpid-server
+        ports:
+            - "5672:5672"
+            - "15672:8080"
+        environment:
+            - DOMAIN=localhost
+            - REALM=mashroom
+            - AUTH=admin:admin

@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+    activemq-amqp:
+        container_name: activemq-amqp
+        image: rmohr/activemq
+        ports:
+            - "5672:5672"
+            - "8161:8161"
+

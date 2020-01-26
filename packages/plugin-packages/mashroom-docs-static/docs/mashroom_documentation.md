@@ -542,6 +542,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-messaging-external-provider-mqtt](../../mashroom-messaging-external-provider-mqtt/README.md) [inc]
 
+[mashroom-messaging-external-provider-amqp](../../mashroom-messaging-external-provider-amqp/README.md) [inc]
+
 [mashroom-i18n](../../mashroom-i18n/README.md) [inc]
 
 [mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc]

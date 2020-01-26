@@ -8,6 +8,7 @@
     "indexPage": "/",
     "ignorePlugins": [
         "Mashroom Messaging External Provider MQTT",
+        "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
         "Mashroom Session Redis Provider",
         "Mashroom Portal Remote App Registry Kubernetes",
@@ -76,6 +77,10 @@
             "userPrivateBaseTopic": "user",
             "enableWebSockets": true,
             "topicACL": "./topic_acl.json"
+        },
+        "Mashroom Messaging External Provider AMQP": {
+            "brokerUsername": "admin",
+            "brokerPassword": "admin"
         }
     }
 }

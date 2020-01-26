@@ -1,0 +1,61 @@
+{
+    "name": "@mashroom/mashroom-messaging-external-provider-amqp",
+    "description": "Allows to use an AMQP 1.0 compliant server as external messaging provider for service side messaging",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "@mashroom/mashroom-utils": "1.2.3",
+        "rhea": "^1.0.17"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.3",
+        "@mashroom/mashroom": "1.2.3",
+        "@mashroom/mashroom-messaging": "1.2.3",
+        "typescript": "^3.7.5",
+        "@types/jest": "^24.9.0",
+        "eslint": "^6.8.0",
+        "jest": "^24.9.0"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src -d dist --extensions '.ts'"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Messaging External Provider AMQP",
+                "type": "external-messaging-provider",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "requires": [
+                    "Mashroom Messaging Services"
+                ],
+                "defaultConfig": {
+                    "internalRoutingKey": "mashroom",
+                    "brokerTopicExchangePrefix": "/topic/",
+                    "brokerTopicMatchAny": "#",
+                    "brokerHost": "localhost",
+                    "brokerPort": 5672,
+                    "brokerUsername": null,
+                    "brokerPassword": null
+                }
+            }
+        ]
+    }
+}
