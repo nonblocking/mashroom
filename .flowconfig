@@ -20,10 +20,12 @@ module.name_mapper.extension='css' -> 'empty/object'
 module.name_mapper.extension='scss' -> 'empty/object'
 module.name_mapper='^@mashroom/mashroom\/\(.*\)$' -> '<PROJECT_ROOT>/packages/core/mashroom/\1'
 module.name_mapper='^@mashroom/mashroom-utils\/\(.*\)$' -> '<PROJECT_ROOT>/packages/core/mashroom-utils/\1'
+module.name_mapper='^@mashroom/mashroom-portal-ui-commons$' -> '<PROJECT_ROOT>/packages/core/mashroom-portal-ui-commons'
 module.name_mapper='^@mashroom/mashroom-portal\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-portal/\1'
 module.name_mapper='^@mashroom/mashroom-security\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-security/\1'
 module.name_mapper='^@mashroom/mashroom-storage\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-storage/\1'
 module.name_mapper='^@mashroom/mashroom-messaging\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-messaging/\1'
+module.name_mapper='^@mashroom/mashroom-i18n\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-i18n/\1'
 module.name_mapper='^@mashroom/mashroom-browser-cache\/\(.*\)$' -> '<PROJECT_ROOT>/packages/plugin-packages/mashroom-browser-cache/\1'
 
 [lints]
