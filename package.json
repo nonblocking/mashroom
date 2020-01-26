@@ -23,7 +23,7 @@
         "@typescript-eslint/eslint-plugin": "^2.16.0",
         "@typescript-eslint/parser": "^2.16.0",
         "file-loader": "^4.3.0",
-        "flow-bin": "^0.115.0",
+        "flow-bin": "^0.116.1",
         "typescript": "^3.7.5",
         "jest": "^24.9.0",
         "lerna": "^3.20.2",
@@ -36,8 +36,7 @@
     },
     "scripts": {
         "setup": "npm install && lerna bootstrap --no-ci && npm run build:core",
-        "type-check": "npm run flow && lerna run type-check",
-        "flow": "flow check",
+        "type-check": "flow check && lerna run type-check",
         "lint": "lerna run lint",
         "test": "lerna run test",
         "build:core": "npm run build --prefix packages/core/mashroom-utils && npm run build --prefix packages/core/mashroom",
