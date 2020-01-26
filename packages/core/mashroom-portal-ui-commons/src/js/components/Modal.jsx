@@ -98,9 +98,12 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     handleEscapeKeyPress(event: KeyboardEvent) {
-        const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(event.srcElement.tagName) !== -1;
-        if (!fromInput && event.key === 'Escape') {
-           this.close();
+        if (event.target) {
+            const target: HTMLElement = (event.target: any);
+            const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) !== -1;
+            if (!fromInput && event.key === 'Escape') {
+                this.close();
+            }
         }
     }
 
