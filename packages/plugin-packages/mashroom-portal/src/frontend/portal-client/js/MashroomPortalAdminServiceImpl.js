@@ -88,7 +88,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
     updateAppInstancePermittedRoles(pluginName: string, instanceId: string, roles: ?string[]) {
         const pageId = this.getCurrentPageId();
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}/${instanceId}/permittedRoles`;
-        return this._restService.put(path, roles);
+        return this._restService.put(path, roles || []);
     }
 
     getCurrentPageId() {
@@ -126,7 +126,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
 
     updatePagePermittedRoles(pageId: string, roles: ?string[]) {
         const path = `/pages/${pageId}/permittedRoles`;
-        return this._restService.put(path, roles);
+        return this._restService.put(path, roles || []);
     }
 
     getCurrentSiteId() {
@@ -164,6 +164,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
 
     updateSitePermittedRoles(siteId: string, roles: ?string[]) {
         const path = `/sites/${siteId}/permittedRoles`;
-        return this._restService.put(path, roles);
+        return this._restService.put(path, roles || []);
     }
 }
