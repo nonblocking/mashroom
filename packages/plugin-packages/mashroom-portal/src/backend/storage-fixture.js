@@ -8,6 +8,10 @@ import {PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION, SITES_COLLECTION} fro
 import type {MashroomLoggerFactory, MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {MashroomPortalAppInstance, MashroomPortalPage, MashroomPortalSite} from '../../type-definitions';
+import type {MashroomSecurityRoleDefinition} from '@mashroom/mashroom-security/type-definitions';
+
+const ROLE_DEFINITIONS_COLLECTION_NAME = 'mashroom-security-role-definitions';
+export const ROLE_ADMINISTRATOR = 'Administrator';
 
 const LOCK_FILE = 'portal-fixture.lock';
 const lockFile = promisify(lockfile.lock);
@@ -19,6 +23,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
     const sitesCollection: MashroomStorageCollection<MashroomPortalSite> = await storageService.getCollection(SITES_COLLECTION);
     const pagesCollection: MashroomStorageCollection<MashroomPortalPage> = await storageService.getCollection(PAGES_COLLECTION);
     const portalAppInstancesCollection: MashroomStorageCollection<MashroomPortalAppInstance> = await storageService.getCollection(PORTAL_APP_INSTANCES_COLLECTION);
+    const rolesCollection: MashroomStorageCollection<MashroomSecurityRoleDefinition> = await storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
 
     try {
         await lockFile(LOCK_FILE, {
@@ -28,6 +33,11 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         const sites = await sitesCollection.find(undefined, 1);
         if (sites.length === 0) {
             log.info('Creating portal demo data');
+
+            const adminRole: MashroomSecurityRoleDefinition = {
+                id: ROLE_ADMINISTRATOR,
+                description: 'The administrator role'
+            };
 
             const welcomeAppInstance1: MashroomPortalAppInstance = {
                 pluginName: 'Mashroom Welcome Portal App',
@@ -231,6 +241,8 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
                 ],
             };
 
+            await rolesCollection.insertOne(adminRole);
+
             await portalAppInstancesCollection.insertOne(welcomeAppInstance1);
             await portalAppInstancesCollection.insertOne(reactDemoAppInstance1);
             await portalAppInstancesCollection.insertOne(reactDemoAppInstance2);
@@ -250,6 +262,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
             await pagesCollection.insertOne(pageSandbox);
 
             await sitesCollection.insertOne(site);
+
         }
     } catch (e) {
         log.error('Inserting portal demo data failed', e);
