@@ -69,6 +69,7 @@ module.exports = (env, argv) => {
         },
         externals: [],
         resolve: {
+            mainFields: ['browser', 'main', 'module'],
             extensions: ['.js', '.jsx'],
             alias: {
                 'react': path.resolve(__dirname, 'node_modules/react'),

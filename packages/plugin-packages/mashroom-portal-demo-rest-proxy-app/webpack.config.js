@@ -59,6 +59,7 @@ module.exports = {
     externals: [],
     resolve: {
         extensions: ['.js', '.jsx'],
+        mainFields: ['browser', 'main', 'module'],
     },
     devServer: {
         inline: true,
