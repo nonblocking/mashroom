@@ -1,7 +1,6 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
 import {
     ModalContainer,
     TabDialogContainer,

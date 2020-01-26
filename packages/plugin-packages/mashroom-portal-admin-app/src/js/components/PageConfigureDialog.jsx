@@ -1,7 +1,8 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {change} from 'redux-form';
+
 import {
     ModalContainer,
     TabDialogContainer,
@@ -237,6 +238,20 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         };
     }
 
+    onChange(values: FormValues, dispatch: (any) => void, props: Object, previousValues: FormValues) {
+
+        // Set friendlyUrl automatically based on the title for a new page
+        if (values.page && previousValues.page && props.initialValues.page && !props.initialValues.page.friendlyUrl) {
+            const title = typeof (values.page.title) === 'object' ? values.page.title[this.props.languages.default] : values.page.title;
+            const previousTitle = typeof (previousValues.page.title) === 'object' ? previousValues.page.title[this.props.languages.default] : previousValues.page.title;
+
+            if (title && title !== previousTitle) {
+                const friendlyUrl = '/'  + title.replace(/[ -]/g, '_');
+                dispatch(change(props.form, 'page.friendlyUrl', friendlyUrl));
+            }
+        }
+    }
+
     validate(values: FormValues) {
         const errors = {
             page: {}
@@ -406,7 +421,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         }
 
         return (
-            <Form formId='page-configure' initialValues={this.getInitialValues()} validator={this.validate.bind(this)} onSubmit={this.onSubmit.bind(this)}>
+            <Form formId='page-configure' initialValues={this.getInitialValues()} validator={this.validate.bind(this)} onChange={this.onChange.bind(this)} onSubmit={this.onSubmit.bind(this)}>
                 {this.renderTabDialog()}
                 {this.renderActions()}
             </Form>

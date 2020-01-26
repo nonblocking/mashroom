@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 import AvailableAppsPanel from '../components/AvailableAppsPanel';
 
 import type {ComponentType} from 'react';
-import type {AvailableApps, Dispatch, State} from '../../../type-definitions';
+import type {AvailableApps, State} from '../../../type-definitions';
 
 type OwnProps = {
     onDragStart: ?(event: DragEvent, name: string) => void,

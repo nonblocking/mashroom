@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import {Field} from 'redux-form';
 
 import type {FieldProps} from 'redux-form';
-import type {IntlShape} from 'react-intl';
 import I18NStringField from '../components/I18NStringField';
 
 import type {Node, ComponentType} from 'react';

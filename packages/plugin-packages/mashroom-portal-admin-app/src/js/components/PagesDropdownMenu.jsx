@@ -1,7 +1,6 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
 import {CircularProgress, DropdownMenu, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_PAGE_DELETE} from '../constants';
 
@@ -75,7 +74,7 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
             <div key={page.pageId} className='page'>
                 <div className='portal-page-link'>
                     {padWithSpaces(page.level * 2)}
-                    <a  href='javascript:void(0)' onClick={this.onGoto.bind(this, page)}>{page.title}</a>
+                    <a href='javascript:void(0)' onClick={this.onGoto.bind(this, page)}>{page.title}</a>
                 </div>
                 <div className='configure' onClick={this.onConfigure.bind(this, page)}>&nbsp;</div>
                 <div className='delete' onClick={this.onDelete.bind(this, page)}>&nbsp;</div>

@@ -1,11 +1,9 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
 import {FieldLabel, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {FieldProps} from 'redux-form';
-import type {IntlShape} from 'react-intl';
 import type {I18NString} from '@mashroom/mashroom/type-definitions';
 import type {Languages} from '../../../type-definitions';
 

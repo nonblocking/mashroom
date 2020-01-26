@@ -1,7 +1,7 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {change} from 'redux-form';
 import {
     ModalContainer,
     TabDialogContainer,
@@ -27,7 +27,6 @@ import type {
     MashroomPortalSite, MashroomPortalSiteService
 } from '@mashroom/mashroom-portal/type-definitions';
 import type {DataLoadingService, Languages, SelectedSite} from '../../../type-definitions';
-
 
 type Props = {
     selectedSite: ?SelectedSite,
@@ -156,6 +155,20 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
             site: selectedSite.site || {},
             roles: selectedSite.permittedRoles
         };
+    }
+
+    onChange(values: FormValues, dispatch: (any) => void, props: Object, previousValues: FormValues) {
+
+        // Set path automatically based on the title for a new page
+        if (values.site && previousValues.site && props.initialValues.site && !props.initialValues.site.path) {
+            const title = typeof(values.site.title) === 'object' ? values.site.title[this.props.languages.default] : values.site.title;
+            const previousTitle: ?string = typeof(previousValues.site.title) === 'object' ? previousValues.site.title[this.props.languages.default] : previousValues.site.title;
+
+            if (title && title !== previousTitle) {
+                const path = '/'  + title.replace(/[ -]/g, '_');
+                dispatch(change(props.form, 'site.path', path));
+            }
+        }
     }
 
     validate(values: FormValues) {
@@ -294,7 +307,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         }
 
         return (
-            <Form formId='site-configure' initialValues={this.getInitialValues()} validator={this.validate.bind(this)} onSubmit={this.onSubmit.bind(this)}>
+            <Form formId='site-configure' initialValues={this.getInitialValues()} validator={this.validate.bind(this)} onChange={this.onChange.bind(this)} onSubmit={this.onSubmit.bind(this)}>
                 {this.renderTabDialog()}
                 {this.renderActions()}
             </Form>

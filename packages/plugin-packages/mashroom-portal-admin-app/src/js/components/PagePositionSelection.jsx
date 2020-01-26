@@ -94,12 +94,12 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
             <Fragment>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='theme' name='position.parentPageId' labelId='parentPage' options={parentPageOptions} onValueChange={this.onSelectedParentPageChange.bind(this)}/>
+                        <SelectFieldContainer id='parentPage' name='position.parentPageId' labelId='parentPage' options={parentPageOptions} onValueChange={this.onSelectedParentPageChange.bind(this)}/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='theme' name='position.insertAfterPageId' labelId='insertAfter' options={insertAfterOptions}/>
+                        <SelectFieldContainer id='insertAfter' name='position.insertAfterPageId' labelId='insertAfter' options={insertAfterOptions}/>
                     </FormCell>
                 </FormRow>
             </Fragment>
