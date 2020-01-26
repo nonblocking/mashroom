@@ -137,7 +137,7 @@ export default class RemoteMessagingClient {
 
         this._openPromises.forEach((op, index, arr) => {
             if (op.timestamp < Date.now() - RESPONSE_TIMEOUT_MS) {
-                op.reject(`Didn't receive a response within ${RESPONSE_TIMEOUT_MS}`);
+                op.reject(`Didn't receive a response within ${RESPONSE_TIMEOUT_MS}ms`);
                 arr.splice(index, 1);
             }
         });
