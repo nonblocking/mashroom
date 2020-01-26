@@ -21,7 +21,10 @@ export default class RolesList extends PureComponent<Props> {
     }
 
     onAddRole(fieldArray: FieldArrayProps, role: string) {
-        fieldArray.fields.insert(0, role);
+        const existingFields = fieldArray.fields.getAll() || [];
+        if (existingFields.indexOf(role) === -1) {
+            fieldArray.fields.insert(0, role);
+        }
     }
 
     onRemoveRole(fieldArray: FieldArrayProps, index: number) {
