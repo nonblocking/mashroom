@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Admin Toolbar cleanup and small fixes
  * Added support for messaging via AMQP (Advanced Messaging Queuing) protocol, supported by almost all message brokers
    (RabbitMQ, Qpid, ActiveMQ, Artemis, Azure Service Bus, ...)
  * Added Remote Portal App registry that automatically scans Kubernetes namespaces for apps
