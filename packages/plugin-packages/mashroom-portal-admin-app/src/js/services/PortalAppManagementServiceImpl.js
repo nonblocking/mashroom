@@ -65,6 +65,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     prepareDrag(event: DragEvent, loadedAppId: ?string, portalAppName: string, instanceId: ?string) {
         this.dragRunning = false;
 
+        // Hint: This doesn't work in IE11, since IE only accept "test" as format
         event.dataTransfer && event.dataTransfer.setData('portal-app-name', portalAppName);
         if (loadedAppId) {
             event.dataTransfer && event.dataTransfer.setData('portal-app-id', loadedAppId);
