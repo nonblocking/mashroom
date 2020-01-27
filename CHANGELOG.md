@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.3.0 (27. January 2020)
+
  * Portal: Fixed broken IE11 support
  * Portal: Admin Toolbar cleanup and small fixes
  * Added support for messaging via AMQP (Advanced Messaging Queuing) protocol, supported by almost all message brokers
