@@ -38,7 +38,7 @@
     "scripts": {
         "lint": "eslint src",
         "test": "jest",
-        "dev": "webpack-dev-server  --mode development --hot",
+        "dev": "webpack-dev-server --mode development --hot",
         "build": "webpack --mode production --display-error-details"
     },
     "mashroom": {
