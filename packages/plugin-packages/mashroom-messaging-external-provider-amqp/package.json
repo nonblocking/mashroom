@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-messaging-external-provider-amqp",
-    "description": "Allows to use an AMQP 1.0 compliant server as external messaging provider for service side messaging",
+    "description": "Mashroom plugin that can use an AMQP 1.0 compliant broker as external messaging provider for service side messaging",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

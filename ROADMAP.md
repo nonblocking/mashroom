@@ -5,6 +5,7 @@
 
  * OpenId Connect (OAuth) security provider
  * mongoDB storage provider
+ * Portal: Show an error in the Admin Toolbar when a path/url already exists (site, page)
 
 ## Version 1.5
 
@@ -20,9 +21,8 @@
 
 ## Post 1.6
 
- * Portal: Responsive Admin App
+ * Portal: Responsive Admin Toolbar
  * Core: Handle path collisions of express apps
  * Core: Add possibility to map sites to virtual hosts
  * Security Plugin: Add IP based ACL rules
  * App store
-

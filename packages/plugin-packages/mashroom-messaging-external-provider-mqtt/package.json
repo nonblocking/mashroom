@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-messaging-external-provider-mqtt",
-    "description": "Allows to use a MQTT server as external messaging provider for service side messaging",
+    "description": "Mashroom plugin that can use a MQTT server as external messaging provider for service side messaging",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
