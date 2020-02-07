@@ -48,17 +48,25 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Portal Remote App Registry Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+                "name": "Mashroom Portal Remote App Registry",
+                "type": "remote-portal-app-registry",
+                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
                 "requires": [
                     "Mashroom Portal Remote App Endpoint Services"
                 ],
                 "defaultConfig": {
-                    "path": "/portal-remote-app-registry",
+                    "priority": 100,
                     "remotePortalAppUrls": "./remote-portal-apps.json",
                     "checkIntervalSec": 30,
                     "registrationRefreshIntervalSec": 3600
+                }
+            },
+            {
+                "name": "Mashroom Portal Remote App Registry Webapp",
+                "type": "web-app",
+                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+                "defaultConfig": {
+                    "path": "/portal-remote-app-registry"
                 }
             },
             {
@@ -71,14 +79,6 @@
                     "Mashroom Session Middleware",
                     "Mashroom Storage Services"
                 ]
-            },
-            {
-                "name": "Mashroom Portal Remote App Registry",
-                "type": "remote-portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
-                "defaultConfig": {
-                    "priority": 100
-                }
             },
             {
                 "name": "Mashroom Portal Remote App Registry Request Context Middleware",

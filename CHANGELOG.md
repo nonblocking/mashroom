@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Remote App Registry: Moved config properties from the *Mashroom Portal Remote App Registry Webapp* plugin to the
+   *Mashroom Portal Remote App Registry* plugin where it belongs (**BREAKING CHANGE**)
+
 ## 1.3.0 (27. January 2020)
 
  * Portal: Fixed broken IE11 support
