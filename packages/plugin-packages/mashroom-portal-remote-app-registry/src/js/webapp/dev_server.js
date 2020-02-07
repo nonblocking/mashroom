@@ -70,6 +70,10 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
     next();
 });
 
+wrapperApp.get('/', (req: ExpressRequest, res: ExpressResponse) => {
+    res.redirect('/portal-remote-app-registry');
+});
+
 wrapperApp.use('/portal-remote-app-registry', app);
 
 wrapperApp.listen(8082, () => {

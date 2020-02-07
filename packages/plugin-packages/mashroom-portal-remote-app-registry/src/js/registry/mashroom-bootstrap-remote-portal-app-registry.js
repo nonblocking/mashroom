@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {registerBackgroundJobHolder, registry} from '../context';
+import context from '../context';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 import RegisterPortalRemoteAppsBackgroundJob from '../jobs/RegisterPortalRemoteAppsBackgroundJob';
@@ -16,7 +16,7 @@ const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (plugi
     const pluginContext = contextHolder.getPluginContext();
 
     const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(checkIntervalSec, registrationRefreshIntervalSec, contextHolder);
-    registerBackgroundJobHolder.backgroundJob = registerBackgroundJob;
+    context.backgroundJob = registerBackgroundJob;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = pluginContext.services.remotePortalAppEndpoint.service;
 
     await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, pluginContext.serverConfig.serverRootFolder, portalRemoteAppEndpointService, pluginContext.loggerFactory);
@@ -26,7 +26,7 @@ const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (plugi
         registerBackgroundJob.stop();
     });
 
-    return registry;
+    return context.registry;
 };
 
 export default bootstrap;

@@ -1,7 +1,7 @@
 // @flow
 
-import type {ExpressRequest} from "@mashroom/mashroom/type-definitions";
-import type {MashroomPortalApp} from "@mashroom/mashroom-portal/type-definitions";
+import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 export type RemotePortalAppEndpoint = {
     +url: string,

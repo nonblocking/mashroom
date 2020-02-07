@@ -25,6 +25,12 @@ export interface RemotePortalAppRegistry extends MashroomRemotePortalAppRegistry
     unregisterRemotePortalApp(name: string): void;
 }
 
+export type Context = {
+    +registry: RemotePortalAppRegistry;
+    webUIShowAddRemoteAppForm: boolean;
+    backgroundJob: RegisterPortalRemoteAppsBackgroundJob,
+}
+
 export type GlobalRequestHolder = {
     request: ?ExpressRequest
 }

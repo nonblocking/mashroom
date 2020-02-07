@@ -81,6 +81,9 @@
         "Mashroom Messaging External Provider AMQP": {
             "brokerUsername": "admin",
             "brokerPassword": "admin"
+        },
+        "Mashroom Portal Remote App Registry Webapp": {
+            "showAddRemoteAppForm": true
         }
     }
 }

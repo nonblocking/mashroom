@@ -1,7 +1,7 @@
 // @flow
 /* eslint no-unused-vars: off */
 
-import {registerBackgroundJobHolder, registry, globalRequestHolder} from '../context';
+import context, {globalRequestHolder} from '../context';
 
 import type {ExpressRequest, MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
@@ -39,7 +39,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
                 portalApps: []
             });
 
-            registerBackgroundJobHolder.backgroundJob.runASAP();
+            context.backgroundJob.runASAP();
         }
     }
 
@@ -62,13 +62,13 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
             portalApps: []
         };
 
-        const updatedEndpoint = await registerBackgroundJobHolder.backgroundJob.fetchPortalAppDataAndUpdateEndpoint(portalAppEndpoint);
+        const updatedEndpoint = await context.backgroundJob.fetchPortalAppDataAndUpdateEndpoint(portalAppEndpoint);
         portalAppEndpoints.push(updatedEndpoint);
 
         // eslint-disable-next-line require-atomic-updates
         request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] = portalAppEndpoints;
 
-        updatedEndpoint.portalApps.forEach((portalApp) => registry.registerRemotePortalAppForSession(portalApp, request));
+        updatedEndpoint.portalApps.forEach((portalApp) => context.registry.registerRemotePortalAppForSession(portalApp, request));
     }
 
     async unregisterRemoteAppUrl(url: string) {
@@ -85,7 +85,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         const collection = await this._getRemotePortalAppEndpointsCollection();
         const existingEndpoint = await collection.findOne({ url });
         if (existingEndpoint) {
-            existingEndpoint.portalApps.forEach((portalApp) => registry.unregisterRemotePortalApp(portalApp.name));
+            existingEndpoint.portalApps.forEach((portalApp) => context.registry.unregisterRemotePortalApp(portalApp.name));
             await collection.deleteOne({ url });
         }
     }
@@ -119,7 +119,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint) {
-        await registerBackgroundJobHolder.backgroundJob.refreshEndpointRegistration(remotePortalAppEndpoint);
+        await context.backgroundJob.refreshEndpointRegistration(remotePortalAppEndpoint);
     }
 
     async _getRemotePortalAppEndpointsCollection(): Promise<MashroomStorageCollection<RemotePortalAppEndpoint>> {

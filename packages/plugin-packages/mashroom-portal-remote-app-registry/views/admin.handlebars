@@ -37,10 +37,11 @@
     <title>Mashroom Portal Remote App Registry</title>
 </head>
 <body>
-    <div class="add-endpoint-form">
-        <h3>Add a new Remote Portal App Endpoint</h3>
+    {{#if showAddRemoteAppForm}}
+        <div class="add-endpoint-form">
+            <h3>Add a new Remote Portal App Endpoint</h3>
 
-        <form method="POST" action="?csrfToken={{csrfToken}}">
+            <form method="POST" action="?csrfToken={{csrfToken}}">
             <input type="hidden" name="_action" value="add"/>
             <div class="form-row">
                 <div class="form-label">
@@ -59,12 +60,13 @@
             <div class="form-row form-actions">
                 <input type="submit" value="Add"/>
             </div>
-        </form>
+            </form>
 
-        <div class="error-message">
-            {{errorMessage}}
+            <div class="error-message">
+                {{errorMessage}}
+            </div>
         </div>
-    </div>
+    {{/if}}
 
     <div class="endpoints">
         <h3>Remote Portal App Endpoints</h3>

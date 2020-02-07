@@ -1,5 +1,7 @@
 // @flow
 
+import context from '../../context';
+
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../../type-definitions';
@@ -19,6 +21,7 @@ const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorM
 
     res.render('admin', {
         baseUrl: req.baseUrl,
+        showAddRemoteAppForm: context.webUIShowAddRemoteAppForm,
         endpoints,
         errorMessage,
         csrfToken: csrfService ? csrfService.getCSRFToken(req) : null

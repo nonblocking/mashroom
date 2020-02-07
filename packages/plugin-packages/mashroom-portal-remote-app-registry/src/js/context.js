@@ -3,10 +3,11 @@
 import RemotePortalAppRegistry from './registry/RemotePortalAppRegistry';
 
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
-import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob} from '../../type-definitions/internal';
+import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob, Context} from '../../type-definitions/internal';
 
 let currentRequest: ?ExpressRequest = null;
 let registerBackgroundJob: any = null;
+let webUIShowAddRemoteAppForm = true;
 
 export const globalRequestHolder: GlobalRequestHolder = {
 
@@ -20,9 +21,13 @@ export const globalRequestHolder: GlobalRequestHolder = {
 
 };
 
-export const registry = new RemotePortalAppRegistry(globalRequestHolder);
+const registry = new RemotePortalAppRegistry(globalRequestHolder);
 
-export const registerBackgroundJobHolder = {
+const context: Context = {
+
+    get registry() {
+        return registry;
+    },
 
     get backgroundJob(): RegisterPortalRemoteAppsBackgroundJob {
         return registerBackgroundJob;
@@ -30,6 +35,16 @@ export const registerBackgroundJobHolder = {
 
     set backgroundJob(job: RegisterPortalRemoteAppsBackgroundJob) {
         registerBackgroundJob = job;
+    },
+
+    get webUIShowAddRemoteAppForm() {
+        return webUIShowAddRemoteAppForm;
+    },
+
+    set webUIShowAddRemoteAppForm(show: boolean) {
+        webUIShowAddRemoteAppForm = show;
     }
 
 };
+
+export default context;

@@ -66,7 +66,8 @@
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
                 "defaultConfig": {
-                    "path": "/portal-remote-app-registry"
+                    "path": "/portal-remote-app-registry",
+                    "showAddRemoteAppForm": true
                 }
             },
             {

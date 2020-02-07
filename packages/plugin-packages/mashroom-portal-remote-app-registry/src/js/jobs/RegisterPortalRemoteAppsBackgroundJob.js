@@ -3,7 +3,7 @@
 
 import url from 'url';
 import request from 'request';
-import {registry} from '../context';
+import context from '../context';
 
 import type {
     MashroomLogger,
@@ -58,7 +58,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         for (const remotePortalAppEndpoint of endpoints) {
             const registrationTimestamp = remotePortalAppEndpoint.registrationTimestamp;
-            const unregisteredApps = remotePortalAppEndpoint.portalApps.some((remoteApp) => !registry.portalApps.find((registeredApp) => registeredApp.name === remoteApp.name));
+            const unregisteredApps = remotePortalAppEndpoint.portalApps.some((remoteApp) => !context.registry.portalApps.find((registeredApp) => registeredApp.name === remoteApp.name));
             if (unregisteredApps || remotePortalAppEndpoint.lastError || !registrationTimestamp || Date.now() - registrationTimestamp > this._registrationRefreshIntervalSec * 1000) {
                 await this.refreshEndpointRegistration(remotePortalAppEndpoint);
             }
@@ -78,13 +78,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         if (!updatedEndpoint.lastError) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Registering remote portal app:', {portalApp});
-                registry.registerRemotePortalApp(portalApp)
+                context.registry.registerRemotePortalApp(portalApp)
             });
         } else {
             this._logger.error(`Registering apps for remote portal apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
             remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Unregister remote portal app:', {portalApp});
-                registry.unregisterRemotePortalApp(portalApp.name)
+                context.registry.unregisterRemotePortalApp(portalApp.name)
             });
         }
 
