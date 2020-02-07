@@ -234,8 +234,14 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any> {
+        const requestOptions = {
+            url: `${remotePortalAppEndpoint.url}/package.json`,
+            followRedirect: false,
+            timeout: 3000,
+        };
+
         return new Promise((resolve, reject) => {
-            request.get({ url: `${remotePortalAppEndpoint.url}/package.json` }, (error, response, body) => {
+            request.get(requestOptions, (error, response, body) => {
                 if (error) {
                     reject(error);
                     return;
