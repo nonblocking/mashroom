@@ -12,9 +12,9 @@
 <body>
     <h3>Kubernetes Services with Remote Portal Apps</h3>
 
-    {{#if error}}
+    {{#if scanError}}
         <div class="error-panel">
-            {{error}}
+            {{scanError}}
         </div>
     {{else}}
         <table border="1" cellspacing="0" cellpadding="10">
@@ -33,8 +33,10 @@
             {{/each}}
         </table>
 
-        <div class="total-services">
-            Total service matching name filter: {{totalServices}}; last scan: {{lastScan}}
+        <div class="footnotes">
+            Service name filter: <strong>{{serviceNameFilter}}</strong>
+            <br/>
+            Last scan: {{lastScan}}
         </div>
     {{/if}}
 

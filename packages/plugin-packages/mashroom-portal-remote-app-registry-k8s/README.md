@@ -20,7 +20,7 @@ You can override the default config in your Mashroom config file like this:
           "k8sNamespaces": ["default"],
           "scanPeriodSec": 30,
           "refreshIntervalSec": 300,
-          "serviceNameFilter": "microfrontend-.*",
+          "serviceNameFilter": "(microfrontend-|widget-)",
           "accessViaClusterIP": false
         }
     }
@@ -29,7 +29,7 @@ You can override the default config in your Mashroom config file like this:
  * _k8sNamespaces_: The Kubernetes namespaces to scan (Default: ["default"])
  * _scanPeriodSec_: The interval in seconds for scans (Default: 30)
  * _checkIntervalSec_: The time in seconds after that a registered services show be re-checked (Default: 300)
- * _serviceNameFilter_: A regular expression for services that should be checked (Default: ".*")
+ * _serviceNameFilter_: A regular expression for services that should be checked (case insensitive). (Default: ".*")
  * _accessViaClusterIP_: Access services via IP address and not via &lt;name&gt;.&lt;namespace&gt; (Default: false)
 
 The list of successful registered services will be available on **http://&lt;host&gt;:&lt;port&gt;/portal-remote-app-registry-kubernetes**

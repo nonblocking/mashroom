@@ -16,7 +16,7 @@ describe('KubernetesServiceRegistry', () => {
         url: 'http://my-service1.default:4444',
         firstSeen: Date.now(),
         lastCheck: Date.now(),
-        descriptorFound: true,
+        status: 'Valid',
         error: null,
         foundPortalApps: [
             portalApp1,
@@ -31,7 +31,7 @@ describe('KubernetesServiceRegistry', () => {
         url: 'http://my-service2.default:5555',
         firstSeen: Date.now(),
         lastCheck: Date.now(),
-        descriptorFound: false,
+        status: 'Valid',
         error: null,
         foundPortalApps: [
             portalApp2,

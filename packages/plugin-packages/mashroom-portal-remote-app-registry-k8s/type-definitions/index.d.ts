@@ -1,20 +1,28 @@
 
-import {MashroomPortalApp, MashroomRemotePortalAppRegistry} from "../../mashroom-portal/type-definitions";
+import {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
+import {CoreV1Api, V1ServiceList} from "@kubernetes/client-node";
 
 export interface ScanBackgroundJob {
     start(): void;
     stop(): void;
 }
 
+export interface KubernetesConnector {
+    init(): void;
+    listNamespaceServices(namespace: string): Promise<V1ServiceList>;
+}
+
+export type KubernetesServiceStatus = 'Checking' | 'Valid' | 'Headless Service' | 'No Descriptor' | 'Error';
+
 export type KubernetesService = {
     readonly name: string;
     readonly namespace: string;
-    readonly ip: string;
-    readonly port: number;
+    readonly ip: string | undefined;
+    readonly port: number | undefined;
     readonly url: string;
     readonly firstSeen: number;
     lastCheck: number;
-    descriptorFound: boolean;
+    status: KubernetesServiceStatus;
     error: string | null;
     foundPortalApps: Array<MashroomPortalApp>;
 }
@@ -28,20 +36,21 @@ export interface KubernetesServiceRegistry extends MashroomRemotePortalAppRegist
 
 export type Context = {
     readonly registry: KubernetesServiceRegistry;
+    serviceNameFilter: string;
     lastScan: number;
     error: string | null;
 }
 
 export type ServicesRenderModel = {
     baseUrl: string;
-    error: string | null;
+    scanError: string | null;
     lastScan: string;
-    totalServices: string;
+    serviceNameFilter: string;
     services: Array<{
         name: string;
         namespace: string;
         url: string;
-        status: 'Registered' |  'Error';
+        status: string;
         portalApps: string;
         lastCheck: string;
         rowClass: string;

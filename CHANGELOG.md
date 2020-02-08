@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Remote App Registry Kubernetes: Show all Kubernetes services matching the pattern and a proper error message if no portal apps could be found.
+   Remove portal apps after some time if the Kubernetes services disappeared.
  * Remote App Registry: Added plugin config property to hide the *Add a new Remote Portal App Endpoint* form from the Admin UI
  * Remote App Registry: Moved config properties from the *Mashroom Portal Remote App Registry Webapp* plugin to the
    *Mashroom Portal Remote App Registry* plugin where it belongs (**BREAKING CHANGE**)

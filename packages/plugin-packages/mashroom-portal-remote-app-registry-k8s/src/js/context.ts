@@ -1,10 +1,9 @@
-// @flow
-
 import KubernetesServiceRegistry from './registry/KubernetesServiceRegistry';
 
 import {Context} from '../../type-definitions';
 
 export const _registry = new KubernetesServiceRegistry();
+let _serviceNameFilter = '';
 let _error: string | null = null;
 let _lastScan = 0;
 
@@ -23,6 +22,12 @@ const context: Context = {
     },
     set lastScan(lastScan: number) {
         _lastScan = lastScan;
+    },
+    get serviceNameFilter() {
+        return _serviceNameFilter;
+    },
+    set serviceNameFilter(serviceNameFilter: string) {
+        _serviceNameFilter = serviceNameFilter;
     }
 };
 

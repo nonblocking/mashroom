@@ -1,10 +1,9 @@
-// @flow
 
 import webapp from './webapp';
 
 import {MashroomWebAppPluginBootstrapFunction} from "@mashroom/mashroom/type-definitions";
 
-const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
+const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
     return webapp;
 };
 

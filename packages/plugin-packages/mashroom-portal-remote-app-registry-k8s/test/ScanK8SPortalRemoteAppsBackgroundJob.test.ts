@@ -1,7 +1,7 @@
-
 // @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
+import DummyKubernetesConnector from '../src/js/k8s/DummyKubernetesConnector';
 
 import {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
 
@@ -66,7 +66,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     it('processes the package json correctly', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
-            300, false, dummyLoggerFactory) ;
+            300, false, new DummyKubernetesConnector(), dummyLoggerFactory);
 
         const portalApps = backgroundJob.processPackageJson(packageJson, 'http://my-service.default:6789', 'my-service');
         expect(portalApps).toBeTruthy();
