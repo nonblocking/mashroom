@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.3.1 (8. February 2020)
+
  * Remote App Registry Kubernetes: Show all Kubernetes services matching the pattern and a proper error message if no portal apps could be found.
    Remove portal apps after some time if the Kubernetes services disappeared.
  * Remote App Registry: Added plugin config property to hide the *Add a new Remote Portal App Endpoint* form from the Admin UI
