@@ -57,6 +57,7 @@
                 "defaultConfig": {
                     "priority": 100,
                     "remotePortalAppUrls": "./remote-portal-apps.json",
+                    "checkTimeoutSec": 3,
                     "checkIntervalSec": 30,
                     "registrationRefreshIntervalSec": 3600
                 }
