@@ -2,7 +2,7 @@
 
 import fs from 'fs';
 import {promisify} from 'util';
-import {lock as lockFile, unlock as unlockFile} from 'proper-lockfile';
+import {lock as lockFile} from 'proper-lockfile';
 import shortId from 'shortid';
 import lodashFilter from 'lodash.filter';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
@@ -143,8 +143,9 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
     }
 
     async _updateOperation(op: Array<Object> => any) {
+        let release: ?() => Promise<void> = null;
         try {
-            await this._lock();
+            release = await this._lock();
         } catch (e) {
             this._log.error(`Couldn't get lock on db file ${this._source}`, e);
             throw new ConcurrentAccessError(`Couldn't get lock for db file: ${this._source}`);
@@ -159,7 +160,9 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
             this._lastExternalChangeCheck = Date.now();
             return result;
         } finally {
-            await this._unlock();
+            if (release) {
+                await release();
+            }
         }
     }
 
@@ -206,10 +209,6 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
                 minTimeout: LOCK_RETRY_MIN_WAIT,
             }
         });
-    }
-
-    _unlock() {
-        return unlockFile(this._source);
     }
 
     _serialize(data: Object): string {
