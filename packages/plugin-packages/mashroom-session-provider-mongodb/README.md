@@ -1,7 +1,7 @@
 
 ### Mashroom Session MongoDB Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a mongoDB session store that can be used by _Mashroom Session_.
 Actually this is just a wrapper for the [connect-mongodb-session](https://github.com/mongodb-js/connect-mongodb-session) package.
@@ -28,13 +28,13 @@ And to change the default config of this plugin add:
 {
   "plugins": {
       "Mashroom Session MongoDB Provider": {
-          "uri": "mongodb://username:password@localhost:27017/mashroom_session?connectTimeoutMS=1000&socketTimeoutMS=2500",
+          "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
           "collection": "sessions"
       }
     }
 }
 ```
 
-All config options are passed to the _connect-mongodb-session_. 
+All config options are passed to the _connect-mongodb-session_.
 See [connect-mongodb-session](https://github.com/mongodb-js/connect-mongodb-session) for available options.
 

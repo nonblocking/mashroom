@@ -30,7 +30,7 @@
                 "type": "session-store-provider",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                    "uri": "mongodb://localhost:27017/mashroom_session?connectTimeoutMS=1000&socketTimeoutMS=2500",
+                    "uri": "mongodb://localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
                     "collection": "sessions"
                 }
             }

@@ -82,8 +82,6 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
 
         evaluateTemplatesInConfigObject(config, this._log);
 
-        this._log.info('Loaded server configuration:', {config});
-
         return {
             getConfig: () => createReadonlyProxy(config),
         };

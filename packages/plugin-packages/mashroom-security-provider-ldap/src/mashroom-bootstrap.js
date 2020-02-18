@@ -7,7 +7,6 @@ import fixTlsOptions from './fix_tls_options';
 import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-
     const {
         loginPage, userSearchFilter, groupSearchFilter, groupToRoleMapping: groupToRoleMappingPath,
         serverUrl, tlsOptions, baseDN, bindDN, bindCredentials, authenticationTimeoutSec,
