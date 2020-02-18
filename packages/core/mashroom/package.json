@@ -21,7 +21,6 @@
         "chokidar": "^3.3.1",
         "express": "^4.17.1",
         "fs-extra": "^8.1.0",
-        "lockfile": "^1.0.4",
         "log4js": "^5.3.0",
         "minimist": "^1.2.0",
         "strip-ansi": "^5.2.0"

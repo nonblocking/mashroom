@@ -3,16 +3,13 @@
 import path from 'path';
 import fs from 'fs';
 import EventEmitter from 'events';
-import fsExtra from 'fs-extra';
-import lockfile from 'lockfile';
+import {ensureDirSync} from 'fs-extra';
 import {promisify} from 'util';
 import stripAnsi from 'strip-ansi';
 import NpmUtils from './NpmUtils';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-const lockFile = promisify(lockfile.lock);
-const unlockFile = promisify(lockfile.unlock);
 
 const MAX_PARALLEL_BUILDS = 5;
 const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
@@ -69,7 +66,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._buildQueue = [];
 
         this._log.info(`Build data folder: ${this._buildDataFolder}`);
-        fsExtra.ensureDirSync(this._buildDataFolder);
+        ensureDirSync(this._buildDataFolder);
         this._processQueueInterval = setInterval(this._processBuildQueue.bind(this), 2000);
     }
 
@@ -116,14 +113,14 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
             if (buildCandidates.length > 0) {
                 this._log.debug(`Adding ${buildCandidates.length} out of ${buildJobs} pending build jobs.`);
-                buildCandidates.forEach(async (queueEntry) => {
+                for (let i = 0; i < buildCandidates.length; i ++) {
                     try {
                         this._numberBuilds ++;
-                        await this._processQueueEntry(queueEntry)
+                        await this._processQueueEntry(buildCandidates[i])
                     } finally {
                         this._numberBuilds --;
                     }
-                });
+                }
             }
         }
     }
@@ -152,7 +149,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
                     this._buildQueue.push(queueEntry);
                     return;
                 } else {
-                    this._log.debug(`Build of ${queueEntry.pluginPackageName} is in running state since more than ${RETRY_RUNNING_BUILD_AFTER_MS / 1000} sec. Taking over build.`);
+                    this._log.debug(`Build of ${queueEntry.pluginPackageName} is in running state since more than ${RETRY_RUNNING_BUILD_AFTER_MS / 1000} sec. Starting new build.`);
                 }
             }
 
@@ -208,31 +205,24 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _loadBuildInfo(pluginPackageName: string) {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
-        const buildInfoFileLock = buildInfoFile + '.lock';
         if (!fs.existsSync(buildInfoFile)) {
             return null;
         }
 
         try {
-            await lockFile(buildInfoFileLock);
             const data = await readFile(buildInfoFile, 'utf8');
             return JSON.parse(data.toString());
         } catch (e) {
             this._log.error('Unable to get current build info file. Creating new one.', e);
             return null;
-        } finally {
-            await unlockFile(buildInfoFileLock);
         }
     }
 
     async _updateBuildInfo(pluginPackageName: string, buildInfo: BuildInfo) {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
-        fsExtra.ensureDirSync(path.resolve(buildInfoFile, '..'));
-
-        const buildInfoFileLock = buildInfoFile + '.lock';
+        ensureDirSync(path.resolve(buildInfoFile, '..'));
 
         try {
-            await lockFile(buildInfoFileLock);
             return writeFile(buildInfoFile, JSON.stringify(buildInfo), 'utf8');
         } catch (e) {
             this._log.error(`Error updating build info file for plugin package: ${pluginPackageName}`, e);
@@ -242,8 +232,6 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             } catch (e2) {
                 // Ignore
             }
-        } finally {
-            await unlockFile(buildInfoFileLock);
         }
     }
 
