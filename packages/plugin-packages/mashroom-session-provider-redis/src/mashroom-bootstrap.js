@@ -8,7 +8,6 @@ import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroo
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.redis');
 
-    logger.info('Using Redis options:', pluginConfig);
     const { redisOptions, cluster, clusterNodes, clusterOptions } = pluginConfig;
 
     let client;

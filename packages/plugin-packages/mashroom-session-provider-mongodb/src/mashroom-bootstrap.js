@@ -6,7 +6,6 @@ import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroo
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.mongodb');
-    logger.info('Using mongoDB connection options:', pluginConfig);
     const MongoDBStore = createMongoDBStore(expressSession);
     const store = new MongoDBStore(pluginConfig);
     store.on('error', (err: any) => {
