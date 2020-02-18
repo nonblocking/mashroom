@@ -21,15 +21,19 @@ async function test() {
     const storage = new MashroomStorageFilestore(dataFolder, () => dummyLogger);
     const collection = await storage.getCollection('cluster-test');
 
+    const start = Date.now();
+
     for (let i = 0; i < INSERTS_PER_CLUSTER; i++) {
-        const start = Date.now();
+        const startInsert = Date.now();
         try {
             await collection.insertOne({w: process.pid, i});
         } catch (e) {
-            console.info('Error after ms: ' + (Date.now() - start), process.pid);
+            console.info('Error after ms: ' + (Date.now() - startInsert), process.pid);
             console.error(e);
         }
     }
+
+    console.info('' + INSERTS_PER_CLUSTER + ' inserts after ms: ' + (Date.now() - start), process.pid);
 
     setTimeout(() => {
         collection.find().then((items) => {
@@ -38,7 +42,7 @@ async function test() {
             console.info('RESULT: ' + (count === INSERTS_PER_CLUSTER * WORKER_COUNT ? 'OK' : 'NOK!'));
             process.exit();
         });
-    }, 5000);
+    }, 10000);
 }
 
 if (cluster.isMaster) {

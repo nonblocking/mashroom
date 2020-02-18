@@ -10,7 +10,7 @@
     ],
     "dependencies": {
         "fs-extra": "^8.1.0",
-        "lockfile": "^1.0.4",
+        "proper-lockfile": "^4.1.1",
         "lodash.filter": "^4.6.0",
         "shortid": "^2.2.15"
     },

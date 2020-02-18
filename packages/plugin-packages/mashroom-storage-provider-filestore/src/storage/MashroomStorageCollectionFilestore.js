@@ -2,19 +2,17 @@
 
 import fs from 'fs';
 import {promisify} from 'util';
-import lockfile from 'lockfile';
+import {lock as lockFile, unlock as unlockFile} from 'proper-lockfile';
 import shortId from 'shortid';
 import lodashFilter from 'lodash.filter';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
-const lockFile = promisify(lockfile.lock);
-const unlockFile = promisify(lockfile.unlock);
 
-const LOCK_WAIT_MS = 2000;
-const LOCK_RETRIES = 3;
-const LOCK_RETRYWAIT = 100;
+const LOCK_STALE_MS = 3000;
+const LOCK_RETRIES = 5;
+const LOCK_RETRY_MIN_WAIT = 100;
 
 const CHECK_EXTERNAL_CHANGE_TIMEOUT_MS = 2000;
 const PRETTY_PRINT_JSON = true;
@@ -27,7 +25,6 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
     _loggerFactory: MashroomLoggerFactory;
     _log: MashroomLogger;
     _source: string;
-    _lockFile: string;
     _dbCache: Object;
     _lastExternalChangeCheck: number;
 
@@ -35,7 +32,6 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
         this._loggerFactory = loggerFactory;
         this._source = source;
         this._log = loggerFactory('mashroom.storage.filestore');
-        this._lockFile = source + '.lock';
     }
 
     async insertOne(item: T) {
@@ -201,15 +197,19 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
     }
 
     _lock() {
-        return lockFile(this._lockFile, {
-            wait: LOCK_WAIT_MS,
-            retries: LOCK_RETRIES,
-            retryWait: LOCK_RETRYWAIT,
+        return lockFile(this._source, {
+            realpath: false,
+            stale: LOCK_STALE_MS,
+            retries: {
+                retries: LOCK_RETRIES,
+                factor: 3,
+                minTimeout: LOCK_RETRY_MIN_WAIT,
+            }
         });
     }
 
     _unlock() {
-        return unlockFile(this._lockFile);
+        return unlockFile(this._source);
     }
 
     _serialize(data: Object): string {
