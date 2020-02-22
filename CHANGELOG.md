@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.3.2 (22. February 2020)
+
  * File Storage: Locking works now also on NFS correctly
  * Removed log statements that could expose passwords
 
