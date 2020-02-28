@@ -186,7 +186,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         if (securityProvider) {
             try {
                 // To prevent phishing, create a new session
-                request.session.destroy();
+                await this._createNewSession(request);
                 return await securityProvider.authenticate(request, response);
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
@@ -232,7 +232,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             try {
                 await securityProvider.revokeAuthentication(request);
                 // Create a new session to make sure no data of the authenticated user remains
-                request.session.destroy();
+                await this._createNewSession(request);
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
             }
@@ -282,6 +282,19 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     async _getRoleDefinitionsCollection(request: ExpressRequest): Promise<MashroomStorageCollection<MashroomSecurityRoleDefinition>> {
         const storageService = request.pluginContext.services.storage.service;
         return storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
+    }
+
+    async _createNewSession(request: ExpressRequest) {
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+
+        return new Promise((resolve) => {
+            request.session.regenerate((err) => {
+                if (err) {
+                    logger.warn('Session invalidation failed!', err);
+                }
+                resolve();
+            });
+        })
     }
 }
 

@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * The security middleware regenerates the session now before and after a login instead of destroying it. Because session.destroy() removes the request.session poperty
+   completely but some security provider might need it during authentication.
+
 ## 1.3.2 (22. February 2020)
 
  * File Storage: Locking works now also on NFS correctly
