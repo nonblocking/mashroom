@@ -5,8 +5,9 @@
         "path": "../../plugin-packages",
         "devMode": true
     }],
-    "indexPage": "/",
+    "indexPage": "/portal",
     "ignorePlugins": [
+        "Mashroom LDAP Security Provider",
         "Mashroom Messaging External Provider MQTT",
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
