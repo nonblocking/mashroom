@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-    activemq-mqtt:
-        container_name: activemq-mqtt
+    mashroom-messaging-activemq-mqtt:
+        container_name: MashroomMessagingActiveMqMQTT
         image: rmohr/activemq
         ports:
             - "1883:1883"

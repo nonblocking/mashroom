@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  mongo:
-    container_name: MongoDB
+  mashroom-session-mongodb:
+    container_name: MashroomSessionMongoDB
     image: mongo
     ports:
       - "27017:27017"

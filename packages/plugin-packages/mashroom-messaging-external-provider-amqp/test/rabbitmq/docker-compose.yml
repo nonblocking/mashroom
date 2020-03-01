@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-    rabbitmq:
-        container_name: rabbitmq
+    mashroom-messaging-rabbitmq:
+        container_name: MashroomMessagingRabbitMq
         image: isikh/rabbitmq_amqp1_0
         ports:
             - "5672:5672"

@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-    mosqitto:
-        container_name: eclipse-mosquitto
+    mashroom-messaging-mosqitto:
+        container_name: MashroomMessagingMQTT
         image: eclipse-mosquitto
         ports:
             - "1883:1883"
