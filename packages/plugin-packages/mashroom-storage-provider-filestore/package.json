@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-storage-provider-filestore",
-    "description": "Session filestore provider",
+    "description": "Simple Mashroom storage provider based on JSON files",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
