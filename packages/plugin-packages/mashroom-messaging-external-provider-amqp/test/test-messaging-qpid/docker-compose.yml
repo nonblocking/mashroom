@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-    mashroom-messaging-qpid:
-        container_name: MashroomMessagingQpid
+    test-messaging-qpid:
+        container_name: TestMessagingQpid
         image: itherz/qpid-server
         ports:
             - "5672:5672"

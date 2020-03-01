@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  mashroom-session-redis:
-    container_name: MashroomSessionRedis
+  test-session-redis:
+    container_name: TestSessionRedis
     image: redis
     ports:
       - "6379:6379"

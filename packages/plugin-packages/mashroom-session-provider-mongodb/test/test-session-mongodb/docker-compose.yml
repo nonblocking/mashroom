@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  test-session-mongodb:
+    container_name: TestSessionMongoDB
+    image: mongo
+    ports:
+      - "27017:27017"
+
+

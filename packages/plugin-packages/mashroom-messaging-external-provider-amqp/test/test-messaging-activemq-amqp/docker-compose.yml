@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-    mashroom-messaging-activemq-amqp:
-        container_name: MashroomMessagingActiveMqAMQP
+    test-messaging-activemq-amqp:
+        container_name: TestMessagingActiveMqAMQP
         image: rmohr/activemq
         ports:
             - "5672:5672"
