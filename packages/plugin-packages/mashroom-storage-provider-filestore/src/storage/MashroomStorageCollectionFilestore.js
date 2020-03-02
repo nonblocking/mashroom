@@ -117,7 +117,7 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
             collection.splice(index, 1);
 
             return {
-                modifiedCount: 1,
+                deletedCount: 1,
             };
         });
     }
@@ -131,7 +131,7 @@ export default class MashroomStorageCollectionFilestore<T: Object> implements Ma
             });
 
             return {
-                modifiedCount: existingItems.length,
+                deletedCount: existingItems.length,
             };
         });
     }

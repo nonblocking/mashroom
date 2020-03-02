@@ -3,13 +3,17 @@
 import type {MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
 
 export type StorageObject<T: {}> = T & {|
-    _id: string
+    _id: any
 |}
 
 export type StorageObjectFilter<T: {}> = {[$Keys<StorageObject<T>>]: any};
 
 export type StorageUpdateResult = {
     modifiedCount: number,
+};
+
+export type StorageDeleteResult = {
+    deletedCount: number;
 };
 
 /**
@@ -39,11 +43,11 @@ export interface MashroomStorageCollection<T: {}> {
     /**
      * Delete the first item that matches the given filter.
      */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageUpdateResult>;
+    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
     /**
      * Delete all items that matches the given filter.
      */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageUpdateResult>;
+    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
 }
 
 /**

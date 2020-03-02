@@ -113,7 +113,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         const deleteResult = await storage.deleteOne({b: 1});
         const result2 = await storage.find({b: 1});
 
-        expect(deleteResult.modifiedCount).toBe(1);
+        expect(deleteResult.deletedCount).toBe(1);
         expect(result1.length).toBe(1);
         expect(result2.length).toBe(0);
     });
@@ -130,7 +130,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         const deleteResult = await storage.deleteMany({a: 1});
         const result2 = await storage.find({a: 1});
 
-        expect(deleteResult.modifiedCount).toBe(3);
+        expect(deleteResult.deletedCount).toBe(3);
         expect(result1.length).toBe(3);
         expect(result2.length).toBe(0);
     });

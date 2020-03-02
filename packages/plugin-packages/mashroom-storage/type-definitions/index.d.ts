@@ -5,7 +5,7 @@ import {MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashr
 // -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
 
 export type StorageObject<T extends {}> = T & {
-    _id: string;
+    _id: any;
 };
 
 export type StorageObjectFilter<T extends {}> = {
@@ -14,6 +14,10 @@ export type StorageObjectFilter<T extends {}> = {
 
 export type StorageUpdateResult = {
     modifiedCount: number;
+};
+
+export type StorageDeleteResult = {
+   deletedCount: number;
 };
 
 /**
@@ -59,12 +63,12 @@ export interface MashroomStorageCollection<T extends {}> {
     /**
      * Delete the first item that matches the given filter.
      */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageUpdateResult>;
+    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
 
     /**
      * Delete all items that matches the given filter.
      */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageUpdateResult>;
+    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
 }
 
 /**
