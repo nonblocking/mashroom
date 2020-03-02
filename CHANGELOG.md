@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Added MongoDB storage provider
  * The security middleware regenerates the session now before and after a login instead of destroying it. Because session.destroy() removes the request.session poperty
    completely but some security provider might need it during authentication.
 

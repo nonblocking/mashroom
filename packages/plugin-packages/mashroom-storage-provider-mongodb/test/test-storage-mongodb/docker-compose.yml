@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  test-storage-mongodb:
+    container_name: TestStorageMongoDB
+    image: mongo
+    ports:
+      - "27017:27017"
+
+

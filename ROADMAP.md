@@ -4,7 +4,6 @@
 ## Version 1.4
 
  * OpenId Connect (OAuth) security provider
- * mongoDB storage provider
  * Portal: Show an error in the Admin Toolbar when a path/url already exists (site, page)
 
 ## Version 1.5

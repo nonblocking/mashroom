@@ -1,0 +1,54 @@
+{
+    "name": "@mashroom/mashroom-storage-provider-mongodb",
+    "description": "Mashroom storage provider backed by MongoDB",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.3.2",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+        "mongodb": "^3.5.4"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.3",
+        "@mashroom/mashroom": "1.3.2",
+        "@mashroom/mashroom-storage": "1.3.2",
+        "@mashroom/mashroom-utils": "1.3.2",
+        "typescript": "^3.7.5",
+        "@types/mongodb": "^3.5.0",
+        "@types/jest": "^24.9.0",
+        "eslint": "^6.8.0",
+        "jest": "^24.9.0",
+        "@shelf/jest-mongodb": "^1.1.3"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts",
+        "preset": "@shelf/jest-mongodb"
+    },
+    "scripts": {
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest --passWithNoTests",
+        "build": "babel src -d dist --extensions '.ts'"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Storage MongoDB Provider",
+                "type": "storage-provider",
+                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
+                "defaultConfig": {
+                    "connectionUri": "mongodb://localhost:27017/mashroom_storage_db?connectTimeoutMS=1000&socketTimeoutMS=2500"
+                }
+            }
+        ]
+    }
+}
