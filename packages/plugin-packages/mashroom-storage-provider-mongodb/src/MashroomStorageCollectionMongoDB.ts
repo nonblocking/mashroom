@@ -44,8 +44,12 @@ export default class MashroomStorageCollectionFilestore<T extends {}> implements
 
     async updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: Partial<StorageObject<T>>): Promise<StorageUpdateResult> {
         const collection = await this.getCollection();
+        const cleanProperties = {
+            ...propertiesToUpdate,
+        };
+        delete cleanProperties._id;
         const result = await collection.updateOne(filter, {
-            $set: propertiesToUpdate,
+            $set: cleanProperties,
         });
         return {
             modifiedCount: result.modifiedCount,

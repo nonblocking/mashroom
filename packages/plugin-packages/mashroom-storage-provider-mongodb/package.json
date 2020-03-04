@@ -44,9 +44,9 @@
             {
                 "name": "Mashroom Storage MongoDB Provider",
                 "type": "storage-provider",
-                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                    "connectionUri": "mongodb://localhost:27017/mashroom_storage_db?connectTimeoutMS=1000&socketTimeoutMS=2500"
+                    "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
                 }
             }
         ]

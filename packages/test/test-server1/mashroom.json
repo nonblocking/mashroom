@@ -7,6 +7,7 @@
     }],
     "indexPage": "/portal",
     "ignorePlugins": [
+        "Mashroom Storage MongoDB Provider",
         "Mashroom LDAP Security Provider",
         "Mashroom Messaging External Provider MQTT",
         "Mashroom Messaging External Provider AMQP",
@@ -57,6 +58,9 @@
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage"
+        },
+        "Mashroom Storage MongoDB Provider": {
+            "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
         },
         "Mashroom Internationalization Services": {
             "availableLanguages": ["en", "de"],
