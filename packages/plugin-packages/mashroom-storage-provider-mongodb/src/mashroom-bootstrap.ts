@@ -8,7 +8,7 @@ const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, plu
     const pluginContext = pluginContextHolder.getPluginContext();
     const {connectionUri} = pluginConfig;
 
-    setConnectionUri(connectionUri);
+    await setConnectionUri(connectionUri);
 
     return new MashroomStorageMongoDB(pluginContext.loggerFactory);
 };

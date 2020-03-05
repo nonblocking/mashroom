@@ -1,7 +1,7 @@
 
 // @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import {setConnectionUri} from '../src/mongodb_client';
+import {setConnectionUri, close} from '../src/mongodb_client';
 import MashroomStorageCollectionMongoDB from '../src/MashroomStorageCollectionMongoDB';
 
 import {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
@@ -19,6 +19,10 @@ type Test = {
 setConnectionUri(process.env.MONGO_URL);
 
 describe('MashroomStorageCollectionMongoDB', () => {
+
+    afterAll(async () => {
+        await close();
+    });
 
     it('writes new item and assigns an id', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test1', dummyLoggerFactory);
