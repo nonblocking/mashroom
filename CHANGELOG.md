@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Angular Demo Portal App: Works now with AOP and the Ivy Compiler
+ * External MQTT Messaging Provider: Supports now MQTT 5
+ * Removed support for Node 8
  * Added MongoDB storage provider
  * The security middleware regenerates the session now before and after a login instead of destroying it. Because session.destroy() removes the request.session poperty
    completely but some security provider might need it during authentication.
