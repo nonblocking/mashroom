@@ -22,7 +22,13 @@
                         "styles": [
                             "src/styles.css"
                         ],
-                        "scripts": []
+                        "scripts": [
+                            {
+                                "input": "node_modules/zone.js/dist/zone.js",
+                                "inject": true,
+                                "bundleName": "zonejs"
+                            }
+                        ]
                     },
                     "configurations": {
                         "production": {
@@ -30,10 +36,10 @@
                             "sourceMap": false,
                             "extractCss": true,
                             "namedChunks": false,
-                            "aot": false,
+                            "aot": true,
                             "extractLicenses": false,
                             "vendorChunk": false,
-                            "buildOptimizer": false
+                            "buildOptimizer": true
                         }
                     }
                 },

@@ -21,6 +21,7 @@ export class AppComponent {
         this.messageBus = clientServices.messageBus;
         this.messageBus.subscribe('ping', () => {
             this.pings++;
+            // Zone.js cannot detect this change
             cdRef.detectChanges();
         });
     }
@@ -28,4 +29,5 @@ export class AppComponent {
     sendPing() {
         this.messageBus.publish('ping', {});
     }
+
 }

@@ -25,7 +25,9 @@
                 var portalClientServices = {
                     messageBus: {
                         publish: function() {},
-                        subscribe: function() {}
+                        subscribe: function(topic, callback) {
+                            window.ANGULAR_PORTAL_APP_PING_CALLBACK = callback;
+                        }
                     }
                 };
                 window.startAngularDemoApp(element, portalAppSetup, portalClientServices);
