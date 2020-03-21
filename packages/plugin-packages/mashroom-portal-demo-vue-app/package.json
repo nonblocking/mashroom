@@ -10,19 +10,19 @@
         "dist/**"
     ],
     "devDependencies": {
-        "@babel/cli": "^7.8.3",
-        "@vue/cli-plugin-eslint": "^4.1.2",
-        "copyfiles": "^2.1.1",
+        "@babel/cli": "^7.8.4",
+        "@vue/cli-plugin-eslint": "^4.2.3",
+        "copyfiles": "^2.2.0",
         "eslint": "^6.8.0",
         "eslint-plugin-vue": "^5.2.3",
         "jest": "^24.9.0",
         "vue": "^2.6.11",
         "vue-eslint-parser": "^6.0.5",
-        "vue-loader": "^15.8.3",
+        "vue-loader": "^15.9.1",
         "vue-template-compiler": "^2.6.11",
-        "webpack": "^4.41.5",
-        "webpack-cli": "^3.3.10",
-        "webpack-dev-server": "^3.10.1"
+        "webpack": "^4.42.0",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.10.3"
     },
     "scripts": {
         "lint": "eslint src",

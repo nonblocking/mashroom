@@ -9,23 +9,23 @@
         "dist/**"
     ],
     "devDependencies": {
-        "@angular-devkit/build-angular": "^0.803.23",
-        "@angular/cli": "^8.3.23",
-        "@angular/common": "^8.2.14",
-        "@angular/compiler": "^8.2.14",
-        "@angular/compiler-cli": "^8.2.14",
-        "@angular/core": "^8.2.14",
-        "@angular/forms": "^8.2.14",
-        "@angular/language-service": "^8.2.14",
-        "@angular/platform-browser": "^8.2.14",
-        "@angular/platform-browser-dynamic": "^8.2.14",
+        "@angular-devkit/build-angular": "^0.900.7",
+        "@angular/cli": "^9.0.7",
+        "@angular/common": "^9.0.7",
+        "@angular/compiler": "^9.0.7",
+        "@angular/compiler-cli": "^9.0.7",
+        "@angular/core": "^9.0.7",
+        "@angular/forms": "^9.0.7",
+        "@angular/language-service": "^9.0.7",
+        "@angular/platform-browser": "^9.0.7",
+        "@angular/platform-browser-dynamic": "^9.0.7",
         "@mashroom/mashroom-portal": "1.3.2",
-        "@types/node": "^8.10.59",
+        "@types/node": "^13.9.2",
         "core-js": "^3.6.4",
+        "zone.js": "^0.10.3",
         "rxjs": "^6.5.4",
-        "tslint": "^5.20.1",
-        "typescript": "^3.7.5",
-        "zone.js": "^0.10.2"
+        "tslint": "^6.1.0",
+        "typescript": "3.7.5"
     },
     "scripts": {
         "dev": "ng serve",
@@ -42,9 +42,13 @@
                 "type": "portal-app",
                 "bootstrap": "startAngularDemoApp",
                 "category": "Demo",
+                "sharedResources": {
+                    "js": [
+                        "zonejs.js"
+                    ]
+                },
                 "resources": {
                     "js": [
-                        "polyfills.js",
                         "runtime.js",
                         "main.js"
                     ],
