@@ -56,8 +56,8 @@ has similar concepts than a Java Portal Server.
 |                     | Supported                                                                                     | Planned *)                   |
 | ------------------- | --------------------------------------------------------------------------------------------- | ---------------------------- |
 | Operating Systems   | Linux, MacOS, Windows                                                                         |                              |
-| Node.js             | 10.x, 12.x                                                                                    |                              |
-| Authentication      | LDAP (Active Directory), JSON File                                                            |  Open ID Connect             |
+| Node.js             | 10.x, 12.x                                                                               |                              |
+| Authentication      | LDAP (Active Directory),  OAuth2/Open ID Connect, JSON File                                   |                              |
 | Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                            |                              |
 | Storage             | MongoDb, Plain JSON Files                                                                     |                              |
@@ -543,6 +543,8 @@ this in the _Mashroom_ config file:
 [mashroom-security-provider-simple](../../mashroom-security-provider-simple/README.md) [inc]
 
 [mashroom-security-provider-ldap](../../mashroom-security-provider-ldap/README.md) [inc]
+
+[mashroom-security-provider-openid-connect](../../mashroom-security-provider-openid-connect/README.md) [inc]
 
 [mashroom-security-default-login-webapp](../../mashroom-security-default-login-webapp/README.md) [inc]
 

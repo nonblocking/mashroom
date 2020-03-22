@@ -1,0 +1,33 @@
+version: "3"
+
+volumes:
+    keycloak_mysql_data:
+
+services:
+    mysql:
+        container_name: keycloak_test_mysql
+        image: tasktrack.telekom.at/docker-hub/mysql:5.7
+        environment:
+            - MYSQL_DATABASE=keycloak
+            - MYSQL_USER=keycloak
+            - MYSQL_PASSWORD=keycloak
+            - MYSQL_ROOT_PASSWORD=mysql
+        volumes:
+            - keycloak_mysql_data:/var/lib/mysql
+    keycloak:
+        container_name: keycloak_test
+        image: tasktrack.telekom.at/gucci-docker/jboss/keycloak
+        depends_on:
+            - mysql
+        environment:
+            - DB_VENDOR=mysql
+            - DB_ADDR=mysql
+            - DB_USER=keycloak
+            - DB_PASSWORD=keycloak
+            - KEYCLOAK_USER=admin
+            - KEYCLOAK_PASSWORD=test
+            - KEYCLOAK_IMPORT=/tmp/keycloak/test/realm-export.json
+        volumes:
+            - ./:/tmp/keycloak/test/
+        ports:
+            - "8080:8080"

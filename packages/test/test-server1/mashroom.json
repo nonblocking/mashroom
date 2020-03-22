@@ -9,6 +9,7 @@
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
         "Mashroom LDAP Security Provider",
+        "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
@@ -42,6 +43,17 @@
         "Mashroom Security Simple Provider": {
             "users": "./users.json",
             "authenticationTimeoutSec": 300
+        },
+        "Mashroom OpenID Connect Security Provider": {
+            "discoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
+            "scope": "openid email profile",
+            "clientId": "mashroom",
+            "clientSecret": "9842e02d-096a-4b18-ad69-7d33fd803d36",
+            "redirectUrl": "http://localhost:5050/openid-connect-cb",
+            "rolesClaim": "roles",
+            "adminRoles": [
+                "mashroom-admin"
+            ]
         },
         "Mashroom Security Default Login Webapp": {
             "loginFormTitle": {

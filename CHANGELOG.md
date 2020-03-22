@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Added OpenID Connect security provider
  * Angular Demo Portal App: Works now with AOP and the Ivy Compiler
  * External MQTT Messaging Provider: Supports now MQTT 5
  * Removed support for Node 8
