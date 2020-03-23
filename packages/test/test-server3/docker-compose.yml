@@ -1,0 +1,48 @@
+version: "3"
+
+volumes:
+    mashroom_testserver3_keycloak_mysql_data:
+
+services:
+    redis:
+        container_name: mashroom_testserver3_redis
+        image: redis
+        ports:
+            - "6379:6379"
+    mongodb:
+        container_name: mashroom_testserver3_mongo
+        image: mongo
+        ports:
+            - "27017:27017"
+    mosqitto:
+        container_name: mashroom_testserver3_mosquitto
+        image: eclipse-mosquitto
+        ports:
+            - "1883:1883"
+    mysql:
+        container_name: mashroom_testserver3_mysql
+        image: tasktrack.telekom.at/docker-hub/mysql:5.7
+        environment:
+            - MYSQL_DATABASE=keycloak
+            - MYSQL_USER=keycloak
+            - MYSQL_PASSWORD=keycloak
+            - MYSQL_ROOT_PASSWORD=mysql
+        volumes:
+            - mashroom_testserver3_keycloak_mysql_data:/var/lib/mysql
+    keycloak:
+        container_name: mashroom_testserver3_keycloak
+        image: tasktrack.telekom.at/gucci-docker/jboss/keycloak
+        depends_on:
+            - mysql
+        environment:
+            - DB_VENDOR=mysql
+            - DB_ADDR=mysql
+            - DB_USER=keycloak
+            - DB_PASSWORD=keycloak
+            - KEYCLOAK_USER=admin
+            - KEYCLOAK_PASSWORD=test
+            - KEYCLOAK_IMPORT=/tmp/keycloak/realm-export.json
+        volumes:
+            - ./keycloak:/tmp/keycloak/
+        ports:
+            - "8080:8080"
