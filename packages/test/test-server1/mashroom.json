@@ -5,7 +5,7 @@
         "path": "../../plugin-packages",
         "devMode": true
     }],
-    "indexPage": "/portal",
+    "indexPage": "/",
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
         "Mashroom LDAP Security Provider",

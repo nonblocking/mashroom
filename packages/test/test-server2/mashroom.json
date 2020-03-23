@@ -9,6 +9,7 @@
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
         "Mashroom LDAP Security Provider",
+        "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
