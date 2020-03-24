@@ -3,25 +3,23 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This plugin adds a OpenID Connect security provider that can be used to integrate *Mashroom Server* with almost
+This plugin adds a OpenID Connect/OAuth2 security provider that can be used to integrate *Mashroom Server* with almost
 all Identity Providers or Identity Platforms.
 
 Tested with:
+ * [Github OAuth 2.0](https://developer.github.com/v3/oauth/)
  * [Google Identity Platform](https://developers.google.com/identity)
  * [Keylcoak Identity Provider](https://www.keycloak.org/)
 
 Should work with (among others):
  * [Auth0](https://auth0.com/docs/protocols/oidc)
+ * [Facebook Login](https://developers.facebook.com/docs/facebook-login/)
  * [Gluu](https://gluu.org/docs/ce/api-guide/openid-connect-api/)
  * [Microsoft Identity Platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
  * [Okta](https://developer.okta.com/docs/reference/api/oidc/)
  * [OneLogin](https://developers.onelogin.com/openid-connect)
  * [Open AM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
  * [PingIdentity](https://www.pingidentity.com/developer/en/resources/openid-connect-developers-guide.html)
-
-Not supported (because they do not expose a discovery endpoint):
- * [Facebook Login](https://developers.facebook.com/docs/facebook-login/)
- * [Github OAuth 2.0](https://developer.github.com/v3/oauth/)
 
 #### Usage
 
@@ -45,7 +43,9 @@ And configure this plugin like this in the Mashroom config file:
 {
     "plugins": {
         "Mashroom OpenID Connect Security Provider": {
-            "discoveryUrl": "http://localhost:8080/.well-known/openid-configuration",
+            "mode": "OIDC",
+            "issuerDiscoveryUrl": "http://localhost:8080/.well-known/openid-configuration",
+            "issuerMetadata": null,
             "scope": "openid email profile",
             "clientId": "mashroom",
             "clientSecret": "your-client-secret",
@@ -65,7 +65,9 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _discoveryUrl_: The [OpenID Connect Discovery URL](https://openid.net/specs/openid-connect-discovery-1_0.html), this is usually https://&lt;your-idp-host&gt;/.well-known/openid-configuration. See Example Configurations below.
+ * _mode_: Can be _OIDC_ (default) or _OAuth2_. Pure OAuth2 usually does not support permission roles (for authorization).
+ * _issuerDiscoveryUrl_: The [OpenID Connect Discovery URL](https://openid.net/specs/openid-connect-discovery-1_0.html), this is usually https://&lt;your-idp-host&gt;/.well-known/openid-configuration. See Example Configurations below.
+ * _issuerMetadata_: The issuer metadata if no _issuerDiscoveryUrl_ is available. Will be passed to the [Issuer constructor](https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer). See examples below.
  * _scope_: The scope (permissions) to ask for (Default: openid email profile)
  * _clientId_: The client to use (Default: mashroom)
  * _clientSecret_: The client secret
@@ -92,7 +94,7 @@ And the expiration time of the refresh token defines how long the user can work 
 
 ##### Example Configurations
 
-**Keycloak**
+###### Keycloak
 
 Setup:
 
@@ -111,7 +113,7 @@ If your Keycloak runs on localhost, the Realm name is *test* amd the client name
 {
     "plugins": {
         "Mashroom OpenID Connect Security Provider": {
-            "discoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
+            "issuerDiscoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
             "clientId": "mashroom",
             "clientSecret": "xxxxxxxxxxxxxxxx",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
@@ -124,7 +126,7 @@ If your Keycloak runs on localhost, the Realm name is *test* amd the client name
 }
 ```
 
-**Google Identity Platform**
+###### Google Identity Platform
 
 Setup:
 
@@ -139,7 +141,7 @@ Possible config:
 {
     "plugins": {
         "Mashroom OpenID Connect Security Provider": {
-            "discoveryUrl": "https://accounts.google.com/.well-known/openid-configuration",
+            "issuerDiscoveryUrl": "https://accounts.google.com/.well-known/openid-configuration",
             "scope": "openid email profile",
             "clientId": "xxxxxxxxxxxxxxxx.apps.googleusercontent.com",
             "clientSecret": "xxxxxxxxxxxxxxxx",
@@ -155,3 +157,36 @@ Possible config:
 
 The access_type=offline parameter is necessary to get a refresh token.
 Since Google users don't have authorization roles there is no way to make some users _Administrator_.
+
+###### GitHub OAuth2
+
+Setup:
+
+ * Go to: https://github.com/settings/developers
+ * Click on "New OAuth App"
+ * Enter the application name and correct callback URL (e.g. http://localhost:5050/openid-connect-cb)
+
+Possible config:
+
+```json
+{
+    "plugins": {
+        "Mashroom OpenID Connect Security Provider": {
+            "mode": "OAuth2",
+            "issuerMetadata": {
+                "issuer": "GitHub",
+                "authorization_endpoint": "https://github.com/login/oauth/authorize",
+                "token_endpoint": "https://github.com/login/oauth/access_token",
+                "userinfo_endpoint": "https://api.github.com/user",
+                "end_session_endpoint": null
+            },
+            "scope": "openid email profile",
+            "clientId": "xxxxxxxxxxxxxxxx",
+            "clientSecret": "xxxxxxxxxxxxxxxx",
+            "redirectUrl": "http://localhost:5050/openid-connect-cb"
+        }
+    }
+}
+```
+
+Since GitHub uses pure OAuth2 the users don't have permission roles and there is no way to make some users _Administrator_.

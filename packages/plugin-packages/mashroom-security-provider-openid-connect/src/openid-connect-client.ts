@@ -1,17 +1,18 @@
 
 import {Client, Issuer} from "openid-client";
 
-import {ClientConfiguration, ExpressRequestWithSession} from "../type-definitions";
+import {ClientConfiguration, ExpressRequestWithSession, Mode} from "../type-definitions";
 import {MashroomLogger} from "@mashroom/mashroom/type-definitions";
 
 let _clientConfiguration: ClientConfiguration | undefined;
-const _callbackBasePath = '/openid-connect-cb';
 let _client: Client | undefined;
 
 export const setClientConfiguration = (clientConfiguration: ClientConfiguration) => {
     _clientConfiguration = clientConfiguration;
     _client = undefined;
 };
+
+export const getMode = (): Mode | undefined => _clientConfiguration ? _clientConfiguration.mode : undefined;
 
 export default async (request: ExpressRequestWithSession): Promise<Client | undefined> => {
     const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
@@ -20,18 +21,32 @@ export default async (request: ExpressRequestWithSession): Promise<Client | und
         return _client;
     }
     if (!_clientConfiguration) {
-        throw new Error('Cannot create OpenID Connect client because no configuration given!');
+        logger.error('Cannot create OpenID Connect client because no configuration given!');
+        return undefined;
     }
 
-    const { discoveryUrl, clientId, clientSecret, redirectUrl, responseType } = _clientConfiguration;
-
-    logger.info(`Setting up OpenID Connect with clientId=${clientId}, responseType=${responseType}, redirectUrl=${redirectUrl}, discoveryUrl=${discoveryUrl}`);
+    const { issuerDiscoveryUrl, issuerMetadata, clientId, clientSecret, redirectUrl, responseType } = _clientConfiguration;
+    if (!issuerDiscoveryUrl && !issuerMetadata) {
+        logger.error('Cannot create OpenID Connect client because no discoverUrl and no metadata given!');
+        return undefined;
+    }
 
     let issuer;
-    try {
-        issuer = await Issuer.discover(discoveryUrl);
-    } catch (e) {
-        logger.error(`Connection to service discovery url failed: ${discoveryUrl}`, e);
+    if (issuerDiscoveryUrl) {
+        try {
+
+                logger.info(`Setting up OpenID Connect with clientId=${clientId}, responseType=${responseType}, redirectUrl=${redirectUrl}, discoveryUrl=${issuerDiscoveryUrl}`);
+                issuer = await Issuer.discover(issuerDiscoveryUrl);
+
+        } catch (e) {
+            logger.error(`Connection to service discovery url failed: ${issuerDiscoveryUrl}`, e);
+            return undefined;
+        }
+    } else if (issuerMetadata) {
+        logger.info(`Setting up OpenID Connect with clientId=${clientId}, responseType=${responseType}, redirectUrl=${redirectUrl}, metadata=${issuerMetadata}`);
+        issuer = new Issuer(issuerMetadata);
+    }
+    if (!issuer) {
         return undefined;
     }
 

@@ -1,4 +1,3 @@
-// @flow
 
 import {setClientConfiguration} from '../openid-connect-client';
 import MashroomOpenIDConnectSecurityProvider from './MashroomOpenIDConnectSecurityProvider';
@@ -6,7 +5,9 @@ import {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroo
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig) => {
     const {
-        discoveryUrl,
+        mode,
+        issuerDiscoveryUrl,
+        issuerMetadata,
         scope,
         clientId,
         clientSecret,
@@ -19,7 +20,9 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
     } = pluginConfig;
 
     setClientConfiguration({
-        discoveryUrl,
+        mode,
+        issuerDiscoveryUrl,
+        issuerMetadata,
         clientId,
         clientSecret,
         redirectUrl,

@@ -157,21 +157,29 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
     getUser(request: ExpressRequestWithSession): MashroomSecurityUser | null {
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
 
-        if (!authData || !authData.tokenSet || !authData.claims) {
+        if (!authData || !authData.tokenSet) {
             return null;
         }
 
-        if (!authData.tokenSet.expires_at || authData.tokenSet.expires_at * 1000 < Date.now()) {
+        if (authData.tokenSet.expires_at && authData.tokenSet.expires_at * 1000 < Date.now()) {
             return null;
         }
 
         const { claims } = authData;
-        const roles = Array.isArray(claims[this.rolesClaimName]) ? (claims[this.rolesClaimName] as Array<string>) : [];
-
-        return {
-            username: claims.preferred_username || claims.email || 'undefined',
-            displayName: claims.name,
-            roles: roles.map((r: string) => (this.adminRoles.indexOf(r) > -1 ? 'Administrator' : r)),
-        };
+        if (claims) {
+            const roles = Array.isArray(claims[this.rolesClaimName]) ? (claims[this.rolesClaimName] as Array<string>) : [];
+            return {
+                username: claims.preferred_username || claims.email || 'undefined',
+                displayName: claims.name,
+                roles: roles.map((r: string) => (this.adminRoles.indexOf(r) > -1 ? 'Administrator' : r)),
+            };
+        } else {
+            // The user is authenticated but we don't know anything about him (e.g. pure OAuth2)
+            return {
+                username: 'undefined',
+                displayName: 'Undefined',
+                roles: [],
+            };
+        }
     }
 }

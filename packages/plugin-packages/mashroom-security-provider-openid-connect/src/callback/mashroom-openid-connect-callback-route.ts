@@ -1,4 +1,5 @@
-import openIDConnectClient from '../openid-connect-client';
+
+import openIDConnectClient, {getMode} from '../openid-connect-client';
 import {OICD_AUTH_DATA_SESSION_KEY} from '../constants';
 
 import {ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -36,14 +37,25 @@ export default (defaultBackUrl: string) => {
         };
 
         try {
-            const tokenSet = await client.callback(redirectUrl, reqParams, checks);
-            const claims = tokenSet.claims();
+            if (getMode() === 'OAuth2') {
+                const tokenSet = await client.oauthCallback(redirectUrl, reqParams, checks);
 
-            console.debug(`Successfully authenticated user ${claims.preferred_username}. Token valid until: ${new Date((tokenSet.expires_at || 0) * 1000)}. Claims:`, claims);
+                console.debug(`Successfully authorized user. Token valid until: ${new Date((tokenSet.expires_at || 0) * 1000)}`);
 
-            authData.lastTokenCheck = Date.now();
-            authData.tokenSet = tokenSet;
-            authData.claims = claims;
+                authData.lastTokenCheck = Date.now();
+                authData.tokenSet = tokenSet;
+
+            } else {
+                const tokenSet = await client.callback(redirectUrl, reqParams, checks);
+                const claims = tokenSet.claims();
+
+                console.debug(`Successfully authenticated user ${claims.preferred_username}. Token valid until: ${new Date((tokenSet.expires_at || 0) * 1000)}. Claims:`, claims);
+
+                authData.lastTokenCheck = Date.now();
+                authData.tokenSet = tokenSet;
+                authData.claims = claims;
+            }
+
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
 
             if (backUrl) {

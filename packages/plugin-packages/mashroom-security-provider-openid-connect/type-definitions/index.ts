@@ -1,12 +1,16 @@
-import {IdTokenClaims, ResponseType, TokenSet} from 'openid-client';
+import {IdTokenClaims, IssuerMetadata, ResponseType, TokenSet} from 'openid-client';
 import {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 
 export type ExpressRequestWithSession = ExpressRequest & {
     session: any;
 }
 
+export type Mode = 'OIDC' | 'OAuth2';
+
 export type ClientConfiguration = {
-    discoveryUrl: string;
+    mode: Mode,
+    issuerDiscoveryUrl: string | undefined;
+    issuerMetadata: IssuerMetadata | undefined;
     clientId: string;
     clientSecret: string;
     redirectUrl: string;

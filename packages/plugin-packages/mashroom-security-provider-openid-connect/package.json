@@ -51,7 +51,9 @@
                     "Mashroom Session Middleware"
                 ],
                 "defaultConfig": {
-                    "discoveryUrl": "http://localhost:8080/.well-known/openid-configuration",
+                    "mode": "OIDC",
+                    "issuerDiscoveryUrl": null,
+                    "issuerMetadata": null,
                     "scope": "openid email profile",
                     "clientId": "mashroom",
                     "clientSecret": "your-client-secret",

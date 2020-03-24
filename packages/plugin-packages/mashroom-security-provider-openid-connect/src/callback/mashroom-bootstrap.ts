@@ -1,3 +1,4 @@
+
 import express from 'express';
 import {MashroomApiPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 import callbackRoute from './mashroom-openid-connect-callback-route';
