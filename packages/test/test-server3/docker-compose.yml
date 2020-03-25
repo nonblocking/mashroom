@@ -42,6 +42,7 @@ services:
             - KEYCLOAK_USER=admin
             - KEYCLOAK_PASSWORD=test
             - KEYCLOAK_IMPORT=/tmp/keycloak/realm-export.json
+            - JDBC_PARAMS=useSSL=false
         volumes:
             - ./keycloak:/tmp/keycloak/
         ports:
