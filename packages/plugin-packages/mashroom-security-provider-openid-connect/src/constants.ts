@@ -1,3 +1,5 @@
 
 export const OICD_AUTH_DATA_SESSION_KEY = '__MASHROOM_OICD_AUTH_DATA';
+export const OICD_USER_SESSION_KEY = '__MASHROOM_OICD_USER';
 export const TOKEN_CHECK_INTERVAL_MS = 10 * 1000; // 10sec
+export const UNDEFINED_USER_NAME = 'undefined';

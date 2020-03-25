@@ -1,0 +1,8 @@
+version: "3"
+
+services:
+    openam:
+        container_name: openam_test
+        image: openidentityplatform/openam
+        ports:
+            - "8080:8080"

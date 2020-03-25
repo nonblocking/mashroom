@@ -10,6 +10,7 @@ Tested with:
  * [Github OAuth 2.0](https://developer.github.com/v3/oauth/)
  * [Google Identity Platform](https://developers.google.com/identity)
  * [Keylcoak Identity Provider](https://www.keycloak.org/)
+ * [Open AM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
 
 Should work with (among others):
  * [Auth0](https://auth0.com/docs/protocols/oidc)
@@ -18,7 +19,6 @@ Should work with (among others):
  * [Microsoft Identity Platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
  * [Okta](https://developer.okta.com/docs/reference/api/oidc/)
  * [OneLogin](https://developers.onelogin.com/openid-connect)
- * [Open AM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
  * [PingIdentity](https://www.pingidentity.com/developer/en/resources/openid-connect-developers-guide.html)
 
 #### Usage
@@ -76,7 +76,7 @@ And configure this plugin like this in the Mashroom config file:
  * _responseType_: The OpenID Connect response type (flow) to use (Default: code)
  * _usePKCE_: Use the [Proof Key for Code Exchange](https://oauth.net/2/pkce) extension for the _code_ flow
  * _extraAuthParams_: Extra authentication parameters that should be used
- * _rolesClaimName_: Defines the name of the claim (the property of the claims object) that contains the user roles
+ * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array
  * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role
 
 ##### Roles
@@ -105,7 +105,7 @@ Setup:
  * To map the roles to a scope/claim goto _Mappers_, click _Add Builtin_ and add a _realm roles_ mapper.
    In the field _Token Claim Name_ enter _roles_.
 
-You'll find more details about the configuration here: https://www.keycloak.org/documentation.html
+You'll find more details about the configuration here: [https://www.keycloak.org/documentation.html](https://www.keycloak.org/documentation.html)
 
 If your Keycloak runs on localhost, the Realm name is *test* amd the client name *mashroom*, then the config would look like this:
 
@@ -116,6 +116,38 @@ If your Keycloak runs on localhost, the Realm name is *test* amd the client name
             "issuerDiscoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
             "clientId": "mashroom",
             "clientSecret": "xxxxxxxxxxxxxxxx",
+            "redirectUrl": "http://localhost:5050/openid-connect-cb",
+            "rolesClaim": "roles",
+            "adminRoles": [
+                "mashroom-admin"
+            ]
+        }
+    }
+}
+```
+
+###### OpenAM
+
+Setup:
+
+ * Create a new Realm (e.g. *Test*)
+ * Create a new OIDC configuration: OAuth provider -> Configure OpenID Connect -> Create from the Dashboard)
+ * Create a new Agent (e.g. *mashroom*): Applications -> OAuth 2.0 -> Agent from the Dashboard)
+ * Make sure the agent has at least the scopes *openid email profile* and the *ID Token Signing Algorithm* is set to *RS256*
+ * Follow [this KB article](https://backstage.forgerock.com/knowledge/kb/article/a15751293) to add the OpenAM groups as roles claim
+
+You'll find more details about the configuration here: [https://backstage.forgerock.com/docs/openam/13.5/admin-guide](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
+
+If your OpenAM server runs on localhost, the Realm name is *Test* amd the client name *mashroom*, then the config would look like this:
+
+```json
+{
+    "plugins": {
+        "Mashroom OpenID Connect Security Provider": {
+            "issuerDiscoveryUrl": "http://localhost:8080/openam/oauth2/Test/.well-known/openid-configuration",
+            "scope": "openid email profile",
+            "clientId": "mashroom",
+            "clientSecret": "mashroom",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
             "rolesClaim": "roles",
             "adminRoles": [
@@ -155,7 +187,8 @@ Possible config:
 }
 ```
 
-The access_type=offline parameter is necessary to get a refresh token.
+The *access_type=offline* parameter is necessary to get a refresh token.
+
 Since Google users don't have authorization roles there is no way to make some users _Administrator_.
 
 ###### GitHub OAuth2
@@ -190,3 +223,4 @@ Possible config:
 ```
 
 Since GitHub uses pure OAuth2 the users don't have permission roles and there is no way to make some users _Administrator_.
+It also supports no *userinfo* endpoint, so it actually makes no sense to use it for *Mashroom*.

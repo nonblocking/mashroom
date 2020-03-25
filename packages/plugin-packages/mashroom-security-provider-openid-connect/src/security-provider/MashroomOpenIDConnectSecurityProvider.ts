@@ -2,7 +2,11 @@
 import requestNative from 'request-promise-native';
 import {AuthorizationParameters, generators} from "openid-client";
 import openIDConnectClient from '../openid-connect-client';
-import {OICD_AUTH_DATA_SESSION_KEY, TOKEN_CHECK_INTERVAL_MS} from '../constants';
+import {
+    OICD_AUTH_DATA_SESSION_KEY,
+    OICD_USER_SESSION_KEY,
+    TOKEN_CHECK_INTERVAL_MS,
+} from '../constants';
 
 import {
     MashroomSecurityAuthenticationResult,
@@ -18,7 +22,7 @@ import {ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-defin
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
-    constructor(private scope: string, private usePKCE: boolean = false, private extraAuthParams: any = {}, private rolesClaimName: string = "roles", private adminRoles: Array<string> = []) {
+    constructor(private scope: string, private usePKCE: boolean = false, private extraAuthParams: any = {}) {
     }
 
     async authenticate(request: ExpressRequestWithSession, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult> {
@@ -82,6 +86,8 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
         const client = await openIDConnectClient(request);
+
+        const user = this.getUser(request);
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
         if (!client || !authData || !authData.tokenSet || !authData.lastTokenCheck) {
             return;
@@ -108,10 +114,10 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
 
-            console.debug(`Token refreshed for user ${authData.claims?.preferred_username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
+            logger.debug(`Token refreshed for user ${user?.username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
 
         } catch (e) {
-            logger.error(`Refreshing access token failed. Signing out user: ${authData.claims?.preferred_username}`, e);
+            logger.error(`Refreshing access token failed. Signing out user: ${user?.username}`, e);
             delete request.session[OICD_AUTH_DATA_SESSION_KEY];
         }
     }
@@ -155,9 +161,13 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
     }
 
     getUser(request: ExpressRequestWithSession): MashroomSecurityUser | null {
+        if (!request.session) {
+            return null;
+        }
+        const user: MashroomSecurityUser | undefined = request.session[OICD_USER_SESSION_KEY];
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
 
-        if (!authData || !authData.tokenSet) {
+        if (!user || !authData || !authData.tokenSet) {
             return null;
         }
 
@@ -165,21 +175,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             return null;
         }
 
-        const { claims } = authData;
-        if (claims) {
-            const roles = Array.isArray(claims[this.rolesClaimName]) ? (claims[this.rolesClaimName] as Array<string>) : [];
-            return {
-                username: claims.preferred_username || claims.email || 'undefined',
-                displayName: claims.name,
-                roles: roles.map((r: string) => (this.adminRoles.indexOf(r) > -1 ? 'Administrator' : r)),
-            };
-        } else {
-            // The user is authenticated but we don't know anything about him (e.g. pure OAuth2)
-            return {
-                username: 'undefined',
-                displayName: 'Undefined',
-                roles: [],
-            };
-        }
+        return user;
     }
+
 }

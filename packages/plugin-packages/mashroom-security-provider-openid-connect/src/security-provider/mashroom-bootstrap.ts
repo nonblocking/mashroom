@@ -1,5 +1,6 @@
 
 import {setClientConfiguration} from '../openid-connect-client';
+import {setCallbackConfiguration} from '../callback/mashroom-openid-connect-callback-route';
 import MashroomOpenIDConnectSecurityProvider from './MashroomOpenIDConnectSecurityProvider';
 import {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
 
@@ -20,7 +21,6 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
     } = pluginConfig;
 
     setClientConfiguration({
-        mode,
         issuerDiscoveryUrl,
         issuerMetadata,
         clientId,
@@ -29,7 +29,13 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         responseType,
     });
 
-    return new MashroomOpenIDConnectSecurityProvider(scope, usePKCE, extraAuthParams, rolesClaimName, adminRoles);
+    setCallbackConfiguration({
+        mode,
+        rolesClaimName,
+        adminRoles,
+    });
+
+    return new MashroomOpenIDConnectSecurityProvider(scope, usePKCE, extraAuthParams);
 };
 
 export default bootstrap;

@@ -12,8 +12,6 @@ export const setClientConfiguration = (clientConfiguration: ClientConfiguration)
     _client = undefined;
 };
 
-export const getMode = (): Mode | undefined => _clientConfiguration ? _clientConfiguration.mode : undefined;
-
 export default async (request: ExpressRequestWithSession): Promise<Client | undefined> => {
     const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
