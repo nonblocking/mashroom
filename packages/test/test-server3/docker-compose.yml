@@ -21,7 +21,7 @@ services:
             - "1883:1883"
     mysql:
         container_name: mashroom_testserver3_mysql
-        image: tasktrack.telekom.at/docker-hub/mysql:5.7
+        image: mysql:5.7
         environment:
             - MYSQL_DATABASE=keycloak
             - MYSQL_USER=keycloak
@@ -31,7 +31,7 @@ services:
             - mashroom_testserver3_keycloak_mysql_data:/var/lib/mysql
     keycloak:
         container_name: mashroom_testserver3_keycloak
-        image: tasktrack.telekom.at/gucci-docker/jboss/keycloak
+        image: jboss/keycloak
         depends_on:
             - mysql
         environment:
