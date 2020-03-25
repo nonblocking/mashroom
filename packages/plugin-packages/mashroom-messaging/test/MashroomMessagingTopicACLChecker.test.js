@@ -14,6 +14,8 @@ describe('MashroomMessageTopicACLChecker', () => {
         const user: MashroomSecurityUser = {
             username: 'test',
             displayName: 'Test',
+            email: null,
+            pictureUrl: null,
             roles: Object.freeze(['GroupX', 'Role5'])
         };
 
@@ -27,6 +29,8 @@ describe('MashroomMessageTopicACLChecker', () => {
         const user: MashroomSecurityUser = {
             username: 'test',
             displayName: 'Test',
+            email: null,
+            pictureUrl: null,
             roles: Object.freeze(['Role1', 'Role5'])
         };
 
@@ -40,6 +44,8 @@ describe('MashroomMessageTopicACLChecker', () => {
         const user: MashroomSecurityUser = {
             username: 'test',
             displayName: 'Test',
+            email: null,
+            pictureUrl: null,
             roles: Object.freeze(['Role1', 'Role5'])
         };
 

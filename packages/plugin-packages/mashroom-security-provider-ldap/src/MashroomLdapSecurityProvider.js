@@ -99,17 +99,18 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             await this._ldapClient.login(user, password);
 
             const groups = await this._getUserGroups(user, logger);
-            logger.debug(`Found user groups for user ${username}: `, groups);
-
-            const roles = this.getRolesForUserGroups(groups, logger);
-            logger.debug(`Found roles for user ${username}: `, roles);
+            const roles = this._getRolesForUserGroups(groups, logger);
 
             const mashroomUser: MashroomSecurityUser = {
                 username,
                 displayName: user.cn,
+                email: user.mail,
+                pictureUrl: null,
                 roles,
                 groups
             };
+
+            logger.debug('User successfully authenticated:', mashroomUser);
 
             request.session[AUTHENTICATION_RESULT_SESSION_KEY] = mashroomUser;
             request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
@@ -147,7 +148,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return groupEntries.map((e) => e.cn);
     }
 
-    getRolesForUserGroups(groups: Array<string>, logger: MashroomLogger): Array<string> {
+    _getRolesForUserGroups(groups: Array<string>, logger: MashroomLogger): Array<string> {
         if (!groups || groups.length === 0) {
             return [];
         }

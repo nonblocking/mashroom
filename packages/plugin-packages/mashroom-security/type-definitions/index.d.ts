@@ -22,6 +22,8 @@ export type MashroomSecurityPermissions = Array<MashroomSecurityPermission>;
 export type MashroomSecurityUser = {
     readonly username: string;
     readonly displayName: string | null | undefined;
+    readonly email: string | null | undefined;
+    readonly pictureUrl: string | null | undefined;
     readonly roles: MashroomSecurityRoles;
 
     /*

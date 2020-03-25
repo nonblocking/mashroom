@@ -39,6 +39,8 @@ const pluginContext: any = {
                     return {
                         username: 'john',
                         displayName: 'John',
+                        email: null,
+                        pictureUrl: null,
                         roles: ['Role2', 'Role1']
                     }
                 }

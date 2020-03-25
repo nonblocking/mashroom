@@ -20,6 +20,8 @@ export type MashroomSecurityPermissions = Array<MashroomSecurityPermission>;
 export type MashroomSecurityUser = {
     +username: string,
     +displayName: ?string,
+    +email: ?string,
+    +pictureUrl: ?string,
     +roles: MashroomSecurityRoles,
     /*
      * Headers that shall be passed to backends for this user (e.g. REST APIs).

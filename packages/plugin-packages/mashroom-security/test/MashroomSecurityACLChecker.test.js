@@ -116,6 +116,8 @@ describe('MashroomSecurityACLChecker', () => {
         const user: MashroomSecurityUser = {
             username: 'test',
             displayName: 'Test',
+            email: null,
+            pictureUrl: null,
             roles: Object.freeze(['User'])
         };
 
@@ -139,6 +141,8 @@ describe('MashroomSecurityACLChecker', () => {
         const user: MashroomSecurityUser = {
             username: 'test',
             displayName: 'Test',
+            email: null,
+            pictureUrl: null,
             roles: Object.freeze(['User'])
         };
 
@@ -162,6 +166,8 @@ describe('MashroomSecurityACLChecker', () => {
         const user: MashroomSecurityUser = {
             username: 'test',
             displayName: 'Test',
+            email: null,
+            pictureUrl: null,
             roles: Object.freeze(['User', 'Manager'])
         };
 

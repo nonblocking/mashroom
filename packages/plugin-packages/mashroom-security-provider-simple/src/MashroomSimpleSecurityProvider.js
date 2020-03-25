@@ -68,12 +68,15 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         const user = this._getUserStore(logger).find((u) => u.username === username && u.passwordHash === passwordHash);
 
         if (user) {
-            logger.debug('User successfully authenticated:', username);
             const mashroomUser: MashroomSecurityUser = {
                 username,
                 displayName: user.displayName,
+                email: null,
+                pictureUrl: null,
                 roles: user.roles
             };
+
+            logger.debug('User successfully authenticated:', mashroomUser);
 
             request.session[AUTHENTICATION_RESULT_SESSION_KEY] = mashroomUser;
             request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
