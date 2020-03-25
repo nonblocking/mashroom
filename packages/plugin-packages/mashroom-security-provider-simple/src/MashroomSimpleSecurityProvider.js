@@ -70,9 +70,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         if (user) {
             const mashroomUser: MashroomSecurityUser = {
                 username,
-                displayName: user.displayName,
-                email: null,
-                pictureUrl: null,
+                displayName: user.displayName || username,
+                email: user.email,
+                pictureUrl: user.pictureUrl,
                 roles: user.roles
             };
 

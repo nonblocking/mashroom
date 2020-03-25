@@ -49,11 +49,13 @@ describe('MashroomSimpleSecurityProvider', () => {
         expect(result.success).toBeTruthy();
 
         expect(req.session['__MASHROOM_SECURITY_AUTH_USER']).toEqual({
-            'displayName': 'John Do',
-            'roles': [
+            displayName: 'John Do',
+            email: 'john@xxxxxx.com',
+            pictureUrl: undefined,
+            roles: [
                 'Editor'
             ],
-            'username': 'john'
+            username: 'john'
         });
     });
 
