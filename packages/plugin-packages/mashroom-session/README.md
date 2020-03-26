@@ -1,11 +1,11 @@
 
-### Mashroom Session
+# Mashroom Session
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds [Express session](https://www.npmjs.com/package/express-session) as middleware.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session** as *dependency*.
 
@@ -42,9 +42,9 @@ You can override the default config in your Mashroom config file like this:
 
 For production you should enable _cookie.secure_ and consider setting _cookie.sameSite_ to either "lax" or "strict" (CSRF protection).
 
-#### Plugin Types
+## Plugin Types
 
-##### session-store-provider
+### session-store-provider
 
 Registers a Security Store Provider that can be used by this plugin.
 

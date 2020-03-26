@@ -1,11 +1,11 @@
 
-### Mashroom Portal Admin App
+# Mashroom Portal Admin App
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds the default Admin Toolbar for the _Mashroom Portal_.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-admin-app** as *dependency*.
 

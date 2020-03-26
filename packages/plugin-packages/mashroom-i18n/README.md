@@ -1,12 +1,12 @@
 
-### Mashroom I18N
+# Mashroom I18N
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds a service for internationalization. It determines the language from the HTTP headers and
 supports translation of messages.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-i18n** as *dependency*.
 
@@ -14,7 +14,7 @@ After that you can use the service like this:
 
 ```js
 // @flow
-    
+
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 
 export default (req: ExpressRequest, res: ExpressResponse) => {
@@ -44,27 +44,27 @@ You can override the default config in your Mashroom config file like this:
 
  * _availableLanguages_: A list of available languages (Default: ["en"])
  * _defaultLanguage_: The default language if it can not be determined from the request (Default: en)
- * _messages_: The folder with custom i18n messages (Default: ./messages). There are default messages 
+ * _messages_: The folder with custom i18n messages (Default: ./messages). There are default messages
    in the messages folder of this package.
- 
+
 The lookup for message files works like this:
- 
+
  * &lt;messages_folder&gt;/messages.&lt;lang&gt;.json
  * &lt;built_in_messages_folder&gt;/messages.&lt;lang&gt;.json
  * &lt;messages_folder&gt;/messages.json
  * &lt;built_in_messages_folder&gt;/messages.json
- 
+
 And a messages file (e.g. _messages.de.json_) looks like this:
 
 ```json
 {
     "message_key": "Die Nachricht"
 }
-``` 
+```
 
-#### Services
+## Services
 
-##### MashroomI18NService
+### MashroomI18NService
 
 The exposed service is accessible through _pluginContext.services.i18n.service_
 

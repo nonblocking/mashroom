@@ -1,5 +1,5 @@
 
-### Mashroom Portal Remote App Registry for Kubernetes
+# Mashroom Portal Remote App Registry for Kubernetes
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
@@ -7,7 +7,7 @@ Adds a remote app registry to _Mashroom Portal_. Scans periodically Kubernetes n
 expose Remote Portal Apps (actually it scans for exposed /package.json containing a _mashroom_ property).
 You can find an example remote app here: [Mashroom Demo Remote Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-remote-app-registry-k8s** as *dependency*.
 
@@ -34,7 +34,7 @@ You can override the default config in your Mashroom config file like this:
 
 The list of successful registered services will be available on **http://&lt;host&gt;:&lt;port&gt;/portal-remote-app-registry-kubernetes**
 
-#### Setup Kubernetes access
+## Setup Kubernetes access
 
 In order to allow Mashroom to fetch services for given namespaces you need to attach a Kubernetes **Service Account** with the correct permissions to the deployment.
 

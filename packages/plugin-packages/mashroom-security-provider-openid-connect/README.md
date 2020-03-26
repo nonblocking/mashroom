@@ -1,5 +1,5 @@
 
-### Mashroom OpenID Connect Security Provider
+# Mashroom OpenID Connect Security Provider
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
@@ -21,7 +21,7 @@ Should work with (among others):
  * [OneLogin](https://developers.onelogin.com/openid-connect)
  * [PingIdentity](https://www.pingidentity.com/developer/en/resources/openid-connect-developers-guide.html)
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-ldap** as *dependency*.
 
@@ -79,12 +79,12 @@ And configure this plugin like this in the Mashroom config file:
  * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array
  * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role
 
-##### Roles
+### Roles
 
 Since the authorization mechanism relies on user roles it is necessary to configure your identity provider to map the user
 roles to a scope (which means we can get it as claim). See Example Configurations below.
 
-##### Authentication Expiration
+### Authentication Expiration
 
 The implementation automatically extends the authentication via refresh token every view seconds (as long as the user is active).
 So, if the authentication session gets revoked in the identity provider the user is signed out almost immediately.
@@ -92,9 +92,9 @@ So, if the authentication session gets revoked in the identity provider the user
 The expiration time of the access token defines after which time the user is automatically signed out due to inactivity.
 And the expiration time of the refresh token defines how long the user can work without signing in again.
 
-##### Example Configurations
+## Example Configurations
 
-###### Keycloak
+### Keycloak
 
 Setup:
 
@@ -126,7 +126,7 @@ If your Keycloak runs on localhost, the Realm name is *test* amd the client name
 }
 ```
 
-###### OpenAM
+### OpenAM
 
 Setup:
 
@@ -158,7 +158,7 @@ If your OpenAM server runs on localhost, the Realm name is *Test* amd the client
 }
 ```
 
-###### Google Identity Platform
+### Google Identity Platform
 
 Setup:
 
@@ -191,7 +191,7 @@ The *access_type=offline* parameter is necessary to get a refresh token.
 
 Since Google users don't have authorization roles there is no way to make some users _Administrator_.
 
-###### GitHub OAuth2
+### GitHub OAuth2
 
 Setup:
 
@@ -223,4 +223,4 @@ Possible config:
 ```
 
 Since GitHub uses pure OAuth2 the users don't have permission roles and there is no way to make some users _Administrator_.
-It also supports no *userinfo* endpoint, so it actually makes no sense to use it for *Mashroom*.
+It also supports no *userinfo* endpoint, so it actually makes not much sense to use it with *Mashroom*.

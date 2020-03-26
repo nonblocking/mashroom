@@ -1,11 +1,11 @@
 
-### Mashroom Storage
+# Mashroom Storage
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a storage service.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-storage** as *dependency*.
 
@@ -18,9 +18,9 @@ import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-defin
 
 export default async (req: ExpressRequest, res: ExpressResponse) => {
     const storageService: MashroomStorageService = req.pluginContext.services.storage.service;
-    
+
     const pagesCollection = await storageService.getCollection('mashroom-portal-pages');
-    
+
     const page = await pagesCollection.findOne({pageId});
 
     // ...
@@ -41,9 +41,9 @@ You can override the default config in your Mashroom config file like this:
 
  * _provider_: The storage-provider plugin that implements the actual storage (Default: Mashroom Storage Filestore Provider)
 
-#### Services
+## Services
 
-##### MashroomStorageService
+### MashroomStorageService
 
 The exposed service is accessible through _pluginContext.services.storage.service_
 
@@ -89,9 +89,9 @@ export interface MashroomStorageCollection<T: Object> {
 }
 ```
 
-#### Plugin type
+## Plugin type
 
-##### storage-provider
+### storage-provider
 
 Registers a Storage Provider that can be used by this plugin.
 
@@ -99,7 +99,7 @@ To register a storage-provider plugin add this to _package.json_:
 
 ```json
 {
-    "mashroom": {     
+    "mashroom": {
         "plugins": [
             {
                 "name": "My Storage Provider",
@@ -124,7 +124,7 @@ import MyStorage from './MyStorage';
 import type {MashroomStoragePluginBootstrapFunction} from '@mashroom/mashroom-storage/type-definitions';
 
 const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-   
+
     return new MyStorage(/* .... */);
 };
 

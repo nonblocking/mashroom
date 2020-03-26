@@ -1,11 +1,11 @@
 
-### Mashroom Portal Tabify App
+# Mashroom Portal Tabify App
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds a portal app that turns the app area it is placed in automatically into a tabbed container.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-tabify-app** as *dependency*.
 

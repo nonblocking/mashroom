@@ -1,11 +1,11 @@
 
-### Mashroom Portal Default Theme
+# Mashroom Portal Default Theme
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds adds the default theme to the _Mashroom Portal_.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-default-theme** as *dependency*.
 

@@ -1,12 +1,12 @@
 
-### Mashroom Portal Demo Remote Messaging App
+# Mashroom Portal Demo Remote Messaging App
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds a demo portal app (SPA) to demonstrate the remote messaging capabilities. This app requires the
 _mashroom-messaging_ and _mashroom-websocket_ plugins to be installed.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-demo-remote-messaging** as *dependency*.
 

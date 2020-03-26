@@ -1,14 +1,14 @@
 
-### Mashroom WebSocket
+# Mashroom WebSocket
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugins adds WebSocket support to the _Mashroom Server_.
 It exposes a new Service that can be used to interact with clients that connect at _/websocket/*_.
 
 It allows only authenticated users to connect.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-websocket** as *dependency*.
 
@@ -21,9 +21,9 @@ import type {MashroomWebSocketService} from '@mashroom/mashroom-websocket/type-d
 
 export default async (req: ExpressRequest, res: ExpressResponse) => {
     const webSocketService: MashroomWebSocketService = req.pluginContext.services.websocket.service;
-    
+
     webSocketService.addMessageListener((path) => path === '/whatever', async (message, client) => {
-           
+
         // ...
 
         await webSocketService.sendMessage(client, {
@@ -49,18 +49,18 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
- * _path_: The path where the clients can connect 
+ * _path_: The path where the clients can connect
  * _restrictToRoles_: An optional array of roles that are required to connect (default: null)
  * _enableKeepAlive_: Enable a periodic keep alive message where the server will send "keepalive" to all clients.
    This is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)
  * _keepAliveIntervalSec_: Interval for keepalive messages in seconds (default: 15)
  * _maxConnections_: Max allowed WebSocket connections per node (default: 2000)
- 
-There will also be a **test page** available under: _/websocket/test_
- 
-#### Services
 
-##### MashroomWebSocketService
+There will also be a **test page** available under: _/websocket/test_
+
+## Services
+
+### MashroomWebSocketService
 
 The exposed service is accessible through _pluginContext.services.websocket.service_
 

@@ -1,12 +1,12 @@
 
-### Mashroom Messaging External Provider AMQP
+# Mashroom Messaging External Provider AMQP
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin allows to use a AMQP server as external messaging provider for _Mashroom_ server side messaging.
 This enables cluster support for server side messaging and also allows communication with 3rd party systems.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging-external-provider-amqp** as *dependency*.
 
@@ -50,7 +50,7 @@ And configure this plugin like this in the Mashroom config file:
  * _brokerUsername_: AMQP broker username (optional)
  * _brokerPassword_: AMQP broker password (optional)
 
-##### Broker specific configuration
+### Broker specific configuration
 
 *RabbitMQ*
 

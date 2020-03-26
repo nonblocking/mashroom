@@ -1,11 +1,11 @@
 
-### Mashroom Portal iFrame App
+# Mashroom Portal iFrame App
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds a (responsive) iFrame portal app to the _Mashroom Portal_.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-iframe-app** as *dependency*.
 

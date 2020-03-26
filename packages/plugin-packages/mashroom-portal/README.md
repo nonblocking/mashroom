@@ -1,5 +1,5 @@
 
-### Mashroom Portal
+# Mashroom Portal
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
@@ -7,7 +7,7 @@ This plugins adds a Portal component that allows composing pages from Single Pag
 Portal apps can be registered as plugin and placed on arbitrary pages via Drag'n'Drop. Or loaded dynamically via client-side JavaScript API.
 It supports i18n, theming and role based security and comes with a client-side message bus.
 
-#### Usage
+## Usage
 
 Since this plugin requires a lot of other plugins the easiest way to use it is to clone this quickstart repository: [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
 
@@ -43,9 +43,9 @@ The Browser support depends on the portal apps and the ES level they require. Bu
 To support older Browsers such as IE the Theme plugin should deliver the required polyfills. The *Mashroom Portal Default Theme* for example delivers
 all necessary polyfills for IE11.
 
-#### Services
+## Services
 
-##### MashroomPortalService
+### MashroomPortalService
 
 The exposed service is accessible through _pluginContext.services.portal.service_
 
@@ -128,9 +128,9 @@ export interface MashroomPortalService {
 }
 ```
 
-#### Plugin Types
+## Plugin Types
 
-##### portal-app
+### portal-app
 
 Registers a Single Page Application and makes it available in the Portal.
 
@@ -603,7 +603,7 @@ export interface MashroomPortalSiteService {
 
 ```
 
-##### portal-theme
+### portal-theme
 
 Registers a theme and makes it available in the Portal.
 
@@ -736,7 +736,7 @@ A typical portal view with *Handlebars* might look like this:
 
 The _portalLayout_ variable contains the layout with the areas for the portal apps (see below).
 
-##### portal-layouts
+### portal-layouts
 
 Registers portal layouts and make them available in the portal. A layout defines a areas where portal-apps can be placed.
 
@@ -777,7 +777,7 @@ A layout looks like this:
 
 Important is the class **mashroom-portal-app-area** and a unique id element.
 
-##### remote-portal-app-registry
+### remote-portal-app-registry
 
 Registers an additional registry for remote portal-apps.
 

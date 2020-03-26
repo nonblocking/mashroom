@@ -1,12 +1,12 @@
 
-### Mashroom Session MongoDB Provider
+# Mashroom Session MongoDB Provider
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a mongoDB session store that can be used by _Mashroom Session_.
 Actually this is just a wrapper for the [connect-mongodb-session](https://github.com/mongodb-js/connect-mongodb-session) package.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-mongodb** as *dependency*.
 

@@ -1,26 +1,26 @@
 
-### Mashroom Server 
+# Mashroom Server
 
-[Mashroom Server](https://www.mashroom-server.com) is a *Node.js* based **Integration Platform for Microfrontends**. 
- 
+[Mashroom Server](https://www.mashroom-server.com) is a *Node.js* based **Integration Platform for Microfrontends**.
+
 This package contains the core of _Mashroom Server_. It contains core services for managing plugins and default plugin loaders
 for *Express* middleware, *Express* webapps and shared code as _services_. It also provides a common logging infrastructure.
 
-From a technical point of view this is s a plugin loader that scans npm packages (_package.json_) for plugin definitions and loads them at runtime. 
-Such a plugin could be an *Express* webapp or a *SPA* or more generally all kind of code it knows how to load, 
+From a technical point of view this is s a plugin loader that scans npm packages (_package.json_) for plugin definitions and loads them at runtime.
+Such a plugin could be an *Express* webapp or a *SPA* or more generally all kind of code it knows how to load,
 which is determined by the available plugin loaders. Plugin loaders itself are also just plugins so it is possible to extend the list of known plugin types.
 
-#### Usage
+## Usage
 
-The easiest way to start is to clone one of the quickstart repositories: 
+The easiest way to start is to clone one of the quickstart repositories:
  * [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart)
  * [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
 
 You can find a full documentation with a setup and configuration guide here: [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
 
-#### Services
+## Services
 
-##### MashroomPluginService
+### MashroomPluginService
 
 Accessible through _pluginContext.services.core.pluginService_
 
@@ -51,10 +51,10 @@ Interface:
      * Register for the next unload event of given plugin (fired BEFORE the plugin is going to be unloaded).
      */
     onUnloadOnce(pluginName: string, listener: () => void): void;
- }   
+ }
 ```
 
-##### MashroomMiddlewareStackService
+### MashroomMiddlewareStackService
 
 Accessible through _pluginContext.services.core.middlewareStackService_
 
@@ -78,12 +78,12 @@ export interface MashroomMiddlewareStackService {
      * Get the ordered list of middleware plugin (first in the list is executed first)
      */
     getStack(): Array<{ pluginName: string, order: number }>;
-} 
+}
 ```
 
-#### Plugin Types
+## Plugin Types
 
-##### plugin-loader
+### plugin-loader
 
 A _plugin-loader_ plugin adds support for a custom plugin type.
 
@@ -91,7 +91,7 @@ To register a new plugin-loader add this to _package.json_:
 
 ```json
 {
-    "mashroom": {     
+    "mashroom": {
         "plugins": [
             {
                 "name": "My Custom Plugin Loader",
@@ -115,7 +115,7 @@ After that all plugins of type _my-custom-type_ will be passed to your custom lo
 // @flow
 
 import type {
-    MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContext, 
+    MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContext,
     MashroomPluginLoaderPluginBootstrapFunction
 } from 'mashroom/type-definitions';
 
@@ -146,7 +146,7 @@ export default myPluginLoaderPlugin;
 ```
 
 
-##### web-app
+### web-app
 
 Registers a *Express* webapp that will be available at a given path.
 
@@ -192,8 +192,8 @@ export default bootstrap;
 
 It is also possible to return handlers in the bootstrap. Currently there is only one:
  * _upgradeHandler_: Handle HTTP Upgrades (e.g. upgrade to WebSocket)
- 
-Example: 
+
+Example:
 
 ```js
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
@@ -207,7 +207,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
 
 ```
 
-##### api
+### api
 
 Registers a *Express* _Router_ (a REST API) and makes it available at a given path.
 
@@ -255,7 +255,7 @@ export default bootstrap;
 
 ```
 
-##### middleware
+### middleware
 
 Registers a *Express* middleware and adds it to the global middleware stack.
 
@@ -297,7 +297,7 @@ const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, 
 export default bootstrap;
 ```
 
-##### static
+### static
 
 Registers some static resources and exposes it at a given path (via *Express* static).
 
@@ -321,7 +321,7 @@ To register a static plugin add this to package.json:
  * _documentRoot_: Defines the local root path of the documents
  * _defaultConfig.path_: The default path where the documents will be available
 
-##### services
+### services
 
 Used to load arbitrary shared code that can be loaded via _pluginContext_.
 

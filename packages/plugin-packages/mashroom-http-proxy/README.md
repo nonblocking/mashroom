@@ -1,11 +1,11 @@
 
-### Mashroom HTTP proxy
+# Mashroom HTTP proxy
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 Adds a service for forwarding requests to a target URI.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-http-proxy** as *dependency*.
 
@@ -64,9 +64,9 @@ You can override the default config in your Mashroom config file like this:
  * _poolMaxSockets_: Max pool size for connections (Default: 10)
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
 
-#### Services
+## Services
 
-##### MashroomHttpProxyService
+### MashroomHttpProxyService
 
 The exposed service is accessible through _pluginContext.services.proxy.service_
 
@@ -74,7 +74,7 @@ The exposed service is accessible through _pluginContext.services.proxy.service_
 
 ```js
 export interface MashroomHttpProxyService {
-    
+
     /**
      * Forwards the given request to the targetUri and passes the response from the target to the response object.
      * The Promise will always resolve, you have to check response.statusCode to see if the transfer was successful or not.

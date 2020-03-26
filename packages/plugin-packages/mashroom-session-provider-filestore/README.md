@@ -1,12 +1,12 @@
 
-### Mashroom Session Filestore Provider
+# Mashroom Session Filestore Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a file based session store that can be used by _Mashroom Session_.
 Actually this is just a wrapper for the [session-file-store](https://github.com/valery-barysok/session-file-store) package.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-filestore** as *dependency*.
 

@@ -60,7 +60,7 @@ has similar concepts than a Java Portal Server.
 | Authentication      | LDAP (Active Directory),  OAuth2/Open ID Connect, JSON File                                   |                              |
 | Authorization       | Role based, ACL (URL, Method), Resources (Page, App instance, Topic, ...)                     |  IP based ACL rules          |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                            |                              |
-| Storage             | MongoDb, Plain JSON Files                                                                     |                              |
+| Storage             | MongoDB, Plain JSON Files                                                                     |                              |
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                        |                              |
 | Session Storage     | in Memory (no Cluster support), shared Filesystem, Redis, MongoDB                             |                              |
 | Clustering          | yes (tested with PM2)                                                                         |                              |

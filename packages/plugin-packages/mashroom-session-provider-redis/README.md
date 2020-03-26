@@ -1,12 +1,12 @@
 
-### Mashroom Session Redis Provider
+# Mashroom Session Redis Provider
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a Redis session store that can be used by _Mashroom Session_.
 Actually this is just a wrapper for the [connect-redis](https://github.com/tj/connect-redis) package.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-redis** as *dependency*.
 
@@ -42,7 +42,7 @@ And to change the default config of this plugin add:
 
 Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
-##### Usage with Sentinel
+### Usage with Sentinel
 
 For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel) the configuration would look like this:
 
@@ -68,7 +68,7 @@ For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel
 
 Checkout out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
-##### Usage with a cluster
+### Usage with a cluster
 
 For a [sharding cluster](https://redis.io/topics/cluster-spec) configure the plugin like this:
 

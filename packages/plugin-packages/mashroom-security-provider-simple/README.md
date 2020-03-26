@@ -1,11 +1,11 @@
 
-### Mashroom Security Simple Provider
+# Mashroom Security Simple Provider
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a simple, JSON file based security provider.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-simple** as *dependency*.
 

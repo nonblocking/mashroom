@@ -1,5 +1,5 @@
 
-### Mashroom Portal Remote App Registry
+# Mashroom Portal Remote App Registry
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
@@ -45,7 +45,7 @@ Hosted on _http://my-server.com/app1_ it will be converted to:
 }
 ```
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-remote-app-registry** as *dependency*.
 
@@ -111,9 +111,9 @@ Available at _/portal-remote-app-registry/api_. Methods:
     ```
  * _DELETE /&lt;url&gt;_ : Delete given URL
 
-#### Services
+## Services
 
-##### MashroomPortalRemoteAppEndpointService
+### MashroomPortalRemoteAppEndpointService
 
 The exposed service is accessible through _pluginContext.services.remotePortalAppEndpoint.service_
 

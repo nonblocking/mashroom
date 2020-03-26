@@ -1,12 +1,12 @@
 
-### Mashroom Security
+# Mashroom Security
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds role based security to the _Mashroom Server_. It allows to restrict the access to certain paths
 via ACL and provides a service to manage the access to resources.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security** as *dependency*.
 
@@ -40,7 +40,7 @@ The general structure is:
 }
 ```
 
-Where the URL_PATTERN can contain "\*" for a single path segment and "\*\*" for an arbitrary number of segments. 
+Where the URL_PATTERN can contain "\*" for a single path segment and "\*\*" for an arbitrary number of segments.
 
 And you can use the security service like this:
 
@@ -84,10 +84,10 @@ You can override the default config in your Mashroom config file like this:
 
  * _provider_: The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)
  * _acl_: The ACL for path based security restrictions (see below) (default: ./acl.json)
- 
-#### Services
 
-##### MashroomSecurityService
+## Services
+
+### MashroomSecurityService
 
 The exposed service is accessible through _pluginContext.services.security.service_
 
@@ -152,9 +152,9 @@ export interface MashroomSecurityService {
 }
 ```
 
-#### Plugin Types
+## Plugin Types
 
-##### security-provider
+### security-provider
 
 Registers a Security Provider that can be used by this plugin.
 
@@ -162,7 +162,7 @@ To register a security-provider plugin add this to _package.json_:
 
 ```json
 {
-    "mashroom": {     
+    "mashroom": {
         "plugins": [
             {
                 "name": "My Custom Security Provider",
@@ -185,7 +185,7 @@ The bootstrap returns the provider:
 import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-  
+
     return new MySecurityProvider(/* ... */);
 };
 

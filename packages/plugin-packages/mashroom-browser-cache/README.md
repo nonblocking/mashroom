@@ -1,11 +1,11 @@
 
-### Mashroom Browser Cache
+# Mashroom Browser Cache
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a Service to manage cache control headers. It allows to disable the cache globally.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-browser-cache** as *dependency*.
 
@@ -20,7 +20,7 @@ export default async (req: ExpressRequest, res: ExpressResponse) => {
 
     const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
     await cacheControlService.addCacheControlHeader(req, res);
-        
+
     // ..
 };
 ```
@@ -42,9 +42,9 @@ You can override the default config in your Mashroom config file like this:
  * _disabledWhenAuthenticated_: Disable browser caching when the user is authenticated (default: false)
  * _maxAgeSec_: Max age in seconds (default: 1800)
 
-#### Services
+## Services
 
-##### MashroomCacheControlService
+### MashroomCacheControlService
 
 The Cache Control service is accessible through _pluginContext.services.browserCache.cacheControl_
 
@@ -52,17 +52,17 @@ The Cache Control service is accessible through _pluginContext.services.browserC
 
 ```js
 export interface MashroomCacheControlService {
-    
+
      /**
       * Add the Cache-Control header based on the settings and authentication status
       */
      addCacheControlHeader(request: ExpressRequest, response: ExpressResponse): Promise<void>;
- 
+
      /**
       * Remove a previously set Cache-Control header
       */
      removeCacheControlHeader(response: ExpressResponse): void;
-     
+
 }
 
 ```

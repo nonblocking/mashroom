@@ -1,11 +1,11 @@
 
-### Mashroom Storage MongoDB Provider
+# Mashroom Storage MongoDB Provider
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugin adds a [MongoDB](https://www.mongodb.com/) based storage provider.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-storage-provider-mongodb** as *dependency*.
 

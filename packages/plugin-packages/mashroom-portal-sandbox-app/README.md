@@ -1,13 +1,13 @@
 
-### Mashroom Portal Sandbox App
+# Mashroom Portal Sandbox App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**. 
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 When you place this portal app on an empty page it allows sandbox testing of any other app.
-This means you can load any other portal app with a specific configuration and you can interact with it via Message Bus. 
+This means you can load any other portal app with a specific configuration and you can interact with it via Message Bus.
 You can also pass the desired portal app and configuration via query parameter which is useful for end-2-end testing with tools such as _Selenium_.
 
-#### Usage
+## Usage
 
 * If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-sandbox-app** as *dependency*.
 * Add the _Mashroom Sandbox App_ app on an empty page
@@ -15,17 +15,17 @@ You can also pass the desired portal app and configuration via query parameter w
 
 The app checks the following query parameters:
 
-* *sbAppName*: The name of the app that should be started in the sandbox. 
-  If this parameter is given the app will be started automatically, otherwise all other query parameters are ignored. 
+* *sbAppName*: The name of the app that should be started in the sandbox.
+  If this parameter is given the app will be started automatically, otherwise all other query parameters are ignored.
 * *sbWidth*: The width the app should be started with. Default: 100%
 * *sbLang*: The language code that should be passed to the app.
 * *sbPermissions*: The base64 encoded _permissions_ object that should be passed to the app. E.g.:
  ```
-btoa(JSON.stringify({ 
-    permissionA: true 
+btoa(JSON.stringify({
+    permissionA: true
 }))
 ```
 * *sbAppConfig*: The Base64 encoded _appConfig_ object that should be passed to the app.
 
-For an example how to use the sandbox in an end-2-end test see: 
+For an example how to use the sandbox in an end-2-end test see:
 https://github.com/nonblocking/mashroom-portal-quickstart/tree/master/plugin-packages/example-react-app/test-e2e/example.test.js
