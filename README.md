@@ -84,6 +84,6 @@ to install all dependencies and build the core packages.
 To start the test server:
 
     cd packages/test/test-server1
-    npm run dev
+    npm start
 
 The test server will be available at http://localhost:5050
