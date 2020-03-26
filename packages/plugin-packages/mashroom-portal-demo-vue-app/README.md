@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo portal app (SPA) based on Vue to the _Mashroom Portal_.
+Adds a demo portal app (SPA) based on [Vue](https://vuejs.org) to the _Mashroom Portal_.
 
 ## Usage
 
