@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Fixed anonymous access to pages
  * Security: The ACL rules allow now "*" as value for allow/deny which includes anonymous users. This can be used to allow
    public access to sub pages. E.g.:
    ```json
