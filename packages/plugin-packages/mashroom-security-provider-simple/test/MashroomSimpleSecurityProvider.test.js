@@ -48,7 +48,7 @@ describe('MashroomSimpleSecurityProvider', () => {
         expect(result).toBeTruthy();
         expect(result.success).toBeTruthy();
 
-        expect(req.session['__MASHROOM_SECURITY_AUTH_USER']).toEqual({
+        expect(req.session['__MASHROOM_SECURITY_SIMPLE_AUTH_USER']).toEqual({
             displayName: 'John Do',
             email: 'john@xxxxxx.com',
             pictureUrl: undefined,
@@ -62,8 +62,8 @@ describe('MashroomSimpleSecurityProvider', () => {
     it('revokes the authentication after given timeout', () => {
         const req: any = {
             session: {
-                ['__MASHROOM_SECURITY_AUTH_USER']: { username: 'john' },
-                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: Date.now() + 2000
+                ['__MASHROOM_SECURITY_SIMPLE_AUTH_USER']: { username: 'john' },
+                ['__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES']: Date.now() + 2000
             }
         };
 
@@ -72,7 +72,7 @@ describe('MashroomSimpleSecurityProvider', () => {
         const user1 = simpleSecurityProvider.getUser(req);
         expect(user1).toBeTruthy();
 
-        req.session['__MASHROOM_SECURITY_AUTH_EXPIRES'] = Date.now() - 1;
+        req.session['__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES'] = Date.now() - 1;
         const user2 = simpleSecurityProvider.getUser(req);
         expect(user2).toBeFalsy();
     });
@@ -81,7 +81,7 @@ describe('MashroomSimpleSecurityProvider', () => {
         const expiresTime = Date.now() + 2000;
         const req: any = {
             session: {
-                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: expiresTime
+                ['__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES']: expiresTime
             }
         };
 

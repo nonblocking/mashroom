@@ -82,8 +82,8 @@ describe('MashroomLdapSecurityProvider', () => {
         };
         const req: any = {
             session: {
-                ['__MASHROOM_SECURITY_AUTH_USER']: { username: 'john' },
-                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: Date.now() + 2000
+                ['__MASHROOM_SECURITY_LDAP_AUTH_USER']: { username: 'john' },
+                ['__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES']: Date.now() + 2000
             }
         };
 
@@ -92,7 +92,7 @@ describe('MashroomLdapSecurityProvider', () => {
         const user1 = provider.getUser(req);
         expect(user1).toBeTruthy();
 
-        req.session['__MASHROOM_SECURITY_AUTH_EXPIRES'] = Date.now() - 1;
+        req.session['__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES'] = Date.now() - 1;
         const user2 = provider.getUser(req);
         expect(user2).toBeFalsy();
     });
@@ -103,7 +103,7 @@ describe('MashroomLdapSecurityProvider', () => {
         const expiresTime = Date.now() + 2000;
         const req: any = {
             session: {
-                ['__MASHROOM_SECURITY_AUTH_EXPIRES']: expiresTime
+                ['__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES']: expiresTime
             }
         };
 
