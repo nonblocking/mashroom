@@ -15,8 +15,8 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {GroupToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
 
-const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_AUTH_USER';
-const AUTHENTICATION_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_AUTH_EXPIRES';
+const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
+const AUTHENTICATION_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';
 
 export default class MashroomLdapSecurityProvider implements MashroomSecurityProvider {
 

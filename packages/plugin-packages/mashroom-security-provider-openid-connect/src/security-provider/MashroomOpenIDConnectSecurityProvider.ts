@@ -72,10 +72,10 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             ...this.extraAuthParams,
         };
 
-        const redirectUri = client.authorizationUrl(authorizationParameters);
-        logger.debug('Redirecting to:', redirectUri);
+        const authorizationUrl = client.authorizationUrl(authorizationParameters);
+        logger.debug('Redirecting to:', authorizationUrl);
 
-        response.redirect(redirectUri);
+        response.redirect(authorizationUrl);
 
         return {
             status: 'deferred',
