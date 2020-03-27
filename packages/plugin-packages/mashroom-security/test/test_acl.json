@@ -1,10 +1,15 @@
 {
+    "/portal/public/**": {
+        "*": {
+            "allow": "*"
+        }
+    },
     "/portal/**": {
         "*": {
             "allow": ["User"]
         },
         "DELETE": {
-            "deny": ["*"]
+            "deny": "*"
         }
     },
     "/portal2": {

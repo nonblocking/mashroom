@@ -9,6 +9,7 @@ import type {
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
 import type {
+    MashroomSecurityRoles,
     MashroomSecurityUser,
 } from '../../type-definitions';
 import type {
@@ -71,10 +72,20 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
             return false;
         }
 
-        const allowMatch = permission.allow && Array.isArray(permission.allow) && permission.allow.find((r) => user && user.roles.find((upr) => upr === r || upr === '*'));
-        const denyMatch = permission.deny && Array.isArray(permission.deny) && permission.deny.find((r) => user && user.roles.find((upr) => upr === r || upr === '*'));
+        const allowMatch = this._checkRolePermission(user, permission.allow);
+        const denyMatch = this._checkRolePermission(user, permission.deny);
 
-        return !!(allowMatch && !denyMatch);
+        return allowMatch && !denyMatch;
+    }
+
+    _checkRolePermission(user: ?MashroomSecurityUser, roles: void | MashroomSecurityRoles | '*'): boolean {
+        if (roles === '*') {
+            return true;
+        }
+        if (user && Array.isArray(roles)) {
+            return !!roles.find((r) => user.roles.find((ur) => ur === r));
+        }
+        return false;
     }
 
     _getPathRuleList(logger: MashroomLogger): Array<ACLPathRuleRegexp> {

@@ -41,6 +41,17 @@ The general structure is:
 ```
 
 Where the URL_PATTERN can contain "\*" for a single path segment and "\*\*" for an arbitrary number of segments.
+Instead of a list of roles you can also use "\*" for all users (even anonymous ones):
+
+```json
+{
+    "/portal/public/**": {
+        "*": {
+            "allow": "*"
+        }
+    }
+}
+```
 
 And you can use the security service like this:
 

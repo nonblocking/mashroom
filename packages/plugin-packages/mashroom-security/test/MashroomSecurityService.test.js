@@ -34,7 +34,7 @@ describe('MashroomSecurityService', () => {
         }
     });
 
-    it('should check the resource permission', async () => {
+    it('checks the resource permission', async () => {
 
         const user: any = {
             roles: ['Role2']

@@ -28,8 +28,8 @@ export interface MashroomSecurityProviderRegistry {
 export type HttpMethod = '*' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS';
 
 export type MashroomSecurityACLPathRulePermission = {
-    +allow?: MashroomSecurityRoles,
-    +deny?: MashroomSecurityRoles
+    +allow?: MashroomSecurityRoles | '*',
+    +deny?: MashroomSecurityRoles | '*',
 }
 
 export type MashroomSecurityACLPathRule = {

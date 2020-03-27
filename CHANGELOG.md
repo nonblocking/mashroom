@@ -3,6 +3,17 @@
 
 ## [unreleased]
 
+ * Security: The ACL rules allow now "*" as value for allow/deny which includes anonymous users. This can be used to allow
+   public access to sub pages. E.g.:
+   ```json
+    {
+        "/portal/public/**": {
+            "*": {
+                "allow": "*"
+            }
+        }
+    }
+   ```
  * Added OpenID Connect security provider
  * Angular Demo Portal App: Works now with AOP and the Ivy Compiler
  * External MQTT Messaging Provider: Supports now MQTT 5

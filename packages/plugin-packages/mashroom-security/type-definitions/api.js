@@ -5,7 +5,7 @@ import type {
     ExpressResponse,
     MashroomPluginConfig,
     MashroomPluginContextHolder
-} from "@mashroom/mashroom/type-definitions";
+} from '@mashroom/mashroom/type-definitions';
 
 export type MashroomSecurityRoleDefinition = {
     id: string,

@@ -6,7 +6,7 @@ import type {MashroomSecurityUser} from '../type-definitions';
 
 describe('MashroomSecurityACLChecker', () => {
 
-    it('should not allow anonymous at a protected path', async () => {
+    it('allows no anonymous access to a protected path', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
         const user: ?MashroomSecurityUser = null;
@@ -57,7 +57,22 @@ describe('MashroomSecurityACLChecker', () => {
         expect(await aclChecker.allowed(req5, user)).toBeFalsy();
     });
 
-    it('should allow anonymous at a unprotected path', async () => {
+    it('allows anonymous access when allowed for all', async () => {
+        const aclPath = './test_acl.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+
+        const req: any = {
+            path: '/portal/public/foo',
+            method: 'GET',
+            pluginContext: {
+                loggerFactory
+            },
+        };
+
+        expect(await aclChecker.allowed(req, null)).toBeTruthy();
+    });
+
+    it('allows anonymous access to an unprotected path', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
         const user: ?MashroomSecurityUser = null;
@@ -101,7 +116,7 @@ describe('MashroomSecurityACLChecker', () => {
         expect(await aclChecker.allowed(req4, user)).toBeTruthy();
     });
 
-    it('should allow a user with the required role at a protected path', async () => {
+    it('allows a user with the required role access to a protected path', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
 
@@ -126,7 +141,7 @@ describe('MashroomSecurityACLChecker', () => {
         expect(allowed).toBeTruthy();
     });
 
-    it('should not allow http method when denied for all', async () => {
+    it('allows no http method when denied for all', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
 
@@ -151,7 +166,7 @@ describe('MashroomSecurityACLChecker', () => {
         expect(allowed).toBeFalsy();
     });
 
-    it('should not allow denied role even if the user has an allowed role', async () => {
+    it('allow no acces with a denied role even if the user has an allowed role', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
 
