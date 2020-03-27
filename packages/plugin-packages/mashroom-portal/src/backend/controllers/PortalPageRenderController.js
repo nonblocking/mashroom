@@ -155,7 +155,7 @@ export default class PortalPageRenderController {
         const warnBeforeAuthenticationExpiresSec = context.portalPluginConfig.warnBeforeAuthenticationExpiresSec;
         const autoExtendAuthentication = context.portalPluginConfig.autoExtendAuthentication;
         const messagingConnectPath = webSocketSupport && messagingService && messagingService.getWebSocketConnectPath(req);
-        const privateUserTopic = messagingService && messagingService.getUserPrivateTopic(req);
+        const privateUserTopic = user && messagingService && messagingService.getUserPrivateTopic(req);
 
         const appLoadingFailedMsg = i18nService.getMessage('portalAppLoadingFailed', lang);
         const portalLayout = await this._loadLayout(layoutName, logger);
