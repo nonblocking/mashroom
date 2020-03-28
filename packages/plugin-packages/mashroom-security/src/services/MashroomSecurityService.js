@@ -32,10 +32,12 @@ const privatePropsMap: WeakMap<MashroomSecurityService, {
 export default class MashroomSecurityService implements MashroomSecurityServiceType {
 
     _securityProviderName: string;
+    _forwardQueryHintsToProvider: ?Array<string>;
     _aclChecker: MashroomSecurityACLChecker;
 
-    constructor(securityProviderName: string, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker) {
+    constructor(securityProviderName: string, forwardQueryHintsToProvider: ?Array<string>, securityProviderRegistry: MashroomSecurityProviderRegistry, aclChecker: MashroomSecurityACLChecker) {
         this._securityProviderName = securityProviderName;
+        this._forwardQueryHintsToProvider = forwardQueryHintsToProvider;
         privatePropsMap.set(this, {
             securityProviderRegistry,
         });
@@ -173,6 +175,19 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return matchingPermissions.some((p) => p.roles.some((r) => user && user.roles.indexOf(r) !== -1));
     }
 
+    async canAuthenticateWithoutUserInteraction(request: ExpressRequest) {
+        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+        const securityProvider = this._getSecurityProvider(logger);
+        if (securityProvider) {
+            try {
+                return await securityProvider.canAuthenticateWithoutUserInteraction(request);
+            } catch (e) {
+                logger.error('Security provider returned error: ', e);
+            }
+        }
+        return false;
+    }
+
     async authenticate(request: ExpressRequest, response: ExpressResponse) {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
@@ -187,7 +202,8 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             try {
                 // To prevent phishing, create a new session
                 await this._createNewSession(request);
-                return await securityProvider.authenticate(request, response);
+                const authenticationHints = this._filterAuthenticationHints(request);
+                return await securityProvider.authenticate(request, response, authenticationHints);
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
             }
@@ -295,6 +311,21 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 resolve();
             });
         })
+    }
+
+    _filterAuthenticationHints(request: ExpressRequest): any {
+        const { query } = request;
+        const forwardQueryParams = this._forwardQueryHintsToProvider;
+        const hints = {};
+        if (!Array.isArray(forwardQueryParams) || forwardQueryParams.length === 0) {
+            return {};
+        }
+        Object.keys(query).forEach((paramName) => {
+            if (forwardQueryParams.indexOf(paramName) !== -1) {
+                hints[paramName] = query[paramName];
+            }
+        });
+        return hints;
     }
 }
 

@@ -38,11 +38,11 @@
         },
         "Mashroom Security Services": {
             "provider": "Mashroom Security Simple Provider",
-            "acl": "./acl.json",
-            "loginPage": "/login"
+            "acl": "./acl.json"
         },
         "Mashroom Security Simple Provider": {
             "users": "./users.json",
+            "loginPage": "/login",
             "authenticationTimeoutSec": 1200
         },
         "Mashroom Storage Services": {

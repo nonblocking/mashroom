@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import querystring from 'querystring';
 import shajs from 'sha.js';
 
 import type {
@@ -39,10 +40,15 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         logger.info(`Configured login page: ${this._loginPage}`);
     }
 
-    async authenticate(request: ExpressRequest, response: ExpressResponse) {
+    async canAuthenticateWithoutUserInteraction() {
+        return false;
+    }
+
+    async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}) {
         let buff = Buffer.from(decodeURI(request.originalUrl));
         const base64encodedReferrer = buff.toString('base64');
-        response.redirect(`${this._loginPage}?ref=${base64encodedReferrer}`);
+        const authenticationHintsQuery = querystring.stringify(authenticationHints);
+        response.redirect(`${this._loginPage}?ref=${base64encodedReferrer}${authenticationHintsQuery ? '&' + authenticationHintsQuery : ''}`);
         return {
             status: 'deferred'
         };

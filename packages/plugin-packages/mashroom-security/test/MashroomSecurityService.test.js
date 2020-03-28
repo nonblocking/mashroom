@@ -24,7 +24,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker);
+        const securityService = new MashroomSecurityService('testProvider', null, securityProviderRegistry, aclChecker);
 
         const user = securityService.getUser(req);
 
@@ -32,6 +32,50 @@ describe('MashroomSecurityService', () => {
         if (user) {
             expect(user.roles).toEqual(['Role2', 'Authenticated']);
         }
+    });
+
+    it('forwards query parameter hints to the provider', async () => {
+        const req: any = {
+            pluginContext: {
+                loggerFactory
+            },
+            query: {
+                hint1: 'foo',
+                foo: 'bar',
+                xxx: 1,
+            },
+            session: {
+                regenerate(cb) { cb(); },
+            },
+        };
+        const res: any = {
+        };
+        const aclChecker: any = {};
+        let receivedAuthenticationHints;
+        const securityProviderRegistry: any = {
+            findProvider() {
+                return {
+                    getUser() {
+                        return null;
+                    },
+                    async authenticate(req, res, authenticationHints) {
+                        receivedAuthenticationHints = authenticationHints;
+                        return {
+                            status: 'deferred',
+                        }
+                    }
+                }
+            }
+        };
+
+        const securityService = new MashroomSecurityService('testProvider', ['hint1', 'hint5'], securityProviderRegistry, aclChecker);
+
+        await securityService.authenticate(req, res);
+
+        expect(receivedAuthenticationHints).toBeTruthy();
+        expect(receivedAuthenticationHints).toEqual({
+            hint1: 'foo',
+        });
     });
 
     it('checks the resource permission', async () => {
@@ -85,7 +129,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker);
+        const securityService = new MashroomSecurityService('testProvider', null, securityProviderRegistry, aclChecker);
 
         const permittedPage1 = await securityService.checkResourcePermission(request, 'Page', 'page1', 'View', false);
         const permittedPage2 = await securityService.checkResourcePermission(request, 'Page', 'page2', 'View', false);
@@ -120,7 +164,7 @@ describe('MashroomSecurityService', () => {
             }
         };
 
-        const securityService = new MashroomSecurityService('testProvider', securityProviderRegistry, aclChecker);
+        const securityService = new MashroomSecurityService('testProvider', null, securityProviderRegistry, aclChecker);
 
         expect(await securityService.checkACL(req)).toBeFalsy();
         expect(aclChecker.allowed.mock.calls.length).toBe(1);

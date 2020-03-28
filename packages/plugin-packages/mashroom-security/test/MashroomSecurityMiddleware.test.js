@@ -9,6 +9,7 @@ describe('MashroomSecurityMiddleware', () => {
 
     it('calls next and refreshAuthentication if the access is permitted', async () => {
         let checkAuthenticationCalled = false;
+        let authenticateCalled = false;
 
         const req: any = {
             headers: {},
@@ -25,6 +26,12 @@ describe('MashroomSecurityMiddleware', () => {
                             },
                             async checkAuthentication() {
                                 checkAuthenticationCalled = true;
+                            },
+                            async canAuthenticateWithoutUserInteraction() {
+                                return false;
+                            },
+                            async authenticate() {
+                                authenticateCalled = true;
                             },
                             getUser() {
                                 return null;
@@ -47,6 +54,53 @@ describe('MashroomSecurityMiddleware', () => {
 
         expect(next.mock.calls.length).toBe(1);
         expect(checkAuthenticationCalled).toBeTruthy();
+        expect(authenticateCalled).toBeFalsy();
+    });
+
+    it('authenticates silently without user interaction if possible on public pages', async () => {
+        let authenticateCalled = false;
+
+        const req: any = {
+            headers: {},
+            pluginContext: {
+                loggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            async checkACL() {
+                                return true;
+                            },
+                            isAuthenticated() {
+                                return true;
+                            },
+                            async checkAuthentication() {
+                            },
+                            async canAuthenticateWithoutUserInteraction() {
+                                return true;
+                            },
+                            async authenticate() {
+                                authenticateCalled = true;
+                            },
+                            getUser() {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const res: any = {
+        };
+
+        const next = jest.fn();
+
+        const securityMiddleware = new MashroomSecurityMiddleware();
+
+        await securityMiddleware.middleware()(req, res, next);
+
+        expect(next.mock.calls.length).toBe(1);
+        expect(authenticateCalled).toBeTruthy();
     });
 
     it('doesnt call refreshAuthentication if the x-mashroom-does-not-extend-auth header is set', async () => {
@@ -69,6 +123,9 @@ describe('MashroomSecurityMiddleware', () => {
                             },
                             async checkAuthentication() {
                                 checkAuthenticationCalled = true;
+                            },
+                            async canAuthenticateWithoutUserInteraction() {
+                                return false;
                             },
                             getUser() {
                                 return null;

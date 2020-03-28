@@ -8,24 +8,28 @@ import {
     TOKEN_CHECK_INTERVAL_MS,
 } from '../constants';
 
-import {
+import type {
     MashroomSecurityAuthenticationResult,
     MashroomSecurityLoginResult,
     MashroomSecurityProvider,
     MashroomSecurityUser,
 } from '@mashroom/mashroom-security/type-definitions';
-import {
+import type {
     ExpressResponse,
     MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
-import {ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-definitions";
+import type {ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-definitions";
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
     constructor(private scope: string, private usePKCE: boolean = false, private extraAuthParams: any = {}) {
     }
 
-    async authenticate(request: ExpressRequestWithSession, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult> {
+    async canAuthenticateWithoutUserInteraction(): Promise<boolean> {
+        return false;
+    }
+
+    async authenticate(request: ExpressRequestWithSession, response: ExpressResponse, authenticationHints: any = {}): Promise<MashroomSecurityAuthenticationResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
         const { originalUrl } = request;
 
@@ -70,6 +74,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             code_challenge,
             code_challenge_method,
             ...this.extraAuthParams,
+            ...authenticationHints,
         };
 
         const authorizationUrl = client.authorizationUrl(authorizationParameters);
@@ -157,7 +162,9 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
     }
 
     async login(): Promise<MashroomSecurityLoginResult> {
-        return {success: false};
+        return {
+            success: false
+        };
     }
 
     getUser(request: ExpressRequestWithSession): MashroomSecurityUser | null {

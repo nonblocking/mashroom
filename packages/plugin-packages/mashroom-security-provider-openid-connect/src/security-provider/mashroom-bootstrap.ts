@@ -2,7 +2,7 @@
 import {setClientConfiguration} from '../openid-connect-client';
 import {setCallbackConfiguration} from '../callback/mashroom-openid-connect-callback-route';
 import MashroomOpenIDConnectSecurityProvider from './MashroomOpenIDConnectSecurityProvider';
-import {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig) => {
     const {

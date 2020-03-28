@@ -26,6 +26,29 @@ describe('MashroomLdapSecurityProvider', () => {
         expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=');
     });
 
+    it('passes the authentication hints to the login page', async () => {
+        let redirectUrl = null;
+
+        const req: any = {
+            originalUrl: '/foo/bar'
+        };
+        const res: any = {
+            redirect: (url) => redirectUrl = url
+        };
+
+        const ldapClient: any = {};
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+
+        const result = await simpleSecurityProvider.authenticate(req, res, {
+            hint1: 'foo',
+            hint2: 2,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result.status).toBe('deferred');
+        expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=&hint1=foo&hint2=2');
+    });
+
     it('processes the login correctly', async () => {
         const userSearchFilter = '(&(objectClass=person)(uid=@username@))';
         const groupSearchFilter = '(objectClass=group)';

@@ -30,6 +30,31 @@ describe('MashroomSimpleSecurityProvider', () => {
         expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=');
     });
 
+    it('passes the authentication hints to the login page', async () => {
+        let redirectUrl = null;
+
+        const req: any = {
+            originalUrl: '/foo/bar',
+            pluginContext: {
+                loggerFactory,
+            }
+        };
+        const res: any = {
+            redirect: (url) => redirectUrl = url
+        };
+
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, loggerFactory);
+
+        const result = await simpleSecurityProvider.authenticate(req, res, {
+            hint1: 'foo',
+            hint2: 2,
+        });
+
+        expect(result).toBeTruthy();
+        expect(result.status).toBe('deferred');
+        expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=&hint1=foo&hint2=2');
+    });
+
     it('processes the form login correctly', async () => {
         const req: any = {
             session: {

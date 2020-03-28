@@ -87,6 +87,7 @@ You can override the default config in your Mashroom config file like this:
   "plugins": {
         "Mashroom Security Services": {
             "provider": "Mashroom Security Simple Provider",
+            "forwardQueryHintsToProvider": [],
             "acl": "./acl.json"
         }
     }
@@ -94,6 +95,8 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _provider_: The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)
+ * _forwardQueryHintsToProvider_: A list of query parameters that should be forwarded during the authentication.
+   (will be added to the login or authorization URL).
  * _acl_: The ACL for path based security restrictions (see below) (default: ./acl.json)
 
 ## Services
@@ -149,9 +152,21 @@ export interface MashroomSecurityService {
      */
     getExistingRoles(request: ExpressRequest): Promise<Array<MashroomSecurityRoleDefinition>>;
     /**
+     * Check if an auto login would be possible.
+     */
+    canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean>;
+    /**
      * Start authentication process
      */
     authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
+    /**
+     * Check the existing authentication (if any)
+     */
+    checkAuthentication(request: ExpressRequest): Promise<void>;
+    /**
+     * Get the authentication expiration time in unix time ms
+     */
+    getAuthenticationExpiration(request: ExpressRequest): ?number;
     /**
      * Revoke the current authentication
      */
@@ -208,18 +223,35 @@ Which has to implement the following interface:
 ```js
 export interface MashroomSecurityProvider {
     /**
+     * Check if an auto login would be possible.
+     * This is used for public pages when an authentication is optional but nevertheless desirable.
+     * It is safe to always return false.
+     */
+    canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean>;
+    /**
      * Start authentication process.
      * This typically means to redirect to the login page, then you should return status: 'deferred'.
-     * This could also automatically login via SSO, then you should return status: 'authenticated'.
+     * This method could also automatically login the user, then you should return status: 'authenticated'.
      */
-    authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
+    authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult>;
+    /**
+     * Check the existing authentication (if any).
+     * Use this to extend the authentication expiration or to periodically refresh the access token.
+     *
+     * This methods gets called for almost every requests, so do nothing expensive here.
+     */
+    checkAuthentication(request: ExpressRequest): Promise<void>;
+    /**
+     * Get the authentication expiration time in unix time ms. Return null/undefined if there is no authentication.
+     */
+    getAuthenticationExpiration(request: ExpressRequest): ?number;
     /**
      * Revoke the current authentication.
      * That typically means to remove the user object from the session.
      */
     revokeAuthentication(request: ExpressRequest): Promise<void>;
     /**
-     * Login user with given credentials (for form login, if supported)
+     * Programmatically login user with given credentials (optional, but necessary if you use the default login page)
      */
     login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult>;
     /**

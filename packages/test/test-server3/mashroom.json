@@ -45,6 +45,7 @@
         },
         "Mashroom Security Services": {
             "provider": "Mashroom OpenID Connect Security Provider",
+            "forwardQueryHintsToProvider": ["kc_idp_hint"],
             "acl": "./acl.json"
         },
         "Mashroom Security Simple Provider": {

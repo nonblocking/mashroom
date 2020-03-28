@@ -37,11 +37,12 @@
         },
         "Mashroom Security Services": {
             "provider": "Mashroom Security Simple Provider",
-            "acl": "./acl.json",
-            "loginPage": "/login"
+            "forwardQueryHintsToProvider": ["test1"],
+            "acl": "./acl.json"
         },
         "Mashroom Security Simple Provider": {
             "users": "./users.json",
+            "loginPage": "/login",
             "authenticationTimeoutSec": 300
         },
         "Mashroom OpenID Connect Security Provider": {

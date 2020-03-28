@@ -134,6 +134,11 @@ export interface MashroomSecurityService {
     ): Promise<Array<MashroomSecurityRoleDefinition>>;
 
     /**
+     * Check if an auto login would be possible.
+     */
+    canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean>;
+
+    /**
      * Start authentication process
      */
     authenticate(
@@ -170,13 +175,20 @@ export interface MashroomSecurityService {
 
 export interface MashroomSecurityProvider {
     /**
+     * Check if an auto login would be possible.
+     * This is used for public pages when an authentication is optional but nevertheless desirable.
+     * It is safe to always return false.
+     */
+    canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean>;
+    /**
      * Start authentication process.
      * This typically means to redirect to the login page, then you should return status: 'deferred'.
-     * This could also automatically login via SSO, then you should return status: 'authenticated'.
+     * This method could also automatically login the user, then you should return status: 'authenticated'.
      */
     authenticate(
         request: ExpressRequest,
         response: ExpressResponse,
+        authenticationHints?: any,
     ): Promise<MashroomSecurityAuthenticationResult>;
 
     /**

@@ -3,10 +3,20 @@
 
 ## [unreleased]
 
+ * Security: Added a new method *canAuthenticateWithoutUserInteraction()* to the Security Provider interface that allows it
+   to check if a user could be logged in silently on public pages, which might be desirable.
+ * Security: Added a new config property to the *mashroom-security* plugin that allows to forward specific query parameters
+   to the authorization system (e.g. a hint which identity provider to use):
+    ```
+    "Mashroom Security Services": {
+       "provider": "Mashroom Security Simple Provider",
+       "forwardQueryHintsToProvider": ["kc_idp_hint"]
+    }
+    ```
  * Portal: Fixed anonymous access to pages
  * Security: The ACL rules allow now "*" as value for allow/deny which includes anonymous users. This can be used to allow
    public access to sub pages. E.g.:
-   ```json
+    ```json
     {
         "/portal/public/**": {
             "*": {
@@ -14,7 +24,7 @@
             }
         }
     }
-   ```
+    ```
  * Added OpenID Connect security provider
  * Angular Demo Portal App: Works now with AOP and the Ivy Compiler
  * External MQTT Messaging Provider: Supports now MQTT 5
@@ -49,20 +59,20 @@
  * Core: Made it possible to use environment variables in server and plugin configuration. If the config value is a valid
    [template string](https://developer.mozilla.org/de/docs/Web/JavaScript/Reference/template_strings) it gets evaluated and the
    environment variables are accessible through the *env* object. Example:
-```json
-{
-    "name": "${env.USER}'s Mashroom Server",
-    "port": 5050
-}
-```
+    ```json
+    {
+        "name": "${env.USER}'s Mashroom Server",
+        "port": 5050
+    }
+    ```
  * Added TypeScript definitions for all API's. Works now similar than with flow:
-```javascript
-// index.ts
-import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
-const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portalAppSetup, portalClientServices) => {
-    // ...
-}
-```
+   ```js
+     // index.ts
+     import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+     const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portalAppSetup, portalClientServices) => {
+       // ...
+     }
+   ```
 
 ## 1.2.3 (11. January 2020)
 
@@ -90,18 +100,18 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portal
  * Portal: Added support for sharing resources between portal apps (e.g. vendor libraries or styles).
    A shared resource with a given name will only loaded once, even if multiple Portal Apps declare it.
    A shared resource can be added like this in the plugin definition:
-```json
-{
-    "name": "Demo Shared DLL App 1",
-    "type": "portal-app",
-    "bootstrap": "startupDemoSharedDLLApp1",
-    "sharedResources": {
-        "js": [
-            "demo_shared_dll_910502a6fce2f139eff8.js"
-        ]
+    ```json
+    {
+        "name": "Demo Shared DLL App 1",
+        "type": "portal-app",
+        "bootstrap": "startupDemoSharedDLLApp1",
+        "sharedResources": {
+            "js": [
+                "demo_shared_dll_910502a6fce2f139eff8.js"
+            ]
+        }
     }
-}
-```
+    ```
    Check out the demo project here: https://github.com/nonblocking/mashroom-demo-shared-dll
  * Portal: A remote Portal App which is not reachable for a long time is now unregistered instead of complete removed from the
    list of remote Apps
@@ -123,15 +133,15 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portal
     * _portalAppVersion_ (if the request is related to a portal app)
    To add additional properties to the logger context use the new _logger.addContext()_ method (e.g. within a middleware).
    If you want to output context properties with the log entries you could configure the _log4js_ appender like this:
-```
-"console": {
-    "type": "console",
-    "layout": {
-        "type": "pattern",
-        "pattern": "%d %p %X{sessionID} %X{browser} %X{browserVersion} %X{username} %X{portalAppName} %X{portalAppVersion} %c - %m"
+    ```
+    "console": {
+        "type": "console",
+        "layout": {
+            "type": "pattern",
+            "pattern": "%d %p %X{sessionID} %X{browser} %X{browserVersion} %X{username} %X{portalAppName} %X{portalAppVersion} %c - %m"
+        }
     }
-}
-```
+    ```
  * HTTP Proxy: White listed _Jaeger_, _OpenZipkin_ and W3C Trace Context HTTP headers by default
  * HTTP Proxy: Fixed the problem that all requests headers got forwarded to the target, even _cookie_ and other security relevant ones
 

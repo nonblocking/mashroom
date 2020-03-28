@@ -60,6 +60,11 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
                     }
                 }
 
+                if (allowed && !user) {
+                    // Try to authenticate on public pages if this is possible without user interaction
+                    await this._authenticateIfPossibleWithoutUserInteraction(securityService, logger, req);
+                }
+
             } catch (e) {
                 logger.error('Checking ACL failed. Denying access.', e);
             }
@@ -70,5 +75,20 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
                 res.sendStatus(403);
             }
         };
+    }
+
+    async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: ExpressRequest) {
+        try {
+            if (await securityService.canAuthenticateWithoutUserInteraction(req)) {
+                const dummyResponse: any = {
+                    redirect: () => {
+                        throw new Error('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
+                    }
+                };
+                await securityService.authenticate(req, dummyResponse);
+            }
+        } catch (e) {
+            logger.error('Authentication without user interaction failed!', e);
+        }
     }
 }

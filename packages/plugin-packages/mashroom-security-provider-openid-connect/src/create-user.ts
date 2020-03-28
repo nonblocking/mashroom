@@ -1,8 +1,7 @@
 
 import {UNDEFINED_USER_NAME} from "./constants";
-
-import {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
 import {IdTokenClaims, UserinfoResponse} from "openid-client";
+import type {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
 
 export default (claims: IdTokenClaims | undefined, userInfo: UserinfoResponse | undefined | null, rolesClaimName: string | undefined | null, adminRoles: Array<string> = []): MashroomSecurityUser => {
     if (claims) {

@@ -1,7 +1,7 @@
 
 import express from 'express';
-import {MashroomApiPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 import callbackRoute from './mashroom-openid-connect-callback-route';
+import type {MashroomApiPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomApiPluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const defaultBackUrl = contextHolder.getPluginContext().serverConfig.indexPage;
