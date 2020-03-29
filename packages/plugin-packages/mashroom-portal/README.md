@@ -132,9 +132,9 @@ export interface MashroomPortalService {
 
 ### portal-app
 
-Registers a Single Page Application and makes it available in the Portal.
+This plugin type makes a Single Page Application (SPA) available in the Portal.
 
-To register a portal-app plugin add this to _package.json_:
+To register a new portal-app plugin add this to _package.json_:
 
 ```json
 {
@@ -258,7 +258,6 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portal
 
 global['startAngularDemoApp'] = bootstrap;
 ```
-
 
 The _portalAppSetup_ has the following structure:
 
@@ -605,9 +604,9 @@ export interface MashroomPortalSiteService {
 
 ### portal-theme
 
-Registers a theme and makes it available in the Portal.
+This plugin types adds a theme to the Portal.
 
-To register a portal-app plugin add this to _package.json_:
+To register a new portal-theme plugin add this to _package.json_:
 
 ```json
 {
@@ -738,9 +737,9 @@ The _portalLayout_ variable contains the layout with the areas for the portal ap
 
 ### portal-layouts
 
-Registers portal layouts and make them available in the portal. A layout defines a areas where portal-apps can be placed.
+This plugin type adds portal layouts to the portal. A layout defines a areas where portal-apps can be placed.
 
-To register a portal-app plugin add this to _package.json_:
+To register a new portal-layouts plugin add this to _package.json_:
 
 ```json
 {
@@ -779,9 +778,9 @@ Important is the class **mashroom-portal-app-area** and a unique id element.
 
 ### remote-portal-app-registry
 
-Registers an additional registry for remote portal-apps.
+This plugin type adds an additional registry for remote portal-apps to the Portal.
 
-To register a portal-app plugin add this to _package.json_:
+To register a new remote-portal-app-registry plugin add this to _package.json_:
 
 ```json
 {
@@ -819,7 +818,7 @@ export default bootstrap;
 
  ```
 
-_RemotePortalAppRegistry_:
+The plugin must implement the following interface:
 
 ```js
 export interface MashroomRemotePortalAppRegistry {

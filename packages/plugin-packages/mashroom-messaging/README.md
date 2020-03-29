@@ -4,7 +4,7 @@
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
 This plugins adds server side messaging support to _Mashroom Server_.
-If an external provider (e.g. MQTT) is configured the messages can also be sent across multiple nodes (cluster support!)
+If an external provider plugin (e.g. MQTT) is configured the messages can also be sent across multiple nodes (cluster support!)
 and to 3rd party systems.
 
 Optionally it supports sending and receiving messages via WebSocket (Requires _mashroom-websocket_).
@@ -194,5 +194,78 @@ export interface MashroomMessagingService {
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
      */
     getWebSocketConnectPath(req: ExpressRequest): ?string;
+}
+```
+
+## Plugin Types
+
+### external-messaging-provider
+
+This plugin type connects the messaging system to an external provider such as MQTT or AMQP.
+It also adds cluster support to the messaging system.
+
+To register your custom external-messaging-provider plugin add this to _package.json_:
+
+```json
+{
+    "mashroom": {
+        "plugins": [
+            {
+                "name": "My Custom External Messaging Provider",
+                "type": "external-messaging-provider",
+                "bootstrap": "./dist/mashroom-bootstrap",
+                "defaultConfig": {
+                   "myProperty": "foo"
+                }
+            }
+        ]
+    }
+}
+```
+
+The bootstrap returns the provider:
+
+```js
+// @flow
+
+import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
+
+const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+
+    return new MyExternalMessagingProvider(/* ... */);
+};
+
+export default bootstrap;
+```
+
+The provider has to implement the following interface:
+
+```js
+export interface MashroomMessagingExternalProvider {
+    /**
+     * Add a message listener
+     * The message must be a JSON object.
+     */
+    addMessageListener(listener: MashroomExternalMessageListener): void;
+    /**
+     * Remove an existing listener
+     */
+    removeMessageListener(listener: MashroomExternalMessageListener): void;
+    /**
+     * Send a message to given external topic.
+     * The passed topic must be prefixed with the topic the provider is listening to.
+     * E.g. if the passed topic is foo/bar and the provider is listening to mashroom/# the message must be
+     * sent to mashroom/foo/bars.
+     *
+     * The message will be a JSON object.
+     */
+    sendInternalMessage(topic: string, message: any): Promise<void>;
+    /**
+     * Send a message to given external topic.
+     * The message will be a JSON object.
+     */
+    sendExternalMessage(topic: string, message: any): Promise<void>;
+}
+
 }
 ```

@@ -46,9 +46,9 @@ For production you should enable _cookie.secure_ and consider setting _cookie.sa
 
 ### session-store-provider
 
-Registers a Security Store Provider that can be used by this plugin.
+This plugin type adds a session store that can be used by this plugin.
 
-To register a session-store-provider plugin add this to _package.json_:
+To register a custom session-store-provider plugin add this to _package.json_:
 
 ```json
 {

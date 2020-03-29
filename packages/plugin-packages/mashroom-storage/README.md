@@ -93,9 +93,9 @@ export interface MashroomStorageCollection<T: Object> {
 
 ### storage-provider
 
-Registers a Storage Provider that can be used by this plugin.
+This plugin type adds a a new storage implementation that can be used by this plugin.
 
-To register a storage-provider plugin add this to _package.json_:
+To register a new storage-provider plugin add this to _package.json_:
 
 ```json
 {
@@ -131,7 +131,7 @@ const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, plu
 export default bootstrap;
 ```
 
-Which has to implement the following interface:
+The plugin has to implement the following interfaces:
 
 ```js
 export interface MashroomStorage {
@@ -139,5 +139,36 @@ export interface MashroomStorage {
      * Get (or create) the MashroomStorageCollection with given name.
      */
     getCollection<T: {}>(name: string): Promise<MashroomStorageCollection<T>>;
+}
+
+export interface MashroomStorageCollection<T: {}> {
+    /**
+     * Find all items that match given filter (e.g. { name: 'foo' }).
+     */
+    find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>>;
+    /**
+     * Return the first item that matches the given filter or null otherwise.
+     */
+    findOne(filter: StorageObjectFilter<T>): Promise<?StorageObject<T>>;
+    /**
+     * Insert one item
+     */
+    insertOne(item: T): Promise<StorageObject<T>>;
+    /**
+     * Update the first item that matches the given filter.
+     */
+    updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: $Shape<StorageObject<T>>): Promise<StorageUpdateResult>;
+    /**
+     * Replace the first item that matches the given filter.
+     */
+    replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult>;
+    /**
+     * Delete the first item that matches the given filter.
+     */
+    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    /**
+     * Delete all items that matches the given filter.
+     */
+    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
 }
 ```
