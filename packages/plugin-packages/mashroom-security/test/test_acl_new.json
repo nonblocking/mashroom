@@ -1,0 +1,36 @@
+{
+    "/portal/public/**": {
+        "*": {
+            "allow": "any"
+        }
+    },
+    "/portal/**": {
+        "*": {
+            "allow": {
+                "roles": ["User"],
+                "ips": ["127.0.0.1", "10.**"]
+            }
+        },
+        "DELETE": {
+            "deny": "any"
+        }
+    },
+    "/portal2": {
+        "*": {
+            "allow": {
+                "roles": ["User"]
+            }
+        }
+    },
+    "/foo/*/bar": {
+        "*": {
+            "allow": {
+                "roles": ["User"]
+            },
+            "deny":{
+                "roles": ["Manager"],
+                "ips": ["1.2.3.4"]
+            }
+        }
+    }
+}

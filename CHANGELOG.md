@@ -3,6 +3,29 @@
 
 ## [unreleased]
 
+ * Security: Extended the ACL rules:
+   * "any" is now a possible value for allow/deny; this matches also anonymous users which is useful for public sub-pages
+   * it is now possible to pass an object to allow/deny with a list of roles and ip addresses
+    ```json
+    {
+       "/portal/**": {
+           "*": {
+             "allow": {
+                 "roles": ["Authenticated"],
+                 "ips": ["10.1.2.*", "168.**"]
+             },
+             "deny": {
+                 "ips": ["1.2.3.4"]
+             }
+           }
+       } ,
+       "/portal/public/**": {
+           "*": {
+                "allow": "any"
+            }
+        }
+    }
+    ```
  * Security: Added a new method *canAuthenticateWithoutUserInteraction()* to the Security Provider interface that allows it
    to check if a user could be logged in silently on public pages, which might be desirable.
  * Security: Added a new config property to the *mashroom-security* plugin that allows to forward specific query parameters
@@ -14,17 +37,6 @@
     }
     ```
  * Portal: Fixed anonymous access to pages
- * Security: The ACL rules allow now "*" as value for allow/deny which includes anonymous users. This can be used to allow
-   public access to sub pages. E.g.:
-    ```json
-    {
-        "/portal/public/**": {
-            "*": {
-                "allow": "*"
-            }
-        }
-    }
-    ```
  * Added OpenID Connect security provider
  * Angular Demo Portal App: Works now with AOP and the Ivy Compiler
  * External MQTT Messaging Provider: Supports now MQTT 5

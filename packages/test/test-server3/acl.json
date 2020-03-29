@@ -1,12 +1,16 @@
 {
     "/portal/**": {
         "*": {
-            "allow": ["Authenticated"]
+            "allow": {
+                "roles": ["Authenticated"]
+            }
         }
     },
     "/websocket/test/**": {
         "*": {
-            "allow": ["Authenticated"]
+            "allow": {
+                "roles": ["Authenticated"]
+            }
         }
     }
 }

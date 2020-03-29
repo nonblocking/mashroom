@@ -27,17 +27,24 @@ export interface MashroomSecurityProviderRegistry {
 
 export type HttpMethod = '*' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS';
 
-export type MashroomSecurityACLPathRulePermission = {
-    +allow?: MashroomSecurityRoles | '*',
-    +deny?: MashroomSecurityRoles | '*',
+export type MashroomSecurityACLPermissionRuleComplex = {
+    roles?: MashroomSecurityRoles,
+    ips?: Array<string>,
 }
 
-export type MashroomSecurityACLPathRule = {
-    +[method: HttpMethod]: MashroomSecurityACLPathRulePermission
+export type MashroomSecurityACLPermissionRules = 'any' | MashroomSecurityRoles | MashroomSecurityACLPermissionRuleComplex;
+
+export type MashroomSecurityACLPermission = {
+    +allow?: MashroomSecurityACLPermissionRules,
+    +deny?: MashroomSecurityACLPermissionRules,
 }
 
-export type MashroomSecurityACL = {
-    +[pathPattern: string]: MashroomSecurityACLPathRule
+export type MashroomSecurityACLHTTPMethods = {
+    +[method: HttpMethod]: MashroomSecurityACLPermission
+}
+
+export type MashroomSecurityACLPaths = {
+    +[pathPattern: string]: MashroomSecurityACLHTTPMethods
 }
 
 export interface MashroomSecurityACLChecker {

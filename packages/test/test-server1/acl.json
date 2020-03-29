@@ -1,12 +1,24 @@
 {
+    "/mashroom/**": {
+        "*": {
+            "allow": {
+                "roles": ["Administrator"],
+                "ips": ["127.0.0.1", "::1"]
+            }
+        }
+    },
     "/portal/**": {
         "*": {
-            "allow": ["Authenticated"]
+            "allow": {
+                "roles": ["Authenticated"]
+            }
         }
     },
     "/websocket/test/**": {
         "*": {
-            "allow": ["Authenticated"]
+            "allow": {
+                "roles": ["Authenticated"]
+            }
         }
     }
 }

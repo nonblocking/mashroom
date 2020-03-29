@@ -2,26 +2,26 @@
 
 import fs from 'fs';
 import path from 'path';
+import {getClientIP, clientIPMatch} from '@mashroom/mashroom-utils/lib/ip_utils';
 
 import type {
     ExpressRequest,
     MashroomLogger,
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
+import type {MashroomSecurityRoles, MashroomSecurityUser,} from '../../type-definitions';
 import type {
-    MashroomSecurityRoles,
-    MashroomSecurityUser,
-} from '../../type-definitions';
-import type {
-    MashroomSecurityACLChecker as MashroomSecurityACLCheckerType,
-    MashroomSecurityACLPathRule,
-    MashroomSecurityACLPathRulePermission,
     HttpMethod,
+    MashroomSecurityACLChecker as MashroomSecurityACLCheckerType,
+    MashroomSecurityACLHTTPMethods,
+    MashroomSecurityACLPermission,
+    MashroomSecurityACLPermissionRules,
+    MashroomSecurityACLPermissionRuleComplex,
 } from '../../type-definitions/internal';
 
 type ACLPathRuleRegexp = {
     regexp: RegExp,
-    pathRule: MashroomSecurityACLPathRule,
+    pathRule: MashroomSecurityACLHTTPMethods,
 }
 
 export default class MashroomSecurityACLChecker implements MashroomSecurityACLCheckerType {
@@ -46,14 +46,15 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         const effectivePath = path.endsWith('/') ? path.substr(0, path.length - 1) : path;
         const method = req.method;
         const username = user ? user.username : 'anonymous';
+        const clientIP = getClientIP(req);
 
-        logger.debug(`ACL check: url: ${path}, method: ${method}, user: ${username}`);
+        logger.debug(`ACL check: url: ${path}, method: ${method}, clientIP: ${clientIP},  user: ${username}`);
 
         const pathRuleList = this._getPathRuleList(logger);
         const matchingRule = pathRuleList.find((r) => !!effectivePath.match(r.regexp));
 
         if (matchingRule) {
-            const allowed = this._checkRule(matchingRule.pathRule, method, user);
+            const allowed = this._checkAllowed(matchingRule.pathRule, method, user, req);
             if (!allowed) {
                 logger.debug(`ACL check: Access denied for user '${username}' at url '${path}' with method: '${method}'`);
             }
@@ -63,27 +64,37 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         return true;
     }
 
-    _checkRule(rule: MashroomSecurityACLPathRule, method: HttpMethod, user: ?MashroomSecurityUser): boolean {
-        let permission: MashroomSecurityACLPathRulePermission = rule[method];
+    _checkAllowed(httpMethods: MashroomSecurityACLHTTPMethods, method: HttpMethod, user: ?MashroomSecurityUser, req: ExpressRequest): boolean {
+        let permission: MashroomSecurityACLPermission = httpMethods[method];
         if (!permission) {
-            permission = rule['*'];
+            permission = httpMethods['*'];
         }
         if (!permission) {
             return false;
         }
 
-        const allowMatch = this._checkRolePermission(user, permission.allow);
-        const denyMatch = this._checkRolePermission(user, permission.deny);
+        const allowMatch = this._checkRulesMatch(user, permission.allow, req);
+        const denyMatch = this._checkRulesMatch(user, permission.deny, req);
 
         return allowMatch && !denyMatch;
     }
 
-    _checkRolePermission(user: ?MashroomSecurityUser, roles: void | MashroomSecurityRoles | '*'): boolean {
-        if (roles === '*') {
+    _checkRulesMatch(user: ?MashroomSecurityUser, rules: ?MashroomSecurityACLPermissionRules, req: ExpressRequest): boolean {
+        if (!rules) {
+            return false;
+        }
+        if (typeof(rules) === 'string' && rules === 'any') {
             return true;
         }
-        if (user && Array.isArray(roles)) {
-            return !!roles.find((r) => user.roles.find((ur) => ur === r));
+        if (Array.isArray(rules) && user) {
+            const roles: MashroomSecurityRoles = rules;
+            return roles.some((r) => user.roles.find((ur) => ur === r));
+        }
+        if (rules.roles || rules.ips) {
+            const complexRules: MashroomSecurityACLPermissionRuleComplex = (rules: any);
+            const roleMatch = user && complexRules.roles && Array.isArray(complexRules.roles) && complexRules.roles.some((r) => user.roles.find((ur) => ur === r));
+            const ipMatch = complexRules.ips && Array.isArray(complexRules.ips) && clientIPMatch(req, complexRules.ips);
+            return !!(roleMatch || ipMatch);
         }
         return false;
     }

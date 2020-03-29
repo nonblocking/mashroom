@@ -1,7 +1,7 @@
 {
     "/portal/public/**": {
         "*": {
-            "allow": "*"
+            "allow": "any"
         }
     },
     "/portal/**": {
@@ -9,7 +9,7 @@
             "allow": ["User"]
         },
         "DELETE": {
-            "deny": "*"
+            "deny": "any"
         }
     },
     "/portal2": {

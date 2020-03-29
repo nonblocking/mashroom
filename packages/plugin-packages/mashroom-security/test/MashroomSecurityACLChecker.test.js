@@ -166,7 +166,7 @@ describe('MashroomSecurityACLChecker', () => {
         expect(allowed).toBeFalsy();
     });
 
-    it('allow no acces with a denied role even if the user has an allowed role', async () => {
+    it('allow no access with a denied role even if the user has an allowed role', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
 
@@ -189,6 +189,131 @@ describe('MashroomSecurityACLChecker', () => {
         const allowed = await aclChecker.allowed(req, user);
 
         expect(allowed).toBeFalsy();
+    });
+
+    it('works with a complex rules', async () => {
+        const aclPath = './test_acl_new.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const user: ?MashroomSecurityUser = null;
+
+
+        const req: any = {
+            path: '/portal',
+            method: 'GET',
+            headers: {
+                'x-forwarded-for': '5.5.5.5',
+            },
+            pluginContext: {
+                loggerFactory
+            },
+        };
+        expect(await aclChecker.allowed(req, user)).toBeFalsy();
+
+        const req2: any = {
+            path: '/portal/foo/bar',
+            method: 'GET',
+            headers: {
+                'x-forwarded-for': '5.5.5.5',
+            },
+            pluginContext: {
+                loggerFactory
+            },
+        };
+        expect(await aclChecker.allowed(req2, user)).toBeFalsy();
+    });
+
+    it('allows anonymous users if the IP address is permitted', async () => {
+        const aclPath = './test_acl_new.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+
+        const req: any = {
+            path: '/portal/foo/bar',
+            method: 'GET',
+            headers: {
+                'x-forwarded-for': '10.5.5.5',
+            },
+            pluginContext: {
+                loggerFactory
+            }
+        };
+
+        expect(await aclChecker.allowed(req, null)).toBeTruthy();
+    });
+
+    it('allows access when no roles but IP address matches', async () => {
+        const aclPath = './test_acl_new.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+
+        const user: MashroomSecurityUser = {
+            username: 'test',
+            displayName: 'Test',
+            email: null,
+            pictureUrl: null,
+            roles: []
+        };
+        const req: any = {
+            path: '/portal/foo/bar',
+            method: 'GET',
+            headers: {
+                'x-forwarded-for': '10.3.3.4',
+            },
+            pluginContext: {
+                loggerFactory
+            },
+        };
+
+        expect(await aclChecker.allowed(req, user)).toBeTruthy();
+
+    });
+
+    it('allows access when a role matches but IP address doesnt', async () => {
+        const aclPath = './test_acl_new.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+
+        const user: MashroomSecurityUser = {
+            username: 'test',
+            displayName: 'Test',
+            email: null,
+            pictureUrl: null,
+            roles: Object.freeze(['User'])
+        };
+        const req: any = {
+            path: '/portal/foo/bar',
+            method: 'GET',
+            headers: {
+                'x-forwarded-for': '5.5.5.5',
+            },
+            pluginContext: {
+                loggerFactory
+            }
+        };
+
+        expect(await aclChecker.allowed(req, user)).toBeTruthy();
+    });
+
+    it('denies access when a roles matches but IP address is denied', async () => {
+        const aclPath = './test_acl_new.json';
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+
+        const user: MashroomSecurityUser = {
+            username: 'test',
+            displayName: 'Test',
+            email: null,
+            pictureUrl: null,
+            roles: Object.freeze(['User'])
+        };
+        const req: any = {
+            path: '/foo/x/bar',
+            method: 'GET',
+            headers: {
+                'x-forwarded-for': '1.2.3.4',
+            },
+            pluginContext: {
+                loggerFactory
+            }
+        };
+
+        expect(await aclChecker.allowed(req, user)).toBeFalsy();
     });
 
 });

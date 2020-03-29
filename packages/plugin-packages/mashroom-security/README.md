@@ -3,57 +3,116 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This plugin adds role based security to the _Mashroom Server_. It allows to restrict the access to certain paths
-via ACL and provides a service to manage the access to resources.
+This plugin adds role based security to the _Mashroom Server_.
+It comes with the following mechanisms:
+
+ * A new *Security Provider* plugin type that does the actual authentication and can be used to obtain the user roles
+ * An access control list (ACL) based on a JSON file that can be used to protect paths and HTTP methods based on roles or IP addresses
+ * A middleware that checks for every request the ACL and if authentication and specific roles are required.
+   If authentication is required and no user present it triggers an authentication (via *Security Provider*).
+ * A shared service to programmatically restrict the access to resources such as Pages or Apps (used by the *Mashroom Portal*)
 
 ## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security** as *dependency*.
 
-After that you can add a _acl.json_ file to your server config folder with a content like this:
+You can override the default config in your Mashroom config file like this:
+
+```json
+{
+  "plugins": {
+        "Mashroom Security Services": {
+            "provider": "Mashroom Security Simple Provider",
+            "forwardQueryHintsToProvider": [],
+            "acl": "./acl.json"
+        }
+    }
+}
+```
+
+ * _provider_: The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)
+ * _forwardQueryHintsToProvider_: A list of query parameters that should be forwarded during the authentication.
+   (will be added to the login or authorization URL).
+ * _acl_: The ACL for path based security restrictions (see below) (default: ./acl.json)
+
+### ACL
+
+A typical ACL configuration looks like this:
 
 ```json
 {
     "/portal/**": {
         "*": {
-            "allow": ["Authenticated"]
+            "allow": {
+                "roles": ["Authenticated"]
+            }
         }
     },
-    "/foo/bar/**": {
-        "DELETE": {
-            "deny": ["NotSoTrustedRole"]
+    **"/mashroom/**": {
+        "*": {
+            "allow": {
+                "roles": ["Administrator"],
+                "ips": ["127.0.0.1", "::1"]
+            }
         }
-    }
+    }**
 }
 ```
 
 The general structure is:
 
+```
+    "/my/path/**": {
+        "*|GET|POST|PUT|DELETE|PATCH|OPTIONS": {
+            "allow": "all"|<array of roles>|<object with optional properties roles and ips>
+            "deny": "all"|<array of roles>|<object with optional properties roles and ips>
+        }
+    }
+```
+
+ * The path can contain the wildcard "\*" for single segments and  "\*\*" for multiple segments
+ * "all" includes anonymous users
+ * IP addresses can also contain wildcards: "?" for s single digit, "\*" for single segments and  "\*\*" for multiple segments
+
+Example: Allow all users except the ones that come from an IP address starting with 12:
+
 ```json
 {
-    "URL_PATTERN": {
-        "*|GET|POST|PUT|DELETE|PATCH|OPTIONS": {
-            "allow": ["Role1", "Role2"],
-            "deny": ["Role3"]
+    "/my-app/**": {
+        "*": {
+            "allow": {
+                "roles": ["Authenticated"]
+            },
+            "deny": {
+                "ips": ["12.**"]
+            }
         }
     }
 }
 ```
 
-Where the URL_PATTERN can contain "\*" for a single path segment and "\*\*" for an arbitrary number of segments.
-Instead of a list of roles you can also use "\*" for all users (even anonymous ones):
+Example: Restrict the Portal to authenticated users but make some sub-pages public:
 
 ```json
 {
     "/portal/public/**": {
         "*": {
-            "allow": "*"
+            "allow": "any"
+        }
+    },
+    "/portal/**": {
+        "*": {
+            "allow": {
+                "roles": ["Authenticated"]
+            }
         }
     }
 }
 ```
 
-And you can use the security service like this:
+### Security Service
+
+Adding and checking a resource permission (e.g. for a Page) works like this:
 
 ```js
 // @flow
@@ -79,25 +138,6 @@ export default async (req: ExpressRequest, res: ExpressResponse) => {
     // ...
 }
 ```
-
-You can override the default config in your Mashroom config file like this:
-
-```json
-{
-  "plugins": {
-        "Mashroom Security Services": {
-            "provider": "Mashroom Security Simple Provider",
-            "forwardQueryHintsToProvider": [],
-            "acl": "./acl.json"
-        }
-    }
-}
-```
-
- * _provider_: The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)
- * _forwardQueryHintsToProvider_: A list of query parameters that should be forwarded during the authentication.
-   (will be added to the login or authorization URL).
- * _acl_: The ACL for path based security restrictions (see below) (default: ./acl.json)
 
 ## Services
 
@@ -182,9 +222,9 @@ export interface MashroomSecurityService {
 
 ### security-provider
 
-Registers a Security Provider that can be used by this plugin.
+This plugin type is responsible for the actual authentication and for creating a user object with a list of roles.
 
-To register a security-provider plugin add this to _package.json_:
+To register your custom security-provider plugin add this to _package.json_:
 
 ```json
 {
@@ -218,7 +258,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
 export default bootstrap;
 ```
 
-Which has to implement the following interface:
+The provider has to implement the following interface:
 
 ```js
 export interface MashroomSecurityProvider {
