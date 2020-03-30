@@ -19,6 +19,8 @@ export type ValidationErrors = {
 }
 export type FormValidator = (values: Object) => ValidationErrors;
 
+export type AsyncFormValidator = (values: Object) => Promise<void>;
+
 export type ModalState = {
     [name: string]: {
         show: boolean

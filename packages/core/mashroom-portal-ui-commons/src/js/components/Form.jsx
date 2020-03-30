@@ -5,12 +5,14 @@ import {reduxForm} from 'redux-form';
 
 import type {Node} from 'React';
 import type {FormProps} from 'redux-form';
-import type {FormValidator, ValidationErrors} from '../../../type-definitions';
+import type {AsyncFormValidator, FormValidator, ValidationErrors} from '../../../type-definitions';
 
 type Props = {
     formId: string,
     initialValues?: any,
     validator?: FormValidator,
+    asyncValidator?: AsyncFormValidator,
+    validateAsyncOnBlurFields?: Array<string>,
     onSubmit?: (values: any) => void,
     onChange?: (values: any) => void,
     children: Node,
@@ -58,6 +60,8 @@ export default class Form extends PureComponent<Props> {
             onChange: this.props.onChange,
             onSubmitFail: this.focusFirstErroneousField.bind(this),
             validate: this.props.validator,
+            asyncValidate: this.props.asyncValidator,
+            asyncBlurFields: this.props.validateAsyncOnBlurFields,
             destroyOnUnmount: false,
             enableReinitialize: true,
             keepDirtyOnReinitialize: false,
