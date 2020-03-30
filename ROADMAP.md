@@ -1,10 +1,6 @@
 
 # Mashroom Roadmap
 
-## Version 1.4
-
- * Portal: Show an error in the Admin Toolbar when a path/url already exists (site, page)
-
 ## Version 1.5
 
  * Portal: Add better support for chunks/code-splitting by setting the webpack publicPath dynamically during loading
