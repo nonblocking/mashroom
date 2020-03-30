@@ -125,7 +125,7 @@ export interface PortalAppManagementService {
 }
 
 export interface DataLoadingService {
-    loadSiteLinks(force?: boolean): Promise<void>;
+    loadSites(force?: boolean): Promise<void>;
     loadPageTree(force?: boolean): Promise<void>;
     loadAvailableApps(force?: boolean): Promise<void>;
     loadAvailableLanguages(force?: boolean): Promise<void>;

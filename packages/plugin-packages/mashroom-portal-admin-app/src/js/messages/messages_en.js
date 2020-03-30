@@ -42,6 +42,7 @@ export default {
     required: 'Required',
     mustStartWithSlash: 'Must start with a slash',
     mustContainOnlyOneSlash: 'Must contain only a single leading slash',
+    pathAlreadyExists: 'Path exists',
     path: 'Path',
     defaultTheme: 'Default Theme',
     defaultLayout: 'Default Layout',

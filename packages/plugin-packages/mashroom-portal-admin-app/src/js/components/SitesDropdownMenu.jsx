@@ -23,7 +23,7 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
     closeDropDownRef: () => void;
 
     onOpen() {
-        this.props.dataLoadingService.loadSiteLinks();
+        this.props.dataLoadingService.loadSites();
     }
 
     onGoto(site: MashroomPortalSiteLinkLocalized) {

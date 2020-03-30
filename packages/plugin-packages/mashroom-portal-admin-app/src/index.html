@@ -82,12 +82,12 @@
                     },
                     portalSiteService: {
                         getCurrentSiteUrl: function() {
-                            return '/site';
+                            return '/portal/web';
                         },
                         getSites: function() {
                             return Promise.resolve([
-                                {siteId: 'site1', title: 'Default site', url: '/site'},
-                                {siteId: 'site2', title: 'Second site', url: '/second'}
+                                {siteId: 'site1', title: 'Default site', path: '/web', url: '/portal/web'},
+                                {siteId: 'site2', title: 'Second site', path: '/second', url: '/portal/second'}
                             ]);
                         },
                         getPageTree: function() {
@@ -296,11 +296,11 @@
                             return Promise.resolve();
                         },
                         getCurrentSiteId: function() {
-                            return 'bar';
+                            return 'site1';
                         },
                         getSite: function() {
                             return Promise.resolve({
-                                siteId: 'bar',
+                                siteId: 'site1',
                                 title: { en: 'Default site' },
                                 path: '/web',
                                 virtualHosts: null,

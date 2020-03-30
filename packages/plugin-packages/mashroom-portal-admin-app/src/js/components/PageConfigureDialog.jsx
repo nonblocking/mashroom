@@ -1,4 +1,4 @@
-// @flow
+    // @flow
 
 import React, {PureComponent} from 'react';
 import {change} from 'redux-form';
@@ -31,7 +31,8 @@ import type {
     MashroomAvailablePortalTheme,
     MashroomPortalAdminService,
     MashroomPortalPage,
-    MashroomPortalPageRef, MashroomPortalSiteService
+    MashroomPortalPageRef,
+    MashroomPortalSiteService
 } from '@mashroom/mashroom-portal/type-definitions';
 import type {Languages, SelectedPage, DataLoadingService, Pages} from '../../../type-definitions';
 
@@ -246,7 +247,10 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             const previousTitle = typeof (previousValues.page.title) === 'object' ? previousValues.page.title[this.props.languages.default] : previousValues.page.title;
 
             if (title && title !== previousTitle) {
-                const friendlyUrl = '/'  + title.replace(/[ -]/g, '_');
+                let friendlyUrl = title.replace(/[ -]/g, '_').toLowerCase();
+                if (friendlyUrl && friendlyUrl.indexOf('/') !== 0) {
+                    friendlyUrl = '/' + friendlyUrl;
+                }
                 dispatch(change(props.form, 'page.friendlyUrl', friendlyUrl));
             }
         }
@@ -268,6 +272,8 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             errors.page.friendlyUrl = 'required';
         } else if (values.page.friendlyUrl.indexOf('/') !== 0) {
             errors.page.friendlyUrl = 'mustStartWithSlash';
+        } else if (this.props.pages.pagesFlattened.find((page) => (!this.props.selectedPage || page.pageId !== this.props.selectedPage.pageId) && page.friendlyUrl.toLowerCase() === values.page.friendlyUrl.toLowerCase())) {
+            errors.page.friendlyUrl = 'pathAlreadyExists';
         }
 
         return errors;
@@ -421,7 +427,11 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         }
 
         return (
-            <Form formId='page-configure' initialValues={this.getInitialValues()} validator={this.validate.bind(this)} onChange={this.onChange.bind(this)} onSubmit={this.onSubmit.bind(this)}>
+            <Form formId='page-configure'
+                  initialValues={this.getInitialValues()}
+                  validator={this.validate.bind(this)}
+                  onChange={this.onChange.bind(this)}
+                  onSubmit={this.onSubmit.bind(this)}>
                 {this.renderTabDialog()}
                 {this.renderActions()}
             </Form>

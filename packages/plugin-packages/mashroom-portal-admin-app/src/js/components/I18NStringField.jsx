@@ -37,6 +37,10 @@ export default class I18NStringField extends PureComponent<Props> {
         this.props.fieldProps.input.onChange(val);
     }
 
+    onBlur() {
+        this.props.fieldProps.input.onBlur();
+    }
+
     onAddLang(lang: string) {
         const val = Object.assign({}, this.getValue(), {
             [lang]: ''
@@ -56,8 +60,12 @@ export default class I18NStringField extends PureComponent<Props> {
         const val = this.getValue();
         const inputs = [];
         inputs.push(
-            <input key='default-lang' type='text' name={this.props.fieldProps.input.name}
-                   value={val[this.props.languages.default]} onChange={(e) => this.onValueChange(this.props.languages.default, e.target.value)}/>
+            <input key='default-lang' type='text'
+                   name={this.props.fieldProps.input.name}
+                   value={val[this.props.languages.default]}
+                   onChange={(e) => this.onValueChange(this.props.languages.default, e.target.value)}
+                   onBlur={this.onBlur.bind(this)}
+            />
         );
 
         let availableLanguages = [...this.props.languages.available];
@@ -70,7 +78,12 @@ export default class I18NStringField extends PureComponent<Props> {
                 inputs.push(
                     <div key={lang} className='translation'>
                         <div className='lang'>{lang}:</div>
-                        <input type='text' name={this.props.fieldProps.input.name + '.' + lang} value={val[lang]} onChange={(e) => this.onValueChange(lang, e.target.value)}/>
+                        <input type='text'
+                               name={this.props.fieldProps.input.name + '.' + lang}
+                               value={val[lang]}
+                               onChange={(e) => this.onValueChange(lang, e.target.value)}
+                               onBlur={this.onBlur.bind(this)}
+                        />
                         <div className='remove' onClick={this.onRemoveLang.bind(this, lang)}>&nbsp;</div>
                     </div>
                 );

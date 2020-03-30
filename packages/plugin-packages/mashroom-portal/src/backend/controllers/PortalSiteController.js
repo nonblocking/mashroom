@@ -39,6 +39,7 @@ export default class PortalSiteController {
                     sites.push({
                         siteId: site.siteId,
                         title: i18nService.translate(req, site.title),
+                        path: site.path,
                         url: this._determineSiteUrl(req, site)
                     });
                 }

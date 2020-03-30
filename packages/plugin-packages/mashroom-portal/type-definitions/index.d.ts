@@ -26,6 +26,7 @@ export type MashroomPortalSiteLocalized = {
 export type MashroomPortalSiteLinkLocalized = {
     readonly siteId: string;
     readonly title: string;
+    readonly path: string;
     readonly url: string;
 };
 

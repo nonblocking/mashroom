@@ -48,7 +48,7 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
         this.portalAdminService = portalAdminService;
     }
 
-    loadSiteLinks(force?: boolean = false) {
+    loadSites(force?: boolean = false) {
         if (this.siteLinksLoaded && !force) {
             return Promise.resolve();
         }

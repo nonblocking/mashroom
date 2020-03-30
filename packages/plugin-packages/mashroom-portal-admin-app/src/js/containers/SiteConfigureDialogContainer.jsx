@@ -18,12 +18,13 @@ import type {
     MashroomAvailablePortalTheme,
     MashroomPortalSite
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {Dispatch, Languages, SelectedSite, State} from '../../../type-definitions';
+import type {Dispatch, Languages, SelectedSite, Sites, State} from '../../../type-definitions';
 
 type OwnProps = {|
 |}
 
 type StateProps = {|
+    sites: Sites,
     selectedSite: ?SelectedSite,
     languages: Languages,
     availableThemes: Array<MashroomAvailablePortalTheme>,
@@ -52,6 +53,7 @@ class PageConfigureDialogContainer extends PureComponent<Props> {
 }
 
 const mapStateToProps = (state: State, ownProps: OwnProps): StateProps => ({
+    sites: state.sites,
     selectedSite: state.selectedSite,
     languages: state.languages,
     availableThemes: state.availableThemes,

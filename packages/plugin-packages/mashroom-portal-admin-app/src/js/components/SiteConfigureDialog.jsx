@@ -26,9 +26,10 @@ import type {
     MashroomPortalAdminService,
     MashroomPortalSite, MashroomPortalSiteService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {DataLoadingService, Languages, SelectedSite} from '../../../type-definitions';
+import type {DataLoadingService, Languages, SelectedSite, Sites} from '../../../type-definitions';
 
 type Props = {
+    sites: Sites,
     selectedSite: ?SelectedSite,
     languages: Languages,
     availableThemes: Array<MashroomAvailablePortalTheme>,
@@ -60,6 +61,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
             promises.push(this.props.dataLoadingService.loadAvailableLanguages());
             promises.push(this.props.dataLoadingService.loadAvailableThemes());
             promises.push(this.props.dataLoadingService.loadAvailableLayouts());
+            promises.push(this.props.dataLoadingService.loadSites());
 
             if (siteId) {
                 promises.push(this.props.portalAdminService.getSite(siteId).then(
@@ -189,6 +191,8 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
             errors.site.path = 'mustStartWithSlash';
         } else if (values.site.path.indexOf('/', 1) !== -1) {
             errors.site.path = 'mustContainOnlyOneSlash';
+        } else if (this.props.sites.sites.find((site) => (!this.props.selectedSite || this.props.selectedSite.siteId !== site.siteId) && site.path === values.site.path)) {
+            errors.site.path = 'pathAlreadyExists';
         }
 
         if (!values.site.defaultTheme) {

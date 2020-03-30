@@ -24,6 +24,7 @@ export type MashroomPortalSiteLocalized = {
 export type MashroomPortalSiteLinkLocalized = {
     +siteId: string,
     +title: string,
+    +path: string,
     +url: string
 }
 
