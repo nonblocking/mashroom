@@ -1,9 +1,19 @@
 // @flow
 
-import url from 'url';
-import {HTTP_HEADER_REST_PROXY_USER, HTTP_HEADER_REST_PROXY_ROLES, HTTP_HEADER_REST_PROXY_PERMISSIONS} from '../constants';
-import {calculatePermissions} from '../utils/security_utils';
+import {parse} from 'url';
+import {
+    HTTP_HEADER_REST_PROXY_USER,
+    HTTP_HEADER_REST_PROXY_ROLES,
+    HTTP_HEADER_REST_PROXY_PERMISSIONS,
+} from '../constants';
+import {
+    calculatePermissions,
+    isSitePathPermitted,
+    isProxyAccessPermitted,
+    getUser,
+} from '../utils/security_utils';
 import {portalAppContext} from '../utils/logging_utils';
+import {getSitePath} from '../utils/path_utils';
 
 import type {
     ExpressRequest,
@@ -11,14 +21,11 @@ import type {
     MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
-import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomPortalAppUserPermissions,
-    MashroomPortalProxyDefinition
+    MashroomPortalProxyDefinition,
 } from '../../../type-definitions';
-import type {
-    MashroomPortalPluginRegistry,
-} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalRestProxyController {
 
@@ -33,12 +40,17 @@ export default class PortalRestProxyController {
 
         try {
             const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-            const user = securityService.getUser(req);
+            const user = getUser(req);
 
-            const parsedUrl = url.parse(req.params['0']);
+            const sitePath = getSitePath(req);
+            if (!await isSitePathPermitted(req, sitePath)) {
+                logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access site: ${sitePath}`);
+                res.sendStatus(403);
+                return;
+            }
+
+            const parsedUrl = parse(req.params['0']);
             const path: string = decodeURI(parsedUrl.pathname || '');
-
             const pathParts = path.split('/');
             if (pathParts.length < 2) {
                 logger.warn(`Invalid rest proxy path: ${path}`);
@@ -50,7 +62,7 @@ export default class PortalRestProxyController {
             const restApiId = pathParts[1];
             const portalApp = this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
             if (!portalApp) {
-                logger.warn('Portal app not found: ', portalApp);
+                logger.warn('Portal app not found: ', pluginName);
                 res.sendStatus(404);
                 return;
             }
@@ -71,13 +83,10 @@ export default class PortalRestProxyController {
                 return;
             }
 
-            if (restProxyDef.restrictToRoles && Array.isArray(restProxyDef.restrictToRoles) && restProxyDef.restrictToRoles.length > 0) {
-                const permitted = restProxyDef.restrictToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
-                if (!permitted) {
-                    logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access rest proxy: ${portalApp.name}/${restApiId}`);
-                    res.sendStatus(403);
-                    return;
-                }
+            if (!await isProxyAccessPermitted(req, restProxyDef, logger)) {
+                logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access rest proxy: ${req.originalUrl}`);
+                res.sendStatus(403);
+                return;
             }
 
             let fullTargetUri = restProxyDef.targetUri;

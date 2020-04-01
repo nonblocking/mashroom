@@ -8,7 +8,6 @@ import minimalLayout from '../layouts/minimal_layout';
 import minimalTemplatePortal from '../theme/minimal_template_portal';
 import {
     PORTAL_JS_FILE,
-    PORTAL_PRIVATE_PATH,
     PORTAL_APP_API_PATH,
     PORTAL_THEME_RESOURCES_BASE_PATH,
     WINDOW_VAR_PORTAL_SERVICES,
@@ -26,9 +25,9 @@ import {
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
 } from '../constants';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
-import {getPortalPath, getSiteAndFriendlyUrl} from '../utils/path_utils';
-import {getPageData, getDefaultSite} from '../utils/model_utils';
-import {isAppPermitted, isPagePermitted, isSitePermitted, isSignedIn, isAdmin, authenticate} from '../utils/security_utils';
+import {getPortalPath, getSitePath, getApiResourcesBaseUrl} from '../utils/path_utils';
+import {getPageData} from '../utils/model_utils';
+import {getUser, isAppPermitted, isPagePermitted, isSitePermitted, isSignedIn, isAdmin, forceAuthentication} from '../utils/security_utils';
 
 const readFile = promisify(fs.readFile);
 const viewEngineCache = new Map();
@@ -78,25 +77,12 @@ export default class PortalPageRenderController {
             const serverConfig = req.pluginContext.serverConfig;
 
             const path = req.path;
+            const sitePath = getSitePath(req);
             const portalPath = getPortalPath();
 
-            logger.info('Sending portal page:', path);
-            const {sitePath, friendlyUrl} = getSiteAndFriendlyUrl(req);
+            logger.debug(`Request for portal page: ${path} on site: ${sitePath}`);
 
-            if (!sitePath) {
-                const defaultSite = await getDefaultSite(req, logger);
-                if (defaultSite) {
-                    logger.debug(`Redirecting to default site: ${defaultSite.siteId}`);
-                    res.redirect(portalPath + defaultSite.path);
-                } else {
-                    res.sendStatus(404);
-                }
-                return;
-            }
-
-            logger.debug(`Determined: Site path: ${sitePath}, Friendly URL: ${friendlyUrl || '/'}`);
-
-            const {site, pageRef, page} = await getPageData(sitePath, friendlyUrl, req, logger);
+            const {site, pageRef, page} = await getPageData(sitePath, path, req, logger);
             logger.debug('Site:', site);
             logger.debug('PageRef:', pageRef);
             logger.debug('Page:', page);
@@ -109,9 +95,11 @@ export default class PortalPageRenderController {
 
             if (!await isSitePermitted(req, site.siteId) || !await isPagePermitted(req, page.pageId)) {
                 if (isSignedIn(req)) {
+                    const user = getUser(req);
+                    logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access path: ${path}`);
                     res.sendStatus(403);
                 } else {
-                    await authenticate(req, res);
+                   await forceAuthentication(path, req, res, logger);
                 }
                 return;
             }
@@ -167,8 +155,9 @@ export default class PortalPageRenderController {
         let resourcesBasePath = null;
         if (themeName) {
             const encodedThemeName = encodeURIComponent(themeName);
-            resourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
+            resourcesBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
         }
+        const apiBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_API_PATH}`;
 
         const localizedPageRef = this._localizePageRef(req, pageRef);
         const mergedPageData = Object.assign({}, localizedPageRef, page);
@@ -184,6 +173,7 @@ export default class PortalPageRenderController {
             portalResourcesHeader,
             portalResourcesFooter,
             portalLayout,
+            apiBasePath,
             resourcesBasePath,
             lang,
             availableLanguages: i18nService.availableLanguages,
@@ -275,7 +265,7 @@ export default class PortalPageRenderController {
                      autoExtendAuthentication: boolean, messagingConnectPath: ?string, privateUserTopic: ?string, devMode: boolean) {
         return `
             <script>
-                window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${portalPrefix}${PORTAL_PRIVATE_PATH}${PORTAL_APP_API_PATH}';
+                window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${getApiResourcesBaseUrl(req)}${PORTAL_APP_API_PATH}';
                 window['${WINDOW_VAR_PORTAL_SITE_URL}'] = '${portalPrefix}${sitePath}';
                 window['${WINDOW_VAR_PORTAL_SITE_ID}'] = '${siteId}';
                 window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
@@ -288,7 +278,7 @@ export default class PortalPageRenderController {
                 ${privateUserTopic ? `window['${WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC}'] = '${privateUserTopic}';` : ''};
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true` : ''}
             </script>
-            <script src="${portalPrefix}${PORTAL_PRIVATE_PATH}/${PORTAL_JS_FILE}?v=${this.startTimestamp}"></script>
+            <script src="${getApiResourcesBaseUrl(req)}/${PORTAL_JS_FILE}?v=${this.startTimestamp}"></script>
         `;
     }
 

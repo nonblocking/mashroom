@@ -1,10 +1,15 @@
 // @flow
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalRestProxyController from '../../../src/backend/controllers/PortalRestProxyController';
 
 import type {MashroomPortalApp} from '../../../type-definitions';
+
+const portalConfig: any = {
+    path: '/portal',
+};
+setPortalPluginConfig(portalConfig);
 
 describe('PortalPageController', () => {
 
@@ -139,6 +144,9 @@ describe('PortalPageController', () => {
                     isAdmin() {
                         return true;
                     },
+                    async checkResourcePermission() {
+                        return true;
+                    }
                 },
             },
             proxy: {
@@ -146,6 +154,34 @@ describe('PortalPageController', () => {
                     forward: httpProxyServiceForwardMock,
                 },
             },
+            portal: {
+                service: {
+                    async findSiteByPath() {
+                        return {
+                            pages: [{
+
+                            }]
+                        }
+                    },
+                    async findPageRefByFriendlyUrl() {
+                        return {
+
+                        }
+                    },
+                    async getPage() {
+                        return {
+                            portalApps: {
+                                'area1': [{
+                                    pluginName: 'Test Portal App 1',
+                                }],
+                                'area2': [{
+                                    pluginName: 'Test Portal App 2',
+                                }]
+                            }
+                        }
+                    }
+                }
+            }
         },
     };
 
@@ -156,6 +192,7 @@ describe('PortalPageController', () => {
     it('forwards calls to the targetUri', async () => {
 
         const req: any = {
+            originalUrl: '/portal/web/test/__/proxy/Test Portal App 1/my-proxy/foo/bar?x=1',
             params: {
                 '0': 'Test Portal App 1/my-proxy/foo/bar?x=1',
             },
@@ -185,6 +222,7 @@ describe('PortalPageController', () => {
     it('sets the configured headers', async () => {
 
         const req: any = {
+            originalUrl: '/portal/web/test/__/proxy/Test Portal App 2/my-proxy?x=2#33',
             params: {
                 '0': 'Test Portal App 2/my-proxy?x=2#33',
             },

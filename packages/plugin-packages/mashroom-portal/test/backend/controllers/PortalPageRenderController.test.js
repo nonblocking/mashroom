@@ -166,6 +166,9 @@ describe('PortalPageRenderController', () => {
         const req: any = {
             baseUrl: '/portal',
             path: '/foo/bar',
+            params: {
+                sitePath: 'web',
+            },
             connection: {
                 remoteAddress: '127.0.0.1'
             },
@@ -182,8 +185,8 @@ describe('PortalPageRenderController', () => {
                 expect(type).toBe('text/html');
                 expect(body).toBeTruthy();
                 expect(body).toContain('<title>Server - Default Site - Test Page</title>');
-                expect(body).toContain('window[\'MashroomPortalApiPath\'] = \'/portal/_/api\';');
-                expect(body).toContain('<script src="/portal/_/client.js?');
+                expect(body).toContain('window[\'MashroomPortalApiPath\'] = \'/portal/web/___/api\';');
+                expect(body).toContain('<script src="/portal/web/___/client.js?');
                 expect(body).toContain('var portalAppService = MashroomPortalServices.portalAppService;');
                 expect(body).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null);');
                 expect(body).toContain('portalAppService.loadApp(\'mashroom-portal-admin-app-container\', \'admin-portal-app\', null, null, null);');
@@ -196,7 +199,6 @@ describe('PortalPageRenderController', () => {
     });
 
     it('renders a page based on a given theme and layout', (done) => {
-
         let engineName = null;
         const webappProps = new Map();
         const webApp: any = {
@@ -207,6 +209,9 @@ describe('PortalPageRenderController', () => {
         const req: any = {
             baseUrl: '/portal',
             path: '/foo/bar',
+            params: {
+                sitePath: 'web',
+            },
             connection: {
                 remoteAddress: '127.0.0.1'
             },
@@ -226,8 +231,9 @@ describe('PortalPageRenderController', () => {
 
                 expect(model.site).toEqual({siteId: 'default', pages: [{pageId: 'test-page', friendlyUrl: '/bar', hidden: false, subPages: [], title: 'Test Page'}], path: '/web', title: 'Default Site'});
                 expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Portal App 2'}, {instanceId: '3', pluginName: 'Portal App 3'}]}, theme: 'my-theme', title: 'Test Page'});
-                expect(model.siteBasePath).toBe('/portal/foo');
-                expect(model.resourcesBasePath).toBe('/portal/_/theme-resources/my-theme');
+                expect(model.siteBasePath).toBe('/portal/web');
+                expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
+                expect(model.apiBasePath).toBe('/portal/web/___/api');
                 expect(model.portalLayout).toBe('<div class="row"><div id="app-area1"></div><div id="app-area2"></div></div>\n');
 
                 done();

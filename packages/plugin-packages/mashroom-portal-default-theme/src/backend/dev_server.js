@@ -41,6 +41,7 @@ app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
             roles: [],
         },
         csrfToken: 'foo',
+        apiBasePath: '/api',
         resourcesBasePath: '/resources',
         site: {
             siteId: 'test',
@@ -122,9 +123,9 @@ app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
                                         <td>18</td>
                                     </tr>
                                 </table>
-                                
+
                                 <br/>
-                                
+
                                 <div class="mashroom-portal-ui-tab-dialog">
                                     <div class="tab-dialog-header">
                                         <div class="tab-dialog-button">
@@ -137,10 +138,10 @@ app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
                                             <div class="title">Tag with close button</div>
                                             <div class="close-button"></div>
                                         </div>
-                                    </div>                              
+                                    </div>
                                 </div>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                     <div class="mashroom-portal-app-wrapper">
                         <div class="mashroom-portal-app-host">
@@ -201,9 +202,9 @@ app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
                                     <select id="select_test2" name="select_test2" disabled="disabled">
                                        <option value="1">One</option>
                                     </select>
-                                </div> 
+                                </div>
                             </div>
-                        </div>    
+                        </div>
                     </div>
                     <div class="mashroom-portal-app-wrapper">
                         <div class="mashroom-portal-app-header">

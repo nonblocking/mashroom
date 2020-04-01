@@ -4,6 +4,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import MashroomPortalPluginRegistry from './plugins/MashroomPortalPluginRegistry';
+import PortalIndexController from './controllers/PortalIndexController';
 import PortalResourcesController from './controllers/PortalResourcesController';
 import PortalPageController from './controllers/PortalPageController';
 import PortalPageRenderController from './controllers/PortalPageRenderController';
@@ -22,7 +23,7 @@ import {
     PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_JS_FILE,
-    PORTAL_PRIVATE_PATH,
+    PORTAL_INTERNAL_PATH,
     PORTAL_THEME_RESOURCES_BASE_PATH
 } from './constants';
 
@@ -30,9 +31,9 @@ import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-defi
 
 export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: number) => {
     const portalWebapp = express<ExpressRequest, ExpressResponse>();
-
     portalWebapp.enable('etag');
 
+    const portalIndexController = new PortalIndexController();
     const portalResourcesController = new PortalResourcesController();
     const portalPageController = new PortalPageController(pluginRegistry);
     const portalPageRenderController = new PortalPageRenderController(portalWebapp, pluginRegistry, startTimestamp);
@@ -46,14 +47,23 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     const portalUserController = new PortalUserController();
     const portalLogController = new PortalLogController(pluginRegistry);
 
-    const privateRoutes = express.Router();
-    portalWebapp.use(PORTAL_PRIVATE_PATH, privateRoutes);
+    const siteRoutes = express.Router({
+        mergeParams: true,
+    });
+    portalWebapp.use('/:sitePath', siteRoutes);
+
+    const internalRoutes = express.Router({
+        mergeParams: true,
+    });
+    siteRoutes.use(`${PORTAL_INTERNAL_PATH}`, internalRoutes);
 
     // REST API
 
-    const restApi = express.Router();
+    const restApi = express.Router({
+        mergeParams: true,
+    });
     restApi.use(bodyParser.json());
-    privateRoutes.use(PORTAL_APP_API_PATH, restApi);
+    internalRoutes.use(PORTAL_APP_API_PATH, restApi);
 
     restApi.get('/portal-apps', portalAppController.getAvailablePortalApps.bind(portalAppController));
 
@@ -94,30 +104,43 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
 
     // Client API resources
 
-    privateRoutes.get(`/${PORTAL_JS_FILE}`, portalResourcesController.getPortalClient.bind(portalResourcesController));
+    internalRoutes.get(`/${PORTAL_JS_FILE}`, portalResourcesController.getPortalClient.bind(portalResourcesController));
 
     // Portal theme resources
 
-    const portalThemeResourcesRoutes = express.Router();
+    const portalThemeResourcesRoutes = express.Router({
+        mergeParams: true,
+    });
+    internalRoutes.use(PORTAL_THEME_RESOURCES_BASE_PATH, portalThemeResourcesRoutes);
+
     portalThemeResourcesRoutes.get(`/:themeName/*`, portalThemeController.getPortalThemeResource.bind(portalThemeController));
-    privateRoutes.use(PORTAL_THEME_RESOURCES_BASE_PATH, portalThemeResourcesRoutes);
 
     // Portal app resources
 
-    const portalAppResourcesRoutes = express.Router();
+    const portalAppResourcesRoutes = express.Router({
+        mergeParams: true,
+    });
+    internalRoutes.use(PORTAL_APP_RESOURCES_BASE_PATH, portalAppResourcesRoutes);
+
     portalAppResourcesRoutes.get(`${PORTAL_APP_RESOURCES_SHARED_PATH}/*`, portalAppController.getSharedPortalAppResource.bind(portalAppController));
     portalAppResourcesRoutes.get('/:pluginName/*', portalAppController.getPortalAppResource.bind(portalAppController));
-    privateRoutes.use(PORTAL_APP_RESOURCES_BASE_PATH, portalAppResourcesRoutes);
 
     // Proxy
 
-    const proxyRoutes = express.Router();
+    const proxyRoutes = express.Router({
+        mergeParams: true,
+    });
+    internalRoutes.use(PORTAL_APP_REST_PROXY_BASE_PATH, proxyRoutes);
+
     proxyRoutes.all(`/*`, portalRestProxyController.forward.bind(portalRestProxyController));
-    privateRoutes.use(PORTAL_APP_REST_PROXY_BASE_PATH, proxyRoutes);
 
     // Page route (main)
 
-    portalWebapp.get('*', portalPageRenderController.renderPortalPage.bind(portalPageRenderController));
+    siteRoutes.get('*', portalPageRenderController.renderPortalPage.bind(portalPageRenderController));
+
+    // Index
+
+    portalWebapp.get('*', portalIndexController.index.bind(portalPageRenderController));
 
     return portalWebapp;
 };

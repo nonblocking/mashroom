@@ -3,6 +3,12 @@
 
 ## [unreleased]
 
+ * Portal: The *sites* work now completely independent (all URLs are relative to <portal_path>/<site_path>).
+   That means in particular:
+     * You can have both public sites and private (protected) sites at the same time
+     * It is possible to map sites to virtual hosts (via reverse proxy). E.g.
+       * https://www.my-company.com -> /portal/web
+       * https://customer-portal.my-company.com -> /portal/customer
  * Security: Extended the ACL rules:
    * "any" is now a possible value for allow/deny; this matches also anonymous users which is useful for public sub-pages
    * it is now possible to pass an object to allow/deny with a list of roles and ip addresses
@@ -19,7 +25,7 @@
              }
            }
        } ,
-       "/portal/public/**": {
+       "/portal/public-site/**": {
            "*": {
                 "allow": "any"
             }

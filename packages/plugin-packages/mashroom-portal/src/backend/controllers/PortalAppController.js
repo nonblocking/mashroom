@@ -2,19 +2,15 @@
 
 import {promisify} from 'util';
 import getUriCbStyle from 'get-uri';
-import {portalAppContext} from '../utils/logging_utils';
-
-const getUri = promisify(getUriCbStyle);
-
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
     PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
-    PORTAL_PRIVATE_PATH
 } from '../constants';
-import {getPortalPath} from '../utils/path_utils';
+import {portalAppContext} from '../utils/logging_utils';
+import {getSitePath, getApiResourcesBaseUrl} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage} from '../utils/model_utils';
-import {isAppPermitted, calculatePermissions} from '../utils/security_utils';
+import {getUser, isAppPermitted, calculatePermissions, isSitePathPermitted} from '../utils/security_utils';
 
 import type {ReadStream} from 'fs';
 import type {
@@ -22,12 +18,9 @@ import type {
     ExpressResponse,
     MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
-import type {
-    MashroomSecurityService,
-    MashroomSecurityUser,
-} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomPortalAppSetup,
     MashroomPortalApp,
@@ -40,6 +33,8 @@ import type {
 import type {
     MashroomPortalPluginRegistry,
 } from '../../../type-definitions/internal';
+
+const getUri = promisify(getUriCbStyle);
 
 export default class PortalAppController {
 
@@ -54,9 +49,17 @@ export default class PortalAppController {
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
         try {
+            const sitePath = getSitePath(req);
             const pageId: any = req.params.pageId;
             const pluginName = req.params.pluginName;
             const portalAppInstanceId = req.params.portalAppInstanceId;
+            const mashroomSecurityUser = await getUser(req);
+
+            if (!await isSitePathPermitted(req, sitePath)) {
+                logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access site: ${sitePath}`);
+                res.sendStatus(403);
+                return;
+            }
 
             const portalApp = this._getPortalApp(pluginName);
             if (!portalApp) {
@@ -65,12 +68,13 @@ export default class PortalAppController {
                 return;
             }
             if (!await isAppPermitted(req, pluginName, portalAppInstanceId, portalApp)) {
+                logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access app: ${pluginName}:${portalAppInstanceId}`);
                 res.sendStatus(403);
                 return;
             }
 
             logger.addContext(portalAppContext(portalApp));
-            let portalAppInstance = null;
+            let portalAppInstance;
 
             if (portalAppInstanceId) {
                 portalAppInstance = await this._getPortalAppInstance(pageId, portalApp, portalAppInstanceId, req);
@@ -83,12 +87,10 @@ export default class PortalAppController {
                 return;
             }
 
-            let portalPath = getPortalPath();
-
             const encodedPortalAppName = encodeURIComponent(portalApp.name);
-            const resourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
-            const sharedResourcesBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
-            const restProxyBasePath = `${portalPath}${PORTAL_PRIVATE_PATH}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
+            const resourcesBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
+            const sharedResourcesBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
+            const restProxyBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
             const restProxyPaths = {};
             if (portalApp.restProxies) {
                 for (const proxyId in portalApp.restProxies) {
@@ -99,8 +101,7 @@ export default class PortalAppController {
             }
 
             const lang = await this._getLang(req);
-            const user = await this._getUser(req, portalApp);
-
+            const user = this._toPortalAppUser(mashroomSecurityUser, portalApp);
             const appConfig = Object.assign({}, portalApp.defaultAppConfig, portalAppInstance.appConfig);
 
             const portalAppSetup: MashroomPortalAppSetup = {
@@ -282,10 +283,7 @@ export default class PortalAppController {
         return i18nService.getLanguage(req);
     }
 
-    async _getUser(req: ExpressRequest, portalApp: MashroomPortalApp) {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-        const user: ?MashroomSecurityUser = securityService.getUser(req);
-
+    _toPortalAppUser(user: ?MashroomSecurityUser, portalApp: MashroomPortalApp) {
         const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
 
         const portalUser: MashroomPortalAppUser = {

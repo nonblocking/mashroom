@@ -117,16 +117,20 @@ describe('PortalAppController', () => {
         services: {
             portal: {
                 service: {
-                    getPage() {
+                    async findSiteByPath() {
+                        return {
+
+                        }
+                    },
+                    async getPage() {
                         return page1;
                     },
-                    getPortalAppInstance(name, id) {
+                    async getPortalAppInstance(name, id) {
                         if (id) {
                             return portalAppInstance1;
                         }
                         return null;
                     },
-
                 },
             },
             security: {
@@ -163,6 +167,7 @@ describe('PortalAppController', () => {
                 remoteAddress: '127.0.0.1'
             },
             params: {
+                sitePath: 'web',
                 pageId: '123',
                 pluginName: 'Test Portal App 1',
                 portalAppInstanceId: 'ABCD',
@@ -189,10 +194,10 @@ describe('PortalAppController', () => {
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
             restProxyPaths: {
-                '1': '/portal/_/proxy/Test%20Portal%20App%201/1',
+                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
-            resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App%201',
-            sharedResourcesBasePath: '/portal/_/app-resources/_shared_',
+            resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
+            sharedResourcesBasePath: '/portal/web/___/apps/_shared_',
             sharedResources: {
                 js: [],
                 css: [],
@@ -224,6 +229,8 @@ describe('PortalAppController', () => {
                 remoteAddress: '127.0.0.1'
             },
             params: {
+                sitePath: 'web',
+                pageId: '123',
                 pluginName: 'Test Portal App 1',
             },
             headers: {
@@ -248,10 +255,10 @@ describe('PortalAppController', () => {
             instanceId: null,
             lastReloadTs: 222222222,
             restProxyPaths: {
-                '1': '/portal/_/proxy/Test%20Portal%20App%201/1',
+                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
-            resourcesBasePath: '/portal/_/app-resources/Test%20Portal%20App%201',
-            sharedResourcesBasePath: '/portal/_/app-resources/_shared_',
+            resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
+            sharedResourcesBasePath: '/portal/web/___/apps/_shared_',
             sharedResources: {
                 js: [],
                 css: [],

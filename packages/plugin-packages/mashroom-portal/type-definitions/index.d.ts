@@ -184,6 +184,7 @@ export interface MashroomPortalPageRenderModel {
     readonly portalName: string;
     readonly portalBasePath: string;
     readonly siteBasePath: string;
+    readonly apiBasePath: string;
     readonly resourcesBasePath: string | null | undefined;
     readonly site: MashroomPortalSiteLocalized;
     readonly page: MashroomPortalPage & MashroomPortalPageRefLocalized;

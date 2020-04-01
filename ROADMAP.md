@@ -17,5 +17,4 @@
 
  * Portal: Responsive Admin Toolbar
  * Core: Handle path collisions of express apps
- * Core: Add possibility to map sites to virtual hosts
  * App store

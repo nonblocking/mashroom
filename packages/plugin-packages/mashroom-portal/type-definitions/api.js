@@ -167,6 +167,7 @@ export interface MashroomPortalPageRenderModel {
     +portalName: string,
     +portalBasePath: string,
     +siteBasePath: string,
+    +apiBasePath: string,
     +resourcesBasePath: ?string,
     +site: MashroomPortalSiteLocalized,
     +page: MashroomPortalPage & MashroomPortalPageRefLocalized,

@@ -4,12 +4,11 @@ export const SITES_COLLECTION = 'mashroom-portal-sites';
 export const PAGES_COLLECTION = 'mashroom-portal-pages';
 export const PORTAL_APP_INSTANCES_COLLECTION = 'mashroom-portal-app-instances';
 
-export const PORTAL_PRIVATE_PATH = '/_';
-
-export const PORTAL_THEME_RESOURCES_BASE_PATH = '/theme-resources';
-
+export const PORTAL_INTERNAL_SEPARATOR = '___';
+export const PORTAL_INTERNAL_PATH = `/${PORTAL_INTERNAL_SEPARATOR}`;
+export const PORTAL_THEME_RESOURCES_BASE_PATH = '/theme';
 export const PORTAL_APP_API_PATH = '/api';
-export const PORTAL_APP_RESOURCES_BASE_PATH = '/app-resources';
+export const PORTAL_APP_RESOURCES_BASE_PATH = '/apps';
 export const PORTAL_APP_RESOURCES_SHARED_PATH = '/_shared_';
 export const PORTAL_APP_REST_PROXY_BASE_PATH = '/proxy';
 

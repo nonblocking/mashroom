@@ -14,7 +14,6 @@ import type {
 } from '../../../type-definitions';
 
 export const findPortalAppInstanceOnPage = (page: MashroomPortalPage, pluginName: string, instanceId: string): ?{ areaId: string, position: number, instance: MashroomPortalAppInstanceRef } => {
-
     const portalApps = page.portalApps;
     if (!portalApps) {
         return null;
@@ -44,8 +43,12 @@ export const findPortalAppInstanceOnPage = (page: MashroomPortalPage, pluginName
     };
 };
 
-export const getPageData = async (sitePath: string, friendlyUrl: ?string, req: ExpressRequest, logger: MashroomLogger): Promise<{ site?: MashroomPortalSite, pageRef?: MashroomPortalPageRef, page?: MashroomPortalPage }> => {
+export const findSiteByPath = async (req: ExpressRequest, sitePath: string): Promise<?MashroomPortalSite> => {
+    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    return portalService.findSiteByPath(sitePath);
+};
 
+export const getPageData = async (sitePath: string, friendlyUrl: ?string, req: ExpressRequest, logger: MashroomLogger): Promise<{ site?: MashroomPortalSite, pageRef?: MashroomPortalPageRef, page?: MashroomPortalPage }> => {
     const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
     const site = await portalService.findSiteByPath(sitePath);
@@ -73,6 +76,11 @@ export const getPageData = async (sitePath: string, friendlyUrl: ?string, req: E
     }
 
     return {site, pageRef, page};
+};
+
+export const getPage = async (req: ExpressRequest, pageId: string): Promise<?MashroomPortalPage> => {
+    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    return await portalService.getPage(pageId);
 };
 
 export const getDefaultSite = async (req: ExpressRequest, logger: MashroomLogger): Promise<?MashroomPortalSite> => {
