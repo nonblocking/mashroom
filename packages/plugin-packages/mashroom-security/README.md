@@ -91,11 +91,11 @@ Example: Allow all users except the ones that come from an IP address starting w
 }
 ```
 
-Example: Restrict the Portal to authenticated users but make some sub-pages public:
+Example: Restrict the Portal to authenticated users but make a specific site public:
 
 ```json
 {
-    "/portal/public/**": {
+    "/portal/public-site/**": {
         "*": {
             "allow": "any"
         }
