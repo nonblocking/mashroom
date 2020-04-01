@@ -1,5 +1,5 @@
 {
-    "/portal/public/**": {
+    "/portal/public-site/**": {
         "*": {
             "allow": "any"
         }

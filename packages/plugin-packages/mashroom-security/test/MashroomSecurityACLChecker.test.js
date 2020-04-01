@@ -62,7 +62,7 @@ describe('MashroomSecurityACLChecker', () => {
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
 
         const req: any = {
-            path: '/portal/public/foo',
+            path: '/portal/public-site/foo',
             method: 'GET',
             pluginContext: {
                 loggerFactory
