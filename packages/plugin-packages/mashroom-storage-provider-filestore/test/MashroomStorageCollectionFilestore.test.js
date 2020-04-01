@@ -33,7 +33,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         await storage.insertOne({a: 'a'});
         const insertedItem = await storage.insertOne({foo: 'bar'});
 
-        expect(insertedItem).not.toBeNull();
+        expect(insertedItem).toBeTruthy();
         expect(insertedItem._id).toBeTruthy();
     });
 
@@ -47,9 +47,10 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result1 = await storage.findOne({b: 'b'});
         const result2 = await storage.findOne({b: 'a'});
 
-        expect(result1).not.toBeNull();
-        // $FlowFixMe - result1 cannot be null at this point
-        expect(result1.b).toBe('b');
+        expect(result1).toBeTruthy();
+        if (result1) {
+            expect(result1.b).toBe('b');
+        }
         expect(result2).toBeNull();
     });
 
@@ -66,8 +67,8 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result1 = await storage.find({b: 1});
         const result2 = await storage.find({b: 1}, 1);
 
-        expect(result1).not.toBeNull();
-        expect(result2).not.toBeNull();
+        expect(result1).toBeTruthy();
+        expect(result2).toBeTruthy();
         expect(result1.length).toBe(3);
         expect(result2.length).toBe(1);
     });
@@ -79,12 +80,13 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result = await storage.updateOne({a: 1}, {a: 2, x: 'x'});
         const updatedItem = await storage.findOne({a: 2});
 
-        expect(updatedItem).not.toBeNull();
+        expect(updatedItem).toBeTruthy();
         expect(result.modifiedCount).toBe(1);
-        // $FlowFixMe - result1 cannot be null at this point
-        expect(updatedItem._id).toBe(insertedItem._id);
         expect(insertedItem.a).toBe(1);
-        expect(updatedItem.a).toBe(2);
+        if (updatedItem) {
+            expect(updatedItem._id).toBe(insertedItem._id);
+            expect(updatedItem.a).toBe(2);
+        }
     });
 
     it('replaces the existing item with replaceOne', async () => {
@@ -94,13 +96,14 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result = await storage.replaceOne({a: 1}, {a: 2, x: 'x'});
         const updatedItem = await storage.findOne({a: 2});
 
-        expect(updatedItem).not.toBeNull();
+        expect(updatedItem).toBeTruthy();
         expect(result.modifiedCount).toBe(1);
-        // $FlowFixMe - result1 cannot be null at this point
-        expect(updatedItem._id).not.toBe(insertedItem._id);
         expect(insertedItem.a).toBe(1);
-        expect(updatedItem.a).toBe(2);
-        expect(updatedItem.b).toBeFalsy();
+        if (updatedItem) {
+            expect(updatedItem._id).not.toBe(insertedItem._id);
+            expect(updatedItem.a).toBe(2);
+            expect(updatedItem.b).toBeFalsy();
+        }
     });
 
     it('deletes the existing item with deleteOne', async () => {

@@ -23,7 +23,7 @@
         "eslint-plugin-jsx-a11y": "^6.2.3",
         "eslint-plugin-react": "^7.19.0",
         "file-loader": "^4.3.0",
-        "flow-bin": "^0.116.1",
+        "flow-bin": "^0.121.0",
         "jest": "^24.9.0",
         "lerna": "^3.20.2",
         "node-sass": "^4.13.1",
