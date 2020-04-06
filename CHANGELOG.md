@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.4.0 (6. April 2020)
+
  * Portal: The *sites* work now completely independent (all URLs are relative to <portal_path>/<site_path>).
    That means in particular:
      * You can have both public sites and private (protected) sites at the same time
@@ -33,7 +35,7 @@
     }
     ```
  * Security: Added a new method *canAuthenticateWithoutUserInteraction()* to the Security Provider interface that allows it
-   to check if a user could be logged in silently on public pages, which might be desirable.
+   to check if a user could be logged in silently on public pages, which could be desirable
  * Security: Added a new config property to the *mashroom-security* plugin that allows to forward specific query parameters
    to the authorization system (e.g. a hint which identity provider to use):
     ```
@@ -48,8 +50,8 @@
  * External MQTT Messaging Provider: Supports now MQTT 5
  * Removed support for Node 8
  * Added MongoDB storage provider
- * The security middleware regenerates the session now before and after a login instead of destroying it. Because session.destroy() removes the request.session poperty
-   completely but some security provider might need it during authentication.
+ * Security: The middleware regenerates the session now before and after a login instead of destroying it.
+   Because session.destroy() removes the request.session property completely but some security provider might need a session during authentication.
 
 ## 1.3.2 (22. February 2020)
 
