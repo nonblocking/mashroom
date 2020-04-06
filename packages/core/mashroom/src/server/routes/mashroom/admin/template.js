@@ -176,11 +176,11 @@ export default (content: string, req: ExpressRequest) => (`
         <h1>Mashroom Administration</h1>
         <nav>
             <ul>
-                <li class="menu-item ${req.path === '/mashroom/admin' ? 'active' : ''}"><a href="/mashroom/admin">Overview</a></li>
-                <li class="menu-item ${req.path === '/mashroom/admin/plugins' ? 'active' : ''}"><a href="/mashroom/admin/plugins">Plugins</a></li>
-                <li class="menu-item ${req.path === '/mashroom/admin/middleware' ? 'active' : ''}"><a href="/mashroom/admin/middleware">Middleware</a></li>
-                <li class="menu-item ${req.path === '/mashroom/admin/services' ? 'active' : ''}"><a href="/mashroom/admin/services">Services</a></li>
-                <li class="menu-item ${req.path === '/mashroom/admin/webapps' ? 'active' : ''}"><a href="/mashroom/admin/webapps">Webapps</a></li>
+                <li class="menu-item ${req.path === '/' ? 'active' : ''}"><a href="/mashroom/admin">Overview</a></li>
+                <li class="menu-item ${req.path === '/plugins' ? 'active' : ''}"><a href="/mashroom/admin/plugins">Plugins</a></li>
+                <li class="menu-item ${req.path === '/middleware' ? 'active' : ''}"><a href="/mashroom/admin/middleware">Middleware</a></li>
+                <li class="menu-item ${req.path === '/services' ? 'active' : ''}"><a href="/mashroom/admin/services">Services</a></li>
+                <li class="menu-item ${req.path === '/webapps' ? 'active' : ''}"><a href="/mashroom/admin/webapps">Webapps</a></li>
                 <li class="menu-item external"><a href="/mashroom/docs" target="_blank">Documentation</a></li>
             </ul>
         </nav>
