@@ -58,7 +58,7 @@ has similar concepts than a Java Portal Server.
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
 | Node.js             | 10.x, 12.x                                                                                                                     |
 | Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
-| Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permission (Page, App instance, Topic, ...)  |
+| Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
 | Storage             | MongoDB, Plain JSON Files                                                                                                      |
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
@@ -194,7 +194,7 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 
 ### Minimum Requirements
 
- * Node.js >= 8
+ * Node.js >= 10
 
 ### Install
 

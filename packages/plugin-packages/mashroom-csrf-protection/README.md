@@ -15,7 +15,7 @@ You can use the _MashroomCSRFService_ to get the current token.
 
 _Mashroom Portal_ automatically uses this plugin to secure all requests if available.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-csrf-protection** as *dependency*.
 

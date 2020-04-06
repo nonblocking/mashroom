@@ -5,7 +5,7 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration P
 
 Contains a demo Express web-app plugin.
 
-#### Usage
+## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-demo-webapp** as *dependency*.
 

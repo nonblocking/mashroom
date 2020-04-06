@@ -36,9 +36,9 @@ The plugin allows the following configuration properties:
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
 
 
-#### Browser support
+## Browser support
 
-The Browser support depends on the portal apps and the ES level they require. But the latest two versions of all current Browsers should work.
+The Browser support depends on the portal apps and the ES version they require to work. But the latest two versions of all current Browsers should work.
 
 To support older Browsers such as IE the Theme plugin should deliver the required polyfills. The *Mashroom Portal Default Theme* for example delivers
 all necessary polyfills for IE11.
