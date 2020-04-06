@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.3.2",
+    "version": "1.4.0",
     "files": [
         "dist/**"
     ],
@@ -19,13 +19,13 @@
         "@angular/language-service": "^9.0.7",
         "@angular/platform-browser": "^9.0.7",
         "@angular/platform-browser-dynamic": "^9.0.7",
-        "@mashroom/mashroom-portal": "1.3.2",
+        "@mashroom/mashroom-portal": "1.4.0",
         "@types/node": "^13.9.2",
         "core-js": "^3.6.4",
-        "zone.js": "^0.10.3",
         "rxjs": "^6.5.4",
         "tslint": "^6.1.0",
-        "typescript": "3.7.5"
+        "typescript": "3.7.5",
+        "zone.js": "^0.10.3"
     },
     "scripts": {
         "dev": "ng serve",
