@@ -26,7 +26,7 @@
                  "ips": ["1.2.3.4"]
              }
            }
-       } ,
+       },
        "/portal/public-site/**": {
            "*": {
                 "allow": "any"

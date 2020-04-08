@@ -7,17 +7,17 @@ This plugin adds a OpenID Connect/OAuth2 security provider that can be used to i
 all Identity Providers or Identity Platforms.
 
 Tested with:
- * [Github OAuth 2.0](https://developer.github.com/v3/oauth/)
+ * [Github OAuth 2.0](https://developer.github.com/v3/oauth)
  * [Google Identity Platform](https://developers.google.com/identity)
- * [Keylcoak Identity Provider](https://www.keycloak.org/)
+ * [Keylcoak Identity Provider](https://www.keycloak.org)
  * [Open AM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
 
 Should work with (among others):
  * [Auth0](https://auth0.com/docs/protocols/oidc)
- * [Facebook Login](https://developers.facebook.com/docs/facebook-login/)
- * [Gluu](https://gluu.org/docs/ce/api-guide/openid-connect-api/)
+ * [Facebook Login](https://developers.facebook.com/docs/facebook-login)
+ * [Gluu](https://gluu.org/docs/ce/api-guide/openid-connect-api)
  * [Microsoft Identity Platform](https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-overview)
- * [Okta](https://developer.okta.com/docs/reference/api/oidc/)
+ * [Okta](https://developer.okta.com/docs/reference/api/oidc)
  * [OneLogin](https://developers.onelogin.com/openid-connect)
  * [PingIdentity](https://www.pingidentity.com/developer/en/resources/openid-connect-developers-guide.html)
 

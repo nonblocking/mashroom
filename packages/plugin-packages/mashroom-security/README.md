@@ -48,14 +48,14 @@ A typical ACL configuration looks like this:
             }
         }
     },
-    **"/mashroom/**": {
+    "/mashroom/**": {
         "*": {
             "allow": {
                 "roles": ["Administrator"],
                 "ips": ["127.0.0.1", "::1"]
             }
         }
-    }**
+    }
 }
 ```
 
