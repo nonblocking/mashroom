@@ -99,11 +99,11 @@ And the expiration time of the refresh token defines how long the user can work 
 Setup:
 
  * Create a new client in your realm (e.g. *mashroom*)
- * In the _Settings_ set Access Type *confidental*
- * Make sure the _Valid Redirect URIs* contains your redirect URL (e.g. http://localhost:5050/*)
- * In the _Credentials_ tab you'll find the client secret
- * To map the roles to a scope/claim goto _Mappers_, click _Add Builtin_ and add a _realm roles_ mapper.
-   In the field _Token Claim Name_ enter _roles_.
+ * In the *Settings* tab set Access Type *confidential*
+ * Make sure the *Valid Redirect URIs* contains your redirect URL (e.g. http://localhost:5050/*)
+ * In the *Credentials* tab you'll find the client secret
+ * To map the roles to a scope/claim goto *Mappers*, click *Add Builtin* and add a *realm roles* mapper.
+   In the field *Token Claim Name* enter *roles*. Also check *Add to ID token*.
 
 You'll find more details about the configuration here: [https://www.keycloak.org/documentation.html](https://www.keycloak.org/documentation.html)
 
