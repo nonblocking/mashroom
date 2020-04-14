@@ -111,8 +111,10 @@ export default class PortalRestProxyController {
                         headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
                     }
                 }
-                if (typeof (user.securityHttpHeaders) === 'object') {
-                    headers = Object.assign({}, headers, user.securityHttpHeaders);
+                if (restProxyDef.sendBearerToken && user.bearerToken) {
+                    headers = Object.assign({}, headers, {
+                        'Authorization': `Bearer ${user.bearerToken}`,
+                    });
                 }
             }
 
