@@ -79,6 +79,7 @@ describe('PortalPageController', () => {
                 sendUserHeader: true,
                 sendPermissionsHeader: true,
                 sendRolesHeader: true,
+                sendBearerToken: true,
                 addHeaders: {
                     'X-EXTRA': 'test',
                 },
@@ -136,9 +137,7 @@ describe('PortalPageController', () => {
                         return {
                             username: 'john',
                             roles: ['User', 'Role2'],
-                            securityHttpHeaders: {
-                                'Authorization': 'Bearer mytoken123'
-                            }
+                            bearerToken: 'mytoken123'
                         };
                     },
                     isAdmin() {

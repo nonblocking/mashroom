@@ -1,4 +1,5 @@
-import {IdTokenClaims, IssuerMetadata, ResponseType, TokenSet, UserinfoResponse} from 'openid-client';
+
+import {IssuerMetadata, ResponseType, TokenSet} from 'openid-client';
 import {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 
 export type ExpressRequestWithSession = ExpressRequest & {

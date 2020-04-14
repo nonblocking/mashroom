@@ -169,6 +169,7 @@ To register a new portal-app plugin add this to _package.json_:
                             "sendUserHeader": false,
                             "sendRolesHeader": false,
                             "sendPermissionsHeader": false,
+                            "sendBearerToken": false,
                             "addHeaders": {},
                             "restrictToRoles": ["Role1"]
                        }
@@ -200,8 +201,8 @@ To register a new portal-app plugin add this to _package.json_:
          * _sendUserHeader_: Adds the header _X-USER-NAME_ that contains the authenticated user name
          * _sendRolesHeader_: Adds the header _X-USER-ROLES_ with a comma separated list of roles of the authenticated user
          * _sendPermissionsHeader_: Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_
+         * _sendBearerToken_: Add the Bearer token from the OIDC/OAuth2 authentication (if any)
          * _addHeaders_: Optional add some extra headers to each request (e.g. BASIC Authentication)
-           The _securityHttpHeaders_ of the authenticated user (e.g. Bearer) are passed automatically.
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
             If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL).
      * _appConfig_: The default app configuration

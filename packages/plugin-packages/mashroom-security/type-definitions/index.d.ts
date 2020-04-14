@@ -25,14 +25,7 @@ export type MashroomSecurityUser = {
     readonly email: string | null | undefined;
     readonly pictureUrl: string | null | undefined;
     readonly roles: MashroomSecurityRoles;
-
-    /*
-     * Headers that shall be passed to backends for this user (e.g. REST APIs).
-     * For example, in case of OAuth this could be a Bearer Authentication header.
-     */
-    readonly securityHttpHeaders?: {
-        [headerName: string]: string;
-    };
+    readonly bearerToken?: string;
 
     readonly [key: string]: any;
 };
@@ -171,6 +164,12 @@ export interface MashroomSecurityService {
         username: string,
         password: string,
     ): Promise<MashroomSecurityLoginResult>;
+
+    /**
+     * Find a security provider by name.
+     * Useful if you want to dispatch the authentication to a different provider.
+     */
+    getSecurityProvider(name: string): MashroomSecurityProvider | null | undefined;
 }
 
 export interface MashroomSecurityProvider {

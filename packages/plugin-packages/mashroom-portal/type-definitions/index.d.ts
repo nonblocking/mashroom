@@ -282,6 +282,7 @@ export type MashroomPortalProxyDefinition = {
     readonly sendUserHeader?: boolean;
     readonly sendPermissionsHeader?: boolean;
     readonly sendRolesHeader?: boolean;
+    readonly addBearerToken?: boolean,
     readonly addHeaders?: any;
     readonly restrictToRoles?: Array<string>;
 };

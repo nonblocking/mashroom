@@ -182,7 +182,9 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             return null;
         }
 
-        return user;
+        return Object.assign({}, user, {
+            bearerToken: authData.tokenSet.access_token,
+        });
     }
 
 }

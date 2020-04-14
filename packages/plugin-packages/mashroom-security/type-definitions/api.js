@@ -23,13 +23,8 @@ export type MashroomSecurityUser = {
     +email: ?string,
     +pictureUrl: ?string,
     +roles: MashroomSecurityRoles,
-    /*
-     * Headers that shall be passed to backends for this user (e.g. REST APIs).
-     * For example, in case of OAuth this could be a Bearer Authentication header.
-     */
-    +securityHttpHeaders?: {
-        [headerName: string]: string
-    },
+    +bearerToken?: string,
+
     +[string]: any
 }
 
@@ -123,6 +118,11 @@ export interface MashroomSecurityService {
      * Login user with given credentials (for form login).
      */
     login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult>;
+    /**
+     * Find a security provider by name.
+     * Useful if you want to dispatch the authentication to a different provider.
+     */
+    getSecurityProvider(name: string): ?MashroomSecurityProvider;
 }
 
 export interface MashroomSecurityProvider {

@@ -3,6 +3,36 @@
 
 ## [unreleased]
 
+ * Portal: Allow it to forward the Bearer token from the OIDC/OAuth2 authentication to the Microfrontend backend via rest proxy. Example:
+   ```json
+     "mashroom": {
+        "plugins": [
+           {
+                "name": "My Single Page App",
+                "type": "portal-app",
+                "bootstrap": "startMyApp",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ]
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "restProxies": {
+                        "myBff": {
+                            "targetUri": "http://10.2.3.4/api",
+                            "sendBearerToken": true
+                       }
+                    },
+                    "appConfig": {
+                        "myProperty": "foo"
+                    }
+                }
+            }
+        ]
+     }
+   ```
+
 ## 1.4.0 (6. April 2020)
 
  * Portal: The *sites* work now completely independent (all URLs are relative to <portal_path>/<site_path>).

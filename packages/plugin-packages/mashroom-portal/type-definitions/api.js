@@ -255,6 +255,7 @@ export type MashroomPortalProxyDefinition = {
     +sendUserHeader?: boolean,
     +sendPermissionsHeader?: boolean,
     +sendRolesHeader?: boolean,
+    +sendBearerToken?: boolean,
     +addHeaders?: any,
     +restrictToRoles?: Array<string>,
 }

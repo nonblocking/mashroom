@@ -272,9 +272,13 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         };
     }
 
-    _getSecurityProvider(logger: MashroomLogger): ?MashroomSecurityProvider {
+    getSecurityProvider(name: string) {
         const privateProps = privatePropsMap.get(this);
-        const securityProvider = privateProps && privateProps.securityProviderRegistry.findProvider(this._securityProviderName);
+        return privateProps && privateProps.securityProviderRegistry.findProvider(name);
+    }
+
+    _getSecurityProvider(logger: MashroomLogger): ?MashroomSecurityProvider {
+        const securityProvider = this.getSecurityProvider(this._securityProviderName);
         if (!securityProvider) {
             logger.warn(`Cannot authenticate because the security provider is not (yet) loaded: ${this._securityProviderName}`);
             return null;

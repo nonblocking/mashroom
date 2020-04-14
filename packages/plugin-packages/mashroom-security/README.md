@@ -215,6 +215,11 @@ export interface MashroomSecurityService {
      * Login user with given credentials (for form login).
      */
     login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult>;
+    /**
+     * Find a security provider by name.
+     * Useful if you want to dispatch the authentication to a different provider.
+     */
+    getSecurityProvider(name: string): MashroomSecurityProvider | null | undefined;
 }
 ```
 
