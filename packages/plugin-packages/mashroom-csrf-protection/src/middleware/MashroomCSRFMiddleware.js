@@ -10,11 +10,9 @@ const CSRF_QUERY_PARM_NAME = 'csrfToken';
 export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareType {
 
     _safeMethods: Array<string>;
-    _logger: MashroomLogger;
 
-    constructor(safeMethods: Array<string>, loggerFactory: MashroomLoggerFactory) {
+    constructor(safeMethods: Array<string>) {
         this._safeMethods = safeMethods;
-        this._logger = loggerFactory('mashroom.csrf.middleware');
     }
 
     middleware() {
@@ -24,6 +22,8 @@ export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareTyp
                 return;
             }
 
+            const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.csrf.middleware');
+
             try {
                 const csrfService: MashroomCSRFService = req.pluginContext.services.csrf.service;
 
@@ -32,16 +32,16 @@ export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareTyp
                     token = req.get(CSRF_HEADER_NAME);
                 }
 
-                this._logger.debug(`Checking CSRF token for request ${req.method} ${req.originalUrl}: ${token || '<none>'}`);
+                logger.debug(`Checking CSRF token for request ${req.method} ${req.originalUrl}: ${token || '<none>'}`);
 
                 if (!token) {
-                    this._logger.error(`Rejecting request without CSRF token ${req.method} ${req.originalUrl}`);
+                    logger.error(`Rejecting request without CSRF token ${req.method} ${req.originalUrl}`);
                     res.sendStatus(403);
                     return;
                 }
 
                 if (!csrfService.isValidCSRFToken(req, token)) {
-                    this._logger.error(`Rejecting request with invalid CSRF token ${req.method} ${req.originalUrl}`);
+                    logger.error(`Rejecting request with invalid CSRF token ${req.method} ${req.originalUrl}`);
                     res.sendStatus(403);
                     return;
                 }
@@ -50,7 +50,7 @@ export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareTyp
                 next();
 
             } catch (error) {
-                this._logger.error('Checking CSRF token failed', error);
+                logger.error('Checking CSRF token failed', error);
                 res.sendStatus(500);
             }
         };
