@@ -22,6 +22,7 @@
         "@mashroom/mashroom-csrf-protection": "1.4.0",
         "@mashroom/mashroom-i18n": "1.4.0",
         "@mashroom/mashroom-security": "1.4.0",
+        "@mashroom/mashroom-vhost-path-mapper": "1.0.0",
         "eslint": "^6.8.0",
         "node-sass": "^4.13.1",
         "node-sass-tilde-importer": "^1.0.2",

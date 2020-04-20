@@ -1,10 +1,12 @@
 {
     "name": "Mashroom Test Server 1",
     "port": 5050,
-    "pluginPackageFolders": [{
-        "path": "../../plugin-packages",
-        "devMode": true
-    }],
+    "pluginPackageFolders": [
+        {
+            "path": "../../plugin-packages",
+            "devMode": true
+        }
+    ],
     "indexPage": "/",
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
@@ -18,14 +20,18 @@
         "Mashroom Portal Remote App Registry Kubernetes Webapp"
     ],
     "plugins": {
-        "Mashroom Portal WebApp": {
-            "adminApp": "Mashroom Portal Admin App",
-            "defaultTheme": "Mashroom Portal Default Theme",
-            "warnBeforeAuthenticationExpiresSec": 60,
-            "autoExtendAuthentication": false
+        "Mashroom VHost Path Mapper Middleware": {
+            "hosts": {
+                "localhost:8888": {
+                    "frontendBasePath": "/mashroom-portal",
+                    "mapping": {
+                        "/login": "/login",
+                        "/": "/portal/web"
+                    }
+                }
+            }
         },
-        "Mashroom Portal Default Theme": {
-            "showEnvAndVersions": true
+        "Mashroom Helmet Middleware": {
         },
         "Mashroom Session Middleware": {
             "provider": "memory",
@@ -37,7 +43,9 @@
         },
         "Mashroom Security Services": {
             "provider": "Mashroom Security Simple Provider",
-            "forwardQueryHintsToProvider": ["test1"],
+            "forwardQueryHintsToProvider": [
+                "test1"
+            ],
             "acl": "./acl.json"
         },
         "Mashroom Security Simple Provider": {
@@ -63,9 +71,6 @@
             },
             "styleFile": "./login_style.css"
         },
-        "Mashroom Helmet Middleware": {
-
-        },
         "Mashroom Storage Services": {
             "provider": "Mashroom Storage Filestore Provider"
         },
@@ -76,7 +81,10 @@
             "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
         },
         "Mashroom Internationalization Services": {
-            "availableLanguages": ["en", "de"],
+            "availableLanguages": [
+                "en",
+                "de"
+            ],
             "defaultLanguage": "en"
         },
         "Mashroom Http Proxy Services": {
@@ -91,7 +99,10 @@
         },
         "Mashroom Messaging Services": {
             "externalProvider": null,
-            "externalTopics": ["external1", "external2"],
+            "externalTopics": [
+                "external1",
+                "external2"
+            ],
             "userPrivateBaseTopic": "user",
             "enableWebSockets": true,
             "topicACL": "./topic_acl.json"
@@ -99,6 +110,15 @@
         "Mashroom Messaging External Provider AMQP": {
             "brokerUsername": "admin",
             "brokerPassword": "admin"
+        },
+        "Mashroom Portal WebApp": {
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "warnBeforeAuthenticationExpiresSec": 60,
+            "autoExtendAuthentication": false
+        },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": true
         },
         "Mashroom Portal Remote App Registry Webapp": {
             "showAddRemoteAppForm": true

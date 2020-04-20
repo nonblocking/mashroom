@@ -11,6 +11,7 @@ import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/ma
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
+import type {MashroomVHostPathMapperService} from '@mashroom/mashroom-vhost-path-mapper/type-definitions';
 
 const app = express<ExpressRequest, ExpressResponse>();
 
@@ -86,6 +87,8 @@ app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
 
 const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService: MashroomI18NService, lang: string, error?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
+    const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper && req.pluginContext.services.vhostPathMapper.service;
+    const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
 
     const queryParams: Array<string> = [];
     if (req.query) {
@@ -112,7 +115,7 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
 
     res.render('login', {
         loginFormTitle: i18nService.translate(req, context.loginFormTitle),
-        baseUrl: req.baseUrl,
+        baseUrl: (vhostMappingInfo && vhostMappingInfo.frontendPath) || req.baseUrl,
         query,
         error,
         helpers: {

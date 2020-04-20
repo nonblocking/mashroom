@@ -7,6 +7,7 @@
     }],
     "indexPage": "/portal",
     "ignorePlugins": [
+        "Mashroom VHost Path Mapper Middleware",
         "Mashroom Storage Filestore Provider",
         "Mashroom LDAP Security Provider",
         "Mashroom Messaging External Provider AMQP",

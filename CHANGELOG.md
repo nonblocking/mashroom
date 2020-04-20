@@ -3,6 +3,30 @@
 
 ## [unreleased]
 
+## 1.4.1 (20. April 2020)
+
+ * Added a virtual host path mapper plugin: Allows it to map internal paths based on virtual hosts and web apps to get
+   the actual "frontend path" to generate absolute links at the same time.
+   Can be used to expose Portal *Sites* to virtual hosts like so:
+
+   https://www.my-company.com/new-portal -> http://internal-portal-host/portal/web
+
+   For this example configure your reverse proxy to forward calls from *https://www.my-company.com/public* to *http://internal-portal-host/* and
+   additionally configure the new plugin like this:
+
+   ```json
+   "Mashroom VHost Path Mapper Middleware": {
+     "hosts": {
+       "www.my-company.com": {
+         "frontendBasePath": "/new-portal",
+           "mapping": {
+             "/login": "/login",
+             "/": "/portal/web"
+           }
+        }
+     }
+   }
+   ```
  * Portal: Allow it to forward the Bearer token from the OIDC/OAuth2 authentication to the Microfrontend backend via rest proxy. Example:
    ```json
      "mashroom": {
@@ -36,32 +60,39 @@
 ## 1.4.0 (6. April 2020)
 
  * Portal: The *sites* work now completely independent (all URLs are relative to <portal_path>/<site_path>).
-   That means in particular:
-     * You can have both public sites and private (protected) sites at the same time
-     * It is possible to map sites to virtual hosts (via reverse proxy). E.g.
-       * https://www.my-company.com -> /portal/web
-       * https://customer-portal.my-company.com -> /portal/customer
+   That means in particular you can have both public sites and private (protected) sites at the same time with an ACL configuration like this:
+     ```json
+       {
+         "/portal/public-site/**": {
+           "*": {
+             "allow": "any"
+           }
+       }
+       "/portal/**": {
+         "*": {
+           "allow": {
+             "roles": ["Authenticated"]
+           }
+         }
+       }
+     }
+     ```
  * Security: Extended the ACL rules:
    * "any" is now a possible value for allow/deny; this matches also anonymous users which is useful for public sub-pages
    * it is now possible to pass an object to allow/deny with a list of roles and ip addresses
     ```json
     {
-       "/portal/**": {
-           "*": {
-             "allow": {
-                 "roles": ["Authenticated"],
-                 "ips": ["10.1.2.*", "168.**"]
-             },
-             "deny": {
-                 "ips": ["1.2.3.4"]
-             }
-           }
-       },
-       "/portal/public-site/**": {
-           "*": {
-                "allow": "any"
-            }
+      "/portal/**": {
+        "*": {
+          "allow": {
+            "roles": ["Authenticated"],
+            "ips": ["10.1.2.*", "168.**"]
+          },
+          "deny": {
+            "ips": ["1.2.3.4"]
+          }
         }
+      }
     }
     ```
  * Security: Added a new method *canAuthenticateWithoutUserInteraction()* to the Security Provider interface that allows it

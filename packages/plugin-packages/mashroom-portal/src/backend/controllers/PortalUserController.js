@@ -1,6 +1,7 @@
 // @flow
 
-import { isAjaxRequest } from '../utils/request_utils';
+import {isAjaxRequest} from '../utils/request_utils';
+import {getFrontendSiteBasePath} from '../utils/path_utils';
 
 import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
@@ -67,9 +68,9 @@ export default class PortalLanguageController {
             await securityService.revokeAuthentication(req);
 
             if (!isAjaxRequest(req)) {
-                // Redirect to start page
-                const indexPage = req.pluginContext.serverConfig.indexPage;
-                res.redirect(indexPage);
+                // Redirect to the site root
+                const siteRoot = getFrontendSiteBasePath(req);
+                res.redirect(siteRoot);
             } else {
                 res.end();
             }

@@ -25,7 +25,7 @@ import {
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
 } from '../constants';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
-import {getPortalPath, getSitePath, getApiResourcesBaseUrl} from '../utils/path_utils';
+import {getPortalPath, getSitePath, getFrontendSiteBasePath, getFrontendApiResourcesBasePath} from '../utils/path_utils';
 import {getPageData} from '../utils/model_utils';
 import {getUser, isAppPermitted, isPagePermitted, isSitePermitted, isSignedIn, isAdmin, forceAuthentication} from '../utils/security_utils';
 
@@ -151,13 +151,13 @@ export default class PortalPageRenderController {
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
             messagingConnectPath, privateUserTopic, devMode);
         const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName);
-        const siteBasePath = `${portalPath}${sitePath}`;
+        const siteBasePath = getFrontendSiteBasePath(req);
         let resourcesBasePath = null;
         if (themeName) {
             const encodedThemeName = encodeURIComponent(themeName);
-            resourcesBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
+            resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
         }
-        const apiBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_API_PATH}`;
+        const apiBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}`;
 
         const localizedPageRef = this._localizePageRef(req, pageRef);
         const mergedPageData = Object.assign({}, localizedPageRef, page);
@@ -265,7 +265,7 @@ export default class PortalPageRenderController {
                      autoExtendAuthentication: boolean, messagingConnectPath: ?string, privateUserTopic: ?string, devMode: boolean) {
         return `
             <script>
-                window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${getApiResourcesBaseUrl(req)}${PORTAL_APP_API_PATH}';
+                window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}';
                 window['${WINDOW_VAR_PORTAL_SITE_URL}'] = '${portalPrefix}${sitePath}';
                 window['${WINDOW_VAR_PORTAL_SITE_ID}'] = '${siteId}';
                 window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
@@ -278,7 +278,7 @@ export default class PortalPageRenderController {
                 ${privateUserTopic ? `window['${WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC}'] = '${privateUserTopic}';` : ''};
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true` : ''}
             </script>
-            <script src="${getApiResourcesBaseUrl(req)}/${PORTAL_JS_FILE}?v=${this.startTimestamp}"></script>
+            <script src="${getFrontendApiResourcesBasePath(req)}/${PORTAL_JS_FILE}?v=${this.startTimestamp}"></script>
         `;
     }
 

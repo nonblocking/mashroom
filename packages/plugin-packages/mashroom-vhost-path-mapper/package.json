@@ -1,0 +1,60 @@
+{
+    "name": "@mashroom/mashroom-vhost-path-mapper",
+    "description": "Path mapping based on virtual hosts",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@mashroom/mashroom": "1.4.0",
+        "@types/express": "^4.17.3",
+        "@types/jest": "^25.1.4",
+        "eslint": "^6.8.0",
+        "express": "^4.17.1",
+        "jest": "^25.1.0",
+        "typescript": "^3.8.3",
+        "webpack-cli": "^3.3.11",
+        "webpack-dev-server": "^3.10.3"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src test --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest --passWithNoTests",
+        "build": "babel src --extensions '.ts' -d dist"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom VHost Path Mapper Middleware",
+                "type": "middleware",
+                "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
+                "defaultConfig": {
+                    "order": -1000,
+                    "hosts": {}
+                }
+            },
+            {
+                "name": "Mashroom VHost Path Mapper Service",
+                "type": "services",
+                "namespace": "vhostPathMapper",
+                "bootstrap": "./dist/services/mashroom-bootstrap-services.js"
+            }
+        ]
+    }
+}

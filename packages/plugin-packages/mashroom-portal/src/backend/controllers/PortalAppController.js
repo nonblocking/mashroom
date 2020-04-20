@@ -8,7 +8,7 @@ import {
     PORTAL_APP_REST_PROXY_BASE_PATH,
 } from '../constants';
 import {portalAppContext} from '../utils/logging_utils';
-import {getSitePath, getApiResourcesBaseUrl} from '../utils/path_utils';
+import {getSitePath, getFrontendApiResourcesBasePath} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage} from '../utils/model_utils';
 import {getUser, isAppPermitted, calculatePermissions, isSitePathPermitted} from '../utils/security_utils';
 
@@ -88,9 +88,9 @@ export default class PortalAppController {
             }
 
             const encodedPortalAppName = encodeURIComponent(portalApp.name);
-            const resourcesBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
-            const sharedResourcesBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
-            const restProxyBasePath = `${getApiResourcesBaseUrl(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
+            const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
+            const sharedResourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
+            const restProxyBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
             const restProxyPaths = {};
             if (portalApp.restProxies) {
                 for (const proxyId in portalApp.restProxies) {
