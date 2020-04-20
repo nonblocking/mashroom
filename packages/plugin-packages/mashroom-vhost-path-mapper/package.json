@@ -6,7 +6,8 @@
     "license": "MIT",
     "version": "1.4.1",
     "files": [
-        "dist/**"
+        "dist/**",
+        "type-definitions/*"
     ],
     "devDependencies": {
         "@babel/cli": "^7.8.4",
