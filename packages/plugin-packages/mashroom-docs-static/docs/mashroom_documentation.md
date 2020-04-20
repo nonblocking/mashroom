@@ -29,10 +29,10 @@ has similar concepts than a Java Portal Server.
 ### Key features
 
  * Integration of existing _Express_ webapps
- * Shared middleware and services
+ * Shared middlewares and services
  * Out of the box services for security, internationalization, messaging, storage and more
  * Pluggable providers for security, storage and and many other services
- * Role based permissions for URL's (ACL's)
+ * Role and IP based access control for URLs
  * Single configuration file to override plugin default configurations
  * Hot deploy, undeploy and reload of all kind of plugins
  * No compile or runtime dependencies to the server
@@ -45,6 +45,7 @@ has similar concepts than a Java Portal Server.
     * Proxying of REST API calls to prevent CORS problems
     * Life registration of _Remote Apps_ (SPA's that run on a different server)
     * JS API to programmatically load portal apps into an arbitrary DOM node (even within another app)
+    * Support for multiple sites that can be mapped to virtual hosts
     * Role based permissions for pages and apps
     * Support for global libraries that can be shared between the apps
     * Support for theming
