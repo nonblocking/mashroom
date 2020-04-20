@@ -27,14 +27,15 @@
      }
    }
    ```
- * Portal: Allow it to forward the Bearer token from the OIDC/OAuth2 authentication to the Microfrontend backend via rest proxy. Example:
+ * Portal: Allow it to forward the Bearer token from the OIDC/OAuth2 authentication to the Portal app backend via rest proxy.
+   Example Portal app config:
    ```json
      "mashroom": {
         "plugins": [
            {
-                "name": "My Single Page App",
+                "name": "My Microfrontend",
                 "type": "portal-app",
-                "bootstrap": "startMyApp",
+                "bootstrap": "startMyMicrofrontend",
                 "resources": {
                     "js": [
                         "bundle.js"
