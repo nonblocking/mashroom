@@ -44,6 +44,7 @@
                 "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
                 "defaultConfig": {
                     "order": -1000,
+                    "considerHttpHeaders": ["x-forwarded-host"],
                     "hosts": {}
                 }
             },

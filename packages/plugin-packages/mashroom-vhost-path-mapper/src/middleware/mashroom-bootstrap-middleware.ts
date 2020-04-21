@@ -4,8 +4,8 @@ import MashroomVHostPathMapperMiddleware from './MashroomVHostPathMapperMiddlewa
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig) => {
-    const { hosts } = pluginConfig;
-    const middleware = new MashroomVHostPathMapperMiddleware(hosts);
+    const { considerHttpHeaders, hosts } = pluginConfig;
+    const middleware = new MashroomVHostPathMapperMiddleware(considerHttpHeaders, hosts);
     return middleware.middleware();
 };
 

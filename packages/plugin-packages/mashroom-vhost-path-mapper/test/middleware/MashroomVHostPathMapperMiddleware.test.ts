@@ -12,7 +12,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
 
     it('does nothing if no vhosts defined', () => {
         const vhostDefinitions: VHostDefinitions = {};
-        const middleware = new MashroomVHostPathMapperMiddleware(vhostDefinitions).middleware();
+        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
 
         const req: any = {
             hostname: 'localhost',
@@ -35,7 +35,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
                 }
             }
         };
-        const middleware = new MashroomVHostPathMapperMiddleware(vhostDefinitions).middleware();
+        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
 
         const req: any = {
             hostname: 'my-company.com',
@@ -62,7 +62,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
                 }
             }
         };
-        const middleware = new MashroomVHostPathMapperMiddleware(vhostDefinitions).middleware();
+        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
 
         const req: any = {
             hostname: 'my-company.com',

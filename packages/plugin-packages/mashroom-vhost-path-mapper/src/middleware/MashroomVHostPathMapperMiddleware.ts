@@ -14,7 +14,7 @@ import type {MashroomVHostPathMapperMiddleware as MashroomVHostPathMapperMiddlew
 
 export default class MashroomVHostPathMapperMiddleware implements MashroomVHostPathMapperMiddlewareType {
 
-    constructor(private vhostDefinitions: VHostDefinitions) {
+    constructor(private considerHttpHeaders: Array<string>, private vhostDefinitions: VHostDefinitions) {
     }
 
     middleware() {
@@ -22,7 +22,7 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
             const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.vhost.pathRewrite.middleware');
 
             try {
-                const host = determineHost(req);
+                const host = determineHost(this.considerHttpHeaders, req);
                 logger.debug('Determined host', host);
 
                 const hostDefinition = findHostDefinition(host, this.vhostDefinitions);

@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Virtual host path mapper: Added a config property to explicitly set the http headers that
+   should be considered (default is x-forwarded-host).
+
 ## 1.4.1 (20. April 2020)
 
  * Added a virtual host path mapper plugin: Allows it to map internal paths based on virtual hosts and web apps to get

@@ -25,6 +25,7 @@ and the plugin like this:
 {
   "plugins": {
        "Mashroom VHost Path Mapper Middleware": {
+           "considerHttpHeaders": ["x-my-custom-host-header", "x-forwarded-host"],
            "hosts": {
               "www.my-company.com": {
                  "frontendBasePath": "/web",
@@ -53,6 +54,9 @@ Port based virtual hosts (like localhost:8080) are also possible but only if the
 The mapping rules do not support regular expressions.
 
 The *frontendBasePath* is optional and */* by default.
+
+The *considerHttpHeaders* property is also optional and can be used to detect the host based on some custom header.
+The first header that is present will be used (so the order in the list specifies the priority).
 
 ## Services
 
