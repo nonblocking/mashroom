@@ -46,6 +46,21 @@ describe('determine_host', () => {
         });
     });
 
+    it('determines a host with forwarding header when it contains multiple entries',  () => {
+        const req: any = {
+            hostname: 'my-host.at',
+            headers: {
+                host: 'my-host.at',
+                'x-forwarded-host': 'my-original-host.at , just-another-host.at'
+            }
+        };
+
+        expect(determineHost(['x-forwarded-host'], req)).toEqual({
+            hostname: 'my-original-host.at',
+            port: undefined,
+        });
+    });
+
     it('determines a host with a port and a forwarding header',  () => {
         const req: any = {
             hostname: 'my-host.at',

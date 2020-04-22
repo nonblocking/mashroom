@@ -14,7 +14,7 @@ export default (considerHttpHeaders: Array<string>, req: ExpressRequest): Determ
                 if (Array.isArray(forwardingHeader)) {
                     hostname = forwardingHeader[0];
                 } else {
-                    hostname = forwardingHeader;
+                    hostname = forwardingHeader.split(',')[0];
                 }
                 break;
             }
@@ -24,6 +24,8 @@ export default (considerHttpHeaders: Array<string>, req: ExpressRequest): Determ
     if (!hostname) {
         hostname = req.hostname;
     }
+
+    hostname = hostname.trim();
 
     if (hostHeader && hostHeader.indexOf(':') !== -1) {
         const [hostFromHeader, portFromHeader] = hostHeader.split(':');

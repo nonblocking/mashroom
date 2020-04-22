@@ -115,7 +115,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps locations (reverse mapping)',  () => {
+    it('maps location header',  () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/foo',
@@ -135,7 +135,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps locations when target is root (reverse mapping)',  () => {
+    it('maps location header when target is root',  () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/foo',
@@ -155,7 +155,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps locations with frontendPath (reverse mapping)',  () => {
+    it('maps location header with frontendPath',  () => {
         const hostDefinition: VHostDefinition = {
             frontendBasePath: '/web',
             mapping: {
