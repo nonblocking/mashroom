@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Portal: If the REST proxy property *sendUserHeader* is true the following headers will be sent additionally with each REST request:
+     * X-USER-DISPLAY-NAME
+     * X-USER-EMAIL
  * Portal: Fixed mapping a Site to a virtual host when the frontend base path is root
  * Virtual host path mapper: Added a config property to explicitly set the http headers that
    should be considered (default is x-forwarded-host).

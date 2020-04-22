@@ -5,6 +5,8 @@ import {
     HTTP_HEADER_REST_PROXY_USER,
     HTTP_HEADER_REST_PROXY_ROLES,
     HTTP_HEADER_REST_PROXY_PERMISSIONS,
+    HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME,
+    HTTP_HEADER_REST_PROXY_USER_EMAIL,
 } from '../constants';
 import {
     calculatePermissions,
@@ -102,6 +104,12 @@ export default class PortalRestProxyController {
                 if (restProxyDef.sendUserHeader || restProxyDef.sendPermissionsHeader || restProxyDef.sendRolesHeader) {
                     if (restProxyDef.sendUserHeader) {
                         headers[HTTP_HEADER_REST_PROXY_USER] = user.username;
+                        if (user.displayName) {
+                            headers[HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME] = user.displayName;
+                        }
+                        if (user.email) {
+                            headers[HTTP_HEADER_REST_PROXY_USER_EMAIL] = user.email;
+                        }
                     }
                     if (restProxyDef.sendRolesHeader) {
                         headers[HTTP_HEADER_REST_PROXY_ROLES] = user.roles.join(',');

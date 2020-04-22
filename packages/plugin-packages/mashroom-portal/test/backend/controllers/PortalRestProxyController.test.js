@@ -136,6 +136,8 @@ describe('PortalPageController', () => {
                     getUser() {
                         return {
                             username: 'john',
+                            displayName: 'John Do',
+                            email: 'john.do@gmail.com',
                             roles: ['User', 'Role2'],
                             bearerToken: 'mytoken123'
                         };
@@ -248,6 +250,8 @@ describe('PortalPageController', () => {
         expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api?x=2');
         expect(httpProxyServiceForwardMock.mock.calls[0][3]).toEqual({
             'X-USER-NAME': 'john',
+            'X-USER-DISPLAY-NAME': 'John Do',
+            'X-USER-EMAIL': 'john.do@gmail.com',
             'X-USER-PERMISSIONS': 'edit',
             'X-USER-ROLES': 'User,Role2',
             'Authorization': 'Bearer mytoken123',
