@@ -198,7 +198,7 @@ To register a new portal-app plugin add this to _package.json_:
      * _rolePermissions_: Optional mapping between app specific roles. This corresponds to the permission object passed with the user information to the app.
      * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
          * _targetUri_: The target URI
-         * _sendUserHeader_: Adds the header _X-USER-NAME_ that contains the authenticated user name
+         * _sendUserHeader_: Adds the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user
          * _sendRolesHeader_: Adds the header _X-USER-ROLES_ with a comma separated list of roles of the authenticated user
          * _sendPermissionsHeader_: Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_
          * _sendBearerToken_: Add the Bearer token from the OIDC/OAuth2 authentication (if any)
