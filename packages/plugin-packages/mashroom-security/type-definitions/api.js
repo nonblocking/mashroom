@@ -55,7 +55,7 @@ export interface MashroomSecurityService {
      */
     getUser(request: ExpressRequest): ?MashroomSecurityUser;
     /**
-     * Get extra HTTP headers that should be send with Backend/API calls to given URI.
+     * Get extra HTTP headers that should be send with backend/API calls to given URI.
      */
     getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
     /**
@@ -165,8 +165,8 @@ export interface MashroomSecurityProvider {
      */
     getUser(request: ExpressRequest): ?MashroomSecurityUser;
     /**
-     * Get extra HTTP headers that should be send which each Backend/API call.
-     * Can be used to add some extra context or a bearer token.
+     * Get extra HTTP headers that should be send with backend/API calls to given URI.
+     * Can be used to add some extra context or an access token.
      */
     getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
 }
