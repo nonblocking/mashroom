@@ -166,10 +166,8 @@ To register a new portal-app plugin add this to _package.json_:
                     "restProxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v3",
-                            "sendUserHeader": false,
-                            "sendRolesHeader": false,
+                            "sendUserHeaders": false,
                             "sendPermissionsHeader": false,
-                            "sendBearerToken": false,
                             "addHeaders": {},
                             "restrictToRoles": ["Role1"]
                        }
@@ -199,9 +197,7 @@ To register a new portal-app plugin add this to _package.json_:
      * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
          * _targetUri_: The target URI
          * _sendUserHeader_: Adds the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user
-         * _sendRolesHeader_: Adds the header _X-USER-ROLES_ with a comma separated list of roles of the authenticated user
          * _sendPermissionsHeader_: Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_
-         * _sendBearerToken_: Add the Bearer token from the OIDC/OAuth2 authentication (if any)
          * _addHeaders_: Optional add some extra headers to each request (e.g. BASIC Authentication)
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
             If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL).

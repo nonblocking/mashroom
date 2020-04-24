@@ -75,7 +75,8 @@ describe('http_upgrade_handler', () => {
                                     displayName: 'John',
                                     email: null,
                                     pictureUrl: null,
-                                    roles: ['Role2', 'Role3']
+                                    roles: ['Role2', 'Role3'],
+                                    extraData: null,
                                 }
                             }
                         }
@@ -121,7 +122,8 @@ describe('http_upgrade_handler', () => {
                                     displayName: 'John',
                                     email: null,
                                     pictureUrl: null,
-                                    roles: ['Role2', 'Role1']
+                                    roles: ['Role2', 'Role1'],
+                                    extraData: null,
                                 }
                             }
                         }

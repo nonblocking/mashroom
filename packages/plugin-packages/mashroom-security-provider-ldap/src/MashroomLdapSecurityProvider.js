@@ -113,7 +113,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 email: user.mail,
                 pictureUrl: null,
                 roles,
-                groups
+                extraData: null,
             };
 
             logger.debug('User successfully authenticated:', mashroomUser);
@@ -141,6 +141,10 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             return null;
         }
         return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+    }
+
+    getApiSecurityHeaders() {
+        return null;
     }
 
     async _getUserGroups(user: LdapEntry, logger: MashroomLogger): Promise<Array<string>> {

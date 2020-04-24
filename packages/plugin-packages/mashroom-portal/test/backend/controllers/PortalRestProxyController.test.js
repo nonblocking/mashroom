@@ -76,10 +76,8 @@ describe('PortalPageController', () => {
         restProxies: {
             'my-proxy': {
                 targetUri: 'https://www.mashroom-server.com/api',
-                sendUserHeader: true,
+                sendUserHeaders: true,
                 sendPermissionsHeader: true,
-                sendRolesHeader: true,
-                sendBearerToken: true,
                 addHeaders: {
                     'X-EXTRA': 'test',
                 },
@@ -139,7 +137,6 @@ describe('PortalPageController', () => {
                             displayName: 'John Do',
                             email: 'john.do@gmail.com',
                             roles: ['User', 'Role2'],
-                            bearerToken: 'mytoken123'
                         };
                     },
                     isAdmin() {
@@ -253,8 +250,6 @@ describe('PortalPageController', () => {
             'X-USER-DISPLAY-NAME': 'John Do',
             'X-USER-EMAIL': 'john.do@gmail.com',
             'X-USER-PERMISSIONS': 'edit',
-            'X-USER-ROLES': 'User,Role2',
-            'Authorization': 'Bearer mytoken123',
             'X-EXTRA': 'test',
         });
     });

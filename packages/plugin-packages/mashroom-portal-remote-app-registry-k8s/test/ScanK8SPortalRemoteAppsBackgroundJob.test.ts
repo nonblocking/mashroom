@@ -39,7 +39,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             restProxies: {
                 'bff': {
                     targetUri: 'http://localhost:4444/api',
-                    sendUserHeader: true,
+                    sendUserHeaders: true,
                     sendPermissionsHeader: true
                 }
             },
@@ -111,7 +111,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
                     bff:
                         {
                             targetUri: 'http://my-service.default:6789/api',
-                            sendUserHeader: true,
+                            sendUserHeaders: true,
                             sendPermissionsHeader: true
                         }
                 },

@@ -3,7 +3,10 @@
 
 ## [unreleased]
 
- * Portal: If the REST proxy property *sendUserHeader* is true the following headers will be sent additionally with each REST request:
+ * Security Provider: Added new method *getApiSecurityHeaders(req, targetUri)* that allows it to add security headers to backend/API calls.
+   Useful to add extra user context or access tokens to backend requests.
+ * Portal: Removed the REST proxy property *sendRoles* because the concept of permissions should be used in backends as well.
+ * Portal: If the REST proxy property *sendUserHeaders* is true the following headers will be sent additionally with each REST request:
      * X-USER-DISPLAY-NAME
      * X-USER-EMAIL
  * Portal: Fixed mapping a Site to a virtual host when the frontend base path is root
@@ -33,36 +36,6 @@
         }
      }
    }
-   ```
- * Portal: Allow it to forward the Bearer token from the OIDC/OAuth2 authentication to the Portal app backend via rest proxy.
-   Example Portal app config:
-   ```json
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Microfrontend",
-                "type": "portal-app",
-                "bootstrap": "startMyMicrofrontend",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
-                },
-                "defaultConfig": {
-                    "resourcesRoot": "./dist",
-                    "restProxies": {
-                        "myBff": {
-                            "targetUri": "http://10.2.3.4/api",
-                            "sendBearerToken": true
-                       }
-                    },
-                    "appConfig": {
-                        "myProperty": "foo"
-                    }
-                }
-            }
-        ]
-     }
    ```
 
 ## 1.4.0 (6. April 2020)

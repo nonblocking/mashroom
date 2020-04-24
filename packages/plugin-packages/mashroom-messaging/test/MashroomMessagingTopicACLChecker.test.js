@@ -16,7 +16,8 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['GroupX', 'Role5'])
+            roles: Object.freeze(['GroupX', 'Role5']),
+            extraData: null,
         };
 
         expect(aclChecker.allowed('/foo/bar/2', user)).toBeTruthy();
@@ -31,7 +32,8 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role1', 'Role5'])
+            roles: Object.freeze(['Role1', 'Role5']),
+            extraData: null,
         };
 
         expect(aclChecker.allowed('/foo/bar/2', user)).toBeFalsy();
@@ -46,7 +48,8 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role1', 'Role5'])
+            roles: Object.freeze(['Role1', 'Role5']),
+            extraData: null,
         };
 
         expect(aclChecker.allowed('/my/topic', user)).toBeFalsy();

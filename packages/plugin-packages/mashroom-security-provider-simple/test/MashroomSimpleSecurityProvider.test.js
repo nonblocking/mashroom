@@ -80,7 +80,8 @@ describe('MashroomSimpleSecurityProvider', () => {
             roles: [
                 'Editor'
             ],
-            username: 'john'
+            username: 'john',
+            extraData: null,
         });
     });
 

@@ -101,28 +101,19 @@ export default class PortalRestProxyController {
 
             let headers = {};
             if (user) {
-                if (restProxyDef.sendUserHeader || restProxyDef.sendPermissionsHeader || restProxyDef.sendRolesHeader) {
-                    if (restProxyDef.sendUserHeader) {
-                        headers[HTTP_HEADER_REST_PROXY_USER] = user.username;
-                        if (user.displayName) {
-                            headers[HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME] = user.displayName;
-                        }
-                        if (user.email) {
-                            headers[HTTP_HEADER_REST_PROXY_USER_EMAIL] = user.email;
-                        }
+                // $FlowFixMe
+                if (restProxyDef.sendUserHeaders || restProxyDef.sendUserHeader) {
+                    headers[HTTP_HEADER_REST_PROXY_USER] = user.username;
+                    if (user.displayName) {
+                        headers[HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME] = user.displayName;
                     }
-                    if (restProxyDef.sendRolesHeader) {
-                        headers[HTTP_HEADER_REST_PROXY_ROLES] = user.roles.join(',');
-                    }
-                    if (restProxyDef.sendPermissionsHeader && portalApp.rolePermissions) {
-                        const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
-                        headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
+                    if (user.email) {
+                        headers[HTTP_HEADER_REST_PROXY_USER_EMAIL] = user.email;
                     }
                 }
-                if (restProxyDef.sendBearerToken && user.bearerToken) {
-                    headers = Object.assign({}, headers, {
-                        'Authorization': `Bearer ${user.bearerToken}`,
-                    });
+                if (restProxyDef.sendPermissionsHeader && portalApp.rolePermissions) {
+                    const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
+                    headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
                 }
             }
 

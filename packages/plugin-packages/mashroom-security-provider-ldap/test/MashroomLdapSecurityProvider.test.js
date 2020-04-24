@@ -95,7 +95,6 @@ describe('MashroomLdapSecurityProvider', () => {
         if (user) {
             expect(user.username).toBe('username');
             expect(user.displayName).toBe('User1');
-            expect(user.groups).toEqual(['GROUP1']);
             expect(user.roles).toEqual(['ROLE1', 'ROLE2']);
         }
     });

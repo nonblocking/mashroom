@@ -21,6 +21,7 @@ describe('create-user', () => {
             email: undefined,
             pictureUrl: null,
             roles: [],
+            extraData: null,
         });
     });
 
@@ -44,6 +45,7 @@ describe('create-user', () => {
             email: 'admin@test.com',
             pictureUrl: null,
             roles: [],
+            extraData: null,
         });
     });
 
@@ -68,6 +70,7 @@ describe('create-user', () => {
             email: 'admin@test.com',
             pictureUrl: null,
             roles: ['Role1', 'Role2', 'Role3', 'Administrator'],
+            extraData: null,
         });
     });
 
@@ -96,6 +99,7 @@ describe('create-user', () => {
             email: 'admin@test.com',
             pictureUrl: 'http://my-picture.com',
             roles: ['Role1', 'Role2', 'Role3', 'Administrator'],
+            extraData: null,
         });
     });
 

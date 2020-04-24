@@ -122,7 +122,8 @@ export type MashroomPortalAppUser = {
     +guest: boolean,
     +username?: string,
     +displayName?: string,
-    +permissions: MashroomPortalAppUserPermissions
+    +permissions: MashroomPortalAppUserPermissions,
+    +extraData?: any,
 }
 
 export type MashroomPortalAppUserPermissions = {
@@ -252,10 +253,8 @@ export type MashroomAvailablePortalTheme = {
 
 export type MashroomPortalProxyDefinition = {
     +targetUri: string,
-    +sendUserHeader?: boolean,
+    +sendUserHeaders?: boolean,
     +sendPermissionsHeader?: boolean,
-    +sendRolesHeader?: boolean,
-    +sendBearerToken?: boolean,
     +addHeaders?: any,
     +restrictToRoles?: Array<string>,
 }

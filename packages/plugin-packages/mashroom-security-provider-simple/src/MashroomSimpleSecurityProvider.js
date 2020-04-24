@@ -79,7 +79,8 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
                 displayName: user.displayName || username,
                 email: user.email,
                 pictureUrl: user.pictureUrl,
-                roles: user.roles
+                roles: user.roles,
+                extraData: null,
             };
 
             logger.debug('User successfully authenticated:', mashroomUser);
@@ -108,6 +109,10 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
             return null;
         }
         return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+    }
+
+    getApiSecurityHeaders() {
+        return null;
     }
 
     _getUserStore(logger: MashroomLogger): UserStore {

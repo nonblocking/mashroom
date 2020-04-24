@@ -138,7 +138,12 @@ describe('PortalAppController', () => {
                     getUser() {
                         return {
                             username: 'test',
+                            displayName: 'Test User',
+                            email: 'test@test.com',
                             roles: ['Role1'],
+                            extraData: {
+                                'customerId': 12345678,
+                            },
                         };
                     },
                     isAdmin() {
@@ -207,10 +212,13 @@ describe('PortalAppController', () => {
             lang: 'en',
             user: {
                 username: 'test',
-                displayName: 'test',
+                displayName: 'Test User',
                 guest: false,
                 permissions: {
                     edit: true
+                },
+                extraData: {
+                    customerId: 12345678,
                 },
             },
             appConfig: {
@@ -268,10 +276,13 @@ describe('PortalAppController', () => {
             lang: 'en',
             user: {
                 username: 'test',
-                displayName: 'test',
+                displayName: 'Test User',
                 guest: false,
                 permissions: {
                     edit: true
+                },
+                extraData: {
+                    customerId: 12345678,
                 },
             },
             appConfig: {

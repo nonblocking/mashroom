@@ -125,6 +125,7 @@ export type MashroomPortalAppUser = {
     readonly username?: string;
     readonly displayName?: string;
     readonly permissions: MashroomPortalAppUserPermissions;
+    readonly extraData?: any;
 };
 
 export type MashroomPortalAppUserPermissions = {
@@ -279,10 +280,8 @@ export type MashroomAvailablePortalTheme = {
 
 export type MashroomPortalProxyDefinition = {
     readonly targetUri: string;
-    readonly sendUserHeader?: boolean;
+    readonly sendUserHeaders?: boolean;
     readonly sendPermissionsHeader?: boolean;
-    readonly sendRolesHeader?: boolean;
-    readonly addBearerToken?: boolean,
     readonly addHeaders?: any;
     readonly restrictToRoles?: Array<string>;
 };

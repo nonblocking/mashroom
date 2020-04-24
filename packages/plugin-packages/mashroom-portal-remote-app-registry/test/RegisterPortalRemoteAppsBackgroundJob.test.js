@@ -5,7 +5,6 @@ import RegisterPortalRemoteAppsBackgroundJob from '../src/js/jobs/RegisterPortal
 
 import type {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
 
-
 describe('RegisterPortalRemoteAppsBackgroundJob', () => {
 
     const pluginContextHolder: any = {
@@ -58,7 +57,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             restProxies: {
                 'bff': {
                     targetUri: 'http://localhost:4444/api',
-                    sendUserHeader: true,
+                    sendUserHeaders: true,
                     sendPermissionsHeader: true
                 }
             },
@@ -118,7 +117,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                     bff:
                         {
                             targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
-                            sendUserHeader: true,
+                            sendUserHeaders: true,
                             sendPermissionsHeader: true
                         }
                 },

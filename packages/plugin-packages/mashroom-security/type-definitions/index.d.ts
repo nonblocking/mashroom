@@ -25,8 +25,7 @@ export type MashroomSecurityUser = {
     readonly email: string | null | undefined;
     readonly pictureUrl: string | null | undefined;
     readonly roles: MashroomSecurityRoles;
-    readonly bearerToken?: string;
-
+    readonly extraData: any | null | undefined;
     readonly [key: string]: any;
 };
 
@@ -60,6 +59,11 @@ export interface MashroomSecurityService {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): MashroomSecurityUser | null | undefined;
+
+    /**
+     * Get extra HTTP headers that should be send with Backend/API calls to given URI.
+     */
+    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined;
 
     /**
      * Checks if user != null
@@ -224,6 +228,12 @@ export interface MashroomSecurityProvider {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): MashroomSecurityUser | null | undefined;
+
+    /**
+     * Get extra HTTP headers that should be send which each Backend/API call.
+     * Can be used to add some extra context or a bearer token.
+     */
+    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined;
 }
 
 /*

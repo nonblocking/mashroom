@@ -23,9 +23,7 @@ export type MashroomSecurityUser = {
     +email: ?string,
     +pictureUrl: ?string,
     +roles: MashroomSecurityRoles,
-    +bearerToken?: string,
-
-    +[string]: any
+    +extraData: ?any,
 }
 
 export type MashroomSecurityResourceType = 'Page' | 'Portal-App' | string;
@@ -56,6 +54,10 @@ export interface MashroomSecurityService {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): ?MashroomSecurityUser;
+    /**
+     * Get extra HTTP headers that should be send with Backend/API calls to given URI.
+     */
+    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
     /**
      * Checks if user != null
      */
@@ -162,6 +164,11 @@ export interface MashroomSecurityProvider {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): ?MashroomSecurityUser;
+    /**
+     * Get extra HTTP headers that should be send which each Backend/API call.
+     * Can be used to add some extra context or a bearer token.
+     */
+    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
 }
 
 /*

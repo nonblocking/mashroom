@@ -133,7 +133,8 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User'])
+            roles: Object.freeze(['User']),
+            extraData: null,
         };
 
         const allowed = await aclChecker.allowed(req, user);
@@ -158,7 +159,8 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User'])
+            roles: Object.freeze(['User']),
+            extraData: null,
         };
 
         const allowed = await aclChecker.allowed(req, user);
@@ -183,7 +185,8 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User', 'Manager'])
+            roles: Object.freeze(['User', 'Manager']),
+            extraData: null,
         };
 
         const allowed = await aclChecker.allowed(req, user);
@@ -249,7 +252,8 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: []
+            roles: [],
+            extraData: null,
         };
         const req: any = {
             path: '/portal/foo/bar',
@@ -275,7 +279,8 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User'])
+            roles: Object.freeze(['User']),
+            extraData: null,
         };
         const req: any = {
             path: '/portal/foo/bar',
@@ -300,7 +305,8 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User'])
+            roles: Object.freeze(['User']),
+            extraData: null,
         };
         const req: any = {
             path: '/foo/x/bar',

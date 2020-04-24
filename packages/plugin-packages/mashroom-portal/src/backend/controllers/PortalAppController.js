@@ -290,7 +290,8 @@ export default class PortalAppController {
             guest: !user,
             username: user ? user.username : 'anonymous',
             displayName: user ? user.displayName || user.username : 'Anonymous',
-            permissions
+            permissions,
+            extraData: user ? user.extraData : null,
         };
 
         return portalUser;

@@ -41,7 +41,8 @@ const pluginContext: any = {
                         displayName: 'John',
                         email: null,
                         pictureUrl: null,
-                        roles: ['Role2', 'Role1']
+                        roles: ['Role2', 'Role1'],
+                        extraData: null,
                     }
                 }
             }

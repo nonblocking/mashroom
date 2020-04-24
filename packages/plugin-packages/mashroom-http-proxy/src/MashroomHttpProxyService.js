@@ -10,6 +10,7 @@ import type {
     ExpressRequest,
     ExpressResponse,
 } from '@mashroom/mashroom/type-definitions';
+import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
 import type {HttpHeaderFilter as HttpHeaderFilterType} from '../type-definitions/internal';
 
@@ -40,6 +41,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
 
     forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders?: HttpHeaders = {}) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
+        const securityService: MashroomSecurityService = req.pluginContext.services.security && req.pluginContext.services.security.service;
 
         const method = req.method;
         if (!this._forwardMethods.find((m) => m === method)) {
@@ -55,12 +57,16 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         this._httpHeaderFilter.filter(req.headers);
         const qs = Object.assign({}, req.query);
 
+        const extraSecurityHeaders = securityService ? securityService.getApiSecurityHeaders(req, uri): null;
+
+        const headers = Object.assign({}, additionalHeaders || {}, extraSecurityHeaders || {});
+
         const options = {
             pool: this._pool,
             method,
             uri,
             qs,
-            headers: additionalHeaders,
+            headers,
             rejectUnauthorized: this._rejectUntrustedCerts,
             resolveWithFullResponse: true,
             timeout: this._socketTimeoutMs,
