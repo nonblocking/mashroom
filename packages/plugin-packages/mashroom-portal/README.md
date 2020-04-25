@@ -3,7 +3,8 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This plugins adds a Portal component that allows composing pages from Single Page Applications (SPA's).
+This plugin adds a Portal component which allows composing pages from Single Page Applications (SPA's).
+
 Portal apps can be registered as plugin and placed on arbitrary pages via Drag'n'Drop. Or loaded dynamically via client-side JavaScript API.
 It supports i18n, theming and role based security and comes with a client-side message bus.
 
@@ -184,25 +185,28 @@ To register a new portal-app plugin add this to _package.json_:
 ```
 
  * _title_: Optional human readable title of the App. Can be a string or a object with translations.
- * _category_: Optional category to group the apps in the admin app
+ * _category_: An optional category to group the apps in the admin app
  * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked
  * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
     This is useful if apps want to share vendor libraries or styles or such.
     Here you can find a demo how to use the *Webpack* *DllPlugin* together with this feature: [Mashroom Demo Shared DLL](https://github.com/nonblocking/mashroom-demo-shared-dll)
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
-     * _resourcesRoot_: The root path for app resources such as Javascript files and images. This can be a local file path or a http, https or ftp URI.
+     * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI.
      * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
-       If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL).
-     * _rolePermissions_: Optional mapping between app specific roles. This corresponds to the permission object passed with the user information to the app.
+       Use this to prevent that an App can just be loaded via JS API (dynamically) by any user, even an anonymous one
+       (if that is a problem).
+     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the app.
      * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
          * _targetUri_: The target URI
-         * _sendUserHeader_: Adds the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user
-         * _sendPermissionsHeader_: Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_
-         * _addHeaders_: Optional add some extra headers to each request (e.g. BASIC Authentication)
+         * _sendUserHeader_: Optional. Adds the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user to each request.
+         * _sendPermissionsHeader_: Optional. Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_.
+         * _addHeaders_: Optional. Can be used to add some extra headers to each request.
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
-            If not set, everyone can load the app (even unauthenticated users if the access is not permitted via ACL).
-     * _appConfig_: The default app configuration
-     * _metaInfo_: Optional meta info (any type)
+            The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
+            can access the proxy if this property is set. You can use this to protect sensitive data only a small group of
+            users are allowed to access.
+     * _appConfig_: The default App specific configuration
+     * _metaInfo_: Optional meta info (any type).
 
 The bootstrap is in this case a global function that starts the app within the given host element. Here for example a React app:
 
@@ -278,8 +282,17 @@ export type MashroomPortalAppSetup = {
    In the example below the base path to the _spaceXApi_ would be in _portalAppSetup.restProxyPaths.spaceXApi._
  * _resourceBasePath_: Base path to access assets in _resourceRoot_ such as images
  * _lang_: The current user language (e.g.: en)
- * _user_: User information such as user name, user display name and roles
- * _appConfig_: The app config object. The default is define in _defaultConfig.appConfig_ but it can be overwritten per instance (per admin app).
+ * _user_: User information such as user name, user display name and roles. It has the following structure:
+   ```js
+    export type MashroomPortalAppUser = {
+        +guest: boolean,
+        +username?: string,
+        +displayName?: string,
+        +permissions: MashroomPortalAppUserPermissions,
+        +extraData?: any,
+    }
+   ```
+ * _appConfig_: The App config object. The default is defined in _defaultConfig.appConfig_, but it can be overwritten per instance (per Admin App).
 
 The _clientServices_ argument contains the client services, see below.
 
@@ -401,7 +414,6 @@ export interface MashroomPortalAdminService {
     * Update roles that are permitted to view the app (undefined or null means everyone is permitted)
     */
     updateAppInstancePermittedRoles(pluginName: string, instanceId: string, roles: ?string[]): Promise<void>;
-
     /**
     * Get current pageId
     */
@@ -503,7 +515,6 @@ export interface MashroomPortalMessageBus {
      * It is also possible to block messages by returning 'undefined' or 'null'.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
-
     /**
      * Unregister a message interceptor.
      */

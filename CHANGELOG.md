@@ -3,15 +3,17 @@
 
 ## [unreleased]
 
+## 1.4.2 (25. April 2020)
+
  * Security Provider: Added new method *getApiSecurityHeaders(req, targetUri)* that allows it to add security headers to backend/API calls.
    Useful to add extra user context or access tokens to backend requests.
  * Portal: Removed the REST proxy property *sendRoles* because the concept of permissions should be used in backends as well.
  * Portal: If the REST proxy property *sendUserHeaders* is true the following headers will be sent additionally with each REST request:
      * X-USER-DISPLAY-NAME
      * X-USER-EMAIL
- * Portal: Fixed mapping a Site to a virtual host when the frontend base path is root
+ * Portal: Fixed mapping *Sites* to virtual hosts when the frontend base path is /
  * Virtual host path mapper: Added a config property to explicitly set the http headers that
-   should be considered (default is x-forwarded-host).
+   should be considered (default is *x-forwarded-host*) to determine the actual host
 
 ## 1.4.1 (20. April 2020)
 
