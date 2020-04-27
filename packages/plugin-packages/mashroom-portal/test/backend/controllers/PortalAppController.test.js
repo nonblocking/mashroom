@@ -211,9 +211,10 @@ describe('PortalAppController', () => {
             globalLaunchFunction: 'foo',
             lang: 'en',
             user: {
+                guest: false,
                 username: 'test',
                 displayName: 'Test User',
-                guest: false,
+                email: 'test@test.com',
                 permissions: {
                     edit: true
                 },
@@ -275,9 +276,10 @@ describe('PortalAppController', () => {
             globalLaunchFunction: 'foo',
             lang: 'en',
             user: {
+                guest: false,
                 username: 'test',
                 displayName: 'Test User',
-                guest: false,
+                email: 'test@test.com',
                 permissions: {
                     edit: true
                 },
