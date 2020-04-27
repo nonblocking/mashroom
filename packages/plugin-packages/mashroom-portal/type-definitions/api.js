@@ -120,10 +120,11 @@ export type MashroomRestProxyPaths = {
 
 export type MashroomPortalAppUser = {
     +guest: boolean,
-    +username?: string,
-    +displayName?: string,
+    +username: string,
+    +displayName: string,
+    +email: ?string;
     +permissions: MashroomPortalAppUserPermissions,
-    +extraData?: any,
+    +extraData: ?any,
 }
 
 export type MashroomPortalAppUserPermissions = {

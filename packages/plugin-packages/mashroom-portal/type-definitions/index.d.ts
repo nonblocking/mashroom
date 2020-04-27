@@ -122,10 +122,11 @@ export type MashroomRestProxyPaths = {
 
 export type MashroomPortalAppUser = {
     readonly guest: boolean;
-    readonly username?: string;
-    readonly displayName?: string;
+    readonly username: string;
+    readonly displayName: string;
+    readonly email: string | null;
     readonly permissions: MashroomPortalAppUserPermissions;
-    readonly extraData?: any;
+    readonly extraData: any | null;
 };
 
 export type MashroomPortalAppUserPermissions = {

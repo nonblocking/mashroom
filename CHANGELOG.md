@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Fixed mapping of email property in the portalAppSetup
+
 ## 1.4.2 (25. April 2020)
 
  * Security Provider: Added new method *getApiSecurityHeaders(req, targetUri)* that allows it to add security headers to backend/API calls.

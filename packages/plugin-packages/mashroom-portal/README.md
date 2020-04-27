@@ -288,6 +288,7 @@ export type MashroomPortalAppSetup = {
         +guest: boolean,
         +username?: string,
         +displayName?: string,
+        +email?: string;
         +permissions: MashroomPortalAppUserPermissions,
         +extraData?: any,
     }
