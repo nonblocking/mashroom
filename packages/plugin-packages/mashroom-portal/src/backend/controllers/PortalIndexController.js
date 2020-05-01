@@ -1,5 +1,6 @@
 // @flow
 
+import querystring from 'querystring';
 import {getDefaultSite} from '../utils/model_utils';
 import {getPortalPath} from '../utils/path_utils';
 
@@ -15,7 +16,8 @@ export default class IndexController {
             const defaultSite = await getDefaultSite(req, logger);
             if (defaultSite) {
                 logger.debug(`Redirecting to default site: ${defaultSite.siteId}`);
-                res.redirect(portalPath + defaultSite.path);
+                const query = querystring.stringify(req.query);
+                res.redirect(portalPath + defaultSite.path + (query ? `?${query}` : ''));
             } else {
                 res.sendStatus(404);
             }
