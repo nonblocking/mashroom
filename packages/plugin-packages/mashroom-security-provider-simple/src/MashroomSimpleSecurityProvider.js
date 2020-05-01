@@ -62,8 +62,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         return request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
     }
 
-    async revokeAuthentication() {
-        // Nothing to do, the session has been regenerated at this point
+    async revokeAuthentication(request: ExpressRequest) {
+        delete request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
