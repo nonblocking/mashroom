@@ -63,7 +63,7 @@
                         "x-b3-*",
                         "trace*"
                     ],
-                    "rejectUntrustedCerts": false,
+                    "rejectUnauthorized": true,
                     "poolMaxSockets": 10,
                     "socketTimeoutMs": 30000
                 }

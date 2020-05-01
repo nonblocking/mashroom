@@ -17,15 +17,15 @@ import type {HttpHeaderFilter as HttpHeaderFilterType} from '../type-definitions
 export default class MashroomHttpProxyService implements MashroomHttpProxyServiceType {
 
     _forwardMethods: Array<string>;
-    _rejectUntrustedCerts: boolean;
+    _rejectUnauthorized: boolean;
     _poolMaxSockets: number;
     _socketTimeoutMs: number;
     _pool: any;
     _httpHeaderFilter: HttpHeaderFilterType;
 
-    constructor(forwardMethods: Array<string>, forwardHeaders: Array<string>, rejectUntrustedCerts: boolean, poolMaxSockets: number, socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
+    constructor(forwardMethods: Array<string>, forwardHeaders: Array<string>, rejectUnauthorized: boolean, poolMaxSockets: number, socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
         this._forwardMethods = forwardMethods;
-        this._rejectUntrustedCerts = rejectUntrustedCerts;
+        this._rejectUnauthorized = rejectUnauthorized;
         this._poolMaxSockets = poolMaxSockets || 10;
         this._socketTimeoutMs = socketTimeoutMs || 0;
         this._httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
@@ -67,7 +67,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             uri,
             qs,
             headers,
-            rejectUnauthorized: this._rejectUntrustedCerts,
+            rejectUnauthorized: this._rejectUnauthorized,
             resolveWithFullResponse: true,
             timeout: this._socketTimeoutMs,
         };
