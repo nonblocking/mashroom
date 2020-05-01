@@ -39,6 +39,8 @@ describe('MashroomSecurityService', () => {
             pluginContext: {
                 loggerFactory
             },
+            url: 'http://localhost?hint1=foo&foo=bar&xxx=1',
+            originalUrl: 'http://localhost?hint1=foo&foo=bar&xxx=1',
             query: {
                 hint1: 'foo',
                 foo: 'bar',
@@ -76,6 +78,8 @@ describe('MashroomSecurityService', () => {
         expect(receivedAuthenticationHints).toEqual({
             hint1: 'foo',
         });
+        expect(req.url).toBe('http://localhost?foo=bar&xxx=1');
+        expect(req.originalUrl).toBe('http://localhost?foo=bar&xxx=1');
     });
 
     it('checks the resource permission', async () => {

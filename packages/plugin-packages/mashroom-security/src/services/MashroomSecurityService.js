@@ -1,5 +1,7 @@
 // @flow
 
+import querystring from 'querystring';
+
 import type {
     ExpressRequest,
     ExpressResponse,
@@ -217,7 +219,8 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             try {
                 // To prevent phishing, create a new session
                 await this._createNewSession(request);
-                const authenticationHints = this._filterAuthenticationHints(request);
+                const authenticationHints = this._getAuthenticationHints(request);
+                this._removeAuthenticationHintsFromUrl(request, authenticationHints);
                 return await securityProvider.authenticate(request, response, authenticationHints);
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
@@ -332,7 +335,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         })
     }
 
-    _filterAuthenticationHints(request: ExpressRequest): any {
+    _getAuthenticationHints(request: ExpressRequest): any {
         const { query } = request;
         const forwardQueryParams = this._forwardQueryHintsToProvider;
         const hints = {};
@@ -345,6 +348,15 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             }
         });
         return hints;
+    }
+
+    _removeAuthenticationHintsFromUrl(request: ExpressRequest, hints: any) {
+        const queryParams = Object.assign({}, request.query);
+        Object.keys(hints).forEach((key) => delete queryParams[key]);
+        const query = querystring.stringify(queryParams);
+
+        request.url = request.url.split('?')[0] + (query ? `?${query}` : '');
+        request.originalUrl = request.originalUrl.split('?')[0] + (query ? `?${query}` : '');
     }
 }
 
