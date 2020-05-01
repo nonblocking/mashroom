@@ -54,6 +54,7 @@
                     "mode": "OIDC",
                     "issuerDiscoveryUrl": null,
                     "issuerMetadata": null,
+                    "rejectUnauthorized": true,
                     "scope": "openid email profile",
                     "clientId": "mashroom",
                     "clientSecret": "your-client-secret",

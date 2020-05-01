@@ -1,5 +1,5 @@
 
-import {Client, Issuer} from "openid-client";
+import {Client, Issuer, custom } from "openid-client";
 
 import type {ClientConfiguration, ExpressRequestWithSession} from "../type-definitions";
 import type {MashroomLogger} from "@mashroom/mashroom/type-definitions";
@@ -57,6 +57,10 @@ export default async (request: ExpressRequestWithSession): Promise<Client | und
             return undefined;
         }
     }
+
+    custom.setHttpOptionsDefaults({
+        rejectUnauthorized: _clientConfiguration.rejectUnauthorized,
+    });
 
     let client;
     try {

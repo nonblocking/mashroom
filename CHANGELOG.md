@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * OIDC Security Provider: Added *rejectUnauthorized* for (test) Identity Providers with self-signed certificates
  * Portal: Fixed mapping of email property in the portalAppSetup
 
 ## 1.4.2 (25. April 2020)

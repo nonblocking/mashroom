@@ -9,6 +9,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         mode,
         issuerDiscoveryUrl,
         issuerMetadata,
+        rejectUnauthorized,
         scope,
         clientId,
         clientSecret,
@@ -23,6 +24,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
     setClientConfiguration({
         issuerDiscoveryUrl,
         issuerMetadata,
+        rejectUnauthorized,
         clientId,
         clientSecret,
         redirectUrl,
