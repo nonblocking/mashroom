@@ -5,7 +5,6 @@ import type {ExpressRequest} from '../../../../../type-definitions';
 export default (content: string, req: ExpressRequest) => (`
     <!doctype html>
     <head>
-        <meta http-equiv="refresh" content="5">
         <title>Mashroom Administration</title>
         <style type="text/css">
             body {
