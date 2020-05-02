@@ -16,8 +16,8 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {UserStore} from '../type-definitions';
 
-const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_USER';
-const AUTHENTICATION_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES';
+const SIMPLE_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_USER';
+const SIMPLE_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES';
 
 export default class MashroomSimpleSecurityProvider implements MashroomSecurityProvider {
 
@@ -55,16 +55,16 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     async checkAuthentication(request: ExpressRequest) {
-        request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+        request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
     }
 
     getAuthenticationExpiration(request: ExpressRequest) {
-        return request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        return request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
     }
 
     async revokeAuthentication(request: ExpressRequest) {
-        delete request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
-        delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+        delete request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
+        delete request.session[SIMPLE_AUTH_USER_SESSION_KEY];
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
@@ -86,8 +86,8 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
             logger.debug('User successfully authenticated:', mashroomUser);
 
-            request.session[AUTHENTICATION_RESULT_SESSION_KEY] = mashroomUser;
-            request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+            request.session[SIMPLE_AUTH_USER_SESSION_KEY] = mashroomUser;
+            request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
 
             return {
                 success: true
@@ -101,15 +101,15 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     getUser(request: ExpressRequest) {
-        const timeout: ?number = request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        const timeout: ?number = request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
         if (!timeout) {
             return null;
         }
         if (timeout < Date.now()) {
-            delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+            delete request.session[SIMPLE_AUTH_USER_SESSION_KEY];
             return null;
         }
-        return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+        return request.session[SIMPLE_AUTH_USER_SESSION_KEY];
     }
 
     getApiSecurityHeaders() {

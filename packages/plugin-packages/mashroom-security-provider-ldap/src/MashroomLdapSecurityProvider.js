@@ -16,8 +16,8 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {GroupToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
 
-const AUTHENTICATION_RESULT_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
-const AUTHENTICATION_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';
+const LDAP_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
+const LDAP_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';
 
 export default class MashroomLdapSecurityProvider implements MashroomSecurityProvider {
 
@@ -67,16 +67,16 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     async checkAuthentication(request: ExpressRequest) {
-        request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+        request.session[LDAP_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
     }
 
     getAuthenticationExpiration(request: ExpressRequest) {
-        return request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        return request.session[LDAP_AUTH_EXPIRES_SESSION_KEY];
     }
 
     async revokeAuthentication(request: ExpressRequest) {
-        delete request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
-        delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+        delete request.session[LDAP_AUTH_EXPIRES_SESSION_KEY];
+        delete request.session[LDAP_AUTH_USER_SESSION_KEY];
     }
 
     async login(request: ExpressRequest, username: string, password: string) {
@@ -119,8 +119,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
 
             logger.debug('User successfully authenticated:', mashroomUser);
 
-            request.session[AUTHENTICATION_RESULT_SESSION_KEY] = mashroomUser;
-            request.session[AUTHENTICATION_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+            request.session[LDAP_AUTH_USER_SESSION_KEY] = mashroomUser;
+            request.session[LDAP_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
 
             return {
                 success: true
@@ -133,15 +133,15 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     getUser(request: ExpressRequest) {
-        const timeout: ?number = request.session[AUTHENTICATION_EXPIRES_SESSION_KEY];
+        const timeout: ?number = request.session[LDAP_AUTH_EXPIRES_SESSION_KEY];
         if (!timeout) {
             return null;
         }
         if (timeout < Date.now()) {
-            delete request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+            delete request.session[LDAP_AUTH_USER_SESSION_KEY];
             return null;
         }
-        return request.session[AUTHENTICATION_RESULT_SESSION_KEY];
+        return request.session[LDAP_AUTH_USER_SESSION_KEY];
     }
 
     getApiSecurityHeaders() {
