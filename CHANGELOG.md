@@ -6,8 +6,8 @@
 ## 1.4.3 (2. May 2020)
 
  * Portal: Keep query parameters when redirecting to default site
- * OIDC Security Provider: Added a *rejectUnauthorized* config property for (test) Identity Providers with self-signed certificates
- * Portal: Fixed mapping of email property in the portalAppSetup
+ * OIDC Security Provider: Added a *rejectUnauthorized* config property for Identity Providers with self-signed certificates
+ * Portal: Fixed mapping of email property in the *portalAppSetup*
 
 ## 1.4.2 (25. April 2020)
 
