@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * OIDC Security Provider: Fixed *rejectUnauthorized* - didn't work as expected
+
 ## 1.4.3 (2. May 2020)
 
  * Portal: Keep query parameters when redirecting to default site

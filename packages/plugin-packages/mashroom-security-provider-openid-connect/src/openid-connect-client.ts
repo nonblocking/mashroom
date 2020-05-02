@@ -4,7 +4,7 @@ import {Client, Issuer, custom } from "openid-client";
 import type {ClientConfiguration, ExpressRequestWithSession} from "../type-definitions";
 import type {MashroomLogger} from "@mashroom/mashroom/type-definitions";
 
-let _clientConfiguration: ClientConfiguration | undefined;
+let _clientConfiguration: ClientConfiguration | undefined;
 let _client: Client | undefined;
 
 export const setClientConfiguration = (clientConfiguration: ClientConfiguration) => {
@@ -12,7 +12,7 @@ export const setClientConfiguration = (clientConfiguration: ClientConfiguration)
     _client = undefined;
 };
 
-export default async (request: ExpressRequestWithSession): Promise<Client | undefined> => {
+export default async (request: ExpressRequestWithSession): Promise<Client | undefined> => {
     const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
     if (_client) {
@@ -23,18 +23,22 @@ export default async (request: ExpressRequestWithSession): Promise<Client | und
         return undefined;
     }
 
-    const { issuerDiscoveryUrl, issuerMetadata, clientId, clientSecret, redirectUrl, responseType } = _clientConfiguration;
+    const {issuerDiscoveryUrl, issuerMetadata, clientId, clientSecret, redirectUrl, responseType} = _clientConfiguration;
     if (!issuerDiscoveryUrl && !issuerMetadata) {
         logger.error('Cannot create OpenID Connect client because no discoverUrl and no metadata given!');
         return undefined;
     }
 
+    custom.setHttpOptionsDefaults({
+        rejectUnauthorized: _clientConfiguration.rejectUnauthorized,
+    });
+
     let issuer;
     if (issuerDiscoveryUrl) {
         try {
 
-                logger.info(`Setting up OpenID Connect with clientId=${clientId}, responseType=${responseType}, redirectUrl=${redirectUrl}, discoveryUrl=${issuerDiscoveryUrl}`);
-                issuer = await Issuer.discover(issuerDiscoveryUrl);
+            logger.info(`Setting up OpenID Connect with clientId=${clientId}, responseType=${responseType}, redirectUrl=${redirectUrl}, discoveryUrl=${issuerDiscoveryUrl}`);
+            issuer = await Issuer.discover(issuerDiscoveryUrl);
 
         } catch (e) {
             logger.error(`Connection to service discovery url failed: ${issuerDiscoveryUrl}`, e);
@@ -57,10 +61,6 @@ export default async (request: ExpressRequestWithSession): Promise<Client | und
             return undefined;
         }
     }
-
-    custom.setHttpOptionsDefaults({
-        rejectUnauthorized: _clientConfiguration.rejectUnauthorized,
-    });
 
     let client;
     try {
