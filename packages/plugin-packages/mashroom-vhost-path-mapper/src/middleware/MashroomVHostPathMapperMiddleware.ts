@@ -19,7 +19,7 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
 
     middleware() {
         return (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
-            const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.vhost.pathRewrite.middleware');
+            const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.vhost.pathmapper');
 
             try {
                 const host = determineHost(this.considerHttpHeaders, req);
