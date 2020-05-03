@@ -145,8 +145,11 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             return;
         }
 
+        delete request.session[OICD_USER_SESSION_KEY];
+        delete request.session[OICD_AUTH_DATA_SESSION_KEY];
+
         try {
-            logger.debug('Revoking token');
+            logger.debug('Revoking identity provider session');
             const endSessionUrl = client.endSessionUrl({
                 id_token_hint: authData.tokenSet.id_token,
             });
@@ -157,7 +160,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             };
             await requestNative(options);
         } catch (e) {
-            logger.error('Error revoking token!', e);
+            logger.error('Revoking identity provider session failed!', e);
         }
     }
 

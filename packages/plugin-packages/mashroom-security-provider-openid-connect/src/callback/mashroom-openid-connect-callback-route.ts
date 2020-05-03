@@ -5,8 +5,8 @@ import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
 import {OpenIDCallbackChecks} from "openid-client";
 
 import type{ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
-import type{CallbackConfiguration, ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-definitions";
 import type {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
+import type{CallbackConfiguration, ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-definitions";
 
 let _callbackConfiguration: CallbackConfiguration | undefined;
 
