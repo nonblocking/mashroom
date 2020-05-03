@@ -51,6 +51,10 @@ app.get('/style.css', (req: ExpressRequest, res: ExpressResponse) => {
     res.sendFile(context.styleFile);
 });
 
+app.get('/assets/bg.png', (req: ExpressRequest, res: ExpressResponse) => {
+    res.sendFile(path.resolve(__dirname, '../assets/random-grey-variations.png'));
+});
+
 app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
 

@@ -320,6 +320,7 @@ table {
 
 header {
     background-color: $COLOR_PRIMARY;
+    background-image: url(assets/random-grey-variations.png);
     color: white;
     border-bottom: 2px solid $COLOR_SECONDARY;
     position: relative;
@@ -345,7 +346,7 @@ header {
 
     .env-and-versions {
         font-size: 0.8em;
-        line-height: 1.2em;
+        line-height: 1.3em;
         margin-left: $GUTTER_WIDTH;
         padding: 10px 0;
 

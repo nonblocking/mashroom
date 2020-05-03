@@ -7,7 +7,7 @@
     "version": "1.4.3",
     "files": [
         "dist/**",
-        "public/**",
+        "assets/**",
         "views/**"
     ],
     "dependencies": {

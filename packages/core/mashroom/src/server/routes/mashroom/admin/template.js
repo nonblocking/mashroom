@@ -102,6 +102,7 @@ export default (content: string, req: ExpressRequest) => (`
 
             td {
                 padding: 6px 10px;
+                line-height: 1.25em;
             }
 
             th {
