@@ -3,8 +3,8 @@
 
 ## [unreleased]
 
-
- * Portal: The logout route accepts now a *redirect* parameter with the page that should be redirected to after revoking the authentication
+ * Default Login Webapp: Renamed the redirect query parameter to *redirectUrl*
+ * Portal: The logout route accepts now a *redirectUrl* parameter with the page that should be redirected to after revoking the authentication
    (default is still the Site's index page)
  * OIDC Security Provider: Fixed *rejectUnauthorized* - didn't work as expected
 

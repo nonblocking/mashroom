@@ -35,7 +35,7 @@ app.get('/', async (req: ExpressRequest, res: ExpressResponse) => {
         const lang = i18nService.getLanguage(req);
         const user = await securityService.getUser(req);
         if (user) {
-            backToRef(req, res);
+            redirect(req, res);
             return;
         }
 
@@ -61,7 +61,7 @@ app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
         const lang = i18nService.getLanguage(req);
         const user = await securityService.getUser(req);
         if (user) {
-            backToRef(req, res);
+            redirect(req, res);
             return;
         }
 
@@ -72,7 +72,7 @@ app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
 
         const result = await securityService.login(req, username, password);
         if (result.success) {
-            backToRef(req, res);
+            redirect(req, res);
             return;
         }
 
@@ -124,16 +124,19 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
     });
 };
 
-const backToRef = (req: ExpressRequest, res: ExpressResponse) => {
-    let backUrl = req.query.ref;
-    if (backUrl) {
-        let buff = new Buffer(backUrl, 'base64');
-        backUrl = buff.toString('ascii');
-    } else {
-        backUrl = context.indexPage;
+const redirect = (req: ExpressRequest, res: ExpressResponse) => {
+    let redirectUrl = null;
+    if (req.query.redirectUrl) {
+        const redirectParam = decodeURIComponent(req.query.redirectUrl);
+        if (redirectParam.startsWith('/')) {
+            redirectUrl = redirectParam;
+        }
+    }
+    if (!redirectUrl) {
+        redirectUrl = context.indexPage;
     }
 
-    res.redirect(backUrl);
+    res.redirect(redirectUrl);
 };
 
 export default app;

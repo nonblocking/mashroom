@@ -68,21 +68,21 @@ export default class PortalUserController {
             await securityService.revokeAuthentication(req);
 
             if (!isAjaxRequest(req)) {
-                let redirectTo = null;
-                if (req.query.redirect) {
+                let redirectUrl = null;
+                if (req.query.redirectUrl) {
                     // Use the redirect query param if any
-                    const redirectParam = decodeURIComponent(req.query.redirect);
+                    const redirectParam = decodeURIComponent(req.query.redirectUrl);
                     if (redirectParam.startsWith('/')) {
-                        redirectTo = redirectParam;
+                        redirectUrl = redirectParam;
                     }
                 }
 
-                if (!redirectTo) {
+                if (!redirectUrl) {
                     // Default: Redirect to the site root
-                    redirectTo = getFrontendSiteBasePath(req);
+                    redirectUrl = getFrontendSiteBasePath(req);
                 }
 
-                res.redirect(redirectTo);
+                res.redirect(redirectUrl);
             } else {
                 res.end();
             }

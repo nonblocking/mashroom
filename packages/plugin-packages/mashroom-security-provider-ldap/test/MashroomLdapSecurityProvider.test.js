@@ -23,7 +23,7 @@ describe('MashroomLdapSecurityProvider', () => {
 
         expect(result).toBeTruthy();
         expect(result.status).toBe('deferred');
-        expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=');
+        expect(redirectUrl).toBe('/login?redirectUrl=%2Ffoo%2Fbar');
     });
 
     it('passes the authentication hints to the login page', async () => {
@@ -46,7 +46,7 @@ describe('MashroomLdapSecurityProvider', () => {
 
         expect(result).toBeTruthy();
         expect(result.status).toBe('deferred');
-        expect(redirectUrl).toBe('/login?ref=L2Zvby9iYXI=&hint1=foo&hint2=2');
+        expect(redirectUrl).toBe('/login?redirectUrl=%2Ffoo%2Fbar&hint1=foo&hint2=2');
     });
 
     it('processes the login correctly', async () => {

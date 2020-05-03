@@ -158,7 +158,7 @@ describe('PortalUserController', () => {
                 accept: 'text/*',
             },
             query: {
-                redirect: '/foo/bar',
+                redirectUrl: '/foo/bar',
             },
             pluginContext: {
                 loggerFactory: dummyLoggerFactory,

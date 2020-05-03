@@ -57,10 +57,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}) {
-        let buff = Buffer.from(decodeURI(request.originalUrl));
-        const base64encodedReferrer = buff.toString('base64');
+        const encodedRedirectUrl = encodeURIComponent(request.originalUrl);
         const authenticationHintsQuery = querystring.stringify(authenticationHints);
-        response.redirect(`${this._loginPage}?ref=${base64encodedReferrer}${authenticationHintsQuery ? '&' + authenticationHintsQuery : ''}`);
+        response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? '&' + authenticationHintsQuery : ''}`);
         return {
             status: 'deferred'
         };
