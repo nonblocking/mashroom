@@ -12,7 +12,7 @@
         "views/**"
     ],
     "dependencies": {
-        "@kubernetes/client-node": "^0.11.1",
+        "@kubernetes/client-node": "^0.11.2",
         "express": "^4.17.1",
         "express-handlebars": "^4.0.4",
         "handlebars": "^4.7.6",

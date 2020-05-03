@@ -9,7 +9,8 @@
         "dist/**"
     ],
     "dependencies": {
-        "connect-mongodb-session": "^2.3.1"
+        "connect-mongodb-session": "^2.3.1",
+        "mongodb": "^3.5.7"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
