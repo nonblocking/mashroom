@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+# 1.4.4 (3. May 2020)
+
+ * Portal: The logout route accepts now a *redirect* parameter with the page that should be redirected to after revoking the authentication
+   (default is still the Site's index page)
  * OIDC Security Provider: Fixed *rejectUnauthorized* - didn't work as expected
 
 ## 1.4.3 (2. May 2020)

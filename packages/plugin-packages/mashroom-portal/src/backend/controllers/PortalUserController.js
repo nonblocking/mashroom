@@ -11,7 +11,7 @@ type NewLanguage = {
     lang: string
 }
 
-export default class PortalLanguageController {
+export default class PortalUserController {
 
     async getAuthenticatedUserAuthenticationExpiration(req: ExpressRequest, res: ExpressResponse) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
@@ -68,9 +68,21 @@ export default class PortalLanguageController {
             await securityService.revokeAuthentication(req);
 
             if (!isAjaxRequest(req)) {
-                // Redirect to the site root
-                const siteRoot = getFrontendSiteBasePath(req);
-                res.redirect(siteRoot);
+                let redirectTo = null;
+                if (req.query.redirect) {
+                    // Use the redirect query param if any
+                    const redirectParam = decodeURIComponent(req.query.redirect);
+                    if (redirectParam.startsWith('/')) {
+                        redirectTo = redirectParam;
+                    }
+                }
+
+                if (!redirectTo) {
+                    // Default: Redirect to the site root
+                    redirectTo = getFrontendSiteBasePath(req);
+                }
+
+                res.redirect(redirectTo);
             } else {
                 res.end();
             }
