@@ -11,6 +11,7 @@
 
 ## Version 1.6
 
+ * Add a middleware that allows it to define proper error pages based on response codes (HTML page or external page)
  * Portal: Add better support for chunks/code-splitting by setting the webpack publicPath dynamically during App loading
  * Core: Add a WebSocket proxy similar to *mashroom-http-proxy* (or extend the existing plugin)
  * Portal: Allow Apps to open WebSocket connections to a backend (through the Portal's REST proxy)
