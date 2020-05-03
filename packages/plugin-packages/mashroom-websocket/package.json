@@ -12,8 +12,8 @@
     ],
     "dependencies": {
         "express": "^4.17.1",
-        "express-handlebars": "^3.1.0",
-        "handlebars": "^4.7.3",
+        "express-handlebars": "^4.0.4",
+        "handlebars": "^4.7.6",
         "ws": "^7.2.3"
     },
     "devDependencies": {

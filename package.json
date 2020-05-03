@@ -36,6 +36,7 @@
     },
     "scripts": {
         "setup": "npm install && lerna bootstrap --no-ci && npm run build:core",
+        "setup:clean": "npm ci && lerna bootstrap --ci && npm run build:core",
         "type-check": "flow check && lerna run type-check",
         "lint": "lerna run lint",
         "test": "lerna run test",
