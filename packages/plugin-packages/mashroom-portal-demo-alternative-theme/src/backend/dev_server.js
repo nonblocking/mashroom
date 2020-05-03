@@ -14,6 +14,7 @@ app.use('/resources', express.static('dist/public'));
 
 const hbs = exphbs.create({
     helpers,
+    defaultLayout: '',
 });
 
 app.engine('handlebars', hbs.engine);

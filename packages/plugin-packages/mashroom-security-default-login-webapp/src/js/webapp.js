@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({
 
 app.engine('handlebars', exphbs({
     helpers,
+    defaultLayout: '',
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, '../views'));

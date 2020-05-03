@@ -19,6 +19,7 @@ admin.use(bodyParser.urlencoded({
 }));
 
 admin.engine('handlebars', exphbs({
+    defaultLayout: '',
 }));
 admin.set('view engine', 'handlebars');
 admin.set('views', path.resolve(__dirname, '../../views'));

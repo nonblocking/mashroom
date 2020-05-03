@@ -13,6 +13,7 @@ const bootstrap: MashroomPortalThemePluginBootstrapFunction = async () => {
             const hbs = exphbs.create({
                 helpers,
                 partialsDir: path.resolve(__dirname, '../views/partials/'),
+                defaultLayout: '',
             });
             return hbs.engine;
         },

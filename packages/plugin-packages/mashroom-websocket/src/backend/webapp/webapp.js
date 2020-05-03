@@ -9,12 +9,13 @@ import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-defi
 const app = express<ExpressRequest, ExpressResponse>();
 
 app.engine('handlebars', exphbs({
+    defaultLayout: '',
 }));
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, '../../views'));
 
 app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
-    res.sendStatus(405);
+    res.redirect(req.baseUrl + '/test');
 });
 
 app.get('/test', (req: ExpressRequest, res: ExpressResponse) => {
