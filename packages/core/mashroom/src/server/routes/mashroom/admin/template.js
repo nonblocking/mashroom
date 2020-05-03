@@ -155,9 +155,18 @@ export default (content: string, req: ExpressRequest) => (`
         </style>
 
         <script type="application/javascript">
+            var refreshTimer = setTimeout(function() {
+                window.location.reload();
+            }, 10000);
+
+            function cancelRefresh() {
+                clearTimeout(refreshTimer);
+            }
+
             function openModal(content) {
-                 document.getElementById('modal-content').innerHTML = content;
-                 document.getElementById('modal').style.display = 'block';
+                cancelRefresh();
+                document.getElementById('modal-content').innerHTML = content;
+                document.getElementById('modal').style.display = 'block';
             }
 
             function closeModal() {
@@ -165,7 +174,7 @@ export default (content: string, req: ExpressRequest) => (`
             }
 
             document.addEventListener('keydown', function (e) {
-                 if (e.key === 'Escape'|| e.key === 'Esc') {
+                if (e.key === 'Escape'|| e.key === 'Esc') {
                     closeModal();
                 }
             });
