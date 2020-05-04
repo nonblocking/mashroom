@@ -3,18 +3,21 @@
 
 ## [unreleased]
 
+## 1.4.4 (May 4, 2020)
+
+ * Upgraded libraries with known vulnerabilities
  * Default Login Webapp: Renamed the redirect query parameter to *redirectUrl*
  * Portal: The logout route accepts now a *redirectUrl* parameter with the page that should be redirected to after revoking the authentication
    (default is still the Site's index page)
  * OIDC Security Provider: Fixed *rejectUnauthorized* - didn't work as expected
 
-## 1.4.3 (2. May 2020)
+## 1.4.3 (May 2, 2020)
 
  * Portal: Keep query parameters when redirecting to default site
  * OIDC Security Provider: Added a *rejectUnauthorized* config property for Identity Providers with self-signed certificates
  * Portal: Fixed mapping of email property in the *portalAppSetup*
 
-## 1.4.2 (25. April 2020)
+## 1.4.2 (April 25, 2020)
 
  * Security Provider: Added new method *getApiSecurityHeaders(req, targetUri)* that allows it to add security headers to backend/API calls.
    Useful to add extra user context or access tokens to backend requests.
@@ -26,7 +29,7 @@
  * Virtual host path mapper: Added a config property to explicitly set the http headers that
    should be considered (default is *x-forwarded-host*) to determine the actual host
 
-## 1.4.1 (20. April 2020)
+## 1.4.1 (April 20, 2020)
 
  * Added a virtual host path mapper plugin: Allows it to map internal paths based on virtual hosts and web apps to get
    the actual "frontend path" to generate absolute links at the same time.
@@ -51,7 +54,7 @@
    }
    ```
 
-## 1.4.0 (6. April 2020)
+## 1.4.0 (April 6, 2020)
 
  * Portal: The *sites* work now completely independent (all URLs are relative to <portal_path>/<site_path>).
    That means in particular you can have both public sites and private (protected) sites at the same time with an ACL configuration like this:
@@ -108,12 +111,12 @@
  * Security: The middleware regenerates the session now before and after a login instead of destroying it.
    Because session.destroy() removes the request.session property completely but some security provider might need a session during authentication.
 
-## 1.3.2 (22. February 2020)
+## 1.3.2 (February 22, 2020)
 
  * File Storage: Locking works now also on NFS correctly
  * Removed log statements that could expose passwords
 
-## 1.3.1 (8. February 2020)
+## 1.3.1 (February 8, 2020)
 
  * Remote App Registry Kubernetes: Show all Kubernetes services matching the pattern and a proper error message if no portal apps could be found.
    Remove portal apps after some time if the Kubernetes services disappeared.
@@ -121,7 +124,7 @@
  * Remote App Registry: Moved config properties from the *Mashroom Portal Remote App Registry Webapp* plugin to the
    *Mashroom Portal Remote App Registry* plugin where it belongs (**BREAKING CHANGE**)
 
-## 1.3.0 (27. January 2020)
+## 1.3.0 (January 27, 2020)
 
  * Portal: Fixed broken IE11 support
  * Portal: Admin Toolbar cleanup and small fixes
@@ -149,7 +152,7 @@
      }
    ```
 
-## 1.2.3 (11. January 2020)
+## 1.2.3 (January 11, 2020)
 
  * Core: Added health checks that can for example be used as readiness/liveness probes in Kubernetes (*/mashroom/health*)
  * Core: Moved Admin UI from */mashroom* to */mashroom/admin*
@@ -158,17 +161,17 @@
  * Portal: When a portal app gets unloaded all its message bus listeners will automatically be unregistered
    (in case the app does not unregister the listeners properly on onmount)
 
-## 1.2.2 (7. December 2019)
+## 1.2.2 (December 7, 2019)
 
 * Forward query parameters to the index page
 * Upgraded some dependencies because of security vulnerabilities
 
-## 1.2.1 (25. November 2019)
+## 1.2.1 (November 25, 2019)
 
  * Redis Session Provider: Added cluster support
  * Session Middleware: Log error messages of providers (Redis, MongoDB) properly
 
-## 1.2.0 (15. November 2019)
+## 1.2.0 (November 15, 2019)
 
  * Portal: The Angular 8 demo App can now be loaded multiple times on the same page with a different
    configuration (bootstrap fixed).
@@ -194,7 +197,7 @@
  * Added Redis session provider plugin
  * Portal: Show a proper error if a configured Portal App on a page cannot be loaded (instead of showing nothing)
 
-## 1.1.4
+## 1.1.4 (October 23, 2019)
 
  * Core: Logger instances created via _req.pluginContext.loggerFactory('category')_ share now the context with all other loggers created
    from the same request. This can for example be used to output tracing information with each log entry.
@@ -220,25 +223,25 @@
  * HTTP Proxy: White listed _Jaeger_, _OpenZipkin_ and W3C Trace Context HTTP headers by default
  * HTTP Proxy: Fixed the problem that all requests headers got forwarded to the target, even _cookie_ and other security relevant ones
 
-## 1.1.3 (15. October 2019)
+## 1.1.3 (October 15, 2019)
 
  * Tabify App: Allow to update the title for a specific app id. This is useful for dynamic cockpits where you might
    want to load the same App multiple times in a tabbed area.
  * Portal: Fixed a problem with token highlighting in the add app panel
 
-## 1.1.2 (30. September 2019)
+## 1.1.2 (September 30, 2019)
 
  * Added a middleware plugin that introduces [Helmet](https://helmetjs.github.io) which sets a bunch of protective
    HTTP headers on each response
  * Upgraded some dependencies because of security vulnerabilities
 
-## 1.1.1 (26. September 2019)
+## 1.1.1 (September 26, 2019)
 
  * WebSocket server now sends keep alive messages to prevent reverse proxies and firewalls from closing the connection
  * Portal: _MashroomMessageBus.getRemoteUserPrivateTopic()_ takes now an optional argument _username_ if you want to obtain the private
    topic of a particular user instead of the "own" (the private topic of the authenticated user)
 
-## 1.1.0 (19. September 2019)
+## 1.1.0 (September 19, 2019)
 
  * Portal: Added two new (optional) security related properties to the default config of portal apps:
      * _defaultRestrictViewToRoles_: Same as the previous _defaultRestrictedToRoles_ but renamed to make its purpose clearer.
@@ -259,25 +262,25 @@
  * Core: web-app Plugins can now additionally have handlers for upgrade requests (WebSocket support) and for unload
  * Core: The _Middleware_ tab in the Admin UI shows now the actual order of the stack (until now the order was just calculated)
 
-## 1.0.94 (28. August 2019)
+## 1.0.94 (August 28, 2019)
 
  * Portal: Made it configurable when the Portal will start to warn that the authentication is about to expire
  * Renamed _MashroomSecurityProvider.refreshAuthentication()_ to _checkAuthentication()_
 
-## 1.0.93 (27. August 2019)
+## 1.0.93 (August 27, 2019)
 
  * Portal: Added configuration property to automatically extend the authentication (so it stays valid as long as the browser page is opened)
  * Portal: Removed the "auto-logout" feature, instead the Portal warns now when the authentication is about to expire.
  * Decoupled authentication from session, in particular the authentication expiration. This simplifies the implementation for
    providers like OAuth2. **BREAKING CHANGE**: The _MashroomSecurityProvider_ interface has been extended.
 
-## 1.0.92 (12. August 2019)
+## 1.0.92 (August 12, 2019)
 
  * Portal: The app filter in Portal Admin Toolbar considers now _tags_ also.
    And the categories are sorted alphabetically now.
  * Portal: All initial query parameters are now added again after login
 
-## 1.0.91 (9. August 2019)
+## 1.0.91 (August 9, 2019)
 
  * Core: Added optional _tags_ (array) property to the plugin definition
  * Bunch of small default theme improvements
@@ -286,6 +289,6 @@
    It allows it to load any Portal App with a specific configuration and to interact with the App
    via Message Bus. Can also be used for end-2-end testing with tools such as Selenium.
 
-## 1.0.90 (18. July 2019)
+## 1.0.90 (July 18, 2019)
 
 First public release
