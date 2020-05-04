@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.4.3",
+    "version": "1.4.4",
     "files": [
         "dist/**"
     ],
@@ -19,7 +19,7 @@
         "@angular/language-service": "^9.0.7",
         "@angular/platform-browser": "^9.0.7",
         "@angular/platform-browser-dynamic": "^9.0.7",
-        "@mashroom/mashroom-portal": "1.4.3",
+        "@mashroom/mashroom-portal": "1.4.4",
         "@types/node": "^13.9.2",
         "core-js": "^3.6.4",
         "rxjs": "^6.5.4",
