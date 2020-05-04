@@ -30,8 +30,7 @@
     },
     "scripts": {
         "lint": "eslint src/js --fix",
-        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/server.js\"",
-        "start": "node dist/server.js",
+        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/dev_server.js\"",
         "build": "babel src/js -d dist && node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/sass/style.scss dist/style.css"
     },
     "mashroom": {
