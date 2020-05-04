@@ -59,6 +59,7 @@ describe('MashroomSecurityMiddleware', () => {
 
     it('authenticates silently without user interaction if possible on public pages', async () => {
         let authenticateCalled = false;
+        let responsePassedToAuthenticate: any = null;
 
         const req: any = {
             headers: {},
@@ -78,8 +79,9 @@ describe('MashroomSecurityMiddleware', () => {
                             async canAuthenticateWithoutUserInteraction() {
                                 return true;
                             },
-                            async authenticate() {
+                            async authenticate(req, res) {
                                 authenticateCalled = true;
+                                responsePassedToAuthenticate = res;
                             },
                             getUser() {
                                 return null;
@@ -91,6 +93,8 @@ describe('MashroomSecurityMiddleware', () => {
         };
 
         const res: any = {
+            test: 1,
+            redirect: () => {},
         };
 
         const next = jest.fn();
@@ -101,6 +105,9 @@ describe('MashroomSecurityMiddleware', () => {
 
         expect(next.mock.calls.length).toBe(1);
         expect(authenticateCalled).toBeTruthy();
+        expect(responsePassedToAuthenticate).toBeTruthy();
+        expect(responsePassedToAuthenticate.test).toBe(1);
+        expect(() => responsePassedToAuthenticate.redirect()).toThrow('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
     });
 
     it('doesnt call refreshAuthentication if the x-mashroom-does-not-extend-auth header is set', async () => {

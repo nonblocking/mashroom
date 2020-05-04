@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Security: Pass a valid response object during a silent login (when canAuthenticateWithoutUserInteraction() is true).
+   It was not possible to set cookies.
+
 ## 1.4.4 (May 4, 2020)
 
  * Upgraded libraries with known vulnerabilities

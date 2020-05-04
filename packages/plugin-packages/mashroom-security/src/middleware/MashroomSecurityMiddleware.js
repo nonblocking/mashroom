@@ -62,7 +62,7 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
 
                 if (allowed && !user) {
                     // Try to authenticate on public pages if this is possible without user interaction
-                    await this._authenticateIfPossibleWithoutUserInteraction(securityService, logger, req);
+                    await this._authenticateIfPossibleWithoutUserInteraction(securityService, logger, req, res);
                 }
 
             } catch (e) {
@@ -77,18 +77,34 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         };
     }
 
-    async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: ExpressRequest) {
+    async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: ExpressRequest, res: ExpressResponse) {
         try {
             if (await securityService.canAuthenticateWithoutUserInteraction(req)) {
-                const dummyResponse: any = {
-                    redirect: () => {
-                        throw new Error('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
-                    }
-                };
-                await securityService.authenticate(req, dummyResponse);
+                const responseProxy = this._createResponseProxyWithDisabledRedirect(res);
+                await securityService.authenticate(req, responseProxy);
             }
         } catch (e) {
             logger.error('Authentication without user interaction failed!', e);
         }
+    }
+
+    _createResponseProxyWithDisabledRedirect(res: ExpressResponse): ExpressResponse {
+        const responseProxyHandler = {
+            get(target, key, receiver) {
+                const prop = Reflect.get(target, key, receiver);
+                if (typeof(prop) === 'function') {
+                    if (key === 'redirect') {
+                        throw new Error('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
+                    }
+                    return function (...args) {
+                        return prop.apply(this, args);
+                    }
+                }
+
+                return prop;
+            }
+        }
+
+        return new Proxy(res, responseProxyHandler);
     }
 }
