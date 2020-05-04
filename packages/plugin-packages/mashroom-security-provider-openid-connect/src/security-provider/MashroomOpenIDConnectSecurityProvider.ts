@@ -22,7 +22,7 @@ import type {ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
-    constructor(private scope: string, private usePKCE: boolean = false, private extraAuthParams: any = {}) {
+    constructor(private scope: string, private usePKCE: boolean = false, private extraAuthParams: any = {}, private rejectUnauthorized: boolean = true) {
     }
 
     async canAuthenticateWithoutUserInteraction(): Promise<boolean> {
@@ -154,11 +154,11 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
                 id_token_hint: authData.tokenSet.id_token,
             });
 
-            const options = {
+            await requestNative({
                 uri: endSessionUrl,
                 method: 'GET',
-            };
-            await requestNative(options);
+                rejectUnauthorized: this.rejectUnauthorized,
+            });
         } catch (e) {
             logger.error('Revoking identity provider session failed!', e);
         }
