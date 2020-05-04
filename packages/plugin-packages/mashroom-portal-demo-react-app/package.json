@@ -44,7 +44,7 @@
                     "resourcesRoot": "./dist",
                     "restProxies": {},
                     "appConfig": {
-                        "firstName": "Rachel"
+                        "firstName": "Jimmy"
                     }
                 }
             }

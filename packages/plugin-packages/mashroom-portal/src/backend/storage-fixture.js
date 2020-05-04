@@ -29,7 +29,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: shortid.generate(),
         appConfig: {
-            firstName: 'Rachel',
+            firstName: 'Jimmy',
         },
     };
 
@@ -37,7 +37,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: shortid.generate(),
         appConfig: {
-            firstName: 'Monica',
+            firstName: 'Mike',
         },
     };
 
@@ -45,7 +45,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: shortid.generate(),
         appConfig: {
-            firstName: 'Phoebe',
+            firstName: 'Gus',
         },
     };
 
@@ -61,7 +61,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo Angular App',
         instanceId: shortid.generate(),
         appConfig: {
-            firstName: 'Chandler',
+            firstName: 'Kim',
         },
     };
 
