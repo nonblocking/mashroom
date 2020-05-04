@@ -54,9 +54,13 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
     next();
 });
 
+wrapperApp.get('/', (req: ExpressRequest, res: ExpressResponse) => {
+    res.redirect('/login');
+});
+
 wrapperApp.use('/login', app);
 
-wrapperApp.listen(8080, () => {
-    console.log('Listening on 8080');
+wrapperApp.listen(5077, () => {
+    console.log('Listening on 5077');
 });
 
