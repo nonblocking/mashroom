@@ -32,7 +32,7 @@
     "scripts": {
         "lint": "eslint src test --ext '.ts' --fix",
         "type-check": "tsc --noEmit",
-        "test": "jest --passWithNoTests",
+        "test": "jest",
         "build": "babel src --extensions '.ts' -d dist"
     },
     "mashroom": {
