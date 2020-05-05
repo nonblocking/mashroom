@@ -94,6 +94,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const res: any = {
             test: 1,
+            cookie: () => { return true; },
             redirect: () => {},
         };
 
@@ -107,6 +108,7 @@ describe('MashroomSecurityMiddleware', () => {
         expect(authenticateCalled).toBeTruthy();
         expect(responsePassedToAuthenticate).toBeTruthy();
         expect(responsePassedToAuthenticate.test).toBe(1);
+        expect(responsePassedToAuthenticate.cookie()).toBeTruthy();
         expect(() => responsePassedToAuthenticate.redirect()).toThrow('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
     });
 
