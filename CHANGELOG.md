@@ -3,8 +3,11 @@
 
 ## [unreleased]
 
- * Security: Pass a valid response object during a silent login (when canAuthenticateWithoutUserInteraction() is true).
-   It was not possible to set cookies.
+## 1.4.5 (May 5, 2020)
+
+ * Security: A valid response object will now be passed to security providers during a silent login
+   (when canAuthenticateWithoutUserInteraction() is true). It was not possible to set cookies.
+ * OIDC Security Provider: Fixed *rejectUnauthorized* - didn't work as expected
 
 ## 1.4.4 (May 4, 2020)
 
@@ -12,7 +15,6 @@
  * Default Login Webapp: Renamed the redirect query parameter to *redirectUrl*
  * Portal: The logout route accepts now a *redirectUrl* parameter with the page that should be redirected to after revoking the authentication
    (default is still the Site's index page)
- * OIDC Security Provider: Fixed *rejectUnauthorized* - didn't work as expected
 
 ## 1.4.3 (May 2, 2020)
 
