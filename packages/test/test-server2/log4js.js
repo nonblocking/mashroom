@@ -1,11 +1,13 @@
 
-const NODE_ID = process.env.pm_id || process.pid;
+const cluster = require('cluster');
+
+const WORKER_ID = process.env.pm_id || cluster.worker.id;
 
 module.exports = {
     appenders: {
         file: {
             type: 'file',
-            filename: `log/mashroom.${NODE_ID}.log`,
+            filename: `log/mashroom.${WORKER_ID}.log`,
             maxLogSize: 10485760, numBackups: 3,
             layout: {
                 type: 'pattern',
