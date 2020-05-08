@@ -12,7 +12,6 @@ const config: MashroomServerConfig = {
     tmpFolder: os.tmpdir(),
     pluginPackageFolders: [{
         path: './node_modules/@mashroom',
-        watch: true,
     }],
     ignorePlugins: [],
     indexPage: '/'
