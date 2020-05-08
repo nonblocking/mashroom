@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Core: Enable Express "view cache" when no plugin package is in *devMode*,
+   even if NODE_ENV is not *production*.
+
 ## 1.4.5 (May 5, 2020)
 
  * Security: A valid response object will now be passed to security providers during a silent login

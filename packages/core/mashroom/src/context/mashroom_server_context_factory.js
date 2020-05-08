@@ -34,6 +34,7 @@ import InitializationError from '../errors/InitializationError';
 
 import type {
     MashroomLoggerFactory,
+    MashroomLogger,
     ExpressApplication,
     MashroomServerConfig,
     MashroomPluginDefinition,
@@ -62,6 +63,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
 
     const loggerDelegate = await createLoggerDelegate(serverRootPath);
     const loggerFactory = await createLoggerFactory(loggerDelegate);
+    const logger = loggerFactory('mashroom');
 
     const serverInfo = createServerInfo();
 
@@ -69,12 +71,13 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const serverConfigHolder = configLoader.load(serverRootPath);
     const serverConfig = serverConfigHolder.getConfig();
 
-    const scanner = new MashroomPluginPackageScanner(serverConfig, loggerFactory);
-    const builder = createBuilder(serverConfig, loggerFactory);
+    const devMode: boolean = isDevMode(serverConfig, logger);
+    const isPackageInDevMode = (path) => devMode && serverConfig.pluginPackageFolders.some((ppf) => path.indexOf(ppf.path) === 0 && !!ppf.devMode);
 
-    const isDevMode = (path) => serverConfig.pluginPackageFolders.some((ppf) => path.indexOf(ppf.path) === 0 && !!ppf.devMode);
+    const scanner = new MashroomPluginPackageScanner(serverConfig, loggerFactory);
+    const builder = devMode ? createBuilder(serverConfig, loggerFactory, logger) : null;
     const pluginPackageFactory = (path: string, connector: MashroomPluginPackageRegistryConnector) =>
-        new MashroomPluginPackage(path, serverConfig.ignorePlugins, connector, isDevMode(path) ? builder : null, loggerFactory);
+        new MashroomPluginPackage(path, serverConfig.ignorePlugins, connector, isPackageInDevMode(path) ? builder : null, loggerFactory);
     const pluginFactory = (pluginDefinition: MashroomPluginDefinition, pluginPackage: MashroomPluginPackageType, connector: MashroomPluginRegistryConnector) =>
         new MashroomPlugin(pluginDefinition, pluginPackage, connector, loggerFactory);
 
@@ -85,6 +88,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const pluginRegistry = new MashroomPluginRegistry(scanner, pluginPackageFactory, pluginFactory, pluginContextHolder, loggerFactory);
 
     const expressApp = express();
+    setExpressConfig(expressApp, devMode, logger);
     const httpServer = http.createServer(expressApp);
     addDefaultExpressErrorHandler(expressApp, loggerFactory);
 
@@ -120,16 +124,20 @@ const isCluster = () => {
     return 'PM2_HOME' in process.env || !cluster.isMaster;
 };
 
-const createBuilder = (config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory): ?MashroomPluginPackageBuilder => {
-    if (!isCluster()) {
-        const anyDevMode = config.pluginPackageFolders.some((ppf) => !!ppf.devMode);
-        if (anyDevMode) {
-            return new MashroomPluginPackageBuilder(config, loggerFactory);
-        }
-    } else {
-        loggerFactory('mashroom').warn('Cluster mode detected: Disabling devMode!');
+const isDevMode = (serverConfig: MashroomServerConfig, logger: MashroomLogger) => {
+    let devMode = serverConfig.pluginPackageFolders.some((ppf) => !!ppf.devMode);
+    if (devMode && isCluster()) {
+        logger.warn('Cluster mode detected: Disabling dev mode!');
+        devMode = false;
     }
-    return null;
+    if (devMode) {
+        logger.info('Some packages are in dev mode. Don\'t use this configuration in production.');
+    }
+    return devMode;
+};
+
+const createBuilder = (config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory, logger: MashroomLogger): MashroomPluginPackageBuilder => {
+    return new MashroomPluginPackageBuilder(config, loggerFactory);
 };
 
 const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, expressApplication: ExpressApplication, httpServer: http$Server,
@@ -157,7 +165,8 @@ const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType,
     serviceNamespacesRegistry.registerServices('core', coreService);
 };
 
-const addDefaultMiddleware = (expressApp: ExpressApplication, pluginContextHolder: MashroomPluginContextHolderType, middlewarePluginDelegate: MiddlewarePluginDelegateType) => {
+const addDefaultMiddleware = (expressApp: ExpressApplication, pluginContextHolder: MashroomPluginContextHolderType,
+                              middlewarePluginDelegate: MiddlewarePluginDelegateType) => {
     // Plugin context middleware must be the first
     const exposePluginContextMiddleware = new ExposePluginContextMiddleware(pluginContextHolder);
     expressApp.use(exposePluginContextMiddleware.middleware());
@@ -170,6 +179,13 @@ const addDefaultMiddleware = (expressApp: ExpressApplication, pluginContextHolde
     const xPoweredByHeaderMiddleware = new XPoweredByHeaderMiddleware(pluginContextHolder);
     expressApp.use(xPoweredByHeaderMiddleware.middleware());
 };
+
+const setExpressConfig = (expressApp: ExpressApplication, devMode: boolean, logger: MashroomLogger) => {
+    if (!devMode) {
+        logger.info('Enabling express template cache');
+        expressApp.enable('view cache');
+    }
+}
 
 const addDefaultExpressErrorHandler = (expressApp: ExpressApplication, loggerFactory: MashroomLoggerFactory) => {
     const errorHandler = new DefaultExpressErrorHandler(loggerFactory);
