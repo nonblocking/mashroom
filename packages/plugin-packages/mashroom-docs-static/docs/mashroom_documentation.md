@@ -210,7 +210,7 @@ The configuration files are expected in the folder where _mashroom_ is executed.
 
     mashroom <path_to_config_files>
 
-The following config files are loaded an merged together if present (in this order):
+The following config files are loaded and merged together if present (in this order):
 
 * mashroom.json
 * mashroom.js
@@ -227,9 +227,10 @@ The typical configuration could look like this:
     "name": "Mashroom Test Server 1",
     "port": 8080,
     "pluginPackageFolders": [{
-         "path": "./node_modules/@mashroom"
+        "path": "./node_modules/@mashroom"
      }, {
         "path": "./my-plugin-packages",
+        "watch": true,
         "devMode": true
     }],
     "ignorePlugins": [],
@@ -302,9 +303,14 @@ Since version 1.3 the property values can also contain string templates and the 
 
 #### Properties
 
- * _name_: The server name
- * _port_: The port, default: 5050
+ * _name_: The server name (default: Mashroom Server)
+ * _port_: The port the server should bind to (default: 5050)
  * _pluginPackageFolders_: An array of folder paths that contain *Node.js* modules with *Mashroom Server* plugins
+    An object in this array can have the following properties:
+      * _path_: The folder path, relative to the config file (mandatory)
+      * _watch_: Determines if this folder should be watched for changed, new or removed packages (default: false)
+      * _devMode_: If this is true the server automatically builds plugins on changes before reloading it.
+        This option enforces _watch_. (default: false)
  * _ignorePlugins_: An array of plugin names which shall be ignored (and not loaded)
  * _indexPage_: The start page if the root ('/') is requested
  * _plugins_: This section can be used to override the *defaultConfig* of arbitrary plugins
