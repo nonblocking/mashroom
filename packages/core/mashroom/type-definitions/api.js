@@ -55,7 +55,8 @@ export type MashroomLoggerFactory = {
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export type MashroomServerInfo = {
-    +version: string
+    +version: string,
+    +devMode: boolean,
 }
 
 /* Plugin Package */

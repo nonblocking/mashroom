@@ -37,6 +37,10 @@ const overview = (pluginContext: MashroomPluginContext) => `
             <td>${pluginContext.serverInfo.version}</td>
         </tr>
         <tr>
+            <th>Packages in Dev Mode</th>
+            <td>${pluginContext.serverInfo.devMode ? '<span style="color:orange">Yes</span>' : 'No'}</td>
+        </tr>
+        <tr>
             <th>Node.js version</th>
             <td>${process.versions['node']}</td>
         </tr>

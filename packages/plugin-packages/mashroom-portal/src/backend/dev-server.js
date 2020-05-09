@@ -185,7 +185,8 @@ app.use((req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) =
     };
     const pluginContext: MashroomPluginContext = {
         serverInfo: {
-            version: '1.0.0'
+            version: '1.0.0',
+            devMode: true,
         },
         serverConfig,
         loggerFactory: dummyLoggerFactory,

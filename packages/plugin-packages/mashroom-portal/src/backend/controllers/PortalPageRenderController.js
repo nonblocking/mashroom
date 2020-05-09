@@ -74,8 +74,6 @@ export default class PortalPageRenderController {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
 
         try {
-            const serverConfig = req.pluginContext.serverConfig;
-
             const path = req.path;
             const sitePath = getSitePath(req);
             const portalPath = getPortalPath();
@@ -107,7 +105,9 @@ export default class PortalPageRenderController {
             const themeName = page.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
             const layoutName = page.layout || site.defaultLayout;
 
-            const model = await this._createPortalPageModel(req, serverConfig, portalPath, sitePath, site, pageRef, page, themeName, layoutName, logger);
+            const portalName = req.pluginContext.serverConfig.name;
+            const devMode = req.pluginContext.serverInfo.devMode;
+            const model = await this._createPortalPageModel(req, portalName, devMode, portalPath, sitePath, site, pageRef, page, themeName, layoutName, logger);
 
             this._render(themeName, model, res, logger);
 
@@ -117,8 +117,9 @@ export default class PortalPageRenderController {
         }
     }
 
-    async _createPortalPageModel(req: ExpressRequest, serverConfig: MashroomServerConfig, portalPath: string, sitePath: string, site: MashroomPortalSite, pageRef: MashroomPortalPageRef,
-                                    page: MashroomPortalPage, themeName: ?string, layoutName: ?string, logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
+    async _createPortalPageModel(req: ExpressRequest, portalName: string, devMode: boolean, portalPath: string, sitePath: string,
+                                 site: MashroomPortalSite, pageRef: MashroomPortalPageRef, page: MashroomPortalPage,
+                                 themeName: ?string, layoutName: ?string, logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
@@ -135,7 +136,6 @@ export default class PortalPageRenderController {
             adminPluginName = context.portalPluginConfig.adminApp;
         }
 
-        const devMode = serverConfig.pluginPackageFolders && serverConfig.pluginPackageFolders.some((ppf) => ppf.devMode);
         let checkAuthenticationExpiration = false;
         if (user) {
             checkAuthenticationExpiration = true;
@@ -165,7 +165,7 @@ export default class PortalPageRenderController {
         const userAgent = determineUserAgent(req);
 
         return {
-            portalName: serverConfig.name,
+            portalName,
             portalBasePath: portalPath,
             siteBasePath,
             site: localizedSite,
@@ -210,7 +210,7 @@ export default class PortalPageRenderController {
         const theme = pluginRegistry.themes.find((t) => t.name === themeName);
         if (theme) {
             try {
-                let engine = null;
+                let engine;
                 if (viewEngineCache.has(theme.name)) {
                     engine = viewEngineCache.get(theme.name);
                 } else {

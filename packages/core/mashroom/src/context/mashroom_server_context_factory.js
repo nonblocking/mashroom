@@ -65,8 +65,6 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const loggerFactory = await createLoggerFactory(loggerDelegate);
     const logger = loggerFactory('mashroom');
 
-    const serverInfo = createServerInfo();
-
     const configLoader = new MashroomServerConfigLoader(loggerFactory);
     const serverConfigHolder = configLoader.load(serverRootPath);
     const serverConfig = serverConfigHolder.getConfig();
@@ -98,6 +96,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     addDefaultPluginLoaders(pluginRegistry, expressApp, httpServer, serviceRegistry, middlewarePluginDelegate, loggerFactory, pluginContextHolder);
     addCoreServices(serviceRegistry, pluginRegistry, middlewarePluginDelegate, loggerFactory);
 
+    const serverInfo = createServerInfo(devMode);
     const globalNodeErrorHandler = new GlobalNodeErrorHandler(loggerFactory);
     const server = new MashroomServer(expressApp, httpServer, serverInfo, serverConfig, scanner, globalNodeErrorHandler, loggerFactory);
 
@@ -206,7 +205,7 @@ const createServerContextHolder = () => {
     };
 };
 
-const createServerInfo = (): MashroomServerInfo => {
+const createServerInfo = (devMode: boolean): MashroomServerInfo => {
     let version = '<unknown>';
     try {
         const mashroomJson = require(path.resolve(__dirname, '../../package.json'));
@@ -216,7 +215,8 @@ const createServerInfo = (): MashroomServerInfo => {
     }
 
     return {
-        version
+        version,
+        devMode,
     };
 };
 

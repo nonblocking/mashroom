@@ -75,6 +75,7 @@ export type LogLevel = "debug" | "info" | "warn" | "error";
 
 export type MashroomServerInfo = {
     readonly version: string;
+    readonly devMode: boolean;
 };
 
 /* Plugin Package */
