@@ -1,12 +1,11 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "plugins": [
-        "flowtype",
+        "@typescript-eslint/eslint-plugin",
         "jest"
     ],
     "extends": [
-        "eslint:recommended",
-        "plugin:flowtype/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "node": true,
@@ -14,11 +13,7 @@
         "es6": true,
         "jest": true
     },
-    "globals": {
-        "$Shape": false
-    },
     "rules": {
-        "no-unused-vars": "off",
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+        "@typescript-eslint/ban-ts-ignore": "off"
     }
 }

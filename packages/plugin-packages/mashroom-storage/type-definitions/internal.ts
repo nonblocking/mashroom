@@ -9,6 +9,6 @@ export type MashroomStorageProviderMap = {
 export interface MashroomStorageRegistry {
     registerStorage(name: string, storage: MashroomStorage): void;
     unregisterStorage(name: string): void;
-    getStorage(name: string): ?MashroomStorage;
-    +storages: MashroomStorageProviderMap;
+    getStorage(name: string): MashroomStorage | undefined | null;
+    readonly storages: MashroomStorageProviderMap;
 }

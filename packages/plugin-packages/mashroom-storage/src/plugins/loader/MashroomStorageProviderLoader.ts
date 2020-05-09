@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig,
@@ -17,12 +16,12 @@ export default class MashroomStorageProviderLoader implements MashroomPluginLoad
         this._log = loggerFactory('mashroom.storage.loader');
     }
 
-    generateMinimumConfig() {
+    generateMinimumConfig(): MashroomPluginConfig {
         return {
         };
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomStoragePluginBootstrapFunction = plugin.requireBootstrap();
         const storageProvider = await bootstrap(plugin.name, config, contextHolder);
         this._log.info(`Registering storage provider: ${plugin.name}`);
@@ -30,7 +29,7 @@ export default class MashroomStorageProviderLoader implements MashroomPluginLoad
 
     }
 
-    async unload(plugin: MashroomPlugin) {
+    async unload(plugin: MashroomPlugin): Promise<void> {
         this._log.info(`Unregistering storage provider: ${plugin.name}`);
         this._storageRegistry.unregisterStorage(plugin.name);
     }

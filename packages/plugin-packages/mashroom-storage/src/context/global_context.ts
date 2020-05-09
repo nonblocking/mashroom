@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomStorageRegistry from '../plugins/MashroomStorageRegistry';
 
