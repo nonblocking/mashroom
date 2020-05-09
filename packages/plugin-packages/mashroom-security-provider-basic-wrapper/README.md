@@ -1,5 +1,5 @@
 
-# Mashroom BASIC Wrapper Security Provider
+# Mashroom Basic Authentication Wrapper Security Provider
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
