@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Added a wrapper security provider that adds support for Basic authentication to any other security provider that implements _login()_ properly.
+   Useful for end-2-end or load tests and if you want to access some API from an external system.
  * Core: Enable Express "view cache" when no plugin package is in *devMode*,
    even if NODE_ENV is not *production*.
 

@@ -551,6 +551,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-security-provider-openid-connect](../../mashroom-security-provider-openid-connect/README.md) [inc]
 
+[mashroom-security-provider-basic-wrapper](../../mashroom-security-provider-basic-wrapper/README.md) [inc]
+
 [mashroom-security-default-login-webapp](../../mashroom-security-default-login-webapp/README.md) [inc]
 
 [mashroom-storage](../../mashroom-storage/README.md) [inc]

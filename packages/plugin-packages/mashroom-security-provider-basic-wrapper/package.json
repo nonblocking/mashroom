@@ -1,0 +1,58 @@
+{
+    "name": "@mashroom/mashroom-security-provider-basic-wrapper",
+    "description": "Adds support for BASIC to any other security provider that implements login() properly",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@mashroom/mashroom": "1.4.5",
+        "@mashroom/mashroom-security": "1.4.5",
+        "@mashroom/mashroom-utils": "1.4.5",
+        "@types/express": "^4.17.3",
+        "@types/jest": "^25.1.4",
+        "@types/request-promise-native": "^1.0.17",
+        "eslint": "^6.8.0",
+        "express": "^4.17.1",
+        "jest": "^25.1.0",
+        "typescript": "^3.8.3"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src test --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src --extensions '.ts' -d dist"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Basic Wrapper Security Provider",
+                "type": "security-provider",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "requires": [
+                    "Mashroom Session Middleware"
+                ],
+                "defaultConfig": {
+                    "targetSecurityProvider": "Mashroom Security Simple Provider",
+                    "onlyPreemptive": true,
+                    "realm": "mashroom"
+                }
+            }
+        ]
+    }
+}

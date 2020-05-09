@@ -53,6 +53,11 @@
             "loginPage": "/login",
             "authenticationTimeoutSec": 300
         },
+        "Mashroom Basic Wrapper Security Provider": {
+            "targetSecurityProvider": "Mashroom Security Simple Provider",
+            "onlyPreemptive": true,
+            "realm": "mashroom"
+        },
         "Mashroom OpenID Connect Security Provider": {
             "issuerDiscoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
             "scope": "openid email profile",
