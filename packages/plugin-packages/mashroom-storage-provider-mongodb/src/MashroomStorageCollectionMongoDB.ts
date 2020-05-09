@@ -1,8 +1,8 @@
 
 import mongoDBClient from './mongodb_client';
 
-import {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import {
+import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
+import type {
     MashroomStorageCollection,
     StorageObject,
     StorageObjectFilter,
@@ -11,12 +11,12 @@ import {
 } from '@mashroom/mashroom-storage/type-definitions';
 import {Collection} from "mongodb";
 
-export default class MashroomStorageCollectionFilestore<T extends {}> implements MashroomStorageCollection<T> {
+export default class MashroomStorageCollectionMongoDB<T extends {}> implements MashroomStorageCollection<T> {
 
     private logger: MashroomLogger;
 
     constructor(private collectionName: string, private loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.storage.filestore');
+        this.logger = loggerFactory('mashroom.storage.mongodb');
     }
 
     async find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>> {

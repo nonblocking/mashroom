@@ -4,15 +4,15 @@ import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setConnectionUri, close} from '../src/mongodb_client';
 import MashroomStorageCollectionMongoDB from '../src/MashroomStorageCollectionMongoDB';
 
-import {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
+import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 
 type Test = {
-    foo?: string,
-    a?: any,
-    b?: any,
-    c?: any,
-    d?: any,
-    x?: any,
+    foo?: string;
+    a?: any;
+    b?: any;
+    c?: any;
+    d?: any;
+    x?: any;
 }
 
 // @ts-ignore
