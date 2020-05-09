@@ -1,4 +1,3 @@
-// @flow
 
 import sessionFileStore from 'session-file-store';
 

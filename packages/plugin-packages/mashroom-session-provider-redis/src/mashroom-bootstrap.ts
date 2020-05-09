@@ -1,16 +1,18 @@
-// @flow
 
 import Redis from 'ioredis';
 import createRedisStore from 'connect-redis';
+
+import type {RedisOptions} from 'ioredis';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.redis');
 
-    const { redisOptions, cluster, clusterNodes, clusterOptions } = pluginConfig;
+    const { redisOptions: options, cluster, clusterNodes, clusterOptions } = pluginConfig;
+    const redisOptions: RedisOptions = options;
 
-    let client;
+    let client: any;
     if (!cluster) {
         client = new Redis(redisOptions);
     } else {

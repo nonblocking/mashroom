@@ -17,11 +17,17 @@
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-session": "1.4.5",
         "eslint": "^6.8.0",
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "@types/express": "^4.17.6",
+        "@types/express-session": "^1.17.0",
+        "@types/connect-redis": "^0.0.13",
+        "@types/ioredis": "^4.16.1",
+        "typescript": "^3.8.3"
     },
     "scripts": {
-        "lint": "eslint src --fix",
-        "build": "babel src -d dist"
+        "lint": "eslint  src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "build": "babel src -d dist --extensions '.ts'"
     },
     "mashroom": {
         "devModeBuildScript": "build",

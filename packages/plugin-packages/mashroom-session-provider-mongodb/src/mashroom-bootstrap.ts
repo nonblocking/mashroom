@@ -1,4 +1,3 @@
-// @flow
 
 import createMongoDBStore from 'connect-mongodb-session';
 
@@ -6,11 +5,14 @@ import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroo
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.mongodb');
+    const connectionInfo: any = pluginConfig;
+
     const MongoDBStore = createMongoDBStore(expressSession);
-    const store = new MongoDBStore(pluginConfig);
+    const store = new MongoDBStore(connectionInfo);
     store.on('error', (err: any) => {
         logger.error('MongoDB store error:', err);
     });
+
     return store;
 };
 
