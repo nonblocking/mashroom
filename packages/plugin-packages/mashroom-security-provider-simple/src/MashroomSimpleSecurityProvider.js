@@ -92,7 +92,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
                 success: true
             }
         } else {
-            logger.warn('User Authentication failed', username);
+            logger.warn('User Authentication failed:', username);
             return {
                 success: false
             }
