@@ -80,7 +80,9 @@
             "provider": "Mashroom Storage Filestore Provider"
         },
         "Mashroom Storage Filestore Provider": {
-            "dataFolder": "./data/storage"
+            "dataFolder": "./data/storage",
+            "checkExternalChangePeriodMs": 2000,
+            "prettyPrintJson": true
         },
         "Mashroom Storage MongoDB Provider": {
             "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
