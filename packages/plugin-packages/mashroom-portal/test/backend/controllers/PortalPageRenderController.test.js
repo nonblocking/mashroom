@@ -108,6 +108,9 @@ describe('PortalPageRenderController', () => {
                 adminApp: 'admin-portal-app',
             },
         },
+        serverInfo: {
+            devMode: true,
+        },
         loggerFactory: dummyLoggerFactory,
         services: {
             portal: {
