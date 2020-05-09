@@ -280,7 +280,7 @@ export type MashroomServerConfig = {
 }
 
 export type MashroomServices = {
-    +[string]: Object
+    +[string]: any
 }
 
 export type MashroomCoreServices = {

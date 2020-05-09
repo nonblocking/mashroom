@@ -351,7 +351,7 @@ export type MashroomServerConfig = {
 };
 
 export type MashroomServices = {
-    readonly [key: string]: Object;
+    readonly [key: string]: any;
 };
 
 export type MashroomCoreServices = {
