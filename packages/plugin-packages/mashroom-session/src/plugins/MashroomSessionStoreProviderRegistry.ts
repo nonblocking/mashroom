@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     MashroomSessionStoreProvider,
@@ -8,8 +7,8 @@ import type {
 } from '../../type-definitions/internal';
 
 type MashroomSessionStoreProviderHolder = {
-    +pluginName: string,
-    +provider: MashroomSessionStoreProvider
+    readonly pluginName: string;
+    readonly provider: MashroomSessionStoreProvider;
 }
 
 export default class MashroomSessionStoreProviderRegistry implements MashroomSessionStoreProviderRegistryType {
@@ -20,15 +19,15 @@ export default class MashroomSessionStoreProviderRegistry implements MashroomSes
         this._providers = [];
     }
 
-    findProvider(pluginName: string) {
+    findProvider(pluginName: string): MashroomSessionStoreProvider | undefined {
         const holder = this._providers.find((p) => p.pluginName === pluginName);
         if (holder) {
             return holder.provider;
         }
-        return null;
+        return undefined;
     }
 
-    register(pluginName: string, provider: MashroomSessionStoreProvider) {
+    register(pluginName: string, provider: MashroomSessionStoreProvider): void {
         // Remove existing
         this.unregister(pluginName);
 
@@ -38,11 +37,12 @@ export default class MashroomSessionStoreProviderRegistry implements MashroomSes
         });
     }
 
-    unregister(pluginName: string) {
+    unregister(pluginName: string): void {
         this._providers = this._providers.filter((p) => p.pluginName !== pluginName);
     }
 
     get providers(): Array<MashroomSessionStoreProvider> {
+        // @ts-ignore
         return Object.freeze(this._providers.map((p) => p.provider));
     }
 }

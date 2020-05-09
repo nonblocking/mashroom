@@ -42,6 +42,28 @@ You can override the default config in your Mashroom config file like this:
 
 For production you should enable _cookie.secure_ and consider setting _cookie.sameSite_ to either "lax" or "strict" (CSRF protection).
 
+## Services
+
+### MashroomSessionService
+
+The exposed service is accessible through _pluginContext.services.session.service_
+
+**Interface:**
+
+```js
+export interface MashroomSessionService {
+    /**
+     * Get the current session count (if the store supports this).
+     */
+    getSessionCount(req: ExpressRequest): Promise<?number>;
+
+    /**
+     * Clear all sessions (if the store supports this).
+     */
+    clearSessions(req: ExpressRequest): Promise<void>;
+}
+```
+
 ## Plugin Types
 
 ### session-store-provider

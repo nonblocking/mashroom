@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomSessionMiddleware from './MashroomSessionMiddleware';
 

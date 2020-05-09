@@ -16,11 +16,15 @@
         "@babel/cli": "^7.8.4",
         "@mashroom/mashroom": "1.4.5",
         "eslint": "^6.8.0",
-        "express": "^4.17.1"
+        "express": "^4.17.1",
+        "@types/express": "^4.17.6",
+        "@types/express-session": "^1.17.0",
+        "typescript": "^3.8.3"
     },
     "scripts": {
-        "lint": "eslint src --fix",
-        "build": "babel src -d dist"
+        "lint": "eslint  src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "build": "babel src -d dist --extensions '.ts'"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -50,6 +54,15 @@
                 "type": "plugin-loader",
                 "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-session-store-provider-plugin-loader.js",
                 "loads": "session-store-provider"
+            },
+            {
+                "name": "Mashroom Session Services",
+                "type": "services",
+                "namespace": "session",
+                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+                "requires": [
+                    "Mashroom Session Middleware"
+                ]
             }
         ]
     }

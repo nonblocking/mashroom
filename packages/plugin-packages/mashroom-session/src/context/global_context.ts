@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomSessionStoreProviderRegistry from '../plugins/MashroomSessionStoreProviderRegistry';
 

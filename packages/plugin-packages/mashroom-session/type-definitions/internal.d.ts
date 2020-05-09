@@ -1,4 +1,3 @@
-// @flow
 
 import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
 import type {
@@ -9,10 +8,9 @@ export interface MashroomSessionMiddleware {
     middleware(): ExpressMiddleware
 }
 
-
 export interface MashroomSessionStoreProviderRegistry {
-    +providers: Array<MashroomSessionStoreProvider>;
-    findProvider(pluginName: string): ?MashroomSessionStoreProvider;
+    readonly providers: Array<MashroomSessionStoreProvider>;
+    findProvider(pluginName: string): MashroomSessionStoreProvider | undefined;
     register(pluginName: string, provider: MashroomSessionStoreProvider): void;
     unregister(pluginName: string): void;
 }
