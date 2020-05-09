@@ -13,7 +13,7 @@ type MashroomSessionStoreProviderHolder = {
 
 export default class MashroomSessionStoreProviderRegistry implements MashroomSessionStoreProviderRegistryType {
 
-    _providers: Array<MashroomSessionStoreProviderHolder>;
+    private _providers: Array<MashroomSessionStoreProviderHolder>;
 
     constructor() {
         this._providers = [];
@@ -42,7 +42,6 @@ export default class MashroomSessionStoreProviderRegistry implements MashroomSes
     }
 
     get providers(): Array<MashroomSessionStoreProvider> {
-        // @ts-ignore
-        return Object.freeze(this._providers.map((p) => p.provider));
+        return this._providers.map((p) => p.provider);
     }
 }
