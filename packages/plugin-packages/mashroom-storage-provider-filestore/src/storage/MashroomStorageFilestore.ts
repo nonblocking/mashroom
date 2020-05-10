@@ -16,7 +16,7 @@ const COLLECTION_POSTIFX = '.json';
  */
 export default class MashroomStorageFilestore implements MashroomStorage {
 
-    private collections: CollectionMap;
+    private readonly collections: CollectionMap;
 
     constructor(private dataFolder: string, private checkExternalChangePeriodMs: number,
                 private prettyPrintJson: boolean, private loggerFactory: MashroomLoggerFactory) {
