@@ -6,7 +6,7 @@ import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 export type MashroomSessionStoreProvider = Store;
 
 /**
- * Bootstrap method definition for security-provider plugins
+ * Bootstrap method definition for session-store-provider plugins
  */
 export type MashroomSessionStoreProviderPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder, expressSession: any) => Promise<MashroomSessionStoreProvider>;
 
