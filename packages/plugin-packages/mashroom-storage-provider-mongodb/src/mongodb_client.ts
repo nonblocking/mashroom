@@ -5,7 +5,7 @@ let _connectionUri: string | null = null;
 let _client: MongoClient | null = null;
 let _db: Db | null = null;
 
-export const close = async () => {
+export const close = async (): Promise<void> => {
     if (_client) {
         try {
             await _client.close();
@@ -17,7 +17,7 @@ export const close = async () => {
     _db = null;
 };
 
-export const setConnectionUri = async (connectionUri: string) => {
+export const setConnectionUri = async (connectionUri: string): Promise<void> => {
     await close();
     _connectionUri = connectionUri;
 };

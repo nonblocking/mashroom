@@ -3,7 +3,7 @@ import fsExtra from 'fs-extra';
 import path from 'path';
 import MashroomStorageCollectionFilestore from './MashroomStorageCollectionFilestore';
 
-import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorage} from '@mashroom/mashroom-storage/type-definitions';
 import type {CollectionMap} from '../../type-definitions';
 
@@ -17,13 +17,12 @@ const COLLECTION_POSTIFX = '.json';
 export default class MashroomStorageFilestore implements MashroomStorage {
 
     private collections: CollectionMap;
-    private logger: MashroomLogger;
 
     constructor(private dataFolder: string, private checkExternalChangePeriodMs: number,
                 private prettyPrintJson: boolean, private loggerFactory: MashroomLoggerFactory) {
         this.collections = {};
-        this.logger = loggerFactory('mashroom.storage.filestore');
-        this.logger.info(`Filestorage provider data folder: ${this.dataFolder}`);
+        const logger = loggerFactory('mashroom.storage.filestore');
+        logger.info(`Filestorage provider data folder: ${this.dataFolder}`);
         this.ensureDbFolderExists();
     }
 
