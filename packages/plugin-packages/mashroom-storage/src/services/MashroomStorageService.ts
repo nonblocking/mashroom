@@ -4,7 +4,7 @@ import type {MashroomStorageService as MashroomStorageServiceType, MashroomStora
 import type {MashroomStorageRegistry} from '../../type-definitions/internal';
 import {MashroomStorageCollection} from "../../type-definitions";
 
-const MAX_WAIT_FOR_STORAGE = 10000;
+const MAX_WAIT_FOR_STORAGE = 30000;
 
 export default class MashroomStorageService implements MashroomStorageServiceType {
 
