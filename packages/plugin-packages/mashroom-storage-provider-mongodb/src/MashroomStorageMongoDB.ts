@@ -4,13 +4,27 @@ import MashroomStorageCollectionMongoDB from './MashroomStorageCollectionMongoDB
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorage} from '@mashroom/mashroom-storage/type-definitions';
 
+export type CollectionMap = {
+    [name: string]: MashroomStorageCollectionMongoDB<any>;
+}
+
 export default class MashroomStorageMongoDB implements MashroomStorage {
 
+    private readonly collections: CollectionMap;
+
     constructor(private loggerFactory: MashroomLoggerFactory) {
+        this.collections = {};
     }
 
     async getCollection<T extends {}>(name: string): Promise<MashroomStorageCollection<T>> {
-        return new MashroomStorageCollectionMongoDB(name, this.loggerFactory);
+        const existingCollection = this.collections[name];
+        if (existingCollection) {
+            return existingCollection;
+        }
+
+        const collection = new MashroomStorageCollectionMongoDB<T>(name, this.loggerFactory);
+        this.collections[name] = collection;
+        return collection;
     }
 
 }
