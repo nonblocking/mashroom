@@ -52,7 +52,7 @@
             {
                 "name": "Mashroom Session Store Provider Loader",
                 "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-session-store-provider-plugin-loader.js",
+                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
                 "loads": "session-store-provider"
             },
             {
