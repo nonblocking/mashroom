@@ -29,6 +29,7 @@
  * Security: Extend the OIDC provider to optionally support the OAuth 2.0 Exchange Token protocol when accessing backend APIs
    (e.g. the BFF of Portal apps). The provider should transparently use the protocol to request access tokens for APIs
    when configured for a base URI.
+ * Messaging: Add an external messaging provider based on *Redis* Pub/Sub
  * Portal: Add a *Store* that allows it to browse all registered Apps with description, configuration details and screenshots
  * Core: Handle path collisions of express apps
  * Portal Admin App: Make responsive
