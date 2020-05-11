@@ -8,10 +8,11 @@ import type {
     StorageObjectFilter,
     StorageUpdateResult,
     StorageDeleteResult,
+    StorageRecord,
 } from '@mashroom/mashroom-storage/type-definitions';
 import {Collection} from "mongodb";
 
-export default class MashroomStorageCollectionMongoDB<T extends {}> implements MashroomStorageCollection<T> {
+export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> implements MashroomStorageCollection<T> {
 
     private logger: MashroomLogger;
 

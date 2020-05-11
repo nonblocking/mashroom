@@ -11,6 +11,7 @@ import type {
     StorageDeleteResult,
     StorageObject,
     StorageObjectFilter,
+    StorageRecord,
     StorageUpdateResult
 } from '@mashroom/mashroom-storage/type-definitions';
 import {JsonDB} from "../../type-definitions";
@@ -22,7 +23,7 @@ const LOCK_STALE_MS = 3000;
 const LOCK_RETRIES = 5;
 const LOCK_RETRY_MIN_WAIT = 100;
 
-export default class MashroomStorageCollectionFilestore<T extends {}> implements MashroomStorageCollection<T> {
+export default class MashroomStorageCollectionFilestore<T extends StorageRecord> implements MashroomStorageCollection<T> {
 
     private lastExternalChangeCheck: number;
     private dbCache: JsonDB<T> | null;

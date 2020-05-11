@@ -2,11 +2,13 @@
 
 import type {MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
 
-export type StorageObject<T extends {}> = T & {
+export type StorageRecord = Record<string, any>;
+
+export type StorageObject<T extends StorageRecord> = T & {
     _id: any;
 };
 
-export type StorageObjectFilter<T extends {}> = {
+export type StorageObjectFilter<T extends StorageRecord> = {
     [key in keyof StorageObject<T>]?: any
 };
 
@@ -21,7 +23,7 @@ export type StorageDeleteResult = {
 /**
  * Mashroom storage collection
  */
-export interface MashroomStorageCollection<T extends {}> {
+export interface MashroomStorageCollection<T extends StorageRecord> {
     /**
      * Find all items that match given filter (e.g. { name: 'foo' }).
      */
@@ -76,7 +78,7 @@ export interface MashroomStorage {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends {}>(
+    getCollection<T extends StorageRecord>(
         name: string,
     ): Promise<MashroomStorageCollection<T>>;
 }
@@ -85,7 +87,7 @@ export interface MashroomStorageService {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends {}>(
+    getCollection<T extends StorageRecord>(
         name: string,
     ): Promise<MashroomStorageCollection<T>>;
 }
