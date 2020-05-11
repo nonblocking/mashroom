@@ -1,6 +1,8 @@
 // @flow
 
 import path from 'path';
+import url from 'url';
+import querystring from 'querystring';
 import express from 'express';
 import exphbs from 'express-handlebars';
 import bodyParser from 'body-parser';
@@ -131,8 +133,15 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
 
 const redirect = (req: ExpressRequest, res: ExpressResponse) => {
     let redirectUrl = null;
-    if (req.query.redirectUrl) {
-        const redirectParam = decodeURIComponent(req.query.redirectUrl);
+
+    let query = req.query;
+    if (req.method === 'POST' && req.headers.referer) {
+        // Take the redirectUrl parameter from the referer
+        const refererUrl = url.parse(req.headers.referer);
+        query = refererUrl.query && querystring.parse(refererUrl.query);
+    }
+    if (query && query.redirectUrl) {
+        const redirectParam = decodeURIComponent(query.redirectUrl);
         if (redirectParam.startsWith('/')) {
             redirectUrl = redirectParam;
         }

@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Login web-app: All query parameters in the *redirectUrl* are now preserved after login
  * Added a service to obtain the current session count to mashroom-session
  * Core: Added a new property *serverInfo.devMode* to the plugin context that can be used to determine if some packages are in development mode
  * Added a wrapper security provider that adds support for Basic authentication to any other security provider that implements _login()_ properly.
