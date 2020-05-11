@@ -1,19 +1,21 @@
 
 import type {
-    MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig,
-    MashroomPluginContextHolder, MashroomLoggerFactory, MashroomLogger,
+    MashroomPluginLoader,
+    MashroomPlugin,
+    MashroomPluginConfig,
+    MashroomPluginContextHolder,
+    MashroomLoggerFactory,
+    MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomStoragePluginBootstrapFunction} from '../../../type-definitions';
 import type {MashroomStorageRegistry} from '../../../type-definitions/internal';
 
 export default class MashroomStorageProviderLoader implements MashroomPluginLoader {
 
-    _storageRegistry: MashroomStorageRegistry;
-    _log: MashroomLogger;
+    private logger: MashroomLogger;
 
-    constructor(storageRegistry: MashroomStorageRegistry, loggerFactory: MashroomLoggerFactory) {
-        this._storageRegistry = storageRegistry;
-        this._log = loggerFactory('mashroom.storage.loader');
+    constructor(private storageRegistry: MashroomStorageRegistry, private loggerFactory: MashroomLoggerFactory) {
+        this.logger = loggerFactory('mashroom.storage.loader');
     }
 
     generateMinimumConfig(): MashroomPluginConfig {
@@ -24,14 +26,14 @@ export default class MashroomStorageProviderLoader implements MashroomPluginLoad
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomStoragePluginBootstrapFunction = plugin.requireBootstrap();
         const storageProvider = await bootstrap(plugin.name, config, contextHolder);
-        this._log.info(`Registering storage provider: ${plugin.name}`);
-        this._storageRegistry.registerStorage(plugin.name, storageProvider);
+        this.logger.info(`Registering storage provider: ${plugin.name}`);
+        this.storageRegistry.registerStorage(plugin.name, storageProvider);
 
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this._log.info(`Unregistering storage provider: ${plugin.name}`);
-        this._storageRegistry.unregisterStorage(plugin.name);
+        this.logger.info(`Unregistering storage provider: ${plugin.name}`);
+        this.storageRegistry.unregisterStorage(plugin.name);
     }
 
     get name(): string {

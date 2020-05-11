@@ -47,7 +47,7 @@
             {
                 "name": "Mashroom Storage Provider Loader",
                 "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-storage-provider-plugin-loader.js",
+                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
                 "loads": "storage-provider"
             }
         ]
