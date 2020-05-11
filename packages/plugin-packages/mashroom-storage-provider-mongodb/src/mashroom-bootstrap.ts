@@ -1,5 +1,5 @@
 
-import {setConnectionUri} from './mongodb_client';
+import {setConnectionUri, close} from './mongodb_client';
 import MashroomStorageMongoDB from './MashroomStorageMongoDB';
 
 import type {MashroomStoragePluginBootstrapFunction} from '@mashroom/mashroom-storage/type-definitions';
@@ -9,6 +9,11 @@ const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, plu
     const {connectionUri} = pluginConfig;
 
     await setConnectionUri(connectionUri);
+
+    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+        // Close the connection when the plugin reloads
+        close();
+    });
 
     return new MashroomStorageMongoDB(pluginContext.loggerFactory);
 };

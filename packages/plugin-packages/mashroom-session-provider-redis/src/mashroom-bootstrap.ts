@@ -2,14 +2,14 @@
 import Redis from 'ioredis';
 import createRedisStore from 'connect-redis';
 
-import type {EventEmitter} from 'events';
-import type {Commands, RedisOptions, ClusterNode, ClusterOptions} from 'ioredis';
+import type {Redis as RedisClient, Cluster, RedisOptions, ClusterNode, ClusterOptions} from 'ioredis';
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 
-type IORedisClient = EventEmitter & Commands;
+type IORedisClient = RedisClient | Cluster;
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
-    const logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.session.provider.redis');
+    const pluginContext =  pluginContextHolder.getPluginContext();
+    const logger = pluginContext.loggerFactory('mashroom.session.provider.redis');
 
     const redisOptions: RedisOptions = pluginConfig.redisOptions;
     const cluster: boolean = pluginConfig.cluster;
@@ -30,6 +30,11 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
 
     client.on('error', (err: any) => {
         logger.error('Redis store error:', err);
+    });
+
+    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+        // Close the connection when the plugin reloads
+        client.disconnect();
     });
 
     const RedisStore = createRedisStore(expressSession);
