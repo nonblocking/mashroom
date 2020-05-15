@@ -76,7 +76,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
     }
 
     translate(req: ExpressRequest, str: I18NString) {
-        if (typeof(str) === 'string') {
+        if (!str || typeof(str) === 'string') {
             return str;
         }
 
