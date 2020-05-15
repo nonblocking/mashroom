@@ -56,7 +56,7 @@ export const isSitePathPermitted = async (req: ExpressRequest, sitePath: string)
 
 export const isSitePermitted = async (req: ExpressRequest, siteId: string): Promise<boolean> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-    const logger = req.pluginContext.loggerFactory('portal');
+    const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
     logger.debug(`Checking permission for site ${siteId}`);
     return await securityService.checkResourcePermission(req, 'Site', siteId, 'View', true);
@@ -64,7 +64,7 @@ export const isSitePermitted = async (req: ExpressRequest, siteId: string): Prom
 
 export const isPagePermitted = async (req: ExpressRequest, pageId: string): Promise<boolean> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-    const logger = req.pluginContext.loggerFactory('portal');
+    const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
     logger.debug(`Checking permission for page ${pageId}`);
     return await securityService.checkResourcePermission(req, 'Page', pageId, 'View', true);
@@ -76,7 +76,7 @@ export const getPortalAppResourceKey = (pluginName: string, instanceId: ?string)
 
 export const isAppPermitted = async (req: ExpressRequest, pluginName: string, portalAppInstanceId: ?string, existingPortalApp: ?MashroomPortalApp): Promise<boolean> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-    const logger = req.pluginContext.loggerFactory('portal');
+    const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
     logger.debug(`Checking permission for app ${pluginName} and instance: ${pluginName || 'global'}`);
     if (portalAppInstanceId) {
