@@ -38,7 +38,7 @@ And to change the default config of this plugin add:
 }
 ```
 
-* *redisOptions*: Passed to the *Redis* constructor of *ioredis*
+* *redisOptions*: Passed to the *Redis* constructor of [ioredis](https://github.com/luin/ioredis)
 
 Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
