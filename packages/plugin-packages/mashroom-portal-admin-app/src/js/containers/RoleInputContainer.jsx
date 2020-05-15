@@ -11,6 +11,7 @@ import type {Dispatch, State} from '../../../type-definitions';
 
 type OwnProps = {|
     onRoleChange?: (role: ?string) => void,
+    onRoleSelected?: (role: ?string) => void,
     resetRef?: (() => void) => void,
 |}
 

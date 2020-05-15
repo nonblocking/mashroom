@@ -12,6 +12,7 @@ type Props = {
     portalAdminService: MashroomPortalAdminService,
     existingRoles: Array<string>,
     onRoleChange?: (role: ?string) => void,
+    onRoleSelected?: (role: ?string) => void,
     setExistingRoles: (Array<string>) => void,
     resetRef?: (() => void) => void,
 };
@@ -36,6 +37,12 @@ export default class RoleInput extends PureComponent<Props> {
         }
     }
 
+    onRoleSelected(role: string) {
+        if (this.props.onRoleSelected) {
+            this.props.onRoleSelected(role);
+        }
+    }
+
     render() {
         const suggestionHandler = new AutocompleteStringArraySuggestionHandler(this.props.existingRoles);
 
@@ -46,6 +53,7 @@ export default class RoleInput extends PureComponent<Props> {
                     name='roleToAdd'
                     labelId='addRole'
                     onValueChange={this.onRoleChange.bind(this)}
+                    onSuggestionSelect={this.onRoleSelected.bind(this)}
                     minCharactersForSuggestions={2}
                     mustSelectSuggestion={false}
                     suggestionHandler={suggestionHandler}
