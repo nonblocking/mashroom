@@ -25,7 +25,7 @@ export default class PortalThemeController {
     }
 
     async getPortalThemeResource(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
 
         try {
@@ -66,7 +66,7 @@ export default class PortalThemeController {
     }
 
     async getAvailablePortalThemes(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;

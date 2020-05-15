@@ -45,7 +45,7 @@ export default class PortalAppController {
     }
 
     async getPortalAppSetup(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
         try {
@@ -132,7 +132,7 @@ export default class PortalAppController {
     }
 
     async getPortalAppResource(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         const pluginName = req.params.pluginName;
         const resourcePath = req.params['0'];
@@ -150,7 +150,7 @@ export default class PortalAppController {
     }
 
     async getSharedPortalAppResource(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         const typeAndResourcePath = req.params['0'];
         const parts = typeAndResourcePath.split('/');
@@ -170,7 +170,7 @@ export default class PortalAppController {
         let sent = false;
         while (portalApps.length > 0 && !sent) {
             const portalApp = portalApps.pop();
-            logger.debug(`Take the shared resource ${resourcePath} from portal app: ${portalApp.name}`);
+            logger.debug(`Taking the shared resource ${resourcePath} from portal app: ${portalApp.name}`);
             sent = await this._sendResource(resourcePath, portalApp, req, res);
         }
 
@@ -181,7 +181,7 @@ export default class PortalAppController {
     }
 
     getAvailablePortalApps(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         const {q, updatedSince} = req.query;
 
         let apps: Array<MashroomAvailablePortalApp> = this.pluginRegistry.portalApps.map((app) => ({
@@ -248,7 +248,7 @@ export default class PortalAppController {
     }
 
     async _sendResource(resourcePath: string, portalApp: MashroomPortalApp, req: ExpressRequest, res: ExpressResponse): Promise<boolean> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
 
         if (cacheControlService) {

@@ -9,7 +9,7 @@ import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/ma
 export default class IndexController {
 
     async index(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalPath = getPortalPath();

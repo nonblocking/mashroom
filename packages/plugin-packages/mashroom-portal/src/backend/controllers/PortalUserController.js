@@ -14,7 +14,7 @@ type NewLanguage = {
 export default class PortalUserController {
 
     async getAuthenticatedUserAuthenticationExpiration(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
@@ -36,7 +36,7 @@ export default class PortalUserController {
     }
 
     async setAuthenticatedUserLanguage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
@@ -60,7 +60,7 @@ export default class PortalUserController {
     }
 
     async logout(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         logger.debug('Logout called');
 
         try {

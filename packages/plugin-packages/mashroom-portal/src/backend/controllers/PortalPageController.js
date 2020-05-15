@@ -36,7 +36,7 @@ export default class PortalPageController {
     }
 
     async getPortalPage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -63,7 +63,7 @@ export default class PortalPageController {
     }
 
     async addPage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -97,7 +97,7 @@ export default class PortalPageController {
     }
 
     async updatePage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -137,7 +137,7 @@ export default class PortalPageController {
     }
 
     async deletePage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -168,7 +168,7 @@ export default class PortalPageController {
     }
 
     async getPagePermittedRoles(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -201,7 +201,7 @@ export default class PortalPageController {
     }
 
     async updatePagePermittedRoles(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -250,7 +250,7 @@ export default class PortalPageController {
     }
 
     async getPortalAppInstances(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -285,7 +285,7 @@ export default class PortalPageController {
     }
 
     async addPortalApp(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -361,7 +361,7 @@ export default class PortalPageController {
     }
 
     async updatePortalApp(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -420,7 +420,7 @@ export default class PortalPageController {
     }
 
     async removePortalApp(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -465,7 +465,7 @@ export default class PortalPageController {
     }
 
     async getPortalAppPermittedRoles(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -512,7 +512,7 @@ export default class PortalPageController {
     }
 
     async updatePortalAppPermittedRoles(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;

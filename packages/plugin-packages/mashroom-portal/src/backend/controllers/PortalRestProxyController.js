@@ -38,7 +38,7 @@ export default class PortalRestProxyController {
     }
 
     async forward(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;

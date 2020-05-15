@@ -71,7 +71,7 @@ export default class PortalPageRenderController {
     }
 
     async renderPortalPage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const path = req.path;

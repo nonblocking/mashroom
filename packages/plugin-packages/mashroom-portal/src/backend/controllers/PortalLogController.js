@@ -18,7 +18,7 @@ export default class PortalLogController {
     }
 
     async log(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal.client');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal.client');
 
         const body: any = req.body;
         const logMessages: Array<ClientLogMessage> = body;

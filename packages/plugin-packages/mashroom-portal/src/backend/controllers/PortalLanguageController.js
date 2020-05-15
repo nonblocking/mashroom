@@ -10,7 +10,7 @@ import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions
 export default class PortalLanguageController {
 
     async getAvailableLanguages(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
@@ -24,7 +24,7 @@ export default class PortalLanguageController {
     }
 
     async getDefaultLanguage(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;

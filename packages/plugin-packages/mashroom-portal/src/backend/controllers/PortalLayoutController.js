@@ -24,7 +24,7 @@ export default class PortalLayoutController {
     }
 
     async getAvailablePortalLayouts(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;

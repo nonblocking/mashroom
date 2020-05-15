@@ -8,7 +8,7 @@ import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-def
 export default class PortalRolesController {
 
     async getExistingRoles(req: ExpressRequest, res: ExpressResponse) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('portal');
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
