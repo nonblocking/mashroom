@@ -61,6 +61,10 @@ module.exports = (env, argv) => {
                     ],
                     sideEffects: true,
                 },
+                {
+                    test: /random-grey-variations/,
+                    use: 'null-loader',
+                },
             ],
         },
         resolve: {
@@ -79,6 +83,8 @@ module.exports = (env, argv) => {
                 'object-assign': path.resolve(__dirname, 'node_modules/object-assign'),
                 // Allow treeshaking of lodash modules
                 'lodash': path.resolve(__dirname, 'node_modules/lodash-es'),
+                // Only for dev mode when the them is included
+                './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
             },
         },
         plugins: [

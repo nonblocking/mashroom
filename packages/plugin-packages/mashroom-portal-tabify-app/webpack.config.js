@@ -57,11 +57,19 @@ module.exports = (env, argv) => {
                     ],
                     sideEffects: true,
                 },
+                {
+                    test: /random-grey-variations/,
+                    use: 'null-loader',
+                },
             ],
         },
         externals: [],
         resolve: {
             extensions: ['.js', '.jsx'],
+            alias: {
+                // Only for dev mode when the them is included
+                './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
+            }
         },
         devServer: {
             inline: true,
