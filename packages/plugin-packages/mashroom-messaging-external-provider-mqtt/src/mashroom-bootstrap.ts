@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomMessagingExternalProviderMQTT from './MashroomMessagingExternalProviderMQTT';
 
@@ -8,7 +7,8 @@ const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = asyn
     const { internalTopic, mqttConnectUrl, mqttProtocolVersion, mqttQoS, mqttUser, mqttPassword, rejectUnauthorized } = pluginConfig;
     const pluginContext = pluginContextHolder.getPluginContext();
 
-    const provider = new MashroomMessagingExternalProviderMQTT(internalTopic, mqttConnectUrl, mqttProtocolVersion, mqttQoS,
+    const provider = new MashroomMessagingExternalProviderMQTT(
+        internalTopic, mqttConnectUrl, mqttProtocolVersion, mqttQoS,
         mqttUser, mqttPassword, rejectUnauthorized, pluginContext.loggerFactory);
 
     provider.subscribeToInternalTopic();

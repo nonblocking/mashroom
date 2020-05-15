@@ -1,4 +1,3 @@
-// @flow
 
 import type {MashroomMessagingExternalProvider} from '@mashroom/mashroom-messaging/type-definitions';
 

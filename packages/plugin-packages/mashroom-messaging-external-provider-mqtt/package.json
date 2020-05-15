@@ -18,7 +18,9 @@
         "@babel/cli": "^7.8.4",
         "eslint": "^7.0.0",
         "express": "^4.17.1",
-        "jest": "^26.0.1"
+        "jest": "^26.0.1",
+        "typescript": "^3.8.3",
+        "@types/jest": "^25.2.2"
     },
     "jest": {
         "verbose": true,
@@ -26,12 +28,13 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
         "test": "jest --passWithNoTests",
-        "build": "babel src -d dist"
+        "build": "babel src -d dist --extensions '.ts'"
     },
     "mashroom": {
         "devModeBuildScript": "build",
