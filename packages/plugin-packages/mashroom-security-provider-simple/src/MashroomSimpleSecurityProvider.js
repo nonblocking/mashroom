@@ -3,7 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
-import shajs from 'sha.js';
+import {createHash} from 'crypto';
 
 import type {
     MashroomSecurityProvider, MashroomSecurityUser
@@ -69,7 +69,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     async login(request: ExpressRequest, username: string, password: string) {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.simple');
 
-        const passwordHash = shajs('sha256').update(password).digest('hex');
+        const passwordHash = createHash('sha256').update(password).digest('hex');
 
         const user = this._getUserStore(logger).find((u) => u.username === username && u.passwordHash === passwordHash);
 
