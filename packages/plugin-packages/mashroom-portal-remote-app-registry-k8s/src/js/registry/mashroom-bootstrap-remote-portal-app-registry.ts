@@ -7,11 +7,12 @@ import {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashro
 
 const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const pluginContext = contextHolder.getPluginContext();
-    const {k8sNamespaces, serviceCheckTimeoutSec, scanPeriodSec, refreshIntervalSec, serviceNameFilter, accessViaClusterIP} = pluginConfig;
+    const {k8sNamespaces, socketTimeoutSec, scanPeriodSec, refreshIntervalSec, serviceNameFilter, accessViaClusterIP} = pluginConfig;
 
     const kubernetesConnector = process.env.DUMMY_K8S_CONNECTOR ? new DummyKubernetesConnector() : new KubernetesConnector();
 
-    const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(k8sNamespaces, serviceNameFilter, serviceCheckTimeoutSec, scanPeriodSec,
+    const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(
+        k8sNamespaces, serviceNameFilter, socketTimeoutSec, scanPeriodSec,
         refreshIntervalSec, accessViaClusterIP, kubernetesConnector, pluginContext.loggerFactory);
     backgroundJob.start();
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {

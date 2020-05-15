@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Remote Portal App Registries: Added an option _socketTimeoutSec_ to configure the timeout when trying to access remote apps
  * Storage Service: Can now leverage the new Memory Cache Service to accelerate the access. Can be configured like this:
    ```json
    "Mashroom Storage Services": {

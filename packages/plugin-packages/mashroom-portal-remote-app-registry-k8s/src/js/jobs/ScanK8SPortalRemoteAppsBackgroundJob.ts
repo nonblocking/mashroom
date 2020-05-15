@@ -17,8 +17,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     private readonly serviceNameFilter: RegExp;
     private readonly logger: MashroomLogger;
 
-    constructor(private k8sNamespaces: Array<string>, serviceNameFilterStr: string, private serviceCheckTimeoutSec: number, private scanPeriodSec: number,
-                private refreshIntervalSec: number, private accessViaClusterIP: boolean, private kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
+    constructor(private k8sNamespaces: Array<string>, serviceNameFilterStr: string, private socketTimeoutSec: number,
+                private scanPeriodSec: number, private refreshIntervalSec: number, private accessViaClusterIP: boolean,
+                private kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
         this.serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
         this.logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
     }
@@ -150,7 +151,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const requestOptions = {
             url: `${serviceUrl}/package.json`,
             followRedirect: false,
-            timeout: this.serviceCheckTimeoutSec * 1000,
+            timeout: this.socketTimeoutSec * 1000,
         };
 
         return new Promise((resolve, reject) => {

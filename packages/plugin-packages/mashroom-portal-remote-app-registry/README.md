@@ -56,6 +56,7 @@ You can override the default config in your Mashroom config file like this:
   "plugins": {
         "Mashroom Portal Remote App Registry": {
             "remotePortalAppUrls": "./remote-portal-apps.json",
+            "socketTimeoutSec": 3,
             "checkIntervalSec": 30,
             "registrationRefreshIntervalSec": 3600
         },
@@ -67,9 +68,10 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
- * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (Default: ./remote-portal-apps.json)
+ * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (default: ./remote-portal-apps.json)
+ * _socketTimeoutSec_: Socket timeout when trying to reach the remote app (default: 3)
  * _checkIntervalSec_: The interval to check new or invalid registrations
- * _registrationRefreshIntervalSec_: Scan interval (Default: 3600)
+ * _registrationRefreshIntervalSec_: Scan interval (default: 3600)
  * _path_: Path of the Admin UI and the REST API (Default: /portal-remote-app-registry)
  * _showAddRemoteAppForm_: Show the *Add a new Remote Portal App Endpoint* form in the Admin UI
 

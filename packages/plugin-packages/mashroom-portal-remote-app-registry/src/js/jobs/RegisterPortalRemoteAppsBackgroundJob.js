@@ -17,15 +17,15 @@ import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBa
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
-    _checkTimeoutSec: number;
+    _socketTimeoutSec: number;
     _checkIntervalSec: number;
     _registrationRefreshIntervalSec: number;
     _pluginContextHolder: MashroomPluginContextHolder;
     _logger: MashroomLogger;
     _timeout: ?TimeoutID;
 
-    constructor(checkTimeoutSec: number, checkIntervalSec: number, registrationRefreshIntervalSec: number, pluginContextHolder: MashroomPluginContextHolder) {
-        this._checkTimeoutSec = checkTimeoutSec;
+    constructor(socketTimeoutSec: number, checkIntervalSec: number, registrationRefreshIntervalSec: number, pluginContextHolder: MashroomPluginContextHolder) {
+        this._socketTimeoutSec = socketTimeoutSec;
         this._checkIntervalSec = checkIntervalSec;
         this._registrationRefreshIntervalSec = registrationRefreshIntervalSec;
         this._pluginContextHolder = pluginContextHolder;
@@ -230,7 +230,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const requestOptions = {
             url: `${remotePortalAppEndpoint.url}/package.json`,
             followRedirect: false,
-            timeout: this._checkTimeoutSec * 1000,
+            timeout: this._socketTimeoutSec * 1000,
         };
 
         return new Promise((resolve, reject) => {

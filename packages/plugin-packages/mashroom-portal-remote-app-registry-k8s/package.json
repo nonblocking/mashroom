@@ -59,7 +59,7 @@
                     "k8sNamespaces": [
                         "default"
                     ],
-                    "serviceCheckTimeoutSec": 3,
+                    "socketTimeoutSec": 3,
                     "scanPeriodSec": 30,
                     "refreshIntervalSec": 600,
                     "serviceNameFilter": ".*",
