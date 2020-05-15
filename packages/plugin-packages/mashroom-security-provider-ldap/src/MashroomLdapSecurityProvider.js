@@ -5,14 +5,12 @@ import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
 
+import type {MashroomSecurityProvider, MashroomSecurityUser,} from '@mashroom/mashroom-security/type-definitions';
 import type {
-    MashroomSecurityProvider, MashroomSecurityUser,
-} from '@mashroom/mashroom-security/type-definitions';
-import type {
-    MashroomLogger,
-    MashroomLoggerFactory,
     ExpressRequest,
     ExpressResponse,
+    MashroomLogger,
+    MashroomLoggerFactory,
 } from '@mashroom/mashroom/type-definitions';
 import type {GroupToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
 
@@ -59,7 +57,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}) {
         const encodedRedirectUrl = encodeURIComponent(request.originalUrl);
         const authenticationHintsQuery = querystring.stringify(authenticationHints);
-        response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? '&' + authenticationHintsQuery : ''}`);
+        response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? `&${authenticationHintsQuery}` : ''}`);
         return {
             status: 'deferred'
         };

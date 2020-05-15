@@ -4,8 +4,14 @@ import {removeFromExpressStack} from '../../utils/reload_utils';
 import ExpressRequestHandlerWrapper from './ExpressRequestHandlerWrapper';
 
 import type {
-    MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder,
-    MashroomLoggerFactory, MashroomLogger, ExpressApplication, ExpressRequestHandler,
+    ExpressApplication,
+    ExpressRequestHandler,
+    MashroomLogger,
+    MashroomLoggerFactory,
+    MashroomPlugin,
+    MashroomPluginConfig,
+    MashroomPluginContextHolder,
+    MashroomPluginLoader,
 } from '../../../type-definitions';
 
 type LoadedPlugin = {
@@ -30,7 +36,7 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
         const requirePath = !this.isMiddleware();
         if (requirePath) {
             return {
-                path: '/' + plugin.name,
+                path: `/${plugin.name}`,
             };
         }
         return {};
@@ -40,7 +46,7 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
         const requirePath = !this.isMiddleware();
         if (requirePath) {
             if (!pluginConfig.path.startsWith('/')) {
-                pluginConfig.path = '/' + pluginConfig.path;
+                pluginConfig.path = `/${pluginConfig.path}`;
             }
         }
 
@@ -48,11 +54,11 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
         let requestHandlerWrapper = null;
 
         if (!loadedPlugin) {
-            this._log.info(`Adding ${plugin.type} express plugin ${plugin.name}`+ (requirePath ? ` to path: ${pluginConfig.path}` : ''));
+            this._log.info(`Adding ${plugin.type} express plugin ${plugin.name}${requirePath ? ` to path: ${pluginConfig.path}` : ''}`);
             requestHandlerWrapper = new ExpressRequestHandlerWrapper(plugin.name);
             this.addPluginInstance(this._expressApplication, requestHandlerWrapper.handler(), pluginConfig);
         } else {
-            this._log.info(`Updating ${plugin.type} express plugin ${plugin.name}`+ (requirePath ? ` on path: ${pluginConfig.path}` : ''));
+            this._log.info(`Updating ${plugin.type} express plugin ${plugin.name}${requirePath ? ` on path: ${pluginConfig.path}` : ''}`);
             this.beforeUnload(plugin);
             requestHandlerWrapper = loadedPlugin.requestHandlerWrapper;
 
@@ -76,7 +82,7 @@ export default class ExpressRequestHandlerBasePluginLoader implements MashroomPl
         const requirePath = !this.isMiddleware();
         const loadedPlugin = this._getLoadedPlugin(plugin);
         if (loadedPlugin) {
-            this._log.info(`Removing ${plugin.type} express plugin ${plugin.name}`+ (requirePath ? ` from path: ${loadedPlugin.path}` : ''));
+            this._log.info(`Removing ${plugin.type} express plugin ${plugin.name}${requirePath ? ` from path: ${loadedPlugin.path}` : ''}`);
             this.beforeUnload(plugin);
             removeFromExpressStack(this._expressApplication, plugin);
             this._loadedPlugins.delete(plugin.name);

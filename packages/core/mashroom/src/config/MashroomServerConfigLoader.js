@@ -7,10 +7,13 @@ import {createReadonlyProxy} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
 import defaultConfig from './mashroom_default_config';
 import {evaluateTemplatesInConfigObject} from '../utils/config_utils';
+import ServerConfigurationError from '../errors/ServerConfigurationError';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '../../type-definitions';
-import type {MashroomServerConfigLoader as MashroomServerConfigLoaderType, MashroomServerConfigHolder} from '../../type-definitions/internal';
-import ServerConfigurationError from '../errors/ServerConfigurationError';
+import type {
+    MashroomServerConfigHolder,
+    MashroomServerConfigLoader as MashroomServerConfigLoaderType
+} from '../../type-definitions/internal';
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const HOSTNAME = os.hostname() || 'localhost';
@@ -75,10 +78,11 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             };
         });
 
-        config = Object.assign({}, config, {
+        config = {
+            ...config,
             serverRootFolder,
             pluginPackageFolders
-        });
+        };
 
         evaluateTemplatesInConfigObject(config, this._log);
 

@@ -17,11 +17,9 @@ export default class CheckboxField extends PureComponent<Props> {
     render() {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
-        const inputProps = Object.assign({}, this.props.fieldProps.input, {
-            id: this.props.id,
+        const inputProps = {...this.props.fieldProps.input, id: this.props.id,
             type: 'checkbox',
-            checked: !!this.props.fieldProps.input.value
-        });
+            checked: !!this.props.fieldProps.input.value};
 
         return (
             <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>

@@ -2,21 +2,17 @@
 
 import fs from 'fs';
 import path from 'path';
-import {getClientIP, clientIPMatch} from '@mashroom/mashroom-utils/lib/ip_utils';
+import {clientIPMatch, getClientIP} from '@mashroom/mashroom-utils/lib/ip_utils';
 
-import type {
-    ExpressRequest,
-    MashroomLogger,
-    MashroomLoggerFactory
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityRoles, MashroomSecurityUser,} from '../../type-definitions';
 import type {
     HttpMethod,
     MashroomSecurityACLChecker as MashroomSecurityACLCheckerType,
     MashroomSecurityACLHTTPMethods,
     MashroomSecurityACLPermission,
-    MashroomSecurityACLPermissionRules,
     MashroomSecurityACLPermissionRuleComplex,
+    MashroomSecurityACLPermissionRules,
 } from '../../type-definitions/internal';
 
 type ACLPathRuleRegexp = {
@@ -83,7 +79,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         if (!rules) {
             return false;
         }
-        if (typeof(rules) === 'string' && rules === 'any') {
+        if (typeof (rules) === 'string' && rules === 'any') {
             return true;
         }
         if (Array.isArray(rules) && user) {
@@ -134,7 +130,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         pattern = pattern.replace('/**', '(\\/.*)?');
         pattern = pattern.replace('/*', '\\/[^/]*');
         pattern = pattern.replace('/', '\\/');
-        pattern = '^' + pattern + '$';
+        pattern = `^${pattern}$`;
         return new RegExp(pattern, 'i');
     }
 }

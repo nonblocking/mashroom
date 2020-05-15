@@ -26,14 +26,12 @@ export default class TextField extends PureComponent<Props> {
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;
 
-        const inputProps = Object.assign({}, this.props.fieldProps.input, {
-            id: this.props.id,
+        const inputProps = {...this.props.fieldProps.input, id: this.props.id,
             type: this.props.type || 'text',
             autoComplete: this.props.autoComplete,
             maxLength: this.props.maxLength,
             pattern: this.props.pattern,
-            placeholder
-        });
+            placeholder};
 
         return (
             <div className={`mashroom-portal-ui-text-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>

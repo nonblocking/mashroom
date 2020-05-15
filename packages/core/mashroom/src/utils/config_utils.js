@@ -31,7 +31,7 @@ export const safeEvaluateStringTemplate = (templateStr: string, context: any): s
         return templateStr;
     }
     if (!isSafeTemplate(templateStr, context)) {
-        throw new Error('Template tries to access global objects: ' + templateStr);
+        throw new Error(`Template tries to access global objects: ${templateStr}`);
     }
 
     const args = Object.keys(context);
@@ -46,7 +46,7 @@ export const safeEvaluateStringTemplate = (templateStr: string, context: any): s
 export const evaluateTemplatesInConfigObject = (config: any, logger: MashroomLogger): void => {
     // Currently only environment variables can be used in templates
     const context = {
-        env: Object.assign({}, process.env),
+        env: {...process.env},
     };
 
     const replaceStringValues = (config: any) => {

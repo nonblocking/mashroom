@@ -7,56 +7,63 @@ import context from '../context/global_portal_context';
 import minimalLayout from '../layouts/minimal_layout';
 import minimalTemplatePortal from '../theme/minimal_template_portal';
 import {
-    PORTAL_JS_FILE,
     PORTAL_APP_API_PATH,
+    PORTAL_JS_FILE,
     PORTAL_THEME_RESOURCES_BASE_PATH,
-    WINDOW_VAR_PORTAL_SERVICES,
-    WINDOW_VAR_PORTAL_SITE_URL,
     WINDOW_VAR_PORTAL_API_PATH,
-    WINDOW_VAR_PORTAL_PAGE_ID,
-    WINDOW_VAR_PORTAL_SITE_ID,
-    WINDOW_VAR_PORTAL_LANGUAGE,
-    WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION,
-    WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC,
-    WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
     WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG,
+    WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
+    WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION,
     WINDOW_VAR_PORTAL_DEV_MODE,
+    WINDOW_VAR_PORTAL_LANGUAGE,
+    WINDOW_VAR_PORTAL_PAGE_ID,
+    WINDOW_VAR_PORTAL_SERVICES,
+    WINDOW_VAR_PORTAL_SITE_ID,
+    WINDOW_VAR_PORTAL_SITE_URL,
+    WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC,
     WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
 } from '../constants';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
-import {getPortalPath, getSitePath, getFrontendSiteBasePath, getFrontendApiResourcesBasePath} from '../utils/path_utils';
+import {
+    getFrontendApiResourcesBasePath,
+    getFrontendSiteBasePath,
+    getPortalPath,
+    getSitePath
+} from '../utils/path_utils';
 import {getPageData} from '../utils/model_utils';
-import {getUser, isAppPermitted, isPagePermitted, isSitePermitted, isSignedIn, isAdmin, forceAuthentication} from '../utils/security_utils';
-
-const readFile = promisify(fs.readFile);
-const viewEngineCache = new Map();
+import {
+    forceAuthentication,
+    getUser,
+    isAdmin,
+    isAppPermitted,
+    isPagePermitted,
+    isSignedIn,
+    isSitePermitted
+} from '../utils/security_utils';
 
 import type {
+    ExpressApplication,
     ExpressRequest,
     ExpressResponse,
     MashroomLogger,
-    MashroomServerConfig,
-    ExpressApplication,
 } from '@mashroom/mashroom/type-definitions';
-import type {
-    MashroomSecurityService,
-    MashroomSecurityUser
-} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
 import type {
-    MashroomPortalSite,
     MashroomPortalPage,
     MashroomPortalPageRef,
     MashroomPortalPageRefLocalized,
-    MashroomPortalSiteLocalized,
     MashroomPortalPageRenderModel,
+    MashroomPortalSite,
+    MashroomPortalSiteLocalized,
 } from '../../../type-definitions';
-import type {
-    MashroomPortalPluginRegistry,
-} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
+
+const readFile = promisify(fs.readFile);
+const viewEngineCache = new Map();
 
 export default class PortalPageRenderController {
 
@@ -97,7 +104,7 @@ export default class PortalPageRenderController {
                     logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access path: ${path}`);
                     res.sendStatus(403);
                 } else {
-                   await forceAuthentication(path, req, res, logger);
+                    await forceAuthentication(path, req, res, logger);
                 }
                 return;
             }
@@ -160,7 +167,8 @@ export default class PortalPageRenderController {
         const apiBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}`;
 
         const localizedPageRef = this._localizePageRef(req, pageRef);
-        const mergedPageData = Object.assign({}, localizedPageRef, page);
+        // $FlowFixMe
+        const mergedPageData = {...localizedPageRef, ...page};
         const localizedSite = await this._localizeSiteAndFilterPages(req, site);
         const userAgent = determineUserAgent(req);
 

@@ -8,31 +8,25 @@ import {
     PORTAL_APP_REST_PROXY_BASE_PATH,
 } from '../constants';
 import {portalAppContext} from '../utils/logging_utils';
-import {getSitePath, getFrontendApiResourcesBasePath} from '../utils/path_utils';
+import {getFrontendApiResourcesBasePath, getSitePath} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage} from '../utils/model_utils';
-import {getUser, isAppPermitted, calculatePermissions, isSitePathPermitted} from '../utils/security_utils';
+import {calculatePermissions, getUser, isAppPermitted, isSitePathPermitted} from '../utils/security_utils';
 
 import type {ReadStream} from 'fs';
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
-    MashroomPortalAppSetup,
-    MashroomPortalApp,
     MashroomAvailablePortalApp,
+    MashroomPortalApp,
     MashroomPortalAppInstance,
-    MashroomPortalService,
-    MashroomPortalAppUserPermissions,
+    MashroomPortalAppSetup,
     MashroomPortalAppUser,
+    MashroomPortalAppUserPermissions,
+    MashroomPortalService,
 } from '../../../type-definitions';
-import type {
-    MashroomPortalPluginRegistry,
-} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
 
 const getUri = promisify(getUriCbStyle);
 
@@ -102,7 +96,9 @@ export default class PortalAppController {
 
             const lang = await this._getLang(req);
             const user = this._toPortalAppUser(mashroomSecurityUser, portalApp);
-            const appConfig = Object.assign({}, portalApp.defaultAppConfig, portalAppInstance.appConfig);
+
+            // $FlowFixMe
+            const appConfig = {...portalApp.defaultAppConfig || {}, ...portalAppInstance.appConfig || {}};
 
             const portalAppSetup: MashroomPortalAppSetup = {
                 pluginName: portalApp.name,
@@ -192,10 +188,10 @@ export default class PortalAppController {
             lastReloadTs: app.lastReloadTs,
         }));
 
-        if (typeof(q) === 'string') {
+        if (typeof (q) === 'string') {
             apps = apps.filter((app) => app.name.toLowerCase().indexOf(q.toLowerCase()) !== -1 || (app.description && app.description.toLowerCase().indexOf(q.toLowerCase()) !== -1));
         }
-        if (typeof(updatedSince) === 'string') {
+        if (typeof (updatedSince) === 'string') {
             try {
                 const updatedSinceTs = parseInt(updatedSince);
                 apps = apps.filter((app) => app.lastReloadTs > updatedSinceTs);
@@ -255,7 +251,7 @@ export default class PortalAppController {
             await cacheControlService.addCacheControlHeader(req, res);
         }
 
-        const resourceUri = portalApp.resourcesRootUri + '/' + resourcePath;
+        const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
         logger.debug(`Sending portal app resource: ${resourceUri}`);
 
         try {

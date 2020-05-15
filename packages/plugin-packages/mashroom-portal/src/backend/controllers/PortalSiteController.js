@@ -5,11 +5,7 @@ import {isAdmin, isSitePermitted} from '../utils/security_utils';
 import {getPortalPath} from '../utils/path_utils';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {
     MashroomSecurityResourcePermissions,
@@ -105,7 +101,7 @@ export default class PortalSiteController {
             // Add a page if none is given
             if (!site.pages) {
                 const page: MashroomPortalPage = {
-                  pageId: shortId.generate()
+                    pageId: shortId.generate()
                 };
                 await portalService.insertPage(page);
                 site.pages = [{
@@ -155,7 +151,7 @@ export default class PortalSiteController {
 
             logger.info('Updating site: ', existingSite);
 
-            const updatedSite = Object.assign({}, existingSite, site);
+            const updatedSite = {...existingSite, ...site};
 
             await portalService.updateSite(updatedSite);
 

@@ -25,7 +25,7 @@
         "webpack-dev-server": "^3.11.0"
     },
     "scripts": {
-        "lint": "eslint src",
+        "lint": "eslint src --fix",
         "copy-assets": "copyfiles -u 1 src/assets/* dist",
         "dev": "webpack-dev-server --hot --mode development",
         "build": "webpack --mode production --display-error-details && npm run copy-assets"

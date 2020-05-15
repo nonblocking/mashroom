@@ -53,14 +53,15 @@ export default class LdapClientImpl {
     }
 
     async login(ldapEntry: LdapEntry, password: string) {
-        return await this._runWithClient(ldapEntry.dn, password, async () => {});
+        return await this._runWithClient(ldapEntry.dn, password, async () => {
+        });
     }
 
     async _runWithClient<T>(user: string, password: string, f: (ldapjsClient: any) => Promise<T>): Promise<T> {
         let client = null;
         try {
             client = ldap.createClient({
-                url: this._serverUrl + '/' + this._baseDN,
+                url: `${this._serverUrl}/${this._baseDN}`,
                 maxConnections: 10,
                 tlsOptions: this._tlsOptions,
             });

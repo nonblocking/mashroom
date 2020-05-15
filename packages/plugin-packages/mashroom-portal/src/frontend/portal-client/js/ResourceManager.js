@@ -56,7 +56,7 @@ export default class ResourceManager {
             scriptElem.src = path;
             scriptElem.addEventListener('error', (error: any) => {
                 console.error('Error loading JS resource: ', path, error);
-                this._remoteLogger.error('Error loading JS resource: ' + path, error, loadedPortalApp.pluginName);
+                this._remoteLogger.error(`Error loading JS resource: ${path}`, error, loadedPortalApp.pluginName);
                 delete LOADED_JS_RESOURCES[path];
                 resource.onErrorCallbacks.forEach((cb) => cb());
             });
@@ -84,7 +84,7 @@ export default class ResourceManager {
         linkElem.href = path;
         linkElem.addEventListener('error', (error: any) => {
             console.error('Error loading style sheet: ', path, error);
-            this._remoteLogger.error('Error loading style sheet: ' + path, error, loadedPortalApp.pluginName);
+            this._remoteLogger.error(`Error loading style sheet: ${path}`, error, loadedPortalApp.pluginName);
             delete LOADED_CSS_RESOURCES[path];
         });
         this._htmlDoc.head ? this._htmlDoc.head.appendChild(linkElem) : null;

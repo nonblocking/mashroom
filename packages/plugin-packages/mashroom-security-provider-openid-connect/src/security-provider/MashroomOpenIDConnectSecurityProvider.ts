@@ -1,12 +1,8 @@
 
 import requestNative from 'request-promise-native';
-import {AuthorizationParameters, generators} from "openid-client";
+import {AuthorizationParameters, generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
-import {
-    OICD_AUTH_DATA_SESSION_KEY,
-    OICD_USER_SESSION_KEY,
-    TOKEN_CHECK_INTERVAL_MS,
-} from '../constants';
+import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY, TOKEN_CHECK_INTERVAL_MS,} from '../constants';
 
 import type {
     MashroomSecurityAuthenticationResult,
@@ -14,11 +10,8 @@ import type {
     MashroomSecurityProvider,
     MashroomSecurityUser,
 } from '@mashroom/mashroom-security/type-definitions';
-import type {
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
-import type {ExpressRequestWithSession, OpenIDConnectAuthData} from "../../type-definitions";
+import type {ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequestWithSession, OpenIDConnectAuthData} from '../../type-definitions';
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
@@ -31,7 +24,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
     async authenticate(request: ExpressRequestWithSession, response: ExpressResponse, authenticationHints: any = {}): Promise<MashroomSecurityAuthenticationResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
-        const { originalUrl } = request;
+        const {originalUrl} = request;
 
         logger.debug('Starting new OpenID Connect authentication flow');
 
@@ -94,7 +87,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
         const user = this.getUser(request);
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (!client || !authData || !authData.tokenSet || !authData.lastTokenCheck) {
+        if (!client || !authData || !authData.tokenSet || !authData.lastTokenCheck) {
             return;
         }
 
@@ -105,7 +98,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
         const refreshToken = authData.tokenSet.refresh_token;
         if (!refreshToken) {
-            logger.warn(`No refresh token given. Authentication will expire at ${new Date((authData.tokenSet.expires_at || 0) * 1000)} and cannot be extended`);
+            logger.warn(`No refresh token given. Authentication will expire at ${new Date((authData.tokenSet.expires_at || 0) * 1000)} and cannot be extended`);
             return;
         }
 
@@ -119,7 +112,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
 
-            logger.debug(`Token refreshed for user ${user?.username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
+            logger.debug(`Token refreshed for user ${user?.username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
 
         } catch (e) {
             logger.error(`Refreshing access token failed. Signing out user: ${user?.username}`, e);
@@ -141,7 +134,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
         const client = await openIDConnectClient(request);
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (!client || !authData || !authData.tokenSet) {
+        if (!client || !authData || !authData.tokenSet) {
             return;
         }
 

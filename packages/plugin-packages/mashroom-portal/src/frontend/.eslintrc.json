@@ -16,8 +16,10 @@
         "global": true
     },
     "rules": {
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
         "no-console": "off",
-        "no-prototype-builtins": "off",
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+        "no-prototype-builtins": "off"
     }
 }

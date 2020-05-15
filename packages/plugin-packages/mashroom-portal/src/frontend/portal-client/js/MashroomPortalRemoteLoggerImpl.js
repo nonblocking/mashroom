@@ -47,7 +47,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
     _log(level: LogLevel, message: string, error?: Error | string, portalAppName: ?string) {
         if (error) {
             const serializedError = typeof (error) === 'string' ? error : this._serializeError(error);
-            message = message + '\n' + serializedError;
+            message = `${message}\n${serializedError}`;
         }
 
         const logMessage: ClientLogMessage = {
@@ -80,7 +80,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
     }
 
     _serializeError(error: Error) {
-        const msg = JSON.stringify(Object.assign({ message: error.message, stack: error.stack }, (error: any)), null, 2);
+        const msg = JSON.stringify({message: error.message, stack: error.stack, ...(error: any)}, null, 2);
         return msg.replace(/\\n/g, '\n');
     }
 }

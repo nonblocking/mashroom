@@ -167,7 +167,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
             const previousTitle: ?string = typeof(previousValues.site.title) === 'object' ? previousValues.site.title[this.props.languages.default] : previousValues.site.title;
 
             if (title && title !== previousTitle) {
-                const path = '/'  + title.replace(/[ -]/g, '_');
+                const path = `/${title.replace(/[ -]/g, '_')}`;
                 dispatch(change(props.form, 'site.path', path));
             }
         }

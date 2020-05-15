@@ -123,8 +123,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
 
     renderInputComponent(inputProps: any) {
         const outerThis = this;
-        const mergedInputProps = Object.assign({}, inputProps, {
-            onKeyDown(e: KeyboardEvent) {
+        const mergedInputProps = {...inputProps, onKeyDown(e: KeyboardEvent) {
                 // Ignore enter (could submit the form)
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -138,8 +137,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                 if (inputProps.ref) {
                     inputProps.ref(elem);
                 }
-            }
-        });
+            }};
 
         return (
             <input {...mergedInputProps} />
@@ -150,13 +148,11 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;
-        const inputProps = Object.assign({}, this.props.fieldProps.input, {
-            type: 'search',
+        const inputProps = {...this.props.fieldProps.input, type: 'search',
             value: this.state.value,
             onChange: (e) => this.onValueChange(e.target.value),
             placeholder,
-            maxLength: this.props.maxLength
-        });
+            maxLength: this.props.maxLength};
 
         return (
             <div className={`mashroom-portal-autocomplete-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>

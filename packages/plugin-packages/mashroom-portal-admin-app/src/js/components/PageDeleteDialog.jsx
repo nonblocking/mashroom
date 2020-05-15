@@ -42,9 +42,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
 
         const promise = this.props.portalAdminService.getSite(this.props.portalAdminService.getCurrentSiteId()).then(
             (site) => {
-                const siteClone = Object.assign({}, site, {
-                   pages: [...site.pages]
-                });
+                const siteClone = {...site, pages: [...site.pages]};
 
                 const parentPage = getParentPage(pageId, this.props.pages.pagesFlattened);
                 const parentPageId = parentPage ? parentPage.pageId : null;

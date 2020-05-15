@@ -1,30 +1,30 @@
-    // @flow
+// @flow
 
 import React, {PureComponent} from 'react';
 import {change} from 'redux-form';
 
 import {
-    ModalContainer,
-    TabDialogContainer,
-    Form,
-    FormRow,
-    FormCell,
-    DialogContent,
-    DialogButtons,
     Button,
-    SelectFieldContainer,
-    TextFieldContainer,
-    TextareaFieldContainer,
     CheckboxFieldContainer,
     CircularProgress,
+    DialogButtons,
+    DialogContent,
     ErrorMessage,
-    SourceCodeEditorFieldContainer
+    Form,
+    FormCell,
+    FormRow,
+    ModalContainer,
+    SelectFieldContainer,
+    SourceCodeEditorFieldContainer,
+    TabDialogContainer,
+    TextareaFieldContainer,
+    TextFieldContainer
 } from '@mashroom/mashroom-portal-ui-commons';
 import Permissions from './Permissions';
 import PagePositionSelection from './PagePositionSelection';
 import I18NStringFieldContainer from '../containers/I18NStringFieldContainer';
 import {DIALOG_NAME_PAGE_CONFIGURE} from '../constants';
-import {searchPageRef, getPagePosition, insertOrUpdatePageAtPosition, getParentPage} from '../services/model_utils';
+import {getPagePosition, getParentPage, insertOrUpdatePageAtPosition, searchPageRef} from '../services/model_utils';
 
 import type {
     MashroomAvailablePortalLayout,
@@ -34,8 +34,7 @@ import type {
     MashroomPortalPageRef,
     MashroomPortalSiteService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {Languages, SelectedPage, DataLoadingService, Pages} from '../../../type-definitions';
-
+import type {DataLoadingService, Languages, Pages, SelectedPage} from '../../../type-definitions';
 
 type Props = {
     languages: Languages,
@@ -151,9 +150,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
 
         const promise = this.props.portalAdminService.getSite(this.props.portalAdminService.getCurrentSiteId()).then(
             (site) => {
-                const siteClone = Object.assign({}, site, {
-                    pages: [...site.pages]
-                });
+                const siteClone = {...site, pages: [...site.pages]};
 
                 let parentPageId = undefined;
                 const updatePageRef = () => {
@@ -177,9 +174,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 } else {
                     return this.props.portalAdminService.addPage(page).then(
                         (page) => {
-                            pageRef = Object.assign({}, pageRef, {
-                                pageId: page.pageId
-                            });
+                            pageRef = {...pageRef, pageId: page.pageId};
 
                             return Promise.all([updatePageRef(), updatePagePermittedRoles(page.pageId)]);
                         }
@@ -223,7 +218,8 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         let position = null;
 
         if (pageId) {
-            page = Object.assign({}, selectedPage.page, selectedPage.pageRef);
+            // $FlowFixMe
+            page = {...selectedPage.page, ...selectedPage.pageRef};
             position = getPagePosition(pageId, this.props.pages.pagesFlattened, this.props.pages.pages);
         } else {
             position = {
@@ -249,7 +245,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             if (title && title !== previousTitle) {
                 let friendlyUrl = title.replace(/[ -]/g, '_').toLowerCase();
                 if (friendlyUrl && friendlyUrl.indexOf('/') !== 0) {
-                    friendlyUrl = '/' + friendlyUrl;
+                    friendlyUrl = `/${friendlyUrl}`;
                 }
                 dispatch(change(props.form, 'page.friendlyUrl', friendlyUrl));
             }
@@ -264,7 +260,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             return errors;
         }
 
-        const title = typeof(values.page.title) === 'object' ? values.page.title[this.props.languages.default] : values.page.title;
+        const title = typeof (values.page.title) === 'object' ? values.page.title[this.props.languages.default] : values.page.title;
         if (!title || title.trim() === '') {
             errors.page.title = 'required';
         }
@@ -302,7 +298,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                         <CheckboxFieldContainer id='hidden' name='page.hidden' labelId='hideInNavigation'/>
                     </FormCell>
                 </FormRow>
-                <PagePositionSelection pageId={selectedPage.pageId} pages={this.props.pages.pagesFlattened} />
+                <PagePositionSelection pageId={selectedPage.pageId} pages={this.props.pages.pagesFlattened}/>
             </DialogContent>
         );
     }
@@ -329,17 +325,19 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             <DialogContent>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='theme' name='page.theme' labelId='theme' options={availableThemesOptions}/>
+                        <SelectFieldContainer id='theme' name='page.theme' labelId='theme'
+                                              options={availableThemesOptions}/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='layout' name='page.layout' labelId='layout' options={availableLayoutsOptions}/>
+                        <SelectFieldContainer id='layout' name='page.layout' labelId='layout'
+                                              options={availableLayoutsOptions}/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SourceCodeEditorFieldContainer labelId='extraCss' name='page.extraCss' language='css' />
+                        <SourceCodeEditorFieldContainer labelId='extraCss' name='page.extraCss' language='css'/>
                     </FormCell>
                 </FormRow>
             </DialogContent>
@@ -356,7 +354,8 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <TextareaFieldContainer id='description' name='page.description' labelId='description' rows={5}/>
+                        <TextareaFieldContainer id='description' name='page.description' labelId='description'
+                                                rows={5}/>
                     </FormCell>
                 </FormRow>
             </DialogContent>
@@ -366,7 +365,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     renderPagePermissions() {
         return (
             <DialogContent>
-                <Permissions />
+                <Permissions/>
             </DialogContent>
         );
     }
@@ -400,7 +399,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     renderLoadingError() {
         return (
             <div className='error-panel'>
-                <ErrorMessage messageId='loadingFailed' />
+                <ErrorMessage messageId='loadingFailed'/>
             </div>
         );
     }
@@ -408,7 +407,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     renderUpdatingError() {
         return (
             <div className='error-panel'>
-                <ErrorMessage messageId='updateFailed' />
+                <ErrorMessage messageId='updateFailed'/>
             </div>
         );
     }

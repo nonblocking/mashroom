@@ -2,29 +2,29 @@
 
 import {
     WINDOW_VAR_PORTAL_API_PATH,
-    WINDOW_VAR_PORTAL_PAGE_ID,
-    WINDOW_VAR_PORTAL_SERVICES,
     WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC,
     WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC,
     WINDOW_VAR_PORTAL_DEV_MODE,
+    WINDOW_VAR_PORTAL_PAGE_ID,
+    WINDOW_VAR_PORTAL_SERVICES,
 } from '../../../backend/constants';
 import ResourceManager from './ResourceManager';
 import defaultCreateAppWrapper from './default_create_app_wrapper';
 import defaultCreateLoadingError from './default_create_loading_error';
 
 import type {
-    MashroomPortalAppSetup,
-    MashroomPortalAppService,
-    MashroomRestService,
+    MashroomAvailablePortalApp,
+    MashroomPortalAppLifecycleHooks,
+    MashroomPortalAppLoadListener,
     MashroomPortalAppPluginBootstrapFunction,
+    MashroomPortalAppService,
+    MashroomPortalAppSetup,
     MashroomPortalClientServices,
     MashroomPortalLoadedPortalApp,
-    MashroomPortalAppLoadListener,
-    ModalAppCloseCallback,
-    MashroomPortalAppLifecycleHooks,
-    MashroomAvailablePortalApp,
-    MashroomPortalRemoteLogger,
     MashroomPortalMasterMessageBus,
+    MashroomPortalRemoteLogger,
+    MashroomRestService,
+    ModalAppCloseCallback,
 } from '../../../../type-definitions';
 
 export type LoadedPortalAppInternal = {
@@ -130,7 +130,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
         this._resourceManager.unloadAppResources(loadedAppInternal);
-        const { portalAppWrapperElement, portalAppHostElement, portalAppTitleElement } =
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
             this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.instanceId);
         const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
         if (parent) {
@@ -196,7 +196,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                         (error) => {
                             handleError(error);
                         }
-                    ).catch((error)=> {
+                    ).catch((error) => {
                         handleError(error);
                     });
                 } else {
@@ -277,7 +277,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     _loadApp(portalAppAreaId: string, pluginName: string, instanceId: ?string, modal: boolean, position?: ?number, overrideAppConfig?: ?Object): Promise<LoadedPortalAppInternal> {
 
         const id = String(this._lastId++);
-        const { portalAppWrapperElement, portalAppHostElement, portalAppTitleElement } = this._appendAppWrapper(id, pluginName, instanceId, portalAppAreaId, position);
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._appendAppWrapper(id, pluginName, instanceId, portalAppAreaId, position);
         const loadedAppInternal: LoadedPortalAppInternal = {
             id,
             pluginName,
@@ -311,9 +311,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             (appSetup: MashroomPortalAppSetup) => {
                 if (overrideAppConfig) {
                     const existingAppConfig = loadedPortalAppInternal.appSetup && loadedPortalAppInternal.appSetup.appConfig || {};
-                    appSetup = Object.assign({}, appSetup, {
-                        appConfig: Object.assign({}, appSetup.appConfig, existingAppConfig, overrideAppConfig)
-                    });
+                    appSetup = {
+                        ...appSetup,
+                        appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig}
+                    };
                 }
                 loadedPortalAppInternal.appSetup = appSetup;
                 loadedPortalAppInternal.instanceId = appSetup.instanceId;
@@ -344,7 +345,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     _loadAppSetup(pageId: string, pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup> {
-        const path = `/pages/${pageId}/portal-app-instances/${pluginName}${instanceId ? '/' + instanceId : ''}`;
+        const path = `/pages/${pageId}/portal-app-instances/${pluginName}${instanceId ? `/${instanceId}` : ''}`;
         return this._restService.get(path);
     }
 
@@ -394,10 +395,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
 
         const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
-        const clonedServices = Object.freeze(Object.assign({}, clientServices, {
-            messageBus: this._getMasterMessageBus(clientServices).getAppInstance(appId),
+        const clonedServices = Object.freeze({
+            ...clientServices, messageBus: this._getMasterMessageBus(clientServices).getAppInstance(appId),
             remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName)
-        }));
+        });
 
         const handleError = (error) => {
             console.error(`Error in bootstrap of app: ${pluginName}`, error);
@@ -413,7 +414,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
 
         if (bootstrapRetVal) {
-            if (typeof(bootstrapRetVal.then) === 'function') {
+            if (typeof (bootstrapRetVal.then) === 'function') {
                 const promise: Promise<void | MashroomPortalAppLifecycleHooks> = (bootstrapRetVal: any);
                 return promise.then(
                     (lifecycleMethods: void | MashroomPortalAppLifecycleHooks) => {
@@ -484,24 +485,24 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     _appendAppWrapper(id: string, pluginName: string, instanceId: ?string, portalAppAreaId: string, position?: ?number) {
         console.log(`Adding wrapper for app: ${pluginName}, host element: ${portalAppAreaId}, position: ${String(position)}`);
 
-        const { portalAppWrapperElement, portalAppHostElement, portalAppTitleElement } = this._createAppWrapper(id, pluginName, instanceId);
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._createAppWrapper(id, pluginName, instanceId);
 
         this._insertPortalAppIntoDOM(portalAppWrapperElement, portalAppAreaId, position);
 
-        return { portalAppWrapperElement, portalAppHostElement, portalAppTitleElement };
+        return {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement};
     }
 
     _insertPortalAppIntoDOM(portalAppWrapperElement: HTMLDivElement, portalAppAreaId: string, position?: ?number) {
         let inserted = false;
 
-        let parentElem= document.getElementById(portalAppAreaId);
+        let parentElem = document.getElementById(portalAppAreaId);
         if (!parentElem) {
             console.error(`App Area ID not found: ${portalAppAreaId} - attaching app to body!`);
             parentElem = document.body;
         }
 
         if (parentElem) {
-            if (typeof(position) === 'number') {
+            if (typeof (position) === 'number') {
                 position = Math.max(0, position);
                 if (position < parentElem.children.length) {
                     parentElem.insertBefore(portalAppWrapperElement, parentElem.children[position]);
@@ -532,11 +533,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const loadedApps = [];
 
         loadedPortalAppsInternal.forEach((loadedApp) => {
-           if (loadedApp.pluginName === pluginName) {
-               if (!instanceId || loadedApp.instanceId === instanceId) {
-                   loadedApps.push(loadedApp);
-               }
-           }
+            if (loadedApp.pluginName === pluginName) {
+                if (!instanceId || loadedApp.instanceId === instanceId) {
+                    loadedApps.push(loadedApp);
+                }
+            }
         });
 
         return loadedApps;
@@ -607,7 +608,8 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                         });
                     if (promise) {
                         promise.then(
-                            () => {},
+                            () => {
+                            },
                             (error) => {
                                 console.error('Failed to update some apps', error);
                             }

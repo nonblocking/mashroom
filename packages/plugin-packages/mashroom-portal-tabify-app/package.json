@@ -29,7 +29,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src",
+        "lint": "eslint src --fix",
         "dev": "webpack-dev-server --mode development --hot",
         "build": "webpack --mode production --display-error-details"
     },

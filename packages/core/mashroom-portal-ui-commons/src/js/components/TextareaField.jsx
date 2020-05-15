@@ -24,11 +24,9 @@ export default class TextareaField extends PureComponent<Props> {
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;
 
-        const inputProps = Object.assign({}, this.props.fieldProps.input, {
-            id: this.props.id,
+        const inputProps = {...this.props.fieldProps.input, id: this.props.id,
             rows: this.props.rows || 3,
-            placeholder
-        });
+            placeholder};
 
         return (
             <div className={`mashroom-portal-ui-textarea-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>

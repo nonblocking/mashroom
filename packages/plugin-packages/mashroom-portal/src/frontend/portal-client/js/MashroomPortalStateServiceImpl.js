@@ -39,14 +39,14 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
         return this._urlState[key] || this._additionalQueryParams[key] || (this._sessionStorage && this._sessionStorage.getItem(key)) || (this._localStorage && this._localStorage.getItem(key));
     }
 
-    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: ?{[string]: string}, hash?: ?string) {
+    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: ?{ [string]: string }, hash?: ?string) {
         let additionalQuery = '';
         for (const paramName in additionalQueryParams) {
             if (additionalQueryParams.hasOwnProperty(paramName)) {
                 additionalQuery += `&${paramName}=${additionalQueryParams[paramName]}`;
             }
         }
-        return `${baseUrl}?${ENCODED_STATE_QUERY_PARAM_NAME}=${btoa(JSON.stringify(state))}${additionalQuery}${hash ? '#' + hash : ''}`;
+        return `${baseUrl}?${ENCODED_STATE_QUERY_PARAM_NAME}=${btoa(JSON.stringify(state))}${additionalQuery}${hash ? `#${hash}` : ''}`;
     }
 
     setUrlStateProperty(key: string, value: ?any) {
@@ -57,7 +57,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
         }
 
         // Update URL
-        const baseUrl = global.location.protocol + '//' + global.location.host + global.location.pathname;
+        const baseUrl = `${global.location.protocol}//${global.location.host}${global.location.pathname}`;
         const hash = global.location.hash ? global.location.hash.substr(1) : null;
         const url = this.encodeStateIntoUrl(baseUrl, this._urlState, this._additionalQueryParams, hash);
 
@@ -73,7 +73,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
     }
 
     _toStorableString(value: any) {
-        if (typeof(value) === 'string') {
+        if (typeof (value) === 'string') {
             return value;
         }
         return JSON.stringify(value);

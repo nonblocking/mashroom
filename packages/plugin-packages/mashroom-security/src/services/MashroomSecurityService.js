@@ -2,24 +2,17 @@
 
 import querystring from 'querystring';
 
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 import type {
-    MashroomSecurityService as MashroomSecurityServiceType,
     MashroomSecurityPermission,
     MashroomSecurityProtectedResource,
+    MashroomSecurityProvider,
     MashroomSecurityResourceType,
     MashroomSecurityRoleDefinition,
-    MashroomSecurityProvider,
+    MashroomSecurityService as MashroomSecurityServiceType,
 } from '../../type-definitions';
-import type {
-    MashroomSecurityACLChecker,
-    MashroomSecurityProviderRegistry,
-} from '../../type-definitions/internal';
+import type {MashroomSecurityACLChecker, MashroomSecurityProviderRegistry,} from '../../type-definitions/internal';
 
 export const ROLE_ADMINISTRATOR = 'Administrator';
 export const ROLE_AUTHENTICATED_USER = 'Authenticated';
@@ -116,9 +109,10 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         if (!existingRole) {
             await roleDefinitionsCollection.insertOne(roleDefinition);
         } else {
-            await roleDefinitionsCollection.updateOne({id: roleDefinition.id}, Object.assign({}, existingRole, {
+            await roleDefinitionsCollection.updateOne({id: roleDefinition.id}, {
+                ...existingRole,
                 description: roleDefinition.description
-            }));
+            });
         }
     }
 
@@ -161,7 +155,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             const roleId = roles[i];
             const exists = await this._findRole(roleDefinitionsCollection, roleId) !== null;
             if (!exists) {
-                await roleDefinitionsCollection.insertOne({id :roleId});
+                await roleDefinitionsCollection.insertOne({id: roleId});
             }
         }
     }
@@ -336,7 +330,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     _getAuthenticationHints(request: ExpressRequest): any {
-        const { query } = request;
+        const {query} = request;
         const forwardQueryParams = this._forwardQueryHintsToProvider;
         const hints = {};
         if (!Array.isArray(forwardQueryParams) || forwardQueryParams.length === 0) {
@@ -351,7 +345,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     _removeAuthenticationHintsFromUrl(request: ExpressRequest, hints: any) {
-        const queryParams = Object.assign({}, request.query);
+        const queryParams = {...request.query};
         Object.keys(hints).forEach((key) => delete queryParams[key]);
         const query = querystring.stringify(queryParams);
 

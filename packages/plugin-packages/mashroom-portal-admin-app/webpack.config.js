@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
                         {
                             loader: 'eslint-loader',
                             options: {
-                                fix: false,
+                                fix: true,
                                 configFile: __dirname + '/.eslintrc.json',
                             },
                         },
@@ -61,25 +61,8 @@ module.exports = (env, argv) => {
                     ],
                     sideEffects: true,
                 },
-                {
-                    test: /\.svg$/,
-                    use: [
-                        {
-                            loader: 'svg-inline-loader',
-                        },
-                    ],
-                },
-                {
-                    test: /\.(png|gif|jpg|jpeg|ttf|eot|woff(2)?)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                        },
-                    ],
-                },
             ],
         },
-        externals: [],
         resolve: {
             mainFields: ['browser', 'main', 'module'],
             extensions: ['.js', '.jsx'],

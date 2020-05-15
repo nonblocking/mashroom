@@ -41,34 +41,34 @@ export default class PortalApp extends PureComponent<Props> {
             return;
         }
 
-        const { setHostWidth } = this.props;
+        const {setHostWidth} = this.props;
         const width = event.pageX - this.wrapperElemRef.current.getBoundingClientRect().left;
         if (width > 100) {
-            setHostWidth('' + width + 'px');
+            setHostWidth(`${width}px`);
         }
     }
 
     render() {
-        const { activePortalApp } = this.props;
+        const {activePortalApp} = this.props;
         if (!activePortalApp) {
             return null;
         }
 
-        let { width } = this.props;
+        let {width} = this.props;
         if (width.match(/^\d+$/)) {
-            width = width + 'px';
+            width = `${width}px`;
         }
 
         const pluginName = activePortalApp.setup.pluginName;
         const classFromPluginName = pluginName.toLowerCase().replace(/ /g, '-');
 
         return (
-            <div className='mashroom-sandbox-app-host-wrapper' style={{ width }} ref={this.wrapperElemRef}>
+            <div className='mashroom-sandbox-app-host-wrapper' style={{width}} ref={this.wrapperElemRef}>
                 <div id={HOST_ELEMENT_ID} className={`portal-app-${classFromPluginName}`}>
-                   <CircularProgress />
+                    <CircularProgress/>
                 </div>
                 <div className='mashroom-sandbox-app-host-resizer' onMouseDown={this.resizerMouseDown.bind(this)}>
-                    <div className='grip' />
+                    <div className='grip'/>
                 </div>
             </div>
         );

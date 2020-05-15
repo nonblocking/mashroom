@@ -22,8 +22,10 @@
         }
     },
     "rules": {
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
         "no-console": "off",
-        "no-unused-vars": "warn",
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+        "no-unused-vars": "warn"
     }
 }

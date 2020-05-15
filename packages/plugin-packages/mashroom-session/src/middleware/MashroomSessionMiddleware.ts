@@ -1,21 +1,17 @@
 
 import {promisify} from 'util';
+import type {SessionOptions, Store} from 'express-session';
 import session, {MemoryStore} from 'express-session';
 import context from '../context/global_context';
 
 import type {RequestHandler} from 'express';
-import type {Store, SessionOptions} from 'express-session';
 import type {MashroomSessionMiddleware as MashroomSessionMiddlewareType} from '../../type-definitions/internal';
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    ExpressNextFunction,
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressNextFunction, ExpressRequest, ExpressResponse,} from '@mashroom/mashroom/type-definitions';
 
 const PROVIDER_NAME_BUILT_IN_MEMORY = 'memory';
 let currentStore: Store | MemoryStore | null | undefined;
 
-export const getSessionCount = async (): Promise<number | null | undefined> => {
+export const getSessionCount = async (): Promise<number | null | undefined> => {
     if (currentStore && currentStore.length) {
         return promisify(currentStore.length).apply(currentStore);
     }
@@ -52,9 +48,7 @@ export default class MashroomSessionMiddleware implements MashroomSessionMiddlew
 
                 try {
                     if (store) {
-                        const options = Object.assign({}, this.options, {
-                            store,
-                        });
+                        const options = {...this.options, store,};
                         logger.info(`Enabling session with provider ${this.storeProviderName} and options:`, this.options);
                         this.sessionMiddleware = session(options);
                     } else {
@@ -71,7 +65,7 @@ export default class MashroomSessionMiddleware implements MashroomSessionMiddlew
                 this.sessionMiddleware(req, res, next);
 
                 // Add sessionID to log context
-                logger.addContext({ sessionID: req.sessionID });
+                logger.addContext({sessionID: req.sessionID});
 
             } else {
                 next();

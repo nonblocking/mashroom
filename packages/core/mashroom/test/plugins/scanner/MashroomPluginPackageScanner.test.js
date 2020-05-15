@@ -28,9 +28,7 @@ describe('MashroomPluginPackageScanner', () => {
 
     it('scans all subfolders on start', (done) => {
 
-        const config = Object.assign({}, defaultConfig, {
-            pluginPackageFolders: [{path: getPluginPackagesFolder(), watch: true}],
-        });
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: getPluginPackagesFolder(), watch: true}],};
 
         const foundPaths = [];
 
@@ -50,25 +48,23 @@ describe('MashroomPluginPackageScanner', () => {
 
         const pluginPackagesFolder = getPluginPackagesFolder();
 
-        const config = Object.assign({}, defaultConfig, {
-            pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],
-        });
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
 
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
         pluginPackageScanner.deferUpdateMillis = 500;
 
         pluginPackageScanner.on('packageUpdated', (packagePath) => {
             pluginPackageScanner.stop();
-            if (packagePath === pluginPackagesFolder + path.sep + 'test2') {
+            if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
                 done();
             } else {
-                throw new Error('Invalid path: ' + packagePath);
+                throw new Error(`Invalid path: ${packagePath}`);
             }
         });
 
         pluginPackageScanner.start().then(() => {
             setTimeout(() => {
-                fsExtra.writeJsonSync(pluginPackagesFolder + '/test2/foo.json', {'foo': 2});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/test2/foo.json`, {'foo': 2});
             }, 1000);
         });
     });
@@ -77,24 +73,22 @@ describe('MashroomPluginPackageScanner', () => {
 
         const pluginPackagesFolder = getPluginPackagesFolder();
 
-        const config = Object.assign({}, defaultConfig, {
-            pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],
-        });
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
 
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
 
         pluginPackageScanner.on('packageRemoved', (packagePath) => {
             pluginPackageScanner.stop();
-            if (packagePath === pluginPackagesFolder + path.sep + 'test2') {
+            if (packagePath === `${pluginPackagesFolder + path.sep  }test2`) {
                 done();
             } else {
-                throw new Error('Invalid path: ' + packagePath);
+                throw new Error(`Invalid path: ${packagePath}`);
             }
         });
 
         pluginPackageScanner.start().then(() => {
             setTimeout(() => {
-                fsExtra.writeJsonSync(pluginPackagesFolder + '/test2/package.json', {'name': 'test3'});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder  }/test2/package.json`, {'name': 'test3'});
             }, 1000);
         });
     });
@@ -103,9 +97,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
-        const config = Object.assign({}, defaultConfig, {
-            pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}],
-        });
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}],};
 
         const foundPaths = [];
 
@@ -125,9 +117,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
-        const config = Object.assign({}, defaultConfig, {
-            pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],
-        });
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
 
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
         pluginPackageScanner.deferUpdateMillis = 500;
@@ -137,13 +127,13 @@ describe('MashroomPluginPackageScanner', () => {
             if (packagePath === pluginPackagesFolder) {
                 done();
             } else {
-                throw new Error('Invalid path: ' + packagePath);
+                throw new Error(`Invalid path: ${packagePath}`);
             }
         });
 
         pluginPackageScanner.start().then(() => {
             setTimeout(() => {
-                fsExtra.writeJsonSync(pluginPackagesFolder + '/foo.json', {'foo': 2});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/foo.json`, {'foo': 2});
             }, 1000);
         });
     });

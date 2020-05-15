@@ -12,13 +12,8 @@ import type {
     MashroomPluginPackageDefinition
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
-import type {
-    MashroomPortalRemoteAppEndpointService,
-    RemotePortalAppEndpoint
-} from '../../../type-definitions';
-import type {
-    RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,
-} from '../../../type-definitions/internal';
+import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../type-definitions';
+import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,} from '../../../type-definitions/internal';
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
@@ -100,22 +95,22 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
 
             const portalApps = this._processPackageJson(packageJson, remotePortalAppEndpoint);
-            return Object.assign({}, remotePortalAppEndpoint, {
-                lastError: null,
+            return {
+                ...remotePortalAppEndpoint, lastError: null,
                 retries: 0,
                 registrationTimestamp: Date.now(),
                 portalApps
-            });
+            };
 
         } catch (error) {
             this._logger.error('Processing remote portal app endpoint failed!', error);
 
-            return Object.assign({}, remotePortalAppEndpoint, {
-                lastError: error.message,
+            return {
+                ...remotePortalAppEndpoint, lastError: error.message,
                 retries: remotePortalAppEndpoint.retries + 1,
                 registrationTimestamp: null,
                 portalApps: []
-            });
+            };
         }
     }
 
@@ -136,15 +131,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
 
         return portalApps.map((portalApp) => {
-           const existingApp = remotePortalAppEndpoint.portalApps.find((existingApp) => existingApp.name === portalApp.name);
-           if (existingApp && existingApp.version === portalApp.version) {
-               // Keep reload timestamp for browser caching
-               return Object.assign({}, portalApp, {
-                   lastReloadTs: existingApp.lastReloadTs
-               });
-           }
+            const existingApp = remotePortalAppEndpoint.portalApps.find((existingApp) => existingApp.name === portalApp.name);
+            if (existingApp && existingApp.version === portalApp.version) {
+                // Keep reload timestamp for browser caching
+                return {...portalApp, lastReloadTs: existingApp.lastReloadTs};
+            }
 
-           return portalApp;
+            return portalApp;
         });
     }
 
@@ -202,9 +195,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     if (parsedUri.hostname === 'localhost') {
                         targetUri = remotePortalAppEndpoint.url + (parsedUri.path && parsedUri.path !== '/' ? parsedUri.path : '');
                     }
-                    restProxies[proxyName] = Object.assign({}, definedRestProxies[proxyName], {
-                        targetUri
-                    });
+                    restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }
             }
         }
@@ -253,7 +244,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     const packageJson = JSON.parse(body);
                     resolve(packageJson);
                 } catch (parseError) {
-                    reject(new Error('Parsing /package.json failed! Did you forget to expose it? \n' + parseError.message));
+                    reject(new Error(`Parsing /package.json failed! Did you forget to expose it? \n${parseError.message}`));
                 }
             });
         });

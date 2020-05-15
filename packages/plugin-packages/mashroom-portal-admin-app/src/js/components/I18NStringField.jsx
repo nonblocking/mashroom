@@ -1,7 +1,7 @@
 // @flow
 
 import React, {PureComponent} from 'react';
-import {FieldLabel, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
+import {ErrorMessage, FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {FieldProps} from 'redux-form';
 import type {I18NString} from '@mashroom/mashroom/type-definitions';
@@ -18,7 +18,7 @@ export default class I18NStringField extends PureComponent<Props> {
 
     getValue(): { [string]: string } {
         let val: I18NString = this.props.fieldProps.input.value;
-        if (typeof(val) === 'string') {
+        if (typeof (val) === 'string') {
             val = {
                 [this.props.languages.default]: val
             }
@@ -30,9 +30,7 @@ export default class I18NStringField extends PureComponent<Props> {
     }
 
     onValueChange(lang: string, value: ?string) {
-        const val = Object.assign({}, this.getValue(), {
-           [lang]: value
-        });
+        const val = {...this.getValue(), [lang]: value};
 
         this.props.fieldProps.input.onChange(val);
     }
@@ -42,15 +40,13 @@ export default class I18NStringField extends PureComponent<Props> {
     }
 
     onAddLang(lang: string) {
-        const val = Object.assign({}, this.getValue(), {
-            [lang]: ''
-        });
+        const val = {...this.getValue(), [lang]: ''};
 
         this.props.fieldProps.input.onChange(val);
     }
 
     onRemoveLang(lang: string) {
-        const val = Object.assign({}, this.getValue());
+        const val = {...this.getValue()};
         delete val[lang];
 
         this.props.fieldProps.input.onChange(val);
@@ -74,12 +70,12 @@ export default class I18NStringField extends PureComponent<Props> {
             if (lang === this.props.languages.default) {
                 continue;
             }
-            if (typeof(val[lang]) !== 'undefined') {
+            if (typeof (val[lang]) !== 'undefined') {
                 inputs.push(
                     <div key={lang} className='translation'>
                         <div className='lang'>{lang}:</div>
                         <input type='text'
-                               name={this.props.fieldProps.input.name + '.' + lang}
+                               name={`${this.props.fieldProps.input.name}.${lang}`}
                                value={val[lang]}
                                onChange={(e) => this.onValueChange(lang, e.target.value)}
                                onBlur={this.onBlur.bind(this)}
@@ -95,7 +91,8 @@ export default class I18NStringField extends PureComponent<Props> {
             inputs.push(
                 <div key='available-languages' className='available-languages'>
                     {availableLanguages.map((lang) => (
-                        <span key={lang} className='add-language' onClick={this.onAddLang.bind(this, lang)}>{lang}</span>
+                        <span key={lang} className='add-language'
+                              onClick={this.onAddLang.bind(this, lang)}>{lang}</span>
                     ))}
                 </div>
             );
@@ -116,7 +113,7 @@ export default class I18NStringField extends PureComponent<Props> {
                 <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
                 <div>
                     {this.renderInputs()}
-                    {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''} />}
+                    {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
                 </div>
             </div>
         );

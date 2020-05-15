@@ -74,9 +74,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         const portalApp = portalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
-        const fixedPortalApp = Object.assign({}, portalApp, {
-            lastReloadTs: 22
-        });
+        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',

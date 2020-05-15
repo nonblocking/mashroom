@@ -1,9 +1,9 @@
 
-import {UNDEFINED_USER_NAME} from "./constants";
-import {IdTokenClaims, UserinfoResponse} from "openid-client";
-import type {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
+import {UNDEFINED_USER_NAME} from './constants';
+import {IdTokenClaims, UserinfoResponse} from 'openid-client';
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
-export default (claims: IdTokenClaims | undefined, userInfo: UserinfoResponse | undefined | null, rolesClaimName: string | undefined | null, adminRoles: Array<string> = []): MashroomSecurityUser => {
+export default (claims: IdTokenClaims | undefined, userInfo: UserinfoResponse | undefined | null, rolesClaimName: string | undefined | null, adminRoles: Array<string> = []): MashroomSecurityUser => {
     if (claims) {
         // claims can be part of the ID Tokens (claims object) or in the userInfo object
         let roles: Array<string> = [];
@@ -13,7 +13,7 @@ export default (claims: IdTokenClaims | undefined, userInfo: UserinfoResponse | 
                 [];
         }
         const username = (userInfo && (userInfo.preferred_username || userInfo.sub || userInfo.email)) ||
-            claims.preferred_username || claims.sub || claims.email || UNDEFINED_USER_NAME;
+            claims.preferred_username || claims.sub || claims.email || UNDEFINED_USER_NAME;
         return {
             username,
             displayName: (userInfo ? userInfo.name : claims.name) || username,

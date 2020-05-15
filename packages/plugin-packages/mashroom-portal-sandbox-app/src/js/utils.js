@@ -3,7 +3,7 @@
 import type {PortalAppParams, SelectedPortalApp} from '../../type-definitions';
 import type {MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
 
-export const getQueryParams = (portalStateService: MashroomPortalStateService): ?PortalAppParams =>  {
+export const getQueryParams = (portalStateService: MashroomPortalStateService): ?PortalAppParams => {
     const appName = portalStateService.getStateProperty('sbAppName');
     if (!appName) {
         return null;
@@ -32,17 +32,15 @@ export const getQueryParams = (portalStateService: MashroomPortalStateService): 
 };
 
 export const mergeAppConfig = (selectedPortalApp: SelectedPortalApp, params: PortalAppParams): SelectedPortalApp => {
-    const { appName, setup } = selectedPortalApp;
-    const { lang, permissions, appConfig } = params;
+    const {appName, setup} = selectedPortalApp;
+    const {lang, permissions, appConfig} = params;
 
     return {
         appName,
-        setup: Object.assign({}, setup, {
-            lang: lang || '100%',
-            user: Object.assign({}, setup.user, {
-                permissions: permissions || setup.user.permissions,
-            }),
+        setup: {
+            ...setup, lang: lang || '100%',
+            user: {...setup.user, permissions: permissions || setup.user.permissions,},
             appConfig: appConfig || setup.appConfig,
-        })
+        }
     };
 };

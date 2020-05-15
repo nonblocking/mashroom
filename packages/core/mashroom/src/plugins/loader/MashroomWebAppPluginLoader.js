@@ -4,15 +4,15 @@ import requestPluginContext from '../../context/request_plugin_context';
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
 
 import type {
-    MashroomPluginContextHolder,
     ExpressApplication,
-    MashroomPluginConfig,
-    MashroomWebAppPluginBootstrapFunction,
-    MashroomPlugin,
     ExpressRequestHandler,
     MashroomHttpUpgradeHandler,
     MashroomLogger,
     MashroomLoggerFactory,
+    MashroomPlugin,
+    MashroomPluginConfig,
+    MashroomPluginContextHolder,
+    MashroomWebAppPluginBootstrapFunction,
 } from '../../../type-definitions';
 
 export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBasePluginLoader {
@@ -51,7 +51,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
             this._installUpgradeHandler(plugin, pluginConfig, upgradeHandler);
         }
 
-        if (webapp && typeof(webapp.disable) === 'function') {
+        if (webapp && typeof (webapp.disable) === 'function') {
             webapp.disable('x-powered-by');
         }
         return webapp;
@@ -73,13 +73,11 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         const path = req.url;
         const entry = this._upgradeHandlers.find((ul) => path.startsWith(ul.path));
         if (entry) {
-            const reqWithContext: any = Object.assign({}, req, {
-                pluginContext: requestPluginContext(req, this._pluginContextHolder),
-            });
+            const reqWithContext: any = {...req, pluginContext: requestPluginContext(req, this._pluginContextHolder),};
             entry.handler(reqWithContext, socket, head);
         } else {
             this._log.warn(`No upgrade handler found for path ${path}. Ignoring request.`);
-            socket.end(`HTTP/1.1 403 Forbidden\r\n\r\n`,'ascii');
+            socket.end(`HTTP/1.1 403 Forbidden\r\n\r\n`, 'ascii');
         }
     }
 

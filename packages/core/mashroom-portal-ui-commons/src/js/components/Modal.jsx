@@ -124,7 +124,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
             return null;
         }
 
-        return '' + Math.max(10, (window.innerHeight - this.modalWrapperEl.offsetHeight) / 2) + 'px';
+        return `${Math.max(10, (window.innerHeight - this.modalWrapperEl.offsetHeight) / 2)}px`;
     }
 
     renderDefaultHeader() {

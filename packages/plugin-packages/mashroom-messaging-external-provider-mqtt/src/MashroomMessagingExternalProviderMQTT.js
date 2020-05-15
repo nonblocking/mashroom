@@ -1,13 +1,9 @@
 // @flow
 
+import type {MqttClient} from 'mqtt';
 import {connect} from 'mqtt';
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
-
-import type {MqttClient} from 'mqtt';
-import type {
-    MashroomLogger,
-    MashroomLoggerFactory
-} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomExternalMessageListener} from '@mashroom/mashroom-messaging/type-definitions';
 import type {MashroomMessagingExternalProviderMQTT as MashroomMessagingExternalProviderMQTTType} from '../type-definitions';
 
@@ -120,7 +116,7 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
                 } else if (typeof (data) === 'string') {
                     message = data;
                 } else {
-                    throw new Error('Unexpected payload type: ' + typeof (data));
+                    throw new Error(`Unexpected payload type: ${typeof (data)}`);
                 }
                 jsonMessage = JSON.parse(message);
             } catch (e) {
@@ -131,14 +127,14 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
             this._logger.debug(`Received message for Topic: ${topic}, Message:`, jsonMessage);
 
             this._listeners.forEach((listener) => {
-               setTimeout(() => {
-                   try {
-                       listener(internalTopic, jsonMessage);
+                setTimeout(() => {
+                    try {
+                        listener(internalTopic, jsonMessage);
 
-                   } catch (e) {
-                       this._logger.error('Message listener threw error', e);
-                   }
-               }, 0);
+                    } catch (e) {
+                        this._logger.error('Message listener threw error', e);
+                    }
+                }, 0);
             });
         }
     }

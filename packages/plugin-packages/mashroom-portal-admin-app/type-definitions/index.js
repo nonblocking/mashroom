@@ -27,7 +27,7 @@ export type State = {|
     +selectedSite: ?SelectedSite
 |}
 
-export type Action = { type: string } & { [any]: any };
+export type Action = { type: string } & { [string]: any };
 
 export type Dispatch = ReduxDispatch<Action>;
 
@@ -96,7 +96,6 @@ export type SelectedPage = {
     +pageId: ?string,
     +page: ?MashroomPortalPage,
     +pageRef: ?MashroomPortalPageRef,
-    +site: MashroomPortalSite,
     +permittedRoles: ?Array<string>,
     +loading: boolean,
     +errorLoading: boolean,

@@ -1,6 +1,6 @@
 // @flow
 
-import React, {PureComponent, Fragment} from 'react';
+import React, {PureComponent} from 'react';
 
 import type {MashroomPortalAppService} from '@mashroom/mashroom-portal/type-definitions';
 
@@ -87,17 +87,13 @@ export default class App extends PureComponent<Props, State> {
 
     onFirstNameValueChange(firstName: ?string, pluginName: string) {
         this.setState({
-            firstNames: Object.assign({}, this.state.firstNames, {
-               [pluginName]: firstName,
-            })
+            firstNames: { ...this.state.firstNames, [pluginName]: firstName,}
         });
     }
 
     onAddCloseButtonChange(checked: boolean, pluginName: string) {
         this.setState({
-            addCloseButton: Object.assign({}, this.state.addCloseButton, {
-                [pluginName]: checked,
-            })
+            addCloseButton: { ...this.state.addCloseButton, [pluginName]: checked,}
         });
     }
 

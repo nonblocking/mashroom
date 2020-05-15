@@ -5,10 +5,10 @@ import request from 'request';
 import HttpHeaderFilter from './HttpHeaderFilter';
 
 import type {
-    MashroomLogger,
-    MashroomLoggerFactory,
     ExpressRequest,
     ExpressResponse,
+    MashroomLogger,
+    MashroomLoggerFactory,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
@@ -55,11 +55,11 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         }
 
         this._httpHeaderFilter.filter(req.headers);
-        const qs = Object.assign({}, req.query);
+        const qs = {...req.query};
 
-        const extraSecurityHeaders = securityService ? securityService.getApiSecurityHeaders(req, uri): null;
+        const extraSecurityHeaders = securityService ? securityService.getApiSecurityHeaders(req, uri) : null;
 
-        const headers = Object.assign({}, additionalHeaders || {}, extraSecurityHeaders || {});
+        const headers = {...additionalHeaders || {}, ...extraSecurityHeaders || {}};
 
         const options = {
             pool: this._pool,

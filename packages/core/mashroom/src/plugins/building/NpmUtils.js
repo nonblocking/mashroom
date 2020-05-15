@@ -1,11 +1,11 @@
 // @flow
 
 import {exec} from 'child_process';
+import type {MashroomLogger, MashroomLoggerFactory} from '../../../type-definitions';
+
+type NpmCommand = 'install' | 'update' | 'run';
 
 const EXECUTION_TIMEOUT = 3 * 60 * 1000; // 3min
-
-import type {MashroomLogger, MashroomLoggerFactory} from '../../../type-definitions';
-type NpmCommand = 'install' | 'update' | 'run';
 
 /**
  * Encapsulate npm access
@@ -51,7 +51,7 @@ export default class NpmUtils {
 
     _npmExecute(packagePath: string, command: NpmCommand, ...args: Array<string>): Promise<void> {
         return new Promise((resolve, reject) => {
-            const commandString = 'npm ' + command + ' ' + args.join(' ');
+            const commandString = `npm ${command} ${args.join(' ')}`;
 
             const execOptions = {
                 cwd: packagePath,

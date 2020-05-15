@@ -11,7 +11,7 @@ export default class GlobalLoggerContext implements MashroomLoggerContext {
     }
 
     add(context: {}) {
-        this._context = Object.assign({}, this._context, context);
+        this._context = {...this._context, ...context};
     }
 
     get() {
@@ -19,6 +19,6 @@ export default class GlobalLoggerContext implements MashroomLoggerContext {
     }
 
     clone() {
-        return new GlobalLoggerContext(Object.assign({}, this._context));
+        return new GlobalLoggerContext({...this._context});
     }
 }

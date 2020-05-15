@@ -14,7 +14,7 @@ export default (optionalTlsOptions: ?TlsOptions, serverRootFolder: string, logge
     }
 
     const tlsOptions: TlsOptions = optionalTlsOptions;
-    const fixedTlsOptions: NodeTlsOptions = Object.assign({}, (tlsOptions: any));
+    const fixedTlsOptions: NodeTlsOptions = {...(tlsOptions: any)};
     const logger = loggerFactory('mashroom.security.provider.ldap');
 
     CERT_PROPERTIES.forEach((certPropName) => {

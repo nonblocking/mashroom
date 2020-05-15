@@ -10,7 +10,9 @@
         "es6": true
     },
     "rules": {
-        "no-console": "off",
-        "no-unused-vars": "off"
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
+        "no-console": "off"
     }
 }

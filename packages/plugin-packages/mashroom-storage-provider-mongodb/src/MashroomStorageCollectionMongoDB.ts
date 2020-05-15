@@ -4,13 +4,13 @@ import mongoDBClient from './mongodb_client';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
+    StorageDeleteResult,
     StorageObject,
     StorageObjectFilter,
-    StorageUpdateResult,
-    StorageDeleteResult,
     StorageRecord,
+    StorageUpdateResult,
 } from '@mashroom/mashroom-storage/type-definitions';
-import {Collection} from "mongodb";
+import type {Collection} from 'mongodb';
 
 export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> implements MashroomStorageCollection<T> {
 

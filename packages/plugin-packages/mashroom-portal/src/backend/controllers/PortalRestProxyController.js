@@ -2,31 +2,18 @@
 
 import {parse} from 'url';
 import {
-    HTTP_HEADER_REST_PROXY_USER,
-    HTTP_HEADER_REST_PROXY_ROLES,
     HTTP_HEADER_REST_PROXY_PERMISSIONS,
+    HTTP_HEADER_REST_PROXY_USER,
     HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME,
     HTTP_HEADER_REST_PROXY_USER_EMAIL,
 } from '../constants';
-import {
-    calculatePermissions,
-    isSitePathPermitted,
-    isProxyAccessPermitted,
-    getUser,
-} from '../utils/security_utils';
+import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security_utils';
 import {portalAppContext} from '../utils/logging_utils';
 import {getSitePath} from '../utils/path_utils';
 
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
-import type {
-    MashroomPortalAppUserPermissions,
-    MashroomPortalProxyDefinition,
-} from '../../../type-definitions';
+import type {MashroomPortalAppUserPermissions, MashroomPortalProxyDefinition,} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalRestProxyController {
@@ -93,7 +80,7 @@ export default class PortalRestProxyController {
 
             let fullTargetUri = restProxyDef.targetUri;
             if (pathParts.length > 2) {
-                fullTargetUri += '/' + pathParts.splice(2).join('/');
+                fullTargetUri += `/${pathParts.splice(2).join('/')}`;
             }
             if (parsedUrl.search) {
                 fullTargetUri += parsedUrl.search;
@@ -118,7 +105,7 @@ export default class PortalRestProxyController {
             }
 
             if (typeof (restProxyDef.addHeaders) === 'object') {
-                headers = Object.assign({}, headers, restProxyDef.addHeaders);
+                headers = {...headers, ...restProxyDef.addHeaders};
             }
 
             logger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);

@@ -17,7 +17,7 @@ export default class RequestLoggerContext implements MashroomLoggerContext {
 
     add(context: {}) {
         const existingContext = this._request[MASHROOM_LOGGER_CONTEXT_KEY] || {};
-        this._request[MASHROOM_LOGGER_CONTEXT_KEY] = Object.assign({}, existingContext, context);
+        this._request[MASHROOM_LOGGER_CONTEXT_KEY] = {...existingContext, ...context};
     }
 
     get() {

@@ -1,8 +1,8 @@
 
-import {Client, Issuer, custom } from "openid-client";
+import {Client, custom, Issuer} from 'openid-client';
 
-import type {ClientConfiguration, ExpressRequestWithSession} from "../type-definitions";
-import type {MashroomLogger} from "@mashroom/mashroom/type-definitions";
+import type {ClientConfiguration, ExpressRequestWithSession} from '../type-definitions';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 
 let _clientConfiguration: ClientConfiguration | undefined;
 let _client: Client | undefined;

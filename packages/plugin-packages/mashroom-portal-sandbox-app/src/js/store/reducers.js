@@ -2,27 +2,28 @@
 
 import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 import {
-    SET_AVAILABLE_PORTAL_APPS,
-    SET_SELECTED_PORTAL_APP,
-    SET_ACTIVE_PORTAL_APP,
-    SET_APP_LOADING_ERROR,
-    SET_TOPICS_SUBSCRIBED_BY_APP,
     ADD_MESSAGE_PUBLISHED_BY_APP,
     ADD_MESSAGE_PUBLISHED_BY_SANDBOX,
-    SET_HOST_WIDTH
+    SET_ACTIVE_PORTAL_APP,
+    SET_APP_LOADING_ERROR,
+    SET_AVAILABLE_PORTAL_APPS,
+    SET_HOST_WIDTH,
+    SET_SELECTED_PORTAL_APP,
+    SET_TOPICS_SUBSCRIBED_BY_APP
 } from './actions';
 
 import type {
     Action,
-    SelectedPortalApp,
     ActivePortalApp,
-    MessageBusCommunication, PortalAppHost
+    MessageBusCommunication,
+    PortalAppHost,
+    SelectedPortalApp
 } from '../../../type-definitions';
 
 import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 const availablePortalApps = (state: Array<MashroomAvailablePortalApp>, action: Action): Array<MashroomAvailablePortalApp> => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return [];
     }
 
@@ -36,7 +37,7 @@ const availablePortalApps = (state: Array<MashroomAvailablePortalApp>, action: A
 };
 
 const appLoadingError = (state: ?boolean, action: Action): ?boolean => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return false;
     }
 
@@ -50,7 +51,7 @@ const appLoadingError = (state: ?boolean, action: Action): ?boolean => {
 };
 
 const selectedPortalApp = (state: ?SelectedPortalApp, action: Action): ?SelectedPortalApp => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return null;
     }
 
@@ -64,7 +65,7 @@ const selectedPortalApp = (state: ?SelectedPortalApp, action: Action): ?Selected
 };
 
 const activePortalApp = (state: ?ActivePortalApp, action: Action): ?ActivePortalApp => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return null;
     }
 
@@ -78,29 +79,23 @@ const activePortalApp = (state: ?ActivePortalApp, action: Action): ?ActivePortal
 };
 
 const messageBusCom = (state: MessageBusCommunication, action: Action): MessageBusCommunication => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return {
             topicsSubscribedByApp: [],
             publishedByApp: [],
-            publishedBySandbox:[]
+            publishedBySandbox: []
         };
     }
 
     switch (action.type) {
         case SET_TOPICS_SUBSCRIBED_BY_APP: {
-            return Object.assign({}, state, {
-                topicsSubscribedByApp: action.topics
-            });
+            return {...state, topicsSubscribedByApp: action.topics};
         }
         case ADD_MESSAGE_PUBLISHED_BY_APP: {
-            return Object.assign({}, state, {
-                publishedByApp: [...state.publishedByApp, action.message]
-            });
+            return {...state, publishedByApp: [...state.publishedByApp, action.message]};
         }
         case ADD_MESSAGE_PUBLISHED_BY_SANDBOX: {
-            return Object.assign({}, state, {
-                publishedBySandbox: [...state.publishedBySandbox, action.message]
-            });
+            return {...state, publishedBySandbox: [...state.publishedBySandbox, action.message]};
         }
         default:
             return state;
@@ -108,7 +103,7 @@ const messageBusCom = (state: MessageBusCommunication, action: Action): MessageB
 };
 
 const host = (state: PortalAppHost, action: Action): PortalAppHost => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return {
             width: '100%'
         };
@@ -116,9 +111,7 @@ const host = (state: PortalAppHost, action: Action): PortalAppHost => {
 
     switch (action.type) {
         case SET_HOST_WIDTH: {
-            return Object.assign({}, state, {
-                width: action.width
-            });
+            return {...state, width: action.width};
         }
         default:
             return state;

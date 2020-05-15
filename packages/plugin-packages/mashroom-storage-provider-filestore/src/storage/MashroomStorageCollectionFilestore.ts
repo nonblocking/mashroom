@@ -5,6 +5,7 @@ import {lock as lockFile} from 'proper-lockfile';
 import shortId from 'shortid';
 import lodashFilter from 'lodash.filter';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
+
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
@@ -14,7 +15,7 @@ import type {
     StorageRecord,
     StorageUpdateResult
 } from '@mashroom/mashroom-storage/type-definitions';
-import {JsonDB} from "../../type-definitions";
+import {JsonDB} from '../../type-definitions';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -38,9 +39,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
 
     async insertOne(item: T): Promise<StorageObject<T>> {
         return this.updateOperation((collection) => {
-            const insertedItem = Object.assign({}, item, {
-               _id: shortId.generate(),
-            });
+            const insertedItem = {...item, _id: shortId.generate(),};
             collection.push(insertedItem);
             return insertedItem;
         });
@@ -66,7 +65,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async  updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: Partial<StorageObject<T>>): Promise<StorageUpdateResult> {
+    async updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: Partial<StorageObject<T>>): Promise<StorageUpdateResult> {
         return this.updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
@@ -76,7 +75,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
             }
 
             const index = collection.indexOf(existingItem);
-            collection[index] = Object.assign({}, existingItem, propertiesToUpdate);
+            collection[index] = {...existingItem, ...propertiesToUpdate};
 
             return {
                 modifiedCount: 1,
@@ -94,9 +93,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
             }
 
             const index = collection.indexOf(existingItem);
-            collection[index] = Object.assign({}, newItem, {
-                _id: shortId.generate(),
-            });
+            collection[index] = {...newItem, _id: shortId.generate(),};
 
             return {
                 modifiedCount: 1,

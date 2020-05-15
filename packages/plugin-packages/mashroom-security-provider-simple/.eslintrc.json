@@ -15,6 +15,9 @@
         "jest": true
     },
     "rules": {
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
+        "prefer-destructuring": ["warn", { "array": true, "object": true }]
     }
 }

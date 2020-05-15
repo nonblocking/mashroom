@@ -5,9 +5,7 @@ import path from 'path';
 import querystring from 'querystring';
 import {createHash} from 'crypto';
 
-import type {
-    MashroomSecurityProvider, MashroomSecurityUser
-} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomSecurityProvider, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
     ExpressRequest,
     ExpressResponse,
@@ -47,7 +45,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}) {
         const encodedRedirectUrl = encodeURIComponent(request.originalUrl);
         const authenticationHintsQuery = querystring.stringify(authenticationHints);
-        response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? '&' + authenticationHintsQuery : ''}`);
+        response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? `&${authenticationHintsQuery}` : ''}`);
         return {
             status: 'deferred'
         };

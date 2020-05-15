@@ -300,7 +300,7 @@ export type MashroomPortalRolePermissions = {
     [permission: string]: Array<string>;
 };
 
-export interface MashroomPortalApp {
+export type MashroomPortalApp = {
     /**
      * Portal App name
      */

@@ -4,11 +4,12 @@ import context from '../context';
 
 import {
     MashroomLogger,
-    MashroomLoggerFactory, MashroomPluginDefinition,
+    MashroomLoggerFactory,
+    MashroomPluginDefinition,
     MashroomPluginPackageDefinition
-} from "@mashroom/mashroom/type-definitions";
-import {MashroomPortalApp, MashroomPortalProxyDefinitions} from "@mashroom/mashroom-portal/type-definitions";
-import {KubernetesConnector, KubernetesService, ScanBackgroundJob} from "../../../type-definitions";
+} from '@mashroom/mashroom/type-definitions';
+import {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
+import {KubernetesConnector, KubernetesService, ScanBackgroundJob} from '../../../type-definitions';
 
 export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgroundJob {
 
@@ -59,11 +60,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
                         if (existingService) {
                             if (existingService.status === 'Error' || existingService.lastCheck < Date.now() - this.refreshIntervalSec * 1000) {
-                                service = Object.assign({}, existingService, {
-                                    status: 'Checking',
+                                service = {
+                                    ...existingService, status: 'Checking',
                                     lastCheck: Date.now(),
                                     error: null,
-                                })
+                                }
                             }
                         } else {
                             const url = this.accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
@@ -85,10 +86,10 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
                         if (service) {
                             if (this.accessViaClusterIP && headlessService) {
-                                service = Object.assign({}, service, {
-                                    status: 'Headless Service',
+                                service = {
+                                    ...service, status: 'Headless Service',
                                     foundPortalApps: []
-                                });
+                                };
                                 context.registry.addOrUpdateService(service);
                             } else {
                                 context.registry.addOrUpdateService(service);
@@ -171,7 +172,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     const json = JSON.parse(body);
                     resolve({found: true, json});
                 } catch (parseError) {
-                    reject(new Error('Parsing /package.json failed!\n' + parseError.message));
+                    reject(new Error(`Parsing /package.json failed!\n${parseError.message}`));
                 }
             });
         });
@@ -248,9 +249,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     if (parsedUri.hostname === 'localhost') {
                         targetUri = serviceUrl + (parsedUri.path && parsedUri.path !== '/' ? parsedUri.path : '');
                     }
-                    restProxies[proxyName] = Object.assign({}, definedRestProxies[proxyName], {
-                        targetUri
-                    });
+                    restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }
             }
         }

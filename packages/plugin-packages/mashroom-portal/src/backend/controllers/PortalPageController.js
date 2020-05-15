@@ -5,27 +5,21 @@ import shortId from 'shortid';
 import {findPortalAppInstanceOnPage} from '../utils/model_utils';
 import {getPortalAppResourceKey, isAdmin} from '../utils/security_utils';
 
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityResourcePermissions,
     MashroomSecurityService
 } from '@mashroom/mashroom-security/type-definitions';
 import type {
-    MashroomPortalPage,
-    MashroomPagePortalAppInstance,
-    MashroomPortalAppInstanceRef,
     MashroomCreatePagePortalAppInstance,
-    MashroomUpdatePagePortalAppInstance,
+    MashroomPagePortalAppInstance,
     MashroomPortalAppInstance,
-    MashroomPortalService
+    MashroomPortalAppInstanceRef,
+    MashroomPortalPage,
+    MashroomPortalService,
+    MashroomUpdatePagePortalAppInstance
 } from '../../../type-definitions';
-import type {
-    MashroomPortalPluginRegistry,
-} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
 
 export default class PortalPageController {
 
@@ -124,7 +118,7 @@ export default class PortalPageController {
 
             logger.info('Updating page: ', existingPage);
 
-            const updatedPage = Object.assign({}, existingPage, page);
+            const updatedPage = {...existingPage, ...page};
 
             await portalService.updatePage(updatedPage);
 
@@ -314,7 +308,8 @@ export default class PortalPageController {
                 return;
             }
 
-            const appConfig = Object.assign({}, portalApp.defaultAppConfig || {}, data.appConfig || {});
+            // $FlowFixMe
+            const appConfig = {...portalApp.defaultAppConfig || {}, ...data.appConfig || {}};
 
             const instanceId = shortId.generate();
             const instance = {
@@ -402,9 +397,7 @@ export default class PortalPageController {
                 logger.info(`Updating app config of app instance ${pluginName}:${portalAppInstanceId} on page ${pageId} to: `, data.appConfig);
                 const existingAppInstance = await portalService.getPortalAppInstance(pluginName, portalAppInstanceId);
                 if (existingAppInstance) {
-                    const updatedAppInstance = Object.assign({}, existingAppInstance, {
-                        appConfig: data.appConfig,
-                    });
+                    const updatedAppInstance = {...existingAppInstance, appConfig: data.appConfig,};
                     await portalService.updatePortalAppInstance(updatedAppInstance);
                 }
             }
@@ -576,7 +569,7 @@ export default class PortalPageController {
         const areaAppInstances = page.portalApps[areaId] = page.portalApps[areaId] || [];
 
         let actualPos = areaAppInstances.length;
-        if (typeof(position) === 'number' && position >= 0 && position < areaAppInstances.length) {
+        if (typeof (position) === 'number' && position >= 0 && position < areaAppInstances.length) {
             actualPos = position;
         }
 

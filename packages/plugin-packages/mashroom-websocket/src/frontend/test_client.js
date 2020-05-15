@@ -17,7 +17,7 @@ global.connect = () => {
     if (!webSocket) {
         const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
         const host = global.document.location.hostname;
-        const port = global.document.location.port ? ':' + global.document.location.port : '';
+        const port = global.document.location.port ? `:${global.document.location.port}` : '';
         const path = global.document.location.pathname;
         const wsUrl = `${socketProtocol}//${host}${port}${path}`;
         console.info('Try to connect to:', wsUrl);

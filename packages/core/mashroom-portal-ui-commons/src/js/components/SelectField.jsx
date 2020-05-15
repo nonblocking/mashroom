@@ -51,11 +51,9 @@ export default class SelectField extends PureComponent<Props> {
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;
 
-        const inputProps = Object.assign({}, this.props.fieldProps.input, {
-            id: this.props.id,
+        const inputProps = {...this.props.fieldProps.input, id: this.props.id,
             placeholder,
-            onChange: (e) => this.onChange(e.target.value)
-        });
+            onChange: (e) => this.onChange(e.target.value)};
 
         return (
             <div className={`mashroom-portal-ui-select-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>

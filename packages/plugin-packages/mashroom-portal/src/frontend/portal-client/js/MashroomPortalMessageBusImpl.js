@@ -1,7 +1,10 @@
 // @flow
 
 import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging_utils';
-import {WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH, WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC} from '../../../backend/constants';
+import {
+    WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
+    WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC
+} from '../../../backend/constants';
 import RemoteMessagingClient, {webSocketSupport} from './RemoteMessagingClient';
 
 import type {
@@ -42,7 +45,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         if (webSocketSupport && REMOTE_MESSAGING_CONNECT_PATH) {
             const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
             const host = global.document.location.hostname;
-            const port = global.document.location.port ? ':' + global.document.location.port : '';
+            const port = global.document.location.port ? `:${global.document.location.port}` : '';
             const connectUrl = `${socketProtocol}//${host}${port}${REMOTE_MESSAGING_CONNECT_PATH}`;
             console.info('Enable remote messaging. WebSocket connect url: ', connectUrl);
             this._remoteMessageClient = new RemoteMessagingClient(connectUrl);
@@ -136,7 +139,8 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
                 this._subscriptionMap[topic].forEach((subscription) => {
                     if (subscription.appId === appId) {
                         this._unsubscribe(topic, subscription.callback).then(
-                            () => {},
+                            () => {
+                            },
                             (error) => {
                                 console.error(`Unsubscribing app ${appId} from topic ${topic} failed`, error);
                             }
@@ -147,9 +151,9 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         }
 
         this._interceptors.forEach((wrapper) => {
-           if (wrapper.appId === appId) {
-               this._unregisterMessageInterceptor(wrapper.interceptor);
-           }
+            if (wrapper.appId === appId) {
+                this._unregisterMessageInterceptor(wrapper.interceptor);
+            }
         });
     }
 

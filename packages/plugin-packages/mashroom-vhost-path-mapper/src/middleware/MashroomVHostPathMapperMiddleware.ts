@@ -2,15 +2,18 @@
 import determineHost from './determine_host';
 import findHostDefinition from './find_host_definition';
 import mapPath from './map_path';
-import {VHOST_MAPPING_INFO_REQUEST_PROP_NAME} from "../constants";
+import {VHOST_MAPPING_INFO_REQUEST_PROP_NAME} from '../constants';
 
 import type {
+    ExpressNextFunction,
     ExpressRequest,
     ExpressResponse,
-    ExpressNextFunction,
     MashroomLogger
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomVHostPathMapperMiddleware as MashroomVHostPathMapperMiddlewareType, VHostDefinitions} from '../../type-definitions/internal';
+import type {
+    MashroomVHostPathMapperMiddleware as MashroomVHostPathMapperMiddlewareType,
+    VHostDefinitions
+} from '../../type-definitions/internal';
 
 export default class MashroomVHostPathMapperMiddleware implements MashroomVHostPathMapperMiddlewareType {
 

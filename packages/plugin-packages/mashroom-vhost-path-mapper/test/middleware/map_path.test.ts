@@ -1,11 +1,10 @@
-
 import mapPath from '../../src/middleware/map_path';
 
-import type {VHostDefinition} from "../../type-definitions/internal";
+import type {VHostDefinition} from '../../type-definitions/internal';
 
 describe('map_path', () => {
 
-    it('does nothing for empty mapping rules',  () => {
+    it('does nothing for empty mapping rules', () => {
         const hostDefinition: VHostDefinition = {
             mapping: {}
         };
@@ -13,7 +12,7 @@ describe('map_path', () => {
         expect(mapPath('/foo', hostDefinition)).toBeFalsy();
     });
 
-    it('maps the path if a rule matches exactly',  () => {
+    it('maps the path if a rule matches exactly', () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/tset',
@@ -33,7 +32,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps the path if a rule matches the base path',  () => {
+    it('maps the path if a rule matches the base path', () => {
         const hostDefinition: VHostDefinition = {
             frontendBasePath: '/web',
             mapping: {
@@ -54,7 +53,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps the root path correctly',  () => {
+    it('maps the root path correctly', () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/tset',
@@ -95,7 +94,7 @@ describe('map_path', () => {
         });
     });
 
-    it('executes only a single rule',  () => {
+    it('executes only a single rule', () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/foo',
@@ -115,7 +114,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps location header',  () => {
+    it('maps location header', () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/foo',
@@ -135,7 +134,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps location header when target is root',  () => {
+    it('maps location header when target is root', () => {
         const hostDefinition: VHostDefinition = {
             mapping: {
                 '/test': '/foo',
@@ -155,7 +154,7 @@ describe('map_path', () => {
         });
     });
 
-    it('maps location header with frontendPath',  () => {
+    it('maps location header with frontendPath', () => {
         const hostDefinition: VHostDefinition = {
             frontendBasePath: '/web',
             mapping: {

@@ -20,8 +20,9 @@
         }
     },
     "rules": {
-        "no-console": "off",
-        "no-unused-vars": "off",
-        "quotes": ["error", "single", { "allowTemplateLiterals": true }]
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
+        "no-console": "off"
     }
 }

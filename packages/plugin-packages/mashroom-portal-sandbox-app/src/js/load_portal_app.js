@@ -24,7 +24,7 @@ const loadJs = (path: string): Promise<void> => {
         scriptElem.src = path;
         scriptElem.addEventListener('error', (error: any) => {
             console.error('Error loading JS resource: ', path, error);
-            reject('Error loading JS resource: ' + path);
+            reject(`Error loading JS resource: ${path}`);
         });
         scriptElem.addEventListener('load', () => resolve());
         document.head ? document.head.appendChild(scriptElem) : null;
@@ -65,7 +65,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
                     () => {
                         const bootstrapFn = window[globalLaunchFunction];
                         if (!(typeof (bootstrapFn) === 'function')) {
-                            return Promise.reject('Invalid bootstrap function: ' + globalLaunchFunction);
+                            return Promise.reject(`Invalid bootstrap function: ${globalLaunchFunction}`);
                         }
 
                         const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
@@ -77,9 +77,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
 
                         const messageBus = dummyMessageBus.getAppInstance('portalAppUnderTest');
                         const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES] || {};
-                        const modifiedClientServices = Object.assign({}, clientServices, {
-                            messageBus
-                        });
+                        const modifiedClientServices = {...clientServices, messageBus};
 
 
                         const result = bootstrapFn(hostElem, setup, modifiedClientServices);

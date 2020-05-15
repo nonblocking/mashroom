@@ -3,7 +3,14 @@
 import path from 'path';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
-import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
+import type {
+    MashroomLogger,
+    MashroomLoggerFactory,
+    MashroomPlugin,
+    MashroomPluginConfig,
+    MashroomPluginContextHolder,
+    MashroomPluginLoader
+} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
@@ -67,15 +74,15 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         }
         if (resourcesRootUri.indexOf('://') === -1) {
             if (resourcesRootUri.startsWith('/')) {
-                resourcesRootUri = 'file://' + resourcesRootUri;
+                resourcesRootUri = `file://${resourcesRootUri}`;
             } else {
-                resourcesRootUri = 'file:///' + resourcesRootUri;
+                resourcesRootUri = `file:///${resourcesRootUri}`;
             }
         }
 
         let defaultAppConfig = {};
         if (plugin.pluginDefinition.defaultConfig && plugin.pluginDefinition.defaultConfig.appConfig) {
-            defaultAppConfig = Object.assign({}, plugin.pluginDefinition.defaultConfig.appConfig, config.appConfig || {});
+            defaultAppConfig = {...plugin.pluginDefinition.defaultConfig.appConfig, ...config.appConfig || {}};
         }
         let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
         if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {

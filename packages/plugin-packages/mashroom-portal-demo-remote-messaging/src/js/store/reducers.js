@@ -2,18 +2,16 @@
 
 import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 import {
-    SET_SUBSCRIPTION,
     ADD_PUBLISHED_MESSAGE,
-    UPDATE_PUBLISHED_MESSAGE_STATUS,
-    ADD_RECEIVED_MESSAGE
+    ADD_RECEIVED_MESSAGE,
+    SET_SUBSCRIPTION,
+    UPDATE_PUBLISHED_MESSAGE_STATUS
 } from './actions';
 
-import type {
-    Action, PublishedMessages, ReceivedMessages, Subscription,
-} from '../../../type-definitions';
+import type {Action, PublishedMessages, ReceivedMessages, Subscription,} from '../../../type-definitions';
 
 const subscription = (state: Subscription, action: Action): Subscription => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return {
             topic: '',
             status: 'Pending'
@@ -30,7 +28,7 @@ const subscription = (state: Subscription, action: Action): Subscription => {
 };
 
 const publishedMessages = (state: PublishedMessages, action: Action): PublishedMessages => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return [];
     }
 
@@ -41,10 +39,10 @@ const publishedMessages = (state: PublishedMessages, action: Action): PublishedM
         case UPDATE_PUBLISHED_MESSAGE_STATUS: {
             return state.map((m) => {
                 if (m.id === action.messageId) {
-                    return Object.assign({}, m, {
-                        status: action.status,
+                    return {
+                        ...m, status: action.status,
                         errorMessage: action.errorMessage,
-                    });
+                    };
                 }
                 return m;
             });
@@ -55,7 +53,7 @@ const publishedMessages = (state: PublishedMessages, action: Action): PublishedM
 };
 
 const receivedMessages = (state: ReceivedMessages, action: Action): ReceivedMessages => {
-    if (typeof(state) === 'undefined') {
+    if (typeof (state) === 'undefined') {
         return [];
     }
 

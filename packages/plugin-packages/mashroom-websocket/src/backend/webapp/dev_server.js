@@ -26,7 +26,7 @@ const pluginContext: any = {
             middlewareStackService: {
                 has: () => true,
                 async apply(name, req) {
-                   req.session = {};
+                    req.session = {};
                 }
             }
         },
@@ -67,9 +67,7 @@ context.server.addMessageListener((path) => path === '/test', (message, client) 
 
 const upgradeHandler = httpUpgradeHandlerFn();
 httpServer.on('upgrade', (req, socket, head) => {
-    const reqWithContext = Object.assign({}, req, {
-        pluginContext
-    });
+    const reqWithContext = {...req, pluginContext};
     upgradeHandler(reqWithContext, socket, head);
 });
 

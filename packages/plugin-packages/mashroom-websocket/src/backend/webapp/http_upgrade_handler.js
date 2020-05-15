@@ -6,8 +6,8 @@ import context from '../context';
 
 import type {
     HttpServerRequest,
-    MashroomLogger,
     MashroomHttpUpgradeHandler,
+    MashroomLogger,
     MashroomMiddlewareStackService
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
@@ -44,7 +44,7 @@ const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) 
 
     context.server.getServer().handleUpgrade(req, socket, head, (ws) => {
         if (user) {
-            const loggerContext = Object.assign({}, logger.getContext(), userContext(user));
+            const loggerContext = {...logger.getContext(), ...userContext(user)};
             context.server.createClient(ws, connectPath, user, loggerContext);
         }
     });
@@ -65,5 +65,5 @@ const getUser = async (req: HttpServerRequest, logger: MashroomLogger): Promise<
 };
 
 const sendError = (socket: net$Socket, statusCode: number, message: string) => {
-    socket.end(`HTTP/1.1 ${statusCode} ${message}\r\n\r\n`,'ascii');
+    socket.end(`HTTP/1.1 ${statusCode} ${message}\r\n\r\n`, 'ascii');
 };

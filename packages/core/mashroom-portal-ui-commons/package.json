@@ -29,6 +29,6 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src"
+        "lint": "eslint src --fix"
     }
 }

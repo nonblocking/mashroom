@@ -1,6 +1,6 @@
 // @flow
 
-import type {MashroomRestService, CreatedResponse} from '../../../../type-definitions';
+import type {CreatedResponse, MashroomRestService} from '../../../../type-definitions';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -38,10 +38,11 @@ export default class RestServiceFetchImpl implements MashroomRestService {
     _fetch(path: string, method: HttpMethod = 'GET', jsonData: ?any, extraHeaders?: {}): Promise<any> {
         return new Promise((resolve, reject) => {
 
-            const headers: any = Object.assign({},extraHeaders || {}, {
+            const headers: any = {
+                ...extraHeaders || {},
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
-            });
+            };
 
             if (method !== 'GET') {
                 const metaCsrfToken = document.querySelector('meta[name="csrf-token"]');
@@ -89,10 +90,10 @@ export default class RestServiceFetchImpl implements MashroomRestService {
                         reject(error);
                     });
             })
-            .catch((error) => {
-                console.error('Processing response failed:', error);
-                reject(error);
-            });
+                .catch((error) => {
+                    console.error('Processing response failed:', error);
+                    reject(error);
+                });
         });
     }
 

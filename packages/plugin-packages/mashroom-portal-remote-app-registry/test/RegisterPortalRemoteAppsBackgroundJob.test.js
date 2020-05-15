@@ -80,9 +80,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(portalApp).toBeTruthy();
         expect(portalApp.lastReloadTs).toBeTruthy();
 
-        const fixedPortalApp = Object.assign({}, portalApp, {
-            lastReloadTs: 22
-        });
+        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',

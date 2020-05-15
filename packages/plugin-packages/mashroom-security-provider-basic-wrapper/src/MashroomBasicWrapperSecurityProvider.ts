@@ -1,15 +1,14 @@
-
 import type {
-    MashroomSecurityProvider, MashroomSecurityService, MashroomSecurityUser,
+    MashroomSecurityProvider,
+    MashroomSecurityService,
+    MashroomSecurityUser,
 } from '@mashroom/mashroom-security/type-definitions';
-import type {
-    ExpressResponse,
-} from '@mashroom/mashroom/type-definitions';
 import {
     MashroomSecurityAuthenticationResult,
     MashroomSecurityLoginResult
-} from "@mashroom/mashroom-security/type-definitions";
-import {ExpressRequestWithSession} from "../type-definitions";
+} from '@mashroom/mashroom-security/type-definitions';
+import type {ExpressResponse,} from '@mashroom/mashroom/type-definitions';
+import {ExpressRequestWithSession} from '../type-definitions';
 
 export default class MashroomBasicWrapperSecurityProvider implements MashroomSecurityProvider {
 

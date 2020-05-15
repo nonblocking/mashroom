@@ -157,9 +157,7 @@ export default class App extends PureComponent<Props, State> {
     onPluginNameTitleMappingMessage(message: any) {
         if (message && message.pluginName && message.title) {
             this.setState({
-                pluginNameTitleMapping: Object.assign({}, this.state.pluginNameTitleMapping, {
-                    [message.pluginName]: message.title,
-                })
+                pluginNameTitleMapping: { ...this.state.pluginNameTitleMapping, [message.pluginName]: message.title,}
             });
         }
     }
@@ -167,9 +165,7 @@ export default class App extends PureComponent<Props, State> {
     onAppIdTitleMappingMessage(message: any) {
         if (message && message.appId && message.title) {
             this.setState({
-                appIdTitleMapping: Object.assign({}, this.state.appIdTitleMapping, {
-                    [message.appId]: message.title,
-                })
+                appIdTitleMapping: { ...this.state.appIdTitleMapping, [message.appId]: message.title,}
             });
         }
     }
