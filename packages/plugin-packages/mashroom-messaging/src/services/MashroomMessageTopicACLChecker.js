@@ -65,11 +65,12 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
                     }
                 }
             }
-            return this._rules = rules;
+            this._rules = rules;
         } else {
-            this._logger.warn(`No Topic ACL definition found: ${this._aclPath}. Disabling ACL security.`);
+            this._logger.warn(`No Topic ACL definition found: ${this._aclPath}. ACL security disabled.`);
+            this._rules = [];
         }
-        return [];
+        return this._rules;
     }
 
 }
