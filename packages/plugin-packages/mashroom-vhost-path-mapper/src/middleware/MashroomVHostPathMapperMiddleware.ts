@@ -23,7 +23,7 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
 
             try {
                 const host = determineHost(this.considerHttpHeaders, req);
-                logger.debug('Determined host', host);
+                // logger.debug('Determined host', host);
 
                 const hostDefinition = findHostDefinition(host, this.vhostDefinitions);
                 if (hostDefinition) {
