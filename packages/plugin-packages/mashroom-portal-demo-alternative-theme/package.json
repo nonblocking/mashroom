@@ -14,18 +14,18 @@
         "handlebars": "^4.7.6"
     },
     "devDependencies": {
-        "@babel/cli": "^7.8.4",
-        "@fortawesome/fontawesome-free": "^5.12.0",
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-portal": "1.4.5",
         "@mashroom/mashroom-portal-ui-commons": "1.4.5",
-        "bootstrap": "^4.4.1",
+        "@babel/cli": "^7.8.4",
+        "@fortawesome/fontawesome-free": "^5.13.0",
+        "bootstrap": "^4.5.0",
         "copyfiles": "^2.2.0",
-        "eslint": "^6.8.0",
+        "eslint": "^7.0.0",
         "express": "^4.17.1",
-        "node-sass": "^4.13.1",
+        "node-sass": "^4.14.1",
         "node-sass-tilde-importer": "^1.0.2",
-        "nodemon": "^2.0.2"
+        "nodemon": "^2.0.4"
     },
     "scripts": {
         "lint": "eslint src --fix",

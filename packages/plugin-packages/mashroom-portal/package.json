@@ -13,12 +13,11 @@
         "@mashroom/mashroom-utils": "1.4.5",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
-        "get-uri": "^3.0.1",
+        "get-uri": "^3.0.2",
         "proper-lockfile": "^4.1.1",
         "shortid": "^2.2.15"
     },
     "devDependencies": {
-        "@babel/cli": "^7.8.4",
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-browser-cache": "1.4.5",
         "@mashroom/mashroom-csrf-protection": "1.4.5",
@@ -28,11 +27,12 @@
         "@mashroom/mashroom-security": "1.4.5",
         "@mashroom/mashroom-storage": "1.4.5",
         "@mashroom/mashroom-vhost-path-mapper": "1.4.5",
-        "eslint": "^6.8.0",
-        "jest": "^24.9.0",
-        "nodemon": "^1.19.4",
-        "webpack": "^4.41.5",
-        "webpack-cli": "^3.3.10"
+        "@babel/cli": "^7.8.4",
+        "eslint": "^7.0.0",
+        "jest": "^26.0.1",
+        "nodemon": "^2.0.4",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
     },
     "jest": {
         "verbose": true,

@@ -18,19 +18,19 @@
     },
     "dependencies": {
         "@mashroom/mashroom-utils": "1.4.5",
-        "chokidar": "^3.3.1",
+        "chokidar": "^3.4.0",
         "express": "^4.17.1",
         "fs-extra": "^9.0.0",
-        "log4js": "^6.1.2",
+        "log4js": "^6.2.1",
         "minimist": "^1.2.5",
         "strip-ansi": "^6.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
-        "@types/express": "^4.17.3",
-        "@types/node": "^10.17.17",
-        "eslint": "^6.8.0",
-        "jest": "^25.1.0"
+        "@types/express": "^4.17.6",
+        "@types/node": "^14.0.1",
+        "eslint": "^7.0.0",
+        "jest": "^26.0.1"
     },
     "jest": {
         "verbose": true,

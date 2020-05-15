@@ -10,15 +10,15 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "1.4.5",
-        "rhea": "^1.0.20"
+        "rhea": "^1.0.21"
     },
     "devDependencies": {
-        "@babel/cli": "^7.8.4",
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-messaging": "1.4.5",
-        "@types/jest": "^25.1.4",
-        "eslint": "^6.8.0",
-        "jest": "^25.1.0",
+        "@babel/cli": "^7.8.4",
+        "@types/jest": "^25.2.2",
+        "eslint": "^7.0.0",
+        "jest": "^26.0.1",
         "typescript": "^3.8.3"
     },
     "jest": {

@@ -11,7 +11,7 @@
     "devDependencies": {
         "cheerio": "^1.0.0-rc.3",
         "copyfiles": "^2.2.0",
-        "puppeteer": "^2.1.1",
+        "puppeteer": "^3.0.4",
         "showdown": "^1.9.1",
         "showdown-highlightjs-extension": "^0.1.2"
     },
