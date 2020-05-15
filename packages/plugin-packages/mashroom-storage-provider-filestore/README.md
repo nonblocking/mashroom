@@ -38,5 +38,5 @@ And configure this plugin like this in the Mashroom config file:
  * _dataFolder_: Base folder for JSON files (Default: ./data/storage)
  * _checkExternalChangePeriodMs_: Check JSON files for external changes after this period.
    If you set this to a value <= 0 the file timestamp will be checked on every access which will cause
-   a lot of extra I/O and should only be done if the *mashroom-memory-cache plugin* is present (default: 2000)
+   a lot of extra I/O and should only be done if the *@mashroom/mashroom-memory-cache* plugin is present (default: 2000)
  * _prettyPrintJson_: Pretty print the JSON files to make it human readable (default: true)

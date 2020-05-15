@@ -76,10 +76,25 @@
 
         },
         "Mashroom Storage Services": {
-            "provider": "Mashroom Storage MongoDB Provider"
+            "provider": "Mashroom Storage MongoDB Provider",
+            "memoryCache": {
+                "enabled": true,
+                "ttlSec": 120,
+                "invalidateOnUpdate": true
+            }
         },
         "Mashroom Storage MongoDB Provider": {
             "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
+        },
+        "Mashroom Memory Cache Services": {
+            "provider": "Mashroom Memory Cache Redis Provider",
+            "defaultTTLSec": 10
+        },
+        "Mashroom Memory Cache Redis Provider": {
+            "host": "localhost",
+            "port": "6379",
+            "keyPrefix": "mashroom:cache:",
+            "maxRetriesPerRequest": 3
         },
         "Mashroom Internationalization Services": {
             "availableLanguages": ["en", "de"],

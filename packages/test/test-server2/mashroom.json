@@ -15,6 +15,7 @@
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
         "Mashroom Session Redis Provider",
+        "Mashroom Memory Cache Redis Provider",
         "Mashroom Portal Remote App Registry Kubernetes",
         "Mashroom Portal Remote App Registry Kubernetes Webapp"
     ],
@@ -47,7 +48,10 @@
             "authenticationTimeoutSec": 1200
         },
         "Mashroom Storage Services": {
-            "provider": "Mashroom Storage Filestore Provider"
+            "provider": "Mashroom Storage Filestore Provider",
+            "memoryCache": {
+                "enabled": false
+            }
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage"

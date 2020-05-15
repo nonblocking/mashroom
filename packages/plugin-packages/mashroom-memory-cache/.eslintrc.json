@@ -15,7 +15,6 @@
     },
     "rules": {
         "quotes": ["error", "single", { "allowTemplateLiterals": true }],
-        "prefer-template": "error",
         "@typescript-eslint/ban-ts-ignore": "off"
     }
 }

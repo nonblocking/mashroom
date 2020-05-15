@@ -16,6 +16,7 @@
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
         "Mashroom Session Redis Provider",
+        "Mashroom Memory Cache Redis Provider",
         "Mashroom Portal Remote App Registry Kubernetes",
         "Mashroom Portal Remote App Registry Kubernetes Webapp"
     ],
@@ -77,7 +78,12 @@
             "styleFile": "./login_style.css"
         },
         "Mashroom Storage Services": {
-            "provider": "Mashroom Storage Filestore Provider"
+            "provider": "Mashroom Storage Filestore Provider",
+            "memoryCache": {
+                "enabled": true,
+                "ttlSec": 120,
+                "invalidateOnUpdate": true
+            }
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage",
@@ -86,6 +92,10 @@
         },
         "Mashroom Storage MongoDB Provider": {
             "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
+        },
+        "Mashroom Memory Cache Services": {
+            "provider": "local",
+            "defaultTTLSec": 10
         },
         "Mashroom Internationalization Services": {
             "availableLanguages": [

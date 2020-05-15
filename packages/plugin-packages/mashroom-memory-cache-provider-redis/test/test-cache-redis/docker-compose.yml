@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  test-memory-cache-redis:
+    container_name: TestMemoryCacheRedis
+    image: redis
+    ports:
+      - "6379:6379"
+
+

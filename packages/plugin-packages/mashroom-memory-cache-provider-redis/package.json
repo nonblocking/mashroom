@@ -1,0 +1,59 @@
+{
+    "name": "@mashroom/mashroom-memory-cache-provider-redis",
+    "description": "A Redis implementation for mashroom-memory-cache",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+        "ioredis": "^4.16.3"
+    },
+    "devDependencies": {
+        "@babel/cli": "7.8.4",
+        "@mashroom/mashroom": "1.4.5",
+        "@mashroom/mashroom-memory-cache": "1.0.0",
+        "eslint": "6.3.0",
+        "@types/ioredis": "^4.16.1",
+        "typescript": "^3.8.3",
+        "jest": "25.1.0"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest --passWithNoTests",
+        "build": "babel src -d dist --extensions '.ts'"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Memory Cache Redis Provider",
+                "type": "memory-cache-provider",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "defaultConfig": {
+                    "redisOptions": {
+                        "host": "localhost",
+                        "port": "6379",
+                        "keyPrefix": "mashroom:cache:",
+                        "maxRetriesPerRequest": 3,
+                        "enableOfflineQueue": false
+                    },
+                    "cluster": false,
+                    "clusterNodes": null,
+                    "clusterOptions": null
+                }
+            }
+        ]
+    }
+}

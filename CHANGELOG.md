@@ -3,6 +3,24 @@
 
 ## [unreleased]
 
+ * Storage Service: Can now leverage the new Memory Cache Service to accelerate the access. Can be configured like this:
+   ```json
+   "Mashroom Storage Services": {
+       "provider": "Mashroom Storage Filestore Provider",
+       "memoryCache": {
+           "enabled": true,
+           "ttlSec": 120,
+           "invalidateOnUpdate": true,
+           "collections": {
+               "mashroom-portal-pages": {
+                  "ttlSec": 300
+               }
+           }
+       }
+   }
+   ```
+ * Added a Redis provider plugin for the Memory Cache
+ * Added a general purpose Memory Cache Service with a built-in provider implementation based on *node-cache*
  * Login web-app: All query parameters in the *redirectUrl* are now preserved after login
  * Added a service to obtain the current session count to mashroom-session
  * Core: Added a new property *serverInfo.devMode* to the plugin context that can be used to determine if some packages are in development mode

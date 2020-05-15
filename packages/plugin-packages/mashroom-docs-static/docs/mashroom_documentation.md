@@ -54,7 +54,7 @@ has similar concepts than a Java Portal Server.
 
 ### Feature/Compatibility Matrix
 
-|                     | Supported
+|                     | Supported                                                                                                                      |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------|
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
 | Node.js             | 10.x, 12.x                                                                                                                     |
@@ -62,8 +62,9 @@ has similar concepts than a Java Portal Server.
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
 | Storage             | MongoDB, Plain JSON Files                                                                                                      |
+| Memory Cache        | Local Memory, Redis                                                                                                            |
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
-| Session Storage     | in Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                              |
+| Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
 | Clustering          | yes (tested with PM2)                                                                                                          |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only)                                  |
 | Mobile Browsers     | Chrome (latest), Safari (latest)                                                                                               |
@@ -555,6 +556,10 @@ this in the _Mashroom_ config file:
 
 [mashroom-security-default-login-webapp](../../mashroom-security-default-login-webapp/README.md) [inc]
 
+[mashroom-csrf-protection](../../mashroom-csrf-protection/README.md) [inc]
+
+[mashroom-helmet](../../mashroom-helmet/README.md) [inc]
+
 [mashroom-storage](../../mashroom-storage/README.md) [inc]
 
 [mashroom-storage-provider-filestore](../../mashroom-storage-provider-filestore/README.md) [inc]
@@ -579,15 +584,15 @@ this in the _Mashroom_ config file:
 
 [mashroom-messaging-external-provider-amqp](../../mashroom-messaging-external-provider-amqp/README.md) [inc]
 
+[mashroom-memory-cache](../../mashroom-memory-cache/README.md) [inc]
+
+[mashroom-memory-cache-provider-redis](../../mashroom-memory-cache-provider-redis/README.md) [inc]
+
 [mashroom-i18n](../../mashroom-i18n/README.md) [inc]
 
 [mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc]
 
-[mashroom-csrf-protection](../../mashroom-csrf-protection/README.md) [inc]
-
 [mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]
-
-[mashroom-helmet](../../mashroom-helmet/README.md) [inc]
 
 [mashroom-portal](../../mashroom-portal/README.md) [inc]
 

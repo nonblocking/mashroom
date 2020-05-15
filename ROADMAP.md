@@ -3,8 +3,6 @@
 
 ## Version 1.5
 
- * Add a memory cache plugin with multiple providers (memory, Redis)
- * Use the memory cache in mashroom-storage if available
  * Add a plugin that exposes Prometheus metrics
 
 ## Version 1.6

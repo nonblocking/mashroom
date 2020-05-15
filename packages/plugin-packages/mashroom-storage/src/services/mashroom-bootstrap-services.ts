@@ -6,10 +6,9 @@ import MashroomStorageService from './MashroomStorageService';
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const providerName = pluginConfig.provider;
+    const {provider, memoryCache} = pluginConfig;
 
-    const pluginContext = pluginContextHolder.getPluginContext();
-    const service = new MashroomStorageService(providerName, context.pluginRegistry, pluginContext.loggerFactory);
+    const service = new MashroomStorageService(provider, memoryCache, context.pluginRegistry, pluginContextHolder);
 
     return {
         service,
