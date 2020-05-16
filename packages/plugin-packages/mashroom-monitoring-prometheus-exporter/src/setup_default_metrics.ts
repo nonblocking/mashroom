@@ -3,7 +3,7 @@ import {collectDefaultMetrics} from 'prom-client';
 import registry from './registry';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import {PrometheusGcStats} from '../type-definitions';
+import type {PrometheusGcStats} from '../type-definitions';
 
 export default (enableGcStats: boolean, loggerFactory: MashroomLoggerFactory) => {
 

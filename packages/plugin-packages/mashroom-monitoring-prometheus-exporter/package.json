@@ -17,6 +17,7 @@
     },
     "devDependencies": {
         "@mashroom/mashroom": "1.4.5",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.0.0",
         "@babel/cli": "^7.8.4",
         "eslint": "^7.0.0",
         "typescript": "^3.9.2",
@@ -33,9 +34,9 @@
         "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src --ext '.ts' --fix",
+        "lint": "eslint src test --ext '.ts' --fix",
         "type-check": "tsc --noEmit",
-        "test": "jest --passWithNoTests",
+        "test": "jest",
         "build": "babel src -d dist --extensions '.ts'"
     },
     "mashroom": {
@@ -46,7 +47,7 @@
                 "type": "web-app",
                 "bootstrap": "./dist/mashroom-bootstrap-webapp.js",
                 "requires": [
-
+                    "Mashroom Monitoring Metrics Collector Services"
                 ],
                 "defaultConfig": {
                     "path": "/metrics",
