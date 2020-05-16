@@ -1,0 +1,68 @@
+{
+    "name": "@mashroom/mashroom-monitoring-metrics-collector",
+    "description": "Collects request metrics and provides a service to add custom metrics",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "type-definitions/*"
+    ],
+    "dependencies": {
+        "tdigest": "^0.1.1"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "1.4.5",
+        "@babel/cli": "^7.8.4",
+        "eslint": "^7.0.0",
+        "typescript": "^3.9.2",
+        "@types/jest": "^25.2.2",
+        "jest": "^26.0.1"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src test --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src -d dist --extensions '.ts'"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Monitoring Metrics Collector Services",
+                "type": "services",
+                "namespace": "metrics",
+                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+                "defaultConfig": {
+                    "disableMetrics": [],
+                    "defaultHistogramBuckets": [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
+                    "customHistogramBucketConfig": {
+                    },
+                    "defaultSummaryQuantiles": [0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999],
+                    "customSummaryQuantileConfig": {
+                    }
+                }
+            },
+            {
+                "name": "Mashroom Monitoring Request Metrics Middleware",
+                "type": "middleware",
+                "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
+                "requires": [
+                    "Mashroom Monitoring Metrics Collector Services"
+                ],
+                "defaultConfig": {
+                    "order": -10
+                }
+            }
+        ]
+    }
+}
