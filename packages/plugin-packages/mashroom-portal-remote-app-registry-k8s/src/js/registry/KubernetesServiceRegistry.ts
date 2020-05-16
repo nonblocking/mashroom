@@ -1,5 +1,6 @@
-import {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
-import {KubernetesService, KubernetesServiceRegistry as KubernetesServiceRegistryType} from '../../../type-definitions';
+
+import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {KubernetesService, KubernetesServiceRegistry as KubernetesServiceRegistryType} from '../../../type-definitions';
 
 export default class KubernetesServiceRegistry implements KubernetesServiceRegistryType {
 

@@ -1,9 +1,7 @@
 /* eslint-disable */
 
-import {ExpressRequest} from "@mashroom/mashroom/type-definitions";
-import {MashroomPortalApp} from "@mashroom/mashroom-portal/type-definitions";
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
+import type {ExpressRequest} from "@mashroom/mashroom/type-definitions";
+import type {MashroomPortalApp} from "@mashroom/mashroom-portal/type-definitions";
 
 export type RemotePortalAppEndpoint = {
     readonly url: string;

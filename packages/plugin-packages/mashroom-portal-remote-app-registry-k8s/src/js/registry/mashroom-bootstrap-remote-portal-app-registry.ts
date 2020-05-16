@@ -1,9 +1,10 @@
+
 import context from '../context';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../jobs/ScanK8SPortalRemoteAppsBackgroundJob';
 import KubernetesConnector from '../k8s/KubernetesConnector';
 import DummyKubernetesConnector from '../k8s/DummyKubernetesConnector';
 
-import {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const pluginContext = contextHolder.getPluginContext();

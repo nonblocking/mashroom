@@ -1,8 +1,6 @@
 /* eslint-disable */
 
-import {I18NString, MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
+import type {I18NString, MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
 
 /* Model */
 

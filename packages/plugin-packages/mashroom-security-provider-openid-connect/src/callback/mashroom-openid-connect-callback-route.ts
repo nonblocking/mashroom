@@ -3,9 +3,9 @@ import createUser from '../create-user';
 import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
 import {OpenIDCallbackChecks} from 'openid-client';
 
-import type {ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
-import type {CallbackConfiguration, ExpressRequestWithSession, OpenIDConnectAuthData} from '../../type-definitions';
+import type {CallbackConfiguration, OpenIDConnectAuthData} from '../../type-definitions';
 
 let _callbackConfiguration: CallbackConfiguration | undefined;
 
@@ -14,7 +14,7 @@ export const setCallbackConfiguration = (callbackConfiguration: CallbackConfigur
 };
 
 export default (defaultBackUrl: string) => {
-    return async (request: ExpressRequestWithSession, response: ExpressResponse) => {
+    return async (request: ExpressRequest, response: ExpressResponse) => {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
         if (!_callbackConfiguration) {

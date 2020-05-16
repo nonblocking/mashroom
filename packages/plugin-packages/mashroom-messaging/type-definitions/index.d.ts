@@ -1,12 +1,10 @@
 /* eslint-disable */
 
-import {
+import type {
     MashroomPluginContextHolder,
     MashroomPluginConfig,
     ExpressRequest,
 } from '@mashroom/mashroom/type-definitions';
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
 
 export type MashroomMessagingSubscriberCallback = (
     data: any,

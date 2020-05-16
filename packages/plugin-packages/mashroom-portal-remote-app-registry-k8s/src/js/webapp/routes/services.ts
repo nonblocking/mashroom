@@ -1,7 +1,7 @@
 import context from '../../context';
 
-import {Request, Response} from 'express';
-import {KubernetesServiceStatus, ServicesRenderModel} from '../../../../type-definitions';
+import type {Request, Response} from 'express';
+import type {KubernetesServiceStatus, ServicesRenderModel} from '../../../../type-definitions';
 
 const formatDate = (ts: number): string => {
     return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')

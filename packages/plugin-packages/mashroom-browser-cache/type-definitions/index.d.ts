@@ -1,8 +1,6 @@
 /* eslint-disable */
 
-import {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
-
-// -------- Converted from index.js via https://flow-to-ts.netlify.com ----------
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
 export interface MashroomCacheControlService {
     /**

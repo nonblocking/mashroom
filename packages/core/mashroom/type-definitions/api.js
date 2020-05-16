@@ -6,7 +6,8 @@ export type HttpServerRequest = $Subtype<http$IncomingMessage<>> & {
     pluginContext: MashroomPluginContext
 };
 export type ExpressRequest = $Subtype<$Request> & {
-    pluginContext: MashroomPluginContext
+    pluginContext: MashroomPluginContext,
+    session?: any;
 };
 export type ExpressResponse = $Response;
 export type ExpressNextFunction = NextFunction;

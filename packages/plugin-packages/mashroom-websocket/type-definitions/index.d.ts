@@ -1,8 +1,6 @@
 /* eslint-disable */
 
-import {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
+import type {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
 
 export type MashroomWebSocketMatcher = (
     connectPath: string,

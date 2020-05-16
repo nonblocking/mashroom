@@ -1,3 +1,4 @@
+
 import express from 'express';
 import app from './webapp';
 import bootstrap from '../registry/mashroom-bootstrap-remote-portal-app-registry';

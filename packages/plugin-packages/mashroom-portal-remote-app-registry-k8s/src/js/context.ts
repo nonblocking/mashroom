@@ -1,6 +1,7 @@
+
 import KubernetesServiceRegistry from './registry/KubernetesServiceRegistry';
 
-import {Context} from '../../type-definitions';
+import type {Context} from '../../type-definitions';
 
 export const _registry = new KubernetesServiceRegistry();
 let _serviceNameFilter = '';

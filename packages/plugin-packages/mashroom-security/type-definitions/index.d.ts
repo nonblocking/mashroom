@@ -1,13 +1,11 @@
 /* eslint-disable */
 
-import {
+import type {
     ExpressRequest,
     ExpressResponse,
     MashroomPluginConfig,
     MashroomPluginContextHolder
 } from "@mashroom/mashroom/type-definitions";
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
 
 export type MashroomSecurityRoleDefinition = {
     id: string;

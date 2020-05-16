@@ -1,10 +1,5 @@
 
-import {IssuerMetadata, ResponseType, TokenSet} from 'openid-client';
-import {ExpressRequest} from '@mashroom/mashroom/type-definitions';
-
-export type ExpressRequestWithSession = ExpressRequest & {
-    session: any;
-}
+import type {IssuerMetadata, ResponseType, TokenSet} from 'openid-client';
 
 export type Mode = 'OIDC' | 'OAuth2';
 

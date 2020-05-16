@@ -1,17 +1,25 @@
 /* eslint-disable */
 
-import {Router, Request, Response, Application, NextFunction} from 'express';
-import {IncomingMessage} from 'http';
-import {Socket} from 'net';
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
+import type {Router, Request, Response, Application, NextFunction} from 'express';
+import type {IncomingMessage} from 'http';
+import type {Socket} from 'net';
 
 export type HttpServerRequest = IncomingMessage & {
     pluginContext: MashroomPluginContext;
 };
 export type ExpressRequest = Request & {
     pluginContext: MashroomPluginContext;
+    session?: any;
 };
+
+// Extend the express Request type too
+declare module 'express-serve-static-core' {
+    interface Request {
+        pluginContext: MashroomPluginContext;
+        session?: any;
+    }
+}
+
 export type ExpressResponse = Response;
 export type ExpressNextFunction = NextFunction;
 export type ExpressApplication = Application;

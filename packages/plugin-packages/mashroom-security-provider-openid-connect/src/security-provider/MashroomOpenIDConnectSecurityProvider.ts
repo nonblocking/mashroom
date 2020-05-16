@@ -4,14 +4,14 @@ import {AuthorizationParameters, generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
 import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY, TOKEN_CHECK_INTERVAL_MS,} from '../constants';
 
+import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityAuthenticationResult,
     MashroomSecurityLoginResult,
     MashroomSecurityProvider,
     MashroomSecurityUser,
 } from '@mashroom/mashroom-security/type-definitions';
-import type {ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
-import type {ExpressRequestWithSession, OpenIDConnectAuthData} from '../../type-definitions';
+import type {OpenIDConnectAuthData} from '../../type-definitions';
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
@@ -22,7 +22,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         return false;
     }
 
-    async authenticate(request: ExpressRequestWithSession, response: ExpressResponse, authenticationHints: any = {}): Promise<MashroomSecurityAuthenticationResult> {
+    async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}): Promise<MashroomSecurityAuthenticationResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
         const {originalUrl} = request;
 
@@ -80,7 +80,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         };
     }
 
-    async checkAuthentication(request: ExpressRequestWithSession): Promise<void> {
+    async checkAuthentication(request: ExpressRequest): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
         const client = await openIDConnectClient(request);
@@ -120,7 +120,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         }
     }
 
-    getAuthenticationExpiration(request: ExpressRequestWithSession): number | null | undefined {
+    getAuthenticationExpiration(request: ExpressRequest): number | null | undefined {
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
         if (authData && authData.tokenSet && authData.tokenSet.expires_at) {
             return authData.tokenSet.expires_at * 1000;
@@ -129,7 +129,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         return undefined;
     }
 
-    async revokeAuthentication(request: ExpressRequestWithSession): Promise<void> {
+    async revokeAuthentication(request: ExpressRequest): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
         const client = await openIDConnectClient(request);
@@ -163,7 +163,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         };
     }
 
-    getUser(request: ExpressRequestWithSession): MashroomSecurityUser | null {
+    getUser(request: ExpressRequest): MashroomSecurityUser | null {
         if (!request.session) {
             return null;
         }
@@ -181,7 +181,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         return user;
     }
 
-    getApiSecurityHeaders(request: ExpressRequestWithSession, targetUri: string): any | null | undefined {
+    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined {
         return null;
     }
 }

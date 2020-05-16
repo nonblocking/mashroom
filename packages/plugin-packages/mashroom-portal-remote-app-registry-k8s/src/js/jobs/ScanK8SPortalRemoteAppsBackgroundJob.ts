@@ -1,15 +1,16 @@
+
 import url from 'url';
 import request from 'request';
 import context from '../context';
 
-import {
+import type {
     MashroomLogger,
     MashroomLoggerFactory,
     MashroomPluginDefinition,
     MashroomPluginPackageDefinition
 } from '@mashroom/mashroom/type-definitions';
-import {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
-import {KubernetesConnector, KubernetesService, ScanBackgroundJob} from '../../../type-definitions';
+import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
+import type {KubernetesConnector, KubernetesService, ScanBackgroundJob} from '../../../type-definitions';
 
 export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgroundJob {
 

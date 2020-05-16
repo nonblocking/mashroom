@@ -1,26 +1,24 @@
+
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityProvider,
     MashroomSecurityService,
     MashroomSecurityUser,
-} from '@mashroom/mashroom-security/type-definitions';
-import {
     MashroomSecurityAuthenticationResult,
     MashroomSecurityLoginResult
 } from '@mashroom/mashroom-security/type-definitions';
-import type {ExpressResponse,} from '@mashroom/mashroom/type-definitions';
-import {ExpressRequestWithSession} from '../type-definitions';
 
 export default class MashroomBasicWrapperSecurityProvider implements MashroomSecurityProvider {
 
     constructor(private targetSecurityProvider: string, private onlyPreemptive: boolean, private realm: string) {
     }
 
-    async canAuthenticateWithoutUserInteraction(request: ExpressRequestWithSession): Promise<boolean> {
+    async canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean> {
         const authorization = this.getAuthorizationHeader(request);
         return !!authorization && authorization.startsWith('Basic ');
     }
 
-    async authenticate(request: ExpressRequestWithSession, response: ExpressResponse, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult> {
+    async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult> {
         const logger = request.pluginContext.loggerFactory('mashroom.security.provider.basic');
 
         const authorization = this.getAuthorizationHeader(request);
@@ -59,14 +57,14 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         };
     }
 
-    async checkAuthentication(request: ExpressRequestWithSession): Promise<void> {
+    async checkAuthentication(request: ExpressRequest): Promise<void> {
         const targetSecurityProvider = this.getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             await targetSecurityProvider.checkAuthentication(request);
         }
     }
 
-    getAuthenticationExpiration(request: ExpressRequestWithSession): number | undefined | null {
+    getAuthenticationExpiration(request: ExpressRequest): number | undefined | null {
         const targetSecurityProvider = this.getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.getAuthenticationExpiration(request);
@@ -74,14 +72,14 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         return null;
     }
 
-    async revokeAuthentication(request: ExpressRequestWithSession): Promise<void> {
+    async revokeAuthentication(request: ExpressRequest): Promise<void> {
         const targetSecurityProvider = this.getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             await targetSecurityProvider.revokeAuthentication(request);
         }
     }
 
-    async login(request: ExpressRequestWithSession, username: string, password: string): Promise<MashroomSecurityLoginResult> {
+    async login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult> {
         const targetSecurityProvider = this.getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.login(request, username, password);
@@ -91,7 +89,7 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         }
     }
 
-    getUser(request: ExpressRequestWithSession): MashroomSecurityUser | undefined | null {
+    getUser(request: ExpressRequest): MashroomSecurityUser | undefined | null {
         const targetSecurityProvider = this.getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.getUser(request);
@@ -99,7 +97,7 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         return null;
     }
 
-    getApiSecurityHeaders(request: ExpressRequestWithSession, targetUri: string): any | null | undefined {
+    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined {
         const targetSecurityProvider = this.getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.getApiSecurityHeaders(request, targetUri);
@@ -107,11 +105,11 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         return null;
     }
 
-    private getAuthorizationHeader(request: ExpressRequestWithSession): string | undefined {
+    private getAuthorizationHeader(request: ExpressRequest): string | undefined {
         return request.headers.authorization;
     }
 
-    private getTargetSecurityProvider(request: ExpressRequestWithSession): MashroomSecurityProvider | null {
+    private getTargetSecurityProvider(request: ExpressRequest): MashroomSecurityProvider | null {
         const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
         const provider = securityService.getSecurityProvider(this.targetSecurityProvider);
         if (!provider) {

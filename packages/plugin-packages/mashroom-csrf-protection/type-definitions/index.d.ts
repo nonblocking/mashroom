@@ -1,8 +1,6 @@
 /* eslint-disable */
 
-import {ExpressRequest} from '@mashroom/mashroom/type-definitions';
-
-// -------- Converted from api.js via https://flow-to-ts.netlify.com ----------
+import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 
 export interface MashroomCSRFService {
     /**

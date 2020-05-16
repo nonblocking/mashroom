@@ -1,5 +1,7 @@
+
 import {CoreV1Api, KubeConfig, V1ServiceList} from '@kubernetes/client-node';
-import {KubernetesConnector as KubernetesConnectorType} from '../../../type-definitions';
+
+import type {KubernetesConnector as KubernetesConnectorType} from '../../../type-definitions';
 
 export default class KubernetesConnector implements KubernetesConnectorType {
 
