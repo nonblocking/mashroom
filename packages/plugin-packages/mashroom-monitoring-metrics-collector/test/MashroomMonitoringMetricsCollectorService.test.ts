@@ -7,12 +7,16 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
 
     const loggerFactory: any = () => console;
     const config: MashroomMonitoringMetricsCollectorConfig = {
-        'disableMetrics': [],
-        'defaultHistogramBuckets': [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
-        'customHistogramBucketConfig': {
+        disableMetrics: [
+            'ignore_me_metric',
+        ],
+        defaultHistogramBuckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
+        customHistogramBucketConfig: {
+            'histogram1': [1, 2],
         },
-        'defaultSummaryQuantiles': [0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999],
-        'customSummaryQuantileConfig': {
+        defaultSummaryQuantiles: [0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999],
+        customSummaryQuantileConfig: {
+            'summary1': [0.1, 0.2],
         }
     };
 
@@ -170,12 +174,11 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
     it('stores summary data correctly', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
-        const histogram = service.summary( 'metric_name', 'metric_help', [0.001, 0.01, 0.1, 0.5]);
-        histogram.observe(5);
-        histogram.observe(50);
-        histogram.observe(222,{ foo: 2 } );
-        histogram.observe(3333, { foo: 2, bar: 'Test' });
-
+        const summary = service.summary( 'metric_name', 'metric_help', [0.001, 0.01, 0.1, 0.5]);
+        summary.observe(5);
+        summary.observe(50);
+        summary.observe(222,{ foo: 2 } );
+        summary.observe(3333, { foo: 2, bar: 'Test' });
 
         expect(service.getMetrics()['metric_name']).toEqual({
             name: 'metric_name',
@@ -252,6 +255,61 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
                     labels: { foo: 2, bar: 'Test' },
                 },
             ]
+        });
+    });
+
+    it('ignores metrics if configured', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        const counter = service.counter( 'ignore_me_metric', 'test');
+        counter.inc(10);
+
+        expect(service.getMetrics()).toEqual({});
+    });
+
+    it('overrides histogram buckets if configured', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        const histogram = service.histogram( 'histogram1', 'test', [1, 10, 100, 1000]);
+        histogram.observe(5);
+
+        expect(service.getMetrics()['histogram1'].data[0]).toEqual({
+            'buckets': [
+                {
+                    'le': 1,
+                    'value': 0
+                },
+                {
+                    'le': 2,
+                    'value': 0
+                }
+            ],
+            'count': 1,
+            'labels': {},
+            'sum': 5
+        });
+    });
+
+    it('overrides summary quantiles if configured', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        const summary = service.summary( 'summary1', 'test', [0.001, 0.01, 0.1, 0.5]);
+        summary.observe(5);
+
+        expect(service.getMetrics()['summary1'].data[0]).toEqual({
+            'buckets': [
+                {
+                    'quantile': 0.1,
+                    'value': 5
+                },
+                {
+                    'quantile': 0.2,
+                    'value': 5
+                }
+            ],
+            'count': 1,
+            'labels': {},
+            'sum': 5
         });
     });
 

@@ -1,5 +1,5 @@
 
-//import {} from 'tdigest';
+import {TDigest} from 'tdigest';
 import createLabelHash from './create_label_hash';
 
 import type {MetricLabels, Summary} from '../../type-definitions';
@@ -12,10 +12,7 @@ export default (metricData: InternalSummaryMetricData): Summary => {
             metricData.data[key] = {
                 count: 0,
                 sum: 0,
-                buckets: metricData.quantiles.map((quantile) => ({
-                    quantile,
-                    value: 0,
-                })),
+                tDigest: new TDigest(),
                 labels,
             };
         }
@@ -28,9 +25,7 @@ export default (metricData: InternalSummaryMetricData): Summary => {
                 const data = getData(labels);
                 data.count++;
                 data.sum += value;
-                data.buckets.forEach((bucket) => {
-                    // TODO
-                });
+                data.tDigest.push(value);
             }
         }
     }

@@ -84,7 +84,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
                 name,
                 help,
                 type: 'histogram',
-                buckets: [...buckets || this.config.defaultHistogramBuckets],
+                buckets: [...(this.config.customHistogramBucketConfig && this.config.customHistogramBucketConfig[name]) || buckets || this.config.defaultHistogramBuckets],
                 data: {},
             };
             this.metrics[name] = metrics;
@@ -106,7 +106,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
                 name,
                 help,
                 type: 'summary',
-                quantiles: [...quantiles || this.config.defaultSummaryQuantiles],
+                quantiles: [...(this.config.customSummaryQuantileConfig && this.config.customSummaryQuantileConfig[name]) || quantiles || this.config.defaultSummaryQuantiles],
                 data: {},
             };
             this.metrics[name] = metrics;
@@ -126,8 +126,28 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
                 name,
                 help,
                 type,
-                data: Object.values(data),
+                data: [],
             };
+            switch (type) {
+                case 'summary':
+                    const summaryMetricsData = metricsData as InternalSummaryMetricData;
+                    metrics[metricName].data = Object.values(summaryMetricsData.data).map(({ sum, count, labels, tDigest }) => {
+                        tDigest.compress();
+                        return {
+                            sum,
+                            count,
+                            labels,
+                            buckets: summaryMetricsData.quantiles.map((quantile) => ({
+                                quantile,
+                                value: tDigest.percentile(quantile),
+                            })),
+                        };
+                    });
+                    break;
+                default:
+                    metrics[metricName].data = Object.values(data);
+                    break;
+            }
         })
         return metrics;
     }

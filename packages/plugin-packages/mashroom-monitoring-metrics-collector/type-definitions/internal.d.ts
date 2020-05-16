@@ -2,6 +2,8 @@
 import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
 import {MetricLabels} from './api';
 
+import type {TDigest} from 'tdigest';
+
 export interface MashroomMonitoringRequestMetricsMiddleware {
     middleware(): ExpressMiddleware
 }
@@ -66,10 +68,7 @@ export type InternalSummaryMetricData = InternalMetricDataBase & {
         [hash: string]: {
             count: number;
             sum: number;
-            buckets: Array<{
-                quantile: number;
-                value: number;
-            }>;
+            tDigest: TDigest;
             labels: MetricLabels;
         };
     };

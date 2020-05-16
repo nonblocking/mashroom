@@ -44,7 +44,7 @@ export interface MashroomMonitoringMetricsCollectorService {
     histogram(name: string, help: string, buckets?: number[]): Histogram;
     /**
      * Similar to a histogram, a summary samples observations. While it also provides a total count of
-     * observations and a sum of all observed values, it calculates configurable quantiles over a sliding time window.
+     * observations and a sum of all observed values, it calculates configurable quantiles..
      */
     summary(name: string, help: string, quantiles?: number[]): Summary;
     /**
