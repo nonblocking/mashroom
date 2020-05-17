@@ -22,9 +22,9 @@ export default class MashroomMonitoringRequestMetricsMiddleware implements Mashr
                 const timeSec = time / 1000;
                 const path = this.getCleanPath(originalUrl);
 
-                collectorService.counter('http_requests_total', 'Total HTTP requests')
+                collectorService.counter('mashroom_http_requests_total', 'Total HTTP requests')
                     .inc(1, { path, method, status: statusCode });
-                collectorService.histogram('http_request_duration_seconds', 'Request duration in seconds')
+                collectorService.histogram('mashroom_http_request_duration_seconds', 'Request duration in seconds')
                     .observe(timeSec, { path, method, status: statusCode });
 
             }
