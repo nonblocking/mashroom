@@ -11,6 +11,9 @@ export default class PromClientMashroomMetricsAdapter {
 
     promClientData: any;
 
+    constructor(private metricName: string) {
+    }
+
     setMetrics(metrics: MetricsData): void {
         const {name, help, type} = metrics;
         this.promClientData = {
@@ -46,6 +49,10 @@ export default class PromClientMashroomMetricsAdapter {
      */
     get(): any {
         return this.promClientData;
+    }
+
+    get name(): string {
+        return this.metricName;
     }
 
     private calcHistogramValues(metrics: HistogramMetricData): Array<any> {

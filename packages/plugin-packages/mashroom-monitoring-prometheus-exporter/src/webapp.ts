@@ -20,17 +20,17 @@ export default (loggerFactory: MashroomLoggerFactory) => {
         const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
         const metrics = collectorService.getMetrics();
         Object.keys(metrics).forEach((metricName) => {
-            const metricsData = metrics[metricName];
-            let adapter = existingAdapters[metricName];
-            if (!adapter) {
-                adapter = new PromClientMashroomMetricsAdapter();
-                existingAdapters[metricName] = adapter;
-                registry.registerMetric(adapter as any);
-            }
             try {
+                const metricsData = metrics[metricName];
+                let adapter = existingAdapters[metricName];
+                if (!adapter) {
+                    adapter = new PromClientMashroomMetricsAdapter(metricName);
+                    existingAdapters[metricName] = adapter;
+                    registry.registerMetric(adapter as any);
+                }
                 adapter.setMetrics(metricsData);
             } catch (e) {
-                logger.error('Conversion to Prometheus format failed', e);
+                logger.error(`Couldn't add metric ${metricName} to Prometheus!`, e);
             }
         });
 

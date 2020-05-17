@@ -32,6 +32,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
     }
 
     counter(name: string, help: string): Counter {
+        name = this.fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
             return this.createNoOpMetric();
@@ -53,6 +54,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
     }
 
     gauge(name: string, help: string): Gauge {
+        name = this.fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
             return this.createNoOpMetric();
@@ -74,6 +76,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
     }
 
     histogram(name: string, help: string, buckets?: number[]): Histogram {
+        name = this.fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
             return this.createNoOpMetric();
@@ -96,6 +99,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
     }
 
     summary(name: string, help: string, quantiles?: number[]): Summary {
+        name = this.fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
             return this.createNoOpMetric();
@@ -150,6 +154,10 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             }
         })
         return metrics;
+    }
+
+    private fixMetricName(name: string): string {
+        return (name || 'undefined').replace(/ /g, '_').toLowerCase();
     }
 
     private createNoOpMetric(): Counter & Gauge & Histogram & Summary {

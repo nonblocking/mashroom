@@ -5,7 +5,7 @@ import {MetricLabels} from './api';
 import type {TDigest} from 'tdigest';
 
 export interface MashroomMonitoringRequestMetricsMiddleware {
-    middleware(): ExpressMiddleware
+    middleware(): ExpressMiddleware;
 }
 
 export type MashroomMonitoringMetricsCollectorConfig = {

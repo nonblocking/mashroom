@@ -41,7 +41,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             ]
         }
 
-        const adapter = new PromClientMashroomMetricsAdapter();
+        const adapter = new PromClientMashroomMetricsAdapter('metric_name');
         adapter.setMetrics(mashroomCounterData);
 
         // @ts-ignore
@@ -78,7 +78,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             ]
         }
 
-        const adapter = new PromClientMashroomMetricsAdapter();
+        const adapter = new PromClientMashroomMetricsAdapter('metric2_name');
         adapter.setMetrics(mashroomGaugeData);
 
         // @ts-ignore
@@ -174,7 +174,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             ]
         }
 
-        const adapter = new PromClientMashroomMetricsAdapter();
+        const adapter = new PromClientMashroomMetricsAdapter('metric3_name');
         adapter.setMetrics(mashroomHistogramData);
 
         // @ts-ignore
@@ -270,7 +270,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             ]
         }
 
-        const adapter = new PromClientMashroomMetricsAdapter();
+        const adapter = new PromClientMashroomMetricsAdapter('metric4_name');
         adapter.setMetrics(mashroomSummaryData);
 
         // @ts-ignore
@@ -298,7 +298,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             ]
         }
 
-        const adapter = new PromClientMashroomMetricsAdapter();
+        const adapter = new PromClientMashroomMetricsAdapter('metric_name');
         adapter.setMetrics(mashroomCounterData);
 
         const registry = new Registry();
