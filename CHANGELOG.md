@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Added a plugin that exports the collected metrics for the _Prometheus_ monitoring system
+ * Added a metrics collector plugin that adds request metrics and exposes a service for other plugins to add more metrics
  * Remote Portal App Registries: Added an option _socketTimeoutSec_ to configure the timeout when trying to access remote apps
  * Storage Service: Can now leverage the new Memory Cache Service to accelerate the access. Can be configured like this:
    ```json
@@ -23,7 +25,6 @@
  * Added a Redis provider plugin for the Memory Cache
  * Added a general purpose Memory Cache Service with a built-in provider implementation based on *node-cache*
  * Login web-app: All query parameters in the *redirectUrl* are now preserved after login
- * Added a service to obtain the current session count to mashroom-session
  * Core: Added a new property *serverInfo.devMode* to the plugin context that can be used to determine if some packages are in development mode
  * Added a wrapper security provider that adds support for Basic authentication to any other security provider that implements _login()_ properly.
    Useful for end-2-end or load tests and if you want to access some API from an external system.
