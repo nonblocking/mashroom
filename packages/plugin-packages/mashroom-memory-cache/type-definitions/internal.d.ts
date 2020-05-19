@@ -1,6 +1,6 @@
 
 import type {
-    MashroomMemoryCacheProvider,
+    MashroomMemoryCacheProvider, MashroomMemoryCacheService,
 } from './api';
 
 export interface MashroomMemoryCacheProviderRegistry {
@@ -9,3 +9,14 @@ export interface MashroomMemoryCacheProviderRegistry {
     register(pluginName: string, provider: MashroomMemoryCacheProvider): void;
     unregister(pluginName: string): void;
 }
+
+export interface MashroomMemoryCacheServiceWithStats extends MashroomMemoryCacheService {
+    getStats(): CacheStatistics;
+}
+
+export type CacheStatistics = {
+    regionCount: number;
+    entriesAdded: number;
+    cacheHitRatio: number;
+}
+

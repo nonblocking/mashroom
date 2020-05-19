@@ -9,15 +9,3 @@ export type MashroomSessionStoreProvider = Store;
  * Bootstrap method definition for session-store-provider plugins
  */
 export type MashroomSessionStoreProviderPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder, expressSession: any) => Promise<MashroomSessionStoreProvider>;
-
-export interface MashroomSessionService {
-    /**
-     * Get the current session count (if the store supports this).
-     */
-    getSessionCount(req: ExpressRequest): Promise<number | null | undefined>;
-
-    /**
-     * Clear all sessions (if the store supports this).
-     */
-    clearSessions(req: ExpressRequest): Promise<void>;
-}

@@ -32,16 +32,6 @@ export interface MashroomMemoryCacheService {
      * This might be an expensive operation, depending on the provider
      */
     getEntryCount(region: string): Promise<number | undefined>;
-    /**
-     * Get some cache statistics
-     */
-    getStats(): CacheStatistics;
-}
-
-export type CacheStatistics = {
-    regionCount: number;
-    entriesAdded: number;
-    cacheHitRatio: number;
 }
 
 export interface MashroomMemoryCacheProvider {

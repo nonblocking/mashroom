@@ -1,0 +1,28 @@
+
+import type {MashroomPluginContextHolder, MashroomPluginService} from '@mashroom/mashroom/type-definitions';
+import {MashroomMonitoringMetricsCollectorService} from '../../type-definitions';
+
+const EXPORT_INTERVAL_MS = 5000;
+
+let interval: NodeJS.Timeout;
+
+export const startExportPluginMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
+    interval = setInterval(() => {
+        const pluginContext = pluginContextHolder.getPluginContext();
+        const pluginService: MashroomPluginService = pluginContext.services.core.pluginService;
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics.service;
+
+        const pluginsTotal = pluginService.getPlugins().length;
+        const pluginsLoaded = pluginService.getPlugins().filter((p) => p.status === 'loaded').length;
+        const pluginsError = pluginService.getPlugins().filter((p) => p.status === 'error').length;
+
+        collectorService.gauge('mashroom_plugins_total', 'Mashroom Plugins Total').set(pluginsTotal);
+        collectorService.gauge('mashroom_plugins_loaded', 'Mashroom Plugins Loaded').set(pluginsLoaded);
+        collectorService.gauge('mashroom_plugins_error', 'Mashroom Plugins with Status Error').set(pluginsError);
+
+    }, EXPORT_INTERVAL_MS);
+}
+
+export const stopExportPluginMetrics = () => {
+    clearInterval(interval);
+};

@@ -18,12 +18,6 @@ export const getSessionCount = async (): Promise<number | null | undefined> => {
     return undefined;
 };
 
-export const clearSessions = async (): Promise<void> => {
-    if (currentStore && currentStore.clear) {
-        await promisify(currentStore.clear).apply(currentStore);
-    }
-};
-
 export default class MashroomSessionMiddleware implements MashroomSessionMiddlewareType {
 
     private sessionMiddleware: RequestHandler | undefined;

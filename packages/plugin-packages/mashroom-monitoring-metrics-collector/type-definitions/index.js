@@ -1,6 +1,8 @@
 // @flow
 
-export type MetricLabels = Record<string, string | number>;
+export type MetricLabels = {
+    [string]: string | number;
+}
 
 export interface Counter {
     inc(by?: number, labels?: MetricLabels): void;

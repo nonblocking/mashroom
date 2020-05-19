@@ -3,14 +3,13 @@ import context from '../context/global_context';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
-    CacheStatistics,
     MashroomMemoryCacheProvider,
-    MashroomMemoryCacheService as MashroomMemoryCacheServiceType,
     CacheKey,
     CacheValue,
 } from '../../type-definitions';
+import {CacheStatistics, MashroomMemoryCacheServiceWithStats} from '../../type-definitions/internal';
 
-export default class MashroomMemoryCacheService implements MashroomMemoryCacheServiceType {
+export default class MashroomMemoryCacheService implements MashroomMemoryCacheServiceWithStats {
 
     private entriesAdded: number;
     private cacheHits: number;

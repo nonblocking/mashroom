@@ -2,6 +2,7 @@
     "annotations": {
         "list": [
             {
+                "$$hashKey": "object:33",
                 "builtIn": 1,
                 "datasource": "-- Grafana --",
                 "enable": true,
@@ -15,7 +16,6 @@
     "editable": true,
     "gnetId": null,
     "graphTooltip": 0,
-    "id": 1,
     "links": [],
     "panels": [
         {
@@ -59,9 +59,9 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{service=\"Mashroom\"}[5m])) by (le))",
+                    "expr": "histogram_quantile(0.95, sum(rate(mashroom_http_request_duration_seconds_bucket{service=\"Mashroom\"}[5m])) by (le)) * 1000",
                     "interval": "",
-                    "legendFormat": "Response Time",
+                    "legendFormat": "All Routes",
                     "refId": "A"
                 }
             ],
@@ -69,7 +69,7 @@
             "timeFrom": null,
             "timeRegions": [],
             "timeShift": null,
-            "title": "95% of Requests Served Within Seconds",
+            "title": "95% of Requests Served Within",
             "tooltip": {
                 "shared": true,
                 "sort": 0,
@@ -85,14 +85,16 @@
             },
             "yaxes": [
                 {
+                    "$$hashKey": "object:108",
                     "format": "short",
-                    "label": null,
+                    "label": "ms",
                     "logBase": 1,
                     "max": null,
                     "min": null,
                     "show": true
                 },
                 {
+                    "$$hashKey": "object:109",
                     "format": "short",
                     "label": null,
                     "logBase": 1,
@@ -147,9 +149,9 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(http_requests_total{service=\"Mashroom\"}[5m]))",
+                    "expr": "sum(rate(mashroom_http_requests_total{service=\"Mashroom\"}[5m]))",
                     "interval": "",
-                    "legendFormat": "Requests",
+                    "legendFormat": "All Routes",
                     "refId": "A"
                 }
             ],
@@ -235,10 +237,16 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(http_requests_total{status=\"500\", service=\"Mashroom\"}[5m]))",
+                    "expr": "sum(rate(mashroom_http_requests_total{status=\"500\", service=\"Mashroom\"}[5m]))",
                     "interval": "",
-                    "legendFormat": "500",
+                    "legendFormat": "HTTP 500",
                     "refId": "A"
+                },
+                {
+                    "expr": "sum(rate(mashroom_http_requests_total{status=\"404\", service=\"Mashroom\"}[5m]))",
+                    "interval": "",
+                    "legendFormat": "HTTP 404",
+                    "refId": "B"
                 }
             ],
             "thresholds": [],
@@ -324,10 +332,16 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "nodejs_heap_size_total_bytes{service=\"Mashroom\"}",
+                    "expr": "nodejs_heap_size_total_bytes{service=\"Mashroom\"} / 1024 / 1024",
                     "interval": "",
-                    "legendFormat": "Heap Size",
+                    "legendFormat": "Heap Total",
                     "refId": "A"
+                },
+                {
+                    "expr": "nodejs_heap_size_used_bytes{service=\"Mashroom\"} / 1024 / 1024",
+                    "interval": "",
+                    "legendFormat": "Heap Used",
+                    "refId": "B"
                 }
             ],
             "thresholds": [],
@@ -350,14 +364,16 @@
             },
             "yaxes": [
                 {
+                    "$$hashKey": "object:179",
                     "format": "short",
-                    "label": null,
+                    "label": "MB",
                     "logBase": 1,
                     "max": null,
                     "min": null,
                     "show": true
                 },
                 {
+                    "$$hashKey": "object:180",
                     "format": "short",
                     "label": null,
                     "logBase": 1,
@@ -412,9 +428,9 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "rate(process_cpu_system_seconds_total{service=\"Mashroom\"}[5m])",
+                    "expr": "avg(irate(process_cpu_seconds_total{service=\"Mashroom\"}[5m])) * 100",
                     "interval": "",
-                    "legendFormat": "System",
+                    "legendFormat": "Total",
                     "refId": "A"
                 }
             ],
@@ -438,14 +454,107 @@
             },
             "yaxes": [
                 {
+                    "$$hashKey": "object:641",
+                    "decimals": null,
                     "format": "short",
-                    "label": null,
+                    "label": "%",
                     "logBase": 1,
                     "max": null,
                     "min": null,
                     "show": true
                 },
                 {
+                    "$$hashKey": "object:642",
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 1,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 6,
+                "w": 8,
+                "x": 16,
+                "y": 6
+            },
+            "hiddenSeries": false,
+            "id": 12,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "sum(rate(nodejs_gc_pause_seconds_total{service=\"Mashroom\"}[5m]))",
+                    "interval": "",
+                    "legendFormat": "GC Pauses",
+                    "refId": "A"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "V8 Garbage Collector",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "$$hashKey": "object:347",
+                    "format": "short",
+                    "label": "Sec",
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "$$hashKey": "object:348",
                     "format": "short",
                     "label": null,
                     "logBase": 1,
@@ -467,7 +576,7 @@
         "list": []
     },
     "time": {
-        "from": "now-6h",
+        "from": "now-30m",
         "to": "now"
     },
     "timepicker": {
@@ -490,5 +599,5 @@
     "variables": {
         "list": []
     },
-    "version": 9
+    "version": 1
 }

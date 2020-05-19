@@ -62,10 +62,6 @@ export interface MashroomMemoryCacheService {
      * This might be an expensive operation, depending on the provider
      */
     getEntryCount(region: string): Promise<?number>;
-    /**
-     * Get some cache statistics
-     */
-    getStats(): CacheStatistics;
 }
 ```
 ## Plugin Types

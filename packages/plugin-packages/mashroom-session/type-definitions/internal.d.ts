@@ -5,7 +5,7 @@ import type {
 } from './api';
 
 export interface MashroomSessionMiddleware {
-    middleware(): ExpressMiddleware
+    middleware(): ExpressMiddleware;
 }
 
 export interface MashroomSessionStoreProviderRegistry {
