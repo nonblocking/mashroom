@@ -1,7 +1,7 @@
 
 // @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import {setConnectionUri, close} from '../src/mongodb_client';
+import {setConnectionUriAndOptions, close} from '../src/mongodb_client';
 import MashroomStorageCollectionMongoDB from '../src/MashroomStorageCollectionMongoDB';
 
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
@@ -15,10 +15,11 @@ type Test = {
     x?: any;
 }
 
-// @ts-ignore
-setConnectionUri(process.env.MONGO_URL);
-
 describe('MashroomStorageCollectionMongoDB', () => {
+
+    beforeAll(async () => {
+        await setConnectionUriAndOptions(process.env.MONGO_URL || '', {});
+    });
 
     afterAll(async () => {
         await close();

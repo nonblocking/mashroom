@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Mongo Storage Provider: Added the possibility pass connection properties such as pool size.
+   **BREAKING CHANGE**: Renamed the _connectionUri_ property to _uri_.
  * Remote Portal App Registries: Added an option _socketTimeoutSec_ to configure the timeout when trying to access remote apps
  * Storage Service: Can now leverage the new Memory Cache Service to accelerate the access. Can be configured like this:
    ```json

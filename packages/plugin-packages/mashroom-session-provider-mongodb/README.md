@@ -29,7 +29,12 @@ And to change the default config of this plugin add:
   "plugins": {
       "Mashroom Session MongoDB Provider": {
           "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
-          "collection": "sessions"
+          "collection": "sessions",
+          "connectionOptions": {
+              "poolSize": 5,
+              "useUnifiedTopology": true,
+              "useNewUrlParser": true
+          }
       }
     }
 }

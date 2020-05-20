@@ -1,4 +1,5 @@
 
+import {Logger} from 'mongodb';
 import createMongoDBStore from 'connect-mongodb-session';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
@@ -12,6 +13,16 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     const store = new MongoDBStore(connectionInfo);
     store.on('error', (err: any) => {
         logger.error('MongoDB store error:', err);
+    });
+
+    // Redirect MongoDB logger
+    Logger.setLevel('info');
+    Logger.setCurrentLogger((msg, context) => {
+        if (context && context.type === 'info') {
+            logger.info('MongoDB:', msg);
+        } else {
+            logger.error('MongoDB:', msg);
+        }
     });
 
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {

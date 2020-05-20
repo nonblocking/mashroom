@@ -27,12 +27,17 @@ And configure this plugin like this in the Mashroom config file:
 {
   "plugins": {
         "Mashroom Storage MongoDB Provider": {
-            "connectionUri": "mongodb://user:xxxxx@localhost:27017/mashroom_storage_db"
+            "uri": "mongodb://user:xxxxx@localhost:27017/mashroom_storage_db",
+            "connectionOptions": {
+                "poolSize": 5,
+                "useUnifiedTopology": true,
+                "useNewUrlParser": true
+            }
         }
     }
 }
 ```
 
- * _connectionUri_: A MongoDB connection string (see [MongoDB documentation](https://docs.mongodb.com/manual/reference/connection-string)).
+ * _uri_: A MongoDB connection string (see [MongoDB documentation](https://docs.mongodb.com/manual/reference/connection-string)).
    **Must** contain the database to use.
-
+ * _connectionOptions_: The MongoDB connection options (see [MongoDB documentation](https://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings)).

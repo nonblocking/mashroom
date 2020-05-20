@@ -82,7 +82,7 @@ export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> i
     }
 
     private async getCollection(): Promise<Collection> {
-        const client = await mongoDBClient();
+        const client = await mongoDBClient(this.logger);
         return client.collection(this.collectionName);
     }
 }
