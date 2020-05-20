@@ -5,6 +5,8 @@
 
  * Added a plugin that exports the collected metrics for the _Prometheus_ monitoring system
  * Added a metrics collector plugin that adds request metrics and exposes a service for other plugins to add more metrics
+ * Mongo Storage Provider: Added the possibility pass connection properties such as pool size.
+   **BREAKING CHANGE**: Renamed the _connectionUri_ property to _uri_.
  * Remote Portal App Registries: Added an option _socketTimeoutSec_ to configure the timeout when trying to access remote apps
  * Storage Service: Can now leverage the new Memory Cache Service to accelerate the access. Can be configured like this:
    ```json

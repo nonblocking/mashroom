@@ -233,7 +233,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             webSocketService.addMessageListener(WEBSOCKET_MESSAGE_MATCHER, this._boundMessageHandler);
             webSocketService.addDisconnectListener(this._boundDisconnectHandler);
         } else {
-            this._logger.warn('Cannot activate WebSocket support because mashroom-websocket is not loaded');
+            this._logger.warn(`Cannot activate WebSocket support because plugin ${WEBSOCKET_SERVICE_PLUGIN_NAME} is not loaded (yet)`);
         }
     }
 
@@ -267,9 +267,10 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
 
     _lookupWebSocketService() {
         if (this._pluginContextHolder.getPluginContext().services.websocket) {
-            this._webSocketService = this._pluginContextHolder.getPluginContext().services.websocket.service;
+            this._onWebSocketProviderLoad();
+        } else {
+            this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderLoad());
         }
-        this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderLoad());
         this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderUnload());
     }
 

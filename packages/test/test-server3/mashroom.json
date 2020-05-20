@@ -12,7 +12,6 @@
         "Mashroom LDAP Security Provider",
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session Filestore Provider",
-        "Mashroom Session MongoDB Provider",
         "Mashroom Portal Remote App Registry Kubernetes",
         "Mashroom Portal Remote App Registry Kubernetes Webapp"
     ],
@@ -42,6 +41,13 @@
                 "maxRetriesPerRequest": 3,
                 "enableOfflineQueue": false,
                 "lazyConnect": true
+            }
+        },
+        "Mashroom Session MongoDB Provider": {
+            "uri": "mongodb://localhost:27017/mashroom_sessions",
+            "collection": "sessions",
+            "connectionOptions": {
+                "poolSize": 2
             }
         },
         "Mashroom Security Services": {
@@ -84,7 +90,10 @@
             }
         },
         "Mashroom Storage MongoDB Provider": {
-            "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
+            "uri": "mongodb://localhost:27017/mashroom_storage_db",
+            "connectionOptions": {
+                "poolSize": 2
+            }
         },
         "Mashroom Memory Cache Services": {
             "provider": "Mashroom Memory Cache Redis Provider",

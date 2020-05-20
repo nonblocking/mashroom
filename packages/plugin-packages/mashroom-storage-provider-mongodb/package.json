@@ -46,7 +46,12 @@
                 "type": "storage-provider",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                    "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
+                    "uri": "mongodb://localhost:27017/mashroom_storage_db",
+                    "connectionOptions": {
+                        "poolSize": 5,
+                        "useUnifiedTopology": true,
+                        "useNewUrlParser": true
+                    }
                 }
             }
         ]

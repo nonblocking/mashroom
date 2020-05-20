@@ -38,7 +38,12 @@
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
                     "uri": "mongodb://localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
-                    "collection": "sessions"
+                    "collection": "sessions",
+                    "connectionOptions": {
+                        "poolSize": 5,
+                        "useUnifiedTopology": true,
+                        "useNewUrlParser": true
+                    }
                 }
             }
         ]
