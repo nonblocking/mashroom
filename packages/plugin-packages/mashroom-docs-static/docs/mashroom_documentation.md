@@ -30,13 +30,14 @@ has similar concepts than a Java Portal Server.
 
  * Integration of existing _Express_ webapps
  * Shared middlewares and services
- * Out of the box services for security, internationalization, messaging, storage and more
- * Pluggable providers for security, storage and and many other services
+ * Out of the box services for security, internationalization, messaging, HTTP proxying, memory cache and storage
+ * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
  * Role and IP based access control for URLs
  * Single configuration file to override plugin default configurations
+ * Support for custom plugin types
+ * Extensive monitoring and export in Prometheus format
  * Hot deploy, undeploy and reload of all kind of plugins
  * No compile or runtime dependencies to the server
- * Support for custom plugin types
  * Fast and lightweight
  * Portal plugin
     * Build pages from independent SPA's, even written in different technologies
@@ -66,6 +67,7 @@ has similar concepts than a Java Portal Server.
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
 | Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
 | Clustering          | yes (tested with PM2)                                                                                                          |
+| Monitoring          | CPU, Heap, Requests + Plugin Metrics exported in Prometheus format                                                             |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only)                                  |
 | Mobile Browsers     | Chrome (latest), Safari (latest)                                                                                               |
 
@@ -406,12 +408,6 @@ And configure log4js like this:
 }
 ```
 
-### Health checks
-
-There are a few integrated health checks available that can be used as probes for monitoring tools or to check the readiness/liveness of Kubernetes pods.
-
-An overview of the health checks is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/health
-
 ### Clustering
 
 When you're going to run _Mashroom Server_ in a cluster you should keep in mind:
@@ -437,6 +433,15 @@ module.exports = {
     disableClustering: true
 };
 ```
+### Health checks
+
+There are a few integrated health checks available that can be used as probes for monitoring tools or to check the readiness/liveness of Kubernetes pods.
+
+An overview of the health checks is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/health
+
+### Monitoring
+
+TODO
 
 ## Admin UI
 
@@ -593,6 +598,12 @@ this in the _Mashroom_ config file:
 [mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc]
 
 [mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]
+
+[mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]
+
+[mashroom-monitoring-metrics-collector](../../mashroom-monitoring-metrics-collector/README.md) [inc]
+
+[mashroom-monitoring-prometheus-exporter](../../mashroom-monitoring-prometheus-exporter/README.md) [inc]
 
 [mashroom-portal](../../mashroom-portal/README.md) [inc]
 

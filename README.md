@@ -25,13 +25,14 @@ has similar concepts than a Java Portal Server such as [Liferay](https://www.lif
 
  * Integration of existing _Express_ webapps
  * Shared middlewares and services
- * Out of the box services for security, internationalization, messaging, storage and more
- * Pluggable providers for security, storage and and many other services
+ * Out of the box services for security, internationalization, messaging, HTTP proxying, memory cache and storage
+ * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
  * Role and IP based access control for URLs
  * Single configuration file to override plugin default configurations
+ * Support for custom plugin types
+ * Extensive monitoring and export in Prometheus format
  * Hot deploy, undeploy and reload of all kind of plugins
  * No compile or runtime dependencies to the server
- * Support for custom plugin types
  * Fast and lightweight
  * Portal plugin
     * Build pages from independent SPA's, even written in different technologies

@@ -1,10 +1,6 @@
 
 # Mashroom Roadmap
 
-## Version 1.5
-
- * Add a plugin that exposes Prometheus metrics
-
 ## Version 1.6
 
  * Security: Add a "brokering" security provider that dispatches the actual authentication to different security providers
