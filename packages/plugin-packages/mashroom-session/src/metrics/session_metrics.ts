@@ -11,13 +11,16 @@ let interval: NodeJS.Timeout;
 export const startExportSessionMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
     interval = setInterval(async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
 
-        try {
-            const sessionsTotal = await getSessionCount() || -1;
+        if (collectorService) {
+            let sessionsTotal = -1;
+            try {
+                sessionsTotal = await getSessionCount() || -1;
+            } catch (e) {
+                // Ignore
+            }
             collectorService.gauge('mashroom_sessions_total', 'Mashroom Express Sessions Total').set(sessionsTotal);
-        } catch (e) {
-            // Ignore
         }
 
     }, EXPORT_INTERVAL_MS);
