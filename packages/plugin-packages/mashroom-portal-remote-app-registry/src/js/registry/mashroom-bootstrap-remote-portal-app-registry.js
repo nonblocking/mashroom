@@ -3,27 +3,30 @@
 import fs from 'fs';
 import path from 'path';
 import context from '../context';
+import RegisterPortalRemoteAppsBackgroundJob from '../jobs/RegisterPortalRemoteAppsBackgroundJob';
+import {startExportRemoteAppMetrics, stopExportRemoteAppMetrics} from '../metrics/remote_app_metrics';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
-import RegisterPortalRemoteAppsBackgroundJob from '../jobs/RegisterPortalRemoteAppsBackgroundJob';
-
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalRemoteAppEndpointService} from '../../../type-definitions';
 
-const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
+const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { remotePortalAppUrls, socketTimeoutSec, checkIntervalSec, registrationRefreshIntervalSec } = pluginConfig;
 
-    const pluginContext = contextHolder.getPluginContext();
+    const pluginContext = pluginContextHolder.getPluginContext();
 
-    const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(socketTimeoutSec, checkIntervalSec, registrationRefreshIntervalSec, contextHolder);
+    const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(socketTimeoutSec, checkIntervalSec, registrationRefreshIntervalSec, pluginContextHolder);
     context.backgroundJob = registerBackgroundJob;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = pluginContext.services.remotePortalAppEndpoint.service;
 
     await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, pluginContext.serverConfig.serverRootFolder, portalRemoteAppEndpointService, pluginContext.loggerFactory);
 
     registerBackgroundJob.start();
+    startExportRemoteAppMetrics(pluginContextHolder);
+
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         registerBackgroundJob.stop();
+        stopExportRemoteAppMetrics();
     });
 
     return context.registry;
