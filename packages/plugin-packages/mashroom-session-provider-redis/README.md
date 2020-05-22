@@ -31,7 +31,7 @@ And to change the default config of this plugin add:
           "redisOptions": {
               "host": "localhost",
               "port": "6379",
-              "keyPrefix": "mashroom:"
+              "keyPrefix": "mashroom:sess:"
           }
       }
   }
@@ -56,7 +56,7 @@ For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel
                   { "host": "localhost", "port": 26380 }
                ],
               "name": "myMaster",
-              "keyPrefix": "mashroom:"
+              "keyPrefix": "mashroom:sess:"
           }
       }
   }
@@ -91,7 +91,7 @@ For a [sharding cluster](https://redis.io/topics/cluster-spec) configure the plu
               "maxRedirections": 3
           },
           "redisOptions": {
-              "keyPrefix": "mashroom:"
+               "keyPrefix": "mashroom:sess:"
           }
       }
   }

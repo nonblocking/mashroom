@@ -1,5 +1,6 @@
 
 import MashroomMessagingExternalProviderMQTT from './MashroomMessagingExternalProviderMQTT';
+import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider_metrics';
 
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
 
@@ -12,8 +13,12 @@ const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = asyn
         mqttUser, mqttPassword, rejectUnauthorized, pluginContext.loggerFactory);
 
     provider.subscribeToInternalTopic();
+
+    startExportProviderMetrics(provider, pluginContextHolder);
+
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         provider.unsubscribeFromInternalTopic();
+        stopExportProviderMetrics();
     });
 
     return provider;

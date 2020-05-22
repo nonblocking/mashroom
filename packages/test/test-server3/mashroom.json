@@ -37,7 +37,7 @@
             "redisOptions": {
                 "host": "localhost",
                 "port": "6379",
-                "keyPrefix": "mashroom:",
+                "keyPrefix": "mashroom:sess:",
                 "maxRetriesPerRequest": 3,
                 "enableOfflineQueue": false,
                 "lazyConnect": true
@@ -131,6 +131,15 @@
             "mqttConnectUrl": "mqtt://localhost:1883",
             "mqttProtocolVersion": 4,
             "mqttQoS": 1
+        },
+        "Mashroom Messaging External Provider AMQP": {
+            "internalRoutingKey": "mashroom",
+            "brokerTopicExchangePrefix": "/topic/",
+            "brokerTopicMatchAny": "#",
+            "brokerHost": "localhost",
+            "brokerPort": 5672,
+            "brokerUsername": "admin",
+            "brokerPassword": "admin"
         },
         "Mashroom Portal Remote App Registry Webapp": {
             "showAddRemoteAppForm": true

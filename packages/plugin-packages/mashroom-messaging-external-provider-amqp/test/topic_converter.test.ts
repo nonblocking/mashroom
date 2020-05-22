@@ -1,5 +1,5 @@
 
-import {topicToRoutingKey, routingKeyToTopic} from '../src/topic_converter';
+import {topicToRoutingKey, routingKeyToTopic} from '../src/provider/topic_converter';
 
 describe('topic_converter', () => {
 

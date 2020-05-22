@@ -1,6 +1,7 @@
 
 import {Logger} from 'mongodb';
 import createMongoDBStore from 'connect-mongodb-session';
+import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store_metrics';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 
@@ -25,9 +26,12 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
         }
     });
 
+    startExportStoreMetrics(store, pluginContextHolder);
+
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads
         store.client.close();
+        stopExportStoreMetrics();
     });
 
     return store;

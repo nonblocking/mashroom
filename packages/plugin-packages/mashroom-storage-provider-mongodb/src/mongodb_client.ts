@@ -27,6 +27,10 @@ export const setConnectionUriAndOptions = async (connectionUri: string, options:
     _connectionOptions = options;
 };
 
+export const getClient = (): MongoClient | null => {
+    return _client;
+}
+
 export default async (logger: MashroomLogger): Promise<Db> => {
     if (_db) {
         return _db;

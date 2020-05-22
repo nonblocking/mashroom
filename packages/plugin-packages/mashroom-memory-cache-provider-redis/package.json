@@ -14,6 +14,7 @@
     "devDependencies": {
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-memory-cache": "1.0.0",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.0.0",
         "@babel/cli": "7.8.4",
         "eslint": "7.0.0",
         "@types/ioredis": "^4.16.2",
@@ -40,7 +41,7 @@
             {
                 "name": "Mashroom Memory Cache Redis Provider",
                 "type": "memory-cache-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "bootstrap": "./dist/provider/mashroom-bootstrap.js",
                 "defaultConfig": {
                     "redisOptions": {
                         "host": "localhost",

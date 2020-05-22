@@ -1,6 +1,7 @@
 
 import Redis from 'ioredis';
 import createRedisStore from 'connect-redis';
+import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store_metrics';
 
 import type {Redis as RedisClient, Cluster, RedisOptions, ClusterNode, ClusterOptions} from 'ioredis';
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
@@ -15,6 +16,10 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     const cluster: boolean = pluginConfig.cluster;
     const clusterNodes: Array<ClusterNode> = pluginConfig.clusterNodes;
     const clusterOptions: ClusterOptions = pluginConfig.clusterOptions;
+
+    // Move client key prefix to the store, otherwise length() wouldn't work (monitoring)
+    const prefix = redisOptions.keyPrefix;
+    delete redisOptions.keyPrefix;
 
     let client: IORedisClient;
     if (!cluster) {
@@ -32,15 +37,19 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
         logger.error('Redis store error:', err);
     });
 
+    startExportStoreMetrics(client, pluginContextHolder);
+
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads
         client.disconnect();
+        stopExportStoreMetrics();
     });
 
     const RedisStore = createRedisStore(expressSession);
     return new RedisStore({
         // @ts-ignore
         client,
+        prefix,
     });
 };
 

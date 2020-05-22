@@ -4,7 +4,9 @@ import {getSessionCount} from '../middleware/MashroomSessionMiddleware';
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 
-const EXPORT_INTERVAL_MS = 10000;
+// Counting sessions can be an expensive operation (e.g. in Redis)
+//   so don't run it too often
+const EXPORT_INTERVAL_MS = 30000;
 
 let interval: NodeJS.Timeout;
 
@@ -16,11 +18,14 @@ export const startExportSessionMetrics = (pluginContextHolder: MashroomPluginCon
         if (collectorService) {
             let sessionsTotal = -1;
             try {
-                sessionsTotal = await getSessionCount() || -1;
+                const count = await getSessionCount();
+                if (typeof (count) === 'number') {
+                    sessionsTotal = count;
+                }
             } catch (e) {
                 // Ignore
             }
-            collectorService.gauge('mashroom_sessions_total', 'Mashroom Express Sessions Total').set(sessionsTotal);
+            collectorService.gauge('mashroom_sessions_total', 'Mashroom Express Sessions Total (-1 means the store supports no length() operation)').set(sessionsTotal);
         }
 
     }, EXPORT_INTERVAL_MS);

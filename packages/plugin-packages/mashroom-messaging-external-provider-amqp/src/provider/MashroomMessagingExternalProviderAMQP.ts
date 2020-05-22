@@ -1,14 +1,15 @@
 /* eslint @typescript-eslint/camelcase: off */
 
-import {connect, Connection, EventContext} from 'rhea';
+import {connect} from 'rhea';
 import {topicToRoutingKey, routingKeyToTopic} from './topic_converter';
 
-import {
+import type {Connection, EventContext} from 'rhea';
+import type {
     MashroomLogger,
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
-import {MashroomExternalMessageListener} from '@mashroom/mashroom-messaging/type-definitions';
-import {MashroomMessagingExternalProviderAMQP as MashroomMessagingExternalProviderAMQPType} from '../type-definitions';
+import type {MashroomExternalMessageListener} from '@mashroom/mashroom-messaging/type-definitions';
+import type {MashroomMessagingExternalProviderAMQP as MashroomMessagingExternalProviderAMQPType} from '../../type-definitions';
 
 const RECONNECT_LIMIT = 100;
 const RECONNECT_DELAY_MS = 5000;
@@ -16,14 +17,14 @@ const SINGLE_WORD_WILDCARD = '*';
 
 export default class MashroomMessagingExternalProviderAMQP implements MashroomMessagingExternalProviderAMQPType {
 
-    private connection: Connection | null;
+    private client: Connection | null;
     private listeners: Array<MashroomExternalMessageListener>;
     private logger: MashroomLogger;
 
     constructor(private internalRoutingKey: string, private brokerTopicExchangePrefix: string, private brokerTopicMatchAny: string,
                 private brokerHost: string, private brokerPort: number, private brokerUsername: string | undefined, private brokerPassword: string | undefined,
                 loggerFactory: MashroomLoggerFactory) {
-        this.connection = null;
+        this.client = null;
         this.listeners = [];
         this.logger = loggerFactory('mashroom.messaging.provider.amqp');
 
@@ -40,10 +41,10 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
 
     subscribeToInternalTopic(): void {
         this.createClient();
-        if (this.connection) {
+        if (this.client) {
             const address = `${this.brokerTopicExchangePrefix}${this.internalRoutingKey}.${this.brokerTopicMatchAny}`;
             this.logger.info(`Subscribing AMQP address: ${address}`);
-            const receiver = this.connection.open_receiver({
+            const receiver = this.client.open_receiver({
                 autoaccept: false,
                 source: {
                     address,
@@ -58,10 +59,10 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
     }
 
     unsubscribeFromInternalTopic(): void {
-        if (this.connection) {
-            this.connection.close();
+        if (this.client) {
+            this.client.close();
         }
-        this.connection = null;
+        this.client = null;
     }
 
     addMessageListener(listener: MashroomExternalMessageListener): void {
@@ -83,15 +84,19 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
         return this.send(routingKey, message);
     }
 
+    getClient(): Connection | null {
+        return this.client;
+    }
+
     private async send(routingKey: string, message: any): Promise<void> {
         this.logger.debug(`Publishing message for routing key: ${routingKey}, Message:`, message);
 
         return new Promise((resolve, reject) => {
-            if (!this.connection) {
+            if (!this.client) {
                 reject('Connection to AMQP broker lost!');
                 return;
             }
-            const sender = this.connection.open_sender({
+            const sender = this.client.open_sender({
                 target: {
                     address: `${this.brokerTopicExchangePrefix}${routingKey}`
                 }
@@ -168,7 +173,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
     }
 
     private createClient(): void {
-        this.connection = connect({
+        this.client = connect({
             port: this.brokerPort,
             host: this.brokerHost,
             username: this.brokerUsername,
@@ -179,16 +184,16 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
             max_reconnect_delay: RECONNECT_DELAY_MS,
         });
 
-        this.connection.on('error', (error) => {
-            this.logger.error('AMQP broker connection error:', error);
+        this.client.on('error', (error) => {
+            this.logger.error('AMQP broker client error:', error);
         });
-        this.connection.on('protocol_error', (error) => {
-            this.logger.error('AMQP broker connection error:', error);
+        this.client.on('protocol_error', (error) => {
+            this.logger.error('AMQP broker client error:', error);
         });
-        this.connection.on('connection_close', () => {
+        this.client.on('connection_close', () => {
             this.logger.warn('Connection to AMQP broker closed (no reconnect!)');
         });
-        this.connection.on('disconnected', () => {
+        this.client.on('disconnected', () => {
             // Ignore
         });
     }

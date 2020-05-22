@@ -15,6 +15,7 @@
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-storage": "1.4.5",
         "@mashroom/mashroom-utils": "1.4.5",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.0.0",
         "@babel/cli": "^7.8.4",
         "@shelf/jest-mongodb": "^1.1.5",
         "@types/mongodb": "^3.5.17",
@@ -44,7 +45,7 @@
             {
                 "name": "Mashroom Storage MongoDB Provider",
                 "type": "storage-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
                 "defaultConfig": {
                     "uri": "mongodb://localhost:27017/mashroom_storage_db",
                     "connectionOptions": {

@@ -1,5 +1,5 @@
 
-import mongoDBClient from './mongodb_client';
+import mongoDBClient from '../mongodb_client';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {

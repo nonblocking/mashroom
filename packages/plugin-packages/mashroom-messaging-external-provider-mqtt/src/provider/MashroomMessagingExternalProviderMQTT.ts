@@ -7,7 +7,7 @@ import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 import type {MqttClient, QoS} from 'mqtt';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomExternalMessageListener} from '@mashroom/mashroom-messaging/type-definitions';
-import type {MashroomMessagingExternalProviderMQTT as MashroomMessagingExternalProviderMQTTType} from '../type-definitions';
+import type {MashroomMessagingExternalProviderMQTT as MashroomMessagingExternalProviderMQTTType} from '../../type-definitions';
 
 const CONNECT_TIMEOUT = 20000;
 const RECONNECT_PERIOD = 5000;
@@ -91,6 +91,10 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
                 }
             });
         });
+    }
+
+    getClient(): MqttClient | undefined {
+        return this.client;
     }
 
     _processReceivedMessage(topic: string, data: Buffer | string | any): void {

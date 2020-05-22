@@ -1,9 +1,9 @@
 
-import getClient, {getKeyPrefix} from './redis_client';
+import getClient, {getKeyPrefix} from '../redis_client';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMemoryCacheProvider, CacheValue, CacheKey} from '@mashroom/mashroom-memory-cache/type-definitions';
-import {IORedisClient} from '../type-definitions';
+import type {IORedisClient} from '../../type-definitions';
 
 export default class MashroomMemoryCacheProviderRedis implements MashroomMemoryCacheProvider {
 
