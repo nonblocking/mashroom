@@ -67,7 +67,7 @@ has similar concepts than a Java Portal Server.
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
 | Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
 | Clustering          | yes (tested with PM2)                                                                                                          |
-| Monitoring          | CPU, Heap, Requests + Plugin Metrics exported in Prometheus format                                                             |
+| Monitoring          | CPU, Heap, Requests + Plugin Metrics; Exporter for Prometheus                                                                  |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only)                                  |
 | Mobile Browsers     | Chrome (latest), Safari (latest)                                                                                               |
 
@@ -441,7 +441,20 @@ An overview of the health checks is available under http://&lt;host&gt;:&lt;port
 
 ### Monitoring
 
-TODO
+_Mashroom Server_ gathers a lot of internal metrics that can be exposed in different formats. Currently there is only
+an exporter for [Prometheus](https://prometheus.io) but it would be simple to write an exporter for a different format.
+
+To enable the metrics and the Prometheus exporter add the following plugins:
+
+ * @mashroom/mashroom-monitoring-metrics-collector
+ * @mashroom/mashroom-monitoring-prometheus-exporter
+
+The Prometheus metrics will be available at **/metrics**. An example [Grafana](https://grafana.com) Dashboard can be found
+[in the Mashroom repo](https://github.com/nonblocking/mashroom/tree/master/packages/plugin-packages/mashroom-monitoring-prometheus-exporter/test/grafana-test/grafana/provisioning/dashboards/Mashroom%20Dashboard.json).
+
+Here how it looks:
+
+![Mashroom Monitoring Dashboard](mashroom_monitoring.png "Mashroom Monitoring Dashboard")
 
 ## Admin UI
 

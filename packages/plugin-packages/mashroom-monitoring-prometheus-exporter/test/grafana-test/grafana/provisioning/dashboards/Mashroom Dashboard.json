@@ -27,7 +27,7 @@
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
-                "h": 6,
+                "h": 5,
                 "w": 8,
                 "x": 0,
                 "y": 0
@@ -117,7 +117,7 @@
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
-                "h": 6,
+                "h": 5,
                 "w": 8,
                 "x": 8,
                 "y": 0
@@ -205,7 +205,7 @@
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
-                "h": 6,
+                "h": 5,
                 "w": 8,
                 "x": 16,
                 "y": 0
@@ -253,7 +253,7 @@
             "timeFrom": null,
             "timeRegions": [],
             "timeShift": null,
-            "title": "Error Rata",
+            "title": "Request Error Rate",
             "tooltip": {
                 "shared": true,
                 "sort": 0,
@@ -299,10 +299,10 @@
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
-                "h": 6,
+                "h": 5,
                 "w": 8,
                 "x": 0,
-                "y": 6
+                "y": 5
             },
             "hiddenSeries": false,
             "id": 2,
@@ -396,10 +396,10 @@
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
-                "h": 6,
+                "h": 5,
                 "w": 8,
                 "x": 8,
-                "y": 6
+                "y": 5
             },
             "hiddenSeries": false,
             "id": 4,
@@ -487,10 +487,10 @@
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
-                "h": 6,
+                "h": 5,
                 "w": 8,
                 "x": 16,
-                "y": 6
+                "y": 5
             },
             "hiddenSeries": false,
             "id": 12,
@@ -567,8 +567,979 @@
                 "align": false,
                 "alignLevel": null
             }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 1,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 0,
+                "y": 10
+            },
+            "hiddenSeries": false,
+            "id": 16,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "mashroom_sessions_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Total",
+                    "refId": "A"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "User Sessions",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 0,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 8,
+                "y": 10
+            },
+            "hiddenSeries": false,
+            "id": 17,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "mashroom_http_proxy_active_connections_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "HTTP Active",
+                    "refId": "A"
+                },
+                {
+                    "expr": "mashroom_http_proxy_idle_connections_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "HTTP Idle",
+                    "refId": "B"
+                },
+                {
+                    "expr": "mashroom_https_proxy_active_connections_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "HTTPS Active",
+                    "refId": "C"
+                },
+                {
+                    "expr": "mashroom_https_proxy_idle_connections_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "HTTPS Idle",
+                    "refId": "D"
+                },
+                {
+                    "expr": "mashroom_http_proxy_max_connections{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Max",
+                    "refId": "E"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "HTTP/S Proxy Connections",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "$$hashKey": "object:256",
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "$$hashKey": "object:257",
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 1,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 16,
+                "y": 10
+            },
+            "hiddenSeries": false,
+            "id": 18,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "mashroom_websocket_connections_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Total",
+                    "refId": "A"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "WebSocket Connections",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 1,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 0,
+                "y": 15
+            },
+            "hiddenSeries": false,
+            "id": 22,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "mashroom_plugins_loaded_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Loaded",
+                    "refId": "B"
+                },
+                {
+                    "expr": "mashroom_plugins_error_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Error",
+                    "refId": "C"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "Plugins",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 1,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 8,
+                "y": 15
+            },
+            "hiddenSeries": false,
+            "id": 23,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "mashroom_remote_apps_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Total",
+                    "refId": "A"
+                },
+                {
+                    "expr": "mashroom_remote_apps_error_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Error",
+                    "refId": "B"
+                },
+                {
+                    "expr": "mashroom_remote_apps_connection_timeout_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Connection Timeout",
+                    "refId": "C"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "Remote Portal Apps",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "$$hashKey": "object:173",
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "$$hashKey": "object:174",
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "aliasColors": {},
+            "bars": false,
+            "dashLength": 10,
+            "dashes": false,
+            "datasource": null,
+            "fill": 1,
+            "fillGradient": 0,
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 16,
+                "y": 15
+            },
+            "hiddenSeries": false,
+            "id": 24,
+            "legend": {
+                "avg": false,
+                "current": false,
+                "max": false,
+                "min": false,
+                "show": true,
+                "total": false,
+                "values": false
+            },
+            "lines": true,
+            "linewidth": 1,
+            "nullPointMode": "null",
+            "options": {
+                "dataLinks": []
+            },
+            "percentage": false,
+            "pointradius": 2,
+            "points": false,
+            "renderer": "flot",
+            "seriesOverrides": [],
+            "spaceLength": 10,
+            "stack": false,
+            "steppedLine": false,
+            "targets": [
+                {
+                    "expr": "mashroom_memory_cache_hit_ratio{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Hit Ratio",
+                    "refId": "A"
+                }
+            ],
+            "thresholds": [],
+            "timeFrom": null,
+            "timeRegions": [],
+            "timeShift": null,
+            "title": "Memory Cache",
+            "tooltip": {
+                "shared": true,
+                "sort": 0,
+                "value_type": "individual"
+            },
+            "type": "graph",
+            "xaxis": {
+                "buckets": null,
+                "mode": "time",
+                "name": null,
+                "show": true,
+                "values": []
+            },
+            "yaxes": [
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                },
+                {
+                    "format": "short",
+                    "label": null,
+                    "logBase": 1,
+                    "max": null,
+                    "min": null,
+                    "show": true
+                }
+            ],
+            "yaxis": {
+                "align": false,
+                "alignLevel": null
+            }
+        },
+        {
+            "cacheTimeout": null,
+            "datasource": null,
+            "gridPos": {
+                "h": 3,
+                "w": 4,
+                "x": 0,
+                "y": 20
+            },
+            "id": 26,
+            "links": [],
+            "options": {
+                "fieldOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "defaults": {
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:403",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 1,
+                        "min": 0,
+                        "nullValueMode": "connected",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "red",
+                                    "value": null
+                                },
+                                {
+                                    "color": "green",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [],
+                    "values": false
+                },
+                "orientation": "horizontal",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": false
+            },
+            "pluginVersion": "6.7.3",
+            "targets": [
+                {
+                    "expr": "mashroom_sessions_mongodb_connected{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "MongoDB Store Connected ",
+            "type": "gauge"
+        },
+        {
+            "cacheTimeout": null,
+            "datasource": null,
+            "gridPos": {
+                "h": 3,
+                "w": 4,
+                "x": 4,
+                "y": 20
+            },
+            "id": 27,
+            "links": [],
+            "options": {
+                "fieldOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "defaults": {
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:403",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 1,
+                        "min": 0,
+                        "nullValueMode": "connected",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "red",
+                                    "value": null
+                                },
+                                {
+                                    "color": "green",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [],
+                    "values": false
+                },
+                "orientation": "horizontal",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": false
+            },
+            "pluginVersion": "6.7.3",
+            "targets": [
+                {
+                    "expr": "mashroom_storage_mongodb_connected{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "MongoDB Storage Connected ",
+            "type": "gauge"
+        },
+        {
+            "cacheTimeout": null,
+            "datasource": null,
+            "gridPos": {
+                "h": 3,
+                "w": 4,
+                "x": 8,
+                "y": 20
+            },
+            "id": 28,
+            "links": [],
+            "options": {
+                "fieldOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "defaults": {
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:403",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 1,
+                        "min": 0,
+                        "nullValueMode": "connected",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "red",
+                                    "value": null
+                                },
+                                {
+                                    "color": "green",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [],
+                    "values": false
+                },
+                "orientation": "horizontal",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": false
+            },
+            "pluginVersion": "6.7.3",
+            "targets": [
+                {
+                    "expr": "mashroom_sessions_redis_nodes_connected{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Redis Session Connected ",
+            "type": "gauge"
+        },
+        {
+            "cacheTimeout": null,
+            "datasource": null,
+            "gridPos": {
+                "h": 3,
+                "w": 4,
+                "x": 12,
+                "y": 20
+            },
+            "id": 29,
+            "links": [],
+            "options": {
+                "fieldOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "defaults": {
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:403",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 1,
+                        "min": 0,
+                        "nullValueMode": "connected",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "red",
+                                    "value": null
+                                },
+                                {
+                                    "color": "green",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [],
+                    "values": false
+                },
+                "orientation": "horizontal",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": false
+            },
+            "pluginVersion": "6.7.3",
+            "targets": [
+                {
+                    "expr": "mashroom_memory_cache_redis_nodes_connected{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "Redis Memory Cache Connected ",
+            "type": "gauge"
+        },
+        {
+            "cacheTimeout": null,
+            "datasource": null,
+            "gridPos": {
+                "h": 3,
+                "w": 4,
+                "x": 16,
+                "y": 20
+            },
+            "id": 30,
+            "links": [],
+            "options": {
+                "fieldOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "defaults": {
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:403",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 1,
+                        "min": 0,
+                        "nullValueMode": "connected",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "red",
+                                    "value": null
+                                },
+                                {
+                                    "color": "green",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [],
+                    "values": false
+                },
+                "orientation": "horizontal",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": false
+            },
+            "pluginVersion": "6.7.3",
+            "targets": [
+                {
+                    "expr": "mashroom_storage_mongodb_connected{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "MQTT Broker Connected ",
+            "type": "gauge"
+        },
+        {
+            "cacheTimeout": null,
+            "datasource": null,
+            "gridPos": {
+                "h": 3,
+                "w": 4,
+                "x": 20,
+                "y": 20
+            },
+            "id": 31,
+            "links": [],
+            "options": {
+                "fieldOptions": {
+                    "calcs": [
+                        "mean"
+                    ],
+                    "defaults": {
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:403",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 1,
+                        "min": 0,
+                        "nullValueMode": "connected",
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "red",
+                                    "value": null
+                                },
+                                {
+                                    "color": "green",
+                                    "value": 1
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [],
+                    "values": false
+                },
+                "orientation": "horizontal",
+                "showThresholdLabels": false,
+                "showThresholdMarkers": false
+            },
+            "pluginVersion": "6.7.3",
+            "targets": [
+                {
+                    "expr": "mashroom_messaging_amqp_connected{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "",
+                    "refId": "A"
+                }
+            ],
+            "timeFrom": null,
+            "timeShift": null,
+            "title": "AMQP Broker Connected ",
+            "type": "gauge"
         }
     ],
+    "refresh": "10s",
     "schemaVersion": 22,
     "style": "dark",
     "tags": [],
@@ -576,7 +1547,7 @@
         "list": []
     },
     "time": {
-        "from": "now-30m",
+        "from": "now-5m",
         "to": "now"
     },
     "timepicker": {
@@ -599,5 +1570,5 @@
     "variables": {
         "list": []
     },
-    "version": 1
+    "version": 5
 }

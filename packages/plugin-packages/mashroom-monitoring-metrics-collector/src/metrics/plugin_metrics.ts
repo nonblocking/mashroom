@@ -17,8 +17,8 @@ export const startExportPluginMetrics = (pluginContextHolder: MashroomPluginCont
         const pluginsError = pluginService.getPlugins().filter((p) => p.status === 'error').length;
 
         collectorService.gauge('mashroom_plugins_total', 'Mashroom Plugins Total').set(pluginsTotal);
-        collectorService.gauge('mashroom_plugins_loaded', 'Mashroom Plugins Loaded').set(pluginsLoaded);
-        collectorService.gauge('mashroom_plugins_error', 'Mashroom Plugins with Status Error').set(pluginsError);
+        collectorService.gauge('mashroom_plugins_loaded_total', 'Mashroom Plugins Loaded').set(pluginsLoaded);
+        collectorService.gauge('mashroom_plugins_error_total', 'Mashroom Plugins with Status Error').set(pluginsError);
 
     }, EXPORT_INTERVAL_MS);
 }

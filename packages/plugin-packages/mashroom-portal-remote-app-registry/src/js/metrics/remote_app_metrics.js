@@ -21,8 +21,8 @@ export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginC
             const endpointsWithTimeouts = endpoints.filter((e) => e.lastError && e.lastError.indexOf('ETIMEDOUT') !== -1).length;
 
             collectorService.gauge('mashroom_remote_apps_total', 'Mashroom Remote Apps Total').set(endpointsTotal);
-            collectorService.gauge('mashroom_remote_apps_error', 'Mashroom Remote Apps With Error').set(endpointsWithError);
-            collectorService.gauge('mashroom_remote_apps_connection_timeout', 'Mashroom Remote Apps With Connection Timeout').set(endpointsWithTimeouts);
+            collectorService.gauge('mashroom_remote_apps_error_total', 'Mashroom Remote Apps With Error').set(endpointsWithError);
+            collectorService.gauge('mashroom_remote_apps_connection_timeout_total', 'Mashroom Remote Apps With Connection Timeout').set(endpointsWithTimeouts);
         }
     }, EXPORT_INTERVAL_MS);
 }

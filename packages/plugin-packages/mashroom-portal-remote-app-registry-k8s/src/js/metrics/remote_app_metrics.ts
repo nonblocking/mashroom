@@ -20,8 +20,8 @@ export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginC
             const servicesWithTimeouts = services.filter((s) => s.error && s.error.indexOf('ETIMEDOUT') !== -1).length;
 
             collectorService.gauge('mashroom_remote_apps_k8s_total', 'Mashroom Kubernetes Remote Apps Total').set(servicesTotal);
-            collectorService.gauge('mashroom_remote_apps_k8s_error', 'Mashroom Kubernetes Remote Apps With Error').set(servicesWithError);
-            collectorService.gauge('mashroom_remote_apps_k8s_connection_timeout', 'Mashroom Kubernetes Remote Apps With Connection Timeout').set(servicesWithTimeouts);
+            collectorService.gauge('mashroom_remote_apps_k8s_error_total', 'Mashroom Kubernetes Remote Apps With Error').set(servicesWithError);
+            collectorService.gauge('mashroom_remote_apps_k8s_connection_timeout_total', 'Mashroom Kubernetes Remote Apps With Connection Timeout').set(servicesWithTimeouts);
         }
 
     }, EXPORT_INTERVAL_MS);
