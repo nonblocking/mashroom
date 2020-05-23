@@ -64,7 +64,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     async checkAuthentication(request: ExpressRequest) {
-        request.session[LDAP_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+        if (this.getUser(request)) {
+            request.session[LDAP_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+        }
     }
 
     getAuthenticationExpiration(request: ExpressRequest) {

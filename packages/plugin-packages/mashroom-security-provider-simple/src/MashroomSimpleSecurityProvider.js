@@ -52,7 +52,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     async checkAuthentication(request: ExpressRequest) {
-        request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+        if (this.getUser(request)) {
+            request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+        }
     }
 
     getAuthenticationExpiration(request: ExpressRequest) {
