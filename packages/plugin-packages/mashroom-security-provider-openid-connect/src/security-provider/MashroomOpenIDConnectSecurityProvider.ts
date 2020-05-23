@@ -83,11 +83,9 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
     async checkAuthentication(request: ExpressRequest): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
-        const client = await openIDConnectClient(request);
-
         const user = this.getUser(request);
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (!client || !authData || !authData.tokenSet || !authData.lastTokenCheck) {
+        if (!user || !authData || !authData.tokenSet || !authData.lastTokenCheck) {
             return;
         }
 
@@ -103,6 +101,11 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         }
 
         try {
+            const client = await openIDConnectClient(request);
+            if (!client) {
+                return;
+            }
+
             const newTokenSet = await client.refresh(refreshToken);
             authData.lastTokenCheck = Date.now();
             authData.tokenSet = newTokenSet;
