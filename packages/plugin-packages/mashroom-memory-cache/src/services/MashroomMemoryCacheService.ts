@@ -73,7 +73,8 @@ export default class MashroomMemoryCacheService implements MashroomMemoryCacheSe
     getStats(): CacheStatistics {
         const { regions, entriesAdded, cacheHits, cacheMisses } = this;
         const regionCount = regions.length;
-        const cacheHitRatio = cacheHits / (cacheHits + cacheMisses);
+        const requestsTotal = cacheHits + cacheMisses;
+        const cacheHitRatio = requestsTotal > 0 ? cacheHits / requestsTotal : 0;
         return {
             regionCount,
             entriesAdded,

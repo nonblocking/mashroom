@@ -11,7 +11,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const service = new MashroomMemoryCacheService(provider, defaultTTLSec, pluginContext.loggerFactory);
 
     startExportMemoryCacheMetrics(service, pluginContextHolder);
-    pluginContextHolder.getPluginContext().services.core.pluginService.onUnloadOnce(pluginName, () => {
+    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         stopExportMemoryCacheMetrics();
     });
 
