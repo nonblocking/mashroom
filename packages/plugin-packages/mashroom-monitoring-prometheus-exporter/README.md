@@ -148,15 +148,15 @@ For example, the overall request rate would still be:
 
     sum(rate(mashroom_http_requests_total{namespace="my-namespace"}[5m]))
 
-But the request rate per container:
+But the request rate per pod:
 
-    sum by (container) (rate(mashroom_http_requests_total{namespace="my-namespace"}[5m]))
+    sum by (kubernetes_pod_name) (rate(mashroom_http_requests_total{namespace="my-namespace"}[5m]))
 
-Or the Session count per container:
+Or the Session count per pod:
 
-    mashroom_sessions_total{namespace="my-namespace"} by (container)
+    mashroom_sessions_total{namespace="my-namespace"} by (kubernetes_pod_name)
 
-In the last two examples you typically would use {{container}} in the legend.
+In the last two examples you typically would use {{kubernetes_pod_name}} in the legend.
 
 ### Demo Grafana Dashboard
 
