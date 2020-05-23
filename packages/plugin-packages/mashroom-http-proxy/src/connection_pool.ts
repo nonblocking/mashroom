@@ -47,7 +47,7 @@ export const getHttpsPool = () => {
 };
 
 const getPoolStats = (agent: HttpAgent | HttpsAgent): PoolStats => {
-    const countArrayEntries = (obj: { [name: string]: Array<any> }) => Object.values(obj).reduce((acc, arr) => acc + arr.length, 0);
+    const countArrayEntries = (obj: NodeJS.ReadOnlyDict<any>) => Object.values(obj).reduce((acc, arr) => acc + arr.length, 0);
 
     return {
         activeConnections: countArrayEntries(agent.sockets),
