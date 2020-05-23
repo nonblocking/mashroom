@@ -237,7 +237,6 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     _checkConnections() {
         const clientCount = this.getClientCount();
         if (clientCount > 0) {
-            this._logger.info(`Currently open WebSocket connections: ${clientCount}`);
             this._clients.forEach((wrapper) => {
                 if (!wrapper.client.alive) {
                     this.close(wrapper.client);
