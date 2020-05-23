@@ -1,9 +1,8 @@
-// @flow
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
 export type HttpHeaders = {
-    [string]: string,
+    [name: string]: string;
 }
 
 export interface MashroomHttpProxyService {

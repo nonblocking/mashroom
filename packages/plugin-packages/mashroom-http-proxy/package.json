@@ -16,10 +16,15 @@
         "@mashroom/mashroom": "1.4.5",
         "@mashroom/mashroom-security": "1.4.5",
         "@mashroom/mashroom-utils": "1.4.5",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.0.0",
         "@babel/cli": "^7.8.4",
         "eslint": "^7.0.0",
         "jest": "^26.0.1",
-        "nock": "^12.0.3"
+        "nock": "^12.0.3",
+        "typescript": "^3.8.3",
+        "@types/request": "^2.48.5",
+        "@types/jest": "^25.2.3",
+        "@types/node": "^14.0.1"
     },
     "jest": {
         "verbose": true,
@@ -27,12 +32,13 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src -d dist"
+        "build": "babel src -d dist --extensions '.ts'"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -41,7 +47,7 @@
                 "name": "Mashroom Http Proxy Services",
                 "type": "services",
                 "namespace": "proxy",
-                "bootstrap": "./dist/mashroom-bootstrap-services.js",
+                "bootstrap": "./dist/proxy/mashroom-bootstrap-services.js",
                 "defaultConfig": {
                     "forwardMethods": [
                         "GET",

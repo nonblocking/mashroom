@@ -1,8 +1,7 @@
-// @flow
 
-import http from 'http';
 import request from 'request';
 import HttpHeaderFilter from './HttpHeaderFilter';
+import {getPoolConfig, getHttpPool, getHttpsPool} from '../connection_pool';
 
 import type {
     ExpressRequest,
@@ -11,40 +10,27 @@ import type {
     MashroomLoggerFactory,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
-import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../type-definitions';
-import type {HttpHeaderFilter as HttpHeaderFilterType} from '../type-definitions/internal';
+import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../../type-definitions';
+import type {HttpHeaderFilter as HttpHeaderFilterType} from '../../type-definitions/internal';
 
 export default class MashroomHttpProxyService implements MashroomHttpProxyServiceType {
 
-    _forwardMethods: Array<string>;
-    _rejectUnauthorized: boolean;
-    _poolMaxSockets: number;
-    _socketTimeoutMs: number;
-    _pool: any;
-    _httpHeaderFilter: HttpHeaderFilterType;
+    private httpHeaderFilter: HttpHeaderFilterType;
 
-    constructor(forwardMethods: Array<string>, forwardHeaders: Array<string>, rejectUnauthorized: boolean, poolMaxSockets: number, socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
-        this._forwardMethods = forwardMethods;
-        this._rejectUnauthorized = rejectUnauthorized;
-        this._poolMaxSockets = poolMaxSockets || 10;
-        this._socketTimeoutMs = socketTimeoutMs || 0;
-        this._httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
+    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, loggerFactory: MashroomLoggerFactory) {
+        this.httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
 
+        const poolConfig = getPoolConfig();
         const logger = loggerFactory('mashroom.httpProxy');
-        logger.info(`Initializing http proxy with maxSockets: ${this._poolMaxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
-
-        this._pool = new http.Agent({
-            keepAlive: true,
-            maxSockets: this._poolMaxSockets,
-        });
+        logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${poolConfig.socketTimeoutMs}ms`);
     }
 
-    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders?: HttpHeaders = {}) {
+    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders = {}) {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService = req.pluginContext.services.security && req.pluginContext.services.security.service;
 
         const method = req.method;
-        if (!this._forwardMethods.find((m) => m === method)) {
+        if (!this.forwardMethods.find((m) => m === method)) {
             res.sendStatus(405);
             return Promise.resolve();
         }
@@ -54,7 +40,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
-        this._httpHeaderFilter.filter(req.headers);
+        this.httpHeaderFilter.filter(req.headers);
         const qs = {...req.query};
 
         const extraSecurityHeaders = securityService ? securityService.getApiSecurityHeaders(req, uri) : null;
@@ -62,14 +48,12 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         const headers = {...additionalHeaders || {}, ...extraSecurityHeaders || {}};
 
         const options = {
-            pool: this._pool,
+            agent: uri.startsWith('https') ? getHttpsPool() : getHttpPool(),
             method,
             uri,
             qs,
             headers,
-            rejectUnauthorized: this._rejectUnauthorized,
             resolveWithFullResponse: true,
-            timeout: this._socketTimeoutMs,
         };
 
         const startTime = process.hrtime();
@@ -79,14 +63,14 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             req.pipe(
                 request(options)
                     .on('response', (targetResponse) => {
-                        this._httpHeaderFilter.filter(targetResponse.headers);
+                        this.httpHeaderFilter.filter(targetResponse.headers);
                         const endTime = process.hrtime(startTime);
                         logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
                         res.status(targetResponse.statusCode);
                     })
-                    .on('error', (error) => {
+                    .on('error', (error: any) => {
                         if (error.code === 'ETIMEDOUT') {
-                            logger.error(`Target endpoint '${uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
+                            logger.error(`Target endpoint '${uri}' did not send a response within ${getPoolConfig().socketTimeoutMs}ms!`, error);
                             res.sendStatus(504);
                         } else {
                             logger.error(`Forwarding to '${uri}' failed!`, error);

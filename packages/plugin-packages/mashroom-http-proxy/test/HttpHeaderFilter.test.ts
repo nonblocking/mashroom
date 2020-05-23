@@ -1,7 +1,5 @@
-// @flow
-/* eslint no-console: off */
 
-import HttpHeaderFilter from '../src/HttpHeaderFilter';
+import HttpHeaderFilter from '../src/proxy/HttpHeaderFilter';
 
 describe('HttpHeaderFilter', () => {
 
