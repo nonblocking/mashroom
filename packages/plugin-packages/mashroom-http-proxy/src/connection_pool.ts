@@ -9,7 +9,6 @@ import type {PoolConfig, PoolStats} from '../type-definitions/internal';
 
 let _config: PoolConfig = {
     maxSockets: 10,
-    socketTimeoutMs: 30000,
     rejectUnauthorized: false,
 };
 let _httpPool: HttpAgent | undefined;
@@ -28,7 +27,6 @@ export const getHttpPool = () => {
         _httpPool = new http.Agent({
             keepAlive: true,
             maxSockets: _config.maxSockets,
-            timeout: _config.socketTimeoutMs,
         });
     }
     return _httpPool;
@@ -39,7 +37,6 @@ export const getHttpsPool = () => {
         _httpsPool = new https.Agent({
             keepAlive: true,
             maxSockets: _config.maxSockets,
-            timeout: _config.socketTimeoutMs,
             rejectUnauthorized: _config.rejectUnauthorized,
         });
     }

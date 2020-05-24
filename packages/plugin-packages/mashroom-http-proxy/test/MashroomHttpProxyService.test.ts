@@ -80,7 +80,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo')
             .reply(200, 'test response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], loggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -101,7 +101,7 @@ describe('MashroomHttpProxyService', () => {
             .post('/login')
             .reply(200, 'test post response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET', 'POST'], [], loggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET', 'POST'], [], 2000, loggerFactory);
 
         const req = createDummyRequest('POST', '{ "user": "test }');
         const res = createDummyResponse();
@@ -118,7 +118,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo?q=javascript')
             .reply(200, 'test response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], loggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, loggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
@@ -133,14 +133,32 @@ describe('MashroomHttpProxyService', () => {
     });
 
     it('sets the correct status code if the target is not available', async () => {
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], loggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
         await httpProxyService.forward(req, res, 'https://www.xxxxxx.at');
 
+        // Expect 503 Service Unavailable
         expect(res.statusCode).toBe(503);
+    });
+
+    it('sets the correct status code if the connection times out', async () => {
+        nock('https://www.yyyyyyyyyyy.at')
+            .get('/')
+            .socketDelay(3000)
+            .reply(200, 'test response');
+
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.yyyyyyyyyyy.at');
+
+        // Expect 504 Gateway Timeout
+        expect(res.statusCode).toBe(504);
     });
 
     it('passes the response from the target endpoint',  async () => {
@@ -148,7 +166,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo')
             .reply(201, 'resource created');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], loggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -167,7 +185,7 @@ describe('MashroomHttpProxyService', () => {
             .get('/foo')
             .reply(200, 'test response');
 
-        const httpProxyService = new MashroomHttpProxyService(['GET'], [], loggerFactory);
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, loggerFactory);
 
         const req = createDummyRequestWithSecurity('GET');
         const res = createDummyResponse();

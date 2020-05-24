@@ -10,12 +10,11 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
     setPoolConfig({
         maxSockets: poolMaxSockets,
-        socketTimeoutMs,
         rejectUnauthorized,
     })
 
     const pluginContext = pluginContextHolder.getPluginContext();
-    const service = new MashroomHttpProxyService(forwardMethods, forwardHeaders, pluginContext.loggerFactory);
+    const service = new MashroomHttpProxyService(forwardMethods, forwardHeaders, socketTimeoutMs, pluginContext.loggerFactory);
 
     startExportPoolMetrics(pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {

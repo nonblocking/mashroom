@@ -8,7 +8,6 @@ export interface HttpHeaderFilter {
 export type PoolConfig = {
     rejectUnauthorized: boolean;
     maxSockets: number;
-    socketTimeoutMs: number;
 }
 
 export type PoolStats = {

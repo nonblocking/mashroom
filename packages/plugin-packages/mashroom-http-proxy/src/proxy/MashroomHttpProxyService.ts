@@ -17,12 +17,12 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
 
     private httpHeaderFilter: HttpHeaderFilterType;
 
-    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, loggerFactory: MashroomLoggerFactory) {
+    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, private socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
         this.httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
 
         const poolConfig = getPoolConfig();
         const logger = loggerFactory('mashroom.httpProxy');
-        logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${poolConfig.socketTimeoutMs}ms`);
+        logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this.socketTimeoutMs}ms`);
     }
 
     forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders = {}) {
@@ -54,6 +54,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             qs,
             headers,
             resolveWithFullResponse: true,
+            timeout: this.socketTimeoutMs,
         };
 
         const startTime = process.hrtime();
@@ -68,9 +69,9 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
                         logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
                         res.status(targetResponse.statusCode);
                     })
-                    .on('error', (error: any) => {
-                        if (error.code === 'ETIMEDOUT') {
-                            logger.error(`Target endpoint '${uri}' did not send a response within ${getPoolConfig().socketTimeoutMs}ms!`, error);
+                    .on('error', (error: Error & { code?: string }) => {
+                        if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
+                            logger.error(`Target endpoint '${uri}' did not send a response within ${this.socketTimeoutMs}ms!`, error);
                             res.sendStatus(504);
                         } else {
                             logger.error(`Forwarding to '${uri}' failed!`, error);
