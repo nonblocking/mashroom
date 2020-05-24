@@ -37,7 +37,7 @@
                     "order": -100,
                     "provider": "memory",
                     "session": {
-                        "secret": "keyboard cat",
+                        "secret": "pS2tZRCp5e3uU7RM",
                         "resave": false,
                         "saveUninitialized": false,
                         "cookie": {

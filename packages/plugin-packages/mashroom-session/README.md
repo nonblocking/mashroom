@@ -18,9 +18,9 @@ You can override the default config in your Mashroom config file like this:
             "order": -100,
             "provider": "Mashroom Session Filestore Provider",
             "session": {
-                "secret": "keyboard cat",
+                "secret": "EWhQ5hvETGkqvPDA",
                 "resave": false,
-                "saveUninitialized": true,
+                "saveUninitialized": false,
                 "cookie": {
                     "maxAge": 1200000,
                     "httpOnly": true,
@@ -38,7 +38,10 @@ You can override the default config in your Mashroom config file like this:
  * _session_: The properties are just passed to express-session. See [Express session](https://www.npmjs.com/package/express-session) for possible options.
     * _cookie.maxAge_: Max session age in ms (Default 20min)
 
-**Security hint**: For a production environment you should enable _cookie.secure_ and consider setting _cookie.sameSite_ to either "lax" or "strict" (CSRF protection).
+**Security hints**:
+
+  * Change the default _secret_
+  * You should consider setting _cookie.sameSite_ to either "lax" or "strict" (CSRF protection).
 
 ## Services
 
