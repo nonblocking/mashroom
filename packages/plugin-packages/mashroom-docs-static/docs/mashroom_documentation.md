@@ -43,7 +43,7 @@ has similar concepts than a Java Portal Server.
     * Build pages from independent SPA's, even written in different technologies
     * Client-side message bus for inter-app communication which can be extended to server-side messaging
       to communicate with apps in other browsers or even 3rd party systems
-    * Proxying of REST API calls to prevent CORS problems
+    * Proxying of REST API calls to avoid CORS problems
     * Life registration of _Remote Apps_ (SPA's that run on a different server)
     * JS API to programmatically load portal apps into an arbitrary DOM node (even within another app)
     * Support for multiple sites that can be mapped to virtual hosts
