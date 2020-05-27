@@ -6,12 +6,12 @@
  * Security: Add a "brokering" security provider that dispatches the actual authentication to different security providers
    based on some rules (path, query, header). This would for example allow it to have Portal *Sites* with different
    authentication methods (e.g. different Realms).
+ * Add a middleware that allows it to define proper error pages based on response codes (HTML page or external page)
  * Portal: Add a plugin to display CMS content. It must be possible to plug any CMS that is either headless
    or provides an API to fetch content.
 
 ## Version 1.7
 
- * Add a middleware that allows it to define proper error pages based on response codes (HTML page or external page)
  * Portal: Add better support for chunks/code-splitting by setting the webpack publicPath dynamically during App loading
  * Core: Add a WebSocket proxy similar to *mashroom-http-proxy* (or extend the existing plugin)
  * Portal: Allow Apps to open WebSocket connections to a backend (through the Portal's REST proxy)
