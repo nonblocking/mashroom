@@ -115,9 +115,8 @@ export default class MashroomStorageCollectionMemoryCacheWrapper<T extends Stora
 
     private createKey(args: Array<any>): [string, string]  {
         const data = args
-            .map((a) => a ? a : 'undefined')
-            .map((a) => JSON.stringify(a))
-            .join('_');
+            .map((a) => a ? JSON.stringify(a) : '')
+            .join('__');
         return [data, createHash('md5').update(data).digest('hex')];
     }
 
