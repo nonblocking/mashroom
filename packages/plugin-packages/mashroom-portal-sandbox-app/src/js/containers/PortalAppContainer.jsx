@@ -22,13 +22,15 @@ import type {
 import type {
     MashroomAvailablePortalApp,
     MashroomPortalAppService,
+    MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
 
 type OwnProps = {
     portalAppService: MashroomPortalAppService,
     portalStateService: MashroomPortalStateService,
-    messageBus: DummyMessageBus,
+    messageBus: MashroomPortalMessageBus,
+    dummyMessageBus: DummyMessageBus,
 }
 
 type StateProps = {|

@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Sandbox: Added query parameter *sbPreselectAppName* to preselect an app without loading it
  * Added metrics for: Plugins, Remote apps, Session count, HTTP proxy pool, WebSocket connections, Redis/MongoDB/MQTT/AMQP connection status
  * Added a plugin that exports the collected metrics for the _Prometheus_ monitoring system
  * Added a metrics collector plugin that adds request metrics and exposes a service for other plugins to add more metrics

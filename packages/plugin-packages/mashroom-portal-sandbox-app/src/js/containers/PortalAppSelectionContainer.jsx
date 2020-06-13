@@ -12,6 +12,7 @@ import type {
 import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 type OwnProps = {
+    preselectAppName: ?string,
     onSelectionChanged: (?string) => void,
 }
 

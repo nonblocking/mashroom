@@ -9,23 +9,24 @@ You can also pass the desired portal app and configuration via query parameter w
 
 ## Usage
 
-* If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-sandbox-app** as *dependency*.
-* Add the _Mashroom Sandbox App_ app on an empty page
-* Select the app you want to run within the sandbox
+ * If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-sandbox-app** as *dependency*.
+ * Add the _Mashroom Sandbox App_ app on an empty page
+ * Select the app you want to run within the sandbox
 
 The app checks the following query parameters:
 
-* *sbAppName*: The name of the app that should be started in the sandbox.
-  If this parameter is given the app will be started automatically, otherwise all other query parameters are ignored.
-* *sbWidth*: The width the app should be started with. Default: 100%
-* *sbLang*: The language code that should be passed to the app.
-* *sbPermissions*: The base64 encoded _permissions_ object that should be passed to the app. E.g.:
+ * *sbPreselectAppName*: The name of the app that should be preselected (without starting it)
+ * *sbAppName*: The name of the app that should be started in the sandbox.
+   If this parameter is given the app will be started automatically, otherwise all other query parameters are ignored.
+ * *sbWidth*: The width the app should be started with. Default: 100%
+ * *sbLang*: The language code that should be passed to the app.
+ * *sbPermissions*: The base64 encoded _permissions_ object that should be passed to the app. E.g.:
  ```
 btoa(JSON.stringify({
     permissionA: true
 }))
 ```
-* *sbAppConfig*: The Base64 encoded _appConfig_ object that should be passed to the app.
+ * *sbAppConfig*: The Base64 encoded _appConfig_ object that should be passed to the app.
 
 For an example how to use the sandbox in an end-2-end test see:
 https://github.com/nonblocking/mashroom-portal-quickstart/tree/master/plugin-packages/example-react-app/test-e2e/example.test.js

@@ -1,14 +1,9 @@
 // @flow
 
-import type {PortalAppParams, SelectedPortalApp} from '../../type-definitions';
+import type {PortalAppParams, PortalAppQueryParams, SelectedPortalApp} from '../../type-definitions';
 import type {MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
 
-export const getQueryParams = (portalStateService: MashroomPortalStateService): ?PortalAppParams => {
-    const appName = portalStateService.getStateProperty('sbAppName');
-    if (!appName) {
-        return null;
-    }
-
+export const getQueryParams = (portalStateService: MashroomPortalStateService): PortalAppQueryParams => {
     const objParam = (key: string): ?{} => {
         const val = portalStateService.getStateProperty(key);
         if (!val) {
@@ -23,7 +18,8 @@ export const getQueryParams = (portalStateService: MashroomPortalStateService): 
     };
 
     return {
-        appName,
+        appName: portalStateService.getStateProperty('sbAppName'),
+        preselectAppName: portalStateService.getStateProperty('sbPreselectAppName'),
         width: portalStateService.getStateProperty('sbWidth'),
         lang: portalStateService.getStateProperty('sbLang'),
         permissions: objParam('sbPermissions'),

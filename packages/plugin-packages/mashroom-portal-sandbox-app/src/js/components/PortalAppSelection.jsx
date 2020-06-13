@@ -6,12 +6,20 @@ import {Form, SelectFieldContainer, ErrorMessage} from '@mashroom/mashroom-porta
 import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
+    preselectAppName: ?string,
     availablePortalApps: Array<MashroomAvailablePortalApp>,
     appLoadingError: boolean,
     onSelectionChanged: (?string) => void,
 }
 
 export default class PortalAppSelection extends PureComponent<Props> {
+
+    getInitialValues() {
+        const { preselectAppName } = this.props;
+        return {
+            appName: preselectAppName,
+        }
+    }
 
     render() {
         const { availablePortalApps, onSelectionChanged, appLoadingError } = this.props;
@@ -22,7 +30,7 @@ export default class PortalAppSelection extends PureComponent<Props> {
 
         return (
             <div>
-                <Form formId='portal-app-selection'>
+                <Form formId='portal-app-selection' initialValues={this.getInitialValues()}>
                     <div className='mashroom-sandbox-app-form-row'>
                         <SelectFieldContainer id='appName' name='appName' labelId='appName' options={options} emptyOption={true} onValueChange={onSelectionChanged} />
                     </div>

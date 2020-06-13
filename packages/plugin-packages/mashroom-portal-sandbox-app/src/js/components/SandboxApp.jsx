@@ -12,35 +12,40 @@ import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 
-import type {MashroomPortalAppService, MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
+import type {
+    MashroomPortalAppService,
+    MashroomPortalMessageBus,
+    MashroomPortalStateService
+} from '@mashroom/mashroom-portal/type-definitions';
 import type { DummyMessageBus as DummyMessageBusType } from '../../../type-definitions';
 
 type Props = {
     lang: string,
+    messageBus: MashroomPortalMessageBus,
     portalAppService: MashroomPortalAppService,
     portalStateService: MashroomPortalStateService,
 }
 
 export default class SandboxApp extends PureComponent<Props> {
 
-    messageBus: DummyMessageBusType;
+    dummyMessageBus: DummyMessageBusType;
 
     constructor() {
         super();
-        this.messageBus = new DummyMessageBus();
-        this.messageBus.onMessageSent((topic, data) => {
+        this.dummyMessageBus = new DummyMessageBus();
+        this.dummyMessageBus.onMessageSent((topic, data) => {
             store.dispatch(addMessagePublishedByApp({
                 topic,
                 data
             }))
         });
-        this.messageBus.onTopicsChanged((topics) => {
+        this.dummyMessageBus.onTopicsChanged((topics) => {
             store.dispatch(setTopicsSubscribedByApp(topics));
         });
     }
 
     render() {
-        const { lang, portalAppService, portalStateService } = this.props;
+        const { lang, messageBus, portalAppService, portalStateService } = this.props;
         let existingLang = lang;
         if (!messages[existingLang]) {
             existingLang = 'en';
@@ -51,9 +56,14 @@ export default class SandboxApp extends PureComponent<Props> {
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
                     <div className='mashroom-sandbox-app'>
                         <PortalAppHostContainer />
-                        <MessageBusSendFormContainer messageBus={this.messageBus} />
+                        <MessageBusSendFormContainer messageBus={this.dummyMessageBus} />
                         <MessageBusHistoryContainer />
-                        <PortalAppContainer messageBus={this.messageBus} portalAppService={portalAppService} portalStateService={portalStateService} />
+                        <PortalAppContainer
+                            messageBus={messageBus}
+                            dummyMessageBus={this.dummyMessageBus}
+                            portalAppService={portalAppService}
+                            portalStateService={portalStateService}
+                        />
                     </div>
                 </IntlProvider>
             </ReduxProvider>

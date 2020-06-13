@@ -60,3 +60,12 @@ export type PortalAppParams = {
     permissions: ?{},
     appConfig: ?{}
 }
+
+export type PortalAppQueryParams = {
+    appName: ?string,
+    preselectAppName: ?string;
+    width: ?string,
+    lang: ?string,
+    permissions: ?{},
+    appConfig: ?{}
+}

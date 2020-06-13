@@ -10,6 +10,7 @@ import {getQueryParams, mergeAppConfig} from '../utils';
 import type {
     MashroomAvailablePortalApp,
     MashroomPortalAppService,
+    MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
 import type {ActivePortalApp, DummyMessageBus, SelectedPortalApp} from '../../../type-definitions';
@@ -17,7 +18,8 @@ import type {ActivePortalApp, DummyMessageBus, SelectedPortalApp} from '../../..
 type Props = {
     portalAppService: MashroomPortalAppService,
     portalStateService: MashroomPortalStateService,
-    messageBus: DummyMessageBus,
+    messageBus: MashroomPortalMessageBus,
+    dummyMessageBus: DummyMessageBus,
     activePortalApp: ?ActivePortalApp,
     setAvailablePortalApps: (Array<MashroomAvailablePortalApp>) => void,
     setSelectedPortalApp: (?SelectedPortalApp) => void,
@@ -34,9 +36,9 @@ export default class PortalApp extends PureComponent<Props> {
             (apps) => {
                 setAvailablePortalApps(apps);
                 const queryParams = this.getQueryParams();
-                if (queryParams) {
+                if (queryParams.appName || queryParams.preselectAppName) {
                     // Auto select
-                    this.selectionChanged(queryParams.appName);
+                    this.selectionChanged(queryParams.appName|| queryParams.preselectAppName);
                 }
             },
             (error) => {
@@ -51,7 +53,14 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     selectionChanged(appName: ?string) {
-        const { portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
+        const { messageBus, portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
+
+        setTimeout(() => {
+            messageBus.publish('mashroom-portal-sandbox-app-selection-change', {
+                appName,
+            });
+        }, 250);
+
         if (!appName) {
             setSelectedPortalApp(null);
             return;
@@ -65,11 +74,10 @@ export default class PortalApp extends PureComponent<Props> {
                     setup
                 };
 
-
                 const queryParams = this.getQueryParams();
-                if (queryParams){
+                if (queryParams.appName) {
                     // Auto load
-                    this.loadPortalApp(mergeAppConfig(selectedPortalApp, queryParams), queryParams.width);
+                    this.loadPortalApp(mergeAppConfig(selectedPortalApp, (queryParams: any)), queryParams.width);
                 } else {
                     setSelectedPortalApp(selectedPortalApp);
                 }
@@ -84,7 +92,7 @@ export default class PortalApp extends PureComponent<Props> {
     loadPortalApp(selectedPortalApp: SelectedPortalApp, hostWidth: ?string) {
         console.info(`Loading app '${selectedPortalApp.appName}' with setup: `, selectedPortalApp.setup);
 
-        const { messageBus, setActivePortalApp, setHostWidth } = this.props;
+        const { dummyMessageBus, setActivePortalApp, setHostWidth } = this.props;
         const { appName, setup } = selectedPortalApp;
         setActivePortalApp(selectedPortalApp);
 
@@ -92,7 +100,7 @@ export default class PortalApp extends PureComponent<Props> {
             setHostWidth(hostWidth);
         }
 
-        loadPortalApp(appName, 'mashroom-sandbox-app-host-elem', setup, messageBus).then(
+        loadPortalApp(appName, 'mashroom-sandbox-app-host-elem', setup, dummyMessageBus).then(
             () => {},
             (error) => {
                 console.error('Loading app failed', error);
@@ -101,9 +109,11 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     renderNoActivePortalApp() {
+        const { preselectAppName } = this.getQueryParams();
+
         return (
             <>
-                <PortalAppSelectionContainer onSelectionChanged={(appName) => this.selectionChanged(appName)} />
+                <PortalAppSelectionContainer preselectAppName={preselectAppName} onSelectionChanged={(appName) => this.selectionChanged(appName)} />
                 <PortalAppConfigContainer onConfigSubmit={(app, hostWidth) => this.loadPortalApp(app, hostWidth)} />
             </>
         );
