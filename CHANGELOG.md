@@ -1,13 +1,13 @@
 
 # Change Log
 
-## [unreleased]
+## 1.5.0 (June 14, 2020)
 
  * Sandbox: Added query parameter *sbPreselectAppName* to preselect an app without loading it
- * Added metrics for: Plugins, Remote apps, Session count, HTTP proxy pool, WebSocket connections, Redis/MongoDB/MQTT/AMQP connection status
+ * Added metrics for: Plugin count, Remote apps, Session count, HTTP proxy pool, WebSocket connections, Redis/MongoDB/MQTT/AMQP connection status
  * Added a plugin that exports the collected metrics for the _Prometheus_ monitoring system
  * Added a metrics collector plugin that adds request metrics and exposes a service for other plugins to add more metrics
- * Mongo Storage Provider: Added the possibility pass connection properties such as pool size.
+ * MongoDB Storage Provider: Added the possibility pass connection properties such as pool size.
    **BREAKING CHANGE**: Renamed the _connectionUri_ property to _uri_.
  * Remote Portal App Registries: Added an option _socketTimeoutSec_ to configure the timeout when trying to access remote apps
  * Storage Service: Can now leverage the new Memory Cache Service to accelerate the access. Can be configured like this:
