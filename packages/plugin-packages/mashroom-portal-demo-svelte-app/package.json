@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-svelte-app",
-    "version": "1.4.5",
+    "version": "1.5.0",
     "description": "Simple Svelte based app that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
@@ -35,7 +35,7 @@
         "webpack-dev-server": "^3.11.0"
     },
     "dependencies": {
-        "@mashroom/mashroom-portal": "1.4.5"
+        "@mashroom/mashroom-portal": "1.5.0"
     },
     "mashroom": {
         "devModeBuildScript": "build",
