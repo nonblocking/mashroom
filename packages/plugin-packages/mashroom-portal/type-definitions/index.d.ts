@@ -530,9 +530,13 @@ export type CreatedResponse = {
 
 export interface MashroomRestService {
     get(path: string, extraHeaders?: {}): Promise<any>;
+
     post(path: string, data: any, extraHeaders?: {}): Promise<any>;
+
     put(path: string, data: any, extraHeaders?: {}): Promise<void>;
+
     delete(path: string, extraHeaders?: {}): Promise<void>;
+
     withBasePath(apiBasePath: string): MashroomRestService;
 }
 
@@ -639,6 +643,7 @@ export interface MashroomPortalAppService {
         pluginName: string,
         instanceId: string | null | undefined,
     ): Promise<MashroomPortalAppSetup>;
+
     readonly loadedPortalApps: Array<MashroomPortalLoadedPortalApp>;
 }
 
@@ -943,15 +948,12 @@ export interface MashroomPortalStateService {
     /**
      * Generate a URL with the given state encoded into it
      */
-    encodeStateIntoUrl(
-        baseUrl: string,
-        state: any,
-        additionalQueryParams?:
-            | {
+    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?:
+        | {
             [key: string]: string;
-        }
-            | null
-            | undefined,
+          }
+        | null
+        | undefined,
         hash?: string | null | undefined,
     ): string;
 
