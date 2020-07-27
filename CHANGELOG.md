@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Call the *willBeRemoved* lifecycle hook of all apps on page unload; this gives the app a chance to do some
+   cleanup or persist its state properly
  * Portal: Made *defaultTheme* and *defaultLayout* in the site configuration optional and derive it from
    the server configuration if not set
 

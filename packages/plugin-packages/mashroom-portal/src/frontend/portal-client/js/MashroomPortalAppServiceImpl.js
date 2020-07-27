@@ -51,7 +51,7 @@ const APP_INFO_CLASS_NAME = 'mashroom-portal-app-info';
 
 const APP_UPDATE_CHECK_INTERVAL = 3000;
 
-const loadedPortalAppsInternal: Array<LoadedPortalAppInternal> = [];
+export const loadedPortalAppsInternal: Array<LoadedPortalAppInternal> = [];
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalAppService {
 

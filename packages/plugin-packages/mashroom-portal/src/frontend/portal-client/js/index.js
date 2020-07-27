@@ -7,6 +7,7 @@ import MashroomPortalStateServiceImpl from './MashroomPortalStateServiceImpl';
 import MashroomRestServiceFetchImpl from './MashroomRestServiceFetchImpl';
 import MashroomPortalUserServiceImpl from './MashroomPortalUserServiceImpl';
 import MashroomPortalSiteServiceImpl from './MashroomPortalSiteServiceImpl';
+import PageUnloadHandler from './PageUnloadHandler';
 import BrowserErrorHandler from './BrowserErrorHandler';
 import AuthenticationExpirationChecker from './AuthenticationExpirationChecker';
 import MashroomPortalRemoteLoggerImpl from './MashroomPortalRemoteLoggerImpl';
@@ -45,3 +46,5 @@ errorHandler.install();
 const authenticationExpirationChecker = new AuthenticationExpirationChecker(portalUserService);
 authenticationExpirationChecker.start();
 
+const pageUnloadHandler = new PageUnloadHandler();
+pageUnloadHandler.install();
