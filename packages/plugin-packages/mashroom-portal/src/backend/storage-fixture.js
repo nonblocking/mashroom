@@ -168,8 +168,6 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         siteId: 'default',
         title: portalName,
         path: '/web',
-        defaultTheme: pluginConfig.defaultTheme || 'Mashroom Portal Default Theme',
-        defaultLayout: 'Mashroom Portal Default Layouts 1 Column',
         pages: [
             {
                 pageId: 'home',

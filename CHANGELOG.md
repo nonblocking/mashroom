@@ -1,6 +1,11 @@
 
 # Change Log
 
+## [unreleased]
+
+ * Portal: Made *defaultTheme* and *defaultLayout* in the site configuration optional and derive it from
+   the server configuration if not set
+
 ## 1.5.0 (June 14, 2020)
 
  * Sandbox: Added query parameter *sbPreselectAppName* to preselect an app without loading it

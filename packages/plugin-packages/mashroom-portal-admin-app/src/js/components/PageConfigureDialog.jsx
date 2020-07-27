@@ -306,7 +306,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     renderPageAppearance() {
         let availableThemesOptions = [{
             value: null,
-            label: '<Default>'
+            label: '<Site Default>'
         }];
         availableThemesOptions = availableThemesOptions.concat(this.props.availableThemes.map((theme) => ({
             value: theme.name,
@@ -314,7 +314,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         })));
         let availableLayoutsOptions = [{
             value: null,
-            label: '<Default>'
+            label: '<Site Default>'
         }];
         availableLayoutsOptions = availableLayoutsOptions.concat(this.props.availableLayouts.map((layout) => ({
             value: layout.name,

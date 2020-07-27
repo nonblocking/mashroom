@@ -32,6 +32,7 @@ export type MashroomPortalPluginConfig = {
     +path: string,
     +adminApp: string,
     +defaultTheme: string,
+    +defaultLayout: string;
     +warnBeforeAuthenticationExpiresSec: number,
     +autoExtendAuthentication: boolean,
 }

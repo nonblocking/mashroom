@@ -195,20 +195,13 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
             errors.site.path = 'pathAlreadyExists';
         }
 
-        if (!values.site.defaultTheme) {
-            errors.site.defaultTheme = 'required';
-        }
-        if (!values.site.defaultLayout) {
-            errors.site.defaultLayout = 'required';
-        }
-
         return errors;
     }
 
     renderPageGeneral() {
         let availableThemesOptions = [{
             value: null,
-            label: ''
+            label: '<Server Default>',
         }];
         availableThemesOptions = availableThemesOptions.concat(this.props.availableThemes.map((theme) => ({
             value: theme.name,
@@ -216,7 +209,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         })));
         let availableLayoutsOptions = [{
             value: null,
-            label: ''
+            label: '<Server Default>',
         }];
         availableLayoutsOptions = availableLayoutsOptions.concat(this.props.availableLayouts.map((layout) => ({
             value: layout.name,

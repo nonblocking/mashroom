@@ -110,7 +110,7 @@ export default class PortalPageRenderController {
             }
 
             const themeName = page.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
-            const layoutName = page.layout || site.defaultLayout;
+            const layoutName = page.layout || site.defaultLayout || context.portalPluginConfig.defaultLayout;
 
             const portalName = req.pluginContext.serverConfig.name;
             const devMode = req.pluginContext.serverInfo.devMode;
