@@ -8,6 +8,7 @@ setPortalPluginConfig({
     path: '/portal',
     adminApp: 'admin-portal-app',
     defaultTheme: 'foo',
+    defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false
 });

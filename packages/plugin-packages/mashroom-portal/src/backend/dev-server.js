@@ -32,6 +32,7 @@ app.get('/', (req, res: ExpressResponse) => {
 setPortalPluginConfig({
     path: '/portal',
     defaultTheme: 'Portal Default Theme',
+    defaultLayout: 'Portal Default Layout',
     adminApp: '',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false
