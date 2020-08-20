@@ -5,8 +5,8 @@ import path from 'path';
 import {promisify} from 'util';
 import EventEmitter from 'events';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
+import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
-import {evaluateTemplatesInConfigObject} from '../utils/config_utils';
 
 import type {
     MashroomPluginPackage as MashroomPluginPackageType,

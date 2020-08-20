@@ -42,6 +42,20 @@ h1, h2, h3 {
     font-family: $FONT_HEADER;
 }
 
+a, a:visited, a:focus {
+    color: $COLOR_PRIMARY;
+    text-decoration: underline;
+    @include hover-animation();
+
+    &:hover {
+        color: $COLOR_PRIMARY_LIGHT;
+    }
+
+    &:active {
+        color: $COLOR_PRIMARY_LIGHT;
+    }
+}
+
 .error-panel {
     display: table;
     border: 1px solid $COLOR_ERROR;
@@ -89,4 +103,47 @@ td.error {
 
 td.checking {
   color: $COLOR_SECONDARY;
+}
+
+#modal {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(68, 68, 68, 0.6);
+    z-index: 5000;
+
+    .modal-wrapper {
+        position: relative;
+        display: table;
+        margin: 2% auto;
+        min-width: 250px;
+        max-width: 90%;
+        box-shadow: 2px 4px 4px #444;
+        background-color: white;
+    }
+
+    .modal-header {
+        position: relative;
+        width: 100%;
+
+        .modal-close {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: black;
+            cursor: pointer;
+        }
+    }
+
+    #modal-content {
+        min-width: 250px;
+        min-height: 250px;
+        padding: 30px;
+        font-family:  Consolas, 'Liberation Mono', Courier, monospace;
+        font-size: 0.9em;
+    }
 }

@@ -1,6 +1,7 @@
 // @flow
 
 import context from '../../context';
+import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
@@ -10,13 +11,18 @@ const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorM
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
     const remoteAppEndpoints: Array<RemotePortalAppEndpoint> = await portalRemoteAppEndpointService.findAll();
+
     const endpoints = remoteAppEndpoints.map((endpoint) => ({
         url: endpoint.url,
         sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
         status: status(endpoint),
         statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
         rowClass: endpoint.lastError ? 'row-error' : '',
-        portalApps: endpoint.portalApps.map((app) => `${app.name} (${app.version})`).join(', ')
+        portalApps: endpoint.portalApps.map((app) => ({
+            name: app.name,
+            version: app.version,
+            pluginDef: jsonToHtml(app),
+        }))
     }));
 
     res.render('admin', {

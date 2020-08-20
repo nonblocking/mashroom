@@ -67,6 +67,9 @@
                 "name": "Mashroom Portal Remote App Registry Webapp",
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+                "requires": [
+                    "Mashroom Portal Remote App Endpoint Services"
+                ],
                 "defaultConfig": {
                     "path": "/portal-remote-app-registry",
                     "showAddRemoteAppForm": true

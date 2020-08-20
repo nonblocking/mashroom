@@ -7,6 +7,17 @@
 
     <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
 
+    <script type="application/javascript">
+         function openModal(content) {
+             document.getElementById('modal-content').innerHTML = content;
+             document.getElementById('modal').style.display = 'block';
+         }
+
+         function closeModal() {
+             document.getElementById('modal').style.display = 'none';
+         }
+    </script>
+
     <title>Mashroom Kubernetes Portal Remote App Registry</title>
 </head>
 <body>
@@ -28,7 +39,13 @@
                     <td>{{this.url}}</td>
                     <td>{{this.lastCheck}}</td>
                     <td class="{{this.statusClass}}">{{this.status}}</td>
-                    <td>{{this.portalApps}}</td>
+                    <td>
+                       {{#each this.portalApps}}
+                           {{this.name}}&nbsp;({{this.version}})
+                           <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
+                           <br/>
+                       {{/each}}
+                    </td>
                 </tr>
             {{/each}}
         </table>
@@ -37,6 +54,17 @@
             Service name filter: <strong>{{serviceNameFilter}}</strong>
             <br/>
             Last scan: {{lastScan}}
+        </div>
+
+        <div id="modal" style="display: none">
+            <div class="modal-wrapper">
+                <div class="modal-header">
+                    <div class="modal-close" onclick="closeModal()">x</div>
+                </div>
+                <div id="modal-content">
+
+                </div>
+            </div>
         </div>
     {{/if}}
 

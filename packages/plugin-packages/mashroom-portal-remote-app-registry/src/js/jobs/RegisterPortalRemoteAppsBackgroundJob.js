@@ -3,6 +3,7 @@
 
 import url from 'url';
 import request from 'request';
+import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
 import type {
@@ -142,7 +143,6 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     _mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
-
         const name = definition.name;
         if (!name) {
             throw new Error(`Invalid portal app definition: No 'name' attribute! Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
@@ -176,7 +176,9 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
 
         const screenshots = definition.screenshots;
+
         const config = definition.defaultConfig || {};
+        evaluateTemplatesInConfigObject(config, this._logger);
         const definedRestProxies = config.restProxies;
         const restProxies: MashroomPortalProxyDefinitions = {};
 

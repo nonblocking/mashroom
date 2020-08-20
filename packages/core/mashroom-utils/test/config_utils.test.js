@@ -1,6 +1,6 @@
 // @flow
 
-import {safeEvaluateStringTemplate, evaluateTemplatesInConfigObject} from '../../src/utils/config_utils';
+import {safeEvaluateStringTemplate, evaluateTemplatesInConfigObject} from '../src/config_utils';
 
 describe('config_utils.safeEvaluateStringTemplate', () => {
 
@@ -8,6 +8,16 @@ describe('config_utils.safeEvaluateStringTemplate', () => {
         const template = 'Hello ${name ? name.toString() : "??"}!';
         const context = {
             name: 'John',
+        };
+
+        expect(safeEvaluateStringTemplate(template, context)).toBe('Hello John!');
+    });
+
+    it('evaluates multiple dynamic string template', () => {
+        const template = '${greeting} ${name}!';
+        const context = {
+            name: 'John',
+            greeting: 'Hello',
         };
 
         expect(safeEvaluateStringTemplate(template, context)).toBe('Hello John!');

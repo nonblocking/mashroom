@@ -9,8 +9,8 @@ import type {RemotePortalAppEndpoint} from '../../../type-definitions';
 
 const wrapperApp = express();
 
-const portalApp1: any = { name: 'Portal App 1' };
-const portalApp2: any = { name: 'Portal App 1' };
+const portalApp1: any = { name: 'Portal App 1', version: '1.0.1' };
+const portalApp2: any = { name: 'Portal App 2', version: '1.1.0' };
 let testEndpoints: Array<RemotePortalAppEndpoint> = [{
     url: 'http://localhost:8080/test',
     sessionOnly: false,

@@ -1,6 +1,7 @@
 
 import url from 'url';
 import request from 'request';
+import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
 import type {
@@ -194,11 +195,10 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             throw new Error('No plugin of type portal-app found in remote portal app');
         }
 
-        return portalAppDefinitions.map((definition) => this.mapPluginDefinition(packageJson, definition, serviceUrl, serviceName));
+        return portalAppDefinitions.map((definition) => this.mapPluginDefinition(packageJson, definition, serviceUrl));
     }
 
-    private mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, serviceUrl: string, serviceName: string): MashroomPortalApp {
-
+    private mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
         const name = definition.name;
         if (!name) {
             throw new Error('Invalid portal app definition: No "name" attribute!');
@@ -232,7 +232,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         }
 
         const screenshots = definition.screenshots;
+
         const config = definition.defaultConfig || {};
+        evaluateTemplatesInConfigObject(config, this.logger);
         const definedRestProxies = config.restProxies;
         const restProxies: MashroomPortalProxyDefinitions = {};
 

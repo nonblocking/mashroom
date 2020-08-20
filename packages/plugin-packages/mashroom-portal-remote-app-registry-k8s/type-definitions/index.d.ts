@@ -51,9 +51,13 @@ export type ServicesRenderModel = {
         namespace: string;
         url: string;
         status: string;
-        portalApps: string;
         lastCheck: string;
         rowClass: string;
         statusClass: string;
+        portalApps: Array<{
+            name: string;
+            version: string;
+            pluginDef: string;
+        }>;
     }>
 }

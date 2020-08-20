@@ -1,4 +1,7 @@
+
 import context from '../../context';
+// @ts-ignore
+import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 
 import type {Request, Response} from 'express';
 import type {KubernetesServiceStatus, ServicesRenderModel} from '../../../../type-definitions';
@@ -43,10 +46,14 @@ export default (request: Request, response: Response) => {
                 namespace: service.namespace,
                 url: service.url,
                 status: service.status !== 'Error' ? service.status : `Error: ${service.error}`,
-                portalApps: service.foundPortalApps.map((app) => `${app.name} (${app.version})`).join(', '),
                 lastCheck: formatDate(service.lastCheck),
                 rowClass: getRowClass(service.status),
                 statusClass: getStatusClass(service.status),
+                portalApps: service.foundPortalApps.map((app) => ({
+                    name: app.name,
+                    version: app.version,
+                    pluginDef: jsonToHtml(app),
+                }))
             }))
     };
 

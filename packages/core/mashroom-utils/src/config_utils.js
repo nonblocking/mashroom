@@ -1,6 +1,8 @@
 // @flow
 
-import type {MashroomLogger} from '../../type-definitions';
+type Logger = {
+    error(message: string, ...args: any[]): void;
+}
 
 const TEMPLATE_CODE_REGEX = /\${(.+?)}/g;
 const TEMPLATE_CODE_ACCESSED_OBJECTS = /(?:^|\W)(\w+?)\./g;
@@ -43,7 +45,7 @@ export const safeEvaluateStringTemplate = (templateStr: string, context: any): s
     return template.apply({}, values);
 };
 
-export const evaluateTemplatesInConfigObject = (config: any, logger: MashroomLogger): void => {
+export const evaluateTemplatesInConfigObject = (config: any, logger: Logger): void => {
     // Currently only environment variables can be used in templates
     const context = {
         env: {...process.env},

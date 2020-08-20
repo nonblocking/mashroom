@@ -1,6 +1,6 @@
 // @flow
 
-import escapeHtml from './escape_html';
+import {escapeHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 import infoTemplate from './template';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
