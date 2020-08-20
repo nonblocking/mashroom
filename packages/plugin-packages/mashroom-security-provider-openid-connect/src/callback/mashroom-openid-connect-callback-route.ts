@@ -33,6 +33,11 @@ export default (defaultBackUrl: string) => {
         logger.debug('Auth callback triggered with params:', reqParams);
 
         const authData: OpenIDConnectAuthData = request.session[OICD_AUTH_DATA_SESSION_KEY];
+        if (!authData) {
+            response.sendStatus(403);
+            return;
+        }
+
         const {state, nonce, codeVerifier, backUrl} = authData;
 
         // Remove sensitive data from session that is no longer required
