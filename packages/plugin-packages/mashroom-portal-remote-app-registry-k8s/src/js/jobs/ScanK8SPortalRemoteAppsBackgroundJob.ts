@@ -1,6 +1,7 @@
 
 import url from 'url';
 import request from 'request';
+// @ts-ignore
 import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
