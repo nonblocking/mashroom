@@ -22,6 +22,9 @@ import type {
     MashroomPortalClientServices,
     MashroomPortalLoadedPortalApp,
     MashroomPortalMasterMessageBus,
+    MashroomPortalMasterStateService,
+    MashroomPortalMessageBus,
+    MashroomPortalStateService,
     MashroomPortalRemoteLogger,
     MashroomRestService,
     ModalAppCloseCallback,
@@ -396,7 +399,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
         const clonedServices = Object.freeze({
-            ...clientServices, messageBus: this._getMasterMessageBus(clientServices).getAppInstance(appId),
+            ...clientServices,
+            messageBus: this._getMessageBusForApp(clientServices, appId),
+            stateService: this._getStateServiceForApp(clientServices, pluginName, appSetup),
             remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName)
         });
 
@@ -547,14 +552,20 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return loadedPortalAppsInternal.find((app) => app.id === id);
     }
 
-    _getMasterMessageBus(clientServices: MashroomPortalClientServices): MashroomPortalMasterMessageBus {
+    _getMessageBusForApp(clientServices: MashroomPortalClientServices, appId: string): MashroomPortalMessageBus {
         const mmb: MashroomPortalMasterMessageBus = (clientServices.messageBus: any);
-        return mmb;
+        return mmb.getAppInstance(appId);
+    }
+
+    _getStateServiceForApp(clientServices: MashroomPortalClientServices, pluginName: string, appSetup: MashroomPortalAppSetup): MashroomPortalStateService {
+        const appStatePrefix = `${appSetup.instanceId || `${this._getPageId()}_${encodeURIComponent(pluginName)}`}__`;
+        const mss: MashroomPortalMasterStateService = (clientServices.stateService: any);
+        return mss.withKeyPrefix(appStatePrefix);
     }
 
     _unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal): void {
         const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
-        const mmb = this._getMasterMessageBus(clientServices);
+        const mmb: MashroomPortalMasterMessageBus = (clientServices.messageBus: any);
         mmb.unsubscribeEverythingFromApp(loadedAppInternal.id);
     }
 

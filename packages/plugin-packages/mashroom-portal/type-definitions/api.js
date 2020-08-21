@@ -754,6 +754,13 @@ export interface MashroomPortalStateService {
     setLocalStoreStateProperty(key: string, value: any): void;
 }
 
+export interface MashroomPortalMasterStateService extends MashroomPortalStateService {
+    /**
+     * Get a state service with a specific prefix for items in the browser storage (scope)
+     */
+    withKeyPrefix(prefix: string): MashroomPortalStateService;
+}
+
 export interface MashroomPortalRemoteLogger {
     /**
      * Send a client error to the server log

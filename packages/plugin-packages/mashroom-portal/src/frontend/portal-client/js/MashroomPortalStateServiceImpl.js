@@ -1,10 +1,10 @@
-// @flow
+ // @flow
 
-import type {MashroomPortalStateService} from '../../../../type-definitions';
+import type {MashroomPortalMasterStateService, MashroomPortalStateService} from '../../../../type-definitions';
 
 const ENCODED_STATE_QUERY_PARAM_NAME = 'mrps';
 
-export default class MashroomPortalStateServiceImpl implements MashroomPortalStateService {
+export default class MashroomPortalStateServiceImpl implements MashroomPortalMasterStateService {
 
     _urlState: any;
     _additionalQueryParams: any;
@@ -12,8 +12,8 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
     _sessionStorage: ?Storage;
 
     constructor() {
-        this._localStorage = global._localStorage;
-        this._sessionStorage = global._sessionStorage;
+        this._localStorage = global.localStorage;
+        this._sessionStorage = global.sessionStorage;
         this._urlState = {};
         this._additionalQueryParams = {};
 
@@ -36,7 +36,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
     }
 
     getStateProperty(key: string) {
-        return this._urlState[key] || this._additionalQueryParams[key] || (this._sessionStorage && this._sessionStorage.getItem(key)) || (this._localStorage && this._localStorage.getItem(key));
+        return this._getStateProperty(key);
     }
 
     encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: ?{ [string]: string }, hash?: ?string) {
@@ -72,11 +72,28 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalSta
         this._localStorage && this._localStorage.setItem(key, this._toStorableString(value));
     }
 
+    withKeyPrefix(prefix: string): MashroomPortalStateService {
+        return {
+            getStateProperty: (key: string) => this._getStateProperty(key, prefix),
+            setUrlStateProperty: this.setUrlStateProperty,
+            encodeStateIntoUrl: this.encodeStateIntoUrl,
+            setSessionStateProperty: (key: string, value: any) => this.setSessionStateProperty(prefix + key, value),
+            setLocalStoreStateProperty: (key: string, value: any) => this.setLocalStoreStateProperty(prefix + key, value),
+        };
+    }
+
     _toStorableString(value: any) {
         if (typeof (value) === 'string') {
             return value;
         }
         return JSON.stringify(value);
+    }
+
+    _getStateProperty(key: string, prefix: string = '') {
+        return this._urlState[key] ||
+            this._additionalQueryParams[key] ||
+            (this._sessionStorage && this._sessionStorage.getItem(prefix + key)) ||
+            (this._localStorage && this._localStorage.getItem(prefix + key));
     }
 
     _getQueryParams() {
