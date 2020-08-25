@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.5.1 (August 25, 2020)
+
  * Portal: The *MashroomPortalStateService* prefixes now data in the browser storage to avoid conflicts.
    So, its save now to use it to persist the application state like this:
    ```js
