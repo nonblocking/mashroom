@@ -1461,7 +1461,7 @@
             "pluginVersion": "6.7.3",
             "targets": [
                 {
-                    "expr": "mashroom_storage_mongodb_connected{service=\"Mashroom\"}",
+                    "expr": "mashroom_messaging_mqtt_connected{service=\"Mashroom\"}",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"

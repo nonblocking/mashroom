@@ -129,7 +129,7 @@ MongoDB storage provider connected:
 
 MQTT messaging system connected:
 
-    mashroom_storage_mongodb_connected{service="Mashroom"}
+    mashroom_messaging_mqtt_connected{service="Mashroom"}
 
 ### Node.js Cluster Mode Hints
 
