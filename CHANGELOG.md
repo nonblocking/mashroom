@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: [ReasonReact](https://reasonml.github.io/reason-react) based demo app added
+
 ## 1.5.1 (August 25, 2020)
 
  * Portal: The *MashroomPortalStateService* prefixes now data in the browser storage to avoid conflicts.

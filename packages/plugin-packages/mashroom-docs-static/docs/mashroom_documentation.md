@@ -650,6 +650,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-portal-demo-svelte-app](../../mashroom-portal-demo-svelte-app/README.md) [inc]
 
+[mashroom-portal-demo-reasonreact-app](../../mashroom-portal-demo-reasonreact-app/README.md) [inc]
+
 [mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc]
 
 [mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc]
