@@ -1,6 +1,6 @@
 // @flow
 
-import type {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 export type MashroomWebSocketMatcher = (connectPath: string, message: any) => boolean;
 
@@ -12,7 +12,10 @@ export type MashroomWebSocketClient = {
     +connectPath: string,
     +user: MashroomSecurityUser,
     +loggerContext: {},
+    +clientId: string,
     alive: boolean,
+    reconnecting?: TimeoutID;
+    bufferedMessages?: any[];
 }
 
 /**

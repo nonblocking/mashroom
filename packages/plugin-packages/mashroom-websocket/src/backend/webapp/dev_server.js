@@ -50,7 +50,17 @@ const pluginContext: any = {
     }
 };
 
-context.server.addMessageListener((path) => path === '/test', (message, client) => {
+setInterval(() => {
+    // $FlowFixMe
+    context.server._clients.forEach(client => {
+        context.server.sendMessage(client.client, {
+            ping: new Date().toISOString(),
+        });
+    })
+}, 3000);
+
+
+context.server.addMessageListener((path) => path.startsWith('/test'), (message, client) => {
     console.info(`Received test message from user ${client.user.username}:`, message);
     context.server.addDisconnectListener((disconnectedClient) => {
         if (disconnectedClient === client) {
