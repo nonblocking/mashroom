@@ -4,7 +4,7 @@ import {Server} from 'ws';
 import {v4} from 'uuid';
 import context from './context';
 
-import type { WebSocket } from 'ws';
+import type {WebSocket} from 'ws';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
