@@ -47,6 +47,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         const resources = {
             js: resourcesDef.js,
             css: resourcesDef.css,
+            html: resourcesDef.html,
         };
 
         if (!resources.js) {

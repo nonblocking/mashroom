@@ -1,0 +1,67 @@
+{
+    "name": "@mashroom/mashroom-portal-demo-isomorphic-react-app",
+    "version": "1.0.0",
+    "description": "Simple Isomorphic React app that integrates into the Portal",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "main": "index.js",
+    "scripts": {
+        "build:client": "webpack --config webpack.config.js",
+        "build:server": "babel -x .js,.jsx ./src -d dist",
+        "build": "npm run build:server && npm run build:client && copyfiles --flat package.json ./public",
+        "lint": "eslint src --fix",
+        "start": "node dist/server/index.js",
+        "dev": "cross-env NODE_ENV=development nodemon -w src src/server/index.js --exec babel-node --config-file ./src/server/.babelrc --"
+    },
+    "author": "Milan Heimschild",
+    "license": "MIT",
+    "dependencies": {
+        "express": "^4.17.1"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.11.6",
+        "@babel/core": "^7.11.6",
+        "@babel/node": "^7.10.5",
+        "@babel/plugin-proposal-class-properties": "^7.10.4",
+        "babel-plugin-inline-react-svg": "^1.1.1",
+        "copyfiles": "^2.3.0",
+        "cross-env": "^7.0.2",
+        "html-webpack-plugin": "^4.5.0",
+        "node-sass": "^4.14.1",
+        "nodemon": "^2.0.4",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-hot-loader": "^4.13.0",
+        "webpack": "^4.44.2",
+        "webpack-cli": "^3.3.12",
+        "webpack-dev-middleware": "^3.7.2",
+        "webpack-hot-middleware": "^2.25.0",
+        "webpack-merge": "^5.1.4"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Isomorphic React App",
+                "title": "Demo Isomorphic React App",
+                "type": "portal-app",
+                "bootstrap": "startIsomorphicReactDemoApp",
+                "category": "Demo",
+                "resources": {
+                    "html": "widget",
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./",
+                    "restProxies": {},
+                    "appConfig": {
+                        "firstName": "Johnny B"
+                    }
+                }
+            }
+        ]
+    }
+}

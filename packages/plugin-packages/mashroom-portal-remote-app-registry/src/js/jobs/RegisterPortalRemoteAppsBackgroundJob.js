@@ -161,6 +161,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const resources = {
             js: resourcesDef.js,
             css: resourcesDef.css,
+            html: resourcesDef.html,
         };
         if (!resources.js) {
             throw new Error(`Invalid configuration of plugin ${name}: No resources.js defined. Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);

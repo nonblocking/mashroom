@@ -388,6 +388,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 this._resourceManager.loadStyle(`${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp));
         }
 
+        // HTML
+        if (appSetup.resources.html) {
+            this._resourceManager.loadHtml(`${appSetup.resourcesBasePath}/${appSetup.resources.html}?v=${appSetup.lastReloadTs}`, loadedPortalApp);
+        }
         return jsPromises;
     }
 

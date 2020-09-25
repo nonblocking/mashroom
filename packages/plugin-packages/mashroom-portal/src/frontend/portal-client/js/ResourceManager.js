@@ -21,7 +21,7 @@ export default class ResourceManager {
     _htmlDoc: Document;
     _remoteLogger: MashroomPortalRemoteLogger;
 
-    constructor(remoteLogger: MashroomPortalRemoteLogger, htmlDoc?: Document = document) {
+    constructor(remoteLogger: MashroomPortalRemoteLogger, htmlDoc: Document = document) {
         this._remoteLogger = remoteLogger;
         this._htmlDoc = htmlDoc;
     }
@@ -96,6 +96,14 @@ export default class ResourceManager {
             onErrorCallbacks: [],
             refs: [loadedPortalApp]
         };
+    }
+
+    loadHtml(path: string, loadedPortalApp: LoadedPortalAppInternal): void {
+        fetch(path)
+            .then(res => res.text())
+            .then(text => {
+                loadedPortalApp.portalAppHostElement.innerHTML = text;
+            });
     }
 
     unloadAppResources(loadedPortalApp: LoadedPortalAppInternal) {

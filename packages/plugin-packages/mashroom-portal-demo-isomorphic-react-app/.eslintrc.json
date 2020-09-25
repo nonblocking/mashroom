@@ -1,0 +1,28 @@
+{
+    "parser": "babel-eslint",
+    "plugins": [
+        "react",
+        "flowtype"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:flowtype/recommended"
+    ],
+    "env": {
+        "node": true,
+        "browser": true,
+        "es6": true
+    },
+    "settings": {
+        "react": {
+            "version": "16.11"
+        }
+    },
+    "rules": {
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
+        "no-console": "off"
+    }
+}
