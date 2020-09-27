@@ -9,9 +9,9 @@
         "dist/**"
     ],
     "dependencies": {
-        "openid-client": "^3.15.1",
+        "openid-client": "^4.1.1",
         "request": "^2.88.2",
-        "request-promise-native": "^1.0.8"
+        "request-promise-native": "^1.0.9"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
