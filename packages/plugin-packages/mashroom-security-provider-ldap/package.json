@@ -52,6 +52,8 @@
                 "defaultConfig": {
                     "loginPage": "/login",
                     "serverUrl": "ldap://my-ldap-server:636",
+                    "ldapConnectTimeout": 3000,
+                    "ldapTimeout": 5000,
                     "tlsOptions": null,
                     "bindDN": "admin",
                     "bindCredentials": "secret",

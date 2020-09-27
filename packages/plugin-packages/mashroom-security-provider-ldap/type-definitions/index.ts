@@ -2,6 +2,7 @@
 export interface LdapClient {
     search(filter: string): Promise<Array<LdapEntry>>;
     login(ldapEntry: LdapEntry, password: string): Promise<void>;
+    shutdown(): void;
 }
 
 export type LdapEntry = {

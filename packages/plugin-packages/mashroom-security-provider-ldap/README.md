@@ -29,6 +29,8 @@ And configure this plugin like this in the Mashroom config file:
         "Mashroom LDAP Security Provider": {
             "loginPage": "/login",
             "serverUrl": "ldap://my-ldap-server:636",
+            "ldapConnectTimeout": 3000,
+            "ldapTimeout": 5000,
             "bindDN": "admin",
             "bindCredentials": "secret",
             "baseDN": "OU=Mashroom",
@@ -43,6 +45,8 @@ And configure this plugin like this in the Mashroom config file:
 
  * _loginPage_: The login URL when user is not authenticated (must match the path of _Mashroom Security Default Login Webapp_)
  * _serverUrl_: The LDAP server URL with protocol and port
+ * _ldapConnectTimeout_: Connect timeout in ms (default 3000)
+ * _ldapTimeout_: Timeout in ms (default 5000)
  * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html),
     but the file paths (e.g. for "cert") are resolved relatively to _mashroom.json_.
  * _bindDN_: The bind user for searching

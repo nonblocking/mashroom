@@ -97,7 +97,13 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (user) {
-            await this.ldapClient.login(user, password);
+            try {
+                await this.ldapClient.login(user, password);
+            } catch (e) {
+                return {
+                    success: false
+                };
+            }
 
             const groups = await this.getUserGroups(user, logger);
             const roles = this.getRolesForUserGroups(groups, logger);
