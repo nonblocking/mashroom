@@ -18,7 +18,12 @@
         "@mashroom/mashroom-utils": "1.5.1",
         "eslint": "^7.0.0",
         "express": "^4.17.1",
-        "jest": "^26.0.1"
+        "jest": "^26.0.1",
+        "typescript": "^3.8.3",
+        "@types/node": "12.0.8",
+        "@types/ldapjs": "^1.0.9",
+        "@types/express": "^4.17.6",
+        "@types/jest": "^25.2.2"
     },
     "jest": {
         "verbose": true,
@@ -26,12 +31,13 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src test --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src -d dist"
+        "build": "babel src --extensions '.ts' -d dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",

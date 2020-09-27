@@ -1,6 +1,7 @@
 // @flow
 
 import path from 'path';
+// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomLdapSecurityProvider from '../src/MashroomLdapSecurityProvider';
 
@@ -13,7 +14,7 @@ describe('MashroomLdapSecurityProvider', () => {
             originalUrl: '/foo/bar'
         };
         const res: any = {
-            redirect: (url) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = url
         };
 
         const ldapClient: any = {};
@@ -33,7 +34,7 @@ describe('MashroomLdapSecurityProvider', () => {
             originalUrl: '/foo/bar'
         };
         const res: any = {
-            redirect: (url) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = url
         };
 
         const ldapClient: any = {};

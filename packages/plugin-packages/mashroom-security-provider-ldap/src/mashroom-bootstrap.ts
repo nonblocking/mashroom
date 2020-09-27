@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomLdapSecurityProvider from './MashroomLdapSecurityProvider';
 import LdapClientImpl from './LdapClientImpl';
