@@ -1,5 +1,5 @@
 
-import {createClient} from 'ldapjs';
+import {ClientOptions, createClient} from 'ldapjs';
 import type {Client as LdapJsClient, SearchOptions} from 'ldapjs';
 
 import type {TlsOptions} from 'tls';
@@ -45,30 +45,22 @@ export default class LdapClientImpl implements LdapClient {
     }
 
     async login(ldapEntry: LdapEntry, password: string): Promise<void> {
-        let client = null;
+        let client;
         try {
-            client = createClient({
-                url: `${this.serverUrl}/${this.baseDN}`,
-                tlsOptions: this.tlsOptions as any,
-                connectTimeout: this.connectTimeout,
-                timeout: this.timeout,
-            });
-        } catch (error) {
-            this.logger.error('Creating LDAP client failed!', error);
-            throw new Error('Could not establish LDAP connection');
-        }
-
-        try {
+            client = await this.createLdapJsClient();
             await this.bind(ldapEntry.dn, password, client);
+            await this.disconnect(client);
         } catch (error) {
-            await this.unbind(client);
-            throw new Error('Login failed!');
+            if (client) {
+                await this.disconnect(client);
+            }
+            throw new Error(error);
         }
     }
 
     shutdown(): void {
         if (this.searchClient) {
-            this.unbind(this.searchClient);
+            this.disconnect(this.searchClient);
             this.searchClient = null;
         }
     }
@@ -79,22 +71,12 @@ export default class LdapClientImpl implements LdapClient {
         }
 
         try {
-            const searchClient = createClient({
-                url: `${this.serverUrl}/${this.baseDN}`,
-                tlsOptions: this.tlsOptions as any,
-                connectTimeout: this.connectTimeout,
-                timeout: this.timeout,
-                reconnect: {
-                    initialDelay: 100,
-                    maxDelay: 1000,
-                    failAfter: 10
-                }
-            });
+            const searchClient = await this.createLdapJsClient(true);
             const bind = async () => {
                 try {
                     await this.bind(this.bindDN, this.bindCredentials, searchClient);
                 } catch (error) {
-                    await this.unbind(searchClient);
+                    await this.disconnect(searchClient);
                 }
             };
             await bind();
@@ -106,8 +88,56 @@ export default class LdapClientImpl implements LdapClient {
             return this.searchClient;
         } catch (error) {
             this.logger.error('Creating search LDAP client failed!', error);
-            throw new Error('Could not establish LDAP connection');
+            throw error;
         }
+    }
+
+    private async createLdapJsClient(reconnect = false): Promise<LdapJsClient> {
+        const clientOptions: ClientOptions = {
+            url: `${this.serverUrl}/${this.baseDN}`,
+            tlsOptions: this.tlsOptions as any,
+            connectTimeout: this.connectTimeout,
+            timeout: this.timeout,
+        };
+
+        if (reconnect) {
+            clientOptions.reconnect = {
+                initialDelay: 100,
+                maxDelay: 10000,
+            };
+        }
+
+        return new Promise((resolve, reject) => {
+            let resolved = false;
+            let client: LdapJsClient;
+            try {
+                client = createClient(clientOptions);
+                client.on('connect', () => {
+                    this.logger.debug(`Connected to LDAP server: ${this.serverUrl}`);
+                    resolve(client);
+                    resolved = true;
+                });
+                client.on('connectError', (error) => {
+                    this.logger.error('LDAP Connection error', error);
+                    if (!resolved) {
+                        reject(error);
+                        resolved = true;
+                    }
+                });
+                client.on('error', (error) => {
+                    this.logger.error('LDAP Error', error);
+                    if (!resolved) {
+                        reject(error);
+                        resolved = true;
+                    }
+                });
+                client.on('destroy', () => {
+                    this.logger.debug(`Disconnected from LDAP server: ${this.serverUrl}`);
+                });
+            } catch (e) {
+                reject(e);
+            }
+        });
     }
 
     private async bind(user: string, password: string, ldapjsClient: LdapJsClient): Promise<void> {
@@ -123,17 +153,10 @@ export default class LdapClientImpl implements LdapClient {
         });
     }
 
-    private async unbind(ldapjsClient: LdapJsClient): Promise<void> {
-        return new Promise((resolve) => {
-            ldapjsClient.unbind((error) => {
-                if (error) {
-                    this.logger.warn('Unbinding failed', error);
-                    resolve();
-                } else {
-                    resolve();
-                }
-            });
-        });
+    private disconnect(ldapjsClient: LdapJsClient): void {
+        if (ldapjsClient.connected) {
+            ldapjsClient.destroy();
+        }
     }
 
 }

@@ -36,7 +36,7 @@ server.search('OU=test,OU=users,DC=at,DC=nonblocking', (req: any, res: any) => {
     res.end();
 });
 
-export const startMockLdapServer = async () => {
+export const startMockLdapServer = async (): Promise<void> => {
     return new Promise((resolve) => {
         server.listen(1389, () => {
             console.log(`LDAP server listening at ${server.url}`);
@@ -45,8 +45,13 @@ export const startMockLdapServer = async () => {
     });
 };
 
-export const stopMockLdapServer = () => {
-    server.emit('close');
-    console.log(`LDAP server at ${server.url} now closed`);
+export const stopMockLdapServer = async (): Promise<void> => {
+    console.info('Remaining connections:', server.connections);
+    return new Promise((resolve) => {
+        server.close(() => {
+            console.log(`LDAP server now closed`);
+            resolve();
+        });
+    });
 };
 
