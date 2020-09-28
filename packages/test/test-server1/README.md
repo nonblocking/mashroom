@@ -7,6 +7,10 @@ A simple test server that runs in dev mode (re-compiles and reloads after code c
 
     npm start
 
+Open http://localhost:5050 and http://localhost:5050/portal for the Portal
+
+Predefined users: john/john, admin/admin
+
 ## Stop
 
      <CTRL+C>

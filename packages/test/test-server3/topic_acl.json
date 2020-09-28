@@ -1,0 +1,9 @@
+{
+    "external1/#": {
+        "allow": ["*"],
+        "deny": ["NotSoTrustedRole"]
+    },
+    "external2/#": {
+        "allow": ["Administrator"]
+    }
+}
