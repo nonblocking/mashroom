@@ -66,7 +66,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
         const request: MashroomMessagingWebSocketSubscribeRequest = {
             messageId: 'ABCD',
             command: 'subscribe',
-            topic: '/foo/bar',
+            topic: 'foo/bar',
         };
 
         if (webSocketMessageHandler) {
@@ -79,7 +79,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                 expect(mockSubscribe.mock.calls[0][0]).toEqual({
                     username: 'maria'
                 });
-                expect(mockSubscribe.mock.calls[0][1]).toBe('/foo/bar');
+                expect(mockSubscribe.mock.calls[0][1]).toBe('foo/bar');
 
                 expect(mockSendMessage.mock.calls.length).toBe(1);
                 expect(mockSendMessage.mock.calls[0][0]).toEqual(client);
@@ -108,7 +108,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
         const request: MashroomMessagingWebSocketSubscribeRequest = {
             messageId: 'ABCD',
             command: 'subscribe',
-            topic: '/foo/bar',
+            topic: 'foo/bar',
         };
 
         if (webSocketMessageHandler) {
@@ -122,7 +122,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                 expect(mockSendMessage.mock.calls[0][1]).toEqual({
                     messageId: 'ABCD',
                     error: true,
-                    message: 'Subscribing to topic /foo/bar failed',
+                    message: 'Subscribing to topic foo/bar failed',
                 });
 
                 done();
@@ -142,7 +142,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
 
         webSocketHandler._clients.set(client, {
            subscriptions: [{
-               topic: '/foo/xx',
+               topic: 'foo/xx',
                callback: () => {},
            }]
         });
@@ -150,7 +150,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
         const request: MashroomMessagingWebSocketUnsubscribeRequest = {
             messageId: 'ABCD',
             command: 'unsubscribe',
-            topic: '/foo/xx',
+            topic: 'foo/xx',
         };
 
         if (webSocketMessageHandler) {
@@ -160,7 +160,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
 
             setTimeout(() => {
                 expect(mockUnsubscribe.mock.calls.length).toBe(1);
-                expect(mockUnsubscribe.mock.calls[0][0]).toEqual('/foo/xx');
+                expect(mockUnsubscribe.mock.calls[0][0]).toEqual('foo/xx');
 
                 expect(mockSendMessage.mock.calls.length).toBe(1);
                 expect(mockSendMessage.mock.calls[0][0]).toEqual(client);
@@ -189,7 +189,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
         const request: MashroomMessagingWebSocketPublishRequest = {
             messageId: 'ABCD',
             command: 'publish',
-            topic: '/foo/xx',
+            topic: 'foo/xx',
             message: {
                 test: '4',
             }
@@ -205,7 +205,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                 expect(mockPublish.mock.calls[0][0]).toEqual({
                     username: 'maria'
                 });
-                expect(mockPublish.mock.calls[0][1]).toBe('/foo/xx');
+                expect(mockPublish.mock.calls[0][1]).toBe('foo/xx');
                 expect(mockPublish.mock.calls[0][2]).toEqual({
                     test: '4',
                 });
@@ -237,7 +237,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
         const request: MashroomMessagingWebSocketPublishRequest = {
             messageId: 'ABCD',
             command: 'publish',
-            topic: '/foo/xx',
+            topic: 'foo/xx',
             message: {
                 test: '4',
             }
@@ -254,7 +254,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                 expect(mockSendMessage.mock.calls[0][1]).toEqual({
                     messageId: 'ABCD',
                     error: true,
-                    message: 'Publishing message to topic /foo/xx failed'
+                    message: 'Publishing message to topic foo/xx failed'
                 });
 
                 expect(webSocketHandler._clients.size).toBe(1);
@@ -276,10 +276,10 @@ describe('MashroomMessagingWebSocketHandler', () => {
 
         webSocketHandler._clients.set(client, {
             subscriptions: [{
-                topic: '/foo/xx',
+                topic: 'foo/xx',
                 callback: () => {},
             }, {
-                topic: '/bar/2',
+                topic: 'bar/2',
                 callback: () => {},
             }]
         });
@@ -290,8 +290,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
 
             setTimeout(() => {
                 expect(mockUnsubscribe.mock.calls.length).toBe(2);
-                expect(mockUnsubscribe.mock.calls[0][0]).toEqual('/foo/xx');
-                expect(mockUnsubscribe.mock.calls[1][0]).toEqual('/bar/2');
+                expect(mockUnsubscribe.mock.calls[0][0]).toEqual('foo/xx');
+                expect(mockUnsubscribe.mock.calls[1][0]).toEqual('bar/2');
 
                 expect(webSocketHandler._clients.size).toBeFalsy();
 

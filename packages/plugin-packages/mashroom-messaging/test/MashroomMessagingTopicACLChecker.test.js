@@ -20,7 +20,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('/foo/bar/2', user)).toBeTruthy();
+        expect(aclChecker.allowed('foo/bar/2', user)).toBeTruthy();
     });
 
     it('should not accept a topic without the required role', async () => {
@@ -36,7 +36,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('/foo/bar/2', user)).toBeFalsy();
+        expect(aclChecker.allowed('foo/bar/2', user)).toBeFalsy();
     });
 
     it('should not accept a topic when the user a denied role ', async () => {
@@ -52,7 +52,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             extraData: null,
         };
 
-        expect(aclChecker.allowed('/my/topic', user)).toBeFalsy();
+        expect(aclChecker.allowed('my/topic', user)).toBeFalsy();
     });
 
 });
