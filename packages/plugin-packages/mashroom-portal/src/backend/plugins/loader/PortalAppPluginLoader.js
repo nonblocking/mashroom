@@ -1,7 +1,7 @@
 // @flow
 
 import path from 'path';
-import {PluginConfigurationError} from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
+import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
 import type {
     MashroomLogger,
