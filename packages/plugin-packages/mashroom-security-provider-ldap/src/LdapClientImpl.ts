@@ -30,10 +30,26 @@ export default class LdapClientImpl implements LdapClient {
         return new Promise((resolve, reject) => {
             const entries: Array<LdapEntry> = [];
             searchClient.search(this.baseDN, searchOpts, (err, res) => {
-                res.on('searchEntry', entry => {
-                    entries.push(entry.object as any);
+                res.on('searchEntry', (entry: any) => {
+                    let cn;
+                    if (Array.isArray(entry.cn)) {
+                        // Take the last one, which is in OpenLDAP the actual group cn
+                        cn = [...entry.cn].pop();
+                    } else if (entry.cn) {
+                        cn = entry.cn;
+                    } else {
+                        // Fallback, cn should always be present
+                        cn = entry.dn.split(',')[0].split('=').pop();
+                    }
+
+                    entries.push({
+                        dn: entry.dn,
+                        cn,
+                        uid: entry.uid,
+                        mail: entry.mail,
+                    });
                 });
-                res.on('error', error => {
+                res.on('error', (error) => {
                     this.logger.error('LDAP search error', error);
                     reject(error);
                 });
