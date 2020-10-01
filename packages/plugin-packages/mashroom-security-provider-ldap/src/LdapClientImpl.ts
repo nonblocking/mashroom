@@ -30,8 +30,8 @@ export default class LdapClientImpl implements LdapClient {
         return new Promise((resolve, reject) => {
             const entries: Array<LdapEntry> = [];
             searchClient.search(this.baseDN, searchOpts, (err, res) => {
-                res.on('searchEntry', (entry: any) => {
-                    let cn;
+                res.on('searchEntry', ({ object: entry }) => {
+                    let cn: string | undefined;
                     if (Array.isArray(entry.cn)) {
                         // Take the last one, which is in OpenLDAP the actual group cn
                         cn = [...entry.cn].pop();
@@ -44,9 +44,9 @@ export default class LdapClientImpl implements LdapClient {
 
                     entries.push({
                         dn: entry.dn,
-                        cn,
-                        uid: entry.uid,
-                        mail: entry.mail,
+                        cn: cn as string,
+                        uid: entry.uid as string,
+                        mail: entry.mail as string,
                     });
                 });
                 res.on('error', (error) => {
