@@ -67,10 +67,10 @@ With a config like that you can place a file _topic_acl.json_ in your server con
 
 ```json
 {
-    "/my/topic": {
+    "my/topic": {
         "allow": ["Role1"]
     },
-    "/foo/bar/#": {
+    "foo/bar/#": {
         "allow": ["*"]
         "deny": ["NotSoTrustedRole"]
     }
@@ -92,7 +92,7 @@ After a successful connection you can use the following commands:
 {
   messageId: 'ABCD',
   command: 'subscribe',
-  topic: '/foo/bar',
+  topic: 'foo/bar',
 }
 ```
 The messageId should be unique. You will get a response message like this when the operation succeeds:
@@ -120,7 +120,7 @@ Otherwise a error message like this:
 {
   messageId: 'ABCD',
   command: 'unsubscribe',
-  topic: '/foo/bar',
+  topic: 'foo/bar',
 }
 ```
 
@@ -132,7 +132,7 @@ Success and error response messages are the same as above.
 {
   messageId: 'ABCD',
   command: 'publish',
-  topic: '/foo/bar',
+  topic: 'foo/bar',
   message: {
      foo: 'bar'
   }
@@ -146,7 +146,7 @@ And the server will push the following **if a message for a subscribed topic arr
 ```
 {
   remoteMessage: true,
-  topic: '/foo/bar',
+  topic: 'foo/bar',
   message: {
      what: 'ever'
   }

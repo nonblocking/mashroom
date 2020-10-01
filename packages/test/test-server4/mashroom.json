@@ -1,0 +1,124 @@
+{
+    "name": "Mashroom Test Server 4",
+    "port": 5050,
+    "pluginPackageFolders": [
+        {
+            "path": "../../plugin-packages",
+            "devMode": true
+        }
+    ],
+    "indexPage": "/portal",
+    "ignorePlugins": [
+        "Mashroom Storage MongoDB Provider",
+        "Mashroom Security Simple Provider",
+        "Mashroom OpenID Connect Security Provider",
+        "Mashroom Messaging External Provider MQTT",
+        "Mashroom Session MongoDB Provider",
+        "Mashroom Session Redis Provider",
+        "Mashroom Memory Cache Redis Provider",
+        "Mashroom Portal Remote App Registry Kubernetes",
+        "Mashroom Portal Remote App Registry Kubernetes Webapp"
+    ],
+    "plugins": {
+        "Mashroom Session Middleware": {
+            "provider": "Mashroom Session Filestore Provider",
+            "session": {
+                "cookie": {
+                    "maxAge": 3600000
+                }
+            }
+        },
+        "Mashroom Session Filestore Provider": {
+            "path": "./data/sessions"
+        },
+        "Mashroom Security Services": {
+            "provider": "Mashroom LDAP Security Provider",
+            "forwardQueryHintsToProvider": [
+                "test1"
+            ],
+            "acl": "./acl.json"
+        },
+        "Mashroom LDAP Security Provider": {
+            "serverUrl": "ldap://localhost:1389",
+            "bindDN": "uid=mashroom,ou=applications,dc=nonblocking,dc=at",
+            "bindCredentials": "mashroom",
+            "baseDN": "ou=users,dc=nonblocking,dc=at",
+            "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
+            "groupSearchFilter": "(objectClass=groupOfNames)",
+            "groupToRoleMapping": "./groupToRoleMapping.json"
+        },
+        "Mashroom Security Default Login Webapp": {
+            "loginFormTitle": {
+                "en": "Mashroom Test Server 4 Login",
+                "de": "Mashroom Test Server 4 Anmeldung"
+            },
+            "styleFile": "./login_style.css"
+        },
+        "Mashroom Storage Services": {
+            "provider": "Mashroom Storage Filestore Provider",
+            "memoryCache": {
+                "enabled": true,
+                "ttlSec": 120,
+                "invalidateOnUpdate": true
+            }
+        },
+        "Mashroom Storage Filestore Provider": {
+            "dataFolder": "./data/storage",
+            "checkExternalChangePeriodMs": 2000,
+            "prettyPrintJson": true
+        },
+        "Mashroom Memory Cache Services": {
+            "provider": "local",
+            "defaultTTLSec": 10
+        },
+        "Mashroom Internationalization Services": {
+            "availableLanguages": [
+                "en",
+                "de"
+            ],
+            "defaultLanguage": "en"
+        },
+        "Mashroom Http Proxy Services": {
+            "rejectUntrustedCerts": false,
+            "poolMaxSockets": 10,
+            "socketTimeoutMs": 3000
+        },
+        "Mashroom WebSocket Services": {
+            "restrictToRoles": null,
+            "enableKeepAlive": true,
+            "keepAliveIntervalSec": 15,
+            "maxConnections": 20
+        },
+        "Mashroom Messaging Services": {
+            "externalProvider": "Mashroom Messaging External Provider AMQP",
+            "externalTopics": [
+                "external1",
+                "external2"
+            ],
+            "userPrivateBaseTopic": "user",
+            "enableWebSockets": true,
+            "topicACL": "./topic_acl.json"
+        },
+        "Mashroom Messaging External Provider AMQP": {
+            "internalRoutingKey": "mashroom",
+            "brokerTopicExchangePrefix": "/topic/",
+            "brokerTopicMatchAny": "#",
+            "brokerHost": "localhost",
+            "brokerPort": 5672,
+            "brokerUsername": "admin",
+            "brokerPassword": "admin"
+        },
+        "Mashroom Portal WebApp": {
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "warnBeforeAuthenticationExpiresSec": 60,
+            "autoExtendAuthentication": false
+        },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": true
+        },
+        "Mashroom Portal Remote App Registry Webapp": {
+            "showAddRemoteAppForm": true
+        }
+    }
+}

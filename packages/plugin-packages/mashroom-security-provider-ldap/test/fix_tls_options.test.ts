@@ -1,9 +1,9 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import fixTlsOptions from '../src/fix_tls_options';
 
-import type {NodeTlsOptions, TlsOptions} from '../type-definitions';
+import type {TlsOptions} from '../type-definitions';
 
 const loggerFactory: any = dummyLoggerFactory;
 
@@ -19,7 +19,7 @@ describe('fix_tls_options', () => {
         };
 
 
-        const fixedTlsOptions: ?NodeTlsOptions = fixTlsOptions(tlsOptions, __dirname, loggerFactory);
+        const fixedTlsOptions = fixTlsOptions(tlsOptions, __dirname, loggerFactory);
 
         expect(fixedTlsOptions).toBeTruthy();
         if (fixedTlsOptions) {

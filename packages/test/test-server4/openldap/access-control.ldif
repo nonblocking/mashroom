@@ -1,0 +1,5 @@
+
+dn: olcDatabase={1}mdb,cn=config
+changetype: modify
+add: olcAccess
+olcAccess: {0}to dn.sub="ou=users,dc=nonblocking,dc=at" by dn="uid=mashroom,ou=applications,dc=nonblocking,dc=at" read by anonymous auth

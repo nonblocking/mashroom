@@ -9,7 +9,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "ldapjs": "^1.0.2"
+        "ldapjs": "^2.2.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
@@ -18,7 +18,12 @@
         "@mashroom/mashroom-utils": "1.5.1",
         "eslint": "^7.0.0",
         "express": "^4.17.1",
-        "jest": "^26.0.1"
+        "jest": "^26.0.1",
+        "typescript": "^3.8.3",
+        "@types/node": "12.0.8",
+        "@types/ldapjs": "^1.0.9",
+        "@types/express": "^4.17.6",
+        "@types/jest": "^25.2.2"
     },
     "jest": {
         "verbose": true,
@@ -26,12 +31,13 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src test --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src -d dist"
+        "build": "babel src --extensions '.ts' -d dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -46,10 +52,12 @@
                 "defaultConfig": {
                     "loginPage": "/login",
                     "serverUrl": "ldap://my-ldap-server:636",
+                    "ldapConnectTimeout": 3000,
+                    "ldapTimeout": 5000,
                     "tlsOptions": null,
-                    "bindDN": "admin",
+                    "bindDN": "uid=mashroom,dc=nonblocking,dc=at",
                     "bindCredentials": "secret",
-                    "baseDN": "",
+                    "baseDN": "ou=users,dc=nonblocking,dc=at",
                     "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
                     "groupSearchFilter": "(objectClass=group)",
                     "groupToRoleMapping": "./groupToRoleMapping.json",

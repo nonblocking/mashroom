@@ -1,0 +1,65 @@
+dn: ou=users,dc=nonblocking,dc=at
+objectclass: top
+objectclass: organizationalUnit
+ou: users
+
+dn: ou=applications,dc=nonblocking,dc=at
+objectclass: top
+objectclass: organizationalUnit
+ou: applications
+
+# Users
+
+dn: uid=john,ou=users,dc=nonblocking,dc=at
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: john
+cn: John Do
+sn: Do
+mail: john@nonblocking.at
+userPassword: john
+
+dn: uid=admin,ou=users,dc=nonblocking,dc=at
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: admin
+cn: Portal Admin
+sn: Admin
+mail: portal-admin@nonblocking.at
+userPassword: admin
+
+dn: uid=mashroom,ou=applications,dc=nonblocking,dc=at
+objectclass: top
+objectclass: person
+objectclass: organizationalPerson
+objectclass: inetOrgPerson
+uid: mashroom
+cn: Mashroom
+sn: Mashroom
+mail: mashroom@nonblocking.at
+userPassword: mashroom
+
+# Groups
+
+dn: cn=group1,ou=users,dc=nonblocking,dc=at
+objectclass: top
+objectclass: groupOfNames
+cn: ldap-user
+member: uid=john,ou=users,dc=nonblocking,dc=at
+member: uid=admin,ou=users,dc=nonblocking,dc=at
+
+dn: cn=group2,ou=users,dc=nonblocking,dc=at
+objectclass: top
+objectclass: groupOfNames
+cn: ldap-user
+member: uid=john,ou=users,dc=nonblocking,dc=at
+
+dn: cn=mashroom-admin,ou=users,dc=nonblocking,dc=at
+objectclass: top
+objectclass: groupOfNames
+cn: ldap-user
+member: uid=admin,ou=users,dc=nonblocking,dc=at

@@ -19,6 +19,9 @@ services:
         image: eclipse-mosquitto
         ports:
             - "1883:1883"
+            - "9001:9001"
+        volumes:
+            - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
     mysql:
         container_name: mashroom_testserver3_mysql
         image: mysql:5.7

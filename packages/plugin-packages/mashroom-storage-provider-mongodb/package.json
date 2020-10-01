@@ -9,7 +9,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "mongodb": "^3.5.7"
+        "mongodb": "^3.6.2"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
@@ -17,9 +17,9 @@
         "@mashroom/mashroom-monitoring-metrics-collector": "1.5.1",
         "@mashroom/mashroom-storage": "1.5.1",
         "@mashroom/mashroom-utils": "1.5.1",
-        "@shelf/jest-mongodb": "^1.1.5",
+        "@shelf/jest-mongodb": "^1.2.3",
         "@types/jest": "^25.2.2",
-        "@types/mongodb": "^3.5.17",
+        "@types/mongodb": "^3.5.27",
         "eslint": "^7.0.0",
         "jest": "^26.0.1",
         "typescript": "^3.8.3"

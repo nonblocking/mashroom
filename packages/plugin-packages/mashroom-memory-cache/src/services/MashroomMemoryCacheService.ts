@@ -25,7 +25,7 @@ export default class MashroomMemoryCacheService implements MashroomMemoryCacheSe
         this.logger = loggerFactory('mashroom.memorycache');
     }
 
-    async get(region: string, key: CacheKey): Promise<CacheValue | undefined> {
+    async get(region: string, key: CacheKey): Promise<CacheValue | undefined> {
         const provider = this.getCacheProvider();
         if (provider) {
             const hit = await provider.get(region, key);

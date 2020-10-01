@@ -84,9 +84,7 @@ module.exports = (env, argv) => {
                 'shallow-equal': path.resolve(__dirname, 'node_modules/shallow-equal'),
                 'hoist-non-react-statics': path.resolve(__dirname, 'node_modules/hoist-non-react-statics'),
                 'object-assign': path.resolve(__dirname, 'node_modules/object-assign'),
-                // Allow treeshaking of lodash modules
-                'lodash': path.resolve(__dirname, 'node_modules/lodash-es'),
-                // Only for dev mode when the them is included
+                // Only for dev mode when the theme is included
                 './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
             },
         },

@@ -1,9 +1,9 @@
 
-# mongoDB test server
+# RabbitMQ test server
 
 Start with:
 
     docker-compose up
 
-Homepage: https://www.mongodb.com/
+Homepage: https://www.rabbitmq.com/
 

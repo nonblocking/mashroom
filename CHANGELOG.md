@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Improved reliability and performance of the LDAP security provider
+ * Upgraded libraries with known vulnerabilities
  * Portal: [ReasonReact](https://reasonml.github.io/reason-react) based demo app added
  * Added reconnect to previous session functionality for websockets
 

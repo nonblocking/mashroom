@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+    openLdap:
+        container_name: mashroom_testserver4_openldap
+        image: osixia/openldap
+        ports:
+            - "1389:389"
+            - "1636:636"
+        environment:
+            - LDAP_ORGANISATION=nonblocking.at
+            - LDAP_DOMAIN=nonblocking.at
+            - LDAP_ADMIN_PASSWORD=admin
+        command: [--copy-service, --loglevel, debug]
+        volumes:
+            - ./openldap/users.ldif:/container/service/slapd/assets/config/bootstrap/ldif/50-users.ldif
+            - ./openldap/access-control.ldif:/container/service/slapd/assets/config/bootstrap/ldif/51-access-control.ldif
+    ldapAdmin:
+        container_name: mashroom_testserver4_ldapadmin
+        image: osixia/phpldapadmin
+        ports:
+            - "4433:443"
+        environment:
+            - PHPLDAPADMIN_LDAP_HOSTS=openLdap
+    rabbitmq:
+        container_name: mashroom_testserver4_rabbitqm
+        image: isikh/rabbitmq_amqp1_0
+        ports:
+            - "5672:5672"
+            - "15672:15672"
