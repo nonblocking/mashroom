@@ -42,8 +42,10 @@ Send a message from the Portal to an external system:
 
  * In the MQTT client subscribe to: /external1/#
  * In the Mashroom Portal add the *Demo Remote Messaging App* to a page and send a message to *external1/foo*
+ * You should see the message in the MQTT client
 
 Send a message from an external system to the Portal:
 
  * In the Mashroom Portal add the *Demo Remote Messaging App*
- * In the MQTT client send a message to: mashroom/user/<user>/test
+ * In the MQTT client send a message to: mashroom/user/<portal-user>/test
+ * You should see the message in the *Demo Remote Messaging App*
