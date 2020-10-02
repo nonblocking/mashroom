@@ -53,11 +53,11 @@
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
                 "requires": [
-                    "Mashroom Security Services",
-                    "Mashroom Storage Services"
+                    "Mashroom Security Services"
                 ],
                 "defaultConfig": {
                     "path": "/websocket",
+                    "tmpFileStorePath": "/tmp",
                     "restrictToRoles": null,
                     "enableKeepAlive": true,
                     "keepAliveIntervalSec": 15,
