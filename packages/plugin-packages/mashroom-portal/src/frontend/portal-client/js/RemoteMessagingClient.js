@@ -157,7 +157,9 @@ export default class RemoteMessagingClient {
 
         try {
             const message = JSON.parse(data);
-            if (message.messageId && message.success) {
+            if (message.type === 'setClientId') {
+                global.sessionStorage.setItem('clientId', message.payload);
+            } else if (message.messageId && message.success) {
                 const resolvedPromise = this._openPromises.find((op) => op.messageId === message.messageId);
                 if (resolvedPromise) {
                     resolvedPromise.resolve();

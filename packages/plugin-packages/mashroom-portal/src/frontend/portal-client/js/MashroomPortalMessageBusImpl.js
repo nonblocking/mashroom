@@ -46,7 +46,8 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
             const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
             const host = global.document.location.hostname;
             const port = global.document.location.port ? `:${global.document.location.port}` : '';
-            const connectUrl = `${socketProtocol}//${host}${port}${REMOTE_MESSAGING_CONNECT_PATH}`;
+            const clientId = global.sessionStorage.getItem('clientId');
+            const connectUrl = `${socketProtocol}//${host}${port}${REMOTE_MESSAGING_CONNECT_PATH}${clientId ? `?clientId=${clientId}` : ''}`;
             console.info('Enable remote messaging. WebSocket connect url: ', connectUrl);
             this._remoteMessageClient = new RemoteMessagingClient(connectUrl);
             this._remoteMessageClient.onMessage(this._handleRemoteMessage.bind(this));

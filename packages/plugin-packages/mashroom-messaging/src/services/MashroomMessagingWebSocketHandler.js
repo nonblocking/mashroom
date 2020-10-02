@@ -19,7 +19,7 @@ import type {
 } from '../../type-definitions/internal';
 
 const WEBSOCKET_SERVICE_PLUGIN_NAME = 'Mashroom WebSocket Services';
-const WEBSOCKET_MESSAGE_MATCHER = (path: string) => path === WEBSOCKET_CONNECT_PATH;
+const WEBSOCKET_MESSAGE_MATCHER = (path: string) => path.startsWith(WEBSOCKET_CONNECT_PATH);
 
 type ClientMap = Map<MashroomWebSocketClient, {
     subscriptions: Array<{
