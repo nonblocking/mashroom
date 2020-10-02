@@ -53,7 +53,8 @@
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
                 "requires": [
-                    "Mashroom Security Services"
+                    "Mashroom Security Services",
+                    "Mashroom Storage Services"
                 ],
                 "defaultConfig": {
                     "path": "/websocket",

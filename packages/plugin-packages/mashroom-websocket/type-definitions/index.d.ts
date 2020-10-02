@@ -22,7 +22,6 @@ export type MashroomWebSocketClient = {
     readonly clientId: string;
     alive: boolean;
     reconnecting?: TimeoutID;
-    bufferedMessages?: any[];
 };
 
 /**

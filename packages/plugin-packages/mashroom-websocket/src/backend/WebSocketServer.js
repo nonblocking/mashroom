@@ -16,6 +16,7 @@ import type {
 import type {
     MashroomWebSocketServer,
 } from '../../type-definitions/internal';
+import type { MashroomStorageService } from '../../../mashroom-storage/type-definitions';
 
 const CHECK_CONNECTIONS_INTERVAL_MS = 30 * 1000;
 const RECONNECT_INTERVAL_MS = 10 * 1000;
@@ -37,8 +38,9 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     _checkConnectionInterval: IntervalID;
     _keepAliveInterval: IntervalID;
 
-    constructor(loggerFactory: MashroomLoggerFactory) {
+    constructor(loggerFactory: MashroomLoggerFactory, storageService: MashroomStorageService) {
         this._logger = loggerFactory('mashroom.websocket.server');
+        this._bufferedMessagesCollection = storageService.getCollection<{ clientId: string, message: any}>('buffered-messages-collection');
         this._server = new Server({
             noServer: true
         });
@@ -104,7 +106,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         });
     }
 
-    createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser, loggerContext: {}) {
+    async createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser, loggerContext: {}) {
         const contextLogger = this._logger.withContext(loggerContext);
 
         contextLogger.debug(`WebSocket connection opened on path: ${connectPath}. User: ${user.username}`);
@@ -127,12 +129,12 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             delete reconnectingClient.client.reconnecting;
             reconnectingClient.webSocket = webSocket;
             this.addWebSocketListeners(reconnectingClient.webSocket, contextLogger, reconnectingClient.client);
-            const { bufferedMessages } = reconnectingClient.client;
+            const bufferedMessages = await (await this._bufferedMessagesCollection).find((msg) => msg.clientId === reconnectingClient.client.clientId);
             if (bufferedMessages && bufferedMessages.length > 0) {
-                bufferedMessages.forEach((msg) => {
-                    this.sendMessage(reconnectingClient.client, msg);
+                bufferedMessages.forEach((item) => {
+                    this.sendMessage(reconnectingClient.client, item.message);
                 });
-                reconnectingClient.client.bufferedMessages = [];
+                await (await this._bufferedMessagesCollection).deleteMany((msg) => msg.clientId === reconnectingClient.client.clientId);
             }
             return;
         }
@@ -178,7 +180,10 @@ export default class WebSocketServer implements MashroomWebSocketServer {
 
         if (client.reconnecting) {
             client.bufferedMessages = client.bufferedMessages || [];
-            client.bufferedMessages.push(message);
+            await (await this._bufferedMessagesCollection).insertOne({
+                clientId: client.clientId,
+                message,
+            })
         }
     }
 
@@ -260,7 +265,8 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         }
     }
 
-    _removeClient(client: MashroomWebSocketClient) {
+    async _removeClient(client: MashroomWebSocketClient) {
+        await (await this._bufferedMessagesCollection).deleteMany((msg) => msg.clientId === client.clientId)
         this._clients = this._clients.filter((cw) => cw.client !== client);
         this._informDisconnectListeners(client);
     }

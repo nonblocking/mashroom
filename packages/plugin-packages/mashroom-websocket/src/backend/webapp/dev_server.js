@@ -10,8 +10,26 @@ import app from './webapp';
 import httpUpgradeHandlerFn from './http_upgrade_handler';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
+import type { MashroomStorageCollection, StorageObjectFilter } from '../../../../mashroom-storage/type-definitions';
 
-context.server = new WebSocketServer(loggerFactory);
+type CollectionType = {
+    clientId: string;
+    message: any;
+}
+const messages = [];
+const collection: MashroomStorageCollection<CollectionType> = {
+    deleteMany: (filter: StorageObjectFilter<CollectionType>) => {
+        const messagesToDelete = messages.filter(filter);
+        messagesToDelete.forEach(msg => messages.splice(messages.indexOf(msg), 1));
+    },
+    insertOne: (item: CollectionType) => messages.push(item),
+    find: (filter: StorageObjectFilter<CollectionType>) => messages.filter(filter),
+}
+context.server = new WebSocketServer(loggerFactory, {
+    getCollection(): Promise<MashroomStorageCollection<CollectionType>> {
+        return Promise.resolve(collection);
+    }
+});
 context.restrictToRoles = ['Role1'];
 context.basePath = '/websocket';
 
