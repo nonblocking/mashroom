@@ -30,6 +30,11 @@ export default class LdapClientImpl implements LdapClient {
         return new Promise((resolve, reject) => {
             const entries: Array<LdapEntry> = [];
             searchClient.search(this.baseDN, searchOpts, (err, res) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
                 res.on('searchEntry', ({ object: entry }) => {
                     let cn: string | undefined;
                     if (Array.isArray(entry.cn)) {
@@ -53,8 +58,12 @@ export default class LdapClientImpl implements LdapClient {
                     this.logger.error('LDAP search error', error);
                     reject(error);
                 });
-                res.on('end', () => {
-                    resolve(entries);
+                res.on('end', (result) => {
+                    if (result?.status === 0) {
+                        resolve(entries);
+                    } else {
+                        reject(new Error(`Search failed: ${result?.errorMessage}`));
+                    }
                 });
             });
         });
@@ -93,6 +102,7 @@ export default class LdapClientImpl implements LdapClient {
                     await this.bind(this.bindDN, this.bindCredentials, searchClient);
                 } catch (error) {
                     await this.disconnect(searchClient);
+                    this.searchClient = null;
                 }
             };
             await bind();
@@ -130,8 +140,10 @@ export default class LdapClientImpl implements LdapClient {
                 client = createClient(clientOptions);
                 client.on('connect', () => {
                     this.logger.debug(`Connected to LDAP server: ${this.serverUrl}`);
-                    resolve(client);
-                    resolved = true;
+                    if (!resolved) {
+                        resolve(client);
+                        resolved = true;
+                    }
                 });
                 client.on('connectError', (error) => {
                     this.logger.error('LDAP Connection error', error);
