@@ -5,25 +5,27 @@ import type { MashroomLogger } from '@mashroom/mashroom/type-definitions';
 import type { MashroomLoggerFactory } from '@mashroom/mashroom/type-definitions';
 
 export default class reconnectMessageBufferStore {
+    _enabled: boolean;
     _basePath: ?string;
     _logger: MashroomLogger;
 
     constructor(basePath: ?string, loggerFactory: MashroomLoggerFactory) {
         this._basePath = basePath;
         this._logger = loggerFactory('mashroom.websocket.server.reconnect.buffer');
+        this._enabled = !!basePath && fs.existsSync(basePath);
 
-        this._logger.debug(this._basePath
+        this._logger.debug(this._enabled
             ? `ReconnectMessageBufferStore is active. Storage path: ${basePath || ''}`
             : 'ReconnectMessageBufferStore is not active'
         );
     }
 
     get enabled() {
-        return !!this._basePath;
+        return this._enabled;
     }
 
     async removeFile(name: string): Promise<void> {
-        if (!this._basePath) {
+        if (!this._enabled) {
             return Promise.resolve();
         }
 
@@ -40,7 +42,7 @@ export default class reconnectMessageBufferStore {
     }
 
     async appendData(name: string, data: string): Promise<void> {
-        if (!this._basePath) {
+        if (!this._enabled) {
             return Promise.resolve();
         }
 
@@ -57,7 +59,7 @@ export default class reconnectMessageBufferStore {
     }
 
     async getData(name: string): Promise<string[]> {
-        if (!this._basePath) {
+        if (!this._enabled) {
             return Promise.resolve([]);
         }
 

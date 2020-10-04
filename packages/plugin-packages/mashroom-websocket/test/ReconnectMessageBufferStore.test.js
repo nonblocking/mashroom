@@ -3,13 +3,13 @@ import fs from 'fs';
 import os from 'os';
 import path from 'path';
 import { dummyLoggerFactory } from '@mashroom/mashroom-utils/lib/logging_utils';
-import TemporaryFileStore from '../src/backend/webapp/ReconnectMessageBufferStore';
+import ReconnectMessageBufferStore from '../src/backend/webapp/ReconnectMessageBufferStore';
 
 const BASE_PATH = os.tmpdir();
 const NAME = 'user_42';
 
 describe('Tmp File Storage', () => {
-    const storage = new TemporaryFileStore(BASE_PATH, dummyLoggerFactory);
+    const storage = new ReconnectMessageBufferStore(BASE_PATH, dummyLoggerFactory);
 
     afterAll(async () => {
         return storage.removeFile(NAME);
@@ -19,8 +19,14 @@ describe('Tmp File Storage', () => {
        expect(storage.enabled).toBeTruthy();
     });
 
+    it('should not be enabled when invalid path provided', () => {
+       const storeWithInvalidPath = new ReconnectMessageBufferStore('/IDoNoExist', dummyLoggerFactory);
+
+       expect(storeWithInvalidPath.enabled).toBeFalsy();
+    });
+
     it('should be disabled when no directory provided', async () => {
-        const storeWithoutDir = new TemporaryFileStore(null, dummyLoggerFactory);
+        const storeWithoutDir = new ReconnectMessageBufferStore(null, dummyLoggerFactory);
         expect(storeWithoutDir.enabled).toBeFalsy();
         expect(await storeWithoutDir.getData('xyz')).toEqual([]);
     });
