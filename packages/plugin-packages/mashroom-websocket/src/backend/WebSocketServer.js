@@ -16,10 +16,9 @@ import type {
 import type {
     MashroomWebSocketServer,
 } from '../../type-definitions/internal';
-import TemporaryFileStore from './webapp/tempStore';
+import ReconnectMessageBufferStore from './webapp/ReconnectMessageBufferStore';
 
 const CHECK_CONNECTIONS_INTERVAL_MS = 30 * 1000;
-const RECONNECT_INTERVAL_MS = 10 * 1000;
 const KEEP_ALIVE_MESSAGE = 'keepalive';
 
 export default class WebSocketServer implements MashroomWebSocketServer {
@@ -37,11 +36,11 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     _disconnectListeners: Array<MashroomWebSocketDisconnectListener>;
     _checkConnectionInterval: IntervalID;
     _keepAliveInterval: IntervalID;
-    _tmpFileStore: TemporaryFileStore;
+    _reconnectMessageBufferStore: ReconnectMessageBufferStore;
 
-    constructor(loggerFactory: MashroomLoggerFactory, tmpFileStore: TemporaryFileStore) {
+    constructor(loggerFactory: MashroomLoggerFactory, reconnectMessageBufferStore: ReconnectMessageBufferStore) {
         this._logger = loggerFactory('mashroom.websocket.server');
-        this._tmpFileStore = tmpFileStore;
+        this._reconnectMessageBufferStore = reconnectMessageBufferStore;
         this._server = new Server({
             noServer: true
         });
@@ -91,13 +90,17 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             contextLogger.error('WebSocket error', error);
         });
         webSocket.on('close', () => {
-            contextLogger.info(`Client ${client.clientId} disconnected, waiting for reconnect`);
-            client.reconnecting = setTimeout(() => {
-                if (client.reconnecting) {
-                    contextLogger.debug(`No reconnect within 10 seconds, removing client ${client.clientId}`);
-                    this._removeClient(client);
-                }
-            }, RECONNECT_INTERVAL_MS);
+            if (this._reconnectMessageBufferStore.enabled) {
+                contextLogger.info(`Client ${client.clientId} disconnected, waiting for reconnect`);
+                client.reconnecting = setTimeout(() => {
+                    if (client.reconnecting) {
+                        contextLogger.debug(`No reconnect within 10 seconds, removing client ${client.clientId}`);
+                        this._removeClient(client);
+                    }
+                }, context.reconnectTimeoutSec * 1000);
+            } else {
+                this._removeClient(client);
+            }
         });
         webSocket.on('pong', () => {
             client.alive = true;
@@ -134,12 +137,12 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             delete reconnectingClient.client.reconnecting;
             reconnectingClient.webSocket = webSocket;
             this.addWebSocketListeners(reconnectingClient.webSocket, contextLogger, reconnectingClient.client);
-            const bufferedMessages = await this._tmpFileStore.getData(this._getFileName(user, reconnectingClient.client));
+            const bufferedMessages = await this._reconnectMessageBufferStore.getData(this._getFileName(user, reconnectingClient.client));
             if (bufferedMessages && bufferedMessages.length > 0) {
                 bufferedMessages.forEach((item) => {
                     this.sendMessage(reconnectingClient.client, JSON.parse(item));
                 });
-                await this._tmpFileStore.removeFile(this._getFileName(user, reconnectingClient.client));
+                await this._reconnectMessageBufferStore.removeFile(this._getFileName(user, reconnectingClient.client));
             }
             return;
         }
@@ -184,7 +187,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         }
 
         if (client.reconnecting) {
-            await this._tmpFileStore.appendData(this._getFileName(client.user, client), JSON.stringify(message));
+            await this._reconnectMessageBufferStore.appendData(this._getFileName(client.user, client), JSON.stringify(message));
         }
     }
 
@@ -267,7 +270,9 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     async _removeClient(client: MashroomWebSocketClient) {
-        await this._tmpFileStore.removeFile(this._getFileName(client.user, client));
+        if (client.reconnecting) {
+            await this._reconnectMessageBufferStore.removeFile(this._getFileName(client.user, client));
+        }
         this._clients = this._clients.filter((cw) => cw.client !== client);
         this._informDisconnectListeners(client);
     }

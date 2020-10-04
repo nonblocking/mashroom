@@ -13,19 +13,20 @@ import type {
     MashroomHttpUpgradeHandler,
     MashroomWebAppPluginBootstrapFunction
 } from '@mashroom/mashroom/type-definitions';
-import TemporaryFileStore from './tempStore';
+import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const { path, restrictToRoles, enableKeepAlive, keepAliveIntervalSec, maxConnections, tmpFileStorePath } = pluginConfig;
+    const { path, restrictToRoles, enableKeepAlive, keepAliveIntervalSec, maxConnections, reconnectMessageBufferFolder, reconnectTimeoutSec } = pluginConfig;
     const pluginContext = pluginContextHolder.getPluginContext();
 
     context.restrictToRoles = restrictToRoles;
     context.basePath = path;
     context.enableKeepAlive = enableKeepAlive;
     context.keepAliveIntervalSec = keepAliveIntervalSec;
+    context.reconnectTimeoutSec = reconnectTimeoutSec;
     context.maxConnections = maxConnections;
-    const tmpFileStore = new TemporaryFileStore(tmpFileStorePath);
-    context.server = new WebSocketServer(pluginContext.loggerFactory, tmpFileStore);
+    const reconnectMessageBufferStore = new ReconnectMessageBufferStore(reconnectMessageBufferFolder, pluginContext.loggerFactory);
+    context.server = new WebSocketServer(pluginContext.loggerFactory, reconnectMessageBufferStore);
 
     const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn();
 

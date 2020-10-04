@@ -35,7 +35,7 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test))\\.js$"
     },
     "scripts": {
         "lint": "eslint src test --fix",
@@ -57,7 +57,8 @@
                 ],
                 "defaultConfig": {
                     "path": "/websocket",
-                    "tmpFileStorePath": "/tmp",
+                    "reconnectMessageBufferFolder": null,
+                    "reconnectTimeoutSec": 5,
                     "restrictToRoles": null,
                     "enableKeepAlive": true,
                     "keepAliveIntervalSec": 15,

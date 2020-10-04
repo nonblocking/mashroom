@@ -14,7 +14,7 @@ export interface MashroomWebSocketServer {
     removeMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void;
     addDisconnectListener(listener: MashroomWebSocketDisconnectListener): void;
     removeDisconnectListener(listener: MashroomWebSocketDisconnectListener): void;
-    createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser, loggerContext: {}): void;
+    createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser, loggerContext: {}): Promise<void>;
     getServer(): Server;
     sendMessage(client: MashroomWebSocketClient, message: any): Promise<void>;
     close(client: MashroomWebSocketClient): void;

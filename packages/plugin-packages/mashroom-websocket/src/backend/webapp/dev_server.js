@@ -1,6 +1,7 @@
 // @flow
 /* eslint no-console: off */
 
+import os from 'os';
 import http from 'http';
 import express from 'express';
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
@@ -10,12 +11,9 @@ import app from './webapp';
 import httpUpgradeHandlerFn from './http_upgrade_handler';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
-import TemporaryFileStore from './tempStore';
+import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
-const logger = {
-    warn: console.log,
-};
-const tmpFileStore = new TemporaryFileStore('/tmp', logger);
+const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), loggerFactory);
 context.server = new WebSocketServer(loggerFactory, tmpFileStore);
 context.restrictToRoles = ['Role1'];
 context.basePath = '/websocket';

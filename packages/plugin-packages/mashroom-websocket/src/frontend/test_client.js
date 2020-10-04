@@ -19,7 +19,7 @@ global.connect = () => {
         const host = global.document.location.hostname;
         const port = global.document.location.port ? `:${global.document.location.port}` : '';
         const path = global.document.location.pathname;
-        const clientId = global.sessionStorage.getItem('clientId');
+        const clientId = global.sessionStorage.getItem('MashroomPortalWebSocketClientId');
         const wsUrl = `${socketProtocol}//${host}${port}${path}${clientId ? `?clientId=${clientId}` : ''}`;
         console.info('Try to connect to:', wsUrl);
         webSocket = new global.WebSocket(wsUrl);
@@ -44,7 +44,7 @@ global.connect = () => {
                 const dataObj = JSON.parse(String(event.data));
                 const { type, payload } = dataObj;
                 if (type === 'setClientId') {
-                    global.sessionStorage.setItem('clientId', payload);
+                    global.sessionStorage.setItem('MashroomPortalWebSocketClientId', payload);
                 }
             } catch (e) {
                 console.error('Cannot parse event payload:', e.message);

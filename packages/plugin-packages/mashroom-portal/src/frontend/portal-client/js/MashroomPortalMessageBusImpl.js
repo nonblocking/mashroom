@@ -3,7 +3,8 @@
 import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging_utils';
 import {
     WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
-    WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC
+    WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
+    SESSION_STORAGE_WS_CLIENT_ID,
 } from '../../../backend/constants';
 import RemoteMessagingClient, {webSocketSupport} from './RemoteMessagingClient';
 
@@ -46,7 +47,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
             const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
             const host = global.document.location.hostname;
             const port = global.document.location.port ? `:${global.document.location.port}` : '';
-            const clientId = global.sessionStorage.getItem('clientId');
+            const clientId = global.sessionStorage.getItem(SESSION_STORAGE_WS_CLIENT_ID);
             const connectUrl = `${socketProtocol}//${host}${port}${REMOTE_MESSAGING_CONNECT_PATH}${clientId ? `?clientId=${clientId}` : ''}`;
             console.info('Enable remote messaging. WebSocket connect url: ', connectUrl);
             this._remoteMessageClient = new RemoteMessagingClient(connectUrl);
