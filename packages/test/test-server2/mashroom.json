@@ -9,6 +9,7 @@
     "ignorePlugins": [
         "Mashroom VHost Path Mapper Middleware",
         "Mashroom Storage MongoDB Provider",
+        "Mashroom Memory Cache Services",
         "Mashroom LDAP Security Provider",
         "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
@@ -48,10 +49,7 @@
             "authenticationTimeoutSec": 1200
         },
         "Mashroom Storage Services": {
-            "provider": "Mashroom Storage Filestore Provider",
-            "memoryCache": {
-                "enabled": false
-            }
+            "provider": "Mashroom Storage Filestore Provider"
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage"

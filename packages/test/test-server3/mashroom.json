@@ -113,11 +113,13 @@
             "rejectUntrustedCerts": false,
             "poolMaxSockets": 10
         },
-        "Mashroom WebSocket Services": {
+        "Mashroom WebSocket Webapp": {
             "restrictToRoles": null,
             "enableKeepAlive": true,
             "keepAliveIntervalSec": 15,
-            "maxConnections": 20
+            "maxConnections": 20,
+            "reconnectMessageBufferFolder": "./data/websocket-messages",
+            "reconnectTimeoutSec": 5
         },
         "Mashroom Messaging Services": {
             "externalProvider": "Mashroom Messaging External Provider MQTT",

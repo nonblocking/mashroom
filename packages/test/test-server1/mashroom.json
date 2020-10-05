@@ -10,6 +10,7 @@
     "indexPage": "/",
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
+        "Mashroom Memory Cache Services",
         "Mashroom LDAP Security Provider",
         "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
@@ -78,12 +79,7 @@
             "styleFile": "./login_style.css"
         },
         "Mashroom Storage Services": {
-            "provider": "Mashroom Storage Filestore Provider",
-            "memoryCache": {
-                "enabled": true,
-                "ttlSec": 120,
-                "invalidateOnUpdate": true
-            }
+            "provider": "Mashroom Storage Filestore Provider"
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage",
@@ -109,7 +105,7 @@
             "poolMaxSockets": 10,
             "socketTimeoutMs": 3000
         },
-        "Mashroom WebSocket Services": {
+        "Mashroom WebSocket Webapp": {
             "restrictToRoles": null,
             "enableKeepAlive": true,
             "keepAliveIntervalSec": 15,
