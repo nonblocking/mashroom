@@ -82,7 +82,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             return clientId;
         }
 
-        return;
+        return null;
     }
 
     addWebSocketListeners(webSocket: WebSocket, contextLogger: MashroomLogger, client: MashroomWebSocketClient) {
