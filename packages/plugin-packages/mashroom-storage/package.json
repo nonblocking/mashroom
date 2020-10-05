@@ -46,7 +46,7 @@
                 "defaultConfig": {
                     "provider": "Mashroom Storage Filestore Provider",
                     "memoryCache": {
-                        "enabled": true,
+                        "enabled": false,
                         "ttlSec": 120,
                         "invalidateOnUpdate": true,
                         "collections": {}

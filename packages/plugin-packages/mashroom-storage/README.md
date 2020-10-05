@@ -35,11 +35,12 @@ You can override the default config in your Mashroom config file like this:
        "Mashroom Storage Services": {
            "provider": "Mashroom Storage Filestore Provider",
            "memoryCache": {
-               "enabled": true,
+               "enabled": false,
                "ttlSec": 120,
                "invalidateOnUpdate": true,
                "collections": {
                    "mashroom-portal-pages": {
+                      "enabled": true,
                       "ttlSec": 300
                    }
                }
@@ -51,7 +52,7 @@ You can override the default config in your Mashroom config file like this:
 
  * _provider_: The storage-provider plugin that implements the actual storage (Default: Mashroom Storage Filestore Provider)
  * _memoryCache_: Use the memory cache to improve the performance. Requires *@mashroom/mashroom-memory-cache* to be installed.
-     * _enabled_: Enable the store. If you set this to false you can still enable caching on some collections (default: true)
+     * _enabled_: Enable cache (of all) collections. The preferred way is to set this to false and enable caching per collection  (default: false)
      * _ttlSec_: The default TTL in seconds. Can be overwritten per collection (default: 120)
      + _invalidateOnUpdate_: Clear the cache for the whole collection if an entry gets updated (default: true).
        This might be an expensive operation on some memory cache implementations (e.g. based on Redis). So use this only

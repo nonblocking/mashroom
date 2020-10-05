@@ -43,6 +43,7 @@ export default class MashroomStorageMemoryCacheWrapper implements MashroomStorag
 
     private cacheEnabledForCollection(name: string): boolean {
         if (this.config.enabled === true) {
+            // Could be disabled per collection
             return this.getCollectionProperties(name).enabled !== false;
         }
         return this.getCollectionProperties(name).enabled === true;
@@ -54,6 +55,7 @@ export default class MashroomStorageMemoryCacheWrapper implements MashroomStorag
 
     private invalidateOnUpdateForCollection(name: string): boolean {
         if (this.config.invalidateOnUpdate === true) {
+            // Could be disabled per collection
             return this.getCollectionProperties(name).invalidateOnUpdate !== false;
         }
         return this.getCollectionProperties(name).invalidateOnUpdate === true;
