@@ -41,6 +41,7 @@ You can override the default config in your Mashroom config file like this:
         "Mashroom WebSocket Webapp": {
             "path": "/websocket",
             "reconnectMessageBufferFolder": null,
+            "reconnectTimeoutSec": 5,
             "restrictToRoles": ["WebSocketRole"],
             "enableKeepAlive": true,
             "keepAliveIntervalSec": 15,
