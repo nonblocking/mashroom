@@ -9,7 +9,7 @@ const BASE_PATH = os.tmpdir();
 const NAME = 'user_42';
 
 describe('Tmp File Storage', () => {
-    const storage = new ReconnectMessageBufferStore(BASE_PATH, dummyLoggerFactory);
+    const storage = new ReconnectMessageBufferStore(BASE_PATH, '.', dummyLoggerFactory);
 
     afterAll(async () => {
         return storage.removeFile(NAME);
@@ -19,14 +19,8 @@ describe('Tmp File Storage', () => {
        expect(storage.enabled).toBeTruthy();
     });
 
-    it('should not be enabled when invalid path provided', () => {
-       const storeWithInvalidPath = new ReconnectMessageBufferStore('/IDoNoExist', dummyLoggerFactory);
-
-       expect(storeWithInvalidPath.enabled).toBeFalsy();
-    });
-
     it('should be disabled when no directory provided', async () => {
-        const storeWithoutDir = new ReconnectMessageBufferStore(null, dummyLoggerFactory);
+        const storeWithoutDir = new ReconnectMessageBufferStore(null, '.', dummyLoggerFactory);
         expect(storeWithoutDir.enabled).toBeFalsy();
         expect(await storeWithoutDir.getData('xyz')).toEqual([]);
     });

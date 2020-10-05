@@ -1,6 +1,6 @@
 
-import fsExtra from 'fs-extra';
-import path from 'path';
+import { ensureDirSync } from 'fs-extra';
+import { isAbsolute, resolve } from 'path';
 import MashroomStorageCollectionFilestore from './MashroomStorageCollectionFilestore';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -17,13 +17,21 @@ const COLLECTION_POSTIFX = '.json';
 export default class MashroomStorageFilestore implements MashroomStorage {
 
     private readonly collections: CollectionMap;
+    private dataFolder: string;
 
-    constructor(private dataFolder: string, private checkExternalChangePeriodMs: number,
+    constructor(dataFolder: string, serverRootFolder: string, private checkExternalChangePeriodMs: number,
                 private prettyPrintJson: boolean, private loggerFactory: MashroomLoggerFactory) {
         this.collections = {};
         const logger = loggerFactory('mashroom.storage.filestore');
-        logger.info(`Filestorage provider data folder: ${this.dataFolder}`);
-        this.ensureDbFolderExists();
+
+        if (!isAbsolute(dataFolder)) {
+            this.dataFolder = resolve(serverRootFolder, dataFolder);
+        } else {
+            this.dataFolder = dataFolder;
+        }
+
+        logger.info(`File storage provider data folder: ${this.dataFolder}`);
+        ensureDirSync(this.dataFolder);
     }
 
     async getCollection<T extends {}>(name: string): Promise<MashroomStorageCollection<T>> {
@@ -32,14 +40,10 @@ export default class MashroomStorageFilestore implements MashroomStorage {
             return existingCollection;
         }
 
-        const source = path.resolve(this.dataFolder, name + COLLECTION_POSTIFX);
+        const source = resolve(this.dataFolder, name + COLLECTION_POSTIFX);
         const collection = new MashroomStorageCollectionFilestore<T>(source, this.checkExternalChangePeriodMs, this.prettyPrintJson, this.loggerFactory);
         this.collections[name] = collection;
         return collection;
-    }
-
-    private ensureDbFolderExists(): void {
-        fsExtra.ensureDirSync(this.dataFolder);
     }
 
 }

@@ -1,8 +1,8 @@
 // @flow
 
-import {existsSync, unlink, appendFile, readFile} from 'fs';
-import {ensureDirSync} from 'fs-extra';
-import path from 'path';
+import { existsSync, unlink, appendFile, readFile } from 'fs';
+import { ensureDirSync } from 'fs-extra';
+import { isAbsolute, resolve } from 'path';
 import type { MashroomLogger } from '@mashroom/mashroom/type-definitions';
 import type { MashroomLoggerFactory } from '@mashroom/mashroom/type-definitions';
 
@@ -11,14 +11,19 @@ export default class ReconnectMessageBufferStore {
     _reconnectMessageBufferFolder: ?string;
     _logger: MashroomLogger;
 
-    constructor(reconnectMessageBufferFolder: ?string, loggerFactory: MashroomLoggerFactory) {
-        this._reconnectMessageBufferFolder = reconnectMessageBufferFolder;
+    constructor(reconnectMessageBufferFolder: ?string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.websocket.server.reconnect.buffer');
 
         if (reconnectMessageBufferFolder) {
+            if (!isAbsolute(reconnectMessageBufferFolder)) {
+                this._reconnectMessageBufferFolder = resolve(serverRootFolder, reconnectMessageBufferFolder);
+            } else {
+                this._reconnectMessageBufferFolder = reconnectMessageBufferFolder;
+            }
+
             try {
-                ensureDirSync(reconnectMessageBufferFolder);
-                if (existsSync(reconnectMessageBufferFolder)) {
+                ensureDirSync(this._reconnectMessageBufferFolder);
+                if (this._reconnectMessageBufferFolder && existsSync(this._reconnectMessageBufferFolder)) {
                     this._enabled = true;
                 }
             } catch (e) {
@@ -42,7 +47,7 @@ export default class ReconnectMessageBufferStore {
         }
 
         return new Promise<void>((res) => {
-            unlink(path.resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), err => {
+            unlink(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), err => {
                 if (err) {
                     this._logger.warn(`Temporary store file could not be deleted: ${err.toString()}`);
                     return res();
@@ -59,7 +64,7 @@ export default class ReconnectMessageBufferStore {
         }
 
         return new Promise<void>((res) => {
-            appendFile(path.resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), `${data}\n`, err => {
+            appendFile(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), `${data}\n`, err => {
                 if (err) {
                     this._logger.warn(`Cannot append data to temporary store file: ${err.toString()}`);
                     return res();
@@ -76,7 +81,7 @@ export default class ReconnectMessageBufferStore {
         }
 
         return new Promise((res) => {
-            readFile(path.resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), (err, data) => {
+            readFile(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), (err, data) => {
                 if (err) {
                     this._logger.warn(`Could not get data from temporary store file: ${err.toString()}`);
                     return res([]);

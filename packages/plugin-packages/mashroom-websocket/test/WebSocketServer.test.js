@@ -11,7 +11,7 @@ import WebSocketServer from '../src/backend/WebSocketServer';
 import ReconnectMessageBufferStore from '../src/backend/webapp/ReconnectMessageBufferStore';
 
 jest.useFakeTimers();
-const reconnectMessageBufferStore = new ReconnectMessageBufferStore(os.tmpdir(), dummyLoggerFactory);
+const reconnectMessageBufferStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', dummyLoggerFactory);
 
 describe('WebSocketServer', () => {
 

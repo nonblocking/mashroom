@@ -12,7 +12,7 @@ describe('MashroomStorageFilestore', () => {
         const dataFolder = path.resolve(__dirname, './test-data');
         const dbFile = path.resolve(dataFolder, 'users.json');
         if (fs.existsSync(dbFile)) fs.unlinkSync(dbFile);
-        const storage = new MashroomStorageFilestore(dataFolder, -1, true, dummyLoggerFactory);
+        const storage = new MashroomStorageFilestore(dataFolder, '.', -1, true, dummyLoggerFactory);
 
         const usersCollection = storage.getCollection('users');
 

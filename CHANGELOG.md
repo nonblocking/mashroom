@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * **BREAKING CHANGE**: All paths (config, sessions, ...) are now relative to the Mashroom config file (if the paths are not absolute).
  * WebSockets: Allow clients to reconnect to previous sessions and to receive missed messages
  * LDAP Security Provider: Improved reliability and performance
  * Upgraded libraries with known vulnerabilities

@@ -52,7 +52,8 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _path_: The path where the clients can connect
- * _reconnectMessageBufferFolder_: The path where messages are temporary stored during client reconnect. when set to null or empty string, buffering is disabled
+ * _reconnectMessageBufferFolder_: The path where messages are temporary stored during client reconnect. when set to null or empty string, buffering is disabled.#
+   The base for relative paths is the Mashroom config file.
  * _reconnectTimeoutSec_: Time for how long are messages buffered during reconnect
  * _restrictToRoles_: An optional array of roles that are required to connect (default: null)
  * _enableKeepAlive_: Enable a periodic keep alive message where the server will send "keepalive" to all clients.

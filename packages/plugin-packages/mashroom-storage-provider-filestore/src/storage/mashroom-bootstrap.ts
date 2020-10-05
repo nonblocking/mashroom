@@ -5,8 +5,8 @@ import type {MashroomStoragePluginBootstrapFunction} from '@mashroom/mashroom-st
 
 const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { dataFolder, checkExternalChangePeriodMs, prettyPrintJson } = pluginConfig;
-    const pluginContext = pluginContextHolder.getPluginContext();
-    return new MashroomStorageFilestore(dataFolder, checkExternalChangePeriodMs, prettyPrintJson, pluginContext.loggerFactory);
+    const { serverConfig, loggerFactory } = pluginContextHolder.getPluginContext();
+    return new MashroomStorageFilestore(dataFolder, serverConfig.serverRootFolder, checkExternalChangePeriodMs, prettyPrintJson, loggerFactory);
 };
 
 export default bootstrap;

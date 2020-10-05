@@ -17,7 +17,7 @@ import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { path, restrictToRoles, enableKeepAlive, keepAliveIntervalSec, maxConnections, reconnectMessageBufferFolder, reconnectTimeoutSec } = pluginConfig;
-    const pluginContext = pluginContextHolder.getPluginContext();
+    const {loggerFactory, serverConfig, services} = pluginContextHolder.getPluginContext();
 
     context.restrictToRoles = restrictToRoles;
     context.basePath = path;
@@ -25,14 +25,15 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
     context.keepAliveIntervalSec = keepAliveIntervalSec;
     context.reconnectTimeoutSec = reconnectTimeoutSec;
     context.maxConnections = maxConnections;
-    const reconnectMessageBufferStore = new ReconnectMessageBufferStore(reconnectMessageBufferFolder, pluginContext.loggerFactory);
-    context.server = new WebSocketServer(pluginContext.loggerFactory, reconnectMessageBufferStore);
+
+    const reconnectMessageBufferStore = new ReconnectMessageBufferStore(reconnectMessageBufferFolder, serverConfig.serverRootFolder, loggerFactory);
+    context.server = new WebSocketServer(loggerFactory, reconnectMessageBufferStore);
 
     const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn();
 
     startExportConnectionMetrics(context.server, pluginContextHolder);
 
-    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+    services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close all connections when the plugin reloads
         context.server.closeAll();
         stopExportConnectionMetrics();
