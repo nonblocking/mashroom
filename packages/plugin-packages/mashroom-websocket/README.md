@@ -61,6 +61,22 @@ You can override the default config in your Mashroom config file like this:
 
 There will also be a **test page** available under: _/websocket/test_
 
+### Reconnect to a previous session
+
+When you connect with a client you will receive a message with your clientId from the server:
+
+```
+{
+    "type": "setClientId",
+    "payload": "abcdef"
+}
+```
+
+When you get disconnected you should reconnect with the query parameter *?clientId=abcdef* to get all messages you
+missed meanwhile.
+
+This only works if *reconnectMessageBufferFolder* is set properly.
+
 ## Services
 
 ### MashroomWebSocketService

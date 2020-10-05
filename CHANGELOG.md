@@ -3,10 +3,10 @@
 
 ## [unreleased]
 
- * Improved reliability and performance of the LDAP security provider
+ * WebSockets: Allow clients to reconnect to previous sessions and to receive missed messages
+ * LDAP Security Provider: Improved reliability and performance
  * Upgraded libraries with known vulnerabilities
  * Portal: [ReasonReact](https://reasonml.github.io/reason-react) based demo app added
- * Added reconnect to previous session functionality for websockets
 
 ## 1.5.1 (August 25, 2020)
 
