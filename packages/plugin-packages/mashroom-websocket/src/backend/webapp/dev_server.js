@@ -13,7 +13,7 @@ import httpUpgradeHandlerFn from './http_upgrade_handler';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
-const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), loggerFactory);
+const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', loggerFactory);
 context.server = new WebSocketServer(loggerFactory, tmpFileStore);
 context.restrictToRoles = ['Role1'];
 context.basePath = '/websocket';
