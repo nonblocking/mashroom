@@ -32,8 +32,8 @@ export default class ReconnectMessageBufferStore {
         }
 
         this._logger.info(this._enabled
-            ? `ReconnectMessageBufferStore is active. Storage path: ${reconnectMessageBufferFolder || ''}`
-            : 'ReconnectMessageBufferStore is not active'
+            ? `WebSocket reconnect message buffering is active. Storage path: ${reconnectMessageBufferFolder || ''}`
+            : 'WebSocket reconnect message buffering is not active'
         );
     }
 
