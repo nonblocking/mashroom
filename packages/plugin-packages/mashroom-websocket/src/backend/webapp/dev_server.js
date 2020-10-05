@@ -1,6 +1,7 @@
 // @flow
 /* eslint no-console: off */
 
+import os from 'os';
 import http from 'http';
 import express from 'express';
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
@@ -10,8 +11,10 @@ import app from './webapp';
 import httpUpgradeHandlerFn from './http_upgrade_handler';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
+import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
-context.server = new WebSocketServer(loggerFactory);
+const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), loggerFactory);
+context.server = new WebSocketServer(loggerFactory, tmpFileStore);
 context.restrictToRoles = ['Role1'];
 context.basePath = '/websocket';
 
@@ -50,7 +53,17 @@ const pluginContext: any = {
     }
 };
 
-context.server.addMessageListener((path) => path === '/test', (message, client) => {
+setInterval(() => {
+    // $FlowFixMe
+    context.server._clients.forEach(client => {
+        context.server.sendMessage(client.client, {
+            ping: new Date().toISOString(),
+        });
+    })
+}, 3000);
+
+
+context.server.addMessageListener((path) => path.startsWith('/test'), (message, client) => {
     console.info(`Received test message from user ${client.user.username}:`, message);
     context.server.addDisconnectListener((disconnectedClient) => {
         if (disconnectedClient === client) {

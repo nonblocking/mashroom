@@ -8,6 +8,7 @@ import type {
     MashroomMessagingWebSocketPublishRequest,
     MashroomMessagingWebSocketPublishMessage,
 } from '@mashroom/mashroom-messaging/type-definitions';
+import { SESSION_STORAGE_WS_CLIENT_ID } from '../../../backend/constants';
 
 export const webSocketSupport = 'WebSocket' in global;
 
@@ -157,7 +158,12 @@ export default class RemoteMessagingClient {
 
         try {
             const message = JSON.parse(data);
-            if (message.messageId && message.success) {
+            if (message.type === 'setClientId') {
+                global.sessionStorage.setItem(SESSION_STORAGE_WS_CLIENT_ID, message.payload);
+                if (this._subscribedTopics.length > 0) {
+                    this._subscribeAgainAfterConnectionLost();
+                }
+            } else if (message.messageId && message.success) {
                 const resolvedPromise = this._openPromises.find((op) => op.messageId === message.messageId);
                 if (resolvedPromise) {
                     resolvedPromise.resolve();
@@ -193,9 +199,6 @@ export default class RemoteMessagingClient {
                 console.info('WebSocket connection established');
                 this._connected = true;
                 this._connectRetries = 0;
-                if (this._subscribedTopics.length > 0) {
-                    this._subscribeAgainAfterConnectionLost();
-                }
             };
             this._webSocket.onerror = (event: Event) => {
                 console.error('WebSocket error failed', event);

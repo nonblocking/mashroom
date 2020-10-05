@@ -19,7 +19,9 @@ export type MashroomWebSocketClient = {
     readonly connectPath: string;
     readonly user: MashroomSecurityUser;
     readonly loggerContext: {};
+    readonly clientId: string;
     alive: boolean;
+    reconnecting?: TimeoutID;
 };
 
 /**

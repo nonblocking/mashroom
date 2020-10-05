@@ -7,6 +7,7 @@ let restrictToRoles: ?Array<string> = null;
 let basePath = '/websocket';
 let enableKeepAlive = false;
 let keepAliveIntervalSec = 15;
+let reconnectTimeoutSec = 5;
 let maxConnections = 2000;
 
 export default {
@@ -33,6 +34,12 @@ export default {
     },
     set enableKeepAlive(enable: boolean) {
         enableKeepAlive = enable;
+    },
+    get reconnectTimeoutSec(): number {
+        return reconnectTimeoutSec;
+    },
+    set reconnectTimeoutSec(timeout: number) {
+        reconnectTimeoutSec = timeout;
     },
     get keepAliveIntervalSec(): number {
         return keepAliveIntervalSec;
