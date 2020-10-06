@@ -1,15 +1,14 @@
-// @flow
 
 import exphbs from 'express-handlebars';
 import path from 'path';
 import helpers from './handlebar_helpers';
-import context from './context';
+import themeParams from './theme_params';
 
 import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalThemePluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const { showEnvAndVersions } = pluginConfig;
-    context.setContext({
+    themeParams.setParams({
         showEnvAndVersions,
         mashroomVersion: contextHolder.getPluginContext().serverInfo.version,
     });

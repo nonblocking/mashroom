@@ -1,15 +1,14 @@
-// @flow
 /* eslint no-console: off */
 
 import express from 'express';
 import exphbs from 'express-handlebars';
 import helpers from './handlebar_helpers';
-import context from './context';
+import themeParams from './theme_params';
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
 import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions';
 
-context.setContext({
+themeParams.setParams({
     showEnvAndVersions: true,
     mashroomVersion: '1.0.0'
 });
@@ -26,7 +25,7 @@ const hbs = exphbs.create({
 app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
+app.get('/', (req: Request, res: Response) => {
 
     const model: MashroomPortalPageRenderModel = {
         portalName: 'Test Portal',
@@ -235,10 +234,6 @@ app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
     res.render('portal', model);
 });
 
-app.listen(5055, (error: ?Error) => {
-    if (error) {
-        console.error(error);
-        return;
-    }
+app.listen(5055, () => {
     console.info('Server started at port 5055');
 });

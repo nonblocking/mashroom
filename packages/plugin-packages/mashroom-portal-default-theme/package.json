@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-default-theme",
-    "description": "Default Portal theme",
+    "description": "Default Portal Theme",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -29,12 +29,16 @@
         "nodemon": "^2.0.4",
         "webpack": "^4.43.0",
         "webpack-cli": "^3.3.11",
-        "whatwg-fetch": "^3.0.0"
+        "whatwg-fetch": "^3.0.0",
+        "typescript": "^3.8.3",
+        "@types/express": "^4.17.8",
+        "@types/express-handlebars": "^3.1.0"
     },
     "scripts": {
-        "lint": "eslint src --fix",
-        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/dev_server.js\"",
-        "build:backend": "babel src/backend -d dist",
+        "lint": "eslint --ext .ts src --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev_server.js\"",
+        "build:backend": "babel src/backend -d dist --extensions .ts",
         "build:frontend": "webpack --mode production --display-error-details && node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/frontend/sass/style.scss dist/public/style.css",
         "build:copy-assets": "copyfiles -u 1 src/assets/* dist/public && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
         "build": "npm run build:backend && npm run build:frontend  && npm run build:copy-assets"
