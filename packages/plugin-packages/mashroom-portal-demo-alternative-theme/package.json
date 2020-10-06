@@ -1,17 +1,17 @@
 {
     "name": "@mashroom/mashroom-portal-demo-alternative-theme",
-    "description": "Alternative Portal theme demo",
+    "description": "Alternative Portal Theme Demo",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
     "version": "1.5.2",
     "files": [
-        "dist/**",
-        "views/**"
+        "dist/**"
     ],
     "dependencies": {
-        "express-handlebars": "^4.0.4",
-        "handlebars": "^4.7.6"
+        "express-react-views": "^0.11.0",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
@@ -25,15 +25,19 @@
         "express": "^4.17.1",
         "node-sass": "^4.14.1",
         "node-sass-tilde-importer": "^1.0.2",
-        "nodemon": "^2.0.4"
+        "nodemon": "^2.0.4",
+        "typescript": "^3.8.3",
+        "@types/express": "^4.17.8",
+        "@types/react": "^16.9.51"
     },
     "scripts": {
-        "lint": "eslint src --fix",
-        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/dev_server.js\"",
-        "build:backend": "babel src/backend -d dist",
-        "build:frontend": "node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/frontend/sass/style.scss dist/public/style.css",
-        "build:copy-assets": "copyfiles -u 1 src/assets/* dist/public && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
-        "build": "npm run build:backend && npm run build:frontend  && npm run build:copy-assets"
+        "lint": "eslint --ext .ts --ext .tsx src --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "nodemon --watch src --watch views -e ts,tsx,scss --exec \"npm run build && node dist/plugin/dev_server.js\"",
+        "build:ts": "babel src -d dist --extensions .ts,.tsx",
+        "build:style": "node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/sass/style.scss dist/public/style.css",
+        "build:copy-assets": "copyfiles -u 1 assets/* dist/public && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
+        "build": "npm run build:ts && npm run build:style && npm run build:copy-assets"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -41,9 +45,9 @@
             {
                 "name": "Mashroom Portal Demo Alternative Theme",
                 "type": "portal-theme",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "bootstrap": "./dist/plugin/mashroom-bootstrap.js",
                 "resourcesRoot": "./dist/public",
-                "views": "./views"
+                "views": "./dist/views"
             }
         ]
     }

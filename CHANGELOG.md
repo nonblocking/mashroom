@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+
+ * Portal: The *mashroom-portal-demo-alternative-theme* module uses now *express-react-views* and *TypeScript* to demonstrate
+   a type save theme template
+
 ## 1.5.2 (October 6, 2020)
 
  * **BREAKING CHANGE**: All paths (config, sessions, ...) are now relative to the Mashroom config file (if they are not absolute)

@@ -361,10 +361,11 @@ header {
         }
 
         .user-name {
+            margin: 0 10px;
         }
 
         .logout {
-            padding-left: 10px;
+            margin: 0 10px;
 
             a {
                 display: block;
@@ -374,7 +375,7 @@ header {
         }
     }
 
-    .menu-open {
+    #menu-open {
         cursor: pointer;
         position: absolute;
         bottom: 5px;
@@ -1079,7 +1080,7 @@ mashroom-portal-ui-error-message {
             }
         }
 
-        .menu-open {
+        #menu-open {
             position: static;
             margin: 0 15px 0 0;
         }
