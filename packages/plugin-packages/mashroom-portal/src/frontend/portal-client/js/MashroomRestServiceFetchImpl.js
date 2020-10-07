@@ -4,6 +4,9 @@ import type {CreatedResponse, MashroomRestService} from '../../../../type-defini
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
+const CSRF_TOKEN_META = document.querySelector('meta[name="csrf-token"]');
+const CSRF_TOKEN = CSRF_TOKEN_META && CSRF_TOKEN_META.getAttribute('content');
+
 /**
  * A RestService impl based on fetch API
  */
@@ -44,11 +47,8 @@ export default class RestServiceFetchImpl implements MashroomRestService {
                 'Accept': 'application/json',
             };
 
-            if (method !== 'GET') {
-                const metaCsrfToken = document.querySelector('meta[name="csrf-token"]');
-                if (metaCsrfToken) {
-                    headers['X-CSRF-Token'] = metaCsrfToken.getAttribute('content');
-                }
+            if (CSRF_TOKEN) {
+                headers['X-CSRF-Token'] = CSRF_TOKEN;
             }
 
             const config: any = {
