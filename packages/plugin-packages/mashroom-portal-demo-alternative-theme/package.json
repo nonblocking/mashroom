@@ -36,7 +36,7 @@
         "dev": "nodemon --watch src --watch views -e ts,tsx,scss --exec \"npm run build && node dist/plugin/dev_server.js\"",
         "build:ts": "babel src -d dist --extensions .ts,.tsx",
         "build:style": "node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/sass/style.scss dist/public/style.css",
-        "build:copy-assets": "copyfiles -u 1 assets/* dist/public && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
+        "build:copy-assets": "copyfiles -u 1 assets/* dist/public/assets && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
         "build": "npm run build:ts && npm run build:style && npm run build:copy-assets"
     },
     "mashroom": {
