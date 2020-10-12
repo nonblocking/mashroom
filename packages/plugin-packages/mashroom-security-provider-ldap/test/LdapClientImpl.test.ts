@@ -20,7 +20,10 @@ describe('LdapClientImpl', () => {
 
         const user: LdapEntry = {
             dn: 'cn=john,OU=test,OU=users,DC=at,DC=nonblocking',
-            cn: 'John',
+            cn: 'john',
+            sn: 'Do',
+            givenName: 'John',
+            displayName: null,
             uid: 'john',
             mail: '',
         };
@@ -34,7 +37,10 @@ describe('LdapClientImpl', () => {
 
         const user: LdapEntry = {
             dn: 'cn=john,OU=test,OU=users,DC=at,DC=nonblocking',
-            cn: 'John',
+            cn: 'john',
+            sn: 'Do',
+            givenName: 'John',
+            displayName: null,
             uid: 'john',
             mail: '',
         };
