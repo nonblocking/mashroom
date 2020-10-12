@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
-
+ * LDAP Security Provider: Use the LDAP attributes *displayName* or *givenName* + *sn* as displayName instead of *cn*
  * Portal: The *mashroom-portal-demo-alternative-theme* module uses now *express-react-views* and *TypeScript* to demonstrate
    a type save theme template
 

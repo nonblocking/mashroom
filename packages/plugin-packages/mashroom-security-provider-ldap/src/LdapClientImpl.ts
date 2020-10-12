@@ -24,7 +24,7 @@ export default class LdapClientImpl implements LdapClient {
         const searchOpts: SearchOptions = {
             filter,
             scope: 'sub',
-            attributes: ['dn', 'cn', 'uid', 'mail']
+            attributes: ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid', 'mail']
         };
 
         return new Promise((resolve, reject) => {
@@ -50,6 +50,9 @@ export default class LdapClientImpl implements LdapClient {
                     entries.push({
                         dn: entry.dn,
                         cn: cn as string,
+                        sn: entry.sn as string,
+                        givenName: entry.givenName as string,
+                        displayName: entry.displayName as string,
                         uid: entry.uid as string,
                         mail: entry.mail as string,
                     });

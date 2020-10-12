@@ -107,10 +107,17 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
 
             const groups = await this.getUserGroups(user, logger);
             const roles = this.getRolesForUserGroups(groups, logger);
+            let displayName = user.displayName;
+            if (!displayName && user.sn) {
+                displayName = `${user.givenName ? `${user.givenName} ` : ''}${user.sn}`;
+            }
+            if (!displayName) {
+                displayName = user.cn;
+            }
 
             const mashroomUser: MashroomSecurityUser = {
                 username,
-                displayName: user.cn,
+                displayName,
                 email: user.mail,
                 pictureUrl: null,
                 roles,

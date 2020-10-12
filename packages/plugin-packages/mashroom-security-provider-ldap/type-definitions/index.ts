@@ -8,7 +8,10 @@ export interface LdapClient {
 export type LdapEntry = {
     dn: string;
     cn: string;
-    uid: string;
+    sn: string | undefined | null;
+    givenName: string | undefined | null;
+    displayName: string | undefined | null;
+    uid: string | undefined | null;
     mail: string;
 }
 

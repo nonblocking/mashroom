@@ -16,8 +16,9 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: john
-cn: John Do
+cn: john
 sn: Do
+givenName: John
 mail: john@nonblocking.at
 userPassword: john
 
@@ -27,8 +28,9 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: admin
-cn: Portal Admin
+cn: admin
 sn: Admin
+givenName: Portal
 mail: portal-admin@nonblocking.at
 userPassword: admin
 
@@ -38,7 +40,7 @@ objectclass: person
 objectclass: organizationalPerson
 objectclass: inetOrgPerson
 uid: mashroom
-cn: Mashroom
+cn: mashroom
 sn: Mashroom
 mail: mashroom@nonblocking.at
 userPassword: mashroom
