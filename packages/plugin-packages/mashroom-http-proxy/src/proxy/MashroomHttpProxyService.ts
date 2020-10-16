@@ -9,15 +9,19 @@ import type {
     MashroomLogger,
     MashroomLoggerFactory,
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
-import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../../type-definitions';
-import type {HttpHeaderFilter as HttpHeaderFilterType} from '../../type-definitions/internal';
+import type {
+    HttpHeaders,
+    MashroomHttpProxyService as MashroomHttpProxyServiceType,
+    MashroomHttpProxyInterceptorResult
+} from '../../type-definitions';
+import type {HttpHeaderFilter as HttpHeaderFilterType, MashroomHttpProxyInterceptorRegistry} from '../../type-definitions/internal';
 
 export default class MashroomHttpProxyService implements MashroomHttpProxyServiceType {
 
     private httpHeaderFilter: HttpHeaderFilterType;
 
-    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, private socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
+    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, private socketTimeoutMs: number,
+                private interceptorRegistry: MashroomHttpProxyInterceptorRegistry, loggerFactory: MashroomLoggerFactory) {
         this.httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
 
         const poolConfig = getPoolConfig();
@@ -25,9 +29,8 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this.socketTimeoutMs}ms`);
     }
 
-    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders = {}) {
+    async forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        const securityService: MashroomSecurityService = req.pluginContext.services.security && req.pluginContext.services.security.service;
 
         const method = req.method;
         if (!this.forwardMethods.find((m) => m === method)) {
@@ -40,19 +43,61 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
+        // First of all filter the headers of the incoming request
         this.httpHeaderFilter.filter(req.headers);
-        const qs = {...req.query};
 
-        const extraSecurityHeaders = securityService ? securityService.getApiSecurityHeaders(req, uri) : null;
+        // Execute interceptors
+        const interceptorResult = await this.processInterceptors(req, uri, additionalHeaders, logger);
+        if (interceptorResult.reject) {
+            if (interceptorResult.rejectReason) {
+                res.status(interceptorResult.rejectStatusCode || 403).send(interceptorResult.rejectReason);
+            } else {
+                res.sendStatus(interceptorResult.rejectStatusCode|| 403);
+            }
+            return Promise.resolve();
+        }
 
-        const headers = {...additionalHeaders || {}, ...extraSecurityHeaders || {}};
+        const effectiveTargetUri = interceptorResult.rewrittenTargetUri || uri;
+
+        // Process additional headers
+        let effectiveAdditionalHeaders = {
+            ...additionalHeaders,
+        };
+        if (interceptorResult.addHeaders) {
+            effectiveAdditionalHeaders = {
+                ...effectiveAdditionalHeaders,
+                ...interceptorResult.addHeaders,
+            };
+        }
+        if (interceptorResult.removeHeaders) {
+            interceptorResult.removeHeaders.forEach((headerKey) => {
+                delete effectiveAdditionalHeaders[headerKey];
+                delete req.headers[headerKey];
+            });
+        }
+
+        // Process query params
+        let effectiveQueryParams = {
+            ...req.query
+        };
+        if (interceptorResult.addQueryParams) {
+            effectiveQueryParams = {
+                ...effectiveQueryParams,
+                ...interceptorResult.addQueryParams,
+            };
+        }
+        if (interceptorResult.removeQueryParams) {
+            interceptorResult.removeQueryParams.forEach((paramKey) => {
+                delete effectiveQueryParams[paramKey];
+            });
+        }
 
         const options = {
             agent: uri.startsWith('https') ? getHttpsPool() : getHttpPool(),
             method,
-            uri,
-            qs,
-            headers,
+            uri: effectiveTargetUri,
+            qs: effectiveQueryParams,
+            headers: effectiveAdditionalHeaders,
             resolveWithFullResponse: true,
             timeout: this.socketTimeoutMs,
         };
@@ -93,4 +138,73 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         });
     }
 
+    private async processInterceptors(req: ExpressRequest, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyInterceptorResult> {
+        let existingHeaders = { ...req.headers, ...additionalHeaders };
+        let existingQueryParams = { ...req.query };
+        let addHeaders = {};
+        let removeHeaders: Array<string> = [];
+        let addQueryParams = {};
+        let removeQueryParams: Array<string> = [];
+        let rewrittenTargetUri = targetUri;
+        const interceptors = this.interceptorRegistry.interceptors;
+        for (let i = 0; i < interceptors.length; i++) {
+            const {pluginName, interceptor} = interceptors[i];
+            try {
+                const result = await interceptor.intercept(rewrittenTargetUri, existingHeaders, existingQueryParams, req);
+                if (result?.reject) {
+                    logger.info(`Interceptor '${pluginName}' rejected call to ${targetUri} with reason: ${result.rejectReason || '-'}`);
+                    return result;
+                }
+                if (result?.rewrittenTargetUri) {
+                    logger.info(`Interceptor '${pluginName}' rewrote target URI ${targetUri} to: ${result.rewrittenTargetUri}`);
+                    rewrittenTargetUri = result.rewrittenTargetUri;
+                }
+                if (result?.addHeaders) {
+                    logger.debug(`Interceptor '${pluginName}' added HTTP headers:`, result.addHeaders);
+                    addHeaders = {
+                        ...addHeaders,
+                        ...result.addHeaders,
+                    }
+                    existingHeaders = {
+                        ...existingHeaders,
+                        ...result.addHeaders,
+                    }
+                }
+                if (result?.removeHeaders) {
+                    logger.debug(`Interceptor '${pluginName}' removed HTTP headers:`, result.removeHeaders);
+                    removeHeaders = [
+                        ...removeHeaders,
+                        ...result.removeHeaders,
+                    ];
+                }
+                if (result?.addQueryParams) {
+                    logger.debug(`Interceptor '${pluginName}' added HTTP query parameters:`, result.addQueryParams);
+                    addQueryParams = {
+                        ...addQueryParams,
+                        ...result.addQueryParams,
+                    }
+                    existingQueryParams = {
+                        ...existingQueryParams,
+                        ...result.addQueryParams,
+                    }
+                }
+                if (result?.removeQueryParams) {
+                    logger.debug(`Interceptor '${pluginName}' removed HTTP query parameters:`, result.removeQueryParams);
+                    removeQueryParams = [
+                        ...removeQueryParams,
+                        ...result.removeQueryParams,
+                    ];
+                }
+            } catch (e) {
+
+            }
+        }
+        return {
+            addHeaders,
+            removeHeaders,
+            addQueryParams,
+            removeQueryParams,
+            rewrittenTargetUri,
+        }
+    }
 }

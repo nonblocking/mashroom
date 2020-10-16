@@ -151,10 +151,6 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return request.session[LDAP_AUTH_USER_SESSION_KEY];
     }
 
-    getApiSecurityHeaders(): any | null | undefined {
-        return null;
-    }
-
     private async getUserGroups(user: LdapEntry, logger: MashroomLogger): Promise<Array<string>> {
         if (!this.groupSearchFilter || !this.groupSearchFilter.trim()) {
             return [];

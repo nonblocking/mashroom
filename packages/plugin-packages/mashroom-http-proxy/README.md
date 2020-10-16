@@ -84,3 +84,85 @@ export interface MashroomHttpProxyService {
 }
 ```
 
+## Plugin Types
+
+### http-proxy-interceptor
+
+This plugin type can be used to intercept http proxy calls and to add for example authentication headers to backend calls.
+
+To register your custom http-proxy-interceptor plugin add this to _package.json_:
+
+```json
+{
+    "mashroom": {
+        "plugins": [
+            {
+                "name": "My Custom Http Proxy Interceptor",
+                "type": "http-proxy-interceptor",
+                "bootstrap": "./dist/mashroom-bootstrap",
+                "defaultConfig": {
+                   "myProperty": "foo"
+                }
+            }
+        ]
+    }
+}
+```
+
+The bootstrap returns the interceptor:
+
+```js
+// @flow
+
+import type {MashroomHttpProxyInterceptorPluginBootstrapFunction} from '@mashroom/mashroom-http-proxy/type-definitions';
+
+const bootstrap: MashroomHttpProxyInterceptorPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+
+    return new MyInterceptor(/* ... */);
+};
+
+export default bootstrap;
+```
+
+The provider has to implement the following interface:
+
+```js
+interface MashroomHttpProxyInterceptor {
+
+    /**
+     * Intercept HTTP proxy call to given targetUri.
+     *
+     * The existingHeaders contain the (filtered!) request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
+     * The existingQueryParams contain query parameters from the request and the ones already added by other interceptors.
+     *
+     * req is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access req.method and req.pluginContext.
+     *
+     * Return null or undefined if you don't want to interfere with a call.
+     */
+    intercept(targetUri: string, existingHeaders: HttpHeaders, existingQueryParams: QueryParams, req: ExpressRequest): Promise<?MashroomHttpProxyInterceptorResult>;
+}
+```
+
+An example implementation could look like this:
+
+```ts
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+  async intercept(targetUri: string, existingHeaders: HttpHeaders, existingQueryParams: QueryParams, req: ExpressRequest) {
+    const logger: MashroomLogger = pluginContext.loggerFactory('my.interceptor');
+    const securityService: MashroomSecurityService = pluginContext.services.security && req.pluginContext.services.security.service;
+
+    const user = securityService.getUser(req);
+    if (!user) {
+       return;
+    }
+
+    return {
+       addHeaders: {
+          Authorization: `Bearer ${user.extraData.token}`
+       }
+    };
+  }
+}
+```
+

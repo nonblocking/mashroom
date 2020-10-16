@@ -55,10 +55,6 @@ export interface MashroomSecurityService {
      */
     getUser(request: ExpressRequest): ?MashroomSecurityUser;
     /**
-     * Get extra HTTP headers that should be send with backend/API calls to given URI.
-     */
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
-    /**
      * Checks if user != null
      */
     isAuthenticated(request: ExpressRequest): boolean;
@@ -164,11 +160,6 @@ export interface MashroomSecurityProvider {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): ?MashroomSecurityUser;
-    /**
-     * Get extra HTTP headers that should be send with backend/API calls to given URI.
-     * Can be used to add some extra context or an access token.
-     */
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
 }
 
 /*

@@ -62,21 +62,6 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any {
-        const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
-
-        const securityProvider = this._getSecurityProvider(logger);
-        if (securityProvider) {
-            try {
-                return securityProvider.getApiSecurityHeaders(request, targetUri);
-            } catch (e) {
-                logger.error('Security provider returned error: ', e);
-            }
-        }
-
-        return undefined;
-    }
-
     isAuthenticated(request: ExpressRequest) {
         return !!this.getUser(request);
     }
