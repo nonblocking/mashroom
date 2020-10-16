@@ -229,6 +229,9 @@ The typical configuration could look like this:
 {
     "name": "Mashroom Test Server 1",
     "port": 8080,
+    "indexPage": "/portal",
+    "xPowerByHeader": "Mashroom Server",
+    "tmpFolder": "/tmp",
     "pluginPackageFolders": [{
         "path": "./node_modules/@mashroom"
      }, {
@@ -237,7 +240,6 @@ The typical configuration could look like this:
         "devMode": true
     }],
     "ignorePlugins": [],
-    "indexPage": "/portal",
     "plugins": {
         "Mashroom Session Middleware": {
             "provider": "Mashroom Session Filestore Provider",
@@ -281,6 +283,9 @@ The same as a Javascript file:
 module.exports = {
     name: "Mashroom Test Server 1",
     port: 8080,
+    indexPage: "/portal",
+    xPowerByHeader: "Mashroom Server",
+    tmpFolder: "/tmp",
     pluginPackageFolders: [{
          path: "./node_modules/@mashroom"
      }, {
@@ -288,7 +293,6 @@ module.exports = {
         devMode: true
     }],
     ignorePlugins: [],
-    indexPage: "/portal",
     plugins: {
 
     }
@@ -308,6 +312,9 @@ Since version 1.3 the property values can also contain string templates and the 
 
  * _name_: The server name (default: Mashroom Server)
  * _port_: The port the server should bind to (default: 5050)
+ * _indexPage_: The start page if the root ('/') is requested (default: /)
+ * _xPowerByHeader_: The *x-powered-by* header to send; null disables the header (default: Mashroom Server)
+ * _tmpFolder_: The tmp folder for plugin builds and so on (default: OS specific temp dir)
  * _pluginPackageFolders_: An array of folder paths that contain *Node.js* modules with *Mashroom Server* plugins
     An object in this array can have the following properties:
       * _path_: The folder path, relative to the config file (mandatory)
@@ -315,7 +322,6 @@ Since version 1.3 the property values can also contain string templates and the 
       * _devMode_: If this is true the server automatically builds plugins on changes before reloading it.
         This option enforces _watch_. (default: false)
  * _ignorePlugins_: An array of plugin names which shall be ignored (and not loaded)
- * _indexPage_: The start page if the root ('/') is requested
  * _plugins_: This section can be used to override the *defaultConfig* of arbitrary plugins
 
 ### Security
