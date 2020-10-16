@@ -130,20 +130,22 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             try {
                 const result = await interceptor.intercept(req, { ...additionalHeaders, ...addHeaders }, rewrittenTargetUri);
                 if (result?.reject) {
-                    logger.info(`Http proxy call to ${targetUri} reject by interceptor: ${pluginName}`);
+                    logger.info(`Interceptor: '${pluginName}' rejected call to ${targetUri} with reason: ${result.rejectReason || '-'}`);
                     return result;
                 }
                 if (result?.rewrittenTargetUri) {
-                    logger.info(`Http proxy call to ${targetUri} rewritten to ${result.rewrittenTargetUri} by interceptor: ${pluginName}`);
+                    logger.info(`Interceptor: '${pluginName}' rewrote target URI ${targetUri} to ${result.rewrittenTargetUri}`);
                     rewrittenTargetUri = result.rewrittenTargetUri;
                 }
                 if (result?.addHeaders) {
+                    logger.debug(`Interceptor: '${pluginName}' added HTTP headers`, result.addHeaders);
                     addHeaders = {
                         ...addHeaders,
                         ...result.addHeaders,
                     }
                 }
                 if (result?.removeHeaders) {
+                    logger.debug(`Interceptor: '${pluginName}' removed HTTP headers`, result.removeHeaders);
                     removeHeaders = [
                         ...removeHeaders,
                         ...result.removeHeaders,
