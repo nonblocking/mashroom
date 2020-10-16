@@ -7,6 +7,7 @@
    This can be used to add security headers to backend calls.
    **BREAKING CHANGE**: The *getApiSecurityHeaders()* method in the security provider interfaces has been removed since
    the http-proxy-interceptor is the more generic approach to solve the same problem.
+ * LDAP Security Provider: Added possibility to map arbitrary LDAP attributes to *user.extraData*
  * LDAP Security Provider: Use the LDAP attributes *displayName* or *givenName* + *sn* as displayName instead of *cn*
  * Portal: The *mashroom-portal-demo-alternative-theme* module uses now *express-react-views* and *TypeScript* to demonstrate
    a type save theme template

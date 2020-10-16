@@ -60,6 +60,7 @@
                     "baseDN": "ou=users,dc=nonblocking,dc=at",
                     "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
                     "groupSearchFilter": "(objectClass=group)",
+                    "extraDataMapping": null,
                     "groupToRoleMapping": "./groupToRoleMapping.json",
                     "authenticationTimeoutSec": 1200
                 }

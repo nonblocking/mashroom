@@ -6,8 +6,13 @@ const ldapClient = new LdapClientImpl('ldap://localhost:1389', 2000, 2000,
     'ou=users,dc=nonblocking,dc=at', 'uid=mashroom,ou=applications,dc=nonblocking,dc=at', 'mashroom',
     null, () => console);
 
+const extraDataMapping = {
+    userId: 'uid',
+    mobile: 'mobile',
+    address: 'postalAddress'
+};
 const securityProvider = new MashroomLdapSecurityProvider(
-    '/login', '(&(objectClass=person)(uid=@username@))', '(objectClass=groupOfNames)', '../groupToRoleMapping.json',
+    '/login', '(&(objectClass=person)(uid=@username@))', '(objectClass=groupOfNames)', extraDataMapping, '../groupToRoleMapping.json',
     ldapClient, './', 1200, () => console);
 
 const request = {

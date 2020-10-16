@@ -26,7 +26,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     private groupToRoleMappingPath: string | undefined | null;
     private groupToRoleMapping: GroupToRoleMapping | null;
 
-    constructor(private loginPage: string, private userSearchFilter: string, private groupSearchFilter: string, groupToRoleMappingPath: string | undefined,
+    constructor(private loginPage: string, private userSearchFilter: string, private groupSearchFilter: string,
+                private extraDataMapping: Record<string, string> | undefined | null, groupToRoleMappingPath: string | undefined,
                 private ldapClient: LdapClient, private serverRootFolder: string, private authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
         this.logger = loggerFactory('mashroom.security.provider.ldap');
         this.groupToRoleMappingPath = groupToRoleMappingPath;
@@ -79,7 +80,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         let user: LdapEntry | null = null;
         const userSearchFilter = this.userSearchFilter.replace('@username@', username);
         logger.debug(`Search for users: ${userSearchFilter}`);
-        const users = await this.ldapClient.search(userSearchFilter);
+        const extraAttributes = this.extraDataMapping ? Object.values(this.extraDataMapping) : undefined;
+        const users = await this.ldapClient.search(userSearchFilter, extraAttributes);
         if (users.length > 0) {
             if (users.length === 1) {
                 user = users[0]
@@ -115,6 +117,16 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 displayName = user.cn;
             }
 
+            let extraData: Record<string, any> | null = null;
+            if (this.extraDataMapping) {
+                extraData = {};
+                Object.keys(this.extraDataMapping).forEach((extraDataProp) => {
+                    if (extraData && user && this.extraDataMapping) {
+                        extraData[extraDataProp] = user[this.extraDataMapping[extraDataProp]];
+                    }
+                });
+            }
+
             const mashroomUser: MashroomSecurityUser = {
                 username,
                 displayName,
@@ -122,7 +134,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 // TODO: we could download the jpegPhoto (https://tools.ietf.org/html/rfc2798#section-2.6) and provide it somehow
                 pictureUrl: null,
                 roles,
-                extraData: null,
+                extraData,
             };
 
             logger.debug('User successfully authenticated:', mashroomUser);

@@ -6,6 +6,8 @@ import type {TlsOptions} from 'tls';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {LdapEntry, LdapClient} from '../type-definitions';
 
+const DEFAULT_ATTRIBUTES = ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid', 'mail'];
+
 export default class LdapClientImpl implements LdapClient {
 
     private logger: MashroomLogger;
@@ -18,13 +20,22 @@ export default class LdapClientImpl implements LdapClient {
         this.searchClient = null;
     }
 
-    async search(filter: string): Promise<Array<LdapEntry>> {
+    async search(filter: string, extraAttributes?: Array<string>): Promise<Array<LdapEntry>> {
         const searchClient = await this.getSearchClient();
+
+        const attributes = DEFAULT_ATTRIBUTES;
+        if (extraAttributes) {
+            extraAttributes.forEach((extraAttribute) => {
+               if (!attributes.includes(extraAttribute)) {
+                   attributes.push(extraAttribute);
+               }
+            });
+        }
 
         const searchOpts: SearchOptions = {
             filter,
             scope: 'sub',
-            attributes: ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid', 'mail']
+            attributes,
         };
 
         return new Promise((resolve, reject) => {
@@ -47,7 +58,7 @@ export default class LdapClientImpl implements LdapClient {
                         cn = entry.dn.split(',')[0].split('=').pop();
                     }
 
-                    entries.push({
+                    const ldapEntry: LdapEntry = {
                         dn: entry.dn,
                         cn: cn as string,
                         sn: entry.sn as string,
@@ -55,7 +66,14 @@ export default class LdapClientImpl implements LdapClient {
                         displayName: entry.displayName as string,
                         uid: entry.uid as string,
                         mail: entry.mail as string,
-                    });
+                    };
+                    if (extraAttributes) {
+                        extraAttributes.forEach((extraAttr) => {
+                            ldapEntry[extraAttr] = entry[extraAttr];
+                        });
+                    }
+
+                    entries.push(ldapEntry);
                 });
                 res.on('error', (error) => {
                     this.logger.error('LDAP search error', error);

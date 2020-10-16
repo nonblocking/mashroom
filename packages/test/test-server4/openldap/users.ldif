@@ -21,6 +21,8 @@ sn: Do
 givenName: John
 mail: john@nonblocking.at
 userPassword: john
+mobile: 0043123123123
+postaladdress: test street 1, metropolis
 
 dn: uid=admin,ou=users,dc=nonblocking,dc=at
 objectclass: top
@@ -33,6 +35,8 @@ sn: Admin
 givenName: Portal
 mail: portal-admin@nonblocking.at
 userPassword: admin
+mobile: 0043123123123
+postaladdress: test street 1, metropolis
 
 dn: uid=mashroom,ou=applications,dc=nonblocking,dc=at
 objectclass: top
@@ -44,6 +48,7 @@ cn: mashroom
 sn: Mashroom
 mail: mashroom@nonblocking.at
 userPassword: mashroom
+description: Technical user with search privileges
 
 # Groups
 

@@ -19,13 +19,19 @@ server.bind('OU=test,OU=users,DC=at,DC=nonblocking', (req: any, res: any, next: 
 });
 
 server.search('OU=test,OU=users,DC=at,DC=nonblocking', (req: any, res: any) => {
-    console.info('Search request', req.filter);
+    console.info('Search request', req.filter, ', Attributes:', req.attributes);
 
     const uid = req.filter.filters[1].raw.toString();
-    if (uid === 'john') {
+    if (uid === 'john' && req.attributes.includes('extraattr')) {
         const entry: any = {
             dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
             attributes: {
+                mail: 'test@test.com',
+                sn: 'Do',
+                givenName: 'John',
+                displayName: 'John Do',
+                uid: 'john',
+                extraAttr: 'foo',
                 a: ['top', 'organization', 'person'],
                 o: ['at', 'nonblocking']
             }

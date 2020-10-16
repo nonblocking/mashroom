@@ -1,6 +1,6 @@
 
 export interface LdapClient {
-    search(filter: string): Promise<Array<LdapEntry>>;
+    search(filter: string, extraAttributes?: Array<string>): Promise<Array<LdapEntry>>;
     login(ldapEntry: LdapEntry, password: string): Promise<void>;
     shutdown(): void;
 }
@@ -13,6 +13,7 @@ export type LdapEntry = {
     displayName: string | undefined | null;
     uid: string | undefined | null;
     mail: string;
+    [attr: string]: string | string[] | undefined | null;
 }
 
 export type GroupToRoleMapping = {
