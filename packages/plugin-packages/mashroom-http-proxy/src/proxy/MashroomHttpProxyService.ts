@@ -9,15 +9,19 @@ import type {
     MashroomLogger,
     MashroomLoggerFactory,
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
-import type {HttpHeaders, MashroomHttpProxyService as MashroomHttpProxyServiceType} from '../../type-definitions';
-import type {HttpHeaderFilter as HttpHeaderFilterType} from '../../type-definitions/internal';
+import type {
+    HttpHeaders,
+    MashroomHttpProxyService as MashroomHttpProxyServiceType,
+    MashroomHttpProxyInterceptorResult
+} from '../../type-definitions';
+import type {HttpHeaderFilter as HttpHeaderFilterType, MashroomHttpProxyInterceptorRegistry} from '../../type-definitions/internal';
 
 export default class MashroomHttpProxyService implements MashroomHttpProxyServiceType {
 
     private httpHeaderFilter: HttpHeaderFilterType;
 
-    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, private socketTimeoutMs: number, loggerFactory: MashroomLoggerFactory) {
+    constructor(private forwardMethods: Array<string>, private forwardHeaders: Array<string>, private socketTimeoutMs: number,
+                private interceptorRegistry: MashroomHttpProxyInterceptorRegistry, loggerFactory: MashroomLoggerFactory) {
         this.httpHeaderFilter = new HttpHeaderFilter(forwardHeaders);
 
         const poolConfig = getPoolConfig();
@@ -25,9 +29,8 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this.socketTimeoutMs}ms`);
     }
 
-    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders = {}) {
+    async forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        const securityService: MashroomSecurityService = req.pluginContext.services.security && req.pluginContext.services.security.service;
 
         const method = req.method;
         if (!this.forwardMethods.find((m) => m === method)) {
@@ -40,19 +43,43 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
+        const interceptorResult = await this.processInterceptors(req, uri, additionalHeaders, logger);
+        if (interceptorResult.reject) {
+            if (interceptorResult.rejectReason) {
+                res.status(interceptorResult.rejectStatusCode || 403).send(interceptorResult.rejectReason);
+            } else {
+                res.sendStatus(interceptorResult.rejectStatusCode|| 403);
+            }
+            return Promise.resolve();
+        }
+
+        const effectiveTargetUri = interceptorResult.rewrittenTargetUri || uri;
+
+        let effectiveAdditionalHeaders = {
+            ...additionalHeaders,
+        };
+        if (interceptorResult.addHeaders) {
+            effectiveAdditionalHeaders = {
+                ...effectiveAdditionalHeaders,
+                ...interceptorResult.addHeaders,
+            };
+        }
+        if (interceptorResult.removeHeaders) {
+            interceptorResult.removeHeaders.forEach((headerKey) => {
+                delete effectiveAdditionalHeaders[headerKey];
+                delete req.headers[headerKey];
+            });
+        }
+
         this.httpHeaderFilter.filter(req.headers);
         const qs = {...req.query};
-
-        const extraSecurityHeaders = securityService ? securityService.getApiSecurityHeaders(req, uri) : null;
-
-        const headers = {...additionalHeaders || {}, ...extraSecurityHeaders || {}};
 
         const options = {
             agent: uri.startsWith('https') ? getHttpsPool() : getHttpPool(),
             method,
-            uri,
+            uri: effectiveTargetUri,
             qs,
-            headers,
+            headers: effectiveAdditionalHeaders,
             resolveWithFullResponse: true,
             timeout: this.socketTimeoutMs,
         };
@@ -93,4 +120,43 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         });
     }
 
+    private async processInterceptors(req: ExpressRequest, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyInterceptorResult> {
+        let addHeaders = {};
+        let removeHeaders: Array<string> = [];
+        let rewrittenTargetUri = targetUri;
+        const interceptors = this.interceptorRegistry.interceptors;
+        for (let i = 0; i < interceptors.length; i++) {
+            const {pluginName, interceptor} = interceptors[i];
+            try {
+                const result = await interceptor.intercept(req, { ...additionalHeaders, ...addHeaders }, rewrittenTargetUri);
+                if (result?.reject) {
+                    logger.info(`Http proxy call to ${targetUri} reject by interceptor: ${pluginName}`);
+                    return result;
+                }
+                if (result?.rewrittenTargetUri) {
+                    logger.info(`Http proxy call to ${targetUri} rewritten to ${result.rewrittenTargetUri} by interceptor: ${pluginName}`);
+                    rewrittenTargetUri = result.rewrittenTargetUri;
+                }
+                if (result?.addHeaders) {
+                    addHeaders = {
+                        ...addHeaders,
+                        ...result.addHeaders,
+                    }
+                }
+                if (result?.removeHeaders) {
+                    removeHeaders = [
+                        ...removeHeaders,
+                        ...result.removeHeaders,
+                    ];
+                }
+            } catch (e) {
+
+            }
+        }
+        return {
+            addHeaders,
+            removeHeaders,
+            rewrittenTargetUri,
+        }
+    }
 }

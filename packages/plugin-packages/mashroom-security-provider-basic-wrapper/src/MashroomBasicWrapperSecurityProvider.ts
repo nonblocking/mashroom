@@ -97,14 +97,6 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         return null;
     }
 
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined {
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
-        if (targetSecurityProvider) {
-            return targetSecurityProvider.getApiSecurityHeaders(request, targetUri);
-        }
-        return null;
-    }
-
     private getAuthorizationHeader(request: ExpressRequest): string | undefined {
         return request.headers.authorization;
     }

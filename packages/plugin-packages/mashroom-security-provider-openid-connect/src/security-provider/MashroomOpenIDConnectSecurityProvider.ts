@@ -184,7 +184,4 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         return user;
     }
 
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined {
-        return null;
-    }
 }

@@ -20,7 +20,7 @@ export type MashroomSecurityPermissions = Array<MashroomSecurityPermission>;
 export type MashroomSecurityUser = {
     readonly username: string;
     readonly displayName: string | null | undefined;
-    readonly email: string | null | undefined;
+    readonly email: string | null | undefined;
     readonly pictureUrl: string | null | undefined;
     readonly roles: MashroomSecurityRoles;
     readonly extraData: any | null | undefined;
@@ -57,11 +57,6 @@ export interface MashroomSecurityService {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): MashroomSecurityUser | null | undefined;
-
-    /**
-     * Get extra HTTP headers that should be send with backend/API calls to given URI.
-     */
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined;
 
     /**
      * Checks if user != null
@@ -226,12 +221,6 @@ export interface MashroomSecurityProvider {
      * Get the current user or null if the user is not authenticated
      */
     getUser(request: ExpressRequest): MashroomSecurityUser | null | undefined;
-
-    /**
-     * Get extra HTTP headers that should be send with backend/API calls to given URI.
-     * Can be used to add some extra context or an access token.
-     */
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): any | null | undefined;
 }
 
 /*

@@ -111,10 +111,6 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         return request.session[SIMPLE_AUTH_USER_SESSION_KEY];
     }
 
-    getApiSecurityHeaders() {
-        return null;
-    }
-
     _getUserStore(logger: MashroomLogger): UserStore {
         if (this._userStore) {
             return this._userStore;
