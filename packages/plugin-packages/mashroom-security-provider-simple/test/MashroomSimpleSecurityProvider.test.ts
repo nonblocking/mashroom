@@ -1,6 +1,6 @@
-// @flow
 
 import path from 'path';
+// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSimpleSecurityProvider from '../src/MashroomSimpleSecurityProvider';
 
@@ -16,7 +16,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
         const res: any = {
-            redirect: (url) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = url
         };
 
         const userStorePath = path.resolve(__dirname, './test_users.json');
@@ -40,7 +40,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
         const res: any = {
-            redirect: (url) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = url
         };
 
         const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, loggerFactory);

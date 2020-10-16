@@ -1,4 +1,3 @@
-// @flow
 
 import fs from 'fs';
 import path from 'path';
@@ -12,66 +11,66 @@ import type {
     MashroomLogger,
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
-import type {UserStore} from '../type-definitions';
+import type {UserStore, UserStoreEntry} from '../type-definitions';
+import {
+    MashroomSecurityAuthenticationResult,
+    MashroomSecurityLoginResult
+} from '@mashroom/mashroom-security/type-definitions';
 
 const SIMPLE_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_USER';
 const SIMPLE_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES';
 
 export default class MashroomSimpleSecurityProvider implements MashroomSecurityProvider {
 
-    _userStore: UserStore;
-    _userStorePath: string;
-    _loginPage: string;
-    _authenticationTimeoutSec: number;
+    private userStorePath: string;
+    private userStore: UserStore | null;
 
-    constructor(userStorePath: string, loginPage: string, serverRootFolder: string, authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
+    constructor(userStorePath: string, private loginPage: string, private serverRootFolder: string, private authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
         const logger = loggerFactory('mashroom.security.provider.simple');
 
-        this._userStorePath = userStorePath;
-        if (!path.isAbsolute(this._userStorePath)) {
-            this._userStorePath = path.resolve(serverRootFolder, this._userStorePath);
+        this.userStore = null;
+        this.userStorePath = userStorePath;
+        if (!path.isAbsolute(this.userStorePath)) {
+            this.userStorePath = path.resolve(serverRootFolder, this.userStorePath);
         }
-        logger.info(`Using user store: ${this._userStorePath}`);
-
-        this._loginPage = loginPage;
-        this._authenticationTimeoutSec = authenticationTimeoutSec;
-        logger.info(`Configured login page: ${this._loginPage}`);
+        logger.info(`Using user store: ${this.userStorePath}`);
+        logger.info(`Configured login page: ${this.loginPage}`);
     }
 
-    async canAuthenticateWithoutUserInteraction() {
+    async canAuthenticateWithoutUserInteraction(): Promise<boolean> {
         return false;
     }
 
-    async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}) {
+    async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints: any = {}): Promise<MashroomSecurityAuthenticationResult> {
         const encodedRedirectUrl = encodeURIComponent(request.originalUrl);
         const authenticationHintsQuery = querystring.stringify(authenticationHints);
-        response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? `&${authenticationHintsQuery}` : ''}`);
+        response.redirect(`${this.loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? `&${authenticationHintsQuery}` : ''}`);
         return {
             status: 'deferred'
         };
     }
 
-    async checkAuthentication(request: ExpressRequest) {
+    async checkAuthentication(request: ExpressRequest): Promise<void> {
         if (this.getUser(request)) {
-            request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+            request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this.authenticationTimeoutSec * 1000;
         }
     }
 
-    getAuthenticationExpiration(request: ExpressRequest) {
+    getAuthenticationExpiration(request: ExpressRequest): number | null | undefined {
         return request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
     }
 
-    async revokeAuthentication(request: ExpressRequest) {
+    async revokeAuthentication(request: ExpressRequest): Promise<void> {
         delete request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
         delete request.session[SIMPLE_AUTH_USER_SESSION_KEY];
     }
 
-    async login(request: ExpressRequest, username: string, password: string) {
+    async login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.simple');
 
         const passwordHash = createHash('sha256').update(password).digest('hex');
 
-        const user = this._getUserStore(logger).find((u) => u.username === username && u.passwordHash === passwordHash);
+        const user = this._getUserStore(logger).find((u: UserStoreEntry) => u.username === username && u.passwordHash === passwordHash);
 
         if (user) {
             const mashroomUser: MashroomSecurityUser = {
@@ -86,7 +85,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
             logger.debug('User successfully authenticated:', mashroomUser);
 
             request.session[SIMPLE_AUTH_USER_SESSION_KEY] = mashroomUser;
-            request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+            request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this.authenticationTimeoutSec * 1000;
 
             return {
                 success: true
@@ -99,8 +98,8 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         }
     }
 
-    getUser(request: ExpressRequest) {
-        const timeout: ?number = request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
+    getUser(request: ExpressRequest): MashroomSecurityUser | null | undefined {
+        const timeout: number = request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
         if (!timeout) {
             return null;
         }
@@ -112,17 +111,19 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     _getUserStore(logger: MashroomLogger): UserStore {
-        if (this._userStore) {
-            return this._userStore;
+        if (this.userStore) {
+            return this.userStore;
         }
 
-        if (fs.existsSync(this._userStorePath)) {
-            this._userStore = require(this._userStorePath);
+        let userStore: UserStore;
+        if (fs.existsSync(this.userStorePath)) {
+            userStore = require(this.userStorePath);
         } else {
-            logger.warn(`No user definition found: ${this._userStorePath}.`);
-            this._userStore = [];
+            logger.warn(`No user definition found: ${this.userStorePath}.`);
+            userStore = [];
         }
 
-        return this._userStore;
+        this.userStore = userStore;
+        return userStore;
     }
 }
