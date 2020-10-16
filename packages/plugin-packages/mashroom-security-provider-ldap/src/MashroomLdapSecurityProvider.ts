@@ -119,6 +119,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 username,
                 displayName,
                 email: user.mail,
+                // TODO: we could download the jpegPhoto (https://tools.ietf.org/html/rfc2798#section-2.6) and provide it somehow
                 pictureUrl: null,
                 roles,
                 extraData: null,
