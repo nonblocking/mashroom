@@ -43,6 +43,10 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
+        // First of all filter the headers of the incoming request
+        this.httpHeaderFilter.filter(req.headers);
+
+        // Execute interceptors
         const interceptorResult = await this.processInterceptors(req, uri, additionalHeaders, logger);
         if (interceptorResult.reject) {
             if (interceptorResult.rejectReason) {
@@ -55,6 +59,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
 
         const effectiveTargetUri = interceptorResult.rewrittenTargetUri || uri;
 
+        // Process additional headers
         let effectiveAdditionalHeaders = {
             ...additionalHeaders,
         };
@@ -71,14 +76,27 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             });
         }
 
-        this.httpHeaderFilter.filter(req.headers);
-        const qs = {...req.query};
+        // Process query params
+        let effectiveQueryParams = {
+            ...req.query
+        };
+        if (interceptorResult.addQueryParams) {
+            effectiveQueryParams = {
+                ...effectiveQueryParams,
+                ...interceptorResult.addQueryParams,
+            };
+        }
+        if (interceptorResult.removeQueryParams) {
+            interceptorResult.removeQueryParams.forEach((paramKey) => {
+                delete effectiveQueryParams[paramKey];
+            });
+        }
 
         const options = {
             agent: uri.startsWith('https') ? getHttpsPool() : getHttpPool(),
             method,
             uri: effectiveTargetUri,
-            qs,
+            qs: effectiveQueryParams,
             headers: effectiveAdditionalHeaders,
             resolveWithFullResponse: true,
             timeout: this.socketTimeoutMs,
@@ -121,34 +139,60 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
     }
 
     private async processInterceptors(req: ExpressRequest, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyInterceptorResult> {
+        let existingHeaders = { ...req.headers, ...additionalHeaders };
+        let existingQueryParams = { ...req.query };
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
+        let addQueryParams = {};
+        let removeQueryParams: Array<string> = [];
         let rewrittenTargetUri = targetUri;
         const interceptors = this.interceptorRegistry.interceptors;
         for (let i = 0; i < interceptors.length; i++) {
             const {pluginName, interceptor} = interceptors[i];
             try {
-                const result = await interceptor.intercept(req, { ...additionalHeaders, ...addHeaders }, rewrittenTargetUri);
+                const result = await interceptor.intercept(rewrittenTargetUri, existingHeaders, existingQueryParams, req);
                 if (result?.reject) {
-                    logger.info(`Interceptor: '${pluginName}' rejected call to ${targetUri} with reason: ${result.rejectReason || '-'}`);
+                    logger.info(`Interceptor '${pluginName}' rejected call to ${targetUri} with reason: ${result.rejectReason || '-'}`);
                     return result;
                 }
                 if (result?.rewrittenTargetUri) {
-                    logger.info(`Interceptor: '${pluginName}' rewrote target URI ${targetUri} to ${result.rewrittenTargetUri}`);
+                    logger.info(`Interceptor '${pluginName}' rewrote target URI ${targetUri} to: ${result.rewrittenTargetUri}`);
                     rewrittenTargetUri = result.rewrittenTargetUri;
                 }
                 if (result?.addHeaders) {
-                    logger.debug(`Interceptor: '${pluginName}' added HTTP headers`, result.addHeaders);
+                    logger.debug(`Interceptor '${pluginName}' added HTTP headers:`, result.addHeaders);
                     addHeaders = {
                         ...addHeaders,
                         ...result.addHeaders,
                     }
+                    existingHeaders = {
+                        ...existingHeaders,
+                        ...result.addHeaders,
+                    }
                 }
                 if (result?.removeHeaders) {
-                    logger.debug(`Interceptor: '${pluginName}' removed HTTP headers`, result.removeHeaders);
+                    logger.debug(`Interceptor '${pluginName}' removed HTTP headers:`, result.removeHeaders);
                     removeHeaders = [
                         ...removeHeaders,
                         ...result.removeHeaders,
+                    ];
+                }
+                if (result?.addQueryParams) {
+                    logger.debug(`Interceptor '${pluginName}' added HTTP query parameters:`, result.addQueryParams);
+                    addQueryParams = {
+                        ...addQueryParams,
+                        ...result.addQueryParams,
+                    }
+                    existingQueryParams = {
+                        ...existingQueryParams,
+                        ...result.addQueryParams,
+                    }
+                }
+                if (result?.removeQueryParams) {
+                    logger.debug(`Interceptor '${pluginName}' removed HTTP query parameters:`, result.removeQueryParams);
+                    removeQueryParams = [
+                        ...removeQueryParams,
+                        ...result.removeQueryParams,
                     ];
                 }
             } catch (e) {
@@ -158,6 +202,8 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
         return {
             addHeaders,
             removeHeaders,
+            addQueryParams,
+            removeQueryParams,
             rewrittenTargetUri,
         }
     }

@@ -12,6 +12,9 @@ const createDummyRequest = (method: string, data?: string) => {
         'accept-language': 'de',
         'another-header': 'foo',
     };
+    req.query = {
+
+    };
     req.pluginContext = {
         loggerFactory,
         services: {
@@ -242,6 +245,74 @@ describe('MashroomHttpProxyService', () => {
         expect(res.body).toBe('test response');
     });
 
+    it('adds query params from interceptors',  async () => {
+        nock('https://www.mashroom-server.com')
+            .get('/foo')
+            .query({
+                foo: 'bar'
+            })
+            .reply(200, 'test response');
+
+        const pluginRegistry: any = {
+            interceptors: [
+                {
+                    pluginName: 'Interceptor 1',
+                    interceptor: {
+                        intercept() {
+                            return {
+                                addQueryParams: {
+                                    'foo': 'bar',
+                                }
+                            }
+                        }
+                    }
+                }
+            ],
+        }
+
+        const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, pluginRegistry, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+
+        expect(res.body).toBe('test response');
+    });
+
+    it('allows interceptors to remove query params',  async () => {
+        nock('https://www.mashroom-server.at')
+            .get('/foo')
+            .query({
+            })
+            .reply(200, 'test response');
+
+        const pluginRegistry: any = {
+            interceptors: [
+                {
+                    pluginName: 'Interceptor 1',
+                    interceptor: {
+                        intercept() {
+                            return {
+                                removeQueryParams: ['foo']
+                            }
+                        }
+                    }
+                }
+            ],
+        }
+
+        const httpProxyService = new MashroomHttpProxyService(['GET'], ['another-header'], 2000, pluginRegistry, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        req.query.foo = 'bar';
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.mashroom-server.at/foo');
+
+        expect(res.body).toBe('test response');
+    });
+
     it('allows interceptors to rewrite the target uri',  async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo')
@@ -267,7 +338,7 @@ describe('MashroomHttpProxyService', () => {
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, '_MASHROOM_SERVER_');
+        await httpProxyService.forward(req, res, '__MASHROOM_SERVER__');
 
         expect(res.body).toBe('test response');
     });
@@ -305,4 +376,3 @@ describe('MashroomHttpProxyService', () => {
         expect(res.statusMessage).toBe('Not allowed');
     });
 });
-
