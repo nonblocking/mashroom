@@ -23,7 +23,7 @@ export type MashroomSecurityUser = {
     readonly email: string | null | undefined;
     readonly pictureUrl: string | null | undefined;
     readonly roles: MashroomSecurityRoles;
-    readonly extraData: any | null | undefined;
+    readonly extraData: Record<string, any> | null | undefined;
     readonly [key: string]: any;
 };
 

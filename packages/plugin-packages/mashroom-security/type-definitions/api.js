@@ -23,7 +23,7 @@ export type MashroomSecurityUser = {
     +email: ?string,
     +pictureUrl: ?string,
     +roles: MashroomSecurityRoles,
-    +extraData: ?any,
+    +extraData: ?{ [string]: any },
 }
 
 export type MashroomSecurityResourceType = 'Page' | 'Portal-App' | string;
