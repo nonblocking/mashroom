@@ -7,7 +7,7 @@ import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/ma
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const {
-        loginPage, userSearchFilter, groupSearchFilter, groupToRoleMapping: groupToRoleMappingPath,
+        loginPage, userSearchFilter, groupSearchFilter, extraDataMapping, groupToRoleMapping: groupToRoleMappingPath,
         serverUrl, ldapConnectTimeout, ldapTimeout,
         tlsOptions, baseDN, bindDN, bindCredentials, authenticationTimeoutSec,
     } = pluginConfig;
@@ -22,7 +22,8 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
        ldapClient.shutdown();
     });
 
-    return new MashroomLdapSecurityProvider(loginPage, userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, authenticationTimeoutSec, loggerFactory);
+    return new MashroomLdapSecurityProvider(loginPage, userSearchFilter, groupSearchFilter, extraDataMapping,
+        groupToRoleMappingPath, ldapClient, serverRootFolder, authenticationTimeoutSec, loggerFactory);
 };
 
 export default bootstrap;

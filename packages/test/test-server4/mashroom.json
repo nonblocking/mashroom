@@ -46,6 +46,11 @@
             "baseDN": "ou=users,dc=nonblocking,dc=at",
             "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
             "groupSearchFilter": "(objectClass=groupOfNames)",
+            "extraDataMapping": {
+                "userId": "uid",
+                "mobile": "mobile",
+                "address": "postalAddress"
+            },
             "groupToRoleMapping": "./groupToRoleMapping.json"
         },
         "Mashroom Security Default Login Webapp": {

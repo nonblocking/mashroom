@@ -18,7 +18,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -38,7 +38,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res, {
             hint1: 'foo',
@@ -57,17 +57,29 @@ describe('MashroomLdapSecurityProvider', () => {
         const serverRootFolder = __dirname;
 
         const mockLogin = jest.fn((user, password) => {
-            if (user.dn === 'User1' && password === 'passwd') {
+            if (user.dn === 'uid=user1,ou=users,dc=nonblocking,dc=at' && password === 'passwd') {
                 return Promise.resolve();
             } else {
                 return Promise.reject();
             }
         });
-        const mockSearch = jest.fn((filter) => {
-            if (filter.indexOf('objectClass=person') !== -1 && filter.indexOf('username') !== -1) {
-                return Promise.resolve([{ dn: 'User1', cn: 'User1' }]);
+        const mockSearch = jest.fn((filter, extraAttributes) => {
+            if (filter.indexOf('objectClass=person') !== -1 && filter.indexOf('user1') !== -1) {
+                return Promise.resolve([{
+                    dn: 'uid=user1,ou=users,dc=nonblocking,dc=at',
+                    cn: 'user1',
+                    sn: 'User',
+                    givenName: 'Test',
+                    displayName: null,
+                    uid: 'user1',
+                    mail: 'user@test.com',
+                    mobiletelephonenumber: extraAttributes.includes('mobiletelephonenumber') ? '0043123123123' : undefined,
+                }]);
             } else if (filter.indexOf('objectClass=group') !== -1 && filter.indexOf('User1') !== 1) {
-                return Promise.resolve([{ dn: 'GROUP1', cn: 'GROUP1' }]);
+                return Promise.resolve([{
+                    dn: 'cn=group1,ou=users,dc=nonblocking,dc=at',
+                    cn: 'GROUP1'
+                }]);
             }
             return Promise.resolve([]);
         });
@@ -84,20 +96,30 @@ describe('MashroomLdapSecurityProvider', () => {
             },
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
+        const extraDataMapping = {
+            'mobile': 'mobiletelephonenumber'
+        };
+        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
 
-        const result = await provider.login(req, 'username', 'passwd');
+        const result = await provider.login(req, 'user1', 'passwd');
 
         expect(result).toBeTruthy();
         expect(result.success).toBeTruthy();
 
         const user = provider.getUser(req);
-        expect(user).toBeTruthy();
-        if (user) {
-            expect(user.username).toBe('username');
-            expect(user.displayName).toBe('User1');
-            expect(user.roles).toEqual(['ROLE1', 'ROLE2']);
-        }
+        expect(user).toEqual({
+            username: 'user1',
+            displayName: 'Test User',
+            email: 'user@test.com',
+            pictureUrl: null,
+            extraData: {
+                mobile: '0043123123123'
+            },
+            roles: [
+                'ROLE1',
+                'ROLE2'
+            ],
+        });
     });
 
     it('revokes the authentication after given timeout', () => {
@@ -110,7 +132,7 @@ describe('MashroomLdapSecurityProvider', () => {
             }
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
 
         const user1 = provider.getUser(req);
         expect(user1).toBeTruthy();
@@ -130,7 +152,7 @@ describe('MashroomLdapSecurityProvider', () => {
             }
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', '', '', '', ldapClient, '', 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
 
         const authExpiration = provider.getAuthenticationExpiration(req);
 

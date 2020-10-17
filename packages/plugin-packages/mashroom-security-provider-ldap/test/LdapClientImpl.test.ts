@@ -59,11 +59,22 @@ describe('LdapClientImpl', () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
             'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
 
-        const result = await ldapClient.search('(&(objectClass=person)(uid=john))');
+        const result = await ldapClient.search('(&(objectClass=person)(uid=john))', ['extraAttr']);
         ldapClient.shutdown();
 
         expect(result).toBeTruthy();
         expect(result.length).toBe(1);
-        expect(result[0].dn).toBe('cn=john,ou=test,ou=users,dc=at,dc=nonblocking')
+        expect(result).toEqual([
+            {
+                dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
+                cn: 'john',
+                extraAttr: 'foo',
+                givenName: 'John',
+                mail: 'test@test.com',
+                sn: 'Do',
+                displayName: 'John Do',
+                uid: 'john'
+            }
+        ]);
     });
 });

@@ -36,6 +36,11 @@ And configure this plugin like this in the Mashroom config file:
             "baseDN": "ou=users,dc=nonblocking,dc=at",
             "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
             "groupSearchFilter": "(objectClass=group)",
+            "extraDataMapping": {
+                "userId": "uid",
+                "mobile": "mobile",
+                "address": "postalAddress"
+            },
             "groupToRoleMapping": "./groupToRoleMapping.json",
             "authenticationTimeoutSec": 1200
         }
@@ -45,8 +50,8 @@ And configure this plugin like this in the Mashroom config file:
 
  * _loginPage_: The login URL when user is not authenticated (must match the path of _Mashroom Security Default Login Webapp_)
  * _serverUrl_: The LDAP server URL with protocol and port
- * _ldapConnectTimeout_: Connect timeout in ms (default 3000)
- * _ldapTimeout_: Timeout in ms (default 5000)
+ * _ldapConnectTimeout_: Connect timeout in ms (default: 3000)
+ * _ldapTimeout_: Timeout in ms (default: 5000)
  * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html),
     but the file paths (e.g. for "cert") are resolved relatively to _mashroom.json_.
  * _bindDN_: The bind user for searching
@@ -54,6 +59,7 @@ And configure this plugin like this in the Mashroom config file:
  * _baseDN_: The base DN for searches (can be empty)
  * _userSearchFilter_: The user search filter, _@username@_ will be replaced by the actual username entered in the login form
  * _groupSearchFilter_: The group search filter (can be empty if you don't want to fetch the user groups)
+ * _extraDataMapping_: Optionally map extra LDAP attributes to _user.extraData_. The key in the map is the extraData property, the value the LDAP attribute (default: null)
  * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping
  * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value.
 
