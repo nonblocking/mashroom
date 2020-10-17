@@ -126,7 +126,7 @@ describe('MashroomHttpProxyService', () => {
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.xxxxxx.at');
+        await httpProxyService.forward(req, res, 'https://www.xxxxxxxxxxxxxxxxxxs.at');
 
         // Expect 503 Service Unavailable
         expect(res.statusCode).toBe(503);
