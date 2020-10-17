@@ -2,12 +2,18 @@
 
 import infoTemplate from './template';
 import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
+import {isNodeCluster, getWorkerId, getAllWorkerPids} from '@mashroom/mashroom-utils/lib/cluster_utils';
 
 import type {MashroomPluginContext, ExpressRequest, ExpressResponse} from '../../../../../type-definitions';
 
-const overviewRoute = (req: ExpressRequest, res: ExpressResponse) => {
+const overviewRoute = async (req: ExpressRequest, res: ExpressResponse) => {
+    let clusterDetailsHtml = '';
+    if (isNodeCluster()) {
+        clusterDetailsHtml = await clusterDetails();
+    }
+
     res.type('text/html');
-    res.send(infoTemplate(overview(req.pluginContext), req));
+    res.send(infoTemplate(overview(req.pluginContext, clusterDetailsHtml), req));
 };
 
 export default overviewRoute;
@@ -18,14 +24,29 @@ const getUptime = () => {
     return date.toISOString().substr(11, 8);
 };
 
-const overview = (pluginContext: MashroomPluginContext) => `
+const clusterDetails = async () => {
+    const workerPids = await getAllWorkerPids();
+
+    return `
+        <tr>
+            <th>Node Worker ID</th>
+            <td>${getWorkerId()}</td>
+        </tr>
+        <tr>
+            <th>Node Worker PIDs</th>
+            <td>${workerPids.join(', ')}</td>
+        </tr>
+    `;
+}
+
+const overview = (pluginContext: MashroomPluginContext, clusterDetails: string) => `
     <table>
         <tr>
-            <th>Server name</th>
+            <th>Server Name</th>
             <td>${pluginContext.serverConfig.name}</td>
         </tr>
         <tr>
-            <th>Server uptime (sec)</th>
+            <th>Server Uptime (sec)</th>
             <td>${getUptime()}</td>
         </tr>
         <tr>
@@ -33,7 +54,7 @@ const overview = (pluginContext: MashroomPluginContext) => `
             <td>${process.pid}</td>
         </tr>
         <tr>
-            <th>Mashroom Server version</th>
+            <th>Mashroom Server Version</th>
             <td>${pluginContext.serverInfo.version}</td>
         </tr>
         <tr>
@@ -41,11 +62,16 @@ const overview = (pluginContext: MashroomPluginContext) => `
             <td>${pluginContext.serverInfo.devMode ? '<span style="color:orange">Yes</span>' : 'No'}</td>
         </tr>
         <tr>
-            <th>Node.js version</th>
+            <th>Node.js Version</th>
             <td>${process.versions['node']}</td>
         </tr>
         <tr>
-            <th>Server configuration</th>
+            <th>Node Cluster</th>
+            <td>${isNodeCluster() ? 'Yes' : 'No'}</td>
+        </tr>
+        ${clusterDetails}
+        <tr>
+            <th>Server Configuration</th>
             <td><div class="json">${jsonToHtml(pluginContext.serverConfig)}</div></td>
         </tr>
         <tr>

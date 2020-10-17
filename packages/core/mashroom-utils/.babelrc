@@ -2,14 +2,10 @@
     "presets": [
         [
             "@babel/preset-env", {
-                "targets": {
-                    "node": "10",
-                    "browsers": [
-                        "last 2 versions",
-                        "ie >= 11"
-                    ]
-                }
+            "targets": {
+                "node": "10"
             }
+        }
         ],
         "@babel/preset-flow"
     ]

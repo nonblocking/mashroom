@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Core: Show cluster details such as the worker PIDs if the Node.js cluster module is active
  * Http Proxy: Added a new plugin type *http-proxy-interceptor* which allows it to rewrite target URIs and headers.
    This can be used to add security headers to backend calls.
    **BREAKING CHANGE**: The *getApiSecurityHeaders()* method in the security provider interfaces has been removed since
