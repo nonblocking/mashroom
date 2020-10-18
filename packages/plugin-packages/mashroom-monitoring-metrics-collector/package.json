@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "files": [
         "dist/**",
         "type-definitions/*"
@@ -15,7 +15,7 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.8.4",
-        "@mashroom/mashroom": "1.5.2",
+        "@mashroom/mashroom": "1.5.3",
         "@types/express": "^4.17.6",
         "@types/jest": "^25.2.2",
         "@types/response-time": "^2.3.4",
@@ -48,11 +48,27 @@
                 "defaultConfig": {
                     "disableMetrics": [],
                     "defaultHistogramBuckets": [
-                        0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10
+                        0.005,
+                        0.01,
+                        0.025,
+                        0.05,
+                        0.1,
+                        0.25,
+                        0.5,
+                        1,
+                        2.5,
+                        5,
+                        10
                     ],
                     "customHistogramBucketConfig": {},
                     "defaultSummaryQuantiles": [
-                        0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999
+                        0.01,
+                        0.05,
+                        0.5,
+                        0.9,
+                        0.95,
+                        0.99,
+                        0.999
                     ],
                     "customSummaryQuantileConfig": {}
                 }

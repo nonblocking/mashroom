@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-reasonreact-app",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "description": "Simple ReasonML based app that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
