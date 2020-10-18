@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.5.3 (October 18, 2020)
+
  * Core: Show cluster details such as the worker PIDs if the Node.js cluster module is active
  * Http Proxy: Added a new plugin type *http-proxy-interceptor* which allows it to rewrite target URIs and headers.
    This can be used to add security headers to backend calls.
