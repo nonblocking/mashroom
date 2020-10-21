@@ -13,9 +13,13 @@ describe('cluster_utils.isNodeCluster', () => {
 
 describe('cluster_utils.getAllWorkerPids', () => {
 
-    it('returns a single pid when no cluster active', async () => {
-        const pids = await getAllWorkerPids();
-        expect(pids.length).toBeGreaterThan(0);
+    it('returns a single pid when no cluster active', (done) => {
+        getAllWorkerPids().then(
+            (pids) => {
+                expect(pids.length).toBeGreaterThan(0);
+                done();
+            }
+        );
     });
 
 });

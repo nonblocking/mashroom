@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Fixed broken support for older browsers (IE11)
+
 ## 1.5.3 (October 18, 2020)
 
  * Core: Show cluster details such as the worker PIDs if the Node.js cluster module is active

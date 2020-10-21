@@ -11,19 +11,25 @@ export const getWorkerId = (): string => {
     return process.env.NODE_APP_INSTANCE || (cluster.worker && String(cluster.worker.id)) || 'master';
 };
 
-export const getAllWorkerPids = async (): Promise<Array<string>> => {
-    try {
-        const [thisProcess] = await findProcess('pid', process.pid);
-        if (thisProcess && thisProcess.ppid) {
-            const workers = await findProcess('name', thisProcess.name);
-            if (workers) {
-                return workers
-                    .filter((worker) => worker.ppid === thisProcess.ppid)
-                    .map((worker) => worker.pid);
+export const getAllWorkerPids = (): Promise<Array<string>> => {
+    return findProcess('pid', process.pid).then(
+        ([thisProcess]) => {
+            if (!thisProcess || !thisProcess.ppid) {
+                return [];
             }
+            return findProcess('name', thisProcess.name).then(
+                (workers) => {
+                    if (!workers) {
+                        return [];
+                    }
+                    return workers
+                        .filter((worker) => worker.ppid === thisProcess.ppid)
+                        .map((worker) => worker.pid);
+                }
+            );
         }
-    } catch (e) {
-        // Ignore
-    }
-    return [];
+    ).catch(() => {
+        // Ignore error
+        return Promise.resolve([]);
+    });
 }
