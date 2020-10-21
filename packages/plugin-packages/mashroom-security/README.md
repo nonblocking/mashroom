@@ -64,14 +64,14 @@ The general structure is:
 ```
     "/my/path/**": {
         "*|GET|POST|PUT|DELETE|PATCH|OPTIONS": {
-            "allow": "all"|<array of roles>|<object with optional properties roles and ips>
-            "deny": "all"|<array of roles>|<object with optional properties roles and ips>
+            "allow": "any"|<array of roles>|<object with optional properties roles and ips>
+            "deny": "any"|<array of roles>|<object with optional properties roles and ips>
         }
     }
 ```
 
  * The path can contain the wildcard "\*" for single segments and  "\*\*" for multiple segments
- * "all" includes anonymous users
+ * "any" includes anonymous users
  * IP addresses can also contain wildcards: "?" for s single digit, "\*" for single segments and  "\*\*" for multiple segments
 
 Example: Allow all users except the ones that come from an IP address starting with 12:
