@@ -196,7 +196,7 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
                     ];
                 }
             } catch (e) {
-
+                logger.error(`Interceptor ${pluginName} threw an error`, e);
             }
         }
         return {
