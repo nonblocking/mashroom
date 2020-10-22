@@ -8,4 +8,5 @@ export type UserStoreEntry = {
     pictureUrl?: string;
     passwordHash: string;
     roles: Array<string>;
+    extraData?: Record<string, any>;
 };
