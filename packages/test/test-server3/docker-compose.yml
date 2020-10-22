@@ -14,7 +14,7 @@ services:
         image: mongo
         ports:
             - "27017:27017"
-    mosqitto:
+    mosquitto:
         container_name: mashroom_testserver3_mosquitto
         image: eclipse-mosquitto
         ports:

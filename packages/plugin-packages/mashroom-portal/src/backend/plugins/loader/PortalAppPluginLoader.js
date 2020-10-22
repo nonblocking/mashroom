@@ -113,7 +113,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             defaultAppConfig
         };
 
-        this._log.info('Registering portal app:', {portalApp});
+        this._log.info('Registering portal app:', JSON.stringify({portalApp}));
         this._registry.registerPortalApp(portalApp);
     }
 
