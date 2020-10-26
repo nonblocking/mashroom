@@ -32,10 +32,10 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
     }
 
     counter(name: string, help: string): Counter {
-        name = this.fixMetricName(name);
+        name = this._fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         let metric = this.metrics[name] as InternalCounterMetricData;
         if (!metric) {
@@ -48,16 +48,16 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             this.metrics[name] = metric;
         } else if (metric.type !== 'counter') {
             this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         return counter(metric);
     }
 
     gauge(name: string, help: string): Gauge {
-        name = this.fixMetricName(name);
+        name = this._fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         let metric = this.metrics[name] as InternalGaugeMetricData;
         if (!metric) {
@@ -70,16 +70,16 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             this.metrics[name] = metric;
         } else if (this.metrics[name].type !== 'gauge') {
             this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         return gauge(metric);
     }
 
     histogram(name: string, help: string, buckets?: number[]): Histogram {
-        name = this.fixMetricName(name);
+        name = this._fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         let metrics = this.metrics[name] as InternalHistogramMetricData;
         if (!metrics) {
@@ -93,16 +93,16 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             this.metrics[name] = metrics;
         } else if (this.metrics[name].type !== 'histogram') {
             this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         return histogram(metrics);
     }
 
     summary(name: string, help: string, quantiles?: number[]): Summary {
-        name = this.fixMetricName(name);
+        name = this._fixMetricName(name);
         if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
             this.logger.debug(`Metric ${name} disabled by configuration`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         let metrics = this.metrics[name] as InternalSummaryMetricData;
         if (!metrics) {
@@ -116,7 +116,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             this.metrics[name] = metrics;
         } else if (this.metrics[name].type !== 'histogram') {
             this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
-            return this.createNoOpMetric();
+            return this._createNoOpMetric();
         }
         return summary(metrics);
     }
@@ -156,11 +156,11 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         return metrics;
     }
 
-    private fixMetricName(name: string): string {
+    private _fixMetricName(name: string): string {
         return (name || 'undefined').replace(/ /g, '_').toLowerCase();
     }
 
-    private createNoOpMetric(): Counter & Gauge & Histogram & Summary {
+    private _createNoOpMetric(): Counter & Gauge & Histogram & Summary {
         return {
             inc(): void {
                 // Ignore
