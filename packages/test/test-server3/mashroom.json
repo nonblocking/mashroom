@@ -13,7 +13,8 @@
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session Filestore Provider",
         "Mashroom Portal Remote App Registry Kubernetes",
-        "Mashroom Portal Remote App Registry Kubernetes Webapp"
+        "Mashroom Portal Remote App Registry Kubernetes Webapp",
+        "Mashroom Monitoring PM2 Exporter"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {

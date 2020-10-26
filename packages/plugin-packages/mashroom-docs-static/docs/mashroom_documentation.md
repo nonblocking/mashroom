@@ -624,6 +624,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-monitoring-prometheus-exporter](../../mashroom-monitoring-prometheus-exporter/README.md) [inc]
 
+[mashroom-monitoring-pm2-exporter](../../mashroom-monitoring-pm2-exporter/README.md) [inc]
+
 [mashroom-portal](../../mashroom-portal/README.md) [inc]
 
 [mashroom-portal-default-layouts](../../mashroom-portal-default-layouts/README.md) [inc]

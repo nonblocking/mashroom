@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Added a plugin that exports Node.js and plugin metrics to PM2 (via pm2/io)
  * Simple Security Provider: Allow to set *extraData* for users
  * Fixed broken support for older browsers (IE11)
 

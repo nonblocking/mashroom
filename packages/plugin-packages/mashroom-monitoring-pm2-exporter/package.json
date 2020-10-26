@@ -1,0 +1,82 @@
+{
+    "name": "@mashroom/mashroom-monitoring-pm2-exporter",
+    "description": "Exports Node.js and Mashroom metrics to PM2",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+        "express": "^4.17.1",
+        "@pm2/io": "^4.3.5"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.8.4",
+        "@mashroom/mashroom": "1.5.3",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.5.3",
+        "@types/express": "^4.17.6",
+        "@types/jest": "^25.2.2",
+        "eslint": "^7.0.0",
+        "jest": "^26.0.1",
+        "typescript": "^3.9.2"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "build": "babel src -d dist --extensions '.ts'"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Monitoring PM2 Exporter",
+                "type": "services",
+                "namespace": "pm2Exporter",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "requires": [
+                    "Mashroom Monitoring Metrics Collector Services"
+                ],
+                "defaultConfig": {
+                    "pmxMetrics": {
+                        "v8": true,
+                        "runtime": true,
+                        "network": false,
+                        "http": true,
+                        "eventLoop": true
+                    },
+                    "mashroomMetrics": [
+                        "mashroom_plugins_total",
+                        "mashroom_plugins_loaded_total",
+                        "mashroom_plugins_error_total",
+                        "mashroom_remote_apps_total",
+                        "mashroom_remote_apps_error_total",
+                        "mashroom_remote_apps_connection_timeout_total",
+                        "mashroom_websocket_connections_total",
+                        "mashroom_https_proxy_active_connections_total",
+                        "mashroom_https_proxy_idle_connections_total",
+                        "mashroom_https_proxy_waiting_requests_total",
+                        "mashroom_sessions_total",
+                        "mashroom_sessions_mongodb_connected",
+                        "mashroom_sessions_redis_nodes_connected",
+                        "mashroom_storage_mongodb_connected",
+                        "mashroom_memory_cache_entries_added_total",
+                        "mashroom_memory_cache_hit_ratio",
+                        "mashroom_memory_cache_redis_nodes_connected",
+                        "mashroom_messaging_amqp_connected",
+                        "mashroom_messaging_mqtt_connected"
+                    ]
+                }
+            }
+        ]
+    }
+}
