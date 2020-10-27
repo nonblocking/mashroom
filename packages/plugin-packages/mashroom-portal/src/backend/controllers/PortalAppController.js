@@ -86,9 +86,10 @@ export default class PortalAppController {
             const sharedResourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
             const restProxyBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
             const restProxyPaths = {};
-            if (portalApp.restProxies) {
+            if (portalApp.restProxies && Object.keys(portalApp.restProxies).length > 0) {
+                restProxyPaths.__baseUrl = restProxyBasePath;
                 for (const proxyId in portalApp.restProxies) {
-                    if (portalApp.restProxies.hasOwnProperty(proxyId)) {
+                    if (proxyId && portalApp.restProxies.hasOwnProperty(proxyId)) {
                         restProxyPaths[proxyId] = `${restProxyBasePath}/${proxyId}`;
                     }
                 }

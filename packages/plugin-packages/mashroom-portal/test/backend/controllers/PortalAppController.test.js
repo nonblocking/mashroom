@@ -51,6 +51,9 @@ describe('PortalAppController', () => {
             'delete': ['Administrator']
         },
         restProxies: {
+            "": {
+                targetUri: 'https://www.mashroom-server.com/api',
+            },
             '1': {
                 targetUri: 'https://www.mashroom-server.com/api',
             },
@@ -200,6 +203,7 @@ describe('PortalAppController', () => {
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
             restProxyPaths: {
+                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
@@ -265,6 +269,7 @@ describe('PortalAppController', () => {
             instanceId: null,
             lastReloadTs: 222222222,
             restProxyPaths: {
+                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',

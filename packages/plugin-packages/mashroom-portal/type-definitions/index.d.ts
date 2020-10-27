@@ -115,6 +115,7 @@ export type MashroomPortalLoadedPortalApp = {
 };
 
 export type MashroomRestProxyPaths = {
+    __baseUrl: string;
     [id: string]: string;
 };
 
