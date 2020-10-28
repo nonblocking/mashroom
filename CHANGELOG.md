@@ -3,6 +3,27 @@
 
 ## [unreleased]
 
+ * Portal: The base backend proxy path is now also passed to the apps. This simplifies the handling of mulitple proxis.
+   E.g. if you have a proxy definition like this:
+   ```json
+   {
+      "restProxies": {
+         "spaceXApi": {
+             "targetUri": "https://api.spacexdata.com/v3"
+         },
+         "secondApi": {
+             "targetUri": "..."
+         }
+     }
+   }
+   ```
+   You could fetch SpaceX's rocket starts like this:
+   ```js
+     const apiUrl = portalAppSetup.restProxyPaths.__base;
+     fetch(`${apiUrl}/spaceXApi/launches/upcoming`)
+     // Instead of:
+     // fetch(`${portalAppSetup.restProxyPaths.spaceXApi}/launches/upcoming`)
+   ```
  * Added a plugin that exports Node.js and plugin metrics to PM2 (via pm2/io)
  * Simple Security Provider: Allow to set *extraData* for users
  * Fixed broken support for older browsers (IE11)
