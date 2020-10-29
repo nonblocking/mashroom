@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.5.4 (October 29, 2020)
+
  * Portal: The base backend proxy path is now also passed to the apps. This simplifies the handling of mulitple proxis.
    E.g. if you have a proxy definition like this:
    ```json
@@ -29,7 +31,7 @@
    for example be used in a Http Proxy Interceptor
  * Simple Security Provider: Allow to set *extraData* and *secrets* for users
  * Added a property *secrets* to the user. In opposite to the *extraData* property the data will never be exposed
-   to the browser (e.g. Portal Apps).
+   to the browser (e.g. to Portal Apps).
  * Added a plugin that exports Node.js and plugin metrics to PM2 (via pm2/io)
  * Fixed broken support for older browsers (IE11)
 
