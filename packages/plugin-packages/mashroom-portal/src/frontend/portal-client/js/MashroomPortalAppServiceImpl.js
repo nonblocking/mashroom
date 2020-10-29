@@ -68,6 +68,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     _watchedApps: Array<LoadedPortalAppInternal>;
     _watchTimer: ?any;
     _lastUpdatedCheckTs: number;
+    _appsUpdateEventSource: EventSource;
 
     constructor(restService: MashroomRestService, resourceManager: ResourceManager, remoteLogger: MashroomPortalRemoteLogger) {
         const apiPath = global[WINDOW_VAR_PORTAL_API_PATH];
@@ -593,6 +594,22 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         };
     }
 
+    _updateApp(app: MashroomAvailablePortalApp, promise: ?Promise<any> = null): ?Promise<any> {
+        let appPromise: ?Promise<any> = null;
+        console.info('Reloading all instances of app:', app.name);
+        this.loadedPortalApps
+            .filter((loadedApp) => loadedApp.pluginName === app.name)
+            .forEach((loadedApp) => {
+                if (promise) {
+                    appPromise = promise.then(() => this.reloadApp(loadedApp.id));
+                } else {
+                    appPromise = this.reloadApp(loadedApp.id);
+                }
+            });
+
+        return appPromise;
+    }
+
     _checkForAppUpdates() {
         // console.info('Checking for app updates since: ', this._lastUpdatedCheckTs);
 
@@ -606,16 +623,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     updatedApps
                         .filter((app) => this._watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
                         .forEach((app) => {
-                            console.info('Reloading all instances of app:', app.name);
-                            this.loadedPortalApps
-                                .filter((loadedApp) => loadedApp.pluginName === app.name)
-                                .forEach((loadedApp) => {
-                                    if (promise) {
-                                        promise = promise.then(() => this.reloadApp(loadedApp.id));
-                                    } else {
-                                        promise = this.reloadApp(loadedApp.id);
-                                    }
-                                });
+                            promise = this._updateApp(app);
                         });
                     if (promise) {
                         promise.then(
@@ -638,8 +646,18 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         this._stopCheckForAppUpdates(loadedAppInternal);
 
         this._watchedApps.push(loadedAppInternal);
-        if (!this._watchTimer) {
-            this._watchTimer = setInterval(this._checkForAppUpdates.bind(this), APP_UPDATE_CHECK_INTERVAL);
+        if (!window.EventSource) {
+            if (!this._watchTimer) {
+                this._watchTimer = setInterval(this._checkForAppUpdates.bind(this), APP_UPDATE_CHECK_INTERVAL);
+            }
+        } else {
+            if (!this._appsUpdateEventSource) {
+                this._appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-apps-sse');
+                this._appsUpdateEventSource.onmessage = (msg: any) => {
+                    const app = JSON.parse(msg.data);
+                    this._updateApp(app);
+                };
+            }
         }
     }
 
@@ -648,6 +666,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         if (this._watchedApps.length === 0 && this._watchTimer) {
             clearInterval(this._watchTimer);
             this._watchTimer = null;
+        }
+
+        if (this._watchedApps.length === 0 && this._appsUpdateEventSource) {
+            this._appsUpdateEventSource.close();
         }
     }
 

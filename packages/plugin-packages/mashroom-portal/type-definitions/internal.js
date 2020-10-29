@@ -18,6 +18,7 @@ export interface MashroomPortalPluginRegistry {
     +portalApps: Array<MashroomPortalApp>;
     +themes: Array<MashroomPortalTheme>;
     +layouts: Array<MashroomPortalLayout>;
+    addListener(listener: MashroomPortalApp => void): void;
     registerPortalApp(portalApp: MashroomPortalApp): void;
     unregisterPortalApp(pluginName: string): void;
     registerTheme(theme: MashroomPortalTheme): void;

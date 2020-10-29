@@ -13,6 +13,7 @@
         "@mashroom/mashroom-utils": "1.5.3",
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
+        "express-sse": "^0.5.3",
         "get-uri": "^3.0.2",
         "proper-lockfile": "^4.1.1",
         "shortid": "^2.2.15"

@@ -26,7 +26,7 @@ import type {
     MashroomPortalAppUserPermissions,
     MashroomPortalService,
 } from '../../../type-definitions';
-import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 const getUri = promisify(getUriCbStyle);
 
@@ -34,8 +34,11 @@ export default class PortalAppController {
 
     pluginRegistry: MashroomPortalPluginRegistry;
 
-    constructor(pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(pluginRegistry: MashroomPortalPluginRegistry, sse: any) {
         this.pluginRegistry = pluginRegistry;
+        this.pluginRegistry.addListener((app: MashroomPortalApp) => {
+           sse.send(app);
+        });
     }
 
     async getPortalAppSetup(req: ExpressRequest, res: ExpressResponse) {

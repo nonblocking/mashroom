@@ -1,6 +1,7 @@
 // @flow
 
 import express from 'express';
+import SSE from 'express-sse';
 import bodyParser from 'body-parser';
 
 import MashroomPortalPluginRegistry from './plugins/MashroomPortalPluginRegistry';
@@ -30,6 +31,7 @@ import {
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
 export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: number) => {
+    const sse = new SSE(['array', 'containing', 'initial', 'content', '(optional)'], { isSerialized: false, initialEvent: 'optional initial event name' });
     const portalWebapp = express<ExpressRequest, ExpressResponse>();
     portalWebapp.enable('etag');
 
@@ -38,7 +40,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     const portalPageController = new PortalPageController(pluginRegistry);
     const portalPageRenderController = new PortalPageRenderController(portalWebapp, pluginRegistry, startTimestamp);
     const portalSiteController = new PortalSiteController();
-    const portalAppController = new PortalAppController(pluginRegistry);
+    const portalAppController = new PortalAppController(pluginRegistry, sse);
     const portalThemeController = new PortalThemeController(pluginRegistry);
     const portalLayoutController = new PortalLayoutController(pluginRegistry);
     const portalRolesController = new PortalRolesController();
@@ -66,6 +68,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     internalRoutes.use(PORTAL_APP_API_PATH, restApi);
 
     restApi.get('/portal-apps', portalAppController.getAvailablePortalApps.bind(portalAppController));
+    restApi.get('/portal-apps-sse', sse.init);
 
     restApi.get('/pages/:pageId/portal-app-instances', portalPageController.getPortalAppInstances.bind(portalPageController));
     restApi.post('/pages/:pageId/portal-app-instances', portalPageController.addPortalApp.bind(portalPageController));

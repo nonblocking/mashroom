@@ -18,17 +18,24 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     _themes: Array<MashroomPortalTheme>;
     _layouts: Array<MashroomPortalLayout>;
     _remotePortalAppRegistries: Array<MashroomRemotePortalAppRegistryHolder>;
+    _listeners: Array<MashroomPortalApp => void>
 
     constructor() {
         this._portalApps = [];
         this._themes = [];
         this._layouts = [];
         this._remotePortalAppRegistries = [];
+        this._listeners = [];
+    }
+
+    addListener(listener: MashroomPortalApp => void) {
+        this._listeners.push(listener);
     }
 
     registerPortalApp(portalApp: MashroomPortalApp) {
         this.unregisterPortalApp(portalApp.name);
         this._portalApps.push(portalApp);
+        this._listeners.forEach(listener => listener(portalApp));
     }
 
     unregisterPortalApp(pluginName: string) {
