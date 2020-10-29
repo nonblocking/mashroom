@@ -19,8 +19,9 @@ export default (claims: IdTokenClaims | undefined, userInfo: UserinfoResponse | 
             displayName: (userInfo ? userInfo.name : claims.name) || username,
             email: userInfo ? userInfo.email : claims.email,
             pictureUrl: userInfo ? userInfo.picture : null,
-            roles: roles.concat(roles.some(r => adminRoles.indexOf(r) > -1) ? ['Administrator'] : []),
             extraData: null,
+            roles: roles.concat(roles.some(r => adminRoles.indexOf(r) > -1) ? ['Administrator'] : []),
+            secrets: null,
         };
     } else {
         // The user is authenticated but we don't know anything about him (e.g. pure OAuth2)
@@ -29,8 +30,9 @@ export default (claims: IdTokenClaims | undefined, userInfo: UserinfoResponse | 
             displayName: UNDEFINED_USER_NAME,
             email: null,
             pictureUrl: null,
-            roles: [],
             extraData: null,
+            roles: [],
+            secrets: null,
         };
     }
 }

@@ -20,8 +20,9 @@ describe('create-user', () => {
             displayName: 'admin',
             email: undefined,
             pictureUrl: null,
-            roles: [],
             extraData: null,
+            roles: [],
+            secrets: null,
         });
     });
 
@@ -44,8 +45,9 @@ describe('create-user', () => {
             displayName: 'Admin User',
             email: 'admin@test.com',
             pictureUrl: null,
-            roles: [],
             extraData: null,
+            roles: [],
+            secrets: null,
         });
     });
 
@@ -69,8 +71,9 @@ describe('create-user', () => {
             displayName: 'Admin User',
             email: 'admin@test.com',
             pictureUrl: null,
-            roles: ['Role1', 'Role2', 'Role3', 'Administrator'],
             extraData: null,
+            roles: ['Role1', 'Role2', 'Role3', 'Administrator'],
+            secrets: null,
         });
     });
 
@@ -98,8 +101,9 @@ describe('create-user', () => {
             displayName: 'Admin User',
             email: 'admin@test.com',
             pictureUrl: 'http://my-picture.com',
-            roles: ['Role1', 'Role2', 'Role3', 'Administrator'],
             extraData: null,
+            roles: ['Role1', 'Role2', 'Role3', 'Administrator'],
+            secrets: null,
         });
     });
 
