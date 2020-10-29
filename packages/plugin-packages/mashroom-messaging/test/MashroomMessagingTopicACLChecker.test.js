@@ -17,6 +17,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['GroupX', 'Role5']),
+            secrets: null,
             extraData: null,
         };
 
@@ -33,6 +34,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['Role1', 'Role5']),
+            secrets: null,
             extraData: null,
         };
 
@@ -49,6 +51,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['Role1', 'Role5']),
+            secrets: null,
             extraData: null,
         };
 

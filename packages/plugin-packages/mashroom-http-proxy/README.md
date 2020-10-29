@@ -159,7 +159,7 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
     return {
        addHeaders: {
-          Authorization: `Bearer ${user.extraData.accessToken}`
+          Authorization: `Bearer ${user.secrets.accessToken}`
        }
     };
   }

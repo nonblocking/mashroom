@@ -27,8 +27,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     private groupToRoleMapping: GroupToRoleMapping | null;
 
     constructor(private loginPage: string, private userSearchFilter: string, private groupSearchFilter: string,
-                private extraDataMapping: Record<string, string> | undefined | null, groupToRoleMappingPath: string | undefined,
-                private ldapClient: LdapClient, private serverRootFolder: string, private authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
+                private extraDataMapping: Record<string, string> | undefined | null,  private secretsMapping: Record<string, string> | undefined | null,
+                groupToRoleMappingPath: string | undefined, private ldapClient: LdapClient, private serverRootFolder: string,
+                private authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
         this.logger = loggerFactory('mashroom.security.provider.ldap');
         this.groupToRoleMappingPath = groupToRoleMappingPath;
         if (groupToRoleMappingPath) {
@@ -80,7 +81,10 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         let user: LdapEntry | null = null;
         const userSearchFilter = this.userSearchFilter.replace('@username@', username);
         logger.debug(`Search for users: ${userSearchFilter}`);
-        const extraAttributes = this.extraDataMapping ? Object.values(this.extraDataMapping) : undefined;
+        const extraAttributes = [
+            ...(this.secretsMapping ? Object.values(this.secretsMapping) : []),
+            ...(this.extraDataMapping ? Object.values(this.extraDataMapping) : []),
+        ];
         const users = await this.ldapClient.search(userSearchFilter, extraAttributes);
         if (users.length > 0) {
             if (users.length === 1) {
@@ -107,8 +111,6 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 };
             }
 
-            const groups = await this.getUserGroups(user, logger);
-            const roles = this.getRolesForUserGroups(groups, logger);
             let displayName = user.displayName;
             if (!displayName && user.sn) {
                 displayName = `${user.givenName ? `${user.givenName} ` : ''}${user.sn}`;
@@ -127,14 +129,27 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 });
             }
 
+            let secrets: Record<string, any> | null = null;
+            if (this.secretsMapping) {
+                secrets = {};
+                Object.keys(this.secretsMapping).forEach((secretsProp) => {
+                    if (secrets && user && this.secretsMapping) {
+                        secrets[secretsProp] = user[this.secretsMapping[secretsProp]];
+                    }
+                });
+            }
+            const groups = await this.getUserGroups(user, logger);
+            const roles = this.getRolesForUserGroups(groups, logger);
+
             const mashroomUser: MashroomSecurityUser = {
                 username,
                 displayName,
                 email: user.mail,
                 // TODO: we could download the jpegPhoto (https://tools.ietf.org/html/rfc2798#section-2.6) and provide it somehow
                 pictureUrl: null,
-                roles,
                 extraData,
+                secrets,
+                roles,
             };
 
             logger.debug('User successfully authenticated:', mashroomUser);

@@ -76,6 +76,7 @@ describe('http_upgrade_handler', () => {
                                     email: null,
                                     pictureUrl: null,
                                     roles: ['Role2', 'Role3'],
+                                    secrets: null,
                                     extraData: null,
                                 }
                             }
@@ -123,6 +124,7 @@ describe('http_upgrade_handler', () => {
                                     email: null,
                                     pictureUrl: null,
                                     roles: ['Role2', 'Role1'],
+                                    secrets: null,
                                     extraData: null,
                                 }
                             }

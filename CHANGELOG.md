@@ -24,8 +24,13 @@
      // Instead of:
      // fetch(`${portalAppSetup.restProxyPaths.spaceXApi}/launches/upcoming`)
    ```
+ * LDAP Security Provider: Added possibility to map arbitrary LDAP attributes to *user.secrets*
+ * OpenID Connect security provider: Add the access token to *user.secrets.accessToken* so it could
+   for example be used in a Http Proxy Interceptor
+ * Simple Security Provider: Allow to set *extraData* and *secrets* for users
+ * Added a property *secrets* to the user. In opposite to the *extraData* property the data will never be exposed
+   to the browser (e.g. Portal Apps).
  * Added a plugin that exports Node.js and plugin metrics to PM2 (via pm2/io)
- * Simple Security Provider: Allow to set *extraData* for users
  * Fixed broken support for older browsers (IE11)
 
 ## 1.5.3 (October 18, 2020)

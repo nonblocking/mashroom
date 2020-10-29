@@ -22,9 +22,9 @@ export type MashroomSecurityUser = {
     readonly displayName: string | null | undefined;
     readonly email: string | null | undefined;
     readonly pictureUrl: string | null | undefined;
-    readonly roles: MashroomSecurityRoles;
     readonly extraData: Record<string, any> | null | undefined;
-    readonly [key: string]: any;
+    readonly roles: MashroomSecurityRoles;
+    readonly secrets: Record<string, any> | null | undefined;
 };
 
 export type MashroomSecurityResourceType = "Page" | "Portal-App" | string;

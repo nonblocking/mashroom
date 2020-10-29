@@ -86,6 +86,11 @@ And configure this plugin like this in the Mashroom config file:
 Since the authorization mechanism relies on user roles it is necessary to configure your identity provider to map the user
 roles to a scope (which means we can get it as claim). See Example Configurations below.
 
+### Secrets
+
+The plugin maps the accessToken to _user.secrets.accessToken_ so it can for example be used in a Http Proxy Interceptor to set
+the Bearer for backend calls.
+
 ### Authentication Expiration
 
 The implementation automatically extends the authentication via refresh token every view seconds (as long as the user is active).

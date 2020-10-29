@@ -7,6 +7,9 @@
         "roles": [
             "Administrator"
         ],
+        "secrets": {
+            "token": "fooo"
+        },
         "extraData": {
             "test": 1
         }
@@ -19,6 +22,9 @@
         "roles": [
             "Editor"
         ],
+        "secrets": {
+            "token": "bar"
+        },
         "extraData": {
             "test": 2
         }

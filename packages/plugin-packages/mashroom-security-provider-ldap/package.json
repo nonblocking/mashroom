@@ -61,6 +61,7 @@
                     "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
                     "groupSearchFilter": "(objectClass=group)",
                     "extraDataMapping": null,
+                    "secretsMapping": null,
                     "groupToRoleMapping": "./groupToRoleMapping.json",
                     "authenticationTimeoutSec": 1200
                 }

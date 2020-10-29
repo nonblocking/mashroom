@@ -49,11 +49,15 @@ And configure this plugin like this in the Mashroom config file:
         "email": "xxxxx@xxxx.com",
         "pictureUrl": "xxxx",
         "passwordHash": "8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918",
+        "extraData": {
+          "firstName": "John",
+          "lastName": "Do"
+        },
         "roles": [
             "Administrator"
         ],
-        "extraData": {
-          "test": 1
+        "secrets": {
+            "token": "xxxxxxx"
         }
     },
     {
@@ -71,3 +75,5 @@ And configure this plugin like this in the Mashroom config file:
 
 The _passwordHash_ is the SHA256 hash of the password. _displayName_, _email_ and _pictureUrl_ are optional.
 
+**Please note**: Everything added to _extraData_ will also be made available to Portal Apps in is therefore visible in the
+browser!

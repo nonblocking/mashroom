@@ -47,8 +47,10 @@
             "baseDN": "ou=users,dc=nonblocking,dc=at",
             "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
             "groupSearchFilter": "(objectClass=groupOfNames)",
+            "secretsMapping": {
+                "userId": "uid"
+            },
             "extraDataMapping": {
-                "userId": "uid",
                 "mobile": "mobile",
                 "address": "postalAddress"
             },

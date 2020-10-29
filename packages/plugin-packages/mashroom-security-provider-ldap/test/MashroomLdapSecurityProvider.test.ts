@@ -18,7 +18,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null, '', ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -38,7 +38,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,'', ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res, {
             hint1: 'foo',
@@ -71,7 +71,7 @@ describe('MashroomLdapSecurityProvider', () => {
                     sn: 'User',
                     givenName: 'Test',
                     displayName: null,
-                    uid: 'user1',
+                    uid: '1111111',
                     mail: 'user@test.com',
                     mobiletelephonenumber: extraAttributes.includes('mobiletelephonenumber') ? '0043123123123' : undefined,
                 }]);
@@ -99,7 +99,10 @@ describe('MashroomLdapSecurityProvider', () => {
         const extraDataMapping = {
             'mobile': 'mobiletelephonenumber'
         };
-        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
+        const secretsMapping = {
+            'internalUserId': 'uid'
+        };
+        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping, secretsMapping, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
 
         const result = await provider.login(req, 'user1', 'passwd');
 
@@ -114,6 +117,9 @@ describe('MashroomLdapSecurityProvider', () => {
             pictureUrl: null,
             extraData: {
                 mobile: '0043123123123'
+            },
+            secrets: {
+                internalUserId: '1111111'
             },
             roles: [
                 'ROLE1',
@@ -132,7 +138,7 @@ describe('MashroomLdapSecurityProvider', () => {
             }
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', null,  null,'', ldapClient, '', 1800, loggerFactory);
 
         const user1 = provider.getUser(req);
         expect(user1).toBeTruthy();
@@ -152,7 +158,7 @@ describe('MashroomLdapSecurityProvider', () => {
             }
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, '', ldapClient, '', 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, null, '', ldapClient, '', 1800, loggerFactory);
 
         const authExpiration = provider.getAuthenticationExpiration(req);
 

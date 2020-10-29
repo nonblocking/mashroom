@@ -125,7 +125,7 @@ export type MashroomPortalAppUser = {
     readonly displayName: string;
     readonly email: string | null;
     readonly permissions: MashroomPortalAppUserPermissions;
-    readonly extraData: any | null;
+    readonly extraData: Record<string, any> | null | undefined;
 };
 
 export type MashroomPortalAppUserPermissions = {

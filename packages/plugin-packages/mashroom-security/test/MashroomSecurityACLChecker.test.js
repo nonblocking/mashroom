@@ -134,6 +134,7 @@ describe('MashroomSecurityACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['User']),
+            secrets: null,
             extraData: null,
         };
 
@@ -160,6 +161,7 @@ describe('MashroomSecurityACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['User']),
+            secrets: null,
             extraData: null,
         };
 
@@ -186,6 +188,7 @@ describe('MashroomSecurityACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['User', 'Manager']),
+            secrets: null,
             extraData: null,
         };
 
@@ -253,6 +256,7 @@ describe('MashroomSecurityACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: [],
+            secrets: null,
             extraData: null,
         };
         const req: any = {
@@ -280,6 +284,7 @@ describe('MashroomSecurityACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['User']),
+            secrets: null,
             extraData: null,
         };
         const req: any = {
@@ -306,6 +311,7 @@ describe('MashroomSecurityACLChecker', () => {
             email: null,
             pictureUrl: null,
             roles: Object.freeze(['User']),
+            secrets: null,
             extraData: null,
         };
         const req: any = {

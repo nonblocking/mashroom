@@ -77,13 +77,16 @@ describe('MashroomSimpleSecurityProvider', () => {
             displayName: 'John Do',
             email: 'john@xxxxxx.com',
             pictureUrl: undefined,
-            roles: [
-                'Editor'
-            ],
             username: 'john',
             extraData: {
                 test: 2
             },
+            roles: [
+                'Editor'
+            ],
+            secrets: {
+                token: 'bar'
+            }
         });
     });
 

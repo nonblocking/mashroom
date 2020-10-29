@@ -7,6 +7,7 @@ export type UserStoreEntry = {
     email?: string;
     pictureUrl?: string;
     passwordHash: string;
-    roles: Array<string>;
     extraData?: Record<string, any>;
+    roles: Array<string>;
+    secrets?: Record<string, any>;
 };

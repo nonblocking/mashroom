@@ -125,7 +125,7 @@ export type MashroomPortalAppUser = {
     +displayName: string,
     +email: ?string;
     +permissions: MashroomPortalAppUserPermissions,
-    +extraData: ?any,
+    +extraData: ?{ [string]: any },
 }
 
 export type MashroomPortalAppUserPermissions = {

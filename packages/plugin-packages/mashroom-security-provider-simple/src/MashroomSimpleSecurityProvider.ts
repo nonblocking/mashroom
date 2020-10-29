@@ -73,14 +73,15 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         const user = this._getUserStore(logger).find((u: UserStoreEntry) => u.username === username && u.passwordHash === passwordHash);
 
         if (user) {
-            const { displayName, email, pictureUrl, roles, extraData } = user;
+            const { displayName, email, pictureUrl, extraData, roles, secrets } = user;
             const mashroomUser: MashroomSecurityUser = {
                 username,
                 displayName: displayName || username,
                 email,
                 pictureUrl,
-                roles,
                 extraData,
+                roles,
+                secrets,
             };
 
             logger.debug('User successfully authenticated:', mashroomUser);

@@ -45,6 +45,7 @@ const pluginContext: any = {
                         email: null,
                         pictureUrl: null,
                         roles: ['Role2', 'Role1'],
+                        secrets: null,
                         extraData: null,
                     }
                 }
