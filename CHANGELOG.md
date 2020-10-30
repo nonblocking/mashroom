@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Http Proxy: Fixed nasty bug that caused http headers to be dropped randomly because RegExp.lastIndex is not
+   reset when test() returns true
+
 ## 1.5.4 (October 29, 2020)
 
  * Portal: The base backend proxy path is now also passed to the apps. This simplifies the handling of mulitple proxis.
