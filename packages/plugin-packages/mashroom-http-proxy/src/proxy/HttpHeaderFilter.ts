@@ -14,7 +14,10 @@ export default class HttpHeaderFilter implements HttpHeaderFilterType {
 
     filter(headers: HttpHeaders): void {
         for (const headerName in headers) {
-            if (headers.hasOwnProperty(headerName) && !this.forwardHeadersRegexes.find((r) =>  r.test(headerName))) {
+            if (headers.hasOwnProperty(headerName) && !this.forwardHeadersRegexes.find((r) => {
+                r.lastIndex = 0;
+                return r.test(headerName);
+            })) {
                 delete headers[headerName];
             }
         }

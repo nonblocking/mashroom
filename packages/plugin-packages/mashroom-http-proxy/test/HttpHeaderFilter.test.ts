@@ -26,6 +26,7 @@ describe('HttpHeaderFilter', () => {
             Connection: 'keep-alive',
             cookie: 'dfdF',
             'content-type': 'application/json',
+            'content-size': '42',
             'x-b3-trace-id': 'sdfdfdfd'
         };
 
@@ -37,9 +38,8 @@ describe('HttpHeaderFilter', () => {
             'Accept-Language': 'en-GB,en-US;q=0.9,en;q=0.8,de;q=0.7',
             'cache-control': 'no-cache',
             'content-type': 'application/json',
+            'content-size': '42',
             'x-b3-trace-id': 'sdfdfdfd'
         });
     });
-
-
 });
