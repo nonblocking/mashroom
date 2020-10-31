@@ -1,7 +1,7 @@
 // @flow
 
 import querystring from 'querystring';
-import {isAjaxRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 
 import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
@@ -199,7 +199,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             try {
                 // If this is a html request, create a new session to prevent session fixation attacks
                 // See https://owasp.org/www-community/attacks/Session_fixation
-                if (!isAjaxRequest(request)) {
+                if (isHtmlRequest(request)) {
                     await this._createNewSession(request);
                 }
                 const authenticationHints = this._getAuthenticationHints(request);

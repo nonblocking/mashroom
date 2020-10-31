@@ -1,6 +1,6 @@
 // @flow
 
-import {isAjaxRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {getFrontendSiteBasePath} from '../utils/path_utils';
 
 import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -67,7 +67,7 @@ export default class PortalUserController {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
             await securityService.revokeAuthentication(req);
 
-            if (!isAjaxRequest(req)) {
+            if (isHtmlRequest(req)) {
                 let redirectUrl = null;
                 if (req.query.redirectUrl) {
                     // Use the redirect query param if any
