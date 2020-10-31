@@ -151,7 +151,7 @@ export type MashroomPortalAppSetup = {
 
 export type UserAgent = {
     +browser: {
-        +name: ? 'Android Browser' | 'Chrome' | 'Chromium' | 'Edge' | 'Firefox' | 'IE' | 'IEMobile' | 'Konqueror' | 'Mobile Safari' | 'Opera Mini' | 'Opera' | 'Safari' | 'Samsung Browser' | 'Tizen Browser' | string,
+        +name: ? 'Android Browser' | 'Chrome' | 'Chromium' | 'Edge' | 'Firefox' | 'IE' | 'IEMobile' | 'Konqueror' | 'Mobile Safari' | 'Opera Mini' | 'Opera' | 'Safari' | 'Samsung Browser' | 'Tizen Browser' | string,
         +version: ?string
     },
     +os: {
@@ -204,10 +204,12 @@ export interface MashroomPortalTheme {
      * Engine name (e.g. 'handlebars')
      */
     +engineName: string;
+
     /**
      * The express template engine instance
      */
     requireEngine(): any;
+
     /**
      * Resources root path (css and other resources)
      */
@@ -375,70 +377,87 @@ export interface MashroomPortalService {
      * Get all registered portal apps
      */
     getPortalApps(): Array<MashroomPortalApp>;
+
     /**
      * Get all registered theme plugins
      */
     getThemes(): Array<MashroomPortalTheme>;
+
     /**
      * Get all registered layout plugins
      */
     getLayouts(): Array<MashroomPortalLayout>;
+
     /**
      * Get all sites
      */
     getSites(limit?: number): Promise<Array<MashroomPortalSite>>;
+
     /**
      * Get the site with the given id
      */
     getSite(siteId: string): Promise<?MashroomPortalSite>;
+
     /**
      * Find the site with given path
      */
     findSiteByPath(path: string): Promise<?MashroomPortalSite>;
+
     /**
      * Insert new site
      */
     insertSite(site: MashroomPortalSite): Promise<void>;
+
     /**
      * Update site
      */
     updateSite(site: MashroomPortalSite): Promise<void>;
+
     /**
      * Delete site
      */
     deleteSite(siteId: string): Promise<void>;
+
     /**
      * Get page with given id
      */
     getPage(pageId: string): Promise<?MashroomPortalPage>;
+
     /**
      * Find the page ref within a site with given friendly URL
      */
     findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<?MashroomPortalPageRef>;
+
     /**
      * Insert new page
      */
     insertPage(page: MashroomPortalPage): Promise<void>;
+
     /**
      * Update page
      */
     updatePage(page: MashroomPortalPage): Promise<void>;
+
     /**
      * Insert new page
      */
     deletePage(pageId: string): Promise<void>;
+
     /**
      * Get portal app instance
      */
     getPortalAppInstance(pluginName: string, instanceId: ?string): Promise<?MashroomPortalAppInstance>;
+
     /**
      * Insert a new portal app instance
      */
     insertPortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void>;
+
     /**
      * Update given portal app instance
      */
     updatePortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void>;
+
     /**
      * Delete given portal app instance
      */
@@ -453,9 +472,13 @@ export type CreatedResponse = {
 
 export interface MashroomRestService {
     get(path: string, extraHeaders?: {}): Promise<any>;
+
     post(path: string, data: any, extraHeaders?: {}): Promise<any>;
+
     put(path: string, data: any, extraHeaders?: {}): Promise<void>;
+
     delete(path: string, extraHeaders?: {}): Promise<void>;
+
     withBasePath(apiBasePath: string): MashroomRestService;
 }
 
@@ -473,30 +496,36 @@ export interface MashroomPortalAppService {
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadApp(appAreaId: string, pluginName: string, instanceId: ?string, position?: ?number, overrideAppConfig?: ?Object): Promise<MashroomPortalLoadedPortalApp>;
+
     /**
      * Load portal app into a modal overlay.
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadAppModal(pluginName: string, title?: ?string, overrideAppConfig?: ?Object, onClose?: ?ModalAppCloseCallback): Promise<MashroomPortalLoadedPortalApp>;
+
     /**
      * Reload given portal app
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
     reloadApp(id: string, overrideAppConfig?: ?Object): Promise<MashroomPortalLoadedPortalApp>;
+
     /**
      * Unload given portal app
      */
     unloadApp(id: string): void;
+
     /**
      * Move a loaded app to another area (to another host element within the DOM)
      */
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void;
+
     /**
      * Show the name and version for all currently loaded apps in a overlay (for debug purposes)
      */
     showAppInfos(customize?: (portalApp: MashroomPortalLoadedPortalApp, overlay: HTMLDivElement) => void): void;
+
     /**
      * Hide all app info overlays
      */
@@ -506,14 +535,17 @@ export interface MashroomPortalAppService {
      * Add listener for load events (fired after an app has been loaded an attached to the page)
      */
     registerAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
+
     /**
      * Remove listener for load events
      */
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
+
     /**
      * Add listener for unload events (fired before an app will been detached from the page)
      */
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
+
     /**
      * Remove listener for unload events
      */
@@ -532,10 +564,12 @@ export interface MashroomPortalSiteService {
      * Get the base url for the current site
      */
     getCurrentSiteUrl(): string;
+
     /**
      * Get a list with all sites
      */
     getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
+
     /**
      * Get the page tree for given site
      */
@@ -547,27 +581,33 @@ export interface MashroomPortalUserService {
      * Get the authentication expiration time in unix time ms
      */
     getAuthenticationExpiration(): Promise<?number>;
+
     /**
      * Extend the authentication.
      * Can be used to update the authentication when no server interaction has occurred for a while and the authentication is about to expire.
      */
     extendAuthentication(): void;
+
     /**
      * Logout the current user
      */
     logout(): Promise<void>;
+
     /**
      * Get the current user's language
      */
     getUserLanguage(): string;
+
     /**
      * Set the new user language
      */
     setUserLanguage(lang: string): Promise<void>;
+
     /**
      * Get all available languages (e.g. en, de)
      */
     getAvailableLanguages(): Promise<Array<string>>;
+
     /**
      * Get the configured default language
      */
@@ -579,10 +619,12 @@ export interface MashroomPortalAdminService {
      * Get all existing themes
      */
     getAvailableThemes(): Promise<Array<MashroomAvailablePortalTheme>>;
+
     /**
      * Get all existing layouts
      */
     getAvailableLayouts(): Promise<Array<MashroomAvailablePortalLayout>>;
+
     /**
      * Get all currently existing roles
      */
@@ -592,22 +634,27 @@ export interface MashroomPortalAdminService {
      * Get all app instances on current page
      */
     getAppInstances(): Promise<Array<MashroomPagePortalAppInstance>>;
+
     /**
      * Add an app to the current page.
      */
     addAppInstance(pluginName: string, areaId: string, position?: number, appConfig?: any): Promise<MashroomPagePortalAppInstance>;
+
     /**
      * Update given app instance config or position
      */
     updateAppInstance(pluginName: string, instanceId: string, areaId: ?string, position: ?number, appConfig: ?any): Promise<void>;
+
     /**
      * Remove given app instance from page
      */
     removeAppInstance(pluginName: string, instanceId: string): Promise<void>;
+
     /**
      * Get roles that are permitted to view the app (no roles means everyone is permitted)
      */
     getAppInstancePermittedRoles(pluginName: string, instanceId: string): Promise<?string[]>;
+
     /**
      * Update roles that are permitted to view the app (undefined or null means everyone is permitted)
      */
@@ -617,26 +664,32 @@ export interface MashroomPortalAdminService {
      * Get current pageId
      */
     getCurrentPageId(): string;
+
     /**
      * Get page data
      */
     getPage(pageId: string): Promise<MashroomPortalPage>;
+
     /**
      * Add new page
      */
     addPage(page: MashroomPortalPage): Promise<MashroomPortalPage>;
+
     /**
      * Update an existing page
      */
     updatePage(page: MashroomPortalPage): Promise<void>;
+
     /**
      * Delete the given page
      */
     deletePage(pageId: string): Promise<void>;
+
     /**
      * Get roles that are permitted to view the page (no roles means everyone is permitted)
      */
     getPagePermittedRoles(pageId: string): Promise<?string[]>;
+
     /**
      * Update roles that are permitted to view the page (undefined or null means everyone is permitted)
      */
@@ -646,26 +699,32 @@ export interface MashroomPortalAdminService {
      * Get current siteId
      */
     getCurrentSiteId(): string;
+
     /**
      * Get site with given id
      */
     getSite(siteId: string): Promise<MashroomPortalSite>;
+
     /**
      * Add new site
      */
     addSite(site: MashroomPortalSite): Promise<MashroomPortalSite>;
+
     /**
      * Update existing site
      */
     updateSite(site: MashroomPortalSite): Promise<void>;
+
     /**
      * Delete the given site
      */
     deleteSite(siteId: string): Promise<void>;
+
     /**
      * Get roles that are permitted to view the site (no roles means everyone is permitted)
      */
     getSitePermittedRoles(siteId: string): Promise<?string[]>;
+
     /**
      * Update roles that are permitted to view the site (undefined or null means everyone is permitted)
      */
@@ -683,36 +742,43 @@ export interface MashroomPortalMessageBus {
      * (e.g. remote:/foo/+/bar)
      */
     subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
+
     /**
      * Subscribe once to given topic. The handler will be removed after the first message has been received.
      * Remote topics are accepted.
      */
     subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
+
     /**
      * Unsubscribe from given topic.
      * Remote topics are accepted.
      */
     unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
+
     /**
      * Publish to given topic.
      * Remote topics are accepted.
      */
     publish(topic: string, data: any): Promise<void>;
+
     /**
      * Get the private user topic for the given user or the currently authenticated user if no argument given.
      * You can subscribe to "sub" topics as well, e.g. <private_topic>/foo
      */
     getRemoteUserPrivateTopic(username?: string): ?string;
+
     /**
      * The prefix for remote topics
      */
     getRemotePrefix(): string;
+
     /**
      * Register a message interceptor.
      * A interceptor can be useful for debugging or to manipulate the messages.
      * It is also possible to block messages by returning 'undefined' or 'null'.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
+
     /**
      * Unregister a message interceptor.
      */
@@ -725,6 +791,7 @@ export interface MashroomPortalMasterMessageBus extends MashroomPortalMessageBus
      * The returned instance will set the senderId on the MashroomPortalMessageBusSubscriberCallback to the given id.
      */
     getAppInstance(appId: string): MashroomPortalMessageBus;
+
     /**
      * Unsubscribe/Unregister everything from given app (for cleanup after unload)
      */
@@ -737,18 +804,22 @@ export interface MashroomPortalStateService {
      * It will be looked up in the URL (query param or encoded) and in the local and session storage
      */
     getStateProperty(key: string): ?any;
+
     /**
      * Add given key value pair into the URL (encoded)
      */
     setUrlStateProperty(key: string, value: ?any): void;
+
     /**
      * Generate a URL with the given state encoded into it
      */
-    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: ?{[string]: string}, hash?: ?string): string;
+    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: ?{ [string]: string }, hash?: ?string): string;
+
     /**
      * Add given key value pair to the session storage
      */
     setSessionStateProperty(key: string, value: any): void;
+
     /**
      * Add given key value pair to the local storage
      */
@@ -767,6 +838,7 @@ export interface MashroomPortalRemoteLogger {
      * Send a client error to the server log
      */
     error(msg: string, error?: Error, portalAppName: ?string): void;
+
     /**
      * Send a client warning to the server log
      */

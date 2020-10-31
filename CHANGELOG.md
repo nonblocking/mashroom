@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Fixed the problem that the CSRF token was invalidated on public pages each when an ajax request was rejected by the ACL check;
+   and after the invalidation all subsequent ajax POST's were failing
  * Http Proxy: Fixed nasty bug that caused http headers to be dropped randomly because RegExp.lastIndex is not
    reset when test() returns true
 
