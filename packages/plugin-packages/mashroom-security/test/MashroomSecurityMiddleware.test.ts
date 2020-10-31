@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityMiddleware from '../src/middleware/MashroomSecurityMiddleware';
 
@@ -75,11 +75,12 @@ describe('MashroomSecurityMiddleware', () => {
                                 return true;
                             },
                             async checkAuthentication() {
+                                // Nothing to do
                             },
                             async canAuthenticateWithoutUserInteraction() {
                                 return true;
                             },
-                            async authenticate(req, res) {
+                            async authenticate(req: any, res: any) {
                                 authenticateCalled = true;
                                 responsePassedToAuthenticate = res;
                             },
@@ -95,7 +96,7 @@ describe('MashroomSecurityMiddleware', () => {
         const res: any = {
             test: 1,
             cookie: () => { return true; },
-            redirect: () => {},
+            redirect: () => { /* nothing to do */ },
         };
 
         const next = jest.fn();
@@ -149,7 +150,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         };
 
-        const next = () => {};
+        const next = () => { /* nothing to do */ };
 
         const securityMiddleware = new MashroomSecurityMiddleware();
 

@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     ExpressRequest,
@@ -11,12 +10,12 @@ import type {
 } from './api';
 
 export interface MashroomSecurityMiddleware {
-    middleware(): ExpressMiddleware
+    middleware(): ExpressMiddleware;
 }
 
 export interface MashroomSecurityProviderRegistry {
-    +providers: Array<MashroomSecurityProvider>;
-    findProvider(pluginName: string): ?MashroomSecurityProvider;
+    readonly providers: Readonly<Array<MashroomSecurityProvider>> ;
+    findProvider(pluginName: string): MashroomSecurityProvider | undefined | null;
     register(pluginName: string, provider: MashroomSecurityProvider): void;
     unregister(pluginName: string): void;
 }
@@ -28,26 +27,26 @@ export interface MashroomSecurityProviderRegistry {
 export type HttpMethod = '*' | 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH' | 'OPTIONS';
 
 export type MashroomSecurityACLPermissionRuleComplex = {
-    roles?: MashroomSecurityRoles,
-    ips?: Array<string>,
+    roles?: MashroomSecurityRoles;
+    ips?: Array<string>;
 }
 
 export type MashroomSecurityACLPermissionRules = 'any' | MashroomSecurityRoles | MashroomSecurityACLPermissionRuleComplex;
 
 export type MashroomSecurityACLPermission = {
-    +allow?: MashroomSecurityACLPermissionRules,
-    +deny?: MashroomSecurityACLPermissionRules,
+    readonly allow?: MashroomSecurityACLPermissionRules;
+    readonly deny?: MashroomSecurityACLPermissionRules;
 }
 
 export type MashroomSecurityACLHTTPMethods = {
-    +[method: HttpMethod]: MashroomSecurityACLPermission
+    readonly [method in HttpMethod]: MashroomSecurityACLPermission;
 }
 
 export type MashroomSecurityACLPaths = {
-    +[pathPattern: string]: MashroomSecurityACLHTTPMethods
+    readonly [pathPattern: string]: MashroomSecurityACLHTTPMethods;
 }
 
 export interface MashroomSecurityACLChecker {
-   allowed(req: ExpressRequest, userPrincipal: ?MashroomSecurityUser): Promise<boolean>;
+   allowed(req: ExpressRequest, userPrincipal: MashroomSecurityUser | undefined | null): Promise<boolean>;
 }
 

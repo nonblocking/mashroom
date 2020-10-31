@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import type {
@@ -18,7 +18,7 @@ import type {
 
 const HEADER_DOES_NOT_EXTEND_AUTHENTICATION = 'x-mashroom-does-not-extend-auth';
 
-const addUserToLogContext = (user: ?MashroomSecurityUser, logger: MashroomLogger) => {
+const addUserToLogContext = (user: MashroomSecurityUser | undefined | null, logger: MashroomLogger) => {
     if (user) {
         logger.addContext(userContext(user));
     }
@@ -26,21 +26,15 @@ const addUserToLogContext = (user: ?MashroomSecurityUser, logger: MashroomLogger
 
 export default class MashroomSecurityMiddleware implements MashroomSecurityMiddlewareType {
 
-    async checkAuthentication(securityService: MashroomSecurityService, req: ExpressRequest) {
-        if (securityService.isAuthenticated(req) && !req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
-            await securityService.checkAuthentication(req);
-        }
-    }
-
     middleware() {
-        return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+        return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction): Promise<unknown> => {
             const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.security.middleware');
             let allowed = false;
 
             try {
                 const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-                await this.checkAuthentication(securityService, req);
+                await this._checkAuthentication(securityService, req);
 
                 const user = securityService.getUser(req);
                 addUserToLogContext(user, logger);
@@ -77,7 +71,13 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         };
     }
 
-    async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: ExpressRequest, res: ExpressResponse) {
+    private async _checkAuthentication(securityService: MashroomSecurityService, req: ExpressRequest): Promise<void> {
+        if (securityService.isAuthenticated(req) && !req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
+            await securityService.checkAuthentication(req);
+        }
+    }
+
+    private async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: ExpressRequest, res: ExpressResponse): Promise<void> {
         try {
             if (await securityService.canAuthenticateWithoutUserInteraction(req)) {
                 const responseProxy = this._createResponseProxyWithDisabledRedirect(res);
@@ -88,15 +88,16 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         }
     }
 
-    _createResponseProxyWithDisabledRedirect(res: ExpressResponse): ExpressResponse {
-        const responseProxyHandler = {
+    private _createResponseProxyWithDisabledRedirect(res: ExpressResponse): ExpressResponse {
+        const responseProxyHandler: ProxyHandler<any> = {
             get(target, key, receiver) {
                 const prop = Reflect.get(target, key, receiver);
                 if (typeof(prop) === 'function') {
                     if (key === 'redirect') {
                         throw new Error('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
                     }
-                    return function (...args) {
+                    return function (...args: any[]) {
+                        // @ts-ignore
                         return prop.apply(this, args);
                     }
                 }

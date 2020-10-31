@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityService from '../src/services/MashroomSecurityService';
 
@@ -34,6 +34,50 @@ describe('MashroomSecurityService', () => {
         }
     });
 
+    it('creates a new session if an authentication is requested', async () => {
+        let sessionRegenerated = false;
+
+        const req: any = {
+            pluginContext: {
+                loggerFactory
+            },
+            url: 'http://localhost?hint1=foo&foo=bar&xxx=1',
+            originalUrl: 'http://localhost?hint1=foo&foo=bar&xxx=1',
+            headers: {
+                accept: 'text/html',
+            },
+            query: {
+
+            },
+            session: {
+                regenerate(cb: (err: Error | null) => void) { cb(null); sessionRegenerated = true; },
+            },
+        };
+        const res: any = {
+        };
+        const aclChecker: any = {};
+        const securityProviderRegistry: any = {
+            findProvider() {
+                return {
+                    getUser() {
+                        return null;
+                    },
+                    async authenticate(req: any, res: any, authenticationHints: any) {
+                        return {
+                            status: 'deferred',
+                        }
+                    }
+                }
+            }
+        };
+
+        const securityService = new MashroomSecurityService('testProvider', ['hint1', 'hint5'], securityProviderRegistry, aclChecker);
+
+        await securityService.authenticate(req, res);
+
+        expect(sessionRegenerated).toBeTruthy();
+    });
+
     it('forwards query parameter hints to the provider', async () => {
         const req: any = {
             pluginContext: {
@@ -41,13 +85,16 @@ describe('MashroomSecurityService', () => {
             },
             url: 'http://localhost?hint1=foo&foo=bar&xxx=1',
             originalUrl: 'http://localhost?hint1=foo&foo=bar&xxx=1',
+            headers: {
+                accept: 'xxxx',
+            },
             query: {
                 hint1: 'foo',
                 foo: 'bar',
                 xxx: 1,
             },
             session: {
-                regenerate(cb) { cb(); },
+                regenerate(cb: (err: Error | null) => void) { cb(null); },
             },
         };
         const res: any = {
@@ -60,7 +107,7 @@ describe('MashroomSecurityService', () => {
                     getUser() {
                         return null;
                     },
-                    async authenticate(req, res, authenticationHints) {
+                    async authenticate(req: any, res: any, authenticationHints: any) {
                         receivedAuthenticationHints = authenticationHints;
                         return {
                             status: 'deferred',
@@ -104,7 +151,7 @@ describe('MashroomSecurityService', () => {
                         service: {
                             getCollection() {
                                 return {
-                                    findOne({key}) {
+                                    findOne({key}: any) {
                                         if (key === 'page1') {
                                             return {
                                                 type: 'Page',
