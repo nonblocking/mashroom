@@ -14,7 +14,7 @@ export type MemoryCacheConfig = MemoryCacheProperties & {
 }
 
 export type MashroomStorageProviderMap = {
-    [name: string]: MashroomStorage
+    [name: string]: MashroomStorage;
 };
 
 export interface MashroomStorageRegistry {
