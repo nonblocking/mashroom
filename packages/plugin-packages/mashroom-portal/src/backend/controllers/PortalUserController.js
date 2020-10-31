@@ -1,6 +1,6 @@
 // @flow
 
-import {isAjaxRequest} from '../utils/request_utils';
+import {isAjaxRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {getFrontendSiteBasePath} from '../utils/path_utils';
 
 import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
