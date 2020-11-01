@@ -1058,7 +1058,3 @@ export type MashroomPortalAppPluginBootstrapFunction = (
     | void
     | MashroomPortalAppLifecycleHooks
     | Promise<void | MashroomPortalAppLifecycleHooks>;
-
-export type MashroomPortalUpdateEventType = 'app' | 'theme' | 'layout';
-
-export type MashroomPortalUpdateListener = (type: MashroomPortalUpdateEventType, event: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme) => void;
