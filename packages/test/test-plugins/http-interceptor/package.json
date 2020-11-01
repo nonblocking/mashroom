@@ -1,0 +1,14 @@
+{
+    "name": "@mashroom/test-http-interceptor",
+    "version": "1.0.0",
+    "private": true,
+    "mashroom": {
+        "plugins": [
+            {
+                "name": "Test Http Proxy Interceptor",
+                "type": "http-proxy-interceptor",
+                "bootstrap": "./bootstrap.js"
+            }
+        ]
+    }
+}

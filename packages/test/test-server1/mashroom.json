@@ -5,6 +5,10 @@
         {
             "path": "../../plugin-packages",
             "devMode": true
+        },
+        {
+            "path": "../test-plugins",
+            "watch": true
         }
     ],
     "indexPage": "/",
