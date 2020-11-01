@@ -5,6 +5,7 @@ import path from 'path';
 import express from 'express';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import context, {setPortalPluginConfig} from './context/global_portal_context';
+import setupWebapp from './setup-webapp';
 import {SITES_COLLECTION, PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} from './constants';
 import MashroomPortalService from './services/MashroomPortalService';
 
@@ -221,7 +222,7 @@ app.use((req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) =
     next();
 });
 
-app.use('/portal', context.portalWebapp);
+app.use('/portal', setupWebapp(context.pluginRegistry));
 
 app.listen('5050', (err: ?Error) => {
     if (err) {

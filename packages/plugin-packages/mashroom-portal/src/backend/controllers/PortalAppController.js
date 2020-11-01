@@ -24,10 +24,7 @@ import type {
     MashroomPortalAppSetup,
     MashroomPortalAppUser,
     MashroomPortalAppUserPermissions,
-    MashroomPortalLayout,
     MashroomPortalService,
-    MashroomPortalTheme,
-    MashroomPortalUpdateEventType,
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
@@ -37,11 +34,8 @@ export default class PortalAppController {
 
     pluginRegistry: MashroomPortalPluginRegistry;
 
-    constructor(pluginRegistry: MashroomPortalPluginRegistry, sse: any) {
+    constructor(pluginRegistry: MashroomPortalPluginRegistry) {
         this.pluginRegistry = pluginRegistry;
-        this.pluginRegistry.addListener((type: MashroomPortalUpdateEventType, event: MashroomPortalApp | MashroomPortalTheme | MashroomPortalLayout) => {
-            sse.send({ type, event });
-        });
     }
 
     async getPortalAppSetup(req: ExpressRequest, res: ExpressResponse) {

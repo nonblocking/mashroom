@@ -5,10 +5,11 @@ import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import type {
     MashroomPortalApp,
     MashroomPortalLayout,
-    MashroomPortalTheme, MashroomPortalUpdateListener,
+    MashroomPortalTheme,
 } from '../../../type-definitions';
 import type {
     MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
+    MashroomPortalRegisterListener,
     MashroomRemotePortalAppRegistryHolder
 } from '../../../type-definitions/internal';
 
@@ -18,7 +19,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     _themes: Array<MashroomPortalTheme>;
     _layouts: Array<MashroomPortalLayout>;
     _remotePortalAppRegistries: Array<MashroomRemotePortalAppRegistryHolder>;
-    _listeners: Array<MashroomPortalUpdateListener>;
+    _listeners: Array<MashroomPortalRegisterListener>;
 
     constructor() {
         this._portalApps = [];
@@ -26,10 +27,6 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         this._layouts = [];
         this._remotePortalAppRegistries = [];
         this._listeners = [];
-    }
-
-    addListener(listener: MashroomPortalUpdateListener) {
-        this._listeners.push(listener);
     }
 
     registerPortalApp(portalApp: MashroomPortalApp) {
@@ -74,6 +71,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder) {
         this.unregisterRemotePortalAppRegistry(registry.name);
         this._remotePortalAppRegistries.push(registry);
+        this._listeners.forEach(listener => listener('registry', registry));
     }
 
     unregisterRemotePortalAppRegistry(name: string) {
@@ -109,6 +107,14 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
 
     get layouts(): Array<MashroomPortalLayout> {
         return cloneAndFreezeArray(this._layouts);
+    }
+
+    addRegisterListener(listener: MashroomPortalRegisterListener) {
+        this._listeners.push(listener);
+    }
+
+    removeRegisterListener(listener: MashroomPortalRegisterListener) {
+        this._listeners = this._listeners.filter((l) => l !== listener);
     }
 
 }

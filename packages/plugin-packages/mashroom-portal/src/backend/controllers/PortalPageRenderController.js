@@ -71,10 +71,10 @@ export default class PortalPageRenderController {
     pluginRegistry: MashroomPortalPluginRegistry;
     startTimestamp: number;
 
-    constructor(portalWebapp: ExpressApplication, pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: number) {
+    constructor(portalWebapp: ExpressApplication, pluginRegistry: MashroomPortalPluginRegistry) {
         this.portalWebapp = portalWebapp;
         this.pluginRegistry = pluginRegistry;
-        this.startTimestamp = startTimestamp;
+        this.startTimestamp = Date.now();
     }
 
     async renderPortalPage(req: ExpressRequest, res: ExpressResponse) {
