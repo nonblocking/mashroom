@@ -5,7 +5,7 @@ import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import type {
     MashroomPortalApp,
     MashroomPortalLayout,
-    MashroomPortalTheme,
+    MashroomPortalTheme, MashroomPortalUpdateListener,
 } from '../../../type-definitions';
 import type {
     MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
@@ -18,7 +18,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     _themes: Array<MashroomPortalTheme>;
     _layouts: Array<MashroomPortalLayout>;
     _remotePortalAppRegistries: Array<MashroomRemotePortalAppRegistryHolder>;
-    _listeners: Array<MashroomPortalApp => void>
+    _listeners: Array<MashroomPortalUpdateListener>;
 
     constructor() {
         this._portalApps = [];
@@ -28,14 +28,14 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         this._listeners = [];
     }
 
-    addListener(listener: MashroomPortalApp => void) {
+    addListener(listener: MashroomPortalUpdateListener) {
         this._listeners.push(listener);
     }
 
     registerPortalApp(portalApp: MashroomPortalApp) {
         this.unregisterPortalApp(portalApp.name);
         this._portalApps.push(portalApp);
-        this._listeners.forEach(listener => listener(portalApp));
+        this._listeners.forEach(listener => listener('app', portalApp));
     }
 
     unregisterPortalApp(pluginName: string) {
@@ -48,6 +48,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerTheme(theme: MashroomPortalTheme) {
         this.unregisterTheme(theme.name);
         this._themes.push(theme);
+        this._listeners.forEach(listener => listener('theme', theme));
     }
 
     unregisterTheme(themeName: string) {
@@ -60,6 +61,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerLayout(layout: MashroomPortalLayout) {
         this.unregisterLayout(layout.name);
         this._layouts.push(layout);
+        this._listeners.forEach(listener => listener('layout', layout));
     }
 
     unregisterLayout(layoutName: string) {

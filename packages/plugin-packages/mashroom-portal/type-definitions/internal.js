@@ -6,7 +6,8 @@ import type {
     MashroomPortalLayout,
     MashroomPortalTheme,
     MashroomRemotePortalAppRegistry,
-} from "./api";
+    MashroomPortalUpdateListener,
+} from './api';
 
 export interface MashroomRemotePortalAppRegistryHolder {
     +name: string;
@@ -18,7 +19,7 @@ export interface MashroomPortalPluginRegistry {
     +portalApps: Array<MashroomPortalApp>;
     +themes: Array<MashroomPortalTheme>;
     +layouts: Array<MashroomPortalLayout>;
-    addListener(listener: MashroomPortalApp => void): void;
+    addListener(listener: MashroomPortalUpdateListener): void;
 
     registerPortalApp(portalApp: MashroomPortalApp): void;
 

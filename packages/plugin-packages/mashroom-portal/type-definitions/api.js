@@ -893,4 +893,6 @@ export type MashroomPortalAppLifecycleHooks = {
 export type MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement: HTMLElement, portalAppSetup: MashroomPortalAppSetup, clientServices: MashroomPortalClientServices)
     => void | MashroomPortalAppLifecycleHooks | Promise<void> | Promise<MashroomPortalAppLifecycleHooks>;
 
+export type MashroomPortalUpdateEventType = 'app' | 'theme' | 'layout';
 
+export type MashroomPortalUpdateListener = (MashroomPortalUpdateEventType, MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme) => void;

@@ -26,6 +26,7 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService,
     MashroomPortalRemoteLogger,
+    MashroomPortalUpdateEventType,
     MashroomRestService,
     ModalAppCloseCallback,
 } from '../../../../type-definitions';
@@ -594,7 +595,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         };
     }
 
-    _updateApp(app: MashroomAvailablePortalApp, promise: ?Promise<any> = null): ?Promise<any> {
+    _updateApp(type: MashroomPortalUpdateEventType, app: MashroomAvailablePortalApp, promise: ?Promise<any> = null): ?Promise<any> {
         let appPromise: ?Promise<any> = null;
         console.info('Reloading all instances of app:', app.name);
         this.loadedPortalApps
@@ -606,6 +607,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     appPromise = this.reloadApp(loadedApp.id);
                 }
             });
+
+        if (type !== 'app') {
+            console.info('Theme or Layout changed - reloading browser window');
+            location.reload();
+        }
 
         return appPromise;
     }
@@ -623,7 +629,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     updatedApps
                         .filter((app) => this._watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
                         .forEach((app) => {
-                            promise = this._updateApp(app);
+                            promise = this._updateApp('app', app);
                         });
                     if (promise) {
                         promise.then(
@@ -654,8 +660,8 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             if (!this._appsUpdateEventSource) {
                 this._appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-apps-sse');
                 this._appsUpdateEventSource.onmessage = (msg: any) => {
-                    const app = JSON.parse(msg.data);
-                    this._updateApp(app);
+                    const event = JSON.parse(msg.data);
+                    this._updateApp(event.type, event.event);
                 };
             }
         }
