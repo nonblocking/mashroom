@@ -1,5 +1,5 @@
 
-class MyInterceptor {
+class TestInterceptor {
 
     constructor(pluginContextHolder) {
         this.pluginContextHolder = pluginContextHolder;
@@ -20,7 +20,7 @@ class MyInterceptor {
 }
 
 const bootstrap = async (pluginName, pluginConfig, pluginContextHolder) => {
-    return new MyInterceptor(pluginContextHolder);
+    return new TestInterceptor(pluginContextHolder);
 };
 
 module.exports = bootstrap;
