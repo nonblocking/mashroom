@@ -99,7 +99,7 @@ To register your custom http-proxy-interceptor plugin add this to _package.json_
             {
                 "name": "My Custom Http Proxy Interceptor",
                 "type": "http-proxy-interceptor",
-                "bootstrap": "./dist/mashroom-bootstrap",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
                    "myProperty": "foo"
                 }
