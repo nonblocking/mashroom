@@ -1,7 +1,7 @@
-// @flow
 
 import fs from 'fs';
 import path from 'path';
+// @ts-ignore
 import {clientIPMatch, getClientIP} from '@mashroom/mashroom-utils/lib/ip_utils';
 
 import type {ExpressRequest, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -16,31 +16,31 @@ import type {
 } from '../../type-definitions/internal';
 
 type ACLPathRuleRegexp = {
-    regexp: RegExp,
-    pathRule: MashroomSecurityACLHTTPMethods,
+    regexp: RegExp;
+    pathRule: MashroomSecurityACLHTTPMethods;
 }
 
 export default class MashroomSecurityACLChecker implements MashroomSecurityACLCheckerType {
 
-    _pathRuleList: ?Array<ACLPathRuleRegexp>;
-    _aclPath: string;
+    private pathRuleList: Array<ACLPathRuleRegexp> | undefined | null;
+    private aclPath: string;
 
     constructor(aclPath: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
-        this._aclPath = aclPath;
-        if (!path.isAbsolute(this._aclPath)) {
-            this._aclPath = path.resolve(serverRootFolder, this._aclPath);
+        this.aclPath = aclPath;
+        if (!path.isAbsolute(this.aclPath)) {
+            this.aclPath = path.resolve(serverRootFolder, this.aclPath);
         }
-        this._pathRuleList = null;
+        this.pathRuleList = null;
         const logger = loggerFactory('mashroom.security.acl');
-        logger.info(`Configured ACL definition: ${this._aclPath}`);
+        logger.info(`Configured ACL definition: ${this.aclPath}`);
     }
 
-    async allowed(req: ExpressRequest, user: ?MashroomSecurityUser) {
+    async allowed(req: ExpressRequest, user: MashroomSecurityUser | undefined | null): Promise<boolean> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.security.acl');
 
         const path = req.path;
         const effectivePath = path.endsWith('/') ? path.substr(0, path.length - 1) : path;
-        const method = req.method;
+        const method = req.method as HttpMethod;
         const username = user ? user.username : 'anonymous';
         const clientIP = getClientIP(req);
 
@@ -60,7 +60,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         return true;
     }
 
-    _checkAllowed(httpMethods: MashroomSecurityACLHTTPMethods, method: HttpMethod, user: ?MashroomSecurityUser, req: ExpressRequest): boolean {
+    private _checkAllowed(httpMethods: MashroomSecurityACLHTTPMethods, method: HttpMethod, user: MashroomSecurityUser | undefined | null, req: ExpressRequest): boolean {
         let permission: MashroomSecurityACLPermission = httpMethods[method];
         if (!permission) {
             permission = httpMethods['*'];
@@ -75,7 +75,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         return allowMatch && !denyMatch;
     }
 
-    _checkRulesMatch(user: ?MashroomSecurityUser, rules: ?MashroomSecurityACLPermissionRules, req: ExpressRequest): boolean {
+    private _checkRulesMatch(user: MashroomSecurityUser | undefined | null, rules: MashroomSecurityACLPermissionRules | undefined | null, req: ExpressRequest): boolean {
         if (!rules) {
             return false;
         }
@@ -86,8 +86,8 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
             const roles: MashroomSecurityRoles = rules;
             return roles.some((r) => user.roles.find((ur) => ur === r));
         }
-        if (rules.roles || rules.ips) {
-            const complexRules: MashroomSecurityACLPermissionRuleComplex = (rules: any);
+        if (rules.hasOwnProperty('roles') || rules.hasOwnProperty('ips')) {
+            const complexRules = rules as MashroomSecurityACLPermissionRuleComplex;
             const roleMatch = user && complexRules.roles && Array.isArray(complexRules.roles) && complexRules.roles.some((r) => user.roles.find((ur) => ur === r));
             const ipMatch = complexRules.ips && Array.isArray(complexRules.ips) && clientIPMatch(req, complexRules.ips);
             return !!(roleMatch || ipMatch);
@@ -95,14 +95,15 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         return false;
     }
 
-    _getPathRuleList(logger: MashroomLogger): Array<ACLPathRuleRegexp> {
-        if (this._pathRuleList) {
-            return this._pathRuleList;
+    private _getPathRuleList(logger: MashroomLogger): Array<ACLPathRuleRegexp> {
+        if (this.pathRuleList) {
+            return this.pathRuleList;
         }
 
-        if (fs.existsSync(this._aclPath)) {
+        if (fs.existsSync(this.aclPath)) {
             const pathRuleList = [];
-            const acl = require(this._aclPath);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const acl = require(this.aclPath);
             for (const pathPattern in acl) {
                 if (acl.hasOwnProperty(pathPattern)) {
                     const pathRule = acl[pathPattern];
@@ -117,15 +118,15 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
                     }
                 }
             }
-            this._pathRuleList = pathRuleList;
+            this.pathRuleList = pathRuleList;
         } else {
-            logger.warn(`No ACL definition found: ${this._aclPath}. Disabling path based security.`);
+            logger.warn(`No ACL definition found: ${this.aclPath}. Disabling path based security.`);
         }
 
-        return this._pathRuleList || [];
+        return this.pathRuleList || [];
     }
 
-    _pathToRegExp(pathPattern: string): RegExp {
+    private _pathToRegExp(pathPattern: string): RegExp {
         let pattern = pathPattern;
         pattern = pattern.replace('/**', '(\\/.*)?');
         pattern = pattern.replace('/*', '\\/[^/]*');

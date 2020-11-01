@@ -120,7 +120,7 @@ describe('PortalUserController', () => {
                 sitePath: 'web',
             },
             headers: {
-                accept: 'text/*',
+                accept: 'text/html',
             },
             query: {
 
@@ -156,7 +156,7 @@ describe('PortalUserController', () => {
                 sitePath: 'web',
             },
             headers: {
-                accept: 'text/*',
+                accept: 'text/html'
             },
             query: {
                 redirectUrl: '/foo/bar',

@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomSecurityProviderRegistry from '../plugins/MashroomSecurityProviderRegistry';
 

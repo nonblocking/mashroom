@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityACLChecker from '../src/acl/MashroomSecurityACLChecker';
 import type {MashroomSecurityUser} from '../type-definitions';
@@ -9,7 +9,7 @@ describe('MashroomSecurityACLChecker', () => {
     it('allows no anonymous access to a protected path', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
-        const user: ?MashroomSecurityUser = null;
+        const user: MashroomSecurityUser | null = null;
 
         const req: any = {
             path: '/portal',
@@ -75,7 +75,7 @@ describe('MashroomSecurityACLChecker', () => {
     it('allows anonymous access to an unprotected path', async () => {
         const aclPath = './test_acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
-        const user: ?MashroomSecurityUser = null;
+        const user: MashroomSecurityUser | null = null;
 
         const req: any = {
             path: '/help/foo/bar',
@@ -133,7 +133,7 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User']),
+            roles: ['User'],
             secrets: null,
             extraData: null,
         };
@@ -160,7 +160,7 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User']),
+            roles: ['User'],
             secrets: null,
             extraData: null,
         };
@@ -187,7 +187,7 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User', 'Manager']),
+            roles: ['User', 'Manager'],
             secrets: null,
             extraData: null,
         };
@@ -200,7 +200,7 @@ describe('MashroomSecurityACLChecker', () => {
     it('works with a complex rules', async () => {
         const aclPath = './test_acl_new.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
-        const user: ?MashroomSecurityUser = null;
+        const user: MashroomSecurityUser | null = null;
 
 
         const req: any = {
@@ -283,7 +283,7 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User']),
+            roles: ['User'],
             secrets: null,
             extraData: null,
         };
@@ -310,7 +310,7 @@ describe('MashroomSecurityACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['User']),
+            roles: ['User'],
             secrets: null,
             extraData: null,
         };

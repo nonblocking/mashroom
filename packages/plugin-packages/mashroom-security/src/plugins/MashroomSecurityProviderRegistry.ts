@@ -1,26 +1,23 @@
-// @flow
 
-import type {
-    MashroomSecurityProvider,
-} from '../../type-definitions';
+import type {MashroomSecurityProvider} from '../../type-definitions';
 import type {
     MashroomSecurityProviderRegistry as MashroomSecurityProviderRegistryType,
 } from '../../type-definitions/internal';
 
 type MashroomSecurityProviderHolder = {
-    +pluginName: string,
-    +provider: MashroomSecurityProvider
+    readonly pluginName: string;
+    readonly provider: MashroomSecurityProvider;
 }
 
 export default class MashroomSecurityProviderRegistry implements MashroomSecurityProviderRegistryType {
 
-    _providers: Array<MashroomSecurityProviderHolder>;
+    private _providers: Array<MashroomSecurityProviderHolder>;
 
     constructor() {
         this._providers = [];
     }
 
-    findProvider(pluginName: string) {
+    findProvider(pluginName: string): MashroomSecurityProvider | undefined | null {
         const holder = this._providers.find((p) => p.pluginName === pluginName);
         if (holder) {
             return holder.provider;
@@ -28,7 +25,7 @@ export default class MashroomSecurityProviderRegistry implements MashroomSecurit
         return null;
     }
 
-    register(pluginName: string, provider: MashroomSecurityProvider) {
+    register(pluginName: string, provider: MashroomSecurityProvider): void {
         // Remove existing
         this.unregister(pluginName);
 
@@ -38,11 +35,11 @@ export default class MashroomSecurityProviderRegistry implements MashroomSecurit
         });
     }
 
-    unregister(pluginName: string) {
+    unregister(pluginName: string): void {
         this._providers = this._providers.filter((p) => p.pluginName !== pluginName);
     }
 
-    get providers(): Array<MashroomSecurityProvider> {
+    get providers(): Readonly<Array<MashroomSecurityProvider>> {
         return Object.freeze(this._providers.map((p) => p.provider));
     }
 

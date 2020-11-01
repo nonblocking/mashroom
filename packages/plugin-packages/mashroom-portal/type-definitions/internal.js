@@ -2,10 +2,10 @@
 
 import type {ExpressApplication, LogLevel} from "@mashroom/mashroom/type-definitions";
 import type {
-    MashroomRemotePortalAppRegistry,
     MashroomPortalApp,
-    MashroomPortalTheme,
     MashroomPortalLayout,
+    MashroomPortalTheme,
+    MashroomRemotePortalAppRegistry,
 } from "./api";
 
 export interface MashroomRemotePortalAppRegistryHolder {
@@ -19,13 +19,21 @@ export interface MashroomPortalPluginRegistry {
     +themes: Array<MashroomPortalTheme>;
     +layouts: Array<MashroomPortalLayout>;
     addListener(listener: MashroomPortalApp => void): void;
+
     registerPortalApp(portalApp: MashroomPortalApp): void;
+
     unregisterPortalApp(pluginName: string): void;
+
     registerTheme(theme: MashroomPortalTheme): void;
+
     unregisterTheme(themeName: string): void;
+
     registerLayout(layout: MashroomPortalLayout): void;
+
     unregisterLayout(layoutName: string): void;
+
     registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder): void;
+
     unregisterRemotePortalAppRegistry(name: string): void;
 }
 
