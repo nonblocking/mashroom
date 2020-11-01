@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Plugin updates are now pushed wo the Browser via SSE (in development mode). So, Portal Apps are reloaded faster after an update.
+   Also, the portal page reloads on theme or layout changes.
  * Portal: Fixed the problem that the CSRF token was invalidated on public pages each when an ajax request was rejected by the ACL check;
    and after the invalidation all subsequent ajax POST's were failing
  * Http Proxy: Fixed nasty bug that caused http headers to be dropped randomly because RegExp.lastIndex is not
