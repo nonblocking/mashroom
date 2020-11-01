@@ -23,6 +23,8 @@ import type {
     MashroomPluginPackageBuilder,
     MashroomPluginPackageBuilderEvent,
 } from '../../type-definitions/internal';
+import digestDirectory from 'lucy-dirsum';
+import anymatch from 'anymatch';
 
 const readFile = promisify(fs.readFile);
 
@@ -92,6 +94,15 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         this._eventEmitter.removeListener(eventName, listener);
     }
 
+    _queuePackageBuild() {
+        if (this._builder) {
+            this._builder.addToBuildQueue(this._name, this._pluginPackagePath, this._pluginPackageDefinition.devModeBuildScript);
+        } else {
+            this._emitReady();
+            this._registryConnector.on('updated', this._boundOnUpdated);
+        }
+    }
+
     async _buildPackage() {
         this._status = 'building';
         this._errorMessage = null;
@@ -148,11 +159,35 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
 
         this._pluginPackageDefinition.plugins = plugins;
 
-        if (this._builder) {
-            this._builder.addToBuildQueue(this._name, this._pluginPackagePath, this._pluginPackageDefinition.devModeBuildScript);
+        const pluginPackagePath = this._pluginPackagePath;
+        const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
+        const digestFile = path.resolve(pluginPackagePath, '.mashroom-dev.chsum');
+        if (fs.existsSync(digestFile)) {
+            const storedPackageDigest = fs.readFileSync(digestFile).toString();
+            digestDirectory(
+                pluginPackagePath,
+                (err, packageDigest) => {
+                    if (storedPackageDigest !== packageDigest) {
+                        fs.writeFileSync(digestFile, packageDigest);
+                        this._queuePackageBuild();
+                    } else {
+                        this._emitReady();
+                        this._registryConnector.on('updated', this._boundOnUpdated);
+                    }
+                }, (path) => {
+                    return anymatch(IGNORE_PATHS, path);
+                },
+            );
         } else {
-            this._emitReady();
-            this._registryConnector.on('updated', this._boundOnUpdated);
+            digestDirectory(
+                pluginPackagePath,
+                (err, packageDigest) => {
+                    fs.writeFileSync(digestFile, packageDigest);
+                    this._queuePackageBuild();
+                }, (path) => {
+                    return anymatch(IGNORE_PATHS, path);
+                },
+            );
         }
     }
 

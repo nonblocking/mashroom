@@ -10,7 +10,7 @@ import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 const readdir = promisify(fs.readdir);
 
 // Anymatch patterns
-const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
+const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
 
 export const DEFAULT_DEFER_UPDATE_MS = 2000;
 
