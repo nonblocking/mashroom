@@ -198,7 +198,7 @@ describe('PortalPageRenderController', () => {
             },
         };
 
-        const controller = new PortalPageRenderController(webApp, pluginRegistry1, Date.now());
+        const controller = new PortalPageRenderController(webApp, pluginRegistry1);
         controller.renderPortalPage(req, res);
     });
 
@@ -244,7 +244,7 @@ describe('PortalPageRenderController', () => {
             },
         };
 
-        const controller = new PortalPageRenderController(webApp, pluginRegistry2, Date.now());
+        const controller = new PortalPageRenderController(webApp, pluginRegistry2);
         controller.renderPortalPage(req, res);
     });
 

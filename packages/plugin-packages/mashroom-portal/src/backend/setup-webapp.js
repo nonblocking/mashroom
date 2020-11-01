@@ -26,17 +26,19 @@ import {
     PORTAL_INTERNAL_PATH,
     PORTAL_THEME_RESOURCES_BASE_PATH
 } from './constants';
+import {getPortalPushPluginUpdatesRoute} from './push-plugin-updates';
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType} from '../../type-definitions/internal';
 
-export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: number) => {
+export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     const portalWebapp = express<ExpressRequest, ExpressResponse>();
     portalWebapp.enable('etag');
 
     const portalIndexController = new PortalIndexController();
     const portalResourcesController = new PortalResourcesController();
     const portalPageController = new PortalPageController(pluginRegistry);
-    const portalPageRenderController = new PortalPageRenderController(portalWebapp, pluginRegistry, startTimestamp);
+    const portalPageRenderController = new PortalPageRenderController(portalWebapp, pluginRegistry);
     const portalSiteController = new PortalSiteController();
     const portalAppController = new PortalAppController(pluginRegistry);
     const portalThemeController = new PortalThemeController(pluginRegistry);
@@ -101,6 +103,13 @@ export default (pluginRegistry: MashroomPortalPluginRegistry, startTimestamp: nu
     restApi.get('/languages/default', portalLanguageController.getDefaultLanguage.bind(portalLanguageController));
 
     restApi.post('/log', portalLogController.log.bind(portalLogController));
+
+    // Push updates in dev mode
+
+    const portalPushPluginUpdatesRoute = getPortalPushPluginUpdatesRoute();
+    if (portalPushPluginUpdatesRoute) {
+        restApi.get('/portal-push-plugin-updates', portalPushPluginUpdatesRoute);
+    }
 
     // Client API resources
 

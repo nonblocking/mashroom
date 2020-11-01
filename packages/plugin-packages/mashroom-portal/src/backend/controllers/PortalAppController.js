@@ -26,7 +26,7 @@ import type {
     MashroomPortalAppUserPermissions,
     MashroomPortalService,
 } from '../../../type-definitions';
-import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 const getUri = promisify(getUriCbStyle);
 

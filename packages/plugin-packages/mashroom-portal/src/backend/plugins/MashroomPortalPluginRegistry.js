@@ -9,6 +9,7 @@ import type {
 } from '../../../type-definitions';
 import type {
     MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
+    MashroomPortalRegisterListener,
     MashroomRemotePortalAppRegistryHolder
 } from '../../../type-definitions/internal';
 
@@ -18,17 +19,20 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     _themes: Array<MashroomPortalTheme>;
     _layouts: Array<MashroomPortalLayout>;
     _remotePortalAppRegistries: Array<MashroomRemotePortalAppRegistryHolder>;
+    _listeners: Array<MashroomPortalRegisterListener>;
 
     constructor() {
         this._portalApps = [];
         this._themes = [];
         this._layouts = [];
         this._remotePortalAppRegistries = [];
+        this._listeners = [];
     }
 
     registerPortalApp(portalApp: MashroomPortalApp) {
         this.unregisterPortalApp(portalApp.name);
         this._portalApps.push(portalApp);
+        this._listeners.forEach(listener => listener('app', portalApp));
     }
 
     unregisterPortalApp(pluginName: string) {
@@ -41,6 +45,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerTheme(theme: MashroomPortalTheme) {
         this.unregisterTheme(theme.name);
         this._themes.push(theme);
+        this._listeners.forEach(listener => listener('theme', theme));
     }
 
     unregisterTheme(themeName: string) {
@@ -53,6 +58,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerLayout(layout: MashroomPortalLayout) {
         this.unregisterLayout(layout.name);
         this._layouts.push(layout);
+        this._listeners.forEach(listener => listener('layout', layout));
     }
 
     unregisterLayout(layoutName: string) {
@@ -65,6 +71,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder) {
         this.unregisterRemotePortalAppRegistry(registry.name);
         this._remotePortalAppRegistries.push(registry);
+        this._listeners.forEach(listener => listener('registry', registry));
     }
 
     unregisterRemotePortalAppRegistry(name: string) {
@@ -100,6 +107,14 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
 
     get layouts(): Array<MashroomPortalLayout> {
         return cloneAndFreezeArray(this._layouts);
+    }
+
+    addRegisterListener(listener: MashroomPortalRegisterListener) {
+        this._listeners.push(listener);
+    }
+
+    removeRegisterListener(listener: MashroomPortalRegisterListener) {
+        this._listeners = this._listeners.filter((l) => l !== listener);
     }
 
 }

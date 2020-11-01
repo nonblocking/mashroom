@@ -6,7 +6,7 @@ import type {
     MashroomPortalLayout,
     MashroomPortalTheme,
     MashroomRemotePortalAppRegistry,
-} from "./api";
+} from './api';
 
 export interface MashroomRemotePortalAppRegistryHolder {
     +name: string;
@@ -34,7 +34,15 @@ export interface MashroomPortalPluginRegistry {
     registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder): void;
 
     unregisterRemotePortalAppRegistry(name: string): void;
+
+    addRegisterListener(listener: MashroomPortalRegisterListener): void;
+
+    removeRegisterListener(listener: MashroomPortalRegisterListener): void;
 }
+
+export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'registry';
+
+export type MashroomPortalRegisterListener = (MashroomPortalPluginType, MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomRemotePortalAppRegistryHolder) => void;
 
 export type MashroomPortalPluginConfig = {
     +path: string,
@@ -48,7 +56,6 @@ export type MashroomPortalPluginConfig = {
 export type MashroomPortalContext = {
     +startTs: number,
     +pluginRegistry: MashroomPortalPluginRegistry,
-    +portalWebapp: ExpressApplication,
     +portalPluginConfig: MashroomPortalPluginConfig,
 }
 
