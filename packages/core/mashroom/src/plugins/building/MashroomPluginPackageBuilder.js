@@ -24,6 +24,8 @@ import type {
     MashroomPluginPackageBuilderEventName,
     MashroomPluginPackageBuilderEvent,
 } from '../../../type-definitions/internal';
+import digestDirectory from 'lucy-dirsum';
+import anymatch from 'anymatch';
 
 type BuildQueueEntry = {
     pluginPackageName: string,
@@ -70,7 +72,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._processQueueInterval = setInterval(this._processBuildQueue.bind(this), 2000);
     }
 
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp?: number = Date.now()) {
+    addPackageToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp?: number = Date.now()) {
         this.removeFromBuildQueue(pluginPackageName);
 
         this._buildQueue.push({
@@ -79,6 +81,40 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             buildScript,
             lastSourceUpdateTimestamp,
         });
+    }
+
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp?: number = Date.now()) {
+        const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
+        const digestFile = path.resolve(pluginPackagePath, '.mashroom-dev.chsum');
+        if (fs.existsSync(digestFile)) {
+            const storedPackageDigest = fs.readFileSync(digestFile).toString();
+            digestDirectory(
+                pluginPackagePath,
+                (err, packageDigest) => {
+                    if (storedPackageDigest !== packageDigest) {
+                        fs.writeFileSync(digestFile, packageDigest);
+                        this.addPackageToBuildQueue(pluginPackageName, pluginPackagePath, buildScript, lastSourceUpdateTimestamp);
+                    } else {
+                        this._eventEmitter.emit('build-finished', {
+                            pluginPackageName,
+                            success: true,
+                        });
+                    }
+                }, (path) => {
+                    return anymatch(IGNORE_PATHS, path);
+                },
+            );
+        } else {
+            digestDirectory(
+                pluginPackagePath,
+                (err, packageDigest) => {
+                    fs.writeFileSync(digestFile, packageDigest);
+                    this.addPackageToBuildQueue(pluginPackageName, pluginPackagePath, buildScript, lastSourceUpdateTimestamp);
+                }, (path) => {
+                    return anymatch(IGNORE_PATHS, path);
+                },
+            );
+        }
     }
 
     removeFromBuildQueue(pluginPackageName: string) {
