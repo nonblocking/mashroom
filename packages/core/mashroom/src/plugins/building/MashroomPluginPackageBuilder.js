@@ -133,8 +133,8 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _isBuildNecessary(pluginPackagePath: string): Promise<boolean> {
         return new Promise(resolve => {
-            const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
-            const digestFile = path.resolve(pluginPackagePath, '.mashroom-dev.chsum');
+            const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-build.checksum'];
+            const digestFile = path.resolve(pluginPackagePath, '.mashroom-build.checksum');
 
             fs.readFile(digestFile, (readErr, data) => {
                 if (readErr) {
@@ -274,6 +274,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _updateBuildInfo(pluginPackageName: string, buildInfo: BuildInfo) {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
+        console.log('---------- updating build info', buildInfoFile);
         ensureDirSync(path.resolve(buildInfoFile, '..'));
 
         try {
