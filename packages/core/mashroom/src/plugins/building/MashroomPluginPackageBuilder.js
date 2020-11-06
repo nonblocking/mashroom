@@ -13,6 +13,8 @@ const writeFile = promisify(fs.writeFile);
 
 const MAX_PARALLEL_BUILDS = 5;
 const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
+const BUILD_CHECKSUM_FILE = '.mashroom-build.checksum';
+const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', `**/${BUILD_CHECKSUM_FILE}`];
 
 import type {
     MashroomLogger,
@@ -133,8 +135,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _isBuildNecessary(pluginPackagePath: string): Promise<boolean> {
         return new Promise(resolve => {
-            const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-build.checksum'];
-            const digestFile = path.resolve(pluginPackagePath, '.mashroom-build.checksum');
+            const digestFile = path.resolve(pluginPackagePath, BUILD_CHECKSUM_FILE);
 
             fs.readFile(digestFile, (readErr, data) => {
                 if (readErr) {
