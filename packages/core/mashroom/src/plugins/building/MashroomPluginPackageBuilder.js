@@ -131,7 +131,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
     }
 
-    async isBuildNecessary(pluginPackagePath: string): Promise<boolean> {
+    async _isBuildNecessary(pluginPackagePath: string): Promise<boolean> {
         return new Promise(resolve => {
             const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
             const digestFile = path.resolve(pluginPackagePath, '.mashroom-dev.chsum');
@@ -172,7 +172,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     async _processQueueEntry(queueEntry: BuildQueueEntry) {
         this.removeFromBuildQueue(queueEntry.pluginPackageName);
 
-        const isBuildNecessary = await this.isBuildNecessary(queueEntry.pluginPackagePath);
+        const isBuildNecessary = await this._isBuildNecessary(queueEntry.pluginPackagePath);
         if (!isBuildNecessary) {
             this._eventEmitter.emit('build-finished', {
                 pluginPackageName: queueEntry.pluginPackageName,
