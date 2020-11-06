@@ -53,9 +53,10 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     _buildDataFolder: string;
     _npmUtils: NpmUtils;
     _buildQueue: Array<BuildQueueEntry>;
+    _buildSlots: Array<Promise<void>>;
     _eventEmitter: EventEmitter;
     _numberBuilds: number;
-    _processQueueInterval: ?IntervalID;
+    _processingAllowed: boolean;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._buildDataFolder = path.resolve(config.tmpFolder, config.name, 'build-data');
@@ -63,16 +64,20 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._npmUtils = new NpmUtils(loggerFactory);
         this._eventEmitter = new EventEmitter();
         this._eventEmitter.setMaxListeners(0);
-        this._numberBuilds = 0;
 
         this._buildQueue = [];
+        this._buildSlots = [];
 
         this._log.info(`Build data folder: ${this._buildDataFolder}`);
         ensureDirSync(this._buildDataFolder);
-        this._processQueueInterval = setInterval(this._processBuildQueue.bind(this), 2000);
+        this._processingAllowed = true;
     }
 
-    addPackageToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp?: number = Date.now()) {
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp: number = Date.now()) {
+        if (!this._processingAllowed) {
+            return;
+        }
+
         this.removeFromBuildQueue(pluginPackageName);
 
         this._buildQueue.push({
@@ -81,40 +86,8 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             buildScript,
             lastSourceUpdateTimestamp,
         });
-    }
 
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp?: number = Date.now()) {
-        const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
-        const digestFile = path.resolve(pluginPackagePath, '.mashroom-dev.chsum');
-        if (fs.existsSync(digestFile)) {
-            const storedPackageDigest = fs.readFileSync(digestFile).toString();
-            digestDirectory(
-                pluginPackagePath,
-                (err, packageDigest) => {
-                    if (storedPackageDigest !== packageDigest) {
-                        fs.writeFileSync(digestFile, packageDigest);
-                        this.addPackageToBuildQueue(pluginPackageName, pluginPackagePath, buildScript, lastSourceUpdateTimestamp);
-                    } else {
-                        this._eventEmitter.emit('build-finished', {
-                            pluginPackageName,
-                            success: true,
-                        });
-                    }
-                }, (path) => {
-                    return anymatch(IGNORE_PATHS, path);
-                },
-            );
-        } else {
-            digestDirectory(
-                pluginPackagePath,
-                (err, packageDigest) => {
-                    fs.writeFileSync(digestFile, packageDigest);
-                    this.addPackageToBuildQueue(pluginPackageName, pluginPackagePath, buildScript, lastSourceUpdateTimestamp);
-                }, (path) => {
-                    return anymatch(IGNORE_PATHS, path);
-                },
-            );
-        }
+        this._processBuildQueue();
     }
 
     removeFromBuildQueue(pluginPackageName: string) {
@@ -125,9 +98,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     stopProcessing() {
-        if (this._processQueueInterval) {
-            clearInterval(this._processQueueInterval);
-        }
+        this._processingAllowed = false;
     }
 
     on(eventName: MashroomPluginPackageBuilderEventName, listener: MashroomPluginPackageBuilderEvent => void) {
@@ -139,30 +110,77 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     async _processBuildQueue() {
-        const buildJobs = this._buildQueue.length;
-        if (buildJobs || this._numberBuilds > 0) {
-            this._log.debug(`Builds running: ${this._numberBuilds}/${MAX_PARALLEL_BUILDS}`);
+        if (this._buildSlots.length === MAX_PARALLEL_BUILDS) {
+            this._log.debug(`Builds running: ${this._buildSlots.length}/${MAX_PARALLEL_BUILDS}`);
+            return; // all slots are full
         }
-        if (buildJobs) {
-            const availableWorkers = Math.max(0, MAX_PARALLEL_BUILDS - this._numberBuilds);
+
+        while (this._buildQueue.length > 0) {
+            this._log.debug(`Builds running: ${this._buildSlots.length}/${MAX_PARALLEL_BUILDS}`);
+
+            const availableWorkers = Math.max(0, MAX_PARALLEL_BUILDS - this._buildSlots.length);
             const buildCandidates = [...this._buildQueue].slice(0, availableWorkers);
 
             if (buildCandidates.length > 0) {
-                this._log.debug(`Adding ${buildCandidates.length} out of ${buildJobs} pending build jobs.`);
-                for (let i = 0; i < buildCandidates.length; i ++) {
-                    try {
-                        this._numberBuilds ++;
-                        await this._processQueueEntry(buildCandidates[i])
-                    } finally {
-                        this._numberBuilds --;
-                    }
-                }
+                this._log.debug(`Adding ${buildCandidates.length} out of ${this._buildQueue.length} pending build jobs.`);
+                this._buildSlots.push(...buildCandidates.map(bc => this._processQueueEntry(bc)));
+                const finishedIdx = await Promise.race(this._buildSlots.map((build, idx) => build.then(() => idx)));
+                this._log.debug(`Build #${finishedIdx} out of ${this._buildSlots.length} pending jobs finished.`);
+                this._buildSlots.splice(finishedIdx, 1);
             }
         }
     }
 
+    async isBuildNecessary(pluginPackagePath: string): Promise<boolean> {
+        return new Promise(resolve => {
+            const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', '**/.mashroom-dev.chsum'];
+            const digestFile = path.resolve(pluginPackagePath, '.mashroom-dev.chsum');
+
+            fs.readFile(digestFile, (readErr, data) => {
+                if (readErr) {
+                    resolve(true);
+                    return digestDirectory(
+                        pluginPackagePath,
+                        (digestErr, packageDigest) => {
+                            if (!digestErr) {
+                                fs.writeFileSync(digestFile, packageDigest);
+                            }
+                        }, (path) => {
+                            return anymatch(IGNORE_PATHS, path);
+                        },
+                    );
+                }
+
+                const storedPackageDigest = data.toString();
+                digestDirectory(
+                    pluginPackagePath,
+                    (digestErr, packageDigest) => {
+                        if (!digestErr && storedPackageDigest === packageDigest) {
+                            return resolve(false);
+                        }
+
+                        fs.writeFileSync(digestFile, packageDigest);
+                        resolve(true);
+                    }, (path) => {
+                        return anymatch(IGNORE_PATHS, path);
+                    },
+                );
+            });
+        });
+    }
+
     async _processQueueEntry(queueEntry: BuildQueueEntry) {
         this.removeFromBuildQueue(queueEntry.pluginPackageName);
+
+        const isBuildNecessary = await this.isBuildNecessary(queueEntry.pluginPackagePath);
+        if (!isBuildNecessary) {
+            this._eventEmitter.emit('build-finished', {
+                pluginPackageName: queueEntry.pluginPackageName,
+                success: true,
+            });
+            return;
+        }
+
         let buildInfo: ?BuildInfo = null;
 
         try {
