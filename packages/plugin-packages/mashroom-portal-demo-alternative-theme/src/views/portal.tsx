@@ -9,35 +9,30 @@ export default ({
                     portalResourcesHeader, portalResourcesFooter, portalLayout, messages
                 }: MashroomPortalPageRenderModel) => (
     <html>
-        <head>
+        <head dangerouslySetInnerHTML={{ __html: `
             <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
 
-            <meta name="description" content={page.description}/>
-            <meta name="keywords" content={page.keywords}/>
+            <meta name="description" content="${page.description}"/>
+            <meta name="keywords" content="${page.keywords}"/>
 
-            {csrfToken && <meta name="csrf-token" content={csrfToken}/>}
+            ${csrfToken ? `<meta name="csrf-token" content="${csrfToken}" />` : ''}
 
-            <title>{site.title} - {page.title}</title>
+            <title>${site.title} - ${page.title}</title>
 
             <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
             <link href='https://fonts.googleapis.com/css?family=Domine' rel='stylesheet' type='text/css'/>
-            <link rel="stylesheet" type="text/css" href={`${resourcesBasePath}/bootstrap/css/bootstrap.css`}/>
-            <link rel="stylesheet" type="text/css" href={`${resourcesBasePath}/fontawesome/css/regular.css`}/>
-            <link rel="stylesheet" type="text/css" href={`${resourcesBasePath}/fontawesome/css/solid.css`}/>
-            <link rel="stylesheet" type="text/css" href={`${resourcesBasePath}/style.css`}/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/style.css'/>
 
-            {page.extraCss && (
-                <style type="text/css">
-                    {page.extraCss}
-                </style>
-            )}
+            ${page.extraCss ? `<style type="text/css">${page.extraCss}</style>` : ''}
 
-        </head>
+            ${portalResourcesHeader}
+        `}} />
         <body>
-            <span dangerouslySetInnerHTML={{__html: portalResourcesHeader}}/>
-
             <div id="mashroom-portal-admin-app-container">
                 {/* Admin app goes here */}
             </div>
