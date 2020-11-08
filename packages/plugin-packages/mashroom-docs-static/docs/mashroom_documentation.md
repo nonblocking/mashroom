@@ -425,7 +425,7 @@ When you're going to run _Mashroom Server_ in a cluster you should keep in mind:
 
 A cluster safe log configuration could look like this:
 
-```json
+```js
 const NODE_ID = process.env.pm_id || process.pid;
 
 module.exports = {
@@ -629,6 +629,10 @@ this in the _Mashroom_ config file:
 [mashroom-portal](../../mashroom-portal/README.md) [inc]
 
 [mashroom-portal-default-layouts](../../mashroom-portal-default-layouts/README.md) [inc]
+
+[mashroom-portal-legacy-browser-support](../../mashroom-portal-legacy-browser-support/README.md) [inc]
+
+[mashroom-portal-app-user-extradata](../../mashroom-portal-app-user-extradata/README.md) [inc]
 
 [mashroom-portal-default-theme](../../mashroom-portal-default-theme/README.md) [inc]
 

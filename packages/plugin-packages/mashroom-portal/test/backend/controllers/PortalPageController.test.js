@@ -4,6 +4,7 @@ import path from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalPageController from '../../../src/backend/controllers/PortalPageController';
+import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -14,139 +15,137 @@ setPortalPluginConfig({
     autoExtendAuthentication: false
 });
 
-import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
+const theme: MashroomPortalTheme = {
+    name: 'my-theme',
+    description: null,
+    lastReloadTs: Date.now(),
+    engineName: 'fooEngine',
+    requireEngine: () => {},
+    resourcesRootPath: './public',
+    viewsPath: './views',
+};
+
+const layout: MashroomPortalLayout = {
+    name: 'my-layout',
+    description: null,
+    lastReloadTs: Date.now(),
+    layoutId: 'test',
+    layoutPath: path.resolve(__dirname, './test_layout.html'),
+};
+
+const pluginRegistry2: any = {
+    themes: [theme],
+    layouts: [layout],
+    portalApps: [{
+        name: 'Mashroom Welcome Portal App',
+        defaultAppConfig: {
+            firstName: 'John',
+        },
+    }, {
+        name: 'Mashroom Welcome Portal App 2',
+        defaultAppConfig: {
+            firstName: 'Foo',
+        },
+    }],
+};
+
+const site: any = {
+    siteId: 'default',
+    title: 'Default Site',
+    path: '/web',
+    pages: [
+        {
+            pageId: 'test-page',
+            title: 'Test Page',
+            friendlyUrl: '/bar',
+            subPages: [],
+        },
+    ],
+};
+
+const page1: any = {
+    pageId: 'test-page',
+    theme: 'my-theme',
+    layout: 'my-layout',
+    portalApps: {
+        'app-area1': [{
+            pluginName: 'Mashroom Welcome Portal App',
+            instanceId: 'ABCDEF',
+        }],
+        'app-area2': [{
+            pluginName: 'Portal App 2',
+            instanceId: '2',
+        }, {
+            pluginName: 'Portal App 3',
+            instanceId: '3',
+        }],
+    },
+};
+
+const portalAppInstance1: any = {
+    pluginName: 'Mashroom Welcome Portal App',
+    instanceId: 'ABCDEF',
+    appConfig: {},
+};
+
+const pluginContext: any = {
+    serverConfig: {
+        name: 'Server',
+        portal: {
+            adminApp: 'admin-portal-app',
+        },
+    },
+    loggerFactory: dummyLoggerFactory,
+    services: {
+        portal: {
+            service: {
+                findSiteByPath() {
+                    return site;
+                },
+                findPageRefByFriendlyUrl() {
+                    return site.pages[0];
+                },
+                getPage() {
+                    return page1;
+                },
+                updatePage() {},
+                getPortalAppInstance() {
+                    return portalAppInstance1;
+                },
+                updatePortalAppInstance() {},
+                insertPortalAppInstance() {},
+                deletePortalAppInstance() {}
+            },
+        },
+        security: {
+            service: {
+                async getUser() {
+                    return {
+                        username: 'admin',
+                        roles: ['Administrator'],
+                    };
+                },
+                isInRole() {
+                    return true;
+                },
+                isAdmin() {
+                    return true;
+                },
+                async checkResourcePermission() {
+                    return true;
+                }
+            },
+        },
+        i18n: {
+            service: {
+                getLanguage: () => 'en',
+                translate: (req, str) => str
+            },
+        },
+    },
+};
 
 describe('PortalPageController', () => {
-
-    const theme: MashroomPortalTheme = {
-        name: 'my-theme',
-        description: null,
-        lastReloadTs: Date.now(),
-        engineName: 'fooEngine',
-        requireEngine: () => {},
-        resourcesRootPath: './public',
-        viewsPath: './views',
-    };
-
-    const layout: MashroomPortalLayout = {
-        name: 'my-layout',
-        description: null,
-        lastReloadTs: Date.now(),
-        layoutId: 'test',
-        layoutPath: path.resolve(__dirname, './test_layout.html'),
-    };
-
-    const pluginRegistry2: any = {
-        themes: [theme],
-        layouts: [layout],
-        portalApps: [{
-            name: 'Mashroom Welcome Portal App',
-            defaultAppConfig: {
-                firstName: 'John',
-            },
-        }, {
-            name: 'Mashroom Welcome Portal App 2',
-            defaultAppConfig: {
-                firstName: 'Foo',
-            },
-        }],
-    };
-
-    const site: any = {
-        siteId: 'default',
-        title: 'Default Site',
-        path: '/web',
-        pages: [
-            {
-                pageId: 'test-page',
-                title: 'Test Page',
-                friendlyUrl: '/bar',
-                subPages: [],
-            },
-        ],
-    };
-
-    const page1: any = {
-        pageId: 'test-page',
-        theme: 'my-theme',
-        layout: 'my-layout',
-        portalApps: {
-            'app-area1': [{
-                pluginName: 'Mashroom Welcome Portal App',
-                instanceId: 'ABCDEF',
-            }],
-            'app-area2': [{
-                pluginName: 'Portal App 2',
-                instanceId: '2',
-            }, {
-                pluginName: 'Portal App 3',
-                instanceId: '3',
-            }],
-        },
-    };
-
-    const portalAppInstance1: any = {
-        pluginName: 'Mashroom Welcome Portal App',
-        instanceId: 'ABCDEF',
-        appConfig: {},
-    };
-
-    const pluginContext: any = {
-        serverConfig: {
-            name: 'Server',
-            portal: {
-                adminApp: 'admin-portal-app',
-            },
-        },
-        loggerFactory: dummyLoggerFactory,
-        services: {
-            portal: {
-                service: {
-                    findSiteByPath() {
-                        return site;
-                    },
-                    findPageRefByFriendlyUrl() {
-                        return site.pages[0];
-                    },
-                    getPage() {
-                        return page1;
-                    },
-                    updatePage() {},
-                    getPortalAppInstance() {
-                        return portalAppInstance1;
-                    },
-                    updatePortalAppInstance() {},
-                    insertPortalAppInstance() {},
-                    deletePortalAppInstance() {}
-                },
-            },
-            security: {
-                service: {
-                    async getUser() {
-                        return {
-                            username: 'admin',
-                            roles: ['Administrator'],
-                        };
-                    },
-                    isInRole() {
-                        return true;
-                    },
-                    isAdmin() {
-                        return true;
-                    },
-                    async checkResourcePermission() {
-                        return true;
-                    }
-                },
-            },
-            i18n: {
-                service: {
-                    getLanguage: () => 'en',
-                    translate: (req, str) => str
-                },
-            },
-        },
-    };
 
     it('returns all app instances on the page', (done) => {
 

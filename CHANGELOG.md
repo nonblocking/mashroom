@@ -3,8 +3,15 @@
 
 ## [unreleased]
 
- * Portal: Plugins are built during the bootstrap only when they changed since the last start
- * Portal: Plugin updates are now pushed wo the Browser via SSE (in development mode). So, Portal Apps are reloaded faster after an update.
+ * Core: Plugins are now only built when they changed since the last start. This dramatically decreases the start time in dev mode.
+ * Added a new plugin *mashroom-portal-legacy-browser-support* that adds a polyfill for IE11 to all portal pages (only if IE detected)
+ * Portal: Added a new plugin type *portal-app-enhancement* that allows it to update or rewrite the *portalAppSetup* that is passed to Portal Apps at startup.
+   This can be used to add extra appConfig or user properties from a context. Additionally, this plugin allows it to pass extra *clientServices*
+   to Portal Apps or replace one of the default ones.
+ * Portal: Added a new plugin type *portal-page-enhancement* that allows it to add extra resources (JavaScript and CSS) to a Portal page based on some (optional) rules.
+   The resources can also be generated dynamically. This can be used to add polyfills or some analytics stuff without the need to change the theme.
+ * HTTP Proxy: The HTTP interceptor plugins now receive the original headers from the incoming request without filtering
+ * Portal: Plugin updates are now pushed to the Browser via SSE (in development mode). So, Portal Apps are reloaded faster after an update.
    Also, the portal page reloads on theme or layout changes.
  * Portal: Fixed the problem that the CSRF token was invalidated on public pages each when an ajax request was rejected by the ACL check;
    and after the invalidation all subsequent ajax POST's were failing

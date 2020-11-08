@@ -74,6 +74,3 @@ And configure this plugin like this in the Mashroom config file:
 ```
 
 The _passwordHash_ is the SHA256 hash of the password. _displayName_, _email_ and _pictureUrl_ are optional.
-
-**Please note**: Everything added to _extraData_ will also be made available to Portal Apps in is therefore visible in the
-browser!

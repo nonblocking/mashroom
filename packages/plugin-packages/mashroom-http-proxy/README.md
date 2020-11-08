@@ -12,8 +12,6 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 After that you can use the service like this:
 
 ```js
-// @flow
-
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 
 export default async (req: ExpressRequest, res: ExpressResponse) => {
@@ -112,8 +110,6 @@ To register your custom http-proxy-interceptor plugin add this to _package.json_
 The bootstrap returns the interceptor:
 
 ```js
-// @flow
-
 import type {MashroomHttpProxyInterceptorPluginBootstrapFunction} from '@mashroom/mashroom-http-proxy/type-definitions';
 
 const bootstrap: MashroomHttpProxyInterceptorPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
@@ -132,7 +128,7 @@ interface MashroomHttpProxyInterceptor {
     /**
      * Intercept HTTP proxy call to given targetUri.
      *
-     * The existingHeaders contain the (filtered!) request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
+     * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
      * The existingQueryParams contain query parameters from the request and the ones already added by other interceptors.
      *
      * req is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access req.method and req.pluginContext.

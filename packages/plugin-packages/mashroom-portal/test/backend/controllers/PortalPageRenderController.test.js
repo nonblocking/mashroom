@@ -4,6 +4,7 @@ import path from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalPageRenderController from '../../../src/backend/controllers/PortalPageRenderController';
+import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -14,154 +15,223 @@ setPortalPluginConfig({
     autoExtendAuthentication: false
 });
 
-import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
+
+const theme: MashroomPortalTheme = {
+    name: 'my-theme',
+    description: null,
+    lastReloadTs: Date.now(),
+    engineName: 'fooEngine',
+    requireEngine: () => {},
+    resourcesRootPath: './public',
+    viewsPath: './views',
+};
+
+const layout: MashroomPortalLayout = {
+    name: 'my-layout',
+    description: null,
+    lastReloadTs: Date.now(),
+    layoutId: 'test',
+    layoutPath: path.resolve(__dirname, './test_layout.html'),
+};
+
+const pluginRegistry1: any = {
+    themes: [],
+    layouts: [],
+    portalApps: [{
+        name: 'Mashroom Welcome Portal App',
+        defaultAppConfig: {
+            firstName: 'John',
+        },
+    }],
+    portalAppEnhancements: [],
+    portalPageEnhancements: [],
+};
+
+const pluginRegistry2: any = {
+    themes: [theme],
+    layouts: [layout],
+    portalApps: [{
+        name: 'Mashroom Welcome Portal App',
+        defaultAppConfig: {
+            firstName: 'John',
+        },
+    }, {
+        name: 'Mashroom Welcome Portal App 2',
+        defaultAppConfig: {
+            firstName: 'Foo',
+        },
+    }],
+    portalAppEnhancements: [],
+    portalPageEnhancements: [],
+};
+
+const pluginRegistry3: any = {
+    themes: [theme],
+    layouts: [layout],
+    portalApps: [{
+        name: 'Mashroom Welcome Portal App',
+        defaultAppConfig: {
+            firstName: 'John',
+        },
+    }, {
+        name: 'Mashroom Welcome Portal App 2',
+        defaultAppConfig: {
+            firstName: 'Foo',
+        },
+    }],
+    portalAppEnhancements: [{
+        name: 'Test App Enhancement',
+        description: null,
+        portalCustomClientServices: {
+            'customService': 'foo'
+        },
+    }],
+    portalPageEnhancements: [{
+        name: 'Test Page Enhancement',
+        resourcesRootUri: 'file://' + __dirname,
+        pageResources: {
+            js: [{
+                path: 'test_script1.js',
+                rule: 'yes',
+                location: 'header',
+                inline: false,
+            }, {
+                path: 'test_script2.js',
+                location: 'footer',
+                inline: true,
+            }, {
+                path: 'test_script3.js',
+                rule: 'no',
+                location: 'footer',
+                inline: false,
+            }, {
+                dynamicResource: 'generatedScript',
+                rule: 'yes',
+                location: 'header',
+            }],
+            css: [{
+                path: 'test_style1.css',
+                location: 'footer',
+                inline: false,
+            }, {
+                path: 'test_style2.css',
+                location: 'header',
+                inline: true,
+            }]
+        },
+        plugin: {
+            dynamicResources: {
+                generatedScript: () => 'console.info("I am generated!");',
+            },
+            rules: {
+                'yes': () => true,
+                'no': () => false,
+            }
+        }
+    }]
+};
+
+const site: any = {
+    siteId: 'default',
+    title: 'Default Site',
+    path: '/web',
+    pages: [
+        {
+            pageId: 'test-page',
+            title: 'Test Page',
+            friendlyUrl: '/bar',
+            subPages: [],
+        },
+    ],
+};
+
+const page1: any = {
+    pageId: 'test-page',
+    theme: 'my-theme',
+    layout: 'my-layout',
+    portalApps: {
+        'app-area1': [{
+            pluginName: 'Mashroom Welcome Portal App',
+            instanceId: 'ABCDEF',
+        }],
+        'app-area2': [{
+            pluginName: 'Portal App 2',
+            instanceId: '2',
+        }, {
+            pluginName: 'Portal App 3',
+            instanceId: '3',
+        }],
+    },
+};
+
+const portalAppInstance1: any = {
+    pluginName: 'Mashroom Welcome Portal App',
+    instanceId: 'ABCDEF',
+    appConfig: {},
+};
+
+const pluginContext: any = {
+    serverConfig: {
+        name: 'Server',
+        portal: {
+            adminApp: 'admin-portal-app',
+        },
+    },
+    serverInfo: {
+        devMode: true,
+    },
+    loggerFactory: dummyLoggerFactory,
+    services: {
+        portal: {
+            service: {
+                findSiteByPath() {
+                    return site;
+                },
+                findPageRefByFriendlyUrl() {
+                    return site.pages[0];
+                },
+                getPage() {
+                    return page1;
+                },
+                updatePage() {},
+                getPortalAppInstance() {
+                    return portalAppInstance1;
+                },
+                updatePortalAppInstance() {},
+                insertPortalAppInstance() {},
+                deletePortalAppInstance() {}
+            },
+        },
+        security: {
+            service: {
+                getUser() {
+                    return {
+                        username: 'admin',
+                        roles: ['Administrator'],
+                    };
+                },
+                isInRole() {
+                    return true;
+                },
+                isAdmin() {
+                    return true;
+                },
+                async checkResourcePermission() {
+                    return true;
+                }
+            },
+        },
+        i18n: {
+            service: {
+                getLanguage: () => 'en',
+                translate: (req, str) => str,
+                getMessage: () => 'error'
+            },
+        },
+    },
+};
 
 describe('PortalPageRenderController', () => {
-
-    const theme: MashroomPortalTheme = {
-        name: 'my-theme',
-        description: null,
-        lastReloadTs: Date.now(),
-        engineName: 'fooEngine',
-        requireEngine: () => {},
-        resourcesRootPath: './public',
-        viewsPath: './views',
-    };
-
-    const layout: MashroomPortalLayout = {
-        name: 'my-layout',
-        description: null,
-        lastReloadTs: Date.now(),
-        layoutId: 'test',
-        layoutPath: path.resolve(__dirname, './test_layout.html'),
-    };
-
-    const pluginRegistry1: any = {
-        themes: [],
-        layouts: [],
-        portalApps: [{
-            name: 'Mashroom Welcome Portal App',
-            defaultAppConfig: {
-                firstName: 'John',
-            },
-        }],
-    };
-
-    const pluginRegistry2: any = {
-        themes: [theme],
-        layouts: [layout],
-        portalApps: [{
-            name: 'Mashroom Welcome Portal App',
-            defaultAppConfig: {
-                firstName: 'John',
-            },
-        }, {
-            name: 'Mashroom Welcome Portal App 2',
-            defaultAppConfig: {
-                firstName: 'Foo',
-            },
-        }],
-    };
-
-    const site: any = {
-        siteId: 'default',
-        title: 'Default Site',
-        path: '/web',
-        pages: [
-            {
-                pageId: 'test-page',
-                title: 'Test Page',
-                friendlyUrl: '/bar',
-                subPages: [],
-            },
-        ],
-    };
-
-    const page1: any = {
-        pageId: 'test-page',
-        theme: 'my-theme',
-        layout: 'my-layout',
-        portalApps: {
-            'app-area1': [{
-                pluginName: 'Mashroom Welcome Portal App',
-                instanceId: 'ABCDEF',
-            }],
-            'app-area2': [{
-                pluginName: 'Portal App 2',
-                instanceId: '2',
-            }, {
-                pluginName: 'Portal App 3',
-                instanceId: '3',
-            }],
-        },
-    };
-
-    const portalAppInstance1: any = {
-        pluginName: 'Mashroom Welcome Portal App',
-        instanceId: 'ABCDEF',
-        appConfig: {},
-    };
-
-    const pluginContext: any = {
-        serverConfig: {
-            name: 'Server',
-            portal: {
-                adminApp: 'admin-portal-app',
-            },
-        },
-        serverInfo: {
-            devMode: true,
-        },
-        loggerFactory: dummyLoggerFactory,
-        services: {
-            portal: {
-                service: {
-                    findSiteByPath() {
-                        return site;
-                    },
-                    findPageRefByFriendlyUrl() {
-                        return site.pages[0];
-                    },
-                    getPage() {
-                        return page1;
-                    },
-                    updatePage() {},
-                    getPortalAppInstance() {
-                        return portalAppInstance1;
-                    },
-                    updatePortalAppInstance() {},
-                    insertPortalAppInstance() {},
-                    deletePortalAppInstance() {}
-                },
-            },
-            security: {
-                service: {
-                    getUser() {
-                        return {
-                            username: 'admin',
-                            roles: ['Administrator'],
-                        };
-                    },
-                    isInRole() {
-                        return true;
-                    },
-                    isAdmin() {
-                        return true;
-                    },
-                    async checkResourcePermission() {
-                        return true;
-                    }
-                },
-            },
-            i18n: {
-                service: {
-                    getLanguage: () => 'en',
-                    translate: (req, str) => str,
-                    getMessage: () => 'error'
-                },
-            },
-        },
-    };
 
     it('renders a page based on a minimal template if no theme is set', (done) => {
         const webApp: any = {
@@ -245,6 +315,52 @@ describe('PortalPageRenderController', () => {
         };
 
         const controller = new PortalPageRenderController(webApp, pluginRegistry2);
+        controller.renderPortalPage(req, res);
+    });
+
+    it('renders a page with enhancement plugins', (done) => {
+        let engineName = null;
+        const webappProps = new Map();
+        const webApp: any = {
+            engine: (name) => engineName = name,
+            set: (key: string, value: any) => webappProps.set(key, value),
+        };
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            params: {
+                sitePath: 'web',
+            },
+            connection: {
+                remoteAddress: '127.0.0.1'
+            },
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            render: (template: string, model: Object) => {
+
+                // console.info(model.portalResourcesHeader);
+                // console.info(model.portalResourcesFooter);
+
+                expect(model.portalResourcesHeader).toContain('window[\'MashroomPortalCustomClientServices\'] = {"customService":"foo"};');
+                expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js"></script>');
+                expect(model.portalResourcesHeader).toContain(' .bar {');
+                expect(model.portalResourcesHeader).toContain('console.info("I am generated!");');
+
+                expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
+                expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css" />');
+                expect(model.portalResourcesFooter).not.toContain('test_script3.js');
+
+                done();
+            },
+        };
+
+        const controller = new PortalPageRenderController(webApp, pluginRegistry3);
         controller.renderPortalPage(req, res);
     });
 

@@ -15,17 +15,6 @@ function equals(this: any, lvalue: any, rvalue: any, options: any): any {
     }
 }
 
-function year(): string {
-    return `<span>${new Date().getFullYear()}</span>`;
-}
-
-function isIE(this: any, userAgent: UserAgent, options: any): any {
-    if (userAgent.browser.name && userAgent.browser.name.startsWith('IE')) {
-        return options.fn(this);
-    }
-    return null;
-}
-
 function i18n(messages: (key: string) => string, key: string): string {
     return messages(key) || key;
 }
@@ -47,8 +36,6 @@ function ifShowEnvAndVersions(this: any, options: any): any {
 
 export default {
     equals,
-    year,
-    isIE,
     env,
     mashroomVersion,
     ifShowEnvAndVersions,

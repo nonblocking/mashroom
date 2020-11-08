@@ -17,10 +17,10 @@ import type {
 
 export default class PortalLayoutController {
 
-    pluginRegistry: MashroomPortalPluginRegistry;
+    _pluginRegistry: MashroomPortalPluginRegistry;
 
     constructor(pluginRegistry: MashroomPortalPluginRegistry) {
-        this.pluginRegistry = pluginRegistry;
+        this._pluginRegistry = pluginRegistry;
     }
 
     async getAvailablePortalLayouts(req: ExpressRequest, res: ExpressResponse) {
@@ -34,7 +34,7 @@ export default class PortalLayoutController {
                 return;
             }
 
-            const availableLayouts: Array<MashroomAvailablePortalLayout> = portalService.getLayouts().map((t) => ({
+            const availableLayouts: Array<MashroomAvailablePortalLayout> = this._pluginRegistry.layouts.map((t) => ({
                 name: t.name,
                 description: t.description,
                 lastReloadTs: t.lastReloadTs

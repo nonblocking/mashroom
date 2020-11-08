@@ -213,8 +213,6 @@ To register a new portal-app plugin add this to _package.json_:
 The bootstrap is in this case a global function that starts the app within the given host element. Here for example a React app:
 
 ```js
-// flow
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -643,8 +641,6 @@ Since *Mashroom Portal* uses the *Express* render mechanism all Template Engines
 The bootstrap returns the template engine and the engine name like so:
 
 ```js
-// @flow
-
 import exphbs from 'express-handlebars';
 import path from 'path';
 
@@ -757,7 +753,7 @@ To register a new portal-layouts plugin add this to _package.json_:
      "mashroom": {
         "plugins": [
            {
-                "name": "Mashroom Portal Default Layouts",
+                "name": "My Layouts",
                 "type": "portal-layouts",
                 "layouts": {
                     "1 Column": "./layouts/1column.html",
@@ -815,8 +811,6 @@ To register a new remote-portal-app-registry plugin add this to _package.json_:
 And the bootstrap must return an implementation of _RemotePortalAppRegistry_:
 
  ```js
-// @flow
-
 import {MyRegistry} from './MyRegistry';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -834,5 +828,158 @@ The plugin must implement the following interface:
 ```js
 export interface MashroomRemotePortalAppRegistry {
     +portalApps: Array<MashroomPortalApp>;
+}
+```
+
+h3.
+
+### portal-page-enhancement
+
+This plugin type allows it to add extra resources (JavaScript and CSS) to a Portal page based on some (optional) rules.
+This can be used to add polyfills or some analytics stuff without the need to change a theme.
+
+To register a new portal-page-enhancement plugin add this to _package.json_:
+
+```json
+{
+     "mashroom": {
+        "plugins": [
+           {
+                "name": "My Portal Page Enhancement",
+                "type": "portal-page-enhancement",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "pageResources": {
+                    "js": [{
+                        "path": "my-extra-scripts.js",
+                        "rule": "includeExtraScript",
+                        "location": "header",
+                        "inline": false
+                    }],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist/public"
+                }
+            }
+        ]
+     }
+}
+```
+
+ * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages. They can be added
+   to the header or footer (location) and can also be inlined. The (optional) rule property refers to a rule in the
+   instantiated plugin (bootstrap), see below.
+
+The bootstrap returns a map of rules and could look like this:
+
+```js
+import type {MashroomPortalPageEnhancementPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
+    return {
+        rules: {
+            // Example rule: Show only for IE
+            includeExtraScript: (sitePath, pageFriendlyUrl, lang, userAgent) => userAgent.browser.name === 'IE',
+        }
+    }
+};
+
+export default bootstrap;
+```
+
+The JavaScript or CSS resource can also be generated dynamically by the plugin. In that case it will always be inlined.
+To use this state a _dynamicResource_ name instead of a _path_ and include the function that actually generates
+the content to the object returned by the bootstrap:
+
+```json
+{
+     "mashroom": {
+        "plugins": [
+           {
+                "name": "My Portal Page Enhancement",
+                "type": "portal-page-enhancement",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "pageResources": {
+                    "js": [{
+                        "dynamicResource": "extraScript",
+                        "location": "header"
+                    }],
+                    "css": []
+                }
+            }
+        ]
+     }
+}
+```
+
+```js
+import type {MashroomPortalPageEnhancementPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
+    return {
+        dynamicResources: {
+            extraScript: (): (sitePath, pageFriendlyUrl, lang, userAgent) => `console.info('test');`,
+        }
+    }
+};
+
+export default bootstrap;
+```
+
+### portal-app-enhancement
+
+This plugin type allows it to update or rewrite the _portalAppSetup_ that is passed to Portal Apps at startup.
+This can be used to add extra config or user properties from a context.
+Additionally, this plugin allows it to pass extra _clientServices_ to Portal Apps or replace one of the default ones.
+
+To register a new portal-app-enhancement plugin add this to _package.json_:
+
+```json
+{
+     "mashroom": {
+        "plugins": [
+           {
+              "name": "My Portal App Enhancement",
+              "type": "portal-app-enhancement",
+              "bootstrap": "./dist/mashroom-bootstrap.js",
+              "portalCustomClientServices": {
+                  "customService": "MY_CUSTOM_SERVICE"
+              }
+           }
+        ]
+     }
+}
+```
+
+ * _portalCustomClientServices_: A map of client services that should be injected in the _clientServices_ object the
+  Portal Apps receive. The value (MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in the _window_).
+
+The bootstrap returns the actual enhancer plugin:
+
+```js
+import MyPortalAppEnhancementPlugin from './MyPortalAppEnhancementPlugin';
+import type {MashroomPortalAppEnhancementPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppEnhancementPluginBootstrapFunction = () => {
+    return new MyPortalAppEnhancementPlugin();
+};
+
+export default bootstrap;
+```
+
+The plugin has to implement the following interface:
+
+```js
+export interface MashroomPortalAppEnhancementPlugin {
+    /**
+     * Enhance the portalAppSetup object passed as the first argument (if necessary)
+     */
+    enhancePortalAppSetup: (
+        portalAppSetup: MashroomPortalAppSetup,
+        sitePath: string,
+        pageFriendlyUrl: string,
+        portalApp: MashroomPortalApp,
+        request: ExpressRequest
+    ) => MashroomPortalAppSetup;
 }
 ```

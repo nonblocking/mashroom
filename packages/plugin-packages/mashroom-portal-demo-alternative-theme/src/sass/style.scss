@@ -402,6 +402,7 @@ header {
 
     .mashroom-portal-app-loading {
         padding: 5px;
+        min-height: 100px;
 
         &:before {
             display: block;
@@ -793,9 +794,14 @@ mashroom-portal-ui-error-message {
         }
     }
 
-    .mashroom-portal-app-loading:before {
-        color: $COLOR_WHITE;
-        font-size: 14px;
+    .mashroom-portal-app-loading {
+        min-height: 32px;
+        background-color: $COLOR_BLACK;
+
+        &:before {
+            color: $COLOR_WHITE;
+            font-size: 14px;
+        }
     }
 }
 

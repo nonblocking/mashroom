@@ -4,15 +4,15 @@ import {isAdmin} from '../utils/security_utils';
 
 import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
-import type {MashroomAvailablePortalTheme, MashroomPortalService} from '../../../type-definitions';
-import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
+import type {MashroomAvailablePortalTheme} from '../../../type-definitions';
+import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalThemeController {
 
-    pluginRegistry: MashroomPortalPluginRegistry;
+    _pluginRegistry: MashroomPortalPluginRegistry;
 
     constructor(pluginRegistry: MashroomPortalPluginRegistry) {
-        this.pluginRegistry = pluginRegistry;
+        this._pluginRegistry = pluginRegistry;
     }
 
     async getPortalThemeResource(req: ExpressRequest, res: ExpressResponse) {
@@ -60,14 +60,12 @@ export default class PortalThemeController {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-
             if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
 
-            const availableThemes: Array<MashroomAvailablePortalTheme> = portalService.getThemes().map((t) => ({
+            const availableThemes: Array<MashroomAvailablePortalTheme> = this._pluginRegistry.themes.map((t) => ({
                 name: t.name,
                 description: t.description,
                 lastReloadTs: t.lastReloadTs
@@ -82,6 +80,6 @@ export default class PortalThemeController {
     }
 
     _getPortalTheme(themeName: string) {
-        return this.pluginRegistry.themes.find((th) => th.name === themeName);
+        return this._pluginRegistry.themes.find((th) => th.name === themeName);
     }
 }

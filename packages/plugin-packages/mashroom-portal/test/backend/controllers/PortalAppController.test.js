@@ -6,166 +6,186 @@ import '../../../src/backend/context/global_portal_context';
 import PortalAppController from '../../../src/backend/controllers/PortalAppController';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 
-import type {MashroomPortalApp, MashroomPortalAppInstance, MashroomPortalPage} from '../../../type-definitions';
+import type {
+    MashroomPortalApp,
+    MashroomPortalAppEnhancement,
+    MashroomPortalAppInstance,
+    MashroomPortalPage
+} from '../../../type-definitions';
 
-describe('PortalAppController', () => {
 
-    setPortalPluginConfig({
-        path: '/portal',
-        adminApp: 'admin-portal-app',
-        defaultTheme: 'foo',
-        defaultLayout: 'foo',
-        warnBeforeAuthenticationExpiresSec: 120,
-        autoExtendAuthentication: false
-    });
+setPortalPluginConfig({
+    path: '/portal',
+    adminApp: 'admin-portal-app',
+    defaultTheme: 'foo',
+    defaultLayout: 'foo',
+    warnBeforeAuthenticationExpiresSec: 120,
+    autoExtendAuthentication: false
+});
 
-    const portalApp1: MashroomPortalApp = {
-        name: 'Test Portal App 1',
-        title: {
-            "en": "Test Portal App",
-            "de": "Test Test Test"
+const portalApp1: MashroomPortalApp = {
+    name: 'Test Portal App 1',
+    title: {
+        "en": "Test Portal App",
+        "de": "Test Test Test"
+    },
+    description: null,
+    tags: [],
+    version: '1.0',
+    homepage: null,
+    author: null,
+    license: null,
+    category: null,
+    metaInfo: null,
+    lastReloadTs: 222222222,
+    globalLaunchFunction: 'foo',
+    resourcesRootUri: `file:/${__dirname}`,
+    resources: {
+        js: ['bundle.js'],
+        css: [],
+    },
+    sharedResources: {
+        js: [],
+        css: [],
+    },
+    screenshots: null,
+    defaultRestrictViewToRoles: ["Role1"],
+    rolePermissions: {
+        'edit': ['Role1'],
+        'delete': ['Administrator']
+    },
+    restProxies: {
+        "": {
+            targetUri: 'https://www.mashroom-server.com/api',
         },
-        description: null,
-        tags: [],
-        version: '1.0',
-        homepage: null,
-        author: null,
-        license: null,
-        category: null,
-        metaInfo: null,
-        lastReloadTs: 222222222,
-        globalLaunchFunction: 'foo',
-        resourcesRootUri: `file:/${__dirname}`,
-        resources: {
-            js: ['bundle.js'],
-            css: [],
+        '1': {
+            targetUri: 'https://www.mashroom-server.com/api',
         },
-        sharedResources: {
-            js: [],
-            css: [],
-        },
-        screenshots: null,
-        defaultRestrictViewToRoles: ["Role1"],
-        rolePermissions: {
-            'edit': ['Role1'],
-            'delete': ['Administrator']
-        },
-        restProxies: {
-            "": {
-                targetUri: 'https://www.mashroom-server.com/api',
-            },
-            '1': {
-                targetUri: 'https://www.mashroom-server.com/api',
-            },
-        },
-        defaultAppConfig: {
-            hello: 'world',
-            foo: 'bar',
-        },
-    };
+    },
+    defaultAppConfig: {
+        hello: 'world',
+        foo: 'bar',
+    },
+};
 
-    const portalApp2: MashroomPortalApp = {
-        name: 'Test Portal App 2',
-        title: {} ,
-        description: null,
-        tags: [],
-        version: '1.0',
-        homepage: null,
-        author: null,
-        license: null,
-        category: null,
-        metaInfo: null,
-        lastReloadTs: 222222222,
-        globalLaunchFunction: 'foo',
-        resourcesRootUri: `file:/${__dirname}`,
-        resources: {
-            js: ['bundle.js'],
-            css: [],
-        },
-        sharedResources: {
-            js: [],
-            css: [],
-        },
-        screenshots: null,
-        defaultRestrictViewToRoles: ["OtherRole"],
-        rolePermissions: {},
-        restProxies: {},
-        defaultAppConfig: {},
-    };
+const portalApp2: MashroomPortalApp = {
+    name: 'Test Portal App 2',
+    title: {} ,
+    description: null,
+    tags: [],
+    version: '1.0',
+    homepage: null,
+    author: null,
+    license: null,
+    category: null,
+    metaInfo: null,
+    lastReloadTs: 222222222,
+    globalLaunchFunction: 'foo',
+    resourcesRootUri: `file:/${__dirname}`,
+    resources: {
+        js: ['bundle.js'],
+        css: [],
+    },
+    sharedResources: {
+        js: [],
+        css: [],
+    },
+    screenshots: null,
+    defaultRestrictViewToRoles: ["OtherRole"],
+    rolePermissions: {},
+    restProxies: {},
+    defaultAppConfig: {},
+};
 
-    const portalAppInstance1: MashroomPortalAppInstance = {
-        pluginName: 'Test Portal App 1',
-        instanceId: 'ABCD',
-        appConfig: {
-            'hello': 'peter',
-        },
-    };
+const portalAppInstance1: MashroomPortalAppInstance = {
+    pluginName: 'Test Portal App 1',
+    instanceId: 'ABCD',
+    appConfig: {
+        'hello': 'peter',
+    },
+};
 
-    const page1: MashroomPortalPage = {
-        pluginName: 'Test page',
-        pageId: 'foo',
-        portalApps: {
-            'area1': [{
-                pluginName: 'Test Portal App 1',
-                instanceId: 'ABCD',
-            }],
-        },
-    };
+const page1: MashroomPortalPage = {
+    pluginName: 'Test page',
+    pageId: 'foo',
+    portalApps: {
+        'area1': [{
+            pluginName: 'Test Portal App 1',
+            instanceId: 'ABCD',
+        }],
+    },
+};
 
-    const pluginRegistry: any = {
-        portalApps: [portalApp1, portalApp2],
-    };
+const portalAppEnhancement: MashroomPortalAppEnhancement = {
+    name: 'Test Enhancement',
+    description: null,
+    portalCustomClientServices: {
+    },
+    plugin: {
+        enhancePortalAppSetup: (portalAppSetup, portalApp, req) => Promise.resolve({
+            ...portalAppSetup,
+            user: {
+                ...portalAppSetup.user,
+                extraData: 'foo',
+            }
+        })
+    }
+}
 
-    const pluginContext: any = {
-        loggerFactory: dummyLoggerFactory,
-        services: {
-            portal: {
-                service: {
-                    async findSiteByPath() {
-                        return {
+const pluginRegistry: any = {
+    portalApps: [portalApp1, portalApp2],
+    portalAppEnhancements: [portalAppEnhancement],
+};
 
-                        }
-                    },
-                    async getPage() {
-                        return page1;
-                    },
-                    async getPortalAppInstance(name, id) {
-                        if (id) {
-                            return portalAppInstance1;
-                        }
-                        return null;
-                    },
-                },
-            },
-            security: {
-                service: {
-                    getUser() {
-                        return {
-                            username: 'test',
-                            displayName: 'Test User',
-                            email: 'test@test.com',
-                            roles: ['Role1'],
-                            extraData: {
-                                'customerId': 12345678,
-                            },
-                        };
-                    },
-                    isAdmin() {
-                        return false
-                    },
-                    async checkResourcePermission() {
-                        return true;
+const pluginContext: any = {
+    loggerFactory: dummyLoggerFactory,
+    services: {
+        portal: {
+            service: {
+                async findSiteByPath() {
+                    return {
+
                     }
                 },
-            },
-            i18n: {
-                service: {
-                    getLanguage: () => 'en',
-                    translate: () => 'Translated title'
+                async getPage() {
+                    return page1;
+                },
+                async getPortalAppInstance(name, id) {
+                    if (id) {
+                        return portalAppInstance1;
+                    }
+                    return null;
                 },
             },
         },
-    };
+        security: {
+            service: {
+                getUser() {
+                    return {
+                        username: 'test',
+                        displayName: 'Test User',
+                        email: 'test@test.com',
+                        roles: ['Role1'],
+                    };
+                },
+                isAdmin() {
+                    return false
+                },
+                async checkResourcePermission() {
+                    return true;
+                }
+            },
+        },
+        i18n: {
+            service: {
+                getLanguage: () => 'en',
+                translate: () => 'Translated title'
+            },
+        },
+    },
+};
+
+describe('PortalAppController', () => {
 
     it('generates portal app setup', async () => {
 
@@ -223,9 +243,7 @@ describe('PortalAppController', () => {
                 permissions: {
                     edit: true
                 },
-                extraData: {
-                    customerId: 12345678,
-                },
+                extraData: 'foo'
             },
             appConfig: {
                 hello: 'peter',
@@ -289,9 +307,7 @@ describe('PortalAppController', () => {
                 permissions: {
                     edit: true
                 },
-                extraData: {
-                    customerId: 12345678,
-                },
+                extraData: 'foo'
             },
             appConfig: {
                 hello: 'world',
@@ -328,7 +344,7 @@ describe('PortalAppController', () => {
         controller.getPortalAppSetup(req, res);
     });
 
-    it('loads resources from filesystem', (done) => {
+    it('loads resources from the filesystem', (done) => {
         const req: any = {
             connection: {
                 remoteAddress: '127.0.0.1'

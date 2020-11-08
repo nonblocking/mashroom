@@ -6,7 +6,8 @@ import {PAGES_COLLECTION, SITES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} fro
 import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {
-    MashroomPortalAppInstance, MashroomPortalPage,
+    MashroomPortalAppInstance,
+    MashroomPortalPage,
     MashroomPortalService as MashroomPortalServiceType,
     MashroomPortalSite,
 } from '../../../type-definitions';
@@ -36,6 +37,14 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
 
     getLayouts() {
         return this._pluginRegistry.layouts;
+    }
+
+    getPortalPageEnhancements() {
+        return this._pluginRegistry.portalPageEnhancements;
+    }
+
+    getPortalAppEnhancements() {
+        return this._pluginRegistry.portalAppEnhancements;
     }
 
     async getSites(limit?: number): Promise<Array<MashroomPortalSite>> {

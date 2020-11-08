@@ -43,9 +43,6 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return Promise.resolve();
         }
 
-        // First of all filter the headers of the incoming request
-        this.httpHeaderFilter.filter(req.headers);
-
         // Execute interceptors
         const interceptorResult = await this.processInterceptors(req, uri, additionalHeaders, logger);
         if (interceptorResult.reject) {
@@ -91,6 +88,9 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
                 delete effectiveQueryParams[paramKey];
             });
         }
+
+        // Filter the forwarded headers from the incoming request
+        this.httpHeaderFilter.filter(req.headers);
 
         const options = {
             agent: uri.startsWith('https') ? getHttpsPool() : getHttpPool(),

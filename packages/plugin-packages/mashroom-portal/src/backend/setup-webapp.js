@@ -3,10 +3,10 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 
-import MashroomPortalPluginRegistry from './plugins/MashroomPortalPluginRegistry';
 import PortalIndexController from './controllers/PortalIndexController';
 import PortalResourcesController from './controllers/PortalResourcesController';
 import PortalPageController from './controllers/PortalPageController';
+import PortalPageEnhancementController from './controllers/PortalPageEnhancementController';
 import PortalPageRenderController from './controllers/PortalPageRenderController';
 import PortalSiteController from './controllers/PortalSiteController';
 import PortalAppController from './controllers/PortalAppController';
@@ -24,7 +24,8 @@ import {
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_JS_FILE,
     PORTAL_INTERNAL_PATH,
-    PORTAL_THEME_RESOURCES_BASE_PATH
+    PORTAL_THEME_RESOURCES_BASE_PATH,
+    PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH
 } from './constants';
 import {getPortalPushPluginUpdatesRoute} from './push-plugin-updates';
 
@@ -38,6 +39,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     const portalIndexController = new PortalIndexController();
     const portalResourcesController = new PortalResourcesController();
     const portalPageController = new PortalPageController(pluginRegistry);
+    const portalPageEnhancementController = new PortalPageEnhancementController(pluginRegistry);
     const portalPageRenderController = new PortalPageRenderController(portalWebapp, pluginRegistry);
     const portalSiteController = new PortalSiteController();
     const portalAppController = new PortalAppController(pluginRegistry);
@@ -123,6 +125,14 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     internalRoutes.use(PORTAL_THEME_RESOURCES_BASE_PATH, portalThemeResourcesRoutes);
 
     portalThemeResourcesRoutes.get(`/:themeName/*`, portalThemeController.getPortalThemeResource.bind(portalThemeController));
+
+    // Page enhancement resources
+
+    const portalPageEnhancementRoutes = express.Router({
+        mergeParams: true,
+    });
+    internalRoutes.use(PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH, portalPageEnhancementRoutes);
+    portalPageEnhancementRoutes.get('/:pluginName/*', portalPageEnhancementController.getPortalPageResource.bind(portalPageEnhancementController));
 
     // Portal app resources
 

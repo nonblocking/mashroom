@@ -1,6 +1,11 @@
 /* eslint-disable */
 
-import type {I18NString, MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
+import type {
+    ExpressRequest,
+    I18NString,
+    MashroomPluginConfig,
+    MashroomPluginContextHolder
+} from "@mashroom/mashroom/type-definitions";
 
 /* Model */
 
@@ -45,7 +50,7 @@ export type MashroomPortalPageRefLocalized = {
 };
 
 export type MashroomPortalPage = {
-    pageId: string;
+    readonly pageId: string;
     readonly description?: string;
     readonly keywords?: string;
     readonly theme?: string;
@@ -125,7 +130,7 @@ export type MashroomPortalAppUser = {
     readonly displayName: string;
     readonly email: string | null;
     readonly permissions: MashroomPortalAppUserPermissions;
-    readonly extraData: Record<string, any> | null | undefined;
+    readonly [customProp: string]: any;
 };
 
 export type MashroomPortalAppUserPermissions = {
@@ -414,23 +419,116 @@ export type MashroomPortalAppLoadListener = (
     arg0: MashroomPortalLoadedPortalApp,
 ) => void;
 
+export type MashroomPortalPageEnhancement = {
+    /**
+     * Enhancer name
+     */
+    readonly name: string;
+    /**
+     * Enhancer description
+     */
+    readonly description: string | undefined | null;
+    /**
+     * Last reload of the plugin
+     */
+    readonly lastReloadTs: number;
+    /**
+     * Resources root URI (can be file, http or https)
+     */
+    readonly resourcesRootUri: string;
+    /**
+     * Resources that should be added to portal pages
+     */
+    readonly pageResources: MashroomPortalPageEnhancementResources;
+    /**
+     * The actual plugin
+     */
+    readonly plugin: MashroomPortalPageEnhancementPlugin
+}
+
+export type MashroomPortalPageEnhancementResource = {
+    readonly path?: string;
+    readonly dynamicResource?: string;
+    readonly rule: string | undefined | null;
+    readonly location: 'header' | 'footer' | undefined | null;
+    readonly inline: boolean | string | undefined;
+}
+
+export type MashroomPortalPageEnhancementResources = {
+    readonly js: Array<MashroomPortalPageEnhancementResource>;
+    readonly css: Array<MashroomPortalPageEnhancementResource>;
+}
+
+export type MashroomPortalPageEnhancementPlugin = {
+    readonly dynamicResources?: {
+        readonly [name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: ExpressRequest) => string;
+    },
+    readonly rules?: {
+        readonly [name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: ExpressRequest) => boolean;
+    }
+};
+
+export type MashroomPortalAppEnhancement = {
+    /**
+     * Enhancer name
+     */
+    readonly name: string;
+    /**
+     * Enhancer description
+     */
+    readonly description: string | undefined | null;
+    /**
+     * Custom services that should be added to MashroomPortalClientServices (the third argument of the portal app bootstrap).
+     * Can also overwrite an existing one.
+     * The value refers to global variable (in window)
+     */
+    readonly portalCustomClientServices: {
+        [customService: string]: string;
+    };
+    /**
+     * The actual plugin
+     */
+    plugin: MashroomPortalAppEnhancementPlugin
+}
+
+export interface MashroomPortalAppEnhancementPlugin {
+    /**
+     * Enhance the portalAppSetup object passed as the first argument (if necessary)
+     */
+    enhancePortalAppSetup: (
+        portalAppSetup: MashroomPortalAppSetup,
+        portalApp: MashroomPortalApp,
+        request: ExpressRequest
+    ) => Promise<MashroomPortalAppSetup>;
+}
+
 /* Backend services */
 
 export interface MashroomPortalService {
     /**
      * Get all registered portal apps
      */
-    getPortalApps(): Array<MashroomPortalApp>;
+    getPortalApps(): ReadonlyArray<Array<MashroomPortalApp>>;
 
     /**
      * Get all registered theme plugins
      */
-    getThemes(): Array<MashroomPortalTheme>;
+    getThemes(): ReadonlyArray<Array<MashroomPortalTheme>>;
 
     /**
      * Get all registered layout plugins
      */
-    getLayouts(): Array<MashroomPortalLayout>;
+    getLayouts(): ReadonlyArray<Array<MashroomPortalLayout>>;
+
+    /**
+     * Get all registered page enhancement plugins
+     */
+    getPortalPageEnhancements(): ReadonlyArray<Array<MashroomPortalPageEnhancement>>;
+
+    /**
+     * Get all registered app enhancement plugins
+     */
+    getPortalAppEnhancements(): ReadonlyArray<Array<MashroomPortalAppEnhancement>>;
 
     /**
      * Get all sites
@@ -1004,6 +1102,7 @@ export type MashroomPortalClientServices = {
     readonly restService: MashroomRestService;
     readonly stateService: MashroomPortalStateService;
     readonly remoteLogger: MashroomPortalRemoteLogger;
+    readonly [customService: string]: any;
 };
 
 export type CreateAppWrapper = (
@@ -1023,24 +1122,19 @@ export type CreateLoadingError = (
 
 /* Plugin bootstrap functions */
 
+// remote-portal-app-registry
+
 export interface MashroomRemotePortalAppRegistry {
     readonly portalApps: readonly MashroomPortalApp[];
 }
-
-export type MashroomPortalThemePluginBootstrapFunction = (
-    pluginName: string,
-    pluginConfig: MashroomPluginConfig,
-    contextHolder: MashroomPluginContextHolder,
-) => Promise<{
-    readonly engineName: string;
-    readonly engineFactory: () => any;
-}>;
 
 export type MashroomRemotePortalAppRegistryBootstrapFunction = (
     pluginName: string,
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
 ) => Promise<MashroomRemotePortalAppRegistry>;
+
+// portal-app
 
 export type MashroomPortalAppLifecycleHooks = {
     /*+
@@ -1059,6 +1153,23 @@ export type MashroomPortalAppPluginBootstrapFunction = (
     | MashroomPortalAppLifecycleHooks
     | Promise<void | MashroomPortalAppLifecycleHooks>;
 
-export type MashroomPortalUpdateEventType = 'app' | 'theme' | 'layout';
+// portal-theme
 
-export type MashroomPortalUpdateListener = (type: MashroomPortalUpdateEventType, event: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme) => void;
+export type MashroomPortalThemePluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder,
+) => Promise<{
+    readonly engineName: string;
+    readonly engineFactory: () => any;
+}>;
+
+// portal-page-enhancer
+
+export type MashroomPortalPageEnhancementPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
+    => MashroomPortalPageEnhancementPlugin;
+
+// portal-app-enhancement
+
+export type MashroomPortalAppEnhancementPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
+    => MashroomPortalAppEnhancementPlugin;

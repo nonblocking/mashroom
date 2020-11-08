@@ -1,3 +1,3 @@
 #!/bin/bash
 
-../../node_modules/.bin/webpack-dev-server
+../../node_modules/.bin/webpack-cli serve

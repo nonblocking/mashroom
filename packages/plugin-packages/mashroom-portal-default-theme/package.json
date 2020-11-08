@@ -23,7 +23,6 @@
         "@types/express-handlebars": "^3.1.0",
         "bootstrap": "^4.5.0",
         "copyfiles": "^2.2.0",
-        "core-js": "^3.6.5",
         "eslint": "^7.0.0",
         "express": "^4.17.1",
         "node-sass": "^4.14.1",
@@ -31,8 +30,7 @@
         "nodemon": "^2.0.4",
         "typescript": "^3.8.3",
         "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.11",
-        "whatwg-fetch": "^3.0.0"
+        "webpack-cli": "^3.3.11"
     },
     "scripts": {
         "lint": "eslint --ext .ts src --fix",

@@ -1,0 +1,51 @@
+{
+    "name": "@mashroom/mashroom-portal-legacy-browser-support",
+    "description": "Adds support for legacy browsers such as IE11 to the Mashroom Portal",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+    },
+    "devDependencies": {
+        "core-js": "^3.6.5",
+        "whatwg-fetch": "^3.0.0",
+        "@mashroom/mashroom": "1.5.4",
+        "@mashroom/mashroom-portal": "1.5.4",
+        "@babel/cli": "^7.8.4",
+        "eslint": "^7.0.0",
+        "typescript": "^3.8.3",
+        "webpack": "^4.43.0",
+        "webpack-cli": "^3.3.11"
+    },
+    "scripts": {
+        "lint": "eslint src --ext '.ts' --fix",
+        "type-check": "tsc --noEmit",
+        "build": "webpack --mode production --display-error-details && babel src/backend --extensions '.ts' -d dist"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Enhancement Legacy Browser",
+                "type": "portal-page-enhancement",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "pageResources": {
+                    "js": [{
+                        "path": "polyfills.js",
+                        "rule": "isLegacyBrowser",
+                        "location": "header",
+                        "inline": false
+                    }],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist/public"
+                }
+            }
+        ]
+    }
+}

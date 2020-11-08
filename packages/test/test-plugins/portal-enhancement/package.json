@@ -1,0 +1,52 @@
+{
+    "name": "@mashroom/test-portal-enhancement",
+    "version": "1.0.0",
+    "private": true,
+    "mashroom": {
+        "plugins": [
+            {
+                "name": "Test Portal Page Enhancement",
+                "type": "portal-page-enhancement",
+                "bootstrap": "./bootstrap-page-enhancement.js",
+                "pageResources": {
+                    "js": [{
+                        "path": "test.js",
+                        "location": "header",
+                        "inline": "true"
+                    }, {
+                        "dynamicResource": "myScript",
+                        "location": "header"
+                    }],
+                    "css": [{
+                        "path": "test.css"
+                    }]
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "."
+                }
+            }, {
+                "name": "Test Portal App Enhancement",
+                "type": "portal-app-enhancement",
+                "bootstrap": "./bootstrap-app-enhancement.js",
+                "portalCustomClientServices": {
+                    "customService": "CUSTOM_PORTAL_APP_CLIENT_SERVICE"
+                }
+            }, {
+                "name": "Portal App Enhancement Test App",
+                "title": "Portal App Enhancement Test App",
+                "type": "portal-app",
+                "bootstrap": "startPortalAppEnhancementTestApp",
+                "category": "Demo",
+                "resources": {
+                    "js": [
+                        "app.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./"
+                }
+            }
+        ]
+    }
+}

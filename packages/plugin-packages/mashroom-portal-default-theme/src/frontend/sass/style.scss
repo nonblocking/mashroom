@@ -48,6 +48,20 @@ $GUTTER_WIDTH: 15px;
     }
 }
 
+@keyframes pulse {
+    0% {
+        opacity: .1;
+    }
+
+    50% {
+        opacity: .3;
+    }
+
+    100% {
+        opacity: .1;
+    }
+}
+
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
 }
@@ -408,20 +422,15 @@ header {
     }
 
     .mashroom-portal-app-loading {
-        padding: 5px;
-
-        &:before {
-            display: block;
-            width: 100%;
-            text-align: center;
-            font-family: $FONT_ICON;
-            font-weight: 900;
-            content: "\f110";
-            color: $COLOR_PRIMARY;
-            font-size: 24px;
-            -webkit-animation: spin 1s infinite steps(8);
-            animation: spin 1s infinite steps(8);
-        }
+        min-height: 100px;
+        background-color: $COLOR_GREY;
+        opacity: 0;
+        animation: pulse 2s infinite ease-in-out;
+        animation-name: pulse;
+        animation-delay: 1s;
+        animation-duration: 2s;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
     }
 
     .mashroom-portal-app-loading-error {
@@ -819,9 +828,8 @@ footer {
         }
     }
 
-    .mashroom-portal-app-loading:before {
-        color: $COLOR_WHITE;
-        font-size: 14px;
+    .mashroom-portal-app-loading {
+        min-height: 32px;
     }
 }
 
@@ -1086,6 +1094,10 @@ footer {
             &:before {
                 font-size: 1.6em;
                 top: 14px;
+            }
+
+            .user-name {
+                text-align: right;
             }
 
             .logout {

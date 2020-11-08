@@ -1,18 +1,22 @@
 // @flow
 
-import {promisify} from 'util';
-import getUriCbStyle from 'get-uri';
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
     PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
 } from '../constants';
 import {portalAppContext} from '../utils/logging_utils';
+import {getResourceAsStream} from '../utils/resource_utils';
 import {getFrontendApiResourcesBasePath, getSitePath} from '../utils/path_utils';
-import {findPortalAppInstanceOnPage} from '../utils/model_utils';
-import {calculatePermissions, getUser, isAppPermitted, isSitePathPermitted} from '../utils/security_utils';
+import {findPortalAppInstanceOnPage, getPage} from '../utils/model_utils';
+import {
+    calculatePermissions,
+    getUser,
+    isAppPermitted,
+    isPagePermitted,
+    isSitePathPermitted
+} from '../utils/security_utils';
 
-import type {ReadStream} from 'fs';
 import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
@@ -25,17 +29,17 @@ import type {
     MashroomPortalAppUser,
     MashroomPortalAppUserPermissions,
     MashroomPortalService,
+    MashroomPortalPage,
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
-const getUri = promisify(getUriCbStyle);
 
 export default class PortalAppController {
 
-    pluginRegistry: MashroomPortalPluginRegistry;
+    _pluginRegistry: MashroomPortalPluginRegistry;
 
     constructor(pluginRegistry: MashroomPortalPluginRegistry) {
-        this.pluginRegistry = pluginRegistry;
+        this._pluginRegistry = pluginRegistry;
     }
 
     async getPortalAppSetup(req: ExpressRequest, res: ExpressResponse) {
@@ -52,6 +56,18 @@ export default class PortalAppController {
             if (!await isSitePathPermitted(req, sitePath)) {
                 logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access site: ${sitePath}`);
                 res.sendStatus(403);
+                return;
+            }
+            if (!await isPagePermitted(req, pageId)) {
+                logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access page: ${pageId}`);
+                res.sendStatus(403);
+                return;
+            }
+
+            const page = await getPage(req, pageId);
+            if (!page) {
+                logger.error(`Portal page not found: ${pageId}`);
+                res.sendStatus(404);
                 return;
             }
 
@@ -71,7 +87,7 @@ export default class PortalAppController {
             let portalAppInstance;
 
             if (portalAppInstanceId) {
-                portalAppInstance = await this._getPortalAppInstance(pageId, portalApp, portalAppInstanceId, req);
+                portalAppInstance = await this._getPortalAppInstance(page, portalApp, portalAppInstanceId, req);
             } else {
                 portalAppInstance = await this._getDynamicallyLoadedPortalAppInstance(portalApp, req);
             }
@@ -101,7 +117,7 @@ export default class PortalAppController {
             // $FlowFixMe
             const appConfig = {...portalApp.defaultAppConfig || {}, ...portalAppInstance.appConfig || {}};
 
-            const portalAppSetup: MashroomPortalAppSetup = {
+            let portalAppSetup: MashroomPortalAppSetup = {
                 pluginName: portalApp.name,
                 title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
                 version: portalApp.version,
@@ -118,7 +134,11 @@ export default class PortalAppController {
                 appConfig
             };
 
-            logger.info(`Sending portal app setup for: ${portalApp.name}`);
+            if (this._pluginRegistry.portalAppEnhancements.length > 0) {
+                portalAppSetup = await this._enhancePortalAppSetup(portalAppSetup, portalApp, req);
+            }
+
+            logger.debug(`Sending portal app setup for: ${portalApp.name}`, portalAppSetup);
 
             res.json(portalAppSetup);
 
@@ -161,7 +181,7 @@ export default class PortalAppController {
         const resourcePath = parts.slice(1).join('/');
 
         // Find portal apps that provide the shared resource
-        const portalApps = this.pluginRegistry.portalApps.filter((portalApp) =>
+        const portalApps = this._pluginRegistry.portalApps.filter((portalApp) =>
             portalApp.sharedResources && portalApp.sharedResources[resourceType] && portalApp.sharedResources[resourceType].find((js) => js === resourcePath));
 
         let sent = false;
@@ -181,7 +201,7 @@ export default class PortalAppController {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         const {q, updatedSince} = req.query;
 
-        let apps: Array<MashroomAvailablePortalApp> = this.pluginRegistry.portalApps.map((app) => ({
+        let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps.map((app) => ({
             name: app.name,
             description: app.description,
             tags: app.tags,
@@ -206,16 +226,11 @@ export default class PortalAppController {
     }
 
     _getPortalApp(pluginName: string) {
-        return this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+        return this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
     }
 
-    async _getPortalAppInstance(pageId: string, portalApp: MashroomPortalApp, instanceId: string, req: ExpressRequest) {
+    async _getPortalAppInstance(page: MashroomPortalPage, portalApp: MashroomPortalApp, instanceId: string, req: ExpressRequest) {
         const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-
-        const page = await portalService.getPage(pageId);
-        if (!page || !page.portalApps) {
-            return null;
-        }
 
         const instData = findPortalAppInstanceOnPage(page, portalApp.name, instanceId);
 
@@ -258,7 +273,7 @@ export default class PortalAppController {
         try {
             const fileName = resourcePath.split('/').pop();
 
-            const rs: ReadStream = await getUri(resourceUri);
+            const rs = await getResourceAsStream(resourceUri);
             res.type(fileName);
             rs.pipe(res);
 
@@ -269,10 +284,30 @@ export default class PortalAppController {
             if (cacheControlService) {
                 cacheControlService.removeCacheControlHeader(res);
             }
-            res.sendStatus(500);
+            if (err.code === 'ENOTFOUND') {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(500);
+            }
         }
 
         return false;
+    }
+
+    async _enhancePortalAppSetup(portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, req: ExpressRequest): Promise<MashroomPortalAppSetup> {
+        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        let enhanceAppSetup = portalAppSetup;
+
+        const enhancements = this._pluginRegistry.portalAppEnhancements;
+        for (let i = 0; i < enhancements.length; i++) {
+            try {
+                enhanceAppSetup = await enhancements[i].plugin.enhancePortalAppSetup(portalAppSetup, portalApp, req);
+            } catch (e) {
+                logger.warn(`Calling Portal App enhancer ${enhancements[i].name} failed!`, e);
+            }
+        }
+
+        return enhanceAppSetup;
     }
 
     async _getLang(req: ExpressRequest) {
@@ -288,8 +323,7 @@ export default class PortalAppController {
             username: user ? user.username : 'anonymous',
             displayName: user ? user.displayName || user.username : 'Anonymous',
             email: user ? user.email : null,
-            permissions,
-            extraData: user ? user.extraData : null,
+            permissions
         };
 
         return portalUser;
