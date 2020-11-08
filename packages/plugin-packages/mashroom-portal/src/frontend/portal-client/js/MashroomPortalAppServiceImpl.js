@@ -7,6 +7,7 @@ import {
     WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC,
     WINDOW_VAR_PORTAL_DEV_MODE,
     WINDOW_VAR_PORTAL_PAGE_ID,
+    WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
     WINDOW_VAR_PORTAL_SERVICES,
 } from '../../../backend/constants';
 import ResourceManager from './ResourceManager';
@@ -351,6 +352,14 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     _loadAppSetup(pageId: string, pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup> {
+        if (instanceId) {
+            const preloadedAppSetup = global[WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP] || {};
+            if (preloadedAppSetup.hasOwnProperty(instanceId)) {
+                console.info('Using preloaded app setup for app: ', pluginName);
+                return Promise.resolve(preloadedAppSetup[instanceId]);
+            }
+        }
+
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}${instanceId ? `/${instanceId}` : ''}`;
         return this._restService.get(path);
     }
@@ -529,7 +538,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
         for (const customServiceName in customServices) {
             if (customServices.hasOwnProperty(customServiceName)) {
-                clonedClientServices[customServiceName] = window[customServices[customServiceName]];
+                clonedClientServices[customServiceName] = global[customServices[customServiceName]];
             }
         }
 
