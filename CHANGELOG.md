@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Core: Plugins are now only built when they changed since the last start. This dramatically decreases the start time in dev mode.
  * Added a new plugin *mashroom-portal-legacy-browser-support* that adds a polyfill for IE11 to all portal pages (only if IE detected)
  * Portal: Added a new plugin type *portal-app-enhancement* that allows it to update or rewrite the *portalAppSetup* that is passed to Portal Apps at startup.
    This can be used to add extra appConfig or user properties from a context. Additionally, this plugin allows it to pass extra *clientServices*

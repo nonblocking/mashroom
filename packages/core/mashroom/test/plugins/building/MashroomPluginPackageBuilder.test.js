@@ -30,6 +30,22 @@ const getPluginPackageFolder = () => {
     return packageFolder;
 };
 
+const getPluginPackageFolder2 = () => {
+    const packageFolder = path.resolve(__dirname, '../../../test-data/building1/test-package2');
+    fsExtra.emptyDirSync(packageFolder);
+    fsExtra.writeJsonSync(path.resolve(packageFolder, 'package.json'), {
+        name: 'test3',
+        version: '1.0.0',
+        dependencies: {
+            copyfiles: '^1',
+        },
+        scripts: {
+            build: 'xxxx',
+        },
+    });
+    return packageFolder;
+};
+
 const getErroneousPluginPackageFolder = () => {
     const packageFolder = path.resolve(__dirname, '../../../test-data/building1/test-package3');
     fsExtra.emptyDirSync(packageFolder);
@@ -106,6 +122,27 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
             builder.stopProcessing();
             done();
         }, 4000);
+    });
+
+    it('doesnt build if there were no changes since the last run', async (done) => {
+        const pluginPackagePath = getPluginPackageFolder2();
+        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()}: any), dummyLoggerFactory);
+
+        const buildInfoFile = path.resolve(__dirname, '../../../test-data/building1/tmp/build-data/test3.build.json');
+        fsExtra.writeJsonSync(buildInfoFile, {
+            buildPackageChecksum: await builder._getBuildChecksum(pluginPackagePath),
+        });
+
+        builder.on('build-finished', (event) => {
+            if (event.success) {
+                done();
+            } else {
+                // It fails when it is actually built because the build script is invalid
+                throw new Error('no build should be started');
+            }
+        });
+
+        builder.addToBuildQueue('test3', pluginPackagePath, 'build');
     });
 
 });
