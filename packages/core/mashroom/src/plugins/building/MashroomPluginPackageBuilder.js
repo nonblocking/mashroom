@@ -26,7 +26,7 @@ const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
 
 const MAX_PARALLEL_BUILDS = 5;
-const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
+const RETRY_RUNNING_BUILD_AFTER_MS = 10 * 1000;
 
 type BuildQueueEntry = {
     pluginPackageName: string,
@@ -150,38 +150,26 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         });
     }
 
-    async _isBuildNecessary(pluginPackagePath: string, pluginPackageName: string): Promise<boolean> {
-        const buildInfo = await this._loadBuildInfo(pluginPackageName);
-
+    async _isBuildNecessary(pluginPackagePath: string, pluginPackageName: string, buildInfo: ?BuildInfo): Promise<boolean> {
         if (!buildInfo) {
             return true;
         }
 
         const packageChecksum = await this._getBuildChecksum(pluginPackagePath);
-        if (!packageChecksum || packageChecksum !== buildInfo.buildPackageChecksum) {
-            return true;
-        }
 
-        return false;
+        return !packageChecksum || packageChecksum !== buildInfo.buildPackageChecksum;
     }
 
     async _processQueueEntry(queueEntry: BuildQueueEntry) {
         const { pluginPackageName, pluginPackagePath } = queueEntry;
         this.removeFromBuildQueue(pluginPackageName);
 
-        const isBuildNecessary = await this._isBuildNecessary(pluginPackagePath, pluginPackageName);
-        if (!isBuildNecessary) {
-            this._eventEmitter.emit('build-finished', {
-                pluginPackageName: queueEntry.pluginPackageName,
-                success: true,
-            });
-            return;
-        }
-
         let buildInfo: ?BuildInfo = null;
 
         try {
             buildInfo = await this._loadBuildInfo(queueEntry.pluginPackageName);
+            const buildNecessary = await this._isBuildNecessary(pluginPackagePath, pluginPackageName, buildInfo);
+
             if (!buildInfo) {
                 buildInfo = {
                     lastDependenciesUpdate: null,
@@ -189,15 +177,19 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
                     buildEnd: null,
                     buildStatus: 'running',
                 };
-            } else if (buildInfo.buildStatus !== 'running') {
-                if (buildInfo.buildEnd && buildInfo.buildEnd > queueEntry.lastSourceUpdateTimestamp) {
-                    // Already built
-                    return;
-                }
-            } else {
+            } else if (!buildNecessary || (buildInfo.buildStatus !== 'running' && buildInfo.buildEnd && buildInfo.buildEnd > queueEntry.lastSourceUpdateTimestamp)) {
+                // No build necessary or already built by another instance
+                this._eventEmitter.emit('build-finished', {
+                    pluginPackageName: queueEntry.pluginPackageName,
+                    success: true,
+                });
+                return;
+            } else if (buildInfo.buildStatus === 'running') {
                 if (this._getBuildInfoLastUpdateTst(queueEntry.pluginPackageName) > Date.now() - RETRY_RUNNING_BUILD_AFTER_MS) {
-                    this._log.debug(`Build already running: ${queueEntry.pluginPackageName}. Re-checking later.`);
-                    this._buildQueue.push(queueEntry);
+                    this._log.debug(`The package ${queueEntry.pluginPackageName} is already built by another Mashroom instance. Re-checking later.`);
+                    setTimeout(() => {
+                        this._buildQueue.push(queueEntry);
+                    }, RETRY_RUNNING_BUILD_AFTER_MS);
                     return;
                 } else {
                     this._log.debug(`Build of ${queueEntry.pluginPackageName} is in running state since more than ${RETRY_RUNNING_BUILD_AFTER_MS / 1000} sec. Starting new build.`);
@@ -259,7 +251,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
     }
 
-    async _loadBuildInfo(pluginPackageName: string): Promise<BuildInfo | null> {
+    async _loadBuildInfo(pluginPackageName: string): Promise<?BuildInfo> {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
         if (!fs.existsSync(buildInfoFile)) {
             return null;
