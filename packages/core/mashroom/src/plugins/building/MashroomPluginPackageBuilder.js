@@ -113,12 +113,12 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _processBuildQueue() {
         if (this._buildSlots.length === MAX_PARALLEL_BUILDS) {
-            this._log.debug(`Builds running: ${this._buildSlots.length}/${MAX_PARALLEL_BUILDS}`);
+            this._log.debug(`Builds running: ${this._buildSlots.length} of ${MAX_PARALLEL_BUILDS} possible`);
             return; // all slots are full
         }
 
         while (this._buildQueue.length > 0) {
-            this._log.debug(`Builds running: ${this._buildSlots.length}/${MAX_PARALLEL_BUILDS}`);
+            this._log.debug(`Builds running: ${this._buildSlots.length} of ${MAX_PARALLEL_BUILDS} possible`);
 
             const availableWorkers = Math.max(0, MAX_PARALLEL_BUILDS - this._buildSlots.length);
             const buildCandidates = [...this._buildQueue].slice(0, availableWorkers);
