@@ -18,10 +18,12 @@
     },
     "dependencies": {
         "@mashroom/mashroom-utils": "1.5.4",
+        "anymatch": "^3.1.1",
         "chokidar": "^3.4.0",
         "express": "^4.17.1",
         "fs-extra": "^9.0.0",
         "log4js": "^6.2.1",
+        "lucy-dirsum": "^0.1.1",
         "minimist": "^1.2.5",
         "strip-ansi": "^6.0.0"
     },

@@ -6,13 +6,10 @@ import EventEmitter from 'events';
 import {ensureDirSync} from 'fs-extra';
 import {promisify} from 'util';
 import stripAnsi from 'strip-ansi';
+import digestDirectory from 'lucy-dirsum';
+import anymatch from 'anymatch';
 import NpmUtils from './NpmUtils';
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-
-const MAX_PARALLEL_BUILDS = 5;
-const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
+import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
 
 import type {
     MashroomLogger,
@@ -24,6 +21,12 @@ import type {
     MashroomPluginPackageBuilderEventName,
     MashroomPluginPackageBuilderEvent,
 } from '../../../type-definitions/internal';
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
+const MAX_PARALLEL_BUILDS = 5;
+const RETRY_RUNNING_BUILD_AFTER_MS = 10 * 1000;
 
 type BuildQueueEntry = {
     pluginPackageName: string,
@@ -38,8 +41,8 @@ type BuildInfo = {
     buildEnd: ?number,
     buildStatus: BuildStatus,
     buildErrorMessage?: ?string,
+    buildPackageChecksum?: string,
 };
-
 
 /**
  * Build service for plugin packages.
@@ -51,9 +54,10 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     _buildDataFolder: string;
     _npmUtils: NpmUtils;
     _buildQueue: Array<BuildQueueEntry>;
+    _buildSlots: Array<Promise<void>>;
     _eventEmitter: EventEmitter;
     _numberBuilds: number;
-    _processQueueInterval: ?IntervalID;
+    _processingAllowed: boolean;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._buildDataFolder = path.resolve(config.tmpFolder, config.name, 'build-data');
@@ -61,16 +65,20 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._npmUtils = new NpmUtils(loggerFactory);
         this._eventEmitter = new EventEmitter();
         this._eventEmitter.setMaxListeners(0);
-        this._numberBuilds = 0;
 
         this._buildQueue = [];
+        this._buildSlots = [];
 
         this._log.info(`Build data folder: ${this._buildDataFolder}`);
         ensureDirSync(this._buildDataFolder);
-        this._processQueueInterval = setInterval(this._processBuildQueue.bind(this), 2000);
+        this._processingAllowed = true;
     }
 
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp?: number = Date.now()) {
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: ?string, lastSourceUpdateTimestamp: number = Date.now()) {
+        if (!this._processingAllowed) {
+            return;
+        }
+
         this.removeFromBuildQueue(pluginPackageName);
 
         this._buildQueue.push({
@@ -79,6 +87,8 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             buildScript,
             lastSourceUpdateTimestamp,
         });
+
+        this._processBuildQueue();
     }
 
     removeFromBuildQueue(pluginPackageName: string) {
@@ -89,9 +99,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     stopProcessing() {
-        if (this._processQueueInterval) {
-            clearInterval(this._processQueueInterval);
-        }
+        this._processingAllowed = false;
     }
 
     on(eventName: MashroomPluginPackageBuilderEventName, listener: MashroomPluginPackageBuilderEvent => void) {
@@ -103,34 +111,65 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     async _processBuildQueue() {
-        const buildJobs = this._buildQueue.length;
-        if (buildJobs || this._numberBuilds > 0) {
-            this._log.debug(`Builds running: ${this._numberBuilds}/${MAX_PARALLEL_BUILDS}`);
+        if (this._buildSlots.length >= MAX_PARALLEL_BUILDS) {
+            // all slots are full
+            this._log.debug(`Builds running: ${this._buildSlots.length} of ${MAX_PARALLEL_BUILDS} possible`);
+            return;
         }
-        if (buildJobs) {
-            const availableWorkers = Math.max(0, MAX_PARALLEL_BUILDS - this._numberBuilds);
+
+        while (this._buildQueue.length > 0) {
+            this._log.debug(`Builds running: ${this._buildSlots.length} of ${MAX_PARALLEL_BUILDS} possible`);
+
+            const availableWorkers = Math.max(0, MAX_PARALLEL_BUILDS - this._buildSlots.length);
             const buildCandidates = [...this._buildQueue].slice(0, availableWorkers);
 
             if (buildCandidates.length > 0) {
-                this._log.debug(`Adding ${buildCandidates.length} out of ${buildJobs} pending build jobs.`);
-                for (let i = 0; i < buildCandidates.length; i ++) {
-                    try {
-                        this._numberBuilds ++;
-                        await this._processQueueEntry(buildCandidates[i])
-                    } finally {
-                        this._numberBuilds --;
-                    }
-                }
+                this._log.debug(`Adding ${buildCandidates.length} out of ${this._buildQueue.length} pending build jobs.`);
+                this._buildSlots.push(...buildCandidates.map(bc => this._processQueueEntry(bc)));
+                const finishedIdx = await Promise.race(this._buildSlots.map((build, idx) => build.then(() => idx)));
+                this._log.debug(`Build #${finishedIdx} out of ${this._buildSlots.length} pending jobs finished.`);
+                this._buildSlots.splice(finishedIdx, 1);
             }
         }
     }
 
+    async _getBuildChecksum(pluginPackagePath: string): Promise<string | null> {
+        return new Promise((resolve) => {
+            digestDirectory(
+                pluginPackagePath,
+                (digestErr, packageDigest) => {
+                    if (!digestErr) {
+                        return resolve(packageDigest);
+                    }
+
+                    resolve(null);
+                }, (path) => {
+                    return anymatch(IGNORE_CHANGES_IN_PATHS, path);
+                },
+            );
+        });
+    }
+
+    async _isBuildNecessary(pluginPackagePath: string, pluginPackageName: string, buildInfo: ?BuildInfo): Promise<boolean> {
+        if (!buildInfo) {
+            return true;
+        }
+
+        const packageChecksum = await this._getBuildChecksum(pluginPackagePath);
+
+        return !packageChecksum || packageChecksum !== buildInfo.buildPackageChecksum;
+    }
+
     async _processQueueEntry(queueEntry: BuildQueueEntry) {
-        this.removeFromBuildQueue(queueEntry.pluginPackageName);
+        const { pluginPackageName, pluginPackagePath } = queueEntry;
+        this.removeFromBuildQueue(pluginPackageName);
+
         let buildInfo: ?BuildInfo = null;
 
         try {
             buildInfo = await this._loadBuildInfo(queueEntry.pluginPackageName);
+            const buildNecessary = await this._isBuildNecessary(pluginPackagePath, pluginPackageName, buildInfo);
+
             if (!buildInfo) {
                 buildInfo = {
                     lastDependenciesUpdate: null,
@@ -138,15 +177,19 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
                     buildEnd: null,
                     buildStatus: 'running',
                 };
-            } else if (buildInfo.buildStatus !== 'running') {
-                if (buildInfo.buildEnd && buildInfo.buildEnd > queueEntry.lastSourceUpdateTimestamp) {
-                    // Already built
-                    return;
-                }
-            } else {
+            } else if (!buildNecessary || (buildInfo.buildStatus !== 'running' && buildInfo.buildEnd && buildInfo.buildEnd > queueEntry.lastSourceUpdateTimestamp)) {
+                // No build necessary or already built by another instance
+                this._eventEmitter.emit('build-finished', {
+                    pluginPackageName: queueEntry.pluginPackageName,
+                    success: true,
+                });
+                return;
+            } else if (buildInfo.buildStatus === 'running') {
                 if (this._getBuildInfoLastUpdateTst(queueEntry.pluginPackageName) > Date.now() - RETRY_RUNNING_BUILD_AFTER_MS) {
-                    this._log.debug(`Build already running: ${queueEntry.pluginPackageName}. Re-checking later.`);
-                    this._buildQueue.push(queueEntry);
+                    this._log.debug(`The package ${queueEntry.pluginPackageName} is already built by another Mashroom instance. Re-checking later.`);
+                    setTimeout(() => {
+                        this._buildQueue.push(queueEntry);
+                    }, RETRY_RUNNING_BUILD_AFTER_MS);
                     return;
                 } else {
                     this._log.debug(`Build of ${queueEntry.pluginPackageName} is in running state since more than ${RETRY_RUNNING_BUILD_AFTER_MS / 1000} sec. Starting new build.`);
@@ -161,6 +204,11 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             await this._updateBuildInfo(queueEntry.pluginPackageName, buildInfo);
 
             await this._build(queueEntry);
+
+            const packageChecksum = await this._getBuildChecksum(pluginPackagePath);
+            if (packageChecksum) {
+                buildInfo.buildPackageChecksum = packageChecksum;
+            }
 
             this._log.info(`Build success: ${queueEntry.pluginPackageName}. Build took ${(Date.now() - buildInfo.buildStart) /1000} sec`);
             buildInfo.buildEnd = Date.now();
@@ -203,7 +251,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
     }
 
-    async _loadBuildInfo(pluginPackageName: string) {
+    async _loadBuildInfo(pluginPackageName: string): Promise<?BuildInfo> {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
         if (!fs.existsSync(buildInfoFile)) {
             return null;

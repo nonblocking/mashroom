@@ -10,7 +10,7 @@ import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 const readdir = promisify(fs.readdir);
 
 // Anymatch patterns
-const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
+export const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
 
 export const DEFAULT_DEFER_UPDATE_MS = 2000;
 
@@ -69,7 +69,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         if (this._foldersToWatch.length > 0) {
             this._log.debug('Start watching: ', this._foldersToWatch);
             this._watcher = chokidar.watch(this._foldersToWatch, {
-                ignored: [/(^|[/\\])\../, ...IGNORE_PATHS],
+                ignored: [/(^|[/\\])\../, ...IGNORE_CHANGES_IN_PATHS],
                 persistent: true,
                 ignoreInitial: true,
                 followSymlinks: false,
