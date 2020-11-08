@@ -37,7 +37,7 @@ interface MashroomHttpProxyInterceptor {
     /**
      * Intercept HTTP proxy call to given targetUri.
      *
-     * The existingHeaders contain the (filtered!) request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
+     * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
      * The existingQueryParams contain query parameters from the request and the ones already added by other interceptors.
      *
      * req is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access req.method and req.pluginContext.
