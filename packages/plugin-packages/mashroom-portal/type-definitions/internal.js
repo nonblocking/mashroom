@@ -1,9 +1,11 @@
 // @flow
 
-import type {ExpressApplication, LogLevel} from "@mashroom/mashroom/type-definitions";
+import type {LogLevel} from "@mashroom/mashroom/type-definitions";
 import type {
     MashroomPortalApp,
+    MashroomPortalAppEnhancement,
     MashroomPortalLayout,
+    MashroomPortalPageEnhancement,
     MashroomPortalTheme,
     MashroomRemotePortalAppRegistry,
 } from './api';
@@ -16,8 +18,14 @@ export interface MashroomRemotePortalAppRegistryHolder {
 
 export interface MashroomPortalPluginRegistry {
     +portalApps: Array<MashroomPortalApp>;
+
     +themes: Array<MashroomPortalTheme>;
+
     +layouts: Array<MashroomPortalLayout>;
+
+    +portalPageEnhancements: Array<MashroomPortalPageEnhancement>;
+
+    +portalAppEnhancements: Array<MashroomPortalAppEnhancement>;
 
     registerPortalApp(portalApp: MashroomPortalApp): void;
 
@@ -35,14 +43,22 @@ export interface MashroomPortalPluginRegistry {
 
     unregisterRemotePortalAppRegistry(name: string): void;
 
+    registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement): void;
+
+    unregisterPortalPageEnhancement(name: string): void;
+
+    registerPortalAppEnhancement(enhancement: MashroomPortalAppEnhancement): void;
+
+    unregisterPortalAppEnhancement(name: string): void;
+
     addRegisterListener(listener: MashroomPortalRegisterListener): void;
 
     removeRegisterListener(listener: MashroomPortalRegisterListener): void;
 }
 
-export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'registry';
+export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'registry' | 'app-enhancement' | 'page-enhancement';
 
-export type MashroomPortalRegisterListener = (MashroomPortalPluginType, MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomRemotePortalAppRegistryHolder) => void;
+export type MashroomPortalRegisterListener = (MashroomPortalPluginType, MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomRemotePortalAppRegistryHolder | MashroomPortalPageEnhancement | MashroomPortalAppEnhancement) => void;
 
 export type MashroomPortalPluginConfig = {
     +path: string,

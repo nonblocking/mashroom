@@ -11,10 +11,10 @@ import type {ClientLogMessage, MashroomPortalPluginRegistry} from '../../../type
 
 export default class PortalLogController {
 
-    pluginRegistry: MashroomPortalPluginRegistry;
+    _pluginRegistry: MashroomPortalPluginRegistry;
 
     constructor(pluginRegistry: MashroomPortalPluginRegistry) {
-        this.pluginRegistry = pluginRegistry;
+        this._pluginRegistry = pluginRegistry;
     }
 
     async log(req: ExpressRequest, res: ExpressResponse) {
@@ -57,7 +57,7 @@ export default class PortalLogController {
     }
 
     _getPortalApp(pluginName: string) {
-        return this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+        return this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
     }
 
 }

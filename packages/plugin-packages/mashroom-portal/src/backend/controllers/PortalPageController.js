@@ -23,10 +23,10 @@ import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/inte
 
 export default class PortalPageController {
 
-    pluginRegistry: MashroomPortalPluginRegistry;
+    _pluginRegistry: MashroomPortalPluginRegistry;
 
     constructor(pluginRegistry: MashroomPortalPluginRegistry) {
-        this.pluginRegistry = pluginRegistry;
+        this._pluginRegistry = pluginRegistry;
     }
 
     async getPortalPage(req: ExpressRequest, res: ExpressResponse) {
@@ -68,7 +68,7 @@ export default class PortalPageController {
             }
 
             const body: any = req.body;
-            const page: MashroomPortalPage = body;
+            let page: MashroomPortalPage = body;
 
             if (!page) {
                 res.sendStatus(400);
@@ -76,7 +76,10 @@ export default class PortalPageController {
             }
 
             const pageId = shortId.generate();
-            page.pageId = pageId;
+            page = {
+                ...page,
+                pageId,
+            };
 
             logger.info('Adding page: ', page);
 
@@ -579,7 +582,7 @@ export default class PortalPageController {
     }
 
     _getAppData(pluginName: string) {
-        return this.pluginRegistry.portalApps.find((a) => a.name === pluginName);
+        return this._pluginRegistry.portalApps.find((a) => a.name === pluginName);
     }
 
 }

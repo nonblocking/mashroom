@@ -13,10 +13,6 @@
 
     <title>{{site.title}} - {{page.title}}</title>
 
-    {{#isIE userAgent}}
-        <script type="application/javascript" src="{{resourcesBasePath}}/ie_polyfills.js"></script>
-    {{/isIE}}
-
     <link rel="shortcut icon" type="image/x-icon" href="{{resourcesBasePath}}/assets/mashroom_favicon.ico">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/bootstrap/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/regular.css">
@@ -31,18 +27,7 @@
         </style>
     {{/if}}
 
-    <script type="application/javascript">
-        function toggleMenu() {
-            document.querySelector('nav').classList.toggle('show');
-        }
-        function toggleShowAppVersions() {
-            if (document.querySelector('.mashroom-portal-app-info')) {
-                MashroomPortalServices.portalAppService.hideAppInfos()
-            } else {
-                MashroomPortalServices.portalAppService.showAppInfos()
-            }
-        }
-    </script>
+    <script type="application/javascript" src="{{resourcesBasePath}}/main.js"></script>
 </head>
 <body>
     <div id="mashroom-portal-admin-app-container">

@@ -121,6 +121,18 @@
                 "loads": "portal-layouts"
             },
             {
+                "name": "Mashroom Portal App Enhancement Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-enhancement-plugin-loader.js",
+                "loads": "portal-app-enhancement"
+            },
+            {
+                "name": "Mashroom Portal Page Enhancement Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-page-enhancement-plugin-loader.js",
+                "loads": "portal-page-enhancement"
+            },
+            {
                 "name": "Mashroom Remote Portal App Registry Plugin Loader",
                 "type": "plugin-loader",
                 "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-remote-portal-app-registry-plugin-loader.js",

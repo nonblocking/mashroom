@@ -6,6 +6,8 @@ import type {
     MashroomPortalApp,
     MashroomPortalLayout,
     MashroomPortalTheme,
+    MashroomPortalPageEnhancement,
+    MashroomPortalAppEnhancement
 } from '../../../type-definitions';
 import type {
     MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
@@ -19,20 +21,25 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     _themes: Array<MashroomPortalTheme>;
     _layouts: Array<MashroomPortalLayout>;
     _remotePortalAppRegistries: Array<MashroomRemotePortalAppRegistryHolder>;
-    _listeners: Array<MashroomPortalRegisterListener>;
+    _portalPageEnhancements: Array<MashroomPortalPageEnhancement>;
+    _portalAppEnhancements: Array<MashroomPortalAppEnhancement>;
+
+    _registerListeners: Array<MashroomPortalRegisterListener>;
 
     constructor() {
         this._portalApps = [];
         this._themes = [];
         this._layouts = [];
         this._remotePortalAppRegistries = [];
-        this._listeners = [];
+        this._portalPageEnhancements = [];
+        this._portalAppEnhancements = [];
+        this._registerListeners = [];
     }
 
     registerPortalApp(portalApp: MashroomPortalApp) {
         this.unregisterPortalApp(portalApp.name);
         this._portalApps.push(portalApp);
-        this._listeners.forEach(listener => listener('app', portalApp));
+        this._registerListeners.forEach(listener => listener('app', portalApp));
     }
 
     unregisterPortalApp(pluginName: string) {
@@ -45,7 +52,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerTheme(theme: MashroomPortalTheme) {
         this.unregisterTheme(theme.name);
         this._themes.push(theme);
-        this._listeners.forEach(listener => listener('theme', theme));
+        this._registerListeners.forEach(listener => listener('theme', theme));
     }
 
     unregisterTheme(themeName: string) {
@@ -58,7 +65,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerLayout(layout: MashroomPortalLayout) {
         this.unregisterLayout(layout.name);
         this._layouts.push(layout);
-        this._listeners.forEach(listener => listener('layout', layout));
+        this._registerListeners.forEach(listener => listener('layout', layout));
     }
 
     unregisterLayout(layoutName: string) {
@@ -71,13 +78,39 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder) {
         this.unregisterRemotePortalAppRegistry(registry.name);
         this._remotePortalAppRegistries.push(registry);
-        this._listeners.forEach(listener => listener('registry', registry));
+        this._registerListeners.forEach(listener => listener('registry', registry));
     }
 
     unregisterRemotePortalAppRegistry(name: string) {
         const idx = this._remotePortalAppRegistries.findIndex((holder) => holder.name === name);
         if (idx !== -1) {
             this._remotePortalAppRegistries.splice(idx, 1);
+        }
+    }
+
+    registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement) {
+        this.unregisterPortalPageEnhancement(enhancement.name);
+        this._portalPageEnhancements.push(enhancement);
+        this._registerListeners.forEach(listener => listener('page-enhancement', enhancement));
+    }
+
+    unregisterPortalPageEnhancement(name: string) {
+        const idx = this._portalPageEnhancements.findIndex((holder) => holder.name === name);
+        if (idx !== -1) {
+            this._portalPageEnhancements.splice(idx, 1);
+        }
+    }
+
+    registerPortalAppEnhancement(enhancement: MashroomPortalAppEnhancement) {
+        this.unregisterPortalPageEnhancement(enhancement.name);
+        this._portalAppEnhancements.push(enhancement);
+        this._registerListeners.forEach(listener => listener('app-enhancement', enhancement));
+    }
+
+    unregisterPortalAppEnhancement(name: string) {
+        const idx = this._portalAppEnhancements.findIndex((holder) => holder.name === name);
+        if (idx !== -1) {
+            this._portalAppEnhancements.splice(idx, 1);
         }
     }
 
@@ -101,6 +134,14 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         return Object.freeze(apps);
     }
 
+    addRegisterListener(listener: MashroomPortalRegisterListener) {
+        this._registerListeners.push(listener);
+    }
+
+    removeRegisterListener(listener: MashroomPortalRegisterListener) {
+        this._registerListeners = this._registerListeners.filter((l) => l !== listener);
+    }
+
     get themes(): Array<MashroomPortalTheme> {
         return cloneAndFreezeArray(this._themes);
     }
@@ -109,12 +150,13 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         return cloneAndFreezeArray(this._layouts);
     }
 
-    addRegisterListener(listener: MashroomPortalRegisterListener) {
-        this._listeners.push(listener);
+    get portalPageEnhancements(): Array<MashroomPortalPageEnhancement> {
+        return cloneAndFreezeArray(this._portalPageEnhancements);
     }
 
-    removeRegisterListener(listener: MashroomPortalRegisterListener) {
-        this._listeners = this._listeners.filter((l) => l !== listener);
+    get portalAppEnhancements(): Array<MashroomPortalAppEnhancement> {
+        return cloneAndFreezeArray(this._portalAppEnhancements);
     }
+
 
 }

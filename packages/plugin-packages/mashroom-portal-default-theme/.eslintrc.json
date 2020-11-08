@@ -10,13 +10,14 @@
     ],
     "env": {
         "node": true,
-        "browser": false,
+        "browser": true,
         "es6": true
     },
     "rules": {
         "quotes": ["error", "single", { "allowTemplateLiterals": true }],
         "prefer-template": "error",
         "prefer-object-spread": "error",
-        "prefer-destructuring": ["warn", { "array": true, "object": true }]
+        "prefer-destructuring": ["warn", { "array": true, "object": true }],
+        "@typescript-eslint/ban-ts-ignore": "off"
     }
 }

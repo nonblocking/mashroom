@@ -62,7 +62,6 @@ And configure this plugin like this in the Mashroom config file:
  * _userSearchFilter_: The user search filter, _@username@_ will be replaced by the actual username entered in the login form
  * _groupSearchFilter_: The group search filter (can be empty if you don't want to fetch the user groups)
  * _extraDataMapping_: Optionally map extra LDAP attributes to _user.extraData_. The key in the map is the extraData property, the value the LDAP attribute (default: null)
-   **Please note**: Everything added to _extraData_ will also be made available to Portal Apps in is therefore visible in the browser!
  * _secretsMapping_: Optionally map extra LDAP attributes to _user.secrets_ (default: null)
  * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping
  * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value.

@@ -1,7 +1,7 @@
 
 module.exports = {
     entry: {
-        'ie_polyfills': __dirname + '/src/frontend/js/ie_polyfills.ts'
+        'main': __dirname + '/src/frontend/js/main.ts'
     },
     output: {
         path: __dirname + '/dist/public',

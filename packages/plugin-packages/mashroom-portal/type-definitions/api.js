@@ -1,6 +1,6 @@
 // @flow
 
-import type {I18NString, MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
+import type {I18NString, MashroomPluginConfig, MashroomPluginContextHolder, ExpressRequest} from "@mashroom/mashroom/type-definitions";
 
 /* Model */
 
@@ -45,7 +45,7 @@ export type MashroomPortalPageRefLocalized = {
 }
 
 export type MashroomPortalPage = {
-    pageId: string,
+    +pageId: string,
     +description?: string,
     +keywords?: string,
     +theme?: string,
@@ -125,7 +125,7 @@ export type MashroomPortalAppUser = {
     +displayName: string,
     +email: ?string;
     +permissions: MashroomPortalAppUserPermissions,
-    +extraData: ?{ [string]: any },
+    +[customProp: string]: any,
 }
 
 export type MashroomPortalAppUserPermissions = {
@@ -370,6 +370,89 @@ export type MashroomAvailablePortalApp = {
 
 export type MashroomPortalAppLoadListener = (MashroomPortalLoadedPortalApp) => void;
 
+export type MashroomPortalPageEnhancement = {
+    /**
+     * Enhancer name
+     */
+    +name: string;
+    /**
+     * Enhancer description
+     */
+    +description: ?string;
+    /**
+     * Last reload of the plugin
+     */
+    +lastReloadTs: number;
+    /**
+     * Resources root URI (can be file, http or https)
+     */
+    +resourcesRootUri: string;
+    /**
+     * Resources that should be added to portal pages
+     */
+    +pageResources: MashroomPortalPageEnhancementResources;
+    /**
+     * The actual plugin
+     */
+    +plugin: MashroomPortalPageEnhancementPlugin
+}
+
+export type MashroomPortalPageEnhancementResource = {
+    +path?: string;
+    +dynamicResource?: string;
+    +rule: ?string;
+    +location: ?'header' | 'footer';
+    +inline: ?boolean;
+}
+
+export type MashroomPortalPageEnhancementResources = {
+    +js: Array<MashroomPortalPageEnhancementResource>;
+    +css: Array<MashroomPortalPageEnhancementResource>;
+}
+
+export type MashroomPortalPageEnhancementPlugin = {
+    +dynamicResources?: {
+        +[name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: ExpressRequest) => string;
+    },
+    +rules?: {
+        +[name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: ExpressRequest) => boolean;
+    }
+};
+
+export type MashroomPortalAppEnhancement = {
+    /**
+     * Enhancer name
+     */
+    +name: string;
+    /**
+     * Enhancer description
+     */
+    +description: ?string;
+    /**
+     * Custom services that should be added to MashroomPortalClientServices (the third argument of the portal app bootstrap).
+     * Can also overwrite an existing one.
+     * The value refers to global variable (in window)
+     */
+    +portalCustomClientServices: {
+        [customService: string]: string;
+    };
+    /**
+     * The actual plugin
+     */
+    +plugin: MashroomPortalAppEnhancementPlugin
+}
+
+export interface MashroomPortalAppEnhancementPlugin {
+    /**
+     * Enhance the portalAppSetup object passed as the first argument (if necessary)
+     */
+    enhancePortalAppSetup: (
+        portalAppSetup: MashroomPortalAppSetup,
+        portalApp: MashroomPortalApp,
+        request: ExpressRequest
+    ) => Promise<MashroomPortalAppSetup>;
+}
+
 /* Backend services */
 
 export interface MashroomPortalService {
@@ -387,6 +470,16 @@ export interface MashroomPortalService {
      * Get all registered layout plugins
      */
     getLayouts(): Array<MashroomPortalLayout>;
+
+    /**
+     * Get all registered page enhancement plugins
+     */
+    getPortalPageEnhancements(): Array<MashroomPortalPageEnhancement>;
+
+    /**
+     * Get all registered app enhancement plugins
+     */
+    getPortalAppEnhancements(): Array<MashroomPortalAppEnhancement>;
 
     /**
      * Get all sites
@@ -859,7 +952,8 @@ export type MashroomPortalClientServices = {
     +messageBus: MashroomPortalMessageBus,
     +restService: MashroomRestService,
     +stateService: MashroomPortalStateService,
-    +remoteLogger: MashroomPortalRemoteLogger
+    +remoteLogger: MashroomPortalRemoteLogger,
+    +[customService: string]: any
 }
 
 export type CreateAppWrapper = (id: string, pluginName: string) => {
@@ -871,16 +965,15 @@ export type CreateLoadingError = (id: string, pluginName: string, title: ?string
 
 /* Plugin bootstrap functions */
 
+// remote-portal-app-registry
+
 export interface MashroomRemotePortalAppRegistry {
     +portalApps: Array<MashroomPortalApp>;
 }
 
-export type MashroomPortalThemePluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<{
-    +engineName: string,
-    +engineFactory: () => any
-}>;
-
 export type MashroomRemotePortalAppRegistryBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomRemotePortalAppRegistry>;
+
+// portal-app
 
 export type MashroomPortalAppLifecycleHooks = {
     /*+
@@ -892,3 +985,20 @@ export type MashroomPortalAppLifecycleHooks = {
 
 export type MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement: HTMLElement, portalAppSetup: MashroomPortalAppSetup, clientServices: MashroomPortalClientServices)
     => void | MashroomPortalAppLifecycleHooks | Promise<void> | Promise<MashroomPortalAppLifecycleHooks>;
+
+// portal-theme
+
+export type MashroomPortalThemePluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<{
+    +engineName: string,
+    +engineFactory: () => any
+}>;
+
+// portal-page-enhancer
+
+export type MashroomPortalPageEnhancementPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
+    => MashroomPortalPageEnhancementPlugin;
+
+// portal-app-enhancement
+
+export type MashroomPortalAppEnhancementPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
+ => MashroomPortalAppEnhancementPlugin;

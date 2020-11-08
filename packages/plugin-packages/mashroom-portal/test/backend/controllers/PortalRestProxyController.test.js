@@ -3,7 +3,6 @@
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalRestProxyController from '../../../src/backend/controllers/PortalRestProxyController';
-
 import type {MashroomPortalApp} from '../../../type-definitions';
 
 const portalConfig: any = {
@@ -11,177 +10,177 @@ const portalConfig: any = {
 };
 setPortalPluginConfig(portalConfig);
 
-describe('PortalPageController', () => {
+const httpProxyServiceForwardMock = jest.fn();
 
-    const httpProxyServiceForwardMock = jest.fn();
-
-    const portalApp1: MashroomPortalApp = {
-        name: 'Test Portal App 1',
-        title: null,
-        description: null,
-        tags: [],
-        version: '1.0',
-        homepage: null,
-        author: null,
-        license: null,
-        category: null,
-        metaInfo: null,
-        lastReloadTs: 222222222,
-        globalLaunchFunction: 'foo',
-        resourcesRootUri: `file://${__dirname}`,
-        resources: {
-            js: ['bundle.js'],
-            css: [],
+const portalApp1: MashroomPortalApp = {
+    name: 'Test Portal App 1',
+    title: null,
+    description: null,
+    tags: [],
+    version: '1.0',
+    homepage: null,
+    author: null,
+    license: null,
+    category: null,
+    metaInfo: null,
+    lastReloadTs: 222222222,
+    globalLaunchFunction: 'foo',
+    resourcesRootUri: `file://${__dirname}`,
+    resources: {
+        js: ['bundle.js'],
+        css: [],
+    },
+    sharedResources: null,
+    screenshots: null,
+    defaultRestrictViewToRoles: null,
+    rolePermissions: null,
+    restProxies: {
+        'my-proxy': {
+            targetUri: 'https://www.mashroom-server.com/api',
         },
-        sharedResources: null,
-        screenshots: null,
-        defaultRestrictViewToRoles: null,
-        rolePermissions: null,
-        restProxies: {
-            'my-proxy': {
-                targetUri: 'https://www.mashroom-server.com/api',
+    },
+    defaultAppConfig: {
+        hello: 'world',
+        foo: 'bar',
+    },
+};
+
+const portalApp2: MashroomPortalApp = {
+    name: 'Test Portal App 2',
+    title: null,
+    description: null,
+    tags: [],
+    version: '1.0',
+    homepage: null,
+    author: null,
+    license: null,
+    category: null,
+    metaInfo: null,
+    lastReloadTs: 222222222,
+    globalLaunchFunction: 'foo',
+    resourcesRootUri: `file://${__dirname}`,
+    resources: {
+        js: ['bundle.js'],
+        css: [],
+    },
+    sharedResources: null,
+    screenshots: null,
+    defaultRestrictViewToRoles: null,
+    rolePermissions: {
+        'edit': ['Role2'],
+        'delete': ['Administrator']
+    },
+    restProxies: {
+        'my-proxy': {
+            targetUri: 'https://www.mashroom-server.com/api',
+            sendUserHeaders: true,
+            sendPermissionsHeader: true,
+            addHeaders: {
+                'X-EXTRA': 'test',
             },
         },
-        defaultAppConfig: {
-            hello: 'world',
-            foo: 'bar',
-        },
-    };
+    },
+    defaultAppConfig: {
+        hello: 'world',
+        foo: 'bar',
+    },
+};
 
-    const portalApp2: MashroomPortalApp = {
-        name: 'Test Portal App 2',
-        title: null,
-        description: null,
-        tags: [],
-        version: '1.0',
-        homepage: null,
-        author: null,
-        license: null,
-        category: null,
-        metaInfo: null,
-        lastReloadTs: 222222222,
-        globalLaunchFunction: 'foo',
-        resourcesRootUri: `file://${__dirname}`,
-        resources: {
-            js: ['bundle.js'],
-            css: [],
+const portalApp3: MashroomPortalApp = {
+    name: 'Test Portal App 3',
+    title: null,
+    description: null,
+    tags: [],
+    version: '1.0',
+    homepage: null,
+    author: null,
+    license: null,
+    category: null,
+    metaInfo: null,
+    lastReloadTs: 222222222,
+    globalLaunchFunction: 'foo',
+    resourcesRootUri: `file://${__dirname}`,
+    resources: {
+        js: ['bundle.js'],
+        css: [],
+    },
+    sharedResources: null,
+    screenshots: null,
+    defaultRestrictViewToRoles: null,
+    rolePermissions: {},
+    restProxies: {
+        'my-proxy': {
+            targetUri: 'https://www.mashroom-server.com/api',
+            restrictToRoles: ["Role5"],
         },
-        sharedResources: null,
-        screenshots: null,
-        defaultRestrictViewToRoles: null,
-        rolePermissions: {
-            'edit': ['Role2'],
-            'delete': ['Administrator']
+    },
+    defaultAppConfig: {},
+};
+
+const pluginRegistry: any = {
+    portalApps: [portalApp1, portalApp2, portalApp3],
+};
+
+const pluginContext: any = {
+    loggerFactory: dummyLoggerFactory,
+    services: {
+        storage: {
         },
-        restProxies: {
-            'my-proxy': {
-                targetUri: 'https://www.mashroom-server.com/api',
-                sendUserHeaders: true,
-                sendPermissionsHeader: true,
-                addHeaders: {
-                    'X-EXTRA': 'test',
+        security: {
+            service: {
+                getUser() {
+                    return {
+                        username: 'john',
+                        displayName: 'John Do',
+                        email: 'john.do@gmail.com',
+                        roles: ['User', 'Role2'],
+                    };
                 },
+                isAdmin() {
+                    return true;
+                },
+                async checkResourcePermission() {
+                    return true;
+                }
             },
         },
-        defaultAppConfig: {
-            hello: 'world',
-            foo: 'bar',
-        },
-    };
-
-    const portalApp3: MashroomPortalApp = {
-        name: 'Test Portal App 3',
-        title: null,
-        description: null,
-        tags: [],
-        version: '1.0',
-        homepage: null,
-        author: null,
-        license: null,
-        category: null,
-        metaInfo: null,
-        lastReloadTs: 222222222,
-        globalLaunchFunction: 'foo',
-        resourcesRootUri: `file://${__dirname}`,
-        resources: {
-            js: ['bundle.js'],
-            css: [],
-        },
-        sharedResources: null,
-        screenshots: null,
-        defaultRestrictViewToRoles: null,
-        rolePermissions: {},
-        restProxies: {
-            'my-proxy': {
-                targetUri: 'https://www.mashroom-server.com/api',
-                restrictToRoles: ["Role5"],
+        proxy: {
+            service: {
+                forward: httpProxyServiceForwardMock,
             },
         },
-        defaultAppConfig: {},
-    };
+        portal: {
+            service: {
+                async findSiteByPath() {
+                    return {
+                        pages: [{
 
-    const pluginRegistry: any = {
-        portalApps: [portalApp1, portalApp2, portalApp3],
-    };
-
-    const pluginContext: any = {
-        loggerFactory: dummyLoggerFactory,
-        services: {
-            storage: {
-            },
-            security: {
-                service: {
-                    getUser() {
-                        return {
-                            username: 'john',
-                            displayName: 'John Do',
-                            email: 'john.do@gmail.com',
-                            roles: ['User', 'Role2'],
-                        };
-                    },
-                    isAdmin() {
-                        return true;
-                    },
-                    async checkResourcePermission() {
-                        return true;
+                        }]
                     }
                 },
-            },
-            proxy: {
-                service: {
-                    forward: httpProxyServiceForwardMock,
+                async findPageRefByFriendlyUrl() {
+                    return {
+
+                    }
                 },
-            },
-            portal: {
-                service: {
-                    async findSiteByPath() {
-                        return {
-                            pages: [{
-
+                async getPage() {
+                    return {
+                        portalApps: {
+                            'area1': [{
+                                pluginName: 'Test Portal App 1',
+                            }],
+                            'area2': [{
+                                pluginName: 'Test Portal App 2',
                             }]
-                        }
-                    },
-                    async findPageRefByFriendlyUrl() {
-                        return {
-
-                        }
-                    },
-                    async getPage() {
-                        return {
-                            portalApps: {
-                                'area1': [{
-                                    pluginName: 'Test Portal App 1',
-                                }],
-                                'area2': [{
-                                    pluginName: 'Test Portal App 2',
-                                }]
-                            }
                         }
                     }
                 }
             }
-        },
-    };
+        }
+    },
+};
+
+describe('PortalPageController', () => {
 
     beforeEach(() => {
         httpProxyServiceForwardMock.mockReset();

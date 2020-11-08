@@ -2,6 +2,7 @@
 
 import {
     WINDOW_VAR_PORTAL_API_PATH,
+    WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
     WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC,
     WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC,
     WINDOW_VAR_PORTAL_DEV_MODE,
@@ -399,14 +400,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             return Promise.reject(`App bootstrap function not found: ${appSetup.globalLaunchFunction}`);
         }
 
-        const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
-        const clonedServices = Object.freeze({
-            ...clientServices,
-            messageBus: this._getMessageBusForApp(clientServices, appId),
-            stateService: this._getStateServiceForApp(clientServices, pluginName, appSetup),
-            remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName)
-        });
-
+        const clientServices = this._getClientServicesForApp(appId, appSetup, pluginName);
         const handleError = (error) => {
             console.error(`Error in bootstrap of app: ${pluginName}`, error);
             this._remoteLogger.error('Error during bootstrap execution', error, pluginName);
@@ -414,7 +408,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         let bootstrapRetVal = null;
         try {
-            bootstrapRetVal = bootstrap(wrapper, appSetup, clonedServices);
+            bootstrapRetVal = bootstrap(wrapper, appSetup, clientServices);
         } catch (error) {
             handleError(error);
             return Promise.reject(error);
@@ -521,6 +515,25 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 parentElem.appendChild(portalAppWrapperElement);
             }
         }
+    }
+
+    _getClientServicesForApp(appId: string, appSetup: MashroomPortalAppSetup, pluginName: string): MashroomPortalClientServices {
+        const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES];
+        const customServices: { [string]: string } = global[WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES] || {};
+
+        const clonedClientServices ={
+            ...clientServices,
+            messageBus: this._getMessageBusForApp(clientServices, appId),
+            stateService: this._getStateServiceForApp(clientServices, pluginName, appSetup),
+            remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName)
+        }
+        for (const customServiceName in customServices) {
+            if (customServices.hasOwnProperty(customServiceName)) {
+                clonedClientServices[customServiceName] = window[customServices[customServiceName]];
+            }
+        }
+
+        return Object.freeze(clonedClientServices);
     }
 
     _createAppWrapper(id: string, pluginName: string, title: ?string) {

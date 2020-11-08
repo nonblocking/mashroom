@@ -18,10 +18,10 @@ import type {MashroomPortalPluginRegistry} from '../../../type-definitions/inter
 
 export default class PortalRestProxyController {
 
-    pluginRegistry: MashroomPortalPluginRegistry;
+    _pluginRegistry: MashroomPortalPluginRegistry;
 
     constructor(pluginRegistry: MashroomPortalPluginRegistry) {
-        this.pluginRegistry = pluginRegistry;
+        this._pluginRegistry = pluginRegistry;
     }
 
     async forward(req: ExpressRequest, res: ExpressResponse) {
@@ -49,7 +49,7 @@ export default class PortalRestProxyController {
 
             const pluginName = pathParts[0];
             const restApiId = pathParts[1];
-            const portalApp = this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+            const portalApp = this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
             if (!portalApp) {
                 logger.warn('Portal app not found: ', pluginName);
                 res.sendStatus(404);
