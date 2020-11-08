@@ -13,8 +13,7 @@ const writeFile = promisify(fs.writeFile);
 
 const MAX_PARALLEL_BUILDS = 5;
 const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
-const BUILD_CHECKSUM_FILE = '.mashroom-build.checksum';
-const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**', `**/${BUILD_CHECKSUM_FILE}`];
+const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
 
 import type {
     MashroomLogger,
@@ -42,6 +41,7 @@ type BuildInfo = {
     buildEnd: ?number,
     buildStatus: BuildStatus,
     buildErrorMessage?: ?string,
+    buildPackageChecksum?: string,
 };
 
 
@@ -133,47 +133,43 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
     }
 
-    async _isBuildNecessary(pluginPackagePath: string): Promise<boolean> {
-        return new Promise(resolve => {
-            const digestFile = path.resolve(pluginPackagePath, BUILD_CHECKSUM_FILE);
+    async _getBuildChecksum(pluginPackagePath: string): Promise<string | null> {
+        return new Promise((resolve) => {
+            digestDirectory(
+                pluginPackagePath,
+                (digestErr, packageDigest) => {
+                    if (!digestErr) {
+                        return resolve(packageDigest);
+                    }
 
-            fs.readFile(digestFile, (readErr, data) => {
-                if (readErr) {
-                    resolve(true);
-                    return digestDirectory(
-                        pluginPackagePath,
-                        (digestErr, packageDigest) => {
-                            if (!digestErr) {
-                                fs.writeFileSync(digestFile, packageDigest);
-                            }
-                        }, (path) => {
-                            return anymatch(IGNORE_PATHS, path);
-                        },
-                    );
-                }
-
-                const storedPackageDigest = data.toString();
-                digestDirectory(
-                    pluginPackagePath,
-                    (digestErr, packageDigest) => {
-                        if (!digestErr && storedPackageDigest === packageDigest) {
-                            return resolve(false);
-                        }
-
-                        fs.writeFileSync(digestFile, packageDigest);
-                        resolve(true);
-                    }, (path) => {
-                        return anymatch(IGNORE_PATHS, path);
-                    },
-                );
-            });
+                    resolve(null);
+                }, (path) => {
+                    return anymatch(IGNORE_PATHS, path);
+                },
+            );
         });
     }
 
-    async _processQueueEntry(queueEntry: BuildQueueEntry) {
-        this.removeFromBuildQueue(queueEntry.pluginPackageName);
+    async _isBuildNecessary(pluginPackagePath: string, pluginPackageName: string): Promise<boolean> {
+        const buildInfo = await this._loadBuildInfo(pluginPackageName);
 
-        const isBuildNecessary = await this._isBuildNecessary(queueEntry.pluginPackagePath);
+        if (!buildInfo) {
+            return true;
+        }
+
+        const packageChecksum = await this._getBuildChecksum(pluginPackagePath);
+        if (!packageChecksum || packageChecksum !== buildInfo.buildPackageChecksum) {
+            return true;
+        }
+
+        return false;
+    }
+
+    async _processQueueEntry(queueEntry: BuildQueueEntry) {
+        const { pluginPackageName, pluginPackagePath } = queueEntry;
+        this.removeFromBuildQueue(pluginPackageName);
+
+        const isBuildNecessary = await this._isBuildNecessary(pluginPackagePath, pluginPackageName);
         if (!isBuildNecessary) {
             this._eventEmitter.emit('build-finished', {
                 pluginPackageName: queueEntry.pluginPackageName,
@@ -217,6 +213,11 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
             await this._build(queueEntry);
 
+            const packageChecksum = await this._getBuildChecksum(pluginPackagePath);
+            if (packageChecksum) {
+                buildInfo.buildPackageChecksum = packageChecksum;
+            }
+
             this._log.info(`Build success: ${queueEntry.pluginPackageName}. Build took ${(Date.now() - buildInfo.buildStart) /1000} sec`);
             buildInfo.buildEnd = Date.now();
             buildInfo.buildStatus = 'success';
@@ -258,7 +259,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
     }
 
-    async _loadBuildInfo(pluginPackageName: string) {
+    async _loadBuildInfo(pluginPackageName: string): Promise<BuildInfo | null> {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
         if (!fs.existsSync(buildInfoFile)) {
             return null;
@@ -275,7 +276,6 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _updateBuildInfo(pluginPackageName: string, buildInfo: BuildInfo) {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
-        console.log('---------- updating build info', buildInfoFile);
         ensureDirSync(path.resolve(buildInfoFile, '..'));
 
         try {
