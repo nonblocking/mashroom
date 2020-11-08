@@ -101,12 +101,12 @@ export default ({
                     var nav = document.querySelector('nav');
                     if (nav.classList.contains('show')) {
                         nav.classList.remove('fade-in');
-                        setTimeout(() => {
+                        setTimeout(function() {
                             nav.classList.remove('show');
                         }, 200);
                     } else {
                         nav.classList.add('show');
-                        setTimeout(() => {
+                        setTimeout(function() {
                             nav.classList.add('fade-in');
                         }, 10);
                     }
