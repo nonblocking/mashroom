@@ -18,7 +18,7 @@
     "repository": "git+https://github.com/nonblocking/mashroom.git",
     "author": "Milan Heimschild",
     "dependencies": {
-        "bs-platform": "^8.3.2",
+        "bs-platform": "^7.3.2",
         "react": "^17.0.1",
         "react-dom": "^17.0.1",
         "reason-react": "^0.9.1"

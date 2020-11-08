@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/camelcase: off */
 
 import {connect} from 'rhea';
 import {topicToRoutingKey, routingKeyToTopic} from './topic_converter';

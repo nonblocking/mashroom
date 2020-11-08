@@ -21,8 +21,8 @@
     },
     "scripts": {
         "lint": "eslint src --fix",
-        "dev": "webpack-dev-server --hot --mode development",
-        "build": "webpack --mode production --display-error-details"
+        "dev": "webpack serve --hot --mode development",
+        "build": "webpack --mode production"
     },
     "mashroom": {
         "devModeBuildScript": "build",

@@ -4,7 +4,7 @@ import { isAbsolute, resolve } from 'path';
 import MashroomStorageCollectionFilestore from './MashroomStorageCollectionFilestore';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorageCollection, MashroomStorage} from '@mashroom/mashroom-storage/type-definitions';
+import type {MashroomStorageCollection, MashroomStorage, StorageRecord} from '@mashroom/mashroom-storage/type-definitions';
 import type {CollectionMap} from '../../type-definitions';
 
 const COLLECTION_POSTIFX = '.json';
@@ -34,7 +34,7 @@ export default class MashroomStorageFilestore implements MashroomStorage {
         ensureDirSync(this.dataFolder);
     }
 
-    async getCollection<T extends {}>(name: string): Promise<MashroomStorageCollection<T>> {
+    async getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
         const existingCollection = this.collections[name];
         if (existingCollection) {
             return existingCollection;

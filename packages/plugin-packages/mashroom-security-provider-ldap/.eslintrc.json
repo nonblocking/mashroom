@@ -18,6 +18,6 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "no-prototype-builtins": "off",
-        "@typescript-eslint/ban-ts-ignore": "off"
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }

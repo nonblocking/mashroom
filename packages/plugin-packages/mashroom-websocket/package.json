@@ -42,7 +42,7 @@
         "lint": "eslint src test --fix",
         "test": "jest",
         "build:backend": "babel src/backend -d dist",
-        "build:frontend": "webpack --mode production --display-error-details",
+        "build:frontend": "webpack --mode production",
         "build": "npm run build:backend && npm run build:frontend",
         "dev": "nodemon --watch src -e js --exec \"npm run build && node dist/webapp/dev_server.js\""
     },

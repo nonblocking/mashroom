@@ -135,7 +135,7 @@ describe('MashroomHttpProxyService', () => {
     it('sets the correct status code if the connection times out', async () => {
         nock('https://www.yyyyyyyyyyy.at')
             .get('/')
-            .socketDelay(3000)
+            .delay(3000)
             .reply(200, 'test response');
 
         const httpProxyService = new MashroomHttpProxyService(['GET'], [], 2000, emptyPluginRegistry, loggerFactory);

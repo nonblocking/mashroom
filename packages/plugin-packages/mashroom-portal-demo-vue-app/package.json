@@ -27,8 +27,8 @@
     "scripts": {
         "lint": "eslint src --fix",
         "copy-assets": "copyfiles -u 1 src/assets/* dist",
-        "dev": "webpack-dev-server --hot --mode development",
-        "build": "webpack --mode production --display-error-details && npm run copy-assets"
+        "dev": "webpack serve --hot --mode development",
+        "build": "webpack --mode production && npm run copy-assets"
     },
     "mashroom": {
         "devModeBuildScript": "build",

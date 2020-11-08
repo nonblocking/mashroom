@@ -17,6 +17,6 @@
         "quotes": ["error", "single", { "allowTemplateLiterals": true }],
         "prefer-template": "error",
         "prefer-object-spread": "error",
-        "@typescript-eslint/ban-ts-ignore": "off"
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }
