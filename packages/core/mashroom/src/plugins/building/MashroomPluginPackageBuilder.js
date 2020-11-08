@@ -6,14 +6,10 @@ import EventEmitter from 'events';
 import {ensureDirSync} from 'fs-extra';
 import {promisify} from 'util';
 import stripAnsi from 'strip-ansi';
+import digestDirectory from 'lucy-dirsum';
+import anymatch from 'anymatch';
 import NpmUtils from './NpmUtils';
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-
-const MAX_PARALLEL_BUILDS = 5;
-const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
-const IGNORE_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
+import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
 
 import type {
     MashroomLogger,
@@ -25,8 +21,12 @@ import type {
     MashroomPluginPackageBuilderEventName,
     MashroomPluginPackageBuilderEvent,
 } from '../../../type-definitions/internal';
-import digestDirectory from 'lucy-dirsum';
-import anymatch from 'anymatch';
+
+const readFile = promisify(fs.readFile);
+const writeFile = promisify(fs.writeFile);
+
+const MAX_PARALLEL_BUILDS = 5;
+const RETRY_RUNNING_BUILD_AFTER_MS = 60 * 1000;
 
 type BuildQueueEntry = {
     pluginPackageName: string,
@@ -43,7 +43,6 @@ type BuildInfo = {
     buildErrorMessage?: ?string,
     buildPackageChecksum?: string,
 };
-
 
 /**
  * Build service for plugin packages.
@@ -112,9 +111,10 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     async _processBuildQueue() {
-        if (this._buildSlots.length === MAX_PARALLEL_BUILDS) {
+        if (this._buildSlots.length >= MAX_PARALLEL_BUILDS) {
+            // all slots are full
             this._log.debug(`Builds running: ${this._buildSlots.length} of ${MAX_PARALLEL_BUILDS} possible`);
-            return; // all slots are full
+            return;
         }
 
         while (this._buildQueue.length > 0) {
@@ -144,7 +144,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
                     resolve(null);
                 }, (path) => {
-                    return anymatch(IGNORE_PATHS, path);
+                    return anymatch(IGNORE_CHANGES_IN_PATHS, path);
                 },
             );
         });
