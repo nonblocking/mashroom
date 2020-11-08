@@ -27,6 +27,7 @@ export const WINDOW_VAR_PORTAL_DEV_MODE = 'MashroomPortalDevMode';
 export const WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC = 'MashroomPortalCreateAppWrapperFunc';
 export const WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC = 'MashroomPortalCreateLoadingErrorFunc';
 export const WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES = 'MashroomPortalCustomClientServices';
+export const WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP = 'MashroomPortalPreloadedAppSetup';
 export const WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION = 'MashroomPortalCheckAuthenticationExpiration';
 export const WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION = 'MashroomPortalAutoExtendAuthentication';
 export const WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC = 'MashroomPortalWarnBeforeAuthExpiresSec';

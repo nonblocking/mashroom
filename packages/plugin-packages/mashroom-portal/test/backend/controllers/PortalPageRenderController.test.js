@@ -42,6 +42,11 @@ const pluginRegistry1: any = {
         defaultAppConfig: {
             firstName: 'John',
         },
+    }, {
+        name: 'Mashroom Welcome Portal App 2',
+        defaultAppConfig: {
+            firstName: 'Foo',
+        },
     }],
     portalAppEnhancements: [],
     portalPageEnhancements: [],
@@ -155,10 +160,10 @@ const page1: any = {
             instanceId: 'ABCDEF',
         }],
         'app-area2': [{
-            pluginName: 'Portal App 2',
+            pluginName: 'Mashroom Welcome Portal App',
             instanceId: '2',
         }, {
-            pluginName: 'Portal App 3',
+            pluginName: 'Mashroom Welcome Portal App 2',
             instanceId: '3',
         }],
     },
@@ -264,6 +269,7 @@ describe('PortalPageRenderController', () => {
                 expect(body).toContain('var portalAppService = MashroomPortalServices.portalAppService;');
                 expect(body).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null);');
                 expect(body).toContain('portalAppService.loadApp(\'mashroom-portal-admin-app-container\', \'admin-portal-app\', null, null, null);');
+                expect(body).toContain('window[\'MashroomPortalPreloadedAppSetup\']');
                 done();
             },
         };
@@ -304,7 +310,7 @@ describe('PortalPageRenderController', () => {
                 expect(webappProps.get('views')).toBe('./views');
 
                 expect(model.site).toEqual({siteId: 'default', pages: [{pageId: 'test-page', friendlyUrl: '/bar', hidden: false, subPages: [], title: 'Test Page'}], path: '/web', title: 'Default Site'});
-                expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Portal App 2'}, {instanceId: '3', pluginName: 'Portal App 3'}]}, theme: 'my-theme', title: 'Test Page'});
+                expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Mashroom Welcome Portal App'}, {instanceId: '3', pluginName: 'Mashroom Welcome Portal App 2'}]}, theme: 'my-theme', title: 'Test Page'});
                 expect(model.siteBasePath).toBe('/portal/web');
                 expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
                 expect(model.apiBasePath).toBe('/portal/web/___/api');

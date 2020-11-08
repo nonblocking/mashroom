@@ -18,7 +18,7 @@ import {
     WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
     WINDOW_VAR_PORTAL_DEV_MODE,
     WINDOW_VAR_PORTAL_LANGUAGE,
-    WINDOW_VAR_PORTAL_PAGE_ID,
+    WINDOW_VAR_PORTAL_PAGE_ID, WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
     WINDOW_VAR_PORTAL_SERVICES,
     WINDOW_VAR_PORTAL_SITE_ID,
     WINDOW_VAR_PORTAL_SITE_URL,
@@ -44,6 +44,7 @@ import {
     isSignedIn,
     isSitePermitted
 } from '../utils/security_utils';
+import createPortalAppSetup from '../utils/create_portal_app_setup';
 
 import type {
     ExpressApplication,
@@ -162,7 +163,7 @@ export default class PortalPageRenderController {
         const portalResourcesHeader = await this._resourcesHeader(req, portalPath, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang,
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
             messagingConnectPath, privateUserTopic, devMode, userAgent);
-        const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent);
+        const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent, user);
         const siteBasePath = getFrontendSiteBasePath(req);
         let resourcesBasePath = null;
         if (themeName) {
@@ -296,30 +297,22 @@ export default class PortalPageRenderController {
     }
 
     async _resourcesFooter(req: ExpressRequest, page: MashroomPortalPage, adminPluginName: ?string, sitePath: string, pageFriendlyUrl: string,
-                           lang: string, userAgent: UserAgent): Promise<string> {
-        const loadStatements = [];
-        if (page.portalApps) {
-            for (const areaId in page.portalApps) {
-                if (areaId && page.portalApps.hasOwnProperty(areaId)) {
-                    for (const portalAppInstance of page.portalApps[areaId]) {
-                        const portalApp = this._getPortalApp(portalAppInstance.pluginName);
-                        if (!await isAppPermitted(req, portalAppInstance.pluginName, portalAppInstance.instanceId, portalApp)) {
-                            continue;
-                        }
+                           lang: string, userAgent: UserAgent, mashroomSecurityUser: ?MashroomSecurityUser): Promise<string> {
 
-                        if (portalAppInstance.instanceId) {
-                            loadStatements.push(
-                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${portalAppInstance.instanceId}', null, null);`
-                            );
-                        } else {
-                            loadStatements.push(
-                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', null, null, null);`
-                            );
-                        }
-                    }
-                }
-            }
-        }
+        const staticAppStartupScript = await this._getStaticAppStartupScript(req, page, mashroomSecurityUser, adminPluginName);
+
+        return `
+            <script>
+                var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;
+                ${staticAppStartupScript}
+            </script>
+            ${await this._getPageEnhancementFooterResources(sitePath, pageFriendlyUrl, lang, userAgent, req)}
+        `;
+    }
+
+    async _getStaticAppStartupScript(req: ExpressRequest, page: MashroomPortalPage, mashroomSecurityUser: ?MashroomSecurityUser, adminPluginName: ?string) {
+        const loadStatements = [];
+        const preloadedPortalAppSetup = {};
 
         if (adminPluginName) {
             loadStatements.push(
@@ -327,12 +320,34 @@ export default class PortalPageRenderController {
             );
         }
 
+        if (page.portalApps) {
+            for (const areaId in page.portalApps) {
+                if (areaId && page.portalApps.hasOwnProperty(areaId)) {
+                    for (const portalAppInstance of page.portalApps[areaId]) {
+                        const portalApp = this._getPortalApp(portalAppInstance.pluginName);
+                        if (!portalApp) {
+                            continue;
+                        }
+                        if (!await isAppPermitted(req, portalAppInstance.pluginName, portalAppInstance.instanceId, portalApp)) {
+                            continue;
+                        }
+
+                        const instanceId = portalAppInstance.instanceId;
+                        if (instanceId) {
+                            loadStatements.push(
+                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${instanceId}', null, null);`
+                            );
+
+                            preloadedPortalAppSetup[instanceId] = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, this._pluginRegistry, req);
+                        }
+                    }
+                }
+            }
+        }
+
         return `
-            <script>
-                var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;
-                ${loadStatements.join('\n')}
-            </script>
-            ${await this._getPageEnhancementFooterResources(sitePath, pageFriendlyUrl, lang, userAgent, req)}
+            window['${WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP}'] = ${JSON.stringify(preloadedPortalAppSetup)};
+            ${loadStatements.join('\n')};
         `;
     }
 
@@ -360,16 +375,16 @@ export default class PortalPageRenderController {
             `;
         }
 
-        enhancement += await this._addPageEnhancementResources('header', sitePath, pageFriendlyUrl, lang, userAgent, req);
+        enhancement += await this._getPageEnhancementResources('header', sitePath, pageFriendlyUrl, lang, userAgent, req);
 
         return enhancement;
     }
 
     async _getPageEnhancementFooterResources(sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: ExpressRequest): Promise<string> {
-        return this._addPageEnhancementResources('footer', sitePath, pageFriendlyUrl, lang, userAgent, req);
+        return this._getPageEnhancementResources('footer', sitePath, pageFriendlyUrl, lang, userAgent, req);
     }
 
-    async _addPageEnhancementResources(location: 'header' | 'footer', sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: ExpressRequest): Promise<string> {
+    async _getPageEnhancementResources(location: 'header' | 'footer', sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: ExpressRequest): Promise<string> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         let enhancement = '';
 
@@ -381,7 +396,7 @@ export default class PortalPageRenderController {
                     const jsResource = pageEnhancement.pageResources.js[j];
                     if (this._pageEnhancementResourceShallInclude(location, pageEnhancement, jsResource, sitePath, pageFriendlyUrl, lang, userAgent, req)) {
                         logger.debug(`Adding JS page resource to the ${location}:`, jsResource);
-                        enhancement += await this._addPageEnhancementResource('js', pageEnhancement, jsResource, sitePath, pageFriendlyUrl, lang, userAgent, req, logger);
+                        enhancement += await this._getPageEnhancementResource('js', pageEnhancement, jsResource, sitePath, pageFriendlyUrl, lang, userAgent, req, logger);
                     }
                 }
             }
@@ -390,7 +405,7 @@ export default class PortalPageRenderController {
                     const cssResource = pageEnhancement.pageResources.css[j];
                     if (this._pageEnhancementResourceShallInclude(location, pageEnhancement, cssResource, sitePath, pageFriendlyUrl, lang, userAgent, req)) {
                         logger.debug(`Adding CSS page resource to the ${location}:`, cssResource);
-                        enhancement += await this._addPageEnhancementResource('css', pageEnhancement, cssResource, sitePath, pageFriendlyUrl, lang, userAgent, req, logger);
+                        enhancement += await this._getPageEnhancementResource('css', pageEnhancement, cssResource, sitePath, pageFriendlyUrl, lang, userAgent, req, logger);
                     }
                 }
             }
@@ -399,7 +414,7 @@ export default class PortalPageRenderController {
         return enhancement;
     }
 
-    async _addPageEnhancementResource(type: 'js' | 'css', enhancement: MashroomPortalPageEnhancement, resource: MashroomPortalPageEnhancementResource, sitePath: string,
+    async _getPageEnhancementResource(type: 'js' | 'css', enhancement: MashroomPortalPageEnhancement, resource: MashroomPortalPageEnhancementResource, sitePath: string,
                                       pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: ExpressRequest, logger: MashroomLogger): Promise<string> {
         const { path: resourcePath, dynamicResource } = resource;
         if (!resource.inline && resourcePath) {
