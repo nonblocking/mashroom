@@ -10,17 +10,17 @@
         "type-definitions/*"
     ],
     "dependencies": {
-        "node-cache": "^5.1.0"
+        "node-cache": "^5.1.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.8.4",
+        "@babel/cli": "^7.12.1",
         "@mashroom/mashroom": "1.5.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "1.5.4",
-        "@types/jest": "^25.2.2",
-        "eslint": "^7.0.0",
+        "@types/jest": "^26.0.15",
+        "eslint": "^7.13.0",
         "express": "^4.17.1",
-        "jest": "26.0.1",
-        "typescript": "^3.8.3"
+        "jest": "26.6.3",
+        "typescript": "^4.0.5"
     },
     "scripts": {
         "lint": "eslint src test --ext '.ts' --fix",
