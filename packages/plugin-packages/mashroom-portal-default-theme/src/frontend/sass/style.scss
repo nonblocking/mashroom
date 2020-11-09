@@ -428,15 +428,15 @@ header {
             animation-delay: 1.5s;
             top: 0;
 
-            &::before,
-            &::after {
+            &:before,
+            &:after {
                 content: '';
                 display: inline-block;
                 position: absolute;
                 top: 0;
             }
 
-            &::before {
+            &:before {
                 left: -15px;
                 width: 10px;
                 height: 10px;
@@ -446,7 +446,7 @@ header {
                 animation-delay: 1s;
             }
 
-            &::after {
+            &:after {
                 left: 15px;
                 width: 10px;
                 height: 10px;
