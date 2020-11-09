@@ -49,7 +49,7 @@ export default class ReconnectMessageBufferStore {
         return new Promise<void>((res) => {
             unlink(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), err => {
                 if (err) {
-                    this._logger.warn(`Temporary store file could not be deleted: ${err.toString()}`);
+                    this._logger.debug(`Temporary store file could not be deleted: ${err.toString()}`);
                     return res();
                 }
 
@@ -83,7 +83,7 @@ export default class ReconnectMessageBufferStore {
         return new Promise((res) => {
             readFile(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), (err, data) => {
                 if (err) {
-                    this._logger.warn(`Could not get data from temporary store file: ${err.toString()}`);
+                    this._logger.debug(`Could not get data from temporary store file: ${err.toString()}`);
                     return res([]);
                 }
 

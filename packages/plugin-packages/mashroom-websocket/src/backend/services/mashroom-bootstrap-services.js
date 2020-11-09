@@ -19,7 +19,7 @@ export default bootstrap;
 
 const addTestListener = (service, loggerFactory) => {
     const logger = loggerFactory('mashroom.websocket.service');
-    service.addMessageListener((path) => path === '/test', (message, client) => {
+    service.addMessageListener((path) => path.startsWith('/test'), (message, client) => {
         logger.info(`Received test message from user ${client.user.username}:`, message);
         service.addDisconnectListener((disconnectedClient) => {
            if (disconnectedClient === client) {
@@ -30,6 +30,6 @@ const addTestListener = (service, loggerFactory) => {
             await service.sendMessage(client, {
                 greetings: `Hello ${client.user.displayName || client.user.username}!`
             });
-        }, 500);
+        }, 1000);
     });
 };

@@ -115,7 +115,8 @@
             "restrictToRoles": null,
             "enableKeepAlive": true,
             "keepAliveIntervalSec": 15,
-            "maxConnections": 20
+            "maxConnections": 20,
+            "reconnectMessageBufferFolder": "./data/ws-reconnect-buffer"
         },
         "Mashroom Messaging Services": {
             "externalProvider": null,
