@@ -15,6 +15,9 @@ $COLOR_SECONDARY: #5cc8ff;
 $COLOR_SECONDARY_LIGHT: #96fbff;
 $COLOR_SECONDARY_DARK: #0097cc;
 
+$COLOR_LOADING_DOTS: $COLOR_PRIMARY;
+$COLOR_LOADING_DOTS_LIGHTEN:  lighten($COLOR_PRIMARY, 30%);
+
 $ADMIN_APP_COLOR_BACKGROUND: $COLOR_BLACK;
 $ADMIN_APP_COLOR_BACKGROUND_LIGHT: lighten($ADMIN_APP_COLOR_BACKGROUND, 10);
 $ADMIN_APP_COLOR_BACKGROUND_LIGHTER: lighten($ADMIN_APP_COLOR_BACKGROUND, 20);
@@ -26,39 +29,22 @@ $FONT_HEADER: Georgia, serif;
 
 $GUTTER_WIDTH: 15px;
 
-@-webkit-keyframes spin {
+@keyframes show-delayed {
     0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+        opacity: 0;
     }
     100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
+        opacity: 1;
     }
 }
 
-@keyframes spin {
+@keyframes dot-flashing {
     0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
+        background-color: $COLOR_LOADING_DOTS;
     }
+    50%,
     100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        opacity: .1;
-    }
-
-    50% {
-        opacity: .3;
-    }
-
-    100% {
-        opacity: .1;
+        background-color: $COLOR_LOADING_DOTS_LIGHTEN;
     }
 }
 
@@ -423,14 +409,53 @@ header {
 
     .mashroom-portal-app-loading {
         min-height: 100px;
-        background-color: $COLOR_GREY;
+        overflow: hidden;
         opacity: 0;
-        animation: pulse 2s infinite ease-in-out;
-        animation-name: pulse;
+        animation: show-delayed 0.1s;
         animation-delay: 1s;
-        animation-duration: 2s;
-        animation-iteration-count: infinite;
-        animation-timing-function: ease-in-out;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+
+        span {
+            display: table;
+            margin: 15px auto;
+            position: relative;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+            animation: dot-flashing 1s infinite linear alternate;
+            animation-delay: 1.5s;
+            top: 0;
+
+            &::before,
+            &::after {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                top: 0;
+            }
+
+            &::before {
+                left: -15px;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+                animation: dot-flashing 1s infinite alternate;
+                animation-delay: 1s;
+            }
+
+            &::after {
+                left: 15px;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+                animation: dot-flashing 1s infinite alternate;
+                animation-delay: 2s;
+            }
+        }
     }
 
     .mashroom-portal-app-loading-error {
@@ -830,6 +855,10 @@ footer {
 
     .mashroom-portal-app-loading {
         min-height: 32px;
+
+        span {
+            display: none;
+        }
     }
 }
 

@@ -18,7 +18,7 @@ const defaultCreateAppWrapper: CreateAppWrapper = (id, pluginName) => {
 
     const portalAppHostElement = document.createElement('div');
     portalAppHostElement.className = 'mashroom-portal-app-host';
-    portalAppHostElement.innerHTML = '<div class="mashroom-portal-app-loading"></div>';
+    portalAppHostElement.innerHTML = '<div class="mashroom-portal-app-loading"><span/></div>';
     portalAppWrapperElement.appendChild(portalAppHostElement);
 
     return {

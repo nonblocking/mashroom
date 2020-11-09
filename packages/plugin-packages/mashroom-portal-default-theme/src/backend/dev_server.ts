@@ -145,7 +145,7 @@ app.get('/', (req: Request, res: Response) => {
                     </div>
                     <div class="mashroom-portal-app-wrapper">
                         <div class="mashroom-portal-app-host">
-                            <div class="mashroom-portal-app-loading"></div>
+                            <div class="mashroom-portal-app-loading"><span/></div>
                         </div>
                     </div>
                 </div>
