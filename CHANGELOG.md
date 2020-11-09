@@ -5,7 +5,7 @@
 
  * Portal: Decreased start time of static Portal Apps by delivering the appSetup with the Portal Page
  * Core: Plugins are now only built when they changed since the last start. This dramatically decreases the start time in dev mode.
- * Added a new plugin *mashroom-portal-legacy-browser-support* that adds a polyfill for IE11 to all portal pages (only if IE detected)
+ * Added a new plugin *mashroom-portal-legacy-browser-support* that adds polyfills for legacy browsers (such as IE11) to all portal pages (only if IE detected)
  * Portal: Added a new plugin type *portal-app-enhancement* that allows it to update or rewrite the *portalAppSetup* that is passed to Portal Apps at startup.
    This can be used to add extra appConfig or user properties from a context. Additionally, this plugin allows it to pass extra *clientServices*
    to Portal Apps or replace one of the default ones.
@@ -14,9 +14,9 @@
  * HTTP Proxy: The HTTP interceptor plugins now receive the original headers from the incoming request without filtering
  * Portal: Plugin updates are now pushed to the Browser via SSE (in development mode). So, Portal Apps are reloaded faster after an update.
    Also, the portal page reloads on theme or layout changes.
- * Portal: Fixed the problem that the CSRF token was invalidated on public pages each when an ajax request was rejected by the ACL check;
-   and after the invalidation all subsequent ajax POST's were failing
- * Http Proxy: Fixed nasty bug that caused http headers to be dropped randomly because RegExp.lastIndex is not
+ * Portal: Fixed the problem that the CSRF token was invalidated on public pages when an ajax request was rejected by the ACL check.
+   And after the invalidation all subsequent ajax POST's were failing
+ * Http Proxy: Fixed nasty bug that caused http headers to be dropped randomly because *RegExp.lastIndex* is not
    reset when test() returns true
 
 ## 1.5.4 (October 29, 2020)

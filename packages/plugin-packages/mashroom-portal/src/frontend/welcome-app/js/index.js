@@ -6,8 +6,8 @@ import template from './template';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '../../../../type-definitions';
 
-const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element) => {
-    element.innerHTML = template();
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup) => {
+    element.innerHTML = template(portalAppSetup.resourcesBasePath);
     return Promise.resolve();
 };
 
