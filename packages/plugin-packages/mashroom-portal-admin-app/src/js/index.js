@@ -14,7 +14,8 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
              portalAdminService={clientServices.portalAdminService}
              portalUserService={clientServices.portalUserService}
              portalSiteService={clientServices.portalSiteService}
-        />, portalAppHostElement);
+        />,
+        portalAppHostElement);
 
     return {
         willBeRemoved: () => {

@@ -26,6 +26,7 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "no-console": "off",
-        "no-unused-vars": "warn"
+        "no-unused-vars": "warn",
+        "react/display-name": "off"
     }
 }

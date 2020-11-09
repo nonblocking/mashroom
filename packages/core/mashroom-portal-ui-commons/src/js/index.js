@@ -22,7 +22,7 @@ export {default as TextFieldContainer} from './containers/TextFieldContainer';
 export {default as TextareaFieldContainer} from './containers/TextareaFieldContainer';
 export {default as CheckboxFieldContainer} from './containers/CheckboxFieldContainer';
 export {default as SelectFieldContainer} from './containers/SelectFieldContainer';
-export {default as SourceCodeEditorFieldContainer} from './containers/SourceCodeEditorFieldContainer';
+export {default as SourceCodeEditorFieldContainer} from './lazy/SourceCodeEditorFieldContainer';
 export {default as FieldLabel} from './components/FieldLabel';
 export {default as AutocompleteFieldContainer} from './containers/AutocompleteFieldContainer';
 export {default as AutocompleteStringArraySuggestionHandler} from './components/AutocompleteStringArraySuggestionHandler';
