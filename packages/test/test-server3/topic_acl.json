@@ -1,6 +1,6 @@
 {
     "external1/#": {
-        "allow": ["*"],
+        "allow": "any",
         "deny": ["NotSoTrustedRole"]
     },
     "external2/#": {
