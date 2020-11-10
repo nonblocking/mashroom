@@ -58,7 +58,7 @@ has similar concepts than a Java Portal Server.
 |                     | Supported                                                                                                                      |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------|
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
-| Node.js             | 10.x, 12.x                                                                                                                     |
+| Node.js             | 10.x, 12.x, 14.x                                                                                                               |
 | Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
@@ -68,7 +68,7 @@ has similar concepts than a Java Portal Server.
 | Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
 | Clustering          | yes (tested with PM2)                                                                                                          |
 | Monitoring          | CPU, Heap, Requests + Plugin Metrics; Exporter for Prometheus                                                                  |
-| Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (Default Theme only)                                  |
+| Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (only with mashroom-portal-legacy-browser-support)    |
 | Mobile Browsers     | Chrome (latest), Safari (latest)                                                                                               |
 
 ## Architecture
