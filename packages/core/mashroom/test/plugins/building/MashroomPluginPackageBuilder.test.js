@@ -130,6 +130,7 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
 
         const buildInfoFile = path.resolve(__dirname, '../../../test-data/building1/tmp/build-data/test3.build.json');
         fsExtra.writeJsonSync(buildInfoFile, {
+            buildStatus: 'success',
             buildPackageChecksum: await builder._getBuildChecksum(pluginPackagePath),
         });
 
