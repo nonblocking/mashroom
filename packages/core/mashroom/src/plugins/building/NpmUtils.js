@@ -62,8 +62,15 @@ export default class NpmUtils {
             // Execute in a child process
             const childProc = exec(commandString, execOptions, (error, stdout, stderr) => {
                 if (error) {
-                    this._log.error(`Executing command '${commandString}' in ${packagePath} failed`, error);
-                    this._log.error(stderr.toString());
+                    const stdErrStr = stderr.toString();
+                    if (stdErrStr) {
+                        this._log.error(stdErrStr);
+                    }
+                    if (childProc.killed) {
+                        this._log.error(`Execution of command '${commandString}' stopped because it took longer than ${EXECUTION_TIMEOUT / 1000}sec!`);
+                    } else {
+                        this._log.error(`Execution of command '${commandString}' in ${packagePath} failed`, error);
+                    }
                     reject(error);
                     return;
                 }
