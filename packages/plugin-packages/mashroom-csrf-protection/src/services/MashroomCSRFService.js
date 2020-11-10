@@ -3,11 +3,11 @@
 import CSRF from 'csrf';
 
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
-import type {MashroomCSRFService as MashroomCSRFServiceeType} from '../../type-definitions';
+import type {MashroomCSRFService as MashroomCSRFServiceType} from '../../type-definitions';
 
 const CSRF_TOKEN_SESSION_KEY = '__MASHROOM_CSRF_TOKEN';
 
-export default class MashroomCSRFService implements MashroomCSRFServiceeType {
+export default class MashroomCSRFService implements MashroomCSRFServiceType {
 
     _saltLength: number;
     _secretLength: number;
