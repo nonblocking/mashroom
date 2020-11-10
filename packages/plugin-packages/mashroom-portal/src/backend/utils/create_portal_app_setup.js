@@ -33,18 +33,18 @@ const toPortalAppUser = (mashroomSecurityUser: ?MashroomSecurityUser, portalApp:
 const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp,
                                      pluginRegistry: MashroomPortalPluginRegistry, req: ExpressRequest): Promise<MashroomPortalAppSetup> => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
-    let enhanceAppSetup = portalAppSetup;
+    let enhancedAppSetup = portalAppSetup;
 
     const enhancements = pluginRegistry.portalAppEnhancements;
     for (let i = 0; i < enhancements.length; i++) {
         try {
-            enhanceAppSetup = await enhancements[i].plugin.enhancePortalAppSetup(portalAppSetup, portalApp, req);
+            enhancedAppSetup = await enhancements[i].plugin.enhancePortalAppSetup(enhancedAppSetup, portalApp, req);
         } catch (e) {
             logger.warn(`Calling Portal App enhancer ${enhancements[i].name} failed!`, e);
         }
     }
 
-    return enhanceAppSetup;
+    return enhancedAppSetup;
 }
 
 export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: ?MashroomSecurityUser,

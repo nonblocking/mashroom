@@ -116,8 +116,8 @@ const page1: MashroomPortalPage = {
     },
 };
 
-const portalAppEnhancement: MashroomPortalAppEnhancement = {
-    name: 'Test Enhancement',
+const portalAppEnhancement1: MashroomPortalAppEnhancement = {
+    name: 'Test Enhancement 1',
     description: null,
     portalCustomClientServices: {
     },
@@ -132,9 +132,26 @@ const portalAppEnhancement: MashroomPortalAppEnhancement = {
     }
 }
 
+const portalAppEnhancement2: MashroomPortalAppEnhancement = {
+    name: 'Test Enhancement 2',
+    description: null,
+    portalCustomClientServices: {
+    },
+    plugin: {
+        enhancePortalAppSetup: (portalAppSetup, portalApp, req) => Promise.resolve({
+            ...portalAppSetup,
+            user: {
+                ...portalAppSetup.user,
+                extraData: 'foo',
+                extraData2: 'bar',
+            }
+        })
+    }
+}
+
 const pluginRegistry: any = {
     portalApps: [portalApp1, portalApp2],
-    portalAppEnhancements: [portalAppEnhancement],
+    portalAppEnhancements: [portalAppEnhancement1, portalAppEnhancement2],
 };
 
 const pluginContext: any = {
@@ -243,7 +260,8 @@ describe('PortalAppController', () => {
                 permissions: {
                     edit: true
                 },
-                extraData: 'foo'
+                extraData: 'foo',
+                extraData2: 'bar'
             },
             appConfig: {
                 hello: 'peter',
@@ -307,7 +325,8 @@ describe('PortalAppController', () => {
                 permissions: {
                     edit: true
                 },
-                extraData: 'foo'
+                extraData: 'foo',
+                extraData2: 'bar'
             },
             appConfig: {
                 hello: 'world',
