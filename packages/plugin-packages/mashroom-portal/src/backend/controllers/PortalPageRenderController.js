@@ -18,7 +18,8 @@ import {
     WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
     WINDOW_VAR_PORTAL_DEV_MODE,
     WINDOW_VAR_PORTAL_LANGUAGE,
-    WINDOW_VAR_PORTAL_PAGE_ID, WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
+    WINDOW_VAR_PORTAL_PAGE_ID,
+    WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
     WINDOW_VAR_PORTAL_SERVICES,
     WINDOW_VAR_PORTAL_SITE_ID,
     WINDOW_VAR_PORTAL_SITE_URL,
@@ -57,11 +58,12 @@ import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
 import type {
+    MashroomPortalApp,
     MashroomPortalPage, MashroomPortalPageEnhancement,
     MashroomPortalPageEnhancementResource,
     MashroomPortalPageRef,
     MashroomPortalPageRefLocalized,
-    MashroomPortalPageRenderModel,
+    MashroomPortalPageRenderModel, MashroomPortalService,
     MashroomPortalSite,
     MashroomPortalSiteLocalized, UserAgent,
 } from '../../../type-definitions';
@@ -335,7 +337,10 @@ export default class PortalPageRenderController {
                                 `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${instanceId}', null, null);`
                             );
                             if (portalApp) {
-                                preloadedPortalAppSetup[instanceId] = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, this._pluginRegistry, req);
+                                const instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
+                                if (instanceData) {
+                                    preloadedPortalAppSetup[instanceId] = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, this._pluginRegistry, req);
+                                }
                             }
                         }
                     }
@@ -493,5 +498,10 @@ export default class PortalPageRenderController {
 
     _getPortalApp(pluginName: string) {
         return this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+    }
+
+    async _getPortalAppInstance(page: MashroomPortalPage, portalApp: MashroomPortalApp, instanceId: string, req: ExpressRequest) {
+        const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+        return portalService.getPortalAppInstance(portalApp.name, instanceId);
     }
 }
