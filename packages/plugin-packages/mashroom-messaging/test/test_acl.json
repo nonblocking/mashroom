@@ -1,8 +1,15 @@
 {
     "my/topic": {
+        "allow": "any",
         "deny": ["Role5"]
     },
     "foo/#": {
         "allow": ["GroupX", "GroupY"]
+    },
+    "a/+/c/#": {
+        "allow": ["Administrator"]
+    },
+    "a/#": {
+        "allow": "any"
     }
 }

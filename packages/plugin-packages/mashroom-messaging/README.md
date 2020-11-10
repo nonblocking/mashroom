@@ -71,10 +71,19 @@ With a config like that you can place a file _topic_acl.json_ in your server con
         "allow": ["Role1"]
     },
     "foo/bar/#": {
-        "allow": ["*"]
+        "allow": "any"
         "deny": ["NotSoTrustedRole"]
     }
 }
+```
+
+The general structure is:
+
+```
+    "/my/+/topic/#": {
+        "allow": "any"|<array of roles>
+        "deny": "any"|<array of roles>
+    }
 ```
 
 You can use here _+_ or _*_ as a wildcard for a single level and _#_ for multiple levels.

@@ -12,8 +12,8 @@ import type {
 
 type Rules = Array<{
     topic: string,
-    allow: ?MashroomSecurityRoles,
-    deny: ?MashroomSecurityRoles
+    allow: ?MashroomSecurityRoles | string,
+    deny: ?MashroomSecurityRoles | string
 }>;
 
 export default class MashroomMessageTopicACLChecker implements MashroomMessageTopicACLCheckerType {
@@ -35,13 +35,26 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
         const rules = this._getRuleList();
         const matchingRule = rules.find((r) => topicMatcher(r.topic, topic));
         if (matchingRule) {
-            const allowMatch = matchingRule.allow && Array.isArray(matchingRule.allow) && matchingRule.allow.find((r) => user && user.roles.find((upr) => upr === r || upr === '*'));
-            const denyMatch = matchingRule.deny && Array.isArray(matchingRule.deny) && matchingRule.deny.find((r) => user && user.roles.find((upr) => upr === r || upr === '*'));
-
-            return !!(allowMatch && !denyMatch);
+            const allowMatch = this._checkRulesMatch(user, matchingRule.allow);
+            const denyMatch = this._checkRulesMatch(user, matchingRule.deny);
+            return allowMatch && !denyMatch;
         }
 
         return true;
+    }
+
+    _checkRulesMatch(user: ?MashroomSecurityUser, rules: ?MashroomSecurityRoles | string): boolean {
+        if (!rules) {
+            return false;
+        }
+        if (typeof (rules) === 'string' && rules === 'any') {
+            return true;
+        }
+        if (Array.isArray(rules) && user) {
+            const roles: MashroomSecurityRoles = rules;
+            return roles.some((r) => user.roles.find((ur) => ur === r));
+        }
+        return false;
     }
 
     _getRuleList(): Rules {
