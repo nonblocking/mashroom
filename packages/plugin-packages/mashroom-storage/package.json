@@ -30,10 +30,10 @@
         "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --ext '.ts' --fix",
+        "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src -d dist --extensions '.ts'"
+        "build": "babel src -d dist --extensions \".ts\""
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -54,7 +54,7 @@
                 }
             },
             {
-                "name": "Mashroom Storage Provider Loadaer",
+                "name": "Mashroom Storage Provider Loader",
                 "type": "plugin-loader",
                 "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
                 "loads": "storage-provider"

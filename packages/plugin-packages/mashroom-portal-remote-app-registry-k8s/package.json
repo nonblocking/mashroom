@@ -42,10 +42,10 @@
         "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --ext '.ts' --fix",
+        "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src/js --extensions '.ts' -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
+        "build": "babel src/js --extensions \".ts\" -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
     },
     "mashroom": {

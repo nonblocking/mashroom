@@ -30,10 +30,10 @@
         "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --ext '.ts' --fix",
+        "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src --extensions '.ts' -d dist"
+        "build": "babel src --extensions \".ts\" -d dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",

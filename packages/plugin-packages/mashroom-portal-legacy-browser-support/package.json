@@ -22,9 +22,9 @@
         "webpack-cli": "^4.2.0"
     },
     "scripts": {
-        "lint": "eslint src --ext '.ts' --fix",
+        "lint": "eslint src --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
-        "build": "webpack --mode production && babel src/backend --extensions '.ts' -d dist"
+        "build": "webpack --mode production && babel src/backend --extensions \".ts\" -d dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",
