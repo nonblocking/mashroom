@@ -22,6 +22,7 @@ export default (content: string, req: ExpressRequest) => (`
             h2 {
                 font-size: 1.2em;
                 font-family: Georgia, serif;
+                margin: 20px 0;
             }
 
             pre, .json, .console {

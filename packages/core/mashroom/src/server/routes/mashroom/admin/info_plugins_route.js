@@ -13,6 +13,8 @@ const pluginsRoute = (req: ExpressRequest, res: ExpressResponse) => {
 export default pluginsRoute;
 
 const plugins = (pluginContext: MashroomPluginContext) => `
+    <h2>Overview</h2>
+    ${pluginOverviewTable(pluginContext)}
     <h2>Plugin Loaders</h2>
     ${pluginLoadersTable(pluginContext)}
     <h2>Plugin Packages</h2>
@@ -20,6 +22,39 @@ const plugins = (pluginContext: MashroomPluginContext) => `
     <h2>Plugins</h2>
     ${pluginTable(pluginContext)}
 `;
+
+const pluginOverviewTable = (pluginContext: MashroomPluginContext) => {
+    const pluginService = pluginContext.services.core.pluginService;
+    const packageCount = pluginService.getPluginPackages().length;
+    const packageReadyCount = pluginService.getPluginPackages().filter((p) => p.status === 'ready').length;
+    const packageErrorCount = pluginService.getPluginPackages().filter((p) => p.status === 'error').length;
+    const pluginCount = pluginService.getPlugins().length;
+    const pluginsReadyCount = pluginService.getPlugins().filter((p) => p.status === 'loaded').length;
+    const pluginsErrorCount = pluginService.getPlugins().filter((p) => p.status === 'error').length;
+
+    return `
+        <table>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Total</th>
+                <th>Ready</th>
+                <th>Error</th>
+            </tr>
+            <tr>
+                <td>Plugin Packages</td>
+                <td>${packageCount}</td>
+                <td><span style="color:green">${packageReadyCount || ''}</span></td>
+                <td><span style="color:red">${packageErrorCount || ''}</span></td>
+            </tr>
+            <tr>
+                <td>Plugins</td>
+                <td>${pluginCount}</td>
+                <td><span style="color:green">${pluginsReadyCount || ''}</span></td>
+                <td><span style="color:red">${pluginsErrorCount || ''}</span></td>
+            </tr>
+        </table>
+    `;
+};
 
 const pluginLoadersTable = (pluginContext: MashroomPluginContext) => {
     const pluginLoaderRows = [];
