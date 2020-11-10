@@ -155,6 +155,10 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             return true;
         }
 
+        if (buildInfo.buildStatus !== 'success') {
+            return true;
+        }
+
         const packageChecksum = await this._getBuildChecksum(pluginPackagePath);
 
         return !packageChecksum || packageChecksum !== buildInfo.buildPackageChecksum;
