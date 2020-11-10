@@ -72,7 +72,7 @@
                 "namespace": "websocket",
                 "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
                 "requires": [
-                    "Mashroom Security Services"
+                    "Mashroom WebSocket Webapp"
                 ]
             }
         ]
