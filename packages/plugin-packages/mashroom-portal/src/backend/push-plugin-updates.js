@@ -1,6 +1,7 @@
 // @flow
 
 import SSE from 'express-sse';
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalPluginRegistry, MashroomPortalRegisterListener} from '../../type-definitions/internal';
 
 let sse: any;
@@ -20,10 +21,17 @@ export const stopPushPluginUpdates = (pluginRegistry: MashroomPortalPluginRegist
     pluginRegistry.removeRegisterListener(registerListener);
 };
 
-export const getPortalPushPluginUpdatesRoute = () => {
-    if (!sse) {
-        return null;
+export const getPortalPushPluginUpdatesRoute = () => (request: ExpressRequest, response: ExpressResponse) => {
+    if (sse) {
+        // express-see uses res.flush() (https://github.com/dpskvn/express-sse/blob/master/index.js#L70) which was removed in Node 14
+        //  for compatibility with Node >= 14 add it to the response
+        // $FlowFixMe
+        if (typeof (response.flush) !== 'function') {
+            // $FlowFixMe
+            response.flush = response.flushHeaders;
+        }
+
+        sse.init(request, response);
     }
-    return sse.init;
 };
 
