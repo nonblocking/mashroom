@@ -325,9 +325,6 @@ export default class PortalPageRenderController {
                 if (areaId && page.portalApps.hasOwnProperty(areaId)) {
                     for (const portalAppInstance of page.portalApps[areaId]) {
                         const portalApp = this._getPortalApp(portalAppInstance.pluginName);
-                        if (!portalApp) {
-                            continue;
-                        }
                         if (!await isAppPermitted(req, portalAppInstance.pluginName, portalAppInstance.instanceId, portalApp)) {
                             continue;
                         }
@@ -337,8 +334,9 @@ export default class PortalPageRenderController {
                             loadStatements.push(
                                 `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${instanceId}', null, null);`
                             );
-
-                            preloadedPortalAppSetup[instanceId] = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, this._pluginRegistry, req);
+                            if (portalApp) {
+                                preloadedPortalAppSetup[instanceId] = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, this._pluginRegistry, req);
+                            }
                         }
                     }
                 }
