@@ -102,7 +102,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     }
 
     registerPortalAppEnhancement(enhancement: MashroomPortalAppEnhancement) {
-        this.unregisterPortalPageEnhancement(enhancement.name);
+        this.unregisterPortalAppEnhancement(enhancement.name);
         this._portalAppEnhancements.push(enhancement);
         this._registerListeners.forEach(listener => listener('app-enhancement', enhancement));
     }
