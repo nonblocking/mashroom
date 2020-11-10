@@ -356,7 +356,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             const preloadedAppSetup = global[WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP] || {};
             if (preloadedAppSetup.hasOwnProperty(instanceId)) {
                 console.info('Using preloaded app setup for app: ', pluginName);
-                return Promise.resolve(preloadedAppSetup[instanceId]);
+                const appSetup = preloadedAppSetup[instanceId];
+                // Use only once at the start and not on reload
+                delete preloadedAppSetup[instanceId];
+                return Promise.resolve(appSetup);
             }
         }
 
