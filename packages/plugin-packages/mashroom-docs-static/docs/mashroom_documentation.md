@@ -618,8 +618,6 @@ this in the _Mashroom_ config file:
 
 [mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]
 
-[mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]
-
 [mashroom-monitoring-metrics-collector](../../mashroom-monitoring-metrics-collector/README.md) [inc]
 
 [mashroom-monitoring-prometheus-exporter](../../mashroom-monitoring-prometheus-exporter/README.md) [inc]
