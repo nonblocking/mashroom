@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+# 1.6.0 (November 11, 2020)
+
  * Portal: Decreased start time of static Portal Apps by delivering the appSetup with the Portal Page
  * Core: Plugins are now only built when they changed since the last start. This dramatically decreases the start time in dev mode.
  * Added a new plugin *mashroom-portal-legacy-browser-support* that adds polyfills for legacy browsers (such as IE11) to all portal pages (only if IE detected)
