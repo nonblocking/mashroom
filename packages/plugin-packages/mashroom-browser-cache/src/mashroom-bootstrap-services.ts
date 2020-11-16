@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomCacheControlService from './MashroomCacheControlService';
 
