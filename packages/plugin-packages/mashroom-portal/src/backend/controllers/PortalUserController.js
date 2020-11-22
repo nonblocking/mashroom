@@ -79,7 +79,7 @@ export default class PortalUserController {
 
                 if (!redirectUrl) {
                     // Default: Redirect to the site root
-                    redirectUrl = getFrontendSiteBasePath(req);
+                    redirectUrl = getFrontendSiteBasePath(req) || '/';
                 }
 
                 res.redirect(redirectUrl);
