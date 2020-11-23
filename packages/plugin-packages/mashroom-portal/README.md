@@ -858,6 +858,7 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
                     "css": []
                 },
                 "defaultConfig": {
+                    "order": 100,
                     "resourcesRoot": "./dist/public"
                 }
             }
@@ -866,9 +867,12 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
 }
 ```
 
+ * _bootstrap_: Path to the script that contains the bootstrap for the plugin (optional)
  * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages. They can be added
    to the header or footer (location) and can also be inlined. The (optional) rule property refers to a rule in the
    instantiated plugin (bootstrap), see below.
+ * _defaultConfig.order_: he weight of the resources- the higher it is the **later** they will be added to the page (default: 1000)
+ * _defaultConfig.resourcesRoot_: The root for all resources (can be a local path or a HTTP url)
 
 The bootstrap returns a map of rules and could look like this:
 
@@ -951,6 +955,7 @@ To register a new portal-app-enhancement plugin add this to _package.json_:
 }
 ```
 
+ * _bootstrap_: Path to the script that contains the bootstrap for the plugin
  * _portalCustomClientServices_: A map of client services that should be injected in the _clientServices_ object the
   Portal Apps receive. The value (MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in the _window_).
 

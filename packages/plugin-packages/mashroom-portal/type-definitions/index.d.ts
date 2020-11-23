@@ -441,9 +441,13 @@ export type MashroomPortalPageEnhancement = {
      */
     readonly pageResources: MashroomPortalPageEnhancementResources;
     /**
-     * The actual plugin
+     * The "weight" of this plugin, the higher it es the later the resources are added to the page
      */
-    readonly plugin: MashroomPortalPageEnhancementPlugin
+    readonly order: number;
+    /**
+     * The actual plugin (optional)
+     */
+    readonly plugin: MashroomPortalPageEnhancementPlugin | undefined;
 }
 
 export type MashroomPortalPageEnhancementResource = {

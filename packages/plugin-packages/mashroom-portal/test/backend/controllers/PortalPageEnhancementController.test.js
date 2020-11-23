@@ -21,6 +21,7 @@ const portalPageEnhancement: MashroomPortalPageEnhancement = {
     name: 'Test Page Enhancement',
     description: null,
     lastReloadTs: Date.now(),
+    order: 1000,
     resourcesRootUri: 'file://' + __dirname,
     pageResources: {
         js: [{

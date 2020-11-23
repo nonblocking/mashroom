@@ -43,6 +43,7 @@
                     "css": []
                 },
                 "defaultConfig": {
+                    "order": -1000,
                     "resourcesRoot": "./dist/public"
                 }
             }

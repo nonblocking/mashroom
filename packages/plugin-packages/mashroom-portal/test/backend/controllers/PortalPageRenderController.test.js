@@ -94,6 +94,7 @@ const pluginRegistry3: any = {
     portalPageEnhancements: [{
         name: 'Test Page Enhancement',
         resourcesRootUri: 'file://' + __dirname,
+        order: 500,
         pageResources: {
             js: [{
                 path: 'test_script1.js',
@@ -133,6 +134,16 @@ const pluginRegistry3: any = {
                 'no': () => false,
             }
         }
+    }, {
+        name: 'Test Page Enhancement 2',
+        resourcesRootUri: 'file://' + __dirname,
+        order: 0,
+        pageResources: {
+            js: [{
+                path: 'very_important_stuff.js',
+                location: 'header',
+            }]
+        },
     }]
 };
 
@@ -361,6 +372,10 @@ describe('PortalPageRenderController', () => {
                 expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
                 expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css" />');
                 expect(model.portalResourcesFooter).not.toContain('test_script3.js');
+
+                const posScript1 = model.portalResourcesHeader.indexOf('/test_script1.js');
+                const posVeryImportantScript = model.portalResourcesHeader.indexOf('/very_important_stuff.js');
+                expect(posVeryImportantScript < posScript1).toBeTruthy();
 
                 done();
             },

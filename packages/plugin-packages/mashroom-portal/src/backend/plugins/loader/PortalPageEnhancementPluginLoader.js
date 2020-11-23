@@ -12,10 +12,12 @@ import type {
     MashroomPluginLoader
 } from '@mashroom/mashroom/type-definitions';
 import type {
-    MashroomPortalPageEnhancement,
+    MashroomPortalPageEnhancement, MashroomPortalPageEnhancementPlugin,
     MashroomPortalPageEnhancementPluginBootstrapFunction
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
+
+const DEFAULT_ORDER = 1000;
 
 export default class PortalPageEnhancementPluginLoader implements MashroomPluginLoader {
 
@@ -32,15 +34,15 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
     }
 
     generateMinimumConfig(plugin: MashroomPlugin) {
-        return {};
+        return {
+            order: DEFAULT_ORDER,
+            resourcesRoot: '.',
+        };
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
 
         let resourcesRootUri = config.resourcesRoot;
-        if (!resourcesRootUri) {
-            resourcesRootUri = '.';
-        }
         if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
             // Process relative file path
             resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
@@ -52,6 +54,8 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
                 resourcesRootUri = `file:///${resourcesRootUri}`;
             }
         }
+
+        const order: number = config.order;
 
         const pageResources = plugin.pluginDefinition.pageResources;
         if (!pageResources) {
@@ -72,18 +76,21 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
             });
         }
 
-        const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = plugin.requireBootstrap();
-        const enhancementPlugin = await bootstrap(plugin.name, config, contextHolder);
+        let enhancementPlugin: ?MashroomPortalPageEnhancementPlugin = undefined;
+        if (plugin.pluginDefinition.bootstrap) {
+            const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = plugin.requireBootstrap();
+            enhancementPlugin = await bootstrap(plugin.name, config, contextHolder);
+        }
 
         const enhancement: MashroomPortalPageEnhancement = {
             name: plugin.name,
             description: plugin.description,
             lastReloadTs: Date.now(),
+            order,
             resourcesRootUri,
             pageResources,
             plugin: enhancementPlugin,
         };
-
 
         this._log.info('Registering portal page enhancement:', JSON.stringify({enhancement}));
         this._registry.registerPortalPageEnhancement(enhancement);

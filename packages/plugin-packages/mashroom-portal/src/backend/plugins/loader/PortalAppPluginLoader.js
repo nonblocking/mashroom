@@ -29,7 +29,9 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
     }
 
     generateMinimumConfig(plugin: MashroomPlugin) {
-        return {};
+        return {
+            resourcesRoot: '.',
+        };
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
@@ -65,9 +67,6 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         const screenshots = plugin.pluginDefinition.screenshots;
 
         let resourcesRootUri = config.resourcesRoot;
-        if (!resourcesRootUri) {
-            resourcesRootUri = '.';
-        }
         if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
             // Process relative file path
             resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);

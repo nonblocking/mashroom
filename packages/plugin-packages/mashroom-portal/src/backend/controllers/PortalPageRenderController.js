@@ -391,7 +391,10 @@ export default class PortalPageRenderController {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
         let enhancement = '';
 
-        const portalPageEnhancements = this._pluginRegistry.portalPageEnhancements;
+        const portalPageEnhancements = [...this._pluginRegistry.portalPageEnhancements];
+        // Sort according to "order" property
+        portalPageEnhancements.sort((enhancement1, enhancement2) => enhancement1.order < enhancement2.order ? -1 : 1);
+
         for (let i = 0; i < portalPageEnhancements.length; i++) {
             const pageEnhancement = portalPageEnhancements[i];
             if (pageEnhancement.pageResources && Array.isArray(pageEnhancement.pageResources.js)) {
@@ -441,7 +444,7 @@ export default class PortalPageRenderController {
                 }
             } else if (dynamicResource) {
                 // Dynamic resource
-                if (enhancement.plugin.dynamicResources && typeof (enhancement.plugin.dynamicResources[dynamicResource]) === 'function') {
+                if (enhancement.plugin && enhancement.plugin.dynamicResources && typeof (enhancement.plugin.dynamicResources[dynamicResource]) === 'function') {
                     try {
                         resourceAsString = enhancement.plugin.dynamicResources[dynamicResource](sitePath, pageFriendlyUrl, lang, userAgent, req);
                     } catch (e) {
@@ -483,7 +486,7 @@ export default class PortalPageRenderController {
             return true;
         }
 
-        if (!enhancement.plugin.rules || typeof (enhancement.plugin.rules[resource.rule]) !== 'function') {
+        if (!enhancement.plugin || !enhancement.plugin.rules || typeof (enhancement.plugin.rules[resource.rule]) !== 'function') {
             logger.warn(`No rule '${resource.rule}' defined in page enhancement plugin ${enhancement.name}`);
             return false;
         }

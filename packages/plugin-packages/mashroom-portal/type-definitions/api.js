@@ -392,9 +392,13 @@ export type MashroomPortalPageEnhancement = {
      */
     +pageResources: MashroomPortalPageEnhancementResources;
     /**
-     * The actual plugin
+     * The "weight" of this plugin, the higher it es the later the resources are added to the page
      */
-    +plugin: MashroomPortalPageEnhancementPlugin
+    +order: number;
+    /**
+     * The actual plugin (optional)
+     */
+    +plugin: ?MashroomPortalPageEnhancementPlugin
 }
 
 export type MashroomPortalPageEnhancementResource = {

@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Portal: The *portal-page-enhancement* plugins have now a config property "order" that defines in which order the resources
+   are added to a page
+ * Portal: Fixed logout when exposing a site via vhost-path-mapper and *frontendBasePath* "/"
+
 # 1.6.0 (November 11, 2020)
 
  * Portal: Decreased start time of static Portal Apps by delivering the appSetup with the Portal Page
