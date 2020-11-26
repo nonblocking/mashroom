@@ -54,17 +54,32 @@ export default class TabDialog extends PureComponent<Props> {
         );
     }
 
+    listenErroneousFieldEvents(name: string, element: ?HTMLDivElement) {
+        if (element) {
+            element.addEventListener('erroneous-field-focused', () => {
+                if (this.props.activeTab !== name) {
+                    console.info(`Switching to tab ${name} because an erroneous field was focused there`);
+                    this.props.setActiveTab(name);
+                }
+            });
+        }
+    }
+
     renderContent() {
         const activeTabIndex = this.getActiveTabIndex();
         if (activeTabIndex === null) {
             return null;
         }
 
-        const content = this.props.tabs[activeTabIndex].content;
+        const tabs = this.props.tabs.map((t, idx) => (
+            <div key={t.name} className={`tab-dialog-content ${idx === activeTabIndex ? 'active' : ''}`} ref={(el) => this.listenErroneousFieldEvents(t.name, el)}>
+                {t.content}
+            </div>
+        ));
 
         return (
-            <div className='tab-dialog-content'>
-                {content}
+            <div className='tab-dialog-content-wrapper'>
+                {tabs}
             </div>
         );
     }

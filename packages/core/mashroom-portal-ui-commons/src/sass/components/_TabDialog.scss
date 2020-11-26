@@ -5,7 +5,19 @@
 
     }
 
-    .tab-dialog-content {
+    .tab-dialog-content-wrapper {
         height: 100%;
+
+        .tab-dialog-content {
+            height: 100%;
+            display: none;
+            opacity: 0;
+
+            &.active {
+                transition: opacity 0.3s ease-in;
+                display: block;
+                opacity: 1;
+            }
+        }
     }
 }

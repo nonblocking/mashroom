@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Fixed the problem that incomplete pages and sites could be saved in the Portal (which could lead to a corrupt storage)
  * Portal: The *portal-page-enhancement* plugins have now a config property "order" that defines in which order the resources
    are added to a page
  * Portal: Fixed logout when exposing a site via vhost-path-mapper and *frontendBasePath* "/"

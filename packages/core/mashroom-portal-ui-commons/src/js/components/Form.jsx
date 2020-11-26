@@ -28,6 +28,10 @@ export default class Form extends PureComponent<Props> {
                 if (errors && this.errorExists(elem.name, errors)) {
                     console.info('Focusing erroneous field: ', elem);
                     elem.focus();
+                    // Fire a custom event that is used by the TabDialog to make the tab with the erronous element visible
+                    const event = document.createEvent('Event');
+                    event.initEvent('erroneous-field-focused', true, true);
+                    elem.dispatchEvent(event);
                     break;
                 }
             }

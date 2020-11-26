@@ -31,6 +31,11 @@ type Props = {
     setPermittedRoles: (?Array<string>) => void
 };
 
+type FormValues = {
+    roles: ?Array<string>;
+    appConfig: any;
+}
+
 export default class PortalAppConfigureDialog extends PureComponent<Props> {
 
     close: () => void;
@@ -50,7 +55,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         }
     }
 
-    onSubmit(values: any) {
+    onSubmit(values: FormValues) {
         const selectedPortalApp = this.props.selectedPortalApp;
         if (!selectedPortalApp) {
             return;
@@ -87,7 +92,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         this.close = close;
     }
 
-    validate(values: Object) {
+    validate(values: FormValues) {
         const errors = {};
 
         try {
