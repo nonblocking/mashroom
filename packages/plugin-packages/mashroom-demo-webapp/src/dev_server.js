@@ -1,4 +1,4 @@
-// @flow
+
 /* eslint no-console: off */
 
 import express from 'express';

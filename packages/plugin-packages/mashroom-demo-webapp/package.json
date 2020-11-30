@@ -12,14 +12,20 @@
         "express": "^4.17.1"
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^4.8.2",
+        "@typescript-eslint/parser": "^4.8.2",
         "@babel/cli": "^7.12.1",
         "@mashroom/mashroom": "1.6.0",
         "eslint": "^7.13.0",
+        "eslint-loader": "^4.0.2",
+        "typescript": "^4.1.2",
+        "@types/node": "^14.14.10",
         "nodemon": "^2.0.6"
     },
     "scripts": {
-        "lint": "eslint src --fix",
-        "build": "babel src -d dist",
+        "lint": "eslint src --ext \".ts\" --fix",
+        "build": "babel src -d dist --extensions \".ts\"",
+        "typecheck": "tsc --noEmit",
         "dev": "nodemon --watch src --exec \"npm run build && node dist/dev_server.js\""
     },
     "mashroom": {
