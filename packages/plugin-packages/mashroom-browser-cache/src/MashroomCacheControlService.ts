@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     ExpressRequest,
@@ -28,7 +27,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         }
     }
 
-    async addCacheControlHeader(request: ExpressRequest, response: ExpressResponse) {
+    async addCacheControlHeader(request: ExpressRequest, response: ExpressResponse): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.browserCache.service');
 
         if (request.method !== 'GET') {
@@ -42,7 +41,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         }
 
         let publicResource = true;
-        const securityService: ?MashroomSecurityService = request.pluginContext.services.security && request.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService | undefined = request.pluginContext.services.security && request.pluginContext.services.security.service;
         if (securityService) {
             const user = securityService.getUser(request);
             const authenticated = !!user;
@@ -57,7 +56,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this._maxAgeSec}`);
     }
 
-    removeCacheControlHeader(response: ExpressResponse) {
+    removeCacheControlHeader(response: ExpressResponse): void {
         response.removeHeader(CACHE_CONTROL_HEADER_NAME);
     }
 
