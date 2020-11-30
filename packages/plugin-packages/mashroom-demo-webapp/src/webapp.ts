@@ -1,9 +1,8 @@
-// @flow
 
 import express from 'express';
 
 // Using the Mashroom types here is optional
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
 const app = express<ExpressRequest, ExpressResponse>();
 

@@ -1,9 +1,9 @@
-// @flow
+// @ts-ignore
 
 import CSRF from 'csrf';
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
-import type {MashroomCSRFService as MashroomCSRFServiceType} from '../../type-definitions';
+import {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import {MashroomCSRFService as MashroomCSRFServiceType} from '../../type-definitions';
 
 const CSRF_TOKEN_SESSION_KEY = '__MASHROOM_CSRF_TOKEN';
 

@@ -1,12 +1,12 @@
 {
-    "parser": "@typescript-eslint/parser",
+    "parser": "babel-eslint",
     "plugins": [
-        "@typescript-eslint/eslint-plugin",
+        "flowtype",
         "jest"
     ],
     "extends": [
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
+        "plugin:flowtype/recommended"
     ],
     "env": {
         "node": true,
@@ -18,6 +18,6 @@
         "quotes": ["error", "single", { "allowTemplateLiterals": true }],
         "prefer-template": "error",
         "prefer-object-spread": "error",
-        "@typescript-eslint/ban-ts-comment": "off"
+        "@typescript-estlind/ban-ts-comment": "off"
     }
 }

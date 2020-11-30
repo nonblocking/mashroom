@@ -1,4 +1,4 @@
-/* eslint-disable */
+
 
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 

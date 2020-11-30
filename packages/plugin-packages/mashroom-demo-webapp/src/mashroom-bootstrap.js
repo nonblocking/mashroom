@@ -1,4 +1,4 @@
-// @flow
+
 
 import webapp from './webapp';
 
