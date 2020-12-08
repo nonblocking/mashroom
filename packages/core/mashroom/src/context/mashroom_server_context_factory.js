@@ -23,7 +23,6 @@ import MashroomServicesLoader from '../plugins/loader/MashroomServicesLoader';
 import MashroomServiceRegistry from '../services/MashroomServiceRegistry';
 import MashroomPluginService from '../services/MashroomPluginService';
 import GlobalNodeErrorHandler from '../server/GlobalNodeErrorHandler';
-import DefaultExpressErrorHandler from '../server/DefaultExpressErrorHandler';
 import ExposePluginContextMiddleware from '../server/ExposePluginContextMiddleware';
 import MiddlewarePluginDelegate from '../server/MiddlewarePluginDelegate';
 import MashroomMiddlewareStackService from '../services/MashroomMiddlewareStackService';
@@ -88,7 +87,6 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const expressApp = express();
     setExpressConfig(expressApp, devMode, logger);
     const httpServer = http.createServer(expressApp);
-    addDefaultExpressErrorHandler(expressApp, loggerFactory);
 
     const middlewarePluginDelegate = new MiddlewarePluginDelegate();
     addDefaultMiddleware(expressApp, pluginContextHolder, middlewarePluginDelegate);
@@ -185,11 +183,6 @@ const setExpressConfig = (expressApp: ExpressApplication, devMode: boolean, logg
         expressApp.enable('view cache');
     }
 }
-
-const addDefaultExpressErrorHandler = (expressApp: ExpressApplication, loggerFactory: MashroomLoggerFactory) => {
-    const errorHandler = new DefaultExpressErrorHandler(loggerFactory);
-    expressApp.use(errorHandler.handler());
-};
 
 const createServerContextHolder = () => {
     let _serverContext = null;
