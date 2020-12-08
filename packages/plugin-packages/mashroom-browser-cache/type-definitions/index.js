@@ -5,9 +5,11 @@ import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-defi
 export interface MashroomCacheControlService {
 
     /**
-     * Add the Cache-Control header based on the settings and authentication status
+     * Add the Cache-Control header based on the settings and authentication status.
+     * The resourceCanContainSensitiveInformation parameter defines if the resource could contain some sensitive user data
+     * and the caching should be disabled if a user is authenticated.
      */
-    addCacheControlHeader(request: ExpressRequest, response: ExpressResponse): Promise<void>;
+    addCacheControlHeader(resourceCanContainSensitiveInformation: boolean, request: ExpressRequest, response: ExpressResponse): Promise<void>;
 
     /**
      * Remove a previously set Cache-Control header

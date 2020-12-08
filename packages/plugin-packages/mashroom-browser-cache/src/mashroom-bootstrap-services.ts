@@ -4,13 +4,13 @@ import MashroomCacheControlService from './MashroomCacheControlService';
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const {disabled, disabledWhenAuthenticated, maxAgeSec} = pluginConfig;
+    const {disabled, maxAgeSec} = pluginConfig;
 
     const pluginContext = pluginContextHolder.getPluginContext();
-    const {serverConfig, loggerFactory} = pluginContext;
-    const devMode = serverConfig.pluginPackageFolders && serverConfig.pluginPackageFolders.some((ppf) => ppf.devMode);
+    const {serverInfo, loggerFactory} = pluginContext;
+    const devMode = serverInfo.devMode;
 
-    const cacheControl = new MashroomCacheControlService(devMode, disabled, disabledWhenAuthenticated, maxAgeSec, loggerFactory);
+    const cacheControl = new MashroomCacheControlService(devMode, disabled, maxAgeSec, loggerFactory);
 
     return {
         cacheControl,

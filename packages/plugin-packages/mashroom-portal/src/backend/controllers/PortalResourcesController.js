@@ -14,7 +14,7 @@ export default class PortalResourcesController {
         res.type('application/javascript');
 
         if (cacheControlService) {
-            await cacheControlService.addCacheControlHeader(req, res);
+            await cacheControlService.addCacheControlHeader(false, req, res);
         }
 
         res.sendFile(portalClientBundle);

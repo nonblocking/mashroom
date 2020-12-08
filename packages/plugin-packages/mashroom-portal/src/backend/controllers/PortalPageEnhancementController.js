@@ -50,7 +50,7 @@ export default class PortalPageEnhancementController {
         }
 
         if (cacheControlService) {
-            await cacheControlService.addCacheControlHeader(req, res);
+            await cacheControlService.addCacheControlHeader(false, req, res);
         }
 
         const resourceUri = `${plugin.resourcesRootUri}/${resource.path}`;

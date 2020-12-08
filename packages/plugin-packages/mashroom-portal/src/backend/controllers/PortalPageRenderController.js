@@ -57,6 +57,7 @@ import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mash
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
+import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 import type {
     MashroomPortalApp,
     MashroomPortalPage, MashroomPortalPageEnhancement,
@@ -123,7 +124,7 @@ export default class PortalPageRenderController {
             const devMode = req.pluginContext.serverInfo.devMode;
             const model = await this._createPortalPageModel(req, portalName, devMode, portalPath, sitePath, site, pageRef, page, themeName, layoutName, logger);
 
-            this._render(themeName, model, res, logger);
+            await this._render(themeName, model, req, res, logger);
 
         } catch (e) {
             logger.error(e);
@@ -220,7 +221,8 @@ export default class PortalPageRenderController {
         return minimalLayout;
     }
 
-    _render(themeName: ?string, model: MashroomPortalPageRenderModel, res: ExpressResponse, logger: MashroomLogger) {
+    async _render(themeName: ?string, model: MashroomPortalPageRenderModel, req: ExpressRequest, res: ExpressResponse, logger: MashroomLogger) {
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
         const pluginRegistry = this._pluginRegistry;
         const theme = pluginRegistry.themes.find((t) => t.name === themeName);
         if (theme) {
@@ -235,6 +237,12 @@ export default class PortalPageRenderController {
                 this._portalWebapp.engine(theme.engineName, engine);
                 this._portalWebapp.set('view engine', theme.engineName);
                 this._portalWebapp.set('views', theme.viewsPath);
+
+                if (cacheControlService) {
+                    // This will disable the browser cache for authenticated users
+                    //  to prevent that back button exposes potential sensitive information
+                    await cacheControlService.addCacheControlHeader(true, req, res);
+                }
 
                 res.render('portal', model);
                 return;

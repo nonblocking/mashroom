@@ -24,8 +24,8 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(req, res);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        await cacheControlService.addCacheControlHeader(false, req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('public, max-age=1800');
@@ -57,8 +57,8 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(req, res);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        await cacheControlService.addCacheControlHeader(false, req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('private, max-age=1800');
@@ -81,8 +81,8 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(req, res);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        await cacheControlService.addCacheControlHeader(false, req, res);
 
         expect(cacheControlHeader).toBeFalsy();
     });
@@ -105,11 +105,11 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, true, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(req, res);
+        const cacheControlService = new MashroomCacheControlService(false, true, 1800, loggerFactory);
+        await cacheControlService.addCacheControlHeader(false, req, res);
 
         expect(cacheControlHeader).toBeTruthy();
-        expect(cacheControlHeader).toBe('no-cache, no-store, must-revalidate');
+        expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
     });
 
     it('disables browser caching if devMode is true', async () => {
@@ -129,14 +129,14 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(true, false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(req, res);
+        const cacheControlService = new MashroomCacheControlService(true, false, 1800, loggerFactory);
+        await cacheControlService.addCacheControlHeader(false, req, res);
 
         expect(cacheControlHeader).toBeTruthy();
-        expect(cacheControlHeader).toBe('no-cache, no-store, must-revalidate');
+        expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
     });
 
-    it('sets the no-cache header if disabledWhenAuthenticated is true and the user authenticated', async () => {
+    it('sets the no-cache header if onlyForAnonymous is true and the user authenticated', async () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
@@ -162,11 +162,11 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, true, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(req, res);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        await cacheControlService.addCacheControlHeader(true, req, res);
 
         expect(cacheControlHeader).toBeTruthy();
-        expect(cacheControlHeader).toBe('no-cache, no-store, must-revalidate');
+        expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
     });
 
 

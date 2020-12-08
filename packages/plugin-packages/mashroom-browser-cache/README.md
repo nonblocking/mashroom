@@ -32,14 +32,12 @@ You can override the default config in your Mashroom config file like this:
   "plugins": {
         "Mashroom Cache Control Services": {
             "disabled": false,
-            "disabledWhenAuthenticated": false,
             "maxAgeSec": 1800
         }
     }
 }
 ```
  * _disabled_: Disable browser caching (default: false)
- * _disabledWhenAuthenticated_: Disable browser caching when the user is authenticated (default: false)
  * _maxAgeSec_: Max age in seconds (default: 1800)
 
 ## Services
@@ -52,18 +50,21 @@ The Cache Control service is accessible through _pluginContext.services.browserC
 
 ```js
 export interface MashroomCacheControlService {
+    /**
+     * Add the Cache-Control header based on the settings and authentication status.
+     * The resourceCanContainSensitiveInformation parameter defines if the resource could contain some sensitive user data
+     * and the caching should be disabled if a user is authenticated.
+     */
+     addCacheControlHeader(
+        resourceCanContainSensitiveInformation: boolean,
+        request: ExpressRequest,
+        response: ExpressResponse,
+    ): Promise<void>;
 
-     /**
-      * Add the Cache-Control header based on the settings and authentication status
-      */
-     addCacheControlHeader(request: ExpressRequest, response: ExpressResponse): Promise<void>;
-
-     /**
-      * Remove a previously set Cache-Control header
-      */
+    /**
+     * Remove a previously set Cache-Control header
+     */
      removeCacheControlHeader(response: ExpressResponse): void;
-
 }
-
 ```
 

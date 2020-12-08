@@ -12,22 +12,18 @@ const CACHE_CONTROL_HEADER_NAME = 'Cache-Control';
 
 export default class MashroomCacheControlService implements MashroomCacheControlServiceType {
 
-    _disabled: boolean;
-    _disabledWhenAuthenticated: boolean;
-    _maxAgeSec: number;
+    private disabled: boolean;
 
-    constructor(devMode: boolean, disabled: boolean, disabledWhenAuthenticated: boolean, maxAgeSec: number, loggerFactory: MashroomLoggerFactory) {
-        this._disabled = disabled;
-        this._disabledWhenAuthenticated = disabledWhenAuthenticated;
-        this._maxAgeSec = maxAgeSec;
+    constructor(devMode: boolean, disabled: boolean, private maxAgeSec: number, loggerFactory: MashroomLoggerFactory) {
+        this.disabled = disabled;
         const logger = loggerFactory('mashroom.browserCache.service');
         if (devMode) {
             logger.info('Disabling browser cache because some packages are in dev mode');
-            this._disabled = true;
+            this.disabled = true;
         }
     }
 
-    async addCacheControlHeader(request: ExpressRequest, response: ExpressResponse): Promise<void> {
+    async addCacheControlHeader(resourceCanContainSensitiveInformation: boolean, request: ExpressRequest, response: ExpressResponse): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.browserCache.service');
 
         if (request.method !== 'GET') {
@@ -35,8 +31,8 @@ export default class MashroomCacheControlService implements MashroomCacheControl
             return;
         }
 
-        if (this._disabled) {
-            response.set(CACHE_CONTROL_HEADER_NAME, 'no-cache, no-store, must-revalidate');
+        if (this.disabled) {
+            this._disableCache(response);
             return;
         }
 
@@ -45,19 +41,25 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         if (securityService) {
             const user = securityService.getUser(request);
             const authenticated = !!user;
-            if (this._disabledWhenAuthenticated && authenticated) {
-                response.set(CACHE_CONTROL_HEADER_NAME, 'no-cache, no-store, must-revalidate');
+            publicResource = !authenticated;
+
+            if (resourceCanContainSensitiveInformation && authenticated) {
+                this._disableCache(response);
                 return;
             }
-
-            publicResource = !authenticated;
         }
 
-        response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this._maxAgeSec}`);
+        response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this.maxAgeSec}`);
     }
 
     removeCacheControlHeader(response: ExpressResponse): void {
         response.removeHeader(CACHE_CONTROL_HEADER_NAME);
+    }
+
+    private _disableCache(res: ExpressResponse) {
+        res.set(CACHE_CONTROL_HEADER_NAME, 'no-cache, no-store, max-age=0');
+        // Older clients
+        res.set('Pragma', 'no');
     }
 
 }

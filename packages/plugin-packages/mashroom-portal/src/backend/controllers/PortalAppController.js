@@ -213,7 +213,7 @@ export default class PortalAppController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
 
         if (cacheControlService) {
-            await cacheControlService.addCacheControlHeader(req, res);
+            await cacheControlService.addCacheControlHeader(false, req, res);
         }
 
         const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;

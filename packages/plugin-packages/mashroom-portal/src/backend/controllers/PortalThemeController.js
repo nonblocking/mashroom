@@ -34,7 +34,7 @@ export default class PortalThemeController {
             logger.debug(`Sending theme resource: ${resourceFile}`);
 
             if (cacheControlService) {
-                await cacheControlService.addCacheControlHeader(req, res);
+                await cacheControlService.addCacheControlHeader(false, req, res);
             }
 
             try {
