@@ -584,6 +584,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-helmet](../../mashroom-helmet/README.md) [inc]
 
+[mashroom-error-pages](../../mashroom-error-pages/README.md) [inc]
+
 [mashroom-storage](../../mashroom-storage/README.md) [inc]
 
 [mashroom-storage-provider-filestore](../../mashroom-storage-provider-filestore/README.md) [inc]
