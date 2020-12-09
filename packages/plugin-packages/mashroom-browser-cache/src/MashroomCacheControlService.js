@@ -42,7 +42,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         }
 
         let publicResource = true;
-        const securityService: MashroomSecurityService | undefined = request.pluginContext.services.security && request.pluginContext.services.security.service;
+        const securityService: ?MashroomSecurityService | undefined = request.pluginContext.services.security && request.pluginContext.services.security.service;
         if (securityService) {
             const user = securityService.getUser(request);
             const authenticated = !!user;
@@ -57,7 +57,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this._maxAgeSec}`);
     }
 
-    removeCacheControlHeader(response: ExpressResponse): void {
+    removeCacheControlHeader(response: ExpressResponse) {
         response.removeHeader(CACHE_CONTROL_HEADER_NAME);
     }
 

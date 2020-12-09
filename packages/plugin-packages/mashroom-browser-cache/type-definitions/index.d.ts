@@ -1,3 +1,4 @@
+/* estlint-disable */
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
