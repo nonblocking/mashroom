@@ -144,7 +144,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
         return null;
     }
 
-    private replacePlaceholders = (html: string, req: ExpressRequest, res: ExpressResponse): string => {
+    private replacePlaceholders(html: string, req: ExpressRequest, res: ExpressResponse): string {
         const i18nService: MashroomI18NService | undefined = req.pluginContext.services.i18n?.service;
         const lang = i18nService?.getLanguage(req) || 'en';
 
@@ -155,9 +155,9 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             .replace(PLACEHOLDER_I18N_MESSAGE, (substring, key) => {
                 return i18nService?.getMessage(key, lang) || '???';
             });
-    };
+    }
 
-    private getResourceAsString = async (errorPageUri: string): Promise<string> => {
+    private async getResourceAsString(errorPageUri: string): Promise<string> {
         const stream = await getUri(errorPageUri) as Readable;
         return new Promise((resolve, reject) => {
             const chunks: Array<Uint8Array> = [];
@@ -165,6 +165,6 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             stream.on('error', (error) => reject(error));
             stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
         })
-    };
+    }
 
 }
