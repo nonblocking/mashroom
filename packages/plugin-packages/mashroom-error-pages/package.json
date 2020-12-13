@@ -1,0 +1,59 @@
+{
+    "name": "@mashroom/mashroom-error-pages",
+    "description": "Mashroom middleware to show proper HTML pages for arbitrary HTTP status codes (e.g. 404)",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**",
+        "pages/**"
+    ],
+    "dependencies": {
+        "get-uri": "^3.0.2"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.12.1",
+        "@mashroom/mashroom": "1.6.1",
+        "@mashroom/mashroom-utils": "1.6.1",
+        "@mashroom/mashroom-i18n": "1.6.1",
+        "eslint": "^7.13.0",
+        "jest": "^26.6.3",
+        "typescript": "^4.0.5",
+        "@types/jest": "^26.0.15",
+        "@types/node": "^14.14.6",
+        "@types/express": "^4.17.9"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts$"
+    },
+    "scripts": {
+        "lint": "eslint src --ext \".ts\" --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src -d dist --extensions \".ts\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Error Pages Middleware",
+                "type": "middleware",
+                "bootstrap": "./dist/mashroom-bootstrap-middleware.js",
+                "defaultConfig": {
+                    "order": -20,
+                    "mapping": {
+                        "404": "./pages/404.html",
+                        "403": "./pages/403.html",
+                        "default": "./pages/default.html"
+                    }
+                }
+            }
+        ]
+    }
+}
