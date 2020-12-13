@@ -41,6 +41,11 @@
         },
         "Mashroom Helmet Middleware": {
         },
+        "Mashroom Error Pages Middleware": {
+            "mapping": {
+                "404": "./test-error-pages/404_custom.html"
+            }
+        },
         "Mashroom Session Middleware": {
             "provider": "memory",
             "session": {
