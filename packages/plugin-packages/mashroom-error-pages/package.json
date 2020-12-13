@@ -30,12 +30,12 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts$"
     },
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
-        "test": "jest --passWithNoTests",
+        "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
     },
     "mashroom": {
@@ -48,18 +48,9 @@
                 "defaultConfig": {
                     "order": -20,
                     "mapping": {
-                        "404": {
-                            "de": "./pages/404_de.html",
-                            "default": "./pages/404.html"
-                        },
-                        "403": {
-                            "de": "./pages/403_de.html",
-                            "default": "./pages/403.html"
-                        },
-                        "default": {
-                            "de": "./pages/default_de.html",
-                            "default": "./pages/default.html"
-                        }
+                        "404": "./pages/404.html",
+                        "403": "./pages/403.html",
+                        "default": "./pages/default.html"
                     }
                 }
             }

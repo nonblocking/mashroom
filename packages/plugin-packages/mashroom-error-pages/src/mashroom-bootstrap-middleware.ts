@@ -5,9 +5,9 @@ import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom
 
 const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const context = contextHolder.getPluginContext();
-    const {serverConfig} = context;
+    const {serverConfig, serverInfo} = context;
     const {mapping} = pluginConfig;
-    const middleware = new MashroomErrorPagesMiddleware(serverConfig.serverRootFolder, mapping);
+    const middleware = new MashroomErrorPagesMiddleware(serverConfig.serverRootFolder, serverInfo.version, mapping);
     return middleware.middleware();
 };
 

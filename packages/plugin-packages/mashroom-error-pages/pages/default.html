@@ -3,7 +3,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>$MESSAGE[pageNotFound]</title>
+    <title>$MESSAGE[serverError]</title>
     <style type="text/css">
         body {
             -webkit-font-smoothing: antialiased;
@@ -63,12 +63,6 @@
             display: inline-block;
         }
 
-        .error-detail {
-            font-size: 0.9em;
-            font-style: italic;
-            word-break: break-all;
-        }
-
         footer {
             background-color: white;
             opacity: 0.7;
@@ -84,14 +78,11 @@
     <div class="error">
         <div class="error-header">
             <div class="status-code">
-                HTTP 404
+                HTTP $STATUS_CODE
             </div>
             <div class="error-message">
-                <h1>$MESSAGE[pageNotFound]</h1>
+                <h1>$MESSAGE[serverError]</h1>
             </div>
-        </div>
-        <div class="error-detail">
-            $REQUEST_URL
         </div>
     </div>
 </div>
