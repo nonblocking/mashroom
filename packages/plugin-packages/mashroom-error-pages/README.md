@@ -19,7 +19,7 @@ You can override the default config in your Mashroom config file like this:
                 "404": "./pages/404.html",
                 "403": "./pages/403.html",
                 "400": "http://my.server-com/bad_request.html",
-                "500": "/some/server/path/500.html"
+                "500": "/some/server/path/500.html",
                 "default": "./pages/default.html"
             }
         }
