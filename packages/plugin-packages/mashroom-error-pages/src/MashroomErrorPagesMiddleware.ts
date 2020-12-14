@@ -112,10 +112,10 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             if (!htmlFile) {
                 if (!errorPageUri.startsWith('file:/')) {
                     if (!isAbsolute(errorPageUri)) {
-                        if (existsSync(resolve(this.pluginRooterFolder, errorPageUri))) {
-                            htmlFile = resolve(this.pluginRooterFolder, errorPageUri);
-                        } else if (existsSync(resolve(this.serverRootFolder, errorPageUri))) {
+                        if (existsSync(resolve(this.serverRootFolder, errorPageUri))) {
                             htmlFile = resolve(this.serverRootFolder, errorPageUri);
+                        } else if (existsSync(resolve(this.pluginRooterFolder, errorPageUri))) {
+                            htmlFile = resolve(this.pluginRooterFolder, errorPageUri);
                         } else {
                             logger.warn(`Error page not found: ${errorPageUri}`);
                             return null;
