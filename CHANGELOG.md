@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.6.2 (December 14, 2020)
+
  * Added a new plugin *mashroom-error-pages* that sends configurable error pages for specific HTTP response codes
  * Portal: Disabled the page caching if the user is authenticated because the back button could reveal sensitive information to other users (on the same machine!).
    See https://owasp.org/www-project-web-security-testing-guide/latest/4-Web_Application_Security_Testing/04-Authentication_Testing/06-Testing_for_Browser_Cache_Weaknesses
