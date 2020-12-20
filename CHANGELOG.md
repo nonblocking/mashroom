@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+## 1.6.3 (December 20, 2020)
+
+ * Error Pages: Deliver error pages only if text/html explicitly is accepted (and not for xhr/fetch requests).
+
 ## 1.6.2 (December 14, 2020)
 
  * Added a new plugin *mashroom-error-pages* that sends configurable error pages for specific HTTP response codes

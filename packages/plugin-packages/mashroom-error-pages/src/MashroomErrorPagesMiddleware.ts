@@ -3,7 +3,7 @@ import {resolve, isAbsolute} from 'path';
 import {promisify} from 'util';
 import getUriCbStyle from 'get-uri';
 // @ts-ignore
-import {isAjaxRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {PLACEHOLDER_REQUEST_URL, PLACEHOLDER_STATUS_CODE, PLACEHOLDER_MASHROOM_VERSION, PLACEHOLDER_I18N_MESSAGE} from './constants';
 import type {Readable} from 'stream';
 import type {MashroomLogger, ExpressRequest, ExpressResponse, ExpressNextFunction, ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
@@ -35,7 +35,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             let writeBuffer: Array<() => void> = [];
 
             const doWrite = (args: Array<any>, exec: () => void) => {
-                if (res.statusCode >= 400 && !errorChecked && !isAjaxRequest(req)) {
+                if (res.statusCode >= 400 && !errorChecked && isHtmlRequest(req)) {
                     errorChecked = true;
                     errorPageSendPending = true;
 
