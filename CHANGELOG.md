@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Fixed the client log handler (didn't terminate correctly)
+
 ## 1.6.3 (December 20, 2020)
 
  * Error Pages: Deliver error pages only if text/html explicitly is accepted (and not for xhr/fetch requests).
