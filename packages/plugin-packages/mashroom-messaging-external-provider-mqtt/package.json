@@ -10,7 +10,7 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "1.6.3",
-        "mqtt": "^4.2.4"
+        "mqtt": "^4.2.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.1",
