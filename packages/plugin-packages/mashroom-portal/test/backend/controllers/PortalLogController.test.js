@@ -45,7 +45,9 @@ describe('PortalLogController', () => {
             }]
         };
 
-        const res: any = {};
+        const res: any = {
+            end: () => {},
+        };
 
         const pluginRegistry: any = {
             portalApps: [
