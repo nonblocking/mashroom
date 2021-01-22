@@ -1,4 +1,6 @@
-// @flow
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 
 import path from 'path';
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';

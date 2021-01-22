@@ -1,8 +1,8 @@
-// @flow
+
 
 import MashroomI18NService from './MashroomI18NService';
 
-import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+import {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const {availableLanguages, defaultLanguage, messages: messagesFolder} = pluginConfig;

@@ -18,7 +18,10 @@
         "@mashroom/mashroom": "1.6.0",
         "@mashroom/mashroom-utils": "1.6.0",
         "eslint": "^7.13.0",
-        "jest": "^26.6.3"
+        "jest": "^26.6.3",
+        "typescript": "^4.1.3",
+        "@types/jest": "^26.0.20",
+        "@types/node": "^14.14.22"
     },
     "jest": {
         "verbose": true,
@@ -26,12 +29,12 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts$"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src test --ext \".ts\" --fix",
         "test": "jest",
-        "build": "babel src -d dist"
+        "build": "babel src -d dist --extensions \".ts\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

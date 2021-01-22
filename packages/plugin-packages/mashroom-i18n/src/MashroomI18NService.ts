@@ -1,20 +1,21 @@
-// @flow
 
-import fs from 'fs';
-import path from 'path';
+
+import * as fs from 'fs';
+import * as path from 'path';
+
 import acceptLanguageParser from 'accept-language-parser';
 
 const BUILT_IN_MESSAGES_FOLDER = path.resolve(__dirname, '../messages');
 
 const MESSAGES_EXISTS_CACHE = {};
 
-import type {
+import {
     MashroomLogger,
     MashroomLoggerFactory,
     ExpressRequest,
     I18NString,
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomI18NService as MashroomI18NServiceType} from '../type-definitions';
+import {MashroomI18NService as MashroomI18NServiceType} from '../type-definitions';
 
 export default class MashroomI18NService implements MashroomI18NServiceType {
 
@@ -61,7 +62,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
 
         for (const messagesPath of existingMessagesPaths) {
             try {
-                const messages = require(messagesPath);
+                const messages = import(messagesPath);
                 const message = messages[key];
                 if (message) {
                     return message;
@@ -75,6 +76,8 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return key;
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    // @ts-ignore
     translate(req: ExpressRequest, str: I18NString) {
         if (!str || typeof(str) === 'string') {
             return str;
@@ -100,6 +103,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
     }
 
     get availableLanguages(): Array<string> {
+        // @ts-ignore
         return Object.freeze(this._availableLanguages.slice(0));
     }
 

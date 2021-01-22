@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import type {ExpressRequest, I18NString} from '@mashroom/mashroom/type-definitions';
+import {ExpressRequest, I18NString} from '@mashroom/mashroom/type-definitions';
 
 export interface MashroomI18NService {
     /**
