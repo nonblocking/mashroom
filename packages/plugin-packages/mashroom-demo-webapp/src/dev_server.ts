@@ -4,7 +4,7 @@
 import express from 'express';
 import app from './webapp';
 
-import {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import  { ExpressRequest, ExpressResponse } from '@mashroom/mashroom/type-definitions';
 
 const wrapperApp = express();
 
