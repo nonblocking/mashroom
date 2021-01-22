@@ -1,6 +1,8 @@
-// @flow
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+
+import type, {
+    ExpressRequest
+    } from '@mashroom/mashroom/type-definitions';
 
 export interface MashroomCSRFService {
 

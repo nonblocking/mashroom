@@ -2,7 +2,7 @@
 
 import MashroomCSRFService from './MashroomCSRFService';
 
-import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+import type, {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig) => {
     const {saltLength, secretLength} = pluginConfig;
