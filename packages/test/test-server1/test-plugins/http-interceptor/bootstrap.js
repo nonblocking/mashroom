@@ -1,26 +1,28 @@
 
 class TestInterceptor {
 
-    constructor(pluginContextHolder) {
-        this.pluginContextHolder = pluginContextHolder;
-    }
-
-    async intercept(targetUri, existingHeaders, existingQueryParams, req) {
-        const pluginContext = this.pluginContextHolder.getPluginContext();
-        const logger = pluginContext.loggerFactory('test.http.interceptor');
+    async interceptRequest(targetUri, existingHeaders, existingQueryParams, clientRequest, clientResponse) {
+        const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
         const securityService = pluginContext.services.security && req.pluginContext.services.security.service;
 
-        const user = securityService.getUser(req);
+        const user = securityService.getUser(clientRequest);
 
-        logger.info(`===== Intercepting http proxy call: ${targetUri}, user: ${user.username} =====`);
+        logger.info(`===== Intercepting http proxy request: ${targetUri}, user: ${user.username} =====`);
 
-        return {
-        };
+        return null;
+    }
+
+    async interceptResponse(targetUri, existingHeaders, targetResponse, clientRequest, clientResponse) {
+        const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
+
+        logger.info(`===== Intercepting http proxy request: ${targetUri}, response code: ${targetResponse.statusCode}  =====`);
+
+        return null;
     }
 }
 
-const bootstrap = async (pluginName, pluginConfig, pluginContextHolder) => {
-    return new TestInterceptor(pluginContextHolder);
+const bootstrap = async () => {
+    return new TestInterceptor();
 };
 
 module.exports = bootstrap;

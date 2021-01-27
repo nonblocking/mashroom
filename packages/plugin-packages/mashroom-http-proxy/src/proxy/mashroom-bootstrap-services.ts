@@ -1,4 +1,7 @@
 
+import HttpHeaderFilter from './HttpHeaderFilter';
+import InterceptorHandler from './InterceptorHandler';
+import ProxyImplRequest from './ProxyImplRequest';
 import MashroomHttpProxyService from './MashroomHttpProxyService';
 import {setPoolConfig} from '../connection_pool';
 import context from '../context/global_context';
@@ -12,10 +15,13 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     setPoolConfig({
         maxSockets: poolMaxSockets,
         rejectUnauthorized,
-    })
+    });
 
     const pluginContext = pluginContextHolder.getPluginContext();
-    const service = new MashroomHttpProxyService(forwardMethods, forwardHeaders, socketTimeoutMs, context.pluginRegistry, pluginContext.loggerFactory);
+    const headerFilter = new HttpHeaderFilter(forwardHeaders);
+    const interceptorHandler = new InterceptorHandler(context.pluginRegistry);
+    const proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, pluginContext.loggerFactory);
+    const service = new MashroomHttpProxyService(forwardMethods, proxy);
 
     startExportPoolMetrics(pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {

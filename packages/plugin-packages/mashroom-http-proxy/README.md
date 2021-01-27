@@ -124,31 +124,44 @@ The provider has to implement the following interface:
 
 ```js
 interface MashroomHttpProxyInterceptor {
-
     /**
-     * Intercept HTTP proxy call to given targetUri.
+     * Intercept request to given targetUri.
      *
      * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
      * The existingQueryParams contain query parameters from the request and the ones already added by other interceptors.
      *
-     * req is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access req.method and req.pluginContext.
+     * clientRequest is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access "method" and "pluginContext".
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
-    intercept(targetUri: string, existingHeaders: HttpHeaders, existingQueryParams: QueryParams, req: ExpressRequest): Promise<?MashroomHttpProxyInterceptorResult>;
+     interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                         clientRequest: ExpressRequest, clientResponse: ExpressResponse):
+        Promise<MashroomHttpProxyRequestInterceptorResult | undefined | null>;
+
+    /**
+     * Intercept response from given targetUri.
+     *
+     * The existingHeaders contain the original request header and the ones already added by other interceptors.
+     * targetResponse is the response that shall be forwarded to the client. DO NOT MANIPULATE IT. Just use it to access "statusCode" an such.
+     *
+     * Return null or undefined if you don't want to interfere with a call.
+     */
+     interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage, clientRequest: ExpressRequest, clientResponse: ExpressResponse):
+        Promise<MashroomHttpProxyResponseInterceptorResult | undefined | null>;
 }
 ```
 
-An example implementation could look like this:
+As an example you could add a Bearer token to each request like this:
 
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
-  async intercept(targetUri: string, existingHeaders: HttpHeaders, existingQueryParams: QueryParams, req: ExpressRequest) {
-    const logger: MashroomLogger = pluginContext.loggerFactory('my.interceptor');
-    const securityService: MashroomSecurityService = pluginContext.services.security && req.pluginContext.services.security.service;
+  async interceptRequest(ttargetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+    const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
+    const securityService = pluginContext.services.security && req.pluginContext.services.security.service;
 
-    const user = securityService.getUser(req);
+    const user = securityService.getUser(clientRequest);
     if (!user) {
        return;
     }
@@ -159,6 +172,55 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
        }
     };
   }
+
+  async interceptResponse() {
+      return null;
+  }
 }
 ```
 
+Or return forbidden for some reason:
+```ts
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+  async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+
+      clientResponse.sendStatus(403);
+
+      return {
+          responseHandled: true
+      };
+  }
+
+  async interceptResponse() {
+      return null;
+  }
+}
+```
+
+Or even manipulate the response:
+```ts
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+  async interceptRequest() {
+      return null;
+  }
+
+  async interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage, clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+      const body = [];
+      targetResponse.on('data', function (chunk) {
+          body.push(chunk);
+      });
+      targetResponse.on('end', function () {
+          body = Buffer.concat(body).toString();
+          console.log("res from proxied server:", body);
+          res.end("my response to cli");
+      });
+
+      return {
+          responseHandled: true
+      };
+  }
+}
+```
