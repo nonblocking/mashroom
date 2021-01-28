@@ -39,5 +39,6 @@ export interface InterceptorHandler {
 }
 
 export interface Proxy {
-    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders): Promise<void>
+    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders): Promise<void>;
+    shutdown(): void;
 }

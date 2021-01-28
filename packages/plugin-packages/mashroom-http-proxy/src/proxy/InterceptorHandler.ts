@@ -24,7 +24,9 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                 const result = await interceptor.interceptRequest(rewrittenTargetUri, existingHeaders, existingQueryParams, clientRequest, clientResponse);
                 if (result?.responseHandled) {
                     logger.info(`Interceptor '${pluginName}' already handled response to ${targetUri}`);
-                    return result;
+                    return {
+                        responseHandled: true,
+                    };
                 }
                 if (result?.rewrittenTargetUri) {
                     logger.info(`Interceptor '${pluginName}' rewrote target URI ${targetUri} to: ${result.rewrittenTargetUri}`);

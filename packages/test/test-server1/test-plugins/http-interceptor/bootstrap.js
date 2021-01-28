@@ -3,11 +3,12 @@ class TestInterceptor {
 
     async interceptRequest(targetUri, existingHeaders, existingQueryParams, clientRequest, clientResponse) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
-        const securityService = pluginContext.services.security && req.pluginContext.services.security.service;
+        const securityService = clientRequest.pluginContext.services.security && clientRequest.pluginContext.services.security.service;
 
         const user = securityService.getUser(clientRequest);
 
         logger.info(`===== Intercepting http proxy request: ${targetUri}, user: ${user.username} =====`);
+
 
         return null;
     }

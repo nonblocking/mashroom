@@ -11,13 +11,13 @@ import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/t
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const {forwardMethods = [], forwardHeaders = [], rejectUnauthorized, poolMaxSockets, socketTimeoutMs } = pluginConfig;
+    const pluginContext = pluginContextHolder.getPluginContext();
 
     setPoolConfig({
         maxSockets: poolMaxSockets,
         rejectUnauthorized,
     });
 
-    const pluginContext = pluginContextHolder.getPluginContext();
     const headerFilter = new HttpHeaderFilter(forwardHeaders);
     const interceptorHandler = new InterceptorHandler(context.pluginRegistry);
     const proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, pluginContext.loggerFactory);
@@ -25,6 +25,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
     startExportPoolMetrics(pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+        proxy.shutdown();
         stopExportPoolMetrics();
     });
 

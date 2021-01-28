@@ -12,8 +12,8 @@ import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-defin
 export default class ProxyImplRequest implements Proxy {
 
     constructor(private socketTimeoutMs: number, private interceptorHandler: InterceptorHandler, private headerFilter: HttpHeaderFilter, loggerFactory: MashroomLoggerFactory) {
-        const poolConfig = getPoolConfig();
         const logger = loggerFactory('mashroom.httpProxy');
+        const poolConfig = getPoolConfig();
         logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this.socketTimeoutMs}ms`);
     }
 
@@ -33,7 +33,7 @@ export default class ProxyImplRequest implements Proxy {
             return Promise.resolve();
         }
 
-        const effectiveTargetUri = interceptorResult.rewrittenTargetUri || uri;
+        const effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri || uri);
 
         // Process additional headers
         let effectiveAdditionalHeaders = {
@@ -115,6 +115,10 @@ export default class ProxyImplRequest implements Proxy {
                         })
                 );
         });
+    }
+
+    shutdown(): void {
+        // Nothing to do
     }
 
 }

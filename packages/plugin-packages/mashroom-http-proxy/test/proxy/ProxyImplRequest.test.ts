@@ -3,11 +3,11 @@ import {Readable, Writable} from 'stream';
 import nock from 'nock';
 // @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import ProxyImplRequest from '../src/proxy/ProxyImplRequest';
-import InterceptorHandler from '../src/proxy/InterceptorHandler';
-import HttpHeaderFilter from '../src/proxy/HttpHeaderFilter';
+import ProxyImplRequest from '../../src/proxy/ProxyImplRequest';
+import InterceptorHandler from '../../src/proxy/InterceptorHandler';
+import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
 import {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
-import {HttpHeaders, QueryParams} from '../type-definitions';
+import {HttpHeaders, QueryParams} from '../../type-definitions';
 
 const createDummyRequest = (method: string, data?: string) => {
     const req: any = new Readable();
