@@ -1,6 +1,6 @@
 
 
-import type, {
+import {
     ExpressMiddleware
 } from '@mashroom/mashroom/type-definitions';
 

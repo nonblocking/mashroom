@@ -1,6 +1,6 @@
 
 
-import type, {
+import {
     ExpressRequest
     } from '@mashroom/mashroom/type-definitions';
 

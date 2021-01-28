@@ -17,6 +17,7 @@ export default class MashroomCSRFService implements MashroomCSRFServiceType {
         this._secretLength = secretLength;
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     getCSRFToken(request: ExpressRequest) {
         let sessionToken = request.session[CSRF_TOKEN_SESSION_KEY];
         if (!sessionToken) {
@@ -27,6 +28,7 @@ export default class MashroomCSRFService implements MashroomCSRFServiceType {
         return sessionToken;
     }
 
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     isValidCSRFToken(request: ExpressRequest, token: string) {
         const sessionToken = request.session[CSRF_TOKEN_SESSION_KEY];
         if (!sessionToken) {
