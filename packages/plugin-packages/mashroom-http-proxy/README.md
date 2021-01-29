@@ -225,18 +225,18 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
     }
 
     async interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage, clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
-        const body = [];
+        let body = [];
         targetResponse.on('data', function (chunk) {
-          body.push(chunk);
+            body.push(chunk);
         });
         targetResponse.on('end', function () {
-          body = Buffer.concat(body).toString();
-          console.log("res from proxied server:", body);
-          res.end("my response to cli");
+            body = Buffer.concat(body).toString();
+            console.log("Response from proxied server:", body);
+            clientResponse.json({ success: true });
         });
 
         return {
-          responseHandled: true
+            responseHandled: true
         };
     }
 }

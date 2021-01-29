@@ -97,9 +97,10 @@ export default class ProxyImplRequest implements Proxy {
 
                     if (anyInterceptors) {
                         // Execute response interceptors
-                        // Pause the stream flow until the async op is finished - will resume automatically on pipe
+                        // Pause the stream flow until the async op is finished
                         targetResponse.pause();
                         const interceptorResult = await this.interceptorHandler.processResponse(req, res, uri, targetResponse, logger);
+                        targetResponse.resume();
 
                         if (interceptorResult.responseHandled) {
                             resolve();
