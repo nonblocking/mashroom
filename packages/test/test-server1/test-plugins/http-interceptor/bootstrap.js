@@ -1,6 +1,10 @@
 
 class TestInterceptor {
 
+    wantToIntercept() {
+        return true;
+    }
+
     async interceptRequest(targetUri, existingHeaders, existingQueryParams, clientRequest, clientResponse) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
         const securityService = clientRequest.pluginContext.services.security && clientRequest.pluginContext.services.security.service;
@@ -16,7 +20,7 @@ class TestInterceptor {
     async interceptResponse(targetUri, existingHeaders, targetResponse, clientRequest, clientResponse) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
 
-        logger.info(`===== Intercepting http proxy request: ${targetUri}, response code: ${targetResponse.statusCode}  =====`);
+        logger.info(`===== Intercepting http proxy response: ${targetUri}, response code: ${targetResponse.statusCode}  =====`);
 
         return null;
     }

@@ -7,8 +7,10 @@
    **BREAKING CHANGE**: The *MashroomHttpProxyInterceptor* interface changed and is not compatible with the old one:
       * intercept() has been renamed to interceptRequest()
       * A new method interceptResponse() has been added
+      * A new method wantToIntercept() has been added (which needs to return true to enable the interceptor for a given request)
       * Instead of returning *result.reject* you can now call res.sendStatus() yourself and just return *result.responseHandled* as
         a hint that the proxy doesn't have to do anything.
+ * HTTP Proxy: Fixed a problem with special characters in target URIs
  * Portal: Fixed the client log handler (didn't terminate correctly)
 
 ## 1.6.3 (December 20, 2020)

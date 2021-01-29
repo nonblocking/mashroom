@@ -1,8 +1,12 @@
-
 import request from 'request';
 import {getHttpPool, getHttpsPool, getPoolConfig} from '../connection_pool';
 
-import type {ExpressRequest, ExpressResponse, MashroomLoggerFactory, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    ExpressRequest,
+    ExpressResponse,
+    MashroomLoggerFactory,
+    MashroomLogger
+} from '@mashroom/mashroom/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
 
@@ -27,45 +31,46 @@ export default class ProxyImplRequest implements Proxy {
             return Promise.resolve();
         }
 
-        // Execute interceptors
-        const interceptorResult = await this.interceptorHandler.processRequest(req, res, uri, additionalHeaders, logger);
-        if (interceptorResult.responseHandled) {
-            return Promise.resolve();
-        }
-
-        const effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri || uri);
-
-        // Process additional headers
+        let effectiveTargetUri = encodeURI(uri);
         let effectiveAdditionalHeaders = {
             ...additionalHeaders,
         };
-        if (interceptorResult.addHeaders) {
-            effectiveAdditionalHeaders = {
-                ...effectiveAdditionalHeaders,
-                ...interceptorResult.addHeaders,
-            };
-        }
-        if (interceptorResult.removeHeaders) {
-            interceptorResult.removeHeaders.forEach((headerKey) => {
-                delete effectiveAdditionalHeaders[headerKey];
-                delete req.headers[headerKey];
-            });
-        }
-
-        // Process query params
         let effectiveQueryParams = {
             ...req.query
         };
-        if (interceptorResult.addQueryParams) {
-            effectiveQueryParams = {
-                ...effectiveQueryParams,
-                ...interceptorResult.addQueryParams,
-            };
-        }
-        if (interceptorResult.removeQueryParams) {
-            interceptorResult.removeQueryParams.forEach((paramKey) => {
-                delete effectiveQueryParams[paramKey];
-            });
+        const anyInterceptors = this.interceptorHandler.anyHandlersWantToIntercept(req, uri);
+        if (anyInterceptors) {
+            // Process request interceptors
+            const interceptorResult = await this.interceptorHandler.processRequest(req, res, uri, additionalHeaders, logger);
+            if (interceptorResult.responseHandled) {
+                return Promise.resolve();
+            }
+            if (interceptorResult.rewrittenTargetUri) {
+                effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
+            }
+            if (interceptorResult.addHeaders) {
+                effectiveAdditionalHeaders = {
+                    ...effectiveAdditionalHeaders,
+                    ...interceptorResult.addHeaders,
+                };
+            }
+            if (interceptorResult.removeHeaders) {
+                interceptorResult.removeHeaders.forEach((headerKey) => {
+                    delete effectiveAdditionalHeaders[headerKey];
+                    delete req.headers[headerKey];
+                });
+            }
+            if (interceptorResult.addQueryParams) {
+                effectiveQueryParams = {
+                    ...effectiveQueryParams,
+                    ...interceptorResult.addQueryParams,
+                };
+            }
+            if (interceptorResult.removeQueryParams) {
+                interceptorResult.removeQueryParams.forEach((paramKey) => {
+                    delete effectiveQueryParams[paramKey];
+                });
+            }
         }
 
         // Filter the forwarded headers from the incoming request
@@ -85,35 +90,65 @@ export default class ProxyImplRequest implements Proxy {
         logger.info(`Forwarding ${options.method} request to: ${options.uri}`);
 
         return new Promise<void>((resolve) => {
-            req.pipe(
-                request(options)
-                    .on('response', (targetResponse) => {
-                        this.headerFilter.filter(targetResponse.headers);
-                        const endTime = process.hrtime(startTime);
-                        logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
-                        res.status(targetResponse.statusCode);
-                    })
-                    .on('error', (error: Error & { code?: string }) => {
-                        if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
-                            logger.error(`Target endpoint '${uri}' did not send a response within ${this.socketTimeoutMs}ms!`, error);
-                            res.sendStatus(504);
-                        } else {
-                            logger.error(`Forwarding to '${uri}' failed!`, error);
-                            res.sendStatus(503);
+            req.pipe(request(options)
+                .on('response', async (targetResponse) => {
+                    const endTime = process.hrtime(startTime);
+                    logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
+
+                    if (anyInterceptors) {
+                        // Execute response interceptors
+                        // Pause the stream flow until the async op is finished - will resume automatically on pipe
+                        targetResponse.pause();
+                        const interceptorResult = await this.interceptorHandler.processResponse(req, res, uri, targetResponse, logger);
+
+                        if (interceptorResult.responseHandled) {
+                            resolve();
+                            return;
                         }
-                        resolve();
-                    }))
-                .pipe(
-                    res
-                        .on('finish', () => {
-                            resolve();
-                        })
-                        .on('error', (error) => {
-                            logger.error('Error sending the response to the client', error);
-                            res.sendStatus(500);
-                            resolve();
-                        })
-                );
+                        // First filter the headers from the target response
+                        this.headerFilter.filter(targetResponse.headers);
+                        if (interceptorResult.addHeaders) {
+                            Object.keys(interceptorResult.addHeaders).forEach((headerKey) => {
+                                targetResponse.headers[headerKey] = interceptorResult.addHeaders?.[headerKey];
+                            });
+                        }
+                        if (interceptorResult.removeHeaders) {
+                            interceptorResult.removeHeaders.forEach((headerKey) => {
+                                delete targetResponse.headers[headerKey];
+                            });
+                        }
+                    } else {
+                        // Just filter the headers
+                        this.headerFilter.filter(targetResponse.headers);
+                    }
+
+                    // Send response
+                    res.status(targetResponse.statusCode);
+                    Object.keys(targetResponse.headers).forEach((headerKey) => {
+                        res.setHeader(headerKey, targetResponse.headers[headerKey] as any);
+                    });
+                    targetResponse.pipe(
+                        res
+                            .on('finish', () => {
+                                resolve();
+                            })
+                            .on('error', (error) => {
+                                logger.error('Error sending the response to the client', error);
+                                res.sendStatus(500);
+                                resolve();
+                            }));
+
+                })
+                .on('error', (error: Error & { code?: string }) => {
+                    if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
+                        logger.error(`Target endpoint '${uri}' did not send a response within ${this.socketTimeoutMs}ms!`, error);
+                        res.sendStatus(504);
+                    } else {
+                        logger.error(`Forwarding to '${uri}' failed!`, error);
+                        res.sendStatus(503);
+                    }
+                    resolve();
+                }));
         });
     }
 

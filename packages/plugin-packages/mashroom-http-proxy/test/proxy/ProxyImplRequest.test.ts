@@ -8,6 +8,7 @@ import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
 import {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import {HttpHeaders, QueryParams} from '../../type-definitions';
+import {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
 const createDummyRequest = (method: string, data?: string) => {
     const req: any = new Readable();
@@ -37,8 +38,10 @@ const createDummyResponse = () => {
     res.statusCode = null;
     res.statusMessage = null;
     res.body = '';
+    res.headers = {};
     res.setHeader = (headerName: string, value: any) => {
         console.info('Header: ', headerName, value);
+        res.headers[headerName] = value;
     };
     res.status = res.sendStatus = function(status: any) {
         this.statusCode = status;
@@ -170,44 +173,57 @@ describe('ProxyImplRequest', () => {
         expect(res.statusCode).toBe(201);
     });
 
-    it('adds headers from interceptors',  async () => {
+    it('adds headers from request interceptors',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
-               'Authorization': 'Bearer XXXXXXXX',
-                'X-Whatever': '123',
+                'authorization': 'Bearer XXXXXXXX',
+                'x-whatever': '123',
             },
         })
             .get('/foo')
             .reply(200, 'test response');
 
-        const pluginRegistry: any = {
-            interceptors: [
-                {
-                    pluginName: 'Interceptor 1',
-                    interceptor: {
-                        interceptRequest() {
-                            return {
-                                addHeaders: {
-                                    'Authorization': 'Bearer XXXXXXXX',
-                                }
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return {
+                            addHeaders: {
+                                'authorization': 'Bearer XXXXXXXX',
                             }
                         }
-                    }
-                },
-                {
-                    pluginName: 'Interceptor 2',
-                    interceptor: {
-                        interceptRequest() {
-                            return {
-                                addHeaders: {
-                                    'X-Whatever': '123',
-                                }
-                            }
-                        }
+                    },
+                    async interceptResponse() {
+                        return null;
                     }
                 }
-            ],
-        }
+            },
+            {
+                pluginName: 'Interceptor 2',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return {
+                            addHeaders: {
+                                'x-whatever': '123',
+                            }
+                        }
+                    },
+                    async interceptResponse() {
+                        return null;
+                    }
+                }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
 
         const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, removeAllHeaderFilter, loggerFactory);
@@ -220,27 +236,34 @@ describe('ProxyImplRequest', () => {
         expect(res.body).toBe('test response');
     });
 
-    it('allows interceptors to remove headers',  async () => {
+    it('allows request interceptors to remove headers',  async () => {
         nock('https://www.mashroom-server.com', {
             badheaders: ['another-header']
         })
             .get('/foo')
             .reply(200, 'test response');
 
-        const pluginRegistry: any = {
-            interceptors: [
-                {
-                    pluginName: 'Interceptor 1',
-                    interceptor: {
-                        interceptRequest() {
-                            return {
-                                removeHeaders: ['another-header']
-                            }
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return {
+                            removeHeaders: ['another-header']
                         }
+                    },
+                    async interceptResponse() {
+                        return null;
                     }
                 }
-            ],
-        }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header'])
 
@@ -254,7 +277,7 @@ describe('ProxyImplRequest', () => {
         expect(res.body).toBe('test response');
     });
 
-    it('adds query params from interceptors',  async () => {
+    it('adds query params from request interceptors',  async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo')
             .query({
@@ -262,22 +285,29 @@ describe('ProxyImplRequest', () => {
             })
             .reply(200, 'test response');
 
-        const pluginRegistry: any = {
-            interceptors: [
-                {
-                    pluginName: 'Interceptor 1',
-                    interceptor: {
-                        interceptRequest() {
-                            return {
-                                addQueryParams: {
-                                    'foo': 'bar',
-                                }
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return {
+                            addQueryParams: {
+                                'foo': 'bar',
                             }
                         }
+                    },
+                    async interceptResponse() {
+                        return null;
                     }
                 }
-            ],
-        }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
 
         const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, removeAllHeaderFilter, loggerFactory);
@@ -290,27 +320,34 @@ describe('ProxyImplRequest', () => {
         expect(res.body).toBe('test response');
     });
 
-    it('allows interceptors to remove query params',  async () => {
+    it('allows request interceptors to remove query params',  async () => {
         nock('https://www.mashroom-server.at')
             .get('/foo')
             .query({
             })
             .reply(200, 'test response');
 
-        const pluginRegistry: any = {
-            interceptors: [
-                {
-                    pluginName: 'Interceptor 1',
-                    interceptor: {
-                        interceptRequest() {
-                            return {
-                                removeQueryParams: ['foo']
-                            }
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return {
+                            removeQueryParams: ['foo']
                         }
+                    },
+                    async interceptResponse() {
+                        return null;
                     }
                 }
-            ],
-        }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header'])
 
@@ -325,25 +362,32 @@ describe('ProxyImplRequest', () => {
         expect(res.body).toBe('test response');
     });
 
-    it('allows interceptors to rewrite the target uri',  async () => {
+    it('allows request interceptors to rewrite the target uri',  async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo')
             .reply(200, 'test response');
 
-        const pluginRegistry: any = {
-            interceptors: [
-                {
-                    pluginName: 'Interceptor 1',
-                    interceptor: {
-                        interceptRequest() {
-                            return {
-                                rewrittenTargetUri: 'https://www.mashroom-server.com/foo',
-                            }
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return {
+                            rewrittenTargetUri: 'https://www.mashroom-server.com/foo',
                         }
+                    },
+                    async interceptResponse() {
+                        return null;
                     }
                 }
-            ],
-        }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header'])
 
@@ -357,28 +401,35 @@ describe('ProxyImplRequest', () => {
         expect(res.body).toBe('test response');
     });
 
-    it('allows interceptors to reject calls',  async () => {
+    it('allows interceptor to handle the request',  async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo')
             .reply(200, 'test response');
 
-        const pluginRegistry: any = {
-            interceptors: [
-                {
-                    pluginName: 'Interceptor 1',
-                    interceptor: {
-                        interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
-                            clientResponse.sendStatus(403);
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                                     clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+                        clientResponse.sendStatus(403);
 
-                            return {
-                               responseHandled: true,
-                            }
+                        return {
+                           responseHandled: true,
                         }
+                    },
+                    async interceptResponse() {
+                        return null;
                     }
                 }
-            ],
-        }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header'])
 
@@ -390,5 +441,97 @@ describe('ProxyImplRequest', () => {
         await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.statusCode).toBe(403);
+    });
+
+    it('adds headers from response interceptors',  async () => {
+        nock('https://www.mashroom-server.com')
+            .get('/foo2')
+            .reply(200, 'test response', {
+                'x-whatever': '123',
+            });
+
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return null;
+                    },
+                    async interceptResponse() {
+                        return {
+                            addHeaders: {
+                                'some-new-header': 'XXXXXXXX',
+                            }
+                        }
+                    }
+                }
+            },
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
+        const interceptorHandler = new InterceptorHandler(pluginRegistry);
+        const headerFilter = new HttpHeaderFilter(['x-whatever', 'some-new-header'])
+
+        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo2');
+
+        expect(res.headers).toEqual({
+            'x-whatever': '123',
+            'some-new-header': 'XXXXXXXX',
+        });
+    });
+
+    it('allows response interceptors to remove headers',  async () => {
+        nock('https://www.mashroom-server.com', {
+            badheaders: ['another-header']
+        })
+            .get('/foo3')
+            .reply(200, 'test response', {
+                'x-whatever': '123',
+                'foo': 'bar',
+            });
+
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                pluginName: 'Interceptor 1',
+                interceptor: {
+                    wantToIntercept() {
+                        return true;
+                    },
+                    async interceptRequest() {
+                        return null;
+                    },
+                    async interceptResponse() {
+                        return {
+                            removeHeaders: ['foo']
+                        }
+                    }
+                }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
+        const interceptorHandler = new InterceptorHandler(pluginRegistry);
+        const headerFilter = new HttpHeaderFilter(['x-whatever', 'foo'])
+
+        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo3');
+
+        expect(res.headers).toEqual({
+            'x-whatever': '123'
+        });
     });
 });
