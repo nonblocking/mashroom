@@ -44,6 +44,7 @@ And configure this plugin like this in the Mashroom config file:
                 "internalUserId": "uid"
             },
             "groupToRoleMapping": "./groupToRoleMapping.json",
+            "userToRoleMapping": "./userToRoleMapping.json",
             "authenticationTimeoutSec": 1200
         }
     }
@@ -64,6 +65,7 @@ And configure this plugin like this in the Mashroom config file:
  * _extraDataMapping_: Optionally map extra LDAP attributes to _user.extraData_. The key in the map is the extraData property, the value the LDAP attribute (default: null)
  * _secretsMapping_: Optionally map extra LDAP attributes to _user.secrets_ (default: null)
  * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping
+ * _userToRoleMapping_: An optional JSON file that contains a user name to roles mapping
  * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value.
 
 For a server that requires TLS you have to provide a _tlsOptions_ object:
@@ -99,3 +101,13 @@ The _groupToRoleMapping_ file has to following simple structure:
 }
 ```
 
+And the _userToRoleMapping_ file:
+
+```json
+{
+    "username": [
+        "ROLE1",
+        "ROLE2"
+    ]
+}
+```

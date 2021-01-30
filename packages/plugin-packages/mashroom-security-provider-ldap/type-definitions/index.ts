@@ -20,6 +20,10 @@ export type GroupToRoleMapping = {
     [groupName: string]: Array<string>;
 }
 
+export type UserToRoleMapping = {
+    [userName: string]: Array<string>;
+}
+
 export type TlsOptions = {
     ca?: string | Array<string>;
     cert: string | Array<string>;
