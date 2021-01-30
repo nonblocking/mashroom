@@ -162,7 +162,8 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
     async login(): Promise<MashroomSecurityLoginResult> {
         return {
-            success: false
+            success: false,
+            failureReason: 'Login not supported'
         };
     }
 

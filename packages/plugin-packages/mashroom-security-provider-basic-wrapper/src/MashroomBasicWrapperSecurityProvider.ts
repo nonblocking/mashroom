@@ -86,6 +86,7 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         }
         return {
             success: false,
+            failureReason: 'Login not supported'
         }
     }
 
