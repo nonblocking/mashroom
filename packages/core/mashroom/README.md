@@ -277,7 +277,7 @@ To register a middleware plugin add this to package.json:
 }
 ```
 
- * _defaultConfig.order_: he weight of the middleware in the stack - the higher it is the **later** it will be executed (default: 1000)
+ * _defaultConfig.order_: the weight of the middleware in the stack - the higher it is the **later** it will be executed (default: 1000)
 
 And the bootstrap just returns the *Express* middleware:
 
