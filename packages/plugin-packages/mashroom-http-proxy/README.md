@@ -99,13 +99,16 @@ To register your custom http-proxy-interceptor plugin add this to _package.json_
                 "type": "http-proxy-interceptor",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                   "myProperty": "foo"
+                    "order": 500,
+                    "myProperty": "foo"
                 }
             }
         ]
     }
 }
 ```
+
+* _defaultConfig.order_: the weight of the middleware in the stack - the higher it is the **later** it will be executed (default: 1000)
 
 The bootstrap returns the interceptor:
 
@@ -126,39 +129,102 @@ The provider has to implement the following interface:
 interface MashroomHttpProxyInterceptor {
 
     /**
-     * Intercept HTTP proxy call to given targetUri.
+     * Intercept request to given targetUri.
      *
      * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
      * The existingQueryParams contain query parameters from the request and the ones already added by other interceptors.
      *
-     * req is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access req.method and req.pluginContext.
+     * clientRequest is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access "method" and "pluginContext".
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
-    intercept(targetUri: string, existingHeaders: HttpHeaders, existingQueryParams: QueryParams, req: ExpressRequest): Promise<?MashroomHttpProxyInterceptorResult>;
+    interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                         clientRequest: Readonly<ExpressRequest>, clientResponse: ExpressResponse):
+        Promise<MashroomHttpProxyRequestInterceptorResult | undefined | null>;
+
+    /**
+     * Intercept response from given targetUri.
+     *
+     * The existingHeaders contain the original request header and the ones already added by other interceptors.
+     * targetResponse is the response that shall be forwarded to the client. DO NOT MANIPULATE IT. Just use it to access "statusCode" an such.
+     *
+     * Return null or undefined if you don't want to interfere with a call.
+     */
+    interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: Readonly<IncomingMessage>, clientRequest: Readonly<ExpressRequest>, clientResponse: ExpressResponse):
+        Promise<MashroomHttpProxyResponseInterceptorResult | undefined | null>;
 }
 ```
 
-An example implementation could look like this:
+As an example you could add a Bearer token to each request like this:
 
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
-  async intercept(targetUri: string, existingHeaders: HttpHeaders, existingQueryParams: QueryParams, req: ExpressRequest) {
-    const logger: MashroomLogger = pluginContext.loggerFactory('my.interceptor');
-    const securityService: MashroomSecurityService = pluginContext.services.security && req.pluginContext.services.security.service;
+    async interceptRequest(ttargetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+        const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
+        const securityService = pluginContext.services.security && req.pluginContext.services.security.service;
 
-    const user = securityService.getUser(req);
-    if (!user) {
-       return;
+        const user = securityService.getUser(clientRequest);
+        if (!user) {
+           return;
+        }
+
+        return {
+           addHeaders: {
+              Authorization: `Bearer ${user.secrets.accessToken}`
+           }
+        };
     }
 
-    return {
-       addHeaders: {
-          Authorization: `Bearer ${user.secrets.accessToken}`
-       }
-    };
-  }
+    async interceptResponse() {
+      return null;
+    }
 }
 ```
 
+Or return forbidden for some reason:
+```ts
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+    async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+
+        clientResponse.sendStatus(403);
+
+        return {
+          responseHandled: true
+        };
+    }
+
+    async interceptResponse() {
+        return null;
+    }
+}
+```
+
+Or even manipulate the response:
+```ts
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+    async interceptRequest() {
+        return null;
+    }
+
+    async interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage, clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+        let body = [];
+        targetResponse.on('data', function (chunk) {
+            body.push(chunk);
+        });
+        targetResponse.on('end', function () {
+            body = Buffer.concat(body).toString();
+            console.log("Response from proxied server:", body);
+            clientResponse.json({ success: true });
+        });
+
+        return {
+            responseHandled: true
+        };
+    }
+}
+```

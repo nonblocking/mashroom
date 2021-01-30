@@ -1,5 +1,5 @@
 
-import HttpHeaderFilter from '../src/proxy/HttpHeaderFilter';
+import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
 
 describe('HttpHeaderFilter', () => {
 

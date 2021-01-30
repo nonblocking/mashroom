@@ -13,6 +13,8 @@ import type {
 } from '../../../type-definitions';
 import type {MashroomHttpProxyInterceptorRegistry} from '../../../type-definitions/internal';
 
+const DEFAULT_ORDER = 1000;
+
 export default class MashroomHttpProxyInterceptorPluginLoader implements MashroomPluginLoader {
 
     private log: MashroomLogger;
@@ -32,8 +34,9 @@ export default class MashroomHttpProxyInterceptorPluginLoader implements Mashroo
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomHttpProxyInterceptorPluginBootstrapFunction = plugin.requireBootstrap();
         const interceptor: MashroomHttpProxyInterceptor = await bootstrap(plugin.name, config, contextHolder);
-        this.log.info(`Registering http proxy interceptor plugin: ${plugin.name}`);
-        this.registry.register(plugin.name, interceptor);
+        const order = config.order || DEFAULT_ORDER;
+        this.log.info(`Registering http proxy interceptor plugin: ${plugin.name} (with order: ${order})`);
+        this.registry.register(order, plugin.name, interceptor);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void>  {

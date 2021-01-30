@@ -13,14 +13,18 @@ export default class MashroomHttpProxyInterceptorRegistry implements MashroomHtt
         this._interceptors = [];
     }
 
-    register(pluginName: string, interceptor: MashroomHttpProxyInterceptor): void {
+    register(order: number, pluginName: string, interceptor: MashroomHttpProxyInterceptor): void {
         // Remove existing
         this.unregister(pluginName);
 
         this._interceptors.push({
+            order,
             pluginName,
             interceptor,
         });
+
+        // Sort
+        this._interceptors.sort((i1, i2) => i1.order - i2.order);
     }
 
     unregister(pluginName: string): void {
