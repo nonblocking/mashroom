@@ -7,7 +7,10 @@
             {
                 "name": "Test Http Proxy Interceptor",
                 "type": "http-proxy-interceptor",
-                "bootstrap": "./bootstrap.js"
+                "bootstrap": "./bootstrap.js",
+                "defaultConfig": {
+                    "order": 200
+                }
             }
         ]
     }
