@@ -6,7 +6,7 @@
  * LDAP Security Provider: Added an optional user to role mapping which is useful if you want to give just a
    specific user access to a Portal page and such.
  * Security: The *MashroomSecurityService.login()* method also returns now a reason if possible (e.g. Invalid credentials).
-   This works at the moment for the Simple Provider and the LDAP Provider with Active Directory.
+   This works at the moment for the Simple Provider and the LDAP Provider (Active Directory and OpenLDAP).
  * Portal: Fixed the client log handler (didn't terminate correctly)
 
 ## 1.6.3 (December 20, 2020)

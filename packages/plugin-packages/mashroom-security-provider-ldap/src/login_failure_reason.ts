@@ -22,6 +22,14 @@ export default (errorMessage: string | undefined | null): MashroomSecurityLoginF
         return;
     }
 
+    // OpenLDAP
+    // https://www.openldap.org/doc/admin24/appendix-common-errors.html
+    if (errorMessage === 'Invalid Credentials') {
+        return 'Invalid credentials';
+    }
+
+    // Active Directory
+    // https://ldapwiki.com/wiki/Common%20Active%20Directory%20Bind%20Errors
     const adMatch = errorMessage.match(AD_ERROR_MESSAGE_REGEX);
     if (adMatch) {
         const adErrorCode = adMatch[1];
