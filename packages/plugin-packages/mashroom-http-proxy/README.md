@@ -99,13 +99,16 @@ To register your custom http-proxy-interceptor plugin add this to _package.json_
                 "type": "http-proxy-interceptor",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                   "myProperty": "foo"
+                    "order": 500,
+                    "myProperty": "foo"
                 }
             }
         ]
     }
 }
 ```
+
+* _defaultConfig.order_: the weight of the middleware in the stack - the higher it is the **later** it will be executed (default: 1000)
 
 The bootstrap returns the interceptor:
 

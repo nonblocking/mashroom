@@ -19,13 +19,14 @@ export type PoolStats = {
 }
 
 export type MashroomHttpProxyInterceptorHolder = {
+    readonly order: number;
     readonly pluginName: string;
     readonly interceptor: MashroomHttpProxyInterceptor;
 }
 
 export interface MashroomHttpProxyInterceptorRegistry {
     readonly interceptors: Array<MashroomHttpProxyInterceptorHolder>;
-    register(pluginName: string, interceptor: MashroomHttpProxyInterceptor): void;
+    register(order: number, pluginName: string, interceptor: MashroomHttpProxyInterceptor): void;
     unregister(pluginName: string): void;
 }
 

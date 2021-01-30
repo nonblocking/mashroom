@@ -185,6 +185,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -203,6 +204,7 @@ describe('ProxyImplRequest', () => {
                 }
             },
             {
+                order: 1000,
                 pluginName: 'Interceptor 2',
                 interceptor: {
                     wantToIntercept() {
@@ -245,6 +247,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -287,6 +290,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -329,6 +333,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -369,6 +374,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -408,6 +414,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -452,6 +459,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {
@@ -501,6 +509,7 @@ describe('ProxyImplRequest', () => {
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
             {
+                order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     wantToIntercept() {

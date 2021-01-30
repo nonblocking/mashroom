@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Added an optional *order* property to interceptor configs that allows it to define the execution order
  * HTTP Proxy: Allow it to intercept/modify the response from the target service.
    **BREAKING CHANGE**: The *MashroomHttpProxyInterceptor* interface changed and is not compatible with the old one:
       * intercept() has been renamed to interceptRequest()
