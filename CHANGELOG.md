@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Security: The *MashroomSecurityService.login()* method also returns now a reason if possible (e.g. Invalid credentials).
+   This works at the moment for the Simple Provider and the LDAP Provider with Active Directory.
  * Portal: Fixed the client log handler (didn't terminate correctly)
 
 ## 1.6.3 (December 20, 2020)

@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
+import loginFailureReason from './login_failure_reason';
 
 import type {
     ExpressRequest,
@@ -92,13 +93,15 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             } else {
                 logger.warn(`Multiple users found for search query: ${userSearchFilter}`);
                 return {
-                    success: false
+                    success: false,
+                    failureReason: 'User not found'
                 };
             }
         } else {
             logger.warn(`No users found for search query: ${userSearchFilter}`);
             return {
-                success: false
+                success: false,
+                failureReason: 'User not found'
             };
         }
 
@@ -107,7 +110,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 await this.ldapClient.login(user, password);
             } catch (e) {
                 return {
-                    success: false
+                    success: false,
+                    failureReason: loginFailureReason(e.message),
+                    failureReasonDetails: e.message,
                 };
             }
 
@@ -163,7 +168,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         return {
-            success: false
+            success: false,
+            failureReason: 'User not found'
         };
     }
 

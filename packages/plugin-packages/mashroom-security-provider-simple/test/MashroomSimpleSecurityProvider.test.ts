@@ -90,6 +90,26 @@ describe('MashroomSimpleSecurityProvider', () => {
         });
     });
 
+    it('returns the correct failure reason if login fails', async () => {
+        const req: any = {
+            session: {
+            },
+            pluginContext: {
+                loggerFactory,
+            }
+        };
+
+        const userStorePath = path.resolve(__dirname, './test_users.json');
+
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggerFactory);
+
+        const result = await simpleSecurityProvider.login(req, 'john', 'john2');
+
+        expect(result).toBeTruthy();
+        expect(result.success).toBeFalsy();
+        expect(result.failureReason).toBe('Invalid credentials');
+    });
+
     it('revokes the authentication after given timeout', () => {
         const req: any = {
             session: {

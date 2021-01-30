@@ -271,7 +271,8 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
 
         return {
-            success: false
+            success: false,
+            failureReason: 'Login not supported'
         };
     }
 

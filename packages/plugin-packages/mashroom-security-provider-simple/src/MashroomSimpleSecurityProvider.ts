@@ -70,9 +70,10 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
         const passwordHash = createHash('sha256').update(password).digest('hex');
 
-        const user = this._getUserStore(logger).find((u: UserStoreEntry) => u.username === username && u.passwordHash === passwordHash);
+        const user = this._getUserStore(logger).find((u: UserStoreEntry) => u.username === username);
+        const passwordCorrect = user && user.passwordHash === passwordHash;
 
-        if (user) {
+        if (user && passwordCorrect) {
             const { displayName, email, pictureUrl, extraData, roles, secrets } = user;
             const mashroomUser: MashroomSecurityUser = {
                 username,
@@ -91,12 +92,13 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
             return {
                 success: true
-            }
+            };
         } else {
             logger.warn('User Authentication failed:', username);
             return {
-                success: false
-            }
+                success: false,
+                failureReason: user ? 'Invalid credentials' : 'User not found',
+            };
         }
     }
 
