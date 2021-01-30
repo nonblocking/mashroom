@@ -83,7 +83,7 @@ app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
             return;
         }
 
-        logger.warn(`Login of user ${username} failed. Reason:`, (result.failureReason || '-'), (result.failureReasonDetails || ''));
+        logger.warn(`Login of user ${username} failed. Reason:`, (result.failureReason || '-'), ', Details:', (result.failureReasonDetails || '-'));
 
         renderLoginPage(req, res, i18nService, lang, i18nService.getMessage('loginFailed', lang));
     } catch (e) {
