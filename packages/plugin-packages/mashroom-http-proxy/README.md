@@ -127,10 +127,6 @@ The provider has to implement the following interface:
 
 ```js
 interface MashroomHttpProxyInterceptor {
-    /**
-     * Return true if you want to intercept given request
-     */
-    wantToIntercept(targetUri: string, clientRequest: ExpressRequest): boolean;
 
     /**
      * Intercept request to given targetUri.
@@ -164,10 +160,6 @@ As an example you could add a Bearer token to each request like this:
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
-    wantToIntercept() {
-        return true;
-    }
-
     async interceptRequest(ttargetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
                          clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
@@ -195,10 +187,6 @@ Or return forbidden for some reason:
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
-    wantToIntercept() {
-        return true;
-    }
-
     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
                          clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
 
@@ -218,10 +206,6 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 Or even manipulate the response:
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
-
-    wantToIntercept() {
-        return true;
-    }
 
     async interceptRequest() {
         return null;

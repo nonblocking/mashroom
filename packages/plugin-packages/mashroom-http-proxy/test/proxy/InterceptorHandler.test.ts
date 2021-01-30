@@ -5,9 +5,6 @@ import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import type {MashroomHttpProxyInterceptor} from '../../type-definitions';
 
 const interceptor1: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return {
             rewrittenTargetUri: 'https://one.com',
@@ -30,9 +27,6 @@ const interceptor1: MashroomHttpProxyInterceptor = {
 }
 
 const interceptor2: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest(rewrittenTargetUri: string) {
         return {
             rewrittenTargetUri: `${rewrittenTargetUri  }/two`,
@@ -54,9 +48,6 @@ const interceptor2: MashroomHttpProxyInterceptor = {
 }
 
 const interceptor3: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return {
             removeHeaders: ['x'],
@@ -71,9 +62,6 @@ const interceptor3: MashroomHttpProxyInterceptor = {
 }
 
 const interceptor4: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return {
             responseHandled: true,
@@ -85,9 +73,6 @@ const interceptor4: MashroomHttpProxyInterceptor = {
 }
 
 const interceptor5: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return null;
     },
@@ -125,13 +110,6 @@ const pluginRegistry3: any = {
 };
 
 describe('InterceptorHandler', () => {
-
-    it('determines if any handler want to intercept', async () => {
-        const clientRequest: any = {
-        };
-        const handler = new InterceptorHandler(pluginRegistry1);
-        expect(handler.anyHandlersWantToIntercept(clientRequest, 'http://www.mashroom.com'));
-    });
 
     it('processes the request interceptors', async () => {
         const clientRequest: any = {

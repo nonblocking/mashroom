@@ -31,7 +31,6 @@ export interface MashroomHttpProxyInterceptorRegistry {
 }
 
 export interface InterceptorHandler {
-    anyHandlersWantToIntercept(clientRequest: ExpressRequest, targetUri: string): boolean;
     processRequest(clientRequest: ExpressRequest, clientResponse: ExpressResponse,
                    targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger):
         Promise<MashroomHttpProxyRequestInterceptorResult>;

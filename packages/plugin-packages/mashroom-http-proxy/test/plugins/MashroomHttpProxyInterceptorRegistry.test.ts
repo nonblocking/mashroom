@@ -3,9 +3,6 @@ import MashroomHttpProxyInterceptorRegistry from '../../src/plugins/MashroomHttp
 import {MashroomHttpProxyInterceptor} from '../../type-definitions';
 
 const interceptor1: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return null;
     },
@@ -15,9 +12,6 @@ const interceptor1: MashroomHttpProxyInterceptor = {
 }
 
 const interceptor2: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return null;
     },
@@ -27,9 +21,6 @@ const interceptor2: MashroomHttpProxyInterceptor = {
 }
 
 const interceptor3: MashroomHttpProxyInterceptor = {
-    wantToIntercept() {
-        return true;
-    },
     async interceptRequest() {
         return null;
     },

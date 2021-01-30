@@ -38,39 +38,36 @@ export default class ProxyImplRequest implements Proxy {
         let effectiveQueryParams = {
             ...req.query
         };
-        const anyInterceptors = this.interceptorHandler.anyHandlersWantToIntercept(req, uri);
-        if (anyInterceptors) {
-            // Process request interceptors
-            const interceptorResult = await this.interceptorHandler.processRequest(req, res, uri, additionalHeaders, logger);
-            if (interceptorResult.responseHandled) {
-                return Promise.resolve();
-            }
-            if (interceptorResult.rewrittenTargetUri) {
-                effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
-            }
-            if (interceptorResult.addHeaders) {
-                effectiveAdditionalHeaders = {
-                    ...effectiveAdditionalHeaders,
-                    ...interceptorResult.addHeaders,
-                };
-            }
-            if (interceptorResult.removeHeaders) {
-                interceptorResult.removeHeaders.forEach((headerKey) => {
-                    delete effectiveAdditionalHeaders[headerKey];
-                    delete req.headers[headerKey];
-                });
-            }
-            if (interceptorResult.addQueryParams) {
-                effectiveQueryParams = {
-                    ...effectiveQueryParams,
-                    ...interceptorResult.addQueryParams,
-                };
-            }
-            if (interceptorResult.removeQueryParams) {
-                interceptorResult.removeQueryParams.forEach((paramKey) => {
-                    delete effectiveQueryParams[paramKey];
-                });
-            }
+        // Process request interceptors
+        const interceptorResult = await this.interceptorHandler.processRequest(req, res, uri, additionalHeaders, logger);
+        if (interceptorResult.responseHandled) {
+            return Promise.resolve();
+        }
+        if (interceptorResult.rewrittenTargetUri) {
+            effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
+        }
+        if (interceptorResult.addHeaders) {
+            effectiveAdditionalHeaders = {
+                ...effectiveAdditionalHeaders,
+                ...interceptorResult.addHeaders,
+            };
+        }
+        if (interceptorResult.removeHeaders) {
+            interceptorResult.removeHeaders.forEach((headerKey) => {
+                delete effectiveAdditionalHeaders[headerKey];
+                delete req.headers[headerKey];
+            });
+        }
+        if (interceptorResult.addQueryParams) {
+            effectiveQueryParams = {
+                ...effectiveQueryParams,
+                ...interceptorResult.addQueryParams,
+            };
+        }
+        if (interceptorResult.removeQueryParams) {
+            interceptorResult.removeQueryParams.forEach((paramKey) => {
+                delete effectiveQueryParams[paramKey];
+            });
         }
 
         // Filter the forwarded headers from the incoming request
@@ -95,32 +92,27 @@ export default class ProxyImplRequest implements Proxy {
                     const endTime = process.hrtime(startTime);
                     logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
 
-                    if (anyInterceptors) {
-                        // Execute response interceptors
-                        // Pause the stream flow until the async op is finished
-                        targetResponse.pause();
-                        const interceptorResult = await this.interceptorHandler.processResponse(req, res, uri, targetResponse, logger);
-                        targetResponse.resume();
+                    // Execute response interceptors
+                    // Pause the stream flow until the async op is finished
+                    targetResponse.pause();
+                    const interceptorResult = await this.interceptorHandler.processResponse(req, res, uri, targetResponse, logger);
+                    targetResponse.resume();
 
-                        if (interceptorResult.responseHandled) {
-                            resolve();
-                            return;
-                        }
-                        // First filter the headers from the target response
-                        this.headerFilter.filter(targetResponse.headers);
-                        if (interceptorResult.addHeaders) {
-                            Object.keys(interceptorResult.addHeaders).forEach((headerKey) => {
-                                targetResponse.headers[headerKey] = interceptorResult.addHeaders?.[headerKey];
-                            });
-                        }
-                        if (interceptorResult.removeHeaders) {
-                            interceptorResult.removeHeaders.forEach((headerKey) => {
-                                delete targetResponse.headers[headerKey];
-                            });
-                        }
-                    } else {
-                        // Just filter the headers
-                        this.headerFilter.filter(targetResponse.headers);
+                    if (interceptorResult.responseHandled) {
+                        resolve();
+                        return;
+                    }
+                    // First filter the headers from the target response
+                    this.headerFilter.filter(targetResponse.headers);
+                    if (interceptorResult.addHeaders) {
+                        Object.keys(interceptorResult.addHeaders).forEach((headerKey) => {
+                            targetResponse.headers[headerKey] = interceptorResult.addHeaders?.[headerKey];
+                        });
+                    }
+                    if (interceptorResult.removeHeaders) {
+                        interceptorResult.removeHeaders.forEach((headerKey) => {
+                            delete targetResponse.headers[headerKey];
+                        });
                     }
 
                     // Send response

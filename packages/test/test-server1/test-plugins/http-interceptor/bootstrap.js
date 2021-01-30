@@ -1,10 +1,6 @@
 
 class TestInterceptor {
 
-    wantToIntercept() {
-        return true;
-    }
-
     async interceptRequest(targetUri, existingHeaders, existingQueryParams, clientRequest, clientResponse) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
         const securityService = clientRequest.pluginContext.services.security && clientRequest.pluginContext.services.security.service;

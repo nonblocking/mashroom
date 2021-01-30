@@ -188,9 +188,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return {
                             addHeaders: {
@@ -207,9 +204,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 2',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return {
                             addHeaders: {
@@ -250,9 +244,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return {
                             removeHeaders: ['another-header']
@@ -293,9 +284,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return {
                             addQueryParams: {
@@ -336,9 +324,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return {
                             removeQueryParams: ['foo']
@@ -377,9 +362,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return {
                             rewrittenTargetUri: 'https://www.mashroom-server.com/foo',
@@ -417,9 +399,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
                                      clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
                         clientResponse.sendStatus(403);
@@ -462,9 +441,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return null;
                     },
@@ -512,9 +488,6 @@ describe('ProxyImplRequest', () => {
                 order: 1000,
                 pluginName: 'Interceptor 1',
                 interceptor: {
-                    wantToIntercept() {
-                        return true;
-                    },
                     async interceptRequest() {
                         return null;
                     },

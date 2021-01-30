@@ -44,11 +44,6 @@ export type MashroomHttpProxyResponseInterceptorResult = {
 interface MashroomHttpProxyInterceptor {
 
     /**
-     * Return true if you want to intercept given request
-     */
-    wantToIntercept(targetUri: string, clientRequest: ExpressRequest): boolean;
-
-    /**
      * Intercept request to given targetUri.
      *
      * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
