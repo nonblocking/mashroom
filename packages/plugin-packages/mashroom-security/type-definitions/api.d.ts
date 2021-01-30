@@ -6,6 +6,16 @@ import type {
     MashroomPluginContextHolder
 } from '@mashroom/mashroom/type-definitions';
 
+export type MashroomSecurityLoginFailureReason =
+    | 'Login not supported'
+    | 'Login not permitted'
+    | 'User not found'
+    | 'Invalid credentials'
+    | 'Password expired'
+    | 'Account expired'
+    | 'Account disabled'
+    | 'Account locked';
+
 export type MashroomSecurityRoleDefinition = {
     id: string;
     description?: string;
@@ -45,6 +55,8 @@ export type MashroomSecurityResourcePermissions = Array<
 
 export type MashroomSecurityLoginResult = {
     readonly success: boolean;
+    readonly failureReason?: MashroomSecurityLoginFailureReason;
+    readonly failureReasonDetails?: string;
 };
 
 export type MashroomSecurityAuthenticationResult = {

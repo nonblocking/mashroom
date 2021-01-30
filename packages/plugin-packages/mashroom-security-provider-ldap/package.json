@@ -63,6 +63,7 @@
                     "extraDataMapping": null,
                     "secretsMapping": null,
                     "groupToRoleMapping": "./groupToRoleMapping.json",
+                    "userToRoleMapping": "./userToRoleMapping.json",
                     "authenticationTimeoutSec": 1200
                 }
             }

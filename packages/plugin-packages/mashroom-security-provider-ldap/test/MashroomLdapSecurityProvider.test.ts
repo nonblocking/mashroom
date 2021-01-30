@@ -18,7 +18,8 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null, '', ldapClient, '', 1800, loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
+            null, null, ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -38,7 +39,8 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const ldapClient: any = {};
-        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,'', ldapClient, '', 1800, loggerFactory);
+        const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
+            null , null, ldapClient, '', 1800, loggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res, {
             hint1: 'foo',
@@ -54,6 +56,7 @@ describe('MashroomLdapSecurityProvider', () => {
         const userSearchFilter = '(&(objectClass=person)(uid=@username@))';
         const groupSearchFilter = '(objectClass=group)';
         const groupToRoleMappingPath = path.resolve(__dirname, './groupToRoleMapping.json');
+        const userToRoleMappingPath = path.resolve(__dirname, './userToRoleMapping.json');
         const serverRootFolder = __dirname;
 
         const mockLogin = jest.fn((user, password) => {
@@ -102,7 +105,8 @@ describe('MashroomLdapSecurityProvider', () => {
         const secretsMapping = {
             'internalUserId': 'uid'
         };
-        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping, secretsMapping, groupToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping,
+            secretsMapping, groupToRoleMappingPath, userToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
 
         const result = await provider.login(req, 'user1', 'passwd');
 
@@ -123,7 +127,8 @@ describe('MashroomLdapSecurityProvider', () => {
             },
             roles: [
                 'ROLE1',
-                'ROLE2'
+                'ROLE2',
+                'ROLE5'
             ],
         });
     });
@@ -138,7 +143,8 @@ describe('MashroomLdapSecurityProvider', () => {
             }
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', '', '', null,  null,'', ldapClient, '', 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', null,  null,
+            null, null, ldapClient, '', 1800, loggerFactory);
 
         const user1 = provider.getUser(req);
         expect(user1).toBeTruthy();
@@ -158,7 +164,8 @@ describe('MashroomLdapSecurityProvider', () => {
             }
         };
 
-        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, null, '', ldapClient, '', 1800, loggerFactory);
+        const provider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
+            null, null, ldapClient, '', 1800, loggerFactory);
 
         const authExpiration = provider.getAuthenticationExpiration(req);
 

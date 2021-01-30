@@ -1,6 +1,6 @@
 
 import {ClientOptions, createClient} from 'ldapjs';
-import type {Client as LdapJsClient, SearchOptions} from 'ldapjs';
+import type {Client as LdapJsClient, SearchOptions, Error as LdapError} from 'ldapjs';
 
 import type {TlsOptions} from 'tls';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -97,10 +97,11 @@ export default class LdapClientImpl implements LdapClient {
             await this.bind(ldapEntry.dn, password, client);
             await this.disconnect(client);
         } catch (error) {
+            this.logger.warn(`Binding with user ${ldapEntry.dn} failed`, error);
             if (client) {
                 await this.disconnect(client);
             }
-            throw new Error(error);
+            throw error;
         }
     }
 
@@ -122,6 +123,7 @@ export default class LdapClientImpl implements LdapClient {
                 try {
                     await this.bind(this.bindDN, this.bindCredentials, searchClient);
                 } catch (error) {
+                    this.logger.error(`Binding with user ${this.bindDN} failed`, error);
                     await this.disconnect(searchClient);
                     this.searchClient = null;
                 }
@@ -166,14 +168,14 @@ export default class LdapClientImpl implements LdapClient {
                         resolved = true;
                     }
                 });
-                client.on('connectError', (error) => {
+                client.on('connectError', (error: LdapError | null) => {
                     this.logger.error('LDAP Connection error', error);
                     if (!resolved) {
                         reject(error);
                         resolved = true;
                     }
                 });
-                client.on('error', (error) => {
+                client.on('error', (error: LdapError | null) => {
                     this.logger.error('LDAP Error', error);
                     if (!resolved) {
                         reject(error);
@@ -191,9 +193,8 @@ export default class LdapClientImpl implements LdapClient {
 
     private async bind(user: string, password: string, ldapjsClient: LdapJsClient): Promise<void> {
         return new Promise((resolve, reject) => {
-            ldapjsClient.bind(user, password, (error) => {
+            ldapjsClient.bind(user, password, (error: LdapError | null) => {
                 if (error) {
-                    this.logger.error(`Binding with user ${user} failed`, error);
                     reject(error);
                 } else {
                     resolve();
