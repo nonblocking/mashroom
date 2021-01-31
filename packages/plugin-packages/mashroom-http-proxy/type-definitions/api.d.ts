@@ -54,7 +54,7 @@ interface MashroomHttpProxyInterceptor {
      * Return null or undefined if you don't want to interfere with a call.
      */
     interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                     clientRequest: Readonly<ExpressRequest>, clientResponse: ExpressResponse):
+                     clientRequest: ExpressRequest, clientResponse: ExpressResponse):
         Promise<MashroomHttpProxyRequestInterceptorResult | undefined | null>;
 
     /**
@@ -65,7 +65,8 @@ interface MashroomHttpProxyInterceptor {
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
-    interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: Readonly<IncomingMessage>, clientRequest: Readonly<ExpressRequest>, clientResponse: ExpressResponse):
+    interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage,
+                      clientRequest: ExpressRequest, clientResponse: ExpressResponse):
         Promise<MashroomHttpProxyResponseInterceptorResult | undefined | null>;
 }
 
