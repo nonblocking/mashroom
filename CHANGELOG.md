@@ -3,9 +3,11 @@
 
 ## [unreleased]
 
- * HTTP Proxy: Added an optional *order* property to interceptor configs that allows it to define the execution order
- * HTTP Proxy: Allow it to intercept/modify the response from the target service.
-   **BREAKING CHANGE**: The *MashroomHttpProxyInterceptor* interface changed and is not compatible with the old one:
+## 1.6.4 (February 1, 2021)
+
+ * HTTP Proxy: Added an optional *order* property to interceptor configs that allows it to determine the execution order
+ * HTTP Proxy: Allow it to intercept/modify the response from the target service
+   **BREAKING CHANGE**: The *MashroomHttpProxyInterceptor* interface changed and is not compatible with the previous one:
       * intercept() has been renamed to interceptRequest()
       * A new method interceptResponse() has been added
       * Instead of returning *result.reject* you can now call res.sendStatus() yourself and just return *result.responseHandled* as
@@ -14,7 +16,7 @@
  * LDAP Security Provider: Added an optional user to role mapping which is useful if you want to give just a
    specific user access to a Portal page and such.
  * Security: The *MashroomSecurityService.login()* method also returns now a reason if possible (e.g. Invalid credentials).
-   This works at the moment for the Simple Provider and the LDAP Provider (Active Directory and OpenLDAP).
+   This works at the moment for the Simple Provider and the LDAP Provider (only Active Directory and OpenLDAP).
  * Portal: Fixed the client log handler (didn't terminate correctly)
 
 ## 1.6.3 (December 20, 2020)
