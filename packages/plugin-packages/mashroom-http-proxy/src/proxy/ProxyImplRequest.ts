@@ -16,7 +16,7 @@ import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-defin
 export default class ProxyImplRequest implements Proxy {
 
     constructor(private socketTimeoutMs: number, private interceptorHandler: InterceptorHandler, private headerFilter: HttpHeaderFilter, loggerFactory: MashroomLoggerFactory) {
-        const logger = loggerFactory('mashroom.httpProxy');
+        const logger: MashroomLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this.socketTimeoutMs}ms`);
     }
@@ -90,7 +90,7 @@ export default class ProxyImplRequest implements Proxy {
             req.pipe(request(options)
                 .on('response', async (targetResponse) => {
                     const endTime = process.hrtime(startTime);
-                    logger.info(`Received from ${options.uri}: Status ${targetResponse.statusCode} in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
+                    logger.info(`Response headers received from ${options.uri} received in ${endTime[0]}s ${endTime[1] / 1000000}ms with status ${targetResponse.statusCode}`);
 
                     // Execute response interceptors
                     // Pause the stream flow until the async op is finished
@@ -123,6 +123,8 @@ export default class ProxyImplRequest implements Proxy {
                     targetResponse.pipe(
                         res
                             .on('finish', () => {
+                                const endTime = process.hrtime(startTime);
+                                logger.info(`Response from ${options.uri} sent to client in ${endTime[0]}s ${endTime[1] / 1000000}ms`);
                                 resolve();
                             })
                             .on('error', (error) => {
