@@ -14,15 +14,12 @@ const CSRF_QUERY_PARM_NAME = 'csrfToken';
 
 export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareType {
 
-    _safeMethods: Array<string>;
-
-    constructor(safeMethods: Array<string>) {
-        this._safeMethods = safeMethods;
+    constructor(private safeMethods: Array<string>) {
     }
 
     middleware(): ExpressMiddleware {
         return (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
-            if (this._safeMethods.find((m) => m === req.method)) {
+            if (this.safeMethods.find((m) => m === req.method)) {
                 next();
                 return;
             }

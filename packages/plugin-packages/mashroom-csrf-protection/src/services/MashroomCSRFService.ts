@@ -8,12 +8,7 @@ const CSRF_TOKEN_SESSION_KEY = '__MASHROOM_CSRF_TOKEN';
 
 export default class MashroomCSRFService implements MashroomCSRFServiceType {
 
-    _saltLength: number;
-    _secretLength: number;
-
-    constructor(saltLength: number, secretLength: number) {
-        this._saltLength = saltLength;
-        this._secretLength = secretLength;
+    constructor(private saltLength: number, private secretLength: number) {
     }
 
     getCSRFToken(request: ExpressRequest): string {
@@ -34,10 +29,10 @@ export default class MashroomCSRFService implements MashroomCSRFServiceType {
         return sessionToken === token;
     }
 
-    _createToken(): string {
+    private _createToken(): string {
         const csrf = new CSRF({
-            saltLength: this._saltLength,
-            secretLength: this._secretLength
+            saltLength: this.saltLength,
+            secretLength: this.secretLength
         });
         const secret = csrf.secretSync();
         return csrf.create(secret);
