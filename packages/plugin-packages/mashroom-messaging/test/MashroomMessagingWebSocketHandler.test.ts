@@ -1,6 +1,6 @@
-// @flow
 
 import MashroomMessagingWebSocketHandler from '../src/services/MashroomMessagingWebSocketHandler';
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import type {
@@ -21,8 +21,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
         publish: mockPublish
     };
 
-    let webSocketMessageHandler = null;
-    let webSocketDisconnectHandler = null;
+    let webSocketMessageHandler: any = null;
+    let webSocketDisconnectHandler: any = null;
     const mockSendMessage = jest.fn();
 
     const mockPluginContextHolder: any = {
@@ -31,15 +31,15 @@ describe('MashroomMessagingWebSocketHandler', () => {
             services: {
                 core: {
                     pluginService: {
-                        onLoadedOnce: () => {},
-                        onUnloadOnce: () => {}
+                        onLoadedOnce: () => { /* Nothing to do */ },
+                        onUnloadOnce: () => { /* Nothing to do */ }
                     }
                 },
                 websocket: {
                     service: {
                         sendMessage: mockSendMessage,
-                        addMessageListener: (matcher, handler) => webSocketMessageHandler = handler,
-                        addDisconnectListener: (handler) => webSocketDisconnectHandler = handler,
+                        addMessageListener: (matcher: any, handler: any) => webSocketMessageHandler = handler,
+                        addDisconnectListener: (handler: any) => webSocketDisconnectHandler = handler,
                     }
                 },
             }
@@ -143,7 +143,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
         webSocketHandler._clients.set(client, {
            subscriptions: [{
                topic: 'foo/xx',
-               callback: () => {},
+               callback: () => { /* Nothing to do */ },
            }]
         });
 
@@ -277,10 +277,10 @@ describe('MashroomMessagingWebSocketHandler', () => {
         webSocketHandler._clients.set(client, {
             subscriptions: [{
                 topic: 'foo/xx',
-                callback: () => {},
+                callback: () => { /* Nothing to do */ },
             }, {
                 topic: 'bar/2',
-                callback: () => {},
+                callback: () => { /* Nothing to do */ },
             }]
         });
 

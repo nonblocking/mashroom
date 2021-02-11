@@ -1,4 +1,3 @@
-// @flow
 
 import context from '../../context';
 import MashroomExternalMessagingProviderPluginLoader from './MashroomExternalMessagingProviderPluginLoader';

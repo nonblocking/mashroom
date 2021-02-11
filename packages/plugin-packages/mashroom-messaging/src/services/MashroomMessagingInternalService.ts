@@ -1,6 +1,7 @@
-// @flow
 
+// @ts-ignore
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
+// @ts-ignore
 import {topicMatcher, containsWildcard, startsWithWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
 import type {MashroomLogger, MashroomLoggerFactory, MashroomPluginService} from '@mashroom/mashroom/type-definitions';
@@ -25,43 +26,28 @@ type SubscriptionWrapper = {
 
 export default class MashroomMessagingInternalService implements MashroomMessagingInternalServiceType {
 
-    _externalMessagingProviderRegistry: MashroomExternalMessagingProviderRegistry;
-    _externalMessagingProviderName: ?string;
-    _externalTopics: Array<string>;
-    _userPrivateBaseTopic: string;
-    _enableWebSockets: boolean;
-    _aclChecker: MashroomMessageTopicACLChecker;
-    _pluginService: MashroomPluginService;
     _logger: MashroomLogger;
     _subscriptions: Array<SubscriptionWrapper>;
-    _currentProvider: ?MashroomMessagingExternalProvider;
+    _currentProvider: MashroomMessagingExternalProvider | undefined | null;
     _boundHandleMessage: MashroomExternalMessageListener;
     _started: boolean;
 
-    constructor(externalMessagingProviderName: ?string, externalMessagingProviderRegistry: MashroomExternalMessagingProviderRegistry,
-                externalTopics: Array<string>, userPrivateBaseTopic: string, enableWebSockets: boolean,
-                aclChecker: MashroomMessageTopicACLChecker, pluginService: MashroomPluginService, loggerFactory: MashroomLoggerFactory) {
-        this._externalMessagingProviderName = externalMessagingProviderName;
-        this._externalMessagingProviderRegistry = externalMessagingProviderRegistry;
-        this._externalTopics = externalTopics;
-        this._enableWebSockets = enableWebSockets;
-        this._aclChecker = aclChecker;
-        this._userPrivateBaseTopic = userPrivateBaseTopic;
-        this._pluginService = pluginService;
+    constructor(private externalMessagingProviderName: string | undefined | null, private externalMessagingProviderRegistry: MashroomExternalMessagingProviderRegistry,
+                private externalTopics: Array<string>, private userPrivateBaseTopic: string, private enableWebSockets: boolean,
+                private aclChecker: MashroomMessageTopicACLChecker, private pluginService: MashroomPluginService, loggerFactory: MashroomLoggerFactory) {
         this._subscriptions = [];
         this._currentProvider = null;
         this._boundHandleMessage = this._handleMessage.bind(this);
         this._started = false;
         this._logger = loggerFactory('mashroom.messaging.service');
-        if (!this._externalMessagingProviderName) {
+        if (!externalMessagingProviderName) {
             this._logger.warn('No external messaging provider configured. Server side messaging within clusters is not supported!');
         }
-
-        if (!this._isValidTopic(this._userPrivateBaseTopic, false)) {
-            throw new Error(`Invalid userPrivateBaseTopic: ${this._userPrivateBaseTopic}`);
+        if (!this._isValidTopic(this.userPrivateBaseTopic, false)) {
+            throw new Error(`Invalid userPrivateBaseTopic: ${this.userPrivateBaseTopic}`);
         }
-        for (let i = 0; i < this._externalTopics.length; i++) {
-            const externalTopic = this._externalTopics[i];
+        for (let i = 0; i < externalTopics.length; i++) {
+            const externalTopic = externalTopics[i];
             if (!this._isValidTopic(externalTopic, false)) {
                 throw new Error(`Invalid external topic: ${externalTopic}`);
             }
@@ -70,17 +56,17 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         this._lookupProvider();
     }
 
-    startListeners() {
+    startListeners(): void {
         this._addExternalMessagingListeners();
         this._started = true;
     }
 
-    stopListeners() {
+    stopListeners(): void {
         this._removeExternalMessagingListeners();
         this._started = false;
     }
 
-    async subscribe(user: MashroomSecurityUser, topic: string, callback: MashroomMessagingSubscriberCallback) {
+    async subscribe(user: MashroomSecurityUser, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void> {
         if (!this._isValidTopic(topic, true)) {
             throw new Error(`Invalid topic (must not start or end with /, must not start with a wildcard): ${topic}`);
         }
@@ -103,7 +89,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         });
     }
 
-    async unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback) {
+    async unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback):  Promise<void> {
         const existing = this._subscriptions.find((wrapper) => wrapper.topic === topic && wrapper.callback === callback);
         if (existing) {
             this._logger.debug(`User ${existing.user.username} unsubscribes from topic: ${existing.topic}`);
@@ -111,7 +97,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         }
     }
 
-    async publish(user: MashroomSecurityUser, topic: string, message: any) {
+    async publish(user: MashroomSecurityUser, topic: string, message: any):  Promise<void> {
         if (!this._isValidTopic(topic, false)) {
             throw new Error(`Invalid topic (must not start or end with /, no wildcards allowed): ${topic}`);
         }
@@ -141,12 +127,12 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         }
     }
 
-    getUserPrivateTopic(user: MashroomSecurityUser) {
+    getUserPrivateTopic(user: MashroomSecurityUser): string {
         const safeUserName = user.username.replace(/\+/, '');
-        return `${this._userPrivateBaseTopic}/${safeUserName}`;
+        return `${this.userPrivateBaseTopic}/${safeUserName}`;
     }
 
-    _handleMessage(topic: string, message: any) {
+    private _handleMessage(topic: string, message: any): void {
         this._logger.debug(`Received message for topic ${topic}:`, message);
 
         this._subscriptions.forEach((wrapper) => {
@@ -160,7 +146,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         });
     }
 
-    _isValidTopic(topic: string, allowWildcards: boolean) {
+    private _isValidTopic(topic: string, allowWildcards: boolean): boolean {
         if (!allowWildcards && containsWildcard(topic)) {
             this._logger.error(`Wildcards are not allowed`);
             return false;
@@ -181,8 +167,8 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         return true;
     }
 
-    _isTopicOfDifferentUser(topic: string, user: MashroomSecurityUser) {
-        if (topic.startsWith(`${this._userPrivateBaseTopic}/`) &&
+    private _isTopicOfDifferentUser(topic: string, user: MashroomSecurityUser): boolean {
+        if (topic.startsWith(`${this.userPrivateBaseTopic}/`) &&
             topic !== this.getUserPrivateTopic(user) && !topic.startsWith(`${this.getUserPrivateTopic(user)}/`)) {
             this._logger.error(`Not permitted to receive topics from different user. Topic: ${topic}. Authenticated user: ${user.username}`);
             return true;
@@ -190,62 +176,62 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         return false;
     }
 
-    _isTopicPermitted(topic: string, user: MashroomSecurityUser) {
-        if (!this._aclChecker.allowed(topic, user)) {
+    private _isTopicPermitted(topic: string, user: MashroomSecurityUser): boolean {
+        if (!this.aclChecker.allowed(topic, user)) {
             this._logger.error(`Topic not permitted for authenticated user ${user.username}: ${topic}`);
             return false;
         }
         return true;
     }
 
-    _isExternalTopic(topic: string) {
-        return this._externalTopics.some((et) => topic === et || topic.startsWith(`${et}/`));
+    private _isExternalTopic(topic: string): boolean {
+        return this.externalTopics.some((et) => topic === et || topic.startsWith(`${et}/`));
     }
 
-    _addExternalMessagingListeners() {
+    private _addExternalMessagingListeners(): void {
         const provider = this._currentProvider;
         if (provider) {
-            this._logger.info(`Using External Messaging Provider: ${this._externalMessagingProviderName || '<none>'}`);
+            this._logger.info(`Using External Messaging Provider: ${this.externalMessagingProviderName || '<none>'}`);
             provider.addMessageListener(this._boundHandleMessage);
         }
     }
 
-    _removeExternalMessagingListeners() {
+    private _removeExternalMessagingListeners(): void {
         const provider = this._currentProvider;
         if (provider) {
-            this._logger.info(`Disabling External Messaging Provider: ${this._externalMessagingProviderName || '<none>'}`);
+            this._logger.info(`Disabling External Messaging Provider: ${this.externalMessagingProviderName || '<none>'}`);
             provider.removeMessageListener(this._boundHandleMessage);
         }
     }
 
-    _onExternalProviderLoaded() {
-        const externalProviderName = this._externalMessagingProviderName;
+    private _onExternalProviderLoaded(): void {
+        const externalProviderName = this.externalMessagingProviderName;
         if (externalProviderName) {
-            this._currentProvider = this._externalMessagingProviderRegistry.findProvider(externalProviderName);
+            this._currentProvider = this.externalMessagingProviderRegistry.findProvider(externalProviderName);
             if (this._started) {
                 this._addExternalMessagingListeners();
             }
-            this._pluginService.onLoadedOnce(externalProviderName, () => this._onExternalProviderLoaded());
+            this.pluginService.onLoadedOnce(externalProviderName, () => this._onExternalProviderLoaded());
         }
     }
 
-    _onExternalProviderUnload() {
-        const externalProviderName = this._externalMessagingProviderName;
+    private _onExternalProviderUnload(): void {
+        const externalProviderName = this.externalMessagingProviderName;
         if (externalProviderName) {
             if (this._started) {
                 this._removeExternalMessagingListeners();
                 this._currentProvider = null;
             }
-            this._pluginService.onUnloadOnce(externalProviderName, () => this._onExternalProviderUnload());
+            this.pluginService.onUnloadOnce(externalProviderName, () => this._onExternalProviderUnload());
         }
     }
 
-    _lookupProvider() {
-        const externalProviderName = this._externalMessagingProviderName;
+    private _lookupProvider(): void {
+        const externalProviderName = this.externalMessagingProviderName;
         if (externalProviderName) {
-            this._currentProvider = this._externalMessagingProviderRegistry.findProvider(externalProviderName);
-            this._pluginService.onLoadedOnce(externalProviderName, () => this._onExternalProviderLoaded());
-            this._pluginService.onUnloadOnce(externalProviderName, () => this._onExternalProviderUnload());
+            this._currentProvider = this.externalMessagingProviderRegistry.findProvider(externalProviderName);
+            this.pluginService.onLoadedOnce(externalProviderName, () => this._onExternalProviderLoaded());
+            this.pluginService.onUnloadOnce(externalProviderName, () => this._onExternalProviderUnload());
         }
     }
 

@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomMessageTopicACLChecker from '../src/services/MashroomMessageTopicACLChecker';
 
@@ -16,7 +16,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role55']),
+            roles: ['Role55'],
             secrets: null,
             extraData: null,
         };
@@ -33,7 +33,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['GroupX', 'Role5']),
+            roles: ['GroupX', 'Role5'],
             secrets: null,
             extraData: null,
         };
@@ -50,7 +50,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role1', 'Role5']),
+            roles: ['Role1', 'Role5'],
             secrets: null,
             extraData: null,
         };
@@ -67,7 +67,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role1', 'Role6']),
+            roles: ['Role1', 'Role6'],
             secrets: null,
             extraData: null,
         };
@@ -84,7 +84,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role1', 'Role5']),
+            roles: ['Role1', 'Role5'],
             secrets: null,
             extraData: null,
         };
@@ -101,7 +101,7 @@ describe('MashroomMessageTopicACLChecker', () => {
             displayName: 'Test',
             email: null,
             pictureUrl: null,
-            roles: Object.freeze(['Role55']),
+            roles: ['Role55'],
             secrets: null,
             extraData: null,
         };

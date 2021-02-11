@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     MashroomPluginContextHolder,
@@ -6,7 +5,10 @@ import type {
     ExpressRequest,
 } from '@mashroom/mashroom/type-definitions';
 
-export type MashroomMessagingSubscriberCallback = (data: any, topic: string) => void;
+export type MashroomMessagingSubscriberCallback = (
+    data: any,
+    topic: string,
+) => void;
 
 export type MashroomMessagingWebSocketSubscribeRequest = {
     messageId: string,
@@ -55,17 +57,27 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    subscribe(req: ExpressRequest, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+    subscribe(
+        req: ExpressRequest,
+        topic: string,
+        callback: MashroomMessagingSubscriberCallback,
+    ): Promise<void>;
+
     /**
      * Unsubscribe from topic
      */
-    unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+    unsubscribe(
+        topic: string,
+        callback: MashroomMessagingSubscriberCallback,
+    ): Promise<void>;
+
     /**
      * Publish to a specific topic
      *
      * Throws an exception if there is no authenticated user
      */
     publish(req: ExpressRequest, topic: string, data: any): Promise<void>;
+
     /**
      * The private topic only the current user can access.
      * E.g. if the value is user/john the user john can access to user/john/whatever
@@ -74,14 +86,18 @@ export interface MashroomMessagingService {
      * Throws an exception if there is no authenticated user
      */
     getUserPrivateTopic(req: ExpressRequest): string;
+
     /**
      * The connect path to send publish or subscribe via WebSocket.
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
      */
-    getWebSocketConnectPath(req: ExpressRequest): ?string;
+    getWebSocketConnectPath(req: ExpressRequest): string | null | undefined;
 }
 
-export type MashroomExternalMessageListener = (topic: string, message: any) => void;
+export type MashroomExternalMessageListener = (
+    topic: string,
+    message: any,
+) => void;
 
 /**
  * External messaging provider plugin.
@@ -97,10 +113,12 @@ export interface MashroomMessagingExternalProvider {
      * The message must be a JSON object.
      */
     addMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Remove an existing listener
      */
     removeMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Send a message to given external topic.
      * The passed topic must be prefixed with the topic the provider is listening to.
@@ -110,6 +128,7 @@ export interface MashroomMessagingExternalProvider {
      * The message will be a JSON object.
      */
     sendInternalMessage(topic: string, message: any): Promise<void>;
+
     /**
      * Send a message to given external topic.
      * The message will be a JSON object.
@@ -120,5 +139,8 @@ export interface MashroomMessagingExternalProvider {
 /*
  * Bootstrap method definition for messaging-provider plugins
  */
-export type MashroomExternalMessagingProviderPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomMessagingExternalProvider>;
-
+export type MashroomExternalMessagingProviderPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder,
+) => Promise<MashroomMessagingExternalProvider>;

@@ -16,8 +16,6 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 And you can use the messaging service like this:
 
 ```js
-// @flow
-
 import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
 
 export default async (req: ExpressRequest, res: ExpressResponse) => {
@@ -235,8 +233,6 @@ To register your custom external-messaging-provider plugin add this to _package.
 The bootstrap returns the provider:
 
 ```js
-// @flow
-
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
 
 const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {

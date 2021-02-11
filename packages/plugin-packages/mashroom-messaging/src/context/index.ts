@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomMessagingExternalProviderRegistry from '../plugins/MashroomMessagingExternalProviderRegistry';
 

@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     MashroomSecurityRoles,
@@ -20,16 +19,16 @@ export interface MashroomMessagingInternalService {
 }
 
 export type MashroomMessagingTopicACLRulePermission = {
-    +allow?: MashroomSecurityRoles,
-    +deny?: MashroomSecurityRoles
+    readonly allow?: MashroomSecurityRoles,
+    readonly deny?: MashroomSecurityRoles
 }
 
 export type MashroomMessagingACLTopicRules = {
-    +[topicPattern: string]: MashroomMessagingTopicACLRulePermission
+    readonly [topicPattern: string]: MashroomMessagingTopicACLRulePermission
 }
 
 export interface MashroomMessageTopicACLChecker {
-    allowed(topic: string, user: ?MashroomSecurityUser): boolean;
+    allowed(topic: string, user: MashroomSecurityUser | undefined | null): boolean;
 }
 
 export interface MashroomMessagingWebSocketHandler {
@@ -38,8 +37,8 @@ export interface MashroomMessagingWebSocketHandler {
 }
 
 export interface MashroomExternalMessagingProviderRegistry {
-    +providers: Array<MashroomMessagingExternalProvider>;
-    findProvider(pluginName: string): ?MashroomMessagingExternalProvider;
+    readonly providers: Readonly<Array<MashroomMessagingExternalProvider>>;
+    findProvider(pluginName: string): MashroomMessagingExternalProvider | undefined | null;
     register(pluginName: string, provider: MashroomMessagingExternalProvider): void;
     unregister(pluginName: string): void;
 }

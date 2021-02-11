@@ -1,7 +1,7 @@
-// @flow
 
 import fs from 'fs';
 import path from 'path';
+// @ts-ignore
 import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -12,15 +12,15 @@ import type {
 
 type Rules = Array<{
     topic: string,
-    allow: ?MashroomSecurityRoles | string,
-    deny: ?MashroomSecurityRoles | string
+    allow: MashroomSecurityRoles | string | undefined | null,
+    deny: MashroomSecurityRoles | string | undefined | null
 }>;
 
 export default class MashroomMessageTopicACLChecker implements MashroomMessageTopicACLCheckerType {
 
     _aclPath: string;
     _logger: MashroomLogger;
-    _rules: ?Rules;
+    _rules: Rules | undefined | null;
 
     constructor(aclPath: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._aclPath = aclPath;
@@ -31,19 +31,19 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
         this._logger.info(`Configured Topic ACL definition: ${this._aclPath}`);
     }
 
-    allowed(topic: string, user: ?MashroomSecurityUser) {
-        const rules = this._getRuleList();
+    allowed(topic: string, user: MashroomSecurityUser | null | undefined): boolean {
+        const rules = this.getRuleList();
         const matchingRule = rules.find((r) => topicMatcher(r.topic, topic));
         if (matchingRule) {
-            const allowMatch = this._checkRulesMatch(user, matchingRule.allow);
-            const denyMatch = this._checkRulesMatch(user, matchingRule.deny);
+            const allowMatch = this.checkRulesMatch(user, matchingRule.allow);
+            const denyMatch = this.checkRulesMatch(user, matchingRule.deny);
             return allowMatch && !denyMatch;
         }
 
         return true;
     }
 
-    _checkRulesMatch(user: ?MashroomSecurityUser, rules: ?MashroomSecurityRoles | string): boolean {
+    private checkRulesMatch(user:  MashroomSecurityUser | null | undefined, rules: MashroomSecurityRoles | string | undefined | null): boolean {
         if (!rules) {
             return false;
         }
@@ -57,13 +57,14 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
         return false;
     }
 
-    _getRuleList(): Rules {
+    private getRuleList(): Rules {
         if (this._rules) {
             return this._rules;
         }
 
         if (fs.existsSync(this._aclPath)) {
             const rules: Rules = [];
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const aclData: MashroomMessagingACLTopicRules = require(this._aclPath);
             for (const topic in aclData) {
                 if (aclData.hasOwnProperty(topic)) {

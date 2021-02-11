@@ -21,7 +21,7 @@ export type MashroomWebSocketClient = {
     readonly loggerContext: {};
     readonly clientId: string;
     alive: boolean;
-    reconnecting?: TimeoutID;
+    reconnecting?: ReturnType<typeof setTimeout>;
 };
 
 /**

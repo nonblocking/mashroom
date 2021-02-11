@@ -1,8 +1,11 @@
-// @flow
 
 import {WEBSOCKET_CONNECT_PATH} from './constants';
 
-import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
+import type {
+    MashroomLogger,
+    MashroomPluginContextHolder,
+    MashroomPluginService
+} from '@mashroom/mashroom/type-definitions';
 import type {MashroomWebSocketClient, MashroomWebSocketService} from '@mashroom/mashroom-websocket/type-definitions';
 import type {
     MashroomMessagingSubscriberCallback,
@@ -30,18 +33,14 @@ type ClientMap = Map<MashroomWebSocketClient, {
 
 export default class MashroomMessagingWebSocketHandler implements MashroomMessagingWebSocketHandlerType {
 
-    _messagingService: MashroomMessagingInternalService;
-    _pluginContextHolder: MashroomPluginContextHolder;
-    _webSocketService: ?MashroomWebSocketService;
+    _webSocketService: MashroomWebSocketService | null;
     _clients: ClientMap;
     _logger: MashroomLogger;
     _started: boolean;
     _boundMessageHandler: (message: any, client: MashroomWebSocketClient) => void;
     _boundDisconnectHandler: (client: MashroomWebSocketClient) => void;
 
-    constructor(messagingService: MashroomMessagingInternalService, pluginContextHolder: MashroomPluginContextHolder) {
-        this._messagingService = messagingService;
-        this._pluginContextHolder = pluginContextHolder;
+    constructor(private messagingService: MashroomMessagingInternalService, private pluginContextHolder: MashroomPluginContextHolder) {
         this._webSocketService = null;
         this._clients = new Map();
         this._logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.messaging.service.websocket');
@@ -52,17 +51,17 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         this._lookupWebSocketService();
     }
 
-    startListeners() {
+    startListeners(): void {
         this._addWebSocketListeners();
         this._started = true;
     }
 
-    stopListeners() {
+    stopListeners(): void {
         this._removeWebSocketListeners();
         this._started = false;
     }
 
-    _handleMessage(message: any, client: MashroomWebSocketClient) {
+    private _handleMessage(message: any, client: MashroomWebSocketClient): void {
         const contextLogger = this._logger.withContext(client.loggerContext);
 
         if (!this._clients.get(client)) {
@@ -87,7 +86,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
     }
 
-    _processSubscribe(request: MashroomMessagingWebSocketSubscribeRequest, client: MashroomWebSocketClient) {
+    private _processSubscribe(request: MashroomMessagingWebSocketSubscribeRequest, client: MashroomWebSocketClient): void {
         const contextLogger = this._logger.withContext(client.loggerContext);
 
         const clientData = this._clients.get(client);
@@ -105,7 +104,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             contextLogger.debug(`Sending message for topic ${topic} via WebSocket to user ${client.user.username}`, data);
             this._sendMessage(topic, data, client);
         };
-        this._messagingService.subscribe(client.user, request.topic, callback).then(
+        this.messagingService.subscribe(client.user, request.topic, callback).then(
             () => {
                 clientData.subscriptions.push({
                     topic: request.topic,
@@ -120,7 +119,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         );
     }
 
-    _processUnsubscribe(request: MashroomMessagingWebSocketUnsubscribeRequest, client: MashroomWebSocketClient) {
+    private _processUnsubscribe(request: MashroomMessagingWebSocketUnsubscribeRequest, client: MashroomWebSocketClient): void {
         const contextLogger = this._logger.withContext(client.loggerContext);
 
         const clientData = this._clients.get(client);
@@ -135,7 +134,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             return;
         }
 
-        this._messagingService.unsubscribe(existingSubscription.topic, existingSubscription.callback).then(
+        this.messagingService.unsubscribe(existingSubscription.topic, existingSubscription.callback).then(
             () => {
                 clientData.subscriptions = clientData.subscriptions.filter((s) => s !== existingSubscription);
                 this._sendSuccessResponse(request.messageId, client);
@@ -147,10 +146,10 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         );
     }
 
-    _processPublish(request: MashroomMessagingWebSocketPublishRequest, client: MashroomWebSocketClient) {
+    private _processPublish(request: MashroomMessagingWebSocketPublishRequest, client: MashroomWebSocketClient): void {
         const contextLogger = this._logger.withContext(client.loggerContext);
 
-        this._messagingService.publish(client.user, request.topic, request.message).then(
+        this.messagingService.publish(client.user, request.topic, request.message).then(
             () => {
                 this._sendSuccessResponse(request.messageId, client);
             },
@@ -161,7 +160,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         )
     }
 
-    _sendMessage(topic: string, message: any, client: MashroomWebSocketClient) {
+    private _sendMessage(topic: string, message: any, client: MashroomWebSocketClient): void {
         if (this._webSocketService) {
             const response: MashroomMessagingWebSocketPublishMessage = {
                 remoteMessage: true,
@@ -169,7 +168,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
                 message,
             };
             this._webSocketService.sendMessage(client, response).then(
-                () => {},
+                () => { /* nothing to do */ },
                 (error) => {
                     this._logger.error('Sending message failed', error);
                 }
@@ -177,7 +176,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
     }
 
-    _sendSuccessResponse(messageId: string, client: MashroomWebSocketClient) {
+    private _sendSuccessResponse(messageId: string, client: MashroomWebSocketClient): void {
         const webSocketService = this._webSocketService;
         if (webSocketService) {
             const contextLogger = this._logger.withContext(client.loggerContext);
@@ -188,7 +187,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             };
             contextLogger.debug('Sending success message', response);
             webSocketService.sendMessage(client, response).then(
-                () => {},
+                () => { /* nothing to do */ },
                 (error) => {
                     this._logger.error('Sending success message failed', error);
                 }
@@ -196,7 +195,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
     }
 
-    _sendErrorResponse(messageId: string, message: string, client: MashroomWebSocketClient) {
+    private _sendErrorResponse(messageId: string, message: string, client: MashroomWebSocketClient): void {
         const webSocketService = this._webSocketService;
         if (webSocketService) {
             const contextLogger = this._logger.withContext(client.loggerContext);
@@ -208,7 +207,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             };
             contextLogger.debug('Sending error message', response);
             webSocketService.sendMessage(client, response).then(
-                () => {},
+                () => { /* nothing to do */ },
                 (error) => {
                     this._logger.error('Sending error message failed', error);
                 }
@@ -216,17 +215,17 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
     }
 
-    _handleDisconnect(client: MashroomWebSocketClient) {
+    private _handleDisconnect(client: MashroomWebSocketClient): void {
         const clientData = this._clients.get(client);
         if (clientData) {
             this._logger.debug(`Removing WebSocket client from user: ${client.user.username}. Subscriptions: `,
                 clientData.subscriptions.map((s) => s.topic).join(', '));
-            clientData.subscriptions.forEach((s) => this._messagingService.unsubscribe(s.topic, s.callback));
+            clientData.subscriptions.forEach((s) => this.messagingService.unsubscribe(s.topic, s.callback));
             this._clients.delete(client);
         }
     }
 
-    _addWebSocketListeners() {
+    private _addWebSocketListeners(): void {
         const webSocketService = this._webSocketService;
         if (webSocketService) {
             this._logger.info('Activating WebSocket support');
@@ -237,7 +236,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
     }
 
-    _removeWebSocketListeners() {
+    private _removeWebSocketListeners(): void {
         const webSocketService = this._webSocketService;
         if (webSocketService && this._started) {
             this._logger.info('Deactivating WebSocket support');
@@ -249,15 +248,15 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
     }
 
-    _onWebSocketProviderLoad() {
-        this._webSocketService = this._pluginContextHolder.getPluginContext().services.websocket.service;
+    private _onWebSocketProviderLoad(): void {
+        this._webSocketService = this.pluginContextHolder.getPluginContext().services.websocket.service;
         if (this._started) {
             this._addWebSocketListeners();
         }
         this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderLoad());
     }
 
-    _onWebSocketProviderUnload() {
+    private _onWebSocketProviderUnload(): void {
         if (this._started) {
             this._removeWebSocketListeners();
             this._webSocketService = null;
@@ -265,8 +264,8 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderUnload());
     }
 
-    _lookupWebSocketService() {
-        if (this._pluginContextHolder.getPluginContext().services.websocket) {
+    private _lookupWebSocketService(): void {
+        if (this.pluginContextHolder.getPluginContext().services.websocket) {
             this._onWebSocketProviderLoad();
         } else {
             this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderLoad());
@@ -274,7 +273,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderUnload());
     }
 
-    _getPluginService() {
-        return this._pluginContextHolder.getPluginContext().services.core.pluginService;
+    private _getPluginService(): MashroomPluginService {
+        return this.pluginContextHolder.getPluginContext().services.core.pluginService;
     }
 }

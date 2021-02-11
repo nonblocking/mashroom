@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     MashroomPluginLoader,
@@ -18,31 +17,29 @@ import type {
 
 export default class MashroomExternalMessagingProviderPluginLoader implements MashroomPluginLoader {
 
-    _registry: MashroomExternalMessagingProviderRegistry;
-    _log: MashroomLogger;
+    _logger: MashroomLogger;
 
-    constructor(registry: MashroomExternalMessagingProviderRegistry, loggerFactory: MashroomLoggerFactory) {
-        this._registry = registry;
-        this._log = loggerFactory('mashroom.messaging.plugin.loader');
+    constructor(private registry: MashroomExternalMessagingProviderRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.messaging.plugin.loader');
     }
 
     get name(): string {
         return 'Messaging External Provider Plugin Loader';
     }
 
-    generateMinimumConfig() {
+    generateMinimumConfig(): MashroomPluginConfig {
         return {};
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = plugin.requireBootstrap();
         const provider: MashroomMessagingExternalProvider = await bootstrap(plugin.name, config, contextHolder);
-        this._log.info(`Registering external messaging provider plugin: ${plugin.name}`);
-        this._registry.register(plugin.name, provider);
+        this._logger.info(`Registering external messaging provider plugin: ${plugin.name}`);
+        this.registry.register(plugin.name, provider);
     }
 
-    async unload(plugin: MashroomPlugin) {
-        this._log.info(`Unregistering external messaging provider plugin: ${plugin.name}`);
-        this._registry.unregister(plugin.name);
+    async unload(plugin: MashroomPlugin): Promise<void> {
+        this._logger.info(`Unregistering external messaging provider plugin: ${plugin.name}`);
+        this.registry.unregister(plugin.name);
     }
 }

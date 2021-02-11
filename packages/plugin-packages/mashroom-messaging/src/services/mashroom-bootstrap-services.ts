@@ -1,4 +1,3 @@
-// @flow
 
 import context from '../context';
 import MashroomMessagingInternalService from './MashroomMessagingInternalService';

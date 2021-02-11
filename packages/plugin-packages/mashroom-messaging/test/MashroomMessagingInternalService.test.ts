@@ -1,11 +1,11 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomMessagingInternalService from '../src/services/MashroomMessagingInternalService';
 
 describe('MashroomMessagingInternalService', () => {
 
-    let onExternalMessageHandler = null;
+    let onExternalMessageHandler: any = null;
     const sendExternalMessageMock = jest.fn();
     const sendInternalMessageMock = jest.fn();
     const mockMessagingProvider: any = {
@@ -28,8 +28,8 @@ describe('MashroomMessagingInternalService', () => {
         allowed: aclAllowedMock,
     };
     const mockPluginService: any = {
-        onLoadedOnce: () => {},
-        onUnloadOnce: () => {},
+        onLoadedOnce: () => { /* Nothing to do */ },
+        onUnloadOnce: () => { /* Nothing to do */ },
     };
 
     beforeEach(() => {
@@ -44,6 +44,7 @@ describe('MashroomMessagingInternalService', () => {
 
         const user: any = {};
         const dummyHandler = () => {
+            // Nothing to do
         };
 
         await expect(service.subscribe(user, '#', dummyHandler)).rejects.toThrow('Invalid topic (must not start or end with /, must not start with a wildcard): #');
@@ -67,6 +68,7 @@ describe('MashroomMessagingInternalService', () => {
 
         const user: any = {};
         const dummyHandler = () => {
+            // Nothing to do
         };
 
         await expect(service.subscribe(user, '/test', dummyHandler)).rejects.toThrow('Invalid topic (must not start or end with /, must not start with a wildcard): /test');
@@ -84,6 +86,7 @@ describe('MashroomMessagingInternalService', () => {
 
         const user: any = {};
         const dummyHandler = () => {
+            // Nothing to do
         };
 
         await expect(service.subscribe(user, 'external/1', dummyHandler)).rejects.toThrow('It is not permitted to subscribe to external topics');
@@ -164,7 +167,7 @@ describe('MashroomMessagingInternalService', () => {
         const service = new MashroomMessagingInternalService(null, mockRegistry,
             [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
 
-        await expect(service.subscribe(user1, 'user/maria/notification', () => {})).rejects.toThrow('User is not permitted to subscribe to user/maria/notification');
+        await expect(service.subscribe(user1, 'user/maria/notification', () => {  /* Nothing to do */ })).rejects.toThrow('User is not permitted to subscribe to user/maria/notification');
     });
 
     it('does not forward messages for other users even if one managed to subscribe', (done) => {
@@ -202,7 +205,7 @@ describe('MashroomMessagingInternalService', () => {
         const service = new MashroomMessagingInternalService(null, mockRegistry,
             [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
 
-        await expect(service.subscribe(user1, 'protected/topic', () => {})).rejects.toThrow('User is not permitted to subscribe to protected/topic');
+        await expect(service.subscribe(user1, 'protected/topic', () => { /* Nothing to do */ })).rejects.toThrow('User is not permitted to subscribe to protected/topic');
     });
 
     it('does not forward messages protected by the ACL even if a user managed to subscribe', (done) => {

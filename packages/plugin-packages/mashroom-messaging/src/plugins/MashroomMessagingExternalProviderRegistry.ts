@@ -1,4 +1,3 @@
-// @flow
 
 import type {
     MashroomMessagingExternalProvider,
@@ -8,8 +7,8 @@ import type {
 } from '../../type-definitions/internal';
 
 type MashroomExternalMessagingProviderHolder = {
-    +pluginName: string,
-    +provider: MashroomMessagingExternalProvider
+    readonly pluginName: string,
+    readonly provider: MashroomMessagingExternalProvider
 }
 
 export default class MashroomMessagingExternalProviderRegistry implements MashroomExternalMessagingProviderRegistryType {
@@ -20,7 +19,7 @@ export default class MashroomMessagingExternalProviderRegistry implements Mashro
         this._providers = [];
     }
 
-    findProvider(pluginName: string) {
+    findProvider(pluginName: string): MashroomMessagingExternalProvider | undefined | null {
         const holder = this._providers.find((p) => p.pluginName === pluginName);
         if (holder) {
             return holder.provider;
@@ -28,7 +27,7 @@ export default class MashroomMessagingExternalProviderRegistry implements Mashro
         return null;
     }
 
-    register(pluginName: string, provider: MashroomMessagingExternalProvider) {
+    register(pluginName: string, provider: MashroomMessagingExternalProvider): void {
         // Remove existing
         this.unregister(pluginName);
 
@@ -38,11 +37,11 @@ export default class MashroomMessagingExternalProviderRegistry implements Mashro
         });
     }
 
-    unregister(pluginName: string) {
+    unregister(pluginName: string): void {
         this._providers = this._providers.filter((p) => p.pluginName !== pluginName);
     }
 
-    get providers(): Array<MashroomMessagingExternalProvider> {
+    get providers(): Readonly<Array<MashroomMessagingExternalProvider>> {
         return Object.freeze(this._providers.map((p) => p.provider));
     }
 

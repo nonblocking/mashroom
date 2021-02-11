@@ -19,16 +19,13 @@ const privatePropsMap: WeakMap<MashroomMessagingService, {
 
 export default class MashroomMessagingService implements MashroomMessagingServiceType {
 
-    _enableWebSockets: boolean;
-
-    constructor(internalService: MashroomMessagingInternalService, enableWebSockets: boolean) {
-        this._enableWebSockets = enableWebSockets;
+    constructor(internalService: MashroomMessagingInternalService, private enableWebSockets: boolean) {
         privatePropsMap.set(this, {
             internalService,
         });
     }
 
-    async subscribe(req: ExpressRequest, topic: string, callback: MashroomMessagingSubscriberCallback) {
+    async subscribe(req: ExpressRequest, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void> {
         const user = this._getUser(req);
         if (!user) {
             throw new Error('Messaging can only be used by authenticated users!');
@@ -39,14 +36,14 @@ export default class MashroomMessagingService implements MashroomMessagingServic
         }
     }
 
-    async unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback) {
+    async unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void> {
         const privateProps = privatePropsMap.get(this);
         if (privateProps) {
             return privateProps.internalService.unsubscribe(topic, callback);
         }
     }
 
-    async publish(req: ExpressRequest, topic: string, data: any) {
+    async publish(req: ExpressRequest, topic: string, data: any): Promise<void> {
         const user = this._getUser(req);
         if (!user) {
             throw new Error('Messaging can only be used by authenticated users!');
@@ -57,7 +54,7 @@ export default class MashroomMessagingService implements MashroomMessagingServic
         }
     }
 
-    getUserPrivateTopic(req: ExpressRequest) {
+    getUserPrivateTopic(req: ExpressRequest): string {
         const user = this._getUser(req);
         if (!user) {
             throw new Error('Messaging can only be used by authenticated users!');
@@ -69,8 +66,8 @@ export default class MashroomMessagingService implements MashroomMessagingServic
         return '';
     }
 
-    getWebSocketConnectPath(req: ExpressRequest) {
-        if (!this._enableWebSockets) {
+    getWebSocketConnectPath(req: ExpressRequest): string | null | undefined {
+        if (!this.enableWebSockets) {
             return null;
         }
 
@@ -82,7 +79,7 @@ export default class MashroomMessagingService implements MashroomMessagingServic
         return `${webSocketService.basePath}${WEBSOCKET_CONNECT_PATH}`;
     }
 
-    _getUser(req: ExpressRequest): ?MashroomSecurityUser {
+    private _getUser(req: ExpressRequest): MashroomSecurityUser | undefined | null {
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
         return securityService.getUser(req);
     }
