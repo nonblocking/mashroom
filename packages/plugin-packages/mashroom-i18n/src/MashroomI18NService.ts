@@ -1,4 +1,3 @@
-// @flow
 
 import fs from 'fs';
 import path from 'path';
@@ -6,7 +5,7 @@ import acceptLanguageParser from 'accept-language-parser';
 
 const BUILT_IN_MESSAGES_FOLDER = path.resolve(__dirname, '../messages');
 
-const MESSAGES_EXISTS_CACHE = {};
+const MESSAGES_EXISTS_CACHE: Record<string, boolean> = {};
 
 import type {
     MashroomLogger,
@@ -23,7 +22,8 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
     _messagesFolder: string;
     _logger: MashroomLogger;
 
-    constructor(availableLanguages: Array<string>, defaultLanguage: string, messagesFolder: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
+    constructor(availableLanguages: Array<string>, defaultLanguage: string, messagesFolder: string,
+                serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._availableLanguages = availableLanguages;
         this._defaultLanguage = defaultLanguage;
         this._messagesFolder = messagesFolder;
@@ -36,7 +36,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         this._logger.info(`Looking for messages in: ${this._messagesFolder}`);
     }
 
-    getLanguage(req: ExpressRequest) {
+    getLanguage(req: ExpressRequest): string {
         let language = req.session.lang;
         if (!language) {
             language = this._detectBrowserLanguage(req);
@@ -45,11 +45,11 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return language;
     }
 
-    setLanguage(language: string, req: ExpressRequest) {
+    setLanguage(language: string, req: ExpressRequest): void {
         req.session.lang = language;
     }
 
-    getMessage(key: string, language: string) {
+    getMessage(key: string, language: string): string {
         const messagesPaths = [
             path.resolve(this._messagesFolder, `messages.${language}.json`),
             path.resolve(BUILT_IN_MESSAGES_FOLDER, `messages.${language}.json`),
@@ -61,6 +61,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
 
         for (const messagesPath of existingMessagesPaths) {
             try {
+                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 const messages = require(messagesPath);
                 const message = messages[key];
                 if (message) {
@@ -75,7 +76,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return key;
     }
 
-    translate(req: ExpressRequest, str: I18NString) {
+    translate(req: ExpressRequest, str: I18NString): string {
         if (!str || typeof(str) === 'string') {
             return str;
         }
@@ -99,28 +100,27 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return '???';
     }
 
-    get availableLanguages(): Array<string> {
+    get availableLanguages(): Readonly<Array<string>> {
         return Object.freeze(this._availableLanguages.slice(0));
     }
 
-    get defaultLanguage() {
+    get defaultLanguage(): string {
         return this._defaultLanguage;
     }
 
-    _bundleExists(path: string) {
+    private _bundleExists(path: string): boolean {
         let exists = MESSAGES_EXISTS_CACHE[path];
-        if (typeof(exists) === 'boolean') {
+        if (typeof(exists) !== 'undefined') {
             return exists;
         }
-
         exists = fs.existsSync(path);
         MESSAGES_EXISTS_CACHE[path] = exists;
         return exists;
     }
 
-    _detectBrowserLanguage(req: ExpressRequest) {
+    private _detectBrowserLanguage(req: ExpressRequest): string {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.i18n.service');
-        const acceptLanguageHeader = req.headers['accept-language'];
+        const acceptLanguageHeader = req.headers['accept-language'] as string;
         const language = acceptLanguageParser.pick(this._availableLanguages, acceptLanguageHeader, {loose: true}) || this._defaultLanguage;
         logger.debug(`Detected browser language based on the accept-language header: ${language}`);
         return language;

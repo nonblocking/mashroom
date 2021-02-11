@@ -1,4 +1,3 @@
-/* eslint-disable */
 
 import type {ExpressRequest, I18NString} from '@mashroom/mashroom/type-definitions';
 
@@ -26,7 +25,7 @@ export interface MashroomI18NService {
     /**
      * Get available languages
      */
-    readonly availableLanguages: Array<string>;
+    readonly availableLanguages: Readonly<Array<string>>;
 
     /**
      * Get the default languages
