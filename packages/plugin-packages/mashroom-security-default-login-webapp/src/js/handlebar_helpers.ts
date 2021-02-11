@@ -1,10 +1,7 @@
-/* eslint-disable no-invalid-this */
-
-// @flow
 
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 
-function equalsHelper(lvalue: any, rvalue: any, options: any) {
+function equalsHelper(this: any, lvalue: any, rvalue: any, options: any): any {
     if (arguments.length < 3) {
         throw new Error('Handlebars Helper equal needs 2 parameters');
     }
@@ -15,7 +12,7 @@ function equalsHelper(lvalue: any, rvalue: any, options: any) {
     }
 }
 
-function year() {
+function year(): string {
     return `<span>${new Date().getFullYear()}</span>`;
 }
 

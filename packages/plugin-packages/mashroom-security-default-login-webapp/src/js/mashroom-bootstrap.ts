@@ -1,4 +1,3 @@
-// @flow
 
 import {resolve, isAbsolute} from 'path';
 import {existsSync} from 'fs';

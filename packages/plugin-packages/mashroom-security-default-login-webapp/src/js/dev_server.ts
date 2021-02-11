@@ -1,5 +1,3 @@
-// @flow
-/* eslint no-console: off */
 
 import {resolve} from 'path';
 import express from 'express';
@@ -18,7 +16,7 @@ const wrapperApp = express();
 
 // Dummy services
 wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
-    req.pluginContext = {
+    const pluginContext: any = {
         loggerFactory: () => console,
         services: {
             security: {
@@ -39,8 +37,8 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
             i18n: {
                 service: {
                     getLanguage: () => 'en',
-                    getMessage: (key) => key,
-                    translate: (req, title) => title.de
+                    getMessage: (key: string) => key,
+                    translate: (req: any, title: any) => title.de
                 },
             },
             csrf: {
@@ -49,7 +47,8 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
                 }
             }
         },
-    };
+    }
+    req.pluginContext = pluginContext;
 
     next();
 });

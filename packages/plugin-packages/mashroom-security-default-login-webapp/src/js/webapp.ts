@@ -1,4 +1,3 @@
-// @flow
 
 import path from 'path';
 import url from 'url';
@@ -15,7 +14,7 @@ import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomVHostPathMapperService} from '@mashroom/mashroom-vhost-path-mapper/type-definitions';
 
-const app = express<ExpressRequest, ExpressResponse>();
+const app = express();
 
 app.use(bodyParser.urlencoded({
     extended: true,
@@ -103,7 +102,7 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
             if (req.query.hasOwnProperty(name) && name !== 'csrfToken') {
                 const values = req.query[name];
                 if (Array.isArray(values)) {
-                    values.forEach((value) => queryParams.push(`${name}=${value}`));
+                    values.forEach((value: any) => queryParams.push(`${name}=${value}`));
                 } else {
                     const value = values;
                     queryParams.push(`${name}=${value}`);
@@ -134,7 +133,7 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
 const redirect = (req: ExpressRequest, res: ExpressResponse) => {
     let redirectUrl = null;
 
-    let query = req.query;
+    let query = req.query as any;
     if (req.method === 'POST' && req.headers.referer) {
         // Take the redirectUrl parameter from the referer
         const refererUrl = url.parse(req.headers.referer);

@@ -1,10 +1,9 @@
-// @flow
 
 import type {I18NString} from '@mashroom/mashroom/type-definitions';
 
 let loginFormTitle: I18NString = 'Mashroom Server';
-let styleFile: string = '';
-let indexPage: string = '/';
+let styleFile = '';
+let indexPage = '/';
 
 export default {
     get loginFormTitle() {
