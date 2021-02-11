@@ -1,4 +1,3 @@
-// @flow
 
 import helmet from 'helmet';
 
