@@ -13,8 +13,6 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 After that you can use the service like this:
 
 ```js
-// @flow
-
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 
 export default (req: ExpressRequest, res: ExpressResponse) => {
