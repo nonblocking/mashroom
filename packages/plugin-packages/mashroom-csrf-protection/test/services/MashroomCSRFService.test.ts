@@ -1,6 +1,4 @@
-// @flow
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomCSRFService from '../../src/services/MashroomCSRFService';
 
 describe('MashroomCSRFService', () => {

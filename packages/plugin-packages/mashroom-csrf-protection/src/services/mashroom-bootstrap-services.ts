@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomCSRFService from './MashroomCSRFService';
 

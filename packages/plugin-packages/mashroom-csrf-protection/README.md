@@ -22,8 +22,6 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 After that you can use the service like this:
 
 ```js
-// @flow
-
 import type {MashroomCacheControlService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 
 export default (req: ExpressRequest, res: ExpressResponse) => {

@@ -1,4 +1,3 @@
-// @flow
 
 import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
 
