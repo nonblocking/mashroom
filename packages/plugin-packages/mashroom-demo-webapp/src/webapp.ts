@@ -1,14 +1,14 @@
-// @flow
 
 import express from 'express';
 
 // Using the Mashroom types here is optional
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 
-const app = express<ExpressRequest, ExpressResponse>();
+const app = express();
 
-app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
-    const logger = req.pluginContext.loggerFactory('demo.webapp');
+app.get('/', (req, res) => {
+    const expressReq = req as ExpressRequest;
+    const logger = expressReq.pluginContext.loggerFactory('demo.webapp');
     logger.info('Hello from Mashroom Demo Webapp');
 
     res.type('text/html');
