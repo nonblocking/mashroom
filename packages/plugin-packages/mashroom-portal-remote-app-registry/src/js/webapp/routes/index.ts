@@ -1,4 +1,3 @@
-// @flow
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 

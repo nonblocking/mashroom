@@ -86,8 +86,6 @@ The config file contains just an array of URL's:
 The **Service** can be used like this:
 
 ```js
-// @flow
-
 import type {MashroomPortalRemoteAppEndpointService} from '@mashroom/mashroom-portal-remote-app-registry/type-definitions';
 
 export default async (req: ExpressRequest, res: ExpressResponse) => {

@@ -1,5 +1,3 @@
-// @flow
-/* eslint no-console: off */
 
 import express from 'express';
 import app from './webapp';
@@ -36,7 +34,7 @@ let testEndpoints: Array<RemotePortalAppEndpoint> = [{
 
 // Dummy services
 wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
-    req.pluginContext = {
+    const pluginContext: any = {
         loggerFactory: () => console,
         services: {
             remotePortalAppEndpoint: {
@@ -44,7 +42,7 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
                     async findAll() {
                         return testEndpoints;
                     },
-                    async registerRemoteAppUrl(url) {
+                    async registerRemoteAppUrl(url: string) {
                         testEndpoints.push({
                             url,
                             sessionOnly: false,
@@ -54,7 +52,7 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
                             portalApps: []
                         })
                     },
-                    async unregisterRemoteAppUrl(url) {
+                    async unregisterRemoteAppUrl(url: string) {
                         testEndpoints = testEndpoints.filter((endpoint) => endpoint.url !== url);
                     }
                 },
@@ -65,7 +63,9 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
                 }
             }
         },
-    };
+    }
+
+    req.pluginContext = pluginContext;
 
     next();
 });

@@ -1,17 +1,13 @@
-// @flow
-/* eslint no-unused-vars: off */
 
 import path from 'path';
 import express, {Router} from 'express';
 import exphbs from 'express-handlebars';
 import bodyParser from 'body-parser';
-import index from './routes/index';
+import index from './routes';
 import {adminIndex, adminUpdate} from './routes/admin';
 import {getRemotePortalApps, addRemotePortalAppUrl, deleteRemotePortalAppUrl} from './routes/api';
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
-
-const app = express<ExpressRequest, ExpressResponse>();
+const app = express();
 
 const admin = express();
 admin.use(bodyParser.urlencoded({
@@ -29,7 +25,7 @@ admin.use(express.static(path.resolve(__dirname, '../../public')));
 admin.get('/', adminIndex);
 admin.post('/', adminUpdate);
 
-const api = new Router();
+const api = Router();
 api.use(bodyParser.json());
 
 api.get('/', getRemotePortalApps);

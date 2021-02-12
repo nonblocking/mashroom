@@ -1,4 +1,3 @@
-// @flow
 
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
@@ -8,40 +7,31 @@ const SESSION_KEY_PORTAL_REMOTE_APPS = '__MASHROOM_PORTAL_REMOTE_APPS';
 
 export default class RemotePortalAppRegistry implements RemotePortalAppRegistryType {
 
-    _requestHolder: GlobalRequestHolder;
-    _portalApps: Array<MashroomPortalApp>;
+    private _portalApps: Array<MashroomPortalApp>;
 
-    constructor(requestHolder: GlobalRequestHolder) {
-        this._requestHolder = requestHolder;
+    constructor(private requestHolder: GlobalRequestHolder) {
         this._portalApps = [];
     }
 
-    registerRemotePortalApp(portalApp: MashroomPortalApp) {
+    registerRemotePortalApp(portalApp: MashroomPortalApp): void {
         this.unregisterRemotePortalApp(portalApp.name);
         this._portalApps.push(portalApp);
     }
 
-    registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: ExpressRequest) {
+    registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: ExpressRequest): void {
         const sessionApps: Array<MashroomPortalApp> = request.session[SESSION_KEY_PORTAL_REMOTE_APPS] || [];
-        this._removeApp(sessionApps, portalApp.name);
+        this.removeApp(sessionApps, portalApp.name);
         sessionApps.push(portalApp);
         request.session[SESSION_KEY_PORTAL_REMOTE_APPS] = sessionApps;
     }
 
-    unregisterRemotePortalApp(name: string) {
-        this._removeApp(this._portalApps, name);
+    unregisterRemotePortalApp(name: string): void {
+        this.removeApp(this._portalApps, name);
     }
 
-    _removeApp(apps: Array<MashroomPortalApp>, name: string) {
-        const idx = apps.findIndex((app) => app.name === name);
-        if (idx !== -1) {
-            apps.splice(idx, 1);
-        }
-    }
-
-    get portalApps(): Array<MashroomPortalApp> {
-        let apps = [];
-        const request = this._requestHolder.request;
+    get portalApps(): Readonly<Array<MashroomPortalApp>> {
+        let apps: Array<MashroomPortalApp> = [];
+        const request = this.requestHolder.request;
         if (request) {
             const sessionApps = request.session[SESSION_KEY_PORTAL_REMOTE_APPS] || [];
             apps = [...sessionApps];
@@ -53,6 +43,13 @@ export default class RemotePortalAppRegistry implements RemotePortalAppRegistryT
         }
 
         return Object.freeze(apps);
+    }
+
+    private removeApp(apps: Array<MashroomPortalApp>, name: string): void{
+        const idx = apps.findIndex((app) => app.name === name);
+        if (idx !== -1) {
+            apps.splice(idx, 1);
+        }
     }
 
 }

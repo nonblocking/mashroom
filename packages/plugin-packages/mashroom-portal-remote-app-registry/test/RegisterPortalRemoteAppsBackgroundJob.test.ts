@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import RegisterPortalRemoteAppsBackgroundJob from '../src/js/jobs/RegisterPortalRemoteAppsBackgroundJob';
 
@@ -75,7 +75,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     it('maps the plugin definition correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 3600, 10, pluginContextHolder);
 
-        const portalApp = backgroundJob._mapPluginDefinition(packageJson, pluginDefinition, remotePortalAppEndpoint);
+        const portalApp = backgroundJob.mapPluginDefinition(packageJson, pluginDefinition, remotePortalAppEndpoint);
 
         expect(portalApp).toBeTruthy();
         expect(portalApp.lastReloadTs).toBeTruthy();

@@ -1,4 +1,3 @@
-// @flow
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
@@ -6,7 +5,7 @@ import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} fr
 
 const EXPORT_INTERVAL_MS = 10000;
 
-let interval: IntervalID;
+let interval: ReturnType<typeof setInterval> | undefined;
 
 export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
     interval = setInterval(async () => {
@@ -15,7 +14,7 @@ export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginC
         const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
 
         if (collectorService) {
-            const endpoints: Array<RemotePortalAppEndpoint> = await portalRemoteAppEndpointService.findAll();
+            const endpoints = await portalRemoteAppEndpointService.findAll();
             const endpointsTotal = endpoints.length;
             const endpointsWithError = endpoints.filter((e) => !!e.lastError).length;
             const endpointsWithTimeouts = endpoints.filter((e) => e.lastError && e.lastError.indexOf('ETIMEDOUT') !== -1).length;
@@ -28,5 +27,7 @@ export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginC
 }
 
 export const stopExportRemoteAppMetrics = () => {
-    clearInterval(interval);
+    if (interval) {
+        clearInterval(interval);
+    }
 };

@@ -1,4 +1,3 @@
-// @flow
 
 import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
 import type {ExpressMiddleware, ExpressRequest} from '@mashroom/mashroom/type-definitions';
@@ -7,8 +6,8 @@ import type {
 } from './api';
 
 export type RemotePortalAppEndpointAddRequest = {
-    +url: string,
-    +sessionOnly?: boolean
+    readonly url: string,
+    readonly sessionOnly?: boolean
 }
 
 export interface RegisterPortalRemoteAppsBackgroundJob {
@@ -26,13 +25,13 @@ export interface RemotePortalAppRegistry extends MashroomRemotePortalAppRegistry
 }
 
 export type Context = {
-    +registry: RemotePortalAppRegistry;
+    readonly registry: RemotePortalAppRegistry;
     webUIShowAddRemoteAppForm: boolean;
-    backgroundJob: RegisterPortalRemoteAppsBackgroundJob,
+    backgroundJob: RegisterPortalRemoteAppsBackgroundJob;
 }
 
 export type GlobalRequestHolder = {
-    request: ?ExpressRequest
+    request: ExpressRequest | undefined | null;
 }
 
 export interface RegisterRequestGloballyMiddleware {

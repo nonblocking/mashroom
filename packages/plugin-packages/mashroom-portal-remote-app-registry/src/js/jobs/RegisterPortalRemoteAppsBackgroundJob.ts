@@ -1,8 +1,7 @@
-// @flow
-/* eslint no-unused-vars: off */
 
 import url from 'url';
 import request from 'request';
+// @ts-ignore
 import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
@@ -18,70 +17,63 @@ import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBa
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
-    _socketTimeoutSec: number;
-    _checkIntervalSec: number;
-    _registrationRefreshIntervalSec: number;
-    _pluginContextHolder: MashroomPluginContextHolder;
-    _logger: MashroomLogger;
-    _timeout: ?TimeoutID;
+    private logger: MashroomLogger;
+    private timeout: ReturnType<typeof setTimeout> | null;
 
-    constructor(socketTimeoutSec: number, checkIntervalSec: number, registrationRefreshIntervalSec: number, pluginContextHolder: MashroomPluginContextHolder) {
-        this._socketTimeoutSec = socketTimeoutSec;
-        this._checkIntervalSec = checkIntervalSec;
-        this._registrationRefreshIntervalSec = registrationRefreshIntervalSec;
-        this._pluginContextHolder = pluginContextHolder;
-        this._logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.remoteAppRegistry');
-        this._timeout = null;
+    constructor(private socketTimeoutSec: number, private checkIntervalSec: number,
+                private registrationRefreshIntervalSec: number, private pluginContextHolder: MashroomPluginContextHolder) {
+        this.logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.remoteAppRegistry');
+        this.timeout = null;
     }
 
-    start() {
+    start(): void {
         this.runASAP();
     }
 
-    stop() {
-        if (this._timeout) {
-            clearTimeout(this._timeout);
+    stop(): void {
+        if (this.timeout) {
+            clearTimeout(this.timeout);
         }
     }
 
-    runASAP() {
+    runASAP(): void {
         this.stop();
-        this._timeout = setTimeout(() => this._processInBackground(), 2000);
+        this.timeout = setTimeout(() => this.processInBackground(), 2000);
     }
 
-    async _processInBackground() {
-        this._logger.info('Start processing remote portal app endpoints');
-        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
-        const endpoints: Array<RemotePortalAppEndpoint> = await portalRemoteAppEndpointService.findAll();
+    async processInBackground(): Promise<void> {
+        this.logger.info('Start processing remote portal app endpoints');
+        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this.pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
+        const endpoints = await portalRemoteAppEndpointService.findAll();
 
         for (const remotePortalAppEndpoint of endpoints) {
             const registrationTimestamp = remotePortalAppEndpoint.registrationTimestamp;
             const unregisteredApps = remotePortalAppEndpoint.portalApps.some((remoteApp) => !context.registry.portalApps.find((registeredApp) => registeredApp.name === remoteApp.name));
-            if (unregisteredApps || remotePortalAppEndpoint.lastError || !registrationTimestamp || Date.now() - registrationTimestamp > this._registrationRefreshIntervalSec * 1000) {
+            if (unregisteredApps || remotePortalAppEndpoint.lastError || !registrationTimestamp || Date.now() - registrationTimestamp > this.registrationRefreshIntervalSec * 1000) {
                 await this.refreshEndpointRegistration(remotePortalAppEndpoint);
             }
         }
 
-        if (this._timeout) {
-            clearTimeout(this._timeout);
+        if (this.timeout) {
+            clearTimeout(this.timeout);
         }
-        this._timeout = setTimeout(() => this._processInBackground(), this._checkIntervalSec * 1000);
+        this.timeout = setTimeout(() => this.processInBackground(), this.checkIntervalSec * 1000);
     }
 
-    async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint) {
-        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
+    async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {
+        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this.pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
 
-        let updatedEndpoint = await this.fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint);
+        const updatedEndpoint = await this.fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint);
 
         if (!updatedEndpoint.lastError) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
-                this._logger.info('Registering remote portal app:', {portalApp});
+                this.logger.info('Registering remote portal app:', {portalApp});
                 context.registry.registerRemotePortalApp(portalApp)
             });
         } else {
-            this._logger.error(`Registering apps for remote portal apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
+            this.logger.error(`Registering apps for remote portal apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
             remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
-                this._logger.info('Unregister remote portal app:', {portalApp});
+                this.logger.info('Unregister remote portal app:', {portalApp});
                 context.registry.unregisterRemotePortalApp(portalApp.name)
             });
         }
@@ -89,13 +81,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         await portalRemoteAppEndpointService.updateRemotePortalAppEndpoint(updatedEndpoint);
     }
 
-    async fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint) {
-        this._logger.info(`Fetching remote endpoint data from URL: ${remotePortalAppEndpoint.url}`);
+    async fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<RemotePortalAppEndpoint> {
+        this.logger.info(`Fetching remote endpoint data from URL: ${remotePortalAppEndpoint.url}`);
 
         try {
-            const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
+            const packageJson = await this.loadPackageJson(remotePortalAppEndpoint);
 
-            const portalApps = this._processPackageJson(packageJson, remotePortalAppEndpoint);
+            const portalApps = this.processPackageJson(packageJson, remotePortalAppEndpoint);
             return {
                 ...remotePortalAppEndpoint, lastError: null,
                 retries: 0,
@@ -104,7 +96,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             };
 
         } catch (error) {
-            this._logger.error('Processing remote portal app endpoint failed!', error);
+            this.logger.error('Processing remote portal app endpoint failed!', error);
 
             return {
                 ...remotePortalAppEndpoint, lastError: error.message,
@@ -115,8 +107,8 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
     }
 
-    _processPackageJson(packageJson: any, remotePortalAppEndpoint: RemotePortalAppEndpoint): Array<MashroomPortalApp> {
-        this._logger.debug(`Processing package.json of remote portal app endpoint: ${remotePortalAppEndpoint.url}`, packageJson);
+    private processPackageJson(packageJson: any, remotePortalAppEndpoint: RemotePortalAppEndpoint): Array<MashroomPortalApp> {
+        this.logger.debug(`Processing package.json of remote portal app endpoint: ${remotePortalAppEndpoint.url}`, packageJson);
 
         if (!packageJson || !packageJson.mashroom) {
             throw new Error(`No mashroom property found in package.json of remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
@@ -129,7 +121,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             throw new Error(`No plugin of type portal-app found in remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
-        const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
+        const portalApps = portalAppDefinitions.map((definition) => this.mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
 
         return portalApps.map((portalApp) => {
             const existingApp = remotePortalAppEndpoint.portalApps.find((existingApp) => existingApp.name === portalApp.name);
@@ -142,7 +134,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         });
     }
 
-    _mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
+    mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
         const name = definition.name;
         if (!name) {
             throw new Error(`Invalid portal app definition: No 'name' attribute! Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
@@ -178,7 +170,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const screenshots = definition.screenshots;
 
         const config = definition.defaultConfig || {};
-        evaluateTemplatesInConfigObject(config, this._logger);
+        evaluateTemplatesInConfigObject(config, this.logger);
         const definedRestProxies = config.restProxies;
         const restProxies: MashroomPortalProxyDefinitions = {};
 
@@ -228,11 +220,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         return portalApp;
     }
 
-    async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any> {
+    private async loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any> {
         const requestOptions = {
             url: `${remotePortalAppEndpoint.url}/package.json`,
             followRedirect: false,
-            timeout: this._socketTimeoutSec * 1000,
+            timeout: this.socketTimeoutSec * 1000,
         };
 
         return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
-// @flow
 
 import context from '../../context';
+// @ts-ignore
 import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
@@ -10,7 +10,7 @@ import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} fr
 const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorMessage?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
-    const remoteAppEndpoints: Array<RemotePortalAppEndpoint> = await portalRemoteAppEndpointService.findAll();
+    const remoteAppEndpoints = await portalRemoteAppEndpointService.findAll();
 
     const endpoints = remoteAppEndpoints.map((endpoint) => ({
         url: endpoint.url,

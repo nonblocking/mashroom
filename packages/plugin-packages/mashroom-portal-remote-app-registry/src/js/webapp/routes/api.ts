@@ -1,4 +1,3 @@
-// @flow
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {
@@ -8,7 +7,7 @@ import type {
     RemotePortalAppEndpointAddRequest
 } from '../../../../type-definitions/internal';
 
-export const getRemotePortalApps = async (req: ExpressRequest, res: ExpressResponse) => {
+export const getRemotePortalApps = async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
 
     const remotePortalApps = await portalRemoteAppEndpointService.findAll();
@@ -16,7 +15,7 @@ export const getRemotePortalApps = async (req: ExpressRequest, res: ExpressRespo
     res.json(remotePortalApps);
 };
 
-export const addRemotePortalAppUrl = async (req: ExpressRequest, res: ExpressResponse) => {
+export const addRemotePortalAppUrl = async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
     const logger = req.pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
 
@@ -43,7 +42,7 @@ export const addRemotePortalAppUrl = async (req: ExpressRequest, res: ExpressRes
     }
 };
 
-export const deleteRemotePortalAppUrl = async (req: ExpressRequest, res: ExpressResponse) => {
+export const deleteRemotePortalAppUrl = async (req: ExpressRequest, res: ExpressResponse): Promise<void> => {
     const logger = req.pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
 

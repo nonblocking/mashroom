@@ -1,4 +1,3 @@
-// @flow
 
 import fs from 'fs';
 import path from 'path';
@@ -47,6 +46,7 @@ async function registerRemotePortalAppsFromConfigFile(configFilePath: string, se
 
     if (fs.existsSync(configFilePath)) {
         logger.info(`Loading remote portal app URLs from: ${configFilePath}`);
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const remotePortalAppURLs = require(configFilePath);
         if (Array.isArray(remotePortalAppURLs)) {
             for (const remotePortalAppURL of remotePortalAppURLs) {
