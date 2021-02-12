@@ -1,21 +1,20 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAppService} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
-    portalAppService: MashroomPortalAppService
+    portalAppService: MashroomPortalAppService;
 }
 
 type State = {
     firstNames: {
-        [string]: string
-    },
+        [pluginName: string]: string;
+    };
     addCloseButton: {
-        [string]: boolean
-    }
-
+        [pluginName: string]: boolean;
+    };
 }
 
 const APPS = [
@@ -26,8 +25,8 @@ const APPS = [
 
 export default class App extends PureComponent<Props, State> {
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
         this.state = {
             firstNames: {},
             addCloseButton: {}
@@ -85,7 +84,7 @@ export default class App extends PureComponent<Props, State> {
         return null;
     }
 
-    onFirstNameValueChange(firstName: ?string, pluginName: string) {
+    onFirstNameValueChange(firstName: string, pluginName: string) {
         this.setState({
             firstNames: { ...this.state.firstNames, [pluginName]: firstName,}
         });
@@ -98,7 +97,7 @@ export default class App extends PureComponent<Props, State> {
     }
 
     renderAvailableApps() {
-        const rows = [];
+        const rows: Array<ReactNode> = [];
 
         APPS.forEach((pluginName, idx) => {
 
