@@ -1,4 +1,3 @@
-// @flow
 
 import IFrameApp from './IFrameApp';
 
@@ -17,4 +16,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     );
 };
 
-global.startPortalIFrameApp = bootstrap;
+(global as any).startPortalIFrameApp = bootstrap;
