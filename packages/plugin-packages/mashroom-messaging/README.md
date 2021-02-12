@@ -177,17 +177,27 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    subscribe(req: ExpressRequest, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+    subscribe(
+        req: ExpressRequest,
+        topic: string,
+        callback: MashroomMessagingSubscriberCallback,
+    ): Promise<void>;
+
     /**
      * Unsubscribe from topic
      */
-    unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+    unsubscribe(
+        topic: string,
+        callback: MashroomMessagingSubscriberCallback,
+    ): Promise<void>;
+
     /**
      * Publish to a specific topic
      *
      * Throws an exception if there is no authenticated user
      */
     publish(req: ExpressRequest, topic: string, data: any): Promise<void>;
+
     /**
      * The private topic only the current user can access.
      * E.g. if the value is user/john the user john can access to user/john/whatever
@@ -196,11 +206,12 @@ export interface MashroomMessagingService {
      * Throws an exception if there is no authenticated user
      */
     getUserPrivateTopic(req: ExpressRequest): string;
+
     /**
      * The connect path to send publish or subscribe via WebSocket.
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
      */
-    getWebSocketConnectPath(req: ExpressRequest): ?string;
+    getWebSocketConnectPath(req: ExpressRequest): string | null | undefined;
 }
 ```
 
@@ -252,10 +263,12 @@ export interface MashroomMessagingExternalProvider {
      * The message must be a JSON object.
      */
     addMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Remove an existing listener
      */
     removeMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Send a message to given external topic.
      * The passed topic must be prefixed with the topic the provider is listening to.
@@ -265,12 +278,11 @@ export interface MashroomMessagingExternalProvider {
      * The message will be a JSON object.
      */
     sendInternalMessage(topic: string, message: any): Promise<void>;
+
     /**
      * Send a message to given external topic.
      * The message will be a JSON object.
      */
     sendExternalMessage(topic: string, message: any): Promise<void>;
-}
-
 }
 ```

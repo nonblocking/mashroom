@@ -125,29 +125,44 @@ export interface MashroomPortalRemoteAppEndpointService {
      * Register a new Remote App URL
      */
     registerRemoteAppUrl(url: string): Promise<void>;
+
     /**
      * Register a Remote App URL only for the current session (useful for testing)
      */
-    synchronousRegisterRemoteAppUrlInSession(url: string, request: ExpressRequest): Promise<void>;
+    synchronousRegisterRemoteAppUrlInSession(
+        url: string,
+        request: ExpressRequest,
+    ): Promise<void>;
+
     /**
      * Unregister a Remote App
      */
     unregisterRemoteAppUrl(url: string): Promise<void>;
+
     /**
      * Find Remote App by URL
      */
-    findRemotePortalAppByUrl(url: string): Promise<?RemotePortalAppEndpoint>;
+    findRemotePortalAppByUrl(
+        url: string,
+    ): Promise<RemotePortalAppEndpoint | null | undefined>;
+
     /**
      * Return all known Remote App endpoints
      */
-    findAll(): Promise<Array<RemotePortalAppEndpoint>>;
+    findAll(): Promise<Readonly<Array<RemotePortalAppEndpoint>>>;
+
     /**
      * Update an existing Remote App endpoint
      */
-    updateRemotePortalAppEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
+    updateRemotePortalAppEndpoint(
+        remotePortalAppEndpoint: RemotePortalAppEndpoint,
+    ): Promise<void>;
+
     /**
      * Refresh (fetch new metadata) from given endpoint
      */
-    refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
+    refreshEndpointRegistration(
+        remotePortalAppEndpoint: RemotePortalAppEndpoint,
+    ): Promise<void>;
 }
 ```

@@ -74,6 +74,5 @@ export interface MashroomCSRFService {
      */
     isValidCSRFToken(request: ExpressRequest, token: string): boolean;
 }
-
 ```
 
