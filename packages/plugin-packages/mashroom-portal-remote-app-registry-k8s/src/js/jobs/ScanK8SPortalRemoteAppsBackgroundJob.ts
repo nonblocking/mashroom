@@ -248,7 +248,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         // Fix proxy target urls
         if (definedRestProxies) {
             for (const proxyName in definedRestProxies) {
-                if (definedRestProxies.hasOwnProperty(proxyName)) {
+                if (Object.prototype.hasOwnProperty.call(definedRestProxies, proxyName)) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
                     const parsedUri = url.parse(targetUri);
                     if (parsedUri.hostname === 'localhost') {
