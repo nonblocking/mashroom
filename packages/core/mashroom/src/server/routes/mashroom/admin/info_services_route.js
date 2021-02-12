@@ -54,7 +54,7 @@ const serviceNames = (pluginContext: MashroomPluginContext) => {
 const methods = (namespace: string, serviceName: string, pluginContext: MashroomPluginContext) => {
     const ms = [];
     for (const methodName of Object.getOwnPropertyNames(Object.getPrototypeOf(pluginContext.services[namespace][serviceName]))) {
-        if (methodName !== 'constructor' && !methodName.startsWith('_')) {
+        if (methodName !== 'constructor' && !methodName.startsWith('_') && typeof (pluginContext.services[namespace][serviceName][methodName] === 'function')) {
             ms.push(methodName);
         }
     }
