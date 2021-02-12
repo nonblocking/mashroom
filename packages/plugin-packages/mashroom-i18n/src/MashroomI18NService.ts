@@ -17,23 +17,23 @@ import type {MashroomI18NService as MashroomI18NServiceType} from '../type-defin
 
 export default class MashroomI18NService implements MashroomI18NServiceType {
 
-    _availableLanguages: Array<string>;
-    _defaultLanguage: string;
-    _messagesFolder: string;
-    _logger: MashroomLogger;
+    private _availableLanguages: Array<string>;
+    private _defaultLanguage: string;
+    private messagesFolder: string;
+    private logger: MashroomLogger;
 
     constructor(availableLanguages: Array<string>, defaultLanguage: string, messagesFolder: string,
                 serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._availableLanguages = availableLanguages;
         this._defaultLanguage = defaultLanguage;
-        this._messagesFolder = messagesFolder;
-        this._logger = loggerFactory('mashroom.i18n.service');
+        this.messagesFolder = messagesFolder;
+        this.logger = loggerFactory('mashroom.i18n.service');
 
-        if (!path.isAbsolute(this._messagesFolder)) {
-            this._messagesFolder = path.resolve(serverRootFolder, this._messagesFolder);
+        if (!path.isAbsolute(this.messagesFolder)) {
+            this.messagesFolder = path.resolve(serverRootFolder, this.messagesFolder);
         }
 
-        this._logger.info(`Looking for messages in: ${this._messagesFolder}`);
+        this.logger.info(`Looking for messages in: ${this.messagesFolder}`);
     }
 
     getLanguage(req: ExpressRequest): string {
@@ -51,9 +51,9 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
 
     getMessage(key: string, language: string): string {
         const messagesPaths = [
-            path.resolve(this._messagesFolder, `messages.${language}.json`),
+            path.resolve(this.messagesFolder, `messages.${language}.json`),
             path.resolve(BUILT_IN_MESSAGES_FOLDER, `messages.${language}.json`),
-            path.resolve(this._messagesFolder, `messages.json`),
+            path.resolve(this.messagesFolder, `messages.json`),
             path.resolve(BUILT_IN_MESSAGES_FOLDER, `messages.json`),
         ];
 
@@ -68,7 +68,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
                     return message;
                 }
             } catch (error) {
-                this._logger.error(`Error loading message bundle: ${messagesPath}`);
+                this.logger.error(`Error loading message bundle: ${messagesPath}`);
             }
         }
 

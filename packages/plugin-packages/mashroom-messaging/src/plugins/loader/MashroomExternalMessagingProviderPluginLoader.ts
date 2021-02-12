@@ -17,10 +17,10 @@ import type {
 
 export default class MashroomExternalMessagingProviderPluginLoader implements MashroomPluginLoader {
 
-    _logger: MashroomLogger;
+    private logger: MashroomLogger;
 
     constructor(private registry: MashroomExternalMessagingProviderRegistry, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.messaging.plugin.loader');
+        this.logger = loggerFactory('mashroom.messaging.plugin.loader');
     }
 
     get name(): string {
@@ -34,12 +34,12 @@ export default class MashroomExternalMessagingProviderPluginLoader implements Ma
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = plugin.requireBootstrap();
         const provider: MashroomMessagingExternalProvider = await bootstrap(plugin.name, config, contextHolder);
-        this._logger.info(`Registering external messaging provider plugin: ${plugin.name}`);
+        this.logger.info(`Registering external messaging provider plugin: ${plugin.name}`);
         this.registry.register(plugin.name, provider);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this._logger.info(`Unregistering external messaging provider plugin: ${plugin.name}`);
+        this.logger.info(`Unregistering external messaging provider plugin: ${plugin.name}`);
         this.registry.unregister(plugin.name);
     }
 }

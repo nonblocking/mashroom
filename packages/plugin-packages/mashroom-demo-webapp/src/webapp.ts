@@ -7,8 +7,8 @@ import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 const app = express();
 
 app.get('/', (req, res) => {
-    const expressReq = req as ExpressRequest;
-    const logger = expressReq.pluginContext.loggerFactory('demo.webapp');
+    const requestWithContext = req as ExpressRequest;
+    const logger = requestWithContext.pluginContext.loggerFactory('demo.webapp');
     logger.info('Hello from Mashroom Demo Webapp');
 
     res.type('text/html');

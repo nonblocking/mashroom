@@ -1129,7 +1129,7 @@ export type CreateLoadingError = (
 // remote-portal-app-registry
 
 export interface MashroomRemotePortalAppRegistry {
-    readonly portalApps: readonly MashroomPortalApp[];
+    readonly portalApps: Readonly<Array<MashroomPortalApp>>;
 }
 
 export type MashroomRemotePortalAppRegistryBootstrapFunction = (

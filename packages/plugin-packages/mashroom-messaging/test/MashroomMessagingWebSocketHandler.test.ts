@@ -88,7 +88,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     success: true,
                 });
 
-                expect(webSocketHandler._clients.size).toBe(1);
+                expect(webSocketHandler.clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -140,7 +140,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
             }
         };
 
-        webSocketHandler._clients.set(client, {
+        webSocketHandler.clients.set(client, {
            subscriptions: [{
                topic: 'foo/xx',
                callback: () => { /* Nothing to do */ },
@@ -169,7 +169,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     success: true,
                 });
 
-                expect(webSocketHandler._clients.size).toBe(1);
+                expect(webSocketHandler.clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -217,7 +217,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     success: true,
                 });
 
-                expect(webSocketHandler._clients.size).toBe(1);
+                expect(webSocketHandler.clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -257,7 +257,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     message: 'Publishing message to topic foo/xx failed'
                 });
 
-                expect(webSocketHandler._clients.size).toBe(1);
+                expect(webSocketHandler.clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -274,7 +274,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
             }
         };
 
-        webSocketHandler._clients.set(client, {
+        webSocketHandler.clients.set(client, {
             subscriptions: [{
                 topic: 'foo/xx',
                 callback: () => { /* Nothing to do */ },
@@ -293,7 +293,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
                 expect(mockUnsubscribe.mock.calls[0][0]).toEqual('foo/xx');
                 expect(mockUnsubscribe.mock.calls[1][0]).toEqual('bar/2');
 
-                expect(webSocketHandler._clients.size).toBeFalsy();
+                expect(webSocketHandler.clients.size).toBeFalsy();
 
                 done();
             }, 100);

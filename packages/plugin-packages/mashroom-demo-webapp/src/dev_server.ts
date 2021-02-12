@@ -8,12 +8,13 @@ const wrapperApp = express();
 
 // Dummy services
 wrapperApp.use((req, res, next) => {
+    const requestWithContext = req as ExpressRequest;
     const pluginContext: any = {
         loggerFactory: () => console,
         services: {
         }
     };
-    (req as ExpressRequest).pluginContext = pluginContext;
+    requestWithContext.pluginContext = pluginContext;
 
     next();
 });

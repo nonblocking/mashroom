@@ -13,7 +13,7 @@ type MashroomExternalMessagingProviderHolder = {
 
 export default class MashroomMessagingExternalProviderRegistry implements MashroomExternalMessagingProviderRegistryType {
 
-    _providers: Array<MashroomExternalMessagingProviderHolder>;
+    private _providers: Array<MashroomExternalMessagingProviderHolder>;
 
     constructor() {
         this._providers = [];

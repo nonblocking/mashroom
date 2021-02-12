@@ -1,6 +1,5 @@
 
-import type {Request, Response} from 'express';
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '../../type-definitions';
 
 const getCleanRoute = (originalUrl: string): string => {
@@ -14,9 +13,8 @@ const getCleanRoute = (originalUrl: string): string => {
     return route;
 }
 
-export const addRequestMetric = (req: Request, res: Response, timeSec: number) => {
-    const requestWithContext = req as ExpressRequest;
-    const collectorService: MashroomMonitoringMetricsCollectorService = requestWithContext.pluginContext.services.metrics.service;
+export const addRequestMetric = (req: ExpressRequest, res: ExpressResponse, timeSec: number) => {
+    const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
     const { originalUrl, method } = req;
     const { statusCode } = res;
 

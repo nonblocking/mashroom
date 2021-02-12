@@ -18,17 +18,17 @@ type Rules = Array<{
 
 export default class MashroomMessageTopicACLChecker implements MashroomMessageTopicACLCheckerType {
 
-    _aclPath: string;
-    _logger: MashroomLogger;
-    _rules: Rules | undefined | null;
+    private aclPath: string;
+    private logger: MashroomLogger;
+    private rules: Rules | undefined | null;
 
     constructor(aclPath: string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
-        this._aclPath = aclPath;
-        if (!path.isAbsolute(this._aclPath)) {
-            this._aclPath = path.resolve(serverRootFolder, this._aclPath);
+        this.aclPath = aclPath;
+        if (!path.isAbsolute(this.aclPath)) {
+            this.aclPath = path.resolve(serverRootFolder, this.aclPath);
         }
-        this._logger = loggerFactory('mashroom.messaging.service.acl');
-        this._logger.info(`Configured Topic ACL definition: ${this._aclPath}`);
+        this.logger = loggerFactory('mashroom.messaging.service.acl');
+        this.logger.info(`Configured Topic ACL definition: ${this.aclPath}`);
     }
 
     allowed(topic: string, user: MashroomSecurityUser | null | undefined): boolean {
@@ -58,14 +58,14 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
     }
 
     private getRuleList(): Rules {
-        if (this._rules) {
-            return this._rules;
+        if (this.rules) {
+            return this.rules;
         }
 
-        if (fs.existsSync(this._aclPath)) {
+        if (fs.existsSync(this.aclPath)) {
             const rules: Rules = [];
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const aclData: MashroomMessagingACLTopicRules = require(this._aclPath);
+            const aclData: MashroomMessagingACLTopicRules = require(this.aclPath);
             for (const topic in aclData) {
                 if (aclData.hasOwnProperty(topic)) {
                     try {
@@ -75,16 +75,16 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
                             deny: aclData[topic].deny,
                         });
                     } catch (error) {
-                        this._logger.error(`Invalid ACL rule for topic ${topic}:` , aclData[topic]);
+                        this.logger.error(`Invalid ACL rule for topic ${topic}:` , aclData[topic]);
                     }
                 }
             }
-            this._rules = rules;
+            this.rules = rules;
         } else {
-            this._logger.warn(`No Topic ACL definition found: ${this._aclPath}. ACL security disabled.`);
-            this._rules = [];
+            this.logger.warn(`No Topic ACL definition found: ${this.aclPath}. ACL security disabled.`);
+            this.rules = [];
         }
-        return this._rules;
+        return this.rules;
     }
 
 }
