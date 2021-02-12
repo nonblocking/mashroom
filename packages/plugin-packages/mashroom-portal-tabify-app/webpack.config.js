@@ -20,7 +20,7 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(ts|tsx)$/,
                     exclude: /node_modules/,
                     enforce: 'pre',
                     use: [
@@ -34,7 +34,7 @@ module.exports = (env, argv) => {
                     ],
                 },
                 {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(ts|tsx)$/,
                     exclude: /node_modules/,
                     use: [
                         {
@@ -65,9 +65,9 @@ module.exports = (env, argv) => {
         },
         externals: [],
         resolve: {
-            extensions: ['.js', '.jsx'],
+            extensions: ['.js', '.ts', '.tsx'],
             alias: {
-                // Only for dev mode when the them is included
+                // Only for dev mode when the theme is included
                 './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
             }
         },

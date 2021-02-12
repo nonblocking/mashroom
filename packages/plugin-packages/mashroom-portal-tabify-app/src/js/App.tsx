@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 
@@ -16,21 +15,26 @@ type Tab = {
 }
 
 type Props = {
-    tabifyPluginName: string,
-    hostElement: HTMLElement,
+    tabifyPluginName: string;
+    hostElement: HTMLElement;
     appConfig: {
-        addCloseButtons: boolean,
-        pluginNameTitleMapping: {[string]: string},
-    },
-    messageBus: MashroomPortalMessageBus,
-    portalAppService: MashroomPortalAppService
+        addCloseButtons?: boolean;
+        pluginNameTitleMapping?: {
+            [pluginName: string]: string};
+    };
+    messageBus: MashroomPortalMessageBus;
+    portalAppService: MashroomPortalAppService;
 }
 
 type State = {
-    activeTabIndex: ?number,
-    pluginNameTitleMapping: {[string]: string},
-    appIdTitleMapping: {[string]: string},
-    tabs: Array<Tab>
+    activeTabIndex: number | undefined | null;
+    pluginNameTitleMapping: {
+        [pluginName: string]: string;
+    };
+    appIdTitleMapping: {
+        [pluginName: string]: string;
+    };
+    tabs: Array<Tab>;
 }
 
 const ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC = 'tabify-add-plugin-name-title-mapping';
@@ -39,15 +43,15 @@ const FOCUS_APP_TOPIC = 'tabify-focus-app';
 
 export default class App extends PureComponent<Props, State> {
 
-    areaId: string;
-    boundOnAppLoaded: MashroomPortalAppLoadListener;
-    boundOnAppUnload: MashroomPortalAppLoadListener;
-    boundOnPluginNameTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
-    boundOnAppIdTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
-    boundOnFocusAppMessage: MashroomPortalMessageBusSubscriberCallback;
+    private areaId: string | undefined;
+    private boundOnAppLoaded: MashroomPortalAppLoadListener;
+    private boundOnAppUnload: MashroomPortalAppLoadListener;
+    private boundOnPluginNameTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
+    private boundOnAppIdTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
+    private boundOnFocusAppMessage: MashroomPortalMessageBusSubscriberCallback;
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
         this.state = {
             activeTabIndex: null,
             pluginNameTitleMapping: {},
@@ -69,7 +73,7 @@ export default class App extends PureComponent<Props, State> {
         // Find the outermost wrapper
         let currentWrapper: HTMLElement = app.portalAppWrapperElement;
         while (currentWrapper.parentElement && currentWrapper.parentElement.id !== app.portalAppAreaId) {
-            currentWrapper = (currentWrapper.parentElement: any);
+            currentWrapper = currentWrapper.parentElement;
         }
 
         const appAreaElement = currentWrapper.parentElement;
@@ -110,7 +114,7 @@ export default class App extends PureComponent<Props, State> {
 
             this.areaId = tabifyApp.portalAppAreaId;
             const areaApps = this.props.portalAppService.loadedPortalApps.filter((app) => app.pluginName !== this.props.tabifyPluginName && app.portalAppAreaId === this.areaId);
-            const tabs = [];
+            const tabs: Array<Tab> = [];
 
             // Hide all apps
             areaApps.forEach((app, idx) => {
@@ -128,7 +132,7 @@ export default class App extends PureComponent<Props, State> {
 
             this.setState({
                 activeTabIndex: 0,
-                pluginNameTitleMapping: this.props.appConfig.pluginNameTitleMapping,
+                pluginNameTitleMapping: this.props.appConfig.pluginNameTitleMapping || {},
                 tabs
             });
 
@@ -240,7 +244,7 @@ export default class App extends PureComponent<Props, State> {
                 this.setState({
                     activeTabIndex: null,
                 });
-            } else {
+            } else if (currentTab) {
                 let newTabIndex = remainingTabs.indexOf(currentTab);
                 if (newTabIndex !== this.state.activeTabIndex) {
                     if (newTabIndex === -1) {
@@ -280,7 +284,7 @@ export default class App extends PureComponent<Props, State> {
         if (typeof(this.state.activeTabIndex) === 'number' && this.state.tabs.length > this.state.activeTabIndex) {
             const appWrapper = this.state.tabs[this.state.activeTabIndex].app.portalAppWrapperElement;
             if (appWrapper.id) {
-                const firstInput = document.querySelector(`#${appWrapper.id} input`);
+                const firstInput = document.querySelector(`#${appWrapper.id} input`) as HTMLInputElement;
                 if (firstInput) {
                     console.info('Focusing first input: ', firstInput);
                     firstInput.focus();

@@ -1,4 +1,3 @@
-// @flow
 
 import '../sass/style.scss';
 
@@ -13,7 +12,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     const { portalAppService, messageBus } = clientServices;
 
     ReactDOM.render(
-        <App hostElement={portalAppHostElement} tabifyPluginName={pluginName} appConfig={appConfig} portalAppService={portalAppService} messageBus={messageBus}/>,
+        <App
+            hostElement={portalAppHostElement}
+            tabifyPluginName={pluginName} appConfig={appConfig}
+            portalAppService={portalAppService}
+            messageBus={messageBus}
+        />,
         portalAppHostElement);
 
     return {
@@ -23,4 +27,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     };
 };
 
-global.startPortalTabifyApp = bootstrap;
+(global as any).startPortalTabifyApp = bootstrap;
