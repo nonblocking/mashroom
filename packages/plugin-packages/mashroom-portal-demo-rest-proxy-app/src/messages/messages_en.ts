@@ -1,4 +1,3 @@
-// @flow
 
 export default {
     rocketLaunches: 'SpaceX Rocket Launches',

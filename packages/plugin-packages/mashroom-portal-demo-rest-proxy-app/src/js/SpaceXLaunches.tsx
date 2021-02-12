@@ -1,26 +1,26 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
+import type {Launches} from './types';
 
 type Props = {
-    spaceXApiPath: string,
+    spaceXApiPath: string;
 }
 
 type State = {
-    loading: boolean,
-    errorLoading: boolean,
-    launches: ?any
+    loading: boolean;
+    errorLoading: boolean;
+    launches: Launches;
 }
 
 export default class SpaceXLaunches extends PureComponent<Props, State> {
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
         this.state = {
             loading: false,
             errorLoading: false,
-            launches: null,
+            launches: [],
         };
     }
 

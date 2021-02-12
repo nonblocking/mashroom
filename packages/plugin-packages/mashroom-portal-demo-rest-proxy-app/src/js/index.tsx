@@ -1,4 +1,3 @@
-// @flow
 
 import '../sass/style.scss';
 
@@ -18,4 +17,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     };
 };
 
-global.startRestProxyDemoApp = bootstrap;
+(global as any).startRestProxyDemoApp = bootstrap;
