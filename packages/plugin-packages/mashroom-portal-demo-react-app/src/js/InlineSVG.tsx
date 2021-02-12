@@ -1,10 +1,9 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 
 type Props = {
-    svgData: string,
-    className?: string
+    svgData: string;
+    className?: string;
 }
 
 class InlineSVG extends PureComponent<Props> {

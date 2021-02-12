@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import InlineSVG from './InlineSVG';
@@ -8,21 +7,21 @@ import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-defi
 
 type Props = {
     appConfig: {
-        firstName: string
-    },
-    messageBus: MashroomPortalMessageBus
+        firstName?: string;
+    };
+    messageBus: MashroomPortalMessageBus;
 }
 
 type State = {
-    pings: number
+    pings: number;
 }
 
 export default class App extends PureComponent<Props, State> {
 
     pingReceiver: () => void;
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
         this.state = {
             pings: 0,
         };
