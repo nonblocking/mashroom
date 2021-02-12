@@ -1,4 +1,3 @@
-// @flow
 
 import path from 'path';
 import express from 'express';
@@ -6,7 +5,7 @@ import exphbs from 'express-handlebars';
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
-const app = express<ExpressRequest, ExpressResponse>();
+const app = express();
 
 app.engine('handlebars', exphbs({
     defaultLayout: '',

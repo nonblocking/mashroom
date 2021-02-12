@@ -1,4 +1,3 @@
-// @flow
 
 import context from '../context';
 
@@ -11,39 +10,39 @@ import type {
 
 export default class MashroomWebSocketService implements MashroomWebSocketServiceType {
 
-    addMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener) {
+    addMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void {
         context.server.addMessageListener(matcher, listener);
     }
 
-    removeMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener) {
+    removeMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void {
         context.server.removeMessageListener(matcher, listener);
     }
 
-    addDisconnectListener(listener: MashroomWebSocketDisconnectListener) {
+    addDisconnectListener(listener: MashroomWebSocketDisconnectListener): void {
         context.server.addDisconnectListener(listener);
     }
 
-    removeDisconnectListener(listener: MashroomWebSocketDisconnectListener) {
+    removeDisconnectListener(listener: MashroomWebSocketDisconnectListener): void {
         context.server.removeDisconnectListener(listener);
     }
 
-    async sendMessage(client: MashroomWebSocketClient, message: any) {
+    async sendMessage(client: MashroomWebSocketClient, message: any): Promise<void> {
         await context.server.sendMessage(client, message);
     }
 
-    getClientsOnPath(connectPath: string) {
+    getClientsOnPath(connectPath: string): Array<MashroomWebSocketClient> {
         return context.server.getClientsOnPath(connectPath);
     }
 
-    getClientsOfUser(username: string) {
+    getClientsOfUser(username: string): Array<MashroomWebSocketClient> {
         return context.server.getClientsOfUser(username);
     }
 
-    getClientCount() {
+    getClientCount(): number {
         return context.server.getClientCount();
     }
 
-    close(client: MashroomWebSocketClient) {
+    close(client: MashroomWebSocketClient): void {
         context.server.close(client);
     }
 

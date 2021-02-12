@@ -1,4 +1,3 @@
-// @flow
 
 const SAMPLE_UUID_V4 = '4242-4242-4242-4242-4242';
 jest.mock('uuid', () => ({
@@ -6,6 +5,7 @@ jest.mock('uuid', () => ({
 }));
 
 import os from 'os';
+// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import WebSocketServer from '../src/backend/WebSocketServer';
 import ReconnectMessageBufferStore from '../src/backend/webapp/ReconnectMessageBufferStore';
@@ -19,7 +19,7 @@ describe('WebSocketServer', () => {
         const webSocketServer = new WebSocketServer(dummyLoggerFactory, reconnectMessageBufferStore);
 
         const webSocket: any = {
-            on() {},
+            on() { /* nothing to do */ },
             send: jest.fn(),
             ping: jest.fn(),
         };
@@ -45,7 +45,7 @@ describe('WebSocketServer', () => {
     it('handles messages correctly', (done) => {
         const webSocketServer = new WebSocketServer(dummyLoggerFactory, reconnectMessageBufferStore);
 
-        let onMessageHandler = null;
+        let onMessageHandler: any = null;
         const wsSend = jest.fn();
         const webSocket: any = {
             on(event: string, handler: (msg: string) => void) {
@@ -76,7 +76,7 @@ describe('WebSocketServer', () => {
     it('handles client disconnect correctly', (done) => {
         const webSocketServer = new WebSocketServer(dummyLoggerFactory, reconnectMessageBufferStore);
 
-        let onCloseHandler = null;
+        let onCloseHandler: any = null;
         const wsSend = jest.fn();
         const webSocket: any = {
             on(event: string, handler: (msg: string) => void) {

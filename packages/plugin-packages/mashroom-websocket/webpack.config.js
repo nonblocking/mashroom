@@ -1,6 +1,6 @@
 
 module.exports = {
-    entry:  __dirname + '/src/frontend/test_client.js',
+    entry:  __dirname + '/src/frontend/test_client',
     output: {
         path: __dirname + '/dist/public',
         filename: 'test_client.js'
@@ -8,7 +8,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(ts)$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -17,5 +17,8 @@ module.exports = {
                 ],
             },
         ]
-    }
+    },
+    resolve: {
+        extensions: ['.ts'],
+    },
 };

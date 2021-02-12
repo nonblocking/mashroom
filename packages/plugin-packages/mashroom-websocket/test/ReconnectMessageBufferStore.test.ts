@@ -1,7 +1,8 @@
-// @flow
+
 import fs from 'fs';
 import os from 'os';
 import path from 'path';
+// @ts-ignore
 import { dummyLoggerFactory } from '@mashroom/mashroom-utils/lib/logging_utils';
 import ReconnectMessageBufferStore from '../src/backend/webapp/ReconnectMessageBufferStore';
 

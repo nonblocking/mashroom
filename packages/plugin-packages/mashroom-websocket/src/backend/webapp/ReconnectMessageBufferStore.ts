@@ -1,4 +1,3 @@
-// @flow
 
 import { existsSync, unlink, appendFile, readFile } from 'fs';
 import { ensureDirSync } from 'fs-extra';
@@ -7,37 +6,38 @@ import type { MashroomLogger } from '@mashroom/mashroom/type-definitions';
 import type { MashroomLoggerFactory } from '@mashroom/mashroom/type-definitions';
 
 export default class ReconnectMessageBufferStore {
-    _enabled: boolean;
-    _reconnectMessageBufferFolder: ?string;
-    _logger: MashroomLogger;
 
-    constructor(reconnectMessageBufferFolder: ?string, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.websocket.server.reconnect.buffer');
+    private _enabled: boolean;
+    private logger: MashroomLogger;
+
+    constructor(private reconnectMessageBufferFolder: string | undefined | null, serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
+        this.logger = loggerFactory('mashroom.websocket.server.reconnect.buffer');
+        this._enabled = false;
 
         if (reconnectMessageBufferFolder) {
             if (!isAbsolute(reconnectMessageBufferFolder)) {
-                this._reconnectMessageBufferFolder = resolve(serverRootFolder, reconnectMessageBufferFolder);
+                this.reconnectMessageBufferFolder = resolve(serverRootFolder, reconnectMessageBufferFolder);
             } else {
-                this._reconnectMessageBufferFolder = reconnectMessageBufferFolder;
+                this.reconnectMessageBufferFolder = reconnectMessageBufferFolder;
             }
 
             try {
-                ensureDirSync(this._reconnectMessageBufferFolder);
-                if (this._reconnectMessageBufferFolder && existsSync(this._reconnectMessageBufferFolder)) {
+                ensureDirSync(this.reconnectMessageBufferFolder);
+                if (this.reconnectMessageBufferFolder && existsSync(this.reconnectMessageBufferFolder)) {
                     this._enabled = true;
                 }
             } catch (e) {
-                this._logger.error('Creating message buffer folder failed!', e);
+                this.logger.error('Creating message buffer folder failed!', e);
             }
         }
 
-        this._logger.info(this._enabled
+        this.logger.info(this._enabled
             ? `WebSocket reconnect message buffering is active. Storage path: ${reconnectMessageBufferFolder || ''}`
             : 'WebSocket reconnect message buffering is not active'
         );
     }
 
-    get enabled() {
+    get enabled(): boolean {
         return this._enabled;
     }
 
@@ -47,9 +47,9 @@ export default class ReconnectMessageBufferStore {
         }
 
         return new Promise<void>((res) => {
-            unlink(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), err => {
+            unlink(resolve(this.reconnectMessageBufferFolder || '', `${name}.json`), err => {
                 if (err) {
-                    this._logger.debug(`Temporary store file could not be deleted: ${err.toString()}`);
+                    this.logger.debug(`Temporary store file could not be deleted: ${err.toString()}`);
                     return res();
                 }
 
@@ -64,9 +64,9 @@ export default class ReconnectMessageBufferStore {
         }
 
         return new Promise<void>((res) => {
-            appendFile(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), `${data}\n`, err => {
+            appendFile(resolve(this.reconnectMessageBufferFolder || '', `${name}.json`), `${data}\n`, err => {
                 if (err) {
-                    this._logger.warn(`Cannot append data to temporary store file: ${err.toString()}`);
+                    this.logger.warn(`Cannot append data to temporary store file: ${err.toString()}`);
                     return res();
                 }
 
@@ -81,9 +81,9 @@ export default class ReconnectMessageBufferStore {
         }
 
         return new Promise((res) => {
-            readFile(resolve(this._reconnectMessageBufferFolder || '', `${name}.json`), (err, data) => {
+            readFile(resolve(this.reconnectMessageBufferFolder || '', `${name}.json`), (err, data) => {
                 if (err) {
-                    this._logger.debug(`Could not get data from temporary store file: ${err.toString()}`);
+                    this.logger.debug(`Could not get data from temporary store file: ${err.toString()}`);
                     return res([]);
                 }
 

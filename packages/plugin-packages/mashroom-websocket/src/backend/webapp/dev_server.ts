@@ -1,17 +1,16 @@
-// @flow
-/* eslint no-console: off */
 
 import os from 'os';
 import http from 'http';
 import express from 'express';
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import WebSocketServer from '../WebSocketServer';
 import context from '../context';
 import app from './webapp';
 import httpUpgradeHandlerFn from './http_upgrade_handler';
+import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
+// @ts-ignore
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
-import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', loggerFactory);
 context.server = new WebSocketServer(loggerFactory, tmpFileStore);
@@ -28,14 +27,14 @@ const pluginContext: any = {
         core: {
             middlewareStackService: {
                 has: () => true,
-                async apply(name, req) {
+                async apply(name: string, req: any) {
                     req.session = {};
                 }
             }
         },
         security: {
             service: {
-                getUser(req): ?MashroomSecurityUser {
+                getUser(req: any): MashroomSecurityUser | undefined | null {
                     if (!req.session) {
                         return null;
                     }
@@ -55,9 +54,8 @@ const pluginContext: any = {
 };
 
 setInterval(() => {
-    // $FlowFixMe
-    context.server._clients.forEach(client => {
-        context.server.sendMessage(client.client, {
+    context.server.clients.forEach(client => {
+        context.server.sendMessage(client, {
             ping: new Date().toISOString(),
         });
     })

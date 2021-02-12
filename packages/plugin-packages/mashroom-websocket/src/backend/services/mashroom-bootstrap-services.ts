@@ -1,8 +1,8 @@
-// @flow
 
 import MashroomWebSocketService from './MashroomWebSocketService';
 
-import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLoggerFactory, MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+import type {MashroomWebSocketService as MashroomWebSocketServiceType} from '../../../type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();
@@ -17,7 +17,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
 export default bootstrap;
 
-const addTestListener = (service, loggerFactory) => {
+const addTestListener = (service: MashroomWebSocketServiceType, loggerFactory: MashroomLoggerFactory) => {
     const logger = loggerFactory('mashroom.websocket.service');
     service.addMessageListener((path) => path.split('?')[0] === '/test', (message, client) => {
         logger.info(`Received test message from user ${client.user.username}:`, message);

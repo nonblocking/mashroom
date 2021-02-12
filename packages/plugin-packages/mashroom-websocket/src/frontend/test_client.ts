@@ -1,19 +1,20 @@
-// @flow
 
-let webSocket: ?WebSocket = null;
+let webSocket: WebSocket | null = null;
 
 const setStatus = (status: string) => {
-    global.document.getElementById('status').innerHTML = `Status: ${status}`;
+    (global as any).document.getElementById('status').innerHTML = `Status: ${status}`;
 };
 
 const addLog = (log: string) => {
     const logPanel = global.document.getElementById('log');
     const logEntry = global.document.createElement('div');
-    logEntry.innerHTML = log;
-    logPanel.appendChild(logEntry);
+    if (logPanel && logEntry) {
+        logEntry.innerHTML = log;
+        logPanel.appendChild(logEntry);
+    }
 };
 
-global.connect = () => {
+(global as any).connect = () => {
     if (!webSocket) {
         const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
         const host = global.document.location.hostname;
@@ -53,13 +54,13 @@ global.connect = () => {
     }
 };
 
-global.disconnect = () => {
+(global as any).disconnect = () => {
     if (webSocket) {
         webSocket.close();
     }
 };
 
-global.ping = () => {
+(global as any).ping = () => {
     if (webSocket) {
         webSocket.send(JSON.stringify({
             greetings: 'Hello Server!'

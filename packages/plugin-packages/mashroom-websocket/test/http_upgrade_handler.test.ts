@@ -1,5 +1,5 @@
-// @flow
 
+// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import httpUpgradeHandlerFn from '../src/backend/webapp/http_upgrade_handler';
 import context from '../src/backend/context';
@@ -22,14 +22,14 @@ describe('http_upgrade_handler', () => {
                     core: {
                         middlewareStackService: {
                             has: () => true,
-                            async apply(name, req) {
+                            async apply(name: string, req: any) {
                                 req.session = {};
                             }
                         }
                     },
                     security: {
                         service: {
-                            getUser(): ?MashroomSecurityUser {
+                            getUser(): MashroomSecurityUser | null {
                               return null;
                             }
                         }
@@ -59,14 +59,14 @@ describe('http_upgrade_handler', () => {
                     core: {
                         middlewareStackService: {
                             has: () => true,
-                            async apply(name, req) {
+                            async apply(name: string, req: any) {
                                 req.session = {};
                             }
                         }
                     },
                     security: {
                         service: {
-                            getUser(req): ?MashroomSecurityUser {
+                            getUser(req: any): MashroomSecurityUser | null {
                                 if (!req.session) {
                                     return null;
                                 }
@@ -107,14 +107,14 @@ describe('http_upgrade_handler', () => {
                     core: {
                         middlewareStackService: {
                             has: () => true,
-                            async apply(name, req) {
+                            async apply(name: string, req: any) {
                                 req.session = {};
                             }
                         }
                     },
                     security: {
                         service: {
-                            getUser(req): ?MashroomSecurityUser {
+                            getUser(req: any): MashroomSecurityUser | null {
                                 if (!req.session) {
                                     return null;
                                 }
@@ -138,13 +138,13 @@ describe('http_upgrade_handler', () => {
         const server: any = {
             getServer() {
                 return {
-                    handleUpgrade(req, socket, head, cb) {
+                    handleUpgrade(req: any, socket: any, head: any, cb: any) {
                         const ws = {};
                         cb(ws);
                     }
                 }
             },
-            createClient(webSocket, connectPath, user) {
+            createClient(webSocket: any, connectPath: any, user: any) {
                 expect(webSocket).toBeTruthy();
                 expect(connectPath).toBe('/demo2');
                 expect(user.username).toBe('john');

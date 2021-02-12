@@ -1,9 +1,8 @@
-// @flow
 
 import type {MashroomWebSocketServer} from '../../../type-definitions/internal';
 
 let server: any = null;
-let restrictToRoles: ?Array<string> = null;
+let restrictToRoles: Array<string> | null = null;
 let basePath = '/websocket';
 let enableKeepAlive = false;
 let keepAliveIntervalSec = 15;
@@ -17,10 +16,10 @@ export default {
     set server(_server: MashroomWebSocketServer) {
         server = _server;
     },
-    get restrictToRoles(): ?Array<string> {
+    get restrictToRoles(): Array<string> | null {
         return restrictToRoles;
     },
-    set restrictToRoles(roles: ?Array<string>) {
+    set restrictToRoles(roles: Array<string> | null) {
         restrictToRoles = roles;
     },
     get basePath(): string {

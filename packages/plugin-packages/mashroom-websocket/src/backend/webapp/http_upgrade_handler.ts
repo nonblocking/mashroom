@@ -1,10 +1,12 @@
-// @flow
 
 import {ServerResponse} from 'http';
+// @ts-ignore
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import context from '../context';
 
+import type {Socket} from 'net';
 import type {
+    ExpressRequest,
     HttpServerRequest,
     MashroomHttpUpgradeHandler,
     MashroomLogger,
@@ -18,11 +20,11 @@ export default (): MashroomHttpUpgradeHandler => {
     };
 }
 
-const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) => {
+const handle = async (req: HttpServerRequest, socket: Socket, head: Buffer) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.websocket.service');
 
     logger.debug('Upgrade request received: ', req.url);
-    let user: ?MashroomSecurityUser = null;
+    let user: MashroomSecurityUser | undefined | null = null;
     try {
         user = await getUser(req, logger);
     } catch (error) {
@@ -40,6 +42,11 @@ const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) 
         return;
     }
 
+    if (!req.url) {
+        sendError(socket, 400, 'Bad Request');
+        return;
+    }
+
     const connectPath = req.url.substr(context.basePath.length);
 
     context.server.getServer().handleUpgrade(req, socket, head, (ws) => {
@@ -50,7 +57,9 @@ const handle = async (req: HttpServerRequest, socket: net$Socket, head: Buffer) 
     });
 };
 
-const getUser = async (req: HttpServerRequest, logger: MashroomLogger): Promise<?MashroomSecurityUser> => {
+const getUser = async (req: HttpServerRequest, logger: MashroomLogger): Promise<MashroomSecurityUser | null | undefined> => {
+    const requestWithContext = req as ExpressRequest;
+
     // Execute session middleware
     const middlewareStackService: MashroomMiddlewareStackService = req.pluginContext.services.core.middlewareStackService;
     if (!middlewareStackService.has('Mashroom Session Middleware')) {
@@ -58,12 +67,12 @@ const getUser = async (req: HttpServerRequest, logger: MashroomLogger): Promise<
         return null;
     }
     const dummyResponse: any = new ServerResponse(req);
-    await middlewareStackService.apply('Mashroom Session Middleware', req, dummyResponse);
+    await middlewareStackService.apply('Mashroom Session Middleware', requestWithContext, dummyResponse);
 
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-    return securityService.getUser(req);
+    return securityService.getUser(requestWithContext);
 };
 
-const sendError = (socket: net$Socket, statusCode: number, message: string) => {
+const sendError = (socket: Socket, statusCode: number, message: string) => {
     socket.end(`HTTP/1.1 ${statusCode} ${message}\r\n\r\n`, 'ascii');
 };
