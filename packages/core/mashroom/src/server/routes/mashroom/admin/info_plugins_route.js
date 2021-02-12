@@ -15,12 +15,12 @@ export default pluginsRoute;
 const plugins = (pluginContext: MashroomPluginContext) => `
     <h2>Overview</h2>
     ${pluginOverviewTable(pluginContext)}
-    <h2>Plugin Loaders</h2>
-    ${pluginLoadersTable(pluginContext)}
-    <h2>Plugin Packages</h2>
-    ${pluginPackagesTable(pluginContext)}
     <h2>Plugins</h2>
     ${pluginTable(pluginContext)}
+    <h2>Plugin Packages</h2>
+    ${pluginPackagesTable(pluginContext)}
+    <h2>Plugin Loaders</h2>
+    ${pluginLoadersTable(pluginContext)}
 `;
 
 const pluginOverviewTable = (pluginContext: MashroomPluginContext) => {
