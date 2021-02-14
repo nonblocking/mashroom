@@ -1,16 +1,17 @@
-<script>
+<script lang="ts">
   import { onDestroy } from 'svelte';
+  import type { MashroomPluginConfig } from '@mashroom/mashroom/type-definitions';
   import logo from './assets/svelte-logo.svg';
 
-  export let messageBus;
-  export let appConfig = {};
+  export let messageBus: any;
+  export let appConfig: MashroomPluginConfig & { firstName?: string } = {};
   let pings = 0;
 
-  const incrementPing = () => pings += 1;
+  const incrementPing = (): number => pings += 1;
 
   messageBus.subscribe('ping', incrementPing);
 
-  const sendPing = () => messageBus.publish('ping', {});
+  const sendPing = (): void => messageBus.publish('ping', {});
 
   onDestroy(() => {
       messageBus.unsubscribe('ping', incrementPing);
