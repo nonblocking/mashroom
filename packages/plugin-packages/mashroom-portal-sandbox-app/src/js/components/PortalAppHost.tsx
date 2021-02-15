@@ -1,39 +1,38 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {CircularProgress} from '@mashroom/mashroom-portal-ui-commons';
 
-import type {ActivePortalApp} from '../../../type-definitions';
+import type {ActivePortalApp} from '../types';
 
 export const HOST_ELEMENT_ID = 'mashroom-sandbox-app-host-elem';
 
 type Props = {
-    width: string,
-    activePortalApp: ?ActivePortalApp,
-    setHostWidth: (string) => void,
+    width: string;
+    activePortalApp: ActivePortalApp | undefined | null;
+    setHostWidth: (width: string) => void;
 }
 
 export default class PortalApp extends PureComponent<Props> {
 
     wrapperElemRef: { current: null | HTMLDivElement };
-    boundResizerMouseUp: MouseEvent => void;
-    boundResizerMouseMove: MouseEvent => void;
+    boundResizerMouseUp: (event: MouseEvent) => void;
+    boundResizerMouseMove: (event: MouseEvent) => void;
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
         this.wrapperElemRef = React.createRef();
         this.boundResizerMouseUp = this.resizerMouseUp.bind(this);
         this.boundResizerMouseMove = this.resizerMouseMove.bind(this);
     }
 
-    resizerMouseDown(event: MouseEvent) {
-        window.addEventListener('mousemove', this.boundResizerMouseMove);
-        window.addEventListener('mouseup', this.boundResizerMouseUp);
+    resizerMouseDown() {
+        global.addEventListener('mousemove', this.boundResizerMouseMove);
+        global.addEventListener('mouseup', this.boundResizerMouseUp);
     }
 
-    resizerMouseUp(event: MouseEvent) {
-        window.removeEventListener('mousemove', this.boundResizerMouseMove);
-        window.removeEventListener('mouseup', this.boundResizerMouseUp);
+    resizerMouseUp() {
+        global.removeEventListener('mousemove', this.boundResizerMouseMove);
+        global.removeEventListener('mouseup', this.boundResizerMouseUp);
     }
 
     resizerMouseMove(event: MouseEvent) {

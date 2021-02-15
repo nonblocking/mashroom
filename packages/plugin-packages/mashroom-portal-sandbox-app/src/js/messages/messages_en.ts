@@ -1,4 +1,3 @@
-// @flow
 
 export default {
     appName: 'App Name',

@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
@@ -7,11 +6,11 @@ import type {
     ActivePortalApp,
     MessageBusCommunication,
     MessageBusMessage
-} from '../../../type-definitions';
+} from '../types';
 
 type Props = {
-    activePortalApp: ?ActivePortalApp,
-    messageBusCom: MessageBusCommunication,
+    activePortalApp: ActivePortalApp | undefined | null;
+    messageBusCom: MessageBusCommunication;
 }
 
 export default class MessageBusHistory extends PureComponent<Props> {

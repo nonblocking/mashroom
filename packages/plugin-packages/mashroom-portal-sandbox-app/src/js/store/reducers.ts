@@ -1,4 +1,3 @@
-// @flow
 
 import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 import {
@@ -12,17 +11,17 @@ import {
     SET_TOPICS_SUBSCRIBED_BY_APP
 } from './actions';
 
+import type {Reducer} from 'redux';
+import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 import type {
-    Action,
+    State,
     ActivePortalApp,
     MessageBusCommunication,
     PortalAppHost,
     SelectedPortalApp
-} from '../../../type-definitions';
+} from '../types';
 
-import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
-
-const availablePortalApps = (state: Array<MashroomAvailablePortalApp>, action: Action): Array<MashroomAvailablePortalApp> => {
+const availablePortalApps: Reducer<Array<MashroomAvailablePortalApp>> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return [];
     }
@@ -36,7 +35,7 @@ const availablePortalApps = (state: Array<MashroomAvailablePortalApp>, action: A
     }
 };
 
-const appLoadingError = (state: ?boolean, action: Action): ?boolean => {
+const appLoadingError: Reducer<boolean> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return false;
     }
@@ -50,7 +49,7 @@ const appLoadingError = (state: ?boolean, action: Action): ?boolean => {
     }
 };
 
-const selectedPortalApp = (state: ?SelectedPortalApp, action: Action): ?SelectedPortalApp => {
+const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -64,7 +63,7 @@ const selectedPortalApp = (state: ?SelectedPortalApp, action: Action): ?Selected
     }
 };
 
-const activePortalApp = (state: ?ActivePortalApp, action: Action): ?ActivePortalApp => {
+const activePortalApp: Reducer<ActivePortalApp | undefined | null> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -78,7 +77,7 @@ const activePortalApp = (state: ?ActivePortalApp, action: Action): ?ActivePortal
     }
 };
 
-const messageBusCom = (state: MessageBusCommunication, action: Action): MessageBusCommunication => {
+const messageBusCom: Reducer<MessageBusCommunication> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return {
             topicsSubscribedByApp: [],
@@ -102,7 +101,7 @@ const messageBusCom = (state: MessageBusCommunication, action: Action): MessageB
     }
 };
 
-const host = (state: PortalAppHost, action: Action): PortalAppHost => {
+const host: Reducer<PortalAppHost> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return {
             width: '100%'
@@ -118,8 +117,7 @@ const host = (state: PortalAppHost, action: Action): PortalAppHost => {
     }
 };
 
-// $FlowFixMe
-export default mashroomPortalCommonsCombineReducers({
+export default mashroomPortalCommonsCombineReducers<State>({
     availablePortalApps,
     selectedPortalApp,
     appLoadingError,

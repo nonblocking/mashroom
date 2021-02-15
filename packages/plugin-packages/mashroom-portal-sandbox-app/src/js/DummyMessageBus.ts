@@ -1,7 +1,6 @@
-// @flow
 
 import type { MashroomPortalMessageBusInterceptor, MashroomPortalMessageBusSubscriberCallback } from '@mashroom/mashroom-portal/type-definitions';
-import type { DummyMessageBus as DummyMessageBusType } from '../../type-definitions';
+import type { DummyMessageBus as DummyMessageBusType } from './types';
 
 type Subscription = {
     callback: MashroomPortalMessageBusSubscriberCallback,
@@ -15,8 +14,8 @@ type SubscriptionMap = {
 export default class DummyMessageBus implements DummyMessageBusType {
 
     _subscriptionMap: SubscriptionMap;
-    _onMessageSentCallback: ?(topic: string, data: any) => void;
-    _onTopicsChangedCallback: ?(topics: Array<string>) => void;
+    _onMessageSentCallback: ((topic: string, data: any) => void) | null;
+    _onTopicsChangedCallback: ((topics: Array<string>) => void) | null;
 
     constructor() {
         this._subscriptionMap = {};
@@ -69,6 +68,7 @@ export default class DummyMessageBus implements DummyMessageBusType {
     }
 
     getAppInstance(appId: string) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const master = this;
 
         return {
@@ -143,7 +143,7 @@ export default class DummyMessageBus implements DummyMessageBusType {
 
         if (subscriptions) {
             subscriptions.forEach((subscription) => {
-                setTimeout(() =>  subscription.callback(data, topic), 0);
+                setTimeout(() =>  subscription.callback(data, topic, null), 0);
                 if (subscription.once) {
                     this._unsubscribe(topic, subscription.callback);
                 }

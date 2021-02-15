@@ -1,4 +1,3 @@
-// @flow
 
 import {HOST_ELEMENT_ID} from './components/PortalAppHost';
 
@@ -7,7 +6,7 @@ import type {
     MashroomPortalAppSetup,
     MashroomPortalClientServices,
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {DummyMessageBus} from '../../type-definitions';
+import type {DummyMessageBus} from './types';
 
 const WINDOW_VAR_PORTAL_SERVICES = 'MashroomPortalServices';
 
@@ -15,7 +14,7 @@ const LOADED_SCRIPTS: Array<HTMLScriptElement> = [];
 const LOADED_STYLES: Array<HTMLLinkElement> = [];
 
 // TODO: implement unloading/loading of a different portal app?
-let loadedAppHooks: ?MashroomPortalAppLifecycleHooks = null;
+let loadedAppHooks: MashroomPortalAppLifecycleHooks | null = null;
 
 const loadJs = (path: string): Promise<void> => {
     return new Promise((resolve, reject) => {
@@ -50,7 +49,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
     try {
         const {sharedResources, resources, resourcesBasePath, globalLaunchFunction, lastReloadTs} = setup;
 
-        let sharedJsResources = [];
+        let sharedJsResources: Array<Promise<any>> = [];
         if (sharedResources && sharedResources.js) {
             sharedJsResources = sharedResources.js.map((jsResource) => loadJs(`${resourcesBasePath}/${jsResource}?v=${lastReloadTs}`));
         }
@@ -63,7 +62,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
             () => {
                 return Promise.all(jsResources).then(
                     () => {
-                        const bootstrapFn = window[globalLaunchFunction];
+                        const bootstrapFn = (global as any)[globalLaunchFunction];
                         if (!(typeof (bootstrapFn) === 'function')) {
                             return Promise.reject(`Invalid bootstrap function: ${globalLaunchFunction}`);
                         }
@@ -76,7 +75,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
                         }
 
                         const messageBus = dummyMessageBus.getAppInstance('portalAppUnderTest');
-                        const clientServices: MashroomPortalClientServices = global[WINDOW_VAR_PORTAL_SERVICES] || {};
+                        const clientServices: MashroomPortalClientServices = (global as any)[WINDOW_VAR_PORTAL_SERVICES] || {};
                         const modifiedClientServices = {...clientServices, messageBus};
 
 
@@ -84,7 +83,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
                         if (result) {
                             if (typeof (result.then) === 'function') {
                                 result.then(
-                                    (hooks) => {
+                                    (hooks: MashroomPortalAppLifecycleHooks | null) => {
                                         loadedAppHooks = hooks
                                     }
                                 );

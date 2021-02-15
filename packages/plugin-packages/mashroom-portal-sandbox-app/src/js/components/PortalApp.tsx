@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
@@ -13,19 +12,19 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {ActivePortalApp, DummyMessageBus, SelectedPortalApp} from '../../../type-definitions';
+import type {ActivePortalApp, DummyMessageBus, SelectedPortalApp} from '../types';
 
 type Props = {
-    portalAppService: MashroomPortalAppService,
-    portalStateService: MashroomPortalStateService,
-    messageBus: MashroomPortalMessageBus,
-    dummyMessageBus: DummyMessageBus,
-    activePortalApp: ?ActivePortalApp,
-    setAvailablePortalApps: (Array<MashroomAvailablePortalApp>) => void,
-    setSelectedPortalApp: (?SelectedPortalApp) => void,
-    setActivePortalApp: (?ActivePortalApp) => void,
-    setAppLoadingError: (boolean) => void,
-    setHostWidth: (string) => void,
+    portalAppService: MashroomPortalAppService;
+    portalStateService: MashroomPortalStateService;
+    messageBus: MashroomPortalMessageBus;
+    dummyMessageBus: DummyMessageBus;
+    activePortalApp: ActivePortalApp | undefined | null;
+    setAvailablePortalApps: (apps: Array<MashroomAvailablePortalApp>) => void;
+    setSelectedPortalApp: (app: SelectedPortalApp | undefined | null) => void;
+    setActivePortalApp: (app: ActivePortalApp | undefined | null) => void;
+    setAppLoadingError: (error: boolean) => void;
+    setHostWidth: (width: string) => void;
 }
 
 export default class PortalApp extends PureComponent<Props> {
@@ -52,7 +51,7 @@ export default class PortalApp extends PureComponent<Props> {
         return getQueryParams(portalStateService);
     }
 
-    selectionChanged(appName: ?string) {
+    selectionChanged(appName: string | undefined | null) {
         const { messageBus, portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
 
         setTimeout(() => {
@@ -74,10 +73,10 @@ export default class PortalApp extends PureComponent<Props> {
                     setup
                 };
 
-                const queryParams = this.getQueryParams();
+                const queryParams = this.getQueryParams() as any;
                 if (queryParams.appName) {
                     // Auto load
-                    this.loadPortalApp(mergeAppConfig(selectedPortalApp, (queryParams: any)), queryParams.width);
+                    this.loadPortalApp(mergeAppConfig(selectedPortalApp, queryParams), queryParams.width);
                 } else {
                     setSelectedPortalApp(selectedPortalApp);
                 }
@@ -89,7 +88,7 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    loadPortalApp(selectedPortalApp: SelectedPortalApp, hostWidth: ?string) {
+    loadPortalApp(selectedPortalApp: SelectedPortalApp, hostWidth: string | undefined | null) {
         console.info(`Loading app '${selectedPortalApp.appName}' with setup: `, selectedPortalApp.setup);
 
         const { dummyMessageBus, setActivePortalApp, setHostWidth } = this.props;
@@ -101,7 +100,9 @@ export default class PortalApp extends PureComponent<Props> {
         }
 
         loadPortalApp(appName, 'mashroom-sandbox-app-host-elem', setup, dummyMessageBus).then(
-            () => {},
+            () => {
+                // Nothing to do
+            },
             (error) => {
                 console.error('Loading app failed', error);
             }

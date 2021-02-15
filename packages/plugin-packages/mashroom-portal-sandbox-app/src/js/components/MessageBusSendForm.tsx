@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {
@@ -9,19 +8,24 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
-import type {ActivePortalApp, MessageBusMessage} from '../../../type-definitions';
+import type {ActivePortalApp, MessageBusMessage} from '../types';
+
+type FormData = {
+    topic: string;
+    message: string;
+}
 
 type Props = {
-    messageBus: MashroomPortalMessageBus,
-    activePortalApp: ?ActivePortalApp,
-    topicsSubscribedByApp: Array<string>,
-    addMessagePublishedBySandbox: (MessageBusMessage) => void,
-    resetForm: (string) => void,
+    messageBus: MashroomPortalMessageBus;
+    activePortalApp: ActivePortalApp | undefined | null;
+    topicsSubscribedByApp: Array<string>;
+    addMessagePublishedBySandbox: (messageBus: MessageBusMessage) => void;
+    resetForm: (name: string) => void;
 }
 
 export default class MessageBusSendForm extends PureComponent<Props> {
 
-    getInitialValues() {
+    getInitialValues(): FormData {
         return {
             topic: '',
             message: `{
@@ -30,8 +34,8 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         }
     }
 
-    validate(values: Object) {
-        const errors = {};
+    validate(values: FormData) {
+        const errors: { [k in keyof FormData]?: string } = {};
         const { topic, message } = values;
 
         if (!topic || !topic.trim()) {
@@ -46,7 +50,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: any) {
+    onSubmit(values: FormData) {
         const { messageBus, addMessagePublishedBySandbox, resetForm } = this.props;
         const { topic, message } = values;
         const data = JSON.parse(message);
@@ -59,7 +63,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
     }
 
     render() {
-        const { activePortalApp, topicsSubscribedByApp} = this.props;
+        const {activePortalApp, topicsSubscribedByApp} = this.props;
         if (!activePortalApp) {
             return null;
         }

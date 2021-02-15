@@ -1,7 +1,6 @@
-// @flow
 
 import type { MashroomAvailablePortalApp } from '@mashroom/mashroom-portal/type-definitions';
-import type {SelectedPortalApp, ActivePortalApp, MessageBusMessage} from '../../../type-definitions';
+import type {SelectedPortalApp, ActivePortalApp, MessageBusMessage} from '../types';
 
 export const SET_AVAILABLE_PORTAL_APPS = 'SET_AVAILABLE_PORTAL_APPS';
 export const SET_SELECTED_PORTAL_APP = 'SET_SELECTED_PORTAL_APP';
@@ -19,14 +18,14 @@ export const setAvailablePortalApps = (availablePortalApps: Array<MashroomAvaila
     };
 };
 
-export const setSelectedPortalApp = (selectedPortalApp: ?SelectedPortalApp) => {
+export const setSelectedPortalApp = (selectedPortalApp: SelectedPortalApp | undefined | null) => {
     return {
         type: SET_SELECTED_PORTAL_APP,
         selectedPortalApp,
     };
 };
 
-export const setActivePortalApp = (activePortalApp: ?ActivePortalApp) => {
+export const setActivePortalApp = (activePortalApp: ActivePortalApp | undefined | null) => {
     return {
         type: SET_ACTIVE_PORTAL_APP,
         activePortalApp,

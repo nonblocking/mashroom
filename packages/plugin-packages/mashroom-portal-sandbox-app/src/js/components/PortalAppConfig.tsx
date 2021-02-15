@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {
@@ -9,17 +8,24 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 import {mergeAppConfig} from '../utils';
 
-import type {SelectedPortalApp} from '../../../type-definitions';
+import type {SelectedPortalApp} from '../types';
+
+type FormData = {
+    lang: string;
+    width: string;
+    permissions: string;
+    appConfig: string;
+}
 
 type Props = {
-    hostWidth: string,
-    selectedPortalApp: ?SelectedPortalApp,
-    onConfigSubmit: (SelectedPortalApp, string) => void,
+    hostWidth: string;
+    selectedPortalApp: SelectedPortalApp | undefined | null;
+    onConfigSubmit: (app: SelectedPortalApp, width: string) => void,
 }
 
 export default class PortalAppConfig extends PureComponent<Props> {
 
-    getInitialValues() {
+    getInitialValues(): FormData | null {
         const { selectedPortalApp, hostWidth: width } = this.props;
         if (!selectedPortalApp) {
             return null;
@@ -34,8 +40,8 @@ export default class PortalAppConfig extends PureComponent<Props> {
         };
     }
 
-    validate(values: Object) {
-        const errors = {};
+    validate(values: FormData) {
+        const errors: { [k in keyof FormData]?: string } = {};
         const { permissions, appConfig } = values;
 
         try {
@@ -52,7 +58,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: any) {
+    onSubmit(values: FormData) {
         const { selectedPortalApp, onConfigSubmit } = this.props;
         if (!selectedPortalApp) {
             return;

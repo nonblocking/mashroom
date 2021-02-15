@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {IntlProvider} from 'react-intl';
@@ -17,7 +16,7 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type { DummyMessageBus as DummyMessageBusType } from '../../../type-definitions';
+import type { DummyMessageBus as DummyMessageBusType } from '../types';
 
 type Props = {
     lang: string,
@@ -30,8 +29,8 @@ export default class SandboxApp extends PureComponent<Props> {
 
     dummyMessageBus: DummyMessageBusType;
 
-    constructor() {
-        super();
+    constructor(props: Props) {
+        super(props);
         this.dummyMessageBus = new DummyMessageBus();
         this.dummyMessageBus.onMessageSent((topic, data) => {
             store.dispatch(addMessagePublishedByApp({

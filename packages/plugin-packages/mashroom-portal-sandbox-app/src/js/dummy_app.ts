@@ -1,4 +1,3 @@
-// @flow
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
@@ -27,4 +26,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     });
 };
 
-global.startFoo = bootstrap;
+(global as any).startFoo = bootstrap;

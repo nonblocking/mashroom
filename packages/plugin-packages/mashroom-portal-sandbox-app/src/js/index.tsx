@@ -1,4 +1,3 @@
-// @flow
 
 import '../sass/style.scss';
 
@@ -21,4 +20,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     };
 };
 
-global.startSandboxApp = bootstrap;
+(global as any).startSandboxApp = bootstrap;

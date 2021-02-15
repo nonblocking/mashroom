@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {Form, SelectFieldContainer, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
@@ -6,10 +5,10 @@ import {Form, SelectFieldContainer, ErrorMessage} from '@mashroom/mashroom-porta
 import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
-    preselectAppName: ?string,
-    availablePortalApps: Array<MashroomAvailablePortalApp>,
-    appLoadingError: boolean,
-    onSelectionChanged: (?string) => void,
+    preselectAppName: string | undefined | null;
+    availablePortalApps: Array<MashroomAvailablePortalApp>;
+    appLoadingError: boolean;
+    onSelectionChanged: (portalApp: string | undefined | null) => void,
 }
 
 export default class PortalAppSelection extends PureComponent<Props> {
