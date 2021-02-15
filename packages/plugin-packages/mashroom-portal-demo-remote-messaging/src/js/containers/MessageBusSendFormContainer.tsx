@@ -1,35 +1,21 @@
 
-// @flow
-
 import React from 'react';
 import {connect} from 'react-redux';
 import {reset as resetForm} from 'redux-form';
 import {addPublishedMessage, updatePublishedMessageStatus} from '../store/actions';
 import MessageBusSendForm from '../components/MessageBusSendForm';
 
-import type {ComponentType} from 'react';
 import type {
     Dispatch, PublishedMessage, PublishedMessageStatus,
     State
-} from '../../../type-definitions';
-import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
+} from '../types';
 
-type OwnProps = {
-    messageBus: MashroomPortalMessageBus,
-}
-
-type DispatchProps = {|
-    resetForm: (string) => void,
-    addPublishedMessage: (message: PublishedMessage) => void,
-    updateMessageStatus: (messageId: string, status: PublishedMessageStatus, errorMessage?: string) => void,
-|}
-
-const mapStateToProps = (state: State, ownProps: OwnProps) => {
+const mapStateToProps = (state: State) => {
     return {
     };
 };
 
-const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchProps => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
     resetForm: (id: string) => {
         dispatch(resetForm(id));
     },
@@ -41,4 +27,4 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchPro
     }
 });
 
-export default (connect(mapStateToProps, mapDispatchToProps)(MessageBusSendForm): ComponentType<OwnProps>);
+export default connect(mapStateToProps, mapDispatchToProps)(MessageBusSendForm);

@@ -1,4 +1,3 @@
-// @flow
 
 import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 import {
@@ -8,9 +7,10 @@ import {
     UPDATE_PUBLISHED_MESSAGE_STATUS
 } from './actions';
 
-import type {Action, PublishedMessages, ReceivedMessages, Subscription,} from '../../../type-definitions';
+import type {Reducer} from 'redux';
+import type {State, PublishedMessages, ReceivedMessages, Subscription,} from '../types';
 
-const subscription = (state: Subscription, action: Action): Subscription => {
+const subscription: Reducer<Subscription> = (state , action) => {
     if (typeof (state) === 'undefined') {
         return {
             topic: '',
@@ -27,7 +27,7 @@ const subscription = (state: Subscription, action: Action): Subscription => {
     }
 };
 
-const publishedMessages = (state: PublishedMessages, action: Action): PublishedMessages => {
+const publishedMessages: Reducer<PublishedMessages> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return [];
     }
@@ -52,7 +52,7 @@ const publishedMessages = (state: PublishedMessages, action: Action): PublishedM
     }
 };
 
-const receivedMessages = (state: ReceivedMessages, action: Action): ReceivedMessages => {
+const receivedMessages: Reducer<ReceivedMessages> = (state, action): ReceivedMessages => {
     if (typeof (state) === 'undefined') {
         return [];
     }
@@ -66,8 +66,7 @@ const receivedMessages = (state: ReceivedMessages, action: Action): ReceivedMess
     }
 };
 
-// $FlowFixMe
-export default mashroomPortalCommonsCombineReducers({
+export default mashroomPortalCommonsCombineReducers<State>({
     subscription,
     publishedMessages,
     receivedMessages

@@ -1,13 +1,13 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "plugins": [
-        "react",
-        "flowtype"
+        "@typescript-eslint/eslint-plugin",
+        "react"
     ],
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:flowtype/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "node": true,
@@ -25,6 +25,7 @@
         "prefer-object-spread": "error",
         "no-console": "off",
         "no-unused-vars": "off",
-        "react/display-name": "off"
+        "react/display-name": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
     }
 }

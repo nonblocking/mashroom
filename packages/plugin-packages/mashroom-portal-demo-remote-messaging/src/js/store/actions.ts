@@ -1,11 +1,10 @@
-// @flow
 
 import type {
     Subscription,
     PublishedMessage,
     ReceivedMessage,
     PublishedMessageStatus
-} from '../../../type-definitions';
+} from '../types';
 
 export const SET_SUBSCRIPTION = 'SET_SUBSCRIPTION';
 export const ADD_PUBLISHED_MESSAGE = 'ADD_PUBLISHED_MESSAGE';

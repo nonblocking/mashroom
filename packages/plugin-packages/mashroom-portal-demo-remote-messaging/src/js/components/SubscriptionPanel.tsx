@@ -1,10 +1,9 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
-import type {Subscription, ReceivedMessage} from '../../../type-definitions';
+import type {Subscription, ReceivedMessage} from '../types';
 
 type Props = {
     subscription: Subscription,

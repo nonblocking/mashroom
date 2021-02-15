@@ -1,4 +1,3 @@
-// @flow
 
 import '../sass/style.scss';
 
@@ -12,7 +11,9 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     const { lang } = portalAppSetup;
     const { messageBus } = clientServices;
 
-    ReactDOM.render(<RemoteMessagingApp lang={lang} messageBus={messageBus} />, portalAppHostElement);
+    ReactDOM.render(
+        <RemoteMessagingApp lang={lang} messageBus={messageBus} />,
+        portalAppHostElement);
 
     return {
         willBeRemoved: () => {
@@ -21,4 +22,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     };
 };
 
-global.startRemoteMessagingDemoApp = bootstrap;
+(global as any).startRemoteMessagingDemoApp = bootstrap;

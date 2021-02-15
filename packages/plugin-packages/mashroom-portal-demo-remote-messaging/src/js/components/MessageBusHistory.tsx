@@ -1,9 +1,8 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import type {PublishedMessages, ReceivedMessages} from '../../../type-definitions';
+import type {PublishedMessages, ReceivedMessages} from '../types';
 
 type Props = {
     publishedMessages: PublishedMessages,

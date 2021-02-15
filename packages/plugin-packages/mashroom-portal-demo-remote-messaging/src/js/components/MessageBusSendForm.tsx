@@ -1,4 +1,3 @@
-// @flow
 
 import React, {PureComponent} from 'react';
 import shortId from 'shortid';
@@ -8,21 +7,27 @@ import {
     TextareaFieldContainer,
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
+// @ts-ignore
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
-import type {PublishedMessage, PublishedMessageStatus} from '../../../type-definitions';
+import type {PublishedMessage, PublishedMessageStatus} from '../types';
+
+type FormData = {
+    topic: string;
+    message: string;
+}
 
 type Props = {
     messageBus: MashroomPortalMessageBus,
-    resetForm: (string) => void,
+    resetForm: (name: string) => void,
     addPublishedMessage: (message: PublishedMessage) => void,
     updateMessageStatus: (messageId: string, status: PublishedMessageStatus, errorMessage?: string) => void,
 }
 
 export default class MessageBusSendForm extends PureComponent<Props> {
 
-    getInitialValues() {
+    getInitialValues(): FormData {
         return {
             topic: '',
             message: `{
@@ -31,8 +36,8 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         }
     }
 
-    validate(values: Object) {
-        const errors = {};
+    validate(values: FormData) {
+        const errors: { [k in keyof FormData]?: string } = {};
         const { topic, message } = values;
 
         if (!topic || !topic.trim()) {
@@ -51,7 +56,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: any) {
+    onSubmit(values: FormData) {
         const { messageBus, resetForm, addPublishedMessage, updateMessageStatus } = this.props;
         const { topic, message } = values;
         const jsonMessage = JSON.parse(message);
