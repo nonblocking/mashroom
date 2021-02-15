@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Load the JS resources for apps sequentially, because if you have more than one bundle they typically depend on each other
+
 ## 1.6.4 (February 1, 2021)
 
  * HTTP Proxy: Added an optional *order* property to interceptor configs that allows it to determine the execution order
