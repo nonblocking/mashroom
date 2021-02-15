@@ -5,11 +5,8 @@
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
     "version": "1.6.4",
-    "main": "src/js",
-    "devDependencies": {
-        "codemirror": "^5.58.2",
-        "eslint": "^7.13.0",
-        "jest": "^26.6.3",
+    "main": "dist",
+    "dependencies": {
         "react": "^17.0.1",
         "react-autosuggest": "^10.0.3",
         "react-click-outside": "^3.0.1",
@@ -17,8 +14,25 @@
         "react-dom": "^17.0.1",
         "react-intl": "^5.9.2",
         "react-redux": "7.2.2",
+        "hoist-non-react-statics": "^3.3.2",
         "redux": "^4.0.5",
-        "redux-form": "^8.3.6"
+        "redux-form": "^8.3.6",
+        "codemirror": "^5.58.2"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.12.1",
+        "eslint": "^7.13.0",
+        "jest": "^26.6.3",
+        "cpy-cli": "^3.1.1",
+        "del-cli": "^3.0.1",
+        "typescript": "^4.0.5",
+        "@types/react": "^17.0.1",
+        "@types/react-dom": "^17.0.0",
+        "@types/react-redux": "^7.1.16",
+        "@types/redux-form": "^8.3.1",
+        "@types/react-autosuggest": "^10.1.1",
+        "@types/react-click-outside": "^3.0.3",
+        "@types/codemirror": "^0.0.108"
     },
     "jest": {
         "verbose": true,
@@ -29,6 +43,9 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src --fix"
+        "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen",
+        "lint": "eslint --ext .ts --ext .tsx --fix js",
+        "type-check": "tsc --noEmit",
+        "type-gen": "tsc --emitDeclarationOnly --declaration && cpy --parents --cwd=dist/declarations/js '**/*.d.ts' '../../../dist' && del-cli dist/declarations"
     }
 }
