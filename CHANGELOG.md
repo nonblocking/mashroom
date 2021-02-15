@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * LDAP Security Provider: Add all roles from the *groupToRoleMapping* and *userToRoleMapping*, to improve the autocomplete in the Admin UI
+ * Simple Security Provider: Add all roles from *users.json* to the known roles, to improve the autocomplete in the Admin UI
+
 ## 1.6.4 (February 1, 2021)
 
  * HTTP Proxy: Added an optional *order* property to interceptor configs that allows it to determine the execution order

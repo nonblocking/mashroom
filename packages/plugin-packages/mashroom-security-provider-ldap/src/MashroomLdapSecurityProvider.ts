@@ -17,6 +17,7 @@ import type {
     MashroomSecurityLoginResult
 } from '@mashroom/mashroom-security/type-definitions';
 import type {GroupToRoleMapping, UserToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
+import {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 
 const LDAP_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
 const LDAP_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';
@@ -156,7 +157,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 });
             }
             const groups = await this.getUserGroups(user, logger);
-            const roles = this.getRoles(username, groups, logger);
+            const roles = this.getRoles(request, username, groups, logger);
 
             const mashroomUser: MashroomSecurityUser = {
                 username,
@@ -208,11 +209,11 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return groupEntries.map((e) => e.cn);
     }
 
-    private getRoles(username: string, groups: Array<string>, logger: MashroomLogger): Array<string> {
+    private getRoles(request: ExpressRequest, username: string, groups: Array<string>, logger: MashroomLogger): Array<string> {
         const roles: Array<string> = [];
 
         if (groups && groups.length > 0) {
-            const groupToRoles = this.getGroupToRoleMapping(logger);
+            const groupToRoles = this.getGroupToRoleMapping(request, logger);
             if (groupToRoles) {
                 groups.forEach((group) => {
                     if (groupToRoles.hasOwnProperty(group)) {
@@ -228,7 +229,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             }
         }
 
-        const userToRoles = this.getUserToRoleMapping(logger);
+        const userToRoles = this.getUserToRoleMapping(request, logger);
         if (userToRoles && userToRoles.hasOwnProperty(username)) {
             userToRoles[username].forEach((role) => {
                 if (roles.indexOf(role) === -1) {
@@ -240,7 +241,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return roles;
     }
 
-    private getGroupToRoleMapping(logger: MashroomLogger): GroupToRoleMapping | undefined | null {
+    private getGroupToRoleMapping(request: ExpressRequest, logger: MashroomLogger): GroupToRoleMapping | undefined | null {
         if (!this.groupToRoleMappingPath) {
             return null;
         }
@@ -249,7 +250,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (fs.existsSync(this.groupToRoleMappingPath)) {
-            this.groupToRoleMapping = require(this.groupToRoleMappingPath);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            this.groupToRoleMapping = require(this.groupToRoleMappingPath) as GroupToRoleMapping;
+            this.createRoleDefinitions(this.groupToRoleMapping, request, logger);
         } else {
             logger.warn(`No group to roles definition found: ${this.groupToRoleMappingPath || '-'}.`);
             this.groupToRoleMapping = null;
@@ -258,7 +261,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return this.groupToRoleMapping;
     }
 
-    private getUserToRoleMapping(logger: MashroomLogger): UserToRoleMapping | undefined | null {
+    private getUserToRoleMapping(request: ExpressRequest, logger: MashroomLogger): UserToRoleMapping | undefined | null {
         if (!this.userToRoleMappingPath) {
             return null;
         }
@@ -267,12 +270,36 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (fs.existsSync(this.userToRoleMappingPath)) {
-            this.userToRoleMapping = require(this.userToRoleMappingPath);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            this.userToRoleMapping = require(this.userToRoleMappingPath) as UserToRoleMapping;
+            this.createRoleDefinitions(this.userToRoleMapping, request, logger);
         } else {
             logger.warn(`No user to roles definition found: ${this.userToRoleMappingPath || '-'}.`);
             this.userToRoleMapping = null;
         }
 
         return this.userToRoleMapping;
+    }
+
+    private async createRoleDefinitions(mapping: GroupToRoleMapping | UserToRoleMapping, request: ExpressRequest, logger: MashroomLogger): Promise<void> {
+        const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
+
+        const roles: Array<string> = [];
+        Object.values(mapping).forEach((mappingRoles) => {
+            mappingRoles?.forEach((role) => {
+                if (roles.indexOf(role) === -1) {
+                    roles.push(role);
+                }
+            });
+        });
+
+
+        logger.debug('Adding role definitions:', roles);
+
+        roles.forEach((id) => {
+            securityService.addRoleDefinition(request, {
+                id,
+            });
+        });
     }
 }
