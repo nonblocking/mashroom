@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
 
-import type {ReactNode} from 'React';
+import type {ReactNode} from 'react';
 
 type Props = {
     children: ReactNode;
