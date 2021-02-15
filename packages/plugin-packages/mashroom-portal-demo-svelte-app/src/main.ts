@@ -1,4 +1,3 @@
-// @flow
 import App from './App.svelte';
 import type { MashroomPortalAppPluginBootstrapFunction } from '@mashroom/mashroom-portal/type-definitions';
 
@@ -11,6 +10,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
             appConfig: portalAppSetup.appConfig,
         },
     });
+
+    return {
+        willBeRemoved: () => {
+            app.$destroy();
+        }
+    };
 };
 
-window.startSvelteDemoApp = bootstrap;
+(global as any).startSvelteDemoApp = bootstrap;

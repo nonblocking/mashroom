@@ -1,0 +1,22 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "target": "esnext",
+        "moduleResolution": "node",
+        "importsNotUsedAsValues": "error",
+        "isolatedModules": true,
+        "declaration": true,
+        "outDir": "dist",
+        "strict": true,
+        "noImplicitAny": false,
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "types": [
+            "node",
+            "svelte"
+        ]
+    }
+}
