@@ -377,16 +377,14 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         // Load the script sequentially, first the shared ones
         let loadJsPromise: Promise<void> =  Promise.resolve();
         if (appSetup.sharedResources && appSetup.sharedResources.js) {
-            appSetup.sharedResources.js.forEach((jsResource) => {
-                const promise = this._resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp);
-                loadJsPromise = loadJsPromise.then(() => promise);
-            });
+            loadJsPromise = appSetup.sharedResources.js.reduce(
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp)),
+                loadJsPromise);
         }
         if (appSetup.resources.js) {
-            appSetup.resources.js.forEach((jsResource) => {
-                const promise = this._resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp);
-                loadJsPromise = loadJsPromise.then(() => promise);
-            });
+            loadJsPromise = appSetup.resources.js.reduce(
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp)),
+                loadJsPromise);
         }
 
         // CSS

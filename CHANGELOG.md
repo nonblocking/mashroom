@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
- * Portal: Load the JS resources for apps sequentially, because if you have more than one bundle they typically depend on each other
+ * Portal: Load the JS resources for apps sequentially, because if there are more than one bundle they typically depend on each other
  * LDAP Security Provider: Add all roles from the *groupToRoleMapping* and *userToRoleMapping*, to improve the autocomplete in the Admin UI
  * Simple Security Provider: Add all roles from *users.json* to the known roles, to improve the autocomplete in the Admin UI
 
