@@ -10,7 +10,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
             appConfig: portalAppSetup.appConfig,
         },
     });
+
+    return {
+        willBeRemoved: () => {
+            app.$destroy();
+        }
+    };
 };
 
-// @ts-ignore
-window.startSvelteDemoApp = bootstrap;
+(global as any).startSvelteDemoApp = bootstrap;
