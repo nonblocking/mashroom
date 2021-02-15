@@ -5,7 +5,6 @@
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
     "version": "1.6.4",
-    "sideEffects": false,
     "files": [
         "dist/**"
     ],
@@ -27,7 +26,13 @@
         "shortid": "^2.2.16",
         "webpack": "^4.44.2",
         "webpack-cli": "^4.2.0",
-        "webpack-dev-server": "^3.11.0"
+        "webpack-dev-server": "^3.11.0",
+        "typescript": "^4.0.5",
+        "@types/react": "^17.0.1",
+        "@types/react-dom": "^17.0.0",
+        "@types/react-redux": "^7.1.16",
+        "@types/redux-form": "^8.3.1",
+        "@types/shortid": "^0.0.29"
     },
     "jest": {
         "verbose": true,
@@ -38,8 +43,9 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src --fix",
-        "dev": "webpack serve --mode development --hot",
+        "lint": "eslint --ext .ts,.tsx --fix --quiet ./src",
+        "type-check": "tsc --noEmit",
+        "dev": "webpack serve --hot --mode development",
         "build": "webpack --mode production"
     },
     "mashroom": {

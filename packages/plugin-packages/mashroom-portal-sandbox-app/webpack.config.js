@@ -25,8 +25,8 @@ module.exports = (env, argv) => {
         module: {
             rules: [
                 {
-                    test: /\.(js|jsx)$/,
-                    exclude: /node_modules/,
+                    test: /\.(ts|tsx)$/,
+                    exclude: [/node_modules/, /mashroom-portal-ui-commons/],
                     enforce: 'pre',
                     use: [
                         {
@@ -39,7 +39,7 @@ module.exports = (env, argv) => {
                     ],
                 },
                 {
-                    test: /\.(js|jsx)$/,
+                    test: /\.(ts|tsx)$/,
                     exclude: /node_modules/,
                     use: [
                         {
@@ -62,8 +62,7 @@ module.exports = (env, argv) => {
                         {
                             loader: 'sass-loader',
                         },
-                    ],
-                    sideEffects: true,
+                    ]
                 },
                 {
                     test: /random-grey-variations/,
@@ -74,7 +73,7 @@ module.exports = (env, argv) => {
         externals: [],
         resolve: {
             mainFields: ['browser', 'main', 'module'],
-            extensions: ['.js', '.jsx'],
+            extensions: ['.js', '.ts', '.tsx'],
             alias: {
                 'react': path.resolve(__dirname, 'node_modules/react'),
                 'react-dom': path.resolve(__dirname, 'node_modules/react-dom'),
