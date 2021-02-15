@@ -47,7 +47,8 @@
                 "type": "security-provider",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "requires": [
-                    "Mashroom Session Middleware"
+                    "Mashroom Session Middleware",
+                    "Mashroom Security Services"
                 ],
                 "defaultConfig": {
                     "loginPage": "/login",

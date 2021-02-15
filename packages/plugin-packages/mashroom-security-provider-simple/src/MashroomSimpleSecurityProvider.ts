@@ -4,7 +4,11 @@ import path from 'path';
 import querystring from 'querystring';
 import {createHash} from 'crypto';
 
-import type {MashroomSecurityProvider, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
+import type {
+    MashroomSecurityProvider,
+    MashroomSecurityService,
+    MashroomSecurityUser
+} from '@mashroom/mashroom-security/type-definitions';
 import type {
     ExpressRequest,
     ExpressResponse,
@@ -70,7 +74,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
         const passwordHash = createHash('sha256').update(password).digest('hex');
 
-        const user = this._getUserStore(logger).find((u: UserStoreEntry) => u.username === username);
+        const user = this.getUserStore(request, logger).find((u: UserStoreEntry) => u.username === username);
         const passwordCorrect = user && user.passwordHash === passwordHash;
 
         if (user && passwordCorrect) {
@@ -114,7 +118,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         return request.session[SIMPLE_AUTH_USER_SESSION_KEY];
     }
 
-    _getUserStore(logger: MashroomLogger): UserStore {
+    private getUserStore(request: ExpressRequest, logger: MashroomLogger): UserStore {
         if (this.userStore) {
             return this.userStore;
         }
@@ -122,6 +126,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         let userStore: UserStore;
         if (fs.existsSync(this.userStorePath)) {
             userStore = require(this.userStorePath);
+            this.createRoleDefinitions(userStore, request, logger);
         } else {
             logger.warn(`No user definition found: ${this.userStorePath}.`);
             userStore = [];
@@ -129,5 +134,26 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
         this.userStore = userStore;
         return userStore;
+    }
+
+    private async createRoleDefinitions(userStore: UserStore, request: ExpressRequest, logger: MashroomLogger): Promise<void> {
+        const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
+
+        const roles: Array<string> = [];
+        userStore.forEach((user) => {
+            user.roles?.forEach((role) => {
+                if (roles.indexOf(role) === -1) {
+                    roles.push(role);
+                }
+            });
+        });
+
+        logger.debug('Adding role definitions:', roles);
+
+        roles.forEach((id) => {
+            securityService.addRoleDefinition(request, {
+                id,
+            });
+        });
     }
 }
