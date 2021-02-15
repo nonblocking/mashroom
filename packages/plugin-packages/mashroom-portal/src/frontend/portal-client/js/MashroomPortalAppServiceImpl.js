@@ -367,30 +367,25 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return this._restService.get(path);
     }
 
-    _loadResources(loadedPortalApp: LoadedPortalAppInternal): Promise<any> {
+    _loadResources(loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
         const appSetup = loadedPortalApp.appSetup;
         if (!appSetup) {
             return Promise.reject('appSetup not loaded');
         }
 
         // JavaScript
-        const sharedJSResourcesPromises: Array<Promise<void>> = [];
+        // Load the script sequentially, first the shared ones
+        let loadJsPromise: Promise<void> =  Promise.resolve();
         if (appSetup.sharedResources && appSetup.sharedResources.js) {
-            appSetup.sharedResources.js.forEach((jsResource) =>
-                sharedJSResourcesPromises.push(
-                    this._resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp))
-            );
+            loadJsPromise = appSetup.sharedResources.js.reduce(
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp)),
+                loadJsPromise);
         }
-        const jsPromises = Promise.all(sharedJSResourcesPromises).then(() => {
-            const jsResourcesPromises: Array<Promise<void>> = [];
-            if (appSetup.resources.js) {
-                appSetup.resources.js.forEach((jsResource) =>
-                    jsResourcesPromises.push(
-                        this._resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp))
-                );
-            }
-            return Promise.all(jsResourcesPromises);
-        });
+        if (appSetup.resources.js) {
+            loadJsPromise = appSetup.resources.js.reduce(
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp)),
+                loadJsPromise);
+        }
 
         // CSS
         // We don't have to wait for CSS resources before we can start the app
@@ -403,7 +398,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 this._resourceManager.loadStyle(`${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp));
         }
 
-        return jsPromises;
+        return loadJsPromise;
     }
 
     _startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<?MashroomPortalAppLifecycleHooks> {
