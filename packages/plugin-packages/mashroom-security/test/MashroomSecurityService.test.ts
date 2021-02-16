@@ -226,4 +226,35 @@ describe('MashroomSecurityService', () => {
         });
     });
 
+    it('don\'t allow login with empty username or password', async () => {
+        const req: any = {
+            pluginContext: {
+                loggerFactory
+            }
+        };
+
+        let providerLoginCalled = false;
+        const aclChecker: any = {};
+        const securityProviderRegistry: any = {
+            findProvider() {
+                return {
+                    login() {
+                        providerLoginCalled = true;
+                        return null;
+                    }
+                }
+            }
+        };
+
+        const securityService = new MashroomSecurityService('testProvider', null, securityProviderRegistry, aclChecker);
+
+        const result = await securityService.login(req, '', '  ');
+
+        expect(providerLoginCalled).toBeFalsy();
+        expect(result).toEqual({
+            failureReason: 'Invalid credentials',
+            success: false
+        });
+    });
+
 });

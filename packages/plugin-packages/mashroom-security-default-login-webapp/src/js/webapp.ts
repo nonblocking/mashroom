@@ -74,8 +74,12 @@ app.post('/', async (req: Request, res: Response) => {
             return;
         }
 
-        const username = req.body._username;
-        const password = req.body._password;
+        const username = req.body._username as string | undefined;
+        const password = req.body._password as string | undefined;
+        if (!username || !username.trim() || !password || !password.trim()) {
+            renderLoginPage(req, res, i18nService, lang, i18nService.getMessage('loginFailed', lang));
+            return;
+        }
 
         logger.debug('Processing login attempt. Username: ', username);
 

@@ -261,6 +261,14 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     async login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
+        if (!username?.trim() || !password?.trim()) {
+            logger.error('Attempt to login with username/password');
+            return {
+                success: false,
+                failureReason: 'Invalid credentials'
+            };
+        }
+
         const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
             try {

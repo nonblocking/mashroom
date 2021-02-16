@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * LDAP Security Provider: Under all circumstances prevent a login with an empty password since some LDAP servers accept it
+   and allow a *simple login*
  * Portal: Load the JS resources for apps sequentially, because if there are more than one bundle they typically depend on each other
  * LDAP Security Provider: Add all roles from the *groupToRoleMapping* and *userToRoleMapping*, to improve the autocomplete in the Admin UI
  * Simple Security Provider: Add all roles from *users.json* to the known roles, to improve the autocomplete in the Admin UI
