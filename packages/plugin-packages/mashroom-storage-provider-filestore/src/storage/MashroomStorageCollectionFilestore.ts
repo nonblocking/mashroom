@@ -174,7 +174,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
                 const mTimeMs = mTime.getTime();
                 const reload = (mTimeMs > this.lastExternalChangeCheck && (forceExternalChangeCheck || this.lastExternalChangeCheck + this.checkExternalChangePeriodMs < Date.now()));
                 if (!reload) {
-                    this.logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this.source}`);
+                    // this.logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this.source}`);
                     return this.dbCache;
                 }
             }
