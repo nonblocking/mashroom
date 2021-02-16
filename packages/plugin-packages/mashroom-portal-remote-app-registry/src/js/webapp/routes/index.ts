@@ -1,6 +1,6 @@
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
 
-export default (req: ExpressRequest, res: ExpressResponse) => {
+export default (req: Request, res: Response) => {
     res.redirect(`${req.baseUrl  }/admin`);
 };

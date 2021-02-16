@@ -3,13 +3,15 @@ import context from '../../context';
 // @ts-ignore
 import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
+import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../../type-definitions';
 
-const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorMessage?: string) => {
-    const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
+const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
+    const reqWithContext = req as ExpressRequest;
+    const csrfService: MashroomCSRFService = reqWithContext.pluginContext.services.csrf && reqWithContext.pluginContext.services.csrf.service;
+    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = reqWithContext.pluginContext.services.remotePortalAppEndpoint.service;
     const remoteAppEndpoints = await portalRemoteAppEndpointService.findAll();
 
     const endpoints = remoteAppEndpoints.map((endpoint) => ({
@@ -30,7 +32,7 @@ const renderAdminPage = async (req: ExpressRequest, res: ExpressResponse, errorM
         showAddRemoteAppForm: context.webUIShowAddRemoteAppForm,
         endpoints,
         errorMessage,
-        csrfToken: csrfService ? csrfService.getCSRFToken(req) : null
+        csrfToken: csrfService ? csrfService.getCSRFToken(reqWithContext) : null
     });
 };
 
@@ -44,13 +46,14 @@ const status = (endpoint: RemotePortalAppEndpoint) => {
     return 'Pending...';
 };
 
-export const adminIndex = async (req: ExpressRequest, res: ExpressResponse) => {
+export const adminIndex = async (req: Request, res: Response) => {
     await renderAdminPage(req, res);
 };
 
-export const adminUpdate = async (req: ExpressRequest, res: ExpressResponse) => {
-    const logger = req.pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
+export const adminUpdate = async (req: Request, res: Response) => {
+    const reqWithContext = req as ExpressRequest;
+    const logger = reqWithContext.pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
+    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = reqWithContext.pluginContext.services.remotePortalAppEndpoint.service;
 
     const action = req.body._action || 'add';
     const url = req.body._url;
@@ -65,7 +68,7 @@ export const adminUpdate = async (req: ExpressRequest, res: ExpressResponse) => 
             try {
                 if (sessionOnly) {
                     logger.info(`Adding portal app endpoint for session: ${url}`);
-                    await portalRemoteAppEndpointService.synchronousRegisterRemoteAppUrlInSession(url, req);
+                    await portalRemoteAppEndpointService.synchronousRegisterRemoteAppUrlInSession(url, reqWithContext);
                 } else {
                     logger.info(`Adding portal app endpoint: ${url}`);
                     await portalRemoteAppEndpointService.registerRemoteAppUrl(url);

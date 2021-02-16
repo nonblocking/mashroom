@@ -2,7 +2,7 @@
 import express from 'express';
 import app from './webapp';
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
 import type {RemotePortalAppEndpoint} from '../../../type-definitions';
 
 const wrapperApp = express();
@@ -33,7 +33,7 @@ let testEndpoints: Array<RemotePortalAppEndpoint> = [{
 }];
 
 // Dummy services
-wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
+wrapperApp.use((req: Request, res: Response, next) => {
     const pluginContext: any = {
         loggerFactory: () => console,
         services: {
@@ -65,12 +65,13 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
         },
     }
 
+    // @ts-ignore
     req.pluginContext = pluginContext;
 
     next();
 });
 
-wrapperApp.get('/', (req: ExpressRequest, res: ExpressResponse) => {
+wrapperApp.get('/', (req: Request, res: Response) => {
     res.redirect('/portal-remote-app-registry');
 });
 
