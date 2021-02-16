@@ -1,4 +1,3 @@
-// @flow
 
 import MashroomI18NService from './MashroomI18NService';
 

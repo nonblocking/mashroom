@@ -8,7 +8,8 @@ import bodyParser from 'body-parser';
 import helpers, {i18nHelper} from './handlebar_helpers';
 import context from './context';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
+import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
@@ -27,15 +28,16 @@ app.engine('handlebars', exphbs({
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve(__dirname, '../views'));
 
-app.get('/', async (req: ExpressRequest, res: ExpressResponse) => {
-    const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
+app.get('/', async (req: Request, res: Response) => {
+    const reqWithContext = req as ExpressRequest;
+    const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.login.webapp');
 
     try {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+        const i18nService: MashroomI18NService = reqWithContext.pluginContext.services.i18n.service;
 
-        const lang = i18nService.getLanguage(req);
-        const user = await securityService.getUser(req);
+        const lang = i18nService.getLanguage(reqWithContext);
+        const user = await securityService.getUser(reqWithContext);
         if (user) {
             redirect(req, res);
             return;
@@ -48,24 +50,25 @@ app.get('/', async (req: ExpressRequest, res: ExpressResponse) => {
     }
 });
 
-app.get('/style.css', (req: ExpressRequest, res: ExpressResponse) => {
+app.get('/style.css', (req: Request, res: Response) => {
     res.sendFile(context.styleFile);
 });
 
-app.get('/assets/bg.png', (req: ExpressRequest, res: ExpressResponse) => {
+app.get('/assets/bg.png', (req: Request, res: Response) => {
     res.sendFile(path.resolve(__dirname, '../assets/random-grey-variations.png'));
 });
 
-app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
-    const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
+app.post('/', async (req: Request, res: Response) => {
+    const reqWithContext = req as ExpressRequest;
+    const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.login.webapp');
 
     try {
         // Login
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+        const i18nService: MashroomI18NService = reqWithContext.pluginContext.services.i18n.service;
 
-        const lang = i18nService.getLanguage(req);
-        const user = await securityService.getUser(req);
+        const lang = i18nService.getLanguage(reqWithContext);
+        const user = await securityService.getUser(reqWithContext);
         if (user) {
             redirect(req, res);
             return;
@@ -76,7 +79,7 @@ app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
 
         logger.debug('Processing login attempt. Username: ', username);
 
-        const result = await securityService.login(req, username, password);
+        const result = await securityService.login(reqWithContext, username, password);
         if (result.success) {
             redirect(req, res);
             return;
@@ -91,10 +94,11 @@ app.post('/', async (req: ExpressRequest, res: ExpressResponse) => {
     }
 });
 
-const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService: MashroomI18NService, lang: string, error?: string) => {
-    const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
-    const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper && req.pluginContext.services.vhostPathMapper.service;
-    const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
+const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NService, lang: string, error?: string) => {
+    const reqWithContext = req as ExpressRequest;
+    const csrfService: MashroomCSRFService = reqWithContext.pluginContext.services.csrf && reqWithContext.pluginContext.services.csrf.service;
+    const pathMapperService: MashroomVHostPathMapperService = reqWithContext.pluginContext.services.vhostPathMapper && reqWithContext.pluginContext.services.vhostPathMapper.service;
+    const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(reqWithContext);
 
     const queryParams: Array<string> = [];
     if (req.query) {
@@ -113,14 +117,14 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
 
     let csrfToken = null;
     if (csrfService) {
-        csrfToken = csrfService.getCSRFToken(req);
+        csrfToken = csrfService.getCSRFToken(reqWithContext);
         queryParams.push(`csrfToken=${csrfToken}`);
     }
 
     const query = queryParams.join(('&'));
 
     res.render('login', {
-        loginFormTitle: i18nService.translate(req, context.loginFormTitle),
+        loginFormTitle: i18nService.translate(reqWithContext, context.loginFormTitle),
         baseUrl: (vhostMappingInfo && vhostMappingInfo.frontendPath) || req.baseUrl,
         query,
         error,
@@ -130,7 +134,7 @@ const renderLoginPage = (req: ExpressRequest, res: ExpressResponse, i18nService:
     });
 };
 
-const redirect = (req: ExpressRequest, res: ExpressResponse) => {
+const redirect = (req: Request, res: Response) => {
     let redirectUrl = null;
 
     let query = req.query as any;

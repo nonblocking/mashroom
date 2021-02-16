@@ -4,7 +4,7 @@ import express from 'express';
 import app from './webapp';
 import {setLoginFormTitle, setStyleFile} from './context';
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
 
 setLoginFormTitle({
     en: 'Login',
@@ -15,7 +15,7 @@ setStyleFile(resolve(__dirname, './style.css'));
 const wrapperApp = express();
 
 // Dummy services
-wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
+wrapperApp.use((req: Request, res: Response, next) => {
     const pluginContext: any = {
         loggerFactory: () => console,
         services: {
@@ -48,12 +48,14 @@ wrapperApp.use((req: ExpressRequest, res: ExpressResponse, next) => {
             }
         },
     }
+
+    // @ts-ignore
     req.pluginContext = pluginContext;
 
     next();
 });
 
-wrapperApp.get('/', (req: ExpressRequest, res: ExpressResponse) => {
+wrapperApp.get('/', (req: Request, res: Response) => {
     res.redirect('/login');
 });
 

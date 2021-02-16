@@ -12,14 +12,6 @@ export type ExpressRequest = Request & {
     session?: any;
 };
 
-// Extend the express Request type too
-declare module 'express-serve-static-core' {
-    interface Request {
-        pluginContext: MashroomPluginContext;
-        session?: any;
-    }
-}
-
 export type ExpressResponse = Response;
 export type ExpressNextFunction = NextFunction;
 export type ExpressApplication = Application;
