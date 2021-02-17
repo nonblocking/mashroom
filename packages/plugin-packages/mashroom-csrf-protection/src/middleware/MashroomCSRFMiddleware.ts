@@ -1,9 +1,7 @@
 
+import type {Request, Response, NextFunction} from 'express';
 import type {
     MashroomLogger,
-    ExpressRequest,
-    ExpressResponse,
-    ExpressNextFunction,
     ExpressMiddleware
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomCSRFService} from '../../type-definitions';
@@ -14,12 +12,12 @@ const CSRF_QUERY_PARM_NAME = 'csrfToken';
 
 export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareType {
 
-    constructor(private safeMethods: Array<string>) {
+    constructor(private _safeMethods: Array<string>) {
     }
 
     middleware(): ExpressMiddleware {
-        return (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
-            if (this.safeMethods.find((m) => m === req.method)) {
+        return (req: Request, res: Response, next: NextFunction) => {
+            if (this._safeMethods.find((m) => m === req.method)) {
                 next();
                 return;
             }

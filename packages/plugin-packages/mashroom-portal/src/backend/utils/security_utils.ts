@@ -1,7 +1,8 @@
 
 import {findSiteByPath} from './model_utils';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomPortalApp,
@@ -10,22 +11,22 @@ import type {
     MashroomPortalRolePermissions,
 } from '../../../type-definitions';
 
-export const getUser = (req: ExpressRequest) => {
+export const getUser = (req: Request) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     return securityService.getUser(req);
 };
 
-export const isAdmin = (req: ExpressRequest) => {
+export const isAdmin = (req: Request) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     return securityService.isAdmin(req);
 };
 
-export const isSignedIn = (req: ExpressRequest) => {
+export const isSignedIn = (req: Request) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     return securityService.isAuthenticated(req);
 };
 
-export const forceAuthentication = async (path: string, req: ExpressRequest, res: ExpressResponse, logger: MashroomLogger) => {
+export const forceAuthentication = async (path: string, req: Request, res: Response, logger: MashroomLogger) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const result = await securityService.authenticate(req, res);
     switch (result.status) {
@@ -45,7 +46,7 @@ export const forceAuthentication = async (path: string, req: ExpressRequest, res
     }
 };
 
-export const isSitePathPermitted = async (req: ExpressRequest, sitePath: string): Promise<boolean> => {
+export const isSitePathPermitted = async (req: Request, sitePath: string): Promise<boolean> => {
     const site = await findSiteByPath(req, sitePath);
     if (!site) {
         return false;
@@ -53,7 +54,7 @@ export const isSitePathPermitted = async (req: ExpressRequest, sitePath: string)
     return await isSitePermitted(req, site.siteId);
 };
 
-export const isSitePermitted = async (req: ExpressRequest, siteId: string): Promise<boolean> => {
+export const isSitePermitted = async (req: Request, siteId: string): Promise<boolean> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
@@ -61,7 +62,7 @@ export const isSitePermitted = async (req: ExpressRequest, siteId: string): Prom
     return await securityService.checkResourcePermission(req, 'Site', siteId, 'View', true);
 };
 
-export const isPagePermitted = async (req: ExpressRequest, pageId: string): Promise<boolean> => {
+export const isPagePermitted = async (req: Request, pageId: string): Promise<boolean> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
@@ -73,7 +74,7 @@ export const getPortalAppResourceKey = (pluginName: string, instanceId: string |
     return `${pluginName}_${instanceId || 'global'}`;
 };
 
-export const isAppPermitted = async (req: ExpressRequest, pluginName: string, portalAppInstanceId: string | undefined | null,
+export const isAppPermitted = async (req: Request, pluginName: string, portalAppInstanceId: string | undefined | null,
                                      existingPortalApp: MashroomPortalApp | undefined | null): Promise<boolean> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const logger = req.pluginContext.loggerFactory('mashroom.portal');
@@ -104,7 +105,7 @@ export const isAppPermitted = async (req: ExpressRequest, pluginName: string, po
     return true;
 };
 
-export const isProxyAccessPermitted = async (req: ExpressRequest, restProxyDef: MashroomPortalProxyDefinition, logger: MashroomLogger): Promise<boolean> => {
+export const isProxyAccessPermitted = async (req: Request, restProxyDef: MashroomPortalProxyDefinition, logger: MashroomLogger): Promise<boolean> => {
     const user = getUser(req);
 
     // Check restricted to roles

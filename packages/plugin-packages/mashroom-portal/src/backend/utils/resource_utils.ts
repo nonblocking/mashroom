@@ -1,13 +1,9 @@
 
-import {promisify} from 'util';
-import getUriCbStyle from 'get-uri';
-import type {ReadStream} from 'fs';
+import getUri from 'get-uri';
+import type {Readable} from 'stream';
 
-const getUri = promisify(getUriCbStyle);
-
-export const getResourceAsStream = async (resourceUri: string): Promise<ReadStream> => {
-    // @ts-ignore
-    return getUri(resourceUri)
+export const getResourceAsStream = async (resourceUri: string): Promise<Readable> => {
+    return getUri(resourceUri);
 };
 
 export const getResourceAsString = async (resourceUri: string): Promise<string> => {

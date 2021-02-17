@@ -47,7 +47,7 @@ describe('MashroomPortalAppServiceImpl', () => {
         };
 
         // @ts-ignore
-        await portalAppService.loadResources(portalApp);
+        await portalAppService._loadResources(portalApp);
 
         expect(loadedScripts.length).toBe(4);
         expect(loadedScripts).toEqual([

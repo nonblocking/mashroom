@@ -13,32 +13,32 @@ import type {
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalAdminService {
 
-    private restService: MashroomRestService;
+    private _restService: MashroomRestService;
 
     constructor(restService: MashroomRestService) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
-        this.restService = restService.withBasePath(apiPath);
+        this._restService = restService.withBasePath(apiPath);
     }
 
     getAvailableThemes() {
         const path = `/themes`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     getAvailableLayouts() {
         const path = `/layouts`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     getExistingRoles() {
         const path = `/roles`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     getAppInstances() {
         const pageId = this.getCurrentPageId();
         const path = `/pages/${pageId}/portal-app-instances`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     addAppInstance(pluginName: string, areaId: string, position?: number, appConfig?: MashroomPluginConfig) {
@@ -51,7 +51,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
         };
 
         const path = `/pages/${pageId}/portal-app-instances`;
-        return this.restService.post(path, data);
+        return this._restService.post(path, data);
     }
 
     updateAppInstance(pluginName: string, instanceId: string, areaId: string | undefined | null, position: number | undefined | null,
@@ -69,25 +69,25 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
         }
 
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}/${instanceId}`;
-        return this.restService.put(path, data);
+        return this._restService.put(path, data);
     }
 
     removeAppInstance(pluginName: string, instanceId: string) {
         const pageId = this.getCurrentPageId();
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}/${instanceId}`;
-        return this.restService.delete(path);
+        return this._restService.delete(path);
     }
 
     getAppInstancePermittedRoles(pluginName: string, instanceId: string) {
         const pageId = this.getCurrentPageId();
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}/${instanceId}/permittedRoles`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     updateAppInstancePermittedRoles(pluginName: string, instanceId: string, roles: string[] | undefined | null) {
         const pageId = this.getCurrentPageId();
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}/${instanceId}/permittedRoles`;
-        return this.restService.put(path, roles || []);
+        return this._restService.put(path, roles || []);
     }
 
     getCurrentPageId() {
@@ -100,32 +100,32 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
 
     getPage(pageId: string) {
         const path = `/pages/${pageId}`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     addPage(page: MashroomPortalPage) {
         const path = '/pages';
-        return this.restService.post(path, page);
+        return this._restService.post(path, page);
     }
 
     updatePage(page: MashroomPortalPage) {
         const path = `/pages/${page.pageId}`;
-        return this.restService.put(path, page);
+        return this._restService.put(path, page);
     }
 
     deletePage(pageId: string) {
         const path = `/pages/${pageId}`;
-        return this.restService.delete(path);
+        return this._restService.delete(path);
     }
 
     getPagePermittedRoles(pageId: string) {
         const path = `/pages/${pageId}/permittedRoles`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     updatePagePermittedRoles(pageId: string, roles: string[] | undefined | null) {
         const path = `/pages/${pageId}/permittedRoles`;
-        return this.restService.put(path, roles || []);
+        return this._restService.put(path, roles || []);
     }
 
     getCurrentSiteId() {
@@ -138,31 +138,31 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAdmin
 
     getSite(siteId: string) {
         const path = `/sites/${siteId}`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     addSite(site: MashroomPortalSite) {
         const path = '/sites';
-        return this.restService.post(path, site);
+        return this._restService.post(path, site);
     }
 
     updateSite(site: MashroomPortalSite) {
         const path = `/sites/${site.siteId}`;
-        return this.restService.put(path, site);
+        return this._restService.put(path, site);
     }
 
     deleteSite(siteId: string) {
         const path = `/sites/${siteId}`;
-        return this.restService.delete(path);
+        return this._restService.delete(path);
     }
 
     getSitePermittedRoles(siteId: string) {
         const path = `/sites/${siteId}/permittedRoles`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     updateSitePermittedRoles(siteId: string, roles: string[] | undefined | null) {
         const path = `/sites/${siteId}/permittedRoles`;
-        return this.restService.put(path, roles || []);
+        return this._restService.put(path, roles || []);
     }
 }

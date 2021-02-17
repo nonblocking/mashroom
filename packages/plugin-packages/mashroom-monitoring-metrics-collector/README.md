@@ -43,7 +43,7 @@ The exposed service is accessible through _pluginContext.services.metrics.servic
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomMonitoringMetricsCollectorService {
 
     /**

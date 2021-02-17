@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 
 import type {

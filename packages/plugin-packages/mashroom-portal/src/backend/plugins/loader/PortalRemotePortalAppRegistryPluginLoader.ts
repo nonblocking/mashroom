@@ -5,10 +5,10 @@ import type {MashroomPortalPluginRegistry, MashroomRemotePortalAppRegistryHolder
 
 export default class PortalRemotePortalAppRegistryPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.portal.plugin.loader');
+    constructor(private _registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.portal.plugin.loader');
     }
 
     get name(): string {
@@ -33,12 +33,12 @@ export default class PortalRemotePortalAppRegistryPluginLoader implements Mashro
             priority
         };
 
-        this.logger.info('Registering remote portal app registry:', {registry: registryHolder});
-        this.registry.registerRemotePortalAppRegistry(registryHolder);
+        this._logger.info('Registering remote portal app registry:', {registry: registryHolder});
+        this._registry.registerRemotePortalAppRegistry(registryHolder);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info(`Unregistering remote portal app registry: ${plugin.name}`);
-        this.registry.unregisterRemotePortalAppRegistry(plugin.name);
+        this._logger.info(`Unregistering remote portal app registry: ${plugin.name}`);
+        this._registry.unregisterRemotePortalAppRegistry(plugin.name);
     }
 }

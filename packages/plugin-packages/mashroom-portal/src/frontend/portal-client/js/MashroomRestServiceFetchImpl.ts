@@ -11,33 +11,33 @@ const CSRF_TOKEN = CSRF_TOKEN_META && CSRF_TOKEN_META.getAttribute('content');
  */
 export default class RestServiceFetchImpl implements MashroomRestService {
 
-    private apiBasePath: string;
+    private _apiBasePath: string;
 
     constructor(apiBasePath?: string) {
-        this.apiBasePath = apiBasePath || '';
+        this._apiBasePath = apiBasePath || '';
     }
 
     get(path: string, extraHeaders?: Record<string, string>): Promise<any> {
-        return this.doFetch(path, 'GET', null, extraHeaders);
+        return this._fetch(path, 'GET', null, extraHeaders);
     }
 
     post(path: string, data: any, extraHeaders?: Record<string, string>): Promise<any> {
-        return this.doFetch(path, 'POST', data, extraHeaders);
+        return this._fetch(path, 'POST', data, extraHeaders);
     }
 
     put(path: string, data: any, extraHeaders?: Record<string, string>): Promise<void> {
-        return this.doFetch(path, 'PUT', data, extraHeaders);
+        return this._fetch(path, 'PUT', data, extraHeaders);
     }
 
     delete(path: string, extraHeaders?: Record<string, string>): Promise<void> {
-        return this.doFetch(path, 'DELETE', null, extraHeaders);
+        return this._fetch(path, 'DELETE', null, extraHeaders);
     }
 
     withBasePath(apiBasePath: string) {
         return new RestServiceFetchImpl(apiBasePath);
     }
 
-    private doFetch(path: string, method: HttpMethod = 'GET', jsonData: any | undefined | null, extraHeaders?: Record<string, string> | undefined): Promise<any> {
+    private _fetch(path: string, method: HttpMethod = 'GET', jsonData: any | undefined | null, extraHeaders?: Record<string, string> | undefined): Promise<any> {
         return new Promise((resolve, reject) => {
 
             const headers: any = {
@@ -60,7 +60,7 @@ export default class RestServiceFetchImpl implements MashroomRestService {
                 config['body'] = JSON.stringify(jsonData);
             }
 
-            fetch(`${this.apiBasePath}${path}`, config).then((response: Response) => {
+            fetch(`${this._apiBasePath}${path}`, config).then((response: Response) => {
                 response.text()
                     .then((responseText) => {
                         let responseBody = null;

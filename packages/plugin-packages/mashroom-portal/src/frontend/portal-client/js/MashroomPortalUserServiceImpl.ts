@@ -8,16 +8,16 @@ import type {MashroomPortalUserService, MashroomRestService} from '../../../../t
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalUserService {
 
-    private restService: MashroomRestService;
+    private _restService: MashroomRestService;
 
     constructor(restService: MashroomRestService) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
-        this.restService = restService.withBasePath(apiPath);
+        this._restService = restService.withBasePath(apiPath);
     }
 
     getAuthenticationExpiration() {
         const path = '/users/authenticated/authExpiration';
-        return this.restService.get(path, {
+        return this._restService.get(path, {
             'x-mashroom-does-not-extend-auth': '1'
         }).then(
             (data) => {
@@ -35,20 +35,20 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
     extendAuthentication() {
         // For the moment: Just request the authentication expiration without the x-mashroom-does-not-extend-auth header
         const path = '/users/authenticated/authExpiration';
-        this.restService.get(path);
+        this._restService.get(path);
     }
 
     logout() {
         const path = '/logout';
-        return this.restService.get(path).then(
+        return this._restService.get(path).then(
             () => {
-                this.reloadPage();
+                this._reloadPage();
                 return Promise.resolve();
             },
             (error) => {
                 console.error('Logout failed', error);
                 // Try to reload anyway
-                this.reloadPage();
+                this._reloadPage();
                 return Promise.resolve();
             }
         );
@@ -63,9 +63,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         const data = {
             lang
         };
-        return this.restService.put(path, data).then(
+        return this._restService.put(path, data).then(
             () => {
-                this.reloadPage();
+                this._reloadPage();
                 return Promise.resolve();
             }
         );
@@ -73,15 +73,15 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
 
     getAvailableLanguages() {
         const path = '/languages';
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     getDefaultLanguage() {
         const path = '/languages/default';
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
-    private reloadPage() {
+    private _reloadPage() {
         global.location.reload(true);
     }
 }

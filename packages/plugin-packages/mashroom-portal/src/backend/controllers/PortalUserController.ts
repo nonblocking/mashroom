@@ -1,10 +1,8 @@
 
-// @ts-ignore
 import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {getFrontendSiteBasePath} from '../utils/path_utils';
 
 import type {Request, Response} from 'express';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 
@@ -15,13 +13,12 @@ type NewLanguage = {
 export default class PortalUserController {
 
     async getAuthenticatedUserAuthenticationExpiration(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-            const expirationTime = await securityService.getAuthenticationExpiration(reqWithContext);
+            const expirationTime = await securityService.getAuthenticationExpiration(req);
             if (!expirationTime) {
                 res.sendStatus(400);
                 return;
@@ -38,18 +35,17 @@ export default class PortalUserController {
     }
 
     async setAuthenticatedUserLanguage(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const i18nService: MashroomI18NService = reqWithContext.pluginContext.services.i18n.service;
+            const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
             const body = req.body;
             const newLanguage: NewLanguage = body;
 
             if (newLanguage && newLanguage.lang && i18nService.availableLanguages.indexOf(newLanguage.lang) !== -1) {
                 logger.info(`Setting new user language: ${newLanguage.lang}`);
-                i18nService.setLanguage(newLanguage.lang, reqWithContext);
+                i18nService.setLanguage(newLanguage.lang, req);
             } else {
                 logger.error(`Invalid language: ${newLanguage && newLanguage.lang}`);
             }
@@ -63,13 +59,12 @@ export default class PortalUserController {
     }
 
     async logout(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
         logger.debug('Logout called');
 
         try {
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
-            await securityService.revokeAuthentication(reqWithContext);
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            await securityService.revokeAuthentication(req);
 
             if (isHtmlRequest(req)) {
                 let redirectUrl = null;
@@ -83,7 +78,7 @@ export default class PortalUserController {
 
                 if (!redirectUrl) {
                     // Default: Redirect to the site root
-                    redirectUrl = getFrontendSiteBasePath(reqWithContext) || '/';
+                    redirectUrl = getFrontendSiteBasePath(req) || '/';
                 }
 
                 res.redirect(redirectUrl);

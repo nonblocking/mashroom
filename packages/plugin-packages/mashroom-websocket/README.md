@@ -14,10 +14,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 And you can use the security service like this:
 
-```js
+```ts
 import type {MashroomWebSocketService} from '@mashroom/mashroom-websocket/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const webSocketService: MashroomWebSocketService = req.pluginContext.services.websocket.service;
 
     webSocketService.addMessageListener((path) => path === '/whatever', async (message, client) => {
@@ -85,7 +85,7 @@ The exposed service is accessible through _pluginContext.services.websocket.serv
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomWebSocketService {
     /**
      * Add a listener for message.

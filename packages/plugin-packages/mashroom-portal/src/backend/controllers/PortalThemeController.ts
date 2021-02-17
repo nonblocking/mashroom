@@ -2,26 +2,24 @@
 import {isAdmin} from '../utils/security_utils';
 
 import type {Request, Response} from 'express';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 import type {MashroomAvailablePortalTheme} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalThemeController {
 
-    constructor(private pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(private _pluginRegistry: MashroomPortalPluginRegistry) {
     }
 
     async getPortalThemeResource(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
-        const cacheControlService: MashroomCacheControlService = reqWithContext.pluginContext.services.browserCache && reqWithContext.pluginContext.services.browserCache.cacheControl;
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
             const themeName = req.params.themeName;
             const resourcePath = req.params['0'];
 
-            const theme = this.getPortalTheme(themeName);
+            const theme = this._getPortalTheme(themeName);
             if (!theme) {
                 logger.warn(`Theme not found: ${themeName}`);
                 res.sendStatus(404);
@@ -32,7 +30,7 @@ export default class PortalThemeController {
             logger.debug(`Sending theme resource: ${resourceFile}`);
 
             if (cacheControlService) {
-                await cacheControlService.addCacheControlHeader(false, reqWithContext, res);
+                await cacheControlService.addCacheControlHeader(false, req, res);
             }
 
             try {
@@ -55,16 +53,15 @@ export default class PortalThemeController {
     }
 
     async getAvailablePortalThemes(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
 
-            const availableThemes: Array<MashroomAvailablePortalTheme> = this.pluginRegistry.themes.map((t) => ({
+            const availableThemes: Array<MashroomAvailablePortalTheme> = this._pluginRegistry.themes.map((t) => ({
                 name: t.name,
                 description: t.description,
                 lastReloadTs: t.lastReloadTs
@@ -78,7 +75,7 @@ export default class PortalThemeController {
         }
     }
 
-    private getPortalTheme(themeName: string) {
-        return this.pluginRegistry.themes.find((th) => th.name === themeName);
+    private _getPortalTheme(themeName: string) {
+        return this._pluginRegistry.themes.find((th) => th.name === themeName);
     }
 }

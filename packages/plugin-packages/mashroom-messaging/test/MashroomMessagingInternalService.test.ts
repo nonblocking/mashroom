@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomMessagingInternalService from '../src/services/MashroomMessagingInternalService';
 
@@ -48,18 +47,24 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         await expect(service.subscribe(user, '#', dummyHandler)).rejects.toThrow('Invalid topic (must not start or end with /, must not start with a wildcard): #');
-        expect(service.subscriptions.length).toBe(0);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(0);
         await expect(service.subscribe(user, '+', dummyHandler)).rejects.toThrow('Invalid topic (must not start or end with /, must not start with a wildcard): +');
-        expect(service.subscriptions.length).toBe(0);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(0);
 
         await service.subscribe(user, 'test/#', dummyHandler);
-        expect(service.subscriptions.length).toBe(1);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(1);
         await service.subscribe(user, 'mashroom/bar/+/x', dummyHandler);
-        expect(service.subscriptions.length).toBe(2);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(2);
         await service.subscribe(user, 'test3/3/#', dummyHandler);
-        expect(service.subscriptions.length).toBe(3);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(3);
         await service.subscribe(user, 'test3/#/1', dummyHandler);
-        expect(service.subscriptions.length).toBe(4);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(4);
     });
 
     it('does not allow to subscribe to invalid topics', async () => {
@@ -72,12 +77,15 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         await expect(service.subscribe(user, '/test', dummyHandler)).rejects.toThrow('Invalid topic (must not start or end with /, must not start with a wildcard): /test');
-        expect(service.subscriptions.length).toBe(0);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(0);
         await expect(service.subscribe(user, 'test/', dummyHandler)).rejects.toThrow('Invalid topic (must not start or end with /, must not start with a wildcard): test');
-        expect(service.subscriptions.length).toBe(0);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(0);
 
         await service.subscribe(user, 'test/#', dummyHandler);
-        expect(service.subscriptions.length).toBe(1);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(1);
     });
 
     it('does not allow to subscribe to external topics', async () => {
@@ -90,14 +98,18 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         await expect(service.subscribe(user, 'external/1', dummyHandler)).rejects.toThrow('It is not permitted to subscribe to external topics');
-        expect(service.subscriptions.length).toBe(0);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(0);
         await expect(service.subscribe(user, 'what/ever', dummyHandler)).rejects.toThrow('It is not permitted to subscribe to external topics');
-        expect(service.subscriptions.length).toBe(0);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(0);
 
         await service.subscribe(user, 'what/ever2', dummyHandler);
-        expect(service.subscriptions.length).toBe(1);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(1);
         await service.subscribe(user, 'foo', dummyHandler);
-        expect(service.subscriptions.length).toBe(2);
+        // @ts-ignore
+        expect(service._subscriptions.length).toBe(2);
     });
 
     it('calculates the private topic prefix correctly', () => {

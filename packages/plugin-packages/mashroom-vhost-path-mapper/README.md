@@ -66,13 +66,14 @@ The exposed service is accessible through _pluginContext.services.vhostPathMappe
 
 **Interface:**
 
-```js
-export interface MashroomVHostPathRewriteService {
+```ts
+export interface MashroomVHostPathMapperService {
 
     /**
      * Get the details if the url of the current path has been rewritten
      */
-    getMappingInfo(request: ExpressRequest): ?RequestVHostMappingInfo;
+    getMappingInfo(request: Request): RequestVHostMappingInfo | undefined;
 
 }
+
 ```

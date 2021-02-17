@@ -1,6 +1,6 @@
 
+import type {Request} from 'express';
 import type {
-    ExpressRequest,
     I18NString,
     MashroomPluginConfig,
     MashroomPluginContextHolder
@@ -156,20 +156,20 @@ export type MashroomPortalAppSetup = {
 export type UserAgent = {
     readonly browser: {
         readonly name:
-            | ("Android Browser" | null | undefined)
-            | "Chrome"
-            | "Chromium"
-            | "Edge"
-            | "Firefox"
-            | "IE"
-            | "IEMobile"
-            | "Konqueror"
-            | "Mobile Safari"
-            | "Opera Mini"
-            | "Opera"
-            | "Safari"
-            | "Samsung Browser"
-            | "Tizen Browser"
+            | ('Android Browser' | null | undefined)
+            | 'Chrome'
+            | 'Chromium'
+            | 'Edge'
+            | 'Firefox'
+            | 'IE'
+            | 'IEMobile'
+            | 'Konqueror'
+            | 'Mobile Safari'
+            | 'Opera Mini'
+            | 'Opera'
+            | 'Safari'
+            | 'Samsung Browser'
+            | 'Tizen Browser'
             | string;
         readonly version: string | null | undefined;
     };
@@ -464,10 +464,10 @@ export type MashroomPortalPageEnhancementResources = {
 
 export type MashroomPortalPageEnhancementPlugin = {
     readonly dynamicResources?: {
-        readonly [name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: ExpressRequest) => string;
+        readonly [name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: Request) => string;
     },
     readonly rules?: {
-        readonly [name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: ExpressRequest) => boolean;
+        readonly [name: string]: (sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, request: Request) => boolean;
     }
 };
 
@@ -501,7 +501,7 @@ export interface MashroomPortalAppEnhancementPlugin {
     enhancePortalAppSetup: (
         portalAppSetup: MashroomPortalAppSetup,
         portalApp: MashroomPortalApp,
-        request: ExpressRequest
+        request: Request
     ) => Promise<MashroomPortalAppSetup>;
 }
 
@@ -664,7 +664,7 @@ export interface MashroomPortalAppService {
         pluginName: string,
         instanceId: string | null | undefined,
         position?: number | null | undefined,
-        overrideAppConfig?: Object | null | undefined,
+        overrideAppConfig?: any | null | undefined,
     ): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
@@ -675,7 +675,7 @@ export interface MashroomPortalAppService {
     loadAppModal(
         pluginName: string,
         title?: string | null | undefined,
-        overrideAppConfig?: Object | null | undefined,
+        overrideAppConfig?: any | null | undefined,
         onClose?: ModalAppCloseCallback | null | undefined,
     ): Promise<MashroomPortalLoadedPortalApp>;
 
@@ -686,7 +686,7 @@ export interface MashroomPortalAppService {
      */
     reloadApp(
         id: string,
-        overrideAppConfig?: Object | null | undefined,
+        overrideAppConfig?: any | null | undefined,
     ): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
@@ -1050,14 +1050,8 @@ export interface MashroomPortalStateService {
     /**
      * Generate a URL with the given state encoded into it
      */
-    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?:
-        | {
-                           [key: string]: string;
-                       }
-        | null
-        | undefined,
-                       hash?: string | null | undefined,
-    ): string;
+    encodeStateIntoUrl(baseUrl: string, state: any,
+        additionalQueryParams?: { [key: string]: string; } | null | undefined, hash?: string | null | undefined): string;
 
     /**
      * Add given key value pair to the session storage

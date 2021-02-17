@@ -38,20 +38,20 @@ The exposed service is accessible through _pluginContext.services.cache.service_
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomMemoryCacheService {
     /**
      * Get a cache entry from given region
      */
-    get(region: string, key: string): Promise<?any>;
+    get(region: string, key: CacheKey): Promise<CacheValue | undefined>;
     /**
      * Set a cache entry in given region
      */
-    set(region: string, key: string, value: any, ttlSec?: number): Promise<void>;
+    set(region: string, key: CacheKey, value: CacheValue, ttlSec?: number): Promise<void>;
     /**
      * Delete an entry in given region
      */
-    del(region: string, key: string): Promise<void>;
+    del(region: string, key: CacheKey): Promise<void>;
     /**
      * Clear the entire region
      * This might be an expensive operation, depending on the provider
@@ -61,7 +61,7 @@ export interface MashroomMemoryCacheService {
      * Get the number of entries in this region (if possible)
      * This might be an expensive operation, depending on the provider
      */
-    getEntryCount(region: string): Promise<?number>;
+    getEntryCount(region: string): Promise<number | undefined>;
 }
 ```
 ## Plugin Types
@@ -91,7 +91,7 @@ To register a custom memory-cache-provider plugin add this to _package.json_:
 
 The bootstrap returns the provider:
 
-```js
+```ts
 import type {MashroomMemoryCacheProviderPluginBootstrapFunction} from '@mashroom/mashroom-memory-cache/type-definitions';
 
 const bootstrap: MashroomMemoryCacheProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
@@ -103,20 +103,20 @@ export default bootstrap;
 
 And the provider has to implement the following interface:
 
-```js
+```ts
 export interface MashroomMemoryCacheProvider {
     /**
      * Get a cache entry from given region
      */
-    get(region: string, key: string): Promise<?any>;
+    get(region: string, key: CacheKey): Promise<CacheValue | undefined>;
     /**
      * Set a cache entry in given region
      */
-    set(region: string, key: string, value: any, ttlSec: number): Promise<void>;
+    set(region: string, key: CacheKey, value: CacheValue, ttlSec: number): Promise<void>;
     /**
      * Delete an entry in given region
      */
-    del(region: string, key: string): Promise<void>;
+    del(region: string, key: CacheKey): Promise<void>;
     /**
      * Clear the entire region
      */
@@ -124,6 +124,6 @@ export interface MashroomMemoryCacheProvider {
     /**
      * Get the number of entries in this region (if possible)
      */
-    getEntryCount(region: string): Promise<?number>;
+    getEntryCount(region: string): Promise<number | undefined>;
 }
 ```

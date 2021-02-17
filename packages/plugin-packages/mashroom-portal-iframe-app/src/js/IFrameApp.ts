@@ -5,64 +5,64 @@ type HeightMessage = {
 
 export default class IFrameApp {
 
-    private mounted: boolean;
-    private iframe: HTMLIFrameElement | null;
-    private boundOnMessage: (event: MessageEvent) => void;
+    private _mounted: boolean;
+    private _iframe: HTMLIFrameElement | null;
+    private _boundOnMessage: (event: MessageEvent) => void;
 
-    constructor(private url: string, private width: string, private defaultHeight: string) {
-        this.mounted = false;
-        this.iframe = null;
-        this.boundOnMessage = this.onMessage.bind(this);
+    constructor(private _url: string, private _width: string, private _defaultHeight: string) {
+        this._mounted = false;
+        this._iframe = null;
+        this._boundOnMessage = this.onMessage.bind(this);
     }
 
     mount(hostElement: HTMLElement): Promise<void> {
         return new Promise((resolve, reject) => {
             const iframe = document.createElement('iframe');
-            this.iframe = iframe;
+            this._iframe = iframe;
 
             iframe.style.border = 'none';
-            iframe.style.width = this.width;
+            iframe.style.width = this._width;
             iframe.style.height = '0';
 
             iframe.onload = () => {
-                iframe.style.height = this.defaultHeight;
+                iframe.style.height = this._defaultHeight;
                 hostElement.childNodes.forEach((node) => {
                     // Remove other child nodes after loading if any
-                    if (node !== this.iframe) {
+                    if (node !== this._iframe) {
                         hostElement.removeChild(node);
                     }
                 });
                 resolve();
             };
             iframe.onerror = (event) => {
-                console.error(`Loading failed: ${this.url}`, event);
+                console.error(`Loading failed: ${this._url}`, event);
                 reject(event);
             };
 
-            hostElement.appendChild(this.iframe);
-            iframe.src = this.url;
+            hostElement.appendChild(this._iframe);
+            iframe.src = this._url;
 
-            window.addEventListener('message', this.boundOnMessage);
+            window.addEventListener('message', this._boundOnMessage);
         });
     }
 
     unmount() {
-        if (this.mounted && this.iframe && this.iframe.parentNode) {
-            this.iframe.parentNode.removeChild(this.iframe);
-            window.removeEventListener('message', this.boundOnMessage);
+        if (this._mounted && this._iframe && this._iframe.parentNode) {
+            this._iframe.parentNode.removeChild(this._iframe);
+            window.removeEventListener('message', this._boundOnMessage);
         }
-        this.mounted = false;
+        this._mounted = false;
     }
 
     onMessage(event: MessageEvent) {
-        if (this.iframe && event.source === this.iframe.contentWindow) {
+        if (this._iframe && event.source === this._iframe.contentWindow) {
             console.info('Received message from iframe: ', event.data);
 
             const heightMessage: HeightMessage = event.data;
-            if (this.iframe && typeof(heightMessage.height) === 'number') {
-                 this.iframe.style.height = `${heightMessage.height}px`;
-                 this.iframe.style.overflowY = 'hidden';
-                 this.iframe.scrolling = 'no';
+            if (this._iframe && typeof(heightMessage.height) === 'number') {
+                 this._iframe.style.height = `${heightMessage.height}px`;
+                 this._iframe.style.overflowY = 'hidden';
+                 this._iframe.scrolling = 'no';
             }
         }
     }

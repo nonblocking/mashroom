@@ -1,16 +1,17 @@
 
-import type {ExpressRequest, I18NString} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
+import type {I18NString} from '@mashroom/mashroom/type-definitions';
 
 export interface MashroomI18NService {
     /**
      * Get the currently set language (for current session)
      */
-    getLanguage(req: ExpressRequest): string;
+    getLanguage(req: Request): string;
 
     /**
      * Set session language
      */
-    setLanguage(language: string, req: ExpressRequest): void;
+    setLanguage(language: string, req: Request): void;
 
     /**
      * Get the message for given key and language
@@ -20,7 +21,7 @@ export interface MashroomI18NService {
     /**
      * Get plain string in the current users language from a I18NString
      */
-    translate(req: ExpressRequest, str: I18NString): string;
+    translate(req: Request, str: I18NString): string;
 
     /**
      * Get available languages

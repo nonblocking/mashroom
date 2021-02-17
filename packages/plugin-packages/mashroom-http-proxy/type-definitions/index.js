@@ -7,7 +7,7 @@ export type HttpHeaders = {
 }
 
 export type QueryParams = {
-    [key: string]: ?string | string[] | {};
+    [key: string]: ?string | string[];
 }
 
 export interface MashroomHttpProxyService {

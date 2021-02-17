@@ -1,7 +1,6 @@
 
+import type {Request, Response} from 'express';
 import type {
-    ExpressRequest,
-    ExpressResponse,
     MashroomLogger,
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
@@ -12,18 +11,18 @@ const CACHE_CONTROL_HEADER_NAME = 'Cache-Control';
 
 export default class MashroomCacheControlService implements MashroomCacheControlServiceType {
 
-    private disabled: boolean;
+    private _disabled: boolean;
 
     constructor(devMode: boolean, disabled: boolean, private maxAgeSec: number, loggerFactory: MashroomLoggerFactory) {
-        this.disabled = disabled;
+        this._disabled = disabled;
         const logger = loggerFactory('mashroom.browserCache.service');
         if (devMode) {
             logger.info('Disabling browser cache because some packages are in dev mode');
-            this.disabled = true;
+            this._disabled = true;
         }
     }
 
-    async addCacheControlHeader(resourceCanContainSensitiveInformation: boolean, request: ExpressRequest, response: ExpressResponse): Promise<void> {
+    async addCacheControlHeader(resourceCanContainSensitiveInformation: boolean, request: Request, response: Response): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.browserCache.service');
 
         if (request.method !== 'GET') {
@@ -31,7 +30,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
             return;
         }
 
-        if (this.disabled) {
+        if (this._disabled) {
             this._disableCache(response);
             return;
         }
@@ -52,11 +51,11 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this.maxAgeSec}`);
     }
 
-    removeCacheControlHeader(response: ExpressResponse): void {
+    removeCacheControlHeader(response: Response): void {
         response.removeHeader(CACHE_CONTROL_HEADER_NAME);
     }
 
-    private _disableCache(res: ExpressResponse) {
+    private _disableCache(res: Response) {
         res.set(CACHE_CONTROL_HEADER_NAME, 'no-cache, no-store, max-age=0');
         // Older clients
         res.set('Pragma', 'no');

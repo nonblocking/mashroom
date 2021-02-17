@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import PortalLayoutsPluginLoader from '../../../../src/backend/plugins/loader/PortalLayoutsPluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
@@ -48,7 +47,7 @@ describe('PortalLayoutsPluginLoader', () => {
         expect(registry.layouts[0].layoutId).toBe('2_columns_50_50');
         expect(registry.layouts[1].layoutId).toBe('2_columns_70_30');
         // @ts-ignore
-        expect(loader.loadedLayouts.get('Portal Layouts 1')).toEqual({
+        expect(loader._loadedLayouts.get('Portal Layouts 1')).toEqual({
             'Portal Layouts 1 2_columns_50_50': true,
             'Portal Layouts 1 2_columns_70_30': true,
         });

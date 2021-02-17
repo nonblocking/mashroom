@@ -2,24 +2,22 @@
 import {getResourceAsStream} from '../utils/resource_utils';
 
 import type {Request, Response} from 'express';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 import type {MashroomPortalPageEnhancement, MashroomPortalPageEnhancementResource} from '../../../type-definitions';
 
 export default class PortalPageEnhancementController {
 
-    constructor(private pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(private _pluginRegistry: MashroomPortalPluginRegistry) {
     }
 
     async getPortalPageResource(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         const pluginName = req.params.pluginName;
         const resourcePath = req.params['0'];
 
-        const plugin = this.pluginRegistry.portalPageEnhancements.find((plugin) => plugin.name === pluginName);
+        const plugin = this._pluginRegistry.portalPageEnhancements.find((plugin) => plugin.name === pluginName);
         if (!plugin) {
             logger.error('Request for resource of unknown page enhancement plugin: ', pluginName);
             res.sendStatus(404);
@@ -34,12 +32,12 @@ export default class PortalPageEnhancementController {
             return;
         }
 
-        await this.sendResource(resourceJs ? 'js' : 'css', resourceJs || resourceCss, plugin, reqWithContext, res);
+        await this._sendResource(resourceJs ? 'js' : 'css', resourceJs || resourceCss, plugin, req, res);
     }
 
-    private async sendResource(type: 'js' | 'css', resource: MashroomPortalPageEnhancementResource | undefined,
-                               plugin: MashroomPortalPageEnhancement, req: ExpressRequest, res: Response) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+    private async _sendResource(type: 'js' | 'css', resource: MashroomPortalPageEnhancementResource | undefined,
+                               plugin: MashroomPortalPageEnhancement, req: Request, res: Response) {
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
 
         if (!resource || !resource.path) {

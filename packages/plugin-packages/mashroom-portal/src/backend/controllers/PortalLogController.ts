@@ -2,17 +2,16 @@
 import {portalAppContext} from '../utils/logging_utils';
 
 import type {Request, Response} from 'express';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+
 import type {ClientLogMessage, MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalLogController {
 
-    constructor(private pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(private _pluginRegistry: MashroomPortalPluginRegistry) {
     }
 
     async log(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal.client');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal.client');
 
         try {
             const body: any = req.body;
@@ -26,7 +25,7 @@ export default class PortalLogController {
             for (const logMessage of logMessages) {
                 let sourceAppInfo = '';
                 if (logMessage.portalAppName) {
-                    const portalApp = this.getPortalApp(logMessage.portalAppName);
+                    const portalApp = this._getPortalApp(logMessage.portalAppName);
                     if (portalApp) {
                         logger.addContext(portalAppContext(portalApp));
                         sourceAppInfo = `Caused by portal app: ${portalApp.name} v${portalApp.version}`;
@@ -58,8 +57,8 @@ export default class PortalLogController {
         }
     }
 
-    private getPortalApp(pluginName: string) {
-        return this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+    private _getPortalApp(pluginName: string) {
+        return this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
     }
 
 }

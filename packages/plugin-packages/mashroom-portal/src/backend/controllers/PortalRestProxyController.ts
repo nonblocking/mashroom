@@ -11,26 +11,24 @@ import {portalAppContext} from '../utils/logging_utils';
 import {getSitePath} from '../utils/path_utils';
 
 import type {Request, Response} from 'express';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 import type {MashroomPortalAppUserPermissions, MashroomPortalProxyDefinition,} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalRestProxyController {
 
-    constructor(private pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(private _pluginRegistry: MashroomPortalPluginRegistry) {
     }
 
     async forward(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const httpProxyService: MashroomHttpProxyService = reqWithContext.pluginContext.services.proxy.service;
-            const user = getUser(reqWithContext);
+            const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
+            const user = getUser(req);
 
-            const sitePath = getSitePath(reqWithContext);
-            if (!await isSitePathPermitted(reqWithContext, sitePath)) {
+            const sitePath = getSitePath(req);
+            if (!await isSitePathPermitted(req, sitePath)) {
                 logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access site: ${sitePath}`);
                 res.sendStatus(403);
                 return;
@@ -47,7 +45,7 @@ export default class PortalRestProxyController {
 
             const pluginName = pathParts[0];
             const restApiId = pathParts[1];
-            const portalApp = this.pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
+            const portalApp = this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
             if (!portalApp) {
                 logger.warn('Portal app not found: ', pluginName);
                 res.sendStatus(404);
@@ -70,7 +68,7 @@ export default class PortalRestProxyController {
                 return;
             }
 
-            if (!await isProxyAccessPermitted(reqWithContext, restProxyDef, logger)) {
+            if (!await isProxyAccessPermitted(req, restProxyDef, logger)) {
                 logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access rest proxy: ${req.originalUrl}`);
                 res.sendStatus(403);
                 return;
@@ -107,7 +105,7 @@ export default class PortalRestProxyController {
             }
 
             logger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);
-            await httpProxyService.forward(reqWithContext, res, fullTargetUri, headers);
+            await httpProxyService.forward(req, res, fullTargetUri, headers);
 
         } catch (e) {
             logger.error(e);

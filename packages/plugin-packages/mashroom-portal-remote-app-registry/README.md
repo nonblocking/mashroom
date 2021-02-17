@@ -85,10 +85,10 @@ The config file contains just an array of URL's:
 
 The **Service** can be used like this:
 
-```js
+```ts
 import type {MashroomPortalRemoteAppEndpointService} from '@mashroom/mashroom-portal-remote-app-registry/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const remoteAppService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
 
     const remoteApps = await remoteAppService.findAll();
@@ -119,7 +119,7 @@ The exposed service is accessible through _pluginContext.services.remotePortalAp
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomPortalRemoteAppEndpointService {
     /**
      * Register a new Remote App URL
@@ -131,7 +131,7 @@ export interface MashroomPortalRemoteAppEndpointService {
      */
     synchronousRegisterRemoteAppUrlInSession(
         url: string,
-        request: ExpressRequest,
+        request: Request,
     ): Promise<void>;
 
     /**

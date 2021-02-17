@@ -7,10 +7,10 @@ import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/in
 
 export default class PortalThemePluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.portal.plugin.loader');
+    constructor(private _registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.portal.plugin.loader');
     }
 
     get name(): string {
@@ -52,12 +52,12 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
             viewsPath,
         };
 
-        this.logger.info('Registering theme:', {theme});
-        this.registry.registerTheme(theme);
+        this._logger.info('Registering theme:', {theme});
+        this._registry.registerTheme(theme);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info(`Unregistering theme: ${plugin.name}`);
-        this.registry.unregisterTheme(plugin.name);
+        this._logger.info(`Unregistering theme: ${plugin.name}`);
+        this._registry.unregisterTheme(plugin.name);
     }
 }

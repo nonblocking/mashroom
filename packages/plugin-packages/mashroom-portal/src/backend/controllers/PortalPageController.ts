@@ -5,7 +5,6 @@ import {findPortalAppInstanceOnPage} from '../utils/model_utils';
 import {getPortalAppResourceKey, isAdmin} from '../utils/security_utils';
 
 import type {Request, Response} from 'express';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityResourcePermissions,
     MashroomSecurityService
@@ -23,17 +22,16 @@ import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/inte
 
 export default class PortalPageController {
 
-    constructor(private pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(private _pluginRegistry: MashroomPortalPluginRegistry) {
     }
 
     async getPortalPage(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -55,13 +53,12 @@ export default class PortalPageController {
     }
 
     async addPage(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -93,13 +90,12 @@ export default class PortalPageController {
     }
 
     async updatePage(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -134,13 +130,12 @@ export default class PortalPageController {
     }
 
     async deletePage(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -166,14 +161,13 @@ export default class PortalPageController {
     }
 
     async getPagePermittedRoles(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -186,7 +180,7 @@ export default class PortalPageController {
             }
 
             let roles = null;
-            const permissions = await securityService.getResourcePermissions(reqWithContext, 'Page', pageId);
+            const permissions = await securityService.getResourcePermissions(req, 'Page', pageId);
             if (permissions && permissions.permissions && permissions.permissions.length > 0) {
                 roles = permissions.permissions[0].roles;
             }
@@ -200,14 +194,13 @@ export default class PortalPageController {
     }
 
     async updatePagePermittedRoles(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -235,7 +228,7 @@ export default class PortalPageController {
 
             logger.info(`Update permitted roles for page ${pageId}:`, {roles});
 
-            await securityService.updateResourcePermission(reqWithContext, {
+            await securityService.updateResourcePermission(req, {
                 type: 'Page',
                 key: pageId,
                 permissions
@@ -250,11 +243,10 @@ export default class PortalPageController {
     }
 
     async getPortalAppInstances(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
             const pageId = req.params.pageId;
             const page = await portalService.getPage(pageId);
@@ -286,14 +278,13 @@ export default class PortalPageController {
     }
 
     async addPortalApp(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -309,7 +300,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const portalApp = this.getAppData(data.pluginName);
+            const portalApp = this._getAppData(data.pluginName);
             if (!portalApp) {
                 logger.warn(`Portal app ${data.pluginName} not found`);
                 res.sendStatus(400);
@@ -323,7 +314,7 @@ export default class PortalPageController {
                 pluginName: data.pluginName,
                 instanceId
             };
-            const position = this.insertAppInstance(page, instance, data.areaId, data.position);
+            const position = this._insertAppInstance(page, instance, data.areaId, data.position);
             logger.info(`Inserting new app instance of ${data.pluginName} on page ${pageId} in area ${data.areaId} at position: ${position}`);
 
             await portalService.updatePage(page);
@@ -337,7 +328,7 @@ export default class PortalPageController {
             await portalService.insertPortalAppInstance(appInstance);
 
             if (portalApp.defaultRestrictViewToRoles && Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
-                await securityService.updateResourcePermission(reqWithContext, {
+                await securityService.updateResourcePermission(req, {
                     type: 'Portal-App',
                     key: getPortalAppResourceKey(data.pluginName, instanceId),
                     permissions: [{
@@ -363,13 +354,12 @@ export default class PortalPageController {
     }
 
     async updatePortalApp(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -398,7 +388,7 @@ export default class PortalPageController {
             if (data.areaId && data.areaId !== existingInstData.areaId || data.position && data.position !== existingInstData.position) {
                 const areaId = data.areaId || existingInstData.areaId;
                 portalApps[existingInstData.areaId].splice(existingInstData.position, 1);
-                const position = this.insertAppInstance(page, existingInstData.instance, areaId, data.position);
+                const position = this._insertAppInstance(page, existingInstData.instance, areaId, data.position);
                 logger.info(`Moving app instance ${pluginName}:${portalAppInstanceId} on page ${pageId} and area ${areaId} to position: ${position}`);
             }
             if (data.appConfig) {
@@ -421,13 +411,12 @@ export default class PortalPageController {
     }
 
     async removePortalApp(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -467,14 +456,13 @@ export default class PortalPageController {
     }
 
     async getPortalAppPermittedRoles(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -501,7 +489,7 @@ export default class PortalPageController {
             }
 
             let roles = null;
-            const permissions = await securityService.getResourcePermissions(reqWithContext, 'Portal-App', getPortalAppResourceKey(pluginName, portalAppInstanceId));
+            const permissions = await securityService.getResourcePermissions(req, 'Portal-App', getPortalAppResourceKey(pluginName, portalAppInstanceId));
             if (permissions && permissions.permissions && permissions.permissions.length > 0) {
                 roles = permissions.permissions[0].roles;
             }
@@ -515,14 +503,13 @@ export default class PortalPageController {
     }
 
     async updatePortalAppPermittedRoles(req: Request, res: Response): Promise<void> {
-        const reqWithContext = req as ExpressRequest;
-        const logger: MashroomLogger = reqWithContext.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = reqWithContext.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = reqWithContext.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
-            if (!isAdmin(reqWithContext)) {
+            if (!isAdmin(req)) {
                 res.sendStatus(403);
                 return;
             }
@@ -561,7 +548,7 @@ export default class PortalPageController {
                 }];
             }
 
-            await securityService.updateResourcePermission(reqWithContext, {
+            await securityService.updateResourcePermission(req, {
                 type: 'Portal-App',
                 key: getPortalAppResourceKey(pluginName, portalAppInstanceId),
                 permissions
@@ -575,7 +562,7 @@ export default class PortalPageController {
         }
     }
 
-    private insertAppInstance(page: MashroomPortalPage, portalAppInstance: MashroomPortalAppInstanceRef, areaId: string, position?: number): number {
+    private _insertAppInstance(page: MashroomPortalPage, portalAppInstance: MashroomPortalAppInstanceRef, areaId: string, position?: number): number {
         page.portalApps = page.portalApps || {};
         const areaAppInstances = page.portalApps[areaId] = page.portalApps[areaId] || [];
 
@@ -589,8 +576,8 @@ export default class PortalPageController {
         return actualPos;
     }
 
-    private getAppData(pluginName: string) {
-        return this.pluginRegistry.portalApps.find((a) => a.name === pluginName);
+    private _getAppData(pluginName: string) {
+        return this._pluginRegistry.portalApps.find((a) => a.name === pluginName);
     }
 
 }

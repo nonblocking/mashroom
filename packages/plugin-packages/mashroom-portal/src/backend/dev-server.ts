@@ -1,24 +1,18 @@
 
 import path from 'path';
 import express from 'express';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import context, {setPortalPluginConfig} from './context/global_portal_context';
 import setupWebapp from './setup-webapp';
 import {SITES_COLLECTION, PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} from './constants';
 import MashroomPortalService from './services/MashroomPortalService';
 
-import type {
-    MashroomPluginContext,
-    ExpressRequest,
-    ExpressResponse,
-    ExpressNextFunction
-} from '@mashroom/mashroom/type-definitions';
+import type {MashroomPluginContext} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {MashroomPortalSite, MashroomPortalPage, MashroomPortalApp, MashroomPortalAppInstance} from '../../type-definitions';
 
 const app = express();
-app.get('/', (req, res: ExpressResponse) => {
+app.get('/', (req, res) => {
     res.type('text/html');
     res.send(`
         <html>
@@ -134,8 +128,7 @@ const welcomeAppInstance1: MashroomPortalAppInstance = {
     },
 };
 
-// @ts-ignore
-app.use((req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+app.use((req, res, next) => {
 
     const pluginService: any = {};
     const middlewareStackService: any = {};
@@ -226,4 +219,8 @@ app.use('/portal', setupWebapp(context.pluginRegistry));
 
 app.listen('5050', ()  => {
     console.info('Portal standalone test server listening on port 5050');
+});
+
+app.once('error', (error) => {
+    console.error('Starting dev server failed', error);
 });

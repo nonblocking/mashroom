@@ -1,9 +1,8 @@
 
 import {DEFAULT_SITE_ID} from '../constants';
 
-import type {
-    ExpressRequest, MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomPortalAppInstanceRef,
     MashroomPortalPage,
@@ -43,12 +42,12 @@ export const findPortalAppInstanceOnPage = (page: MashroomPortalPage, pluginName
     };
 };
 
-export const findSiteByPath = async (req: ExpressRequest, sitePath: string): Promise<MashroomPortalSite | undefined | null> => {
+export const findSiteByPath = async (req: Request, sitePath: string): Promise<MashroomPortalSite | undefined | null> => {
     const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
     return portalService.findSiteByPath(sitePath);
 };
 
-export const getPageData = async (sitePath: string, friendlyUrl: string | undefined | null, req: ExpressRequest, logger: MashroomLogger):
+export const getPageData = async (sitePath: string, friendlyUrl: string | undefined | null, req: Request, logger: MashroomLogger):
     Promise<{ site?: MashroomPortalSite, pageRef?: MashroomPortalPageRef, page?: MashroomPortalPage }> => {
     const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
@@ -79,12 +78,12 @@ export const getPageData = async (sitePath: string, friendlyUrl: string | undefi
     return {site, pageRef, page};
 };
 
-export const getPage = async (req: ExpressRequest, pageId: string): Promise<MashroomPortalPage | undefined | null> => {
+export const getPage = async (req: Request, pageId: string): Promise<MashroomPortalPage | undefined | null> => {
     const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
     return await portalService.getPage(pageId);
 };
 
-export const getDefaultSite = async (req: ExpressRequest, logger: MashroomLogger): Promise<MashroomPortalSite | undefined | null> => {
+export const getDefaultSite = async (req: Request, logger: MashroomLogger): Promise<MashroomPortalSite | undefined | null> => {
     const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
 
     const defaultSite = await portalService.getSite(DEFAULT_SITE_ID);

@@ -4,17 +4,17 @@ import type {HttpHeaderFilter as HttpHeaderFilterType} from '../../type-definiti
 
 export default class HttpHeaderFilter implements HttpHeaderFilterType {
 
-    private forwardHeadersRegexes: Array<RegExp>;
+    private _forwardHeadersRegexes: Array<RegExp>;
 
     constructor(forwardHeaders: Array<string>) {
-        this.forwardHeadersRegexes = forwardHeaders.map((h) => {
+        this._forwardHeadersRegexes = forwardHeaders.map((h) => {
             return new RegExp(h.replace('*', '.*'), 'gi');
         });
     }
 
     filter(headers: HttpHeaders): void {
         for (const headerName in headers) {
-            if (headers.hasOwnProperty(headerName) && !this.forwardHeadersRegexes.find((r) => {
+            if (headers.hasOwnProperty(headerName) && !this._forwardHeadersRegexes.find((r) => {
                 r.lastIndex = 0;
                 return r.test(headerName);
             })) {

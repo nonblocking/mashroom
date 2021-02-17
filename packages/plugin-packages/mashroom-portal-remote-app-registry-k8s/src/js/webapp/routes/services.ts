@@ -1,6 +1,5 @@
 
 import context from '../../context';
-// @ts-ignore
 import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 
 import type {Request, Response} from 'express';

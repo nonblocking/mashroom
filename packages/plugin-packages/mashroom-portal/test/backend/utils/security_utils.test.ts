@@ -1,6 +1,5 @@
 
 import {isSitePermitted, isSitePathPermitted, isPagePermitted, isAppPermitted, isProxyAccessPermitted} from '../../../src/backend/utils/security_utils';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 

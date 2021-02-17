@@ -24,56 +24,56 @@ const KEEP_ALIVE_MESSAGE = 'keepalive';
 
 export default class WebSocketServer implements MashroomWebSocketServer {
 
-    private logger: MashroomLogger;
-    private server: Server;
-    _clients: Array<{
+    private _logger: MashroomLogger;
+    private _server: Server;
+    private _clients: Array<{
         client: InternalMashroomWebSocketClient,
         webSocket: WebSocket,
     }>;
-    private messageListener: Array<{
+    private _messageListener: Array<{
         matcher: MashroomWebSocketMatcher,
         listener: MashroomWebSocketMessageListener
     }>;
-    private disconnectListeners: Array<MashroomWebSocketDisconnectListener>;
-    private checkConnectionInterval: IntervalID;
-    private keepAliveInterval: IntervalID | undefined;
+    private _disconnectListeners: Array<MashroomWebSocketDisconnectListener>;
+    private _checkConnectionInterval: IntervalID;
+    private _keepAliveInterval: IntervalID | undefined;
 
-    constructor(loggerFactory: MashroomLoggerFactory, private reconnectMessageBufferStore: ReconnectMessageBufferStore) {
-        this.logger = loggerFactory('mashroom.websocket.server');
-        this.server = new Server({
+    constructor(loggerFactory: MashroomLoggerFactory, private _reconnectMessageBufferStore: ReconnectMessageBufferStore) {
+        this._logger = loggerFactory('mashroom.websocket.server');
+        this._server = new Server({
             noServer: true
         });
         this._clients = [];
-        this.messageListener = [];
-        this.disconnectListeners = [];
+        this._messageListener = [];
+        this._disconnectListeners = [];
 
-        this.checkConnectionInterval = setInterval(() => this.checkConnections(), CHECK_CONNECTIONS_INTERVAL_MS);
+        this._checkConnectionInterval = setInterval(() => this._checkConnections(), CHECK_CONNECTIONS_INTERVAL_MS);
         if (context.enableKeepAlive) {
-            this.keepAliveInterval = setInterval(() => this.sendKeepAlive(), context.keepAliveIntervalSec * 1000);
+            this._keepAliveInterval = setInterval(() => this._sendKeepAlive(), context.keepAliveIntervalSec * 1000);
         }
     }
 
     addMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void {
-        this.messageListener.push({
+        this._messageListener.push({
             matcher,
             listener
         });
     }
 
     removeMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void {
-        this.messageListener = this.messageListener.filter((wrapper) => wrapper.matcher !== matcher || wrapper.listener !== listener);
+        this._messageListener = this._messageListener.filter((wrapper) => wrapper.matcher !== matcher || wrapper.listener !== listener);
     }
 
     addDisconnectListener(listener: MashroomWebSocketDisconnectListener): void {
-        this.disconnectListeners.push(listener);
+        this._disconnectListeners.push(listener);
     }
 
     removeDisconnectListener(listener: MashroomWebSocketDisconnectListener): void {
-        this.disconnectListeners = this.disconnectListeners.filter((l) => l !== listener);
+        this._disconnectListeners = this._disconnectListeners.filter((l) => l !== listener);
     }
 
     async createClient(webSocket: WebSocket, connectPath: string, user: MashroomSecurityUser, loggerContext: any): Promise<void> {
-        const contextLogger = this.logger.withContext(loggerContext);
+        const contextLogger = this._logger.withContext(loggerContext);
 
         contextLogger.debug(`WebSocket connection opened on path: ${connectPath}. User: ${user.username}`);
 
@@ -85,7 +85,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
 
         const alive = true;
         const reconnecting = undefined;
-        const clientIdFromConnectPath = this.getClientIdFromConnectPath(connectPath);
+        const clientIdFromConnectPath = this._getClientIdFromConnectPath(connectPath);
         const reconnectingClient = this._clients.find((c) => c.client.clientId === clientIdFromConnectPath);
         const clientId = reconnectingClient ? (clientIdFromConnectPath || v4()) : v4();
 
@@ -96,13 +96,13 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             }
             delete reconnectingClient.client.reconnecting;
             reconnectingClient.webSocket = webSocket;
-            this.addWebSocketListeners(reconnectingClient.webSocket, contextLogger, reconnectingClient.client);
-            const bufferedMessages = await this.reconnectMessageBufferStore.getData(this.getFileName(user, reconnectingClient.client));
+            this._addWebSocketListeners(reconnectingClient.webSocket, contextLogger, reconnectingClient.client);
+            const bufferedMessages = await this._reconnectMessageBufferStore.getData(this._getFileName(user, reconnectingClient.client));
             if (bufferedMessages && bufferedMessages.length > 0) {
                 bufferedMessages.forEach((item) => {
                     this.sendMessage(reconnectingClient.client, JSON.parse(item));
                 });
-                await this.reconnectMessageBufferStore.removeFile(this.getFileName(user, reconnectingClient.client));
+                await this._reconnectMessageBufferStore.removeFile(this._getFileName(user, reconnectingClient.client));
             }
             return;
         }
@@ -122,18 +122,18 @@ export default class WebSocketServer implements MashroomWebSocketServer {
 
         webSocket.send(JSON.stringify({type: 'setClientId', payload: clientId}));
 
-        this.addWebSocketListeners(webSocket, contextLogger, client);
+        this._addWebSocketListeners(webSocket, contextLogger, client);
     }
 
     getServer(): Server {
-        return this.server;
+        return this._server;
     }
 
     async sendMessage(client: MashroomWebSocketClient, message: any): Promise<void> {
-        const webSocket = this.getWebSocket(client);
+        const webSocket = this._getWebSocket(client);
         const internalClient = client as InternalMashroomWebSocketClient;
         if (webSocket && !internalClient.reconnecting) {
-            const contextLogger = this.logger.withContext(client.loggerContext);
+            const contextLogger = this._logger.withContext(client.loggerContext);
 
             return new Promise((resolve, reject) => {
                 contextLogger.debug(`Sending WebSocket message to client:`, message);
@@ -148,19 +148,19 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         }
 
         if (internalClient.reconnecting) {
-            await this.reconnectMessageBufferStore.appendData(this.getFileName(client.user, client), JSON.stringify(message));
+            await this._reconnectMessageBufferStore.appendData(this._getFileName(client.user, client), JSON.stringify(message));
         }
     }
 
     close(client: MashroomWebSocketClient): void {
-        const webSocket = this.getWebSocket(client);
+        const webSocket = this._getWebSocket(client);
         if (webSocket) {
             try {
                 webSocket.close();
             } catch (err) {
-                this.logger.warn('Closing WebSocket client failed', err);
+                this._logger.warn('Closing WebSocket client failed', err);
             }
-            this.removeClient(client);
+            this._removeClient(client);
         }
     }
 
@@ -181,19 +181,19 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     closeAll(): void {
-        if (this.checkConnectionInterval) {
-            clearInterval(this.checkConnectionInterval);
+        if (this._checkConnectionInterval) {
+            clearInterval(this._checkConnectionInterval);
         }
-        if (this.keepAliveInterval) {
-            clearInterval(this.keepAliveInterval);
+        if (this._keepAliveInterval) {
+            clearInterval(this._keepAliveInterval);
         }
-        this.logger.info('Closing all WebSocket connections');
+        this._logger.info('Closing all WebSocket connections');
         this._clients.forEach((cw) => {
             this.close(cw.client);
         });
     }
 
-    private getClientIdFromConnectPath(connectPath: string): string | null {
+    private _getClientIdFromConnectPath(connectPath: string): string | null {
         const CLIENT_ID_QUERY_PARAM = 'clientId'
         if (connectPath.indexOf(`${CLIENT_ID_QUERY_PARAM}=`) > -1) {
             const params = connectPath.split('&');
@@ -205,38 +205,38 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         return null;
     }
 
-    private addWebSocketListeners(webSocket: WebSocket, contextLogger: MashroomLogger, client: MashroomWebSocketClient) {
+    private _addWebSocketListeners(webSocket: WebSocket, contextLogger: MashroomLogger, client: MashroomWebSocketClient) {
         webSocket.on('error', (error) => {
             contextLogger.error('WebSocket error', error);
         });
         webSocket.on('close', () => {
-            if (this.reconnectMessageBufferStore.enabled) {
+            if (this._reconnectMessageBufferStore.enabled) {
                 contextLogger.info(`Client ${client.clientId} disconnected, waiting for reconnect`);
                 const internalClient = client as InternalMashroomWebSocketClient;
                 internalClient.reconnecting = setTimeout(() => {
                     if (internalClient.reconnecting) {
                         contextLogger.debug(`No reconnect within 10 seconds, removing client ${client.clientId}`);
-                        this.removeClient(client);
+                        this._removeClient(client);
                     }
                 }, context.reconnectTimeoutSec * 1000);
             } else {
-                this.removeClient(client);
+                this._removeClient(client);
             }
         });
         webSocket.on('pong', () => {
             client.alive = true;
         });
         webSocket.on('message', (textMsg) => {
-            this.handleMessage(textMsg, client);
+            this._handleMessage(textMsg, client);
         });
     }
 
-    private getFileName({username}: MashroomSecurityUser, {clientId}: MashroomWebSocketClient): string {
+    private _getFileName({username}: MashroomSecurityUser, {clientId}: MashroomWebSocketClient): string {
         return `${username}_${clientId}`;
     }
 
-    private handleMessage(textMsg: any, client: MashroomWebSocketClient): void {
-        const contextLogger = this.logger.withContext(client.loggerContext);
+    private _handleMessage(textMsg: any, client: MashroomWebSocketClient): void {
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
         if (typeof (textMsg) !== 'string') {
             contextLogger.warn('Ignoring WebSocket message because currently binary is not supported');
@@ -254,7 +254,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         contextLogger.debug('Received WebSocket message from client:', message);
 
         let handled = false;
-        this.messageListener.forEach((wrapper) => {
+        this._messageListener.forEach((wrapper) => {
             let match = false;
             try {
                 match = wrapper.matcher(client.connectPath, message);
@@ -276,31 +276,31 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         }
     }
 
-    private async removeClient(client: MashroomWebSocketClient): Promise<void> {
+    private async _removeClient(client: MashroomWebSocketClient): Promise<void> {
         const internalClient = client as InternalMashroomWebSocketClient;
         if (internalClient.reconnecting) {
-            await this.reconnectMessageBufferStore.removeFile(this.getFileName(client.user, client));
+            await this._reconnectMessageBufferStore.removeFile(this._getFileName(client.user, client));
         }
         this._clients = this._clients.filter((cw) => cw.client !== client);
-        this.informDisconnectListeners(client);
+        this._informDisconnectListeners(client);
     }
 
-    private informDisconnectListeners(client: MashroomWebSocketClient): void {
-        this.disconnectListeners.forEach((listener) => {
+    private _informDisconnectListeners(client: MashroomWebSocketClient): void {
+        this._disconnectListeners.forEach((listener) => {
             try {
                 listener(client);
             } catch (e) {
-                this.logger.error('Disconnect listener threw error', e);
+                this._logger.error('Disconnect listener threw error', e);
             }
         });
     }
 
-    private getWebSocket(client: MashroomWebSocketClient): WebSocket | null {
+    private _getWebSocket(client: MashroomWebSocketClient): WebSocket | null {
         const clientWrapper = this._clients.find((cw) => cw.client === client);
         return clientWrapper ? clientWrapper.webSocket : null;
     }
 
-    private sendKeepAlive(): void {
+    private _sendKeepAlive(): void {
         this._clients.forEach((wrapper) => {
             this.sendMessage(wrapper.client, KEEP_ALIVE_MESSAGE).then(
                 () => { /* nothing to do */ }, () => { /* nothing to do */ }
@@ -308,7 +308,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         });
     }
 
-    private checkConnections(): void {
+    private _checkConnections(): void {
         const clientCount = this.getClientCount();
         if (clientCount > 0) {
             this._clients.forEach((wrapper) => {

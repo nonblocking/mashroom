@@ -64,4 +64,7 @@ wrapperApp.use('/login', app);
 wrapperApp.listen(5077, () => {
     console.log('Listening on 5077');
 });
+wrapperApp.once('error', (error) => {
+    console.error('Failed to start server!', error);
+});
 

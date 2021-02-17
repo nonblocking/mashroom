@@ -1,4 +1,4 @@
-// @ts-ignore
+
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
 import DummyKubernetesConnector from '../src/js/k8s/DummyKubernetesConnector';

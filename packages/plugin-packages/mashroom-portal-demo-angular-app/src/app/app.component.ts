@@ -14,11 +14,11 @@ export class AppComponent {
     pings: number;
     messageBus: MashroomPortalMessageBus;
 
-    constructor(cdRef: ChangeDetectorRef, @Inject('app.setup') private appSetup: MashroomPortalAppSetup, @Inject('client.services') private clientServices: MashroomPortalClientServices) {
-        this.resourcesBasePath = appSetup.resourcesBasePath;
-        this.firstName = appSetup.appConfig.firstName;
+    constructor(cdRef: ChangeDetectorRef, @Inject('app.setup') private _appSetup: MashroomPortalAppSetup, @Inject('client.services') private _clientServices: MashroomPortalClientServices) {
+        this.resourcesBasePath = _appSetup.resourcesBasePath;
+        this.firstName = _appSetup.appConfig.firstName;
         this.pings = 0;
-        this.messageBus = clientServices.messageBus;
+        this.messageBus = _clientServices.messageBus;
         this.messageBus.subscribe('ping', () => {
             this.pings++;
             // Zone.js cannot detect this change

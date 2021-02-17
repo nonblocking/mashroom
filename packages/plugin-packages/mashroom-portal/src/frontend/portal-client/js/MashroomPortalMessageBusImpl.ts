@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging_utils';
 import {
     WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
@@ -35,13 +34,13 @@ type Interceptor = {
 
 export default class MashroomPortalMessageBusImpl implements MashroomPortalMasterMessageBus {
 
-    private subscriptionMap: SubscriptionMap;
-    private interceptors: Array<Interceptor>;
-    private remoteMessageClient: RemoteMessagingClient | undefined | null;
+    private _subscriptionMap: SubscriptionMap;
+    private _interceptors: Array<Interceptor>;
+    private _remoteMessageClient: RemoteMessagingClient | undefined | null;
 
     constructor() {
-        this.subscriptionMap = {};
-        this.interceptors = [];
+        this._subscriptionMap = {};
+        this._interceptors = [];
 
         if (webSocketSupport && REMOTE_MESSAGING_CONNECT_PATH) {
             const socketProtocol = (global.location.protocol === 'https:' ? 'wss:' : 'ws:');
@@ -50,32 +49,32 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
             const clientId = global.sessionStorage.getItem(SESSION_STORAGE_WS_CLIENT_ID);
             const connectUrl = `${socketProtocol}//${host}${port}${REMOTE_MESSAGING_CONNECT_PATH}${clientId ? `?clientId=${clientId}` : ''}`;
             console.info('Enable remote messaging. WebSocket connect url: ', connectUrl);
-            this.remoteMessageClient = new RemoteMessagingClient(connectUrl);
-            this.remoteMessageClient.onMessage(this.handleRemoteMessage.bind(this));
+            this._remoteMessageClient = new RemoteMessagingClient(connectUrl);
+            this._remoteMessageClient.onMessage(this._handleRemoteMessage.bind(this));
         } else {
             console.info('Remote messaging not supported');
         }
     }
 
     subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
-        return this.internalSubscribe(topic, callback, false);
+        return this._subscribe(topic, callback, false);
     }
 
     subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
-        return this.internalSubscribe(topic, callback, true);
+        return this._subscribe(topic, callback, true);
     }
 
     unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
-        return this.internalUnsubscribe(topic, callback);
+        return this._unsubscribe(topic, callback);
     }
 
     publish(topic: string, data: any): Promise<void> {
-        return this.internalPublish(topic, data);
+        return this._publish(topic, data);
     }
 
     getRemoteUserPrivateTopic(username?: string) {
         const privateTopicAuthenticatedUser = REMOTE_MESSAGING_PRIVATE_USER_TOPIC;
-        if (!this.remoteMessageClient || !privateTopicAuthenticatedUser) {
+        if (!this._remoteMessageClient || !privateTopicAuthenticatedUser) {
             return null;
         }
         if (!username) {
@@ -92,11 +91,11 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
     }
 
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-        this.internalRegisterMessageInterceptor(interceptor);
+        this._registerMessageInterceptor(interceptor);
     }
 
     unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-        this.internalUnregisterMessageInterceptor(interceptor);
+        this._unregisterMessageInterceptor(interceptor);
     }
 
     getAppInstance(appId: string) {
@@ -105,16 +104,16 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
 
         return {
             subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                return master.internalSubscribe(topic, callback, false, appId);
+                return master._subscribe(topic, callback, false, appId);
             },
             subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-                return master.internalSubscribe(topic, callback, true, appId);
+                return master._subscribe(topic, callback, true, appId);
             },
             unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
                 return master.unsubscribe(topic, callback);
             },
             publish(topic: string, data: any) {
-                return master.internalPublish(topic, data, appId);
+                return master._publish(topic, data, appId);
             },
             getRemoteUserPrivateTopic(username?: string) {
                 return master.getRemoteUserPrivateTopic(username);
@@ -123,10 +122,10 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
                 return master.getRemotePrefix();
             },
             registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-                return master.internalRegisterMessageInterceptor(interceptor, appId);
+                return master._registerMessageInterceptor(interceptor, appId);
             },
             unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-                return master.internalUnregisterMessageInterceptor(interceptor);
+                return master._unregisterMessageInterceptor(interceptor);
             },
             getAppInstance() {
                 throw new Error('Not available');
@@ -137,11 +136,11 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
     unsubscribeEverythingFromApp(appId: string) {
         console.info('Unregistering all MessageBus handlers from app:', appId);
 
-        for (const topic in this.subscriptionMap) {
-            if (this.subscriptionMap.hasOwnProperty(topic)) {
-                this.subscriptionMap[topic].forEach((subscription) => {
+        for (const topic in this._subscriptionMap) {
+            if (this._subscriptionMap.hasOwnProperty(topic)) {
+                this._subscriptionMap[topic].forEach((subscription) => {
                     if (subscription.appId === appId) {
-                        this.internalUnsubscribe(topic, subscription.callback).then(
+                        this._unsubscribe(topic, subscription.callback).then(
                             () => {
                                 // Nothing to do
                             },
@@ -154,20 +153,20 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
             }
         }
 
-        this.interceptors.forEach((wrapper) => {
+        this._interceptors.forEach((wrapper) => {
             if (wrapper.appId === appId) {
-                this.internalUnregisterMessageInterceptor(wrapper.interceptor);
+                this._unregisterMessageInterceptor(wrapper.interceptor);
             }
         });
     }
 
-    private internalSubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback, once: boolean, appId?: string): Promise<void> {
-        if (!this.subscriptionMap[topic]) {
-            this.subscriptionMap[topic] = [];
+    private _subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback, once: boolean, appId?: string): Promise<void> {
+        if (!this._subscriptionMap[topic]) {
+            this._subscriptionMap[topic] = [];
         }
 
-        if (!this.subscriptionMap[topic].find((subscription) => subscription.callback === callback)) {
-            this.subscriptionMap[topic].push({
+        if (!this._subscriptionMap[topic].find((subscription) => subscription.callback === callback)) {
+            this._subscriptionMap[topic].push({
                 callback,
                 once,
                 appId,
@@ -175,8 +174,8 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         }
 
         if (topic.indexOf(REMOTE_MESSAGING_TOPIC_PREFIX) === 0) {
-            if (this.remoteMessageClient) {
-                return this.remoteMessageClient.subscribe(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length));
+            if (this._remoteMessageClient) {
+                return this._remoteMessageClient.subscribe(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length));
             } else {
                 return Promise.reject('Remote messaging is not enabled');
             }
@@ -185,14 +184,14 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         return Promise.resolve();
     }
 
-    private internalUnsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
-        if (this.subscriptionMap[topic]) {
-            this.subscriptionMap[topic] = this.subscriptionMap[topic].filter((subscription) => subscription.callback !== callback);
+    private _unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void> {
+        if (this._subscriptionMap[topic]) {
+            this._subscriptionMap[topic] = this._subscriptionMap[topic].filter((subscription) => subscription.callback !== callback);
         }
 
         if (topic.indexOf(REMOTE_MESSAGING_TOPIC_PREFIX) === 0) {
-            if (this.remoteMessageClient) {
-                return this.remoteMessageClient.unsubscribe(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length));
+            if (this._remoteMessageClient) {
+                return this._remoteMessageClient.unsubscribe(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length));
             } else {
                 return Promise.reject('Remote messaging is not enabled');
             }
@@ -201,25 +200,25 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         return Promise.resolve();
     }
 
-    private internalPublish(topic: string, data: any, appId?: string): Promise<void> {
+    private _publish(topic: string, data: any, appId?: string): Promise<void> {
         console.info(`Published to topic ${topic} by app ${appId || '<unknown>'}: `, data);
 
         if (topic.indexOf(REMOTE_MESSAGING_TOPIC_PREFIX) === 0) {
-            if (this.remoteMessageClient) {
-                return this.remoteMessageClient.publish(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length), data);
+            if (this._remoteMessageClient) {
+                return this._remoteMessageClient.publish(topic.substr(REMOTE_MESSAGING_TOPIC_PREFIX.length), data);
             } else {
                 return Promise.reject('Remote messaging is not enabled');
             }
         }
 
-        const subscriptions = this.subscriptionMap[topic];
+        const subscriptions = this._subscriptionMap[topic];
         console.debug(`Subscriptions for topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
 
         if (subscriptions) {
             subscriptions.forEach((subscription) => {
-                setTimeout(() => this.deliverMessage(topic, data, appId, subscription), 0);
+                setTimeout(() => this._deliverMessage(topic, data, appId, subscription), 0);
                 if (subscription.once) {
-                    this.internalUnsubscribe(topic, subscription.callback);
+                    this._unsubscribe(topic, subscription.callback);
                 }
             });
         }
@@ -227,9 +226,9 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         return Promise.resolve();
     }
 
-    private deliverMessage(topic: string, data: any, senderAppId: string | undefined | null, subscription: Subscription) {
+    private _deliverMessage(topic: string, data: any, senderAppId: string | undefined | null, subscription: Subscription) {
         let resultData = data;
-        this.interceptors.forEach((wrapper) => {
+        this._interceptors.forEach((wrapper) => {
             resultData = wrapper.interceptor(resultData, topic, senderAppId, subscription.appId);
         });
 
@@ -238,39 +237,39 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         }
     }
 
-    private handleRemoteMessage(data: any, remoteTopic: string) {
+    private _handleRemoteMessage(data: any, remoteTopic: string) {
         const topic = REMOTE_MESSAGING_TOPIC_PREFIX + remoteTopic;
         console.info('Received remote message for topic: ', topic);
 
         let subscriptions: Array<Subscription> = [];
-        Object.keys(this.subscriptionMap)
+        Object.keys(this._subscriptionMap)
             .filter((t) => topicMatcher(t, topic))
             .forEach((t) => {
-                subscriptions = subscriptions.concat(this.subscriptionMap[t]);
+                subscriptions = subscriptions.concat(this._subscriptionMap[t]);
             });
         console.debug(`Subscriptions for remote topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
 
         if (subscriptions) {
             subscriptions.forEach((subscription) => {
-                setTimeout(() => this.deliverMessage(topic, data, 'server', subscription), 0);
+                setTimeout(() => this._deliverMessage(topic, data, 'server', subscription), 0);
                 if (subscription.once) {
-                    this.internalUnsubscribe(topic, subscription.callback);
+                    this._unsubscribe(topic, subscription.callback);
                 }
             });
         }
     }
 
-    private internalRegisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor, appId?: string) {
-        this.interceptors.push({
+    private _registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor, appId?: string) {
+        this._interceptors.push({
             interceptor,
             appId,
         });
     }
 
-    private internalUnregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
-        const wrapper = this.interceptors.find((wrapper) => wrapper.interceptor === interceptor);
+    private _unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
+        const wrapper = this._interceptors.find((wrapper) => wrapper.interceptor === interceptor);
         if (wrapper) {
-            this.interceptors.splice(this.interceptors.indexOf(wrapper), 1);
+            this._interceptors.splice(this._interceptors.indexOf(wrapper), 1);
         }
     }
 }

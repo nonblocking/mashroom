@@ -1,5 +1,5 @@
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 import type {RemotePortalAppRegistry as RemotePortalAppRegistryType, GlobalRequestHolder} from '../../../type-definitions/internal';
 
@@ -9,7 +9,7 @@ export default class RemotePortalAppRegistry implements RemotePortalAppRegistryT
 
     private _portalApps: Array<MashroomPortalApp>;
 
-    constructor(private requestHolder: GlobalRequestHolder) {
+    constructor(private _requestHolder: GlobalRequestHolder) {
         this._portalApps = [];
     }
 
@@ -18,20 +18,20 @@ export default class RemotePortalAppRegistry implements RemotePortalAppRegistryT
         this._portalApps.push(portalApp);
     }
 
-    registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: ExpressRequest): void {
+    registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: Request): void {
         const sessionApps: Array<MashroomPortalApp> = request.session[SESSION_KEY_PORTAL_REMOTE_APPS] || [];
-        this.removeApp(sessionApps, portalApp.name);
+        this._removeApp(sessionApps, portalApp.name);
         sessionApps.push(portalApp);
         request.session[SESSION_KEY_PORTAL_REMOTE_APPS] = sessionApps;
     }
 
     unregisterRemotePortalApp(name: string): void {
-        this.removeApp(this._portalApps, name);
+        this._removeApp(this._portalApps, name);
     }
 
     get portalApps(): Readonly<Array<MashroomPortalApp>> {
         let apps: Array<MashroomPortalApp> = [];
-        const request = this.requestHolder.request;
+        const request = this._requestHolder.request;
         if (request) {
             const sessionApps = request.session[SESSION_KEY_PORTAL_REMOTE_APPS] || [];
             apps = [...sessionApps];
@@ -45,7 +45,7 @@ export default class RemotePortalAppRegistry implements RemotePortalAppRegistryT
         return Object.freeze(apps);
     }
 
-    private removeApp(apps: Array<MashroomPortalApp>, name: string): void{
+    private _removeApp(apps: Array<MashroomPortalApp>, name: string): void{
         const idx = apps.findIndex((app) => app.name === name);
         if (idx !== -1) {
             apps.splice(idx, 1);

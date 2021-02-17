@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Migration to TypeScript completed (but flow types are still available)
  * LDAP Security Provider: Under all circumstances prevent a login with an empty password since some LDAP servers accept it
    and allow a *simple login*
  * Portal: Load the JS resources for apps sequentially, because if there are more than one bundle they typically depend on each other

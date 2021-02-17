@@ -7,7 +7,6 @@ import context from '../context';
 import app from './webapp';
 import httpUpgradeHandlerFn from './http_upgrade_handler';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
@@ -87,5 +86,8 @@ wrapperApp.use('/websocket', app);
 
 httpServer.listen(8066, () => {
     console.log('Listening on 8066');
+});
+httpServer.once('error', (error) => {
+    console.error('Failed to start server!', error);
 });
 

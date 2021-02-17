@@ -1,6 +1,5 @@
 import LdapClientImpl from '../src/LdapClientImpl';
 import {startMockLdapServer, stopMockLdapServer} from './mockLdapServer';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import type {LdapEntry} from '../type-definitions';
 

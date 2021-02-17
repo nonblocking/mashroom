@@ -1,6 +1,6 @@
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 
-export const isAjaxRequest = (req: ExpressRequest): boolean => {
+export const isAjaxRequest = (req: Request): boolean => {
     return req.xhr || (/json/i).test(req.headers.accept as string);
 };

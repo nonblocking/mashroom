@@ -1,10 +1,10 @@
 
 import RemotePortalAppRegistry from './registry/RemotePortalAppRegistry';
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob, Context} from '../../type-definitions/internal';
 
-let currentRequest: ExpressRequest | undefined | null = null;
+let currentRequest: Request | undefined | null = null;
 let registerBackgroundJob: any = null;
 let webUIShowAddRemoteAppForm = true;
 
@@ -14,7 +14,7 @@ export const globalRequestHolder: GlobalRequestHolder = {
         return currentRequest;
     },
 
-    set request(request: ExpressRequest | undefined | null) {
+    set request(request: Request | undefined | null) {
         currentRequest = request;
     }
 

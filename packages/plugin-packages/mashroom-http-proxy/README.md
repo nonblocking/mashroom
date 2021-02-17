@@ -11,10 +11,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 After that you can use the service like this:
 
-```js
+```ts
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
 
     const targetURI = 'http://foo.bar/api/test';
@@ -70,7 +70,7 @@ The exposed service is accessible through _pluginContext.services.proxy.service_
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomHttpProxyService {
 
     /**
@@ -78,7 +78,8 @@ export interface MashroomHttpProxyService {
      * The Promise will always resolve, you have to check response.statusCode to see if the transfer was successful or not.
      * The Promise will resolve as soon as the whole response was sent to the client.
      */
-    forward(req: ExpressRequest, res: ExpressResponse, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
+    forward(req: Request, res: Response, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
+
 }
 ```
 
@@ -112,7 +113,7 @@ To register your custom http-proxy-interceptor plugin add this to _package.json_
 
 The bootstrap returns the interceptor:
 
-```js
+```ts
 import type {MashroomHttpProxyInterceptorPluginBootstrapFunction} from '@mashroom/mashroom-http-proxy/type-definitions';
 
 const bootstrap: MashroomHttpProxyInterceptorPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
@@ -125,7 +126,7 @@ export default bootstrap;
 
 The provider has to implement the following interface:
 
-```js
+```ts
 interface MashroomHttpProxyInterceptor {
 
     /**
@@ -139,7 +140,7 @@ interface MashroomHttpProxyInterceptor {
      * Return null or undefined if you don't want to interfere with a call.
      */
     interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-        clientRequest: ExpressRequest, clientResponse: ExpressResponse):
+                     clientRequest: Request, clientResponse: Response):
         Promise<MashroomHttpProxyRequestInterceptorResult | undefined | null>;
 
     /**
@@ -151,7 +152,7 @@ interface MashroomHttpProxyInterceptor {
      * Return null or undefined if you don't want to interfere with a call.
      */
     interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage,
-        clientRequest: ExpressRequest, clientResponse: ExpressResponse):
+                      clientRequest: Request, clientResponse: Response):
         Promise<MashroomHttpProxyResponseInterceptorResult | undefined | null>;
 }
 ```
@@ -162,7 +163,7 @@ As an example you could add a Bearer token to each request like this:
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
     async interceptRequest(ttargetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+                         clientRequest: Request, clientResponse: Response) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
         const securityService = pluginContext.services.security && req.pluginContext.services.security.service;
 
@@ -189,7 +190,7 @@ Or return forbidden for some reason:
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+                         clientRequest: Request, clientResponse: Response) {
 
         clientResponse.sendStatus(403);
 

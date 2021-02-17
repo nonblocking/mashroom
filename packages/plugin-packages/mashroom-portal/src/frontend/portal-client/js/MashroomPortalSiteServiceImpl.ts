@@ -5,11 +5,11 @@ import type {MashroomRestService, MashroomPortalSiteService} from '../../../../t
 
 export default class MashroomPortalSiteServiceImpl implements MashroomPortalSiteService {
 
-    private restService: MashroomRestService;
+    private _restService: MashroomRestService;
 
     constructor(restService: MashroomRestService) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
-        this.restService = restService.withBasePath(apiPath);
+        this._restService = restService.withBasePath(apiPath);
     }
 
     getCurrentSiteUrl() {
@@ -22,11 +22,11 @@ export default class MashroomPortalSiteServiceImpl implements MashroomPortalSite
 
     getSites() {
         const path = '/sites';
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     getPageTree(siteId: string) {
         const path = `/sites/${siteId}/pageTree`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 }

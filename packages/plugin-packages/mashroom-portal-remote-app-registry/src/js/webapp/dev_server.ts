@@ -80,4 +80,7 @@ wrapperApp.use('/portal-remote-app-registry', app);
 wrapperApp.listen(8082, () => {
     console.log('Listening on 8082');
 });
+wrapperApp.once('error', (error) => {
+    console.error('Failed to start server!', error);
+});
 

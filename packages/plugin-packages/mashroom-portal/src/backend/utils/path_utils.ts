@@ -2,7 +2,7 @@
 import context from '../context/global_portal_context';
 import {PORTAL_INTERNAL_PATH} from '../constants';
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {MashroomVHostPathMapperService} from '@mashroom/mashroom-vhost-path-mapper/type-definitions';
 
 export const getPortalPath = () => {
@@ -10,7 +10,7 @@ export const getPortalPath = () => {
     return context.portalPluginConfig.path;
 };
 
-export const getSitePath = (req: ExpressRequest): string => {
+export const getSitePath = (req: Request): string => {
     const sitePath = req.params.sitePath;
     if (sitePath) {
         return `/${sitePath}`;
@@ -18,7 +18,7 @@ export const getSitePath = (req: ExpressRequest): string => {
     return '';
 };
 
-export const getFrontendSiteBasePath = (req: ExpressRequest): string => {
+export const getFrontendSiteBasePath = (req: Request): string => {
     const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper && req.pluginContext.services.vhostPathMapper.service;
     const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
     if (vhostMappingInfo) {
@@ -27,6 +27,6 @@ export const getFrontendSiteBasePath = (req: ExpressRequest): string => {
     return `${getPortalPath()}${getSitePath(req)}`;
 };
 
-export const getFrontendApiResourcesBasePath = (req: ExpressRequest): string => {
+export const getFrontendApiResourcesBasePath = (req: Request): string => {
     return `${getFrontendSiteBasePath(req)}${PORTAL_INTERNAL_PATH}`;
 };

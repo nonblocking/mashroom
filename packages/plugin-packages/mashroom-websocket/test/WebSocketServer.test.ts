@@ -5,7 +5,6 @@ jest.mock('uuid', () => ({
 }));
 
 import os from 'os';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import WebSocketServer from '../src/backend/WebSocketServer';
 import ReconnectMessageBufferStore from '../src/backend/webapp/ReconnectMessageBufferStore';

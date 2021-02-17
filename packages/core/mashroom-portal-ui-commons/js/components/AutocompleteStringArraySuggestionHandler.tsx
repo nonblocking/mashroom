@@ -6,7 +6,7 @@ import type {SuggestionHandler} from '../../type-definitions';
 
 export default class AutocompleteStringArraySuggestionHandler implements SuggestionHandler<string> {
 
-    constructor(private data: Array<string>, private searchEverywhere = true, private maxMatches?: number) {
+    constructor(private _data: Array<string>, private _searchEverywhere = true, private _maxMatches?: number) {
     }
 
     getSuggestions(query: string): Promise<Array<string>> {
@@ -14,14 +14,14 @@ export default class AutocompleteStringArraySuggestionHandler implements Suggest
             return Promise.resolve([]);
         }
         const regexp = this._getQueryRexExp(query);
-        let suggestions = this.data.filter((d) => {
+        let suggestions = this._data.filter((d) => {
             const match = regexp.exec(d);
             // Reset lastIndex
             regexp.exec('');
-            return match && (this.searchEverywhere || match.index === 0);
+            return match && (this._searchEverywhere || match.index === 0);
         });
-        if (this.maxMatches && this.maxMatches > 0) {
-            suggestions = suggestions.slice(0, this.maxMatches);
+        if (this._maxMatches && this._maxMatches > 0) {
+            suggestions = suggestions.slice(0, this._maxMatches);
         }
         return Promise.resolve(suggestions);
     }

@@ -33,40 +33,40 @@ type ClientMap = Map<MashroomWebSocketClient, {
 
 export default class MashroomMessagingWebSocketHandler implements MashroomMessagingWebSocketHandlerType {
 
-    private webSocketService: MashroomWebSocketService | null;
-    clients: ClientMap;
-    private logger: MashroomLogger;
-    private started: boolean;
-    private boundMessageHandler: (message: any, client: MashroomWebSocketClient) => void;
-    private boundDisconnectHandler: (client: MashroomWebSocketClient) => void;
+    private _webSocketService: MashroomWebSocketService | null;
+    private _clients: ClientMap;
+    private _logger: MashroomLogger;
+    private _started: boolean;
+    private _boundMessageHandler: (message: any, client: MashroomWebSocketClient) => void;
+    private _boundDisconnectHandler: (client: MashroomWebSocketClient) => void;
 
-    constructor(private messagingService: MashroomMessagingInternalService, private pluginContextHolder: MashroomPluginContextHolder) {
-        this.webSocketService = null;
-        this.clients = new Map();
-        this.logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.messaging.service.websocket');
-        this.started = false;
-        this.boundMessageHandler = this.handleMessage.bind(this);
-        this.boundDisconnectHandler = this.handleDisconnect.bind(this);
+    constructor(private _messagingService: MashroomMessagingInternalService, private _pluginContextHolder: MashroomPluginContextHolder) {
+        this._webSocketService = null;
+        this._clients = new Map();
+        this._logger = _pluginContextHolder.getPluginContext().loggerFactory('mashroom.messaging.service.websocket');
+        this._started = false;
+        this._boundMessageHandler = this._handleMessage.bind(this);
+        this._boundDisconnectHandler = this._handleDisconnect.bind(this);
 
-        this.lookupWebSocketService();
+        this._lookupWebSocketService();
     }
 
     startListeners(): void {
-        this.addWebSocketListeners();
-        this.started = true;
+        this._addWebSocketListeners();
+        this._started = true;
     }
 
     stopListeners(): void {
-        this.removeWebSocketListeners();
-        this.started = false;
+        this._removeWebSocketListeners();
+        this._started = false;
     }
 
-    private handleMessage(message: any, client: MashroomWebSocketClient): void {
-        const contextLogger = this.logger.withContext(client.loggerContext);
+    private _handleMessage(message: any, client: MashroomWebSocketClient): void {
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
-        if (!this.clients.get(client)) {
+        if (!this._clients.get(client)) {
             contextLogger.debug(`Registering new WebSocket client for user: ${client.user.username}`);
-            this.clients.set(client, {
+            this._clients.set(client, {
                 subscriptions: [],
             });
         }
@@ -78,51 +78,51 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         }
 
         if (message.command === 'subscribe') {
-            this.processSubscribe(message, client);
+            this._processSubscribe(message, client);
         } else if (message.command === 'unsubscribe') {
-            this.processUnsubscribe(message, client);
+            this._processUnsubscribe(message, client);
         } else if (message.command === 'publish') {
-            this.processPublish(message, client);
+            this._processPublish(message, client);
         }
     }
 
-    private processSubscribe(request: MashroomMessagingWebSocketSubscribeRequest, client: MashroomWebSocketClient): void {
-        const contextLogger = this.logger.withContext(client.loggerContext);
+    private _processSubscribe(request: MashroomMessagingWebSocketSubscribeRequest, client: MashroomWebSocketClient): void {
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
-        const clientData = this.clients.get(client);
+        const clientData = this._clients.get(client);
         if (!clientData) {
             // Just to satisfy flow, cannot happen
             return;
         }
         if (clientData.subscriptions.find((s) => s.topic === request.topic)) {
             contextLogger.info(`Topic already subscribed: ${request.topic}`);
-            this.sendSuccessResponse(request.messageId, client);
+            this._sendSuccessResponse(request.messageId, client);
             return;
         }
 
         const callback: MashroomMessagingSubscriberCallback = (data: any, topic: string) => {
             contextLogger.debug(`Sending message for topic ${topic} via WebSocket to user ${client.user.username}`, data);
-            this.sendMessage(topic, data, client);
+            this._sendMessage(topic, data, client);
         };
-        this.messagingService.subscribe(client.user, request.topic, callback).then(
+        this._messagingService.subscribe(client.user, request.topic, callback).then(
             () => {
                 clientData.subscriptions.push({
                     topic: request.topic,
                     callback,
                 });
-                this.sendSuccessResponse(request.messageId, client);
+                this._sendSuccessResponse(request.messageId, client);
             },
             (error) => {
                 contextLogger.error(`Subscribing to topic ${request.topic} failed`, error);
-                this.sendErrorResponse(request.messageId, `Subscribing to topic ${request.topic} failed`, client);
+                this._sendErrorResponse(request.messageId, `Subscribing to topic ${request.topic} failed`, client);
             }
         );
     }
 
-    private processUnsubscribe(request: MashroomMessagingWebSocketUnsubscribeRequest, client: MashroomWebSocketClient): void {
-        const contextLogger = this.logger.withContext(client.loggerContext);
+    private _processUnsubscribe(request: MashroomMessagingWebSocketUnsubscribeRequest, client: MashroomWebSocketClient): void {
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
-        const clientData = this.clients.get(client);
+        const clientData = this._clients.get(client);
         if (!clientData) {
             // Just to satisfy flow, cannot happen
             return;
@@ -130,56 +130,56 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         const existingSubscription = clientData.subscriptions.find((s) => s.topic === request.topic);
         if (!existingSubscription) {
             contextLogger.debug(`Cannot unsubscribe because topic is not subscribed: ${request.topic}`);
-            this.sendErrorResponse(request.messageId, `Unsubscribing from topic ${request.topic} failed`, client);
+            this._sendErrorResponse(request.messageId, `Unsubscribing from topic ${request.topic} failed`, client);
             return;
         }
 
-        this.messagingService.unsubscribe(existingSubscription.topic, existingSubscription.callback).then(
+        this._messagingService.unsubscribe(existingSubscription.topic, existingSubscription.callback).then(
             () => {
                 clientData.subscriptions = clientData.subscriptions.filter((s) => s !== existingSubscription);
-                this.sendSuccessResponse(request.messageId, client);
+                this._sendSuccessResponse(request.messageId, client);
             },
             (error) => {
                 contextLogger.error(`Unsubscribing from topic ${request.topic} failed`, error);
-                this.sendErrorResponse(request.messageId, `Unsubscribing from topic ${request.topic} failed`, client);
+                this._sendErrorResponse(request.messageId, `Unsubscribing from topic ${request.topic} failed`, client);
             }
         );
     }
 
-    private processPublish(request: MashroomMessagingWebSocketPublishRequest, client: MashroomWebSocketClient): void {
-        const contextLogger = this.logger.withContext(client.loggerContext);
+    private _processPublish(request: MashroomMessagingWebSocketPublishRequest, client: MashroomWebSocketClient): void {
+        const contextLogger = this._logger.withContext(client.loggerContext);
 
-        this.messagingService.publish(client.user, request.topic, request.message).then(
+        this._messagingService.publish(client.user, request.topic, request.message).then(
             () => {
-                this.sendSuccessResponse(request.messageId, client);
+                this._sendSuccessResponse(request.messageId, client);
             },
             (error) => {
                 contextLogger.error(`Publishing message to topic ${request.topic} failed`, error);
-                this.sendErrorResponse(request.messageId, `Publishing message to topic ${request.topic} failed`, client);
+                this._sendErrorResponse(request.messageId, `Publishing message to topic ${request.topic} failed`, client);
             }
         )
     }
 
-    private sendMessage(topic: string, message: any, client: MashroomWebSocketClient): void {
-        if (this.webSocketService) {
+    private _sendMessage(topic: string, message: any, client: MashroomWebSocketClient): void {
+        if (this._webSocketService) {
             const response: MashroomMessagingWebSocketPublishMessage = {
                 remoteMessage: true,
                 topic,
                 message,
             };
-            this.webSocketService.sendMessage(client, response).then(
+            this._webSocketService.sendMessage(client, response).then(
                 () => { /* nothing to do */ },
                 (error) => {
-                    this.logger.error('Sending message failed', error);
+                    this._logger.error('Sending message failed', error);
                 }
             )
         }
     }
 
-    private sendSuccessResponse(messageId: string, client: MashroomWebSocketClient): void {
-        const webSocketService = this.webSocketService;
+    private _sendSuccessResponse(messageId: string, client: MashroomWebSocketClient): void {
+        const webSocketService = this._webSocketService;
         if (webSocketService) {
-            const contextLogger = this.logger.withContext(client.loggerContext);
+            const contextLogger = this._logger.withContext(client.loggerContext);
 
             const response: MashroomMessagingWebSocketSuccessResponse = {
                 messageId,
@@ -189,16 +189,16 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             webSocketService.sendMessage(client, response).then(
                 () => { /* nothing to do */ },
                 (error) => {
-                    this.logger.error('Sending success message failed', error);
+                    this._logger.error('Sending success message failed', error);
                 }
             )
         }
     }
 
-    private sendErrorResponse(messageId: string, message: string, client: MashroomWebSocketClient): void {
-        const webSocketService = this.webSocketService;
+    private _sendErrorResponse(messageId: string, message: string, client: MashroomWebSocketClient): void {
+        const webSocketService = this._webSocketService;
         if (webSocketService) {
-            const contextLogger = this.logger.withContext(client.loggerContext);
+            const contextLogger = this._logger.withContext(client.loggerContext);
 
             const response: MashroomMessagingWebSocketErrorResponse = {
                 messageId,
@@ -209,71 +209,71 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
             webSocketService.sendMessage(client, response).then(
                 () => { /* nothing to do */ },
                 (error) => {
-                    this.logger.error('Sending error message failed', error);
+                    this._logger.error('Sending error message failed', error);
                 }
             )
         }
     }
 
-    private handleDisconnect(client: MashroomWebSocketClient): void {
-        const clientData = this.clients.get(client);
+    private _handleDisconnect(client: MashroomWebSocketClient): void {
+        const clientData = this._clients.get(client);
         if (clientData) {
-            this.logger.debug(`Removing WebSocket client from user: ${client.user.username}. Subscriptions: `,
+            this._logger.debug(`Removing WebSocket client from user: ${client.user.username}. Subscriptions: `,
                 clientData.subscriptions.map((s) => s.topic).join(', '));
-            clientData.subscriptions.forEach((s) => this.messagingService.unsubscribe(s.topic, s.callback));
-            this.clients.delete(client);
+            clientData.subscriptions.forEach((s) => this._messagingService.unsubscribe(s.topic, s.callback));
+            this._clients.delete(client);
         }
     }
 
-    private addWebSocketListeners(): void {
-        const webSocketService = this.webSocketService;
+    private _addWebSocketListeners(): void {
+        const webSocketService = this._webSocketService;
         if (webSocketService) {
-            this.logger.info('Activating WebSocket support');
-            webSocketService.addMessageListener(WEBSOCKET_MESSAGE_MATCHER, this.boundMessageHandler);
-            webSocketService.addDisconnectListener(this.boundDisconnectHandler);
+            this._logger.info('Activating WebSocket support');
+            webSocketService.addMessageListener(WEBSOCKET_MESSAGE_MATCHER, this._boundMessageHandler);
+            webSocketService.addDisconnectListener(this._boundDisconnectHandler);
         } else {
-            this.logger.warn(`Cannot activate WebSocket support because plugin ${WEBSOCKET_SERVICE_PLUGIN_NAME} is not loaded (yet)`);
+            this._logger.warn(`Cannot activate WebSocket support because plugin ${WEBSOCKET_SERVICE_PLUGIN_NAME} is not loaded (yet)`);
         }
     }
 
-    private removeWebSocketListeners(): void {
-        const webSocketService = this.webSocketService;
-        if (webSocketService && this.started) {
-            this.logger.info('Deactivating WebSocket support');
-            webSocketService.removeMessageListener(WEBSOCKET_MESSAGE_MATCHER, this.boundMessageHandler);
-            webSocketService.removeDisconnectListener(this.boundDisconnectHandler);
-            this.clients.forEach((data, client) => {
+    private _removeWebSocketListeners(): void {
+        const webSocketService = this._webSocketService;
+        if (webSocketService && this._started) {
+            this._logger.info('Deactivating WebSocket support');
+            webSocketService.removeMessageListener(WEBSOCKET_MESSAGE_MATCHER, this._boundMessageHandler);
+            webSocketService.removeDisconnectListener(this._boundDisconnectHandler);
+            this._clients.forEach((data, client) => {
                 webSocketService.close(client);
             });
         }
     }
 
-    private onWebSocketProviderLoad(): void {
-        this.webSocketService = this.pluginContextHolder.getPluginContext().services.websocket.service;
-        if (this.started) {
-            this.addWebSocketListeners();
+    private _onWebSocketProviderLoad(): void {
+        this._webSocketService = this._pluginContextHolder.getPluginContext().services.websocket.service;
+        if (this._started) {
+            this._addWebSocketListeners();
         }
-        this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this.onWebSocketProviderLoad());
+        this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderLoad());
     }
 
-    private onWebSocketProviderUnload(): void {
-        if (this.started) {
-            this.removeWebSocketListeners();
-            this.webSocketService = null;
+    private _onWebSocketProviderUnload(): void {
+        if (this._started) {
+            this._removeWebSocketListeners();
+            this._webSocketService = null;
         }
-        this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this.onWebSocketProviderUnload());
+        this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderUnload());
     }
 
-    private lookupWebSocketService(): void {
-        if (this.pluginContextHolder.getPluginContext().services.websocket) {
-            this.onWebSocketProviderLoad();
+    private _lookupWebSocketService(): void {
+        if (this._pluginContextHolder.getPluginContext().services.websocket) {
+            this._onWebSocketProviderLoad();
         } else {
-            this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this.onWebSocketProviderLoad());
+            this._getPluginService().onLoadedOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderLoad());
         }
-        this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this.onWebSocketProviderUnload());
+        this._getPluginService().onUnloadOnce(WEBSOCKET_SERVICE_PLUGIN_NAME, () => this._onWebSocketProviderUnload());
     }
 
     private _getPluginService(): MashroomPluginService {
-        return this.pluginContextHolder.getPluginContext().services.core.pluginService;
+        return this._pluginContextHolder.getPluginContext().services.core.pluginService;
     }
 }

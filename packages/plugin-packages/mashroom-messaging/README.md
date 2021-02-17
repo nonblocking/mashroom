@@ -15,10 +15,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 And you can use the messaging service like this:
 
-```js
+```ts
 import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const messagingService: MashroomMessagingService = req.pluginContext.services.messaging.service;
 
     // Subscribe
@@ -168,7 +168,7 @@ The exposed service is accessible through _pluginContext.services.messaging.serv
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomMessagingService {
     /**
      * Subscribe to given topic.
@@ -178,7 +178,7 @@ export interface MashroomMessagingService {
      * Throws an exception if there is no authenticated user
      */
     subscribe(
-        req: ExpressRequest,
+        req: Request,
         topic: string,
         callback: MashroomMessagingSubscriberCallback,
     ): Promise<void>;
@@ -196,7 +196,7 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    publish(req: ExpressRequest, topic: string, data: any): Promise<void>;
+    publish(req: Request, topic: string, data: any): Promise<void>;
 
     /**
      * The private topic only the current user can access.
@@ -205,13 +205,13 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    getUserPrivateTopic(req: ExpressRequest): string;
+    getUserPrivateTopic(req: Request): string;
 
     /**
      * The connect path to send publish or subscribe via WebSocket.
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
      */
-    getWebSocketConnectPath(req: ExpressRequest): string | null | undefined;
+    getWebSocketConnectPath(req: Request): string | null | undefined;
 }
 ```
 
@@ -243,7 +243,7 @@ To register your custom external-messaging-provider plugin add this to _package.
 
 The bootstrap returns the provider:
 
-```js
+```ts
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
 
 const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
@@ -256,7 +256,7 @@ export default bootstrap;
 
 The provider has to implement the following interface:
 
-```js
+```ts
 export interface MashroomMessagingExternalProvider {
     /**
      * Add a message listener

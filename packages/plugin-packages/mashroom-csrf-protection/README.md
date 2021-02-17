@@ -21,10 +21,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 After that you can use the service like this:
 
-```js
+```ts
 import type {MashroomCacheControlService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 
-export default (req: ExpressRequest, res: ExpressResponse) => {
+export default (req: Request, res: Response) => {
 
     const csrfService: MashroomCacheControlService = req.pluginContext.services.csrf.service;
     const token = csrfService.getCSRFToken(req);
@@ -60,19 +60,18 @@ The exposed service is accessible through _pluginContext.services.csrf.service_
 
 **Interface:**
 
-```js
-
+```ts
 export interface MashroomCSRFService {
 
     /**
      * Get the current CSRF token for this session
      */
-    getCSRFToken(request: ExpressRequest): string;
+    getCSRFToken(request: Request): string;
 
     /**
      * Check if the given token is valid
      */
-    isValidCSRFToken(request: ExpressRequest, token: string): boolean;
+    isValidCSRFToken(request: Request, token: string): boolean;
 }
 ```
 

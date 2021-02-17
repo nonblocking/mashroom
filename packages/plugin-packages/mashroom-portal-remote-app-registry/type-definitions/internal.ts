@@ -1,6 +1,7 @@
 
+import type {Request} from 'express';
 import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
-import type {ExpressMiddleware, ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
 import type {
     RemotePortalAppEndpoint,
 } from './api';
@@ -20,7 +21,7 @@ export interface RegisterPortalRemoteAppsBackgroundJob {
 
 export interface RemotePortalAppRegistry extends MashroomRemotePortalAppRegistry {
     registerRemotePortalApp(portalApp: MashroomPortalApp): void;
-    registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: ExpressRequest): void;
+    registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: Request): void;
     unregisterRemotePortalApp(name: string): void;
 }
 
@@ -31,7 +32,7 @@ export type Context = {
 }
 
 export type GlobalRequestHolder = {
-    request: ExpressRequest | undefined | null;
+    request: Request | undefined | null;
 }
 
 export interface RegisterRequestGloballyMiddleware {

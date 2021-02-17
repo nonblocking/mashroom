@@ -1,6 +1,5 @@
 
 import MashroomMessagingWebSocketHandler from '../src/services/MashroomMessagingWebSocketHandler';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import type {
@@ -88,7 +87,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     success: true,
                 });
 
-                expect(webSocketHandler.clients.size).toBe(1);
+                // @ts-ignore
+                expect(webSocketHandler._clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -140,7 +140,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
             }
         };
 
-        webSocketHandler.clients.set(client, {
+        // @ts-ignore
+        webSocketHandler._clients.set(client, {
            subscriptions: [{
                topic: 'foo/xx',
                callback: () => { /* Nothing to do */ },
@@ -169,7 +170,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     success: true,
                 });
 
-                expect(webSocketHandler.clients.size).toBe(1);
+                // @ts-ignore
+                expect(webSocketHandler._clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -217,7 +219,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     success: true,
                 });
 
-                expect(webSocketHandler.clients.size).toBe(1);
+                // @ts-ignore
+                expect(webSocketHandler._clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -257,7 +260,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
                     message: 'Publishing message to topic foo/xx failed'
                 });
 
-                expect(webSocketHandler.clients.size).toBe(1);
+                // @ts-ignore
+                expect(webSocketHandler._clients.size).toBe(1);
 
                 done();
             }, 100);
@@ -274,7 +278,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
             }
         };
 
-        webSocketHandler.clients.set(client, {
+        // @ts-ignore
+        webSocketHandler._clients.set(client, {
             subscriptions: [{
                 topic: 'foo/xx',
                 callback: () => { /* Nothing to do */ },
@@ -293,7 +298,8 @@ describe('MashroomMessagingWebSocketHandler', () => {
                 expect(mockUnsubscribe.mock.calls[0][0]).toEqual('foo/xx');
                 expect(mockUnsubscribe.mock.calls[1][0]).toEqual('bar/2');
 
-                expect(webSocketHandler.clients.size).toBeFalsy();
+                // @ts-ignore
+                expect(webSocketHandler._clients.size).toBeFalsy();
 
                 done();
             }, 100);
