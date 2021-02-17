@@ -57,7 +57,7 @@ Version ${this._serverInfo.version}
                 resolve();
             });
             this._httpServer.once('error', (error) => {
-                this._log.error('Failed to start Mashroom server', error);
+                this._log.error('Failed to start Mashroom server!', error);
                 reject(error);
             });
         });
@@ -72,7 +72,7 @@ Version ${this._serverInfo.version}
         return new Promise<void>((resolve, reject) => {
             this._httpServer.close((error) => {
                 if (error) {
-                    this._log.error('Failed to stop Mashroom server', error);
+                    this._log.error('Failed to stop Mashroom server!', error);
                     reject(error);
                 } else {
                     this._log.info('Mashroom server stopped');
@@ -82,7 +82,7 @@ Version ${this._serverInfo.version}
         });
     }
 
-    _addServerRoutes() {
+    private _addServerRoutes() {
         this._expressApp.get('/', indexRoute);
         this._expressApp.use('/mashroom', mashroomRouter);
     }

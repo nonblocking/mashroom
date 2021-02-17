@@ -43,10 +43,14 @@ server.search('OU=test,OU=users,DC=at,DC=nonblocking', (req: any, res: any) => {
 });
 
 export const startMockLdapServer = async (): Promise<void> => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         server.listen(1389, () => {
             console.log(`LDAP server listening at ${server.url}`);
             resolve();
+        });
+        server.once('error', (error) => {
+            console.error('Failed to start LDAP mock server!', error);
+            reject(error);
         });
     });
 };

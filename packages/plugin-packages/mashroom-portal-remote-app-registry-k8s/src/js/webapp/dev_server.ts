@@ -41,4 +41,7 @@ wrapperApp.use('/portal-remote-app-registry-kubernetes', app);
 wrapperApp.listen(8083, () => {
     console.log('Listening on 8083');
 });
+wrapperApp.once('error', (error) => {
+    console.error('Failed to start server!', error);
+});
 

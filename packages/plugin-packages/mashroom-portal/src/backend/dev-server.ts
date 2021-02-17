@@ -220,6 +220,7 @@ app.use('/portal', setupWebapp(context.pluginRegistry));
 app.listen('5050', ()  => {
     console.info('Portal standalone test server listening on port 5050');
 });
+
 app.once('error', (error) => {
     console.error('Starting dev server failed', error);
 });

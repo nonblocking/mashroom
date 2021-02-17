@@ -22,4 +22,7 @@ wrapperApp.use('/', app);
 wrapperApp.listen(5058, () => {
     console.log('Listening on 5058');
 });
+wrapperApp.once('error', (error) => {
+    console.error('Failed to start server!', error);
+});
 

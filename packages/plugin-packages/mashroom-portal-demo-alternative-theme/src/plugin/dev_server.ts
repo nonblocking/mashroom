@@ -234,3 +234,6 @@ app.get('/', (req: Request, res: Response) => {
 app.listen(5066, () => {
     console.info('Server started at port 5066');
 });
+app.once('error', (error) => {
+    console.error('Failed to start server!', error);
+});

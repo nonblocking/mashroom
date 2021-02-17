@@ -35,7 +35,7 @@ Send a message from the Portal to an external system:
  * In the Rabbit MQ Admin UI got to *Queues*
  * Create a new Queue with an arbitrary name
  * Click on the new queue and go to *Add binding to this queue*
- * Enter *From Exchange*: *amq.topic* and *Routing key*: *external.#* and click *Bind*
+ * Enter *From Exchange*: *amq.topic* and *Routing key*: *external1.#* and click *Bind*
  * In the Mashroom Portal add the *Demo Remote Messaging App* to a page and send a message to *external1/foo*
  * In the RabbitMQ Admin UI on the page of your queue click *Get Messages*
  * You should see the message
@@ -43,5 +43,6 @@ Send a message from the Portal to an external system:
 Send a message from an external system to the Portal:
 
  * In the Mashroom Portal add the *Demo Remote Messaging App*
- * In the RabbitMQ Admin UI go to *Exchange* -> *amq.topic* -> *Publish message* and enter *mashroom.user.<portal-user>.test* and payload that is valid JSON
+ * In the RabbitMQ Admin UI go to *Exchange* -> *amq.topic*
+ * Go to *Publish message* and enter *mashroom.user.<portal-user>.test* and routing key and payload that is valid JSON
  * You should see the message in the *Demo Remote Messaging App*

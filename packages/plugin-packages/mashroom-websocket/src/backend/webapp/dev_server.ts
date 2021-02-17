@@ -87,4 +87,7 @@ wrapperApp.use('/websocket', app);
 httpServer.listen(8066, () => {
     console.log('Listening on 8066');
 });
+httpServer.once('error', (error) => {
+    console.error('Failed to start server!', error);
+});
 
