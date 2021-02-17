@@ -163,7 +163,7 @@ As an example you could add a Bearer token to each request like this:
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
     async interceptRequest(ttargetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+                         clientRequest: Request, clientResponse: Response) {
         const logger = clientRequest.pluginContext.loggerFactory('test.http.interceptor');
         const securityService = pluginContext.services.security && req.pluginContext.services.security.service;
 
@@ -190,7 +190,7 @@ Or return forbidden for some reason:
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                         clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+                         clientRequest: Request, clientResponse: Response) {
 
         clientResponse.sendStatus(403);
 

@@ -14,7 +14,7 @@ After that you can use the service like this:
 ```ts
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
 
     const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
     await cacheControlService.addCacheControlHeader(req, res);

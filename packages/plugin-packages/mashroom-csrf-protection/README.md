@@ -24,7 +24,7 @@ After that you can use the service like this:
 ```ts
 import type {MashroomCacheControlService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 
-export default (req: ExpressRequest, res: ExpressResponse) => {
+export default (req: Request, res: Response) => {
 
     const csrfService: MashroomCacheControlService = req.pluginContext.services.csrf.service;
     const token = csrfService.getCSRFToken(req);

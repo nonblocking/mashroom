@@ -17,6 +17,7 @@ declare global {
 
 export type IncomingMessageWithContext = IncomingMessage & {
     pluginContext: MashroomPluginContext;
+    session?: any;
 }
 
 export type ExpressRequestWithContext = Request & {
@@ -27,23 +28,19 @@ export type ExpressRequestWithContext = Request & {
 /*
  * @deprecated use http.IncomingMessage
  */
-/*
 export type HttpServerRequest = IncomingMessageWithContext;
-*/
 /*
  * @deprecated use express.Request
  */
-/*
 export type ExpressRequest = ExpressRequestWithContext;
-*/
 /*
  * @deprecated Use express.Response
  */
-//export type ExpressResponse = Response;
+export type ExpressResponse = Response;
 /*
  * @deprecated Use express.Response
  */
-//export type ExpressNextFunction = NextFunction;
+export type ExpressNextFunction = NextFunction;
 
 export type ExpressApplication = Application;
 export type ExpressMiddleware = RequestHandler;

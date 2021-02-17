@@ -38,7 +38,6 @@ export const safeEvaluateStringTemplate = (templateStr: string, context: any): s
     const args = Object.keys(context);
     const values = args.map((arg) => context[arg]);
 
-    // $FlowFixMe
     const template = new Function(...args, `return \`${templateStr}\`;`)
 
     return template.apply({}, values);

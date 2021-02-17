@@ -4,7 +4,6 @@ import type {RequestHandler} from 'express';
 import type {ExpressApplication, MashroomPlugin} from '../../type-definitions';
 
 export const removeFromExpressStack = (expressApplication: ExpressApplication, plugin: MashroomPlugin) => {
-    // $FlowFixMe
     const expressLayers = expressApplication._router.stack;
     const expressLayerIndex = expressLayers.findIndex((requestHandler: RequestHandler) => requestHandler.name === plugin.name);
     if (expressLayerIndex) {
