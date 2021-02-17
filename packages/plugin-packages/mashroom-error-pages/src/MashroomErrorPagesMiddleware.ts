@@ -1,10 +1,8 @@
 import {existsSync} from 'fs';
 import {resolve, isAbsolute} from 'path';
-import {promisify} from 'util';
-import getUriCbStyle from 'get-uri';
+import getUri from 'get-uri';
 import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {PLACEHOLDER_REQUEST_URL, PLACEHOLDER_STATUS_CODE, PLACEHOLDER_MASHROOM_VERSION, PLACEHOLDER_I18N_MESSAGE} from './constants';
-import type {Readable} from 'stream';
 import type {Request, Response, NextFunction} from 'express';
 import type {MashroomLogger, ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
@@ -12,8 +10,6 @@ import type {
     MashroomErrorPagesMiddleware as MashroomErrorPagesMiddlewareType,
     ErrorMapping,
 } from '../type-definitions';
-
-const getUri = promisify(getUriCbStyle);
 
 const FILE_MAPPING: Record<string, string> = {};
 
@@ -152,13 +148,18 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             .replace(PLACEHOLDER_REQUEST_URL, req.originalUrl)
             .replace(PLACEHOLDER_STATUS_CODE, String(res.statusCode))
             .replace(PLACEHOLDER_MASHROOM_VERSION, this._serverVersion)
-            .replace(PLACEHOLDER_I18N_MESSAGE, (substring, key) => {
-                return i18nService?.getMessage(key, lang) || '???';
+            .replace(PLACEHOLDER_I18N_MESSAGE, (substring, messageKeyAndDefault) => {
+                const [messageKey, defaultMessage] = messageKeyAndDefault?.split(',');
+                const message = i18nService?.getMessage(messageKey, lang);
+                if (!message || message === messageKey) {
+                    return defaultMessage || '';
+                }
+                return message;
             });
     }
 
     private async _getResourceAsString(errorPageUri: string): Promise<string> {
-        const stream = await getUri(errorPageUri) as Readable;
+        const stream = await getUri(errorPageUri);
         return new Promise((resolve, reject) => {
             const chunks: Array<Uint8Array> = [];
             stream.on('data', (chunk) => chunks.push(chunk));

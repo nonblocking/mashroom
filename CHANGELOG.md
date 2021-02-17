@@ -4,6 +4,7 @@
 ## [unreleased]
 
  * Migration to TypeScript completed (but flow types are still available)
+ * Error Pages: Added the possibility to add default messages if *mashroom-i18n* is not (yet) available
  * LDAP Security Provider: Under all circumstances prevent a login with an empty password since some LDAP servers accept it
    and allow a *simple login*
  * Portal: Load the JS resources for apps sequentially, because if there are more than one bundle they typically depend on each other
