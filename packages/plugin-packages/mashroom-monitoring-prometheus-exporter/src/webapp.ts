@@ -16,7 +16,7 @@ export default (loggerFactory: MashroomLoggerFactory) => {
 
     const app = express();
 
-    app.get('/', (req: Request, res: Response) => {
+    app.get('/', async (req: Request, res: Response) => {
         const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
         const metrics = collectorService.getMetrics();
         Object.keys(metrics).forEach((metricName) => {
@@ -35,7 +35,7 @@ export default (loggerFactory: MashroomLoggerFactory) => {
         });
 
         res.set('Content-Type', registry.contentType);
-        res.end(registry.metrics());
+        res.end(await registry.metrics());
     });
 
 

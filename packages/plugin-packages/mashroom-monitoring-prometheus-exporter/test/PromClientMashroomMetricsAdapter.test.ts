@@ -45,7 +45,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
         adapter.setMetrics(mashroomCounterData);
 
         // @ts-ignore
-        expect(promClientCounter.get()).toEqual(adapter.get());
+        expect(await promClientCounter.get()).toEqual(await adapter.get());
     });
 
     it('transforms gauge metrics correctly', async () => {
@@ -82,7 +82,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
         adapter.setMetrics(mashroomGaugeData);
 
         // @ts-ignore
-        expect(promClientGauge.get()).toEqual(adapter.get());
+        expect(await promClientGauge.get()).toEqual(await adapter.get());
     });
 
     it('transforms histogram metrics correctly', async () => {
@@ -178,7 +178,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
         adapter.setMetrics(mashroomHistogramData);
 
         // @ts-ignore
-        expect(promClientHistogram.get()).toEqual(adapter.get());
+        expect(await promClientHistogram.get()).toEqual(await adapter.get());
     });
 
     it('transforms summary metrics correctly', async () => {
@@ -274,7 +274,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
         adapter.setMetrics(mashroomSummaryData);
 
         // @ts-ignore
-        expect(promClientSummary.get()).toEqual(adapter.get());
+        expect(await promClientSummary.get()).toEqual(await adapter.get());
     });
 
     it('can be registered', async () => {
@@ -304,7 +304,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
         const registry = new Registry();
         registry.registerMetric(adapter as any);
 
-        expect(registry.metrics()).toContain('metric_name 10');
+        expect(await registry.metrics()).toContain('metric_name 10');
     });
 
 });
