@@ -1,9 +1,6 @@
 
-import type {Request, Response, NextFunction} from 'express';
-import type {
-    MashroomLogger,
-    ExpressMiddleware
-} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response, NextFunction, RequestHandler} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCSRFService} from '../../type-definitions';
 import type {MashroomCSRFMiddleware as MashroomCSRFMiddlewareType} from '../../type-definitions/internal';
 
@@ -15,7 +12,7 @@ export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareTyp
     constructor(private _safeMethods: Array<string>) {
     }
 
-    middleware(): ExpressMiddleware {
+    middleware(): RequestHandler {
         return (req: Request, res: Response, next: NextFunction) => {
             if (this._safeMethods.find((m) => m === req.method)) {
                 next();

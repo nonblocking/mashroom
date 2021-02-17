@@ -1,15 +1,15 @@
 
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
 
-import type {Router} from 'express';
+import type {Router, Application} from 'express';
 import type {
-    MashroomPluginContextHolder, ExpressApplication, MashroomPluginConfig,
+    MashroomPluginContextHolder, MashroomPluginConfig,
     MashroomPlugin, MashroomApiPluginBootstrapFunction,
 } from '../../../type-definitions';
 
 export default class MashroomApiPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 
-    addPluginInstance(expressApplication: ExpressApplication, pluginInstance: Router, pluginConfig: MashroomPluginConfig) {
+    addPluginInstance(expressApplication: Application, pluginInstance: Router, pluginConfig: MashroomPluginConfig) {
         expressApplication.use(pluginConfig.path, pluginInstance);
     }
 

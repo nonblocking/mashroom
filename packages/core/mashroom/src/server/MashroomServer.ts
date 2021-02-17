@@ -3,11 +3,11 @@ import indexRoute from './routes/index_route';
 import mashroomRouter from './routes/mashroom';
 
 import type {Server} from 'http';
+import type {Application} from 'express';
 import type {
     MashroomServerConfig,
     MashroomLogger,
     MashroomLoggerFactory,
-    ExpressApplication,
     MashroomServerInfo,
 } from '../../type-definitions';
 import type {
@@ -23,10 +23,10 @@ export default class MashroomServer implements MashroomServerType {
     _scanner: MashroomPluginPackageScanner;
     _errorHandler: GlobalNodeErrorHandler;
     _log: MashroomLogger;
-    _expressApp: ExpressApplication;
+    _expressApp: Application;
     _httpServer: Server;
 
-    constructor(expressApp: ExpressApplication, httpServer: Server, serverInfo: MashroomServerInfo, config: MashroomServerConfig,
+    constructor(expressApp: Application, httpServer: Server, serverInfo: MashroomServerInfo, config: MashroomServerConfig,
                 scanner: MashroomPluginPackageScanner, errorHandler: GlobalNodeErrorHandler, loggerFactory: MashroomLoggerFactory) {
         this._expressApp = expressApp;
         this._httpServer = httpServer;

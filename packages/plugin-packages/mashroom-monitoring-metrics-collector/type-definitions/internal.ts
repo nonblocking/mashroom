@@ -1,11 +1,11 @@
 
-import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
-import {MetricLabels} from './api';
+import type {RequestHandler} from 'express';
+import type {MetricLabels} from './api';
 
 import type {TDigest} from 'tdigest';
 
 export interface MashroomMonitoringRequestMetricsMiddleware {
-    middleware(): ExpressMiddleware;
+    middleware(): RequestHandler;
 }
 
 export type MashroomMonitoringMetricsCollectorConfig = {

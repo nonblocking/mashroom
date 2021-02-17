@@ -36,7 +36,7 @@
     },
     "scripts": {
         "setup": "npm install && lerna bootstrap && npm run build:core",
-        "type-check": "flow check && lerna run type-check",
+        "type-check": "lerna run type-check && flow check",
         "lint": "lerna run lint",
         "test": "lerna run test",
         "build:core": "npm run build --prefix packages/core/mashroom-utils && npm run build --prefix packages/core/mashroom && npm run build --prefix packages/core/mashroom-portal-ui-commons",

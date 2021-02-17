@@ -27,22 +27,32 @@ export type ExpressRequestWithContext = Request & {
 
 /*
  * @deprecated use http.IncomingMessage
+ * Will be removed in 2.0
  */
 export type HttpServerRequest = IncomingMessageWithContext;
 /*
  * @deprecated use express.Request
+ * Will be removed in 2.0
  */
 export type ExpressRequest = ExpressRequestWithContext;
 /*
  * @deprecated Use express.Response
+ * Will be removed in 2.0
  */
 export type ExpressResponse = Response;
 /*
  * @deprecated Use express.Response
  */
 export type ExpressNextFunction = NextFunction;
-
+/*
+ * @deprecated Use express.Application
+ * Will be removed in 2.0
+ */
 export type ExpressApplication = Application;
+/*
+ * @deprecated Use express.RequestHandler
+ * Will be removed in 2.0
+ */
 export type ExpressMiddleware = RequestHandler;
 
 export type I18NString =
@@ -460,7 +470,7 @@ export type MashroomHttpUpgradeHandler = (
 ) => void;
 
 export type ExpressApplicationWithUpgradeHandler = {
-    expressApp: ExpressApplication;
+    expressApp: Application;
     upgradeHandler?: MashroomHttpUpgradeHandler;
 };
 
@@ -480,7 +490,7 @@ export type MashroomWebAppPluginBootstrapFunction = (
     pluginName: string,
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
-) => Promise<ExpressApplication | ExpressApplicationWithUpgradeHandler>;
+) => Promise<Application | ExpressApplicationWithUpgradeHandler>;
 
 /**
  * Bootstrap method definition for API plugins
@@ -498,7 +508,7 @@ export type MashroomMiddlewarePluginBootstrapFunction = (
     pluginName: string,
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
-) => Promise<ExpressMiddleware>;
+) => Promise<RequestHandler>;
 
 /**
  * Bootstrap method definition for services plugins

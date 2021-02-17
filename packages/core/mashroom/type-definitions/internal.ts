@@ -1,4 +1,5 @@
 
+import type {RequestHandler, Application} from 'express';
 import type {
     LogLevel,
     MashroomServerConfig,
@@ -15,10 +16,8 @@ import type {
     MashroomServerInfo,
     MashroomLoggerFactory,
     MashroomPluginContextHolder,
-    ExpressApplication,
-    ExpressMiddleware,
+    MashroomCoreServices
 } from './api';
-import {MashroomCoreServices} from './api';
 
 export interface GlobalNodeErrorHandler {
     install(): void;
@@ -188,15 +187,15 @@ export interface MashroomServiceRegistry {
  * Middleware
  */
 export interface MiddlewarePluginDelegate {
-    insertOrReplaceMiddleware(pluginName: string, order: number, middleware: ExpressMiddleware): void;
+    insertOrReplaceMiddleware(pluginName: string, order: number, middleware: RequestHandler): void;
     removeMiddleware(pluginName: string): void;
-    middleware(): ExpressMiddleware;
+    middleware(): RequestHandler;
     readonly middlewareStack: Array<MiddlewareStackEntry>;
 }
 
 export type MiddlewareStackEntry = {
     readonly pluginName: string;
-    readonly middleware: ExpressMiddleware;
+    readonly middleware: RequestHandler;
     readonly order: number;
 }
 
@@ -213,7 +212,7 @@ export interface MashroomServerContext {
     readonly pluginContextHolder: MashroomPluginContextHolder,
     readonly pluginRegistry: MashroomPluginRegistry;
     readonly serviceRegistry: MashroomServiceRegistry;
-    readonly expressApp: ExpressApplication;
+    readonly expressApp: Application;
     readonly middlewarePluginDelegate: MiddlewarePluginDelegate;
 }
 

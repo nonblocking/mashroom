@@ -1,11 +1,9 @@
 
-import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
-import type {
-    MashroomSessionStoreProvider,
-} from './api';
+import type {RequestHandler} from 'express';
+import type {MashroomSessionStoreProvider} from './api';
 
 export interface MashroomSessionMiddleware {
-    middleware(): ExpressMiddleware;
+    middleware(): RequestHandler;
 }
 
 export interface MashroomSessionStoreProviderRegistry {

@@ -1,9 +1,9 @@
 
 import {sep} from 'path';
-import type {RequestHandler} from 'express';
-import type {ExpressApplication, MashroomPlugin} from '../../type-definitions';
+import type {RequestHandler, Application} from 'express';
+import type {MashroomPlugin} from '../../type-definitions';
 
-export const removeFromExpressStack = (expressApplication: ExpressApplication, plugin: MashroomPlugin) => {
+export const removeFromExpressStack = (expressApplication: Application, plugin: MashroomPlugin) => {
     const expressLayers = expressApplication._router.stack;
     const expressLayerIndex = expressLayers.findIndex((requestHandler: RequestHandler) => requestHandler.name === plugin.name);
     if (expressLayerIndex) {

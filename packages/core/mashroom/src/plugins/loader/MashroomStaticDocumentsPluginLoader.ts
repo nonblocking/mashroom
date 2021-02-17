@@ -4,12 +4,12 @@ import path from 'path';
 import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
 
-import type {RequestHandler} from 'express';
-import type {MashroomPluginContextHolder, ExpressApplication, MashroomPluginConfig, MashroomPlugin} from '../../../type-definitions';
+import type {RequestHandler, Application} from 'express';
+import type {MashroomPluginContextHolder, MashroomPluginConfig, MashroomPlugin} from '../../../type-definitions';
 
 export default class MashroomStaticDocumentsPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 
-    addPluginInstance(expressApplication: ExpressApplication, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig) {
+    addPluginInstance(expressApplication: Application, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig) {
         expressApplication.use(pluginConfig.path, pluginInstance);
     }
 

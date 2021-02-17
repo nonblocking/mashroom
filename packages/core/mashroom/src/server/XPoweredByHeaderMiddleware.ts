@@ -1,6 +1,6 @@
 
-import type {NextFunction} from 'express';
-import type {ExpressMiddleware, MashroomPluginContextHolder} from '../../type-definitions';
+import type {RequestHandler} from 'express';
+import type {MashroomPluginContextHolder} from '../../type-definitions';
 
 export default class XPoweredByHeaderMiddleware {
 
@@ -10,8 +10,8 @@ export default class XPoweredByHeaderMiddleware {
         this._pluginContextHolder = pluginContextHolder;
     }
 
-    middleware(): ExpressMiddleware {
-        return (req, res, next: NextFunction) => {
+    middleware(): RequestHandler {
+        return (req, res, next) => {
             const serverConfig = this._pluginContextHolder.getPluginContext().serverConfig;
             if (serverConfig.xPowerByHeader) {
                 res.setHeader('X-Powered-By', serverConfig.xPowerByHeader);

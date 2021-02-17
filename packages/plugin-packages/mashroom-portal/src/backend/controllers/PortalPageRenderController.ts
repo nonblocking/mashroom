@@ -46,10 +46,8 @@ import {
 } from '../utils/security_utils';
 import createPortalAppSetup from '../utils/create_portal_app_setup';
 
-import type {Request, Response} from 'express';
-import type {ExpressApplication,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response, Application} from 'express';
+import type { MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
@@ -75,7 +73,7 @@ export default class PortalPageRenderController {
 
     private _startTimestamp: number;
 
-    constructor(private _portalWebapp: ExpressApplication, private _pluginRegistry: MashroomPortalPluginRegistry) {
+    constructor(private _portalWebapp: Application, private _pluginRegistry: MashroomPortalPluginRegistry) {
         this._startTimestamp = Date.now();
     }
 

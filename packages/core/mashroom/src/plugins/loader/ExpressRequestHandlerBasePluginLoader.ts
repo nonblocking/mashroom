@@ -2,9 +2,8 @@
 import {removeFromExpressStack} from '../../utils/reload_utils';
 import ExpressRequestHandlerWrapper from './ExpressRequestHandlerWrapper';
 
-import type {RequestHandler} from 'express';
+import type {RequestHandler, Application} from 'express';
 import type {
-    ExpressApplication,
     MashroomLogger,
     MashroomLoggerFactory,
     MashroomPlugin,
@@ -23,7 +22,7 @@ export default abstract class ExpressRequestHandlerBasePluginLoader implements M
     private _logger: MashroomLogger;
     private _loadedPlugins: Map<string, LoadedPlugin>;
 
-    constructor(private _expressApplication: ExpressApplication, loggerFactory: MashroomLoggerFactory) {
+    constructor(private _expressApplication: Application, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.loader');
         this._loadedPlugins = new Map();
     }
@@ -89,7 +88,7 @@ export default abstract class ExpressRequestHandlerBasePluginLoader implements M
         return this._loadedPlugins.get(plugin.name);
     }
 
-    abstract addPluginInstance(expressApplication: ExpressApplication, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig): void;
+    abstract addPluginInstance(expressApplication: Application, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig): void;
 
     abstract createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<RequestHandler>;
 

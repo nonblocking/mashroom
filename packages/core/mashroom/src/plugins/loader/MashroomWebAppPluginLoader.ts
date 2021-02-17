@@ -4,9 +4,8 @@ import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePl
 
 import type {Server, IncomingMessage} from 'http';
 import type {Socket} from 'net';
-import type {RequestHandler} from 'express';
+import type {RequestHandler, Application} from 'express';
 import type {
-    ExpressApplication,
     MashroomHttpUpgradeHandler,
     MashroomLogger,
     MashroomLoggerFactory,
@@ -25,7 +24,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         handler: MashroomHttpUpgradeHandler
     }>;
 
-    constructor(expressApplication: ExpressApplication, httpServer: Server, loggerFactory: MashroomLoggerFactory, private _pluginContextHolder: MashroomPluginContextHolder) {
+    constructor(expressApplication: Application, httpServer: Server, loggerFactory: MashroomLoggerFactory, private _pluginContextHolder: MashroomPluginContextHolder) {
         super(expressApplication, loggerFactory);
         this._logger2 = loggerFactory('mashroom.plugins.loader');
         this._upgradeHandlers = [];
@@ -34,14 +33,14 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         httpServer.on('upgrade', upgradeHandler);
     }
 
-    addPluginInstance(expressApplication: ExpressApplication, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig) {
+    addPluginInstance(expressApplication: Application, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig) {
         expressApplication.use(pluginConfig.path, pluginInstance as any);
     }
 
     async createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
         const webAppBootstrap: MashroomWebAppPluginBootstrapFunction = plugin.requireBootstrap();
         const bootstrapResult: any = await webAppBootstrap(plugin.name, pluginConfig, contextHolder);
-        const webapp: ExpressApplication = bootstrapResult.expressApp ? bootstrapResult.expressApp : bootstrapResult;
+        const webapp: Application = bootstrapResult.expressApp ? bootstrapResult.expressApp : bootstrapResult;
         const upgradeHandler: MashroomHttpUpgradeHandler | undefined | null = bootstrapResult.upgradeHandler ? bootstrapResult.upgradeHandler : null;
 
         if (upgradeHandler) {

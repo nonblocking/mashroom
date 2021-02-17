@@ -1,6 +1,6 @@
 
-import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
+import type {RequestHandler} from 'express';
 
 export interface MashroomCSRFMiddleware {
-    middleware(): ExpressMiddleware
+    middleware(): RequestHandler
 }

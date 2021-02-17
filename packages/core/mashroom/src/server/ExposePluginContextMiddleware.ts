@@ -1,8 +1,8 @@
 
 import requestPluginContext from '../context/request_plugin_context';
 
-import type {NextFunction} from 'express';
-import type {MashroomPluginContextHolder, ExpressMiddleware} from '../../type-definitions';
+import type {RequestHandler} from 'express';
+import type {MashroomPluginContextHolder} from '../../type-definitions';
 
 const PLUGIN_CONTEXT_PROPERTY_NAME = 'pluginContext';
 
@@ -14,8 +14,8 @@ export default class ExposePluginContextMiddleware {
         this._pluginContextHolder = pluginContextHolder;
     }
 
-    middleware(): ExpressMiddleware {
-        return (req, res, next: NextFunction) => {
+    middleware(): RequestHandler {
+        return (req, res, next) => {
             req[PLUGIN_CONTEXT_PROPERTY_NAME] = requestPluginContext(req, this._pluginContextHolder);
             next();
         };

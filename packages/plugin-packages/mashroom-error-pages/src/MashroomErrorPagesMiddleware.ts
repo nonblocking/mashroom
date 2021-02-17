@@ -3,8 +3,8 @@ import {resolve, isAbsolute} from 'path';
 import getUri from 'get-uri';
 import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {PLACEHOLDER_REQUEST_URL, PLACEHOLDER_STATUS_CODE, PLACEHOLDER_MASHROOM_VERSION, PLACEHOLDER_I18N_MESSAGE} from './constants';
-import type {Request, Response, NextFunction} from 'express';
-import type {MashroomLogger, ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response, NextFunction, RequestHandler} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {
     MashroomErrorPagesMiddleware as MashroomErrorPagesMiddlewareType,
@@ -21,7 +21,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
         this._pluginRooterFolder = resolve(__dirname, '..');
     }
 
-    middleware(): ExpressMiddleware {
+    middleware(): RequestHandler {
         return (req: Request, res: Response, next: NextFunction) => {
             const originalWrite = res.write;
             const originalEnd = res.end;

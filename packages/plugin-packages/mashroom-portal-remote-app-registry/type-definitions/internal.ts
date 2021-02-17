@@ -1,7 +1,6 @@
 
-import type {Request} from 'express';
+import type {Request, RequestHandler} from 'express';
 import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
-import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
 import type {
     RemotePortalAppEndpoint,
 } from './api';
@@ -36,5 +35,5 @@ export type GlobalRequestHolder = {
 }
 
 export interface RegisterRequestGloballyMiddleware {
-    middleware(): ExpressMiddleware
+    middleware(): RequestHandler
 }

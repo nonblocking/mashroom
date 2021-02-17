@@ -29,11 +29,11 @@ import XPoweredByHeaderMiddleware from '../server/XPoweredByHeaderMiddleware';
 import MashroomServer from '../server/MashroomServer';
 import InitializationError from '../errors/InitializationError';
 
-import {Server} from 'http';
+import type {Server} from 'http';
+import type {Application} from 'express';
 import type {
     MashroomLoggerFactory,
     MashroomLogger,
-    ExpressApplication,
     MashroomServerConfig,
     MashroomPluginDefinition,
     MashroomPluginPackage as MashroomPluginPackageType,
@@ -136,7 +136,7 @@ const createBuilder = (config: MashroomServerConfig, loggerFactory: MashroomLogg
     return new MashroomPluginPackageBuilder(config, loggerFactory);
 };
 
-const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, expressApplication: ExpressApplication, httpServer: Server,
+const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, expressApplication: Application, httpServer: Server,
                                  serviceRegistry: MashroomServiceRegistryType, middlewarePluginDelegate: MiddlewarePluginDelegateType,
                                  loggerFactory: MashroomLoggerFactory, pluginContextHolder: MashroomPluginContextHolderType) => {
     pluginRegistry.registerPluginLoader('plugin-loader', new MashroomPluginLoaderLoader(pluginRegistry, loggerFactory));
@@ -161,7 +161,7 @@ const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType,
     serviceNamespacesRegistry.registerServices('core', coreService);
 };
 
-const addDefaultMiddleware = (expressApp: ExpressApplication, pluginContextHolder: MashroomPluginContextHolderType,
+const addDefaultMiddleware = (expressApp: Application, pluginContextHolder: MashroomPluginContextHolderType,
                               middlewarePluginDelegate: MiddlewarePluginDelegateType) => {
     // Plugin context middleware must be the first
     const exposePluginContextMiddleware = new ExposePluginContextMiddleware(pluginContextHolder);
@@ -176,7 +176,7 @@ const addDefaultMiddleware = (expressApp: ExpressApplication, pluginContextHolde
     expressApp.use(xPoweredByHeaderMiddleware.middleware());
 };
 
-const setExpressConfig = (expressApp: ExpressApplication, devMode: boolean, logger: MashroomLogger) => {
+const setExpressConfig = (expressApp: Application, devMode: boolean, logger: MashroomLogger) => {
     if (!devMode) {
         logger.info('Enabling express template cache');
         expressApp.enable('view cache');

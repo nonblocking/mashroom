@@ -1,8 +1,5 @@
 
-import type {Request} from 'express';
-import type {
-    ExpressMiddleware,
-} from '@mashroom/mashroom/type-definitions';
+import type {Request, RequestHandler} from 'express';
 import type {
     MashroomSecurityProvider,
     MashroomSecurityRoles,
@@ -10,7 +7,7 @@ import type {
 } from './api';
 
 export interface MashroomSecurityMiddleware {
-    middleware(): ExpressMiddleware;
+    middleware(): RequestHandler;
 }
 
 export interface MashroomSecurityProviderRegistry {
