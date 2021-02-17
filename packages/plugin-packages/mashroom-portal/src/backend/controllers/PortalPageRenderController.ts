@@ -47,8 +47,7 @@ import {
 import createPortalAppSetup from '../utils/create_portal_app_setup';
 
 import type {Request, Response} from 'express';
-import type {
-    ExpressApplication,
+import type {ExpressApplication,
     MashroomLogger,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
@@ -81,7 +80,7 @@ export default class PortalPageRenderController {
     }
 
     async renderPortalPage(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const path = req.path;
@@ -132,8 +131,8 @@ export default class PortalPageRenderController {
                                  themeName: string | undefined | null, layoutName: string | undefined | null, logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
-        const csrfService: MashroomCSRFService = req.pluginContext.services.csrf && req.pluginContext.services.csrf.service;
-        const messagingService: MashroomMessagingService = req.pluginContext.services.messaging && req.pluginContext.services.messaging.service;
+        const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
+        const messagingService: MashroomMessagingService = req.pluginContext.services.messaging?.service;
         const webSocketSupport = !!req.pluginContext.services.websocket;
 
         const user: MashroomSecurityUser | undefined | null = securityService.getUser(req);

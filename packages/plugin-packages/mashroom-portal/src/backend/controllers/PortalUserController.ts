@@ -3,7 +3,6 @@ import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {getFrontendSiteBasePath} from '../utils/path_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 
@@ -14,7 +13,7 @@ type NewLanguage = {
 export default class PortalUserController {
 
     async getAuthenticatedUserAuthenticationExpiration(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
@@ -36,7 +35,7 @@ export default class PortalUserController {
     }
 
     async setAuthenticatedUserLanguage(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
@@ -60,7 +59,7 @@ export default class PortalUserController {
     }
 
     async logout(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
         logger.debug('Logout called');
 
         try {

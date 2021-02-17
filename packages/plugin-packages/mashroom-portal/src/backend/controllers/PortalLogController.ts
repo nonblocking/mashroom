@@ -2,7 +2,7 @@
 import {portalAppContext} from '../utils/logging_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
+
 import type {ClientLogMessage, MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 export default class PortalLogController {
@@ -11,7 +11,7 @@ export default class PortalLogController {
     }
 
     async log(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal.client');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal.client');
 
         try {
             const body: any = req.body;

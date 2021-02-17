@@ -5,7 +5,6 @@ import {findPortalAppInstanceOnPage} from '../utils/model_utils';
 import {getPortalAppResourceKey, isAdmin} from '../utils/security_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityResourcePermissions,
     MashroomSecurityService
@@ -27,7 +26,7 @@ export default class PortalPageController {
     }
 
     async getPortalPage(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -54,7 +53,7 @@ export default class PortalPageController {
     }
 
     async addPage(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -91,7 +90,7 @@ export default class PortalPageController {
     }
 
     async updatePage(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -131,7 +130,7 @@ export default class PortalPageController {
     }
 
     async deletePage(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -162,7 +161,7 @@ export default class PortalPageController {
     }
 
     async getPagePermittedRoles(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -195,7 +194,7 @@ export default class PortalPageController {
     }
 
     async updatePagePermittedRoles(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -244,7 +243,7 @@ export default class PortalPageController {
     }
 
     async getPortalAppInstances(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -279,7 +278,7 @@ export default class PortalPageController {
     }
 
     async addPortalApp(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -355,7 +354,7 @@ export default class PortalPageController {
     }
 
     async updatePortalApp(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -412,7 +411,7 @@ export default class PortalPageController {
     }
 
     async removePortalApp(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -457,7 +456,7 @@ export default class PortalPageController {
     }
 
     async getPortalAppPermittedRoles(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
@@ -504,7 +503,7 @@ export default class PortalPageController {
     }
 
     async updatePortalAppPermittedRoles(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalService: MashroomPortalService = req.pluginContext.services.portal.service;

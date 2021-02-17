@@ -2,7 +2,6 @@
 import {isAdmin} from '../utils/security_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 import type {MashroomAvailablePortalTheme} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
@@ -13,7 +12,7 @@ export default class PortalThemeController {
     }
 
     async getPortalThemeResource(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
@@ -54,7 +53,7 @@ export default class PortalThemeController {
     }
 
     async getAvailablePortalThemes(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             if (!isAdmin(req)) {

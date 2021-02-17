@@ -8,7 +8,6 @@ import {
 import {calculatePermissions} from './security_utils';
 
 import type {Request} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
@@ -35,7 +34,7 @@ const toPortalAppUser = (mashroomSecurityUser: MashroomSecurityUser | undefined 
 
 const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp,
                                      pluginRegistry: MashroomPortalPluginRegistry, req: Request): Promise<MashroomPortalAppSetup> => {
-    const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+    const logger = req.pluginContext.loggerFactory('mashroom.portal');
     let enhancedAppSetup = portalAppSetup;
 
     const enhancements = pluginRegistry.portalAppEnhancements;

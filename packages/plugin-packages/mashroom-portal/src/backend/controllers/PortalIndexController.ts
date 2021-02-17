@@ -4,12 +4,11 @@ import {getDefaultSite} from '../utils/model_utils';
 import {getPortalPath} from '../utils/path_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 
 export default class IndexController {
 
     async index(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const portalPath = getPortalPath();

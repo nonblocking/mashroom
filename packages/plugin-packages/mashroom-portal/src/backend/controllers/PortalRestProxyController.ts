@@ -11,7 +11,6 @@ import {portalAppContext} from '../utils/logging_utils';
 import {getSitePath} from '../utils/path_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 import type {MashroomPortalAppUserPermissions, MashroomPortalProxyDefinition,} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
@@ -22,7 +21,7 @@ export default class PortalRestProxyController {
     }
 
     async forward(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
             const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;

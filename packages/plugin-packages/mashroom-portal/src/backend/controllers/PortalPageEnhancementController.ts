@@ -2,7 +2,6 @@
 import {getResourceAsStream} from '../utils/resource_utils';
 
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 import type {MashroomPortalPageEnhancement, MashroomPortalPageEnhancementResource} from '../../../type-definitions';
@@ -13,7 +12,7 @@ export default class PortalPageEnhancementController {
     }
 
     async getPortalPageResource(req: Request, res: Response): Promise<void> {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         const pluginName = req.params.pluginName;
         const resourcePath = req.params['0'];
@@ -38,7 +37,7 @@ export default class PortalPageEnhancementController {
 
     private async _sendResource(type: 'js' | 'css', resource: MashroomPortalPageEnhancementResource | undefined,
                                plugin: MashroomPortalPageEnhancement, req: Request, res: Response) {
-        const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
 
         if (!resource || !resource.path) {
