@@ -11,7 +11,7 @@ export type HttpHeaders = {
 }
 
 export type QueryParams = {
-    [key: string]: undefined | string | string[] | {};
+    [key: string]: undefined | string | string[];
 }
 
 export interface MashroomHttpProxyService {
@@ -40,7 +40,7 @@ export type MashroomHttpProxyResponseInterceptorResult = {
     responseHandled?: boolean;
 }
 
-interface MashroomHttpProxyInterceptor {
+export interface MashroomHttpProxyInterceptor {
 
     /**
      * Intercept request to given targetUri.

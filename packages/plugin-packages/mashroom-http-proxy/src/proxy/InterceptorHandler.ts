@@ -2,7 +2,12 @@
 import type {IncomingMessage} from 'http';
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
-import type {HttpHeaders, MashroomHttpProxyRequestInterceptorResult, MashroomHttpProxyResponseInterceptorResult} from '../../type-definitions';
+import type {
+    HttpHeaders,
+    MashroomHttpProxyRequestInterceptorResult,
+    MashroomHttpProxyResponseInterceptorResult,
+    QueryParams
+} from '../../type-definitions';
 import type {InterceptorHandler as InterceptorHandlerType, MashroomHttpProxyInterceptorRegistry} from '../../type-definitions/internal';
 
 export default class InterceptorHandler implements InterceptorHandlerType {
@@ -12,7 +17,16 @@ export default class InterceptorHandler implements InterceptorHandlerType {
 
     async processRequest(clientRequest: Request, clientResponse: Response, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyRequestInterceptorResult> {
         let existingHeaders = { ...clientRequest.headers, ...additionalHeaders };
-        let existingQueryParams = { ...clientRequest.query };
+        let existingQueryParams: QueryParams = {};
+        Object.keys(clientRequest.query || {}).forEach((queryKey) => {
+            const queryValue = clientRequest.query[queryKey];
+            if (Array.isArray(queryValue)) {
+                existingQueryParams[queryKey] = (queryValue as Array<any>).map((v) => v.toString());
+            } else {
+                existingQueryParams[queryKey] = queryValue?.toString();
+            }
+        });
+
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
         let addQueryParams = {};
