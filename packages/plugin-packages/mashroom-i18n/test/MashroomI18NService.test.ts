@@ -1,6 +1,5 @@
 
 import path from 'path';
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomI18NService from '../src/MashroomI18NService';
 

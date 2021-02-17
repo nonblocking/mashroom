@@ -114,12 +114,10 @@ Example: Restrict the Portal to authenticated users but make a specific site pub
 
 Adding and checking a resource permission (e.g. for a Page) works like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
     // Create a permission
@@ -147,78 +145,117 @@ The exposed service is accessible through _pluginContext.services.security.servi
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomSecurityService {
     /**
      * Get the current user or null if the user is not authenticated
      */
-    getUser(request: ExpressRequest): ?MashroomSecurityUser;
-    /**
-     * Get extra HTTP headers that should be send with Backend/API calls to given URI.
-     */
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
+    getUser(request: Request): MashroomSecurityUser | null | undefined;
+
     /**
      * Checks if user != null
      */
-    isAuthenticated(request: ExpressRequest): boolean;
+    isAuthenticated(request: Request): boolean;
+
     /**
      * Check if the currently authenticated user has given role
      */
-    isInRole(request: ExpressRequest, roleName: string): boolean;
+    isInRole(request: Request, roleName: string): boolean;
+
     /**
      * Check if the currently authenticated user is an admin (has the role Administrator)
      */
-    isAdmin(request: ExpressRequest): boolean;
+    isAdmin(request: Request): boolean;
+
     /**
      * Check the request against the ACL
      */
-    checkACL(request: ExpressRequest): Promise<boolean>;
+    checkACL(request: Request): Promise<boolean>;
+
     /**
      * Check if given abstract "resource" is permitted for currently authenticated user.
      * The permission has to be defined with updateResourcePermission() first, otherwise the allowIfNoResourceDefinitionFound flag defines the outcome.
      */
-    checkResourcePermission(request: ExpressRequest, resourceType: MashroomSecurityResourceType, resourceKey: string, permission: MashroomSecurityPermission, allowIfNoResourceDefinitionFound?: boolean): Promise<boolean>;
+    checkResourcePermission(
+        request: Request,
+        resourceType: MashroomSecurityResourceType,
+        resourceKey: string,
+        permission: MashroomSecurityPermission,
+        allowIfNoResourceDefinitionFound?: boolean,
+    ): Promise<boolean>;
+
     /**
      * Set a resource permission for given abstract resource.
      * A resource could be: {type: 'Page', key: 'home', permissions: [{ roles: ['User'], permissions: ['VIEW'] }]}
      */
-    updateResourcePermission(request: ExpressRequest, resource: MashroomSecurityProtectedResource): Promise<void>;
+    updateResourcePermission(
+        request: Request,
+        resource: MashroomSecurityProtectedResource,
+    ): Promise<void>;
+
     /**
      * Get the permission definition for given resource, if any.
      */
-    getResourcePermissions(request: ExpressRequest, resourceType: MashroomSecurityResourceType, resourceKey: string): Promise<?MashroomSecurityProtectedResource>;
+    getResourcePermissions(
+        request: Request,
+        resourceType: MashroomSecurityResourceType,
+        resourceKey: string,
+    ): Promise<MashroomSecurityProtectedResource | null | undefined>;
+
     /**
      * Add a role definition
      */
-    addRoleDefinition(request: ExpressRequest, roleDefinition: MashroomSecurityRoleDefinition): Promise<void>;
+    addRoleDefinition(
+        request: Request,
+        roleDefinition: MashroomSecurityRoleDefinition,
+    ): Promise<void>;
+
     /**
      * Get all known roles. Returns all roles added with addRoleDefinition() or implicitly added bei updateResourcePermission().
      */
-    getExistingRoles(request: ExpressRequest): Promise<Array<MashroomSecurityRoleDefinition>>;
+    getExistingRoles(
+        request: Request,
+    ): Promise<Array<MashroomSecurityRoleDefinition>>;
+
     /**
      * Check if an auto login would be possible.
      */
-    canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean>;
+    canAuthenticateWithoutUserInteraction(request: Request): Promise<boolean>;
+
     /**
      * Start authentication process
      */
-    authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult>;
+    authenticate(
+        request: Request,
+        response: Response,
+    ): Promise<MashroomSecurityAuthenticationResult>;
+
     /**
      * Check the existing authentication (if any)
      */
-    checkAuthentication(request: ExpressRequest): Promise<void>;
+    checkAuthentication(request: Request): Promise<void>;
+
     /**
      * Get the authentication expiration time in unix time ms
      */
-    getAuthenticationExpiration(request: ExpressRequest): ?number;
+    getAuthenticationExpiration(
+        request: Request,
+    ): number | null | undefined;
+
     /**
      * Revoke the current authentication
      */
-    revokeAuthentication(request: ExpressRequest): Promise<void>;
+    revokeAuthentication(request: Request): Promise<void>;
+
     /**
      * Login user with given credentials (for form login).
      */
-    login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult>;
+    login(
+        request: Request,
+        username: string,
+        password: string,
+    ): Promise<MashroomSecurityLoginResult>;
+
     /**
      * Find a security provider by name.
      * Useful if you want to dispatch the authentication to a different provider.
@@ -254,9 +291,7 @@ To register your custom security-provider plugin add this to _package.json_:
 
 The bootstrap returns the provider:
 
-```js
-// @flow
-
+```ts
 import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
@@ -269,49 +304,59 @@ export default bootstrap;
 
 The provider has to implement the following interface:
 
-```js
+```ts
 export interface MashroomSecurityProvider {
     /**
      * Check if an auto login would be possible.
      * This is used for public pages when an authentication is optional but nevertheless desirable.
      * It is safe to always return false.
      */
-    canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean>;
+    canAuthenticateWithoutUserInteraction(request: Request): Promise<boolean>;
     /**
      * Start authentication process.
      * This typically means to redirect to the login page, then you should return status: 'deferred'.
      * This method could also automatically login the user, then you should return status: 'authenticated'.
      */
-    authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult>;
+    authenticate(
+        request: Request,
+        response: Response,
+        authenticationHints?: any,
+    ): Promise<MashroomSecurityAuthenticationResult>;
+
     /**
      * Check the existing authentication (if any).
      * Use this to extend the authentication expiration or to periodically refresh the access token.
      *
      * This methods gets called for almost every requests, so do nothing expensive here.
      */
-    checkAuthentication(request: ExpressRequest): Promise<void>;
+    checkAuthentication(request: Request): Promise<void>;
+
     /**
      * Get the authentication expiration time in unix time ms. Return null/undefined if there is no authentication.
      */
-    getAuthenticationExpiration(request: ExpressRequest): ?number;
+    getAuthenticationExpiration(
+        request: Request,
+    ): number | null | undefined;
+
     /**
      * Revoke the current authentication.
      * That typically means to remove the user object from the session.
      */
-    revokeAuthentication(request: ExpressRequest): Promise<void>;
+    revokeAuthentication(request: Request): Promise<void>;
+
     /**
      * Programmatically login user with given credentials (optional, but necessary if you use the default login page)
      */
-    login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult>;
+    login(
+        request: Request,
+        username: string,
+        password: string,
+    ): Promise<MashroomSecurityLoginResult>;
+
     /**
      * Get the current user or null if the user is not authenticated
      */
-    getUser(request: ExpressRequest): ?MashroomSecurityUser;
-    /**
-     * Get extra HTTP headers that should be send which each Backend/API call.
-     * Can be used to add some extra context or a bearer token.
-     */
-    getApiSecurityHeaders(request: ExpressRequest, targetUri: string): ?any;
+    getUser(request: Request): MashroomSecurityUser | null | undefined;
 }
 ```
 

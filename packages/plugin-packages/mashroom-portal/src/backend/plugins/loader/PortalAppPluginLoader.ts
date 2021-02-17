@@ -1,6 +1,5 @@
 
 import path from 'path';
-// @ts-ignore
 import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
 import type {
@@ -16,10 +15,10 @@ import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/in
 
 export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.portal.plugin.loader');
+    constructor(private _registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.portal.plugin.loader');
     }
 
     get name(): string {
@@ -110,12 +109,12 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             defaultAppConfig
         };
 
-        this.logger.info('Registering portal app:', JSON.stringify({portalApp}));
-        this.registry.registerPortalApp(portalApp);
+        this._logger.info('Registering portal app:', JSON.stringify({portalApp}));
+        this._registry.registerPortalApp(portalApp);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info(`Unregistering portal app: ${plugin.name}`);
-        this.registry.unregisterPortalApp(plugin.name);
+        this._logger.info(`Unregistering portal app: ${plugin.name}`);
+        this._registry.unregisterPortalApp(plugin.name);
     }
 }

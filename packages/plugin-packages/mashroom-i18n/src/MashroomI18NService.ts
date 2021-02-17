@@ -3,40 +3,39 @@ import fs from 'fs';
 import path from 'path';
 import acceptLanguageParser from 'accept-language-parser';
 
-const BUILT_IN_MESSAGES_FOLDER = path.resolve(__dirname, '../messages');
-
-const MESSAGES_EXISTS_CACHE: Record<string, boolean> = {};
-
+import type {Request} from 'express';
 import type {
     MashroomLogger,
     MashroomLoggerFactory,
-    ExpressRequest,
     I18NString,
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService as MashroomI18NServiceType} from '../type-definitions';
+
+const BUILT_IN_MESSAGES_FOLDER = path.resolve(__dirname, '../messages');
+const MESSAGES_EXISTS_CACHE: Record<string, boolean> = {};
 
 export default class MashroomI18NService implements MashroomI18NServiceType {
 
     private _availableLanguages: Array<string>;
     private _defaultLanguage: string;
-    private messagesFolder: string;
-    private logger: MashroomLogger;
+    private _messagesFolder: string;
+    private _logger: MashroomLogger;
 
     constructor(availableLanguages: Array<string>, defaultLanguage: string, messagesFolder: string,
                 serverRootFolder: string, loggerFactory: MashroomLoggerFactory) {
         this._availableLanguages = availableLanguages;
         this._defaultLanguage = defaultLanguage;
-        this.messagesFolder = messagesFolder;
-        this.logger = loggerFactory('mashroom.i18n.service');
+        this._messagesFolder = messagesFolder;
+        this._logger = loggerFactory('mashroom.i18n.service');
 
-        if (!path.isAbsolute(this.messagesFolder)) {
-            this.messagesFolder = path.resolve(serverRootFolder, this.messagesFolder);
+        if (!path.isAbsolute(this._messagesFolder)) {
+            this._messagesFolder = path.resolve(serverRootFolder, this._messagesFolder);
         }
 
-        this.logger.info(`Looking for messages in: ${this.messagesFolder}`);
+        this._logger.info(`Looking for messages in: ${this._messagesFolder}`);
     }
 
-    getLanguage(req: ExpressRequest): string {
+    getLanguage(req: Request): string {
         let language = req.session.lang;
         if (!language) {
             language = this._detectBrowserLanguage(req);
@@ -45,15 +44,15 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return language;
     }
 
-    setLanguage(language: string, req: ExpressRequest): void {
+    setLanguage(language: string, req: Request): void {
         req.session.lang = language;
     }
 
     getMessage(key: string, language: string): string {
         const messagesPaths = [
-            path.resolve(this.messagesFolder, `messages.${language}.json`),
+            path.resolve(this._messagesFolder, `messages.${language}.json`),
             path.resolve(BUILT_IN_MESSAGES_FOLDER, `messages.${language}.json`),
-            path.resolve(this.messagesFolder, `messages.json`),
+            path.resolve(this._messagesFolder, `messages.json`),
             path.resolve(BUILT_IN_MESSAGES_FOLDER, `messages.json`),
         ];
 
@@ -68,7 +67,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
                     return message;
                 }
             } catch (error) {
-                this.logger.error(`Error loading message bundle: ${messagesPath}`);
+                this._logger.error(`Error loading message bundle: ${messagesPath}`);
             }
         }
 
@@ -76,7 +75,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return key;
     }
 
-    translate(req: ExpressRequest, str: I18NString): string {
+    translate(req: Request, str: I18NString): string {
         if (!str || typeof(str) === 'string') {
             return str;
         }
@@ -118,7 +117,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         return exists;
     }
 
-    private _detectBrowserLanguage(req: ExpressRequest): string {
+    private _detectBrowserLanguage(req: Request): string {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.i18n.service');
         const acceptLanguageHeader = req.headers['accept-language'] as string;
         const language = acceptLanguageParser.pick(this._availableLanguages, acceptLanguageHeader, {loose: true}) || this._defaultLanguage;

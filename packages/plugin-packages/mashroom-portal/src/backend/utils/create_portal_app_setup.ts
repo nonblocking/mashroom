@@ -6,17 +6,20 @@ import {
     PORTAL_APP_REST_PROXY_BASE_PATH
 } from '../constants';
 import {calculatePermissions} from './security_utils';
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+
+import type {Request} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomPortalAppSetup,
     MashroomPortalApp,
     MashroomPortalAppInstance,
-    MashroomPortalAppUserPermissions, MashroomPortalAppUser
+    MashroomPortalAppUserPermissions,
+    MashroomPortalAppUser,
+    MashroomRestProxyPaths
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
-import {MashroomRestProxyPaths} from '../../../type-definitions';
 
 const toPortalAppUser = (mashroomSecurityUser: MashroomSecurityUser | undefined | null, portalApp: MashroomPortalApp): MashroomPortalAppUser => {
     const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, mashroomSecurityUser);
@@ -31,7 +34,7 @@ const toPortalAppUser = (mashroomSecurityUser: MashroomSecurityUser | undefined 
 }
 
 const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp,
-                                     pluginRegistry: MashroomPortalPluginRegistry, req: ExpressRequest): Promise<MashroomPortalAppSetup> => {
+                                     pluginRegistry: MashroomPortalPluginRegistry, req: Request): Promise<MashroomPortalAppSetup> => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.portal');
     let enhancedAppSetup = portalAppSetup;
 
@@ -48,7 +51,7 @@ const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, por
 }
 
 export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
-                      pluginRegistry: MashroomPortalPluginRegistry, req: ExpressRequest) => {
+                      pluginRegistry: MashroomPortalPluginRegistry, req: Request) => {
     const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
     const encodedPortalAppName = encodeURIComponent(portalApp.name);

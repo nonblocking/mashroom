@@ -4,7 +4,7 @@ import registry from './registry';
 import PromClientMashroomMetricsAdapter from './PromClientMashroomMetricsAdapter';
 
 import type {Request, Response} from 'express';
-import type {MashroomLoggerFactory, ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 
 const existingAdapters: {
@@ -17,8 +17,7 @@ export default (loggerFactory: MashroomLoggerFactory) => {
     const app = express();
 
     app.get('/', (req: Request, res: Response) => {
-        const reqWithContext = req as ExpressRequest;
-        const collectorService: MashroomMonitoringMetricsCollectorService = reqWithContext.pluginContext.services.metrics.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
         const metrics = collectorService.getMetrics();
         Object.keys(metrics).forEach((metricName) => {
             try {

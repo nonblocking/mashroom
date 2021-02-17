@@ -9,23 +9,23 @@ const SEND_INTERVAL = 1000;
 
 export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRemoteLogger {
 
-    private restService: MashroomRestService;
-    private unsentLogMessages: Array<ClientLogMessage>;
-    private timeout: ReturnType<typeof setTimeout> | null;
+    private _restService: MashroomRestService;
+    private _unsentLogMessages: Array<ClientLogMessage>;
+    private _timeout: ReturnType<typeof setTimeout> | null;
 
     constructor(restService: MashroomRestService) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
-        this.restService = restService.withBasePath(apiPath);
-        this.unsentLogMessages = [];
-        this.timeout = null;
+        this._restService = restService.withBasePath(apiPath);
+        this._unsentLogMessages = [];
+        this._timeout = null;
     }
 
     error(msg: string, error?: Error, portalAppName?: string | undefined | null) {
-        this.log('error', msg, error, portalAppName);
+        this._log('error', msg, error, portalAppName);
     }
 
     warn(msg: string, error?: Error, portalAppName?: string | undefined | null) {
-        this.log('warn', msg, error, portalAppName);
+        this._log('warn', msg, error, portalAppName);
     }
 
     getAppInstance(portalAppName: string) {
@@ -44,9 +44,9 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
         }
     }
 
-    private log(level: LogLevel, message: string, error?: Error | string, portalAppName?: string | undefined | null) {
+    private _log(level: LogLevel, message: string, error?: Error | string, portalAppName?: string | undefined | null) {
         if (error) {
-            const serializedError = typeof (error) === 'string' ? error : this.serializeError(error);
+            const serializedError = typeof (error) === 'string' ? error : this._serializeError(error);
             message = `${message}\n${serializedError}`;
         }
 
@@ -56,30 +56,30 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
             message
         };
 
-        this.unsentLogMessages.push(logMessage);
+        this._unsentLogMessages.push(logMessage);
 
-        if (this.timeout) {
-            clearTimeout(this.timeout);
+        if (this._timeout) {
+            clearTimeout(this._timeout);
         }
-        setTimeout(this.send.bind(this), SEND_INTERVAL);
+        setTimeout(this._send.bind(this), SEND_INTERVAL);
     }
 
-    private send() {
-        this.timeout = null;
+    private _send() {
+        this._timeout = null;
 
-        const messages = [...this.unsentLogMessages];
+        const messages = [...this._unsentLogMessages];
         if (messages.length === 0) {
             return;
         }
 
         try {
-            this.restService.post('/log', messages);
+            this._restService.post('/log', messages);
         } catch (e) {
             console.error('Unable to send error message to server', e);
         }
     }
 
-    private serializeError(error: Error) {
+    private _serializeError(error: Error) {
         const msg = JSON.stringify({...error}, null, 2);
         return msg.replace(/\\n/g, '\n');
     }

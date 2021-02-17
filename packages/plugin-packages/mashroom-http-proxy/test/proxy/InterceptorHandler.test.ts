@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import type {MashroomHttpProxyInterceptor} from '../../type-definitions';

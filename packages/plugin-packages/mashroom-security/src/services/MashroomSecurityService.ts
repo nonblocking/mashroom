@@ -1,9 +1,9 @@
 
 import querystring from 'querystring';
-// @ts-ignore
 import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 
-import type {ExpressRequest, ExpressResponse, MashroomLogger,} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
+import type {MashroomLogger,} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 import type {
     MashroomSecurityPermission,
@@ -32,14 +32,14 @@ const privatePropsMap: WeakMap<MashroomSecurityService, {
 
 export default class MashroomSecurityService implements MashroomSecurityServiceType {
 
-    constructor(private securityProviderName: string, private forwardQueryHintsToProvider: Array<string> | undefined | null,
-                securityProviderRegistry: MashroomSecurityProviderRegistry, private aclChecker: MashroomSecurityACLChecker) {
+    constructor(private _securityProviderName: string, private _forwardQueryHintsToProvider: Array<string> | undefined | null,
+                securityProviderRegistry: MashroomSecurityProviderRegistry, private _aclChecker: MashroomSecurityACLChecker) {
         privatePropsMap.set(this, {
             securityProviderRegistry,
         });
     }
 
-    getUser(request: ExpressRequest): MashroomSecurityUser | null | undefined {
+    getUser(request: Request): MashroomSecurityUser | null | undefined {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
         const securityProvider = this._getSecurityProvider(logger);
@@ -65,29 +65,29 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    isAuthenticated(request: ExpressRequest): boolean {
+    isAuthenticated(request: Request): boolean {
         return !!this.getUser(request);
     }
 
-    isInRole(request: ExpressRequest, roleName: string): boolean {
+    isInRole(request: Request, roleName: string): boolean {
         const user = this.getUser(request);
         return !!user && user.roles && user.roles.indexOf(roleName) !== -1;
     }
 
-    isAdmin(request: ExpressRequest): boolean {
+    isAdmin(request: Request): boolean {
         return this.isInRole(request, ROLE_ADMINISTRATOR);
     }
 
-    async checkACL(request: ExpressRequest): Promise<boolean> {
+    async checkACL(request: Request): Promise<boolean> {
         if (this.isAdmin(request)) {
             return true;
         }
 
         const user = this.getUser(request);
-        return this.aclChecker.allowed(request, user);
+        return this._aclChecker.allowed(request, user);
     }
 
-    async addRoleDefinition(request: ExpressRequest, roleDefinition: MashroomSecurityRoleDefinition): Promise<void> {
+    async addRoleDefinition(request: Request, roleDefinition: MashroomSecurityRoleDefinition): Promise<void> {
         if (!roleDefinition.id) {
             throw new Error('Cannot add role definition because id is required');
         }
@@ -104,12 +104,12 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    async getExistingRoles(request: ExpressRequest): Promise<Array<MashroomSecurityRoleDefinition>> {
+    async getExistingRoles(request: Request): Promise<Array<MashroomSecurityRoleDefinition>> {
         const roleDefinitionsCollection = await this._getRoleDefinitionsCollection(request);
         return await roleDefinitionsCollection.find();
     }
 
-    async updateResourcePermission(request: ExpressRequest, resource: MashroomSecurityProtectedResource): Promise<void> {
+    async updateResourcePermission(request: Request, resource: MashroomSecurityProtectedResource): Promise<void> {
         // Remove permissions without roles
         if (resource.permissions) {
             resource.permissions = resource.permissions.filter((p) => p.roles && p.roles.length > 0);
@@ -148,12 +148,12 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    async getResourcePermissions(request: ExpressRequest, resourceType: MashroomSecurityResourceType, resourceKey: string): Promise<MashroomSecurityProtectedResource | null | undefined> {
+    async getResourcePermissions(request: Request, resourceType: MashroomSecurityResourceType, resourceKey: string): Promise<MashroomSecurityProtectedResource | null | undefined> {
         const resourcePermissionCollection = await this._getResourcePermissionsCollection(request);
         return await this._findResourcePermission(resourcePermissionCollection, resourceType, resourceKey);
     }
 
-    async checkResourcePermission(request: ExpressRequest, resourceType: string, resourceKey: string, permission: MashroomSecurityPermission, allowIfNoResourceDefinitionFound = false): Promise<boolean> {
+    async checkResourcePermission(request: Request, resourceType: string, resourceKey: string, permission: MashroomSecurityPermission, allowIfNoResourceDefinitionFound = false): Promise<boolean> {
         if (this.isAdmin(request)) {
             return true;
         }
@@ -174,7 +174,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return matchingPermissions.some((p) => p.roles.some((r) => user && user.roles.indexOf(r) !== -1));
     }
 
-    async canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean> {
+    async canAuthenticateWithoutUserInteraction(request: Request): Promise<boolean> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
         const securityProvider = this._getSecurityProvider(logger);
         if (securityProvider) {
@@ -187,7 +187,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return false;
     }
 
-    async authenticate(request: ExpressRequest, response: ExpressResponse): Promise<MashroomSecurityAuthenticationResult> {
+    async authenticate(request: Request, response: Response): Promise<MashroomSecurityAuthenticationResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
         if (this.isAuthenticated(request)) {
@@ -217,7 +217,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         };
     }
 
-    async checkAuthentication(request: ExpressRequest): Promise<void> {
+    async checkAuthentication(request: Request): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
         const securityProvider = this._getSecurityProvider(logger);
@@ -230,7 +230,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    getAuthenticationExpiration(request: ExpressRequest): number | null | undefined {
+    getAuthenticationExpiration(request: Request): number | null | undefined {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
         const securityProvider = this._getSecurityProvider(logger);
@@ -243,7 +243,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    async revokeAuthentication(request: ExpressRequest): Promise<void> {
+    async revokeAuthentication(request: Request): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
         const securityProvider = this._getSecurityProvider(logger);
@@ -258,7 +258,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         }
     }
 
-    async login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult> {
+    async login(request: Request, username: string, password: string): Promise<MashroomSecurityLoginResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
 
         if (!username?.trim() || !password?.trim()) {
@@ -290,9 +290,9 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     private _getSecurityProvider(logger: MashroomLogger): MashroomSecurityProvider | undefined | null {
-        const securityProvider = this.getSecurityProvider(this.securityProviderName);
+        const securityProvider = this.getSecurityProvider(this._securityProviderName);
         if (!securityProvider) {
-            logger.warn(`Cannot authenticate because the security provider is not (yet) loaded: ${this.securityProviderName}`);
+            logger.warn(`Cannot authenticate because the security provider is not (yet) loaded: ${this._securityProviderName}`);
             return null;
         }
         return securityProvider;
@@ -302,7 +302,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return collection.findOne({type, key});
     }
 
-    private async _getResourcePermissionsCollection(request: ExpressRequest): Promise<MashroomStorageCollection<MashroomSecurityProtectedResource>> {
+    private async _getResourcePermissionsCollection(request: Request): Promise<MashroomStorageCollection<MashroomSecurityProtectedResource>> {
         const storageService = request.pluginContext.services.storage.service;
         return storageService.getCollection(RESOURCE_PERMISSIONS_COLLECTION_NAME);
     }
@@ -311,12 +311,12 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return collection.findOne({id});
     }
 
-    private async _getRoleDefinitionsCollection(request: ExpressRequest): Promise<MashroomStorageCollection<MashroomSecurityRoleDefinition>> {
+    private async _getRoleDefinitionsCollection(request: Request): Promise<MashroomStorageCollection<MashroomSecurityRoleDefinition>> {
         const storageService = request.pluginContext.services.storage.service;
         return storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
     }
 
-    private async _createNewSession(request: ExpressRequest): Promise<void> {
+    private async _createNewSession(request: Request): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
         logger.debug('Invalidating session');
 
@@ -330,9 +330,9 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         })
     }
 
-    private _getAuthenticationHints(request: ExpressRequest): any {
+    private _getAuthenticationHints(request: Request): any {
         const {query} = request;
-        const forwardQueryParams = this.forwardQueryHintsToProvider;
+        const forwardQueryParams = this._forwardQueryHintsToProvider;
         const hints: any = {};
         if (!Array.isArray(forwardQueryParams) || forwardQueryParams.length === 0) {
             return {};
@@ -345,7 +345,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return hints;
     }
 
-    private _removeAuthenticationHintsFromUrl(request: ExpressRequest, hints: any): void {
+    private _removeAuthenticationHintsFromUrl(request: Request, hints: any): void {
         const queryParams: any = {...request.query};
         Object.keys(hints).forEach((key) => delete queryParams[key]);
         const query = querystring.stringify(queryParams);

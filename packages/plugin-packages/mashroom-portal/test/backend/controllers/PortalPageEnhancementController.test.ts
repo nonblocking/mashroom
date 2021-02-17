@@ -1,6 +1,5 @@
 
 import {Writable} from 'stream';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import '../../../src/backend/context/global_portal_context';
 import PortalPageEnhancementController from '../../../src/backend/controllers/PortalPageEnhancementController';

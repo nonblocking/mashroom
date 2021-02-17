@@ -14,54 +14,54 @@ const DEFAULT_TTL_SEC = 10;
 
 export default class MashroomStorageMemoryCacheWrapper implements MashroomStorage {
 
-    private readonly collectionMap: CollectionMap;
-    private readonly logger: MashroomLogger;
+    private _collectionMap: CollectionMap;
+    private _logger: MashroomLogger;
 
-    constructor(private delegate: MashroomStorage, private config: MemoryCacheConfig, private pluginContextHolder: MashroomPluginContextHolder) {
-        this.collectionMap = {};
-        this.logger = this.pluginContextHolder.getPluginContext().loggerFactory('mashroom.storage.memorycache');
+    constructor(private _delegate: MashroomStorage, private _config: MemoryCacheConfig, private _pluginContextHolder: MashroomPluginContextHolder) {
+        this._collectionMap = {};
+        this._logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.storage.memorycache');
     }
 
     async getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
-        if (this.collectionMap[name]) {
-            return this.collectionMap[name];
+        if (this._collectionMap[name]) {
+            return this._collectionMap[name];
         }
 
-        let collection = await this.delegate.getCollection<T>(name);
+        let collection = await this._delegate.getCollection<T>(name);
 
         try {
-            if (this.cacheEnabledForCollection(name)) {
-                collection = new MashroomStorageCollectionMemoryCacheWrapper(name, collection, this.ttlSecForCollection(name), this.invalidateOnUpdateForCollection(name), this.pluginContextHolder)
+            if (this._cacheEnabledForCollection(name)) {
+                collection = new MashroomStorageCollectionMemoryCacheWrapper(name, collection, this._ttlSecForCollection(name), this._invalidateOnUpdateForCollection(name), this._pluginContextHolder)
             }
         } catch (e) {
-            this.logger.error(`Enabling memory cache for collection '${name}' failed`, e);
+            this._logger.error(`Enabling memory cache for collection '${name}' failed`, e);
         }
 
-        this.collectionMap[name] = collection;
+        this._collectionMap[name] = collection;
         return collection;
     }
 
-    private cacheEnabledForCollection(name: string): boolean {
-        if (this.config.enabled === true) {
+    private _cacheEnabledForCollection(name: string): boolean {
+        if (this._config.enabled === true) {
             // Could be disabled per collection
-            return this.getCollectionProperties(name).enabled !== false;
+            return this._getCollectionProperties(name).enabled !== false;
         }
-        return this.getCollectionProperties(name).enabled === true;
+        return this._getCollectionProperties(name).enabled === true;
     }
 
-    private ttlSecForCollection(name: string): number {
-        return this.getCollectionProperties(name).ttlSec || this.config.ttlSec || DEFAULT_TTL_SEC;
+    private _ttlSecForCollection(name: string): number {
+        return this._getCollectionProperties(name).ttlSec || this._config.ttlSec || DEFAULT_TTL_SEC;
     }
 
-    private invalidateOnUpdateForCollection(name: string): boolean {
-        if (this.config.invalidateOnUpdate === true) {
+    private _invalidateOnUpdateForCollection(name: string): boolean {
+        if (this._config.invalidateOnUpdate === true) {
             // Could be disabled per collection
-            return this.getCollectionProperties(name).invalidateOnUpdate !== false;
+            return this._getCollectionProperties(name).invalidateOnUpdate !== false;
         }
-        return this.getCollectionProperties(name).invalidateOnUpdate === true;
+        return this._getCollectionProperties(name).invalidateOnUpdate === true;
     }
 
-    private getCollectionProperties(name: string): MemoryCacheProperties {
-        return (this.config.collections && this.config.collections[name]) || {};
+    private _getCollectionProperties(name: string): MemoryCacheProperties {
+        return (this._config.collections && this._config.collections[name]) || {};
     }
 }

@@ -8,10 +8,10 @@ import type {MashroomSecurityProviderRegistry} from '../../../type-definitions/i
 
 export default class MashroomSecurityProviderPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomSecurityProviderRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.security.plugin.loader');
+    constructor(private _registry: MashroomSecurityProviderRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.security.plugin.loader');
     }
 
     get name(): string {
@@ -25,12 +25,12 @@ export default class MashroomSecurityProviderPluginLoader implements MashroomPlu
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = plugin.requireBootstrap();
         const provider: MashroomSecurityProvider = await bootstrap(plugin.name, config, contextHolder);
-        this.logger.info(`Registering security provider plugin: ${plugin.name}`);
-        this.registry.register(plugin.name, provider);
+        this._logger.info(`Registering security provider plugin: ${plugin.name}`);
+        this._registry.register(plugin.name, provider);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this.logger.info(`Unregistering security provider plugin: ${plugin.name}`);
-        this.registry.unregister(plugin.name);
+        this._logger.info(`Unregistering security provider plugin: ${plugin.name}`);
+        this._registry.unregister(plugin.name);
     }
 }

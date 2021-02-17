@@ -1,4 +1,5 @@
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+
+import type {Request} from 'express';
 import type {
     MashroomPortalApp,
     MashroomPortalAppEnhancementPlugin,
@@ -10,7 +11,7 @@ export default class CopyExtraDataPortalAppEnhancementPlugin implements Mashroom
 
     async enhancePortalAppSetup(portalAppSetup: MashroomPortalAppSetup,
                           portalApp: MashroomPortalApp,
-                          req: ExpressRequest): Promise<MashroomPortalAppSetup> {
+                          req: Request): Promise<MashroomPortalAppSetup> {
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
 
         const user = securityService.getUser(req);

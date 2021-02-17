@@ -16,33 +16,33 @@ const COLLECTION_POSTIFX = '.json';
  */
 export default class MashroomStorageFilestore implements MashroomStorage {
 
-    private readonly collections: CollectionMap;
-    private dataFolder: string;
+    private _collections: CollectionMap;
+    private _dataFolder: string;
 
-    constructor(dataFolder: string, serverRootFolder: string, private checkExternalChangePeriodMs: number,
-                private prettyPrintJson: boolean, private loggerFactory: MashroomLoggerFactory) {
-        this.collections = {};
-        const logger = loggerFactory('mashroom.storage.filestore');
+    constructor(dataFolder: string, serverRootFolder: string, private _checkExternalChangePeriodMs: number,
+                private _prettyPrintJson: boolean, private _loggerFactory: MashroomLoggerFactory) {
+        this._collections = {};
+        const logger = _loggerFactory('mashroom.storage.filestore');
 
         if (!isAbsolute(dataFolder)) {
-            this.dataFolder = resolve(serverRootFolder, dataFolder);
+            this._dataFolder = resolve(serverRootFolder, dataFolder);
         } else {
-            this.dataFolder = dataFolder;
+            this._dataFolder = dataFolder;
         }
 
-        logger.info(`File storage provider data folder: ${this.dataFolder}`);
-        ensureDirSync(this.dataFolder);
+        logger.info(`File storage provider data folder: ${this._dataFolder}`);
+        ensureDirSync(this._dataFolder);
     }
 
     async getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
-        const existingCollection = this.collections[name];
+        const existingCollection = this._collections[name];
         if (existingCollection) {
             return existingCollection;
         }
 
-        const source = resolve(this.dataFolder, name + COLLECTION_POSTIFX);
-        const collection = new MashroomStorageCollectionFilestore<T>(source, this.checkExternalChangePeriodMs, this.prettyPrintJson, this.loggerFactory);
-        this.collections[name] = collection;
+        const source = resolve(this._dataFolder, name + COLLECTION_POSTIFX);
+        const collection = new MashroomStorageCollectionFilestore<T>(source, this._checkExternalChangePeriodMs, this._prettyPrintJson, this._loggerFactory);
+        this._collections[name] = collection;
         return collection;
     }
 

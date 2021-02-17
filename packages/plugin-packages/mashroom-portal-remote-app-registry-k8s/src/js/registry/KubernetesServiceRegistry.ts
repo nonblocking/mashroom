@@ -4,7 +4,7 @@ import type {KubernetesService, KubernetesServiceRegistry as KubernetesServiceRe
 
 export default class KubernetesServiceRegistry implements KubernetesServiceRegistryType {
 
-    private readonly _services: Array<KubernetesService>;
+    private _services: Array<KubernetesService>;
 
     constructor() {
         this._services = [];

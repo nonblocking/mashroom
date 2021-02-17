@@ -5,37 +5,37 @@ const ENCODED_STATE_QUERY_PARAM_NAME = 'mrps';
 
 export default class MashroomPortalStateServiceImpl implements MashroomPortalMasterStateService {
 
-    private urlState: any;
-    private additionalQueryParams: any;
-    private localStorage: Storage | undefined | null;
-    private sessionStorage: Storage | undefined | null;
+    private _urlState: any;
+    private _additionalQueryParams: any;
+    private _localStorage: Storage | undefined | null;
+    private _sessionStorage: Storage | undefined | null;
 
     constructor() {
-        this.localStorage = global.localStorage;
-        this.sessionStorage = global.sessionStorage;
-        this.urlState = {};
-        this.additionalQueryParams = {};
+        this._localStorage = global.localStorage;
+        this._sessionStorage = global.sessionStorage;
+        this._urlState = {};
+        this._additionalQueryParams = {};
 
-        const queryParams = this.getQueryParams();
+        const queryParams = this._getQueryParams();
         for (const paramName in queryParams) {
             if (queryParams.hasOwnProperty(paramName)) {
                 // Process the encoded state
                 if (paramName === ENCODED_STATE_QUERY_PARAM_NAME) {
                     try {
-                        this.urlState = JSON.parse(atob(queryParams[ENCODED_STATE_QUERY_PARAM_NAME]));
+                        this._urlState = JSON.parse(atob(queryParams[ENCODED_STATE_QUERY_PARAM_NAME]));
                     } catch (e) {
                         console.error(`Unable to decode url parameter ${ENCODED_STATE_QUERY_PARAM_NAME}`, e);
                     }
                 } else {
                     // Take over other query params as well
-                    this.additionalQueryParams[paramName] = decodeURIComponent(queryParams[paramName]);
+                    this._additionalQueryParams[paramName] = decodeURIComponent(queryParams[paramName]);
                 }
             }
         }
     }
 
     getStateProperty(key: string) {
-        return this.internalGetStateProperty(key);
+        return this._getStateProperty(key);
     }
 
     encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: Record<string, string> | undefined | null, hash?: string | undefined | null) {
@@ -50,30 +50,30 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
 
     setUrlStateProperty(key: string, value: any | undefined | null) {
         if (!value) {
-            delete this.urlState[key];
+            delete this._urlState[key];
         } else {
-            this.urlState[key] = value;
+            this._urlState[key] = value;
         }
 
         // Update URL
         const baseUrl = `${global.location.protocol}//${global.location.host}${global.location.pathname}`;
         const hash = global.location.hash ? global.location.hash.substr(1) : null;
-        const url = this.encodeStateIntoUrl(baseUrl, this.urlState, this.additionalQueryParams, hash);
+        const url = this.encodeStateIntoUrl(baseUrl, this._urlState, this._additionalQueryParams, hash);
 
         history.pushState({}, '', url);
     }
 
     setSessionStateProperty(key: string, value: any) {
-        this.sessionStorage && this.sessionStorage.setItem(key, this.toStorableString(value));
+        this._sessionStorage && this._sessionStorage.setItem(key, this._toStorableString(value));
     }
 
     setLocalStoreStateProperty(key: string, value: any) {
-        this.localStorage && this.localStorage.setItem(key, this.toStorableString(value));
+        this._localStorage && this._localStorage.setItem(key, this._toStorableString(value));
     }
 
     withKeyPrefix(prefix: string): MashroomPortalStateService {
         return {
-            getStateProperty: (key: string) => this.internalGetStateProperty(key, prefix),
+            getStateProperty: (key: string) => this._getStateProperty(key, prefix),
             setUrlStateProperty: this.setUrlStateProperty,
             encodeStateIntoUrl: this.encodeStateIntoUrl,
             setSessionStateProperty: (key: string, value: any) => this.setSessionStateProperty(prefix + key, value),
@@ -81,21 +81,21 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
         };
     }
 
-    private toStorableString(value: any) {
+    private _toStorableString(value: any) {
         if (typeof (value) === 'string') {
             return value;
         }
         return JSON.stringify(value);
     }
 
-    private internalGetStateProperty(key: string, prefix = '') {
-        return this.urlState[key] ||
-            this.additionalQueryParams[key] ||
-            (this.sessionStorage && this.sessionStorage.getItem(prefix + key)) ||
-            (this.localStorage && this.localStorage.getItem(prefix + key));
+    private _getStateProperty(key: string, prefix = '') {
+        return this._urlState[key] ||
+            this._additionalQueryParams[key] ||
+            (this._sessionStorage && this._sessionStorage.getItem(prefix + key)) ||
+            (this._localStorage && this._localStorage.getItem(prefix + key));
     }
 
-    private getQueryParams() {
+    private _getQueryParams() {
         const queryString = global.location.search;
         const params: Record<string, string> = {};
 

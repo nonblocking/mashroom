@@ -29,14 +29,14 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo1'].length).toBe(1);
+        expect(messageBus._subscriptionMap['foo1'].length).toBe(1);
 
         messageBus.publish('foo1', {
             'Hello': 'World',
         });
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo1'].length).toBe(0);
+        expect(messageBus._subscriptionMap['foo1'].length).toBe(0);
     });
 
     it('should not fail when no subscriber', () => {
@@ -55,12 +55,12 @@ describe('MashroomPortalMessageBusImpl', () => {
         messageBus.subscribe('foo2', callback);
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo2'].length).toBe(1);
+        expect(messageBus._subscriptionMap['foo2'].length).toBe(1);
 
         messageBus.unsubscribe('foo2', callback);
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo2'].length).toBe(0);
+        expect(messageBus._subscriptionMap['foo2'].length).toBe(0);
     });
 
     it('should prevent duplicate subscriptions', () => {
@@ -72,7 +72,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         messageBus.subscribe('foo6', callback);
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo6'].length).toBe(1);
+        expect(messageBus._subscriptionMap['foo6'].length).toBe(1);
     });
 
     it('should work over multiple apps', (done) => {
@@ -157,7 +157,7 @@ describe('MashroomPortalMessageBusImpl', () => {
     it('returns the user private topic of the authenticated user', () => {
         const messageBus = new MashroomPortalMessageBusImpl();
         // @ts-ignore
-        messageBus.remoteMessageClient = {};
+        messageBus._remoteMessageClient = {};
 
         expect(messageBus.getRemoteUserPrivateTopic()).toBe('user/testuser');
     });
@@ -165,7 +165,7 @@ describe('MashroomPortalMessageBusImpl', () => {
     it('returns the user private topic of another user', () => {
         const messageBus = new MashroomPortalMessageBusImpl();
         // @ts-ignore
-        messageBus.remoteMessageClient = {};
+        messageBus._remoteMessageClient = {};
 
         expect(messageBus.getRemoteUserPrivateTopic('foo@test.com')).toBe('user/foo@test.com');
     });
@@ -180,16 +180,16 @@ describe('MashroomPortalMessageBusImpl', () => {
         messageBusApp2.subscribe('foo', () => { /* nothing to do */ });
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo'].length).toBe(2);
+        expect(messageBus._subscriptionMap['foo'].length).toBe(2);
         // @ts-ignore
-        expect(messageBus.interceptors.length).toBe(1);
+        expect(messageBus._interceptors.length).toBe(1);
 
         messageBus.unsubscribeEverythingFromApp('app1');
 
         // @ts-ignore
-        expect(messageBus.subscriptionMap['foo'].length).toBe(1);
+        expect(messageBus._subscriptionMap['foo'].length).toBe(1);
         // @ts-ignore
-        expect(messageBus.interceptors.length).toBe(0);
+        expect(messageBus._interceptors.length).toBe(0);
     });
 
 });

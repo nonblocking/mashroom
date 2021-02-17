@@ -28,8 +28,8 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.controlsVisible = false;
         this.dragRunning = false;
 
-        this.portalAppService.registerAppLoadedListener(this.appLoadedListener.bind(this));
-        this.portalAppService.registerAppAboutToUnloadListener(this.appAboutToUnloadListener.bind(this));
+        this.portalAppService.registerAppLoadedListener(this._appLoadedListener.bind(this));
+        this.portalAppService.registerAppAboutToUnloadListener(this._appAboutToUnloadListener.bind(this));
     }
 
     showPortalAppControls() {
@@ -39,7 +39,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
 
             if (app.instanceId && parent && parent.className.indexOf(CSS_CLASS_APP_CONTROLS) === -1) {
                 // No control wrapper yet
-                const controlsWrapper = this.createControlsWrapper(app.id, app.pluginName, app.instanceId);
+                const controlsWrapper = this._createControlsWrapper(app.id, app.pluginName, app.instanceId);
                 parent.insertBefore(controlsWrapper, appWrapper);
                 controlsWrapper.appendChild(appWrapper);
             }
@@ -99,10 +99,10 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
                 }
             }
             for (let i = 0; i < portalAppElements.length; i++) {
-                this.createDropZone(areaElem as HTMLElement, portalAppElements[i] as HTMLElement, i);
+                this._createDropZone(areaElem as HTMLElement, portalAppElements[i] as HTMLElement, i);
             }
 
-            this.createDropZone(areaElem as HTMLElement, null, portalAppElements.length);
+            this._createDropZone(areaElem as HTMLElement, null, portalAppElements.length);
         });
     }
 
@@ -134,17 +134,17 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         );
     }
 
-    private onDragOverDropZone(event: DragEvent, dropZone: HTMLElement) {
+    private _onDragOverDropZone(event: DragEvent, dropZone: HTMLElement) {
         event.preventDefault();
 
         dropZone.classList.add('drag-over');
     }
 
-    private onDragLeaveDropZone(event: DragEvent, dropZone: HTMLElement) {
+    private _onDragLeaveDropZone(event: DragEvent, dropZone: HTMLElement) {
         dropZone.classList.remove('drag-over');
     }
 
-    private onDropDropZone(event: DragEvent, areaElement: HTMLElement, position: number) {
+    private _onDropDropZone(event: DragEvent, areaElement: HTMLElement, position: number) {
         event.preventDefault();
 
         const id = event.dataTransfer && event.dataTransfer.getData('portal-app-id');
@@ -156,22 +156,22 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
             // Force drag end and remove the drop zone, otherwise the app insert algorithm gets confused
             this.dragEnd();
 
-            this.addApp(id, portalAppName, instanceId, areaElement.id, position);
+            this._addApp(id, portalAppName, instanceId, areaElement.id, position);
         }
     }
 
-    private createDropZone(areaElement: HTMLElement, beforeApp: Node | null, position: number) {
+    private _createDropZone(areaElement: HTMLElement, beforeApp: Node | null, position: number) {
         const dropZone = document.createElement('div');
         dropZone.className = CSS_CLASS_APP_DROP_ZONE;
-        dropZone.addEventListener('dragover', (event: DragEvent) => this.onDragOverDropZone(event, dropZone));
-        dropZone.addEventListener('dragleave', (event: DragEvent) => this.onDragLeaveDropZone(event, dropZone));
-        dropZone.addEventListener('drop', (event: DragEvent) => this.onDropDropZone(event, areaElement, position));
+        dropZone.addEventListener('dragover', (event: DragEvent) => this._onDragOverDropZone(event, dropZone));
+        dropZone.addEventListener('dragleave', (event: DragEvent) => this._onDragLeaveDropZone(event, dropZone));
+        dropZone.addEventListener('drop', (event: DragEvent) => this._onDropDropZone(event, areaElement, position));
 
         // console.info('Inserting dropzone before ', beforeApp, position);
         areaElement.insertBefore(dropZone, beforeApp);
     }
 
-    private createControlsWrapper(loadedAppId: string, portalAppName: string, instanceId: string) {
+    private _createControlsWrapper(loadedAppId: string, portalAppName: string, instanceId: string) {
         const controlsWrapper = document.createElement('div');
         controlsWrapper.className = CSS_CLASS_APP_CONTROLS;
         const removeButton = document.createElement('div');
@@ -185,15 +185,15 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         controlsWrapper.appendChild(moveButton);
         controlsWrapper.appendChild(configureButton);
 
-        removeButton.addEventListener('click', this.removeApp.bind(this, loadedAppId, portalAppName, instanceId));
-        moveButton.addEventListener('dragstart', (e: DragEvent) => this.onMoveAppDragStart(e, loadedAppId, portalAppName, instanceId));
-        moveButton.addEventListener('dragend', this.onMoveAppDragEnd.bind(this));
-        configureButton.addEventListener('click', this.configureApp.bind(this, loadedAppId, portalAppName, instanceId));
+        removeButton.addEventListener('click', this._removeApp.bind(this, loadedAppId, portalAppName, instanceId));
+        moveButton.addEventListener('dragstart', (e: DragEvent) => this._onMoveAppDragStart(e, loadedAppId, portalAppName, instanceId));
+        moveButton.addEventListener('dragend', this._onMoveAppDragEnd.bind(this));
+        configureButton.addEventListener('click', this._configureApp.bind(this, loadedAppId, portalAppName, instanceId));
 
         return controlsWrapper;
     }
 
-    private addApp(loadedAppId: string | undefined | null, portalAppName: string, instanceId: string | undefined | null, areaId: string, position: number) {
+    private _addApp(loadedAppId: string | undefined | null, portalAppName: string, instanceId: string | undefined | null, areaId: string, position: number) {
         if (instanceId) {
             // Move
             this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, null).then(
@@ -215,13 +215,13 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         }
     }
 
-    private appLoadedListener() {
+    private _appLoadedListener() {
         if (this.controlsVisible) {
             this.showPortalAppControls();
         }
     }
 
-    private appAboutToUnloadListener(loadedApp: MashroomPortalLoadedPortalApp) {
+    private _appAboutToUnloadListener(loadedApp: MashroomPortalLoadedPortalApp) {
         if (this.controlsVisible) {
             const controlsWrapper = loadedApp.portalAppWrapperElement.parentElement;
             if (controlsWrapper && controlsWrapper.className === CSS_CLASS_APP_CONTROLS) {
@@ -235,12 +235,12 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         }
     }
 
-    private removeApp(id: string, portalAppName: string, instanceId: string) {
+    private _removeApp(id: string, portalAppName: string, instanceId: string) {
         this.portalAppService.unloadApp(id);
         this.portalAdminService.removeAppInstance(portalAppName, instanceId);
     }
 
-    private onMoveAppDragStart(event: DragEvent, loadedAppId: string, portalAppName: string, instanceId: string | undefined | null) {
+    private _onMoveAppDragStart(event: DragEvent, loadedAppId: string, portalAppName: string, instanceId: string | undefined | null) {
         const dragImage = document.createElement('div');
         dragImage.className = 'mashroom-portal-admin-drag-ghost';
         dragImage.innerHTML = `<span>${portalAppName}</span>`;
@@ -252,7 +252,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.prepareDrag(event, loadedAppId, portalAppName, instanceId);
     }
 
-    private onMoveAppDragEnd() {
+    private _onMoveAppDragEnd() {
         Array.from(document.querySelectorAll('.drag-ghost')).forEach((dragGhost) => {
             document.body && document.body.removeChild(dragGhost);
         });
@@ -260,7 +260,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.dragEnd();
     }
 
-    private configureApp(loadedAppId: string, portalAppName: string, instanceId: string | undefined | null) {
+    private _configureApp(loadedAppId: string, portalAppName: string, instanceId: string | undefined | null) {
         this.store.dispatch(setSelectedPortalApp(loadedAppId, portalAppName, instanceId));
         this.store.dispatch(setShowModal(DIALOG_NAME_PORTAL_APP_CONFIGURE, true));
     }

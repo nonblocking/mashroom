@@ -1,7 +1,6 @@
 
 import fs from 'fs';
 import path from 'path';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import MashroomStorageFilestore from '../src/storage/MashroomStorageFilestore';

@@ -1,8 +1,8 @@
 
+import type {Request} from 'express';
 import type {
     MashroomPluginContextHolder,
     MashroomPluginConfig,
-    ExpressRequest,
 } from '@mashroom/mashroom/type-definitions';
 
 export type MashroomMessagingSubscriberCallback = (
@@ -58,7 +58,7 @@ export interface MashroomMessagingService {
      * Throws an exception if there is no authenticated user
      */
     subscribe(
-        req: ExpressRequest,
+        req: Request,
         topic: string,
         callback: MashroomMessagingSubscriberCallback,
     ): Promise<void>;
@@ -76,7 +76,7 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    publish(req: ExpressRequest, topic: string, data: any): Promise<void>;
+    publish(req: Request, topic: string, data: any): Promise<void>;
 
     /**
      * The private topic only the current user can access.
@@ -85,13 +85,13 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    getUserPrivateTopic(req: ExpressRequest): string;
+    getUserPrivateTopic(req: Request): string;
 
     /**
      * The connect path to send publish or subscribe via WebSocket.
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
      */
-    getWebSocketConnectPath(req: ExpressRequest): string | null | undefined;
+    getWebSocketConnectPath(req: Request): string | null | undefined;
 }
 
 export type MashroomExternalMessageListener = (

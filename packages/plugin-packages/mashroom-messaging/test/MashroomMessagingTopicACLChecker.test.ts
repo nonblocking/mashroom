@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomMessageTopicACLChecker from '../src/services/MashroomMessageTopicACLChecker';
 

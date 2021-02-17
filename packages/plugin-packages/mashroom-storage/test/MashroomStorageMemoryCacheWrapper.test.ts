@@ -43,9 +43,9 @@ describe('MashroomStorageMemoryCacheWrapper', () => {
         expect(collection).toBeTruthy();
         expect(collection instanceof MashroomStorageCollectionMemoryCacheWrapper).toBeTruthy();
         // @ts-ignore
-        expect(collection.ttlSec).toBe(10);
+        expect(collection._ttlSec).toBe(10);
         // @ts-ignore
-        expect(collection.invalidateOnUpdate).toBe(true);
+        expect(collection._invalidateOnUpdate).toBe(true);
         expect(mockGetCollection.mock.calls.length).toBe(1);
     });
 
@@ -56,9 +56,9 @@ describe('MashroomStorageMemoryCacheWrapper', () => {
 
         expect(collection instanceof MashroomStorageCollectionMemoryCacheWrapper).toBeTruthy();
         // @ts-ignore
-        expect(collection.ttlSec).toBe(100);
+        expect(collection._ttlSec).toBe(100);
         // @ts-ignore
-        expect(collection.invalidateOnUpdate).toBe(false);
+        expect(collection._invalidateOnUpdate).toBe(false);
     });
 
     it('does not wrap the collection if enabled is false', async () => {

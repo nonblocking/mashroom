@@ -27,21 +27,21 @@ type OpenPromise = {
 
 export default class RemoteMessagingClient {
 
-    webSocket: WebSocket | undefined | null;
-    connected: boolean;
-    messageHandler: ((message: any, topic: string) => void) | null;
-    openPromises: Array<OpenPromise>;
-    connectRetries: number;
-    subscribedTopics: Array<string>;
-    timer: ReturnType<typeof setTimeout> | undefined | null;
+    private _webSocket: WebSocket | undefined | null;
+    private _connected: boolean;
+    private _messageHandler: ((message: any, topic: string) => void) | null;
+    private _openPromises: Array<OpenPromise>;
+    private _connectRetries: number;
+    private _subscribedTopics: Array<string>;
+    private _timer: ReturnType<typeof setTimeout> | undefined | null;
 
-    constructor(private connectUrl: string) {
-        this.webSocket = null;
-        this.connected = false;
-        this.messageHandler = null;
-        this.openPromises = [];
-        this.connectRetries = 0;
-        this.subscribedTopics = [];
+    constructor(private _connectUrl: string) {
+        this._webSocket = null;
+        this._connected = false;
+        this._messageHandler = null;
+        this._openPromises = [];
+        this._connectRetries = 0;
+        this._subscribedTopics = [];
     }
 
     subscribe(topic: string): Promise<void> {
@@ -50,10 +50,10 @@ export default class RemoteMessagingClient {
             command: 'subscribe',
             topic,
         };
-        return this.webSocketSend(subscribeRequest).then(
+        return this._webSocketSend(subscribeRequest).then(
             () => {
-                if (this.subscribedTopics.indexOf(topic) === -1) {
-                    this.subscribedTopics.push(topic);
+                if (this._subscribedTopics.indexOf(topic) === -1) {
+                    this._subscribedTopics.push(topic);
                 }
             }
         );
@@ -65,9 +65,9 @@ export default class RemoteMessagingClient {
             command: 'unsubscribe',
             topic,
         };
-        return this.webSocketSend(subscribeRequest).then(
+        return this._webSocketSend(subscribeRequest).then(
             () => {
-                this.subscribedTopics = this.subscribedTopics.filter((t) => t !== topic);
+                this._subscribedTopics = this._subscribedTopics.filter((t) => t !== topic);
             }
         );
     }
@@ -79,73 +79,73 @@ export default class RemoteMessagingClient {
             topic,
             message,
         };
-        return this.webSocketSend(subscribeRequest);
+        return this._webSocketSend(subscribeRequest);
     }
 
     onMessage(handler: (message: any, topic: string) => void) {
-        this.messageHandler = handler;
+        this._messageHandler = handler;
     }
 
-    private webSocketSend(message: any): Promise<void> {
+    private _webSocketSend(message: any): Promise<void> {
         const messageId = message.messageId;
         if (!messageId) {
             return Promise.reject('Message has no messageId property!');
         }
-        const webSocket = this.getWebSocket();
+        const webSocket = this._getWebSocket();
         if (webSocket) {
             return new Promise((resolve, reject) => {
-                this.sendWhenReady(webSocket, Date.now(), messageId, JSON.stringify(message), resolve, reject);
+                this._sendWhenReady(webSocket, Date.now(), messageId, JSON.stringify(message), resolve, reject);
             });
         }
         return Promise.reject('No WebSocket connection!');
     }
 
-    private sendWhenReady(webSocket: WebSocket, startTimestamp: number, messageId: string, message: string, resolve: ResolveFn, reject: RejectFn) {
-        if (this.connected) {
+    private _sendWhenReady(webSocket: WebSocket, startTimestamp: number, messageId: string, message: string, resolve: ResolveFn, reject: RejectFn) {
+        if (this._connected) {
             console.log('Sending WebSocket message:', message);
             webSocket.send(message);
-            this.waitForResponseMessage(messageId, resolve, reject);
+            this._waitForResponseMessage(messageId, resolve, reject);
         } else if (startTimestamp < Date.now() - WEBSOCKET_READY_TIMEOUT_MS) {
             reject('WebSocket not connected');
         } else {
             console.info('Waiting for WebSocket connection...');
-            setTimeout(() => this.sendWhenReady(webSocket, startTimestamp, messageId, message, resolve, reject), 500);
+            setTimeout(() => this._sendWhenReady(webSocket, startTimestamp, messageId, message, resolve, reject), 500);
         }
     }
 
-    private waitForResponseMessage(messageId: string, resolve: ResolveFn, reject: RejectFn) {
-        this.openPromises.push({
+    private _waitForResponseMessage(messageId: string, resolve: ResolveFn, reject: RejectFn) {
+        this._openPromises.push({
             timestamp: Date.now(),
             messageId,
             resolve,
             reject,
         });
-        this.startTimeoutTimer();
+        this._startTimeoutTimer();
     }
 
-    private startTimeoutTimer() {
-        if (this.timer) {
-            clearTimeout(this.timer);
+    private _startTimeoutTimer() {
+        if (this._timer) {
+            clearTimeout(this._timer);
         }
-        this.timer = setTimeout(() => this.checkPromiseTimeout(), 1000);
+        this._timer = setTimeout(() => this._checkPromiseTimeout(), 1000);
     }
 
-    private checkPromiseTimeout() {
-        this.timer = null;
+    private _checkPromiseTimeout() {
+        this._timer = null;
 
-        this.openPromises.forEach((op, index, arr) => {
+        this._openPromises.forEach((op, index, arr) => {
             if (op.timestamp < Date.now() - RESPONSE_TIMEOUT_MS) {
                 op.reject(`Didn't receive a response within ${RESPONSE_TIMEOUT_MS}ms`);
                 arr.splice(index, 1);
             }
         });
 
-        if (this.openPromises.length > 0) {
-            this.startTimeoutTimer();
+        if (this._openPromises.length > 0) {
+            this._startTimeoutTimer();
         }
     }
 
-    private handleData(data: string) {
+    private _handleData(data: string) {
         if (data === '""' || data === '"keepalive"') {
             // Ignore keep alive messages
             return;
@@ -157,25 +157,25 @@ export default class RemoteMessagingClient {
             const message = JSON.parse(data);
             if (message.type === 'setClientId') {
                 global.sessionStorage.setItem(SESSION_STORAGE_WS_CLIENT_ID, message.payload);
-                if (this.subscribedTopics.length > 0) {
-                    this.subscribeAgainAfterConnectionLost();
+                if (this._subscribedTopics.length > 0) {
+                    this._subscribeAgainAfterConnectionLost();
                 }
             } else if (message.messageId && message.success) {
-                const resolvedPromise = this.openPromises.find((op) => op.messageId === message.messageId);
+                const resolvedPromise = this._openPromises.find((op) => op.messageId === message.messageId);
                 if (resolvedPromise) {
                     resolvedPromise.resolve();
-                    this.openPromises = this.openPromises.filter((op) => op !== resolvedPromise);
+                    this._openPromises = this._openPromises.filter((op) => op !== resolvedPromise);
                 }
             } else if (message.messageId && message.error) {
-                const rejectedPromise = this.openPromises.find((op) => op.messageId === message.messageId);
+                const rejectedPromise = this._openPromises.find((op) => op.messageId === message.messageId);
                 if (rejectedPromise) {
                     rejectedPromise.reject(message.message);
-                    this.openPromises = this.openPromises.filter((op) => op !== rejectedPromise);
+                    this._openPromises = this._openPromises.filter((op) => op !== rejectedPromise);
                 }
             } else if (message.remoteMessage === true) {
                 const publishMessage: MashroomMessagingWebSocketPublishMessage = message;
-                if (this.messageHandler) {
-                    this.messageHandler(publishMessage.message, publishMessage.topic);
+                if (this._messageHandler) {
+                    this._messageHandler(publishMessage.message, publishMessage.topic);
                 }
             } else {
                 console.warn(`Don't know how to handle WebSocket message: `, message);
@@ -185,52 +185,52 @@ export default class RemoteMessagingClient {
         }
     }
 
-    private getWebSocket(): WebSocket | undefined | null {
-        if (!this.webSocket) {
+    private _getWebSocket(): WebSocket | undefined | null {
+        if (!this._webSocket) {
             if (!webSocketSupport) {
                 throw new Error(`The browser doesn't support WebSockets`);
             }
 
-            this.webSocket = new global.WebSocket(this.connectUrl);
-            this.webSocket.onopen = () => {
+            this._webSocket = new global.WebSocket(this._connectUrl);
+            this._webSocket.onopen = () => {
                 console.info('WebSocket connection established');
-                this.connected = true;
-                this.connectRetries = 0;
+                this._connected = true;
+                this._connectRetries = 0;
             };
-            this.webSocket.onerror = (event: Event) => {
+            this._webSocket.onerror = (event: Event) => {
                 console.error('WebSocket error failed', event);
             };
-            this.webSocket.onclose = (event: CloseEvent) => {
+            this._webSocket.onclose = (event: CloseEvent) => {
                 console.error(`Connection closed: Code: ${event.code}, Reason: ${event.reason}`);
-                this.webSocket = null;
-                this.connected = false;
-                this.tryReconnect();
+                this._webSocket = null;
+                this._connected = false;
+                this._tryReconnect();
             };
-            this.webSocket.onmessage = (event: MessageEvent) => {
+            this._webSocket.onmessage = (event: MessageEvent) => {
                 if (typeof (event.data) === 'string') {
                     const data: string = event.data;
-                    this.handleData(data);
+                    this._handleData(data);
                 } else {
                     console.error('Ignoring non string WebSocket message: ', event.data);
                 }
             };
         }
 
-        return this.webSocket;
+        return this._webSocket;
     }
 
-    private tryReconnect() {
-        if (this.connectRetries < CONNECT_RETRIES) {
-            this.connectRetries++;
-            console.warn(`WebSocket connection lost. Try to reconnect (attempt #${this.connectRetries})...`);
-            setTimeout(() => this.getWebSocket(), CONNECT_RETRY_TIMEOUT_MS * this.connectRetries);
+    private _tryReconnect() {
+        if (this._connectRetries < CONNECT_RETRIES) {
+            this._connectRetries++;
+            console.warn(`WebSocket connection lost. Try to reconnect (attempt #${this._connectRetries})...`);
+            setTimeout(() => this._getWebSocket(), CONNECT_RETRY_TIMEOUT_MS * this._connectRetries);
         } else {
-            console.error(`WebSocket connect lost. Giving up after ${this.connectRetries} reconnect attempts.`);
+            console.error(`WebSocket connect lost. Giving up after ${this._connectRetries} reconnect attempts.`);
         }
     }
 
-    private subscribeAgainAfterConnectionLost() {
-        this.subscribedTopics.forEach((topic) => {
+    private _subscribeAgainAfterConnectionLost() {
+        this._subscribedTopics.forEach((topic) => {
             this.subscribe(topic);
         });
     }

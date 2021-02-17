@@ -43,12 +43,12 @@ const FOCUS_APP_TOPIC = 'tabify-focus-app';
 
 export default class App extends PureComponent<Props, State> {
 
-    private areaId: string | undefined;
-    private boundOnAppLoaded: MashroomPortalAppLoadListener;
-    private boundOnAppUnload: MashroomPortalAppLoadListener;
-    private boundOnPluginNameTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
-    private boundOnAppIdTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
-    private boundOnFocusAppMessage: MashroomPortalMessageBusSubscriberCallback;
+    private _areaId: string | undefined;
+    private _boundOnAppLoaded: MashroomPortalAppLoadListener;
+    private _boundOnAppUnload: MashroomPortalAppLoadListener;
+    private _boundOnPluginNameTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
+    private _boundOnAppIdTitleMappingMessage: MashroomPortalMessageBusSubscriberCallback;
+    private _boundOnFocusAppMessage: MashroomPortalMessageBusSubscriberCallback;
 
     constructor(props: Props) {
         super(props);
@@ -59,11 +59,11 @@ export default class App extends PureComponent<Props, State> {
             tabs: [],
         };
 
-        this.boundOnAppLoaded = this.onAppLoaded.bind(this);
-        this.boundOnAppUnload = this.onAppUnload.bind(this);
-        this.boundOnPluginNameTitleMappingMessage = this.onPluginNameTitleMappingMessage.bind(this);
-        this.boundOnAppIdTitleMappingMessage = this.onAppIdTitleMappingMessage.bind(this);
-        this.boundOnFocusAppMessage = this.onFocusAppMessage.bind(this);
+        this._boundOnAppLoaded = this.onAppLoaded.bind(this);
+        this._boundOnAppUnload = this.onAppUnload.bind(this);
+        this._boundOnPluginNameTitleMappingMessage = this.onPluginNameTitleMappingMessage.bind(this);
+        this._boundOnAppIdTitleMappingMessage = this.onAppIdTitleMappingMessage.bind(this);
+        this._boundOnFocusAppMessage = this.onFocusAppMessage.bind(this);
     }
 
     createAppWrapper(app: MashroomPortalLoadedPortalApp): HTMLElement {
@@ -112,8 +112,8 @@ export default class App extends PureComponent<Props, State> {
             tabifyApp.portalAppWrapperElement.classList.add('no-margin');
             tabifyApp.portalAppWrapperElement.classList.add('hide-header');
 
-            this.areaId = tabifyApp.portalAppAreaId;
-            const areaApps = this.props.portalAppService.loadedPortalApps.filter((app) => app.pluginName !== this.props.tabifyPluginName && app.portalAppAreaId === this.areaId);
+            this._areaId = tabifyApp.portalAppAreaId;
+            const areaApps = this.props.portalAppService.loadedPortalApps.filter((app) => app.pluginName !== this.props.tabifyPluginName && app.portalAppAreaId === this._areaId);
             const tabs: Array<Tab> = [];
 
             // Hide all apps
@@ -140,22 +140,22 @@ export default class App extends PureComponent<Props, State> {
                 this.focusFirstInputOnActiveTab();
             },50);
 
-            this.props.portalAppService.registerAppLoadedListener(this.boundOnAppLoaded);
-            this.props.portalAppService.registerAppAboutToUnloadListener(this.boundOnAppUnload);
+            this.props.portalAppService.registerAppLoadedListener(this._boundOnAppLoaded);
+            this.props.portalAppService.registerAppAboutToUnloadListener(this._boundOnAppUnload);
 
-            this.props.messageBus.subscribe(ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC, this.boundOnPluginNameTitleMappingMessage);
-            this.props.messageBus.subscribe(ADD_APP_ID_TITLE_MAPPING_TOPIC, this.boundOnAppIdTitleMappingMessage);
-            this.props.messageBus.subscribe(FOCUS_APP_TOPIC, this.boundOnFocusAppMessage);
+            this.props.messageBus.subscribe(ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC, this._boundOnPluginNameTitleMappingMessage);
+            this.props.messageBus.subscribe(ADD_APP_ID_TITLE_MAPPING_TOPIC, this._boundOnAppIdTitleMappingMessage);
+            this.props.messageBus.subscribe(FOCUS_APP_TOPIC, this._boundOnFocusAppMessage);
         }
     }
 
     componentWillUnmount() {
-        this.props.portalAppService.unregisterAppLoadedListener(this.boundOnAppLoaded);
-        this.props.portalAppService.unregisterAppAboutToUnloadListener(this.boundOnAppUnload);
+        this.props.portalAppService.unregisterAppLoadedListener(this._boundOnAppLoaded);
+        this.props.portalAppService.unregisterAppAboutToUnloadListener(this._boundOnAppUnload);
 
-        this.props.messageBus.unsubscribe(ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC, this.boundOnPluginNameTitleMappingMessage);
-        this.props.messageBus.unsubscribe(ADD_APP_ID_TITLE_MAPPING_TOPIC, this.boundOnAppIdTitleMappingMessage);
-        this.props.messageBus.unsubscribe(FOCUS_APP_TOPIC, this.boundOnFocusAppMessage);
+        this.props.messageBus.unsubscribe(ADD_PLUGIN_NAME_TITLE_MAPPING_TOPIC, this._boundOnPluginNameTitleMappingMessage);
+        this.props.messageBus.unsubscribe(ADD_APP_ID_TITLE_MAPPING_TOPIC, this._boundOnAppIdTitleMappingMessage);
+        this.props.messageBus.unsubscribe(FOCUS_APP_TOPIC, this._boundOnFocusAppMessage);
     }
 
     onPluginNameTitleMappingMessage(message: any) {
@@ -189,7 +189,7 @@ export default class App extends PureComponent<Props, State> {
     }
 
     onAppLoaded(app: MashroomPortalLoadedPortalApp) {
-        if (app.pluginName !== this.props.tabifyPluginName && app.portalAppAreaId === this.areaId) {
+        if (app.pluginName !== this.props.tabifyPluginName && app.portalAppAreaId === this._areaId) {
             const existingAreaApp = this.state.tabs.find((tab) => tab.app.id === app.id);
             if (!existingAreaApp) {
                 const wrapper = this.createAppWrapper(app);
@@ -201,7 +201,7 @@ export default class App extends PureComponent<Props, State> {
 
                 let tabIdx = 0;
                 this.props.portalAppService.loadedPortalApps
-                    .filter((a) => a.pluginName !== this.props.tabifyPluginName && a.portalAppAreaId === this.areaId)
+                    .filter((a) => a.pluginName !== this.props.tabifyPluginName && a.portalAppAreaId === this._areaId)
                     .forEach((a, idx) => {
                        if (a.id === app.id) {
                            tabIdx = idx;

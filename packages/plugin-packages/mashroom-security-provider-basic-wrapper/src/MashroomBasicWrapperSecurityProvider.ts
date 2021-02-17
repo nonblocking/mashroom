@@ -1,5 +1,5 @@
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
 import type {
     MashroomSecurityProvider,
     MashroomSecurityService,
@@ -10,18 +10,18 @@ import type {
 
 export default class MashroomBasicWrapperSecurityProvider implements MashroomSecurityProvider {
 
-    constructor(private targetSecurityProvider: string, private onlyPreemptive: boolean, private realm: string) {
+    constructor(private _targetSecurityProvider: string, private _onlyPreemptive: boolean, private _realm: string) {
     }
 
-    async canAuthenticateWithoutUserInteraction(request: ExpressRequest): Promise<boolean> {
-        const authorization = this.getAuthorizationHeader(request);
+    async canAuthenticateWithoutUserInteraction(request: Request): Promise<boolean> {
+        const authorization = this._getAuthorizationHeader(request);
         return !!authorization && authorization.startsWith('Basic ');
     }
 
-    async authenticate(request: ExpressRequest, response: ExpressResponse, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult> {
+    async authenticate(request: Request, response: Response, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult> {
         const logger = request.pluginContext.loggerFactory('mashroom.security.provider.basic');
 
-        const authorization = this.getAuthorizationHeader(request);
+        const authorization = this._getAuthorizationHeader(request);
         if (authorization && authorization.startsWith('Basic ')) {
             const token = authorization.split(' ')[1];
             const buff = Buffer.from(token, 'base64');
@@ -38,8 +38,8 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
             }
         }
 
-        if (!this.onlyPreemptive) {
-            response.setHeader('WWW-Authenticate', `Basic realm="${this.realm}"`);
+        if (!this._onlyPreemptive) {
+            response.setHeader('WWW-Authenticate', `Basic realm="${this._realm}"`);
             response.sendStatus(401);
 
             return {
@@ -47,7 +47,7 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
             };
         }
 
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
+        const targetSecurityProvider = this._getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.authenticate(request, response, authenticationHints);
         }
@@ -57,30 +57,30 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         };
     }
 
-    async checkAuthentication(request: ExpressRequest): Promise<void> {
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
+    async checkAuthentication(request: Request): Promise<void> {
+        const targetSecurityProvider = this._getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             await targetSecurityProvider.checkAuthentication(request);
         }
     }
 
-    getAuthenticationExpiration(request: ExpressRequest): number | undefined | null {
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
+    getAuthenticationExpiration(request: Request): number | undefined | null {
+        const targetSecurityProvider = this._getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.getAuthenticationExpiration(request);
         }
         return null;
     }
 
-    async revokeAuthentication(request: ExpressRequest): Promise<void> {
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
+    async revokeAuthentication(request: Request): Promise<void> {
+        const targetSecurityProvider = this._getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             await targetSecurityProvider.revokeAuthentication(request);
         }
     }
 
-    async login(request: ExpressRequest, username: string, password: string): Promise<MashroomSecurityLoginResult> {
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
+    async login(request: Request, username: string, password: string): Promise<MashroomSecurityLoginResult> {
+        const targetSecurityProvider = this._getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.login(request, username, password);
         }
@@ -90,24 +90,24 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
         }
     }
 
-    getUser(request: ExpressRequest): MashroomSecurityUser | undefined | null {
-        const targetSecurityProvider = this.getTargetSecurityProvider(request);
+    getUser(request: Request): MashroomSecurityUser | undefined | null {
+        const targetSecurityProvider = this._getTargetSecurityProvider(request);
         if (targetSecurityProvider) {
             return targetSecurityProvider.getUser(request);
         }
         return null;
     }
 
-    private getAuthorizationHeader(request: ExpressRequest): string | undefined {
+    private _getAuthorizationHeader(request: Request): string | undefined {
         return request.headers.authorization;
     }
 
-    private getTargetSecurityProvider(request: ExpressRequest): MashroomSecurityProvider | null {
+    private _getTargetSecurityProvider(request: Request): MashroomSecurityProvider | null {
         const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
-        const provider = securityService.getSecurityProvider(this.targetSecurityProvider);
+        const provider = securityService.getSecurityProvider(this._targetSecurityProvider);
         if (!provider) {
             const logger = request.pluginContext.loggerFactory('mashroom.security.provider.basic');
-            logger.error(`Security provider not found: ${this.targetSecurityProvider}`);
+            logger.error(`Security provider not found: ${this._targetSecurityProvider}`);
             return null;
         }
         return provider;

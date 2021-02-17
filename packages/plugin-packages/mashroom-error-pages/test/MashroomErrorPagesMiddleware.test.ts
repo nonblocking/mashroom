@@ -1,6 +1,5 @@
 /* eslint @typescript-eslint/no-empty-function: off */
 
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomErrorPagesMiddleware from '../src/MashroomErrorPagesMiddleware';
 import type {ErrorMapping} from '../type-definitions';

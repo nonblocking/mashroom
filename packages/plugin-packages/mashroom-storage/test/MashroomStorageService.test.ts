@@ -68,9 +68,9 @@ describe('MashroomStorageService', () => {
 
         expect(collection).not.toBe(coll);
         // @ts-ignore
-        expect(collection.ttlSec).toBe(22);
+        expect(collection._ttlSec).toBe(22);
         // @ts-ignore
-        expect(collection.invalidateOnUpdate).toBe(true);
+        expect(collection._invalidateOnUpdate).toBe(true);
         expect(mockGetCollection.mock.calls.length).toBe(1);
         expect(mockGetCollection.mock.calls[0][0]).toBe('collection2');
     });

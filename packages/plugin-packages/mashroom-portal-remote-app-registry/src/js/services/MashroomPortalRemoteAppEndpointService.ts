@@ -1,7 +1,8 @@
 
 import context, {globalRequestHolder} from '../context';
 
-import type {ExpressRequest, MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
+import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {
     MashroomPortalRemoteAppEndpointService as MashroomPortalRemoteAppEndpointServiceType,
@@ -13,10 +14,10 @@ const SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS = '__MASHROOM_PORTAL_REMOTE_APP_EN
 
 export default class MashroomPortalRemoteAppEndpointService implements MashroomPortalRemoteAppEndpointServiceType {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private pluginContextHolder: MashroomPluginContextHolder) {
-        this.logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.remoteAppRegistry');
+    constructor(private _pluginContextHolder: MashroomPluginContextHolder) {
+        this._logger = _pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.remoteAppRegistry');
     }
 
     async registerRemoteAppUrl(url: string): Promise<void> {
@@ -24,7 +25,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
 
         const exists = !! await this.findRemotePortalAppByUrl(url);
         if (!exists) {
-            this.logger.info(`Adding remote portal app URL: ${url}`);
+            this._logger.info(`Adding remote portal app URL: ${url}`);
             const collection = await this._getRemotePortalAppEndpointsCollection();
             await collection.insertOne({
                 url,
@@ -39,7 +40,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         }
     }
 
-    async synchronousRegisterRemoteAppUrlInSession(url: string, request: ExpressRequest): Promise<void> {
+    async synchronousRegisterRemoteAppUrlInSession(url: string, request: Request): Promise<void> {
         url = this._fixUrl(url);
         const portalAppEndpoints: Array<RemotePortalAppEndpoint> = request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] || [];
 
@@ -47,7 +48,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
             return;
         }
 
-        this.logger.info(`Adding remote portal app URL for current session: ${url}`);
+        this._logger.info(`Adding remote portal app URL for current session: ${url}`);
 
         const portalAppEndpoint = {
             url,
@@ -110,7 +111,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         if (existingEndpoint) {
             await collection.updateOne({ url: remotePortalAppEndpoint.url }, remotePortalAppEndpoint);
         } else {
-            this.logger.error(`Cannot update remote portal app endpoint because it doesn't exist: ${remotePortalAppEndpoint.url}`);
+            this._logger.error(`Cannot update remote portal app endpoint because it doesn't exist: ${remotePortalAppEndpoint.url}`);
         }
     }
 
@@ -123,7 +124,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
     }
 
     private _getStorageService(): MashroomStorageService {
-        return this.pluginContextHolder.getPluginContext().services.storage.service;
+        return this._pluginContextHolder.getPluginContext().services.storage.service;
     }
 
     private _fixUrl(url: string): string {

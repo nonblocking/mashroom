@@ -1,16 +1,16 @@
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 
 export interface MashroomCSRFService {
 
     /**
      * Get the current CSRF token for this session
      */
-    getCSRFToken(request: ExpressRequest): string;
+    getCSRFToken(request: Request): string;
 
     /**
      * Check if the given token is valid
      */
-    isValidCSRFToken(request: ExpressRequest, token: string): boolean;
+    isValidCSRFToken(request: Request, token: string): boolean;
 }
 

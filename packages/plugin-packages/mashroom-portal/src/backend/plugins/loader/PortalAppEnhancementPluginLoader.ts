@@ -15,10 +15,10 @@ import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/in
 
 export default class PortalAppEnhancementPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.portal.plugin.loader');
+    constructor(private _registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.portal.plugin.loader');
     }
 
     get name(): string {
@@ -44,12 +44,12 @@ export default class PortalAppEnhancementPluginLoader implements MashroomPluginL
         };
 
 
-        this.logger.info('Registering portal app enhancement:', JSON.stringify({enhancement}));
-        this.registry.registerPortalAppEnhancement(enhancement);
+        this._logger.info('Registering portal app enhancement:', JSON.stringify({enhancement}));
+        this._registry.registerPortalAppEnhancement(enhancement);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info(`Unregistering portal app enhancement: ${plugin.name}`);
-        this.registry.unregisterPortalAppEnhancement(plugin.name);
+        this._logger.info(`Unregistering portal app enhancement: ${plugin.name}`);
+        this._registry.unregisterPortalAppEnhancement(plugin.name);
     }
 }

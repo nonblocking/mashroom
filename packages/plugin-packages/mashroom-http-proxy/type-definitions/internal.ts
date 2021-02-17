@@ -1,6 +1,7 @@
 
 import type {IncomingHttpHeaders, IncomingMessage} from 'http';
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyInterceptor, MashroomHttpProxyResponseInterceptorResult, HttpHeaders, MashroomHttpProxyRequestInterceptorResult} from './api';
 
 export interface HttpHeaderFilter {
@@ -31,15 +32,15 @@ export interface MashroomHttpProxyInterceptorRegistry {
 }
 
 export interface InterceptorHandler {
-    processRequest(clientRequest: ExpressRequest, clientResponse: ExpressResponse,
+    processRequest(clientRequest: Request, clientResponse: Response,
                    targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger):
         Promise<MashroomHttpProxyRequestInterceptorResult>;
-    processResponse(clientRequest: ExpressRequest, clientResponse: ExpressResponse, targetUri: string,
+    processResponse(clientRequest: Request, clientResponse: Response, targetUri: string,
                     targetResponse: IncomingMessage, logger: MashroomLogger):
         Promise<MashroomHttpProxyResponseInterceptorResult>;
 }
 
 export interface Proxy {
-    forward(req: ExpressRequest, res: ExpressResponse, uri: string, additionalHeaders: HttpHeaders): Promise<void>;
+    forward(req: Request, res: Response, uri: string, additionalHeaders: HttpHeaders): Promise<void>;
     shutdown(): void;
 }

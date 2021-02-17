@@ -1,6 +1,5 @@
 
 import path from 'path';
-// @ts-ignore
 import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
 import type {
@@ -21,10 +20,10 @@ const DEFAULT_ORDER = 1000;
 
 export default class PortalPageEnhancementPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.portal.plugin.loader');
+    constructor(private _registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.portal.plugin.loader');
     }
 
     get name(): string {
@@ -90,12 +89,12 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
             plugin: enhancementPlugin,
         };
 
-        this.logger.info('Registering portal page enhancement:', JSON.stringify({enhancement}));
-        this.registry.registerPortalPageEnhancement(enhancement);
+        this._logger.info('Registering portal page enhancement:', JSON.stringify({enhancement}));
+        this._registry.registerPortalPageEnhancement(enhancement);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info(`Unregistering portal page enhancement: ${plugin.name}`);
-        this.registry.unregisterPortalPageEnhancement(plugin.name);
+        this._logger.info(`Unregistering portal page enhancement: ${plugin.name}`);
+        this._registry.unregisterPortalPageEnhancement(plugin.name);
     }
 }

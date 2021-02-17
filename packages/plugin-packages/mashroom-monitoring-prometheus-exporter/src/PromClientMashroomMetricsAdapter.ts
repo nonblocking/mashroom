@@ -9,14 +9,14 @@ import type {
 
 export default class PromClientMashroomMetricsAdapter {
 
-    promClientData: any;
+    _promClientData: any;
 
-    constructor(private metricName: string) {
+    constructor(private _metricName: string) {
     }
 
     setMetrics(metrics: MetricsData): void {
         const {name, help, type} = metrics;
-        this.promClientData = {
+        this._promClientData = {
             aggregator: 'sum',
             name,
             help,
@@ -26,18 +26,18 @@ export default class PromClientMashroomMetricsAdapter {
         switch (type) {
             case 'counter':
                 const counterMetrics = metrics as CounterMetricData;
-                this.promClientData.values = counterMetrics.data.map(({labels, value}) => ({labels, value}))
+                this._promClientData.values = counterMetrics.data.map(({labels, value}) => ({labels, value}))
             case 'gauge':
                 const gaugeMetrics = metrics as GaugeMetricData;
-                this.promClientData.values = gaugeMetrics.data.map(({labels, value}) => ({labels, value}))
+                this._promClientData.values = gaugeMetrics.data.map(({labels, value}) => ({labels, value}))
                 break;
             case 'histogram':
                 const histogramData = metrics as HistogramMetricData;
-                this.promClientData.values = this.calcHistogramValues(histogramData);
+                this._promClientData.values = this._calcHistogramValues(histogramData);
                 break;
             case 'summary':
                 const summaryData = metrics as SummaryMetricData;
-                this.promClientData.values = this.calcSummaryValues(summaryData);
+                this._promClientData.values = this.calcSummaryValues(summaryData);
                 break;
             default:
                 break;
@@ -48,14 +48,14 @@ export default class PromClientMashroomMetricsAdapter {
      * This is called by prom-client
      */
     get(): any {
-        return this.promClientData;
+        return this._promClientData;
     }
 
     get name(): string {
-        return this.metricName;
+        return this._metricName;
     }
 
-    private calcHistogramValues(metrics: HistogramMetricData): Array<any> {
+    private _calcHistogramValues(metrics: HistogramMetricData): Array<any> {
         const values: Array<any> = [];
 
         metrics.data.forEach((data) => {

@@ -17,10 +17,10 @@ const DEFAULT_ORDER = 1000;
 
 export default class MashroomHttpProxyInterceptorPluginLoader implements MashroomPluginLoader {
 
-    private log: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomHttpProxyInterceptorRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.log = loggerFactory('mashroom.httpProxy.plugin.loader');
+    constructor(private _registry: MashroomHttpProxyInterceptorRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.httpProxy.plugin.loader');
     }
 
     get name(): string {
@@ -35,12 +35,12 @@ export default class MashroomHttpProxyInterceptorPluginLoader implements Mashroo
         const bootstrap: MashroomHttpProxyInterceptorPluginBootstrapFunction = plugin.requireBootstrap();
         const interceptor: MashroomHttpProxyInterceptor = await bootstrap(plugin.name, config, contextHolder);
         const order = config.order || DEFAULT_ORDER;
-        this.log.info(`Registering http proxy interceptor plugin: ${plugin.name} (with order: ${order})`);
-        this.registry.register(order, plugin.name, interceptor);
+        this._logger.info(`Registering http proxy interceptor plugin: ${plugin.name} (with order: ${order})`);
+        this._registry.register(order, plugin.name, interceptor);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void>  {
-        this.log.info(`Unregistering http proxy interceptor plugin: ${plugin.name}`);
-        this.registry.unregister(plugin.name);
+        this._logger.info(`Unregistering http proxy interceptor plugin: ${plugin.name}`);
+        this._registry.unregister(plugin.name);
     }
 }

@@ -1,13 +1,12 @@
 
 import {ServerResponse} from 'http';
-// @ts-ignore
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import context from '../context';
 
 import type {Socket} from 'net';
+import type {Request} from 'express';
 import type {
-    ExpressRequest,
-    HttpServerRequest,
+    IncomingMessageWithContext,
     MashroomHttpUpgradeHandler,
     MashroomLogger,
     MashroomMiddlewareStackService
@@ -15,18 +14,18 @@ import type {
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 export default (): MashroomHttpUpgradeHandler => {
-    return (req, socket, head) => {
-        handle(req, socket, head);
+    return (message, socket, head) => {
+        handle(message, socket, head);
     };
 }
 
-const handle = async (req: HttpServerRequest, socket: Socket, head: Buffer) => {
-    const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.websocket.service');
+const handle = async (message: IncomingMessageWithContext, socket: Socket, head: Buffer) => {
+    const logger: MashroomLogger = message.pluginContext.loggerFactory('mashroom.websocket.service');
 
-    logger.debug('Upgrade request received: ', req.url);
+    logger.debug('Upgrade request received: ', message.url);
     let user: MashroomSecurityUser | undefined | null = null;
     try {
-        user = await getUser(req, logger);
+        user = await getUser(message, logger);
     } catch (error) {
         logger.error('User determination failed', error);
     }
@@ -42,14 +41,14 @@ const handle = async (req: HttpServerRequest, socket: Socket, head: Buffer) => {
         return;
     }
 
-    if (!req.url) {
+    if (!message.url) {
         sendError(socket, 400, 'Bad Request');
         return;
     }
 
-    const connectPath = req.url.substr(context.basePath.length);
+    const connectPath = message.url.substr(context.basePath.length);
 
-    context.server.getServer().handleUpgrade(req, socket, head, (ws) => {
+    context.server.getServer().handleUpgrade(message, socket, head, (ws) => {
         if (user) {
             const loggerContext = {...logger.getContext(), ...userContext(user)};
             context.server.createClient(ws, connectPath, user, loggerContext);
@@ -57,8 +56,8 @@ const handle = async (req: HttpServerRequest, socket: Socket, head: Buffer) => {
     });
 };
 
-const getUser = async (req: HttpServerRequest, logger: MashroomLogger): Promise<MashroomSecurityUser | null | undefined> => {
-    const requestWithContext = req as ExpressRequest;
+const getUser = async (message: IncomingMessageWithContext, logger: MashroomLogger): Promise<MashroomSecurityUser | null | undefined> => {
+    const req = message as Request;
 
     // Execute session middleware
     const middlewareStackService: MashroomMiddlewareStackService = req.pluginContext.services.core.middlewareStackService;
@@ -67,10 +66,10 @@ const getUser = async (req: HttpServerRequest, logger: MashroomLogger): Promise<
         return null;
     }
     const dummyResponse: any = new ServerResponse(req);
-    await middlewareStackService.apply('Mashroom Session Middleware', requestWithContext, dummyResponse);
+    await middlewareStackService.apply('Mashroom Session Middleware', req, dummyResponse);
 
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-    return securityService.getUser(requestWithContext);
+    return securityService.getUser(req);
 };
 
 const sendError = (socket: Socket, statusCode: number, message: string) => {

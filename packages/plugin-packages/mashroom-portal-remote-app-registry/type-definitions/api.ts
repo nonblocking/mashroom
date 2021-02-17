@@ -1,5 +1,5 @@
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 export type RemotePortalAppEndpoint = {
@@ -22,7 +22,7 @@ export interface MashroomPortalRemoteAppEndpointService {
      */
     synchronousRegisterRemoteAppUrlInSession(
         url: string,
-        request: ExpressRequest,
+        request: Request,
     ): Promise<void>;
 
     /**

@@ -26,32 +26,33 @@ Accessible through _pluginContext.services.core.pluginService_
 
 Interface:
 
-```js
- /**
-  * Mashroom plugin service
-  */
- export interface MashroomPluginService {
+```ts
+export interface MashroomPluginService {
     /**
      * The currently known plugin loaders
      */
-    getPluginLoaders(): MashroomPluginLoaderMap;
+    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
+
     /**
      * Get all currently known plugins
      */
-    getPlugins(): Array<MashroomPlugin>;
+    getPlugins(): Readonly<Array<MashroomPlugin>>;
+
     /**
      * Get all currently known plugin packages
      */
-    getPluginPackages(): Array<MashroomPluginPackage>;
+    getPluginPackages(): Readonly<Array<MashroomPluginPackage>>;
+
     /**
      * Register for the next loaded event of given plugin (fired AFTER the plugin has been loaded).
      */
     onLoadedOnce(pluginName: string, listener: () => void): void;
+
     /**
      * Register for the next unload event of given plugin (fired BEFORE the plugin is going to be unloaded).
      */
     onUnloadOnce(pluginName: string, listener: () => void): void;
- }
+}
 ```
 
 ### MashroomMiddlewareStackService
@@ -60,24 +61,27 @@ Accessible through _pluginContext.services.core.middlewareStackService_
 
 Interface:
 
-```js
-/**
- * A service to access and introspect the middleware stack
- */
+```ts
 export interface MashroomMiddlewareStackService {
     /**
      * Check if the stack has given plugin
      */
-    has(pluginName: string): boolean;
+        has(pluginName: string): boolean;
+
     /**
      * Execute the given middleware.
      * Throws an exception if it doesn't exists
      */
-    apply(pluginName: string, req: ExpressRequest, res: ExpressResponse): Promise<void>;
+        apply(
+        pluginName: string,
+        req: Request,
+        res: Response,
+    ): Promise<void>;
+
     /**
      * Get the ordered list of middleware plugin (first in the list is executed first)
      */
-    getStack(): Array<{ pluginName: string, order: number }>;
+        getStack(): Array<{pluginName: string; order: number}>;
 }
 ```
 
@@ -111,9 +115,7 @@ To register a new plugin-loader add this to _package.json_:
 
 After that all plugins of type _my-custom-type_ will be passed to your custom loader instantiated by the bootstrap script:
 
-```js
-// @flow
-
+```ts
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContext,
     MashroomPluginLoaderPluginBootstrapFunction
@@ -174,9 +176,7 @@ To register a web-app plugin add this to _package.json_:
 
 And the bootstrap just returns the *Express* webapp:
 
-```js
-// @flow
-
+```ts
 import webapp from './webapp';
 
 import type {MashroomWebAppPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
@@ -199,7 +199,7 @@ Example:
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
     return {
         expressApp: webapp,
-        upgradeHandler: (request: HttpServerRequest, socket: net$Socket, head: Buffer) => {
+        upgradeHandler: (request: IncomingMessageWithContext, socket: Socket, head: Buffer) => {
             // TODO
         },
     };
@@ -235,9 +235,7 @@ To register a API plugin add this to _package.json_:
 
 And the bootstrap just returns the *Express* router:
 
-```js
-// @flow
-
+```ts
 const express = require('express');
 const router = express.Router();
 
@@ -281,9 +279,7 @@ To register a middleware plugin add this to package.json:
 
 And the bootstrap just returns the *Express* middleware:
 
-```js
-// @flow
-
+```ts
 import MyMiddleware from './MyMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
@@ -346,9 +342,7 @@ To register a service plugin add this to package.json:
 
 The bootstrap will just return an object with a bunch of services:
 
-```js
-// @flow
-
+```ts
 import MyService from './MyService';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';

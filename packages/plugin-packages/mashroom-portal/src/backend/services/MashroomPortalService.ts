@@ -16,30 +16,30 @@ import type {
 
 export default class MashroomPortalService implements MashroomPortalServiceType {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private pluginRegistry: MashroomPortalPluginRegistry, private pluginContextHolder: MashroomPluginContextHolder) {
-        this.logger = pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.service');
+    constructor(private _pluginRegistry: MashroomPortalPluginRegistry, private _pluginContextHolder: MashroomPluginContextHolder) {
+        this._logger = _pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.service');
     }
 
     getPortalApps() {
-        return this.pluginRegistry.portalApps;
+        return this._pluginRegistry.portalApps;
     }
 
     getThemes() {
-        return this.pluginRegistry.themes;
+        return this._pluginRegistry.themes;
     }
 
     getLayouts() {
-        return this.pluginRegistry.layouts;
+        return this._pluginRegistry.layouts;
     }
 
     getPortalPageEnhancements() {
-        return this.pluginRegistry.portalPageEnhancements;
+        return this._pluginRegistry.portalPageEnhancements;
     }
 
     getPortalAppEnhancements() {
-        return this.pluginRegistry.portalAppEnhancements;
+        return this._pluginRegistry.portalAppEnhancements;
     }
 
     async getSites(limit?: number): Promise<Array<MashroomPortalSite>> {
@@ -132,20 +132,20 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         await portalAppInstancesCollection.deleteOne({pluginName, instanceId});
     }
 
-    async _getSitesCollections(): Promise<MashroomStorageCollection<MashroomPortalSite>> {
+    private async _getSitesCollections(): Promise<MashroomStorageCollection<MashroomPortalSite>> {
         return this._getStorageService().getCollection(SITES_COLLECTION);
     }
 
-    async _getPagesCollection(): Promise<MashroomStorageCollection<MashroomPortalPage>> {
+    private async _getPagesCollection(): Promise<MashroomStorageCollection<MashroomPortalPage>> {
         return this._getStorageService().getCollection(PAGES_COLLECTION);
     }
 
-    async _getPortalAppInstancesCollection(): Promise<MashroomStorageCollection<MashroomPortalAppInstance>> {
+    private async _getPortalAppInstancesCollection(): Promise<MashroomStorageCollection<MashroomPortalAppInstance>> {
         return this._getStorageService().getCollection(PORTAL_APP_INSTANCES_COLLECTION);
     }
 
-    _getStorageService(): MashroomStorageService {
-        return this.pluginContextHolder.getPluginContext().services.storage.service;
+    private _getStorageService(): MashroomStorageService {
+        return this._pluginContextHolder.getPluginContext().services.storage.service;
     }
 
 }

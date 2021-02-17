@@ -1,7 +1,6 @@
 
 import {connect} from 'mqtt';
 
-// @ts-ignore
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
 import type {MqttClient, QoS} from 'mqtt';
@@ -14,77 +13,77 @@ const RECONNECT_PERIOD = 5000;
 
 export default class MashroomMessagingExternalProviderMQTT implements MashroomMessagingExternalProviderMQTTType {
 
-    private readonly logger: MashroomLogger;
-    private client: MqttClient | undefined;
-    private listeners: Array<MashroomExternalMessageListener>;
+    private _logger: MashroomLogger;
+    private _client: MqttClient | undefined;
+    private _listeners: Array<MashroomExternalMessageListener>;
 
-    constructor(private internalTopic: string, private mqttConnectUrl: string, private mqttProtocolVersion: number, private mqttQoS: QoS,
-                private mqttUser: string | undefined, private mqttPassword: string | undefined,
-                private rejectUnauthorized: boolean, loggerFactory: MashroomLoggerFactory) {
-        if (!internalTopic) {
+    constructor(private _internalTopic: string, private _mqttConnectUrl: string, private _mqttProtocolVersion: number, private _mqttQoS: QoS,
+                private _mqttUser: string | undefined, private _mqttPassword: string | undefined,
+                private _rejectUnauthorized: boolean, loggerFactory: MashroomLoggerFactory) {
+        if (!_internalTopic) {
             throw new Error('Internal topic must not be empty!');
         }
-        if (internalTopic.startsWith('/') || internalTopic.endsWith('/')) {
+        if (_internalTopic.startsWith('/') || _internalTopic.endsWith('/')) {
             throw new Error('Internal topic must not start or end with a slash!');
         }
-        if (containsWildcard(internalTopic)) {
+        if (containsWildcard(_internalTopic)) {
             throw new Error('Internal topic must not contain wildcards!');
         }
 
-        this.listeners = [];
-        this.logger = loggerFactory('mashroom.messaging.provider.mqtt');
+        this._listeners = [];
+        this._logger = loggerFactory('mashroom.messaging.provider.mqtt');
     }
 
     subscribeToInternalTopic(): void {
         this._createClient();
-        const client = this.client;
+        const client = this._client;
         if (client) {
-            const topic = `${this.internalTopic}/#`;
-            this.logger.info(`Subscribing MQTT topic ${topic}`);
+            const topic = `${this._internalTopic}/#`;
+            this._logger.info(`Subscribing MQTT topic ${topic}`);
             client.subscribe(topic, {
-                qos: this.mqttQoS
+                qos: this._mqttQoS
             }, (err) => {
                 if (err) {
-                    this.logger.error(`Subscribing MQTT topic ${topic} failed!`);
+                    this._logger.error(`Subscribing MQTT topic ${topic} failed!`);
                 }
             });
         }
     }
 
     unsubscribeFromInternalTopic(): void {
-        if (this.client) {
-            this.client.end();
-            this.client = undefined;
+        if (this._client) {
+            this._client.end();
+            this._client = undefined;
         }
     }
 
     addMessageListener(listener: MashroomExternalMessageListener): void {
-        this.listeners.push(listener);
+        this._listeners.push(listener);
     }
 
     removeMessageListener(listener: MashroomExternalMessageListener): void {
-        this.listeners = this.listeners.filter((l) => l !== listener);
+        this._listeners = this._listeners.filter((l) => l !== listener);
     }
 
     async sendInternalMessage(topic: string, message: any): Promise<void> {
-        const fullTopic = `${this.internalTopic}/${topic}`;
+        const fullTopic = `${this._internalTopic}/${topic}`;
         await this.sendExternalMessage(fullTopic, message);
     }
 
     async sendExternalMessage(topic: string, message: any): Promise<void> {
-        const client = this.client;
+        const client = this._client;
         if (!client) {
             return;
         }
 
-        this.logger.debug(`Publishing message for Topic: ${topic}, Message:`, message);
+        this._logger.debug(`Publishing message for Topic: ${topic}, Message:`, message);
         const data = Buffer.from(JSON.stringify(message), 'utf-8');
         return new Promise((resolve, reject) => {
             client.publish(topic, data, {
-                qos: this.mqttQoS
+                qos: this._mqttQoS
             }, (err) => {
                 if (err) {
-                    this.logger.error('Publishing message to MQTT failed', err);
+                    this._logger.error('Publishing message to MQTT failed', err);
                     reject(err);
                 } else {
                     resolve();
@@ -94,12 +93,12 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
     }
 
     getClient(): MqttClient | undefined {
-        return this.client;
+        return this._client;
     }
 
-    _processReceivedMessage(topic: string, data: Buffer | string | any): void {
-        if (topic.startsWith(`${this.internalTopic}/`)) {
-            const internalTopic = topic.substr(this.internalTopic.length + 1);
+    private _processReceivedMessage(topic: string, data: Buffer | string | any): void {
+        if (topic.startsWith(`${this._internalTopic}/`)) {
+            const internalTopic = topic.substr(this._internalTopic.length + 1);
             let jsonMessage: any = null;
             try {
                 let message: string | null = null;
@@ -112,51 +111,51 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
                 }
                 jsonMessage = JSON.parse(message);
             } catch (e) {
-                this.logger.error(`Processing of the received message failed: Topic: ${topic}, Message:`, data);
+                this._logger.error(`Processing of the received message failed: Topic: ${topic}, Message:`, data);
                 return;
             }
 
-            this.logger.debug(`Received message for Topic: ${topic}, Message:`, jsonMessage);
+            this._logger.debug(`Received message for Topic: ${topic}, Message:`, jsonMessage);
 
-            this.listeners.forEach((listener) => {
+            this._listeners.forEach((listener) => {
                 setTimeout(() => {
                     try {
                         listener(internalTopic, jsonMessage);
 
                     } catch (e) {
-                        this.logger.error('Message listener threw error', e);
+                        this._logger.error('Message listener threw error', e);
                     }
                 }, 0);
             });
         }
     }
 
-    _createClient(): void {
-        const client = connect(this.mqttConnectUrl, {
+    private _createClient(): void {
+        const client = connect(this._mqttConnectUrl, {
             connectTimeout: CONNECT_TIMEOUT,
             reconnectPeriod: RECONNECT_PERIOD,
-            rejectUnauthorized: this.rejectUnauthorized,
-            protocolVersion: this.mqttProtocolVersion,
-            username: this.mqttUser,
-            password: this.mqttPassword,
+            rejectUnauthorized: this._rejectUnauthorized,
+            protocolVersion: this._mqttProtocolVersion,
+            username: this._mqttUser,
+            password: this._mqttPassword,
         });
 
         client.on('message', this._processReceivedMessage.bind(this));
 
         client.on('connect', () => {
-            this.logger.info('Successfully connected to MQTT server');
+            this._logger.info('Successfully connected to MQTT server');
         });
         client.on('reconnect', () => {
-            this.logger.warn('Connection lost. Try to reconnect to MQTT server...');
+            this._logger.warn('Connection lost. Try to reconnect to MQTT server...');
         });
         client.on('error', (err) => {
-            this.logger.error('Error', err);
+            this._logger.error('Error', err);
         });
         client.on('close', (err: any) => {
-            this.logger.warn('Connection to MQTT server lost', err || '');
+            this._logger.warn('Connection to MQTT server lost', err || '');
         });
 
-        this.client = client;
+        this._client = client;
     }
 
 }

@@ -16,7 +16,7 @@ import {BrowserModule} from "@angular/platform-browser";
 })
 export class LoaderModule {
 
-    constructor(private injector: Injector) {
+    constructor(private _injector: Injector) {
     }
 
     ngDoBootstrap() {
@@ -24,7 +24,7 @@ export class LoaderModule {
     }
 
     public loadApp(appModule: any, hostElement: Node, portalAppSetup: MashroomPortalAppSetup, portalClientServices: MashroomPortalClientServices): ComponentRef<any> {
-        const moduleInjector = createInjector(appModule, this.injector, [
+        const moduleInjector = createInjector(appModule, this._injector, [
             {provide: 'host.element', useValue: hostElement },
             {provide: 'app.setup', useValue: portalAppSetup},
             {provide: 'client.services', useValue: portalClientServices},

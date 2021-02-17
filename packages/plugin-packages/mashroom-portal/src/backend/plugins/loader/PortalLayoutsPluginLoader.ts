@@ -1,7 +1,6 @@
 
 import path from 'path';
-// @ts-ignore
-import {PluginConfigurationError} from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
+import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
 import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalLayout} from '../../../../type-definitions';
@@ -9,12 +8,12 @@ import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/in
 
 export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
-    private loadedLayouts: Map<string, any>;
+    private _logger: MashroomLogger;
+    private _loadedLayouts: Map<string, any>;
 
-    constructor(private registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.portal.plugin.loader');
-        this.loadedLayouts = new Map();
+    constructor(private _registry: MashroomPortalPluginRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.portal.plugin.loader');
+        this._loadedLayouts = new Map();
     }
 
     get name(): string {
@@ -48,13 +47,13 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
                     layoutPath,
                 };
 
-                this.logger.info('Registering layout:', {layout});
-                this.registry.registerLayout(layout);
+                this._logger.info('Registering layout:', {layout});
+                this._registry.registerLayout(layout);
 
-                let pluginLayouts = this.loadedLayouts.get(plugin.name);
+                let pluginLayouts = this._loadedLayouts.get(plugin.name);
                 if (!pluginLayouts) {
                     pluginLayouts = {};
-                    this.loadedLayouts.set(plugin.name, pluginLayouts);
+                    this._loadedLayouts.set(plugin.name, pluginLayouts);
                 }
                 pluginLayouts[name] = true;
             }
@@ -63,12 +62,12 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
     }
 
     async unload(plugin: MashroomPlugin) {
-        if (this.loadedLayouts.has(plugin.name)) {
-            const pluginLayouts = this.loadedLayouts.get(plugin.name);
+        if (this._loadedLayouts.has(plugin.name)) {
+            const pluginLayouts = this._loadedLayouts.get(plugin.name);
             for (const pluginName in pluginLayouts) {
                 if (pluginLayouts.hasOwnProperty(pluginName)) {
-                    this.logger.info(`Unregistering layout:${pluginName}`);
-                    this.registry.unregisterLayout(pluginName);
+                    this._logger.info(`Unregistering layout:${pluginName}`);
+                    this._registry.unregisterLayout(pluginName);
                 }
             }
         }

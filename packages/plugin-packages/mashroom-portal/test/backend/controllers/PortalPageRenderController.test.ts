@@ -1,6 +1,5 @@
 
 import path from 'path';
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalPageRenderController from '../../../src/backend/controllers/PortalPageRenderController';

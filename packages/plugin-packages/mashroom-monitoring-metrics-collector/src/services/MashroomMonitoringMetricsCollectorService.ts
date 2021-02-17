@@ -21,23 +21,23 @@ import type {
 
 export default class MashroomMonitoringMetricsCollectorService implements MashroomMonitoringMetricsCollectorServiceType {
 
-    private metrics: {
+    private _metrics: {
         [name: string]: InternalMetricsData;
     }
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private config: MashroomMonitoringMetricsCollectorConfig, loggerFactory: MashroomLoggerFactory) {
-        this.metrics = {};
-        this.logger = loggerFactory('mashroom.montoring.collector');
+    constructor(private _config: MashroomMonitoringMetricsCollectorConfig, loggerFactory: MashroomLoggerFactory) {
+        this._metrics = {};
+        this._logger = loggerFactory('mashroom.montoring.collector');
     }
 
     counter(name: string, help: string): Counter {
         name = this._fixMetricName(name);
-        if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
-            this.logger.debug(`Metric ${name} disabled by configuration`);
+        if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
+            this._logger.debug(`Metric ${name} disabled by configuration`);
             return this._createNoOpMetric();
         }
-        let metric = this.metrics[name] as InternalCounterMetricData;
+        let metric = this._metrics[name] as InternalCounterMetricData;
         if (!metric) {
             metric = {
                 name,
@@ -45,9 +45,9 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
                 type: 'counter',
                 data: {},
             };
-            this.metrics[name] = metric;
+            this._metrics[name] = metric;
         } else if (metric.type !== 'counter') {
-            this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
+            this._logger.error(`Metric ${name} of type ${this._metrics[name].type} already exists!`);
             return this._createNoOpMetric();
         }
         return counter(metric);
@@ -55,11 +55,11 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     gauge(name: string, help: string): Gauge {
         name = this._fixMetricName(name);
-        if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
-            this.logger.debug(`Metric ${name} disabled by configuration`);
+        if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
+            this._logger.debug(`Metric ${name} disabled by configuration`);
             return this._createNoOpMetric();
         }
-        let metric = this.metrics[name] as InternalGaugeMetricData;
+        let metric = this._metrics[name] as InternalGaugeMetricData;
         if (!metric) {
             metric = {
                 name,
@@ -67,9 +67,9 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
                 type: 'gauge',
                 data: {},
             };
-            this.metrics[name] = metric;
-        } else if (this.metrics[name].type !== 'gauge') {
-            this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
+            this._metrics[name] = metric;
+        } else if (this._metrics[name].type !== 'gauge') {
+            this._logger.error(`Metric ${name} of type ${this._metrics[name].type} already exists!`);
             return this._createNoOpMetric();
         }
         return gauge(metric);
@@ -77,22 +77,22 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     histogram(name: string, help: string, buckets?: number[]): Histogram {
         name = this._fixMetricName(name);
-        if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
-            this.logger.debug(`Metric ${name} disabled by configuration`);
+        if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
+            this._logger.debug(`Metric ${name} disabled by configuration`);
             return this._createNoOpMetric();
         }
-        let metrics = this.metrics[name] as InternalHistogramMetricData;
+        let metrics = this._metrics[name] as InternalHistogramMetricData;
         if (!metrics) {
             metrics = {
                 name,
                 help,
                 type: 'histogram',
-                buckets: [...(this.config.customHistogramBucketConfig && this.config.customHistogramBucketConfig[name]) || buckets || this.config.defaultHistogramBuckets],
+                buckets: [...(this._config.customHistogramBucketConfig && this._config.customHistogramBucketConfig[name]) || buckets || this._config.defaultHistogramBuckets],
                 data: {},
             };
-            this.metrics[name] = metrics;
-        } else if (this.metrics[name].type !== 'histogram') {
-            this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
+            this._metrics[name] = metrics;
+        } else if (this._metrics[name].type !== 'histogram') {
+            this._logger.error(`Metric ${name} of type ${this._metrics[name].type} already exists!`);
             return this._createNoOpMetric();
         }
         return histogram(metrics);
@@ -100,22 +100,22 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     summary(name: string, help: string, quantiles?: number[]): Summary {
         name = this._fixMetricName(name);
-        if (this.config.disableMetrics && this.config.disableMetrics.includes(name)) {
-            this.logger.debug(`Metric ${name} disabled by configuration`);
+        if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
+            this._logger.debug(`Metric ${name} disabled by configuration`);
             return this._createNoOpMetric();
         }
-        let metrics = this.metrics[name] as InternalSummaryMetricData;
+        let metrics = this._metrics[name] as InternalSummaryMetricData;
         if (!metrics) {
             metrics = {
                 name,
                 help,
                 type: 'summary',
-                quantiles: [...(this.config.customSummaryQuantileConfig && this.config.customSummaryQuantileConfig[name]) || quantiles || this.config.defaultSummaryQuantiles],
+                quantiles: [...(this._config.customSummaryQuantileConfig && this._config.customSummaryQuantileConfig[name]) || quantiles || this._config.defaultSummaryQuantiles],
                 data: {},
             };
-            this.metrics[name] = metrics;
-        } else if (this.metrics[name].type !== 'histogram') {
-            this.logger.error(`Metric ${name} of type ${this.metrics[name].type} already exists!`);
+            this._metrics[name] = metrics;
+        } else if (this._metrics[name].type !== 'histogram') {
+            this._logger.error(`Metric ${name} of type ${this._metrics[name].type} already exists!`);
             return this._createNoOpMetric();
         }
         return summary(metrics);
@@ -123,8 +123,8 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     getMetrics(): MetricDataMap {
         const metrics: MetricDataMap = {};
-        Object.keys(this.metrics).forEach((metricName) => {
-            const metricsData = this.metrics[metricName];
+        Object.keys(this._metrics).forEach((metricName) => {
+            const metricsData = this._metrics[metricName];
             const {name, help, type, data} = metricsData;
             metrics[metricName] = {
                 name,

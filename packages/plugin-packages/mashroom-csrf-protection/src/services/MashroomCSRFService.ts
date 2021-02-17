@@ -1,17 +1,17 @@
 
 import CSRF from 'csrf';
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {MashroomCSRFService as MashroomCSRFServiceType} from '../../type-definitions';
 
 const CSRF_TOKEN_SESSION_KEY = '__MASHROOM_CSRF_TOKEN';
 
 export default class MashroomCSRFService implements MashroomCSRFServiceType {
 
-    constructor(private saltLength: number, private secretLength: number) {
+    constructor(private _saltLength: number, private _secretLength: number) {
     }
 
-    getCSRFToken(request: ExpressRequest): string {
+    getCSRFToken(request: Request): string {
         let sessionToken = request.session[CSRF_TOKEN_SESSION_KEY];
         if (!sessionToken) {
             sessionToken = this._createToken();
@@ -21,7 +21,7 @@ export default class MashroomCSRFService implements MashroomCSRFServiceType {
         return sessionToken;
     }
 
-    isValidCSRFToken(request: ExpressRequest, token: string): boolean {
+    isValidCSRFToken(request: Request, token: string): boolean {
         const sessionToken = request.session[CSRF_TOKEN_SESSION_KEY];
         if (!sessionToken) {
             return false;
@@ -31,8 +31,8 @@ export default class MashroomCSRFService implements MashroomCSRFServiceType {
 
     private _createToken(): string {
         const csrf = new CSRF({
-            saltLength: this.saltLength,
-            secretLength: this.secretLength
+            saltLength: this._saltLength,
+            secretLength: this._secretLength
         });
         const secret = csrf.secretSync();
         return csrf.create(secret);

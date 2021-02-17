@@ -1,7 +1,5 @@
-// @flow
 
 import path from 'path';
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomLdapSecurityProvider from '../src/MashroomLdapSecurityProvider';
 

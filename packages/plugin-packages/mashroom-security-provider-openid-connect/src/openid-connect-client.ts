@@ -1,7 +1,8 @@
 
 import {Client, custom, Issuer} from 'openid-client';
 
-import type {ExpressRequest, MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {ClientConfiguration} from '../type-definitions';
 
 let _clientConfiguration: ClientConfiguration | undefined;
@@ -12,7 +13,7 @@ export const setClientConfiguration = (clientConfiguration: ClientConfiguration)
     _client = undefined;
 };
 
-export default async (request: ExpressRequest): Promise<Client | undefined> => {
+export default async (request: Request): Promise<Client | undefined> => {
     const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
     if (_client) {

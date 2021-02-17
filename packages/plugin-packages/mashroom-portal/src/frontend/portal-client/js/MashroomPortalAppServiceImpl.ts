@@ -60,47 +60,47 @@ export const loadedPortalAppsInternal: Array<LoadedPortalAppInternal> = [];
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalAppService {
 
-    private restService: MashroomRestService;
-    private loadListeners: Array<MashroomPortalAppLoadListener>;
-    private aboutToUnloadListeners: Array<MashroomPortalAppLoadListener>;
-    private lastId: number;
-    private watch: boolean;
-    private watchedApps: Array<LoadedPortalAppInternal>;
-    private watchTimer: any | undefined | null;
-    private lastUpdatedCheckTs: number;
-    private appsUpdateEventSource: EventSource | undefined;
+    private _restService: MashroomRestService;
+    private _loadListeners: Array<MashroomPortalAppLoadListener>;
+    private _aboutToUnloadListeners: Array<MashroomPortalAppLoadListener>;
+    private _lastId: number;
+    private _watch: boolean;
+    private _watchedApps: Array<LoadedPortalAppInternal>;
+    private _watchTimer: any | undefined | null;
+    private _lastUpdatedCheckTs: number;
+    private _appsUpdateEventSource: EventSource | undefined;
 
-    constructor(restService: MashroomRestService, private resourceManager: ResourceManager, private remoteLogger: MashroomPortalRemoteLogger) {
+    constructor(restService: MashroomRestService, private _resourceManager: ResourceManager, private _remoteLogger: MashroomPortalRemoteLogger) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
         console.debug('Using portal api path:', apiPath);
-        this.restService = restService.withBasePath(apiPath);
-        this.loadListeners = [];
-        this.aboutToUnloadListeners = [];
-        this.lastId = 1000;
-        this.watch = !!(global as any)[WINDOW_VAR_PORTAL_DEV_MODE];
-        this.watchedApps = [];
-        this.watchTimer = null;
-        this.lastUpdatedCheckTs = Date.now();
+        this._restService = restService.withBasePath(apiPath);
+        this._loadListeners = [];
+        this._aboutToUnloadListeners = [];
+        this._lastId = 1000;
+        this._watch = !!(global as any)[WINDOW_VAR_PORTAL_DEV_MODE];
+        this._watchedApps = [];
+        this._watchTimer = null;
+        this._lastUpdatedCheckTs = Date.now();
     }
 
     getAvailableApps() {
         const path = `/portal-apps`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
     loadApp(hostElementId: string, pluginName: string, instanceId: string | undefined | null, position?: number | undefined | null, overrideAppConfig?: any | undefined | null) {
-        if (instanceId && this.findLoadedPortalApps(pluginName, instanceId).length > 0) {
+        if (instanceId && this._findLoadedPortalApps(pluginName, instanceId).length > 0) {
             return Promise.reject(`App ${pluginName}' with instance id ${instanceId} is already loaded!`);
         }
 
         console.info(`Loading app '${pluginName}' with instance id: ${instanceId || '<undefined>'}`);
 
-        return this.internalLoadApp(hostElementId, pluginName, instanceId, false, position, overrideAppConfig).then(
+        return this._internalLoadApp(hostElementId, pluginName, instanceId, false, position, overrideAppConfig).then(
             (loadedApp) => {
-                if (this.watch) {
-                    this.startCheckForAppUpdates(loadedApp);
+                if (this._watch) {
+                    this._startCheckForAppUpdates(loadedApp);
                 }
-                return this.toLoadedApp(loadedApp);
+                return this._toLoadedApp(loadedApp);
             }
         );
     }
@@ -108,32 +108,32 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     loadAppModal(pluginName: string, title?: string | undefined | null, overrideAppConfig?: any | undefined | null, onClose?: ModalAppCloseCallback | undefined | null) {
         console.info(`Loading app '${pluginName}' modal`);
 
-        return this.internalLoadApp(HOST_ELEMENT_MODAL_OVERLAY, pluginName, null, true, null, overrideAppConfig).then(
+        return this._internalLoadApp(HOST_ELEMENT_MODAL_OVERLAY, pluginName, null, true, null, overrideAppConfig).then(
             (loadedApp) => {
-                this.showModalOverlay(loadedApp, title, onClose);
+                this._showModalOverlay(loadedApp, title, onClose);
 
-                if (this.watch) {
-                    this.startCheckForAppUpdates(loadedApp);
+                if (this._watch) {
+                    this._startCheckForAppUpdates(loadedApp);
                 }
 
-                return this.toLoadedApp(loadedApp);
+                return this._toLoadedApp(loadedApp);
             }
         );
     }
 
     reloadApp(id: string, overrideAppConfig?: any | undefined | null) {
-        const loadedAppInternal = this.findLoadedApp(id);
+        const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
             return Promise.reject(`No app found with id: ${id}`);
         }
 
         console.info(`Reloading app '${loadedAppInternal.pluginName}' with id: ${id}`);
 
-        this.fireAboutToUnloadEvent(loadedAppInternal);
+        this._fireAboutToUnloadEvent(loadedAppInternal);
 
-        this.resourceManager.unloadAppResources(loadedAppInternal);
+        this._resourceManager.unloadAppResources(loadedAppInternal);
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
-            this.createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.instanceId);
+            this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.instanceId);
         const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
         if (parent) {
             parent.replaceChild(portalAppWrapperElement, loadedAppInternal.portalAppWrapperElement);
@@ -143,22 +143,22 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         loadedAppInternal.portalAppTitleElement = portalAppTitleElement;
         loadedAppInternal.loadedTs = Date.now();
 
-        return this.loadAppSetupAndStart(loadedAppInternal, overrideAppConfig).then(
+        return this._loadAppSetupAndStart(loadedAppInternal, overrideAppConfig).then(
             () => {
-                return this.toLoadedApp(loadedAppInternal);
+                return this._toLoadedApp(loadedAppInternal);
             }
         );
     }
 
     unloadApp(id: string) {
-        const loadedAppInternal = this.findLoadedApp(id);
+        const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
             console.error(`No app found with id: ${id}`);
             return;
         }
 
         console.info(`Unloading app '${loadedAppInternal.pluginName}' with id: ${id}`);
-        this.fireAboutToUnloadEvent(loadedAppInternal);
+        this._fireAboutToUnloadEvent(loadedAppInternal);
 
         const removeHostElemAndUnloadResources = () => {
             const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
@@ -166,9 +166,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 parent.removeChild(loadedAppInternal.portalAppWrapperElement);
             }
 
-            this.unsubscribeFromMessageBus(loadedAppInternal);
-            this.stopCheckForAppUpdates(loadedAppInternal);
-            this.resourceManager.unloadAppResources(loadedAppInternal);
+            this._unsubscribeFromMessageBus(loadedAppInternal);
+            this._stopCheckForAppUpdates(loadedAppInternal);
+            this._resourceManager.unloadAppResources(loadedAppInternal);
 
             const idx = loadedPortalAppsInternal.indexOf(loadedAppInternal);
             loadedPortalAppsInternal.splice(idx, 1);
@@ -183,7 +183,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const handleError = (error: Error) => {
             console.warn(`Calling willBeRemoved callback of app '${loadedAppInternal.pluginName}' failed`, error);
-            this.remoteLogger.warn('Calling willBeRemoved callback failed', error, loadedAppInternal.pluginName);
+            this._remoteLogger.warn('Calling willBeRemoved callback failed', error, loadedAppInternal.pluginName);
             removeHostElemAndUnloadResources();
         };
 
@@ -213,15 +213,15 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     moveApp(id: string, newAppAreaId: string, newPosition?: number) {
-        const loadedAppInternal = this.findLoadedApp(id);
+        const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
             console.error(`No app found with id: ${id}`);
             return;
         }
 
-        this.fireAboutToUnloadEvent(loadedAppInternal);
-        this.insertPortalAppIntoDOM(loadedAppInternal.portalAppWrapperElement, newAppAreaId, newPosition);
-        this.fireLoadEvent(loadedAppInternal);
+        this._fireAboutToUnloadEvent(loadedAppInternal);
+        this._insertPortalAppIntoDOM(loadedAppInternal.portalAppWrapperElement, newAppAreaId, newPosition);
+        this._fireLoadEvent(loadedAppInternal);
     }
 
     showAppInfos(customize?: (portalApp: MashroomPortalLoadedPortalApp, overlay: HTMLDivElement) => void) {
@@ -252,35 +252,35 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     registerAppLoadedListener(listener: MashroomPortalAppLoadListener) {
-        this.loadListeners.push(listener);
+        this._loadListeners.push(listener);
     }
 
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener) {
-        this.loadListeners = this.loadListeners.filter((l) => l !== listener);
+        this._loadListeners = this._loadListeners.filter((l) => l !== listener);
     }
 
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener) {
-        this.aboutToUnloadListeners.push(listener);
+        this._aboutToUnloadListeners.push(listener);
     }
 
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener) {
-        this.aboutToUnloadListeners = this.aboutToUnloadListeners.filter((l) => l !== listener);
+        this._aboutToUnloadListeners = this._aboutToUnloadListeners.filter((l) => l !== listener);
     }
 
     loadAppSetup(pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
-        const pageId = this.getPageId();
-        return this.internalLoadAppSetup(pageId, pluginName, instanceId);
+        const pageId = this._getPageId();
+        return this._internalLoadAppSetup(pageId, pluginName, instanceId);
     }
 
     get loadedPortalApps(): Array<MashroomPortalLoadedPortalApp> {
-        return loadedPortalAppsInternal.map((loadedAppInternal) => this.toLoadedApp(loadedAppInternal));
+        return loadedPortalAppsInternal.map((loadedAppInternal) => this._toLoadedApp(loadedAppInternal));
     }
 
-    private internalLoadApp(portalAppAreaId: string, pluginName: string, instanceId: string | undefined | null, modal: boolean,
+    private _internalLoadApp(portalAppAreaId: string, pluginName: string, instanceId: string | undefined | null, modal: boolean,
              position?: number | undefined | null, overrideAppConfig?: any | undefined | null): Promise<LoadedPortalAppInternal> {
 
-        const id = String(this.lastId++);
-        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this.appendAppWrapper(id, pluginName, instanceId, portalAppAreaId, position);
+        const id = String(this._lastId++);
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._appendAppWrapper(id, pluginName, instanceId, portalAppAreaId, position);
         const loadedAppInternal: LoadedPortalAppInternal = {
             id,
             pluginName,
@@ -298,17 +298,17 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         };
         loadedPortalAppsInternal.push(loadedAppInternal);
 
-        return this.loadAppSetupAndStart(loadedAppInternal, overrideAppConfig).then(
+        return this._loadAppSetupAndStart(loadedAppInternal, overrideAppConfig).then(
             () => {
                 return loadedAppInternal;
             }
         );
     }
 
-    private loadAppSetupAndStart(loadedPortalAppInternal: LoadedPortalAppInternal, overrideAppConfig?: any | undefined | null): Promise<void> {
-        const pageId = this.getPageId();
+    private _loadAppSetupAndStart(loadedPortalAppInternal: LoadedPortalAppInternal, overrideAppConfig?: any | undefined | null): Promise<void> {
+        const pageId = this._getPageId();
 
-        return this.internalLoadAppSetup(pageId, loadedPortalAppInternal.pluginName, loadedPortalAppInternal.instanceId).then(
+        return this._internalLoadAppSetup(pageId, loadedPortalAppInternal.pluginName, loadedPortalAppInternal.instanceId).then(
             (appSetup: MashroomPortalAppSetup) => {
                 if (overrideAppConfig) {
                     const existingAppConfig = loadedPortalAppInternal.appSetup && loadedPortalAppInternal.appSetup.appConfig || {};
@@ -323,12 +323,12 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 if (appSetup.title) {
                     loadedPortalAppInternal.portalAppTitleElement.innerHTML = appSetup.title;
                 }
-                this.fireLoadEvent(loadedPortalAppInternal);
+                this._fireLoadEvent(loadedPortalAppInternal);
 
-                return this.loadResources(loadedPortalAppInternal).then(
+                return this._loadResources(loadedPortalAppInternal).then(
                     () => {
                         console.info(`Starting portal app '${loadedPortalAppInternal.pluginName}' with setup: `, appSetup);
-                        return this.startApp(loadedPortalAppInternal.id, loadedPortalAppInternal.portalAppHostElement, appSetup, loadedPortalAppInternal.pluginName).then(
+                        return this._startApp(loadedPortalAppInternal.id, loadedPortalAppInternal.portalAppHostElement, appSetup, loadedPortalAppInternal.pluginName).then(
                             (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
                                 loadedPortalAppInternal.lifecycleHooks = lifecycleHooks;
                             }
@@ -337,15 +337,15 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 )
             }
         ).catch((error) => {
-            this.showLoadingError(loadedPortalAppInternal);
+            this._showLoadingError(loadedPortalAppInternal);
             console.error('Loading app setup failed!', error);
             loadedPortalAppInternal.error = true;
-            this.fireLoadEvent(loadedPortalAppInternal);
+            this._fireLoadEvent(loadedPortalAppInternal);
             return Promise.resolve();
         });
     }
 
-    private internalLoadAppSetup(pageId: string, pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
+    private _internalLoadAppSetup(pageId: string, pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
         if (instanceId) {
             const preloadedAppSetup = (global as any)[WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP] || {};
             if (preloadedAppSetup.hasOwnProperty(instanceId)) {
@@ -358,10 +358,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
 
         const path = `/pages/${pageId}/portal-app-instances/${pluginName}${instanceId ? `/${instanceId}` : ''}`;
-        return this.restService.get(path);
+        return this._restService.get(path);
     }
 
-    private loadResources(loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
+    private _loadResources(loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
         const appSetup = loadedPortalApp.appSetup;
         if (!appSetup) {
             return Promise.reject('appSetup not loaded');
@@ -372,12 +372,12 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         let loadJsPromise: Promise<void> =  Promise.resolve();
         if (appSetup.sharedResources && appSetup.sharedResources.js) {
             loadJsPromise = appSetup.sharedResources.js.reduce(
-                (promise, jsResource) => promise.then(() => this.resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp)),
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp)),
                 loadJsPromise);
         }
         if (appSetup.resources.js) {
             loadJsPromise = appSetup.resources.js.reduce(
-                (promise, jsResource) => promise.then(() => this.resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp)),
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp)),
                 loadJsPromise);
         }
 
@@ -385,26 +385,26 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         // We don't have to wait for CSS resources before we can start the app
         if (appSetup.sharedResources && appSetup.sharedResources.css) {
             appSetup.sharedResources.css.forEach((cssResource) =>
-                this.resourceManager.loadStyle(`${appSetup.sharedResourcesBasePath}/css/x${cssResource}`, loadedPortalApp));
+                this._resourceManager.loadStyle(`${appSetup.sharedResourcesBasePath}/css/x${cssResource}`, loadedPortalApp));
         }
         if (appSetup.resources.css) {
             appSetup.resources.css.forEach((cssResource) =>
-                this.resourceManager.loadStyle(`${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp));
+                this._resourceManager.loadStyle(`${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp));
         }
 
         return loadJsPromise;
     }
 
-    private startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<MashroomPortalAppLifecycleHooks | void> {
+    private _startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<MashroomPortalAppLifecycleHooks | void> {
         const bootstrap: MashroomPortalAppPluginBootstrapFunction = (global as any)[appSetup.globalLaunchFunction];
         if (!bootstrap) {
             return Promise.reject(`App bootstrap function not found: ${appSetup.globalLaunchFunction}`);
         }
 
-        const clientServices = this.getClientServicesForApp(appId, appSetup, pluginName);
+        const clientServices = this._getClientServicesForApp(appId, appSetup, pluginName);
         const handleError = (error: Error) => {
             console.error(`Error in bootstrap of app: ${pluginName}`, error);
-            this.remoteLogger.error('Error during bootstrap execution', error, pluginName);
+            this._remoteLogger.error('Error during bootstrap execution', error, pluginName);
         };
 
         let bootstrapRetVal = null;
@@ -439,7 +439,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return Promise.resolve();
     }
 
-    private showModalOverlay(loadedApp: LoadedPortalAppInternal, title?: string | undefined | null, onClose?: ModalAppCloseCallback | undefined | null) {
+    private _showModalOverlay(loadedApp: LoadedPortalAppInternal, title?: string | undefined | null, onClose?: ModalAppCloseCallback | undefined | null) {
         // Show overlay
         const modalOverlayElem = document.getElementById(MODAL_OVERLAY_ID);
         if (modalOverlayElem) {
@@ -484,17 +484,17 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
     }
 
-    private appendAppWrapper(id: string, pluginName: string, instanceId: string | undefined | null, portalAppAreaId: string, position?: number | undefined | null) {
+    private _appendAppWrapper(id: string, pluginName: string, instanceId: string | undefined | null, portalAppAreaId: string, position?: number | undefined | null) {
         console.log(`Adding wrapper for app: ${pluginName}, host element: ${portalAppAreaId}, position: ${String(position)}`);
 
-        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this.createAppWrapper(id, pluginName, instanceId);
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._createAppWrapper(id, pluginName, instanceId);
 
-        this.insertPortalAppIntoDOM(portalAppWrapperElement, portalAppAreaId, position);
+        this._insertPortalAppIntoDOM(portalAppWrapperElement, portalAppAreaId, position);
 
         return {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement};
     }
 
-    private insertPortalAppIntoDOM(portalAppWrapperElement: HTMLDivElement, portalAppAreaId: string, position?: number | undefined | null) {
+    private _insertPortalAppIntoDOM(portalAppWrapperElement: HTMLDivElement, portalAppAreaId: string, position?: number | undefined | null) {
         let inserted = false;
 
         let parentElem = document.getElementById(portalAppAreaId);
@@ -518,7 +518,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
     }
 
-    private getClientServicesForApp(appId: string, appSetup: MashroomPortalAppSetup, pluginName: string): MashroomPortalClientServices {
+    private _getClientServicesForApp(appId: string, appSetup: MashroomPortalAppSetup, pluginName: string): MashroomPortalClientServices {
         const clientServices: MashroomPortalClientServices = (global as any)[WINDOW_VAR_PORTAL_SERVICES];
         const customServiceMapping: Record<string, string> = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES] || {};
 
@@ -531,8 +531,8 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const clonedClientServices: MashroomPortalClientServices = {
             ...clientServices,
-            messageBus: this.getMessageBusForApp(clientServices, appId),
-            stateService: this.getStateServiceForApp(clientServices, pluginName, appSetup),
+            messageBus: this._getMessageBusForApp(clientServices, appId),
+            stateService: this._getStateServiceForApp(clientServices, pluginName, appSetup),
             remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName),
             ...customServices,
         }
@@ -540,12 +540,12 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return Object.freeze(clonedClientServices);
     }
 
-    private createAppWrapper(id: string, pluginName: string, title: string | undefined | null) {
+    private _createAppWrapper(id: string, pluginName: string, title: string | undefined | null) {
         const createAppWrapper = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC] || defaultCreateAppWrapper;
         return createAppWrapper(id, pluginName, title);
     }
 
-    private showLoadingError(portalApp: LoadedPortalAppInternal) {
+    private _showLoadingError(portalApp: LoadedPortalAppInternal) {
         const createLoadingError = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC] || defaultCreateLoadingError;
         const errorElement = createLoadingError(portalApp.id, portalApp.pluginName, portalApp.title);
 
@@ -553,7 +553,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         portalApp.portalAppHostElement.appendChild(errorElement);
     }
 
-    private findLoadedPortalApps(pluginName: string, instanceId: string | undefined | null) {
+    private _findLoadedPortalApps(pluginName: string, instanceId: string | undefined | null) {
         const loadedApps: Array<LoadedPortalAppInternal> = [];
 
         loadedPortalAppsInternal.forEach((loadedApp) => {
@@ -567,28 +567,28 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return loadedApps;
     }
 
-    private findLoadedApp(id: string) {
+    private _findLoadedApp(id: string) {
         return loadedPortalAppsInternal.find((app) => app.id === id);
     }
 
-    private getMessageBusForApp(clientServices: MashroomPortalClientServices, appId: string): MashroomPortalMessageBus {
+    private _getMessageBusForApp(clientServices: MashroomPortalClientServices, appId: string): MashroomPortalMessageBus {
         const mmb = clientServices.messageBus as MashroomPortalMasterMessageBus;
         return mmb.getAppInstance(appId);
     }
 
-    private getStateServiceForApp(clientServices: MashroomPortalClientServices, pluginName: string, appSetup: MashroomPortalAppSetup): MashroomPortalStateService {
-        const appStatePrefix = `${appSetup.instanceId || `${this.getPageId()}_${encodeURIComponent(pluginName)}`}__`;
+    private _getStateServiceForApp(clientServices: MashroomPortalClientServices, pluginName: string, appSetup: MashroomPortalAppSetup): MashroomPortalStateService {
+        const appStatePrefix = `${appSetup.instanceId || `${this._getPageId()}_${encodeURIComponent(pluginName)}`}__`;
         const mss = clientServices.stateService as MashroomPortalMasterStateService;
         return mss.withKeyPrefix(appStatePrefix);
     }
 
-    private unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal): void {
+    private _unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal): void {
         const clientServices: MashroomPortalClientServices = (global as any)[WINDOW_VAR_PORTAL_SERVICES];
         const mmb = clientServices.messageBus as MashroomPortalMasterMessageBus;
         mmb.unsubscribeEverythingFromApp(loadedAppInternal.id);
     }
 
-    private getPageId() {
+    private _getPageId() {
         const pageId = (global as any)[WINDOW_VAR_PORTAL_PAGE_ID];
         if (!pageId) {
             throw new Error('Unable to determine the current pageId!');
@@ -596,7 +596,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return pageId;
     }
 
-    private toLoadedApp(loadedAppInternal: LoadedPortalAppInternal): MashroomPortalLoadedPortalApp {
+    private _toLoadedApp(loadedAppInternal: LoadedPortalAppInternal): MashroomPortalLoadedPortalApp {
         return {
             id: loadedAppInternal.id,
             pluginName: loadedAppInternal.pluginName,
@@ -612,7 +612,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         };
     }
 
-    private updateApp(app: MashroomAvailablePortalApp): Promise<any> {
+    private _updateApp(app: MashroomAvailablePortalApp): Promise<any> {
         const promises: Array<Promise<any>> = [];
         console.info('Reloading all instances of app:', app.name);
         this.loadedPortalApps
@@ -624,19 +624,19 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return Promise.all(promises);
     }
 
-    private pluginUpdateEventReceived(type: MashroomPortalPluginType, plugin: any) {
+    private _pluginUpdateEventReceived(type: MashroomPortalPluginType, plugin: any) {
         if (type === 'app') {
-            return this.updateApp(plugin);
+            return this._updateApp(plugin);
         } else {
             console.info('Theme or Layout changed - reloading browser window');
             location.reload();
         }
     }
 
-    private checkForAppUpdates() {
+    private _checkForAppUpdates() {
         // console.info('Checking for app updates since: ', this._lastUpdatedCheckTs);
 
-        this.restService.get(`/portal-apps?updatedSince=${this.lastUpdatedCheckTs}`, {
+        this._restService.get(`/portal-apps?updatedSince=${this._lastUpdatedCheckTs}`, {
             'x-mashroom-does-not-extend-auth': '1'
         }).then(
             (updatedApps: Array<MashroomAvailablePortalApp>) => {
@@ -644,9 +644,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     console.info('Updated apps found:', updatedApps);
                     let promise = Promise.resolve();
                     updatedApps
-                        .filter((app) => this.watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
+                        .filter((app) => this._watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
                         .forEach((app) => {
-                            promise = promise.then(() => this.updateApp(app));
+                            promise = promise.then(() => this._updateApp(app));
                         });
                     if (promise) {
                         promise.then(
@@ -662,55 +662,55 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             }
         );
 
-        this.lastUpdatedCheckTs = Date.now();
+        this._lastUpdatedCheckTs = Date.now();
     }
 
-    private startCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
+    private _startCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
         // Remove existing
-        this.stopCheckForAppUpdates(loadedAppInternal);
+        this._stopCheckForAppUpdates(loadedAppInternal);
 
-        this.watchedApps.push(loadedAppInternal);
+        this._watchedApps.push(loadedAppInternal);
         if (!window.EventSource) {
-            if (!this.watchTimer) {
-                this.watchTimer = setInterval(this.checkForAppUpdates.bind(this), APP_UPDATE_CHECK_INTERVAL);
+            if (!this._watchTimer) {
+                this._watchTimer = setInterval(this._checkForAppUpdates.bind(this), APP_UPDATE_CHECK_INTERVAL);
             }
-        } else if (!this.appsUpdateEventSource) {
-            this.appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-push-plugin-updates');
-            this.appsUpdateEventSource.onmessage = (msg: any) => {
+        } else if (!this._appsUpdateEventSource) {
+            this._appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-push-plugin-updates');
+            this._appsUpdateEventSource.onmessage = (msg: any) => {
                 const event = JSON.parse(msg.data);
-                this.pluginUpdateEventReceived(event.type, event.event);
+                this._pluginUpdateEventReceived(event.type, event.event);
             };
         }
     }
 
-    private stopCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
-        this.watchedApps = this.watchedApps.filter((app) => app.id !== loadedAppInternal.id);
-        if (this.watchedApps.length === 0 && this.watchTimer) {
-            clearInterval(this.watchTimer);
-            this.watchTimer = null;
+    private _stopCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
+        this._watchedApps = this._watchedApps.filter((app) => app.id !== loadedAppInternal.id);
+        if (this._watchedApps.length === 0 && this._watchTimer) {
+            clearInterval(this._watchTimer);
+            this._watchTimer = null;
         }
 
-        if (this.watchedApps.length === 0 && this.appsUpdateEventSource) {
-            this.appsUpdateEventSource.close();
+        if (this._watchedApps.length === 0 && this._appsUpdateEventSource) {
+            this._appsUpdateEventSource.close();
         }
     }
 
-    private fireLoadEvent(loadedAppInternal: LoadedPortalAppInternal) {
-        const loadedApp = this.toLoadedApp(loadedAppInternal);
+    private _fireLoadEvent(loadedAppInternal: LoadedPortalAppInternal) {
+        const loadedApp = this._toLoadedApp(loadedAppInternal);
         try {
-            this.loadListeners.forEach((l) => l(loadedApp));
+            this._loadListeners.forEach((l) => l(loadedApp));
         } catch (e) {
-            this.remoteLogger.error('Load listener threw an error', e);
+            this._remoteLogger.error('Load listener threw an error', e);
             console.error('Load listener threw an error: ', e);
         }
     }
 
-    private fireAboutToUnloadEvent(loadedAppInternal: LoadedPortalAppInternal) {
-        const loadedApp = this.toLoadedApp(loadedAppInternal);
+    private _fireAboutToUnloadEvent(loadedAppInternal: LoadedPortalAppInternal) {
+        const loadedApp = this._toLoadedApp(loadedAppInternal);
         try {
-            this.aboutToUnloadListeners.forEach((l) => l(loadedApp));
+            this._aboutToUnloadListeners.forEach((l) => l(loadedApp));
         } catch (e) {
-            this.remoteLogger.error('AboutToUnload listener threw an error', e);
+            this._remoteLogger.error('AboutToUnload listener threw an error', e);
             console.error('AboutToUnload listener threw an error: ', e);
         }
     }

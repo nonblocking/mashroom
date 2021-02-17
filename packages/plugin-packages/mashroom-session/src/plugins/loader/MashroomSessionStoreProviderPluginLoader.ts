@@ -19,10 +19,10 @@ import type {
 
 export default class MashroomSessionStoreProviderPluginLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private registry: MashroomSessionStoreProviderRegistry, private loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.session.store.plugin.loader');
+    constructor(private _registry: MashroomSessionStoreProviderRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.session.store.plugin.loader');
     }
 
     get name(): string {
@@ -36,12 +36,12 @@ export default class MashroomSessionStoreProviderPluginLoader implements Mashroo
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
         const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = plugin.requireBootstrap();
         const provider: MashroomSessionStoreProvider = await bootstrap(plugin.name, config, contextHolder, session);
-        this.logger.info(`Registering session store provider plugin: ${plugin.name}`);
-        this.registry.register(plugin.name, provider);
+        this._logger.info(`Registering session store provider plugin: ${plugin.name}`);
+        this._registry.register(plugin.name, provider);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info(`Unregistering session store provider plugin: ${plugin.name}`);
-        this.registry.unregister(plugin.name);
+        this._logger.info(`Unregistering session store provider plugin: ${plugin.name}`);
+        this._registry.unregister(plugin.name);
     }
 }

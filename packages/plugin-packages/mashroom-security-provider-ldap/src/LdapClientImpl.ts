@@ -10,14 +10,14 @@ const DEFAULT_ATTRIBUTES = ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid',
 
 export default class LdapClientImpl implements LdapClient {
 
-    private logger: MashroomLogger;
-    private searchClient: LdapJsClient | null;
+    private _logger: MashroomLogger;
+    private _searchClient: LdapJsClient | null;
 
-    constructor(private serverUrl: string, private connectTimeout: number, private timeout: number,
-                private baseDN: string, private bindDN: string, private bindCredentials: string,
-                private tlsOptions: TlsOptions | undefined | null, loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.security.provider.ldap');
-        this.searchClient = null;
+    constructor(private _serverUrl: string, private _connectTimeout: number, private _timeout: number,
+                private _baseDN: string, private _bindDN: string, private _bindCredentials: string,
+                private _tlsOptions: TlsOptions | undefined | null, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.security.provider.ldap');
+        this._searchClient = null;
     }
 
     async search(filter: string, extraAttributes?: Array<string>): Promise<Array<LdapEntry>> {
@@ -40,7 +40,7 @@ export default class LdapClientImpl implements LdapClient {
 
         return new Promise((resolve, reject) => {
             const entries: Array<LdapEntry> = [];
-            searchClient.search(this.baseDN, searchOpts, (err, res) => {
+            searchClient.search(this._baseDN, searchOpts, (err, res) => {
                 if (err) {
                     reject(err);
                     return;
@@ -76,7 +76,7 @@ export default class LdapClientImpl implements LdapClient {
                     entries.push(ldapEntry);
                 });
                 res.on('error', (error) => {
-                    this.logger.error('LDAP search error', error);
+                    this._logger.error('LDAP search error', error);
                     reject(error);
                 });
                 res.on('end', (result) => {
@@ -93,39 +93,39 @@ export default class LdapClientImpl implements LdapClient {
     async login(ldapEntry: LdapEntry, password: string): Promise<void> {
         let client;
         try {
-            client = await this.createLdapJsClient();
-            await this.bind(ldapEntry.dn, password, client);
-            await this.disconnect(client);
+            client = await this._createLdapJsClient();
+            await this._bind(ldapEntry.dn, password, client);
+            await this._disconnect(client);
         } catch (error) {
-            this.logger.warn(`Binding with user ${ldapEntry.dn} failed`, error);
+            this._logger.warn(`Binding with user ${ldapEntry.dn} failed`, error);
             if (client) {
-                await this.disconnect(client);
+                await this._disconnect(client);
             }
             throw error;
         }
     }
 
     shutdown(): void {
-        if (this.searchClient) {
-            this.disconnect(this.searchClient);
-            this.searchClient = null;
+        if (this._searchClient) {
+            this._disconnect(this._searchClient);
+            this._searchClient = null;
         }
     }
 
     private async getSearchClient(): Promise<LdapJsClient> {
-        if (this.searchClient) {
-            return this.searchClient;
+        if (this._searchClient) {
+            return this._searchClient;
         }
 
         try {
-            const searchClient = await this.createLdapJsClient(true);
+            const searchClient = await this._createLdapJsClient(true);
             const bind = async () => {
                 try {
-                    await this.bind(this.bindDN, this.bindCredentials, searchClient);
+                    await this._bind(this._bindDN, this._bindCredentials, searchClient);
                 } catch (error) {
-                    this.logger.error(`Binding with user ${this.bindDN} failed`, error);
-                    await this.disconnect(searchClient);
-                    this.searchClient = null;
+                    this._logger.error(`Binding with user ${this._bindDN} failed`, error);
+                    await this._disconnect(searchClient);
+                    this._searchClient = null;
                 }
             };
             await bind();
@@ -133,20 +133,20 @@ export default class LdapClientImpl implements LdapClient {
                 // Re-bind on reconnect
                 await bind();
             });
-            this.searchClient = searchClient;
-            return this.searchClient;
+            this._searchClient = searchClient;
+            return this._searchClient;
         } catch (error) {
-            this.logger.error('Creating search LDAP client failed!', error);
+            this._logger.error('Creating search LDAP client failed!', error);
             throw error;
         }
     }
 
-    private async createLdapJsClient(reconnect = false): Promise<LdapJsClient> {
+    private async _createLdapJsClient(reconnect = false): Promise<LdapJsClient> {
         const clientOptions: ClientOptions = {
-            url: `${this.serverUrl}/${this.baseDN}`,
-            tlsOptions: this.tlsOptions as any,
-            connectTimeout: this.connectTimeout,
-            timeout: this.timeout,
+            url: `${this._serverUrl}/${this._baseDN}`,
+            tlsOptions: this._tlsOptions as any,
+            connectTimeout: this._connectTimeout,
+            timeout: this._timeout,
         };
 
         if (reconnect) {
@@ -162,28 +162,28 @@ export default class LdapClientImpl implements LdapClient {
             try {
                 client = createClient(clientOptions);
                 client.on('connect', () => {
-                    this.logger.debug(`Connected to LDAP server: ${this.serverUrl}`);
+                    this._logger.debug(`Connected to LDAP server: ${this._serverUrl}`);
                     if (!resolved) {
                         resolve(client);
                         resolved = true;
                     }
                 });
                 client.on('connectError', (error: LdapError | null) => {
-                    this.logger.error('LDAP Connection error', error);
+                    this._logger.error('LDAP Connection error', error);
                     if (!resolved) {
                         reject(error);
                         resolved = true;
                     }
                 });
                 client.on('error', (error: LdapError | null) => {
-                    this.logger.error('LDAP Error', error);
+                    this._logger.error('LDAP Error', error);
                     if (!resolved) {
                         reject(error);
                         resolved = true;
                     }
                 });
                 client.on('destroy', () => {
-                    this.logger.debug(`Disconnected from LDAP server: ${this.serverUrl}`);
+                    this._logger.debug(`Disconnected from LDAP server: ${this._serverUrl}`);
                 });
             } catch (e) {
                 reject(e);
@@ -191,7 +191,7 @@ export default class LdapClientImpl implements LdapClient {
         });
     }
 
-    private async bind(user: string, password: string, ldapjsClient: LdapJsClient): Promise<void> {
+    private async _bind(user: string, password: string, ldapjsClient: LdapJsClient): Promise<void> {
         return new Promise((resolve, reject) => {
             ldapjsClient.bind(user, password, (error: LdapError | null) => {
                 if (error) {
@@ -203,7 +203,7 @@ export default class LdapClientImpl implements LdapClient {
         });
     }
 
-    private disconnect(ldapjsClient: LdapJsClient): void {
+    private _disconnect(ldapjsClient: LdapJsClient): void {
         if (ldapjsClient.connected) {
             ldapjsClient.destroy();
         }

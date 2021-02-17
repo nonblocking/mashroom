@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import httpUpgradeHandlerFn from '../src/backend/webapp/http_upgrade_handler';
 import context from '../src/backend/context';

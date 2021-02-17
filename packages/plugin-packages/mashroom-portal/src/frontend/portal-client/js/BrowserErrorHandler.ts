@@ -7,7 +7,7 @@ import {
 
 export default class BrowserErrorHandler {
 
-    constructor(private remoteLogger: MashroomPortalRemoteLogger) {
+    constructor(private _remoteLogger: MashroomPortalRemoteLogger) {
     }
 
     install(): void {
@@ -22,7 +22,7 @@ export default class BrowserErrorHandler {
 
             const message = error ? error.message : event.toString();
 
-            this.remoteLogger.error(message, error, portalAppName);
+            this._remoteLogger.error(message, error, portalAppName);
         };
     }
 

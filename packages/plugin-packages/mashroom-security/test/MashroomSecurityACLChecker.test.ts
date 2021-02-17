@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityACLChecker from '../src/acl/MashroomSecurityACLChecker';
 import type {MashroomSecurityUser} from '../type-definitions';

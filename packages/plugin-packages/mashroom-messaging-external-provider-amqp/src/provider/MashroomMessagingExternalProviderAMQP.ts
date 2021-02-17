@@ -16,34 +16,34 @@ const SINGLE_WORD_WILDCARD = '*';
 
 export default class MashroomMessagingExternalProviderAMQP implements MashroomMessagingExternalProviderAMQPType {
 
-    private client: Connection | null;
-    private listeners: Array<MashroomExternalMessageListener>;
-    private logger: MashroomLogger;
+    private _client: Connection | null;
+    private _listeners: Array<MashroomExternalMessageListener>;
+    private _logger: MashroomLogger;
 
-    constructor(private internalRoutingKey: string, private brokerTopicExchangePrefix: string, private brokerTopicMatchAny: string,
-                private brokerHost: string, private brokerPort: number, private brokerUsername: string | undefined, private brokerPassword: string | undefined,
+    constructor(private _internalRoutingKey: string, private _brokerTopicExchangePrefix: string, private _brokerTopicMatchAny: string,
+                private _brokerHost: string, private _brokerPort: number, private _brokerUsername: string | undefined, private _brokerPassword: string | undefined,
                 loggerFactory: MashroomLoggerFactory) {
-        this.client = null;
-        this.listeners = [];
-        this.logger = loggerFactory('mashroom.messaging.provider.amqp');
+        this._client = null;
+        this._listeners = [];
+        this._logger = loggerFactory('mashroom.messaging.provider.amqp');
 
-        if (!this.internalRoutingKey) {
+        if (!this._internalRoutingKey) {
             throw new Error('Internal routing key must not be empty!');
         }
-        if (this.internalRoutingKey.indexOf('/') !== -1) {
+        if (this._internalRoutingKey.indexOf('/') !== -1) {
             throw new Error('Internal routing key must not contain slashes, please use dots to separate the words!');
         }
-        if (this.internalRoutingKey.indexOf(SINGLE_WORD_WILDCARD) !== -1 || this.internalRoutingKey.indexOf(this.brokerTopicMatchAny) !== -1) {
+        if (this._internalRoutingKey.indexOf(SINGLE_WORD_WILDCARD) !== -1 || this._internalRoutingKey.indexOf(this._brokerTopicMatchAny) !== -1) {
             throw new Error('Internal routing key must not contain wildcards!');
         }
     }
 
     subscribeToInternalTopic(): void {
-        this.createClient();
-        if (this.client) {
-            const address = `${this.brokerTopicExchangePrefix}${this.internalRoutingKey}.${this.brokerTopicMatchAny}`;
-            this.logger.info(`Subscribing AMQP address: ${address}`);
-            const receiver = this.client.open_receiver({
+        this._createClient();
+        if (this._client) {
+            const address = `${this._brokerTopicExchangePrefix}${this._internalRoutingKey}.${this._brokerTopicMatchAny}`;
+            this._logger.info(`Subscribing AMQP address: ${address}`);
+            const receiver = this._client.open_receiver({
                 autoaccept: false,
                 source: {
                     address,
@@ -52,52 +52,52 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
                 }
             });
             receiver.on('message', (context: EventContext) => {
-                this.processReceivedMessage(context);
+                this._processReceivedMessage(context);
             });
         }
     }
 
     unsubscribeFromInternalTopic(): void {
-        if (this.client) {
-            this.client.close();
+        if (this._client) {
+            this._client.close();
         }
-        this.client = null;
+        this._client = null;
     }
 
     addMessageListener(listener: MashroomExternalMessageListener): void {
-        this.listeners.push(listener);
+        this._listeners.push(listener);
     }
 
     removeMessageListener(listener: MashroomExternalMessageListener): void {
-        this.listeners = this.listeners.filter((l) => l !== listener);
+        this._listeners = this._listeners.filter((l) => l !== listener);
     }
 
     async sendInternalMessage(topic: string, message: any): Promise<void> {
         const routingKey = topicToRoutingKey(topic);
-        const fullRoutingKey = `${this.internalRoutingKey}.${routingKey}`;
-        return this.send(fullRoutingKey, message);
+        const fullRoutingKey = `${this._internalRoutingKey}.${routingKey}`;
+        return this._send(fullRoutingKey, message);
     }
 
     async sendExternalMessage(topic: string, message: any): Promise<void> {
         const routingKey = topicToRoutingKey(topic);
-        return this.send(routingKey, message);
+        return this._send(routingKey, message);
     }
 
     getClient(): Connection | null {
-        return this.client;
+        return this._client;
     }
 
-    private async send(routingKey: string, message: any): Promise<void> {
-        this.logger.debug(`Publishing message for routing key: ${routingKey}, Message:`, message);
+    private async _send(routingKey: string, message: any): Promise<void> {
+        this._logger.debug(`Publishing message for routing key: ${routingKey}, Message:`, message);
 
         return new Promise((resolve, reject) => {
-            if (!this.client) {
+            if (!this._client) {
                 reject('Connection to AMQP broker lost!');
                 return;
             }
-            const sender = this.client.open_sender({
+            const sender = this._client.open_sender({
                 target: {
-                    address: `${this.brokerTopicExchangePrefix}${routingKey}`
+                    address: `${this._brokerTopicExchangePrefix}${routingKey}`
                 }
             });
             sender.on('sendable', () => {
@@ -114,7 +114,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
         });
     }
 
-    private processReceivedMessage(context: EventContext): void {
+    private _processReceivedMessage(context: EventContext): void {
         const { message: { subject: routingKey = null, body = null } = {}, delivery } = context;
 
         if (!routingKey) {
@@ -122,7 +122,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
             return;
         }
 
-        if (routingKey.startsWith(`${this.internalRoutingKey}.`)) {
+        if (routingKey.startsWith(`${this._internalRoutingKey}.`)) {
             let jsonMessage: any;
             if (body) {
                 if (!body.typecode) {
@@ -151,48 +151,48 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
                 return;
             }
 
-            this.logger.debug(`Received message for routing key: ${routingKey}, Message:`, jsonMessage);
+            this._logger.debug(`Received message for routing key: ${routingKey}, Message:`, jsonMessage);
             if (delivery) {
                 delivery.accept();
             }
 
-            const internalRoutingKey = routingKey.substr(this.internalRoutingKey.length + 1);
+            const internalRoutingKey = routingKey.substr(this._internalRoutingKey.length + 1);
             const internalTopic = routingKeyToTopic(internalRoutingKey);
 
-            this.listeners.forEach((listener) => {
+            this._listeners.forEach((listener) => {
                 setTimeout(() => {
                     try {
                         listener(internalTopic, jsonMessage);
                     } catch (e) {
-                        this.logger.error('Message listener threw error', e);
+                        this._logger.error('Message listener threw error', e);
                     }
                 }, 0);
             });
         }
     }
 
-    private createClient(): void {
-        this.client = connect({
-            port: this.brokerPort,
-            host: this.brokerHost,
-            username: this.brokerUsername,
-            password: this.brokerPassword,
+    private _createClient(): void {
+        this._client = connect({
+            port: this._brokerPort,
+            host: this._brokerHost,
+            username: this._brokerUsername,
+            password: this._brokerPassword,
             reconnect: true,
             reconnect_limit: RECONNECT_LIMIT,
             initial_reconnect_delay: RECONNECT_DELAY_MS,
             max_reconnect_delay: RECONNECT_DELAY_MS,
         });
 
-        this.client.on('error', (error) => {
-            this.logger.error('AMQP broker client error:', error);
+        this._client.on('error', (error) => {
+            this._logger.error('AMQP broker client error:', error);
         });
-        this.client.on('protocol_error', (error) => {
-            this.logger.error('AMQP broker client error:', error);
+        this._client.on('protocol_error', (error) => {
+            this._logger.error('AMQP broker client error:', error);
         });
-        this.client.on('connection_close', () => {
-            this.logger.warn('Connection to AMQP broker closed (no reconnect!)');
+        this._client.on('connection_close', () => {
+            this._logger.warn('Connection to AMQP broker closed (no reconnect!)');
         });
-        this.client.on('disconnected', () => {
+        this._client.on('disconnected', () => {
             // Ignore
         });
     }

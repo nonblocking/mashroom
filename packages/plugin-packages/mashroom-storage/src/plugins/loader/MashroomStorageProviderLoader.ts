@@ -12,10 +12,10 @@ import type {MashroomStorageRegistry} from '../../../type-definitions/internal';
 
 export default class MashroomStorageProviderLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private storageRegistry: MashroomStorageRegistry, private loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.storage.loader');
+    constructor(private _storageRegistry: MashroomStorageRegistry, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.storage.loader');
     }
 
     generateMinimumConfig(): MashroomPluginConfig {
@@ -26,14 +26,14 @@ export default class MashroomStorageProviderLoader implements MashroomPluginLoad
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomStoragePluginBootstrapFunction = plugin.requireBootstrap();
         const storageProvider = await bootstrap(plugin.name, config, contextHolder);
-        this.logger.info(`Registering storage provider: ${plugin.name}`);
-        this.storageRegistry.registerStorage(plugin.name, storageProvider);
+        this._logger.info(`Registering storage provider: ${plugin.name}`);
+        this._storageRegistry.registerStorage(plugin.name, storageProvider);
 
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this.logger.info(`Unregistering storage provider: ${plugin.name}`);
-        this.storageRegistry.unregisterStorage(plugin.name);
+        this._logger.info(`Unregistering storage provider: ${plugin.name}`);
+        this._storageRegistry.unregisterStorage(plugin.name);
     }
 
     get name(): string {
