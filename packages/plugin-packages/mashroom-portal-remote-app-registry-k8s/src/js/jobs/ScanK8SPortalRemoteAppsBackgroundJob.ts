@@ -1,5 +1,5 @@
 
-import url from 'url';
+import {URL} from 'url';
 import request from 'request';
 import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
@@ -249,9 +249,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             for (const proxyName in definedRestProxies) {
                 if (Object.prototype.hasOwnProperty.call(definedRestProxies, proxyName)) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
-                    const parsedUri = url.parse(targetUri);
+                    const parsedUri = new URL(targetUri);
                     if (parsedUri.hostname === 'localhost') {
-                        targetUri = serviceUrl + (parsedUri.path && parsedUri.path !== '/' ? parsedUri.path : '');
+                        targetUri = serviceUrl + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
                     }
                     restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }

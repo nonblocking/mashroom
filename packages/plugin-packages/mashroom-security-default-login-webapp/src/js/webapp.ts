@@ -1,6 +1,6 @@
 
 import path from 'path';
-import url from 'url';
+import {URL} from 'url';
 import querystring from 'querystring';
 import express from 'express';
 import exphbs from 'express-handlebars';
@@ -138,11 +138,13 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
 const redirect = (req: Request, res: Response) => {
     let redirectUrl = null;
 
-    let query = req.query as any;
+    const query: Record<string, any> = req.query;
     if (req.method === 'POST' && req.headers.referer) {
         // Take the redirectUrl parameter from the referer
-        const refererUrl = url.parse(req.headers.referer);
-        query = refererUrl.query && querystring.parse(refererUrl.query);
+        const referer = new URL(req.headers.referer);
+        referer.searchParams.forEach((key, value) => {
+            query[key] = value;
+        });
     }
     if (query && query.redirectUrl) {
         const redirectParam = decodeURIComponent(query.redirectUrl);

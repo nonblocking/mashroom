@@ -1,5 +1,5 @@
 
-import url from 'url';
+import {URL} from 'url';
 import request from 'request';
 import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
@@ -184,9 +184,9 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             for (const proxyName in definedRestProxies) {
                 if (definedRestProxies.hasOwnProperty(proxyName)) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
-                    const parsedUri = url.parse(targetUri);
+                    const parsedUri = new URL(targetUri);
                     if (parsedUri.hostname === 'localhost') {
-                        targetUri = remotePortalAppEndpoint.url + (parsedUri.path && parsedUri.path !== '/' ? parsedUri.path : '');
+                        targetUri = remotePortalAppEndpoint.url + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
                     }
                     restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }
