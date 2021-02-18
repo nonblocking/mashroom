@@ -3,7 +3,27 @@
 
 ## [unreleased]
 
- * Migration to TypeScript completed (but flow types are still available)
+ * Migration to TypeScript completed (but flow types are still available).
+
+   The type aliases for express (ExpressRequest, ExpressResponse) are no longer required, so you can directly use the express types.
+   E.g. in a middleware plugin:
+   ```ts
+    import type {Request, Response, NextFunction} from 'express';
+    import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+
+    const myMiddleware = (req: Request, res: Response, next: NextFunction) => {
+        const logger = req.pluginContext.loggerFactory('my.middleware');
+        logger.info('woohoo');
+        // TODO
+        next();
+    };
+
+    const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig) => {
+        return myMiddleware;
+    };
+
+    export default bootstrap;
+   ```
  * Error Pages: Added the possibility to add default messages if *mashroom-i18n* is not (yet) available
  * LDAP Security Provider: Under all circumstances prevent a login with an empty password since some LDAP servers accept it
    and allow a *simple login*

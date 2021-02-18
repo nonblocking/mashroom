@@ -224,6 +224,9 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
             clientResponse.json({ success: true });
         });
 
+        // NOTE: if you "await" the end event you have to call targetResponse.resume() here
+        //  because the interceptor pauses the stream from the target until all interceptors are done
+
         return {
             responseHandled: true
         };
