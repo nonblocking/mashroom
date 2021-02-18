@@ -1,12 +1,12 @@
 
 import {Readable, Writable} from 'stream';
 import nock from 'nock';
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import ProxyImplNodeHttpProxy from '../../src/proxy/ProxyImplNodeHttpProxy';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
-import {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+
+import {Request, Response} from 'express';
 import {HttpHeaders, QueryParams} from '../../type-definitions';
 import {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
@@ -28,7 +28,7 @@ const createDummyRequest = (method: string, data?: string) => {
         },
     };
     req.socket = {
-        setTimeout: () => {},
+        setTimeout: () => { /* nothing to do */ },
     };
     req.connection = {};
 
@@ -405,7 +405,7 @@ describe('ProxyImplNodeHttpProxy', () => {
                 pluginName: 'Interceptor 1',
                 interceptor: {
                     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                                     clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
+                                     clientRequest: Request, clientResponse: Response) {
                         clientResponse.sendStatus(403);
 
                         return {
