@@ -43,16 +43,16 @@ const createDummyResponse = () => {
         console.info('Header: ', headerName, value);
         res.headers[headerName] = value;
     };
-    res.status = res.sendStatus = function(status: any) {
-        this.statusCode = status;
+    res.status = res.sendStatus = (status: number) => {
+        res.statusCode = status;
         return {
             send(message: string) {
                 res.statusMessage = message;
             }
         };
     };
-    res.write = function(chunk: any) {
-        this.body += chunk.toString();
+    res.write = (chunk: any) => {
+        res.body += chunk.toString();
         return true;
     };
 
