@@ -12,7 +12,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(ts)$/,
                 exclude: [/node_modules/, /mashroom-utils/],
                 enforce: 'pre',
                 use: [
@@ -20,13 +20,13 @@ module.exports = {
                         loader: 'eslint-loader',
                         options: {
                             fix: true,
-                            configFile: __dirname + '/src/frontend/.eslintrc.json'
+                            configFile: __dirname + '/.eslintrc.json'
                         }
                     }
                 ]
             },
             {
-                test: /\.(js|jsx)$/,
+                test: /\.(ts)$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -60,6 +60,6 @@ module.exports = {
     },
     externals: [],
     resolve: {
-        extensions: ['.js', '.jsx']
+        extensions: ['.js', '.ts']
     }
 };

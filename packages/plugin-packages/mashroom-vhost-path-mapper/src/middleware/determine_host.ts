@@ -1,8 +1,8 @@
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {DeterminedHost} from '../../type-definitions/internal';
 
-export default (considerHttpHeaders: Array<string>, req: ExpressRequest): DeterminedHost => {
+export default (considerHttpHeaders: Array<string>, req: Request): DeterminedHost => {
     const hostHeader = req.headers.host;
     let hostname = undefined;
     let port = undefined;

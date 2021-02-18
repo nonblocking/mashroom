@@ -15,12 +15,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 And you can use the messaging service like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomMessagingService} from '@mashroom/mashroom-messaging/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const messagingService: MashroomMessagingService = req.pluginContext.services.messaging.service;
 
     // Subscribe
@@ -170,7 +168,7 @@ The exposed service is accessible through _pluginContext.services.messaging.serv
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomMessagingService {
     /**
      * Subscribe to given topic.
@@ -179,17 +177,27 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    subscribe(req: ExpressRequest, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+    subscribe(
+        req: Request,
+        topic: string,
+        callback: MashroomMessagingSubscriberCallback,
+    ): Promise<void>;
+
     /**
      * Unsubscribe from topic
      */
-    unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+    unsubscribe(
+        topic: string,
+        callback: MashroomMessagingSubscriberCallback,
+    ): Promise<void>;
+
     /**
      * Publish to a specific topic
      *
      * Throws an exception if there is no authenticated user
      */
-    publish(req: ExpressRequest, topic: string, data: any): Promise<void>;
+    publish(req: Request, topic: string, data: any): Promise<void>;
+
     /**
      * The private topic only the current user can access.
      * E.g. if the value is user/john the user john can access to user/john/whatever
@@ -197,12 +205,13 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    getUserPrivateTopic(req: ExpressRequest): string;
+    getUserPrivateTopic(req: Request): string;
+
     /**
      * The connect path to send publish or subscribe via WebSocket.
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
      */
-    getWebSocketConnectPath(req: ExpressRequest): ?string;
+    getWebSocketConnectPath(req: Request): string | null | undefined;
 }
 ```
 
@@ -234,9 +243,7 @@ To register your custom external-messaging-provider plugin add this to _package.
 
 The bootstrap returns the provider:
 
-```js
-// @flow
-
+```ts
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
 
 const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
@@ -249,17 +256,19 @@ export default bootstrap;
 
 The provider has to implement the following interface:
 
-```js
+```ts
 export interface MashroomMessagingExternalProvider {
     /**
      * Add a message listener
      * The message must be a JSON object.
      */
     addMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Remove an existing listener
      */
     removeMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Send a message to given external topic.
      * The passed topic must be prefixed with the topic the provider is listening to.
@@ -269,12 +278,11 @@ export interface MashroomMessagingExternalProvider {
      * The message will be a JSON object.
      */
     sendInternalMessage(topic: string, message: any): Promise<void>;
+
     /**
      * Send a message to given external topic.
      * The message will be a JSON object.
      */
     sendExternalMessage(topic: string, message: any): Promise<void>;
-}
-
 }
 ```

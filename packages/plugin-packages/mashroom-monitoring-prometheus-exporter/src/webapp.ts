@@ -3,7 +3,8 @@ import express from 'express';
 import registry from './registry';
 import PromClientMashroomMetricsAdapter from './PromClientMashroomMetricsAdapter';
 
-import type {ExpressApplication, ExpressRequest, ExpressResponse, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
+import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 
 const existingAdapters: {
@@ -13,10 +14,9 @@ const existingAdapters: {
 export default (loggerFactory: MashroomLoggerFactory) => {
     const logger = loggerFactory('mashroom.monitoring.prometheus');
 
-    const app: ExpressApplication = express();
+    const app = express();
 
-    app.get('/', (req: ExpressRequest, res: ExpressResponse) => {
-
+    app.get('/', async (req: Request, res: Response) => {
         const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
         const metrics = collectorService.getMetrics();
         Object.keys(metrics).forEach((metricName) => {
@@ -35,7 +35,7 @@ export default (loggerFactory: MashroomLoggerFactory) => {
         });
 
         res.set('Content-Type', registry.contentType);
-        res.end(registry.metrics());
+        res.end(await registry.metrics());
     });
 
 

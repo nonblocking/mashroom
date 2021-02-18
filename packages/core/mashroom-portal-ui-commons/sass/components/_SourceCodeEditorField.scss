@@ -1,0 +1,22 @@
+
+.mashroom-portal-ui-source-code-editor-field {
+
+    @import "../node_modules/codemirror/lib/codemirror.css";
+    @import "../node_modules/codemirror/theme/blackboard.css";
+    @import "../node_modules/codemirror/theme/idea.css";
+
+    label {
+        display: block;
+        padding-bottom: 3px;
+    }
+
+    .CodeMirror {
+        font-family: monospace;
+        font-size: 0.9em;
+        height: 100%;
+
+        &.CodeMirror-focused {
+
+        }
+    }
+}

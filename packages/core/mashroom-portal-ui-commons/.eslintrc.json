@@ -1,14 +1,13 @@
 {
-    "parser": "babel-eslint",
+    "parser": "@typescript-eslint/parser",
     "plugins": [
-        "react",
-        "flowtype",
-        "jest"
+        "@typescript-eslint/eslint-plugin",
+        "react"
     ],
     "extends": [
         "eslint:recommended",
         "plugin:react/recommended",
-        "plugin:flowtype/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
     "env": {
         "node": true,

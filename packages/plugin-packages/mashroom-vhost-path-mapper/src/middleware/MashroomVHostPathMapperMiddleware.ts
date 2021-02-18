@@ -4,10 +4,8 @@ import findHostDefinition from './find_host_definition';
 import mapPath from './map_path';
 import {VHOST_MAPPING_INFO_REQUEST_PROP_NAME} from '../constants';
 
+import type {Request, Response, NextFunction} from 'express';
 import type {
-    ExpressNextFunction,
-    ExpressRequest,
-    ExpressResponse,
     MashroomLogger
 } from '@mashroom/mashroom/type-definitions';
 import type {
@@ -17,18 +15,18 @@ import type {
 
 export default class MashroomVHostPathMapperMiddleware implements MashroomVHostPathMapperMiddlewareType {
 
-    constructor(private considerHttpHeaders: Array<string>, private vhostDefinitions: VHostDefinitions) {
+    constructor(private _considerHttpHeaders: Array<string>, private _vhostDefinitions: VHostDefinitions) {
     }
 
     middleware() {
-        return (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+        return (req: Request, res: Response, next: NextFunction) => {
             const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.vhost.pathmapper');
 
             try {
-                const host = determineHost(this.considerHttpHeaders, req);
+                const host = determineHost(this._considerHttpHeaders, req);
                 // logger.debug('Determined host', host);
 
-                const hostDefinition = findHostDefinition(host, this.vhostDefinitions);
+                const hostDefinition = findHostDefinition(host, this._vhostDefinitions);
                 if (hostDefinition) {
                     const originalPath = req.url;
                     const mappingResult = mapPath(originalPath, hostDefinition);

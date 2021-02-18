@@ -26,19 +26,19 @@ const LOCK_RETRY_MIN_WAIT = 100;
 
 export default class MashroomStorageCollectionFilestore<T extends StorageRecord> implements MashroomStorageCollection<T> {
 
-    private lastExternalChangeCheck: number;
-    private dbCache: JsonDB<T> | null;
-    private logger: MashroomLogger;
+    private _lastExternalChangeCheck: number;
+    private _dbCache: JsonDB<T> | null;
+    private _logger: MashroomLogger;
 
-    constructor(private source: string, private checkExternalChangePeriodMs: number,
-                private prettyPrintJson: boolean, private loggerFactory: MashroomLoggerFactory) {
-        this.lastExternalChangeCheck = -1;
-        this.dbCache = null;
-        this.logger = loggerFactory('mashroom.storage.filestore');
+    constructor(private _source: string, private _checkExternalChangePeriodMs: number,
+                private _prettyPrintJson: boolean, private _loggerFactory: MashroomLoggerFactory) {
+        this._lastExternalChangeCheck = -1;
+        this._dbCache = null;
+        this._logger = _loggerFactory('mashroom.storage.filestore');
     }
 
     async insertOne(item: T): Promise<StorageObject<T>> {
-        return this.updateOperation((collection) => {
+        return this._updateOperation((collection) => {
             const insertedItem = {...item, _id: shortId.generate(),};
             collection.push(insertedItem);
             return insertedItem;
@@ -46,7 +46,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
     }
 
     async find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>> {
-        return this.readOperation((collection) => {
+        return this._readOperation((collection) => {
             let result = filter ? lodashFilter<StorageObject<T>>(collection, filter) : collection;
             if (limit && result.length > limit) {
                 result = result.slice(0, limit);
@@ -56,7 +56,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
     }
 
     async findOne(filter: StorageObjectFilter<T>): Promise<StorageObject<T> | null | undefined> {
-        return this.readOperation((collection) => {
+        return this._readOperation((collection) => {
             const result: Array<StorageObject<T>> = lodashFilter<StorageObject<T>>(collection, filter);
             if (result.length === 0) {
                 return null;
@@ -66,7 +66,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
     }
 
     async updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: Partial<StorageObject<T>>): Promise<StorageUpdateResult> {
-        return this.updateOperation(async (collection) => {
+        return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
                 return {
@@ -84,7 +84,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
     }
 
     async replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult> {
-        return this.updateOperation(async (collection) => {
+        return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
                 return {
@@ -102,7 +102,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
     }
 
     async deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult> {
-        return this.updateOperation(async (collection) => {
+        return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
                 return {
@@ -120,7 +120,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
     }
 
     async deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult> {
-        return this.updateOperation(async (collection) => {
+        return this._updateOperation(async (collection) => {
             const existingItems = await this.find(filter);
             existingItems.forEach((existingItem) => {
                 const index = collection.indexOf(existingItem);
@@ -133,28 +133,28 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    private async readOperation<S>(op: (data: Array<StorageObject<T>>) => S): Promise<S> {
-        const db = await this.getDb();
-        const collection = this.getCollection(db);
+    private async _readOperation<S>(op: (data: Array<StorageObject<T>>) => S): Promise<S> {
+        const db = await this._getDb();
+        const collection = this._getCollection(db);
         return op(collection);
     }
 
-    private async updateOperation<S>(op: (data: Array<StorageObject<T>>) => S): Promise<S> {
+    private async _updateOperation<S>(op: (data: Array<StorageObject<T>>) => S): Promise<S> {
         let release: (() => Promise<void>) | null = null;
         try {
-            release = await this.lock();
+            release = await this._lock();
         } catch (e) {
-            this.logger.error(`Couldn't get lock on db file ${this.source}`, e);
-            throw new ConcurrentAccessError(`Couldn't get lock for db file: ${this.source}`);
+            this._logger.error(`Couldn't get lock on db file ${this._source}`, e);
+            throw new ConcurrentAccessError(`Couldn't get lock for db file: ${this._source}`);
         }
         try {
-            const db = await this.getDb(true);
-            const collection = this.getCollection(db);
+            const db = await this._getDb(true);
+            const collection = this._getCollection(db);
             const result = await op(collection);
-            this.logger.debug(`Updating db source: ${this.source}`);
-            await writeFile(this.source, this.serialize(db));
-            this.dbCache = db;
-            this.lastExternalChangeCheck = Date.now();
+            this._logger.debug(`Updating db source: ${this._source}`);
+            await writeFile(this._source, this._serialize(db));
+            this._dbCache = db;
+            this._lastExternalChangeCheck = Date.now();
             return result;
         } finally {
             if (release) {
@@ -163,31 +163,31 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         }
     }
 
-    private getCollection(db: JsonDB<T>): Array<StorageObject<T>> {
+    private _getCollection(db: JsonDB<T>): Array<StorageObject<T>> {
         return db.d;
     }
 
-    private async getDb(forceExternalChangeCheck = false): Promise<JsonDB<T>> {
+    private async _getDb(forceExternalChangeCheck = false): Promise<JsonDB<T>> {
         try {
-            if (this.dbCache) {
-                const mTime = fs.statSync(this.source).mtime;
+            if (this._dbCache) {
+                const mTime = fs.statSync(this._source).mtime;
                 const mTimeMs = mTime.getTime();
-                const reload = (mTimeMs > this.lastExternalChangeCheck && (forceExternalChangeCheck || this.lastExternalChangeCheck + this.checkExternalChangePeriodMs < Date.now()));
+                const reload = (mTimeMs > this._lastExternalChangeCheck && (forceExternalChangeCheck || this._lastExternalChangeCheck + this._checkExternalChangePeriodMs < Date.now()));
                 if (!reload) {
-                    this.logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this.source}`);
-                    return this.dbCache;
+                    // this.logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this.source}`);
+                    return this._dbCache;
                 }
             }
 
-            this.logger.debug(`Reloading db source: ${this.source}`);
-            const json = await readFile(this.source);
-            const db = this.deserialize(json.toString());
-            this.dbCache = db;
-            this.lastExternalChangeCheck = Date.now();
+            this._logger.debug(`Reloading db source: ${this._source}`);
+            const json = await readFile(this._source);
+            const db = this._deserialize(json.toString());
+            this._dbCache = db;
+            this._lastExternalChangeCheck = Date.now();
             return db;
         } catch (e) {
-            if (fs.existsSync(this.source)) {
-                this.logger.error(`Error loading db file: ${this.source}`, e);
+            if (fs.existsSync(this._source)) {
+                this._logger.error(`Error loading db file: ${this._source}`, e);
             }
         }
 
@@ -196,8 +196,8 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         };
     }
 
-    private lock(): Promise<() => Promise<void>> {
-        return lockFile(this.source, {
+    private _lock(): Promise<() => Promise<void>> {
+        return lockFile(this._source, {
             realpath: false,
             stale: LOCK_STALE_MS,
             retries: {
@@ -208,16 +208,16 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    private serialize(data: JsonDB<T>): string {
-        return this.prettyPrintJson ? JSON.stringify(data, null, 2) : JSON.stringify(data);
+    private _serialize(data: JsonDB<T>): string {
+        return this._prettyPrintJson ? JSON.stringify(data, null, 2) : JSON.stringify(data);
     }
 
-    private deserialize(json: string): JsonDB<T> {
+    private _deserialize(json: string): JsonDB<T> {
         try {
             return JSON.parse(json);
         } catch (e) {
             if (e instanceof SyntaxError) {
-                e.message = `Malformed JSON in file: ${this.source}\n${e.message}`;
+                e.message = `Malformed JSON in file: ${this._source}\n${e.message}`;
             }
             throw e;
         }

@@ -14,22 +14,28 @@
     "dependencies": {
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
-        "express-handlebars": "^5.2.0",
-        "handlebars": "^4.7.6",
+        "express-handlebars": "^5.2.1",
+        "handlebars": "^4.7.7",
         "request": "^2.88.2"
     },
     "devDependencies": {
-        "@babel/cli": "^7.12.1",
+        "@babel/cli": "^7.12.16",
         "@mashroom/mashroom": "1.6.4",
         "@mashroom/mashroom-csrf-protection": "1.6.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "1.6.4",
         "@mashroom/mashroom-portal": "1.6.4",
         "@mashroom/mashroom-storage": "1.6.4",
         "@mashroom/mashroom-utils": "1.6.4",
-        "eslint": "^7.13.0",
+        "eslint": "^7.20.0",
         "jest": "^26.6.3",
         "node-sass": "^5.0.0",
-        "nodemon": "^2.0.6"
+        "nodemon": "^2.0.7",
+        "typescript": "^4.1.5",
+        "@types/express": "^4.17.11",
+        "@types/express-handlebars": "^3.1.0",
+        "@types/body-parser": "^1.19.0",
+        "@types/jest": "^26.0.20",
+        "@types/request": "^2.48.5"
     },
     "jest": {
         "verbose": true,
@@ -37,13 +43,14 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src test --ext \".ts\" --fix",
+        "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src/js -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
-        "dev": "nodemon --watch src -e js,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
+        "build": "babel src/js --extensions \".ts\" -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

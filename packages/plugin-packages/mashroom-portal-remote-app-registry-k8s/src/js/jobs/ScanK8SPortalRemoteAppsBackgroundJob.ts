@@ -1,7 +1,6 @@
 
-import url from 'url';
+import {URL} from 'url';
 import request from 'request';
-// @ts-ignore
 import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
@@ -16,45 +15,45 @@ import type {KubernetesConnector, KubernetesService, ScanBackgroundJob} from '..
 
 export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgroundJob {
 
-    private timeout?: NodeJS.Timeout;
-    private readonly serviceNameFilter: RegExp;
-    private readonly logger: MashroomLogger;
+    private _timeout?: NodeJS.Timeout;
+    private _serviceNameFilter: RegExp;
+    private _logger: MashroomLogger;
 
-    constructor(private k8sNamespaces: Array<string>, serviceNameFilterStr: string, private socketTimeoutSec: number,
-                private scanPeriodSec: number, private refreshIntervalSec: number, private accessViaClusterIP: boolean,
-                private kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
-        this.serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
-        this.logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
+    constructor(private _k8sNamespaces: Array<string>, serviceNameFilterStr: string, private _socketTimeoutSec: number,
+                private _scanPeriodSec: number, private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
+                private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
+        this._serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
+        this._logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
     }
 
     start(): void {
-        this.kubernetesConnector.init();
-        this.scanKubernetesServices();
-        this.timeout = setInterval(() => this.scanKubernetesServices(), this.scanPeriodSec * 1000);
+        this._kubernetesConnector.init();
+        this._scanKubernetesServices();
+        this._timeout = setInterval(() => this._scanKubernetesServices(), this._scanPeriodSec * 1000);
     }
 
     stop(): void {
-        if (this.timeout) {
-            clearInterval(this.timeout);
+        if (this._timeout) {
+            clearInterval(this._timeout);
         }
     }
 
-    private async scanKubernetesServices(): Promise<void> {
-        this.logger.info('Starting scan of k8s namespaces: ', this.k8sNamespaces);
+    private async _scanKubernetesServices(): Promise<void> {
+        this._logger.info('Starting scan of k8s namespaces: ', this._k8sNamespaces);
         context.lastScan = Date.now();
         context.error = null;
 
-        for (let i = 0; i < this.k8sNamespaces.length; i++) {
-            const namespace = this.k8sNamespaces[i];
+        for (let i = 0; i < this._k8sNamespaces.length; i++) {
+            const namespace = this._k8sNamespaces[i];
             try {
-                const res = await this.kubernetesConnector.listNamespaceServices(namespace);
+                const res = await this._kubernetesConnector.listNamespaceServices(namespace);
                 const serviceItems = res.items;
 
                 for (let j = 0; j < serviceItems.length; j++) {
                     const serviceItem = serviceItems[j];
 
                     const name = serviceItem?.metadata?.name;
-                    if (name && name.match(this.serviceNameFilter)) {
+                    if (name && name.match(this._serviceNameFilter)) {
                         const existingService = context.registry.getService(name);
                         const ip = serviceItem?.spec?.clusterIP;
                         const ports = serviceItem?.spec?.ports;
@@ -63,7 +62,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                         let service: KubernetesService | undefined;
 
                         if (existingService) {
-                            if (existingService.status === 'Error' || existingService.lastCheck < Date.now() - this.refreshIntervalSec * 1000) {
+                            if (existingService.status === 'Error' || existingService.lastCheck < Date.now() - this._refreshIntervalSec * 1000) {
                                 service = {
                                     ...existingService, status: 'Checking',
                                     lastCheck: Date.now(),
@@ -71,8 +70,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                 }
                             }
                         } else {
-                            const url = this.accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
-                            this.logger.info(`Adding new Kubernetes service: ${name} (${url})`);
+                            const url = this._accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
+                            this._logger.info(`Adding new Kubernetes service: ${name} (${url})`);
 
                             service = {
                                 name,
@@ -89,7 +88,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                         }
 
                         if (service) {
-                            if (this.accessViaClusterIP && headlessService) {
+                            if (this._accessViaClusterIP && headlessService) {
                                 service = {
                                     ...service, status: 'Headless Service',
                                     foundPortalApps: []
@@ -97,29 +96,29 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                 context.registry.addOrUpdateService(service);
                             } else {
                                 context.registry.addOrUpdateService(service);
-                                await this.checkServiceForRemotePortalApps(service);
+                                await this._checkServiceForRemotePortalApps(service);
                                 context.registry.addOrUpdateService(service);
                             }
                         }
                     }
                 }
             } catch (error) {
-                this.logger.error(`Error during scan of k8s namespace: ${namespace}`, error);
+                this._logger.error(`Error during scan of k8s namespace: ${namespace}`, error);
                 context.error = error.message;
             }
         }
 
-        this.removeAppsNotSeenForALongTime();
+        this._removeAppsNotSeenForALongTime();
     }
 
-    private async checkServiceForRemotePortalApps(service: KubernetesService): Promise<void> {
-        this.logger.debug('Checking service:', service);
+    private async _checkServiceForRemotePortalApps(service: KubernetesService): Promise<void> {
+        this._logger.debug('Checking service:', service);
 
         let packageJson;
         let portalApps;
 
         try {
-            const {found, json} = await this.loadPackageJson(service.url);
+            const {found, json} = await this._loadPackageJson(service.url);
             if (found) {
                 packageJson = json;
             } else {
@@ -131,18 +130,18 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             service.status = 'Error';
             service.error = error.message;
             service.foundPortalApps = [];
-            this.logger.error(`Error checking Kubernetes service ${service.name} failed!`, error);
+            this._logger.error(`Error checking Kubernetes service ${service.name} failed!`, error);
             return;
         }
 
         try {
             portalApps = this.processPackageJson(packageJson, service.url, service.name);
-            this.logger.info(`Registered portal apps for Kubernetes service: ${service.name}:`, portalApps);
+            this._logger.info(`Registered portal apps for Kubernetes service: ${service.name}:`, portalApps);
         } catch (error) {
             service.status = 'Error';
             service.error = error.message;
             service.foundPortalApps = [];
-            this.logger.error(`Processing remote portal app info for Kubernetes service ${service.name} failed!`, error);
+            this._logger.error(`Processing remote portal app info for Kubernetes service ${service.name} failed!`, error);
             return;
         }
 
@@ -150,11 +149,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         service.foundPortalApps = portalApps;
     }
 
-    private async loadPackageJson(serviceUrl: string): Promise<{ found: boolean; json?: any }> {
+    private async _loadPackageJson(serviceUrl: string): Promise<{ found: boolean; json?: any }> {
         const requestOptions = {
             url: `${serviceUrl}/package.json`,
             followRedirect: false,
-            timeout: this.socketTimeoutSec * 1000,
+            timeout: this._socketTimeoutSec * 1000,
         };
 
         return new Promise((resolve, reject) => {
@@ -183,7 +182,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     }
 
     processPackageJson(packageJson: any, serviceUrl: string, serviceName: string): Array<MashroomPortalApp> {
-        this.logger.debug(`Processing package.json of Kubernetes service: ${serviceName}`, packageJson);
+        this._logger.debug(`Processing package.json of Kubernetes service: ${serviceName}`, packageJson);
 
         if (!packageJson || !packageJson.mashroom) {
             throw new Error('No mashroom property found in package.json');
@@ -196,10 +195,10 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             throw new Error('No plugin of type portal-app found in remote portal app');
         }
 
-        return portalAppDefinitions.map((definition) => this.mapPluginDefinition(packageJson, definition, serviceUrl));
+        return portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, serviceUrl));
     }
 
-    private mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
+    private _mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
         const name = definition.name;
         if (!name) {
             throw new Error('Invalid portal app definition: No "name" attribute!');
@@ -235,7 +234,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const screenshots = definition.screenshots;
 
         const config = definition.defaultConfig || {};
-        evaluateTemplatesInConfigObject(config, this.logger);
+        evaluateTemplatesInConfigObject(config, this._logger);
         const definedRestProxies = config.restProxies;
         const restProxies: MashroomPortalProxyDefinitions = {};
 
@@ -248,11 +247,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         // Fix proxy target urls
         if (definedRestProxies) {
             for (const proxyName in definedRestProxies) {
-                if (definedRestProxies.hasOwnProperty(proxyName)) {
+                if (Object.prototype.hasOwnProperty.call(definedRestProxies, proxyName)) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
-                    const parsedUri = url.parse(targetUri);
+                    const parsedUri = new URL(targetUri);
                     if (parsedUri.hostname === 'localhost') {
-                        targetUri = serviceUrl + (parsedUri.path && parsedUri.path !== '/' ? parsedUri.path : '');
+                        targetUri = serviceUrl + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
                     }
                     restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }
@@ -285,11 +284,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         return portalApp;
     }
 
-    private removeAppsNotSeenForALongTime(): void {
+    private _removeAppsNotSeenForALongTime(): void {
         context.registry.services.forEach((service) => {
-            if (service.lastCheck < Date.now() - this.refreshIntervalSec * 1000 * 2.5) {
+            if (service.lastCheck < Date.now() - this._refreshIntervalSec * 1000 * 2.5) {
                 // Not seen for 2.5 check intervals
-                this.logger.info(`Removing portal apps because Kubernetes service ${service.name} is no longer available:`, service.foundPortalApps);
+                this._logger.info(`Removing portal apps because Kubernetes service ${service.name} is no longer available:`, service.foundPortalApps);
                 context.registry.removeService(service.name);
             }
         });

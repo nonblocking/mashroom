@@ -1,7 +1,7 @@
 
 import {VHOST_MAPPING_INFO_REQUEST_PROP_NAME} from '../constants';
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 import type {
     MashroomVHostPathMapperService as MashroomVHostPathMapperServiceType,
     RequestVHostMappingInfo
@@ -9,7 +9,7 @@ import type {
 
 export default class MashroomVHostPathMapperService implements MashroomVHostPathMapperServiceType {
 
-    getMappingInfo(request: ExpressRequest): RequestVHostMappingInfo | undefined {
+    getMappingInfo(request: Request): RequestVHostMappingInfo | undefined {
         // @ts-ignore
         return request[VHOST_MAPPING_INFO_REQUEST_PROP_NAME];
     }

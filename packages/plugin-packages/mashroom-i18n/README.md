@@ -12,12 +12,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 After that you can use the service like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 
-export default (req: ExpressRequest, res: ExpressResponse) => {
+export default (req: Request, res: Response) => {
     const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
     const currentLang = i18nService.getLanguage(req);
@@ -70,31 +68,36 @@ The exposed service is accessible through _pluginContext.services.i18n.service_
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomI18NService {
     /**
      * Get the currently set language (for current session)
      */
-    getLanguage(req: ExpressRequest): string;
+    getLanguage(req: Request): string;
+
     /**
      * Set session language
      */
-    setLanguage(language: string, req: ExpressRequest): void;
+    setLanguage(language: string, req: Request): void;
+
     /**
      * Get the message for given key and language
      */
     getMessage(key: string, language: string): string;
+
     /**
      * Get plain string in the current users language from a I18NString
      */
-    translate(req: ExpressRequest, str: I18NString): string;
+    translate(req: Request, str: I18NString): string;
+
     /**
      * Get available languages
      */
-    +availableLanguages: Array<string>;
+    readonly availableLanguages: Readonly<Array<string>>;
+
     /**
      * Get the default languages
      */
-    +defaultLanguage: string;
+    readonly defaultLanguage: string;
 }
 ```

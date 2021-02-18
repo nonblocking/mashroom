@@ -11,12 +11,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 After that you can use the service like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
 
     const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
     await cacheControlService.addCacheControlHeader(req, res);
@@ -55,16 +53,16 @@ export interface MashroomCacheControlService {
      * The resourceCanContainSensitiveInformation parameter defines if the resource could contain some sensitive user data
      * and the caching should be disabled if a user is authenticated.
      */
-     addCacheControlHeader(
+    addCacheControlHeader(
         resourceCanContainSensitiveInformation: boolean,
-        request: ExpressRequest,
-        response: ExpressResponse,
+        request: Request,
+        response: Response,
     ): Promise<void>;
 
     /**
      * Remove a previously set Cache-Control header
      */
-     removeCacheControlHeader(response: ExpressResponse): void;
+    removeCacheControlHeader(response: Response): void;
 }
 ```
 

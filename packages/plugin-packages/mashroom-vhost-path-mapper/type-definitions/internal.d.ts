@@ -1,9 +1,9 @@
 
-import type {ExpressMiddleware} from '@mashroom/mashroom/type-definitions';
-import type {RequestVHostMappingInfo} from "./index";
+import type {RequestHandler} from 'express';
+import type {RequestVHostMappingInfo} from './index';
 
 export interface MashroomVHostPathMapperMiddleware {
-    middleware(): ExpressMiddleware;
+    middleware(): RequestHandler;
 }
 
 export type VHostMappingRules = {

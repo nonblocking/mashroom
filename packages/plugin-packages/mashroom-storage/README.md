@@ -11,12 +11,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 Then use the security service like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: ExpressResponse) => {
     const storageService: MashroomStorageService = req.pluginContext.services.storage.service;
 
     const pagesCollection = await storageService.getCollection('mashroom-portal-pages');
@@ -67,43 +65,62 @@ The exposed service is accessible through _pluginContext.services.storage.servic
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomStorageService {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T: {}>(name: string): Promise<MashroomStorageCollection<T>>;
+    getCollection<T extends StorageRecord>(
+        name: string,
+    ): Promise<MashroomStorageCollection<T>>;
 }
 
-export interface MashroomStorageCollection<T: Object> {
+export interface MashroomStorageCollection<T extends StorageRecord> {
     /**
      * Find all items that match given filter (e.g. { name: 'foo' }).
      */
-    find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>>;
+    find(
+        filter?: StorageObjectFilter<T>,
+        limit?: number,
+    ): Promise<Array<StorageObject<T>>>;
+
     /**
      * Return the first item that matches the given filter or null otherwise.
      */
-    findOne(filter: StorageObjectFilter<T>): Promise<?StorageObject<T>>;
+    findOne(
+        filter: StorageObjectFilter<T>,
+    ): Promise<StorageObject<T> | null | undefined>;
+
     /**
      * Insert one item
      */
     insertOne(item: T): Promise<StorageObject<T>>;
+
     /**
      * Update the first item that matches the given filter.
      */
-    updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: $Shape<StorageObject<T>>): Promise<StorageUpdateResult>;
+    updateOne(
+        filter: StorageObjectFilter<T>,
+        propertiesToUpdate: Partial<StorageObject<T>>,
+    ): Promise<StorageUpdateResult>;
+
     /**
      * Replace the first item that matches the given filter.
      */
-    replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult>;
+    replaceOne(
+        filter: StorageObjectFilter<T>,
+        newItem: T,
+    ): Promise<StorageUpdateResult>;
+
     /**
      * Delete the first item that matches the given filter.
      */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageUpdateResult>;
+    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+
     /**
      * Delete all items that matches the given filter.
      */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageUpdateResult>;
+    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
 }
 ```
 
@@ -134,9 +151,7 @@ To register a new storage-provider plugin add this to _package.json_:
 
 The bootstrap returns the provider:
 
-```js
-// @flow
-
+```ts
 import MyStorage from './MyStorage';
 
 import type {MashroomStoragePluginBootstrapFunction} from '@mashroom/mashroom-storage/type-definitions';
@@ -151,42 +166,13 @@ export default bootstrap;
 
 The plugin has to implement the following interfaces:
 
-```js
+```ts
 export interface MashroomStorage {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T: {}>(name: string): Promise<MashroomStorageCollection<T>>;
-}
-
-export interface MashroomStorageCollection<T: {}> {
-    /**
-     * Find all items that match given filter (e.g. { name: 'foo' }).
-     */
-    find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>>;
-    /**
-     * Return the first item that matches the given filter or null otherwise.
-     */
-    findOne(filter: StorageObjectFilter<T>): Promise<?StorageObject<T>>;
-    /**
-     * Insert one item
-     */
-    insertOne(item: T): Promise<StorageObject<T>>;
-    /**
-     * Update the first item that matches the given filter.
-     */
-    updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: $Shape<StorageObject<T>>): Promise<StorageUpdateResult>;
-    /**
-     * Replace the first item that matches the given filter.
-     */
-    replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult>;
-    /**
-     * Delete the first item that matches the given filter.
-     */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
-    /**
-     * Delete all items that matches the given filter.
-     */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    getCollection<T extends StorageRecord>(
+        name: string,
+    ): Promise<MashroomStorageCollection<T>>;
 }
 ```

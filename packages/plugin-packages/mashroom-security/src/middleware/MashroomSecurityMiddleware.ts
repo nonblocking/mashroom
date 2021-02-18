@@ -1,13 +1,8 @@
 
-// @ts-ignore
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 
-import type {
-    ExpressRequest,
-    ExpressResponse,
-    ExpressNextFunction,
-    MashroomLogger,
-} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response, NextFunction} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomSecurityService,
     MashroomSecurityUser
@@ -27,7 +22,7 @@ const addUserToLogContext = (user: MashroomSecurityUser | undefined | null, logg
 export default class MashroomSecurityMiddleware implements MashroomSecurityMiddlewareType {
 
     middleware() {
-        return async (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction): Promise<unknown> => {
+        return async (req: Request, res: Response, next: NextFunction): Promise<unknown> => {
             const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.security.middleware');
             let allowed = false;
 
@@ -71,13 +66,13 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         };
     }
 
-    private async _checkAuthentication(securityService: MashroomSecurityService, req: ExpressRequest): Promise<void> {
+    private async _checkAuthentication(securityService: MashroomSecurityService, req: Request): Promise<void> {
         if (securityService.isAuthenticated(req) && !req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
             await securityService.checkAuthentication(req);
         }
     }
 
-    private async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: ExpressRequest, res: ExpressResponse): Promise<void> {
+    private async _authenticateIfPossibleWithoutUserInteraction(securityService: MashroomSecurityService, logger: MashroomLogger, req: Request, res: Response): Promise<void> {
         try {
             if (await securityService.canAuthenticateWithoutUserInteraction(req)) {
                 const responseProxy = this._createResponseProxyWithDisabledRedirect(res);
@@ -88,7 +83,7 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         }
     }
 
-    private _createResponseProxyWithDisabledRedirect(res: ExpressResponse): ExpressResponse {
+    private _createResponseProxyWithDisabledRedirect(res: Response): Response {
         const responseProxyHandler: ProxyHandler<any> = {
             get(target, key, receiver) {
                 const prop = Reflect.get(target, key, receiver);

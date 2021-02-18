@@ -85,12 +85,10 @@ The config file contains just an array of URL's:
 
 The **Service** can be used like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomPortalRemoteAppEndpointService} from '@mashroom/mashroom-portal-remote-app-registry/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const remoteAppService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
 
     const remoteApps = await remoteAppService.findAll();
@@ -121,35 +119,50 @@ The exposed service is accessible through _pluginContext.services.remotePortalAp
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomPortalRemoteAppEndpointService {
     /**
      * Register a new Remote App URL
      */
     registerRemoteAppUrl(url: string): Promise<void>;
+
     /**
      * Register a Remote App URL only for the current session (useful for testing)
      */
-    synchronousRegisterRemoteAppUrlInSession(url: string, request: ExpressRequest): Promise<void>;
+    synchronousRegisterRemoteAppUrlInSession(
+        url: string,
+        request: Request,
+    ): Promise<void>;
+
     /**
      * Unregister a Remote App
      */
     unregisterRemoteAppUrl(url: string): Promise<void>;
+
     /**
      * Find Remote App by URL
      */
-    findRemotePortalAppByUrl(url: string): Promise<?RemotePortalAppEndpoint>;
+    findRemotePortalAppByUrl(
+        url: string,
+    ): Promise<RemotePortalAppEndpoint | null | undefined>;
+
     /**
      * Return all known Remote App endpoints
      */
-    findAll(): Promise<Array<RemotePortalAppEndpoint>>;
+    findAll(): Promise<Readonly<Array<RemotePortalAppEndpoint>>>;
+
     /**
      * Update an existing Remote App endpoint
      */
-    updateRemotePortalAppEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
+    updateRemotePortalAppEndpoint(
+        remotePortalAppEndpoint: RemotePortalAppEndpoint,
+    ): Promise<void>;
+
     /**
      * Refresh (fetch new metadata) from given endpoint
      */
-    refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
+    refreshEndpointRegistration(
+        remotePortalAppEndpoint: RemotePortalAppEndpoint,
+    ): Promise<void>;
 }
 ```

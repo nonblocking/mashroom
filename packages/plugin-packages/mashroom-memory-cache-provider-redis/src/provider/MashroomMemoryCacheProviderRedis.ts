@@ -7,20 +7,20 @@ import type {IORedisClient} from '../../type-definitions';
 
 export default class MashroomMemoryCacheProviderRedis implements MashroomMemoryCacheProvider {
 
-    private logger: MashroomLogger;
+    private _logger: MashroomLogger;
 
-    constructor(private loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.memorycache.redis');
+    constructor(loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.memorycache.redis');
     }
 
     async get(region: string, key: CacheKey): Promise<CacheValue | undefined> {
-        return this.doWithClient<CacheValue>(async (client) => {
-            const json = await client.get(this.getFullKey(region, key));
+        return this._doWithClient<CacheValue>(async (client) => {
+            const json = await client.get(this._getFullKey(region, key));
             if (json) {
                 try {
                     return JSON.parse(json);
                 } catch (e) {
-                    this.logger.error('Parsing cache value failed!', e);
+                    this._logger.error('Parsing cache value failed!', e);
                 }
             }
             return undefined;
@@ -28,27 +28,27 @@ export default class MashroomMemoryCacheProviderRedis implements MashroomMemoryC
     }
 
     async set(region: string, key: CacheKey, value: CacheValue, ttlSec: number): Promise<void> {
-        return this.doWithClient<void>(async (client) => {
-            await client.set(this.getFullKey(region, key), JSON.stringify(value), 'ex', ttlSec);
+        return this._doWithClient<void>(async (client) => {
+            await client.set(this._getFullKey(region, key), JSON.stringify(value), 'ex', ttlSec);
         });
     }
 
     async del(region: string, key: CacheKey): Promise<void> {
-        return this.doWithClient<void>(async (client) => {
-            await client.del(this.getFullKey(region, key));
+        return this._doWithClient<void>(async (client) => {
+            await client.del(this._getFullKey(region, key));
         });
     }
 
     async getEntryCount(region: string): Promise<number | undefined> {
-        return this.doWithClient<number>(async (client) => {
-            const keys = await client.keys(this.getRegionPattern(region));
+        return this._doWithClient<number>(async (client) => {
+            const keys = await client.keys(this._getRegionPattern(region));
             return keys.length;
         });
     }
 
     async clear(region: string): Promise<void> {
-        return this.doWithClient<void>(async (client) => {
-            const keys = await client.keys(this.getRegionPattern(region));
+        return this._doWithClient<void>(async (client) => {
+            const keys = await client.keys(this._getRegionPattern(region));
             if (keys && keys.length) {
                 const keyPrefix = getKeyPrefix() || '';
                 const keysWithoutPrefix = keys.map((k) => k.substr(keyPrefix.length));
@@ -57,21 +57,21 @@ export default class MashroomMemoryCacheProviderRedis implements MashroomMemoryC
         });
     }
 
-    private getFullKey(region: string, key: string): string {
+    private _getFullKey(region: string, key: string): string {
         return `${region}:${key}`;
     }
 
-    private getRegionPattern(region: string): string {
+    private _getRegionPattern(region: string): string {
         const keyPrefix = getKeyPrefix() || '';
         return `${keyPrefix}${region}:*`;
     }
 
-    private async doWithClient<T>(op: (client: IORedisClient) => Promise<T>): Promise<T | undefined> {
+    private async _doWithClient<T>(op: (client: IORedisClient) => Promise<T>): Promise<T | undefined> {
         try {
             const client = await getClient();
             return await op(client);
         } catch (e) {
-            this.logger.error('Redis operation failed. Memory cache is inactive!', e);
+            this._logger.error('Redis operation failed. Memory cache is inactive!', e);
         }
         return undefined;
     }

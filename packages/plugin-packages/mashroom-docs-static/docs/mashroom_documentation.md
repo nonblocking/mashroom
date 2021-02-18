@@ -6,7 +6,7 @@ Version: [version]
 
 [https://www.mashroom-server.com](https://www.mashroom-server.com)
 
-(c) 2020 nonblocking.at gmbh
+(c) 2021 nonblocking.at gmbh
 
 ## Table of contents
 

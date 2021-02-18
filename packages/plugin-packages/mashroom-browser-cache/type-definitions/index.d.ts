@@ -1,5 +1,5 @@
 
-import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
+import type {Request, Response} from 'express';
 
 export interface MashroomCacheControlService {
     /**
@@ -9,12 +9,12 @@ export interface MashroomCacheControlService {
      */
     addCacheControlHeader(
         resourceCanContainSensitiveInformation: boolean,
-        request: ExpressRequest,
-        response: ExpressResponse,
+        request: Request,
+        response: Response,
     ): Promise<void>;
 
     /**
      * Remove a previously set Cache-Control header
      */
-    removeCacheControlHeader(response: ExpressResponse): void;
+    removeCacheControlHeader(response: Response): void;
 }

@@ -9,9 +9,9 @@
         "public/**"
     ],
     "devDependencies": {
-        "cheerio": "^1.0.0-rc.3",
-        "copyfiles": "^2.4.0",
-        "puppeteer": "^5.4.1",
+        "cheerio": "^1.0.0-rc.5",
+        "copyfiles": "^2.4.1",
+        "puppeteer": "^7.1.0",
         "showdown": "^1.9.1",
         "showdown-highlightjs-extension": "^0.1.2"
     },

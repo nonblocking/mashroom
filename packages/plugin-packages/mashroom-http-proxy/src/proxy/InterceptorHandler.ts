@@ -1,23 +1,38 @@
 
 import type {IncomingMessage} from 'http';
-import type {ExpressRequest, ExpressResponse, MashroomLogger} from '@mashroom/mashroom/type-definitions';
-import type {HttpHeaders, MashroomHttpProxyRequestInterceptorResult, MashroomHttpProxyResponseInterceptorResult} from '../../type-definitions';
+import type {Request, Response} from 'express';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {
+    HttpHeaders,
+    MashroomHttpProxyRequestInterceptorResult,
+    MashroomHttpProxyResponseInterceptorResult,
+    QueryParams
+} from '../../type-definitions';
 import type {InterceptorHandler as InterceptorHandlerType, MashroomHttpProxyInterceptorRegistry} from '../../type-definitions/internal';
 
 export default class InterceptorHandler implements InterceptorHandlerType {
 
-    constructor(private interceptorRegistry: MashroomHttpProxyInterceptorRegistry) {
+    constructor(private _interceptorRegistry: MashroomHttpProxyInterceptorRegistry) {
     }
 
-    async processRequest(clientRequest: ExpressRequest, clientResponse: ExpressResponse, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyRequestInterceptorResult> {
+    async processRequest(clientRequest: Request, clientResponse: Response, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyRequestInterceptorResult> {
         let existingHeaders = { ...clientRequest.headers, ...additionalHeaders };
-        let existingQueryParams = { ...clientRequest.query };
+        let existingQueryParams: QueryParams = {};
+        Object.keys(clientRequest.query || {}).forEach((queryKey) => {
+            const queryValue = clientRequest.query[queryKey];
+            if (Array.isArray(queryValue)) {
+                existingQueryParams[queryKey] = (queryValue as Array<any>).map((v) => v.toString());
+            } else {
+                existingQueryParams[queryKey] = queryValue?.toString();
+            }
+        });
+
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
         let addQueryParams = {};
         let removeQueryParams: Array<string> = [];
         let rewrittenTargetUri = targetUri;
-        const interceptors = this.interceptorRegistry.interceptors;
+        const interceptors = this._interceptorRegistry.interceptors;
         for (let i = 0; i < interceptors.length; i++) {
             const {pluginName, interceptor} = interceptors[i];
             try {
@@ -82,11 +97,11 @@ export default class InterceptorHandler implements InterceptorHandlerType {
         }
     }
 
-    async processResponse(clientRequest: ExpressRequest, clientResponse: ExpressResponse, targetUri: string, targetResponse: IncomingMessage, logger: MashroomLogger): Promise<MashroomHttpProxyResponseInterceptorResult> {
+    async processResponse(clientRequest: Request, clientResponse: Response, targetUri: string, targetResponse: IncomingMessage, logger: MashroomLogger): Promise<MashroomHttpProxyResponseInterceptorResult> {
         let existingHeaders = { ...targetResponse.headers };
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
-        const interceptors = this.interceptorRegistry.interceptors;
+        const interceptors = this._interceptorRegistry.interceptors;
         for (let i = 0; i < interceptors.length; i++) {
             const {pluginName, interceptor} = interceptors[i];
             try {

@@ -11,10 +11,10 @@ import {HttpClientModule} from "@angular/common/http";
 })
 export class AppModule {
 
-    constructor(private resolver: ComponentFactoryResolver) {
+    constructor(private _resolver: ComponentFactoryResolver) {
     }
 
     public resolveComponentFactory(): ComponentFactory<AppComponent> {
-        return this.resolver.resolveComponentFactory(AppComponent);
+        return this._resolver.resolveComponentFactory(AppComponent);
     }
 }

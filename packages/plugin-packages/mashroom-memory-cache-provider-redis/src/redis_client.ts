@@ -52,7 +52,7 @@ export default async (): Promise<IORedisClient> => {
     });
 
     // Wait for a connection a few seconds
-    await new Promise((resolve) => {
+    await new Promise<void>((resolve) => {
         let resolved = false;
         _client && _client.on('connect', () => {
             setTimeout(() => {

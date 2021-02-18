@@ -24,6 +24,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -47,9 +54,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -114,6 +122,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -137,9 +152,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -202,6 +218,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -225,9 +248,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -296,6 +320,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -319,10 +350,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -393,6 +424,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": "Prometheus",
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -416,9 +454,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -484,6 +523,17 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "color": {},
+                    "custom": {},
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": []
+                    }
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -507,9 +557,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -519,10 +570,24 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "sum(rate(nodejs_gc_pause_seconds_total{service=\"Mashroom\"}[5m]))",
+                    "expr": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{kind=\"major\"}[5m])) by (le))",
                     "interval": "",
-                    "legendFormat": "GC Pauses",
+                    "legendFormat": "GC Duration Major",
                     "refId": "A"
+                },
+                {
+                    "expr": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{kind=\"minor\"}[5m])) by (le))",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "GC Duration Minor",
+                    "refId": "B"
+                },
+                {
+                    "expr": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{kind=\"incremental\"}[5m])) by (le))",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "GC Duration Incr",
+                    "refId": "C"
                 }
             ],
             "thresholds": [],
@@ -574,6 +639,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -597,9 +669,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -662,6 +735,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 0,
             "fillGradient": 0,
             "gridPos": {
@@ -685,9 +765,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -710,21 +791,30 @@
                 },
                 {
                     "expr": "mashroom_https_proxy_active_connections_total{service=\"Mashroom\"}",
+                    "hide": false,
                     "interval": "",
                     "legendFormat": "HTTPS Active",
-                    "refId": "C"
+                    "refId": "D"
                 },
                 {
                     "expr": "mashroom_https_proxy_idle_connections_total{service=\"Mashroom\"}",
+                    "hide": false,
                     "interval": "",
                     "legendFormat": "HTTPS Idle",
-                    "refId": "D"
+                    "refId": "C"
                 },
                 {
                     "expr": "mashroom_http_proxy_max_connections{service=\"Mashroom\"}",
                     "interval": "",
-                    "legendFormat": "Max",
+                    "legendFormat": "HTTP Max",
                     "refId": "E"
+                },
+                {
+                    "expr": "mashroom_https_proxy_max_connections{service=\"Mashroom\"}",
+                    "hide": false,
+                    "interval": "",
+                    "legendFormat": "HTTPS Max",
+                    "refId": "F"
                 }
             ],
             "thresholds": [],
@@ -776,6 +866,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -799,9 +896,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -864,6 +962,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -887,9 +992,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -958,6 +1064,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -981,9 +1094,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -1060,6 +1174,13 @@
             "dashLength": 10,
             "dashes": false,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "links": []
+                },
+                "overrides": []
+            },
             "fill": 1,
             "fillGradient": 0,
             "gridPos": {
@@ -1083,9 +1204,10 @@
             "linewidth": 1,
             "nullPointMode": "null",
             "options": {
-                "dataLinks": []
+                "alertThreshold": true
             },
             "percentage": false,
+            "pluginVersion": "7.4.2",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -1145,6 +1267,38 @@
         {
             "cacheTimeout": null,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [
+                        {
+                            "$$hashKey": "object:403",
+                            "id": 0,
+                            "op": "=",
+                            "text": "N/A",
+                            "type": 1,
+                            "value": "null"
+                        }
+                    ],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 1
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
             "gridPos": {
                 "h": 3,
                 "w": 4,
@@ -1154,47 +1308,19 @@
             "id": 26,
             "links": [],
             "options": {
-                "fieldOptions": {
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "mean"
                     ],
-                    "defaults": {
-                        "mappings": [
-                            {
-                                "$$hashKey": "object:403",
-                                "id": 0,
-                                "op": "=",
-                                "text": "N/A",
-                                "type": 1,
-                                "value": "null"
-                            }
-                        ],
-                        "max": 1,
-                        "min": 0,
-                        "nullValueMode": "connected",
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {
-                                    "color": "red",
-                                    "value": null
-                                },
-                                {
-                                    "color": "green",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "unit": "none"
-                    },
-                    "overrides": [],
+                    "fields": "",
                     "values": false
                 },
-                "orientation": "horizontal",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false
+                "showThresholdMarkers": false,
+                "text": {}
             },
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "targets": [
                 {
                     "expr": "mashroom_sessions_mongodb_connected{service=\"Mashroom\"}",
@@ -1211,6 +1337,38 @@
         {
             "cacheTimeout": null,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [
+                        {
+                            "$$hashKey": "object:403",
+                            "id": 0,
+                            "op": "=",
+                            "text": "N/A",
+                            "type": 1,
+                            "value": "null"
+                        }
+                    ],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 1
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
             "gridPos": {
                 "h": 3,
                 "w": 4,
@@ -1220,47 +1378,19 @@
             "id": 27,
             "links": [],
             "options": {
-                "fieldOptions": {
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "mean"
                     ],
-                    "defaults": {
-                        "mappings": [
-                            {
-                                "$$hashKey": "object:403",
-                                "id": 0,
-                                "op": "=",
-                                "text": "N/A",
-                                "type": 1,
-                                "value": "null"
-                            }
-                        ],
-                        "max": 1,
-                        "min": 0,
-                        "nullValueMode": "connected",
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {
-                                    "color": "red",
-                                    "value": null
-                                },
-                                {
-                                    "color": "green",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "unit": "none"
-                    },
-                    "overrides": [],
+                    "fields": "",
                     "values": false
                 },
-                "orientation": "horizontal",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false
+                "showThresholdMarkers": false,
+                "text": {}
             },
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "targets": [
                 {
                     "expr": "mashroom_storage_mongodb_connected{service=\"Mashroom\"}",
@@ -1277,6 +1407,38 @@
         {
             "cacheTimeout": null,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [
+                        {
+                            "$$hashKey": "object:403",
+                            "id": 0,
+                            "op": "=",
+                            "text": "N/A",
+                            "type": 1,
+                            "value": "null"
+                        }
+                    ],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 1
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
             "gridPos": {
                 "h": 3,
                 "w": 4,
@@ -1286,47 +1448,19 @@
             "id": 28,
             "links": [],
             "options": {
-                "fieldOptions": {
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "mean"
                     ],
-                    "defaults": {
-                        "mappings": [
-                            {
-                                "$$hashKey": "object:403",
-                                "id": 0,
-                                "op": "=",
-                                "text": "N/A",
-                                "type": 1,
-                                "value": "null"
-                            }
-                        ],
-                        "max": 1,
-                        "min": 0,
-                        "nullValueMode": "connected",
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {
-                                    "color": "red",
-                                    "value": null
-                                },
-                                {
-                                    "color": "green",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "unit": "none"
-                    },
-                    "overrides": [],
+                    "fields": "",
                     "values": false
                 },
-                "orientation": "horizontal",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false
+                "showThresholdMarkers": false,
+                "text": {}
             },
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "targets": [
                 {
                     "expr": "mashroom_sessions_redis_nodes_connected{service=\"Mashroom\"}",
@@ -1343,6 +1477,38 @@
         {
             "cacheTimeout": null,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [
+                        {
+                            "$$hashKey": "object:403",
+                            "id": 0,
+                            "op": "=",
+                            "text": "N/A",
+                            "type": 1,
+                            "value": "null"
+                        }
+                    ],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 1
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
             "gridPos": {
                 "h": 3,
                 "w": 4,
@@ -1352,47 +1518,19 @@
             "id": 29,
             "links": [],
             "options": {
-                "fieldOptions": {
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "mean"
                     ],
-                    "defaults": {
-                        "mappings": [
-                            {
-                                "$$hashKey": "object:403",
-                                "id": 0,
-                                "op": "=",
-                                "text": "N/A",
-                                "type": 1,
-                                "value": "null"
-                            }
-                        ],
-                        "max": 1,
-                        "min": 0,
-                        "nullValueMode": "connected",
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {
-                                    "color": "red",
-                                    "value": null
-                                },
-                                {
-                                    "color": "green",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "unit": "none"
-                    },
-                    "overrides": [],
+                    "fields": "",
                     "values": false
                 },
-                "orientation": "horizontal",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false
+                "showThresholdMarkers": false,
+                "text": {}
             },
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "targets": [
                 {
                     "expr": "mashroom_memory_cache_redis_nodes_connected{service=\"Mashroom\"}",
@@ -1409,6 +1547,38 @@
         {
             "cacheTimeout": null,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [
+                        {
+                            "$$hashKey": "object:403",
+                            "id": 0,
+                            "op": "=",
+                            "text": "N/A",
+                            "type": 1,
+                            "value": "null"
+                        }
+                    ],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 1
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
             "gridPos": {
                 "h": 3,
                 "w": 4,
@@ -1418,47 +1588,19 @@
             "id": 30,
             "links": [],
             "options": {
-                "fieldOptions": {
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "mean"
                     ],
-                    "defaults": {
-                        "mappings": [
-                            {
-                                "$$hashKey": "object:403",
-                                "id": 0,
-                                "op": "=",
-                                "text": "N/A",
-                                "type": 1,
-                                "value": "null"
-                            }
-                        ],
-                        "max": 1,
-                        "min": 0,
-                        "nullValueMode": "connected",
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {
-                                    "color": "red",
-                                    "value": null
-                                },
-                                {
-                                    "color": "green",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "unit": "none"
-                    },
-                    "overrides": [],
+                    "fields": "",
                     "values": false
                 },
-                "orientation": "horizontal",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false
+                "showThresholdMarkers": false,
+                "text": {}
             },
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "targets": [
                 {
                     "expr": "mashroom_messaging_mqtt_connected{service=\"Mashroom\"}",
@@ -1475,6 +1617,38 @@
         {
             "cacheTimeout": null,
             "datasource": null,
+            "fieldConfig": {
+                "defaults": {
+                    "custom": {},
+                    "mappings": [
+                        {
+                            "$$hashKey": "object:403",
+                            "id": 0,
+                            "op": "=",
+                            "text": "N/A",
+                            "type": 1,
+                            "value": "null"
+                        }
+                    ],
+                    "max": 1,
+                    "min": 0,
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "red",
+                                "value": null
+                            },
+                            {
+                                "color": "green",
+                                "value": 1
+                            }
+                        ]
+                    },
+                    "unit": "none"
+                },
+                "overrides": []
+            },
             "gridPos": {
                 "h": 3,
                 "w": 4,
@@ -1484,47 +1658,19 @@
             "id": 31,
             "links": [],
             "options": {
-                "fieldOptions": {
+                "orientation": "horizontal",
+                "reduceOptions": {
                     "calcs": [
                         "mean"
                     ],
-                    "defaults": {
-                        "mappings": [
-                            {
-                                "$$hashKey": "object:403",
-                                "id": 0,
-                                "op": "=",
-                                "text": "N/A",
-                                "type": 1,
-                                "value": "null"
-                            }
-                        ],
-                        "max": 1,
-                        "min": 0,
-                        "nullValueMode": "connected",
-                        "thresholds": {
-                            "mode": "absolute",
-                            "steps": [
-                                {
-                                    "color": "red",
-                                    "value": null
-                                },
-                                {
-                                    "color": "green",
-                                    "value": 1
-                                }
-                            ]
-                        },
-                        "unit": "none"
-                    },
-                    "overrides": [],
+                    "fields": "",
                     "values": false
                 },
-                "orientation": "horizontal",
                 "showThresholdLabels": false,
-                "showThresholdMarkers": false
+                "showThresholdMarkers": false,
+                "text": {}
             },
-            "pluginVersion": "6.7.3",
+            "pluginVersion": "7.4.2",
             "targets": [
                 {
                     "expr": "mashroom_messaging_amqp_connected{service=\"Mashroom\"}",
@@ -1540,7 +1686,7 @@
         }
     ],
     "refresh": "10s",
-    "schemaVersion": 22,
+    "schemaVersion": 27,
     "style": "dark",
     "tags": [],
     "templating": {
@@ -1567,8 +1713,5 @@
     "timezone": "",
     "title": "Mashroom",
     "uid": "Du04HfgMz",
-    "variables": {
-        "list": []
-    },
-    "version": 5
+    "version": 1
 }

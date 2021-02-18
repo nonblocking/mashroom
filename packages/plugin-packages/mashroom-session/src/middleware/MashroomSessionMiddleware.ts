@@ -4,9 +4,8 @@ import type {SessionOptions, Store} from 'express-session';
 import session, {MemoryStore} from 'express-session';
 import context from '../context/global_context';
 
-import type {RequestHandler} from 'express';
+import type {RequestHandler, Request, Response, NextFunction} from 'express';
 import type {MashroomSessionMiddleware as MashroomSessionMiddlewareType} from '../../type-definitions/internal';
-import type {ExpressNextFunction, ExpressRequest, ExpressResponse,} from '@mashroom/mashroom/type-definitions';
 
 const PROVIDER_NAME_BUILT_IN_MEMORY = 'memory';
 let currentStore: Store | MemoryStore | null | undefined;
@@ -20,33 +19,33 @@ export const getSessionCount = async (): Promise<number | null | undefined> => {
 
 export default class MashroomSessionMiddleware implements MashroomSessionMiddlewareType {
 
-    private sessionMiddleware: RequestHandler | undefined;
+    private _sessionMiddleware: RequestHandler | undefined;
 
-    constructor(private storeProviderName: string, private options: SessionOptions) {
+    constructor(private _storeProviderName: string, private _options: SessionOptions) {
     }
 
     middleware() {
-        return (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => {
+        return (req: Request, res: Response, next: NextFunction) => {
             const logger = req.pluginContext.loggerFactory('mashroom.session.middleware');
 
-            const storePluginChanged = this.storeProviderName !== PROVIDER_NAME_BUILT_IN_MEMORY &&
-                currentStore !== context.pluginRegistry.findProvider(this.storeProviderName);
+            const storePluginChanged = this._storeProviderName !== PROVIDER_NAME_BUILT_IN_MEMORY &&
+                currentStore !== context.pluginRegistry.findProvider(this._storeProviderName);
 
-            if (!this.sessionMiddleware || storePluginChanged) {
+            if (!this._sessionMiddleware || storePluginChanged) {
                 let store;
-                if (this.storeProviderName === PROVIDER_NAME_BUILT_IN_MEMORY) {
+                if (this._storeProviderName === PROVIDER_NAME_BUILT_IN_MEMORY) {
                     store = new MemoryStore();
                 } else {
-                    store = context.pluginRegistry.findProvider(this.storeProviderName);
+                    store = context.pluginRegistry.findProvider(this._storeProviderName);
                 }
 
                 try {
                     if (store) {
-                        const options = {...this.options, store,};
-                        logger.info(`Enabling session with provider ${this.storeProviderName} and options:`, this.options);
-                        this.sessionMiddleware = session(options);
+                        const options = {...this._options, store,};
+                        logger.info(`Enabling session with provider ${this._storeProviderName} and options:`, this._options);
+                        this._sessionMiddleware = session(options);
                     } else {
-                        logger.warn(`Cannot enable session middleware because the store provider is not loaded (yet): ${this.storeProviderName}`);
+                        logger.warn(`Cannot enable session middleware because the store provider is not loaded (yet): ${this._storeProviderName}`);
                     }
                 } catch (e) {
                     logger.error('Creating session middleware failed!', e);
@@ -55,8 +54,8 @@ export default class MashroomSessionMiddleware implements MashroomSessionMiddlew
                 currentStore = store;
             }
 
-            if (this.sessionMiddleware) {
-                this.sessionMiddleware(req, res, next);
+            if (this._sessionMiddleware) {
+                this._sessionMiddleware(req, res, next);
 
                 // Add sessionID to log context
                 logger.addContext({sessionID: req.sessionID});

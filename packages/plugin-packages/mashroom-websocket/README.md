@@ -14,12 +14,10 @@ If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/ma
 
 And you can use the security service like this:
 
-```js
-// @flow
-
+```ts
 import type {MashroomWebSocketService} from '@mashroom/mashroom-websocket/type-definitions';
 
-export default async (req: ExpressRequest, res: ExpressResponse) => {
+export default async (req: Request, res: Response) => {
     const webSocketService: MashroomWebSocketService = req.pluginContext.services.websocket.service;
 
     webSocketService.addMessageListener((path) => path === '/whatever', async (message, client) => {
@@ -87,7 +85,7 @@ The exposed service is accessible through _pluginContext.services.websocket.serv
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomWebSocketService {
     /**
      * Add a listener for message.
@@ -95,42 +93,59 @@ export interface MashroomWebSocketService {
      * (which is the sub path where the client connected, e.g. if it connected on /websocket/test the connect path would be /test)
      * or be based on the message content or both.
      */
-    addMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void;
+    addMessageListener(
+        matcher: MashroomWebSocketMatcher,
+        listener: MashroomWebSocketMessageListener,
+    ): void;
+
     /**
      * Remove a message listener
      */
-    removeMessageListener(matcher: MashroomWebSocketMatcher, listener: MashroomWebSocketMessageListener): void;
+    removeMessageListener(
+        matcher: MashroomWebSocketMatcher,
+        listener: MashroomWebSocketMessageListener,
+    ): void;
+
     /**
      * Add a listener for disconnects
      */
     addDisconnectListener(listener: MashroomWebSocketDisconnectListener): void;
+
     /**
      * Remove a disconnect listener
      */
-    removeDisconnectListener(listener: MashroomWebSocketDisconnectListener): void;
+    removeDisconnectListener(
+        listener: MashroomWebSocketDisconnectListener,
+    ): void;
+
     /**
      * Send a (JSON) message to given client.
      */
     sendMessage(client: MashroomWebSocketClient, message: any): Promise<void>;
+
     /**
      * Get all clients on given connect path
      */
     getClientsOnPath(connectPath: string): Array<MashroomWebSocketClient>;
+
     /**
      * Get all clients for a specific username
      */
     getClientsOfUser(username: string): Array<MashroomWebSocketClient>;
+
     /**
      * Get the number of connected clients
      */
     getClientCount(): number;
+
     /**
      * Close client connection (this will also trigger disconnect listeners)
      */
     close(client: MashroomWebSocketClient): void;
+
     /**
      * The base path where clients can connect
      */
-    +basePath: string;
+    readonly basePath: string;
 }
 ```

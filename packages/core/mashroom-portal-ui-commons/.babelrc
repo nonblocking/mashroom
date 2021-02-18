@@ -3,16 +3,13 @@
         [
             "@babel/preset-env",
             {
-                "targets": {
-                    "browsers": [
-                        "last 2 versions",
-                        "ie >= 11"
-                    ]
-                },
-                "useBuiltIns": "entry"
+                "modules": false
             }
         ],
         "@babel/preset-react",
-        "@babel/preset-flow"
+        "@babel/preset-typescript"
+    ],
+    "plugins": [
+        "@babel/plugin-transform-runtime"
     ]
 }

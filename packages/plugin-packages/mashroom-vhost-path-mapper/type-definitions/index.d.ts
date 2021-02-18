@@ -1,5 +1,5 @@
 
-import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
+import type {Request} from 'express';
 
 export type RequestVHostMappingInfo = {
     /**
@@ -29,7 +29,7 @@ export interface MashroomVHostPathMapperService {
     /**
      * Get the details if the url of the current path has been rewritten
      */
-    getMappingInfo(request: ExpressRequest): RequestVHostMappingInfo | undefined;
+    getMappingInfo(request: Request): RequestVHostMappingInfo | undefined;
 
 }
 

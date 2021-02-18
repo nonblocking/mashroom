@@ -52,7 +52,6 @@
                 "namespace": "proxy",
                 "bootstrap": "./dist/proxy/mashroom-bootstrap-services.js",
                 "defaultConfig": {
-                    "proxyImpl": "request",
                     "forwardMethods": [
                         "GET",
                         "POST",

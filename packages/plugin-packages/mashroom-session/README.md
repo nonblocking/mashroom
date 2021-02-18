@@ -70,7 +70,7 @@ To register a custom session-store-provider plugin add this to _package.json_:
 
 The bootstrap returns the express session store (here for example the file store):
 
-```js
+```ts
 import sessionFileStore from 'session-file-store';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';

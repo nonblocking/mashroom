@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomSecurityService from '../src/services/MashroomSecurityService';
 
@@ -223,6 +222,37 @@ describe('MashroomSecurityService', () => {
         expect(aclChecker.allowed.mock.calls[0][1]).toEqual({
             username: 'john',
             roles: ['Role2', 'Authenticated']
+        });
+    });
+
+    it('don\'t allow login with empty username or password', async () => {
+        const req: any = {
+            pluginContext: {
+                loggerFactory
+            }
+        };
+
+        let providerLoginCalled = false;
+        const aclChecker: any = {};
+        const securityProviderRegistry: any = {
+            findProvider() {
+                return {
+                    login() {
+                        providerLoginCalled = true;
+                        return null;
+                    }
+                }
+            }
+        };
+
+        const securityService = new MashroomSecurityService('testProvider', null, securityProviderRegistry, aclChecker);
+
+        const result = await securityService.login(req, '', '  ');
+
+        expect(providerLoginCalled).toBeFalsy();
+        expect(result).toEqual({
+            failureReason: 'Invalid credentials',
+            success: false
         });
     });
 

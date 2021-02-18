@@ -10,13 +10,16 @@
         "type-definitions/*"
     ],
     "devDependencies": {
-        "@babel/cli": "^7.12.1",
+        "@babel/cli": "^7.12.16",
         "@mashroom/mashroom": "1.6.4",
         "@mashroom/mashroom-security": "1.6.4",
         "@mashroom/mashroom-utils": "1.6.4",
         "@mashroom/mashroom-websocket": "1.6.4",
-        "eslint": "^7.13.0",
-        "jest": "^26.6.3"
+        "eslint": "^7.20.0",
+        "jest": "^26.6.3",
+        "typescript": "^4.1.5",
+        "@types/express": "^4.17.11",
+        "@types/jest": "^26.0.20"
     },
     "jest": {
         "verbose": true,
@@ -24,12 +27,13 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.ts"
     },
     "scripts": {
-        "lint": "eslint src test --fix",
+        "lint": "eslint src test --ext \".ts\" --fix",
+        "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src -d dist"
+        "build": "babel src -d dist --extensions \".ts\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

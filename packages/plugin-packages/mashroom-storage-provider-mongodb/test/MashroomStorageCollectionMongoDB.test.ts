@@ -1,5 +1,4 @@
 
-// @ts-ignore
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setConnectionUriAndOptions, close} from '../src/mongodb_client';
 import MashroomStorageCollectionMongoDB from '../src/storage/MashroomStorageCollectionMongoDB';

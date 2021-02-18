@@ -63,6 +63,10 @@ GC pauses rate:
 
     sum(rate(nodejs_gc_pause_seconds_total{service="Mashroom"}[5m]))
 
+GC pauses 95% quantile
+
+    histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket[5m])) by (le))
+
 User sessions:
 
     mashroom_sessions_total{service="Mashroom"}

@@ -39,4 +39,4 @@ You can override the default config in your Mashroom config file like this:
      * _$REQUEST_URL_: The original request URL
      * _$STATUS_CODE_: The status code
      * _$MASHROOM_VERSION_: The _Mashroom Server_ version
-     * _$MESSAGE\[message.key\]_: A translated message from the _mashroom-i18n_ package
+     * _$MESSAGE\[messageKey(,Default text if i18n not yet available)\]_: A translated message from the _mashroom-i18n_ package
