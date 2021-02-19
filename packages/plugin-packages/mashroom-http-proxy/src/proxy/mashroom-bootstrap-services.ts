@@ -25,10 +25,10 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const interceptorHandler = new InterceptorHandler(context.pluginRegistry);
     let proxy: Proxy;
     if (proxyImpl === 'nodeHttpProxy') {
-        logger.info('Using http-proxy impl based on node-http-proxy');
+        logger.info('Using http-proxy impl based on "node-http-proxy"');
         proxy = new ProxyImplNodeHttpProxy(socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, pluginContext.loggerFactory);
     } else {
-        logger.info('Using http-proxy impl based on request');
+        logger.info('Using http-proxy impl based on "request"');
         proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, pluginContext.loggerFactory);
     }
     const service = new MashroomHttpProxyService(forwardMethods, proxy);
