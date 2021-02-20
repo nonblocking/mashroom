@@ -1,0 +1,17 @@
+{
+    "name": "background-job",
+    "version": "1.0.0",
+    "private": true,
+    "mashroom": {
+        "plugins": [
+            {
+                "name": "Test Background Job",
+                "type": "background-job",
+                "bootstrap": "./bootstrap.js",
+                "defaultConfig": {
+                    "cronSchedule": "0/30 * * * * *"
+                }
+            }
+        ]
+    }
+}

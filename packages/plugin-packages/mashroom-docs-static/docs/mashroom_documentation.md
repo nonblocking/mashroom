@@ -616,6 +616,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-i18n](../../mashroom-i18n/README.md) [inc]
 
+[mashroom-background-jobs](../../mashroom-background-jobs/README.md) [inc]
+
 [mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc]
 
 [mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]

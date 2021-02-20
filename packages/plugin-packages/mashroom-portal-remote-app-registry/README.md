@@ -54,25 +54,25 @@ You can override the default config in your Mashroom config file like this:
 ```json
 {
   "plugins": {
-        "Mashroom Portal Remote App Registry": {
-            "remotePortalAppUrls": "./remote-portal-apps.json",
-            "socketTimeoutSec": 3,
-            "checkIntervalSec": 30,
-            "registrationRefreshIntervalSec": 3600
-        },
-        "Mashroom Portal Remote App Registry Webapp": {
-            "path": "/portal-remote-app-registry",
-            "showAddRemoteAppForm": true
-        }
-    }
+      "Mashroom Portal Remote App Background Job": {
+          "cronSchedule": "0/1 * * * *",
+          "socketTimeoutSec": 3,
+          "registrationRefreshIntervalSec": 3600
+      },
+      "Mashroom Portal Remote App Registry": {
+          "remotePortalAppUrls": "./remote-portal-apps.json"
+      },
+      "Mashroom Portal Remote App Registry Webapp": {
+          "showAddRemoteAppForm": true
+      }
+  }
 }
 ```
 
- * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (default: ./remote-portal-apps.json)
+ * _cronSchedule_: The cron schedule for the background job that scans for new apps (default: every minute)
  * _socketTimeoutSec_: Socket timeout when trying to reach the remote app (default: 3)
- * _checkIntervalSec_: The interval to check new or invalid registrations
  * _registrationRefreshIntervalSec_: Scan interval (default: 3600)
- * _path_: Path of the Admin UI and the REST API (Default: /portal-remote-app-registry)
+ * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (default: ./remote-portal-apps.json)
  * _showAddRemoteAppForm_: Show the *Add a new Remote Portal App Endpoint* form in the Admin UI
 
 The config file contains just an array of URL's:

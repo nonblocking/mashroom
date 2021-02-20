@@ -1,10 +1,9 @@
 
 import {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
-import {CoreV1Api, V1ServiceList} from "@kubernetes/client-node";
+import {V1ServiceList} from '@kubernetes/client-node';
 
 export interface ScanBackgroundJob {
-    start(): void;
-    stop(): void;
+    run(): void;
 }
 
 export interface KubernetesConnector {

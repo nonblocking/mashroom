@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+ * Remote App Registry Kubernetes: **BREAKING CHANGE**: Since it uses ow the new background job scheduler to scan the k8s cluster,
+   the configuration slightly changed. Checkout the README in *mashroom-portal-remote-app-registry-k8s*.
+ * Remote App Registry: **BREAKING CHANGE**: Since it uses ow the new background job scheduler to scan for remote apps,
+   the configuration slightly changed. Checkout the README in *mashroom-portal-remote-app-registry*.
+ * Added a background job plugin (*mashroom-background-jobs*) that allows it to schedule arbitrary jobs based on cron expressions
  * HTTP Proxy: **BREAKING CHANGE**: The bootstrap for interceptor plugins must return the interceptor directly now instead of a Promise
  * Migration to TypeScript completed (but flow types are still available).
 

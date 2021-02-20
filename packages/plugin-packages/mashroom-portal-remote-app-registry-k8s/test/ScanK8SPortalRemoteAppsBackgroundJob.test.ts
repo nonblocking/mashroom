@@ -65,7 +65,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     };
 
     it('processes the package json correctly', () => {
-        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3, 30,
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
             300, false, new DummyKubernetesConnector(), dummyLoggerFactory);
 
         const portalApps = backgroundJob.processPackageJson(packageJson, 'http://my-service.default:6789', 'my-service');

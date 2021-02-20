@@ -36,7 +36,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
                 portalApps: []
             });
 
-            context.backgroundJob.runASAP();
+            context.backgroundJob.run();
         }
     }
 

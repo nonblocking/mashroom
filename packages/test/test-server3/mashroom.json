@@ -12,8 +12,9 @@
         "Mashroom LDAP Security Provider",
         "Mashroom Messaging External Provider AMQP",
         "Mashroom Session Filestore Provider",
-        "Mashroom Portal Remote App Registry Kubernetes",
-        "Mashroom Portal Remote App Registry Kubernetes Webapp",
+        "Mashroom Portal Remote App Kubernetes Background Job",
+        "Mashroom Portal Remote App Kubernetes Registry",
+        "Mashroom Portal Remote App Kubernetes Webapp",
         "Mashroom Monitoring PM2 Exporter"
     ],
     "plugins": {

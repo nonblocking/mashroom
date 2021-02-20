@@ -23,6 +23,7 @@
         "@mashroom/mashroom": "1.6.4",
         "@mashroom/mashroom-monitoring-metrics-collector": "1.6.4",
         "@mashroom/mashroom-portal": "1.6.4",
+        "@mashroom/mashroom-background-jobs": "1.0.0",
         "@mashroom/mashroom-utils": "1.6.4",
         "@types/express": "^4.17.11",
         "@types/express-handlebars": "^3.1.0",
@@ -52,25 +53,35 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Portal Remote App Registry Kubernetes",
-                "type": "remote-portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
+                "name": "Mashroom Portal Remote App Kubernetes Background Job",
+                "type": "background-job",
+                "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
                 "defaultConfig": {
-                    "priority": 50,
+                    "cronSchedule": "0/1 * * * *",
                     "k8sNamespaces": [
                         "default"
                     ],
                     "socketTimeoutSec": 3,
-                    "scanPeriodSec": 30,
                     "refreshIntervalSec": 600,
                     "serviceNameFilter": ".*",
                     "accessViaClusterIP": false
                 }
             },
             {
-                "name": "Mashroom Portal Remote App Registry Kubernetes Webapp",
+                "name": "Mashroom Portal Remote App Kubernetes Registry",
+                "type": "remote-portal-app-registry",
+                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
+                "defaultConfig": {
+                    "priority": 50
+                }
+            },
+            {
+                "name": "Mashroom Portal Remote App Kubernetes Webapp",
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+                "requires": [
+                    "Mashroom Portal Remote App Kubernetes Background Job"
+                ],
                 "defaultConfig": {
                     "path": "/portal-remote-app-registry-kubernetes"
                 }

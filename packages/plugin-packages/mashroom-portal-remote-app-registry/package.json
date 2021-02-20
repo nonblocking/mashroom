@@ -25,6 +25,7 @@
         "@mashroom/mashroom-monitoring-metrics-collector": "1.6.4",
         "@mashroom/mashroom-portal": "1.6.4",
         "@mashroom/mashroom-storage": "1.6.4",
+        "@mashroom/mashroom-background-jobs": "1.0.0",
         "@mashroom/mashroom-utils": "1.6.4",
         "eslint": "^7.20.0",
         "jest": "^26.6.3",
@@ -56,6 +57,19 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
+                "name": "Mashroom Portal Remote App Background Job",
+                "type": "background-job",
+                "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
+                "requires": [
+                    "Mashroom Portal Remote App Endpoint Services"
+                ],
+                "defaultConfig": {
+                    "cronSchedule": "0/1 * * * *",
+                    "socketTimeoutSec": 3,
+                    "registrationRefreshIntervalSec": 3600
+                }
+            },
+            {
                 "name": "Mashroom Portal Remote App Registry",
                 "type": "remote-portal-app-registry",
                 "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
@@ -64,10 +78,7 @@
                 ],
                 "defaultConfig": {
                     "priority": 100,
-                    "remotePortalAppUrls": "./remote-portal-apps.json",
-                    "socketTimeoutSec": 3,
-                    "checkIntervalSec": 30,
-                    "registrationRefreshIntervalSec": 3600
+                    "remotePortalAppUrls": "./remote-portal-apps.json"
                 }
             },
             {
