@@ -82,7 +82,7 @@
                 }
             },
             {
-                "name": "Mashroom Portal Remote App Registry Webapp",
+                "name": "Mashroom Portal Remote App Registry Admin Webapp",
                 "type": "web-app",
                 "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
                 "requires": [

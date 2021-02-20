@@ -62,7 +62,7 @@ You can override the default config in your Mashroom config file like this:
       "Mashroom Portal Remote App Registry": {
           "remotePortalAppUrls": "./remote-portal-apps.json"
       },
-      "Mashroom Portal Remote App Registry Webapp": {
+      "Mashroom Portal Remote App Registry Admin Webapp": {
           "showAddRemoteAppForm": true
       }
   }
