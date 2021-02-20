@@ -26,7 +26,7 @@ export type MashroomHttpProxyInterceptorHolder = {
 }
 
 export interface MashroomHttpProxyInterceptorRegistry {
-    readonly interceptors: Array<MashroomHttpProxyInterceptorHolder>;
+    readonly interceptors: Readonly<Array<MashroomHttpProxyInterceptorHolder>>;
     register(order: number, pluginName: string, interceptor: MashroomHttpProxyInterceptor): void;
     unregister(pluginName: string): void;
 }

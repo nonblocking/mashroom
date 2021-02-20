@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: **BREAKING CHANGE**: The bootstrap for interceptor plugins must return the interceptor directly now instead of a Promise
  * Migration to TypeScript completed (but flow types are still available).
 
    The type aliases for express (ExpressRequest, ExpressResponse) are no longer required, so you can directly use the express types.
