@@ -59,7 +59,7 @@ export default class IFrameApp {
             console.info('Received message from iframe: ', event.data);
 
             const heightMessage: HeightMessage = event.data;
-            if (this._iframe && typeof(heightMessage.height) === 'number') {
+            if (this._iframe && typeof(heightMessage?.height) === 'number') {
                  this._iframe.style.height = `${heightMessage.height}px`;
                  this._iframe.style.overflowY = 'hidden';
                  this._iframe.scrolling = 'no';
