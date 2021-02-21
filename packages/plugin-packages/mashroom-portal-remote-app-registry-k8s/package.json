@@ -85,6 +85,18 @@
                 "defaultConfig": {
                     "path": "/portal-remote-app-registry-kubernetes"
                 }
+            },
+            {
+                "name": "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
+                "type": "admin-ui-integration",
+                "requires": [
+                    "Mashroom Portal Remote App Kubernetes Admin Webapp"
+                ],
+                "target": "Mashroom Portal Remote App Kubernetes Admin Webapp",
+                "defaultConfig": {
+                    "menuTitle": "Remote Portal Apps (K8S)",
+                    "path": "/remote-portal-apps-k8s"
+                }
             }
         ]
     }

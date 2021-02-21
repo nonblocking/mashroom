@@ -18,6 +18,7 @@ import MashroomWebAppPluginLoader from '../plugins/loader/MashroomWebAppPluginLo
 import MashroomApiPluginLoader from '../plugins/loader/MashroomApiPluginLoader';
 import MashroomMiddlewarePluginLoader from '../plugins/loader/MashroomMiddlewarePluginLoader';
 import MashroomStaticDocumentsPluginLoader from '../plugins/loader/MashroomStaticDocumentsPluginLoader';
+import MashroomAdminUIIntegrationLoader from '../plugins/loader/MashroomAdminUIIntegrationLoader';
 import MashroomServicesLoader from '../plugins/loader/MashroomServicesLoader';
 import MashroomServiceRegistry from '../services/MashroomServiceRegistry';
 import MashroomPluginService from '../services/MashroomPluginService';
@@ -145,6 +146,7 @@ const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, exp
     pluginRegistry.registerPluginLoader('static', new MashroomStaticDocumentsPluginLoader(expressApplication, loggerFactory));
     pluginRegistry.registerPluginLoader('middleware', new MashroomMiddlewarePluginLoader(middlewarePluginDelegate, loggerFactory));
     pluginRegistry.registerPluginLoader('services', new MashroomServicesLoader(serviceRegistry, loggerFactory));
+    pluginRegistry.registerPluginLoader('admin-ui-integration', new MashroomAdminUIIntegrationLoader(loggerFactory));
 };
 
 const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType, pluginRegistry: MashroomPluginRegistryType,

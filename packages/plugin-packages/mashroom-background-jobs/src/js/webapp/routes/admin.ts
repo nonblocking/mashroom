@@ -23,7 +23,7 @@ export const adminIndex = async (req: Request, res: Response) => {
         nextInvocation: formatDate(nextInvocation),
         lastInvocation: formatDate(lastInvocation?.timestamp),
         executionTime: lastInvocation ? `${lastInvocation.executionTimeMs}ms` : '',
-        statusClass: lastInvocation?.success ? 'success' : 'error',
+        statusClass: lastInvocation ? (lastInvocation.success ? 'success' : 'error') : '',
         status: lastInvocation ? (lastInvocation.success ? 'Success' : `Error: ${lastInvocation?.errorMessage}`) : '',
     }));
 

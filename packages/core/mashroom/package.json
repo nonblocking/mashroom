@@ -49,6 +49,7 @@
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src -d dist --extensions \".ts\""
+        "build": "babel src -d dist --extensions \".ts\"",
+        "dev": "npm run build && node dist/server.js"
     }
 }

@@ -69,7 +69,7 @@ a, a:visited, a:focus {
 }
 
 table, th, td {
-    border: 1px solid #CCC;
+    border: none;
 }
 
 table {
@@ -77,16 +77,21 @@ table {
     border-collapse: collapse;
 }
 
-td {
-    padding: 6px 10px;
-}
-
 th {
-    background-color: #EFEFEF;
     padding: 8px 10px;
     text-align: left;
     vertical-align: top;
     white-space: nowrap;
+    border-bottom: 1px solid #666;
+    font-weight: normal;
+    font-family: Georgia, serif;
+    font-size: 1.05em;
+}
+
+td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #AAA;
+    vertical-align: top;
 }
 
 tr.row-error {

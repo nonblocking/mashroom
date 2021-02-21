@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Admin UI (under /mashroom) improved
+ * Added a new plugin type *admin-ui-integration* to register an arbitrary *web-app* or *static* plugin as panel in the Admin UI
+   (will be integrated via iframe)
  * Remote App Registry Kubernetes: **BREAKING CHANGE**: Since it uses ow the new background job scheduler to scan the k8s cluster,
    you also need to add *mashroom-background-jobs* to your dependencies, and the configuration slightly changed.
    Checkout the README in *mashroom-portal-remote-app-registry-k8s*.

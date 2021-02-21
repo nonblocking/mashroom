@@ -94,6 +94,18 @@
                 }
             },
             {
+                "name": "Mashroom Portal Remote App Registry Admin Webapp Integration",
+                "type": "admin-ui-integration",
+                "requires": [
+                    "Mashroom Portal Remote App Registry Admin Webapp"
+                ],
+                "target": "Mashroom Portal Remote App Registry Admin Webapp",
+                "defaultConfig": {
+                    "menuTitle": "Remote Portal Apps",
+                    "path": "/remote-portal-apps"
+                }
+            },
+            {
                 "name": "Mashroom Portal Remote App Endpoint Services",
                 "type": "services",
                 "namespace": "remotePortalAppEndpoint",

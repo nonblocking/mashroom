@@ -68,12 +68,25 @@
                 }
             },
             {
+                "name": "Mashroom Background Jobs Admin Webapp Integration",
+                "type": "admin-ui-integration",
+                "requires": [
+                    "Mashroom Background Jobs Admin Webapp"
+                ],
+                "target": "Mashroom Background Jobs Admin Webapp",
+                "defaultConfig": {
+                    "menuTitle": "Background Jobs",
+                    "path": "/background-jobs"
+                }
+            },
+            {
                 "name": "Mashroom Background Job Plugin Loader",
                 "type": "plugin-loader",
                 "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
                 "loads": "background-job",
                 "requires": [
                     "Mashroom Background Jobs Services"
+
                 ]
             }
         ]

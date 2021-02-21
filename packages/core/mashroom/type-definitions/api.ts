@@ -211,6 +211,7 @@ export type MashroomPluginType =
     | 'services'
     | 'storage'
     | 'plugin-loader'
+    | 'admin-ui-integration'
     | string;
 
 /**

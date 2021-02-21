@@ -38,17 +38,28 @@ const serviceRows = (pluginContext: MashroomPluginContext) => {
 };
 
 const serviceNames = (pluginContext: MashroomPluginContext) => {
-    const s = [];
+    const services = [];
     for (const namespace in pluginContext.services) {
         if (pluginContext.services.hasOwnProperty(namespace)) {
             for (const serviceName in pluginContext.services[namespace]) {
                 if (pluginContext.services[namespace].hasOwnProperty(serviceName)) {
-                    s.push({namespace, serviceName});
+                    services.push({namespace, serviceName});
                 }
             }
         }
     }
-    return s;
+
+    services.sort((s1, s2) => {
+        if (s1.namespace === 'core') {
+            return -1;
+        }
+        if (s2.namespace === 'core') {
+            return 1;
+        }
+        return s1.namespace.localeCompare(s2.namespace)
+    });
+
+    return services;
 };
 
 const methods = (namespace: string, serviceName: string, pluginContext: MashroomPluginContext) => {

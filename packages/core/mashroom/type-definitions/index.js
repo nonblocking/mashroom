@@ -144,7 +144,7 @@ export interface MashroomPluginPackage extends MashroomEventEmitter<MashroomPlug
     +errorMessage: ?string;
 }
 
-export type MashroomPluginType = 'web-app' | 'api' | 'middleware' | 'static' | 'services' | 'storage' | 'plugin-loader' | string;
+export type MashroomPluginType = 'web-app' | 'api' | 'middleware' | 'static' | 'services' | 'storage' | 'plugin-loader' | 'admin-ui-integration' | string;
 
 /**
  * The plugin definition as found within the package.json of the plugin package

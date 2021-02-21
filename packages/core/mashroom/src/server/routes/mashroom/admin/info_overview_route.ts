@@ -1,19 +1,12 @@
 
 import infoTemplate from './template';
-import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
-import {isNodeCluster, getWorkerId, getAllWorkerPids} from '@mashroom/mashroom-utils/lib/cluster_utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomPluginContext} from '../../../../../type-definitions';
 
 const overviewRoute = async (req: Request, res: Response) => {
-    let clusterDetailsHtml = '';
-    if (isNodeCluster()) {
-        clusterDetailsHtml = await clusterDetails();
-    }
-
     res.type('text/html');
-    res.send(infoTemplate(overview(req.pluginContext, clusterDetailsHtml), req));
+    res.send(infoTemplate(overview(req.pluginContext), req));
 };
 
 export default overviewRoute;
@@ -24,60 +17,103 @@ const getUptime = () => {
     return date.toISOString().substr(11, 8);
 };
 
-const clusterDetails = async () => {
-    const workerPids = await getAllWorkerPids();
+const overview = (pluginContext: MashroomPluginContext) => `
+    <h2>Server Overview</h2>
+    ${serverOverviewTable(pluginContext)}
+    <div class="details-link">
+        <a href="/mashroom/admin/server-info">Server Details</a>
+    </div>
+    <h2>Overview Plugins</h2>
+    ${pluginOverviewTable(pluginContext)}
+`;
 
+const serverOverviewTable = (pluginContext: MashroomPluginContext) => {
     return `
-        <tr>
-            <th>Node Worker ID</th>
-            <td>${getWorkerId()}</td>
-        </tr>
-        <tr>
-            <th>Node Worker PIDs</th>
-            <td>${workerPids.join(', ')}</td>
-        </tr>
+        <table>
+            <tr>
+                <th>Server Name</th>
+                <td>${pluginContext.serverConfig.name}</td>
+            </tr>
+                <tr>
+                <th>Server Uptime</th>
+                <td>${getUptime()}</td>
+            </tr>
+            <tr>
+                <th>Mashroom Server Version</th>
+                <td>${pluginContext.serverInfo.version}</td>
+            </tr>
+            <tr>
+                <th>Packages in Dev Mode</th>
+                <td>${pluginContext.serverInfo.devMode ? '<span style="color:orange">Yes</span>' : 'No'}</td>
+            </tr>
+        </table>
     `;
 }
 
-const overview = (pluginContext: MashroomPluginContext, clusterDetails: string) => `
-    <table>
-        <tr>
-            <th>Server Name</th>
-            <td>${pluginContext.serverConfig.name}</td>
-        </tr>
-        <tr>
-            <th>Server Uptime (sec)</th>
-            <td>${getUptime()}</td>
-        </tr>
-        <tr>
-            <th>Process ID</th>
-            <td>${process.pid}</td>
-        </tr>
-        <tr>
-            <th>Mashroom Server Version</th>
-            <td>${pluginContext.serverInfo.version}</td>
-        </tr>
-        <tr>
-            <th>Packages in Dev Mode</th>
-            <td>${pluginContext.serverInfo.devMode ? '<span style="color:orange">Yes</span>' : 'No'}</td>
-        </tr>
-        <tr>
-            <th>Node.js Version</th>
-            <td>${process.versions['node']}</td>
-        </tr>
-        <tr>
-            <th>Node Cluster</th>
-            <td>${isNodeCluster() ? 'Yes' : 'No'}</td>
-        </tr>
-        ${clusterDetails}
-        <tr>
-            <th>Server Configuration</th>
-            <td><div class="json">${jsonToHtml(pluginContext.serverConfig)}</div></td>
-        </tr>
-        <tr>
-            <th>Environment</th>
-            <td><div class="json">${jsonToHtml(process.env)}</div></td>
-        </tr>
-    </table>
-`;
+const pluginOverviewTable = (pluginContext: MashroomPluginContext) => {
+    const pluginService = pluginContext.services.core.pluginService;
+
+    const packageCount = pluginService.getPluginPackages().length;
+    const packageReadyCount = pluginService.getPluginPackages().filter((p) => p.status === 'ready').length;
+    const packageErrorCount = pluginService.getPluginPackages().filter((p) => p.status === 'error').length;
+    const pluginCount = pluginService.getPlugins().length;
+    const pluginsReadyCount = pluginService.getPlugins().filter((p) => p.status === 'loaded').length;
+    const pluginsErrorCount = pluginService.getPlugins().filter((p) => p.status === 'error').length;
+    const middlewareCount = pluginService.getPlugins().filter((p) => p.type === 'middleware').length;
+    const middlewareReadyCount = pluginService.getPlugins().filter((p) => p.type === 'middleware' && p.status === 'loaded').length;
+    const middlewareErrorCount = pluginService.getPlugins().filter((p) => p.type === 'middleware' && p.status === 'error').length;
+    const servicesCount = pluginService.getPlugins().filter((p) => p.type === 'services').length;
+    const servicesReadyCount = pluginService.getPlugins().filter((p) => p.type === 'services' && p.status === 'loaded').length;
+    const servicesErrorCount = pluginService.getPlugins().filter((p) => p.type === 'services' && p.status === 'error').length;
+    const webappsCount = pluginService.getPlugins().filter((p) => p.type === 'web-app').length;
+    const webappsReadyCount = pluginService.getPlugins().filter((p) => p.type === 'web-app' && p.status === 'loaded').length;
+    const webappsErrorCount = pluginService.getPlugins().filter((p) => p.type === 'web-app' && p.status === 'error').length;
+
+    return `
+        <table>
+            <tr>
+                <th>&nbsp;</th>
+                <th>Total</th>
+                <th>Ready</th>
+                <th>Error</th>
+                <th>&nbsp;</th>
+            </tr>
+            <tr>
+                <td>Plugin Packages</td>
+                <td>${packageCount}</td>
+                <td><span style="color:green">${packageReadyCount || ''}</span></td>
+                <td><span style="color:red">${packageErrorCount || ''}</span></td>
+                 <td><a href="/mashroom/admin/plugin-packages">Details</a></td>
+            </tr>
+            <tr>
+                <td>Plugins</td>
+                <td>${pluginCount}</td>
+                <td><span style="color:green">${pluginsReadyCount || ''}</span></td>
+                <td><span style="color:red">${pluginsErrorCount || ''}</span></td>
+                <td><a href="/mashroom/admin/plugins">Details</a></td>
+            </tr>
+            <tr>
+                <td>Middlewares</td>
+                <td>${middlewareCount}</td>
+                <td><span style="color:green">${middlewareReadyCount || ''}</span></td>
+                <td><span style="color:red">${middlewareErrorCount || ''}</span></td>
+                <td><a href="/mashroom/admin/middleware">Details</a></td>
+            </tr>
+            <tr>
+                <td>Services</td>
+                <td>${servicesCount}</td>
+                <td><span style="color:green">${servicesReadyCount || ''}</span></td>
+                <td><span style="color:red">${servicesErrorCount || ''}</span></td>
+                <td><a href="/mashroom/admin/services">Details</a></td>
+            </tr>
+            <tr>
+                <td>Webapps</td>
+                <td>${webappsCount}</td>
+                <td><span style="color:green">${webappsReadyCount || ''}</span></td>
+                <td><span style="color:red">${webappsErrorCount || ''}</span></td>
+                <td><a href="/mashroom/admin/webapps">Details</a></td>
+            </tr>
+        </table>
+    `;
+};
 
