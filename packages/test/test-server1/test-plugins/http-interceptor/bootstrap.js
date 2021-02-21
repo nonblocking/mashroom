@@ -22,7 +22,7 @@ class TestInterceptor {
     }
 }
 
-const bootstrap = async () => {
+const bootstrap = () => {
     return new TestInterceptor();
 };
 

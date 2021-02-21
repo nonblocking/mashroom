@@ -1,5 +1,5 @@
 {
-    "name": "@mashroom/test-http-interceptor",
+    "name": "http-interceptor",
     "version": "1.0.0",
     "private": true,
     "mashroom": {

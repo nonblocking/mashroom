@@ -1,0 +1,46 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
+    <script type="application/javascript">
+        var lastContentHeight = null;
+        function sendHeight() {
+            var contentHeight = document.body.offsetHeight;
+            if (parent !== window && lastContentHeight !== contentHeight) {
+                parent.postMessage({
+                    height: contentHeight + 20
+                }, "*");
+                lastContentHeight = contentHeight;
+            }
+        }
+
+        setInterval(sendHeight, 1000);
+    </script>
+
+    <title>Mashroom Background Jobs</title>
+</head>
+<body>
+    <div class="background-jobs">
+        <h3>Background Jobs</h3>
+
+        <table border="1" cellspacing="0" cellpadding="10">
+            <tr>
+                <th>Name</th><th>Next Invocation</th><th>Last Invocation</th><th>Last Execution Time</th><th>Last Invocation Status</th>
+            </tr>
+            {{#each jobs}}
+                <tr class="{{this.statusClass}}">
+                    <td>{{this.name}}</td>
+                    <td>{{this.nextInvocation}}</td>
+                    <td>{{this.lastInvocation}}</td>
+                    <td>{{this.executionTime}}</td>
+                    <td class="{{this.statusClass}}">{{this.status}}</td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+</body>
+</html>

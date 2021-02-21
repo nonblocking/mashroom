@@ -12,122 +12,20 @@ const pluginsRoute = (req: Request, res: Response) => {
 
 export default pluginsRoute;
 
+const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const plugins = (pluginContext: MashroomPluginContext) => `
-    <h2>Overview</h2>
-    ${pluginOverviewTable(pluginContext)}
     <h2>Plugins</h2>
     ${pluginTable(pluginContext)}
-    <h2>Plugin Packages</h2>
-    ${pluginPackagesTable(pluginContext)}
-    <h2>Plugin Loaders</h2>
-    ${pluginLoadersTable(pluginContext)}
 `;
-
-const pluginOverviewTable = (pluginContext: MashroomPluginContext) => {
-    const pluginService = pluginContext.services.core.pluginService;
-    const packageCount = pluginService.getPluginPackages().length;
-    const packageReadyCount = pluginService.getPluginPackages().filter((p) => p.status === 'ready').length;
-    const packageErrorCount = pluginService.getPluginPackages().filter((p) => p.status === 'error').length;
-    const pluginCount = pluginService.getPlugins().length;
-    const pluginsReadyCount = pluginService.getPlugins().filter((p) => p.status === 'loaded').length;
-    const pluginsErrorCount = pluginService.getPlugins().filter((p) => p.status === 'error').length;
-
-    return `
-        <table>
-            <tr>
-                <th>&nbsp;</th>
-                <th>Total</th>
-                <th>Ready</th>
-                <th>Error</th>
-            </tr>
-            <tr>
-                <td>Plugin Packages</td>
-                <td>${packageCount}</td>
-                <td><span style="color:green">${packageReadyCount || ''}</span></td>
-                <td><span style="color:red">${packageErrorCount || ''}</span></td>
-            </tr>
-            <tr>
-                <td>Plugins</td>
-                <td>${pluginCount}</td>
-                <td><span style="color:green">${pluginsReadyCount || ''}</span></td>
-                <td><span style="color:red">${pluginsErrorCount || ''}</span></td>
-            </tr>
-        </table>
-    `;
-};
-
-const pluginLoadersTable = (pluginContext: MashroomPluginContext) => {
-    const pluginLoaderRows = [];
-
-    const pluginLoaders = pluginContext.services.core.pluginService.getPluginLoaders();
-    for (const loadsType in pluginLoaders) {
-        if (pluginLoaders.hasOwnProperty(loadsType)) {
-            pluginLoaderRows.push(`
-                <tr>
-                    <td>${pluginLoaders[loadsType]?.name}</td>
-                    <td>${loadsType}</td>
-                </tr>
-            `);
-        }
-    }
-
-    return `
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Loads</th>
-            </tr>
-            ${pluginLoaderRows.join('')}
-        </table>
-    `;
-};
-
-const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
-    const pluginPackagesRows: Array<string> = [];
-
-    pluginContext.services.core.pluginService.getPluginPackages().forEach((pp) => {
-        const homepageLink = pp.homepage ? `<a target='_blank' href="${pp.homepage}">${pp.homepage}</a>` : '';
-        let statusStyle = '';
-        let rowBackgroundStyle = '';
-        if (pp.status === 'ready') {
-            statusStyle = 'color:green';
-        }
-        if (pp.status === 'error') {
-            statusStyle = 'color:red';
-            rowBackgroundStyle = 'background-color:#FFDDDD';
-        }
-        pluginPackagesRows.push(`
-            <tr style="${rowBackgroundStyle}">
-                <td>${escapeHtml(pp.name)}</td>
-                <td>${homepageLink}</td>
-                <td>${escapeHtml(pp.author || '')}</td>
-                <td>${pp.license || ''}</td>
-                <td>${pp.version}</td>
-                <td style="${statusStyle}">${pp.status}</td>
-                <td>${escapeHtml(pp.errorMessage || '')}</td>
-            </tr>`);
-    });
-
-    return `
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Homepage</th>
-                <th>Author</th>
-                <th>License</th>
-                <th>Version</th>
-                <th>Status</th>
-                <th>Error</th>
-            </tr>
-            ${pluginPackagesRows.join('')}
-        </table>
-    `;
-};
 
 const pluginTable = (pluginContext: MashroomPluginContext) => {
     const pluginRows: Array<string> = [];
 
-    pluginContext.services.core.pluginService.getPlugins().forEach((plugin, pluginIndex) => {
+    const plugins = [...pluginContext.services.core.pluginService.getPlugins()];
+    plugins.sort((p1, p2) => p1.name.localeCompare(p2.name));
+
+    plugins.forEach((plugin, pluginIndex) => {
         const config = plugin.config ? jsonToHtml(plugin.config) : '&nbsp;';
         const def = jsonToHtml(plugin.pluginDefinition);
         const lastReload = plugin.lastReloadTs ? new Date(plugin.lastReloadTs).toLocaleString() : '';
@@ -146,7 +44,7 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
                 <td>${escapeHtml(plugin.description || '')}</td>
                 <td>${plugin.type}</td>
                 <td>${escapeHtml(plugin.pluginPackage.name)}</td>
-                <td style="${statusStyle}">${plugin.status}</td>
+                <td style="${statusStyle}">${capitalize(plugin.status)}</td>
                 <td>${escapeHtml(plugin.errorMessage || '')}</td>
                 <td>${lastReload}</td>
                 <td>

@@ -17,17 +17,30 @@ const webapps = (pluginContext: MashroomPluginContext) => `
 `;
 
 const webappsList = (pluginContext: MashroomPluginContext) => {
-    const webappItems: Array<string> = [];
-    pluginContext.services.core.pluginService.getPlugins().filter((p) => p.type === 'web-app').forEach((p) => {
+    const rows: Array<string> = [];
+
+    const webapps = [...pluginContext.services.core.pluginService.getPlugins().filter((p) => p.type === 'web-app')];
+    webapps.sort((w1, w2) => w1.name.localeCompare(w2.name));
+
+    webapps.forEach((p) => {
         if (p.config && p.config.path) {
-            webappItems.push(`
-            <li>
-                <a href="${p.config.path}" target="_blank">${p.name}</a>
-            </li>
-        `);
+            rows.push(`
+                <tr>
+                    <td>${p.name}</td>
+                    <td><a href="${p.config.path}" target="_blank">${p.config.path}</a></td>
+                </tr>
+            `);
         }
     });
 
-    return `<ul>${webappItems.join('')}</ul>`;
+    return `
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Path</th>
+            </tr>
+            ${rows.join('')}
+        </table>
+    `;
 };
 

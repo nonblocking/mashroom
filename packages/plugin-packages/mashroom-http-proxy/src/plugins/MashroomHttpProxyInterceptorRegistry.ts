@@ -31,8 +31,7 @@ export default class MashroomHttpProxyInterceptorRegistry implements MashroomHtt
         this._interceptors = this.interceptors.filter((holder) => holder.pluginName !== pluginName);
     }
 
-    get interceptors(): Array<MashroomHttpProxyInterceptorHolder> {
-        // @ts-ignore
+    get interceptors(): Readonly<Array<MashroomHttpProxyInterceptorHolder>> {
         return Object.freeze(this._interceptors);
     }
 

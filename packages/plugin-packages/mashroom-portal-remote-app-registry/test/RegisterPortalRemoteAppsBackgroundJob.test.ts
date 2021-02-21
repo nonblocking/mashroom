@@ -72,7 +72,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     };
 
     it('maps the plugin definition correctly', () => {
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 3600, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
 
         const portalApp = backgroundJob.mapPluginDefinition(packageJson, pluginDefinition, remotePortalAppEndpoint);
 

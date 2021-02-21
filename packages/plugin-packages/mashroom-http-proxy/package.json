@@ -80,9 +80,9 @@
                 }
             },
             {
-                "name": "Mashroom Http Proxy Interceptor Loader",
+                "name": "Mashroom Http Proxy Interceptor Plugin Loader",
                 "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-http-proxy-interceptor-plugin-loader.js",
+                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
                 "loads": "http-proxy-interceptor"
             }
         ]

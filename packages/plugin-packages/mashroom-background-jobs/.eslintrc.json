@@ -1,0 +1,24 @@
+{
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+        "@typescript-eslint/eslint-plugin",
+        "jest"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
+    "env": {
+        "node": true,
+        "browser": false,
+        "es6": true,
+        "jest": true
+    },
+    "rules": {
+        "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+        "prefer-template": "error",
+        "prefer-object-spread": "error",
+        "no-prototype-builtins": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
+    }
+}

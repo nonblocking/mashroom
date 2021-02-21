@@ -17,8 +17,10 @@
         "Mashroom Session MongoDB Provider",
         "Mashroom Session Redis Provider",
         "Mashroom Memory Cache Redis Provider",
-        "Mashroom Portal Remote App Registry Kubernetes",
-        "Mashroom Portal Remote App Registry Kubernetes Webapp"
+        "Mashroom Portal Remote App Kubernetes Background Job",
+        "Mashroom Portal Remote App Kubernetes Registry",
+        "Mashroom Portal Remote App Kubernetes Admin Webapp",
+        "Mashroom Portal Remote App Kubernetes Admin Webapp Integration"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {

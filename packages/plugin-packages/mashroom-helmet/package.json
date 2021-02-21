@@ -40,7 +40,7 @@
                         "expectCt": false,
                         "featurePolicy": false,
                         "frameguard": {
-                            "action": "deny"
+                            "action": "sameorigin"
                         },
                         "hidePoweredBy": false,
                         "hsts": {

@@ -1,14 +1,13 @@
 
 import express from 'express';
 import app from './webapp';
-import bootstrap from '../registry/mashroom-bootstrap-remote-portal-app-registry';
+import bootstrap from '../jobs/mashroom-bootstrap-background-job';
 
 // @ts-ignore
 process.env.DUMMY_K8S_CONNECTOR = true;
 
 const pluginConfig = {
     k8sNamespaces: ['default'],
-    scanPeriodSec: 30,
     refreshIntervalSec: 120,
     serviceNameFilter: '.*',
     accessViaClusterIP: true,

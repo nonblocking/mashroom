@@ -15,27 +15,18 @@ import type {KubernetesConnector, KubernetesService, ScanBackgroundJob} from '..
 
 export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgroundJob {
 
-    private _timeout?: NodeJS.Timeout;
     private _serviceNameFilter: RegExp;
     private _logger: MashroomLogger;
 
     constructor(private _k8sNamespaces: Array<string>, serviceNameFilterStr: string, private _socketTimeoutSec: number,
-                private _scanPeriodSec: number, private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
+                private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
         this._serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
         this._logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
     }
 
-    start(): void {
-        this._kubernetesConnector.init();
-        this._scanKubernetesServices();
-        this._timeout = setInterval(() => this._scanKubernetesServices(), this._scanPeriodSec * 1000);
-    }
-
-    stop(): void {
-        if (this._timeout) {
-            clearInterval(this._timeout);
-        }
+    run(): void {
+        this._scanKubernetesServices()
     }
 
     private async _scanKubernetesServices(): Promise<void> {

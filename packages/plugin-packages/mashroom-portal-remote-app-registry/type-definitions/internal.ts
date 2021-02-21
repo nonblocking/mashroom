@@ -11,9 +11,7 @@ export type RemotePortalAppEndpointAddRequest = {
 }
 
 export interface RegisterPortalRemoteAppsBackgroundJob {
-    start(): void;
-    stop(): void;
-    runASAP(): void;
+    run(): void;
     fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<RemotePortalAppEndpoint>;
     refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
 }

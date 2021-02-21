@@ -359,3 +359,40 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 export default bootstrap;
 ```
 
+### admin-ui-integration
+
+A simple plugin to register an arbitrary *web-app* or *static* plugin as panel in the Admin UI.
+
+To register an admin-ui-integration plugin add this to package.json:
+
+```json
+{
+    "mashroom": {
+        "plugins": [{
+            "name": "My Admin Panel Integration",
+            "type": "admin-ui-integration",
+            "requires": [
+                "My Admin Panel"
+            ],
+            "target": "My Admin Panel",
+            "defaultConfig": {
+                "menuTitle": "My Admin Panel",
+                "path": "/my-admin-panel",
+                "height": "80vh",
+                "weight": 10000
+            }
+        }]
+    }
+}
+```
+
+* _target_: The actual web-app or static plugin that should be integrated
+* _defaultConfig.menuTitle_: The name that should be appear in the Admin UI menu
+* _defaultConfig.path_: The path in the Admin UI (full path will be /mashroom/admin/ext/\<your path>)
+* _defaultConfig.height_: The height of the iframe that will contain the target webapp.
+  If you want that the iframe has the full height of the webapp you have to post the height periodically to
+  the parent, like so
+  ```js
+    parent.postMessage({ height: contentHeight + 20 }, "*");
+  ```
+ * _defaultConfig.weight_: The weight of the menu entry, the higher the number the lower will be menu entry be.

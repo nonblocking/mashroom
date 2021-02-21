@@ -27,6 +27,20 @@
                 "defaultConfig": {
                     "path": "/mashroom/docs"
                 }
+            },
+            {
+                "name": "Mashroom Documentation Integration",
+                "type": "admin-ui-integration",
+                "requires": [
+                    "Mashroom Documentation"
+                ],
+                "target": "Mashroom Documentation",
+                "defaultConfig": {
+                    "menuTitle": "Documentation",
+                    "path": "/documentation",
+                    "height": "80vh",
+                    "weight": 10000
+                }
             }
         ]
     }
