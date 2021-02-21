@@ -14,6 +14,16 @@
    Checkout the README in *mashroom-portal-remote-app-registry*.
  * Added a background job plugin (*mashroom-background-jobs*) that allows it to schedule arbitrary jobs based on cron expressions
  * HTTP Proxy: **BREAKING CHANGE**: The bootstrap for interceptor plugins must return the interceptor directly now instead of a Promise
+ * HTTP Proxy: Added a second proxy implementation based on based on [node-http-proxy](https://github.com/request/request),
+   since [request](https://github.com/http-party/node-http-proxy) is deprecated. It can be enabled like this in the config:
+   ```json
+   {
+     "Mashroom Http Proxy Services": {
+       "proxyImpl": "nodeHttpProxy"
+     }
+   }
+   ```
+   Default is still the request based implementation.
  * Migration to TypeScript completed (but flow types are still available).
 
    The type aliases for express (ExpressRequest, ExpressResponse) are no longer required, so you can directly use the express types.

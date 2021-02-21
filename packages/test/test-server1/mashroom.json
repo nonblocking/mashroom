@@ -116,7 +116,8 @@
         "Mashroom Http Proxy Services": {
             "rejectUntrustedCerts": false,
             "poolMaxSockets": 10,
-            "socketTimeoutMs": 3000
+            "socketTimeoutMs": 3000,
+            "proxyImpl": "nodeHttpProxy"
         },
         "Mashroom WebSocket Webapp": {
             "restrictToRoles": null,

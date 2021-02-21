@@ -117,7 +117,7 @@ export default class ProxyImplRequest implements Proxy {
                     // Send response
                     res.status(targetResponse.statusCode);
                     Object.keys(targetResponse.headers).forEach((headerKey) => {
-                        res.setHeader(headerKey, targetResponse.headers[headerKey] as any);
+                        res.setHeader(headerKey, targetResponse.headers[headerKey] as string | Array<string>);
                     });
                     targetResponse.pipe(
                         res
