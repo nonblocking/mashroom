@@ -33,7 +33,7 @@ export default class MashroomHttpProxyInterceptorPluginLoader implements Mashroo
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomHttpProxyInterceptorPluginBootstrapFunction = plugin.requireBootstrap();
-        const interceptor: MashroomHttpProxyInterceptor = bootstrap(plugin.name, config, contextHolder);
+        const interceptor: MashroomHttpProxyInterceptor = await bootstrap(plugin.name, config, contextHolder);
         const order = config.order || DEFAULT_ORDER;
         this._logger.info(`Registering http proxy interceptor plugin: ${plugin.name} (with order: ${order})`);
         this._registry.register(order, plugin.name, interceptor);

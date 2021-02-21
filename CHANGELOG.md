@@ -16,7 +16,6 @@
    you also need to add *mashroom-background-jobs* to your dependencies, and the configuration slightly changed.
    Checkout the README in *mashroom-portal-remote-app-registry*.
  * Added a background job plugin (*mashroom-background-jobs*) that allows it to schedule arbitrary jobs based on cron expressions
- * HTTP Proxy: **BREAKING CHANGE**: The bootstrap for interceptor plugins must return the interceptor directly now instead of a Promise
  * HTTP Proxy: Added a second proxy implementation based on based on [node-http-proxy](https://github.com/request/request),
    since [request](https://github.com/http-party/node-http-proxy) is deprecated. It can be enabled like this in the config:
    ```json

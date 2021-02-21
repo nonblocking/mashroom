@@ -68,6 +68,6 @@ interface MashroomHttpProxyInterceptor {
 /*
  * Bootstrap method definition for http-proxy-interceptor plugins
  */
-export type MashroomHttpProxyInterceptorPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => MashroomHttpProxyInterceptor;
+export type MashroomHttpProxyInterceptorPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomHttpProxyInterceptor>;
 
 
