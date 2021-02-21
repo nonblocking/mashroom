@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Renamed *mashroom-portal-demo-remote-messaging* to *mashroom-portal-remote-messaging-app* because it's more a test
+   util than a demo, like the sandbox app
  * Admin UI (under /mashroom) improved
  * Added a new plugin type *admin-ui-integration* to register an arbitrary *web-app* or *static* plugin as panel in the Admin UI
    (will be integrated via iframe)

@@ -1,6 +1,6 @@
 {
-    "name": "@mashroom/mashroom-portal-demo-remote-messaging",
-    "description": "Simple app that demonstrates remote messaging",
+    "name": "@mashroom/mashroom-portal-remote-messaging-app",
+    "description": "Simple app to test remote messaging",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
