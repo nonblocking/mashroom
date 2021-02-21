@@ -65,10 +65,6 @@ https://www.mashroom-server.com
 
 https://medium.com/mashroom-server
 
-## Full Documentation
-
-https://www.mashroom-server.com/documentation
-
 ## Development
 
 After cloning the repository just run
@@ -83,3 +79,17 @@ To start the test server:
     npm start
 
 The test server will be available at http://localhost:5050
+
+## Development Resources
+
+### Plugin Examples
+
+https://github.com/nonblocking/mashroom-plugin-demos
+
+### Example Microfrontend Platform based on Mashroom and Kubernetes
+
+https://github.com/nonblocking/microfrontend-platform-kubernetes
+
+### Full Documentation
+
+https://www.mashroom-server.com/documentation

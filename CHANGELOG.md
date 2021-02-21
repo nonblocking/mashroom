@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Moved out some example plugins to the new https://github.com/nonblocking/mashroom-plugin-demos repo
  * Renamed *mashroom-portal-demo-remote-messaging* to *mashroom-portal-remote-messaging-app* because it's more a test
    util than a demo, like the sandbox app
  * Admin UI (under /mashroom) improved

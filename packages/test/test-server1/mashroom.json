@@ -7,8 +7,8 @@
             "devMode": true
         },
         {
-            "path": "./test-plugins",
-            "watch": true
+            "path": "../../../../mashroom-plugin-demos/packages",
+            "devMode": true
         }
     ],
     "indexPage": "/",
