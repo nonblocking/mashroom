@@ -10,7 +10,7 @@
         var lastContentHeight = null;
         function sendHeight() {
             var contentHeight = document.body.offsetHeight;
-            if (parent !== window && lastContentHeight !== contentHeight) {
+            if (lastContentHeight !== contentHeight) {
                 parent.postMessage({
                     height: contentHeight + 20
                 }, "*");
@@ -18,7 +18,9 @@
             }
         }
 
-        setInterval(sendHeight, 1000);
+        if (parent !== window) {
+            setInterval(sendHeight, 1000);
+        }
     </script>
 
     <title>Mashroom Background Jobs</title>

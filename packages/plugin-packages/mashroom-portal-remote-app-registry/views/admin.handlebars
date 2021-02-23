@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
     <script type="application/javascript">
         function removeEndpoint(url) {
-           sendPost(url, "delete");
+            sendPost(url, "delete");
         }
 
         function refreshEndpoint(url) {
@@ -17,15 +17,18 @@
 
         function sendPost(url, action) {
             var form = document.createElement("form");
-            form.setAttribute('method',"post");
-            form.setAttribute('action',"?csrfToken={{csrfToken}}");
+            form.setAttribute('method', "post");
+            form.setAttribute('action', "?csrfToken=
+                {{csrfToken}}"
+        )
+            ;
             var urlInput = document.createElement("input");
-            urlInput.setAttribute('type',"hidden");
-            urlInput.setAttribute('name',"_url");
+            urlInput.setAttribute('type', "hidden");
+            urlInput.setAttribute('name', "_url");
             urlInput.setAttribute("value", url);
             var actionInput = document.createElement("input");
-            actionInput.setAttribute('type',"hidden");
-            actionInput.setAttribute('name',"_action");
+            actionInput.setAttribute('type', "hidden");
+            actionInput.setAttribute('name', "_action");
             actionInput.setAttribute("value", action);
             form.appendChild(urlInput);
             form.appendChild(actionInput);
@@ -33,103 +36,111 @@
             form.submit();
         }
 
-         function openModal(content) {
-             document.getElementById('modal-content').innerHTML = content;
-             document.getElementById('modal').style.display = 'block';
-         }
+        function openModal(content) {
+            document.getElementById('modal-content').innerHTML = content;
+            document.getElementById('modal').style.display = 'block';
+        }
 
-         function closeModal() {
-             document.getElementById('modal').style.display = 'none';
-         }
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
 
-         var lastContentHeight = null;
-         function sendHeight() {
+        var lastContentHeight = null;
+
+        function sendHeight() {
             var contentHeight = document.body.offsetHeight;
-            if (parent !== window && lastContentHeight !== contentHeight) {
+            if (lastContentHeight !== contentHeight) {
                 parent.postMessage({
                     height: contentHeight + 20
                 }, "*");
                 lastContentHeight = contentHeight;
             }
-         }
+        }
 
-         setInterval(sendHeight, 1000);
+        if (parent !== window) {
+            setInterval(sendHeight, 1000);
+        }
     </script>
 
     <title>Mashroom Portal Remote App Registry</title>
 </head>
 <body>
-    {{#if showAddRemoteAppForm}}
-        <div class="add-endpoint-form">
-            <h3>Add a new Remote Portal App Endpoint</h3>
+{{#if showAddRemoteAppForm}}
+    <div class="add-endpoint-form">
+        <h3>Add a new Remote Portal App Endpoint</h3>
 
-            <form method="POST" action="?csrfToken={{csrfToken}}">
-            <input type="hidden" name="_action" value="add"/>
-            <div class="form-row">
-                <div class="form-label">
-                    <label for="url">URL</label>
-                </div>
-                <div class="form-input">
-                    <input type="text" name="_url" id="url"/>
-                </div>
+        <form method="POST" action="?csrfToken={{csrfToken}}">
+        <input type="hidden" name="_action" value="add"/>
+        <div class="form-row">
+            <div class="form-label">
+                <label for="url">URL</label>
             </div>
-            <div class="form-row">
-                <div>
-                    <input type="checkbox" name="_sessionOnly" id="sessionOnly">
-                    <label for="sessionOnly">Only for the current session</label>
-                </div>
-            </div>
-            <div class="form-row form-actions">
-                <input type="submit" value="Add"/>
-            </div>
-            </form>
-
-            <div class="error-message">
-                {{errorMessage}}
+            <div class="form-input">
+                <input type="text" name="_url" id="url"/>
             </div>
         </div>
-    {{/if}}
+        <div class="form-row">
+            <div>
+                <input type="checkbox" name="_sessionOnly" id="sessionOnly">
+                <label for="sessionOnly">Only for the current session</label>
+            </div>
+        </div>
+        <div class="form-row form-actions">
+            <input type="submit" value="Add"/>
+        </div>
+        </form>
 
-    <div class="endpoints">
-        <h3>Remote Portal App Endpoints</h3>
+        <div class="error-message">
+            {{errorMessage}}
+        </div>
+    </div>
+{{/if}}
 
-        <table border="1" cellspacing="0" cellpadding="10">
-            <tr>
-                <th>URL</th><th>Session</th><th>Status</th><th>Portal Apps</th><th>&nbsp;</th>
+<div class="endpoints">
+    <h3>Remote Portal App Endpoints</h3>
+
+    <table border="1" cellspacing="0" cellpadding="10">
+        <tr>
+            <th>URL</th>
+            <th>Session</th>
+            <th>Status</th>
+            <th>Portal Apps</th>
+            <th>&nbsp;</th>
+        </tr>
+        {{#each endpoints}}
+            <tr class="{{this.rowClass}}">
+                <td>{{this.url}}</td>
+                <td>{{this.sessionOnly}}</td>
+                <td class="{{this.statusClass}}">{{this.status}}</td>
+                <td>
+                    {{#each this.portalApps}}
+                        {{this.name}}&nbsp;({{this.version}})
+                        <a href="javascript:void(0)"
+                           onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
+                        <br/>
+                    {{/each}}
+                </td>
+                <td>
+                    {{#unless this.sessionOnly}}
+                        <a href="javascript:void(0)" onclick="refreshEndpoint('{{this.url}}')">Refresh</a>
+                        &nbsp;
+                    {{/unless}}
+                    <a href="javascript:void(0)" onclick="removeEndpoint('{{this.url}}')">Remove</a>
+                </td>
             </tr>
-            {{#each endpoints}}
-                <tr class="{{this.rowClass}}">
-                    <td>{{this.url}}</td>
-                    <td>{{this.sessionOnly}}</td>
-                    <td class="{{this.statusClass}}">{{this.status}}</td>
-                    <td>
-                       {{#each this.portalApps}}
-                           {{this.name}}&nbsp;({{this.version}})
-                           <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
-                           <br/>
-                       {{/each}}
-                    </td>
-                    <td>
-                        {{#unless this.sessionOnly}}
-                            <a href="javascript:void(0)" onclick="refreshEndpoint('{{this.url}}')">Refresh</a>
-                            &nbsp;
-                        {{/unless}}
-                        <a href="javascript:void(0)" onclick="removeEndpoint('{{this.url}}')">Remove</a>
-                    </td>
-                </tr>
-            {{/each}}
-        </table>
-    </div>
+        {{/each}}
+    </table>
+</div>
 
-    <div id="modal" style="display: none">
-        <div class="modal-wrapper">
-            <div class="modal-header">
-                <div class="modal-close" onclick="closeModal()">x</div>
-            </div>
-            <div id="modal-content">
+<div id="modal" style="display: none">
+    <div class="modal-wrapper">
+        <div class="modal-header">
+            <div class="modal-close" onclick="closeModal()">x</div>
+        </div>
+        <div id="modal-content">
 
-            </div>
         </div>
     </div>
+</div>
 </body>
 </html>
