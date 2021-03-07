@@ -112,14 +112,14 @@ describe('ProxyImplRequest', () => {
 
     it('forwards query parameters',  async () => {
         nock('https://www.mashroom-server.com')
-            .get('/foo?q=javascript')
+            .get('/foo?q=javascript%205')
             .reply(200, 'test response');
 
         const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, loggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
-            q: 'javascript'
+            q: 'javascript 5'
         };
 
         const res = createDummyResponse();
