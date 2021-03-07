@@ -58,8 +58,8 @@ export default class SubscriptionPanel extends PureComponent<Props> {
         const { subscription: { topic, status, errorMessage } } = this.props;
 
         return (
-            <div className='mashroom-demo-remote-messaging-app-subscription-status'>
-                <div className='mashroom-demo-remote-messaging-app-output-row'>
+            <div className='mashroom-remote-messaging-app-subscription-status'>
+                <div className='mashroom-remote-messaging-app-output-row'>
                     <div>
                         <FormattedMessage id='subscribeTopic' />
                     </div>
@@ -67,7 +67,7 @@ export default class SubscriptionPanel extends PureComponent<Props> {
                         {topic}
                     </div>
                 </div>
-                <div className='mashroom-demo-remote-messaging-app-output-row'>
+                <div className='mashroom-remote-messaging-app-output-row'>
                     <div>
                         <FormattedMessage id='subscriptionStatus' />
                     </div>

@@ -27,7 +27,7 @@ export default class RemoteMessagingApp extends PureComponent<Props> {
         return (
             <ReduxProvider store={store}>
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
-                    <div className='mashroom-demo-remote-messaging-app'>
+                    <div className='mashroom-remote-messaging-app'>
                         <MessageBusSendFormContainer messageBus={messageBus} />
                         <SubscriptionPanelContainer messageBus={messageBus} />
                         <MessageBusHistoryContainer />

@@ -3,10 +3,10 @@
 
 $LABEL_ROW_WIDTH: 170px;
 
-.mashroom-demo-remote-messaging-app {
+.mashroom-remote-messaging-app {
     padding: 10px;
 
-    .mashroom-demo-remote-messaging-app-form-row {
+    .mashroom-remote-messaging-app-form-row {
         margin: 10px 0;
 
         label {
@@ -25,11 +25,11 @@ $LABEL_ROW_WIDTH: 170px;
         }
     }
 
-    .mashroom-demo-remote-messaging-app-form-button-row {
+    .mashroom-remote-messaging-app-form-button-row {
         margin-left: $LABEL_ROW_WIDTH;
     }
 
-    .mashroom-demo-remote-messaging-app-output-row {
+    .mashroom-remote-messaging-app-output-row {
         display: flex;
         margin: 10px 0;
 
@@ -46,7 +46,7 @@ $LABEL_ROW_WIDTH: 170px;
         }
     }
 
-    .mashroom-demo-remote-messaging-app-subscription-status {
+    .mashroom-remote-messaging-app-subscription-status {
         margin: 20px 0;
 
         .remote-topic {

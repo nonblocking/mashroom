@@ -22,4 +22,4 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     };
 };
 
-(global as any).startRemoteMessagingDemoApp = bootstrap;
+(global as any).startRemoteMessagingApp = bootstrap;

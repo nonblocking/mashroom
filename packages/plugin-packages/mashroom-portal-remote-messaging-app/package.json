@@ -52,11 +52,11 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Portal Demo Remote Messaging App",
-                "title": "Demo Remote Messaging App",
+                "name": "Mashroom Portal Remote Messaging App",
+                "title": "Remote Messaging App",
                 "type": "portal-app",
-                "bootstrap": "startRemoteMessagingDemoApp",
-                "category": "Demo",
+                "bootstrap": "startRemoteMessagingApp",
+                "category": "Testing",
                 "resources": {
                     "js": [
                         "bundle.js"

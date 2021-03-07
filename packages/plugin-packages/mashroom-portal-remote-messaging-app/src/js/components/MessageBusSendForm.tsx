@@ -81,21 +81,21 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             }
          );
 
-        resetForm('mashroom-demo-remote-messaging-app-form');
+        resetForm('mashroom-remote-messaging-app-form');
     }
 
     render() {
         return (
-            <div className='mashroom-demo-remote-messaging-app-publish-form'>
-                <Form formId='mashroom-demo-remote-messaging-app-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
-                    <div className='mashroom-demo-remote-messaging-app-form-row'>
-                        <TextFieldContainer id='mashroom-demo-remote-messaging-app-topic' type='text' name='topic' labelId='remoteTopic' />
+            <div className='mashroom-remote-messaging-app-publish-form'>
+                <Form formId='mashroom-remote-messaging-app-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
+                    <div className='mashroom-remote-messaging-app-form-row'>
+                        <TextFieldContainer id='mashroom-remote-messaging-app-topic' type='text' name='topic' labelId='remoteTopic' />
                     </div>
-                    <div className='mashroom-demo-remote-messaging-app-form-row '>
-                        <TextareaFieldContainer id='mashroom-demo-remote-messaging-app-message' name='message' labelId='message' rows={4} />
+                    <div className='mashroom-remote-messaging-app-form-row '>
+                        <TextareaFieldContainer id='mashroom-remote-messaging-app-message' name='message' labelId='message' rows={4} />
                     </div>
-                    <div className='mashroom-demo-remote-messaging-app-form-button-row'>
-                        <Button id='mashroom-demo-remote-messaging-app-publish-message' type='submit' labelId='publishMessage'/>
+                    <div className='mashroom-remote-messaging-app-form-button-row'>
+                        <Button id='mashroom-remote-messaging-app-publish-message' type='submit' labelId='publishMessage'/>
                     </div>
                 </Form>
             </div>
