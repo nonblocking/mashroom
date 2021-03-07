@@ -94,6 +94,13 @@ describe('MashroomLdapSecurityProvider', () => {
             session: {},
             pluginContext: {
                 loggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            addRoleDefinition: () => { /* nothing to do */ }
+                        }
+                    }
+                }
             },
         };
 
