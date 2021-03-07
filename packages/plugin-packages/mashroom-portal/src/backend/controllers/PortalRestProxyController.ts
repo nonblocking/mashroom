@@ -1,11 +1,11 @@
 
-import {parse} from 'url';
 import {
     HTTP_HEADER_REST_PROXY_PERMISSIONS,
     HTTP_HEADER_REST_PROXY_USER,
     HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME,
     HTTP_HEADER_REST_PROXY_USER_EMAIL,
 } from '../constants';
+import context from '../context/global_portal_context';
 import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security_utils';
 import {portalAppContext} from '../utils/logging_utils';
 import {getSitePath} from '../utils/path_utils';
@@ -22,6 +22,7 @@ export default class PortalRestProxyController {
 
     async forward(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
+        const {defaultProxyConfig} = context.portalPluginConfig;
 
         try {
             const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
@@ -34,8 +35,7 @@ export default class PortalRestProxyController {
                 return;
             }
 
-            const parsedUrl = parse(req.params['0']);
-            const path: string = decodeURI(parsedUrl.pathname || '');
+            const [path, search] = decodeURIComponent(req.params['0']).split('?');
             const pathParts = path.split('/');
             if (pathParts.length < 2) {
                 logger.warn(`Invalid rest proxy path: ${path}`);
@@ -78,14 +78,13 @@ export default class PortalRestProxyController {
             if (pathParts.length > 2) {
                 fullTargetUri += `/${pathParts.splice(2).join('/')}`;
             }
-            if (parsedUrl.search) {
-                fullTargetUri += parsedUrl.search;
+            if (search) {
+                fullTargetUri += `?${search}`;
             }
 
             let headers: Record<string, string> = {};
             if (user) {
-                // @ts-ignore
-                if (restProxyDef.sendUserHeaders || restProxyDef.sendUserHeader) {
+                if (restProxyDef.sendUserHeaders || (restProxyDef as any).sendUserHeader || defaultProxyConfig.sendUserHeaders) {
                     headers[HTTP_HEADER_REST_PROXY_USER] = user.username;
                     if (user.displayName) {
                         headers[HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME] = user.displayName;
@@ -94,14 +93,16 @@ export default class PortalRestProxyController {
                         headers[HTTP_HEADER_REST_PROXY_USER_EMAIL] = user.email;
                     }
                 }
-                if (restProxyDef.sendPermissionsHeader && portalApp.rolePermissions) {
+                if ((restProxyDef.sendPermissionsHeader || defaultProxyConfig.sendPermissionsHeader) && portalApp.rolePermissions) {
                     const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
                     headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => !!permissions[p]).join(',');
                 }
             }
 
-            if (typeof (restProxyDef.addHeaders) === 'object') {
-                headers = {...headers, ...restProxyDef.addHeaders};
+            headers = {
+                ...headers,
+                ...restProxyDef.addHeaders || {},
+                ...defaultProxyConfig.addHeaders || {},
             }
 
             logger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);
