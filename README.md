@@ -2,7 +2,7 @@
 
 ## About ##
 
-*Mashroom Server* is *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps on the
+*Mashroom Server* is a *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps on the
 server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as
 security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and supports custom middleware and services via plugins.
 
