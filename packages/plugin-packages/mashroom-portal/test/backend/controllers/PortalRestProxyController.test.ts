@@ -4,10 +4,22 @@ import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_
 import PortalRestProxyController from '../../../src/backend/controllers/PortalRestProxyController';
 import type {MashroomPortalApp} from '../../../type-definitions';
 
-const portalConfig: any = {
+setPortalPluginConfig({
     path: '/portal',
-};
-setPortalPluginConfig(portalConfig);
+    adminApp: 'admin-portal-app',
+    defaultTheme: 'foo',
+    defaultLayout: 'foo',
+    warnBeforeAuthenticationExpiresSec: 120,
+    autoExtendAuthentication: false,
+    defaultProxyConfig: {
+        sendUserHeaders: false,
+        sendPermissionsHeader: false,
+        restrictToRoles: [],
+        addHeaders: {
+            defaultHeader: 'x',
+        }
+    }
+});
 
 const httpProxyServiceForwardMock = jest.fn();
 
@@ -188,9 +200,9 @@ describe('PortalPageController', () => {
     it('forwards calls to the targetUri', async () => {
 
         const req: any = {
-            originalUrl: '/portal/web/test/__/proxy/Test Portal App 1/my-proxy/foo/bar?x=1',
+            originalUrl: '/portal/web/test/__/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
             params: {
-                '0': 'Test Portal App 1/my-proxy/foo/bar?x=1',
+                '0': 'Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -218,9 +230,9 @@ describe('PortalPageController', () => {
     it('sets the configured headers', async () => {
 
         const req: any = {
-            originalUrl: '/portal/web/test/__/proxy/Test Portal App 2/my-proxy?x=2#33',
+            originalUrl: '/portal/web/test/__/proxy/Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
             params: {
-                '0': 'Test Portal App 2/my-proxy?x=2#33',
+                '0': 'Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -242,13 +254,14 @@ describe('PortalPageController', () => {
 
         expect(status).toBeNull();
         expect(httpProxyServiceForwardMock.mock.calls.length).toBe(1);
-        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api?x=2');
+        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api?x=2&y=aa+bb');
         expect(httpProxyServiceForwardMock.mock.calls[0][3]).toEqual({
             'X-USER-NAME': 'john',
             'X-USER-DISPLAY-NAME': 'John Do',
             'X-USER-EMAIL': 'john.do@gmail.com',
             'X-USER-PERMISSIONS': 'edit',
             'X-EXTRA': 'test',
+            defaultHeader: 'x'
         });
     });
 

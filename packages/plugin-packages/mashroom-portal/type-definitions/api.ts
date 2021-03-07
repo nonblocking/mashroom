@@ -286,7 +286,7 @@ export type MashroomPortalProxyDefinition = {
     readonly targetUri: string;
     readonly sendUserHeaders?: boolean;
     readonly sendPermissionsHeader?: boolean;
-    readonly addHeaders?: any;
+    readonly addHeaders?: Record<string, string>;
     readonly restrictToRoles?: Array<string>;
 };
 

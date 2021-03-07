@@ -1,5 +1,6 @@
 
 import {findSiteByPath} from './model_utils';
+import context from '../context/global_portal_context';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -107,10 +108,17 @@ export const isAppPermitted = async (req: Request, pluginName: string, portalApp
 
 export const isProxyAccessPermitted = async (req: Request, restProxyDef: MashroomPortalProxyDefinition, logger: MashroomLogger): Promise<boolean> => {
     const user = getUser(req);
+    const {defaultProxyConfig} = context.portalPluginConfig;
 
     // Check restricted to roles
-    const restrictToRoles = restProxyDef.restrictToRoles;
-    if (restrictToRoles && Array.isArray(restrictToRoles) && restrictToRoles.length > 0) {
+    const restrictToRoles = [];
+    if (Array.isArray(defaultProxyConfig?.restrictToRoles)) {
+        restrictToRoles.push(...defaultProxyConfig.restrictToRoles);
+    }
+    if (Array.isArray(restProxyDef.restrictToRoles)) {
+        restrictToRoles.push(...restProxyDef.restrictToRoles);
+    }
+    if (restrictToRoles.length > 0) {
         const permitted = restrictToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
         if (!permitted) {
             logger.error(`Proxy access denied: User has none of the roles in the restrictToRoles list: ${restrictToRoles.join(', ')}`);

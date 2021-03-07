@@ -80,7 +80,13 @@
                     "defaultTheme": "Mashroom Portal Default Theme",
                     "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
                     "warnBeforeAuthenticationExpiresSec": 120,
-                    "autoExtendAuthentication": false
+                    "autoExtendAuthentication": false,
+                    "defaultProxyConfig": {
+                        "sendUserHeaders": false,
+                        "sendPermissionsHeader": false,
+                        "addHeaders": null,
+                        "restrictToRoles": null
+                    }
                 }
             },
             {

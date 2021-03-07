@@ -25,7 +25,15 @@ The plugin allows the following configuration properties:
             "defaultTheme": "Mashroom Portal Default Theme",
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
             "warnBeforeAuthenticationExpiresSec": 120,
-            "autoExtendAuthentication": false
+            "autoExtendAuthentication": false,
+            "defaultProxyConfig": {
+                "sendUserHeaders": false,
+                "sendPermissionsHeader": false,
+                "addHeaders": {
+                    "test": "2"
+                },
+                "restrictToRoles": ["ROLE_X"]
+            }
         }
     }
 }
@@ -37,7 +45,8 @@ The plugin allows the following configuration properties:
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
  * _warnBeforeAuthenticationExpiresSec_: Defines when the the Portal should start to warn that the authentication is about to expire
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
-
+ * _defaultProxyConfig_: Optinal default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
+   The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
 
 ## Browser support
 

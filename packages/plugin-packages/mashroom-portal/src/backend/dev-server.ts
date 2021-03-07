@@ -29,7 +29,8 @@ setPortalPluginConfig({
     defaultLayout: 'Portal Default Layout',
     adminApp: '',
     warnBeforeAuthenticationExpiresSec: 120,
-    autoExtendAuthentication: false
+    autoExtendAuthentication: false,
+    defaultProxyConfig: {}
 });
 
 // Plugins

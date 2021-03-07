@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Http Proxy: Fixed encoding of query parameters (already URL encoded parameters were encoded again).
+ * Portal: Added the possibility to define a default proxy config for Portal Apps. This is useful if you want to enable the
+   permissions header for all Apps.
  * Moved out some example plugins to the new https://github.com/nonblocking/mashroom-plugin-demos repo
  * Renamed *mashroom-portal-demo-remote-messaging* to *mashroom-portal-remote-messaging-app* because it's more a test
    util than a demo, like the sandbox app

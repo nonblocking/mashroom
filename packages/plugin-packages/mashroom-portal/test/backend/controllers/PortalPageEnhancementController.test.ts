@@ -12,7 +12,8 @@ setPortalPluginConfig({
     defaultTheme: 'foo',
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
-    autoExtendAuthentication: false
+    autoExtendAuthentication: false,
+    defaultProxyConfig: {}
 });
 
 const portalPageEnhancement: MashroomPortalPageEnhancement = {
