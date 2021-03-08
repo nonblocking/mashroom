@@ -1,4 +1,5 @@
 
+import {parse} from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import PortalThemePluginLoader from '../../../../src/backend/plugins/loader/PortalThemePluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
@@ -47,7 +48,8 @@ describe('PortalThemePluginLoader', () => {
         expect(registry.themes[0].engineName).toBe('test');
         expect(registry.themes[0].requireEngine).toBeTruthy();
         if (process.platform === 'win32') {
-            expect(registry.themes[0].viewsPath).toBe('C:\\opt\\mashroom\\packages\\test\\public\\views');
+            const {root} = parse(__dirname);
+            expect(registry.themes[0].viewsPath).toBe(`${root}opt\\mashroom\\packages\\test\\public\\views`);
         } else {
             expect(registry.themes[0].viewsPath).toBe('/opt/mashroom/packages/test/public/views');
         }

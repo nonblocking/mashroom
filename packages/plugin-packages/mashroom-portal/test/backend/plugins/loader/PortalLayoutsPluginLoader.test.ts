@@ -1,4 +1,5 @@
 
+import {parse} from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import PortalLayoutsPluginLoader from '../../../../src/backend/plugins/loader/PortalLayoutsPluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
@@ -53,8 +54,9 @@ describe('PortalLayoutsPluginLoader', () => {
         });
 
         if (process.platform === 'win32') {
-            expect(registry.layouts[0].layoutPath).toBe('C:\\opt\\mashroom\\packages\\test\\layouts\\2_columns_50_50.html');
-            expect(registry.layouts[1].layoutPath).toBe('C:\\opt\\mashroom\\packages\\test\\layouts\\2_columns_70_30.html');
+            const {root} = parse(__dirname);
+            expect(registry.layouts[0].layoutPath).toBe(`${root}opt\\mashroom\\packages\\test\\layouts\\2_columns_50_50.html`);
+            expect(registry.layouts[1].layoutPath).toBe(`${root}opt\\mashroom\\packages\\test\\layouts\\2_columns_70_30.html`);
         } else {
             expect(registry.layouts[0].layoutPath).toBe('/opt/mashroom/packages/test/layouts/2_columns_50_50.html');
             expect(registry.layouts[1].layoutPath).toBe('/opt/mashroom/packages/test/layouts/2_columns_70_30.html');

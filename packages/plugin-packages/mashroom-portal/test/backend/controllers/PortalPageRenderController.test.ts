@@ -326,7 +326,7 @@ describe('PortalPageRenderController', () => {
                 expect(model.siteBasePath).toBe('/portal/web');
                 expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
                 expect(model.apiBasePath).toBe('/portal/web/___/api');
-                expect(model.portalLayout).toBe('<div class="row"><div id="app-area1"></div><div id="app-area2"></div></div>\n');
+                expect(model.portalLayout).toContain('<div class="row"><div id="app-area1"></div><div id="app-area2"></div></div>');
 
                 done();
             },

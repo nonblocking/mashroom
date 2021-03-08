@@ -4,6 +4,7 @@ import PortalAppPluginLoader from '../../../../src/backend/plugins/loader/Portal
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
 
 import type {MashroomPlugin} from '@mashroom/mashroom/type-definitions';
+import {parse} from 'path';
 
 describe('PortalAppPluginLoader', () => {
 
@@ -149,7 +150,8 @@ describe('PortalAppPluginLoader', () => {
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform === 'win32') {
-            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///C:\\opt\\mashroom\\packages\\test\\public');
+            const {root} = parse(__dirname);
+            expect(registry.portalApps[0].resourcesRootUri).toBe(`file:///${root}opt\\mashroom\\packages\\test\\public`);
         } else {
             expect(registry.portalApps[0].resourcesRootUri).toBe('file:///opt/mashroom/packages/test/public');
         }
