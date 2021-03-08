@@ -117,7 +117,11 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
                             return null;
                         }
                     }
-                    fixedErrorPageUri = `file://${htmlFile}`;
+                    if (htmlFile.startsWith('/')) {
+                        fixedErrorPageUri = `file://${htmlFile}`;
+                    } else {
+                        fixedErrorPageUri = `file:///${htmlFile}`;
+                    }
                 } else {
                     fixedErrorPageUri = errorPageUri;
                 }
