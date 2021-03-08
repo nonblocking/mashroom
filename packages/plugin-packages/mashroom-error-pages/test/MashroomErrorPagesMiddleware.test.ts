@@ -124,7 +124,8 @@ describe('MashroomErrorPagesMiddleware', () => {
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
-                expect(chunk).toContain('status for /the/resource: 404;\nserver version 1.0.0');
+                expect(chunk).toContain('status for /the/resource: 404');
+                expect(chunk).toContain('server version 1.0.0');
                 done();
             }
         }

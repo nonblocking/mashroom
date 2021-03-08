@@ -94,7 +94,7 @@ const pluginRegistry3: any = {
     }],
     portalPageEnhancements: [{
         name: 'Test Page Enhancement',
-        resourcesRootUri: `file://${__dirname}`,
+        resourcesRootUri: `file:///${__dirname}`,
         order: 500,
         pageResources: {
             js: [{
