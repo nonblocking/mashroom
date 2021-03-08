@@ -3,14 +3,12 @@ node_modules/
 dist/
 lib/
 test-data/
-
-log/
-*.log
 tmp/
+log/
 
 .idea
 *.iml
-
+.vscode
 .DS_Store
 
 /packages/plugin-packages/mashroom-background-jobs/public/
