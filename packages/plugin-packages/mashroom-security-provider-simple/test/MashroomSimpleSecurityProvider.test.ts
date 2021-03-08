@@ -60,6 +60,13 @@ describe('MashroomSimpleSecurityProvider', () => {
             },
             pluginContext: {
                 loggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            addRoleDefinition: () => { /* nothing to do */ }
+                        }
+                    }
+                }
             }
         };
 
@@ -95,6 +102,13 @@ describe('MashroomSimpleSecurityProvider', () => {
             },
             pluginContext: {
                 loggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            addRoleDefinition: () => { /* nothing to do */ }
+                        }
+                    }
+                }
             }
         };
 

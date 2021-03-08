@@ -2,6 +2,8 @@
 import MashroomBackgroundJobService from '../../src/js/services/MashroomBackgroundJobService';
 import type {MashroomBackgroundJob} from '../../type-definitions';
 
+jest.setTimeout(10000);
+
 const pluginContext: any = {
     loggerFactory: () => console,
 }
