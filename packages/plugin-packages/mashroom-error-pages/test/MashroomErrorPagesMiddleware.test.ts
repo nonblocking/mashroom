@@ -23,7 +23,7 @@ describe('MashroomErrorPagesMiddleware', () => {
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
-                expect(chunk).toEqual('404\n');
+                expect(chunk).toContain('404');
                 done();
             }
         }
@@ -57,7 +57,7 @@ describe('MashroomErrorPagesMiddleware', () => {
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
-                expect(chunk).toEqual('404\n');
+                expect(chunk).toContain('404');
                 done();
             }
         }
@@ -124,7 +124,7 @@ describe('MashroomErrorPagesMiddleware', () => {
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
-                expect(chunk).toEqual('status for /the/resource: 404;\nserver version 1.0.0\n');
+                expect(chunk).toContain('status for /the/resource: 404;\nserver version 1.0.0');
                 done();
             }
         }
@@ -170,7 +170,7 @@ describe('MashroomErrorPagesMiddleware', () => {
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
-                expect(chunk).toEqual('<div>Hallo World</div>\n');
+                expect(chunk).toContain('<div>Hallo World</div>');
                 done();
             }
         }
