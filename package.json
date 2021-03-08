@@ -39,6 +39,7 @@
         "@zkochan/cmd-shim": "5.1.0"
     },
     "scripts": {
+        "preinstall": "npx npm-force-resolutions",
         "setup": "npm install && lerna bootstrap && npm run build:core",
         "type-check": "lerna run type-check && flow check",
         "lint": "lerna run lint",
