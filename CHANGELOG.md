@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 1.7.0 (March 9, 2021)
+
  * Build under windows fixed
  * Problems with Node 15.x fixed
  * Http Proxy: Fixed encoding of query parameters (already URL encoded parameters were encoded again)
