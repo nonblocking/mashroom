@@ -201,7 +201,7 @@ export default (content: string, req: Request) => {
             <script type="application/javascript">
                 var refreshTimer = setTimeout(function() {
                     window.location.reload();
-                }, 10000);
+                }, 30000);
 
                 function cancelRefresh() {
                     clearTimeout(refreshTimer);
