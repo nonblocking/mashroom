@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+
+## 1.7.2 (March 10, 2021)
+
+ * Portal: Fixed loading of remote Apps with invalid proxy targetUri
+
 ## 1.7.1 (March 10, 2021)
 
  * Fixed the broken mashroom-portal-remote-app-registry-k8s plugin (the K8S connector was not initialized properly)
