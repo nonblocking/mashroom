@@ -18,10 +18,7 @@
         function sendPost(url, action) {
             var form = document.createElement("form");
             form.setAttribute('method', "post");
-            form.setAttribute('action', "?csrfToken=
-                {{csrfToken}}"
-        )
-            ;
+            form.setAttribute('action', "?csrfToken={{csrfToken}}");
             var urlInput = document.createElement("input");
             urlInput.setAttribute('type', "hidden");
             urlInput.setAttribute('name', "_url");
