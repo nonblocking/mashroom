@@ -5,10 +5,6 @@ import type {KubernetesConnector as KubernetesConnectorType} from '../../../type
 
 export default class KubernetesConnector implements KubernetesConnectorType {
 
-    init(): void {
-        // Nothing to do
-    }
-
     async listNamespaceServices(namespace: string): Promise<V1ServiceList> {
         return {
             items: [

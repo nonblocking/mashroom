@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+## 1.7.1 (March 10, 2021)
+
+ * Fixed the broken mashroom-portal-remote-app-registry-k8s plugin (the K8S connector was not initialized properly)
 
 ## 1.7.0 (March 9, 2021)
 

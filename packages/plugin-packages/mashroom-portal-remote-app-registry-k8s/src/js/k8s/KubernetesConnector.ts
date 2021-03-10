@@ -7,21 +7,18 @@ export default class KubernetesConnector implements KubernetesConnectorType {
 
     private _k8sApi?: CoreV1Api;
 
-    init(): void {
-        if (!this._k8sApi) {
-            this._setupK8sApi();
-        }
-    }
-
     async listNamespaceServices(namespace: string): Promise<V1ServiceList> {
         if (!this._k8sApi) {
-            return Promise.reject((new Error('No k8s client found. Did you forget to call init()?')));
+            this.init();
+        }
+        if (!this._k8sApi) {
+            throw new Error('No k8s client found.');
         }
         const result = await this._k8sApi.listNamespacedService(namespace);
         return result.body;
     }
 
-    private _setupK8sApi(): void {
+    private init(): void {
         const k8sClient = new KubeConfig();
         // This only works if the Portal runs within a Kubernetes Pod with a valid service account attached
         k8sClient.loadFromCluster();
