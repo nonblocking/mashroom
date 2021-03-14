@@ -202,7 +202,7 @@ describe('PortalPageController', () => {
         const req: any = {
             originalUrl: '/portal/web/test/__/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
             params: {
-                '0': 'Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
+                '0': 'Test Portal App 1/my-proxy/foo/bar',
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -224,7 +224,7 @@ describe('PortalPageController', () => {
 
         expect(status).toBeNull();
         expect(httpProxyServiceForwardMock.mock.calls.length).toBe(1);
-        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api/foo/bar?x=1');
+        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api/foo/bar');
     });
 
     it('sets the configured headers', async () => {
@@ -232,7 +232,7 @@ describe('PortalPageController', () => {
         const req: any = {
             originalUrl: '/portal/web/test/__/proxy/Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
             params: {
-                '0': 'Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
+                '0': 'Test Portal App 2/my-proxy',
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -254,7 +254,7 @@ describe('PortalPageController', () => {
 
         expect(status).toBeNull();
         expect(httpProxyServiceForwardMock.mock.calls.length).toBe(1);
-        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api?x=2&y=aa+bb');
+        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api');
         expect(httpProxyServiceForwardMock.mock.calls[0][3]).toEqual({
             'X-USER-NAME': 'john',
             'X-USER-DISPLAY-NAME': 'John Do',

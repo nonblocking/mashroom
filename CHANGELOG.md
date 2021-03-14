@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Http Proxy: Removed double request path URI-decoding in forward method (request path already URI-decoded by Express was decoded again)
 
 ## 1.7.2 (March 10, 2021)
 

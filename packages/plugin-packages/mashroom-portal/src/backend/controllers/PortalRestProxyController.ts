@@ -35,10 +35,10 @@ export default class PortalRestProxyController {
                 return;
             }
 
-            const [path, search] = decodeURIComponent(req.params['0']).split('?');
-            const pathParts = path.split('/');
+            const decodedPath = req.params['0'];
+            const pathParts = decodedPath.split('/');
             if (pathParts.length < 2) {
-                logger.warn(`Invalid rest proxy path: ${path}`);
+                logger.warn(`Invalid rest proxy path: ${decodedPath}`);
                 res.sendStatus(400);
                 return;
             }
@@ -55,7 +55,7 @@ export default class PortalRestProxyController {
             logger.addContext(portalAppContext(portalApp));
 
             if (!portalApp.restProxies) {
-                logger.warn(`Invalid rest proxy path: ${path}`);
+                logger.warn(`Invalid rest proxy path: ${decodedPath}`);
                 res.sendStatus(400);
                 return;
             }
@@ -63,7 +63,7 @@ export default class PortalRestProxyController {
             const restProxyDef: MashroomPortalProxyDefinition = portalApp.restProxies[restApiId];
 
             if (!restProxyDef || !restProxyDef.targetUri) {
-                logger.warn(`Invalid rest proxy path: ${path}`);
+                logger.warn(`Invalid rest proxy path: ${decodedPath}`);
                 res.sendStatus(400);
                 return;
             }
@@ -77,9 +77,6 @@ export default class PortalRestProxyController {
             let fullTargetUri = restProxyDef.targetUri;
             if (pathParts.length > 2) {
                 fullTargetUri += `/${pathParts.splice(2).join('/')}`;
-            }
-            if (search) {
-                fullTargetUri += `?${search}`;
             }
 
             let headers: Record<string, string> = {};
@@ -105,7 +102,7 @@ export default class PortalRestProxyController {
                 ...defaultProxyConfig.addHeaders || {},
             }
 
-            logger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);
+            logger.info(`Forwarding Rest API call: ${req.method} /${decodedPath} --> ${fullTargetUri}`);
             await httpProxyService.forward(req, res, fullTargetUri, headers);
 
         } catch (e) {
