@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Http Proxy: Removed double request path URI-decoding in forward method (request path already URI-decoded by Express was decoded again)
  * Build under windows fixed
  * Problems with Node 15.x fixed
  * Http Proxy: Fixed encoding of query parameters (already URL encoded parameters were encoded again)
