@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.6.4",
+    "version": "1.7.2",
     "main": "dist",
     "files": [
         "dist/**",
@@ -17,7 +17,8 @@
         "mashroom": "./dist/server.js"
     },
     "dependencies": {
-        "@mashroom/mashroom-utils": "1.6.4",
+        "@mashroom/mashroom-utils": "1.7.2",
+        "@types/express": "^4.17.11",
         "anymatch": "^3.1.1",
         "chokidar": "^3.5.1",
         "express": "^4.17.1",
@@ -25,17 +26,16 @@
         "log4js": "^6.3.0",
         "lucy-dirsum": "^0.1.1",
         "minimist": "^1.2.5",
-        "strip-ansi": "^6.0.0",
-        "@types/express": "^4.17.11"
+        "strip-ansi": "^6.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.16",
+        "@types/fs-extra": "^9.0.7",
+        "@types/jest": "^26.0.20",
         "@types/node": "^14.14.28",
         "eslint": "^7.20.0",
         "jest": "^26.6.3",
-        "typescript": "^4.1.5",
-        "@types/jest": "^26.0.20",
-        "@types/fs-extra": "^9.0.7"
+        "typescript": "^4.1.5"
     },
     "jest": {
         "verbose": true,

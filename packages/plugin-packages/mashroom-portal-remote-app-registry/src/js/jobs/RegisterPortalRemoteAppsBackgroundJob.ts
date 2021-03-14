@@ -165,9 +165,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             for (const proxyName in definedRestProxies) {
                 if (definedRestProxies.hasOwnProperty(proxyName)) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
-                    const parsedUri = new URL(targetUri);
-                    if (parsedUri.hostname === 'localhost') {
-                        targetUri = remotePortalAppEndpoint.url + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                    try {
+                        const parsedUri = new URL(targetUri);
+                        if (parsedUri.hostname === 'localhost') {
+                            targetUri = remotePortalAppEndpoint.url + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                        }
+                    } catch (e) {
+                        // Ignore
                     }
                     restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }

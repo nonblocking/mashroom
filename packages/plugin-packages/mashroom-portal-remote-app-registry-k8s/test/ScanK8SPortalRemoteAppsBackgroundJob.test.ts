@@ -41,6 +41,9 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
                     targetUri: 'http://localhost:4444/api',
                     sendUserHeaders: true,
                     sendPermissionsHeader: true
+                },
+                'two': {
+                    targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
                 }
             },
             rolePermissions: {},
@@ -106,12 +109,14 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             rolePermissions: {},
             restProxies:
                 {
-                    bff:
-                        {
-                            targetUri: 'http://my-service.default:6789/api',
-                            sendUserHeaders: true,
-                            sendPermissionsHeader: true
-                        }
+                    bff: {
+                        targetUri: 'http://my-service.default:6789/api',
+                        sendUserHeaders: true,
+                        sendPermissionsHeader: true
+                    },
+                    two: {
+                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                    }
                 },
             defaultAppConfig: {
                 customerId: '123123'

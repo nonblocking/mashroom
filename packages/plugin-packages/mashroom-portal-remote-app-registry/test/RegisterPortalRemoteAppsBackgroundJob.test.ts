@@ -58,6 +58,9 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                     targetUri: 'http://localhost:4444/api',
                     sendUserHeaders: true,
                     sendPermissionsHeader: true
+                },
+                'two': {
+                    targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
                 }
             },
             rolePermissions: {},
@@ -111,12 +114,14 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             rolePermissions: {},
             restProxies:
                 {
-                    bff:
-                        {
-                            targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
-                            sendUserHeaders: true,
-                            sendPermissionsHeader: true
-                        }
+                    bff: {
+                        targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
+                        sendUserHeaders: true,
+                        sendPermissionsHeader: true
+                    },
+                    two: {
+                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                    }
                 },
             defaultAppConfig: {
                 customerId: '123123'

@@ -7,7 +7,6 @@ export interface ScanBackgroundJob {
 }
 
 export interface KubernetesConnector {
-    init(): void;
     listNamespaceServices(namespace: string): Promise<V1ServiceList>;
 }
 

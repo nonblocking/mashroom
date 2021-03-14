@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This plugin allows to use a AMQP server as external messaging provider for _Mashroom_ server side messaging.
+This plugin allows to use a AMQP 1.0 compliant broker as external messaging provider for _Mashroom_ server side messaging.
 This enables cluster support for server side messaging and also allows communication with 3rd party systems.
 
 ## Usage

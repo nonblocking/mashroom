@@ -4,26 +4,26 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.6.4",
+    "version": "1.7.2",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
     "dependencies": {
-        "request": "^2.88.2",
         "http-proxy": "^1.18.1",
+        "request": "^2.88.2",
         "shortid": "^2.2.16"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.16",
-        "@mashroom/mashroom": "1.6.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "1.6.4",
-        "@mashroom/mashroom-utils": "1.6.4",
+        "@mashroom/mashroom": "1.7.2",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.7.2",
+        "@mashroom/mashroom-utils": "1.7.2",
         "@types/express": "^4.17.11",
+        "@types/http-proxy": "^1.17.5",
         "@types/jest": "^26.0.20",
         "@types/node": "^14.14.28",
         "@types/request": "^2.48.5",
-        "@types/http-proxy": "^1.17.5",
         "@types/shortid": "^0.0.29",
         "eslint": "^7.20.0",
         "jest": "^26.6.3",
