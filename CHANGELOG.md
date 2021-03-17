@@ -4,6 +4,9 @@
 ## [unreleased]
 
 
+## 1.7.4 (March 17, 2021)
+
+ * Fixed bug in the K8S registry
 
 ## 1.7.3 (March 17, 2021)
 
