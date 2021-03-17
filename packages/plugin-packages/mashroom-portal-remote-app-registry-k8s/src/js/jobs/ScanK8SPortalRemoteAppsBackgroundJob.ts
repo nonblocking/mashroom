@@ -113,6 +113,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             if (found && json?.mashrooom) {
                 packageJson = json;
             } else {
+                this._logger.warn(`No proper Mashroom Portal App descriptor found for Kubernetes service ${service.name}`);
                 service.foundPortalApps = [];
                 service.status = 'No Descriptor';
                 return;
