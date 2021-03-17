@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+
+
+## 1.7.3 (March 17, 2021)
+
+ * K8S Remote App Registry: Just ignore services without a proper descriptor (instead of throwing an error)
  * Http Proxy: Removed double request path URI-decoding in forward method (request path already URI-decoded by Express was decoded again)
 
 ## 1.7.2 (March 10, 2021)
