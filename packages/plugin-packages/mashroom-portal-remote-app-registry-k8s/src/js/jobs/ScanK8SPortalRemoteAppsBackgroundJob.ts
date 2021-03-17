@@ -110,7 +110,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
         try {
             const {found, json} = await this._loadPackageJson(service.url);
-            if (found) {
+            if (found && json?.mashrooom) {
                 packageJson = json;
             } else {
                 service.foundPortalApps = [];
@@ -174,10 +174,6 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     processPackageJson(packageJson: any, serviceUrl: string, serviceName: string): Array<MashroomPortalApp> {
         this._logger.debug(`Processing package.json of Kubernetes service: ${serviceName}`, packageJson);
-
-        if (!packageJson || !packageJson.mashroom) {
-            throw new Error('No mashroom property found in package.json');
-        }
 
         const mashroomDef: MashroomPluginPackageDefinition = packageJson.mashroom;
         const portalAppDefinitions = mashroomDef.plugins.filter((plugin) => plugin.type === 'portal-app');
