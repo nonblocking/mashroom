@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.7.2",
+    "version": "1.7.3",
     "files": [
         "dist/**"
     ],
@@ -13,9 +13,9 @@
     },
     "devDependencies": {
         "@babel/cli": "7.12.16",
-        "@mashroom/mashroom": "1.7.2",
-        "@mashroom/mashroom-memory-cache": "1.7.2",
-        "@mashroom/mashroom-monitoring-metrics-collector": "1.7.2",
+        "@mashroom/mashroom": "1.7.3",
+        "@mashroom/mashroom-memory-cache": "1.7.3",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.7.3",
         "@types/ioredis": "^4.19.4",
         "eslint": "7.20.0",
         "jest": "26.6.3",
