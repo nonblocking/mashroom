@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Error Pages: Fixed the problem that error pages were open to reflected XSS if the $REQUEST_URL was used in the template.
 
 ## 1.7.4 (March 17, 2021)
 

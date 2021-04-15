@@ -108,7 +108,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('processes placeholder correctly', (done) => {
         const req: any = {
-            originalUrl: '/the/resource',
+            originalUrl: '/the/resource?a=b',
             headers: {
                 accept: 'text/html',
             },
@@ -124,7 +124,7 @@ describe('MashroomErrorPagesMiddleware', () => {
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
-                expect(chunk).toContain('status for /the/resource: 404');
+                expect(chunk).toContain('status for /the/resource?a=b: 404');
                 expect(chunk).toContain('server version 1.0.0');
                 done();
             }
@@ -179,6 +179,42 @@ describe('MashroomErrorPagesMiddleware', () => {
 
         const mapping: ErrorMapping = {
             '404': './html/404_3.html'
+        }
+
+        const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
+
+        mashroomErrorPagesMiddleware.middleware()(req, res, () => {});
+
+        res.end('foo');
+    });
+
+    it('encodes the original url to avoid reflected xss', (done) => {
+        const req: any = {
+            originalUrl: '/the/resource?a<script>alert(1)</script>b',
+            headers: {
+                accept: 'text/html',
+            },
+            pluginContext: {
+                loggerFactory: dummyLoggerFactory,
+                services: {
+                }
+            }
+        };
+        const res: any = {
+            statusCode: 404,
+            removeHeader: () => {},
+            setHeader: () => {},
+            write: (chunk: any) => {},
+            end: (chunk: any) => {
+                expect(chunk).toContain('status for /the/resource?a%3Cscript%3Ealert(1)%3C/script%3Eb: 404');
+                expect(chunk).toContain('server version 1.0.0');
+                done();
+            }
+        }
+
+
+        const mapping: ErrorMapping = {
+            '404': './html/404_2.html'
         }
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);

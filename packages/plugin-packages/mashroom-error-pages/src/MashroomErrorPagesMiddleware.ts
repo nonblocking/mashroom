@@ -149,7 +149,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
         const lang = i18nService?.getLanguage(req) || 'en';
 
         return html
-            .replace(PLACEHOLDER_REQUEST_URL, req.originalUrl)
+            .replace(PLACEHOLDER_REQUEST_URL, encodeURI(req.originalUrl))
             .replace(PLACEHOLDER_STATUS_CODE, String(res.statusCode))
             .replace(PLACEHOLDER_MASHROOM_VERSION, this._serverVersion)
             .replace(PLACEHOLDER_I18N_MESSAGE, (substring, messageKeyAndDefault) => {
