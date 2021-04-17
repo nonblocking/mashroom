@@ -91,11 +91,13 @@ const pluginRegistry3: any = {
         portalCustomClientServices: {
             'customService': 'foo'
         },
+        lastReloadTs: 1000,
     }],
     portalPageEnhancements: [{
         name: 'Test Page Enhancement',
         resourcesRootUri: `file:///${__dirname}`,
         order: 500,
+        lastReloadTs: 2000,
         pageResources: {
             js: [{
                 path: 'test_script1.js',
@@ -366,12 +368,12 @@ describe('PortalPageRenderController', () => {
                 // console.info(model.portalResourcesFooter);
 
                 expect(model.portalResourcesHeader).toContain('window[\'MashroomPortalCustomClientServices\'] = {"customService":"foo"};');
-                expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js"></script>');
+                expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js?v=2000"></script>');
                 expect(model.portalResourcesHeader).toContain(' .bar {');
                 expect(model.portalResourcesHeader).toContain('console.info("I am generated!");');
 
                 expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
-                expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css" />');
+                expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css?v=2000" />');
                 expect(model.portalResourcesFooter).not.toContain('test_script3.js');
 
                 const posScript1 = model.portalResourcesHeader.indexOf('/test_script1.js');

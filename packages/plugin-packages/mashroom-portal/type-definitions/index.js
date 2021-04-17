@@ -182,7 +182,8 @@ export interface MashroomPortalPageRenderModel {
     +messages: (key: string) => string,
     +user: MashroomPortalUser,
     +csrfToken: ?string,
-    +userAgent: UserAgent
+    +userAgent: UserAgent,
+    +lastThemeReloadTs: number,
 }
 
 /* Plugins */

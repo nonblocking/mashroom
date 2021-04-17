@@ -160,10 +160,16 @@ export default class PortalPageRenderController {
             messagingConnectPath, privateUserTopic, devMode, userAgent);
         const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent, user);
         const siteBasePath = getFrontendSiteBasePath(req);
+
+        let lastThemeReloadTs = Date.now();
         let resourcesBasePath = null;
         if (themeName) {
             const encodedThemeName = encodeURIComponent(themeName);
             resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
+            const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
+            if (theme) {
+                lastThemeReloadTs = theme.lastReloadTs;
+            }
         }
         const apiBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}`;
 
@@ -192,7 +198,8 @@ export default class PortalPageRenderController {
                 roles: user ? user.roles : [],
             },
             csrfToken,
-            userAgent
+            userAgent,
+            lastThemeReloadTs,
         };
     }
 
@@ -214,8 +221,7 @@ export default class PortalPageRenderController {
 
     private async _render(themeName: string | undefined | null, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger) {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
-        const pluginRegistry = this._pluginRegistry;
-        const theme = pluginRegistry.themes.find((t) => t.name === themeName);
+        const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
         if (theme) {
             try {
                 let engine;
@@ -428,11 +434,11 @@ export default class PortalPageRenderController {
         if (!resource.inline && resourcePath) {
             if (type === 'js') {
                 return `
-                    <script src="${getFrontendApiResourcesBasePath(req)}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}"></script>
+                    <script src="${getFrontendApiResourcesBasePath(req)}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}"></script>
                 `;
             } else {
                 return `
-                    <link rel="stylesheet" href="${getFrontendApiResourcesBasePath(req)}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}" />
+                    <link rel="stylesheet" href="${getFrontendApiResourcesBasePath(req)}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}" />
                 `;
             }
         } else {

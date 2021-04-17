@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Portal: Cache busting improved:
+     * A new property *lastThemeReloadTs* can now be used in themes for resource URLs
+     * Added *?v=<lastRelaodTs>* to all resources exposed via Page Enhancement Plugin
  * Error Pages: Fixed the problem that error pages were open to reflected XSS if the $REQUEST_URL was used in the template.
 
 ## 1.7.4 (March 17, 2021)

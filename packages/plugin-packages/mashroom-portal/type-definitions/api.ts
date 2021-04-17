@@ -202,6 +202,7 @@ export interface MashroomPortalPageRenderModel {
     readonly user: MashroomPortalUser;
     readonly csrfToken: string | null | undefined;
     readonly userAgent: UserAgent;
+    readonly lastThemeReloadTs: number;
 }
 
 /* Plugins */
