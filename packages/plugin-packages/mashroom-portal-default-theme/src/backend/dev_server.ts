@@ -43,6 +43,7 @@ app.get('/', (req: Request, res: Response) => {
         csrfToken: 'foo',
         apiBasePath: '/api',
         resourcesBasePath: '/resources',
+        lastThemeReloadTs: Date.now(),
         site: {
             siteId: 'test',
             title: 'Test Site',
