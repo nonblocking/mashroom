@@ -44,7 +44,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         };
     }
 
-    static getDerivedStateFromProps(props: Props, state: State) {
+    static getDerivedStateFromProps(props: Props) {
         return {
             value: props.fieldProps.input.value
         }
@@ -123,7 +123,9 @@ export default class AutocompleteField extends PureComponent<Props, State> {
     renderInputComponent(inputProps: any) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
-        const mergedInputProps = {...inputProps, onKeyDown(e: KeyboardEvent) {
+        const mergedInputProps = {
+            ...inputProps,
+            onKeyDown(e: KeyboardEvent) {
                 // Ignore enter (could submit the form)
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -137,7 +139,19 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                 if (inputProps.ref) {
                     inputProps.ref(elem);
                 }
-            }};
+            },
+            onChange(e: ChangeEvent<HTMLInputElement>) {
+                const cursor = e.target.selectionStart;
+                inputProps.onChange(e);
+                // Prevent the cursor from jumping to the end
+                // This is just a quick fix, the actual problem seems to be a bug in react-autosuggest or redux-form
+                // TODO: investigate
+                setTimeout(() => {
+                    e.target.selectionStart = cursor;
+                    e.target.selectionEnd = cursor;
+                }, 0);
+            },
+        };
 
         return (
             <input {...mergedInputProps} />
