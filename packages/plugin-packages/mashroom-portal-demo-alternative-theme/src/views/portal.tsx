@@ -23,9 +23,9 @@ export default ({
 
             <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
             <link href='https://fonts.googleapis.com/css?family=Domine' rel='stylesheet' type='text/css'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css?v=${lastThemeReloadTs}'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css?v=${lastThemeReloadTs}'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css?v=${lastThemeReloadTs}'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/style.css?v=${lastThemeReloadTs}'/>
 
             ${page.extraCss ? `<style type="text/css">${page.extraCss}</style>` : ''}
