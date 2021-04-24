@@ -6,6 +6,7 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
+import type {SuggestionHandler} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 
 type Props = {
     portalAdminService: MashroomPortalAdminService;
@@ -17,6 +18,13 @@ type Props = {
 };
 
 export default class RoleInput extends PureComponent<Props> {
+
+    suggestionHandler: SuggestionHandler<any>;
+
+    constructor(props: Props) {
+        super(props);
+        this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(props.existingRoles);
+    }
 
     componentDidMount() {
         this.props.portalAdminService.getExistingRoles().then(
@@ -43,8 +51,6 @@ export default class RoleInput extends PureComponent<Props> {
     }
 
     render() {
-        const suggestionHandler = new AutocompleteStringArraySuggestionHandler(this.props.existingRoles);
-
         return (
             <div className='role-input'>
                 <AutocompleteFieldContainer
@@ -55,7 +61,7 @@ export default class RoleInput extends PureComponent<Props> {
                     onSuggestionSelect={this.onRoleSelected.bind(this)}
                     minCharactersForSuggestions={2}
                     mustSelectSuggestion={false}
-                    suggestionHandler={suggestionHandler}
+                    suggestionHandler={this.suggestionHandler}
                     resetRef={this.props.resetRef} />
             </div>
 
