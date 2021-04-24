@@ -141,20 +141,18 @@ export default class LdapClientImpl implements LdapClient {
         }
     }
 
-    private async _createLdapJsClient(reconnect = false): Promise<LdapJsClient> {
+    private async _createLdapJsClient(keepForever = false): Promise<LdapJsClient> {
         const clientOptions: ClientOptions = {
             url: `${this._serverUrl}/${this._baseDN}`,
             tlsOptions: this._tlsOptions as any,
             connectTimeout: this._connectTimeout,
             timeout: this._timeout,
-        };
-
-        if (reconnect) {
-            clientOptions.reconnect = {
+            reconnect: {
                 initialDelay: 100,
                 maxDelay: 10000,
-            };
-        }
+                failAfter: keepForever ? Infinity : 3,
+            }
+        };
 
         return new Promise((resolve, reject) => {
             let resolved = false;

@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * LDAP Security Provider: Retry the login if the first attempt fails with ECONNRESET (happens sporadically with Active Directory)
 
 ## 1.7.5 (April 20, 2021)
 
