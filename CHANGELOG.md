@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Made the *name* property required for all plugins and disallowed some characters like '/' and '?' to prevent problems
+   when the name is used in the path
  * LDAP Security Provider: Retry the login if the first attempt fails with ECONNRESET (happens sporadically with Active Directory)
 
 ## 1.7.5 (April 20, 2021)

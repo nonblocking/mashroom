@@ -53,7 +53,7 @@ const getPluginPackageFolder2 = () => {
     const pluginPackageFolder = path.resolve(__dirname, '../../test-data/plugins3/test1');
     fsExtra.emptyDirSync(pluginPackageFolder);
     fsExtra.writeJsonSync(path.resolve(pluginPackageFolder, 'package.json'), {
-        name: 'test1',
+        name: 'test2',
         description: 'test no plugin names',
         version: '1.1.3',
         license: 'BSD-3-Clause',
@@ -65,21 +65,50 @@ const getPluginPackageFolder2 = () => {
         mashroom: {
             plugins: [
                 {
+                    name: 'Plugin 1',
                     type: 'web-app',
                     bootstrap: './dist/mashroom-bootstrap.js',
                 },
                 {
                     type: 'plugin-loader',
                     bootstrap: './dist/mashroom-bootstrap2.js',
+                }
+            ],
+        },
+    });
+    return pluginPackageFolder;
+};
+
+const getPluginPackageFolder3 = () => {
+    const pluginPackageFolder = path.resolve(__dirname, '../../test-data/plugins4/test1');
+    fsExtra.emptyDirSync(pluginPackageFolder);
+    fsExtra.writeJsonSync(path.resolve(pluginPackageFolder, 'package.json'), {
+        name: 'test3',
+        description: 'test no plugin names',
+        version: '1.1.3',
+        license: 'BSD-3-Clause',
+        author: {
+            'name': 'Jürgen Kofler',
+            'email': 'juergen.kofler@nonblocking.at',
+            'url': 'http://www.nonblocking.at',
+        },
+        mashroom: {
+            plugins: [
+                {
+                    name: 'Plugin 1',
+                    type: 'web-app',
+                    bootstrap: './dist/mashroom-bootstrap.js',
                 },
                 {
-                    type: 'web-app',
-                    bootstrap: 'foo',
+                    name: 'Plugin 2/3',
+                    type: 'plugin-loader',
+                    bootstrap: './dist/mashroom-bootstrap2.js',
                 },
                 {
-                    type: 'web-app',
-                    bootstrap: 'bar',
-                },
+                    name: 'Plugin 3?',
+                    type: 'plugin-loader',
+                    bootstrap: './dist/mashroom-bootstrap3.js',
+                }
             ],
         },
     });
@@ -181,7 +210,7 @@ describe('MashroomPluginPackage', () => {
             }
         });
 
-        builderAddToBuildQueueMock.mockImplementation((pluginPackageName, _pluginPackagePath, buildScript) => {
+        builderAddToBuildQueueMock.mockImplementation((pluginPackageName) => {
             setTimeout(() => {
                 if (buildFinishedCallback) {
                     buildFinishedCallback({
@@ -204,7 +233,7 @@ describe('MashroomPluginPackage', () => {
         });
     });
 
-    it('assign unique plugin names if none defined in package.json', (done) => {
+    it('ignores plugins without a name', (done) => {
         const pluginPackagePath = getPluginPackageFolder2();
         let buildFinishedCallback: any = null;
 
@@ -214,7 +243,7 @@ describe('MashroomPluginPackage', () => {
             }
         });
 
-        builderAddToBuildQueueMock.mockImplementation((pluginPackageName, _pluginPackagePath, buildScript) => {
+        builderAddToBuildQueueMock.mockImplementation((pluginPackageName) => {
             setTimeout(() => {
                 if (buildFinishedCallback) {
                     buildFinishedCallback({
@@ -229,17 +258,44 @@ describe('MashroomPluginPackage', () => {
 
         expect(pluginPackage.status).toBe('building');
 
-        pluginPackage.on('ready', (event) => {
-            expect(pluginPackage.name).toBe('test1');
-            expect(event.pluginsAdded).toBeTruthy();
-            expect(event.pluginsAdded && event.pluginsAdded.length).toBe(4);
-            expect(event.pluginsAdded && event.pluginsAdded[0].name).toBe('test1 web-app');
-            expect(event.pluginsAdded && event.pluginsAdded[1].name).toBe('test1 plugin-loader');
-            expect(event.pluginsAdded && event.pluginsAdded[2].name).toBe('test1 web-app 2');
-            expect(event.pluginsAdded && event.pluginsAdded[3].name).toBe('test1 web-app 3');
+        pluginPackage.on('ready', (ready) => {
+            expect(pluginPackage.status).toBe('ready');
+            expect(pluginPackage.pluginDefinitions.length).toBe(1);
 
             done();
         });
     });
 
+    it('ignores plugins with invalid names', (done) => {
+        const pluginPackagePath = getPluginPackageFolder3();
+        let buildFinishedCallback: any = null;
+
+        builderOnMock.mockImplementation((event, callback) => {
+            if (event === 'build-finished') {
+                buildFinishedCallback = callback;
+            }
+        });
+
+        builderAddToBuildQueueMock.mockImplementation((pluginPackageName) => {
+            setTimeout(() => {
+                if (buildFinishedCallback) {
+                    buildFinishedCallback({
+                        pluginPackageName,
+                        success: true,
+                    });
+                }
+            }, 200);
+        });
+
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+
+        expect(pluginPackage.status).toBe('building');
+
+        pluginPackage.on('ready', (ready) => {
+            expect(pluginPackage.status).toBe('ready');
+            expect(pluginPackage.pluginDefinitions.length).toBe(1);
+
+            done();
+        });
+    });
 });

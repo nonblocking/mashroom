@@ -5,6 +5,7 @@ type Logger = {
 
 const TEMPLATE_CODE_REGEX = /\${(.+?)}/g;
 const TEMPLATE_CODE_ACCESSED_OBJECTS = /(?:^|\W)(\w+?)\./g;
+export const INVALID_PLUGIN_NAME_CHARACTERS = /[/?]/;
 
 const isTemplate = (templateStr: string) => templateStr.indexOf('${') !== -1;
 

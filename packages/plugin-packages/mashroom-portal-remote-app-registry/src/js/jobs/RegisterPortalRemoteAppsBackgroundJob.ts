@@ -1,7 +1,7 @@
 
 import {URL} from 'url';
 import request from 'request';
-import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
+import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
 import type {
@@ -118,6 +118,9 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const name = definition.name;
         if (!name) {
             throw new Error(`Invalid portal app definition: No 'name' attribute! Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
+        }
+        if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
+            throw new Error(`Invalid portal app definition ${name}: The name contains invalid characters (/,?).`);
         }
 
         const globalLaunchFunction = definition.bootstrap;

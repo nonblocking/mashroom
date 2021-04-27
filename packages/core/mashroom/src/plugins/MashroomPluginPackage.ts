@@ -4,7 +4,7 @@ import path from 'path';
 import {promisify} from 'util';
 import {EventEmitter} from 'events';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
+import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
 
 import type {
@@ -213,6 +213,14 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
 
     private _checkPluginDefinitions(rawPluginDefinitions: Array<any>): Array<MashroomPluginDefinition> {
         const fixedPluginDefinitions = rawPluginDefinitions.filter((p) => {
+            if (!p.name) {
+                this._logger.error(`Ignoring plugin in package ${this._name} because it has no name property.`);
+                return false;
+            }
+            if (p.name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
+                this._logger.error(`Ignoring plugin ${p.name} in package ${this._name} because its name has invalid characters (/,?).`);
+                return false;
+            }
             if (!p.type) {
                 this._logger.error(`Ignoring plugin ${p.name} in package ${this._name} because it has no type property.`);
                 return false;
@@ -226,21 +234,6 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
             if (!p.description) {
                 this._logger.info(`Plugin ${p.name} in package ${this._name} has no description property, using description from package.`);
                 p.description = this._description;
-            }
-        });
-
-        // Fix name
-        fixedPluginDefinitions.forEach((p) => {
-            if (!p.name) {
-                this._logger.info(`Plugin ${p.name} in package ${this._name} has no name property, generating one.`);
-                const name = `${this._name} ${p.type}`;
-                let index = 1;
-                let postfix = '';
-                while (this._pluginPackageDefinition.plugins.find((p) => p.name === name + postfix)) {
-                    index++;
-                    postfix = ` ${index}`;
-                }
-                p.name = name + postfix;
             }
         });
 
