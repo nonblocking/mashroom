@@ -197,12 +197,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
         const globalLaunchFunction = definition.bootstrap;
         if (!globalLaunchFunction) {
-            throw new Error('Invalid configuration of plugin ${name}: No bootstrap function defined.');
+            throw new Error(`Invalid configuration of plugin ${name}: No bootstrap function defined.`);
         }
 
         const resourcesDef = definition.resources;
         if (!resourcesDef) {
-            throw new Error('Invalid configuration of plugin ${name}: No resources defined.');
+            throw new Error(`Invalid configuration of plugin ${name}: No resources defined.`);
         }
 
         const resources = {
@@ -210,7 +210,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             css: resourcesDef.css,
         };
         if (!resources.js) {
-            throw new Error('Invalid configuration of plugin ${name}: No resources.js defined.');
+            throw new Error(`Invalid configuration of plugin ${name}: No resources.js defined.`);
         }
 
         const sharedResourcesDef = definition.sharedResources;
@@ -240,6 +240,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             for (const proxyName in definedRestProxies) {
                 if (Object.prototype.hasOwnProperty.call(definedRestProxies, proxyName)) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
+                    if (!targetUri) {
+                        throw new Error(`Invalid configuration of plugin ${name}: No targetUri defined for proxy ${proxyName}.`);
+                    }
                     try {
                         const parsedUri = new URL(targetUri);
                         if (parsedUri.hostname === 'localhost') {
