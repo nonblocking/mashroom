@@ -1,5 +1,5 @@
 
-import {Server} from 'ws';
+import {Server, CLOSING, OPEN} from 'ws';
 import {v4} from 'uuid';
 import context from './context';
 
@@ -132,7 +132,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     async sendMessage(client: MashroomWebSocketClient, message: any): Promise<void> {
         const webSocket = this._getWebSocket(client);
         const internalClient = client as InternalMashroomWebSocketClient;
-        if (webSocket && !internalClient.reconnecting) {
+        if (webSocket && webSocket.readyState === OPEN && !internalClient.reconnecting) {
             const contextLogger = this._logger.withContext(client.loggerContext);
 
             return new Promise((resolve, reject) => {
@@ -147,7 +147,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
             });
         }
 
-        if (internalClient.reconnecting) {
+        if (internalClient.reconnecting || (webSocket && webSocket.readyState === CLOSING)) {
             await this._reconnectMessageBufferStore.appendData(this._getFileName(client.user, client), JSON.stringify(message));
         }
     }
