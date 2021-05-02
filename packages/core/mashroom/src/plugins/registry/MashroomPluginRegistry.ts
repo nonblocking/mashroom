@@ -131,7 +131,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         }
         if (event.pluginsUpdated) {
             event.pluginsUpdated.forEach(async (updatedPluginDefinition) => {
-                const existingPlugin = this._findPluginByDefinition(updatedPluginDefinition);
+                const existingPlugin = this._findPluginByDefinition(event.pluginPackage, updatedPluginDefinition);
                 if (existingPlugin) {
                     if (existingPlugin.type !== updatedPluginDefinition.type) {
                         await this._removePlugin(existingPlugin);
@@ -144,7 +144,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         }
         if (event.pluginsRemoved) {
             event.pluginsRemoved.forEach((pluginDefinition) => {
-                const existingPlugin = this._findPluginByDefinition(pluginDefinition);
+                const existingPlugin = this._findPluginByDefinition(event.pluginPackage, pluginDefinition);
                 if (existingPlugin) {
                     this._removePlugin(existingPlugin);
                 }
@@ -226,7 +226,15 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
             return;
         }
 
-        if (this._loadedPlugins().find((p) => p.name === plugin.name)) {
+        const existingPlugin = this._loadedPlugins().find((p) => p.name === plugin.name);
+        if (existingPlugin) {
+            if (existingPlugin.pluginPackage.pluginPackagePath !== plugin.pluginPackage.pluginPackagePath) {
+                pluginConnector.emitError({
+                    errorMessage: `Duplicate plugin name. A plugin with name '${plugin.name}' also exists in ${existingPlugin.pluginPackage.pluginPackagePath}`,
+                });
+                return;
+            }
+
             this._eventEmitter.emit('unload', {
                 pluginName: plugin.name,
             });
@@ -262,7 +270,9 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         });
 
         try {
-            await loader.unload(plugin);
+            if (plugin.status === 'loaded') {
+                await loader.unload(plugin);
+            }
         } catch (error) {
             this._logger.error(`Unloading plugin: ${plugin.name}, type: ${plugin.type} failed!`, error);
         }
@@ -358,9 +368,9 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         return null;
     }
 
-    private _findPluginByDefinition(def: MashroomPluginDefinition) {
+    private _findPluginByDefinition(pluginPackage: MashroomPluginPackage, def: MashroomPluginDefinition) {
         for (const plugin of this._plugins.keys()) {
-            if (plugin.name === def.name) {
+            if (plugin.name === def.name && plugin.pluginPackage.pluginPackagePath == pluginPackage.pluginPackagePath) {
                 return plugin;
             }
         }

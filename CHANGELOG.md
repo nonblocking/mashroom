@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Prevented plugins with the same name to silently overwrite each other. If a plugin with the same name already exists
+   it will not be loaded anymore, and an error in the Admin UI will be shown.
  * Made the *name* property required for all plugins and disallowed some characters like '/' and '?' to prevent problems
    when the name is used in the path
  * LDAP Security Provider: Retry the login if the first attempt fails with ECONNRESET (happens sporadically with Active Directory)

@@ -120,7 +120,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             throw new Error(`Invalid portal app definition: No 'name' attribute! Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
         }
         if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
-            throw new Error(`Invalid portal app definition ${name}: The name contains invalid characters (/,?).`);
+            throw new Error(`Invalid portal app '${name}': The name contains invalid characters (/,?).`);
+        }
+        const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && remotePortalAppEndpoint.url.indexOf(a.resourcesRootUri) !== 0);
+        if (existingPortalApp) {
+            throw new Error(`Invalid portal app '${name}': The name is already defined on endpoint ${existingPortalApp.resourcesRootUri}`);
         }
 
         const globalLaunchFunction = definition.bootstrap;

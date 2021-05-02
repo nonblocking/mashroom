@@ -220,6 +220,8 @@ describe('MashroomPluginRegistry', () => {
             type: 'foo',
             pluginDefinition: {
             },
+            status: 'loaded',
+            pluginPackage,
         };
         const newPluginDef: any = {
             name: 'plugin7',
@@ -229,6 +231,7 @@ describe('MashroomPluginRegistry', () => {
             name: 'plugin7',
             type: 'foo',
             pluginDefinition: newPluginDef,
+            pluginPackage,
         };
 
         const context = {
@@ -258,12 +261,14 @@ describe('MashroomPluginRegistry', () => {
         const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
-        // @ts-ignore
-        registry._plugins.set(existingPlugin, new ConnectorMock());
+
         registry.on('loaded', onLoadedMock);
         registry.on('unload', onUnloadMock);
         registry.registerPluginLoader('foo', new PluginLoaderMock());
         registry.registerPluginLoader('bar', new PluginLoaderMock());
+
+        // @ts-ignore
+        registry._plugins.set(existingPlugin, new ConnectorMock());
 
         // @ts-ignore
         registry._onPackageReady({
@@ -418,6 +423,7 @@ describe('MashroomPluginRegistry', () => {
             requires: ['bar'],
             pluginDefinition: {
             },
+            pluginPackage,
         };
         const requiredPluginDef: any = {
             name: 'bar',
@@ -428,6 +434,7 @@ describe('MashroomPluginRegistry', () => {
             type: 'foo',
             status: 'loaded',
             pluginDefinition: requiredPluginDef,
+            pluginPackage,
         };
 
         const context = {

@@ -194,6 +194,10 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
             throw new Error(`Invalid portal app definition ${name}: The name contains invalid characters (/,?).`);
         }
+        const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && serviceUrl.indexOf(a.resourcesRootUri) !== 0);
+        if (existingPortalApp) {
+            throw new Error(`Invalid portal app '${name}': The name is already defined on service ${existingPortalApp.resourcesRootUri}`);
+        }
 
         const globalLaunchFunction = definition.bootstrap;
         if (!globalLaunchFunction) {
