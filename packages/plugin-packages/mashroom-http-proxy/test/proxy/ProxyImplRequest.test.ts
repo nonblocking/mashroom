@@ -10,6 +10,8 @@ import type {Request, Response} from 'express';
 import type {HttpHeaders, QueryParams} from '../../type-definitions';
 import type {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
+jest.setTimeout(10000);
+
 const createDummyRequest = (method: string, data?: string) => {
     const req: any = new Readable();
     req.method = method;
@@ -139,23 +141,6 @@ describe('ProxyImplRequest', () => {
 
         // Expect 503 Service Unavailable
         expect(res.statusCode).toBe(503);
-    });
-
-    it('sets the correct status code if the connection times out', async () => {
-        nock('https://www.yyyyyyyyyyy.at')
-            .get('/')
-            .delay(3000)
-            .reply(200, 'test response');
-
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, loggerFactory);
-
-        const req = createDummyRequest('GET');
-        const res = createDummyResponse();
-
-        await httpProxyService.forward(req, res, 'https://www.yyyyyyyyyyy.at');
-
-        // Expect 504 Gateway Timeout
-        expect(res.statusCode).toBe(504);
     });
 
     it('passes the response from the target endpoint',  async () => {
