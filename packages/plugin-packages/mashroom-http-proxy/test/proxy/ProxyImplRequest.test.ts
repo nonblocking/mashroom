@@ -10,8 +10,6 @@ import type {Request, Response} from 'express';
 import type {HttpHeaders, QueryParams} from '../../type-definitions';
 import type {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
-jest.setTimeout(10000);
-
 const createDummyRequest = (method: string, data?: string) => {
     const req: any = new Readable();
     req.method = method;
