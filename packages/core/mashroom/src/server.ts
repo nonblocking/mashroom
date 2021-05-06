@@ -13,6 +13,7 @@ import {mashroomServerContextFactory} from './index';
 import type {MashroomLogger} from '../type-definitions';
 import type {MashroomServer} from '../type-definitions/internal';
 
+const WAIT_BEFORE_SERVER_CLOSE = process.env.WAIT_BEFORE_SERVER_CLOSE && parseInt(process.env.WAIT_BEFORE_SERVER_CLOSE);
 const SERVER_STOP_TIMEOUT = 5 * 1000; // 5 sec
 
 const argv = minimist(process.argv.slice(2));
@@ -40,25 +41,32 @@ async function startServer() {
             output: process.stdout
         });
 
-        rl.on('SIGINT', async () => {
-            await stopServer(server, logger);
+        rl.on('SIGINT', () => {
+            stopServer(server, logger);
         });
     }
 
-    process.on('SIGINT', async () => {
-        await stopServer(server, logger);
+    process.on('SIGINT', () => {
+        stopServer(server, logger);
     });
     process.on('SIGTERM', async () => {
-        await stopServer(server, logger);
+        // Allow graceful shutdown
+        if (WAIT_BEFORE_SERVER_CLOSE) {
+            logger.info(`Graceful shutdown, waiting for ${WAIT_BEFORE_SERVER_CLOSE}sec`);
+            setTimeout(() => {
+                stopServer(server, logger);
+            }, WAIT_BEFORE_SERVER_CLOSE * 1000)
+        } else {
+            stopServer(server, logger);
+        }
     });
 }
 
 async function stopServer(server: MashroomServer, log: MashroomLogger) {
     if (!stopping) {
-        stopping = true;
-        log.info('Stopping Mashroom Server...');
+        stopping = true;;
         setTimeout(() => {
-            log.debug(`Server didn't stop within ${SERVER_STOP_TIMEOUT} ms. Exiting now.`);
+            log.info(`Server didn't stop within ${SERVER_STOP_TIMEOUT} ms. Exiting now.`);
             process.exit(0);
         }, SERVER_STOP_TIMEOUT);
         await server.stop();

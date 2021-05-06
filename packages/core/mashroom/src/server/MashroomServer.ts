@@ -51,7 +51,7 @@ Version ${this._serverInfo.version}
 
         return new Promise<void>((resolve, reject) => {
             this._httpServer.listen(this._config.port, () => {
-                this._log.info(`Mashroom server started at port ${this._config.port}`);
+                this._log.info(`Mashroom server started with pid ${process.pid} and at port ${this._config.port}`);
                 this._scanner.start();
                 this._errorHandler.install();
                 resolve();
@@ -64,7 +64,7 @@ Version ${this._serverInfo.version}
     }
 
     async stop() {
-        this._log.info('Stopping Mashroom server');
+        this._log.info('Stopping Mashroom server...');
 
         this._errorHandler.uninstall();
         await this._scanner.stop();
