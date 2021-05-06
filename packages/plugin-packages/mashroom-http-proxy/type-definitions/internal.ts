@@ -9,6 +9,7 @@ export interface HttpHeaderFilter {
 }
 
 export type PoolConfig = {
+    keepAlive: boolean;
     rejectUnauthorized: boolean;
     maxSockets: number;
 }

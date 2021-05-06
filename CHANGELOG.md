@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Http Proxy: Allow it to disable connection keep-alive; mitigates #77
  * Prevented plugins with the same name to silently overwrite each other. If a plugin with the same name already exists
    it will not be loaded anymore, and an error in the Admin UI will be shown.
  * Made the *name* property required for all plugins and disallowed some characters like '/' and '?' to prevent problems

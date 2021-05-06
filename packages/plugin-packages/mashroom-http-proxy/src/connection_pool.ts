@@ -8,6 +8,7 @@ import type {Agent as HttpsAgent} from 'https';
 import type {PoolConfig, PoolStats} from '../type-definitions/internal';
 
 let _config: PoolConfig = {
+    keepAlive: true,
     maxSockets: 10,
     rejectUnauthorized: false,
 };
@@ -25,7 +26,7 @@ export const getPoolConfig = (): PoolConfig => {
 export const getHttpPool = () => {
     if (!_httpPool) {
         _httpPool = new http.Agent({
-            keepAlive: true,
+            keepAlive: _config.keepAlive,
             maxSockets: _config.maxSockets,
         });
     }
@@ -35,7 +36,7 @@ export const getHttpPool = () => {
 export const getHttpsPool = () => {
     if (!_httpsPool) {
         _httpsPool = new https.Agent({
-            keepAlive: true,
+            keepAlive: _config.keepAlive,
             maxSockets: _config.maxSockets,
             rejectUnauthorized: _config.rejectUnauthorized,
         });
@@ -48,7 +49,6 @@ const getPoolStats = (agent: HttpAgent | HttpsAgent): PoolStats => {
 
     return {
         activeConnections: countArrayEntries(agent.sockets),
-        // @ts-ignore Not sure why freeSockets is not part of the type definition; see: https://nodejs.org/api/http.html#http_agent_freesockets
         idleConnections: countArrayEntries(agent.freeSockets),
         waitingRequests: countArrayEntries(agent.requests),
     }

@@ -76,6 +76,7 @@
                     "rejectUnauthorized": true,
                     "poolMaxSockets": 10,
                     "socketTimeoutMs": 30000,
+                    "keepAlive": true,
                     "proxyImpl": "default"
                 }
             },

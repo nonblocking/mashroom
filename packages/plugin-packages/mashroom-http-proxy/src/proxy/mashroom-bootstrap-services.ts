@@ -12,11 +12,12 @@ import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/t
 import type {Proxy} from '../../type-definitions/internal';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const {proxyImpl, forwardMethods = [], forwardHeaders = [], rejectUnauthorized, poolMaxSockets, socketTimeoutMs} = pluginConfig;
+    const {proxyImpl, forwardMethods = [], forwardHeaders = [], rejectUnauthorized, poolMaxSockets, socketTimeoutMs, keepAlive} = pluginConfig;
     const pluginContext = pluginContextHolder.getPluginContext();
     const logger = pluginContext.loggerFactory('mashroom.httpProxy');
 
     setPoolConfig({
+        keepAlive,
         maxSockets: poolMaxSockets,
         rejectUnauthorized,
     });
