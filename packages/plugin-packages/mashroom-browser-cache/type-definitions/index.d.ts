@@ -1,17 +1,17 @@
 
 import type {Request, Response} from 'express';
 
+export type CachingPolicy = 'ALWAYS' | 'NEVER' | 'ONLY_FOR_ANONYMOUS_USERS';
+
 export interface MashroomCacheControlService {
     /**
-     * Add the Cache-Control header based on the settings and authentication status.
-     * The resourceCanContainSensitiveInformation parameter defines if the resource could contain some sensitive user data
-     * and the caching should be disabled if a user is authenticated.
+     * Add the Cache-Control header based on the policy and authentication status.
      */
     addCacheControlHeader(
-        resourceCanContainSensitiveInformation: boolean,
+        cachingPolicy: CachingPolicy,
         request: Request,
         response: Response,
-    ): Promise<void>;
+    ): void;
 
     /**
      * Remove a previously set Cache-Control header

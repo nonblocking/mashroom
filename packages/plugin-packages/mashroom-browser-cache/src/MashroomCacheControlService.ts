@@ -5,7 +5,7 @@ import type {
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
-import type {MashroomCacheControlService as MashroomCacheControlServiceType} from '../type-definitions';
+import type {MashroomCacheControlService as MashroomCacheControlServiceType, CachingPolicy} from '../type-definitions';
 
 const CACHE_CONTROL_HEADER_NAME = 'Cache-Control';
 
@@ -22,7 +22,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         }
     }
 
-    async addCacheControlHeader(resourceCanContainSensitiveInformation: boolean, request: Request, response: Response): Promise<void> {
+    addCacheControlHeader(cachingPolicy: CachingPolicy, request: Request, response: Response): void {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.browserCache.service');
 
         if (request.method !== 'GET') {
@@ -30,22 +30,23 @@ export default class MashroomCacheControlService implements MashroomCacheControl
             return;
         }
 
-        if (this._disabled) {
+        if (this._disabled || cachingPolicy === 'NEVER') {
             this._disableCache(response);
             return;
         }
 
         let publicResource = true;
+        let authenticated = false;
         const securityService: MashroomSecurityService | undefined = request.pluginContext.services.security && request.pluginContext.services.security.service;
         if (securityService) {
             const user = securityService.getUser(request);
-            const authenticated = !!user;
+            authenticated = !!user;
             publicResource = !authenticated;
+        }
 
-            if (resourceCanContainSensitiveInformation && authenticated) {
-                this._disableCache(response);
-                return;
-            }
+        if (cachingPolicy === 'ONLY_FOR_ANONYMOUS_USERS' && authenticated) {
+            this._disableCache(response);
+            return;
         }
 
         response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this.maxAgeSec}`);
