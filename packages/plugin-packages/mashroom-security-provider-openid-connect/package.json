@@ -9,7 +9,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "openid-client": "^4.4.0",
+        "openid-client": "^4.7.3",
         "request": "^2.88.2",
         "request-promise-native": "^1.0.9"
     },
