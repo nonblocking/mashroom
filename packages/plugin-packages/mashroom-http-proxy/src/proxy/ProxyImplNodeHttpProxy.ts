@@ -254,10 +254,14 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
             logger.error(`Target endpoint '${activeRequest.uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
-            clientResponse.sendStatus(504);
+            if (!clientResponse.headersSent) {
+                clientResponse.sendStatus(504);
+            }
         } else {
             logger.error(`Forwarding to '${activeRequest.uri}' failed!`, error);
-            clientResponse.sendStatus(503);
+            if (!clientResponse.headersSent) {
+                clientResponse.sendStatus(503);
+            }
         }
 
         activeRequest.resolve();

@@ -136,10 +136,14 @@ export default class ProxyImplRequest implements Proxy {
                 .on('error', (error: Error & { code?: string }) => {
                     if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
                         logger.error(`Target endpoint '${uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
-                        res.sendStatus(504);
+                        if (!res.headersSent) {
+                            res.sendStatus(504);
+                        }
                     } else {
                         logger.error(`Forwarding to '${uri}' failed!`, error);
-                        res.sendStatus(503);
+                        if (!res.headersSent) {
+                            res.sendStatus(503);
+                        }
                     }
                     resolve();
                 }));
