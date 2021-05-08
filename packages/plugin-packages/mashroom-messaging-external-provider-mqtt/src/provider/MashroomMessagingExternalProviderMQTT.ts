@@ -14,7 +14,7 @@ const RECONNECT_PERIOD = 5000;
 export default class MashroomMessagingExternalProviderMQTT implements MashroomMessagingExternalProviderMQTTType {
 
     private _logger: MashroomLogger;
-    private _client: MqttClient | undefined;
+    private _client: MqttClient | undefined;
     private _listeners: Array<MashroomExternalMessageListener>;
 
     constructor(private _internalTopic: string, private _mqttConnectUrl: string, private _mqttProtocolVersion: number, private _mqttQoS: QoS,
