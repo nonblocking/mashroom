@@ -237,7 +237,7 @@ export default class PortalPageRenderController {
 
                 if (cacheControlService) {
                     // Disable the browser cache for authenticated users to prevent that back button exposes potential sensitive information.
-                    // If a CSRF token is prevent disable the caching always because it must not be cached.
+                    // If a CSRF token is present disable the caching always because it must not be cached.
                     cacheControlService.addCacheControlHeader(model.csrfToken ? 'NEVER' : 'ONLY_FOR_ANONYMOUS_USERS' , req, res);
                 }
 
