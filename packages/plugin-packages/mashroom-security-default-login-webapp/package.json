@@ -21,6 +21,7 @@
         "@mashroom/mashroom": "1.7.5",
         "@mashroom/mashroom-csrf-protection": "1.7.5",
         "@mashroom/mashroom-i18n": "1.7.5",
+        "@mashroom/mashroom-browser-cache": "1.7.5",
         "@mashroom/mashroom-security": "1.7.5",
         "@mashroom/mashroom-vhost-path-mapper": "1.7.5",
         "@types/body-parser": "^1.19.0",
@@ -47,7 +48,8 @@
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "requires": [
                     "Mashroom Security Services",
-                    "Mashroom Internationalization Services"
+                    "Mashroom Internationalization Services",
+                    "Mashroom Browser Cache Services"
                 ],
                 "defaultConfig": {
                     "path": "/login",

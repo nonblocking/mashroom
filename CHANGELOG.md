@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Disable the browser caching for all pages if a CSRF token is present, otherwise stale tokens could be used
  * K8S remote app registry: Improved compatibility with Kubernetes 1.20
  * Added the possibility to delay the server shutdown after receiving SIGTERM via environment variable *WAIT_BEFORE_SERVER_CLOSE*,
    which contains the seconds to wait.

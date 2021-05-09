@@ -1,7 +1,6 @@
 
 import path from 'path';
 import {URL} from 'url';
-import querystring from 'querystring';
 import express from 'express';
 import exphbs from 'express-handlebars';
 import bodyParser from 'body-parser';
@@ -14,6 +13,7 @@ import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-def
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomVHostPathMapperService} from '@mashroom/mashroom-vhost-path-mapper/type-definitions';
+import type {MashroomCacheControlService} from '../../../mashroom-browser-cache/type-definitions';
 
 const app = express();
 
@@ -30,11 +30,10 @@ app.set('views', path.resolve(__dirname, '../views'));
 
 app.get('/', async (req: Request, res: Response) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
+    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
     try {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
-
         const lang = i18nService.getLanguage(req);
         const user = await securityService.getUser(req);
         if (user) {
@@ -61,7 +60,6 @@ app.post('/', async (req: Request, res: Response) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
 
     try {
-        // Login
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
@@ -99,6 +97,7 @@ app.post('/', async (req: Request, res: Response) => {
 const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NService, lang: string, error?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
     const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper?.service;
+    const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
     const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
 
     const queryParams: Array<string> = [];
@@ -120,6 +119,8 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
     if (csrfService) {
         csrfToken = csrfService.getCSRFToken(req);
         queryParams.push(`csrfToken=${csrfToken}`);
+        // Make sure the login page doesn't get cached because the CSRF token might no longer be valid
+        cacheControlService.addCacheControlHeader('NEVER', req, res);
     }
 
     const query = queryParams.join(('&'));

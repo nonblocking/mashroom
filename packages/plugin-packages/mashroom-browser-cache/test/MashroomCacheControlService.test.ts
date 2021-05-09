@@ -4,7 +4,7 @@ import MashroomCacheControlService from '../src/MashroomCacheControlService';
 
 describe('MashroomCacheControlService', () => {
 
-    it('sets the Cache-Control header correctly for an unauthenticated user', async () => {
+    it('sets the Cache-Control header correctly for an unauthenticated user', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
@@ -24,13 +24,13 @@ describe('MashroomCacheControlService', () => {
         };
 
         const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(false, req, res);
+        cacheControlService.addCacheControlHeader('ALWAYS', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('public, max-age=1800');
     });
 
-    it('sets the Cache-Control header correctly for an authenticated user', async () => {
+    it('sets the Cache-Control header correctly for an authenticated user', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
@@ -57,13 +57,13 @@ describe('MashroomCacheControlService', () => {
         };
 
         const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(false, req, res);
+        cacheControlService.addCacheControlHeader('ALWAYS', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('private, max-age=1800');
     });
 
-    it('doesnt set the Cache-Control header for POST requests', async () => {
+    it('doesnt set the Cache-Control header for POST requests', () => {
         const req: any = {
             method: 'POST',
             pluginContext: {
@@ -81,13 +81,13 @@ describe('MashroomCacheControlService', () => {
         };
 
         const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(false, req, res);
+        cacheControlService.addCacheControlHeader('ALWAYS', req, res);
 
         expect(cacheControlHeader).toBeFalsy();
     });
 
 
-    it('sets the no-cache header if disabled is true', async () => {
+    it('sets the no-cache header if disabled is true', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
@@ -105,13 +105,13 @@ describe('MashroomCacheControlService', () => {
         };
 
         const cacheControlService = new MashroomCacheControlService(false, true, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(false, req, res);
+        cacheControlService.addCacheControlHeader('ALWAYS', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
     });
 
-    it('disables browser caching if devMode is true', async () => {
+    it('disables browser caching if devMode is true', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
@@ -129,13 +129,13 @@ describe('MashroomCacheControlService', () => {
         };
 
         const cacheControlService = new MashroomCacheControlService(true, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(false, req, res);
+        cacheControlService.addCacheControlHeader('ALWAYS', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
     });
 
-    it('sets the no-cache header if onlyForAnonymous is true and the user authenticated', async () => {
+    it('sets the no-cache header if policy is ONLY_FOR_ANONYMOUS_USERS and the user authenticated',  () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
@@ -162,12 +162,34 @@ describe('MashroomCacheControlService', () => {
         };
 
         const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
-        await cacheControlService.addCacheControlHeader(true, req, res);
+        cacheControlService.addCacheControlHeader('ONLY_FOR_ANONYMOUS_USERS', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
         expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
     });
 
+    it('sets the no-cache header if policy is NEVER', () => {
+        const req: any = {
+            method: 'GET',
+            pluginContext: {
+                loggerFactory,
+            }
+        };
 
+        let cacheControlHeader = null;
+        const res: any = {
+            set: (headerName: string, header: string) => {
+                if (headerName === 'Cache-Control') {
+                    cacheControlHeader = header;
+                }
+            }
+        };
+
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        cacheControlService.addCacheControlHeader('NEVER', req, res);
+
+        expect(cacheControlHeader).toBeTruthy();
+        expect(cacheControlHeader).toBe('no-cache, no-store, max-age=0');
+    });
 });
 

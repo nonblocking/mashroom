@@ -236,9 +236,9 @@ export default class PortalPageRenderController {
                 this._portalWebapp.set('views', theme.viewsPath);
 
                 if (cacheControlService) {
-                    // This will disable the browser cache for authenticated users
-                    //  to prevent that back button exposes potential sensitive information
-                    await cacheControlService.addCacheControlHeader(true, req, res);
+                    // Disable the browser cache for authenticated users to prevent that back button exposes potential sensitive information.
+                    // If a CSRF token is present disable the caching always because it must not be cached.
+                    cacheControlService.addCacheControlHeader(model.csrfToken ? 'NEVER' : 'ONLY_FOR_ANONYMOUS_USERS' , req, res);
                 }
 
                 res.render('portal', model);
