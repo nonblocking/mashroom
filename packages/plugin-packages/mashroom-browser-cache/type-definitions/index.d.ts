@@ -7,11 +7,7 @@ export interface MashroomCacheControlService {
     /**
      * Add the Cache-Control header based on the policy and authentication status.
      */
-    addCacheControlHeader(
-        cachingPolicy: CachingPolicy,
-        request: Request,
-        response: Response,
-    ): void;
+    addCacheControlHeader(cachingPolicy: CachingPolicy, request: Request, response: Response): void;
 
     /**
      * Remove a previously set Cache-Control header
