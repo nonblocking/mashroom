@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 1.7.6 (May 10, 2021)
+
  * Portal: Disable the browser caching for all pages if a CSRF token is present, otherwise stale tokens could be used
  * K8S remote app registry: Improved compatibility with Kubernetes 1.20
  * Added the possibility to delay the server shutdown after receiving SIGTERM via environment variable *WAIT_BEFORE_SERVER_CLOSE*,
@@ -11,11 +13,11 @@
    It also allows active request to finish properly. See: https://blog.laputa.io/graceful-shutdown-in-kubernetes-85f1c8d586da
  * Http Proxy: Allow it to disable connection keep-alive; mitigates #77
  * Prevented plugins with the same name to silently overwrite each other. If a plugin with the same name already exists
-   it will not be loaded anymore, and an error in the Admin UI will be shown.
+   it will not be loaded anymore, and an error in the Admin UI will be shown
  * Made the *name* property required for all plugins and disallowed some characters like '/' and '?' to prevent problems
    when the name is used in the path
  * LDAP Security Provider: Retry the login if the first attempt fails with ECONNRESET (happens sporadically with Active Directory)
- * Buffering WS messages when client connection is in state "closing". Otherwise any attempt to send a message produces an error
+ * Buffering WS messages when client connection is in state "closing". Otherwise, any attempt to send a message produces an error
 
 ## 1.7.5 (April 20, 2021)
 
