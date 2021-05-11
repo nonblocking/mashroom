@@ -64,7 +64,7 @@ async function startServer() {
 
 async function stopServer(server: MashroomServer, log: MashroomLogger) {
     if (!stopping) {
-        stopping = true;;
+        stopping = true;
         setTimeout(() => {
             log.info(`Server didn't stop within ${SERVER_STOP_TIMEOUT} ms. Exiting now.`);
             process.exit(0);
