@@ -300,13 +300,11 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             });
         });
 
-
         logger.debug('Adding role definitions:', roles);
-
-        roles.forEach((id) => {
-            securityService.addRoleDefinition(request, {
+        for (const id of roles) {
+            await securityService.addRoleDefinition(request, {
                 id,
             });
-        });
+        }
     }
 }

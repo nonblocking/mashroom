@@ -148,11 +148,10 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
         });
 
         logger.debug('Adding role definitions:', roles);
-
-        roles.forEach((id) => {
-            securityService.addRoleDefinition(request, {
+        for (const id of roles) {
+            await securityService.addRoleDefinition(request, {
                 id,
             });
-        });
+        }
     }
 }

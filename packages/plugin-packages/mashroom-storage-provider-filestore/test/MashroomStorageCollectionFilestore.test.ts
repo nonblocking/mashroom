@@ -36,6 +36,18 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(insertedItem._id).toBeTruthy();
     });
 
+    it('inserts a bunch of new items correctly', async () => {
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+
+        for (let i = 0; i < 1000; i++) {
+            await storage.insertOne({a: i});
+        }
+
+        const insertedItems = await storage.find();
+
+        expect(insertedItems.length).toBe(1000);
+    });
+
     it('returns first match with findOne', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
 

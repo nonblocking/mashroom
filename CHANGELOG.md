@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Simple Security Provider, LDAP Security Provider: Fixed adding roles to storage (caused lock exceptions under some circumstances)
+
 ## 1.7.6 (May 10, 2021)
 
  * Portal: Disable the browser caching for all pages if a CSRF token is present, otherwise stale tokens could be used

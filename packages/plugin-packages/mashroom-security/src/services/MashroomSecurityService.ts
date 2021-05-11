@@ -99,7 +99,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         } else {
             await roleDefinitionsCollection.updateOne({id: roleDefinition.id}, {
                 ...existingRole,
-                description: roleDefinition.description
+                description: roleDefinition.description || existingRole.description,
             });
         }
     }
