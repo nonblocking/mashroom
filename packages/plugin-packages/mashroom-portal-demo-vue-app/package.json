@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.7.6",
+    "version": "1.7.7",
     "sideEffects": false,
     "files": [
         "dist/**"
