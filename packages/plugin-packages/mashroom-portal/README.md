@@ -1102,7 +1102,7 @@ import type {MashroomPortalPageEnhancementPluginBootstrapFunction} from '@mashro
 const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
     return {
         dynamicResources: {
-            extraScript: (): (sitePath, pageFriendlyUrl, lang, userAgent) => `console.info('test');`,
+            extraScript: (sitePath, pageFriendlyUrl, lang, userAgent) => `console.info('test');`,
         }
     }
 };
