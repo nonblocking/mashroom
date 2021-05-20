@@ -36,7 +36,7 @@ export type MashroomHttpProxyResponseInterceptorResult = {
     responseHandled?: boolean;
 }
 
-interface MashroomHttpProxyInterceptor {
+export interface MashroomHttpProxyInterceptor {
 
     /**
      * Intercept request to given targetUri.
