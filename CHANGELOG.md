@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 1.7.7 (May 20, 2021)
+
  * Simple Security Provider, LDAP Security Provider: Fixed adding roles to storage (caused lock exceptions under some circumstances)
 
 ## 1.7.6 (May 10, 2021)
