@@ -1161,10 +1161,8 @@ export interface MashroomPortalAppEnhancementPlugin {
      */
     enhancePortalAppSetup: (
         portalAppSetup: MashroomPortalAppSetup,
-        sitePath: string,
-        pageFriendlyUrl: string,
         portalApp: MashroomPortalApp,
         request: Request
-    ) => MashroomPortalAppSetup;
+    ) => Promise<MashroomPortalAppSetup>;
 }
 ```
