@@ -21,13 +21,6 @@
                         ],
                         "styles": [
                             "src/styles.css"
-                        ],
-                        "scripts": [
-                            {
-                                "input": "node_modules/zone.js/dist/zone.js",
-                                "inject": true,
-                                "bundleName": "zonejs"
-                            }
                         ]
                     },
                     "configurations": {

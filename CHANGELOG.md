@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Angular Demo App: Remove zone.js because it pollutes the public space and possibly influences other Apps
  * Portal: Added the possibility to prefetch Portal App resources (*MashroomPortalAppService.prefetchResources*)
    which is useful if you know which apps you will have to load in the future and want to minimize the loading time.
  * Portal: Fixed loading shared CSS resources

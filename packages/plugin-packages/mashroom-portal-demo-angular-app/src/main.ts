@@ -11,7 +11,9 @@ if (process.env.NODE_ENV === 'production') {
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = async (hostElement, portalAppSetup, portalClientServices) => {
 
-    const loaderModule = await platformBrowserDynamic().bootstrapModule(LoaderModule);
+    const loaderModule = await platformBrowserDynamic().bootstrapModule(LoaderModule, {
+        ngZone: 'noop'
+    });
 
     const componentRef = loaderModule.instance.loadApp(AppModule, hostElement, portalAppSetup, portalClientServices);
 

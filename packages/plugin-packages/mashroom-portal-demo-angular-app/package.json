@@ -23,8 +23,7 @@
         "@types/node": "^14.14.28",
         "rxjs": "^6.6.3",
         "tslint": "^6.1.3",
-        "typescript": "4.1.5",
-        "zone.js": "^0.11.4"
+        "typescript": "4.1.5"
     },
     "scripts": {
         "dev": "ng serve",
@@ -41,11 +40,6 @@
                 "type": "portal-app",
                 "bootstrap": "startAngularDemoApp",
                 "category": "Demo",
-                "sharedResources": {
-                    "js": [
-                        "zonejs.js"
-                    ]
-                },
                 "resources": {
                     "js": [
                         "runtime.js",
