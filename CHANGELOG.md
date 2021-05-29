@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+ * Portal: Added the possibility to prefetch Portal App resources (*MashroomPortalAppService.prefetchResources*)
+   which is useful if you know which apps you will have to load in the future and want to minimize the loading time.
+ * Portal: Fixed loading shared CSS resources
+ * Portal: Allow messages with empty data (null or undefined)
+ * Portal: Take existing *appConfig* for Portal Apps from server config file even if the App itself has no *appConfig* defined
 
 ## 1.7.7 (May 20, 2021)
 

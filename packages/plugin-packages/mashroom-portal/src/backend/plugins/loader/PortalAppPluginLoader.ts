@@ -76,10 +76,8 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             }
         }
 
-        let defaultAppConfig = {};
-        if (plugin.pluginDefinition.defaultConfig && plugin.pluginDefinition.defaultConfig.appConfig) {
-            defaultAppConfig = {...plugin.pluginDefinition.defaultConfig.appConfig, ...config.appConfig || {}};
-        }
+        const defaultAppConfig = {...plugin.pluginDefinition.defaultConfig?.appConfig || {}, ...config.appConfig || {}};
+
         let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
         if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {
             // Backward compatibility

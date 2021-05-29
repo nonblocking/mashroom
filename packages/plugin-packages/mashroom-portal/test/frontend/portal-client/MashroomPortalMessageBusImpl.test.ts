@@ -129,12 +129,13 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
     });
 
-    it('should drop a message if the interceptor return null', (done) => {
+    it('should drop a message if the interceptor calls cancelMessage', (done) => {
         const messageBus = new MashroomPortalMessageBusImpl();
         const messageBusApp1 = messageBus.getAppInstance('app1');
         const messageBusApp2 = messageBus.getAppInstance('app2');
 
-        messageBus.registerMessageInterceptor(() => {
+        messageBus.registerMessageInterceptor((data, topic, senderAppId, receiverAppId, cancelMessage) => {
+            cancelMessage();
             return null;
         });
 

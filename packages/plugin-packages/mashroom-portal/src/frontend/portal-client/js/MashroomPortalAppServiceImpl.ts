@@ -272,6 +272,27 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return this._internalLoadAppSetup(pageId, pluginName, instanceId);
     }
 
+    prefetchResources(pluginName: string): Promise<void> {
+        const pageId = this._getPageId();
+        return this._internalLoadAppSetup(pageId, pluginName, null).then(
+            (appSetup) => {
+                // We just add a prefetch link for all resources (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Link_prefetching_FAQ)
+                if (appSetup.sharedResources?.js) {
+                    appSetup.sharedResources.js.forEach((jsResource) => this._getSharedJSResourceUrl(jsResource, appSetup));
+                }
+                if (appSetup.resources.js) {
+                    appSetup.resources.js.forEach((jsResource) => this._addPrefetchLink(this._getJSResourceUrl(jsResource, appSetup)));
+                }
+                if (appSetup.sharedResources?.css) {
+                    appSetup.sharedResources.css.forEach((jsResource) => this._addPrefetchLink(this._getSharedCSSResourceUrl(jsResource, appSetup)));
+                }
+                if (appSetup.resources.css) {
+                    appSetup.resources.css.forEach((jsResource) => this._addPrefetchLink(this._getCSSResourceUrl(jsResource, appSetup)));
+                }
+            }
+        );
+    }
+
     get loadedPortalApps(): Array<MashroomPortalLoadedPortalApp> {
         return loadedPortalAppsInternal.map((loadedAppInternal) => this._toLoadedApp(loadedAppInternal));
     }
@@ -370,26 +391,26 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         // JavaScript
         // Load the script sequentially, first the shared ones
         let loadJsPromise: Promise<void> =  Promise.resolve();
-        if (appSetup.sharedResources && appSetup.sharedResources.js) {
+        if (appSetup.sharedResources?.js) {
             loadJsPromise = appSetup.sharedResources.js.reduce(
-                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.sharedResourcesBasePath}/js/${jsResource}`, loadedPortalApp)),
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(this._getSharedJSResourceUrl(jsResource, appSetup), loadedPortalApp)),
                 loadJsPromise);
         }
         if (appSetup.resources.js) {
             loadJsPromise = appSetup.resources.js.reduce(
-                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(`${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp)),
+                (promise, jsResource) => promise.then(() => this._resourceManager.loadJs(this._getJSResourceUrl(jsResource, appSetup), loadedPortalApp)),
                 loadJsPromise);
         }
 
         // CSS
         // We don't have to wait for CSS resources before we can start the app
-        if (appSetup.sharedResources && appSetup.sharedResources.css) {
+        if (appSetup.sharedResources?.css) {
             appSetup.sharedResources.css.forEach((cssResource) =>
-                this._resourceManager.loadStyle(`${appSetup.sharedResourcesBasePath}/css/x${cssResource}`, loadedPortalApp));
+                this._resourceManager.loadStyle(this._getSharedCSSResourceUrl(cssResource, appSetup), loadedPortalApp));
         }
         if (appSetup.resources.css) {
             appSetup.resources.css.forEach((cssResource) =>
-                this._resourceManager.loadStyle(`${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`, loadedPortalApp));
+                this._resourceManager.loadStyle(this._getCSSResourceUrl(cssResource, appSetup), loadedPortalApp));
         }
 
         return loadJsPromise;
@@ -713,5 +734,28 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             this._remoteLogger.error('AboutToUnload listener threw an error', e);
             console.error('AboutToUnload listener threw an error: ', e);
         }
+    }
+
+    private _getSharedJSResourceUrl(jsResource: string, appSetup: MashroomPortalAppSetup): string {
+        return `${appSetup.sharedResourcesBasePath}/js/${jsResource}`;
+    }
+
+    private _getJSResourceUrl(jsResource: string, appSetup: MashroomPortalAppSetup): string {
+        return `${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`;
+    }
+
+    private _getSharedCSSResourceUrl(cssResource: string, appSetup: MashroomPortalAppSetup): string {
+        return `${appSetup.sharedResourcesBasePath}/css/${cssResource}`;
+    }
+
+    private _getCSSResourceUrl(cssResource: string, appSetup: MashroomPortalAppSetup): string {
+        return `${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`;
+    }
+
+    private _addPrefetchLink(url: string): void {
+        const prefetchLink = document.createElement('link');
+        prefetchLink.rel = 'prefetch';
+        prefetchLink.href = url;
+        document.head.appendChild(prefetchLink);
     }
 }

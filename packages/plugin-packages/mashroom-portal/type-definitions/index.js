@@ -654,6 +654,12 @@ export interface MashroomPortalAppService {
      */
     loadAppSetup(pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup>;
 
+    /**
+     * Prefetch resources of given app/plugin. This is useful if you know which apps you will have to load
+     * in the future and want to minimize the loading time.
+     */
+    prefetchResources(pluginName: string): Promise<void>;
+
     +loadedPortalApps: Array<MashroomPortalLoadedPortalApp>;
 }
 
@@ -830,7 +836,7 @@ export interface MashroomPortalAdminService {
 }
 
 export type MashroomPortalMessageBusSubscriberCallback = (data: any, topic: string, senderAppId: ?string) => void;
-export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string) => ?any;
+export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string, cancelMessage: () => void) => ?any;
 
 export interface MashroomPortalMessageBus {
     /**

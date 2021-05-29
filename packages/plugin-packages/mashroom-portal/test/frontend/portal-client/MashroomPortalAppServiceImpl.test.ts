@@ -58,7 +58,7 @@ describe('MashroomPortalAppServiceImpl', () => {
         ]);
         expect(loadedStyles.length).toBe(2);
         expect(loadedStyles).toEqual([
-            'http://localhost:5050/shared/css/xshared-style.css',
+            'http://localhost:5050/shared/css/shared-style.css',
             'http://localhost:5050/app1/style.css?v=undefined',
         ]);
     });

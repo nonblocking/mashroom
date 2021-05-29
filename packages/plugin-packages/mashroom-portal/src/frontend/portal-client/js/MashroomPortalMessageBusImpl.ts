@@ -228,11 +228,14 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
 
     private _deliverMessage(topic: string, data: any, senderAppId: string | undefined | null, subscription: Subscription) {
         let resultData = data;
+        let canceled = false;
+        const cancelMessage = () => canceled = true;
+
         this._interceptors.forEach((wrapper) => {
-            resultData = wrapper.interceptor(resultData, topic, senderAppId, subscription.appId);
+            resultData = wrapper.interceptor(resultData, topic, senderAppId, subscription.appId, cancelMessage);
         });
 
-        if (resultData) {
+        if (!canceled) {
             subscription.callback(resultData, topic, senderAppId);
         }
     }

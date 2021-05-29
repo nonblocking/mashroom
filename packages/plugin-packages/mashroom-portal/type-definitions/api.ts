@@ -683,12 +683,10 @@ export interface MashroomPortalAppService {
     /**
      * Reload given portal app
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always resolve!
+     * If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
-    reloadApp(
-        id: string,
-        overrideAppConfig?: any | null | undefined,
-    ): Promise<MashroomPortalLoadedPortalApp>;
+    reloadApp(id: string, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
      * Unload given portal app
@@ -703,12 +701,7 @@ export interface MashroomPortalAppService {
     /**
      * Show the name and version for all currently loaded apps in a overlay (for debug purposes)
      */
-    showAppInfos(
-        customize?: (
-            portalApp: MashroomPortalLoadedPortalApp,
-            overlay: HTMLDivElement,
-        ) => void,
-    ): void;
+    showAppInfos(customize?: (portalApp: MashroomPortalLoadedPortalApp, overlay: HTMLDivElement) => void): void;
 
     /**
      * Hide all app info overlays
@@ -728,24 +721,23 @@ export interface MashroomPortalAppService {
     /**
      * Add listener for unload events (fired before an app will been detached from the page)
      */
-    registerAppAboutToUnloadListener(
-        listener: MashroomPortalAppLoadListener,
-    ): void;
+    registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener,): void;
 
     /**
      * Remove listener for unload events
      */
-    unregisterAppAboutToUnloadListener(
-        listener: MashroomPortalAppLoadListener,
-    ): void;
+    unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener,): void;
 
     /**
      * Load the setup for given app/plugin name on the current page
      */
-    loadAppSetup(
-        pluginName: string,
-        instanceId: string | null | undefined,
-    ): Promise<MashroomPortalAppSetup>;
+    loadAppSetup(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppSetup>;
+
+    /**
+     * Prefetch resources of given app/plugin. This is useful if you know which apps you will have to load
+     * in the future and want to minimize the loading time.
+     */
+    prefetchResources(pluginName: string): Promise<void>;
 
     readonly loadedPortalApps: Array<MashroomPortalLoadedPortalApp>;
 }
@@ -951,11 +943,13 @@ export type MashroomPortalMessageBusSubscriberCallback = (
     topic: string,
     senderAppId: string | null | undefined,
 ) => void;
+
 export type MashroomPortalMessageBusInterceptor = (
     data: any,
     topic: string,
     senderAppId: string | null | undefined,
     receiverAppId: string | null | undefined,
+    cancelMessage: () => void,
 ) => any | null | undefined;
 
 export interface MashroomPortalMessageBus {
