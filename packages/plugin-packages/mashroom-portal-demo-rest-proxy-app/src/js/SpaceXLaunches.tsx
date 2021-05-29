@@ -1,7 +1,8 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
-import type {Launches} from './types';
+import fetchData from './fetch_data';
+import type {Launches, Launchpads, Rockets} from './types';
 
 type Props = {
     spaceXApiPath: string;
@@ -11,6 +12,8 @@ type State = {
     loading: boolean;
     errorLoading: boolean;
     launches: Launches;
+    launchpads: Launchpads;
+    rockets: Rockets;
 }
 
 export default class SpaceXLaunches extends PureComponent<Props, State> {
@@ -21,30 +24,24 @@ export default class SpaceXLaunches extends PureComponent<Props, State> {
             loading: false,
             errorLoading: false,
             launches: [],
+            launchpads: [],
+            rockets: [],
         };
     }
 
     componentDidMount() {
+        const {spaceXApiPath} = this.props;
         this.setState({
             loading: true,
         });
-        fetch(`${this.props.spaceXApiPath}/launches/upcoming`, { credentials: 'same-origin' }).then(
-            (response) => {
-               response.json().then(
-                   (launches) => {
-                       this.setState({
-                           loading: false,
-                           launches,
-                       });
-                   },
-                   (error) => {
-                       console.error('Fetching failed!', error);
-                       this.setState({
-                           loading: false,
-                           errorLoading: true,
-                       });
-                   }
-               );
+        fetchData(spaceXApiPath).then(
+            ([launches, launchpads, rockets]) => {
+                this.setState({
+                    loading: false,
+                    launches,
+                    launchpads,
+                    rockets,
+                });
             },
             (error) => {
                 console.error('Fetching failed!', error);
@@ -57,13 +54,14 @@ export default class SpaceXLaunches extends PureComponent<Props, State> {
     }
 
     renderContent() {
-        if (this.state.loading) {
+        const {loading, errorLoading, launches, launchpads, rockets} = this.state;
+        if (loading) {
             return (
                 <div className='loading'>
                     <FormattedMessage id='loading'/>
                 </div>
             );
-        } else if (this.state.errorLoading) {
+        } else if (errorLoading) {
             return (
                 <div className='error'>
                     <FormattedMessage id='errorLoading'/>
@@ -71,17 +69,19 @@ export default class SpaceXLaunches extends PureComponent<Props, State> {
             );
         }
 
-        if (!this.state.launches) {
+        if (!launches) {
             return null;
         }
 
-        const rows = this.state.launches.splice(0, 10).map((launch) => (
-            <tr key={launch.flight_number}>
-                <td>{launch.flight_number}</td>
-                <td>{launch.mission_name}</td>
-                <td>{launch.rocket.rocket_name}</td>
-                <td>{launch.launch_site.site_name_long}</td>
-                <td>{new Date(launch.launch_date_unix * 1000).toLocaleDateString()}</td>
+        const nextTenLaunches = launches.sort((l1, l2) => l1.date_unix - l2.date_unix).splice(0, 10);
+
+        const rows = nextTenLaunches.map(({name, flight_number, date_unix, rocket, launchpad}) => (
+            <tr key={name}>
+                <td>{flight_number}</td>
+                <td>{name}</td>
+                <td>{rockets.find((r) => r.id === rocket)?.name}</td>
+                <td>{launchpads.find((l) => l.id === launchpad)?.full_name}</td>
+                <td>{new Date(date_unix * 1000).toLocaleDateString()}</td>
             </tr>
         ));
 
@@ -98,7 +98,7 @@ export default class SpaceXLaunches extends PureComponent<Props, State> {
                         <FormattedMessage id='rocketName'/>
                     </th>
                     <th>
-                        <FormattedMessage id='siteName'/>
+                        <FormattedMessage id='launchPad'/>
                     </th>
                     <th>
                         <FormattedMessage id='launchDate'/>

@@ -52,7 +52,7 @@
                     ],
                     "restProxies": {
                         "spaceXApi": {
-                            "targetUri": "https://api.spacexdata.com/v3",
+                            "targetUri": "https://api.spacexdata.com/v4",
                             "restrictToRoles": [
                                 "Authenticated"
                             ]

@@ -1,18 +1,27 @@
 
 export type Launch = {
     flight_number: string;
-    mission_name: string;
-    mission_id: string;
-    rocket: {
-        rocket_name: string;
-    };
-    launch_site: {
-        site_name_long: string;
-    };
-    is_tentative: boolean;
-    launch_year: string;
-    launch_date_utc: string;
-    launch_date_unix: number;
+    name: string;
+    id: string;
+    rocket: string;
+    launchpad: string;
+    upcoming: boolean;
+    date_utc: string;
+    date_unix: number;
 }
 
 export type Launches = Array<Launch>;
+
+export type Launchpad = {
+    id: string;
+    full_name: string;
+}
+
+export type Launchpads = Array<Launchpad>;
+
+export type Rocket = {
+    id: string;
+    name: string;
+}
+
+export type Rockets = Array<Rocket>;

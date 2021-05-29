@@ -6,6 +6,6 @@ export default {
     flightNumber: 'Flight number',
     missionName: 'Mission name',
     rocketName: 'Rocket name',
-    siteName: 'Site name',
+    launchPad: 'Launch ste',
     launchDate: 'Launch date',
 };
