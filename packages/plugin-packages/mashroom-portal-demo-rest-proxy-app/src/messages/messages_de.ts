@@ -4,7 +4,7 @@ export default {
     loading: 'Laden...',
     errorLoading: 'Fehler beim Laden!',
     flightNumber: 'Flugnummer',
-    missionName: 'Misson Name',
+    missionName: 'Mission Name',
     rocketName: 'Rakete',
     launchPad: 'Start Ort',
     launchDate: 'Start Datum',

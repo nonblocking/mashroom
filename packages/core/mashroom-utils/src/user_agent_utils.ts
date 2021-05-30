@@ -22,7 +22,7 @@ export const determineUserAgent = (req: IncomingMessage): UserAgent => {
             version: ua.browser.version
         },
         os: {
-            name: ua.os.name
+            name: ua.os.name || 'Unknown'
         }
     };
 };

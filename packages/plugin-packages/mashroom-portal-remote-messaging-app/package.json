@@ -29,6 +29,7 @@
         "redux": "^4.0.5",
         "redux-form": "^8.3.7",
         "shortid": "^2.2.16",
+        "shallow-equal": "^1.2.1",
         "typescript": "^4.1.5",
         "webpack": "^4.46.0",
         "webpack-cli": "^4.5.0",

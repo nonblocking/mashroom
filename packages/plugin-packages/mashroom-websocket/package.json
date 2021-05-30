@@ -16,7 +16,7 @@
         "fs-extra": "^9.1.0",
         "handlebars": "^4.7.7",
         "uuid": "^8.3.2",
-        "ws": "^7.4.3"
+        "ws": "^7.4.6"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.16",
