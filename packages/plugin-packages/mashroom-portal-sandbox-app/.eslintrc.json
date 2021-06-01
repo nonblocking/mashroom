@@ -16,7 +16,7 @@
     },
     "settings": {
         "react": {
-            "version": "16.11"
+            "version": "detect"
         }
     },
     "rules": {
