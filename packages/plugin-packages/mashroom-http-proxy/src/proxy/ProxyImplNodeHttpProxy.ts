@@ -243,7 +243,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         activeRequest.resolve();
     }
 
-    private async onError(error: Error & { code?: string }, req: IncomingMessage, res: ServerResponse): Promise<void> {
+    private async onError(error: NodeJS.ErrnoException, req: IncomingMessage, res: ServerResponse): Promise<void> {
         const clientRequest = req as Request;
         const clientResponse = res as Response;
         const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy');
