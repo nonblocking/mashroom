@@ -317,7 +317,7 @@ Since version 1.3 the property values can also contain string templates and the 
  * _tmpFolder_: The tmp folder for plugin builds and so on (default: OS specific temp dir)
  * _pluginPackageFolders_: An array of folder paths that contain *Node.js* modules with *Mashroom Server* plugins
     An object in this array can have the following properties:
-      * _path_: The folder path, relative to the config file (mandatory)
+      * _path_: The plugin folder path, relative to the config file (mandatory)
       * _watch_: Determines if this folder should be watched for changed, new or removed packages (default: false)
       * _devMode_: If this is true the server automatically builds plugins on changes before reloading it.
         This option enforces _watch_. (default: false)
