@@ -4,7 +4,7 @@ import type {MashroomLogger, MashroomLoggerFactory} from '../../../type-definiti
 
 type NpmCommand = 'install' | 'update' | 'run';
 
-const EXECUTION_TIMEOUT = 3 * 60 * 1000; // 3min
+const DEFAULT_NPM_EXECUTION_TIMEOUT_SEC = 3 * 60; // 3min
 
 /**
  * Encapsulate npm access
@@ -13,7 +13,7 @@ export default class NpmUtils {
 
     private _logger: MashroomLogger;
 
-    constructor(loggerFactory: MashroomLoggerFactory) {
+    constructor(loggerFactory: MashroomLoggerFactory, private _npmExecutionTimeoutSec = DEFAULT_NPM_EXECUTION_TIMEOUT_SEC) {
         this._logger = loggerFactory('mashroom.plugins.build');
     }
 
@@ -54,7 +54,7 @@ export default class NpmUtils {
 
             const execOptions = {
                 cwd: packagePath,
-                timeout: EXECUTION_TIMEOUT,
+                timeout: this._npmExecutionTimeoutSec * 1000,
                 windowsHide: true,
             };
 
@@ -66,7 +66,7 @@ export default class NpmUtils {
                         this._logger.error(stdErrStr);
                     }
                     if (childProc.killed) {
-                        reject(new Error(`Execution of command '${commandString}' aborted because it took longer than ${EXECUTION_TIMEOUT / 1000}sec!`));
+                        reject(new Error(`Execution of command '${commandString}' aborted because it took longer than ${this._npmExecutionTimeoutSec}sec!`));
                     } else {
                         reject(error);
                     }

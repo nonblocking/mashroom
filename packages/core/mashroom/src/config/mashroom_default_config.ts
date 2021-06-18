@@ -13,7 +13,8 @@ const config: MashroomServerConfig = {
         path: './node_modules/@mashroom',
     }],
     ignorePlugins: [],
-    indexPage: '/'
+    indexPage: '/',
+    devModeNpmExecutionTimeoutSec: undefined,
 };
 
 export default config;

@@ -368,6 +368,7 @@ export type MashroomServerConfig = {
     readonly pluginPackageFolders: Array<PluginPackageFolder>;
     readonly ignorePlugins: Array<string>;
     readonly indexPage: string;
+    readonly devModeNpmExecutionTimeoutSec: number | null | undefined;
 
     [key: string]: any;
 };

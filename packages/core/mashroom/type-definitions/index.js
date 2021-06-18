@@ -278,6 +278,7 @@ export type MashroomServerConfig = {
     +pluginPackageFolders: Array<PluginPackageFolder>,
     +ignorePlugins: Array<string>,
     +indexPage: string,
+    +devModeNpmExecutionTimeoutSec: ?number,
     [key: string]: any
 }
 

@@ -62,7 +62,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._buildDataFolder = path.resolve(config.tmpFolder, config.name, 'build-data');
         this._logger = loggerFactory('mashroom.plugins.build');
-        this._npmUtils = new NpmUtils(loggerFactory);
+        this._npmUtils = new NpmUtils(loggerFactory, config.devModeNpmExecutionTimeoutSec || undefined);
         this._eventEmitter = new EventEmitter();
         this._eventEmitter.setMaxListeners(0);
 
