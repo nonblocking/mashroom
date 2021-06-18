@@ -4,9 +4,8 @@ import {CircularProgress} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {ActivePortalApp} from '../types';
 
-export const HOST_ELEMENT_ID = 'mashroom-sandbox-app-host-elem';
-
 type Props = {
+    hostElementId: string;
     width: string;
     activePortalApp: ActivePortalApp | undefined | null;
     setHostWidth: (width: string) => void;
@@ -48,7 +47,7 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     render() {
-        const {activePortalApp} = this.props;
+        const {activePortalApp, hostElementId} = this.props;
         if (!activePortalApp) {
             return null;
         }
@@ -63,7 +62,7 @@ export default class PortalApp extends PureComponent<Props> {
 
         return (
             <div className='mashroom-sandbox-app-host-wrapper' style={{width}} ref={this.wrapperElemRef}>
-                <div id={HOST_ELEMENT_ID} className={`portal-app-${classFromPluginName}`}>
+                <div id={hostElementId} className={`portal-app-${classFromPluginName}`}>
                     <CircularProgress/>
                 </div>
                 <div className='mashroom-sandbox-app-host-resizer' onMouseDown={this.resizerMouseDown.bind(this)}>

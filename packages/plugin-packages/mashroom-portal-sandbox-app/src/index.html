@@ -17,6 +17,31 @@
     <script type="text/javascript">
         (function () {
 
+            const masterMessageBus = {
+                getAppInstance() {
+                    return {
+                        _subscriptionMap: {},
+                        publish(topic, data) {
+                            console.info('App under test published:', topic, data);
+                            if (this._subscriptionMap[topic]) {
+                                this._subscriptionMap[topic](data, topic);
+                            }
+                        },
+                        subscribe(topic, cb) {
+                            console.info('App under test subscribed to:', topic);
+                            this._subscriptionMap[topic] = cb;
+                        }
+                    }
+                },
+                publish(topic, data) {
+                    console.info('Sandbox published:', topic, data);
+                },
+            }
+
+            window.MashroomPortalServices = {
+                messageBus: masterMessageBus,
+            }
+
             document.addEventListener("DOMContentLoaded", function () {
                 var element = document.getElementById("sandbox-app-container");
                 var portalAppConfig = {
@@ -94,7 +119,8 @@
 
                             return null;
                         }
-                    }
+                    },
+                    messageBus: masterMessageBus,
                 };
                 window.startSandboxApp(element, portalAppSetup, portalClientServices);
             });

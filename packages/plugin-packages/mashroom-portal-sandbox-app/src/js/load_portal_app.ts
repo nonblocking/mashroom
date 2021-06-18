@@ -1,14 +1,11 @@
 
-import {HOST_ELEMENT_ID} from './components/PortalAppHost';
+import getClientServices from './client_services';
 
 import type {
     MashroomPortalAppLifecycleHooks,
     MashroomPortalAppSetup,
-    MashroomPortalClientServices,
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {DummyMessageBus} from './types';
-
-const WINDOW_VAR_PORTAL_SERVICES = 'MashroomPortalServices';
+import type {MessageBusPortalAppUnderTest} from './types';
 
 const LOADED_SCRIPTS: Array<HTMLScriptElement> = [];
 const LOADED_STYLES: Array<HTMLLinkElement> = [];
@@ -45,7 +42,7 @@ const loadStyle = (path: string) => {
     LOADED_STYLES.push(linkElem);
 };
 
-export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, dummyMessageBus: DummyMessageBus): Promise<void> => {
+export default (appName: string, hostElementId: string, setup: MashroomPortalAppSetup, messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest): Promise<void> => {
     try {
         const {sharedResources, resources, resourcesBasePath, globalLaunchFunction, lastReloadTs} = setup;
 
@@ -67,17 +64,16 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
                             return Promise.reject(`Invalid bootstrap function: ${globalLaunchFunction}`);
                         }
 
-                        const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
+                        const wrapperElem = document.getElementById(hostElementId);
                         const hostElem = document.createElement('div');
                         if (wrapperElem) {
                             wrapperElem.innerHTML = '';
                             wrapperElem.appendChild(hostElem);
                         }
 
-                        const messageBus = dummyMessageBus.getAppInstance('portalAppUnderTest');
-                        const clientServices: MashroomPortalClientServices = (global as any)[WINDOW_VAR_PORTAL_SERVICES] || {};
+                        const clientServices = getClientServices();
+                        const messageBus = messageBusPortalAppUnderTest;
                         const modifiedClientServices = {...clientServices, messageBus};
-
 
                         const result = bootstrapFn(hostElem, setup, modifiedClientServices);
                         if (result) {
@@ -96,7 +92,7 @@ export default (appName: string, areaId: string, setup: MashroomPortalAppSetup, 
             }
         ).catch((error) => {
             console.error('Error loading app into sandbox: ', error);
-            const wrapperElem = document.getElementById(HOST_ELEMENT_ID);
+            const wrapperElem = document.getElementById(hostElementId);
             if (wrapperElem) {
                 wrapperElem.innerHTML = `<div class="mashroom-portal-app-loading-error">Loading ${appName} failed: ${error}</div>`;
             }

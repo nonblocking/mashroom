@@ -2,9 +2,10 @@
 import React, {PureComponent} from 'react';
 import {IntlProvider} from 'react-intl';
 import {Provider as ReduxProvider} from 'react-redux';
-import DummyMessageBus from '../DummyMessageBus';
+import shortId from 'shortid';
 import store from '../store/store';
 import messages from '../messages/messages';
+import getMessageBusPortalAppUnderTest from '../message_bus_portal_app_under_test';
 import PortalAppHostContainer from '../containers/PortalAppHostContainer';
 import PortalAppContainer from '../containers/PortalAppContainer';
 import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer';
@@ -16,7 +17,7 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type { DummyMessageBus as DummyMessageBusType } from '../types';
+import type { MessageBusPortalAppUnderTest } from '../types';
 
 type Props = {
     lang: string,
@@ -27,18 +28,20 @@ type Props = {
 
 export default class SandboxApp extends PureComponent<Props> {
 
-    dummyMessageBus: DummyMessageBusType;
+    hostElementId: string;
+    messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest;
 
     constructor(props: Props) {
         super(props);
-        this.dummyMessageBus = new DummyMessageBus();
-        this.dummyMessageBus.onMessageSent((topic, data) => {
+        this.hostElementId = `mashroom-sandbox-app-host-elem_${shortId()}`;
+        this.messageBusPortalAppUnderTest = getMessageBusPortalAppUnderTest();
+        this.messageBusPortalAppUnderTest.onMessageSent((topic, data) => {
             store.dispatch(addMessagePublishedByApp({
                 topic,
                 data
             }))
         });
-        this.dummyMessageBus.onTopicsChanged((topics) => {
+        this.messageBusPortalAppUnderTest.onTopicsChanged((topics) => {
             store.dispatch(setTopicsSubscribedByApp(topics));
         });
     }
@@ -54,12 +57,13 @@ export default class SandboxApp extends PureComponent<Props> {
             <ReduxProvider store={store}>
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
                     <div className='mashroom-sandbox-app'>
-                        <PortalAppHostContainer />
-                        <MessageBusSendFormContainer messageBus={this.dummyMessageBus} />
+                        <PortalAppHostContainer hostElementId={this.hostElementId} />
+                        <MessageBusSendFormContainer messageBus={messageBus} />
                         <MessageBusHistoryContainer />
                         <PortalAppContainer
+                            hostElementId={this.hostElementId}
                             messageBus={messageBus}
-                            dummyMessageBus={this.dummyMessageBus}
+                            messageBusPortalAppUnderTest={this.messageBusPortalAppUnderTest}
                             portalAppService={portalAppService}
                             portalStateService={portalStateService}
                         />

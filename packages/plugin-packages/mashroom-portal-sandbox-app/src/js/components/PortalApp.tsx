@@ -12,13 +12,14 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {ActivePortalApp, DummyMessageBus, SelectedPortalApp} from '../types';
+import type {ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
 
 type Props = {
+    hostElementId: string;
     portalAppService: MashroomPortalAppService;
     portalStateService: MashroomPortalStateService;
     messageBus: MashroomPortalMessageBus;
-    dummyMessageBus: DummyMessageBus;
+    messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest;
     activePortalApp: ActivePortalApp | undefined | null;
     setAvailablePortalApps: (apps: Array<MashroomAvailablePortalApp>) => void;
     setSelectedPortalApp: (app: SelectedPortalApp | undefined | null) => void;
@@ -91,7 +92,7 @@ export default class PortalApp extends PureComponent<Props> {
     loadPortalApp(selectedPortalApp: SelectedPortalApp, hostWidth: string | undefined | null) {
         console.info(`Loading app '${selectedPortalApp.appName}' with setup: `, selectedPortalApp.setup);
 
-        const { dummyMessageBus, setActivePortalApp, setHostWidth } = this.props;
+        const { hostElementId, messageBusPortalAppUnderTest, setActivePortalApp, setHostWidth } = this.props;
         const { appName, setup } = selectedPortalApp;
         setActivePortalApp(selectedPortalApp);
 
@@ -99,7 +100,7 @@ export default class PortalApp extends PureComponent<Props> {
             setHostWidth(hostWidth);
         }
 
-        loadPortalApp(appName, 'mashroom-sandbox-app-host-elem', setup, dummyMessageBus).then(
+        loadPortalApp(appName, hostElementId, setup, messageBusPortalAppUnderTest).then(
             () => {
                 // Nothing to do
             },

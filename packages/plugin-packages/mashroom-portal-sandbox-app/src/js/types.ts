@@ -5,6 +5,7 @@ import type {
     MashroomPortalAppSetup,
     MashroomPortalMasterMessageBus,
 } from '@mashroom/mashroom-portal/type-definitions';
+import {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 
 export type State = {
     readonly availablePortalApps: Array<MashroomAvailablePortalApp>;
@@ -31,10 +32,9 @@ export type ActivePortalApp = {
     readonly setup: MashroomPortalAppSetup,
 }
 
-export interface DummyMessageBus extends MashroomPortalMasterMessageBus {
+export interface MessageBusPortalAppUnderTest extends MashroomPortalMessageBus {
     onMessageSent(callback: (topic: string, data: any) => void): void;
     onTopicsChanged(callback: (topics: Array<string>) => void): void;
-    reset(): void;
 }
 
 export type MessageBusMessage = {

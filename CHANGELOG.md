@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+
+ * Sandbox App: The sandbox now uses the "real" message bus and therefore supports Apps that use the messageBus
+   interceptor, and can also simulate communication with other Apps on the same page.
+   Also, the Sandbox can now load itself properly ;-)
+ * Portal: Added an info() method to *MashroomPortalRemoteLogger*
  * Virtual host path mapper: Make sure the reverse mapped location header is never empty (fixes #79)
 
 ## 1.7.8 (May 31, 2021)
