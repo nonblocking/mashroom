@@ -9,7 +9,7 @@ const reverseRules = (mapping: VHostMappingRules): VHostMappingRules => {
     return ret;
 };
 
-export default (originalUrl: string, vHostDefinition: VHostDefinition, reverse = false): MappingResult | undefined => {
+export default (originalUrl: string, vHostDefinition: VHostDefinition, reverse = false): MappingResult | undefined => {
     const { frontendBasePath = '/', mapping } = vHostDefinition;
     const originalPath = originalUrl.split(/[?#]/)[0];
 

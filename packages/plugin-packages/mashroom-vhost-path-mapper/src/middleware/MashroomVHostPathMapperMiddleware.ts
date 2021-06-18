@@ -45,7 +45,7 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
                         let newRedirectUrl = redirectUrl;
                         const redirectMappingResult = mapPath(redirectUrl, hostDefinition, true);
                         if (redirectMappingResult) {
-                            newRedirectUrl = redirectMappingResult.url;
+                            newRedirectUrl = redirectMappingResult.url || '/';
                             logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${redirectMappingResult.url}`);
                         }
                         return originalLocationFn(newRedirectUrl);

@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Virtual host path mapper: Make sure the reverse mapped location header is never empty (fixes #79)
+
 ## 1.7.8 (May 31, 2021)
 
  * 3rd party libraries with know vulnerabilities upgraded

@@ -84,6 +84,36 @@ describe('MashroomVHostPathMapperMiddleware', () => {
         expect(location.mock.calls[0][0]).toBe('/x/foo?x=4');
     })
 
+    it('maps the redirect to / if the location is the root path', () => {
+        const vhostDefinitions: VHostDefinitions = {
+            'my-company.com': {
+                mapping: {
+                    '/': '/portal/web'
+                }
+            }
+        };
+        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
+
+        const req: any = {
+            hostname: 'my-company.com',
+            url: '/bar?y=1',
+            headers: {},
+            pluginContext,
+        };
+        const location = jest.fn();
+        const res: any = {
+            location,
+        };
+        const next = jest.fn();
+
+        middleware(req, res, next);
+
+        res.location('/portal/web');
+
+        expect(location.mock.calls.length).toBe(1);
+        expect(location.mock.calls[0][0]).toBe('/');
+    })
+
 });
 
 
