@@ -1070,6 +1070,23 @@ export interface MashroomPortalRemoteLogger {
     /**
      * Send a client error to the server log
      */
+    error(msg: string, error?: Error): void;
+
+    /**
+     * Send a client warning to the server log
+     */
+    warn(msg: string, error?: Error): void;
+
+    /**
+     * Send a client info to the server log
+     */
+    info(msg: string): void;
+}
+
+export interface MasterMashroomPortalRemoteLogger extends MashroomPortalRemoteLogger {
+    /**
+     * Send a client error to the server log
+     */
     error(msg: string, error?: Error, portalAppName?: string | null | undefined): void;
 
     /**

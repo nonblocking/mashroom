@@ -26,9 +26,9 @@ import type {
     MashroomPortalMasterStateService,
     MashroomPortalMessageBus,
     MashroomPortalStateService,
-    MashroomPortalRemoteLogger,
+    MasterMashroomPortalRemoteLogger,
     MashroomRestService,
-    ModalAppCloseCallback,
+    ModalAppCloseCallback, MashroomPortalRemoteLogger,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType} from '../../../../type-definitions/internal';
 
@@ -70,7 +70,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     private _lastUpdatedCheckTs: number;
     private _appsUpdateEventSource: EventSource | undefined;
 
-    constructor(restService: MashroomRestService, private _resourceManager: ResourceManager, private _remoteLogger: MashroomPortalRemoteLogger) {
+    constructor(restService: MashroomRestService, private _resourceManager: ResourceManager, private _remoteLogger: MasterMashroomPortalRemoteLogger) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
         console.debug('Using portal api path:', apiPath);
         this._restService = restService.withBasePath(apiPath);
@@ -554,7 +554,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             ...clientServices,
             messageBus: this._getMessageBusForApp(clientServices, appId),
             stateService: this._getStateServiceForApp(clientServices, pluginName, appSetup),
-            remoteLogger: clientServices.remoteLogger.getAppInstance(pluginName),
+            remoteLogger: this._getRemoteLoggerForApp(clientServices, pluginName),
             ...customServices,
         }
 
@@ -601,6 +601,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const appStatePrefix = `${appSetup.instanceId || `${this._getPageId()}_${encodeURIComponent(pluginName)}`}__`;
         const mss = clientServices.stateService as MashroomPortalMasterStateService;
         return mss.withKeyPrefix(appStatePrefix);
+    }
+
+    private _getRemoteLoggerForApp(clientServices: MashroomPortalClientServices, pluginName: string): MashroomPortalRemoteLogger {
+        const mrl = clientServices.remoteLogger as MasterMashroomPortalRemoteLogger;
+        return mrl.getAppInstance(pluginName);
     }
 
     private _unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal): void {

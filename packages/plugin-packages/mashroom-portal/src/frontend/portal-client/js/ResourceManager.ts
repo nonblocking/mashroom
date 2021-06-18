@@ -1,6 +1,6 @@
 
 import type {LoadedPortalAppInternal} from './MashroomPortalAppServiceImpl';
-import type {MashroomPortalRemoteLogger} from '../../../../type-definitions';
+import type {MasterMashroomPortalRemoteLogger} from '../../../../type-definitions';
 
 type Resources<T> = {
     [path: string]: {
@@ -18,9 +18,9 @@ const LOADED_CSS_RESOURCES: Resources<HTMLLinkElement> = {};
 export default class ResourceManager {
 
     _htmlDoc: Document;
-    _remoteLogger: MashroomPortalRemoteLogger;
+    _remoteLogger: MasterMashroomPortalRemoteLogger;
 
-    constructor(remoteLogger: MashroomPortalRemoteLogger, htmlDoc = document) {
+    constructor(remoteLogger: MasterMashroomPortalRemoteLogger, htmlDoc = document) {
         this._remoteLogger = remoteLogger;
         this._htmlDoc = htmlDoc;
     }

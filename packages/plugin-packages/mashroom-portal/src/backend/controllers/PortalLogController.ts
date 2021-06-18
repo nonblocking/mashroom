@@ -28,7 +28,7 @@ export default class PortalLogController {
                     const portalApp = this._getPortalApp(logMessage.portalAppName);
                     if (portalApp) {
                         logger.addContext(portalAppContext(portalApp));
-                        sourceAppInfo = `Caused by portal app: ${portalApp.name} v${portalApp.version}`;
+                        sourceAppInfo = `[${portalApp.name} v${portalApp.version}]`;
                     }
                 }
 

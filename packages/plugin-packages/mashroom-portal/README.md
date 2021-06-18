@@ -791,23 +791,17 @@ export interface MashroomPortalRemoteLogger {
     /**
      * Send a client error to the server log
      */
-    error(msg: string, error?: Error, portalAppName?: string | null | undefined): void;
+    error(msg: string, error?: Error): void;
 
     /**
      * Send a client warning to the server log
      */
-    warn(msg: string, error?: Error, portalAppName?: string | null | undefined): void;
+    warn(msg: string, error?: Error): void;
 
     /**
      * Send a client info to the server log
      */
-    info(msg: string, portalAppName?: string | null | undefined): void;
-
-    /**
-     * Get an app specific instance.
-     * The returned instance will set the portalAppName automatically.
-     */
-    getAppInstance(portalAppName: string): MashroomPortalRemoteLogger;
+    info(msg: string): void;
 }
 ```
 

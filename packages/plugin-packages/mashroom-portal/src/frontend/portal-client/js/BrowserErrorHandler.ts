@@ -1,5 +1,5 @@
 
-import type {MashroomPortalRemoteLogger} from '../../../../type-definitions';
+import type {MasterMashroomPortalRemoteLogger} from '../../../../type-definitions';
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
     PORTAL_INTERNAL_PATH
@@ -7,7 +7,7 @@ import {
 
 export default class BrowserErrorHandler {
 
-    constructor(private _remoteLogger: MashroomPortalRemoteLogger) {
+    constructor(private _remoteLogger: MasterMashroomPortalRemoteLogger) {
     }
 
     install(): void {
