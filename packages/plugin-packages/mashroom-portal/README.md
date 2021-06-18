@@ -359,6 +359,7 @@ The following client side services are available for all portal apps:
  * _MashroomPortalStateService_: State management
  * _MashroomPortalUserService_: User management services (such as logout)
  * _MashroomPortalSiteService_: Site services
+ * _MashroomPortalRemoteLogger_: A facility to log messages on the server
 
 _MashroomPortalAppService_
 
@@ -780,6 +781,33 @@ export interface MashroomPortalSiteService {
      * Get the page tree for given site
      */
         getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
+}
+```
+
+_MashroomPortalSiteService_
+
+```ts
+export interface MashroomPortalRemoteLogger {
+    /**
+     * Send a client error to the server log
+     */
+    error(msg: string, error?: Error, portalAppName?: string | null | undefined): void;
+
+    /**
+     * Send a client warning to the server log
+     */
+    warn(msg: string, error?: Error, portalAppName?: string | null | undefined): void;
+
+    /**
+     * Send a client info to the server log
+     */
+    info(msg: string, portalAppName?: string | null | undefined): void;
+
+    /**
+     * Get an app specific instance.
+     * The returned instance will set the portalAppName automatically.
+     */
+    getAppInstance(portalAppName: string): MashroomPortalRemoteLogger;
 }
 ```
 

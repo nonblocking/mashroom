@@ -28,6 +28,10 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
         this._log('warn', msg, error, portalAppName);
     }
 
+    info(msg: string, portalAppName?: string | null | undefined) {
+        this._log('info', msg, undefined, portalAppName);
+    }
+
     getAppInstance(portalAppName: string) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
@@ -37,6 +41,9 @@ export default class MashroomPortalRemoteLoggerImpl implements MashroomPortalRem
             },
             warn(msg: string, error?: Error) {
                 self.error(msg, error, portalAppName);
+            },
+            info(msg: string) {
+                self.info(msg, portalAppName);
             },
             getAppInstance() {
                 throw Error('Not implemented');

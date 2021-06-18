@@ -948,6 +948,12 @@ export interface MashroomPortalRemoteLogger {
      */
     warn(msg: string, error?: Error, portalAppName: ?string): void;
 
+
+    /**
+     * Send a client info to the server log
+     */
+    info(msg: string, portalAppName: ?string): void;
+
     /**
      * Get an app specific instance.
      * The returned instance will set the portalAppName automatically.
