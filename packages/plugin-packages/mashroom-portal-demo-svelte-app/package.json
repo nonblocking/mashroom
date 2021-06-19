@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-svelte-app",
-    "version": "1.7.8",
+    "version": "1.7.9",
     "description": "Simple Svelte based app that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
@@ -28,8 +28,8 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.12.16",
-        "@mashroom/mashroom": "1.7.8",
-        "@mashroom/mashroom-portal": "1.7.8",
+        "@mashroom/mashroom": "1.7.9",
+        "@mashroom/mashroom-portal": "1.7.9",
         "@tsconfig/svelte": "^1.0.10",
         "cross-env": "^7.0.3",
         "svelte": "^3.32.3",
