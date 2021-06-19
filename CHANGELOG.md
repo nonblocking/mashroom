@@ -4,9 +4,11 @@
 ## [unreleased]
 
 
+## 1.7.9 (June 19, 2021)
+
  * Core: Added a new property *devModeNpmExecutionTimeoutSec* to the server config to increase the npm execution timeout
-   in dev mode on slow computers (default is 3min)
- * Sandbox App: The sandbox now uses the "real" message bus and therefore supports Apps that use the messageBus
+   in dev mode on slow computers (default is 180)
+ * Sandbox App: The sandbox now uses the "real" message bus and therefore supports Apps that use the message bus
    interceptor, and can also simulate communication with other Apps on the same page.
    Also, the Sandbox can now load itself properly ;-)
  * Portal: MashroomPortalRemoteLogger improved:
