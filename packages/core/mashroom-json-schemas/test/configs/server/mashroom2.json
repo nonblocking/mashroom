@@ -1,5 +1,0 @@
-{
-    "$schema": "../../../schemas/mashroom-server-config.json",
-    "name": "Mashroom Test Server 2",
-    "port": 7777
-}
