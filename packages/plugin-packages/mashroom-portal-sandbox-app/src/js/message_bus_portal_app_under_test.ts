@@ -19,7 +19,6 @@ export default (): MessageBusPortalAppUnderTest => {
     return {
         async subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
             await messageBus.subscribe(topic, callback);
-            console.info('!!!!!! SUBSCRIBE TO', topic);
             if (topics.indexOf(topic) === -1) {
                 topics.push(topic);
             }
