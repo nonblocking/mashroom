@@ -62,7 +62,7 @@ export default class PortalApp extends PureComponent<Props> {
 
         return (
             <div className='mashroom-sandbox-app-host-wrapper' style={{width}} ref={this.wrapperElemRef}>
-                <div id={hostElementId} className={`portal-app-${classFromPluginName}`}>
+                <div id={hostElementId} className={`mashroom-sandbox-app-host-elem portal-app-${classFromPluginName}`}>
                     <CircularProgress/>
                 </div>
                 <div className='mashroom-sandbox-app-host-resizer' onMouseDown={this.resizerMouseDown.bind(this)}>

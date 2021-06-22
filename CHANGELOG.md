@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * Sandbox App: Fixed App container style
+
 ## 1.7.9 (June 19, 2021)
 
  * Core: Added a new property *devModeNpmExecutionTimeoutSec* to the server config to increase the npm execution timeout

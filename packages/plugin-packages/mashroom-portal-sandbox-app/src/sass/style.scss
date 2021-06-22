@@ -60,7 +60,7 @@ $LABEL_ROW_WIDTH: 240px;
         .mashroom-sandbox-app-host-resizer {
             cursor: col-resize;
             position: relative;
-            width: 10px;
+            flex: 0 0 10px;
 
             .grip:before {
                 position: absolute;
@@ -69,12 +69,12 @@ $LABEL_ROW_WIDTH: 240px;
                 content: '\f7a5';
                 color: #CCC;
                 height: 16px;
-                top: calc(50% - 8px);
-                font-size: 0.8em;
+                top: calc(50% - 12px);
+                font-size: 1.2em;
             }
         }
 
-        #mashroom-sandbox-app-host-elem {
+        .mashroom-sandbox-app-host-elem {
             flex-grow: 2;
             overflow: hidden;
         }
