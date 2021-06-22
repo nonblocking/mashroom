@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+## 1.7.10 (June 22, 2021)
+
  * Sandbox App: Fixed App container style
 
 ## 1.7.9 (June 19, 2021)
