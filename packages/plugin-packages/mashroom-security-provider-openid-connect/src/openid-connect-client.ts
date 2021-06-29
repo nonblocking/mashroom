@@ -32,6 +32,7 @@ export default async (request: Request): Promise<Client | undefined> => {
 
     custom.setHttpOptionsDefaults({
         rejectUnauthorized: _clientConfiguration.rejectUnauthorized,
+        timeout: _clientConfiguration.httpRequestTimeout || 3500,
     });
 
     let issuer;

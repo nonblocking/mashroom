@@ -11,6 +11,7 @@ export type ClientConfiguration = {
     clientSecret: string;
     redirectUrl: string;
     responseType: ResponseType;
+    httpRequestTimeout?: number;
 }
 
 export type CallbackConfiguration = {

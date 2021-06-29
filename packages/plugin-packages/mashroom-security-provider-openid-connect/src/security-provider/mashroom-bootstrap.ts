@@ -19,6 +19,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         usePKCE,
         rolesClaimName,
         adminRoles,
+        httpRequestTimeout,
     } = pluginConfig;
 
     setClientConfiguration({
@@ -29,6 +30,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         clientSecret,
         redirectUrl,
         responseType,
+        httpRequestTimeout,
     });
 
     setCallbackConfiguration({

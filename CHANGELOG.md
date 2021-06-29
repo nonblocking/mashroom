@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * OpenID Connect Security Provider: allow to configure http request timeout
 
 ## 1.7.10 (June 22, 2021)
 

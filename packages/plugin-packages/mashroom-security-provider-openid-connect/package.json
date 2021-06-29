@@ -65,7 +65,8 @@
                     "rolesClaimName": "roles",
                     "adminRoles": [
                         "mashroom-admin"
-                    ]
+                    ],
+                    "httpRequestTimeout": 3500
                 }
             },
             {
