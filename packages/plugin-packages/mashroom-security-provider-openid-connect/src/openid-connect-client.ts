@@ -30,10 +30,13 @@ export default async (request: Request): Promise<Client | undefined> => {
         return undefined;
     }
 
-    custom.setHttpOptionsDefaults({
-        rejectUnauthorized: _clientConfiguration.rejectUnauthorized,
-        timeout: _clientConfiguration.httpRequestTimeout || 3500,
-    });
+    const httpOptions = {
+        rejectUnauthorized: _clientConfiguration.httpRequestRejectUnauthorized,
+        timeout: _clientConfiguration.httpRequestTimeoutMs,
+        retry: _clientConfiguration.httpRequestRetry,
+    }
+    logger.debug('Setting HTTP options:', httpOptions);
+    custom.setHttpOptionsDefaults(httpOptions);
 
     let issuer;
     if (issuerDiscoveryUrl) {

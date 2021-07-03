@@ -54,7 +54,6 @@
                     "mode": "OIDC",
                     "issuerDiscoveryUrl": null,
                     "issuerMetadata": null,
-                    "rejectUnauthorized": true,
                     "scope": "openid email profile",
                     "clientId": "mashroom",
                     "clientSecret": "your-client-secret",
@@ -66,7 +65,9 @@
                     "adminRoles": [
                         "mashroom-admin"
                     ],
-                    "httpRequestTimeout": 3500
+                    "httpRequestRejectUnauthorized": true,
+                    "httpRequestTimeoutMs": 3500,
+                    "httpRequestRetry": 0
                 }
             },
             {

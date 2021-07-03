@@ -6,12 +6,13 @@ export type Mode = 'OIDC' | 'OAuth2';
 export type ClientConfiguration = {
     issuerDiscoveryUrl: string | undefined | null;
     issuerMetadata: IssuerMetadata | undefined | null;
-    rejectUnauthorized: boolean;
     clientId: string;
     clientSecret: string;
     redirectUrl: string;
     responseType: ResponseType;
-    httpRequestTimeout?: number;
+    httpRequestRejectUnauthorized: boolean;
+    httpRequestTimeoutMs: number;
+    httpRequestRetry: number;
 }
 
 export type CallbackConfiguration = {

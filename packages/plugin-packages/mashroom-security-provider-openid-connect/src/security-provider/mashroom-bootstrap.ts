@@ -9,7 +9,6 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         mode,
         issuerDiscoveryUrl,
         issuerMetadata,
-        rejectUnauthorized,
         scope,
         clientId,
         clientSecret,
@@ -19,18 +18,21 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         usePKCE,
         rolesClaimName,
         adminRoles,
-        httpRequestTimeout,
+        httpRequestRejectUnauthorized,
+        httpRequestTimeoutMs,
+        httpRequestRetry,
     } = pluginConfig;
 
     setClientConfiguration({
         issuerDiscoveryUrl,
         issuerMetadata,
-        rejectUnauthorized,
         clientId,
         clientSecret,
         redirectUrl,
         responseType,
-        httpRequestTimeout,
+        httpRequestRejectUnauthorized,
+        httpRequestTimeoutMs,
+        httpRequestRetry,
     });
 
     setCallbackConfiguration({
@@ -39,7 +41,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         adminRoles,
     });
 
-    return new MashroomOpenIDConnectSecurityProvider(scope, usePKCE, extraAuthParams, rejectUnauthorized);
+    return new MashroomOpenIDConnectSecurityProvider(scope, usePKCE, extraAuthParams, httpRequestRejectUnauthorized);
 };
 
 export default bootstrap;
