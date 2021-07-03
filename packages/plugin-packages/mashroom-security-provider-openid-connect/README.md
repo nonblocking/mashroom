@@ -46,7 +46,6 @@ And configure this plugin like this in the Mashroom config file:
             "mode": "OIDC",
             "issuerDiscoveryUrl": "http://localhost:8080/.well-known/openid-configuration",
             "issuerMetadata": null,
-            "rejectUnauthorized": true,
             "scope": "openid email profile",
             "clientId": "mashroom",
             "clientSecret": "your-client-secret",
@@ -57,7 +56,10 @@ And configure this plugin like this in the Mashroom config file:
             "rolesClaim": "roles",
             "adminRoles": [
                 "mashroom-admin"
-            ]
+            ],
+            "httpRequestRejectUnauthorized": true,
+            "httpRequestTimeoutMs": 3500,
+            "httpRequestRetry": 0
         },
         "Mashroom OpenID Connect Security Provider Callback": {
            "path": "/openid-connect-cb"
@@ -69,7 +71,6 @@ And configure this plugin like this in the Mashroom config file:
  * _mode_: Can be _OIDC_ (default) or _OAuth2_. Pure OAuth2 usually does not support permission roles (for authorization).
  * _issuerDiscoveryUrl_: The [OpenID Connect Discovery URL](https://openid.net/specs/openid-connect-discovery-1_0.html), this is usually https://&lt;your-idp-host&gt;/.well-known/openid-configuration. See Example Configurations below.
  * _issuerMetadata_: The issuer metadata if no _issuerDiscoveryUrl_ is available. Will be passed to the [Issuer constructor](https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer). See examples below.
- * _rejectUnauthorized_: Reject self-signed certificates (Default: true)
  * _scope_: The scope (permissions) to ask for (Default: openid email profile)
  * _clientId_: The client to use (Default: mashroom)
  * _clientSecret_: The client secret
@@ -80,6 +81,9 @@ And configure this plugin like this in the Mashroom config file:
  * _extraAuthParams_: Extra authentication parameters that should be used
  * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array
  * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role
+ * _httpRequestRejectUnauthorized_: Reject self-signed certificates when contacting the Authorization Server (Default: true)
+ * _httpRequestTimeoutMs_: Request timeout when contacting the Authorization Server (Default: 3500)
+ * _httpRequestRetry_: Number of retries when contacting the Authorization Server (Default: 0)
 
 ### Roles
 

@@ -64,7 +64,6 @@
         },
         "Mashroom OpenID Connect Security Provider": {
             "issuerDiscoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
-            "rejectUnauthorized": false,
             "scope": "openid email profile",
             "clientId": "mashroom",
             "clientSecret": "9842e02d-096a-4b18-ad69-7d33fd803d36",
@@ -72,7 +71,10 @@
             "rolesClaim": "roles",
             "adminRoles": [
                 "mashroom-admin"
-            ]
+            ],
+            "httpRequestRejectUnauthorized": false,
+            "httpRequestTimeoutMs": 5000,
+            "httpRequestRetry": 0
         },
         "Mashroom Security Default Login Webapp": {
             "loginFormTitle": {

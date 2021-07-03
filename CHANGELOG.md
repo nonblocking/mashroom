@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
-
+ * OpenID Connect Security Provider: Allow configuring HTTP timeout and number of retries when contacting the Authorization Server
  * Upgrade to TypeScript 4.3
  * Upgrade to Webpack 5
 
