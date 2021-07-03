@@ -16,7 +16,7 @@ module.exports = (env, argv) => {
             path: __dirname + '/dist',
             filename: 'bundle.js',
         },
-        bail: true,
+        target: ['web', 'es5'],
         module: {
             rules: [
                 {

@@ -71,9 +71,12 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
 
     restApi.get('/pages/:pageId/portal-app-instances', portalPageController.getPortalAppInstances.bind(portalPageController));
     restApi.post('/pages/:pageId/portal-app-instances', portalPageController.addPortalApp.bind(portalPageController));
+    // @ts-ignore TODO: check why we get 'Type instantiation is excessively deep and possibly infinite' here
     restApi.get('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId?', portalAppController.getPortalAppSetup.bind(portalAppController));
+    // @ts-ignore TODO: check why we get 'Type instantiation is excessively deep and possibly infinite' here
     restApi.put('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId', portalPageController.updatePortalApp.bind(portalPageController));
     restApi.delete('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId', portalPageController.removePortalApp.bind(portalPageController));
+    // @ts-ignore TODO: check why we get 'Type instantiation is excessively deep and possibly infinite' here
     restApi.get('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId/permittedRoles', portalPageController.getPortalAppPermittedRoles.bind(portalPageController));
     restApi.put('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId/permittedRoles', portalPageController.updatePortalAppPermittedRoles.bind(portalPageController));
 

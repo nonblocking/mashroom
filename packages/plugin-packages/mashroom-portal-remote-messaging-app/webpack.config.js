@@ -19,7 +19,7 @@ module.exports = (env, argv) => {
             path: __dirname + '/dist',
             filename: '[name].js',
         },
-        bail: true,
+        target: ['web', 'es5'],
         module: {
             rules: [
                 {

@@ -58,7 +58,7 @@ has similar concepts than a Java Portal Server.
 |                     | Supported                                                                                                                      |
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------|
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
-| Node.js             | 10.x, 12.x, 14.x                                                                                                               |
+| Node.js             | 12.x, 14.x, 16.x                                                                                                               |
 | Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
