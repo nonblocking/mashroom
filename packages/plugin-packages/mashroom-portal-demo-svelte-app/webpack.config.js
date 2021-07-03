@@ -8,7 +8,6 @@ module.exports = {
     entry: {
         bundle: ['./src/main.ts']
     },
-    target: ['web', 'es5'],
     resolve: {
         alias: {
             svelte: path.resolve('node_modules', 'svelte'),
@@ -26,11 +25,9 @@ module.exports = {
             {
                 test: /\.ts$/,
                 exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                    },
-                ],
+                use: {
+                    loader: 'babel-loader',
+                },
             },
             {
                 test: /\.svelte$/,
