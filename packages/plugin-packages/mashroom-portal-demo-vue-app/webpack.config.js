@@ -1,5 +1,5 @@
 
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
     entry: __dirname + '/src/js',
@@ -7,40 +7,12 @@ module.exports = {
         path: __dirname + '/dist',
         filename: 'bundle.js',
     },
-    bail: true,
+    target: ['web', 'es5'],
     module: {
         rules: [
             {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                enforce: 'pre',
-                use: [
-                    {
-                        loader: 'eslint-loader',
-                        options: {
-                            fix: true,
-                            configFile: __dirname + '/.eslintrc.json',
-                        },
-                    },
-                ],
-            },
-            {
                 test: /\.vue$/,
-                loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        js: 'babel-loader'
-                    }
-                }
-            },
-            {
-                test: /\.(js|jsx)$/,
-                exclude: /node_modules/,
-                use: [
-                    {
-                        loader: 'babel-loader',
-                    },
-                ],
+                loader: 'vue-loader'
             },
             {
                 test: /\.css$/,
@@ -61,7 +33,6 @@ module.exports = {
         extensions: ['.js', '.jsx'],
     },
     plugins: [
-        // make sure to include the plugin!
         new VueLoaderPlugin()
     ],
     devServer: {

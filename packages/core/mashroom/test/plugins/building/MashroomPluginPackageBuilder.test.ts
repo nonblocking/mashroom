@@ -126,27 +126,29 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
         }, 4000);
     });
 
-    it('doesnt build if there were no changes since the last run', async (done) => {
-        const pluginPackagePath = getPluginPackageFolder2();
-        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), dummyLoggerFactory);
+    it('doesnt build if there were no changes since the last run', (done) => {
+        (async () => {
+            const pluginPackagePath = getPluginPackageFolder2();
+            const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), dummyLoggerFactory);
 
-        const buildInfoFile = path.resolve(__dirname, '../../../test-data/building1/tmp/build-data/test3.build.json');
-        fsExtra.writeJsonSync(buildInfoFile, {
-            buildStatus: 'success',
-            // @ts-ignore
-            buildPackageChecksum: await builder._getBuildChecksum(pluginPackagePath),
-        });
+            const buildInfoFile = path.resolve(__dirname, '../../../test-data/building1/tmp/build-data/test3.build.json');
+            fsExtra.writeJsonSync(buildInfoFile, {
+                buildStatus: 'success',
+                // @ts-ignore
+                buildPackageChecksum: await builder._getBuildChecksum(pluginPackagePath),
+            });
 
-        builder.on('build-finished', (event) => {
-            if (event.success) {
-                done();
-            } else {
-                // It fails when it is actually built because the build script is invalid
-                throw new Error('no build should be started');
-            }
-        });
+            builder.on('build-finished', (event) => {
+                if (event.success) {
+                    done();
+                } else {
+                    // It fails when it is actually built because the build script is invalid
+                    throw new Error('no build should be started');
+                }
+            });
 
-        builder.addToBuildQueue('test3', pluginPackagePath, 'build');
+            builder.addToBuildQueue('test3', pluginPackagePath, 'build');
+        })();
     });
 
 });

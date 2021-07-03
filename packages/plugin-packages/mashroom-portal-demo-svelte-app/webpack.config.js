@@ -8,6 +8,7 @@ module.exports = {
     entry: {
         bundle: ['./src/main.ts']
     },
+    target: ['web', 'es5'],
     resolve: {
         alias: {
             svelte: path.resolve('node_modules', 'svelte'),

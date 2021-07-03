@@ -5,6 +5,9 @@
 
  * OpenID Connect Security Provider: allow to configure http request timeout
 
+ * Upgrade to TypeScript 4.3
+ * Upgrade to Webpack 5
+
 ## 1.7.10 (June 22, 2021)
 
  * Sandbox App: Fixed App container style

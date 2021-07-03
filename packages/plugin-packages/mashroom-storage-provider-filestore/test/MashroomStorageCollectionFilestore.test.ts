@@ -39,13 +39,13 @@ describe('MashroomStorageCollectionFilestore', () => {
     it('inserts a bunch of new items correctly', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
 
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 100; i++) {
             await storage.insertOne({a: i});
         }
 
         const insertedItems = await storage.find();
 
-        expect(insertedItems.length).toBe(1000);
+        expect(insertedItems.length).toBe(100);
     });
 
     it('returns first match with findOne', async () => {

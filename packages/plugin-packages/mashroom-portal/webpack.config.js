@@ -6,9 +6,10 @@ module.exports = {
     },
     output: {
         path: __dirname + '/dist/frontend',
-        filename: '[name].js'
+        filename: '[name].js',
+        publicPath: '',
     },
-    bail: true,
+    target: ['web', 'es5'],
     module: {
         rules: [
             {

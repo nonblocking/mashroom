@@ -4,8 +4,7 @@ import fs from 'fs';
 import {EventEmitter} from 'events';
 import {ensureDirSync} from 'fs-extra';
 import {promisify} from 'util';
-import stripAnsi from 'strip-ansi';
-// @ts-ignore
+import ansiRegex from 'ansi-regex';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
 import NpmUtils from './NpmUtils';
@@ -226,7 +225,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
         } catch (error) {
             this._logger.error(`Error building plugin package: ${queueEntry.pluginPackageName}.`, error);
-            const errorMessage = stripAnsi(error.toString());
+            const errorMessage = error.toString().replace(ansiRegex(), '');
 
             if (buildInfo) {
                 buildInfo.buildStatus = 'error';
