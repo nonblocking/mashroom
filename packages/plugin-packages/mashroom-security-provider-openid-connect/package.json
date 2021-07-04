@@ -61,6 +61,7 @@
                     "responseType": "code",
                     "usePKCE": "false",
                     "extraAuthParams": {},
+                    "extraDataMapping": null,
                     "rolesClaimName": "roles",
                     "adminRoles": [
                         "mashroom-admin"

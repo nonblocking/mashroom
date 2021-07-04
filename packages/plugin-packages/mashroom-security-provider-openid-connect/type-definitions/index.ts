@@ -19,6 +19,7 @@ export type CallbackConfiguration = {
     mode: Mode;
     rolesClaimName: string | undefined | null;
     adminRoles: Array<string>;
+    extraDataMapping: Record<string, string> | undefined | null;
 }
 
 export type OpenIDConnectAuthData = {

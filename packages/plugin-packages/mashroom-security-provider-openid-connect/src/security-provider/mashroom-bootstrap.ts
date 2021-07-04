@@ -15,6 +15,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         redirectUrl,
         responseType,
         extraAuthParams,
+        extraDataMapping,
         usePKCE,
         rolesClaimName,
         adminRoles,
@@ -39,6 +40,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
         mode,
         rolesClaimName,
         adminRoles,
+        extraDataMapping,
     });
 
     return new MashroomOpenIDConnectSecurityProvider(scope, usePKCE, extraAuthParams, httpRequestRejectUnauthorized);

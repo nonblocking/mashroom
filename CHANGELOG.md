@@ -3,9 +3,8 @@
 
 ## [unreleased]
 
+ * OpenID Connect Security Provider: Allow mapping arbitrary claims to *user.extraData*
  * OpenID Connect Security Provider: Allow configuring HTTP timeout and number of retries when contacting the Authorization Server
- * Upgrade to TypeScript 4.3
- * Upgrade to Webpack 5
 
 ## 1.7.10 (June 22, 2021)
 

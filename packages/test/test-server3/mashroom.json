@@ -72,6 +72,10 @@
             "adminRoles": [
                 "mashroom-admin"
             ],
+            "extraDataMapping": {
+                "phone": "phone",
+                "updatedAt": "updated_at"
+            },
             "httpRequestRejectUnauthorized": false,
             "httpRequestTimeoutMs": 5000,
             "httpRequestRetry": 0

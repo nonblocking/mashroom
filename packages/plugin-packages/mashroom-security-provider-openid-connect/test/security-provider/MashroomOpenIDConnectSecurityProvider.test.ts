@@ -1,7 +1,6 @@
 
-import MashroomOpenIDConnectSecurityProvider from '../src/security-provider/MashroomOpenIDConnectSecurityProvider';
-import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../src/constants';
-import {MashroomSecurityRoles} from '@mashroom/mashroom-security/type-definitions';
+import MashroomOpenIDConnectSecurityProvider from '../../src/security-provider/MashroomOpenIDConnectSecurityProvider';
+import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../../src/constants';
 
 describe('MashroomOpenIDConnectSecurityProvider', () => {
 

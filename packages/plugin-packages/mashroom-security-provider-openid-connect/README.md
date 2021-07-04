@@ -53,6 +53,11 @@ And configure this plugin like this in the Mashroom config file:
             "responseType": "code",
             "usePKCE": "false",
             "extraAuthParams": {},
+            "extraDataMapping": {
+                "phone": "phone",
+                "birthdate": "birthdate",
+                "updatedAt": "updated_at"
+            },
             "rolesClaim": "roles",
             "adminRoles": [
                 "mashroom-admin"
@@ -79,6 +84,7 @@ And configure this plugin like this in the Mashroom config file:
  * _responseType_: The OpenID Connect response type (flow) to use (Default: code)
  * _usePKCE_: Use the [Proof Key for Code Exchange](https://oauth.net/2/pkce) extension for the _code_ flow
  * _extraAuthParams_: Extra authentication parameters that should be used
+ * _extraDataMapping_: Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (default: null)
  * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array
  * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role
  * _httpRequestRejectUnauthorized_: Reject self-signed certificates when contacting the Authorization Server (Default: true)

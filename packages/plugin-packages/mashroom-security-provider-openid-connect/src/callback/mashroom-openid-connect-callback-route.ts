@@ -22,7 +22,7 @@ export default (defaultBackUrl: string) => {
             response.sendStatus(500);
             return;
         }
-        const {mode, rolesClaimName, adminRoles} = _callbackConfiguration;
+        const {mode, rolesClaimName, adminRoles, extraDataMapping} = _callbackConfiguration;
 
         const client = await openIDConnectClient(request);
         if (!client) {
@@ -77,7 +77,7 @@ export default (defaultBackUrl: string) => {
                 authData.tokenSet = tokenSet;
             }
 
-            const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles);
+            const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles, extraDataMapping);
             logger.debug('User successfully authenticated:', mashroomUser);
             logger.debug(`Token valid until: ${new Date((authData.tokenSet.expires_at || 0) * 1000)}. Claims:`, claims, '. User info:', userInfo);
 
