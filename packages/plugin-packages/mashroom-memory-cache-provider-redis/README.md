@@ -63,8 +63,8 @@ For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel
 }
 ```
 
-* *sentinels*: list of sentinel nodes to connect to
-* *name*: identifies a group of Redis instances composed of a master and one or more slaves
+* *sentinels*: List of sentinel nodes to connect to
+* *name*: Identifies a group of Redis instances composed of a master and one or more slaves
 
 Checkout out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 

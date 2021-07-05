@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "https://json.schemastore.org/package.json"
+        },
+        {
+            "properties": {
+                "mashroom": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "./mashroom-plugins.json"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "required": ["mashroom"]
+}

@@ -1,0 +1,123 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "PluginType": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+        },
+        "PackagerRelativePath": {
+            "type": "string",
+            "pattern": "^\\./.*$"
+        },
+        "MashroomPluginDefinitionCommon": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name"]
+        },
+        "MashroomPluginLoaderPluginDefinition": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/MashroomPluginDefinitionCommon"
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "const": "plugin-loader"
+                        },
+                        "loads": {
+                            "$ref": "#/definitions/PluginType",
+                            "description": "The plugin type this loader can load"
+                        },
+                        "bootstrap": {
+                            "$ref": "#/definitions/PackagerRelativePath",
+                            "description": "Script that exports a MashroomPluginLoaderPluginBootstrapFunction"
+                        }
+                    },
+                    "required": ["type", "loads", "bootstrap"]
+                }
+            ]
+        },
+        "MashroomWebAppPluginDefinition": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/MashroomPluginDefinitionCommon"
+                },
+                {
+                    "properties": {
+                        "type": {
+                            "const": "web-app"
+                        },
+                        "bootstrap": {
+                            "$ref": "#/definitions/PackagerRelativePath",
+                            "description": "Script that exports a MashroomWebAppPluginBootstrapFunction"
+                        },
+                        "defaultConfig": {
+                            "type": "object",
+                            "properties": {
+                                "path": {
+                                    "type": "string",
+                                    "description": "The default path"
+                                }
+                            },
+                            "required": ["path"]
+                        }
+                    },
+                    "required": ["type", "bootstrap", "defaultConfig"]
+                }
+            ]
+        },
+        "MashroomPlugins": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/MashroomPluginLoaderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomWebAppPluginDefinition"
+                }
+            ]
+        }
+    },
+    "type": "object",
+    "properties": {
+        "devModeBuildScript": {
+            "type": "string"
+        },
+        "plugins": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/MashroomPlugins"
+            }
+        },
+        "$schema": {
+            "type": "string"
+        }
+    },
+    "required": ["plugins"],
+    "additionalProperties": false
+}

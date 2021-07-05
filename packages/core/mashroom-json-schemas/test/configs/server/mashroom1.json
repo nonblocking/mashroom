@@ -1,0 +1,93 @@
+{
+    "$schema": "../../../schemas/mashroom-server-config.json",
+    "name": "Mashroom Test Server 1",
+    "port": 5050,
+    "pluginPackageFolders": [
+        {
+            "path": "../../plugin-packages",
+            "devMode": true
+        },
+        {
+            "path": "../../../../mashroom-plugin-demos/packages",
+            "devMode": true
+        }
+    ],
+    "indexPage": "/",
+    "ignorePlugins": [
+        "Mashroom Storage MongoDB Provider"
+    ],
+    "plugins": {
+        "Mashroom Browser Cache Services": {
+            "maxAgeSec": 2000
+        },
+        "Mashroom CSRF Middleware": {
+            "safeMethods": ["GET", "OPTIONS"]
+        },
+        "Mashroom Error Pages Middleware": {
+            "mapping": {
+                "404": "./abcd/not-found.html",
+                "403": "https://forbidden.test.de"
+            }
+        },
+        "Mashroom Helmet Middleware": {
+            "helmet": {
+                "contentSecurityPolicy": true
+            }
+        },
+        "Mashroom Http Proxy Services": {
+            "proxyImpl": "nodeHttpProxy"
+        },
+        "Mashroom Internationalization Services": {
+            "availableLanguages": ["de", "en"],
+            "defaultLanguage": "de",
+            "messages": "./path/to/messages"
+        },
+        "Mashroom Memory Cache Services": {
+            "defaultTTLSec": 20,
+            "provider": "Mashroom Memory Cache Redis Provider"
+        },
+        "Mashroom Memory Cache Redis Provider": {
+            "cluster": true,
+            "clusterNodes": [
+                {
+                    "host": "redis-node1",
+                    "port": "6379"
+                },
+                {
+                    "host": "redis-node2",
+                    "port": "6379"
+
+                }
+            ],
+            "clusterOptions": {
+                "maxRedirections": 3
+            },
+            "redisOptions": {
+                "keyPrefix": "mashroom:cache:"
+            }
+        },
+        "Mashroom Messaging Services": {
+            "externalProvider": "Mashroom Messaging External Provider MQTT",
+            "externalTopics": ["external1", "external2"],
+            "userPrivateBaseTopic": "user",
+            "enableWebSockets": true,
+            "topicACL": "./topic_acl.json"
+        },
+        "Mashroom Messaging External Provider MQTT": {
+            "internalTopic": "mashroom",
+            "mqttConnectUrl": "mqtt://localhost:1883",
+            "mqttProtocolVersion": 4,
+            "mqttQoS": 1
+        },
+        "Mashroom Messaging External Provider AMQP": {
+            "internalRoutingKey": "mashroom",
+            "brokerTopicExchangePrefix": "/topic/",
+            "brokerTopicMatchAny": "#",
+            "brokerHost": "localhost",
+            "brokerPort": 5672,
+            "brokerUsername": "admin",
+            "brokerPassword": "admin"
+        }
+
+    }
+}
