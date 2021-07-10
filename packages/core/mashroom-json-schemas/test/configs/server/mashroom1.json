@@ -87,7 +87,76 @@
             "brokerPort": 5672,
             "brokerUsername": "admin",
             "brokerPassword": "admin"
+        },
+        "Mashroom Monitoring Metrics Collector Services": {
+            "disableMetrics": [],
+            "defaultHistogramBuckets": [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
+            "customHistogramBucketConfig": {
+                "mashroom_http_request_duration_seconds": [0.1, 1, 10]
+            },
+            "defaultSummaryQuantiles": [0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999],
+            "customSummaryQuantileConfig": {
+                "foo": [0.1, 1]
+            }
+        },
+        "Mashroom Monitoring PM2 Exporter": {
+            "pmxMetrics": {
+                "v8": true,
+                "runtime": true,
+                "network": {
+                    "upload": true,
+                    "download": true
+                },
+                "http": true,
+                "eventLoop": true
+            },
+            "mashroomMetrics": [
+                "mashroom_plugins_total",
+                "mashroom_plugins_loaded_total",
+                "mashroom_plugins_error_total"
+            ]
+        },
+        "Mashroom Monitoring Prometheus Exporter Webapp": {
+            "path": "/myMetricsPath",
+            "enableGcStats": true
+        },
+        "Mashroom Portal WebApp": {
+            "path": "/portal",
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
+            "warnBeforeAuthenticationExpiresSec": 120,
+            "autoExtendAuthentication": false,
+            "defaultProxyConfig": {
+                "sendUserHeaders": false,
+                "sendPermissionsHeader": false,
+                "addHeaders": {
+                    "test": "2"
+                },
+                "restrictToRoles": ["ROLE_X"]
+            }
+        },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": true
+        },
+        "Mashroom Portal Remote App Background Job": {
+            "cronSchedule": "0/1 * * * *",
+            "socketTimeoutSec": 3,
+            "registrationRefreshIntervalSec": 600
+        },
+        "Mashroom Portal Remote App Registry": {
+            "remotePortalAppUrls": "./remote-portal-apps.json"
+        },
+        "Mashroom Portal Remote App Registry Admin Webapp": {
+            "showAddRemoteAppForm": true
+        },
+        "Mashroom Portal Remote App Kubernetes Background Job": {
+            "cronSchedule": "0/1 * * * *",
+            "k8sNamespaces": ["default"],
+            "socketTimeoutSec": 3,
+            "refreshIntervalSec": 300,
+            "serviceNameFilter": "(microfrontend-|widget-)",
+            "accessViaClusterIP": false
         }
-
     }
 }

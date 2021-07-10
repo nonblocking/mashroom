@@ -19,7 +19,7 @@ The plugin allows the following configuration properties:
 ```json
 {
   "plugins": {
-        "Plugin: Mashroom Portal WebApp": {
+        "Mashroom Portal WebApp": {
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
@@ -40,12 +40,12 @@ The plugin allows the following configuration properties:
 ```
 
  * _path_: The portal base path (Default: /portal)
- * _adminApp_: The admin to use (Default: /Mashroom Portal Admin App)
+ * _adminApp_: The admin to use (Default: Mashroom Portal Admin App)
  * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
- * _warnBeforeAuthenticationExpiresSec_: Defines when the the Portal should start to warn that the authentication is about to expire
- * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
- * _defaultProxyConfig_: Optinal default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
+ * _warnBeforeAuthenticationExpiresSec_: The time when the Portal should start to warn that the authentication is about to expire (Default: 120)
+ * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
+ * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
 
 ## Browser support
@@ -251,9 +251,9 @@ To register a new portal-app plugin add this to _package.json_:
      * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the app.
      * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
          * _targetUri_: The target URI
-         * _sendUserHeader_: Optional. Adds the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user to each request.
-         * _sendPermissionsHeader_: Optional. Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_.
-         * _addHeaders_: Optional. Can be used to add some extra headers to each request.
+         * _sendUserHeader_: Optional. Add the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user to each request.
+         * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_.
+         * _addHeaders_: Optional. Add extra headers to every API call.
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
             The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
             can access the proxy if this property is set. You can use this to protect sensitive data only a small group of

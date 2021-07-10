@@ -17,7 +17,7 @@ You can change the default configuration in your Mashroom config file like this:
 
 ```json
      "plugins": {
-         "Mashroom Monitoring Prometheus PM2 Webapp": {
+         "Mashroom Monitoring PM2 Exporter": {
               "pmxMetrics": {
                   "v8": true,
                   "runtime": true,

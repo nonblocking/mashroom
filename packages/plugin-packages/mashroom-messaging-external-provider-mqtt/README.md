@@ -48,4 +48,4 @@ And configure this plugin like this in the Mashroom config file:
  * _mqttQoS_: Quality of service level (0, 1, or 2) (Default: 1)
  * _mqttUser_: Optional MQTT username (Default: null)
  * _mqttPassword_: Optional MQTT password (Default: null)
- * _rejectUnauthorized_: If you use mqtts or wss if a self signed certificate set it to false (Default: true)
+ * _rejectUnauthorized_: If you use mqtts or wss with a self signed certificate set it to false (Default: true)

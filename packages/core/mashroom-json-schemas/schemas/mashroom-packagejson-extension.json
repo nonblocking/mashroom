@@ -9,6 +9,7 @@
             "properties": {
                 "mashroom": {
                     "type": "object",
+                    "description": "Mashroom Server plugins",
                     "allOf": [
                         {
                             "$ref": "./mashroom-plugins.json"

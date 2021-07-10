@@ -1,0 +1,22 @@
+{
+    "$schema": "../../../schemas/mashroom-packagejson-extension.json",
+    "name": "test",
+    "version": "1.0.0",
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "My Webapp",
+                "type": "web-app",
+                "bootstrap": "./dist/bootstrap.js",
+                "requires": [
+                    "Mashroom Session Middleware"
+                ],
+                "defaultConfig": {
+                    "path": "/portal",
+                    "foo": 2
+                }
+            }
+        ]
+    }
+}

@@ -20,7 +20,7 @@ You can override the default config in your Mashroom config file like this:
           "cronSchedule": "0/1 * * * *",
           "k8sNamespaces": ["default"],
           "socketTimeoutSec": 3,
-          "refreshIntervalSec": 300,
+          "refreshIntervalSec": 600,
           "serviceNameFilter": "(microfrontend-|widget-)",
           "accessViaClusterIP": false
         }
@@ -28,10 +28,10 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
- * _cronSchedule_: The cron schedule for the background job that scans for new apps (default: every minute)
+ * _cronSchedule_: The cron schedule for the background job that scans for new apps (Default: every minute)
  * _k8sNamespaces_: The Kubernetes namespaces to scan (Default: ["default"])
- * _socketTimeoutSec_: Socket timeout when trying to the Kubernetes service (default: 3)
- * _checkIntervalSec_: The time in seconds after that a registered services show be re-checked (Default: 300)
+ * _socketTimeoutSec_: Socket timeout when trying to the Kubernetes service (Default: 3)
+ * _checkIntervalSec_: The time in seconds after that a registered services show be re-checked (Default: 600)
  * _serviceNameFilter_: A regular expression for services that should be checked (case insensitive). (Default: ".*")
  * _accessViaClusterIP_: Access services via IP address and not via &lt;name&gt;.&lt;namespace&gt; (Default: false)
 

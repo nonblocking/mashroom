@@ -351,7 +351,250 @@
                         },
                         "rejectUnauthorized": {
                             "type": "boolean",
-                            "description": "If you use mqtts or wss if a self signed certificate set it to false (Default: true)"
+                            "description": "If you use mqtts or wss with a self signed certificate set it to false (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Monitoring Metrics Collector Services": {
+                    "type": "object",
+                    "properties": {
+                        "disableMetrics": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of metrics that should be disabled"
+                        },
+                        "defaultHistogramBuckets": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Default buckets for histogram metrics"
+                        },
+                        "customHistogramBucketConfig": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                }
+                            },
+                            "description": "Override the bucket configuration for histogram metrics"
+                        },
+                        "defaultSummaryQuantiles": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Default quantiles for summary metrics"
+                        },
+                        "customSummaryQuantileConfig": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                }
+                            },
+                            "description": "Override the quantiles configuration for summary metrics"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Monitoring PM2 Exporter": {
+                    "type": "object",
+                    "properties": {
+                        "pmxMetrics": {
+                            "type": "object",
+                            "properties": {
+                                "v8": {
+                                    "type": "boolean"
+                                },
+                                "runtime": {
+                                    "type": "boolean"
+                                },
+                                "network": {
+                                    "type": "object",
+                                    "properties": {
+                                        "upload": {
+                                            "type": "boolean"
+                                        },
+                                        "download": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "http": {
+                                    "type": "boolean"
+                                },
+                                "eventLoop": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "description": "Will be passed as metrics to https://github.com/keymetrics/pm2-io-apm/tree/master#configuration",
+                            "additionalProperties": false
+                        },
+                        "mashroomMetrics": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of Mashroom plugin metrics that should be exposed"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Monitoring Prometheus Exporter Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "The path where the metrics will be exported (Default: /metrics)"
+                        },
+                        "enableGcStats": {
+                            "type": "boolean",
+                            "description": "Enable additional GC stats like 'runs total' and 'pause seconds total' (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal WebApp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "type": "string",
+                            "description": "The portal base path (Default: /portal)"
+                        },
+                        "adminApp": {
+                            "type": "string",
+                            "description": "The admin to use (Default: Mashroom Portal Admin App)"
+                        },
+                        "defaultTheme": {
+                            "type": "string",
+                            "description": "The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)"
+                        },
+                        "defaultLayout": {
+                            "type": "string",
+                            "description": "The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)"
+                        },
+                        "warnBeforeAuthenticationExpiresSec": {
+                            "type": "number",
+                            "description": "The time when the Portal should start to warn that the authentication is about to expire (Default: 120)"
+                        },
+                        "autoExtendAuthentication": {
+                            "type": "boolean",
+                            "description": "Automatically extend the authentication as long as the portal page is open (Default: false)"
+                        },
+                        "defaultProxyConfig": {
+                            "type": "object",
+                            "properties": {
+                                "sendUserHeaders": {
+                                    "type": "boolean",
+                                    "description": "Add the headers X-USER-NAME_, X-USER-DISPLAY-NAME and X-USER-EMAIL with data about the authenticated user to each request"
+                                },
+                                "sendPermissionsHeader": {
+                                    "type": "boolean",
+                                    "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions"
+                                },
+                                "addHeaders": {
+                                    "type": "object",
+                                    "description": "Add extra headers to every API call"
+                                },
+                                "restrictToRoles": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "Optional list of roles that are permitted to access the proxy"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Optional default http proxy config for portal apps"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal Default Theme": {
+                    "type": "object",
+                    "properties": {
+                        "showEnvAndVersions": {
+                            "type": "boolean",
+                            "description": "Show the environment (NODE_ENV) and version information in the header (Default: false)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal Remote App Background Job": {
+                    "type": "object",
+                    "properties": {
+                        "cronSchedule": {
+                            "type": "string",
+                            "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
+                        },
+                        "socketTimeoutSec": {
+                            "type": "integer",
+                            "description": "Socket timeout when trying to reach the remote app (Default: 3)"
+                        },
+                        "registrationRefreshIntervalSec": {
+                            "type": "integer",
+                            "description": "Interval for refreshing known endpoints (Default: 600)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal Remote App Registry": {
+                    "type": "object",
+                    "properties": {
+                        "remotePortalAppUrls": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Location of the config file with the remote URLs, relative to the server config (Default: ./remote-portal-apps.json)"
+                        }
+                    }
+                },
+                "Mashroom Portal Remote App Registry Admin Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "showAddRemoteAppForm": {
+                            "type": "boolean",
+                            "description": " Show the 'Add a new Remote Portal App Endpoint' form in the Admin UI"
+                        }
+                    }
+                },
+                "Mashroom Portal Remote App Kubernetes Background Job": {
+                    "type": "object",
+                    "properties": {
+                        "cronSchedule": {
+                            "type": "string",
+                            "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
+                        },
+                        "k8sNamespaces": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The Kubernetes namespaces to scan (Default: [\"default\"])"
+                        },
+                        "socketTimeoutSec": {
+                            "type": "integer",
+                            "description": "Socket timeout when trying to the Kubernetes service (Default: 3)"
+                        },
+                        "refreshIntervalSec": {
+                            "type": "integer",
+                            "description": "The time in seconds after that a registered services show be re-checked (Default: 600)"
+                        },
+                        "serviceNameFilter": {
+                            "type": "string",
+                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
+                        },
+                        "accessViaClusterIP": {
+                            "type": "boolean",
+                            "description": "Access services via IP address and not via <name>.<namespace> (Default: false)"
                         }
                     },
                     "additionalProperties": false
