@@ -1,21 +1,45 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "definitions": {
+        "I18NString": {
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-z]{2}$": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
         "WebAppPath": {
             "type": "string",
             "pattern": "^/[^/]+$"
         },
+        "WebAppPathOrHttpUrl": {
+            "type": "string",
+            "pattern": "^(/|http://|https://).*$"
+        },
+        "HttpUrl": {
+            "type": "string",
+            "pattern": "^(http://|https://).*$"
+        },
         "PackagerRelativePath": {
             "type": "string",
-            "pattern": "^\\./.*$"
+            "pattern": "^(\\./|\\../).*$"
         },
         "PackagerRelativeOrSystemPath": {
             "type": "string",
-            "pattern": "^(\\./|/).*$"
+            "pattern": "^(\\./|\\../|/|[a-zA-Z]:/).*$"
         },
         "PackagerRelativePathOrHttp": {
             "type": "string",
-            "pattern": "^(\\./|http://|https://).*$"
+            "pattern": "^(\\./|\\../|http://|https://).*$"
         },
         "PluginPackageFolder": {
             "type": "object",
@@ -36,6 +60,20 @@
             "required": [
                 "path"
             ]
+        },
+        "MongoDbConfig": {
+            "type": "object",
+            "required": ["uri"],
+            "properties": {
+                "uri": {
+                    "type": "string",
+                    "description": "A MongoDB connection string"
+                },
+                "connectionOptions": {
+                    "type": "object",
+                    "description": "The MongoDB connection options (see https://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings)"
+                }
+            }
         },
         "IORedisConfig": {
             "type": "object",
@@ -261,7 +299,7 @@
                     "type": "object",
                     "properties": {
                         "externalProvider": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "A plugin that connects to an external messaging system. Allows to receive messages from other systems and to send messages \"out\" (Default: null)"
                         },
                         "externalTopics": {
@@ -281,7 +319,7 @@
                         },
                         "topicACL": {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
-                            "description": "Access control list to restrict the use of certain topic patterns to specific roles"
+                            "description": "Access control list to restrict the use of certain topic patterns to specific roles (Default: ./topicACL.json)"
                         }
                     },
                     "additionalProperties": false
@@ -454,7 +492,7 @@
                     "type": "object",
                     "properties": {
                         "path": {
-                            "type": "string",
+                            "$ref": "#/definitions/WebAppPath",
                             "description": "The path where the metrics will be exported (Default: /metrics)"
                         },
                         "enableGcStats": {
@@ -468,7 +506,7 @@
                     "type": "object",
                     "properties": {
                         "path": {
-                            "type": "string",
+                            "$ref": "#/definitions/WebAppPath",
                             "description": "The portal base path (Default: /portal)"
                         },
                         "adminApp": {
@@ -553,7 +591,7 @@
                     "properties": {
                         "remotePortalAppUrls": {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
-                            "description": "Location of the config file with the remote URLs, relative to the server config (Default: ./remote-portal-apps.json)"
+                            "description": "Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)"
                         }
                     }
                 },
@@ -598,6 +636,450 @@
                         }
                     },
                     "additionalProperties": false
+                },
+                "Mashroom Security Services": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": " The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)"
+                        },
+                        "forwardQueryHintsToProvider": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of query parameters that should be forwarded during the authentication.\n   (will be added to the login or authorization URL)"
+                        },
+                        "acl": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The ACL for path based security restrictions (see below) (Default: ./acl.json)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Security Default Login Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The path of the login page (Default: /login)"
+                        },
+                        "loginFormTitle":  {
+                            "$ref": "#/definitions/I18NString",
+                            "description": "A custom title for the login form (Default is the server name)"
+                        },
+                        "styleFile":  {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Basic Wrapper Security Provider": {
+                    "type": "object",
+                    "properties": {
+                        "targetSecurityProvider": {
+                            "type": "string",
+                            "description": "The actual security provider that is used to login (Default: Mashroom Security Simple Provider)"
+                        },
+                        "onlyPreemptive": {
+                            "type": "boolean",
+                            "description": "Only use BASIC if it is sent preemptively if true. Otherwise, the plugin will send HTTP 401 which will trigger the Browser's login popup (Default: true)"
+                        },
+                        "realm": {
+                            "type": "string",
+                            "description": "The realm name that should be used if onlyPreemptive is false (Default: mashroom)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom LDAP Security Provider": {
+                    "type": "object",
+                    "required": ["serverUrl", "bindDN", "bindCredentials", "baseDN"],
+                    "properties": {
+                        "loginPage": {
+                            "$ref": "#/definitions/WebAppPathOrHttpUrl",
+                            "description": "The login URL to redirect to if the user is not authenticated (Default: /login)"
+                        },
+                        "serverUrl": {
+                            "type": "string",
+                            "description": "The LDAP server URL with protocol and port"
+                        },
+                        "ldapConnectTimeout": {
+                            "type": "integer",
+                            "description": "Connect timeout in ms (Default: 3000)"
+                        },
+                        "ldapTimeout": {
+                            "type": "integer",
+                            "description": "Timeout in ms (Default: 5000)"
+                        },
+                        "tlsOptions": {
+                            "type": ["object", "null"],
+                            "description": "TLS options if your LDAP server requires TLS. The options are passed to https://nodejs.org/api/tls.html but the file paths (e.g. for \"cert\") are resolved relatively to the server config"
+                        },
+                        "bindDN": {
+                            "type": "string",
+                            "description": "The bind user for searching"
+                        },
+                        "bindCredentials": {
+                            "type": "string",
+                            "description": "The password for the bind user"
+                        },
+                        "baseDN": {
+                            "type": "string",
+                            "description": "The base DN for searches (can be empty)"
+                        },
+                        "userSearchFilter": {
+                            "type": "string",
+                            "description": "The user search filter, @username@ will be replaced by the actual username entered in the login form"
+                        },
+                        "groupSearchFilter": {
+                            "type": "string",
+                            "description": "The group search filter (can be empty if you don't want to fetch the user groups)"
+                        },
+                        "extraDataMapping": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "string"
+                                }
+                            },
+                            "description": "Optionally map extra LDAP attributes to user.extraData. The key in the map is the extraData property, the value the LDAP attribute (Default: null)"
+                        },
+                        "secretsMapping": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "string"
+                                }
+                            },
+                            "description": "Optionally map extra LDAP attributes to user.secrets (Default: null)"
+                        },
+                        "groupToRoleMapping": {
+                            "type": "string",
+                            "description": "An optional JSON file that contains a user group to roles mapping (Default: /groupToRoleMapping.json)"
+                        },
+                        "userToRoleMapping": {
+                            "type": "string",
+                            "description": "An optional JSON file that contains a user name to roles mapping (Default: /userToRoleMapping.json)"
+                        },
+                        "authenticationTimeoutSec": {
+                            "type": "integer",
+                            "description": " The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session cookie.maxAge is greater than this value (Default: 1200)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom OpenID Connect Security Provider": {
+                    "type": "object",
+                    "required": ["clientSecret", "redirectUrl"],
+                    "properties": {
+                        "mode": {
+                            "type": "string",
+                            "enum": ["OIDC", "OAuth2"],
+                            "description": "Can be _OIDC_ (default) or _OAuth2_. Pure OAuth2 usually does not support permission roles (for authorization)"
+                        },
+                        "issuerDiscoveryUrl": {
+                            "type": ["string", "null"],
+                            "description": "The OpenID Connect Discovery URL, this is usually https://<your-idp-host>/.well-known/openid-configuration"
+                        },
+                        "issuerMetadata": {
+                            "type": ["object", "null"],
+                            "description": "The issuer metadata if no issuerDiscoveryUrl is available. Will be passed to the issuer constructor: https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer (Default: null)"
+                        },
+                        "scope": {
+                            "type": "string",
+                            "description": "The scope (permissions) to ask for (Default: openid email profile)"
+                        },
+                        "clientId": {
+                            "type": "string",
+                            "description": "The client to use (Default: mashroom)"
+                        },
+                        "clientSecret": {
+                            "type": "string",
+                            "description": "The client secret"
+                        },
+                        "redirectUrl": {
+                            "$ref": "#/definitions/HttpUrl",
+                            "description": "The full URL of the callback (as seen from the user). This is usually https://<mashroom-server-host>/openid-connect-cb"
+                        },
+                        "responseType": {
+                            "type": "string",
+                            "description": "The OpenID Connect response type (flow) to use (Default: code)"
+                        },
+                        "usePKCE": {
+                            "type": "boolean",
+                            "description": "Use the Proof Key for Code Exchange extension for the code flow (Default: false)"
+                        },
+                        "extraAuthParams": {
+                            "type": "object",
+                            "description": "Extra authentication parameters that should be used"
+                        },
+                        "extraDataMapping": {
+                            "type": "object",
+                            "description": "Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (Default: null)"
+                        },
+                        "rolesClaimName": {
+                            "type": "string",
+                            "description": "Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array (Default: roles)"
+                        },
+                        "adminRoles": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of user roles that should get the Mashroom _Administrator_ role (Default: [\"mashroom-admin\"])"
+                        },
+                        "httpRequestRejectUnauthorized": {
+                            "type": "boolean",
+                            "description": "Reject self-signed certificates when contacting the Authorization Server (Default: true)"
+                        },
+                        "httpRequestTimeoutMs": {
+                            "type": "integer",
+                            "description": "Request timeout when contacting the Authorization Server (Default: 3500)"
+                        },
+                        "httpRequestRetry": {
+                            "type": "integer",
+                            "description": "Number of retries when contacting the Authorization Server (Default: 0)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom OpenID Connect Security Provider Callback": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "Path of the callback"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Security Simple Provider": {
+                    "type": "object",
+                    "properties": {
+                        "users": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The path to the JSON file with user and role definitions (Default: ./users.json)"
+                        },
+                        "loginPage": {
+                            "$ref": "#/definitions/WebAppPathOrHttpUrl",
+                            "description": "The path to redirect to if a restricted resource is requested but the user not logged in yet (Default: /login)"
+                        },
+                        "authenticationTimeoutSec": {
+                            "type": "integer",
+                            "description": "The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session cookie.maxAge is greater than this value (Default: 1200)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Session Middleware": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": "The plugin from type session-store-provider that implements the store (Default: memory)"
+                        },
+                        "session": {
+                            "type": "object",
+                            "description": "The properties are just passed to express-session. See https://www.npmjs.com/package/express-session for possible options"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Session Filestore Provider": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The directory where the session files will be stored (Default: ./data/sessions)"
+                        }
+                    },
+                    "description": "The config object will be passed to https://github.com/valery-barysok/session-file-store"
+                },
+                "Mashroom Session MongoDB Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/MongoDbConfig"
+                        },
+                        {
+                            "properties": {
+                                "collection": {
+                                    "type": "string",
+                                    "description": "The MongoDB collection to store sessions in (Default: sessions)"
+                                }
+                            }
+                        }
+                    ],
+                    "description": "All config options are passed to the connect-mongodb-session"
+                },
+                "Mashroom Session Redis Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/IORedisConfig"
+                        }
+                    ]
+                },
+                "Mashroom Storage Services": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": "The storage-provider plugin that implements the actual storage (Default: Mashroom Storage Filestore Provider)"
+                        },
+                        "memoryCache": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable cache (of all) collections. The preferred way is to set this to false and enable caching per collection (Default: false)"
+                                },
+                                "ttlSec": {
+                                    "type": "integer",
+                                    "description": "The default TTL in seconds. Can be overwritten per collection (Default: 120)"
+                                },
+                                "invalidateOnUpdate": {
+                                    "type": "boolean",
+                                    "description": "Clear the cache for the whole collection if an entry gets updated (Default: true)"
+                                },
+                                "collections": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^.*$": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean"
+                                                },
+                                                "ttlSec": {
+                                                    "type": "integer"
+                                                },
+                                                "invalidateOnUpdate": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "A map of collections specific settings"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Use the memory cache to improve the performance. Requires @mashroom/mashroom-memory-cache to be installed."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Storage Filestore Provider": {
+                    "type": "object",
+                    "properties": {
+                        "dataFolder": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Folder to store the data files. The base for relative paths is the Mashroom config file (Default: ./data/storage)"
+                        },
+                        "checkExternalChangePeriodMs": {
+                            "type": "integer",
+                            "description": "Check JSON files for external changes after this period.\n   If you set this to a value <= 0 the file timestamp will be checked on every access which will cause (Default: 2000)"
+                        },
+                        "prettyPrintJson": {
+                            "type": "boolean",
+                            "description": "Pretty print the JSON files to make it human readable (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Storage MongoDB Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/MongoDbConfig"
+                        }
+                    ]
+                },
+                "Mashroom VHost Path Mapper Middleware": {
+                    "type": "object",
+                    "required": ["hosts"],
+                    "properties": {
+                        "considerHttpHeaders": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": ""
+                        },
+                        "hosts": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^[^/]+$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "frontendBasePath": {
+                                            "type": "string",
+                                            "pattern": "^/.*$",
+                                            "description": ""
+                                        },
+                                        "mapping": {
+                                            "type": "object",
+                                            "patternProperties": {
+                                                "^/.*$": {
+                                                    "type": "string",
+                                                    "pattern": "^/.*$"
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "Mashroom WebSocket Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The path where the clients can connect (Default: /websocket)"
+                        },
+                        "reconnectMessageBufferFolder": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/PackagerRelativeOrSystemPath"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "The path where messages are temporary stored during client reconnect. When set to null or empty string, buffering is disabled (Default: null)"
+                        },
+                        "reconnectTimeoutSec": {
+                            "type": "integer",
+                            "description": "Time for how long are messages buffered during reconnect (Default: 5)"
+                        },
+                        "restrictToRoles": {
+                            "type": ["array", "null"],
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "An optional array of roles that are required to connect (Default: null)"
+                        },
+                        "enableKeepAlive": {
+                            "type": "boolean",
+                            "description": "Enable periodic keep alive messages to all clients.\nThis is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)"
+                        },
+                        "keepAliveIntervalSec": {
+                            "type": "integer",
+                            "description": "Interval for keepalive messages in seconds (Default: 15)"
+                        },
+                        "maxConnections": {
+                            "type": "integer",
+                            "description": "Max allowed WebSocket connections per node (Default: 2000)"
+                        }
+                    }
                 }
             }
         }

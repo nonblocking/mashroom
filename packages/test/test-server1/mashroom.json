@@ -80,7 +80,7 @@
             "clientId": "mashroom",
             "clientSecret": "9842e02d-096a-4b18-ad69-7d33fd803d36",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "rolesClaim": "roles",
+            "rolesClaimName": "roles",
             "adminRoles": [
                 "mashroom-admin"
             ]
@@ -101,7 +101,7 @@
             "prettyPrintJson": true
         },
         "Mashroom Storage MongoDB Provider": {
-            "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
+            "uri": "mongodb://localhost:27017/mashroom_storage_db"
         },
         "Mashroom Memory Cache Services": {
             "provider": "local",
@@ -150,7 +150,10 @@
         "Mashroom Portal Default Theme": {
             "showEnvAndVersions": true
         },
-        "Mashroom Portal Remote App Registry Webapp": {
+        "Mashroom Portal Remote App Registry": {
+            "remotePortalAppUrls": "./remotePortalApps.json"
+        },
+        "Mashroom Portal Remote App Registry Admin Webapp": {
             "showAddRemoteAppForm": true
         }
     }

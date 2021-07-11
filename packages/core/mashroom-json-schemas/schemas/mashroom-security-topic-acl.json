@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Rule": {
+            "oneOf": [
+                {
+                    "const": "any",
+                    "description": "Includes anonymous users"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            ]
+        }
+    },
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        }
+    },
+    "patternProperties": {
+        "^[a-zA-Z0-9/?#]+$": {
+            "type": "object",
+            "properties": {
+                "allow": {
+                    "$ref": "#/definitions/Rule"
+                },
+                "deny": {
+                    "$ref": "#/definitions/Rule"
+                }
+            },
+            "additionalProperties": false
+        }
+    },
+    "additionalProperties": false
+}

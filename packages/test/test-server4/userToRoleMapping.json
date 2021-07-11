@@ -1,0 +1,6 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-security-ldap-provider-user-to-role-mapping.json",
+    "user5": [
+        "Role5"
+    ]
+}

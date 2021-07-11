@@ -9,7 +9,7 @@ const schema = JSON.parse(readFileSync(resolve(__dirname, '..', 'schemas', 'mash
 
 describe('server config validation', () => {
 
-    it('validates a valid config', () => {
+    it('succeeds at a valid Mashroom server config', () => {
         const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'server', 'mashroom1.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);
@@ -19,7 +19,7 @@ describe('server config validation', () => {
         expect(valid).toBeTruthy();
     });
 
-    it('validates an invalid config', () => {
+    it('fails at an invalid Mashroom server config', () => {
         const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'server', 'mashroom2.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);

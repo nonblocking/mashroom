@@ -1,0 +1,67 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "Rule": {
+            "oneOf": [
+                {
+                    "const": "any",
+                    "description": "Includes anonymous users"
+                },
+                {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                {
+                    "type": "object",
+                    "properties": {
+                        "roles": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "ips": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "IP addresses can also contain wildcards: ? for s single digit, * for single segments and ** for multiple segments"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        }
+    },
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        }
+    },
+    "patternProperties": {
+        "^/.*$": {
+            "type": "object",
+            "patternProperties": {
+                "^(\\*|GET|POST|PUT|DELETE|PATCH|OPTIONS)$": {
+                    "type": "object",
+                    "properties": {
+                        "allow": {
+                            "$ref": "#/definitions/Rule"
+                        },
+                        "deny": {
+                            "$ref": "#/definitions/Rule"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false,
+            "description": "The path can contain the wildcard * for single segments and ** for multiple segments"
+        }
+    },
+    "required": [],
+    "additionalProperties": false
+}

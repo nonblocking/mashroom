@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Introduced JSON Schemas for all config files and for package.json with Mashroom plugins
+ * BREAKING CHANGE*: All default config file names are now camel case. The following config files had been renamed:
+     * remote-portal-apps.json -> remotePortalApps.json
+     * topic_acl.json -> topicACL.json
  * OpenID Connect Security Provider: Allow mapping arbitrary claims to *user.extraData*
  * OpenID Connect Security Provider: Allow configuring HTTP timeout and number of retries when contacting the Authorization Server
 

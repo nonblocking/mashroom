@@ -69,7 +69,7 @@
             "clientId": "mashroom",
             "clientSecret": "9842e02d-096a-4b18-ad69-7d33fd803d36",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "rolesClaim": "roles",
+            "rolesClaimName": "roles",
             "adminRoles": [
                 "mashroom-admin"
             ],
@@ -136,7 +136,7 @@
             "externalTopics": ["external1", "external2"],
             "userPrivateBaseTopic": "user",
             "enableWebSockets": true,
-            "topicACL": "./topic_acl.json"
+            "topicACL": "./topicACL.json"
         },
         "Mashroom Messaging External Provider MQTT": {
             "internalTopic": "mashroom",

@@ -33,7 +33,7 @@ You can override the default config in your Mashroom config file like this:
  * _provider_: The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)
  * _forwardQueryHintsToProvider_: A list of query parameters that should be forwarded during the authentication.
    (will be added to the login or authorization URL).
- * _acl_: The ACL for path based security restrictions (see below) (default: ./acl.json)
+ * _acl_: The ACL for path based security restrictions (see below) (Default: ./acl.json)
 
 ### ACL
 
@@ -41,6 +41,7 @@ A typical ACL configuration looks like this:
 
 ```json
 {
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-security-acl.json",
     "/portal/**": {
         "*": {
             "allow": {

@@ -49,15 +49,15 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
- * _path_: The path where the clients can connect
- * _reconnectMessageBufferFolder_: The path where messages are temporary stored during client reconnect. when set to null or empty string, buffering is disabled.#
-   The base for relative paths is the Mashroom config file.
- * _reconnectTimeoutSec_: Time for how long are messages buffered during reconnect
- * _restrictToRoles_: An optional array of roles that are required to connect (default: null)
- * _enableKeepAlive_: Enable a periodic keep alive message where the server will send "keepalive" to all clients.
+ * _path_: The path where the clients can connect (Default: /websocket)
+ * _reconnectMessageBufferFolder_: The path where messages are temporary stored during client reconnect. When set to null or empty string, buffering is disabled.
+   The base for relative paths is the Mashroom config file (Default: null)
+ * _reconnectTimeoutSec_: Time for how long are messages buffered during reconnect (Default: 5)
+ * _restrictToRoles_: An optional array of roles that are required to connect (Default: null)
+ * _enableKeepAlive_: Enable periodic keep alive messages to all clients.
    This is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)
- * _keepAliveIntervalSec_: Interval for keepalive messages in seconds (default: 15)
- * _maxConnections_: Max allowed WebSocket connections per node (default: 2000)
+ * _keepAliveIntervalSec_: Interval for keepalive messages in seconds (Default: 15)
+ * _maxConnections_: Max allowed WebSocket connections per node (Default: 2000)
 
 There will also be a **test page** available under: _/websocket/test_
 

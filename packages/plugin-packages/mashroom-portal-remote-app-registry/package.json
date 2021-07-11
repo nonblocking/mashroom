@@ -78,7 +78,7 @@
                 ],
                 "defaultConfig": {
                     "priority": 100,
-                    "remotePortalAppUrls": "./remote-portal-apps.json"
+                    "remotePortalAppUrls": "./remotePortalApps.json"
                 }
             },
             {

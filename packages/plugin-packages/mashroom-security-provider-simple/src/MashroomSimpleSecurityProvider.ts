@@ -124,7 +124,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
         let userStore: UserStore;
         if (fs.existsSync(this._userStorePath)) {
-            userStore = require(this._userStorePath);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const userData = require(this._userStorePath);
+            userStore = Array.isArray(userData) ? userData : (userData.users || []);
             this._createRoleDefinitions(userStore, request, logger);
         } else {
             logger.warn(`No user definition found: ${this._userStorePath}.`);

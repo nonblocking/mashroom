@@ -51,14 +51,14 @@ And configure this plugin like this in the Mashroom config file:
             "clientSecret": "your-client-secret",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
             "responseType": "code",
-            "usePKCE": "false",
+            "usePKCE": false,
             "extraAuthParams": {},
             "extraDataMapping": {
                 "phone": "phone",
                 "birthdate": "birthdate",
                 "updatedAt": "updated_at"
             },
-            "rolesClaim": "roles",
+            "rolesClaimName": "roles",
             "adminRoles": [
                 "mashroom-admin"
             ],
@@ -82,11 +82,11 @@ And configure this plugin like this in the Mashroom config file:
  * _redirectUrl_: The full URL of the callback (as seen from the user). This is usually https://&lt;mashroom-server-host&gt;/openid-connect-cb.
    The path corresponds with the _path_ property in the *Mashroom OpenID Connect Security Provider Callback* config.
  * _responseType_: The OpenID Connect response type (flow) to use (Default: code)
- * _usePKCE_: Use the [Proof Key for Code Exchange](https://oauth.net/2/pkce) extension for the _code_ flow
+ * _usePKCE_: Use the [Proof Key for Code Exchange](https://oauth.net/2/pkce) extension for the _code_ flow (Default: false)
  * _extraAuthParams_: Extra authentication parameters that should be used
- * _extraDataMapping_: Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (default: null)
- * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array
- * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role
+ * _extraDataMapping_: Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (Default: null)
+ * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array (Default: roles)
+ * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role (Default: ["mashroom-admin"])
  * _httpRequestRejectUnauthorized_: Reject self-signed certificates when contacting the Authorization Server (Default: true)
  * _httpRequestTimeoutMs_: Request timeout when contacting the Authorization Server (Default: 3500)
  * _httpRequestRetry_: Number of retries when contacting the Authorization Server (Default: 0)

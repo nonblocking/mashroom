@@ -51,7 +51,7 @@
                     "externalTopics": [],
                     "userPrivateBaseTopic": "user",
                     "enableWebSockets": true,
-                    "topicACL": "./topic_acl.json"
+                    "topicACL": "./topicACL.json"
                 }
             },
             {

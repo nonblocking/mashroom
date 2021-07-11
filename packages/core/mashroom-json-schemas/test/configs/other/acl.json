@@ -1,5 +1,5 @@
 {
-    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-security-acl.json",
+    "$schema": "../../../schemas/mashroom-security-acl.json",
     "/mashroom/**": {
         "*": {
             "allow": {
@@ -15,9 +15,7 @@
     },
     "/portal/**": {
         "*": {
-            "allow": {
-                "roles": ["Authenticated"]
-            }
+            "allow": ["Authenticated"]
         }
     },
     "/websocket/test/**": {

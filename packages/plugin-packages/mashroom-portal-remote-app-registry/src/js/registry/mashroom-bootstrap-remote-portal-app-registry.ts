@@ -43,15 +43,14 @@ async function registerRemotePortalAppsFromConfigFile(configFilePath: string, se
     if (fs.existsSync(configFilePath)) {
         logger.info(`Loading remote portal app URLs from: ${configFilePath}`);
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const remotePortalAppURLs = require(configFilePath);
+        const remotePortalAppData = require(configFilePath);
+        const remotePortalAppURLs: Array<string> = Array.isArray(remotePortalAppData) ? remotePortalAppData : (remotePortalAppData.remotePortalApps || []);
+
         if (Array.isArray(remotePortalAppURLs)) {
             for (const remotePortalAppURL of remotePortalAppURLs) {
-                if (typeof(remotePortalAppURL) === 'string') {
-                    await portalRemoteAppEndpointService.registerRemoteAppUrl(remotePortalAppURL);
-                }
+                await portalRemoteAppEndpointService.registerRemoteAppUrl(remotePortalAppURL);
             }
         }
-
     } else {
         logger.warn(`Remote portal app URLs config file not found: ${configFilePath}`);
     }

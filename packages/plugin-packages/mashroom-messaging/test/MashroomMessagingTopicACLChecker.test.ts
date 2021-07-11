@@ -7,7 +7,7 @@ import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-defini
 describe('MashroomMessageTopicACLChecker', () => {
 
     it('accepts the access when no rule defined', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './testACL.json';
         const aclChecker = new MashroomMessageTopicACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -24,7 +24,7 @@ describe('MashroomMessageTopicACLChecker', () => {
     });
 
     it('should accept a topic with the required role', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './testACL.json';
         const aclChecker = new MashroomMessageTopicACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -41,7 +41,7 @@ describe('MashroomMessageTopicACLChecker', () => {
     });
 
     it('should not accept a topic without the required role', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './testACL.json';
         const aclChecker = new MashroomMessageTopicACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -58,7 +58,7 @@ describe('MashroomMessageTopicACLChecker', () => {
     });
 
     it('should accept a topic when the user has no denied role', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './testACL.json';
         const aclChecker = new MashroomMessageTopicACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -75,7 +75,7 @@ describe('MashroomMessageTopicACLChecker', () => {
     });
 
     it('should not accept a topic when the user a denied role', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './testACL.json';
         const aclChecker = new MashroomMessageTopicACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -92,7 +92,7 @@ describe('MashroomMessageTopicACLChecker', () => {
     });
 
     it('supports single and multi level placeholder', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './testACL.json';
         const aclChecker = new MashroomMessageTopicACLChecker(aclPath, __dirname, dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {

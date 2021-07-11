@@ -51,22 +51,22 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _loginPage_: The login URL when user is not authenticated (must match the path of _Mashroom Security Default Login Webapp_)
+ * _loginPage_: The login URL to redirect to if the user is not authenticated (Default: /login)
  * _serverUrl_: The LDAP server URL with protocol and port
- * _ldapConnectTimeout_: Connect timeout in ms (default: 3000)
- * _ldapTimeout_: Timeout in ms (default: 5000)
- * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html),
-    but the file paths (e.g. for "cert") are resolved relatively to _mashroom.json_.
+ * _ldapConnectTimeout_: Connect timeout in ms (Default: 3000)
+ * _ldapTimeout_: Timeout in ms (Default: 5000)
+ * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html)
+    but the file paths (e.g. for "cert") are resolved relatively to the server config.
  * _bindDN_: The bind user for searching
  * _bindCredentials_: The password for the bind user
  * _baseDN_: The base DN for searches (can be empty)
  * _userSearchFilter_: The user search filter, _@username@_ will be replaced by the actual username entered in the login form
  * _groupSearchFilter_: The group search filter (can be empty if you don't want to fetch the user groups)
- * _extraDataMapping_: Optionally map extra LDAP attributes to _user.extraData_. The key in the map is the extraData property, the value the LDAP attribute (default: null)
- * _secretsMapping_: Optionally map extra LDAP attributes to _user.secrets_ (default: null)
- * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping
- * _userToRoleMapping_: An optional JSON file that contains a user name to roles mapping
- * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value.
+ * _extraDataMapping_: Optionally map extra LDAP attributes to _user.extraData_. The key in the map is the extraData property, the value the LDAP attribute (Default: null)
+ * _secretsMapping_: Optionally map extra LDAP attributes to _user.secrets_ (Default: null)
+ * _groupToRoleMapping_: An optional JSON file that contains a user group to roles mapping (Default: /groupToRoleMapping.json)
+ * _userToRoleMapping_: An optional JSON file that contains a user name to roles mapping (Default: /userToRoleMapping.json)
+ * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value (Default: 1200)
 
 For a server that requires TLS you have to provide a _tlsOptions_ object:
 
@@ -94,6 +94,7 @@ The _groupToRoleMapping_ file has to following simple structure:
 
 ```json
 {
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-security-ldap-provider-group-to-role-mapping.json",
     "LDAP_GROUP1": [
         "ROLE1",
         "ROLE2"
@@ -105,6 +106,7 @@ And the _userToRoleMapping_ file:
 
 ```json
 {
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-security-ldap-provider-user-to-role-mapping.json",
     "username": [
         "ROLE1",
         "ROLE2"
