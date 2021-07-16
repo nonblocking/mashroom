@@ -15,7 +15,9 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
 
     const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(
         k8sNamespaces, serviceNameFilter, socketTimeoutSec,
-        refreshIntervalSec, accessViaClusterIP, kubernetesConnector, pluginContext.loggerFactory);
+        refreshIntervalSec, accessViaClusterIP,
+        pluginContext.serverConfig.externalPluginConfigFileNames,
+        kubernetesConnector, pluginContext.loggerFactory);
 
     // Run immediately
     backgroundJob.run();

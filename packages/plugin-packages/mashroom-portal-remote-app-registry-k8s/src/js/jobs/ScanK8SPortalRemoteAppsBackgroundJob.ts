@@ -20,6 +20,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     constructor(private _k8sNamespaces: Array<string>, serviceNameFilterStr: string, private _socketTimeoutSec: number,
                 private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
+                private _externalPluginConfigFileNames: Array<string>,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
         this._serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
         this._logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
@@ -105,29 +106,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     private async _checkServiceForRemotePortalApps(service: KubernetesService): Promise<void> {
         this._logger.debug('Checking service:', service);
 
-        let packageJson;
-        let portalApps;
-
+        let portalApps = [];
         try {
-            const {found, json} = await this._loadPackageJson(service.url);
-            if (found && json?.mashroom) {
-                packageJson = json;
-            } else {
-                this._logger.warn(`No proper Mashroom Portal App descriptor found for Kubernetes service ${service.name}`);
-                service.foundPortalApps = [];
-                service.status = 'No Descriptor';
-                return;
-            }
-        } catch (error) {
-            service.status = 'Error';
-            service.error = error.message;
-            service.foundPortalApps = [];
-            this._logger.error(`Error checking Kubernetes service ${service.name} failed!`, error);
-            return;
-        }
+            const externalPluginDefinition = await this._loadExternalPluginDefinition(service.url);
+            const packageJson = await this._loadPackageJson(service.url);
 
-        try {
-            portalApps = this.processPackageJson(packageJson, service.url, service.name);
+            portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, service);
             this._logger.info(`Registered portal apps for Kubernetes service: ${service.name}:`, portalApps);
         } catch (error) {
             service.status = 'Error';
@@ -141,52 +125,97 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         service.foundPortalApps = portalApps;
     }
 
-    private async _loadPackageJson(serviceUrl: string): Promise<{ found: boolean; json?: any }> {
+    private async _loadPackageJson(serviceUrl: string): Promise<any | null> {
         const requestOptions = {
             url: `${serviceUrl}/package.json`,
             followRedirect: false,
             timeout: this._socketTimeoutSec * 1000,
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             request.get(requestOptions, (error, response, body) => {
                 if (error) {
-                    reject(error);
-                    return;
-                }
-                if (response.statusCode === 404) {
-                    resolve({found: false});
+                    this._logger.warn(`Fetching package.json from ${serviceUrl} failed`, error);
+                    resolve(null);
                     return;
                 }
                 if (response.statusCode !== 200) {
-                    reject(new Error(`Received HTTP Code: ${response.statusCode}`));
+                    this._logger.warn(`Fetching package.json from ${serviceUrl} failed with status code ${response.statusCode}`);
+                    resolve(null);
                     return;
                 }
-
                 try {
                     const json = JSON.parse(body);
-                    resolve({found: true, json});
+                    resolve(json);
                 } catch (parseError) {
-                    reject(new Error(`Parsing /package.json failed!\n${parseError.message}`));
+                    this._logger.error(`Parsing package.json from ${serviceUrl} failed`, parseError);
+                    resolve(null);
                 }
             });
         });
     }
 
-    processPackageJson(packageJson: any, serviceUrl: string, serviceName: string): Array<MashroomPortalApp> {
-        this._logger.debug(`Processing package.json of Kubernetes service: ${serviceName}`, packageJson);
+    private async _loadExternalPluginDefinition(serviceUrl: string): Promise<MashroomPluginPackageDefinition | null> {
+        const promises = this._externalPluginConfigFileNames.map((name) => {
+            const requestOptions = {
+                url: `${serviceUrl}/${name}.json`,
+                followRedirect: false,
+                timeout: this._socketTimeoutSec * 1000,
+            };
 
-        const mashroomDef: MashroomPluginPackageDefinition = packageJson.mashroom;
-        const portalAppDefinitions = mashroomDef.plugins.filter((plugin) => plugin.type === 'portal-app');
+            return new Promise<MashroomPluginPackageDefinition | null>((resolve) => {
+                request.get(requestOptions, (error, response, body) => {
+                    if (error || response.statusCode !== 200) {
+                        this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed`);
+                        resolve(null);
+                        return;
+                    }
+                    try {
+                        const packageJson = JSON.parse(body);
+                        this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
+                        resolve(packageJson);
+                    } catch (parseError) {
+                        this._logger.error(`Parsing ${name}.json from ${serviceUrl} failed`, parseError);
+                        resolve(null);
+                    }
+                });
+            });
+        });
+
+        const configs = await Promise.all(promises);
+        return configs.find((c) => !!c) || null;
+    }
+
+    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, service: KubernetesService): Array<MashroomPortalApp> {
+        this._logger.debug(`Processing plugin definition of Kubernetes service: ${service.name}`, packageJson, definition);
+
+        if (!definition) {
+            definition = packageJson?.mashroom;
+        }
+        if (!definition || !Array.isArray(definition.plugins)) {
+            throw new Error(`No plugin definition found for Kubernetes service ${service.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
+        }
+
+        const portalAppDefinitions = definition.plugins.filter((plugin) => plugin.type === 'portal-app');
 
         if (portalAppDefinitions.length === 0) {
             throw new Error('No plugin of type portal-app found in remote portal app');
         }
 
-        return portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, serviceUrl));
+        const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, service.url));
+
+        return portalApps.map((portalApp) => {
+            const existingApp = service.foundPortalApps?.find((existingApp) => existingApp.name === portalApp.name);
+            if (existingApp && existingApp.version === portalApp.version) {
+                // Keep reload timestamp for browser caching
+                return {...portalApp, lastReloadTs: existingApp.lastReloadTs};
+            }
+
+            return portalApp;
+        });
     }
 
-    private _mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
+    private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
         const name = definition.name;
         if (!name) {
             throw new Error('Invalid portal app definition: No "name" attribute!');
@@ -263,12 +292,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const portalApp: MashroomPortalApp = {
             name,
             title: definition.title,
-            description: definition.description || packageJson.description,
+            description: definition.description || packageJson?.description,
             tags: definition.tags || [],
-            version: packageJson.version,
-            homepage: definition.homepage || packageJson.homepage,
-            author: definition.author || packageJson.author,
-            license: packageJson.license,
+            version: packageJson?.version || new Date().toISOString(),
+            homepage: definition.homepage || packageJson?.homepage,
+            author: definition.author || packageJson?.author,
+            license: packageJson?.license,
             category: definition.category,
             metaInfo: config.metaInfo,
             lastReloadTs: Date.now(),

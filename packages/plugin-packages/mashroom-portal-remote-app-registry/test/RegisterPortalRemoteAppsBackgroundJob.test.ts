@@ -9,19 +9,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     const pluginContextHolder: any = {
         getPluginContext: () => {
             return {
-                loggerFactory: dummyLoggerFactory
+                loggerFactory: dummyLoggerFactory,
+                serverConfig: {
+                    externalPluginConfigFileNames: []
+                }
             }
         }
-    };
-
-    const packageJson: any = {
-        name: 'Test',
-        version: '5.1.2',
-        description: 'Test package',
-        author: 'juergen.kofler@nonblocking.at',
-        homepage: 'https://www.mashroom-server.com',
-        license: 'MIT',
-        mashroom: {}
     };
 
     const pluginDefinition: MashroomPluginDefinition = {
@@ -70,16 +63,40 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         }
     };
 
+    const pluginPackageDefinition: any = {
+        plugins: [
+            pluginDefinition,
+        ]
+    }
+
+    const packageJson: any = {
+        name: 'Test',
+        version: '5.1.2',
+        description: 'Test package',
+        author: 'juergen.kofler@nonblocking.at',
+        homepage: 'https://www.mashroom-server.com',
+        license: 'MIT',
+        mashroom: pluginPackageDefinition,
+    };
+
+    const packageJson2: any = {
+        name: 'Test2',
+        version: '1.1.2'
+    };
+
     const remotePortalAppEndpoint: any = {
         url: 'https://www.mashroom-server.com/test-remote-app'
     };
 
-    it('maps the plugin definition correctly', () => {
+    it('processes package.json correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
 
-        const portalApp = backgroundJob.mapPluginDefinition(packageJson, pluginDefinition, remotePortalAppEndpoint);
+        const portalApps = backgroundJob.processPluginDefinition(packageJson, null, remotePortalAppEndpoint);
 
-        expect(portalApp).toBeTruthy();
+        expect(portalApps).toBeTruthy();
+        expect(portalApps.length).toBe(1);
+
+        const portalApp = portalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
 
         const fixedPortalApp = {...portalApp, lastReloadTs: 22};
@@ -102,15 +119,64 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             globalLaunchFunction: 'startTestApp',
             resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app',
             resources: {
-                js: ['bundle.js'],
-                css: undefined
+                js: ['bundle.js']
             },
             sharedResources: {
-                js: ['my-lib-dll-a1ef123a.js'],
-                css: undefined
+                js: ['my-lib-dll-a1ef123a.js']
             },
             screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
-            defaultRestrictViewToRoles: undefined,
+            rolePermissions: {},
+            restProxies:
+                {
+                    bff: {
+                        targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
+                        sendUserHeaders: true,
+                        sendPermissionsHeader: true
+                    },
+                    two: {
+                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                    }
+                },
+            defaultAppConfig: {
+                customerId: '123123'
+            }
+        });
+    });
+
+    it('processes an external plugin package definition correctly', () => {
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+
+        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, remotePortalAppEndpoint);
+
+        expect(portalApps).toBeTruthy();
+        expect(portalApps.length).toBe(1);
+
+        const portalApp = portalApps[0];
+        expect(portalApp.lastReloadTs).toBeTruthy();
+
+        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
+        expect(fixedPortalApp).toEqual({
+            name: 'Test App',
+            description: 'Test App',
+            tags: [],
+            title: {
+                en: 'Title'
+            },
+            version: '1.1.2',
+            category: 'Test App',
+            metaInfo: {
+                test: 1
+            },
+            lastReloadTs: 22,
+            globalLaunchFunction: 'startTestApp',
+            resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app',
+            resources: {
+                js: ['bundle.js']
+            },
+            sharedResources: {
+                js: ['my-lib-dll-a1ef123a.js']
+            },
+            screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
             rolePermissions: {},
             restProxies:
                 {
