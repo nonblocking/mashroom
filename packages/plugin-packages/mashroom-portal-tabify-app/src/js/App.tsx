@@ -1,6 +1,7 @@
 
 import React, {PureComponent} from 'react';
 
+import type {ReactNode} from 'react';
 import type {
     MashroomPortalLoadedPortalApp,
     MashroomPortalAppService,
@@ -14,13 +15,21 @@ type Tab = {
     app: MashroomPortalLoadedPortalApp
 }
 
+type Message = {
+    appId?: string | undefined;
+    title?: string | undefined;
+    pluginName?: string | undefined;
+}
+
 type Props = {
     tabifyPluginName: string;
     hostElement: HTMLElement;
     appConfig: {
         addCloseButtons?: boolean;
         pluginNameTitleMapping?: {
-            [pluginName: string]: string};
+            [pluginName: string]: string
+        };
+        fixedTabTitles?: Array<string | null | undefined>;
     };
     messageBus: MashroomPortalMessageBus;
     portalAppService: MashroomPortalAppService;
@@ -89,7 +98,7 @@ export default class App extends PureComponent<Props, State> {
         return newWrapper;
     }
 
-    removeAppWrapper(tab: Tab) {
+    removeAppWrapper(tab: Tab): void {
         const previousWrapper = tab.wrapper.firstChild;
         const appAreaElement = tab.wrapper.parentElement;
         if (previousWrapper && appAreaElement) {
@@ -99,13 +108,13 @@ export default class App extends PureComponent<Props, State> {
         tab.app.portalAppWrapperElement.classList.remove('hide-header');
     }
 
-    removeAllAppWrappers() {
+    removeAllAppWrappers(): void {
         this.state.tabs.forEach((tab) => {
             this.removeAppWrapper(tab);
         });
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         const tabifyApp = this.props.portalAppService.loadedPortalApps.find((app) => app.portalAppHostElement === this.props.hostElement);
         if (tabifyApp) {
             tabifyApp.portalAppWrapperElement.classList.add('no-border');
@@ -149,7 +158,7 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    componentWillUnmount() {
+    componentWillUnmount(): void {
         this.props.portalAppService.unregisterAppLoadedListener(this._boundOnAppLoaded);
         this.props.portalAppService.unregisterAppAboutToUnloadListener(this._boundOnAppUnload);
 
@@ -158,7 +167,7 @@ export default class App extends PureComponent<Props, State> {
         this.props.messageBus.unsubscribe(FOCUS_APP_TOPIC, this._boundOnFocusAppMessage);
     }
 
-    onPluginNameTitleMappingMessage(message: any) {
+    onPluginNameTitleMappingMessage(message: Message): void {
         if (message && message.pluginName && message.title) {
             this.setState({
                 pluginNameTitleMapping: { ...this.state.pluginNameTitleMapping, [message.pluginName]: message.title,}
@@ -166,7 +175,7 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    onAppIdTitleMappingMessage(message: any) {
+    onAppIdTitleMappingMessage(message: Message): void {
         if (message && message.appId && message.title) {
             this.setState({
                 appIdTitleMapping: { ...this.state.appIdTitleMapping, [message.appId]: message.title,}
@@ -174,7 +183,7 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    onFocusAppMessage(message: any) {
+    onFocusAppMessage(message: Message): void {
         if (message && message.appId) {
             this.state.tabs.forEach((tab, idx) => {
                 if (tab.app.id === message.appId) {
@@ -184,11 +193,11 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    onCloseApp(app: MashroomPortalLoadedPortalApp) {
+    onCloseApp(app: MashroomPortalLoadedPortalApp): void {
         this.props.portalAppService.unloadApp(app.id);
     }
 
-    onAppLoaded(app: MashroomPortalLoadedPortalApp) {
+    onAppLoaded(app: MashroomPortalLoadedPortalApp): void {
         if (app.pluginName !== this.props.tabifyPluginName && app.portalAppAreaId === this._areaId) {
             const existingAreaApp = this.state.tabs.find((tab) => tab.app.id === app.id);
             if (!existingAreaApp) {
@@ -222,7 +231,7 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    onAppUnload(app: MashroomPortalLoadedPortalApp) {
+    onAppUnload(app: MashroomPortalLoadedPortalApp): void {
         if (app.portalAppHostElement === this.props.hostElement) {
             console.info('Tabify app unloaded, removing all app wrappers');
             this.removeAllAppWrappers();
@@ -258,7 +267,7 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    onChangeActiveTab(newTabIndex: number) {
+    onChangeActiveTab(newTabIndex: number): void {
         // Hide current active
         if (typeof(this.state.activeTabIndex) === 'number' && this.state.tabs.length > this.state.activeTabIndex) {
             const wrapperElem =  this.state.tabs[this.state.activeTabIndex].wrapper;
@@ -280,7 +289,7 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    focusFirstInputOnActiveTab() {
+    focusFirstInputOnActiveTab(): void {
         if (typeof(this.state.activeTabIndex) === 'number' && this.state.tabs.length > this.state.activeTabIndex) {
             const appWrapper = this.state.tabs[this.state.activeTabIndex].app.portalAppWrapperElement;
             if (appWrapper.id) {
@@ -293,13 +302,20 @@ export default class App extends PureComponent<Props, State> {
         }
     }
 
-    renderTabHeader() {
+    renderTabHeader(): ReactNode {
         if (this.state.tabs.length === 0) {
             return null;
         }
 
+        const fixedTabTitles = this.props.appConfig.fixedTabTitles || [];
         const buttons = this.state.tabs.map((tab, idx) => {
-            const title = this.state.appIdTitleMapping[tab.app.id] || this.state.pluginNameTitleMapping[tab.app.pluginName] || tab.app.title || tab.app.pluginName;
+            let title;
+            if (fixedTabTitles.length > idx) {
+                title = fixedTabTitles[idx];
+            }
+            if (!title) {
+                title = this.state.appIdTitleMapping[tab.app.id] || this.state.pluginNameTitleMapping[tab.app.pluginName] || tab.app.title || tab.app.pluginName;
+            }
 
             return (
                 <div key={tab.app.instanceId} className={`tab-dialog-button ${idx === this.state.activeTabIndex ? 'active' : ''}`} data-app-ref={`portal-app-${tab.app.id}`}>
@@ -316,7 +332,7 @@ export default class App extends PureComponent<Props, State> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-portal-tabify-app'>
                 <div className='mashroom-portal-ui-tab-dialog'>

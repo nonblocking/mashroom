@@ -56,8 +56,9 @@
                     "appConfig": {
                         "addCloseButtons": false,
                         "pluginNameTitleMapping": {
-                            "My App Plugin": "My fabulous app"
-                        }
+                            "My App": "The title to display"
+                        },
+                        "fixedTabTitles": []
                     }
                 }
             }
