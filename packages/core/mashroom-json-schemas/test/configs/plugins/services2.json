@@ -1,0 +1,17 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Services",
+            "requires": [
+                "Another Plugin"
+            ],
+            "type": "services",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

@@ -14,7 +14,7 @@ You can override the default config in your Mashroom config file like this:
 ```json
 {
     "plugins": {
-        "Mashroom Storage Services": {
+        "Mashroom Session Middleware": {
             "order": -100,
             "provider": "Mashroom Session Filestore Provider",
             "session": {

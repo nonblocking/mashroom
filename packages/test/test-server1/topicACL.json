@@ -1,0 +1,6 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-security-topic-acl.json",
+    "external2/#": {
+        "allow": ["Administrator"]
+    }
+}

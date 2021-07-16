@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Middleware",
+            "type": "middleware",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "order": 500,
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

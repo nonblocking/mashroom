@@ -46,7 +46,7 @@ You can override the default config in your Mashroom config file like this:
             "externalTopics": [],
             "userPrivateBaseTopic": "user",
             "enableWebSockets": true,
-            "topicACL": "./topic_acl.json"
+            "topicACL": "./topicACL.json"
         }
     }
 }
@@ -59,12 +59,13 @@ You can override the default config in your Mashroom config file like this:
  * _userPrivateBaseTopic_: The base for private user topics. If the prefix is _something/user_ the user _john_ would only be able
     to subscribe to _user/john/something_ and not to _something/user/thomas/weather-update_ (Default: user).
  * _enableWebSockets_: Enable WebSocket support when _mashroom-websocket_ is present (Default: true)
- * _topicACL_: Access control list to restrict the use of certain topic patterns to specific roles
+ * _topicACL_: Access control list to restrict the use of certain topic patterns to specific roles (Default: ./topicACL.json)
 
 With a config like that you can place a file _topic_acl.json_ in your server config  with a content like this:
 
 ```json
 {
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-security-topic-acl.json",
     "my/topic": {
         "allow": ["Role1"]
     },

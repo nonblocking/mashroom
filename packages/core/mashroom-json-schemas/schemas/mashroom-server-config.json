@@ -1,0 +1,1138 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "I18NString": {
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-z]{2}$": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "WebAppPath": {
+            "type": "string",
+            "pattern": "^/[a-zA-Z0-9-_/]+$"
+        },
+        "WebAppPathOrHttpUrl": {
+            "type": "string",
+            "pattern": "^(/|http://|https://).*$"
+        },
+        "HttpUrl": {
+            "type": "string",
+            "pattern": "^(http://|https://).*$"
+        },
+        "PackagerRelativePath": {
+            "type": "string",
+            "pattern": "^\\./.*$"
+        },
+        "PackagerRelativeOrSystemPath": {
+            "type": "string",
+            "pattern": "^(\\./|\\../|/|[a-zA-Z]:/).*$"
+        },
+        "PackagerRelativeOrSystemPathOrHttp": {
+            "type": "string",
+            "pattern": "^(\\./|\\../|/|http://|https://).*$"
+        },
+        "PluginPackageFolder": {
+            "type": "object",
+            "properties": {
+                "path": {
+                    "type": "string",
+                    "description": "The plugin folder path, relative to this file"
+                },
+                "watch": {
+                    "type": "boolean",
+                    "description": "Watch the plugin folder for changes"
+                },
+                "devMode": {
+                    "type": "boolean",
+                    "description": "Rebuild plugins after changes and before reloading it (enables watch automatically)"
+                }
+            },
+            "required": [
+                "path"
+            ]
+        },
+        "MongoDbConfig": {
+            "type": "object",
+            "required": ["uri"],
+            "properties": {
+                "uri": {
+                    "type": "string",
+                    "description": "A MongoDB connection string"
+                },
+                "connectionOptions": {
+                    "type": "object",
+                    "description": "The MongoDB connection options (see https://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings)"
+                }
+            }
+        },
+        "IORedisConfig": {
+            "type": "object",
+            "properties": {
+                "redisOptions": {
+                    "type": "object",
+                    "description": "Passed to the Redis constructor of https://github.com/luin/ioredis",
+                    "properties": {
+                        "host": {
+                            "type": "string"
+                        },
+                        "port": {
+                            "type": "string"
+                        },
+                        "keyPrefix": {
+                            "type": "string",
+                            "description": "Cache key prefix (Default: mashroom:cache:)"
+                        },
+                        "name":{
+                            "type": "string",
+                            "description": "Identifies a group of Redis instances composed of a master and one or more slaves"
+                        },
+                        "sentinels": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "host": {
+                                        "type": "string"
+                                    },
+                                    "port": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "description": "List of sentinel nodes to connect to"
+                        }
+                    }
+                },
+                "cluster": {
+                    "type": "boolean",
+                    "description": "Enables cluster support"
+                },
+                "clusterNodes": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "description": "Cluster start nodes",
+                        "properties": {
+                            "host": {
+                                "type": "string"
+                            },
+                            "port": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "clusterOptions": {
+                    "type": "object",
+                    "description": "Passed as second argument of the Redis.Cluster constructor of ioredis"
+                }
+            }
+        },
+        "Plugins": {
+            "type": "object",
+            "description": "Plugin specific config",
+            "properties": {
+                "Mashroom Browser Cache Services": {
+                    "type": "object",
+                    "properties": {
+                        "maxAgeSec": {
+                            "type": "integer",
+                            "description": "Max age in seconds (default: 1800)"
+                        },
+                        "disabled": {
+                            "type": "boolean",
+                            "description": "Disable browser caching completely (default: false)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom CSRF Services": {
+                    "type": "object",
+                    "properties": {
+                        "saltLength": {
+                            "type": "integer",
+                            "description": "Passed to the https://www.npmjs.com/package/csrf package"
+                        },
+                        "secretLength": {
+                            "type": "integer",
+                            "description": "Passed to the https://www.npmjs.com/package/csrf package"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom CSRF Middleware": {
+                    "type": "object",
+                    "properties": {
+                        "safeMethods": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "List of HTTP methods that require no CSRF token check (Default: [\"GET\", \"HEAD\", \"OPTIONS\"])"
+                        }
+                    }
+                },
+                "Mashroom Error Pages Middleware": {
+                    "type": "object",
+                    "properties": {
+                        "mapping": {
+                            "type": "object",
+                            "description": "Maps status codes to error pages.\nThe target files can be file paths or HTTP/S urls.\nIf the file path is not absolute the plugin will expect it to be relative to the plugin folder or the Mashroom server config file.",
+                            "patternProperties": {
+                                ".*": {
+                                    "$ref": "#/definitions/PackagerRelativeOrSystemPathOrHttp"
+                                }
+                            }
+                        }
+                    }
+                },
+                "Mashroom Helmet Middleware": {
+                    "type": "object",
+                    "properties": {
+                        "helmet": {
+                            "type": "object",
+                            "description": "The configuration will directly be passed to Helmet - checkout https://helmetjs.github.io/docs"
+                        }
+                    }
+                },
+                "Mashroom Http Proxy Services": {
+                    "type": "object",
+                    "properties": {
+                        "forwardMethods": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The HTTP methods that should be forwarded"
+                        },
+                        "forwardHeaders": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The HTTP headers that should be forwarded. May contain a _*_ as wildcard"
+                        },
+                        "rejectUnauthorized": {
+                            "type": "boolean",
+                            "description": "Reject self-signed certificates (Default: true)"
+                        },
+                        "poolMaxSockets": {
+                            "type": "integer",
+                            "description": "Max pool size for connections (Default: 10)"
+                        },
+                        "socketTimeoutMs": {
+                            "type": "integer",
+                            "description": "Socket timeout, 0 means no timeout (Default: 30000 - 30sec)"
+                        },
+                        "keepAlive": {
+                            "type": "boolean",
+                            "description": "Enable/disable connection keep-alive (Default: true)"
+                        },
+                        "proxyImpl": {
+                            "type": "string",
+                            "enum": [
+                                "default",
+                                "nodeHttpProxy",
+                                "request"
+                            ],
+                            "description": "Switch the proxy implementation. Currently available are 'request' (based https://github.com/request/request), which is the default, or 'nodeHttpProxy' (based on https://github.com/http-party/node-http-proxy)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Internationalization Services": {
+                    "type": "object",
+                    "properties": {
+                        "availableLanguages": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "pattern": "^[a-z]{2}$"
+                            },
+                            "description": "A list of available languages (Default: [\"en\"])"
+                        },
+                        "defaultLanguage": {
+                            "type": "string",
+                            "pattern": "^[a-z]{2}$",
+                            "description": "The default language if it can not be determined from the request (Default: en)"
+                        },
+                        "messages": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The folder with custom i18n messages (Default: ./messages)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Memory Cache Services": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": "The name of the provider. Default is 'local' which uses the local Node.js memory"
+                        },
+                        "defaultTTLSec": {
+                            "type": "integer",
+                            "description": "The default TTL in seconds (Default: 10)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Memory Cache Redis Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/IORedisConfig"
+                        }
+                    ]
+                },
+                "Mashroom Messaging Services": {
+                    "type": "object",
+                    "properties": {
+                        "externalProvider": {
+                            "type": ["string", "null"],
+                            "description": "A plugin that connects to an external messaging system. Allows to receive messages from other systems and to send messages \"out\" (Default: null)"
+                        },
+                        "externalTopics": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of topic roots that should be considered as external.\nE.g. if the list contains _other-system_ topics published to _other-system/foo_ or _other-system/bar_ would be send via _externalProvider_. (Default: [])"
+                        },
+                        "userPrivateBaseTopic": {
+                            "type": "string",
+                            "description": "The base for private user topics.\nIf the prefix is _something/user_ the user _john_ would only be able to subscribe to _user/john/something_ and not to _something/user/thomas/weather-update_ (Default: user)"
+                        },
+                        "enableWebSockets": {
+                            "type": "boolean",
+                            "description": "Enable WebSocket support when mashroom-websocket is present (Default: true)"
+                        },
+                        "topicACL": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Access control list to restrict the use of certain topic patterns to specific roles (Default: ./topicACL.json)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Messaging External Provider AMQP": {
+                    "type": "object",
+                    "properties": {
+                        "internalRoutingKey": {
+                            "type": "string",
+                            "description": " The base routing key the server should use for internal messages.\nE.g. if the value is mashroom.test all messages published internally are prefixed with *mashroom.test* before published to the broker and at the same time this provider listens to mashroom.test.# for messages (Default: mashroom)"
+                        },
+                        "brokerTopicExchangePrefix": {
+                            "type": "string",
+                            "description": "The prefix for the topic exchange (default: /topic/ (RabbitMQ))"
+                        },
+                        "brokerTopicMatchAny": {
+                            "type": "string",
+                            "description": "The wildcard for match any words (default: # (RabbitMQ))"
+                        },
+                        "brokerHost": {
+                            "type": "string",
+                            "description": "AMQP broker host (Default: localhost)"
+                        },
+                        "brokerPort": {
+                            "type": "integer",
+                            "description": "AMQP broker port (Default: 5672)"
+                        },
+                        "brokerUsername": {
+                            "type": "string",
+                            "description": "AMQP broker username (optional)"
+                        },
+                        "brokerPassword": {
+                            "type": "string",
+                            "description": "AMQP broker password (optional)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Messaging External Provider MQTT": {
+                    "type": "object",
+                    "properties": {
+                        "internalTopic": {
+                            "type": "string",
+                            "description": "The base topic the server should use for internal messages.\nE.g. if the value is mashroom/test all messages published internally are prefixed with mashroom/test before published to MQTT and at the same time this provider listens to mashroom/test/# for messages (Default: mashroom)"
+                        },
+                        "mqttConnectUrl": {
+                            "type": "string",
+                            "description": "MQTT connect URL (Default: mqtt://localhost:1883)"
+                        },
+                        "mqttProtocolVersion": {
+                            "type": "integer",
+                            "enum": [3, 4],
+                            "description": "MQTT protocol version (Default: 4)"
+                        },
+                        "mqttQoS": {
+                            "type": "integer",
+                            "enum": [0, 1, 2],
+                            "description": "Quality of service level (Default: 1)"
+                        },
+                        "mqttUser": {
+                            "type": "string",
+                            "description": "Optional MQTT username (Default: null)"
+                        },
+                        "mqttPassword": {
+                            "type": "string",
+                            "description": "Optional MQTT password (Default: null)"
+                        },
+                        "rejectUnauthorized": {
+                            "type": "boolean",
+                            "description": "If you use mqtts or wss with a self signed certificate set it to false (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Monitoring Metrics Collector Services": {
+                    "type": "object",
+                    "properties": {
+                        "disableMetrics": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of metrics that should be disabled"
+                        },
+                        "defaultHistogramBuckets": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Default buckets for histogram metrics"
+                        },
+                        "customHistogramBucketConfig": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                }
+                            },
+                            "description": "Override the bucket configuration for histogram metrics"
+                        },
+                        "defaultSummaryQuantiles": {
+                            "type": "array",
+                            "items": {
+                                "type": "number"
+                            },
+                            "description": "Default quantiles for summary metrics"
+                        },
+                        "customSummaryQuantileConfig": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "number"
+                                    }
+                                }
+                            },
+                            "description": "Override the quantiles configuration for summary metrics"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Monitoring PM2 Exporter": {
+                    "type": "object",
+                    "properties": {
+                        "pmxMetrics": {
+                            "type": "object",
+                            "properties": {
+                                "v8": {
+                                    "type": "boolean"
+                                },
+                                "runtime": {
+                                    "type": "boolean"
+                                },
+                                "network": {
+                                    "type": "object",
+                                    "properties": {
+                                        "upload": {
+                                            "type": "boolean"
+                                        },
+                                        "download": {
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                "http": {
+                                    "type": "boolean"
+                                },
+                                "eventLoop": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "description": "Will be passed as metrics to https://github.com/keymetrics/pm2-io-apm/tree/master#configuration",
+                            "additionalProperties": false
+                        },
+                        "mashroomMetrics": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of Mashroom plugin metrics that should be exposed"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Monitoring Prometheus Exporter Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The path where the metrics will be exported (Default: /metrics)"
+                        },
+                        "enableGcStats": {
+                            "type": "boolean",
+                            "description": "Enable additional GC stats like 'runs total' and 'pause seconds total' (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal WebApp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The portal base path (Default: /portal)"
+                        },
+                        "adminApp": {
+                            "type": "string",
+                            "description": "The admin to use (Default: Mashroom Portal Admin App)"
+                        },
+                        "defaultTheme": {
+                            "type": "string",
+                            "description": "The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)"
+                        },
+                        "defaultLayout": {
+                            "type": "string",
+                            "description": "The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)"
+                        },
+                        "warnBeforeAuthenticationExpiresSec": {
+                            "type": "number",
+                            "description": "The time when the Portal should start to warn that the authentication is about to expire (Default: 120)"
+                        },
+                        "autoExtendAuthentication": {
+                            "type": "boolean",
+                            "description": "Automatically extend the authentication as long as the portal page is open (Default: false)"
+                        },
+                        "defaultProxyConfig": {
+                            "type": "object",
+                            "properties": {
+                                "sendUserHeaders": {
+                                    "type": "boolean",
+                                    "description": "Add the headers X-USER-NAME_, X-USER-DISPLAY-NAME and X-USER-EMAIL with data about the authenticated user to each request"
+                                },
+                                "sendPermissionsHeader": {
+                                    "type": "boolean",
+                                    "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions"
+                                },
+                                "addHeaders": {
+                                    "type": "object",
+                                    "description": "Add extra headers to every API call"
+                                },
+                                "restrictToRoles": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "description": "Optional list of roles that are permitted to access the proxy"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Optional default http proxy config for portal apps"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal Default Theme": {
+                    "type": "object",
+                    "properties": {
+                        "showEnvAndVersions": {
+                            "type": "boolean",
+                            "description": "Show the environment (NODE_ENV) and version information in the header (Default: false)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal Remote App Background Job": {
+                    "type": "object",
+                    "properties": {
+                        "cronSchedule": {
+                            "type": "string",
+                            "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
+                        },
+                        "socketTimeoutSec": {
+                            "type": "integer",
+                            "description": "Socket timeout when trying to reach the remote app (Default: 3)"
+                        },
+                        "registrationRefreshIntervalSec": {
+                            "type": "integer",
+                            "description": "Interval for refreshing known endpoints (Default: 600)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Portal Remote App Registry": {
+                    "type": "object",
+                    "properties": {
+                        "remotePortalAppUrls": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)"
+                        }
+                    }
+                },
+                "Mashroom Portal Remote App Registry Admin Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "showAddRemoteAppForm": {
+                            "type": "boolean",
+                            "description": " Show the 'Add a new Remote Portal App Endpoint' form in the Admin UI"
+                        }
+                    }
+                },
+                "Mashroom Portal Remote App Kubernetes Background Job": {
+                    "type": "object",
+                    "properties": {
+                        "cronSchedule": {
+                            "type": "string",
+                            "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
+                        },
+                        "k8sNamespaces": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The Kubernetes namespaces to scan (Default: [\"default\"])"
+                        },
+                        "socketTimeoutSec": {
+                            "type": "integer",
+                            "description": "Socket timeout when trying to the Kubernetes service (Default: 3)"
+                        },
+                        "refreshIntervalSec": {
+                            "type": "integer",
+                            "description": "The time in seconds after that a registered services show be re-checked (Default: 600)"
+                        },
+                        "serviceNameFilter": {
+                            "type": "string",
+                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
+                        },
+                        "accessViaClusterIP": {
+                            "type": "boolean",
+                            "description": "Access services via IP address and not via <name>.<namespace> (Default: false)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Security Services": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": " The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)"
+                        },
+                        "forwardQueryHintsToProvider": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of query parameters that should be forwarded during the authentication.\n   (will be added to the login or authorization URL)"
+                        },
+                        "acl": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The ACL for path based security restrictions (see below) (Default: ./acl.json)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Security Default Login Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The path of the login page (Default: /login)"
+                        },
+                        "loginFormTitle":  {
+                            "$ref": "#/definitions/I18NString",
+                            "description": "A custom title for the login form (Default is the server name)"
+                        },
+                        "styleFile":  {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Basic Wrapper Security Provider": {
+                    "type": "object",
+                    "properties": {
+                        "targetSecurityProvider": {
+                            "type": "string",
+                            "description": "The actual security provider that is used to login (Default: Mashroom Security Simple Provider)"
+                        },
+                        "onlyPreemptive": {
+                            "type": "boolean",
+                            "description": "Only use BASIC if it is sent preemptively if true. Otherwise, the plugin will send HTTP 401 which will trigger the Browser's login popup (Default: true)"
+                        },
+                        "realm": {
+                            "type": "string",
+                            "description": "The realm name that should be used if onlyPreemptive is false (Default: mashroom)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom LDAP Security Provider": {
+                    "type": "object",
+                    "required": ["serverUrl", "bindDN", "bindCredentials", "baseDN"],
+                    "properties": {
+                        "loginPage": {
+                            "$ref": "#/definitions/WebAppPathOrHttpUrl",
+                            "description": "The login URL to redirect to if the user is not authenticated (Default: /login)"
+                        },
+                        "serverUrl": {
+                            "type": "string",
+                            "description": "The LDAP server URL with protocol and port"
+                        },
+                        "ldapConnectTimeout": {
+                            "type": "integer",
+                            "description": "Connect timeout in ms (Default: 3000)"
+                        },
+                        "ldapTimeout": {
+                            "type": "integer",
+                            "description": "Timeout in ms (Default: 5000)"
+                        },
+                        "tlsOptions": {
+                            "type": ["object", "null"],
+                            "description": "TLS options if your LDAP server requires TLS. The options are passed to https://nodejs.org/api/tls.html but the file paths (e.g. for \"cert\") are resolved relatively to the server config"
+                        },
+                        "bindDN": {
+                            "type": "string",
+                            "description": "The bind user for searching"
+                        },
+                        "bindCredentials": {
+                            "type": "string",
+                            "description": "The password for the bind user"
+                        },
+                        "baseDN": {
+                            "type": "string",
+                            "description": "The base DN for searches (can be empty)"
+                        },
+                        "userSearchFilter": {
+                            "type": "string",
+                            "description": "The user search filter, @username@ will be replaced by the actual username entered in the login form"
+                        },
+                        "groupSearchFilter": {
+                            "type": "string",
+                            "description": "The group search filter (can be empty if you don't want to fetch the user groups)"
+                        },
+                        "extraDataMapping": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "string"
+                                }
+                            },
+                            "description": "Optionally map extra LDAP attributes to user.extraData. The key in the map is the extraData property, the value the LDAP attribute (Default: null)"
+                        },
+                        "secretsMapping": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^.*$": {
+                                    "type": "string"
+                                }
+                            },
+                            "description": "Optionally map extra LDAP attributes to user.secrets (Default: null)"
+                        },
+                        "groupToRoleMapping": {
+                            "type": "string",
+                            "description": "An optional JSON file that contains a user group to roles mapping (Default: /groupToRoleMapping.json)"
+                        },
+                        "userToRoleMapping": {
+                            "type": "string",
+                            "description": "An optional JSON file that contains a user name to roles mapping (Default: /userToRoleMapping.json)"
+                        },
+                        "authenticationTimeoutSec": {
+                            "type": "integer",
+                            "description": " The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session cookie.maxAge is greater than this value (Default: 1200)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom OpenID Connect Security Provider": {
+                    "type": "object",
+                    "required": ["clientSecret", "redirectUrl"],
+                    "properties": {
+                        "mode": {
+                            "type": "string",
+                            "enum": ["OIDC", "OAuth2"],
+                            "description": "Can be _OIDC_ (default) or _OAuth2_. Pure OAuth2 usually does not support permission roles (for authorization)"
+                        },
+                        "issuerDiscoveryUrl": {
+                            "type": ["string", "null"],
+                            "description": "The OpenID Connect Discovery URL, this is usually https://<your-idp-host>/.well-known/openid-configuration"
+                        },
+                        "issuerMetadata": {
+                            "type": ["object", "null"],
+                            "description": "The issuer metadata if no issuerDiscoveryUrl is available. Will be passed to the issuer constructor: https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer (Default: null)"
+                        },
+                        "scope": {
+                            "type": "string",
+                            "description": "The scope (permissions) to ask for (Default: openid email profile)"
+                        },
+                        "clientId": {
+                            "type": "string",
+                            "description": "The client to use (Default: mashroom)"
+                        },
+                        "clientSecret": {
+                            "type": "string",
+                            "description": "The client secret"
+                        },
+                        "redirectUrl": {
+                            "$ref": "#/definitions/HttpUrl",
+                            "description": "The full URL of the callback (as seen from the user). This is usually https://<mashroom-server-host>/openid-connect-cb"
+                        },
+                        "responseType": {
+                            "type": "string",
+                            "description": "The OpenID Connect response type (flow) to use (Default: code)"
+                        },
+                        "usePKCE": {
+                            "type": "boolean",
+                            "description": "Use the Proof Key for Code Exchange extension for the code flow (Default: false)"
+                        },
+                        "extraAuthParams": {
+                            "type": "object",
+                            "description": "Extra authentication parameters that should be used"
+                        },
+                        "extraDataMapping": {
+                            "type": "object",
+                            "description": "Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (Default: null)"
+                        },
+                        "rolesClaimName": {
+                            "type": "string",
+                            "description": "Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array (Default: roles)"
+                        },
+                        "adminRoles": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of user roles that should get the Mashroom _Administrator_ role (Default: [\"mashroom-admin\"])"
+                        },
+                        "httpRequestRejectUnauthorized": {
+                            "type": "boolean",
+                            "description": "Reject self-signed certificates when contacting the Authorization Server (Default: true)"
+                        },
+                        "httpRequestTimeoutMs": {
+                            "type": "integer",
+                            "description": "Request timeout when contacting the Authorization Server (Default: 3500)"
+                        },
+                        "httpRequestRetry": {
+                            "type": "integer",
+                            "description": "Number of retries when contacting the Authorization Server (Default: 0)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom OpenID Connect Security Provider Callback": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "Path of the callback"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Security Simple Provider": {
+                    "type": "object",
+                    "properties": {
+                        "users": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The path to the JSON file with user and role definitions (Default: ./users.json)"
+                        },
+                        "loginPage": {
+                            "$ref": "#/definitions/WebAppPathOrHttpUrl",
+                            "description": "The path to redirect to if a restricted resource is requested but the user not logged in yet (Default: /login)"
+                        },
+                        "authenticationTimeoutSec": {
+                            "type": "integer",
+                            "description": "The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session cookie.maxAge is greater than this value (Default: 1200)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Session Middleware": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": "The plugin from type session-store-provider that implements the store (Default: memory)"
+                        },
+                        "session": {
+                            "type": "object",
+                            "description": "The properties are just passed to express-session. See https://www.npmjs.com/package/express-session for possible options"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Session Filestore Provider": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "The directory where the session files will be stored (Default: ./data/sessions)"
+                        }
+                    },
+                    "description": "The config object will be passed to https://github.com/valery-barysok/session-file-store"
+                },
+                "Mashroom Session MongoDB Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/MongoDbConfig"
+                        },
+                        {
+                            "properties": {
+                                "collection": {
+                                    "type": "string",
+                                    "description": "The MongoDB collection to store sessions in (Default: sessions)"
+                                }
+                            }
+                        }
+                    ],
+                    "description": "All config options are passed to the connect-mongodb-session"
+                },
+                "Mashroom Session Redis Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/IORedisConfig"
+                        }
+                    ]
+                },
+                "Mashroom Storage Services": {
+                    "type": "object",
+                    "properties": {
+                        "provider": {
+                            "type": "string",
+                            "description": "The storage-provider plugin that implements the actual storage (Default: Mashroom Storage Filestore Provider)"
+                        },
+                        "memoryCache": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean",
+                                    "description": "Enable cache (of all) collections. The preferred way is to set this to false and enable caching per collection (Default: false)"
+                                },
+                                "ttlSec": {
+                                    "type": "integer",
+                                    "description": "The default TTL in seconds. Can be overwritten per collection (Default: 120)"
+                                },
+                                "invalidateOnUpdate": {
+                                    "type": "boolean",
+                                    "description": "Clear the cache for the whole collection if an entry gets updated (Default: true)"
+                                },
+                                "collections": {
+                                    "type": "object",
+                                    "patternProperties": {
+                                        "^.*$": {
+                                            "type": "object",
+                                            "properties": {
+                                                "enabled": {
+                                                    "type": "boolean"
+                                                },
+                                                "ttlSec": {
+                                                    "type": "integer"
+                                                },
+                                                "invalidateOnUpdate": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "description": "A map of collections specific settings"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Use the memory cache to improve the performance. Requires @mashroom/mashroom-memory-cache to be installed."
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Storage Filestore Provider": {
+                    "type": "object",
+                    "properties": {
+                        "dataFolder": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Folder to store the data files. The base for relative paths is the Mashroom config file (Default: ./data/storage)"
+                        },
+                        "checkExternalChangePeriodMs": {
+                            "type": "integer",
+                            "description": "Check JSON files for external changes after this period.\n   If you set this to a value <= 0 the file timestamp will be checked on every access which will cause (Default: 2000)"
+                        },
+                        "prettyPrintJson": {
+                            "type": "boolean",
+                            "description": "Pretty print the JSON files to make it human readable (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Storage MongoDB Provider": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/MongoDbConfig"
+                        }
+                    ]
+                },
+                "Mashroom VHost Path Mapper Middleware": {
+                    "type": "object",
+                    "required": ["hosts"],
+                    "properties": {
+                        "considerHttpHeaders": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": ""
+                        },
+                        "hosts": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^[^/]+$": {
+                                    "type": "object",
+                                    "properties": {
+                                        "frontendBasePath": {
+                                            "type": "string",
+                                            "pattern": "^/.*$",
+                                            "description": ""
+                                        },
+                                        "mapping": {
+                                            "type": "object",
+                                            "patternProperties": {
+                                                "^/.*$": {
+                                                    "type": "string",
+                                                    "pattern": "^/.*$"
+                                                }
+                                            },
+                                            "additionalProperties": false
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    }
+                },
+                "Mashroom WebSocket Webapp": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The path where the clients can connect (Default: /websocket)"
+                        },
+                        "reconnectMessageBufferFolder": {
+                            "oneOf": [
+                                {
+                                    "$ref": "#/definitions/PackagerRelativeOrSystemPath"
+                                },
+                                {
+                                    "type": "null"
+                                }
+                            ],
+                            "description": "The path where messages are temporary stored during client reconnect. When set to null or empty string, buffering is disabled (Default: null)"
+                        },
+                        "reconnectTimeoutSec": {
+                            "type": "integer",
+                            "description": "Time for how long are messages buffered during reconnect (Default: 5)"
+                        },
+                        "restrictToRoles": {
+                            "type": ["array", "null"],
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "An optional array of roles that are required to connect (Default: null)"
+                        },
+                        "enableKeepAlive": {
+                            "type": "boolean",
+                            "description": "Enable periodic keep alive messages to all clients.\nThis is useful if you want to prevent reverse proxies to close connections because of a read timeout (Default: true)"
+                        },
+                        "keepAliveIntervalSec": {
+                            "type": "integer",
+                            "description": "Interval for keepalive messages in seconds (Default: 15)"
+                        },
+                        "maxConnections": {
+                            "type": "integer",
+                            "description": "Max allowed WebSocket connections per node (Default: 2000)"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "description": "The server name"
+        },
+        "port": {
+            "type": "integer"
+        },
+        "indexPage": {
+            "type": "string",
+            "description": "The start page"
+        },
+        "xPowerByHeader": {
+            "type": "string",
+            "description": "The x-powered-by to send; null disables the header"
+        },
+        "tmpFolder": {
+            "type": "string",
+            "description": "The tmp folder for plugin builds and so on"
+        },
+        "pluginPackageFolders": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/PluginPackageFolder"
+            },
+            "description": "The plugin packages"
+        },
+        "devModeNpmExecutionTimeoutSec": {
+            "type": "integer",
+            "description": "Optional timeout for npm execution in dev mode (default 180)"
+        },
+        "ignorePlugins": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "uniqueItems": true,
+            "description": "An array of plugin names which shall be ignored"
+        },
+        "plugins": {
+            "$ref": "#/definitions/Plugins"
+        },
+        "$schema": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "pluginPackageFolders"
+    ],
+    "additionalProperties": false
+}

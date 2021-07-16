@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+
+    },
+    "type": "object",
+    "properties": {
+        "$schema": {
+            "type": "string"
+        },
+        "users": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "username": {
+                        "type": "string"
+                    },
+                    "displayName": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "pictureUrl": {
+                        "type": "string"
+                    },
+                    "passwordHash": {
+                        "type": "string",
+                        "description": "The SHA256 hash of the password"
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "extraData": {
+                        "type": "object",
+                        "description": "Will be mapped to user.extraData"
+                    },
+                    "secrets": {
+                        "type": "object",
+                        "description": "Will be mapped to user.secrets"
+                    }
+                },
+                "required": ["username", "passwordHash"],
+                "additionalProperties": true
+            }
+        }
+    },
+    "required": ["users"],
+    "additionalProperties": false
+}

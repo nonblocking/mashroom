@@ -1,0 +1,26 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Portal Page Enhancement",
+            "type": "portal-page-enhancement",
+            "bootstrap": "./dist/bootstrap.js",
+            "pageResources": {
+                "js": [{
+                    "path": "my-extra-scripts.js",
+                    "rule": "includeExtraScript",
+                    "location": "header",
+                    "inline": false
+                }],
+                "css": [{
+                    "path": "test.css"
+                }]
+            },
+            "defaultConfig": {
+                "order": 100,
+                "resourcesRoot": "./dist/public"
+            }
+        }
+    ]
+}

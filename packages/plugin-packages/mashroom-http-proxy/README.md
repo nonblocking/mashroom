@@ -58,8 +58,8 @@ You can override the default config in your Mashroom config file like this:
     }
 }
 ```
- * _forwardMethods_: The methods that should be forwarded
- * _forwardHeaders_: The http headers that should be forwarded. May contain a _*_ as wildcard.
+ * _forwardMethods_: The HTTP methods that should be forwarded
+ * _forwardHeaders_: The HTTP headers that should be forwarded. May contain a _*_ as wildcard.
  * _rejectUnauthorized_: Reject self-signed certificates (Default: true)
  * _poolMaxSockets_: Max pool size for connections (Default: 10)
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
@@ -115,7 +115,7 @@ To register your custom http-proxy-interceptor plugin add this to _package.json_
 }
 ```
 
-* _defaultConfig.order_: the weight of the middleware in the stack - the higher it is the **later** it will be executed (default: 1000)
+* _defaultConfig.order_: The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
 
 The bootstrap returns the interceptor:
 

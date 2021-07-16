@@ -1,4 +1,5 @@
 {
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-security-topic-acl.json",
     "external1/#": {
         "allow": "any",
         "deny": ["NotSoTrustedRole"]

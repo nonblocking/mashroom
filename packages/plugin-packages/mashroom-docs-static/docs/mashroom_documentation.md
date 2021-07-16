@@ -88,6 +88,7 @@ A _package.json_ with a _Mashroom Server_ plugin definition looks like this:
 
 ```json
 {
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-packagejson-extension.json",
     "name": "my-webapp",
     "version": "1.0.0",
     "dependencies": {
@@ -227,6 +228,7 @@ The typical configuration could look like this:
 
 ```json
 {
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-portal-remote-apps.json",
     "name": "Mashroom Test Server 1",
     "port": 8080,
     "indexPage": "/portal",

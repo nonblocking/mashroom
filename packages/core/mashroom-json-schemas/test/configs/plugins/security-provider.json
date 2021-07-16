@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Custom Security Provider",
+            "type": "security-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

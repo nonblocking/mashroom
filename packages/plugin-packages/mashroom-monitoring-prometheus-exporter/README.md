@@ -28,8 +28,8 @@ You can change the default configuration in your Mashroom config file like this:
 }
 ```
 
- * _path_: The path where the metrics will be exported (default: /metrics)
- * _enableGcStats_: Enable additional GC stats like _runs total_ and _pause seconds total_ (default: true)
+ * _path_: The path where the metrics will be exported (Default: /metrics)
+ * _enableGcStats_: Enable additional GC stats like _runs total_ and _pause seconds total_ (Default: true)
 
 ### Example Queries
 

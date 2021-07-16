@@ -1,0 +1,23 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "allOf": [
+        {
+            "$ref": "https://json.schemastore.org/package.json"
+        },
+        {
+            "properties": {
+                "mashroom": {
+                    "type": "object",
+                    "description": "Mashroom Server plugins",
+                    "allOf": [
+                        {
+                            "$ref": "./mashroom-plugins.json"
+                        }
+                    ]
+                }
+            }
+        }
+    ],
+    "required": ["mashroom"]
+}

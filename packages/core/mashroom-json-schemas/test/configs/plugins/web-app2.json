@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+
+            }
+        }
+    ]
+}

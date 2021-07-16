@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Background Job",
+            "type": "background-job",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "cronSchedule": "0/1 * * * *",
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

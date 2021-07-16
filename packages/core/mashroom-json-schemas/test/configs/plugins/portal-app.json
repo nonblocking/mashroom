@@ -1,0 +1,55 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Single Page App",
+            "title": {
+                "en": "My Single Page App",
+                "de": "Meine Single Page App"
+            },
+            "category": "My Category",
+            "tags": ["my", "stuff"],
+            "type": "portal-app",
+            "bootstrap": "startMyApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ],
+                "css": [
+                    "style.css"
+                ]
+            },
+            "sharedResources": {
+                "js": [
+                    "whatever.js"
+                ]
+            },
+            "screenshots": [
+                "screenshot1.png"
+            ],
+            "defaultConfig": {
+                "resourcesRoot": "./dist",
+                "defaultRestrictViewToRoles": ["Role1"],
+                "rolePermissions": {
+                    "doSomethingSpecial": ["Role2", "Role3"]
+                },
+                "restProxies": {
+                    "spaceXApi": {
+                        "targetUri": "https://api.spacexdata.com/v3",
+                        "sendUserHeaders": false,
+                        "sendPermissionsHeader": false,
+                        "addHeaders": {},
+                        "restrictToRoles": ["Role1"]
+                    }
+                },
+                "metaInfo": {
+                    "capabilities": ["foo"]
+                },
+                "appConfig": {
+                    "myProperty": "foo"
+                }
+            }
+        }
+    ]
+}

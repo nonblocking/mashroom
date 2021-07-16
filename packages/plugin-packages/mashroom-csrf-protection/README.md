@@ -49,7 +49,7 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
- * _safeMethods_: List of HTTP methods that require no CSRF token check
+ * _safeMethods_: List of HTTP methods that require no CSRF token check (Default: ["GET", "HEAD", "OPTIONS"]).
  * _saltLength_ and _secretLength_ are passed to the [csrf](https://www.npmjs.com/package/csrf) package.
 
 ## Services

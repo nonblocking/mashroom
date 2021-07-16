@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My API",
+            "type": "api",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "path": "/my/api",
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

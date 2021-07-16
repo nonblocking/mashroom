@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Memory Cache Provider",
+            "type": "memory-cache-provider",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+            }
+        }
+    ]
+}

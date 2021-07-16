@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+
+            "type": "plugin-loader",
+            "loads": "my-custom-plugin",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+
+            }
+        }
+    ]
+}

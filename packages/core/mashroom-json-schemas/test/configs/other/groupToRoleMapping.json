@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schemas/mashroom-security-ldap-provider-group-to-role-mapping.json",
+    "mashroom-admin": [
+        "Administrator"
+    ],
+    "group1": [
+        "Role1",
+        "Role2"
+    ],
+    "group2": [
+        "Role3"
+    ]
+}

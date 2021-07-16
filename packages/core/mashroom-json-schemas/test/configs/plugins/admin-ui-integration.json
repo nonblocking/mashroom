@@ -1,0 +1,20 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Admin UI Integration",
+            "type": "admin-ui-integration",
+            "requires": [
+                "My Admin Panel"
+            ],
+            "target": "My Admin Panel",
+            "defaultConfig": {
+                "menuTitle": "My Admin Panel",
+                "path": "/my-admin-panel",
+                "height": "80vh",
+                "weight": 10000
+            }
+        }
+    ]
+}

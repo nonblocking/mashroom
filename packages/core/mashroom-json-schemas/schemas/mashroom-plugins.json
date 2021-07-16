@@ -1,0 +1,1138 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "definitions": {
+        "I18NString": {
+            "oneOf": [
+                {
+                    "type": "string"
+                },
+                {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-z]{2}$": {
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        },
+        "PluginType": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+        },
+        "WebAppPath": {
+            "type": "string",
+            "pattern": "^/[a-zA-Z0-9-_/]+$"
+        },
+        "PackagerRelativePath": {
+            "type": "string",
+            "pattern": "^\\./.*$"
+        },
+        "PackagerRelativeOrSystemPath": {
+            "type": "string",
+            "pattern": "^(\\./|\\../|/|[a-zA-Z]:/).*$"
+        },
+        "PackagerRelativeOrSystemPathOrHttpOrFtp": {
+            "type": "string",
+            "pattern": "^(\\./|\\../|/|http://|https://|ftp://|ftps://).*$"
+        },
+        "HttpUrl": {
+            "type": "string",
+            "pattern": "^(http://|https://).*$"
+        },
+        "JavaScriptIdentifier": {
+            "type": "string",
+            "pattern": "^[a-zA-Z_]\\w+$"
+        },
+        "AppResources": {
+            "type": "object",
+            "properties": {
+                "js": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[^/].*\\.js$"
+                    },
+                    "description": "JavaScript resources. Relative to resourcesRoot"
+                },
+                "css": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[^/].*\\.css$"
+                    },
+                    "description": "CSS resources. Relative to resourcesRoot"
+                }
+            },
+            "required": ["js"],
+            "additionalProperties": false
+        },
+        "PageEnhancementResources": {
+            "type": "object",
+            "properties": {
+                "js": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "path": {
+                                "type": "string",
+                                "pattern": "^[^/].*\\.js$"
+                            },
+                            "rule": {
+                                "type": "string",
+                                "description": "Optional rule property refers to a rule in the instantiated plugin (bootstrap)"
+                            },
+                            "location": {
+                                "type": "string",
+                                "enum": ["header", "footer"],
+                                "description": "The location of the script"
+                            },
+                            "inline": {
+                                "type": "boolean",
+                                "description": "Inline the script"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["path"]
+                    }
+                },
+                "css": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "path": {
+                                "type": "string",
+                                "pattern": "^[^/].*\\.css$"
+                            },
+                            "rule": {
+                                "type": "string",
+                                "description": "Optional rule property refers to a rule in the instantiated plugin (bootstrap)"
+                            },
+                            "location": {
+                                "type": "string",
+                                "enum": ["header", "footer"],
+                                "description": "The location of the style"
+                            },
+                            "inline": {
+                                "type": "boolean",
+                                "description": "Inline the style"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["path"]
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "MashroomPluginLoaderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "plugin-loader"
+                },
+                "loads": {
+                    "$ref": "#/definitions/PluginType",
+                    "description": "The plugin type this loader can load"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "loads", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomWebAppPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "web-app"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomWebAppPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The default path where the WebApp will be available"
+                        }
+                    },
+                    "required": ["path"]
+                }
+            },
+            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomApiPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "api"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomApiPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The default path where the API will be available"
+                        }
+                    },
+                    "required": ["path"]
+                }
+            },
+            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomMiddlewarePluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "middleware"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomMiddlewarePluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "order": {
+                            "type": "number",
+                            "description": "The weight of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)"
+                        }
+                    }
+                }
+            },
+            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomStaticPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "static"
+                },
+                "documentRoot": {
+                    "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                    "description": "Defines the local root path of the documents"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The default path where the static documents will be available"
+                        }
+                    },
+                    "required": ["path"]
+                }
+            },
+            "required": ["name", "type", "documentRoot", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomServicesPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "services"
+                },
+                "namespace": {
+                    "$ref": "#/definitions/JavaScriptIdentifier",
+                    "description": "Defines the path to the services. The services ill be accessible through pluginContext.services.myNamespace.service"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomServicesPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "namespace", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomAdminUiIntegrationPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "admin-ui-integration"
+                },
+                "target": {
+                    "type": "string",
+                    "description": "The actual web-app or static plugin that should be integrated"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "menuTitle": {
+                            "type": "string",
+                            "description": "The name that should be appear in the Admin UI menu"
+                        },
+                        "path": {
+                            "$ref": "#/definitions/WebAppPath",
+                            "description": "The path in the Admin UI (full path will be /mashroom/admin/ext/<your path>)"
+                        },
+                        "height": {
+                            "type": "string",
+                            "description": "The height of the iframe that will contain the target webapp (Default: 80vh)"
+                        },
+                        "weight": {
+                            "type": "integer",
+                            "description": "The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)"
+                        }
+                    },
+                    "required": ["menuTitle", "path"]
+                }
+            },
+            "required": ["name", "type", "target", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomBackgroundJobPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "background-job"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomBackgroundJobPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "cronSchedule": {
+                            "type": "string",
+                            "description": "The execution schedule for the job, must be a valid cron expression, see: https://github.com/node-cron/node-cron"
+                        }
+                    },
+                    "required": ["cronSchedule"]
+                }
+            },
+            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomExternalMessagingProviderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "external-messaging-provider"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomMessagingExternalProvider"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomHttpProxyInterceptorPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "http-proxy-interceptor"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomHttpProxyInterceptorPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "order": {
+                            "type": "integer",
+                            "description": "The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)"
+                        }
+                    }
+                }
+            },
+            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomMemoryCacheProviderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "memory-cache-provider"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomMemoryCacheProviderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomPortalAppPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-app"
+                },
+                "title": {
+                    "$ref": "#/definitions/I18NString",
+                    "description": "Optional human readable title of the App. Can be a string or an object with translations."
+                },
+                "category": {
+                    "type": "string",
+                    "description": "An optional category to group the Apps in the Admin App"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of tags that can also be used in the search (in the Admin App)"
+                },
+                "resources": {
+                    "$ref": "#/definitions/AppResources",
+                    "description": ""
+                },
+                "sharedResources": {
+                    "$ref": "#/definitions/AppResources",
+                    "description": ""
+                },
+                "screenshots": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[^/].*\\.(png|jpg|jpeg|gif|svg)$"
+                    },
+                    "description": "Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/JavaScriptIdentifier",
+                    "description": "A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "resourcesRoot": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPathOrHttpOrFtp",
+                            "description": "The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI."
+                        },
+                        "defaultRestrictViewToRoles": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Optional default list of roles that have the VIEW permission if not set via Admin App."
+                        },
+                        "rolePermissions": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^[a-zA-Z_]\\w+$":{
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App"
+                        },
+                        "restProxies": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^[a-zA-Z_]\\w+$":{
+                                    "type": "object",
+                                    "properties": {
+                                        "targetUri": {
+                                            "$ref": "#/definitions/HttpUrl",
+                                            "description": " The API target URI"
+                                        },
+                                        "sendUserHeaders": {
+                                            "type": "boolean",
+                                            "description": "Optional. Add the headers X-USER-NAME, X-USER-DISPLAY-NAME and X-USER-EMAIL with data about the authenticated user to each request (Default: false)"
+                                        },
+                                        "sendPermissionsHeader": {
+                                            "type": "boolean",
+                                            "description": "Optional. Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
+                                        },
+                                        "addHeaders": {
+                                            "type": "object",
+                                            "description": "Optional. Add extra headers to every API call"
+                                        },
+                                        "restrictToRoles": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "description": "Optional list of roles that are permitted to access the proxy"
+                                        }
+                                    },
+                                    "required": ["targetUri"]
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "metaInfo": {
+                            "type": "object",
+                            "description": "Optional meta info that could be used to lookup for Apps with specific features or capabilities"
+                        },
+                        "appConfig": {
+                            "type": "object",
+                            "description": "The default configuration that will be passed to the App. Can be adapted in the Admin App"
+                        }
+                    },
+                    "required": ["resourcesRoot"]
+                }
+            },
+            "required": ["name", "type", "resources", "bootstrap", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomPortalThemePluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-theme"
+                },
+                "resourcesRoot": {
+                    "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                    "description": "Folder that contains assets (can be accessed in the theme via resourcesBasePath)"
+                },
+                "views": {
+                    "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                    "description": "The folder with the views. There must exist a view  portal which renders a portal page"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomPortalThemePluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "resourcesRoot", "views", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomPortalLayoutsPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-layouts"
+                },
+                "layouts": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^.*$": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "description": " A map with the layout html files (on the local file system)"
+                }
+            },
+            "required": ["name", "type", "layouts"],
+            "additionalProperties": false
+        },
+        "MashroomRemotePortalAppRegistryPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "remote-portal-app-registry"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Script that exports MashroomRemotePortalAppRegistryBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "priority": {
+                            "type": "integer",
+                            "description": "Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)"
+                        }
+                    }
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomPortalPageEnhancementPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-page-enhancement"
+                },
+                "pageResources": {
+                    "$ref": "#/definitions/PageEnhancementResources",
+                    "description": "A list of JavaScript and CSS resourced that should be added to all portal pages"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Optional script that exports MashroomPortalPageEnhancementPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "priority": {
+                            "type": "integer",
+                            "description": "The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)"
+                        },
+                        "resourcesRoot": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPathOrHttpOrFtp",
+                            "description": "The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI."
+                        }
+                    },
+                    "required": ["resourcesRoot"]
+                }
+            },
+            "required": ["name", "type", "pageResources", "defaultConfig"],
+            "additionalProperties": false
+        },
+        "MashroomPortalAppEnhancementPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-app-enhancement"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Optional script that exports MashroomPortalAppEnhancementPluginBootstrapFunction"
+                },
+                "portalCustomClientServices": {
+                    "type": "object",
+                    "patternProperties": {
+                        "^[a-zA-Z_]\\w+$":{
+                            "$ref": "#/definitions/JavaScriptIdentifier"
+                        }
+                    },
+                    "additionalProperties": false,
+                    "description": "A map of client services that should be injected in the clientServices object the Portal Apps receive.\nThe value needs to be an existing global variable on the page (in window)"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomSecurityProviderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "security-provider"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Optional script that exports MashroomSecurityProviderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomSessionStoreProviderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "session-store-provider"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Optional script that exports MashroomSessionStoreProviderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomStorageProviderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "storage-provider"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackagerRelativePath",
+                    "description": "Optional script that exports MashroomStoragePluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"],
+            "additionalProperties": false
+        },
+        "MashroomPlugins": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/MashroomPluginLoaderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomWebAppPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomApiPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomMiddlewarePluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomStaticPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomServicesPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomAdminUiIntegrationPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomBackgroundJobPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomExternalMessagingProviderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomHttpProxyInterceptorPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomMemoryCacheProviderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalAppPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalThemePluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalLayoutsPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomRemotePortalAppRegistryPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalPageEnhancementPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalAppEnhancementPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomSecurityProviderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomSessionStoreProviderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomStorageProviderPluginDefinition"
+                }
+            ]
+        }
+    },
+    "type": "object",
+    "properties": {
+        "devModeBuildScript": {
+            "type": "string"
+        },
+        "plugins": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/MashroomPlugins"
+            }
+        },
+        "$schema": {
+            "type": "string"
+        }
+    },
+    "required": ["plugins"],
+    "additionalProperties": false
+}

@@ -35,7 +35,9 @@ and the plugin like this:
                  }
               },
               "localhost:8080": {
-                 "/": "/local-test"
+                 "mapping": {
+                     "/": "/local-test"
+                 }
               }
           }
        }

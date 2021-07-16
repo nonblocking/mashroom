@@ -275,7 +275,7 @@ To register a middleware plugin add this to package.json:
 }
 ```
 
- * _defaultConfig.order_: the weight of the middleware in the stack - the higher it is the **later** it will be executed (default: 1000)
+ * _defaultConfig.order_: The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
 
 And the bootstrap just returns the *Express* middleware:
 
@@ -389,10 +389,10 @@ To register an admin-ui-integration plugin add this to package.json:
 * _target_: The actual web-app or static plugin that should be integrated
 * _defaultConfig.menuTitle_: The name that should be appear in the Admin UI menu
 * _defaultConfig.path_: The path in the Admin UI (full path will be /mashroom/admin/ext/\<your path>)
-* _defaultConfig.height_: The height of the iframe that will contain the target webapp.
+* _defaultConfig.height_: The height of the iframe that will contain the target webapp (Default: 80vh)
   If you want that the iframe has the full height of the webapp you have to post the height periodically to
   the parent, like so
   ```js
     parent.postMessage({ height: contentHeight + 20 }, "*");
   ```
- * _defaultConfig.weight_: The weight of the menu entry, the higher the number the lower will be menu entry be.
+ * _defaultConfig.weight_: The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)

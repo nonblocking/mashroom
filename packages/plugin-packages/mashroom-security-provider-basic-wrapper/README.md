@@ -38,8 +38,8 @@ And configure this plugin like this in the Mashroom config file:
 }
 ```
 
- * _targetSecurityProvider_: The actual security provider that is used to login
+ * _targetSecurityProvider_: The actual security provider that is used to login (Default: Mashroom Security Simple Provider)
  * _onlyPreemptive_: Only use BASIC if it is sent preemptively if true. Otherwise, the plugin will send HTTP 401 and *WWW-Authenticate*
-   which will trigger the Browser's login popup.
- * _realm_: The realm name that should be used if _onlyPreemptive_ is false.
+   which will trigger the Browser's login popup (Default: true)
+ * _realm_: The realm name that should be used if _onlyPreemptive_ is false (Default: mashroom)
 

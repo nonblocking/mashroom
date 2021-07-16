@@ -1,0 +1,13 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My External Messaging Provider",
+            "type": "external-messaging-provider",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+            }
+        }
+    ]
+}

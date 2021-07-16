@@ -1,0 +1,22 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Single Page App",
+            "category": "My Category",
+            "type": "portal-app",
+            "bootstrap": "startMyApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "defaultConfig": {
+                "appConfig": {
+                    "myProperty": "foo"
+                }
+            }
+        }
+    ]
+}

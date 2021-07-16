@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Remote Portal App Registry",
+            "type": "remote-portal-app-registry",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "priority": 100,
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

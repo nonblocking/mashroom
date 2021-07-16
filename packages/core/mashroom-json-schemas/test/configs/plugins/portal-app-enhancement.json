@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Portal App Enhancement",
+            "type": "portal-app-enhancement",
+            "bootstrap": "./dist/bootstrap.js",
+            "portalCustomClientServices": {
+                "customService": "MY_CUSTOM_SERVICE"
+            }
+        }
+    ]
+}

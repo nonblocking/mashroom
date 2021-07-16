@@ -1,0 +1,318 @@
+{
+    "$schema": "../../../schemas/mashroom-server-config.json",
+    "name": "Mashroom Test Server 1",
+    "port": 5050,
+    "pluginPackageFolders": [
+        {
+            "path": "../../plugin-packages",
+            "devMode": true
+        },
+        {
+            "path": "../../../../mashroom-plugin-demos/packages",
+            "devMode": true
+        }
+    ],
+    "indexPage": "/",
+    "ignorePlugins": [
+        "Mashroom Storage MongoDB Provider"
+    ],
+    "plugins": {
+        "Mashroom Browser Cache Services": {
+            "maxAgeSec": 2000
+        },
+        "Mashroom CSRF Middleware": {
+            "safeMethods": ["GET", "OPTIONS"]
+        },
+        "Mashroom Error Pages Middleware": {
+            "mapping": {
+                "404": "./abcd/not-found.html",
+                "403": "https://forbidden.test.de"
+            }
+        },
+        "Mashroom Helmet Middleware": {
+            "helmet": {
+                "contentSecurityPolicy": true
+            }
+        },
+        "Mashroom Http Proxy Services": {
+            "proxyImpl": "nodeHttpProxy"
+        },
+        "Mashroom Internationalization Services": {
+            "availableLanguages": ["de", "en"],
+            "defaultLanguage": "de",
+            "messages": "./path/to/messages"
+        },
+        "Mashroom Memory Cache Services": {
+            "defaultTTLSec": 20,
+            "provider": "Mashroom Memory Cache Redis Provider"
+        },
+        "Mashroom Memory Cache Redis Provider": {
+            "cluster": true,
+            "clusterNodes": [
+                {
+                    "host": "redis-node1",
+                    "port": "6379"
+                },
+                {
+                    "host": "redis-node2",
+                    "port": "6379"
+
+                }
+            ],
+            "clusterOptions": {
+                "maxRedirections": 3
+            },
+            "redisOptions": {
+                "keyPrefix": "mashroom:cache:"
+            }
+        },
+        "Mashroom Messaging Services": {
+            "externalProvider": "Mashroom Messaging External Provider MQTT",
+            "externalTopics": ["external1", "external2"],
+            "userPrivateBaseTopic": "user",
+            "enableWebSockets": true,
+            "topicACL": "./topicACL.json"
+        },
+        "Mashroom Messaging External Provider MQTT": {
+            "internalTopic": "mashroom",
+            "mqttConnectUrl": "mqtt://localhost:1883",
+            "mqttProtocolVersion": 4,
+            "mqttQoS": 1
+        },
+        "Mashroom Messaging External Provider AMQP": {
+            "internalRoutingKey": "mashroom",
+            "brokerTopicExchangePrefix": "/topic/",
+            "brokerTopicMatchAny": "#",
+            "brokerHost": "localhost",
+            "brokerPort": 5672,
+            "brokerUsername": "admin",
+            "brokerPassword": "admin"
+        },
+        "Mashroom Monitoring Metrics Collector Services": {
+            "disableMetrics": [],
+            "defaultHistogramBuckets": [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5, 10],
+            "customHistogramBucketConfig": {
+                "mashroom_http_request_duration_seconds": [0.1, 1, 10]
+            },
+            "defaultSummaryQuantiles": [0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999],
+            "customSummaryQuantileConfig": {
+                "foo": [0.1, 1]
+            }
+        },
+        "Mashroom Monitoring PM2 Exporter": {
+            "pmxMetrics": {
+                "v8": true,
+                "runtime": true,
+                "network": {
+                    "upload": true,
+                    "download": true
+                },
+                "http": true,
+                "eventLoop": true
+            },
+            "mashroomMetrics": [
+                "mashroom_plugins_total",
+                "mashroom_plugins_loaded_total",
+                "mashroom_plugins_error_total"
+            ]
+        },
+        "Mashroom Monitoring Prometheus Exporter Webapp": {
+            "path": "/myMetricsPath",
+            "enableGcStats": true
+        },
+        "Mashroom Portal WebApp": {
+            "path": "/portal",
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
+            "warnBeforeAuthenticationExpiresSec": 120,
+            "autoExtendAuthentication": false,
+            "defaultProxyConfig": {
+                "sendUserHeaders": false,
+                "sendPermissionsHeader": false,
+                "addHeaders": {
+                    "test": "2"
+                },
+                "restrictToRoles": ["ROLE_X"]
+            }
+        },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": true
+        },
+        "Mashroom Portal Remote App Background Job": {
+            "cronSchedule": "0/1 * * * *",
+            "socketTimeoutSec": 3,
+            "registrationRefreshIntervalSec": 600
+        },
+        "Mashroom Portal Remote App Registry": {
+            "remotePortalAppUrls": "./remote-portal-apps.json"
+        },
+        "Mashroom Portal Remote App Registry Admin Webapp": {
+            "showAddRemoteAppForm": true
+        },
+        "Mashroom Portal Remote App Kubernetes Background Job": {
+            "cronSchedule": "0/1 * * * *",
+            "k8sNamespaces": ["default"],
+            "socketTimeoutSec": 3,
+            "refreshIntervalSec": 300,
+            "serviceNameFilter": "(microfrontend-|widget-)",
+            "accessViaClusterIP": false
+        },
+        "Mashroom Security Services": {
+            "provider": "Mashroom Security Simple Provider",
+            "forwardQueryHintsToProvider": ["foo"],
+            "acl": "c:/acl.json"
+        },
+        "Mashroom Security Default Login Webapp": {
+            "path": "/my-login-page",
+            "loginFormTitle": "Login",
+            "styleFile": "./login_style.css"
+        },
+        "Mashroom Security Simple Provider": {
+            "users": "./users.json",
+            "loginPage": "/login",
+            "authenticationTimeoutSec": 1200
+        },
+        "Mashroom LDAP Security Provider": {
+            "loginPage": "/login",
+            "serverUrl": "ldap://my-ldap-server:636",
+            "ldapConnectTimeout": 3000,
+            "ldapTimeout": 5000,
+            "bindDN": "uid=mashroom,dc=nonblocking,dc=at",
+            "bindCredentials": "secret",
+            "baseDN": "ou=users,dc=nonblocking,dc=at",
+            "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
+            "groupSearchFilter": "(objectClass=group)",
+            "extraDataMapping": {
+                "mobile": "mobile",
+                "address": "postalAddress"
+            },
+            "secretsMapping": {
+                "internalUserId": "uid"
+            },
+            "groupToRoleMapping": "./groupToRoleMapping.json",
+            "userToRoleMapping": "./userToRoleMapping.json",
+            "authenticationTimeoutSec": 1200
+        },
+        "Mashroom OpenID Connect Security Provider": {
+            "mode": "OIDC",
+            "issuerDiscoveryUrl": "http://localhost:8080/.well-known/openid-configuration",
+            "issuerMetadata": null,
+            "scope": "openid email profile",
+            "clientId": "mashroom",
+            "clientSecret": "your-client-secret",
+            "redirectUrl": "http://localhost:5050/openid-connect-cb",
+            "responseType": "code",
+            "usePKCE": false,
+            "extraAuthParams": {},
+            "extraDataMapping": {
+                "phone": "phone",
+                "birthdate": "birthdate",
+                "updatedAt": "updated_at"
+            },
+            "rolesClaimName": "roles",
+            "adminRoles": [
+                "mashroom-admin"
+            ],
+            "httpRequestRejectUnauthorized": true,
+            "httpRequestTimeoutMs": 3500,
+            "httpRequestRetry": 0
+        },
+        "Mashroom OpenID Connect Security Provider Callback": {
+            "path": "/openid-connect-cb"
+        },
+        "Mashroom Basic Wrapper Security Provider": {
+            "targetSecurityProvider": "Mashroom Security Simple Provider",
+            "onlyPreemptive": true,
+            "realm": "mashroom"
+        },
+        "Mashroom Session Middleware": {
+            "provider": "Mashroom Session Filestore Provider",
+            "session": {
+                "secret": "EWhQ5hvETGkqvPDA",
+                "resave": false,
+                "saveUninitialized": false,
+                "cookie": {
+                    "maxAge": 1200000,
+                    "httpOnly": true,
+                    "secure": false,
+                    "sameSite": false
+                }
+            }
+        },
+        "Mashroom Session Filestore Provider": {
+            "path": "../../data/sessions",
+            "retries": 10
+        },
+        "Mashroom Session MongoDB Provider": {
+            "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
+            "collection": "sessions",
+            "expires": 123123123213,
+            "connectionOptions": {
+                "poolSize": 5,
+                "useUnifiedTopology": true,
+                "useNewUrlParser": true
+            }
+        },
+        "Mashroom Session Redis Provider": {
+            "redisOptions": {
+                "host": "localhost",
+                "port": "6379",
+                "keyPrefix": "mashroom:sess:"
+            }
+        },
+        "Mashroom Storage Services": {
+            "provider": "Mashroom Storage Filestore Provider",
+            "memoryCache": {
+                "enabled": false,
+                "ttlSec": 120,
+                "invalidateOnUpdate": true,
+                "collections": {
+                    "mashroom-portal-pages": {
+                        "enabled": true,
+                        "ttlSec": 300
+                    }
+                }
+            }
+        },
+        "Mashroom Storage Filestore Provider": {
+            "dataFolder": "/var/mashroom/data/storage",
+            "checkExternalChangePeriodMs": 2000,
+            "prettyPrintJson": true
+        },
+        "Mashroom Storage MongoDB Provider": {
+            "uri": "mongodb://user:xxxxx@localhost:27017/mashroom_storage_db",
+            "connectionOptions": {
+                "poolSize": 5,
+                "useUnifiedTopology": true,
+                "useNewUrlParser": true
+            }
+        },
+        "Mashroom VHost Path Mapper Middleware": {
+            "considerHttpHeaders": ["x-my-custom-host-header", "x-forwarded-host"],
+            "hosts": {
+                "www.my-company2.com": {
+                    "frontendBasePath": "/web",
+                    "mapping": {
+                        "/login": "/login",
+                        "/": "/portal/public-site"
+                    }
+                },
+                "localhost:8080": {
+                    "mapping": {
+                        "/": "/local-test"
+                    }
+                }
+            }
+        },
+        "Mashroom WebSocket Webapp": {
+            "path": "/websocket",
+            "reconnectMessageBufferFolder": "./data/websocket-message-buffer",
+            "reconnectTimeoutSec": 5,
+            "restrictToRoles": ["WebSocketRole"],
+            "enableKeepAlive": true,
+            "keepAliveIntervalSec": 15,
+            "maxConnections": 2000
+        }
+    }
+}

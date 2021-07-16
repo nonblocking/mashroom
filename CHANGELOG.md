@@ -3,6 +3,32 @@
 
 ## [unreleased]
 
+ * Introduced JSON Schemas for all config files:
+    * package.json: schemas/mashroom-packagejson-extension.json
+    * mashroom.json (Server config): schemas/mashroom-server-config.json
+    * acl.json: schemas/mashroom-security-acl.json
+    * groupToRoleMapping.json: schemas/mashroom-security-ldap-provider-group-to-role-mapping.json
+    * userToRoleMapping.json: schemas/mashroom-security-ldap-provider-user-to-role-mapping.json
+    * users.json: schemas/mashroom-security-simple-provider-users.json
+    * topicACL.json: schemas/mashroom-security-topic-acl.json
+    * remotePortalApps.json: schemas/mashroom-portal-remote-apps.json
+   The schema can be applied by adding *@mashroom/mashroom-json-schemas* to your dependencies:
+   ```json
+   {
+      "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-packagejson-extension.json",
+      "name": "my-package"
+   }
+   ```
+   or by using the remote location:
+   ```json
+   {
+      "$schema": "https://www.mashroom-server.com/schemas/mashroom-packagejson-extension.json",
+      "name": "my-package"
+   }
+   ```
+ * **BREAKING CHANGE**: All default config file names are now camel case. The following config files had been renamed:
+    * remote-portal-apps.json -> remotePortalApps.json
+    * topic_acl.json -> topicACL.json
  * Tabify App: Added the possibility to have fixed titles for the tabs (appConfig.fixedTabTitles)
  * Portal: Added *metaInfo* and *screenshots* to *MashroomPortalAppService.getAvailableApps()* response.
    This allows an App to launch another App based on metadata and could be used to show a preview image.

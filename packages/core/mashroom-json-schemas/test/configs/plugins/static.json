@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Static Plugin",
+            "type": "static",
+            "documentRoot": "./my-documents",
+            "defaultConfig": {
+                "path": "/my/docs"
+            }
+        }
+    ]
+}

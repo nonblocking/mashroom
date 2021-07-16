@@ -28,7 +28,7 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _provider_: The name of the provider. Default is *local* which uses the local Node.js memory.
- * _defaultTTLSec_: The default TTL in seconds (default: 10)
+ * _defaultTTLSec_: The default TTL in seconds (Default: 10)
 
 ## Services
 

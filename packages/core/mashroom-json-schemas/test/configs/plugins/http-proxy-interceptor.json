@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Http Proxy Interceptor",
+            "type": "http-proxy-interceptor",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "order": 500,
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

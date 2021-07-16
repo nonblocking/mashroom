@@ -19,7 +19,7 @@ The plugin allows the following configuration properties:
 ```json
 {
   "plugins": {
-        "Plugin: Mashroom Portal WebApp": {
+        "Mashroom Portal WebApp": {
             "path": "/portal",
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
@@ -40,12 +40,12 @@ The plugin allows the following configuration properties:
 ```
 
  * _path_: The portal base path (Default: /portal)
- * _adminApp_: The admin to use (Default: /Mashroom Portal Admin App)
+ * _adminApp_: The admin to use (Default: Mashroom Portal Admin App)
  * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
- * _warnBeforeAuthenticationExpiresSec_: Defines when the the Portal should start to warn that the authentication is about to expire
- * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (use with care)
- * _defaultProxyConfig_: Optinal default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
+ * _warnBeforeAuthenticationExpiresSec_: The time when the Portal should start to warn that the authentication is about to expire (Default: 120)
+ * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
+ * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
 
 ## Browser support
@@ -192,17 +192,18 @@ To register a new portal-app plugin add this to _package.json_:
 
 ```json
 {
-     "mashroom": {
+    "mashroom": {
         "plugins": [
-           {
+            {
                 "name": "My Single Page App",
                 "title": {
                     "en": "My Single Page App",
                     "de": "Meine Single Page App"
                 },
+                "category": "My Category",
+                "tags": ["my", "stuff"],
                 "type": "portal-app",
                 "bootstrap": "startMyApp",
-                "category": "My Category",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -210,12 +211,21 @@ To register a new portal-app plugin add this to _package.json_:
                     "css": []
                 },
                 "sharedResources": {
+                    "js": []
                 },
+                "screenshots": [
+                    "screenshot1.png"
+                ],
                 "defaultConfig": {
                     "resourcesRoot": "./dist",
-                    "defaultRestrictViewToRoles": ["Role1"],
+                    "defaultRestrictViewToRoles": [
+                        "Role1"
+                    ],
                     "rolePermissions": {
-                        "doSomethingSpecial": ["Role2", "Role3"]
+                        "doSomethingSpecial": [
+                            "Role2",
+                            "Role3"
+                        ]
                     },
                     "restProxies": {
                         "spaceXApi": {
@@ -223,8 +233,10 @@ To register a new portal-app plugin add this to _package.json_:
                             "sendUserHeaders": false,
                             "sendPermissionsHeader": false,
                             "addHeaders": {},
-                            "restrictToRoles": ["Role1"]
-                       }
+                            "restrictToRoles": [
+                                "Role1"
+                            ]
+                        }
                     },
                     "metaInfo": null,
                     "appConfig": {
@@ -233,35 +245,37 @@ To register a new portal-app plugin add this to _package.json_:
                 }
             }
         ]
-     }
+    }
 }
 ```
 
- * _title_: Optional human readable title of the App. Can be a string or a object with translations.
- * _category_: An optional category to group the apps in the admin app
- * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked
+ * _title_: Optional human readable title of the App. Can be a string or an object with translations.
+ * _category_: An optional category to group the Apps in the Admin App
+ * _tags: A list of tags that can also be used in the search (in the Admin App)
+ * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
  * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
     This is useful if apps want to share vendor libraries or styles or such.
     Here you can find a demo how to use the *Webpack* *DllPlugin* together with this feature: [Mashroom Demo Shared DLL](https://github.com/nonblocking/mashroom-demo-shared-dll)
+ * _screenshots_: Optional some screenshots of the App. The screenshots paths are relative to *resourcesRoot*.
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
      * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI.
      * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
        Use this to prevent that an App can just be loaded via JS API (dynamically) by any user, even an anonymous one
        (if that is a problem).
-     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the app.
+     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
      * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
-         * _targetUri_: The target URI
-         * _sendUserHeader_: Optional. Adds the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user to each request.
-         * _sendPermissionsHeader_: Optional. Adds the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_.
-         * _addHeaders_: Optional. Can be used to add some extra headers to each request.
+         * _targetUri_: The API target URI
+         * _sendUserHeader_: Optional. Add the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user to each request (Default: false)
+         * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_ (Default: false)
+         * _addHeaders_: Optional. Add extra headers to every API call.
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
             The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
             can access the proxy if this property is set. You can use this to protect sensitive data only a small group of
             users are allowed to access.
-     * _appConfig_: The default App specific configuration
-     * _metaInfo_: Optional meta info (any type).
+     * _metaInfo_: Optional meta info that could be used to lookup for Apps with specific features or capabilities.
+     * _appConfig_: The default configuration that will be passed to the App. Can be adapted in the Admin App.
 
-The bootstrap is in this case a global function that starts the app within the given host element. Here for example a React app:
+The bootstrap is in this case a global function that starts the App within the given host element. Here for example a React app:
 
 ```ts
 import React from 'react';
@@ -829,7 +843,9 @@ To register a new portal-theme plugin add this to _package.json_:
      }
 }
 ```
- * _views_: The folder with the views. There must exist a view _portal_ which renders a portal page
+
+ * _resourcesRoot_: Folder that contains assets (can be accessed in the theme via *resourcesBasePath*)
+ * _views_: The folder with the views. There must exist a view **portal** which renders a portal page
 
 Since *Mashroom Portal* uses the *Express* render mechanism all Template Engines supported by *Express* can be used to define the template.
 The bootstrap returns the template engine and the engine name like so:
@@ -960,7 +976,7 @@ To register a new portal-layouts plugin add this to _package.json_:
      }
 }
 ```
- * _layouts_: A map with the layout html files
+ * _layouts_: A map with the layout html files (on the local file system)
 
 A layout looks like this:
 
@@ -1065,8 +1081,8 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
  * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages. They can be added
    to the header or footer (location) and can also be inlined. The (optional) rule property refers to a rule in the
    instantiated plugin (bootstrap), see below.
- * _defaultConfig.order_: he weight of the resources- the higher it is the **later** they will be added to the page (default: 1000)
- * _defaultConfig.resourcesRoot_: The root for all resources (can be a local path or a HTTP url)
+ * _defaultConfig.order_: The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)
+ * _defaultConfig.resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
 
 The bootstrap returns a map of rules and could look like this:
 
@@ -1151,7 +1167,7 @@ To register a new portal-app-enhancement plugin add this to _package.json_:
 
  * _bootstrap_: Path to the script that contains the bootstrap for the plugin
  * _portalCustomClientServices_: A map of client services that should be injected in the _clientServices_ object the
-  Portal Apps receive. The value (MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in the _window_).
+  Portal Apps receive. The value (in this example MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in _window_).
 
 The bootstrap returns the actual enhancer plugin:
 

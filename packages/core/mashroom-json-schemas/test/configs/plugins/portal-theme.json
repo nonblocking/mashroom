@@ -1,0 +1,16 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Portal Theme",
+            "type": "portal-theme",
+            "resourcesRoot": "./dist",
+            "views": "./views",
+            "bootstrap": "./dist/bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "foo"
+            }
+        }
+    ]
+}

@@ -1,4 +1,5 @@
 {
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-server-config.json",
     "name": "Mashroom Test Server 1",
     "port": 5050,
     "pluginPackageFolders": [
@@ -79,7 +80,7 @@
             "clientId": "mashroom",
             "clientSecret": "9842e02d-096a-4b18-ad69-7d33fd803d36",
             "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "rolesClaim": "roles",
+            "rolesClaimName": "roles",
             "adminRoles": [
                 "mashroom-admin"
             ]
@@ -100,7 +101,7 @@
             "prettyPrintJson": true
         },
         "Mashroom Storage MongoDB Provider": {
-            "connectionUri": "mongodb://localhost:27017/mashroom_storage_db"
+            "uri": "mongodb://localhost:27017/mashroom_storage_db"
         },
         "Mashroom Memory Cache Services": {
             "provider": "local",
@@ -114,7 +115,7 @@
             "defaultLanguage": "en"
         },
         "Mashroom Http Proxy Services": {
-            "rejectUntrustedCerts": false,
+            "rejectUnauthorized": false,
             "poolMaxSockets": 10,
             "socketTimeoutMs": 3000,
             "proxyImpl": "nodeHttpProxy"
@@ -149,7 +150,10 @@
         "Mashroom Portal Default Theme": {
             "showEnvAndVersions": true
         },
-        "Mashroom Portal Remote App Registry Webapp": {
+        "Mashroom Portal Remote App Registry": {
+            "remotePortalAppUrls": "./remotePortalApps.json"
+        },
+        "Mashroom Portal Remote App Registry Admin Webapp": {
             "showAddRemoteAppForm": true
         }
     }
