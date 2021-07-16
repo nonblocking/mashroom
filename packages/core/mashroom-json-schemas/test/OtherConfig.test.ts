@@ -20,7 +20,7 @@ describe('other config validation', () => {
 
     it('succeeds at a valid Topic ACL config', () => {
         const schema = JSON.parse(readFileSync(resolve(__dirname, '..', 'schemas', 'mashroom-security-topic-acl.json')).toString("utf-8"));
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'other', 'topicAcl.json')).toString("utf-8"));
+        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'other', 'topicACL.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);
 
