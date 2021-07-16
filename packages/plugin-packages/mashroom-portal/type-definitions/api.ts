@@ -409,9 +409,11 @@ export type MashroomPortalApp = {
 
 export type MashroomAvailablePortalApp = {
     readonly name: string;
+    readonly category: string | null | undefined;
     readonly description: string | null | undefined;
     readonly tags: Array<string>;
-    readonly category: string | null | undefined;
+    readonly screenshots: Array<string>;
+    readonly metaInfo: any | undefined;
     readonly lastReloadTs: number;
 };
 

@@ -1,7 +1,7 @@
 
 import {portalAppContext} from '../utils/logging_utils';
 import {getResourceAsStream} from '../utils/resource_utils';
-import {getSitePath} from '../utils/path_utils';
+import {getFrontendApiResourcesBasePath, getSitePath} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage, getPage} from '../utils/model_utils';
 import {
     getUser,
@@ -10,6 +10,7 @@ import {
     isSitePathPermitted
 } from '../utils/security_utils';
 import createPortalAppSetup from '../utils/create_portal_app_setup';
+import {PORTAL_APP_RESOURCES_BASE_PATH} from '../constants';
 
 import type {Request, Response} from 'express';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
@@ -149,13 +150,20 @@ export default class PortalAppController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const {q, updatedSince} = req.query;
 
-        let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps.map((app) => ({
-            name: app.name,
-            description: app.description,
-            tags: app.tags,
-            category: app.category,
-            lastReloadTs: app.lastReloadTs,
-        }));
+        let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps.map((portalApp) => {
+            const encodedPortalAppName = encodeURIComponent(portalApp.name);
+            const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
+            const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
+            return {
+                name: portalApp.name,
+                category: portalApp.category,
+                description: portalApp.description,
+                tags: portalApp.tags,
+                screenshots,
+                metaInfo: portalApp.metaInfo,
+                lastReloadTs: portalApp.lastReloadTs,
+            }
+        });
 
         if (typeof (q) === 'string') {
             apps = apps.filter((app) => app.name.toLowerCase().indexOf(q.toLowerCase()) !== -1 || (app.description && app.description.toLowerCase().indexOf(q.toLowerCase()) !== -1));

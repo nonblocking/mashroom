@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Added *metaInfo* and *screenshots* to *MashroomPortalAppService.getAvailableApps()* response. This allows an App
+   to launch another App based on metadata and could be used to show a preview image.
  * OpenID Connect Security Provider: Allow mapping arbitrary claims to *user.extraData*
  * OpenID Connect Security Provider: Allow configuring HTTP timeout and number of retries when contacting the Authorization Server
 
