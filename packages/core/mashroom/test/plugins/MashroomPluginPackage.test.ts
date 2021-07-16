@@ -115,6 +115,62 @@ const getPluginPackageFolder3 = () => {
     return pluginPackageFolder;
 };
 
+const getPluginPackageFolder4 = () => {
+    const pluginPackageFolder = path.resolve(__dirname, '../../test-data/plugins5/test1');
+    fsExtra.emptyDirSync(pluginPackageFolder);
+    fsExtra.writeJsonSync(path.resolve(pluginPackageFolder, 'package.json'), {
+        name: 'test4',
+        description: 'test no plugin names',
+        version: '2.2.2',
+        license: 'BSD-3-Clause',
+        author: {
+            'name': 'Jürgen Kofler',
+            'email': 'juergen.kofler@nonblocking.at',
+            'url': 'http://www.nonblocking.at',
+        }
+    });
+    fsExtra.writeJsonSync(path.resolve(pluginPackageFolder, 'mashroom.json'), {
+        devModeBuildScript: 'build',
+        plugins: [
+            {
+                name: 'Plugin 1',
+                type: 'web-app',
+                bootstrap: './dist/mashroom-bootstrap.js',
+            }
+        ],
+    })
+    return pluginPackageFolder;
+};
+
+const getPluginPackageFolder5 = () => {
+    const pluginPackageFolder = path.resolve(__dirname, '../../test-data/plugins6/test1');
+    fsExtra.emptyDirSync(pluginPackageFolder);
+    fsExtra.writeJsonSync(path.resolve(pluginPackageFolder, 'package.json'), {
+        name: 'test4',
+        description: 'test no plugin names',
+        version: '2.2.2',
+        license: 'BSD-3-Clause',
+        author: {
+            'name': 'Jürgen Kofler',
+            'email': 'juergen.kofler@nonblocking.at',
+            'url': 'http://www.nonblocking.at',
+        }
+    });
+    fsExtra.writeFileSync(path.resolve(pluginPackageFolder, 'mashroom.js'), `
+        module.exports = {
+            devModeBuildScript: 'build',
+            plugins: [
+                {
+                    name: 'Plugin 1',
+                    type: 'web-app',
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                }
+            ],
+        };
+    `)
+    return pluginPackageFolder;
+};
+
 const registryConnectorOnMock = jest.fn();
 const registryConnectorRemoveListenerMock = jest.fn();
 const RegistryConnectorMock: any = jest.fn(() => ({
@@ -171,7 +227,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
 
         // Set existing plugins
         // @ts-ignore
@@ -222,7 +278,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
         expect(pluginPackage.status).toBe('building');
 
         pluginPackage.on('error', (event) => {
@@ -254,7 +310,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
 
         expect(pluginPackage.status).toBe('building');
 
@@ -287,7 +343,73 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+
+        expect(pluginPackage.status).toBe('building');
+
+        pluginPackage.on('ready', (ready) => {
+            expect(pluginPackage.status).toBe('ready');
+            expect(pluginPackage.pluginDefinitions.length).toBe(1);
+
+            done();
+        });
+    });
+
+    it(`loads the plugin definition from external json definition files`, (done) => {
+        const pluginPackagePath = getPluginPackageFolder4();
+        let buildFinishedCallback: any = null;
+
+        builderOnMock.mockImplementation((event, callback) => {
+            if (event === 'build-finished') {
+                buildFinishedCallback = callback;
+            }
+        });
+
+        builderAddToBuildQueueMock.mockImplementation((pluginPackageName) => {
+            setTimeout(() => {
+                if (buildFinishedCallback) {
+                    buildFinishedCallback({
+                        pluginPackageName,
+                        success: true,
+                    });
+                }
+            }, 200);
+        });
+
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], ['mashroom'], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+
+        expect(pluginPackage.status).toBe('building');
+
+        pluginPackage.on('ready', (ready) => {
+            expect(pluginPackage.status).toBe('ready');
+            expect(pluginPackage.pluginDefinitions.length).toBe(1);
+
+            done();
+        });
+    });
+
+    it(`loads the plugin definition from external JavaScript definition files`, (done) => {
+        const pluginPackagePath = getPluginPackageFolder5();
+        let buildFinishedCallback: any = null;
+
+        builderOnMock.mockImplementation((event, callback) => {
+            if (event === 'build-finished') {
+                buildFinishedCallback = callback;
+            }
+        });
+
+        builderAddToBuildQueueMock.mockImplementation((pluginPackageName) => {
+            setTimeout(() => {
+                if (buildFinishedCallback) {
+                    buildFinishedCallback({
+                        pluginPackageName,
+                        success: true,
+                    });
+                }
+            }, 200);
+        });
+
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], ['mashroom'], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
 
         expect(pluginPackage.status).toBe('building');
 

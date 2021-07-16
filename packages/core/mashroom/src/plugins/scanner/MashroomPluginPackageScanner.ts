@@ -5,6 +5,13 @@ import {EventEmitter} from 'events';
 import chokidar from 'chokidar';
 import {promisify} from 'util';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
+import {getExternalPluginDefinitionFilePath} from '../../utils/plugin_utils';
+import type {MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder} from '../../../type-definitions';
+import type {MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName} from '../../../type-definitions/internal';
+
+type DeferredUpdatesTimestamps = {
+    [path: string]: number;
+};
 
 const readdir = promisify(fs.readdir);
 
@@ -12,17 +19,6 @@ const readdir = promisify(fs.readdir);
 export const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
 
 export const DEFAULT_DEFER_UPDATE_MS = 2000;
-
-import type {
-    MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder,
-} from '../../../type-definitions';
-import type {
-    MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName,
-} from '../../../type-definitions/internal';
-
-type DeferredUpdatesTimestamps = {
-    [path: string]: number;
-};
 
 /**
  * The plugin scanner.
@@ -34,6 +30,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     private _eventEmitter: EventEmitter;
     private _deferUpdateMillis: number;
     private _serverRootFolder: string;
+    private _externalPluginConfigFileNames: Array<string>;
     private _pluginPackageFolders: Array<PluginPackageFolder>;
     private _foldersToWatch: Array<string>;
     private _pluginPackagePaths: Array<MashroomPluginPackagePath>;
@@ -44,6 +41,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.scanner');
         this._serverRootFolder = config.serverRootFolder;
+        this._externalPluginConfigFileNames = config.externalPluginConfigFileNames;
         this._pluginPackageFolders = config.pluginPackageFolders.filter((folder) => {
            if (!fs.existsSync(folder.path)) {
                 this._logger.error(`Ignoring plugin package folder because it doesn't exist: ${folder.path}`);
@@ -211,8 +209,12 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     }
 
     private _isMashroomPluginPackage(pluginPackagePath: string): boolean {
-        const packageFile = path.resolve(pluginPackagePath, 'package.json');
+        const externalPluginConfigFile = getExternalPluginDefinitionFilePath(pluginPackagePath, this._externalPluginConfigFileNames);
+        if (externalPluginConfigFile) {
+            return true;
+        }
 
+        const packageFile = path.resolve(pluginPackagePath, 'package.json');
         if (fs.existsSync(packageFile)) {
             try {
                 const packageJson = JSON.parse(fs.readFileSync(packageFile).toString());

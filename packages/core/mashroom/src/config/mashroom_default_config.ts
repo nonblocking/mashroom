@@ -9,6 +9,7 @@ const config: MashroomServerConfig = {
     xPowerByHeader: 'Mashroom Server',
     serverRootFolder: '.',
     tmpFolder: os.tmpdir(),
+    externalPluginConfigFileNames: ['mashroom'],
     pluginPackageFolders: [{
         path: './node_modules/@mashroom',
     }],

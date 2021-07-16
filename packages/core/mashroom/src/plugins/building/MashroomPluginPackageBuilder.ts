@@ -73,7 +73,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._processingAllowed = true;
     }
 
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string | undefined | null, lastSourceUpdateTimestamp = Date.now()) {
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string | undefined | null, lastSourceUpdateTimestamp = Date.now()): void {
         if (!this._processingAllowed) {
             return;
         }
@@ -90,18 +90,18 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._processBuildQueue();
     }
 
-    removeFromBuildQueue(pluginPackageName: string) {
+    removeFromBuildQueue(pluginPackageName: string): void {
         const existingEntryIndex = this._buildQueue.findIndex((e) => e.pluginPackageName === pluginPackageName);
         if (existingEntryIndex > -1) {
             this._buildQueue.splice(existingEntryIndex, 1);
         }
     }
 
-    stopProcessing() {
+    stopProcessing(): void {
         this._processingAllowed = false;
     }
 
-    on(eventName: MashroomPluginPackageBuilderEventName, listener: (event: MashroomPluginPackageBuilderEvent) => void) {
+    on(eventName: MashroomPluginPackageBuilderEventName, listener: (event: MashroomPluginPackageBuilderEvent) => void): void {
         this._eventEmitter.on(eventName, listener);
     }
 
@@ -290,7 +290,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         return path.resolve(this._buildDataFolder, `${pluginPackageName}.build.json`);
     }
 
-    private _nodeModulesExists(pluginPackagePath: string) {
+    private _nodeModulesExists(pluginPackagePath: string): boolean {
         const nodeModules = path.resolve(pluginPackagePath, 'node_modules');
         return fs.existsSync(nodeModules);
     }

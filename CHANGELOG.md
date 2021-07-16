@@ -3,6 +3,31 @@
 
 ## [unreleased]
 
+ * Core: Mashroom supports now "external" plugin definition files, so the "mashroom" node in package.json can be in a separate
+   file, by default *mashroom.json* or *mashroom.js*. E.g.:
+   ```json
+   {
+       "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
+       "devModeBuildScript": "build",
+       "plugins": [
+           {
+               "name": "Mashroom Portal Demo React App",
+               "type": "portal-app",
+               "bootstrap": "startReactDemoApp",
+               "resources": {
+                   "js": [
+                       "bundle.js"
+                   ],
+                   "css": []
+               },
+               "defaultConfig": {
+                   "resourcesRoot": "./dist"
+               }
+           }
+       ]
+   }
+   ```
+   The possible file name can be changed in the server config via the *externalPluginConfigFileNames* config property.
  * Introduced JSON Schemas for all config files:
     * package.json: schemas/mashroom-packagejson-extension.json
     * mashroom.json (Server config): schemas/mashroom-server-config.json

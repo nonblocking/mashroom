@@ -1105,6 +1105,13 @@
             "type": "string",
             "description": "The tmp folder for plugin builds and so on"
         },
+        "externalPluginConfigFileNames": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "Possible external config file names for plugin packages (Default [\"mashroom\"])"
+        },
         "pluginPackageFolders": {
             "type": "array",
             "items": {
