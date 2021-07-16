@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Remote App Registry and Remote App Registry Kubernetes: Added support external plugin definitions. The need to be in
+   JSON format and also expose on / by the server.
  * Core: Mashroom supports now "external" plugin definition files, so the "mashroom" node in package.json can be in a separate
    file, by default *mashroom.json* or *mashroom.js*. E.g.:
    ```json
@@ -93,7 +95,7 @@
 ## 1.7.6 (May 10, 2021)
 
  * Portal: Disable the browser caching for all pages if a CSRF token is present, otherwise stale tokens could be used
- * K8S remote app registry: Improved compatibility with Kubernetes 1.20
+ * Remote App Registry Kubernetes: Improved compatibility with Kubernetes 1.20
  * Added the possibility to delay the server shutdown after receiving SIGTERM via environment variable *WAIT_BEFORE_SERVER_CLOSE*,
    which contains the seconds to wait.
    This is required for a non-disruptive rolling deployment on Kubernetes where the kube-proxy takes some time to rewrite iptables.
@@ -119,7 +121,7 @@
 
 ## 1.7.3 (March 17, 2021)
 
- * K8S Remote App Registry: Just ignore services without a proper descriptor (instead of throwing an error)
+ * Remote App Registry Kubernetes: Just ignore services without a proper descriptor (instead of throwing an error)
  * Http Proxy: Removed double request path URI-decoding in forward method (request path already URI-decoded by Express was decoded again)
 
 ## 1.7.2 (March 10, 2021)
