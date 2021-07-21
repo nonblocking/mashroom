@@ -7,6 +7,7 @@
         "key": "./certs/key.pem",
         "cert": "./certs/cert.pem"
     },
+    "enableHttp2": false,
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages",

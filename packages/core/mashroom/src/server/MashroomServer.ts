@@ -100,9 +100,19 @@ Pid ${process.pid}
         this._logger.debug('Using TLS options: ', fixedTlsOptions);
 
         return new Promise<void>((resolve, reject) => {
-            const httpsServer = https.createServer({
-               ...fixedTlsOptions,
-            }, this._expressApp);
+            let httpsServer: HttpsServer;
+            if (this._config.enableHttp2) {
+                httpsServer = spdy.createServer({
+                    ...fixedTlsOptions,
+                    spdy: {
+                        protocols: ['h2', 'http/1.1'],
+                    }
+                }, this._expressApp);
+            } else {
+                httpsServer = https.createServer({
+                    ...fixedTlsOptions,
+                }, this._expressApp);
+            }
             httpsServer.listen(this._config.httpsPort, () => {
                 this._logger.info(`Mashroom HTTPS server available at https://localhost:${this._config.httpsPort}`);
                 this._scanner.start();

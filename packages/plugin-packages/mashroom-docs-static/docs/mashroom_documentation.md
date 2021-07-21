@@ -327,10 +327,10 @@ To enable HTTPS and/or HTTP2 you would add:
 
  * _name_: The server name (default: Mashroom Server)
  * _port_: The port the server should bind to (default: 5050)
- * _httpsPort_: An optional HTTPS port (requires _tlsOptions_ as well)
+ * _httpsPort_: Additionally launch a HTTPS server on this port (requires _tlsOptions_ as well)
  * _tlsOptions_: Passed to [Node TLS](https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener)
     but the file paths (e.g. for "cert") are resolved relatively to the server config.
- * _enableHttp2_: Enable HTTP/2. If you enable this WebSockets will no longer work.
+ * _enableHttp2_: Enable HTTP/2 for the HTTPS server. If you enable this WebSockets will no longer work.
  * _indexPage_: The start page if the root ('/') is requested (default: /)
  * _xPowerByHeader_: The *x-powered-by* header to send; null disables the header (default: Mashroom Server)
  * _tmpFolder_: The tmp folder for plugin builds and so on (default: OS specific temp dir)

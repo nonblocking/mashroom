@@ -1095,7 +1095,7 @@
         },
         "httpsPort": {
             "type": ["integer", "null"],
-            "description": "Enable HTTPS on given port. Requires also tlsOptions to be set (Default: null)"
+            "description": "Additionally launch a HTTPS server on this port. Requires also tlsOptions to be set (Default: null)"
         },
         "tlsOptions": {
             "type": ["object", "null"],
@@ -1103,7 +1103,7 @@
         },
         "enableHttp2": {
             "type": "boolean",
-            "description": "Enable HTTP/2. If you enable this WebSockets will no longer work (Default: false)"
+            "description": "Enable HTTP/2 for the HTTPS server. If you enable this WebSockets will no longer work (Default: false)"
         },
         "indexPage": {
             "type": "string",

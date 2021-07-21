@@ -3,6 +3,15 @@
 
 ## [unreleased]
 
+ * Added HTTP/2 support for HTTPS - this currently uses the [node-spdy](https://github.com/spdy-http2/node-spdy)
+   modules which has a known problem with compressed data (https://github.com/spdy-http2/node-spdy/issues/357).
+   So, don't use this if your API server compresses responses. Also, don't use this if you rely on WebSocket or SSE.
+   To enable it add this to you your server config:
+     ```json
+   {
+      "enableHttp2": true
+   }
+   ```
  * Added TLS support (HTTPS). Can be enabled like this in the server config:
    ```json
    {
@@ -13,6 +22,7 @@
       }
    }
    ```
+   The tlsOptions are passed to https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener
  * Introduced JSON Schemas for all config files:
     * package.json: schemas/mashroom-packagejson-extension.json
     * mashroom.json (Server config): schemas/mashroom-server-config.json
