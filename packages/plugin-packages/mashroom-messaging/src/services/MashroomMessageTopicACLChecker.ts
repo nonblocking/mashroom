@@ -66,7 +66,7 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const aclData: MashroomMessagingACLTopicRules = require(this._aclPath);
             for (const topic in aclData) {
-                if (aclData.hasOwnProperty(topic)) {
+                if (aclData.hasOwnProperty(topic) && !topic.startsWith('$')) {
                     try {
                         rules.push({
                             topic,

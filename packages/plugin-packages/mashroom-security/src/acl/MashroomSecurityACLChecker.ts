@@ -105,7 +105,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
             // eslint-disable-next-line @typescript-eslint/no-var-requires
             const acl = require(this._aclPath);
             for (const pathPattern in acl) {
-                if (acl.hasOwnProperty(pathPattern)) {
+                if (acl.hasOwnProperty(pathPattern) && !pathPattern.startsWith('$')) {
                     const pathRule = acl[pathPattern];
                     if (pathPattern.startsWith('/')) {
                         const regexp = this._pathToRegExp(pathPattern);
