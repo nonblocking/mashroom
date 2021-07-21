@@ -85,6 +85,28 @@ export interface MashroomMiddlewareStackService {
 }
 ```
 
+### MashroomHttpUpgradeService
+
+Accessible through _pluginContext.services.core.websocketUpgradeService_
+
+Interface:
+
+```ts
+/**
+ * A services to add and remove HTTP/1 upgrade listeners
+ */
+export interface MashroomHttpUpgradeService {
+    /**
+     * Register an upgrade handler for given path
+     */
+    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, path: string): void;
+    /**
+     * Unregister an upgrade handler
+     */
+    unregisterUpgradeHandler(handler: MashroomHttpUpgradeHandler): void;
+}
+```
+
 ## Plugin Types
 
 ### plugin-loader
@@ -191,7 +213,7 @@ export default bootstrap;
 *Additional handlers*
 
 It is also possible to return handlers in the bootstrap. Currently there is only one:
- * _upgradeHandler_: Handle HTTP Upgrades (e.g. upgrade to WebSocket)
+ * _upgradeHandler_: Handle HTTP Upgrades (e.g. upgrade to WebSocket). Alternatively you could use *MashroomWebsocketUpgradeService* directly
 
 Example:
 

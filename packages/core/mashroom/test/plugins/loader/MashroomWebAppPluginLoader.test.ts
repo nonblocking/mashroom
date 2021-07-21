@@ -14,6 +14,7 @@ const getPluginPackageFolder = () => {
 
 let expressStack: Array<any> = [];
 const expressUseMock = jest.fn();
+const registerUpgradeHandlerMock = jest.fn();
 const ExpressApplicationMock: any = jest.fn(() => ({
     use: expressUseMock,
     _router: {
@@ -21,19 +22,17 @@ const ExpressApplicationMock: any = jest.fn(() => ({
     },
 }));
 
-let upgradeHandler: any = null;
-const httpServerMock: any = {
-    on(event: string, handler: (req: any, socket: any, head: any) => void) {
-        if (event === 'upgrade') {
-            upgradeHandler = handler;
-        }
-    }
-};
-
 const pluginContextHolderMock = {
     getPluginContext() {
         const context: any = {
             loggerFactory,
+            services: {
+                core: {
+                    httpUpgradeService: {
+                        registerUpgradeHandler: registerUpgradeHandlerMock,
+                    }
+                }
+            },
             foo: 'bar'
         };
         return context;
@@ -80,7 +79,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
         await loader.load(plugin, {path: '/foo'}, context);
 
         // @ts-ignore
@@ -125,7 +124,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
         // @ts-ignore
         loader._loadedPlugins.set('Test2', {
             path: '/foo',
@@ -170,7 +169,7 @@ describe('MashroomWebAppPluginLoader', () => {
             {name: 'bar'},
         ];
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
         // @ts-ignore
         loader._loadedPlugins.set('Test3', {
             path: '/foo',
@@ -206,30 +205,19 @@ describe('MashroomWebAppPluginLoader', () => {
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => ({
                 expressApp: (req, res, next) => req.test = 1,
-                upgradeHandler: (req, socket, head) => socket.test = 2,
+                websocketUpgradeHandler: (req, socket, head) => socket.test = 2,
             })
         `);
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), httpServerMock, loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
         await loader.load(plugin, {path: '/websocket'}, context);
 
         // @ts-ignore
         expect(loader._loadedPlugins.size).toBe(1);
-        // @ts-ignore
-        expect(loader._upgradeHandlers.length).toBe(1);
 
-        expect(upgradeHandler).toBeTruthy();
-        if (upgradeHandler) {
-            const req: any = {
-                headers: {},
-                url: '/websocket/test'
-            };
-            const socket: any = {};
-            upgradeHandler(req, socket, {});
-            expect(socket.test).toBe(2);
-        }
+        expect(registerUpgradeHandlerMock.mock.calls.length).toBe(1);
     });
 
 });

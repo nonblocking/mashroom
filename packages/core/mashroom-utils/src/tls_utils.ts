@@ -2,22 +2,20 @@
 import fs from 'fs';
 import path from 'path';
 
-import type {TlsOptions as NodeTlsOptions} from 'tls';
-import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {TlsOptions} from '../type-definitions';
+import type {TlsOptions} from 'tls';
+
+type Logger = {
+    debug(debug: string, ...args: any[]): void;
+    warn(message: string, ...args: any[]): void;
+    error(message: string, ...args: any[]): void;
+}
 
 const CERT_PROPERTIES: Array<keyof TlsOptions> = ['cert', 'ca', 'key', 'crl', 'pfx'];
 
-export default (optionalTlsOptions: TlsOptions | undefined | null, serverRootFolder: string, loggerFactory: MashroomLoggerFactory): NodeTlsOptions | undefined | null => {
-    if (!optionalTlsOptions) {
-        return optionalTlsOptions;
-    }
-
-    const tlsOptions: TlsOptions = optionalTlsOptions;
-    const fixedTlsOptions: any = {
+export const fixTlsOptions = (tlsOptions: TlsOptions, serverRootFolder: string, logger: Logger): TlsOptions => {
+    const fixedTlsOptions: TlsOptions = {
         ...tlsOptions
     };
-    const logger = loggerFactory('mashroom.security.provider.ldap');
 
     CERT_PROPERTIES.forEach((certPropName) => {
         if (tlsOptions.hasOwnProperty(certPropName)) {
@@ -37,12 +35,12 @@ export default (optionalTlsOptions: TlsOptions | undefined | null, serverRootFol
                 });
 
                 fixedCertArray = fixedCertArray.filter((cert) => cert !== null);
-                fixedTlsOptions[certPropName] = fixedCertArray;
+                // @ts-ignore
+                fixedTlsOptions[certPropName] = fixedCertArray || [];
             }
         }
     });
 
-    logger.debug('LDAP TLS options: ', { tlsOptions: fixedTlsOptions });
     return fixedTlsOptions;
 }
 

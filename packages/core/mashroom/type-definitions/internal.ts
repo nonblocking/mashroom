@@ -1,4 +1,5 @@
 
+import type {Server} from 'net';
 import type {RequestHandler, Application} from 'express';
 import type {
     LogLevel,
@@ -16,7 +17,8 @@ import type {
     MashroomServerInfo,
     MashroomLoggerFactory,
     MashroomPluginContextHolder,
-    MashroomCoreServices
+    MashroomCoreServices,
+    MashroomHttpUpgradeService
 } from './api';
 
 export interface GlobalNodeErrorHandler {
@@ -222,3 +224,6 @@ export interface MashroomServerContextHolder {
     getServerContext(): MashroomServerContext
 }
 
+export interface InternalMashroomHttpUpgradeService extends MashroomHttpUpgradeService {
+    addServer(server: Server): void;
+}

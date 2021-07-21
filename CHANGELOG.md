@@ -3,6 +3,27 @@
 
 ## [unreleased]
 
+
+ * Added HTTP/2 support for HTTPS - this currently uses the [node-spdy](https://github.com/spdy-http2/node-spdy)
+   modules which has a [known problem with compressed data](https://github.com/spdy-http2/node-spdy/issues/357).
+   So, don't use this if your API server compresses responses. Also, don't use this if you rely on WebSocket or SSE.
+   To enable it add this to you your server config:
+   ```json
+   {
+      "enableHttp2": true
+   }
+   ```
+ * Added TLS support (HTTPS). Can be enabled like this in the server config:
+   ```json
+   {
+      "httpsPort": 5443,
+      "tlsOptions": {
+          "key": "./certs/key.pem",
+          "cert": "./certs/cert.pem"
+      }
+   }
+   ```
+   The tlsOptions are passed to https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener
  * Remote App Registry and Remote App Registry Kubernetes: Added support external plugin definitions. The need to be in
    JSON format and also expose on / by the server.
  * Core: Mashroom supports now "external" plugin definition files, so the "mashroom" node in package.json can be in a separate
@@ -30,7 +51,7 @@
    }
    ```
    The possible file name can be changed in the server config via the *externalPluginConfigFileNames* config property.
- * Introduced JSON Schemas for all config files:
+  * Introduced JSON Schemas for all config files:
     * package.json: schemas/mashroom-packagejson-extension.json
     * mashroom.json (Server config): schemas/mashroom-server-config.json
     * acl.json: schemas/mashroom-security-acl.json
@@ -95,7 +116,7 @@
 ## 1.7.6 (May 10, 2021)
 
  * Portal: Disable the browser caching for all pages if a CSRF token is present, otherwise stale tokens could be used
- * Remote App Registry Kubernetes: Improved compatibility with Kubernetes 1.20
+ * K8S remote app registry: Improved compatibility with Kubernetes 1.20
  * Added the possibility to delay the server shutdown after receiving SIGTERM via environment variable *WAIT_BEFORE_SERVER_CLOSE*,
    which contains the seconds to wait.
    This is required for a non-disruptive rolling deployment on Kubernetes where the kube-proxy takes some time to rewrite iptables.
@@ -121,7 +142,7 @@
 
 ## 1.7.3 (March 17, 2021)
 
- * Remote App Registry Kubernetes: Just ignore services without a proper descriptor (instead of throwing an error)
+ * K8S Remote App Registry: Just ignore services without a proper descriptor (instead of throwing an error)
  * Http Proxy: Removed double request path URI-decoding in forward method (request path already URI-decoded by Express was decoded again)
 
 ## 1.7.2 (March 10, 2021)

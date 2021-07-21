@@ -272,6 +272,9 @@ export interface MashroomPluginLoader {
 export type MashroomServerConfig = {
     +name: string,
     +port: number,
+    +httpsPort: ?number;
+    +tlsOptions: ?any;
+    +enableHttp2: boolean;
     +xPowerByHeader: ?string,
     +serverRootFolder: string,
     +tmpFolder: string,
@@ -289,6 +292,7 @@ export type MashroomServices = {
 export type MashroomCoreServices = {
     +pluginService: MashroomPluginService,
     +middlewareStackService: MashroomMiddlewareStackService,
+    +httpUpgradeService: MashroomHttpUpgradeService,
 }
 
 /* Services */
@@ -340,6 +344,25 @@ export interface MashroomMiddlewareStackService {
 }
 
 /**
+ * Http/1 Upgrade Handler
+ */
+export type MashroomHttpUpgradeHandler = (request: HttpServerRequest, socket: net$Socket, head: Buffer) => void;
+
+/**
+ * A services to add and remove HTTP/1 upgrade listeners
+ */
+export interface MashroomHttpUpgradeService {
+    /**
+     * Register an upgrade handler for given path
+     */
+    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, path: string): void;
+    /**
+     * Unregister an upgrade handler
+     */
+    unregisterUpgradeHandler(handler: MashroomHttpUpgradeHandler): void;
+}
+
+/**
  * Mashroom plugin context
  *
  * This context will be available in the plugin bootstrap methods
@@ -358,11 +381,6 @@ export type MashroomPluginContext = {
 export interface MashroomPluginContextHolder {
     getPluginContext(): MashroomPluginContext;
 }
-
-/**
- * WebSocket support
- */
-export type MashroomHttpUpgradeHandler = (request: HttpServerRequest, socket: net$Socket, head: Buffer) => void;
 
 export type ExpressApplicationWithUpgradeHandler = {
     expressApp: ExpressApplication,
