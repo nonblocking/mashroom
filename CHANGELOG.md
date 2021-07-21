@@ -4,7 +4,7 @@
 ## [unreleased]
 
  * Added HTTP/2 support for HTTPS - this currently uses the [node-spdy](https://github.com/spdy-http2/node-spdy)
-   modules which has a known problem with compressed data (https://github.com/spdy-http2/node-spdy/issues/357).
+   modules which has a [known problem with compressed data](https://github.com/spdy-http2/node-spdy/issues/357).
    So, don't use this if your API server compresses responses. Also, don't use this if you rely on WebSocket or SSE.
    To enable it add this to you your server config:
      ```json
