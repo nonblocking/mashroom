@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import path from 'path';
+import {readFile as readFileCb} from 'fs';
+import {resolve} from 'path';
 import {promisify} from 'util';
 import {EventEmitter} from 'events';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
@@ -22,8 +22,9 @@ import type {
     MashroomPluginPackageBuilder,
     MashroomPluginPackageBuilderEvent,
 } from '../../type-definitions/internal';
+import {getExternalPluginDefinitionFilePath} from '../utils/plugin_utils';
 
-const readFile = promisify(fs.readFile);
+const readFile = promisify(readFileCb);
 
 export default class MashroomPackagePlugin implements MashroomPluginPackageType {
 
@@ -44,7 +45,8 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
     private _boundOnBuildFinished: (event: MashroomPluginPackageBuilderEvent) => void;
 
 
-    constructor(private _pluginPackagePath: string, private _ignorePlugins: Array<string>, private _registryConnector: MashroomPluginPackageRegistryConnector,
+    constructor(private _pluginPackagePath: string, private _ignorePlugins: Array<string>, private _externalPluginConfigFileNames: Array<string>,
+                private _registryConnector: MashroomPluginPackageRegistryConnector,
                 private _builder: MashroomPluginPackageBuilder | undefined | null, loggerFactory: MashroomLoggerFactory) {
         this._eventEmitter = new EventEmitter();
         this._eventEmitter.setMaxListeners(0);
@@ -71,7 +73,7 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         this._buildPackage();
     }
 
-    on(eventName: MashroomPluginPackageEventName, listener: (event: MashroomPluginPackageEvent) => void) {
+    on(eventName: MashroomPluginPackageEventName, listener: (event: MashroomPluginPackageEvent) => void): void {
         this._eventEmitter.on(eventName, listener);
     }
 
@@ -102,24 +104,28 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         this._author = this._authorToString(packageJson.author);
         this._license = packageJson.license;
 
-        if (!packageJson.mashroom) {
-            this._logger.error(`Error processing package.json in: ${this._pluginPackagePath}: No 'mashroom' property found!`);
+        let pluginDefinition = this._readExternalPluginConfigFile();
+        if (!pluginDefinition && packageJson.mashroom) {
+            pluginDefinition = packageJson.mashroom;
+        }
+
+        if (!pluginDefinition) {
+            this._logger.error(`No plugin definition found in: ${this._pluginPackagePath}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist.`);
             this._status = 'error';
-            this._errorMessage = `No 'mashroom' property found in package.json`;
+            this._errorMessage = `No plugin definition found`;
+            this._emitError();
+            return;
+        }
+        if (!pluginDefinition.plugins || !Array.isArray(pluginDefinition.plugins)) {
+            this._logger.error(`Error processing plugin definition in: ${this._pluginPackagePath}: "plugins" is either not defined or no array!`);
+            this._status = 'error';
+            this._errorMessage = `Invalid plugin definition: "plugins" is either not defined or no array`;
             this._emitError();
             return;
         }
 
-        if (!packageJson.mashroom.plugins || !Array.isArray(packageJson.mashroom.plugins)) {
-            this._logger.error(`Error processing package.json in: ${this._pluginPackagePath}: mashroom.plugins is either not defined or no array!`);
-            this._status = 'error';
-            this._errorMessage = `mashroom.plugins in package.json is either not defined or no array`;
-            this._emitError();
-            return;
-        }
-
-        this._pluginPackageDefinition = packageJson.mashroom;
-        let plugins = this._checkPluginDefinitions(packageJson.mashroom.plugins);
+        this._pluginPackageDefinition = pluginDefinition;
+        let plugins = this._checkPluginDefinitions(this._pluginPackageDefinition.plugins);
 
         // Check ignore list
         if (this._ignorePlugins && this._ignorePlugins.length > 0) {
@@ -143,9 +149,21 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         }
     }
 
-    private async _readPackageJson() {
-        const fileData = await readFile(path.resolve(this._pluginPackagePath, 'package.json'), 'utf-8');
+    private async _readPackageJson(): Promise<any> {
+        const fileData = await readFile(resolve(this._pluginPackagePath, 'package.json'), 'utf-8');
         return JSON.parse(fileData.toString());
+    }
+
+    private _readExternalPluginConfigFile(): MashroomPluginPackageDefinition | undefined {
+        const externalPluginConfigFile = getExternalPluginDefinitionFilePath(this._pluginPackagePath, this._externalPluginConfigFileNames);
+        if (!externalPluginConfigFile) {
+            return;
+        }
+
+        this._logger.debug('Loading plugin config file:', externalPluginConfigFile);
+        // Reload
+        delete require.cache[externalPluginConfigFile];
+        return require(externalPluginConfigFile);
     }
 
     private _onBuildFinished(event: MashroomPluginPackageBuilderEvent) {

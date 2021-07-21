@@ -53,6 +53,12 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         }
     };
 
+    const pluginPackageDefinition: any = {
+        plugins: [
+            pluginDefinition,
+        ]
+    }
+
     const packageJson: any = {
         name: 'Test',
         version: '5.1.2',
@@ -60,18 +66,22 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         author: 'juergen.kofler@nonblocking.at',
         homepage: 'https://www.mashroom-server.com',
         license: 'MIT',
-        mashroom: {
-            plugins: [
-                pluginDefinition
-            ]
-        }
+        mashroom: pluginPackageDefinition,
     };
 
-    it('processes the package json correctly', () => {
-        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
-            300, false, new DummyKubernetesConnector(), dummyLoggerFactory);
+    const packageJson2: any = {
+        name: 'Test2',
+        version: '1.1.2'
+    };
 
-        const portalApps = backgroundJob.processPackageJson(packageJson, 'http://my-service.default:6789', 'my-service');
+    it('processes package.json correctly', () => {
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
+            300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+
+        const portalApps = backgroundJob.processPluginDefinition(packageJson, null, {
+            url: 'http://my-service.default:6789',
+            name: 'my-service'
+        } as any);
         expect(portalApps).toBeTruthy();
         expect(portalApps.length).toBe(1);
 
@@ -97,15 +107,66 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             globalLaunchFunction: 'startTestApp',
             resourcesRootUri: 'http://my-service.default:6789',
             resources: {
-                js: ['bundle.js'],
-                css: undefined
+                js: ['bundle.js']
             },
             sharedResources: {
-                js: ['my-lib-dll-a1ef123a.js'],
-                css: undefined
+                js: ['my-lib-dll-a1ef123a.js']
             },
             screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
-            defaultRestrictViewToRoles: undefined,
+            rolePermissions: {},
+            restProxies:
+                {
+                    bff: {
+                        targetUri: 'http://my-service.default:6789/api',
+                        sendUserHeaders: true,
+                        sendPermissionsHeader: true
+                    },
+                    two: {
+                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                    }
+                },
+            defaultAppConfig: {
+                customerId: '123123'
+            }
+        });
+    });
+
+    it('processes an external plugin package definition correctly', () => {
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
+            300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+
+        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, {
+            url: 'http://my-service.default:6789',
+            name: 'my-service'
+        } as any);
+        expect(portalApps).toBeTruthy();
+        expect(portalApps.length).toBe(1);
+
+        const portalApp = portalApps[0];
+        expect(portalApp.lastReloadTs).toBeTruthy();
+        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
+        expect(fixedPortalApp).toEqual({
+            name: 'Test App',
+            description: 'Test App',
+            tags: [],
+            title: {
+                en: 'Title'
+            },
+            version: '1.1.2',
+            category: 'Test App',
+            metaInfo: {
+                test: 1
+            },
+            lastReloadTs: 22,
+            globalLaunchFunction: 'startTestApp',
+            resourcesRootUri: 'http://my-service.default:6789',
+            resources: {
+                js: ['bundle.js']
+            },
+            sharedResources: {
+                js: ['my-lib-dll-a1ef123a.js']
+            },
+            screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
             rolePermissions: {},
             restProxies:
                 {

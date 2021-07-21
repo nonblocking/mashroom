@@ -16,10 +16,13 @@ import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBa
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
+    private _externalPluginConfigFileNames: Array<string>;
     private _logger: MashroomLogger;
 
     constructor(private _socketTimeoutSec: number , private _registrationRefreshIntervalSec: number, private _pluginContextHolder: MashroomPluginContextHolder) {
-        this._logger = _pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.remoteAppRegistry');
+        const pluginContext = _pluginContextHolder.getPluginContext();
+        this._externalPluginConfigFileNames = pluginContext.serverConfig.externalPluginConfigFileNames;
+        this._logger = pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
     }
 
     run(): void {
@@ -51,9 +54,10 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         this._logger.info(`Fetching remote endpoint data from URL: ${remotePortalAppEndpoint.url}`);
 
         try {
+            const externalPluginDefinition = await this._loadExternalPluginDefinition(remotePortalAppEndpoint);
             const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
 
-            const portalApps = this._processPackageJson(packageJson, remotePortalAppEndpoint);
+            const portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, remotePortalAppEndpoint);
             return {
                 ...remotePortalAppEndpoint, lastError: null,
                 retries: 0,
@@ -87,24 +91,26 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
     }
 
-    private _processPackageJson(packageJson: any, remotePortalAppEndpoint: RemotePortalAppEndpoint): Array<MashroomPortalApp> {
-        this._logger.debug(`Processing package.json of remote portal app endpoint: ${remotePortalAppEndpoint.url}`, packageJson);
+    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): Array<MashroomPortalApp> {
+        this._logger.debug(`Processing plugin definition of remote portal app endpoint: ${remotePortalAppEndpoint.url}`, packageJson, definition);
 
-        if (!packageJson || !packageJson.mashroom) {
-            throw new Error(`No mashroom property found in package.json of remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
+        if (!definition) {
+            definition = packageJson?.mashroom;
+        }
+        if (!definition || !Array.isArray(definition.plugins)) {
+            throw new Error(`No plugin definition found for remote portal app endpoint: ${remotePortalAppEndpoint.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
         }
 
-        const mashroomDef: MashroomPluginPackageDefinition = packageJson.mashroom;
-        const portalAppDefinitions = mashroomDef.plugins.filter((plugin) => plugin.type === 'portal-app');
+        const portalAppDefinitions = definition.plugins.filter((plugin) => plugin.type === 'portal-app');
 
         if (portalAppDefinitions.length === 0) {
             throw new Error(`No plugin of type portal-app found in remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
-        const portalApps = portalAppDefinitions.map((definition) => this.mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
+        const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
 
         return portalApps.map((portalApp) => {
-            const existingApp = remotePortalAppEndpoint.portalApps.find((existingApp) => existingApp.name === portalApp.name);
+            const existingApp = remotePortalAppEndpoint.portalApps?.find((existingApp) => existingApp.name === portalApp.name);
             if (existingApp && existingApp.version === portalApp.version) {
                 // Keep reload timestamp for browser caching
                 return {...portalApp, lastReloadTs: existingApp.lastReloadTs};
@@ -114,7 +120,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         });
     }
 
-    mapPluginDefinition(packageJson: any, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
+    private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
         const name = definition.name;
         if (!name) {
             throw new Error(`Invalid portal app definition: No 'name' attribute! Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
@@ -191,12 +197,12 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const portalApp: MashroomPortalApp = {
             name,
             title: definition.title,
-            description: definition.description || packageJson.description,
+            description: definition.description || packageJson?.description,
             tags: definition.tags || [],
-            version: packageJson.version,
-            homepage: definition.homepage || packageJson.homepage,
-            author: definition.author || packageJson.author,
-            license: packageJson.license,
+            version: packageJson?.version || new Date().toISOString(),
+            homepage: definition.homepage || packageJson?.homepage,
+            author: definition.author || packageJson?.author,
+            license: packageJson?.license,
             category: definition.category,
             metaInfo: config.metaInfo,
             lastReloadTs: Date.now(),
@@ -214,29 +220,64 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         return portalApp;
     }
 
-    private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any> {
+    private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any | null> {
         const requestOptions = {
             url: `${remotePortalAppEndpoint.url}/package.json`,
             followRedirect: false,
             timeout: this._socketTimeoutSec * 1000,
         };
 
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             request.get(requestOptions, (error, response, body) => {
                 if (error) {
-                    reject(error);
+                    this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed`, error);
+                    resolve(null);
                     return;
                 }
-
+                if (response.statusCode !== 200) {
+                    this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed with status code ${response.statusCode}`);
+                    resolve(null);
+                    return;
+                }
                 try {
                     const packageJson = JSON.parse(body);
                     resolve(packageJson);
                 } catch (parseError) {
-                    reject(new Error(`Parsing /package.json failed! Did you forget to expose it? \n${parseError.message}`));
+                    this._logger.error(`Parsing package.json from ${remotePortalAppEndpoint.url} failed`, parseError);
+                    resolve(null);
                 }
             });
         });
     }
 
+    private async _loadExternalPluginDefinition(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<MashroomPluginPackageDefinition | null> {
+        const promises = this._externalPluginConfigFileNames.map((name) => {
+            const requestOptions = {
+                url: `${remotePortalAppEndpoint.url}/${name}.json`,
+                followRedirect: false,
+                timeout: this._socketTimeoutSec * 1000,
+            };
 
+            return new Promise<MashroomPluginPackageDefinition | null>((resolve) => {
+                request.get(requestOptions, (error, response, body) => {
+                    if (error || response.statusCode !== 200) {
+                        this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed`);
+                        resolve(null);
+                        return;
+                    }
+                    try {
+                        const packageJson = JSON.parse(body);
+                        this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
+                        resolve(packageJson);
+                    } catch (parseError) {
+                        this._logger.error(`Parsing ${name}.json from ${remotePortalAppEndpoint.url} failed`, parseError);
+                        resolve(null);
+                    }
+                });
+            });
+        });
+
+        const configs = await Promise.all(promises);
+        return configs.find((c) => !!c) || null;
+    }
 }

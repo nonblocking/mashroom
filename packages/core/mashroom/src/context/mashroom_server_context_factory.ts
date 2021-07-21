@@ -74,7 +74,8 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const scanner = new MashroomPluginPackageScanner(serverConfig, loggerFactory);
     const builder = devMode ? createBuilder(serverConfig, loggerFactory, logger) : null;
     const pluginPackageFactory = (path: string, connector: MashroomPluginPackageRegistryConnector) =>
-        new MashroomPluginPackage(path, serverConfig.ignorePlugins, connector, isPackageInDevMode(path) ? builder : null, loggerFactory);
+        new MashroomPluginPackage(path, serverConfig.ignorePlugins, serverConfig.externalPluginConfigFileNames,
+            connector, isPackageInDevMode(path) ? builder : null, loggerFactory);
     const pluginFactory = (pluginDefinition: MashroomPluginDefinition, pluginPackage: MashroomPluginPackageType, connector: MashroomPluginRegistryConnector) =>
         new MashroomPlugin(pluginDefinition, pluginPackage, connector, loggerFactory);
 

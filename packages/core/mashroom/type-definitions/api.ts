@@ -365,6 +365,7 @@ export type MashroomServerConfig = {
     readonly xPowerByHeader: string | null | undefined;
     readonly serverRootFolder: string;
     readonly tmpFolder: string;
+    readonly externalPluginConfigFileNames: Array<string>;
     readonly pluginPackageFolders: Array<PluginPackageFolder>;
     readonly ignorePlugins: Array<string>;
     readonly indexPage: string;
