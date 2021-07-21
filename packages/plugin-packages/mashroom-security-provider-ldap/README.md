@@ -55,7 +55,7 @@ And configure this plugin like this in the Mashroom config file:
  * _serverUrl_: The LDAP server URL with protocol and port
  * _ldapConnectTimeout_: Connect timeout in ms (Default: 3000)
  * _ldapTimeout_: Timeout in ms (Default: 5000)
- * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html)
+ * _tlsOptions_: Optional TLS options if your LDAP server requires TLS. The options are passed to [Node TLS](https://nodejs.org/api/tls.html#tls_tls_createserver_options_secureconnectionlistener)
     but the file paths (e.g. for "cert") are resolved relatively to the server config.
  * _bindDN_: The bind user for searching
  * _bindCredentials_: The password for the bind user

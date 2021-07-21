@@ -3,6 +3,16 @@
 
 ## [unreleased]
 
+ * Added TLS support (HTTPS). Can be enabled like this in the server config:
+   ```json
+   {
+      "httpsPort": 5443,
+      "tlsOptions": {
+        "key": "./certs/key.pem",
+        "cert": "./certs/cert.pem"
+      }
+   }
+   ```
  * Introduced JSON Schemas for all config files:
     * package.json: schemas/mashroom-packagejson-extension.json
     * mashroom.json (Server config): schemas/mashroom-server-config.json

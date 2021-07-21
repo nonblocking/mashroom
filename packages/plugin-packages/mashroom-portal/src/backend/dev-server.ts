@@ -133,6 +133,7 @@ app.use((req, res, next) => {
 
     const pluginService: any = {};
     const middlewareStackService: any = {};
+    const httpUpgradeService: any = {};
     const storageService: MashroomStorageService = {
         getCollection: async (collection: string) => {
             switch (collection) {
@@ -190,6 +191,7 @@ app.use((req, res, next) => {
             core: {
                 pluginService,
                 middlewareStackService,
+                httpUpgradeService,
             },
             storage: {
                 service: storageService,

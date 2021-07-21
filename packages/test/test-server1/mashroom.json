@@ -2,6 +2,11 @@
     "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-server-config.json",
     "name": "Mashroom Test Server 1",
     "port": 5050,
+    "httpsPort": 5443,
+    "tlsOptions": {
+        "key": "./certs/key.pem",
+        "cert": "./certs/cert.pem"
+    },
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages",

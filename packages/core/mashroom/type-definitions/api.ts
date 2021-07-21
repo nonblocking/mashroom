@@ -2,6 +2,7 @@
 import type {Request, Response, Application, NextFunction, RequestHandler, Router} from 'express';
 import type {IncomingMessage} from 'http';
 import type {Socket} from 'net';
+import type {TlsOptions} from 'tls';
 
 // Extends Express Request
 declare global {
@@ -362,6 +363,9 @@ export interface MashroomPluginLoader {
 export type MashroomServerConfig = {
     readonly name: string;
     readonly port: number;
+    readonly httpsPort: number | null | undefined;
+    readonly tlsOptions: TlsOptions | null | undefined;
+    readonly enableHttp2: boolean;
     readonly xPowerByHeader: string | null | undefined;
     readonly serverRootFolder: string;
     readonly tmpFolder: string;
@@ -380,6 +384,7 @@ export type MashroomServices = {
 export type MashroomCoreServices = {
     readonly pluginService: MashroomPluginService;
     readonly middlewareStackService: MashroomMiddlewareStackService;
+    readonly httpUpgradeService: MashroomHttpUpgradeService;
 };
 
 /* Services */
@@ -441,6 +446,29 @@ export interface MashroomMiddlewareStackService {
 }
 
 /**
+ * Http/1 Upgrade Handler
+ */
+export type MashroomHttpUpgradeHandler = (
+    request: IncomingMessageWithContext,
+    socket: Socket,
+    head: Buffer,
+) => void;
+
+/**
+ * A services to add and remove HTTP/1 upgrade listeners
+ */
+export interface MashroomHttpUpgradeService {
+    /**
+     * Register an upgrade handler for given path
+     */
+    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, path: string): void;
+    /**
+     * Unregister an upgrade handler
+     */
+    unregisterUpgradeHandler(handler: MashroomHttpUpgradeHandler): void;
+}
+
+/**
  * Mashroom plugin context
  *
  * This context will be available in the plugin bootstrap methods
@@ -459,15 +487,6 @@ export type MashroomPluginContext = {
 export interface MashroomPluginContextHolder {
     getPluginContext(): MashroomPluginContext;
 }
-
-/**
- * WebSocket support
- */
-export type MashroomHttpUpgradeHandler = (
-    request: IncomingMessageWithContext,
-    socket: Socket,
-    head: Buffer,
-) => void;
 
 export type ExpressApplicationWithUpgradeHandler = {
     expressApp: Application;

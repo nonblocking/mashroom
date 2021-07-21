@@ -1,24 +1,19 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import fixTlsOptions from '../src/fix_tls_options';
+import {fixTlsOptions} from '../src/tls_utils';
 
-import type {TlsOptions} from '../type-definitions';
+describe('tls_utils.fixTlsOptions', () => {
 
-const loggerFactory: any = dummyLoggerFactory;
+    it('processes certificate paths correctly', () => {
 
-describe('fix_tls_options', () => {
-
-    it('processes certificate paths correctly', async () => {
-
-        const tlsOptions: TlsOptions = {
+        const tlsOptions = {
             key: './client-key.pem',
-            cert: './test-client-cert.pem',
+            cert: './data/test-client-cert.pem',
             rejectUnauthorized: true,
             ca: [ './server-cert.pem' ]
         };
 
 
-        const fixedTlsOptions = fixTlsOptions(tlsOptions, __dirname, loggerFactory);
+        const fixedTlsOptions = fixTlsOptions(tlsOptions, __dirname, console);
 
         expect(fixedTlsOptions).toBeTruthy();
         if (fixedTlsOptions) {

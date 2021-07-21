@@ -1,7 +1,7 @@
 
+import {fixTlsOptions} from '@mashroom/mashroom-utils/lib/tls_utils';
 import MashroomLdapSecurityProvider from './MashroomLdapSecurityProvider';
 import LdapClientImpl from './LdapClientImpl';
-import fixTlsOptions from './fix_tls_options';
 
 import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/mashroom-security/type-definitions';
 
@@ -16,7 +16,11 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
     const pluginContext = pluginContextHolder.getPluginContext();
     const { loggerFactory, serverConfig: { serverRootFolder } } = pluginContext;
 
-    const fixedTlsOptions = fixTlsOptions(tlsOptions, serverRootFolder, loggerFactory);
+    const logger = loggerFactory('mashroom.security.provider.ldap');
+
+    const fixedTlsOptions = fixTlsOptions(tlsOptions, serverRootFolder, logger);
+    logger.debug('Using TLS options for LDAPS: ', fixedTlsOptions);
+
     const ldapClient = new LdapClientImpl(serverUrl, ldapConnectTimeout, ldapTimeout, baseDN, bindDN, bindCredentials, fixedTlsOptions, loggerFactory);
 
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {

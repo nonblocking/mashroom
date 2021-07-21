@@ -1093,6 +1093,18 @@
         "port": {
             "type": "integer"
         },
+        "httpsPort": {
+            "type": ["integer", "null"],
+            "description": "Enable HTTPS on given port. Requires also tlsOptions to be set (Default: null)"
+        },
+        "tlsOptions": {
+            "type": ["object", "null"],
+            "description": "TLS options if you want to enable HTTPS. The options are passed to https://nodejs.org/api/tls.html but the file paths (e.g. for \"cert\") are resolved relatively to the server config"
+        },
+        "enableHttp2": {
+            "type": "boolean",
+            "description": "Enable HTTP/2. If you enable this WebSockets will no longer work (Default: false)"
+        },
         "indexPage": {
             "type": "string",
             "description": "The start page"
