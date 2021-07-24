@@ -35,7 +35,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
         const webAppBootstrap: MashroomWebAppPluginBootstrapFunction = plugin.requireBootstrap();
         const bootstrapResult: any = await webAppBootstrap(plugin.name, pluginConfig, contextHolder);
         const webapp: Application = bootstrapResult.expressApp ? bootstrapResult.expressApp : bootstrapResult;
-        const upgradeHandler: MashroomHttpUpgradeHandler | undefined | null = bootstrapResult.websocketUpgradeHandler ? bootstrapResult.websocketUpgradeHandler : null;
+        const upgradeHandler: MashroomHttpUpgradeHandler | undefined | null = bootstrapResult.upgradeHandler;
 
         if (upgradeHandler) {
             if (pluginConfig.path && pluginConfig.path !== '/') {
