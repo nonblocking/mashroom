@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo portal app (SPA) based on [Svelte](https://svelte.dev) to the _Mashroom Portal_.
+Adds a demo App (Microfrontend) based on [Svelte](https://svelte.dev) to the _Mashroom Portal_.
 
 ## Usage
 

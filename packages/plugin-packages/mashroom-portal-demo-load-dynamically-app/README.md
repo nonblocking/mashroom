@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo portal app (SPA) to the _Mashroom Portal_ that shows how portal apps can be loaded dynamically via client-side JavaScript API.
+Adds a demo App (Microfrontend) to the _Mashroom Portal_ that shows how portal apps can be loaded dynamically via client-side JavaScript API.
 
 ## Usage
 
