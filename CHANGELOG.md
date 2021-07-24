@@ -52,14 +52,14 @@
    ```
    The possible file name can be changed in the server config via the *externalPluginConfigFileNames* config property.
   * Introduced JSON Schemas for all config files:
-    * package.json: schemas/mashroom-packagejson-extension.json
-    * mashroom.json (Server config): schemas/mashroom-server-config.json
-    * acl.json: schemas/mashroom-security-acl.json
-    * groupToRoleMapping.json: schemas/mashroom-security-ldap-provider-group-to-role-mapping.json
-    * userToRoleMapping.json: schemas/mashroom-security-ldap-provider-user-to-role-mapping.json
-    * users.json: schemas/mashroom-security-simple-provider-users.json
-    * topicACL.json: schemas/mashroom-security-topic-acl.json
-    * remotePortalApps.json: schemas/mashroom-portal-remote-apps.json
+    * *package.json*: schemas/mashroom-packagejson-extension.json
+    * *mashroom.json* (Server config): schemas/mashroom-server-config.json
+    * *acl.json*: schemas/mashroom-security-acl.json
+    * *groupToRoleMapping.json*: schemas/mashroom-security-ldap-provider-group-to-role-mapping.json
+    * *userToRoleMapping.json*: schemas/mashroom-security-ldap-provider-user-to-role-mapping.json
+    * *users.json*: schemas/mashroom-security-simple-provider-users.json
+    * *topicACL.json*: schemas/mashroom-security-topic-acl.json
+    * *remotePortalApps.json*: schemas/mashroom-portal-remote-apps.json
    The schema can be applied by adding *@mashroom/mashroom-json-schemas* to your dependencies:
    ```json
    {
