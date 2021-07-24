@@ -12,6 +12,7 @@ import type {
     MashroomHttpUpgradeHandler,
     MashroomHttpUpgradeService,
 } from '../../../type-definitions';
+import {ExpressApplicationWithUpgradeHandler} from '../../../type-definitions';
 
 export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 
@@ -33,9 +34,9 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
 
     async createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
         const webAppBootstrap: MashroomWebAppPluginBootstrapFunction = plugin.requireBootstrap();
-        const bootstrapResult: any = await webAppBootstrap(plugin.name, pluginConfig, contextHolder);
-        const webapp: Application = bootstrapResult.expressApp ? bootstrapResult.expressApp : bootstrapResult;
-        const upgradeHandler: MashroomHttpUpgradeHandler | undefined | null = bootstrapResult.upgradeHandler;
+        const bootstrapResult = await webAppBootstrap(plugin.name, pluginConfig, contextHolder);
+        const webapp: Application = (bootstrapResult as ExpressApplicationWithUpgradeHandler).expressApp || bootstrapResult;
+        const upgradeHandler: MashroomHttpUpgradeHandler | undefined | null = (bootstrapResult as ExpressApplicationWithUpgradeHandler).upgradeHandler || null;
 
         if (upgradeHandler) {
             if (pluginConfig.path && pluginConfig.path !== '/') {
