@@ -205,7 +205,7 @@ describe('MashroomWebAppPluginLoader', () => {
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => ({
                 expressApp: (req, res, next) => req.test = 1,
-                websocketUpgradeHandler: (req, socket, head) => socket.test = 2,
+                upgradeHandler: (req, socket, head) => socket.test = 2,
             })
         `);
 
