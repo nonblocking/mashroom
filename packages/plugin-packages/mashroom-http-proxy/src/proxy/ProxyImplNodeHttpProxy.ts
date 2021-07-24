@@ -85,12 +85,6 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     async forward(req: Request, res: Response, uri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
-        if (req.headers.upgrade) {
-            // TODO: implement
-            res.sendStatus(406);
-            return Promise.resolve();
-        }
-
         let effectiveTargetUri = encodeURI(uri);
         let effectiveAdditionalHeaders = {
             ...additionalHeaders,
