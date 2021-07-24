@@ -42,7 +42,7 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
                 const layout: MashroomPortalLayout = {
                     name,
                     description: plugin.description,
-                    lastReloadTs: Date.now(),
+                    lastReloadTs: plugin.lastReloadTs || Date.now(),
                     layoutId,
                     layoutPath,
                 };

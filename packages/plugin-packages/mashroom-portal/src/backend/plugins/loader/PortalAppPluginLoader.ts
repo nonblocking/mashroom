@@ -95,7 +95,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             license: plugin.pluginPackage.license,
             category: plugin.pluginDefinition.category,
             metaInfo: config.metaInfo,
-            lastReloadTs: Date.now(),
+            lastReloadTs: plugin.lastReloadTs || Date.now(),
             globalLaunchFunction,
             screenshots,
             resourcesRootUri,
