@@ -3,7 +3,11 @@ import requestPluginContext from '../context/request_plugin_context';
 
 import type {Server, Socket} from 'net';
 import type{IncomingMessage} from 'http';
-import type {MashroomHttpUpgradeHandler, MashroomPluginContextHolder} from '../../type-definitions';
+import type {
+    IncomingMessageWithContext,
+    MashroomHttpUpgradeHandler,
+    MashroomPluginContextHolder
+} from '../../type-definitions';
 import type {InternalMashroomHttpUpgradeService} from '../../type-definitions/internal';
 
 export default class MashroomHttpUpgradeService implements InternalMashroomHttpUpgradeService {
@@ -43,7 +47,8 @@ export default class MashroomHttpUpgradeService implements InternalMashroomHttpU
         const path = req.url;
         const entry = path && this._upgradeHandlers.find((ul) => path.startsWith(ul.path));
         if (entry) {
-            const reqWithContext: any = {...req, pluginContext: requestPluginContext(req, this._pluginContextHolder),};
+            const reqWithContext = req as IncomingMessageWithContext;
+            reqWithContext.pluginContext = requestPluginContext(req, this._pluginContextHolder);
             entry.handler(reqWithContext, socket, head);
         } else {
             logger.warn(`No upgrade handler found for path ${path}. Ignoring request.`);

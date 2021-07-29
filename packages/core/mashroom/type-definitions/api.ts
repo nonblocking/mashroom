@@ -27,7 +27,7 @@ export type ExpressRequestWithContext = Request & {
 };
 
 /*
- * @deprecated use http.IncomingMessage
+ * @deprecated use IncomingMessageWithContext
  * Will be removed in 2.0
  */
 export type HttpServerRequest = IncomingMessageWithContext;

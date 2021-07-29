@@ -2,20 +2,28 @@
 
 import type {Router, $Request, $Response, $Application, NextFunction} from 'express';
 
-export type HttpServerRequest = $Subtype<http$IncomingMessage<>> & {
-    pluginContext: MashroomPluginContext
-};
-export type ExpressRequest = $Subtype<$Request> & {
+export type ExpressRequestWithContext = $Subtype<$Request> & {
     pluginContext: MashroomPluginContext,
     session?: any;
 };
+export type IncomingMessageWithContext = http$IncomingMessage<> & {
+    pluginContext: MashroomPluginContext;
+    session?: any;
+}
+
+export type ExpressRequest = ExpressRequestWithContext;
 export type ExpressResponse = $Response;
 export type ExpressNextFunction = NextFunction;
-export type ExpressApplication = $Application<ExpressRequest, ExpressResponse>;
-export type ExpressMiddleware = (req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => mixed;
-export type ExpressErrorHandler = (error: Error, req: ExpressRequest, res: ExpressResponse, next: ExpressNextFunction) => mixed;
-export type ExpressRouter = Router<ExpressRequest, ExpressResponse>;
+export type ExpressApplication = $Application<ExpressRequestWithContext, ExpressResponse>;
+export type ExpressMiddleware = (req: ExpressRequestWithContext, res: ExpressResponse, next: ExpressNextFunction) => mixed;
+export type ExpressErrorHandler = (error: Error, req: ExpressRequestWithContext, res: ExpressResponse, next: ExpressNextFunction) => mixed;
+export type ExpressRouter = Router<ExpressRequestWithContext, ExpressResponse>;
 export type ExpressRequestHandler = ExpressApplication | ExpressRouter | ExpressMiddleware | ExpressErrorHandler;
+
+/*
+ * @deprecated use IncomingMessageWithContext
+ */
+export type HttpServerRequest = IncomingMessageWithContext;
 
 export type I18NString = string | {
     [lang: string]: string
