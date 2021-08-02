@@ -556,6 +556,7 @@ describe('ProxyImplNodeHttpProxy', () => {
                     expect(message).toBe('hello server');
                     proxyServer.close();
                     targetWsServer.close();
+                    targetServer.close();
                     done();
                 });
             });
