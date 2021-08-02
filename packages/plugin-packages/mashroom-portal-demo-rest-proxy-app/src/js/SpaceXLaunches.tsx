@@ -116,6 +116,11 @@ export default class SpaceXLaunches extends PureComponent<Props, State> {
                     <h4><FormattedMessage id='rocketLaunches'/></h4>
                 </div>
 
+                <div className="info">
+                    <span className="info-icon" />
+                    This App connects via the Mashroom HTTP Proxy to SpaceX&lsquo;s data API
+                </div>
+
                 {this.renderContent()}
             </div>
         );

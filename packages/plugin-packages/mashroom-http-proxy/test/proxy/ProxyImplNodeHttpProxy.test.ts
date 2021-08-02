@@ -1,14 +1,17 @@
 
 import {Readable, Writable} from 'stream';
+import {createServer as createHttpServer} from 'http';
+import WebSocket from 'ws';
 import nock from 'nock';
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import ProxyImplNodeHttpProxy from '../../src/proxy/ProxyImplNodeHttpProxy';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
 
-import {Request, Response} from 'express';
-import {HttpHeaders, QueryParams} from '../../type-definitions';
-import {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
+import type {Server} from 'http';
+import type {Request, Response} from 'express';
+import type {HttpHeaders, QueryParams} from '../../type-definitions';
+import type {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
 const createDummyRequest = (method: string, data?: string) => {
     const req: any = new Readable();
@@ -29,6 +32,9 @@ const createDummyRequest = (method: string, data?: string) => {
     };
     req.socket = {
         setTimeout: () => { /* nothing to do */ },
+        setNoDelay: () => { /* nothing to do */ },
+        setKeepAlive: () => { /* nothing to do */ },
+        destroy: () => { /* nothing to do */ },
     };
     req.connection = {};
 
@@ -73,7 +79,7 @@ const removeAllHeaderFilter = new HttpHeaderFilter([]);
 
 describe('ProxyImplNodeHttpProxy', () => {
 
-    it('forwards GET request to the target URI',  async () => {
+    it('forwards HTTP GET request to the target URI',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
                 'foo': 'bar',
@@ -94,7 +100,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         expect(res.body).toBe('test response');
     });
 
-    it('forwards POST request to the target URI',  async () => {
+    it('forwards HTTP POST request to the target URI',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
                 'foo': 'bar',
@@ -115,7 +121,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         expect(res.body).toBe('test post response');
     });
 
-    it('forwards query parameters',  async () => {
+    it('forwards query parameters for HTTP requests',  async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo?q=javascript%205')
             .reply(200, 'test response');
@@ -492,7 +498,6 @@ describe('ProxyImplNodeHttpProxy', () => {
         };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['x-whatever', 'foo'])
-
         const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
 
         const req = createDummyRequest('GET');
@@ -503,5 +508,147 @@ describe('ProxyImplNodeHttpProxy', () => {
         expect(res.headers).toEqual({
             'x-whatever': '123'
         });
+    });
+
+    it('forwards WebSocket connections to the target URI',  (done) => {
+        (async () => {
+            const pluginRegistry: any = {};
+            const interceptorHandler = new InterceptorHandler(pluginRegistry);
+            const headerFilter = new HttpHeaderFilter([])
+            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+
+            const targetServer = await new Promise<Server>((resolve, reject) => {
+                const server = createHttpServer();
+                server.on('error', (e) => reject(e));
+                server.listen(30001, () => resolve(server));
+            })
+            const proxyServer = await new Promise<Server>((resolve, reject) => {
+                const server = createHttpServer();
+                server.on('error', (e) => reject(e));
+                server.on('upgrade', (req, socket, head) => {
+                    console.info('Received upgrade request');
+                    req.pluginContext = {
+                        loggerFactory,
+                        services: {}
+                    }
+                    httpProxyService.forwardWs(req, socket, head, 'ws://localhost:30001?test=1', {
+                        foo: '2'
+                    });
+                })
+                server.listen(30003, () => resolve(server));
+            });
+
+            const targetWsServer = new WebSocket.Server(({server: targetServer}));
+
+            const client = new WebSocket('ws://localhost:30003?test=1');
+            client.on('error', (error) => {
+                console.error('WS client connection error', error);
+            });
+            client.on('open', () => {
+                client.send('hello server');
+            });
+
+            targetWsServer.on('connection', (ws, req) => {
+                console.info('Client connected');
+                ws.on('message', async (message) => {
+                    expect(req.url).toBe('/?test=1');
+                    expect(req.headers.foo).toBe('2');
+                    expect(message).toBe('hello server');
+                    proxyServer.close();
+                    targetWsServer.close();
+                    done();
+                });
+            });
+        })();
+    });
+
+    /*
+    it('forwards WebSocket connections to echo server',  (done) => {
+        (async () => {
+            const pluginRegistry: any = {};
+            const interceptorHandler = new InterceptorHandler(pluginRegistry);
+            const headerFilter = new HttpHeaderFilter([])
+            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+
+            const proxyServer = await new Promise<Server>((resolve, reject) => {
+                const server = createHttpServer();
+                server.on('error', (e) => reject(e));
+                server.on('upgrade', (req, socket, head) => {
+                    console.info('Received upgrade request');
+                    req.pluginContext = {
+                        loggerFactory,
+                        services: {}
+                    }
+                    httpProxyService.forwardWs(req, socket, head, 'ws://echo.websocket.org/', {
+
+                    });
+                })
+                server.listen(30007, () => resolve(server));
+            });
+
+            const client = new WebSocket('ws://localhost:30007');
+            client.on('error', (error) => {
+                console.error('WS client connection error', error);
+            });
+            client.on('open', () => {
+                console.info('Client connected');
+                client.send('hello echo');
+            });
+            client.on('message', (message) => {
+                expect(message).toBe('hello echo');
+                client.close();
+                proxyServer.close();
+                done();
+            })
+        })();
+    });
+     */
+
+    it('processes WebSocket forwarding errors',  (done) => {
+        (async () => {
+            const pluginRegistry: any = {};
+            const interceptorHandler = new InterceptorHandler(pluginRegistry);
+            const headerFilter = new HttpHeaderFilter([])
+            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+
+            const proxyServer = await new Promise<Server>((resolve, reject) => {
+                const server = createHttpServer();
+                server.on('error', (e) => reject(e));
+                server.on('upgrade', (req, socket, head) => {
+                    console.info('Received upgrade request');
+                    req.pluginContext = {
+                        loggerFactory,
+                        services: {}
+                    }
+                    httpProxyService.forwardWs(req, socket, head, 'ws://localhost:30333', {
+                        foo: '2'
+                    });
+                })
+                server.listen(30033, () => resolve(server));
+            });
+
+            const client = new WebSocket('ws://localhost:30033');
+            client.on('error', (error) => {
+                expect(error.message).toBe('Unexpected server response: 503');
+                proxyServer.close();
+                done();
+            });
+            client.on('open', () => {
+                client.send('hello server');
+            });
+        })();
+    });
+
+    it('does not process unknown protocol upgrades',  async () => {
+        const req = createDummyRequest('GET')
+        req.headers.upgrade = 'whatever';
+        const head = Buffer.from('');
+
+        const pluginRegistry: any = {};
+        const interceptorHandler = new InterceptorHandler(pluginRegistry);
+        const headerFilter = new HttpHeaderFilter([])
+        const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+
+        await expect(httpProxyService.forwardWs(req, req.socket, head, 'ws://www.mashroom-server.com/ws')).rejects.toThrowError('Upgrade not supported: whatever');
     });
 });

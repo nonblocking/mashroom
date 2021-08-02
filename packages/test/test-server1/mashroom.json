@@ -125,7 +125,7 @@
             "rejectUnauthorized": false,
             "poolMaxSockets": 10,
             "socketTimeoutMs": 3000,
-            "proxyImpl": "nodeHttpProxy"
+            "proxyImpl": "default"
         },
         "Mashroom WebSocket Webapp": {
             "restrictToRoles": null,

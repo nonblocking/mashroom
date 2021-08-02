@@ -12,7 +12,7 @@ import PortalAppController from './controllers/PortalAppController';
 import PortalThemeController from './controllers/PortalThemeController';
 import PortalLayoutController from './controllers/PortalLayoutController';
 import PortalRolesController from './controllers/PortalRolesController';
-import PortalRestProxyController from './controllers/PortalRestProxyController';
+import PortalHttpProxyController from './controllers/PortalHttpProxyController';
 import PortalLanguageController from './controllers/PortalLanguageController';
 import PortalUserController from './controllers/PortalUserController';
 import PortalLogController from './controllers/PortalLogController';
@@ -44,7 +44,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     const portalThemeController = new PortalThemeController(pluginRegistry);
     const portalLayoutController = new PortalLayoutController(pluginRegistry);
     const portalRolesController = new PortalRolesController();
-    const portalRestProxyController = new PortalRestProxyController(pluginRegistry);
+    const portalHttpProxyController = new PortalHttpProxyController(pluginRegistry);
     const portalLanguageController = new PortalLanguageController();
     const portalUserController = new PortalUserController();
     const portalLogController = new PortalLogController(pluginRegistry);
@@ -152,7 +152,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     });
     internalRoutes.use(PORTAL_APP_REST_PROXY_BASE_PATH, proxyRoutes);
 
-    proxyRoutes.all(`/*`, portalRestProxyController.forward.bind(portalRestProxyController));
+    proxyRoutes.all(`/*`, portalHttpProxyController.forward.bind(portalHttpProxyController));
 
     // Page route (main)
 

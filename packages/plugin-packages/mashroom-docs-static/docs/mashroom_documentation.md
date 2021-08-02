@@ -59,6 +59,7 @@ has similar concepts than a Java Portal Server.
 | ------------------- | -------------------------------------------------------------------------------------------------------------------------------|
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
 | Node.js             | 12.x, 14.x, 16.x                                                                                                               |
+| HTTP                | 1.0, 1.1, 2 + TLS 1.1, 1.2, 1.3                                                                                                 |
 | Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
@@ -66,6 +67,7 @@ has similar concepts than a Java Portal Server.
 | Memory Cache        | Local Memory, Redis                                                                                                            |
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
 | Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
+| API Proxy           | HTTP, HTTPS, SSE, WebSocket                                                                                                    |
 | Clustering          | yes (tested with PM2)                                                                                                          |
 | Monitoring          | CPU, Heap, Requests + Plugin Metrics; Exporter for Prometheus                                                                  |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (only with mashroom-portal-legacy-browser-support)    |

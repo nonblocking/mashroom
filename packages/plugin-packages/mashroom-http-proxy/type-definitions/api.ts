@@ -1,10 +1,8 @@
 
 import type {IncomingMessage} from 'http';
+import type {Socket} from 'net';
 import type {Request, Response} from 'express';
-import type {
-    MashroomPluginConfig,
-    MashroomPluginContextHolder
-} from '@mashroom/mashroom/type-definitions';
+import type {MashroomPluginConfig, MashroomPluginContextHolder, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 
 export type HttpHeaders = {
     [name: string]: undefined | string | string[];
@@ -22,6 +20,13 @@ export interface MashroomHttpProxyService {
      * The Promise will resolve as soon as the whole response was sent to the client.
      */
     forward(req: Request, res: Response, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
+
+    /**
+     * Forwards a WebSocket request (ws or wss).
+     * The passed additional headers are only available at the upgrade/handshake request (most WS frameworks allow you to access it).
+     * Proxy interceptors are not applied for WebSockets!
+     */
+    forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
 
 }
 

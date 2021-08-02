@@ -37,9 +37,9 @@
             "type": "string",
             "pattern": "^(\\./|\\../|/|http://|https://|ftp://|ftps://).*$"
         },
-        "HttpUrl": {
+        "HttpOrWebSocketUrl": {
             "type": "string",
-            "pattern": "^(http://|https://).*$"
+            "pattern": "^(http://|https://|ws://|wss://).*$"
         },
         "JavaScriptIdentifier": {
             "type": "string",
@@ -679,8 +679,8 @@
                                     "type": "object",
                                     "properties": {
                                         "targetUri": {
-                                            "$ref": "#/definitions/HttpUrl",
-                                            "description": " The API target URI"
+                                            "$ref": "#/definitions/HttpOrWebSocketUrl",
+                                            "description": " The API target URI (HTTP, HTTPS or WebSocket)"
                                         },
                                         "sendUserHeaders": {
                                             "type": "boolean",

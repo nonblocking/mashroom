@@ -1,7 +1,7 @@
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
-import PortalRestProxyController from '../../../src/backend/controllers/PortalRestProxyController';
+import PortalHttpProxyController from '../../../src/backend/controllers/PortalHttpProxyController';
 import type {MashroomPortalApp} from '../../../type-definitions';
 
 setPortalPluginConfig({
@@ -22,6 +22,7 @@ setPortalPluginConfig({
 });
 
 const httpProxyServiceForwardMock = jest.fn();
+const httpProxyServiceForwardWsMock = jest.fn();
 
 const portalApp1: MashroomPortalApp = {
     name: 'Test Portal App 1',
@@ -48,6 +49,9 @@ const portalApp1: MashroomPortalApp = {
     restProxies: {
         'my-proxy': {
             targetUri: 'https://www.mashroom-server.com/api',
+        },
+        'my-ws-proxy': {
+            targetUri: 'wss://www.mashroom-server.com/ws',
         },
     },
     defaultAppConfig: {
@@ -158,6 +162,7 @@ const pluginContext: any = {
         proxy: {
             service: {
                 forward: httpProxyServiceForwardMock,
+                forwardWs: httpProxyServiceForwardWsMock,
             },
         },
         portal: {
@@ -197,10 +202,10 @@ describe('PortalPageController', () => {
         httpProxyServiceForwardMock.mockReset();
     });
 
-    it('forwards calls to the targetUri', async () => {
+    it('forwards HTTP requests to the targetUri', async () => {
 
         const req: any = {
-            originalUrl: '/portal/web/test/__/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
+            originalUrl: '/portal/web/___/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
             params: {
                 '0': 'Test Portal App 1/my-proxy/foo/bar',
             },
@@ -218,7 +223,7 @@ describe('PortalPageController', () => {
             sendStatus: (s: number) => status = s,
         };
 
-        const controller = new PortalRestProxyController(pluginRegistry);
+        const controller = new PortalHttpProxyController(pluginRegistry);
 
         await controller.forward(req, res);
 
@@ -230,7 +235,7 @@ describe('PortalPageController', () => {
     it('sets the configured headers', async () => {
 
         const req: any = {
-            originalUrl: '/portal/web/test/__/proxy/Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
+            originalUrl: '/portal/web/___/proxy/Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
             params: {
                 '0': 'Test Portal App 2/my-proxy',
             },
@@ -248,7 +253,7 @@ describe('PortalPageController', () => {
             sendStatus: (s: number) => status = s,
         };
 
-        const controller = new PortalRestProxyController(pluginRegistry);
+        const controller = new PortalHttpProxyController(pluginRegistry);
 
         await controller.forward(req, res);
 
@@ -285,12 +290,11 @@ describe('PortalPageController', () => {
             sendStatus: (s: number) => status = s,
         };
 
-        const controller = new PortalRestProxyController(pluginRegistry);
+        const controller = new PortalHttpProxyController(pluginRegistry);
 
         await controller.forward(req, res);
 
         expect(status).toBe(403);
     });
-
 
 });

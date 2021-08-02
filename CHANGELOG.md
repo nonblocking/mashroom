@@ -3,7 +3,13 @@
 
 ## [unreleased]
 
-
+ * Added a demo App for WebSocket proxy usage (@mashroom/mashroom-portal-demo-websocket-proxy-app)
+ * Portal: The App proxy supports now WebSocket. This means, that Apps (Microfrontends) can open WebSocket connections
+   to servers "behind" the Portal. All the usual (optional) Security headers going to be sent with the initial
+   upgrade/handshake request. Proxy interceptors are ignored for WebSocket connections.
+ * HTTP Proxy: Added WebSocket support
+ * HTTP Proxy: Fixed rewriting the host header, so forwarding works even if the target server uses virtual hosting
+ * HTTP Proxy: The node-http-proxy based implementation is now default
  * Added HTTP/2 support for HTTPS - this currently uses the [node-spdy](https://github.com/spdy-http2/node-spdy)
    modules which has a [known problem with compressed data](https://github.com/spdy-http2/node-spdy/issues/357).
    So, don't use this if your API server compresses responses. Also, don't use this if you rely on WebSocket or SSE.

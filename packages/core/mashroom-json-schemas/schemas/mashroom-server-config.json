@@ -245,7 +245,7 @@
                                 "nodeHttpProxy",
                                 "request"
                             ],
-                            "description": "Switch the proxy implementation. Currently available are 'request' (based https://github.com/request/request), which is the default, or 'nodeHttpProxy' (based on https://github.com/http-party/node-http-proxy)"
+                            "description": "Switch the proxy implementation. Currently available are  'nodeHttpProxy' (based on https://github.com/http-party/node-http-proxy), which is the default, or 'request' (based https://github.com/request/request)"
                         }
                     },
                     "additionalProperties": false

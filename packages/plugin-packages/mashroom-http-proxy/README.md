@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a service for forwarding requests to a target URI.
+Adds a service for forwarding requests to a target URI. It supports HTTP, HTTPS and WebSockets (only the default/nodeHttpProxy implementation, see below).
 
 ## Usage
 
@@ -65,8 +65,8 @@ You can override the default config in your Mashroom config file like this:
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
  * _keepAlive_: Enable/disable connection keep-alive. Set this to *false* if you experience random ECONNRESET with the *nodeHttpProxy* implementation,
     see: https://github.com/nonblocking/mashroom/issues/77
- * _proxyImpl_: Switch the proxy implementation. Currently available are *request* (based on [request](https://github.com/request/request)),
-   *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy)) and *default* (which is *request* at the moment)
+ * _proxyImpl_: Switch the proxy implementation. Currently available are *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy)),
+   *request* (based on [request](https://github.com/request/request)) and *default* (which is *nodeHttpProxy* at the moment)
 
 ## Services
 
@@ -85,6 +85,13 @@ export interface MashroomHttpProxyService {
      * The Promise will resolve as soon as the whole response was sent to the client.
      */
     forward(req: Request, res: Response, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
+
+    /**
+     * Forwards a WebSocket request (ws or wss).
+     * The passed additional headers are only available at the upgrade/handshake request (most WS frameworks allow you to access it).
+     * Proxy interceptors are not applied for WebSockets!
+     */
+    forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
 
 }
 ```

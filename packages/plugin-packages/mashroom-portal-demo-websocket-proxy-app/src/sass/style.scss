@@ -1,0 +1,37 @@
+
+@import "~@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults";
+
+.mashroom-demo-websocket-proxy-app {
+    padding: 10px;
+
+    .echo {
+        .input-form {
+            display: flex;
+            max-width: 500px;
+
+            button {
+                margin-left: 10px;
+            }
+        }
+    }
+
+    .received-message {
+        margin-top: 10px;
+
+    }
+
+    .info {
+        margin: 10px 0 20px 0;
+
+        .info-icon:before {
+            content: '\f129';
+            font-family: $FONT_ICON;
+            font-weight: 900;
+            margin-right: 10px;
+        }
+    }
+
+    .error {
+        color: red;
+    }
+}

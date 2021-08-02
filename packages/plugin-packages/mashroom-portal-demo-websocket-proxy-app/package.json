@@ -1,10 +1,10 @@
 {
-    "name": "@mashroom/mashroom-portal-demo-rest-proxy-app",
-    "description": "Simple app that demonstrates rest proxy usage and i18n",
+    "name": "@mashroom/mashroom-portal-demo-websocket-proxy-app",
+    "description": "Simple App that demonstrates how to use a WebSocket proxy",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.7.10",
+    "version": "1.0.0",
     "sideEffects": false,
     "files": [
         "dist/**"
@@ -19,7 +19,6 @@
         "jest": "^27.0.6",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
-        "react-intl": "^5.20.4",
         "typescript": "^4.3.5",
         "webpack": "^5.42.0",
         "webpack-cli": "^4.7.2",
@@ -35,10 +34,10 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Portal Demo Rest Proxy App",
-                "title": "Demo REST Proxy App",
+                "name": "Mashroom Portal Demo WebSocket Proxy App",
+                "title": "Demo WebSocket Proxy App",
                 "type": "portal-app",
-                "bootstrap": "startRestProxyDemoApp",
+                "bootstrap": "startWebSocketProxyDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -52,8 +51,8 @@
                         "Authenticated"
                     ],
                     "restProxies": {
-                        "spaceXApi": {
-                            "targetUri": "https://api.spacexdata.com/v4",
+                        "echo": {
+                            "targetUri": "ws://echo.websocket.org/",
                             "restrictToRoles": [
                                 "Authenticated"
                             ]

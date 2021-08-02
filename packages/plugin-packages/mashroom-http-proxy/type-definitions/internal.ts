@@ -1,7 +1,8 @@
 
 import type {IncomingHttpHeaders, IncomingMessage} from 'http';
+import type {Socket} from 'net';
 import type {Request, Response} from 'express';
-import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyInterceptor, MashroomHttpProxyResponseInterceptorResult, HttpHeaders, MashroomHttpProxyRequestInterceptorResult} from './api';
 
 export interface HttpHeaderFilter {
@@ -42,6 +43,7 @@ export interface InterceptorHandler {
 }
 
 export interface Proxy {
-    forward(req: Request, res: Response, uri: string, additionalHeaders: HttpHeaders): Promise<void>;
+    forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders): Promise<void>;
+    forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
     shutdown(): void;
 }

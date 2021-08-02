@@ -15,7 +15,7 @@ import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-
 import type {MashroomPortalAppUserPermissions, MashroomPortalProxyDefinition,} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
-export default class PortalRestProxyController {
+export default class PortalHttpProxyController {
 
     constructor(private _pluginRegistry: MashroomPortalPluginRegistry) {
     }

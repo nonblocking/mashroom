@@ -1,11 +1,9 @@
 import request from 'request';
 import {getHttpPool, getHttpsPool, getPoolConfig} from '../connection_pool';
 
+import type {Socket} from 'net';
 import type {Request, Response} from 'express';
-import type {
-    MashroomLoggerFactory,
-    MashroomLogger
-} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLoggerFactory, MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
 
@@ -20,7 +18,7 @@ export default class ProxyImplRequest implements Proxy {
         logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
     }
 
-    async forward(req: Request, res: Response, uri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
+    async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const method = req.method;
 
@@ -30,7 +28,7 @@ export default class ProxyImplRequest implements Proxy {
             return Promise.resolve();
         }
 
-        let effectiveTargetUri = encodeURI(uri);
+        let effectiveTargetUri = encodeURI(targetUri);
         let effectiveAdditionalHeaders = {
             ...additionalHeaders,
         };
@@ -38,7 +36,7 @@ export default class ProxyImplRequest implements Proxy {
             ...req.query
         };
         // Process request interceptors
-        const interceptorResult = await this._interceptorHandler.processRequest(req, res, uri, additionalHeaders, logger);
+        const interceptorResult = await this._interceptorHandler.processRequest(req, res, targetUri, additionalHeaders, logger);
         if (interceptorResult.responseHandled) {
             return Promise.resolve();
         }
@@ -73,7 +71,7 @@ export default class ProxyImplRequest implements Proxy {
         this._headerFilter.filter(req.headers);
 
         const options = {
-            agent: uri.startsWith('https') ? getHttpsPool() : getHttpPool(),
+            agent: targetUri.startsWith('https') ? getHttpsPool() : getHttpPool(),
             method,
             uri: effectiveTargetUri,
             qs: effectiveQueryParams,
@@ -94,7 +92,7 @@ export default class ProxyImplRequest implements Proxy {
                     // Execute response interceptors
                     // Pause the stream flow until the async op is finished
                     targetResponse.pause();
-                    const interceptorResult = await this._interceptorHandler.processResponse(req, res, uri, targetResponse, logger);
+                    const interceptorResult = await this._interceptorHandler.processResponse(req, res, targetUri, targetResponse, logger);
                     targetResponse.resume();
 
                     if (interceptorResult.responseHandled) {
@@ -135,12 +133,12 @@ export default class ProxyImplRequest implements Proxy {
                 })
                 .on('error', (error: NodeJS.ErrnoException) => {
                     if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
-                        logger.error(`Target endpoint '${uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
+                        logger.error(`Target endpoint '${targetUri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
                         if (!res.headersSent) {
                             res.sendStatus(504);
                         }
                     } else {
-                        logger.error(`Forwarding to '${uri}' failed!`, error);
+                        logger.error(`Forwarding to '${targetUri}' failed!`, error);
                         if (!res.headersSent) {
                             res.sendStatus(503);
                         }
@@ -148,6 +146,10 @@ export default class ProxyImplRequest implements Proxy {
                     resolve();
                 }));
         });
+    }
+
+    async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void> {
+        throw new Error('WebSockets are not supported by this HTTP proxy implementation (request)');
     }
 
     shutdown(): void {

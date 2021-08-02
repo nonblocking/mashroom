@@ -1,6 +1,7 @@
 // @flow
 
-import type {ExpressRequest, ExpressResponse, MashroomPluginConfig, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
+import type {ExpressRequest, ExpressResponse, MashroomPluginConfig, MashroomPluginContextHolder, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
+import type {Socket} from 'net';
 
 export type HttpHeaders = {
     [string]: string;
@@ -19,6 +20,13 @@ export interface MashroomHttpProxyService {
      */
     forward(req: ExpressRequest, res: ExpressResponse, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
 
+
+    /**
+     * Forwards a WebSocket request (ws or wss).
+     * The passed additional headers are only available at the upgrade/handshake request (most WS frameworks allow you to access it).
+     * Proxy interceptors are not applied for WebSockets!
+     */
+    forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
 }
 
 export type MashroomHttpProxyRequestInterceptorResult = {
