@@ -11,7 +11,8 @@ module.exports = {
         proxy: {
             '/mashroom-portal/*':{
                 target: 'http://localhost:5050',
-                pathRewrite: {'^/mashroom-portal' : ''}
+                pathRewrite: {'^/mashroom-portal' : ''},
+                ws: true
             },
         },
     },
