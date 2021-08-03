@@ -9,15 +9,15 @@
         "dist/**"
     ],
     "dependencies": {
-        "ioredis": "^4.27.6"
+        "ioredis": "^4.27.7"
     },
     "devDependencies": {
         "@mashroom/mashroom": "1.7.10",
         "@mashroom/mashroom-memory-cache": "1.7.10",
         "@mashroom/mashroom-monitoring-metrics-collector": "1.7.10",
-        "@babel/cli": "7.14.5",
-        "@types/ioredis": "^4.26.4",
-        "eslint": "7.30.0",
+        "@babel/cli": "7.14.8",
+        "@types/ioredis": "^4.26.6",
+        "eslint": "7.32.0",
         "jest": "27.0.6",
         "typescript": "^4.3.5"
     },
