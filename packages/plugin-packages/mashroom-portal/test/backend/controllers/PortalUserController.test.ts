@@ -131,6 +131,7 @@ describe('PortalUserController', () => {
                     security: {
                         service: {
                             revokeAuthentication: mockRevokeAuthentication,
+                            getUser: () => Promise.resolve({}),
                         }
                     }
                 }
@@ -167,6 +168,7 @@ describe('PortalUserController', () => {
                     security: {
                         service: {
                             revokeAuthentication: mockRevokeAuthentication,
+                            getUser: () => Promise.resolve({}),
                         }
                     }
                 }
