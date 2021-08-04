@@ -34,6 +34,7 @@ export default class RemoteMessagingClient {
     private _connectRetries: number;
     private _subscribedTopics: Array<string>;
     private _timer: ReturnType<typeof setTimeout> | undefined | null;
+    private _cancelRetry: boolean;
 
     constructor(private _connectUrl: string) {
         this._webSocket = null;
@@ -42,6 +43,10 @@ export default class RemoteMessagingClient {
         this._openPromises = [];
         this._connectRetries = 0;
         this._subscribedTopics = [];
+        this._cancelRetry = false;
+        global.addEventListener('beforeunload', (event) => {
+            this._cancelRetry = true;
+        });
     }
 
     subscribe(topic: string): Promise<void> {
@@ -220,7 +225,7 @@ export default class RemoteMessagingClient {
     }
 
     private _tryReconnect() {
-        if (this._connectRetries < CONNECT_RETRIES) {
+        if (this._connectRetries < CONNECT_RETRIES && !this._cancelRetry) {
             this._connectRetries++;
             console.warn(`WebSocket connection lost. Try to reconnect (attempt #${this._connectRetries})...`);
             setTimeout(() => this._getWebSocket(), CONNECT_RETRY_TIMEOUT_MS * this._connectRetries);
