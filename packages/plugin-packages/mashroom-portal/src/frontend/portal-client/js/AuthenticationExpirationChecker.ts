@@ -40,6 +40,13 @@ export default class MashroomPortalUserInactivityHandler {
     }
 
     private _checkExpirationTime() {
+        const timeLeft = this._getTimeLeftSec();
+        if (timeLeft <= warnBeforeAuthenticationExpiresSec && timeLeft > 5 && timeLeft % 5 !== 0) {
+            // Limit the server requests to max once per 5sec
+            this._handleExpirationTimeUpdate();
+            return;
+        }
+
         this._portalUserService.getAuthenticationExpiration().then(
             (expirationTime) => {
                 this._authenticationExpirationTime = expirationTime;
@@ -50,6 +57,7 @@ export default class MashroomPortalUserInactivityHandler {
 
     private _extendAuthentication() {
         this._portalUserService.extendAuthentication();
+        this._authenticationExpirationTime = warnBeforeAuthenticationExpiresSec + 10;
     }
 
     private _handleExpirationTimeUpdate() {

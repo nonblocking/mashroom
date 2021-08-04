@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Reduced the number of session expiration checks to the server
  * OpenID Connect Security Provider: Allow multiple parallel auth requests. This fixes the problem that the login
    failed if multiple browser tabs were open and triggered the login at the same time.
  * OpenID Connect Security Provider: Reduced the number of token refreshes
