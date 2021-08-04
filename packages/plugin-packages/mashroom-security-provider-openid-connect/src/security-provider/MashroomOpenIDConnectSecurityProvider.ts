@@ -195,7 +195,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
     /*
      * We need to refresh the token periodically, otherwise the session would just expire after some time
      * To avoid too much load at the Identity Provider we do that only from time to time, when a third of the
-     * expire time (which is usually a few minutes) has elapsed
+     * expiration time (which is usually a few minutes) has elapsed
      */
     private shouldRefreshToken(authData: OpenIDConnectAuthData): boolean {
         const {lastTokenCheck, tokenSet: {expires_at} = {}} = authData;
