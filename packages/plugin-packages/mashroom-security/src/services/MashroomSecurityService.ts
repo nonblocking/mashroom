@@ -22,6 +22,7 @@ import {
 
 export const ROLE_ADMINISTRATOR = 'Administrator';
 export const ROLE_AUTHENTICATED_USER = 'Authenticated';
+export const SECURITY_SESSION_PROPERTY_PREFX = '__MASHROOM_SECURITY_';
 
 const RESOURCE_PERMISSIONS_COLLECTION_NAME = 'mashroom-security-resource-permissions';
 const ROLE_DEFINITIONS_COLLECTION_NAME = 'mashroom-security-role-definitions';
@@ -206,7 +207,10 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 }
                 const authenticationHints = this._getAuthenticationHints(request);
                 this._removeAuthenticationHintsFromUrl(request, authenticationHints);
-                return await securityProvider.authenticate(request, response, authenticationHints);
+                const result = await securityProvider.authenticate(request, response, authenticationHints);
+
+
+
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
             }
@@ -318,16 +322,26 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
 
     private async _createNewSession(request: Request): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
-        logger.debug('Invalidating session');
+        logger.debug('Creating a new session');
 
         return new Promise((resolve) => {
+            const oldSession = {
+                ...request.session,
+            }
             request.session.regenerate((err: Error | null) => {
                 if (err) {
                     logger.warn('Session invalidation failed!', err);
+                } else {
+                    // Copy the security stuff we need for ongoing authentication flows
+                    Object.keys(oldSession).forEach((sessionKey) => {
+                       if (sessionKey.indexOf(SECURITY_SESSION_PROPERTY_PREFX) === 0) {
+                           request.session[sessionKey] = oldSession[sessionKey];
+                       }
+                    });
                 }
                 resolve();
             });
-        })
+        });
     }
 
     private _getAuthenticationHints(request: Request): any {

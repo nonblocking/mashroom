@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * OpenID Connect Security Provider: Allow multiple parallel auth requests. This fixes the problem that the login
+   failed if multiple browser tabs were open and triggered the login at the same time.
+ * OpenID Connect Security Provider: Reduced the number of token refreshes
  * Added a demo App for WebSocket proxy usage (@mashroom/mashroom-portal-demo-websocket-proxy-app)
  * Portal: The App proxy supports now WebSocket. This means, that Apps (Microfrontends) can open WebSocket connections
    to servers "behind" the Portal. All the usual (optional) Security headers going to be sent with the initial

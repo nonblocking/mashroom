@@ -64,7 +64,9 @@ export default class PortalUserController {
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-            await securityService.revokeAuthentication(req);
+            if (securityService.getUser(req)) {
+                await securityService.revokeAuthentication(req);
+            }
 
             if (isHtmlRequest(req)) {
                 let redirectUrl = null;

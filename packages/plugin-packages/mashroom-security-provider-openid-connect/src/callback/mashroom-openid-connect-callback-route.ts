@@ -1,21 +1,22 @@
 import openIDConnectClient from '../openid-connect-client';
 import createUser from '../create-user';
-import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
+import {OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
 import {OpenIDCallbackChecks} from 'openid-client';
 
 import type {Request, Response} from 'express';
+import type {TokenSet} from 'openid-client';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
-import type {CallbackConfiguration, OpenIDConnectAuthData} from '../../type-definitions';
+import type {CallbackConfiguration, OpenIDConnectAuthRequestData, OpenIDConnectAuthData} from '../../type-definitions';
 
 let _callbackConfiguration: CallbackConfiguration | undefined;
 
-export const setCallbackConfiguration = (callbackConfiguration: CallbackConfiguration) => {
+export const setCallbackConfiguration = (callbackConfiguration: CallbackConfiguration): void => {
     _callbackConfiguration = callbackConfiguration;
 };
 
 export default (defaultBackUrl: string) => {
-    return async (request: Request, response: Response) => {
+    return async (request: Request, response: Response): Promise<void> => {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
         if (!_callbackConfiguration) {
@@ -33,20 +34,18 @@ export default (defaultBackUrl: string) => {
         const reqParams = client.callbackParams(request);
         logger.debug('Auth callback triggered with params:', reqParams);
 
-        const authData: OpenIDConnectAuthData = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (!authData) {
+        const requestDataKey = `${OICD_REQUEST_DATA_SESSION_KEY_PREFIX}${reqParams.state}`;
+        const authReqData: OpenIDConnectAuthRequestData | undefined = request.session[requestDataKey];
+        if (!authReqData) {
+            logger.error('No authentication request found for state:', reqParams.state);
             response.sendStatus(403);
             return;
         }
 
-        const {state, nonce, codeVerifier, backUrl} = authData;
+        // Delete the auth request data to prevent replays
+        delete request.session[requestDataKey];
 
-        // Remove sensitive data from session that is no longer required
-        delete authData.state;
-        delete authData.nonce;
-        delete authData.codeVerifier;
-        request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
-
+        const {state, nonce, codeVerifier, backUrl} = authReqData;
         const redirectUrl = client.metadata.redirect_uris && client.metadata.redirect_uris[0];
 
         const checks: OpenIDCallbackChecks = {
@@ -58,29 +57,27 @@ export default (defaultBackUrl: string) => {
         try {
             let claims;
             let userInfo;
+            let tokenSet: TokenSet;
             if (mode === 'OAuth2') {
-                const tokenSet = await client.oauthCallback(redirectUrl, reqParams, checks);
-
-                authData.lastTokenCheck = Date.now();
-                authData.tokenSet = tokenSet;
-
+                tokenSet = await client.oauthCallback(redirectUrl, reqParams, checks);
             } else {
-                const tokenSet = await client.callback(redirectUrl, reqParams, checks);
+                tokenSet = await client.callback(redirectUrl, reqParams, checks);
                 claims = tokenSet.claims();
                 try {
                     userInfo = await client.userinfo(tokenSet);
                 } catch (e) {
                     // Issuer has no userinfo_endpoint
                 }
-
-                authData.lastTokenCheck = Date.now();
-                authData.tokenSet = tokenSet;
             }
 
             const mashroomUser: MashroomSecurityUser = createUser(claims, userInfo, rolesClaimName, adminRoles, extraDataMapping);
             logger.debug('User successfully authenticated:', mashroomUser);
-            logger.debug(`Token valid until: ${new Date((authData.tokenSet.expires_at || 0) * 1000)}. Claims:`, claims, '. User info:', userInfo);
+            logger.debug(`Token valid until: ${new Date((tokenSet.expires_at || 0) * 1000)}. Claims:`, claims, '. User info:', userInfo);
 
+            const authData: OpenIDConnectAuthData = {
+                lastTokenCheck: Date.now(),
+                tokenSet,
+            }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
             request.session[OICD_USER_SESSION_KEY] = mashroomUser;
 

@@ -30,13 +30,13 @@ const handle = async (message: IncomingMessageWithContext, socket: Socket, head:
         logger.error('User determination failed', error);
     }
     if (!user) {
-        logger.error('Unauthenticated user cannot upgrade to WebSocket');
+        logger.error('Anonymous users cannot use mashroom-websocket');
         sendError(socket, 403, 'Unauthenticated');
         return;
     }
 
     if (context.restrictToRoles && context.restrictToRoles.length > 0 && !context.restrictToRoles.some((role) => user && user.roles.indexOf(role) !== -1)) {
-        logger.error(`User ${user.username} has not required roles to upgrade to WebSocket`);
+        logger.error(`User ${user.username} has not required roles to use mashroom-websocket`);
         sendError(socket, 401, 'Forbidden');
         return;
     }

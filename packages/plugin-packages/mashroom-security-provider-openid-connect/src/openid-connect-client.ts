@@ -8,7 +8,7 @@ import type {ClientConfiguration} from '../type-definitions';
 let _clientConfiguration: ClientConfiguration | undefined;
 let _client: Client | undefined;
 
-export const setClientConfiguration = (clientConfiguration: ClientConfiguration) => {
+export const setClientConfiguration = (clientConfiguration: ClientConfiguration): void => {
     _clientConfiguration = clientConfiguration;
     _client = undefined;
 };

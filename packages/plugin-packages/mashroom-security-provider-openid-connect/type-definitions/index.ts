@@ -22,11 +22,15 @@ export type CallbackConfiguration = {
     extraDataMapping: Record<string, string> | undefined | null;
 }
 
-export type OpenIDConnectAuthData = {
-    state?: string | undefined;
-    nonce?: string | undefined;
-    codeVerifier?: string | undefined;
-    backUrl?: string | undefined;
-    lastTokenCheck?: number | undefined;
-    tokenSet?: TokenSet | undefined;
+export type OpenIDConnectAuthRequestData = {
+    state: string;
+    nonce?: string;
+    codeVerifier?: string;
+    backUrl: string;
 }
+
+export type OpenIDConnectAuthData = {
+    lastTokenCheck: number;
+    tokenSet: TokenSet;
+}
+

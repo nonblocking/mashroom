@@ -2,7 +2,7 @@
 import requestNative from 'request-promise-native';
 import {AuthorizationParameters, generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
-import {OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY, TOKEN_CHECK_INTERVAL_MS,} from '../constants';
+import {OICD_AUTH_DATA_SESSION_KEY, OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_USER_SESSION_KEY} from '../constants';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger,} from '@mashroom/mashroom/type-definitions';
@@ -12,7 +12,7 @@ import type {
     MashroomSecurityProvider,
     MashroomSecurityUser,
 } from '@mashroom/mashroom-security/type-definitions';
-import type {OpenIDConnectAuthData} from '../../type-definitions';
+import type {OpenIDConnectAuthData, OpenIDConnectAuthRequestData} from '../../type-definitions';
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
@@ -36,19 +36,19 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             };
         }
 
-        const newAuthData: OpenIDConnectAuthData = {
+        const authReqData: OpenIDConnectAuthRequestData = {
             state: generators.random(),
             backUrl: originalUrl,
         };
         if (client.metadata.response_types && client.metadata.response_types.includes('id_token')) {
-            newAuthData.nonce = generators.random();
+            authReqData.nonce = generators.random();
         }
 
         let code_challenge = undefined;
         let code_challenge_method = undefined;
         if (this._usePKCE) {
             const code_verifier = generators.codeVerifier();
-            newAuthData.codeVerifier = code_verifier;
+            authReqData.codeVerifier = code_verifier;
             if (Array.isArray(client.metadata.code_challenge_methods_supported) && client.metadata.code_challenge_methods_supported.includes('S256')) {
                 logger.debug('Using PKCE code challenge method: S256');
                 code_challenge = generators.codeChallenge(code_verifier);
@@ -59,12 +59,13 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             }
         }
 
-        request.session[OICD_AUTH_DATA_SESSION_KEY] = newAuthData;
+        const requestDataKey = `${OICD_REQUEST_DATA_SESSION_KEY_PREFIX}${authReqData.state}`;
+        request.session[requestDataKey] = authReqData;
 
         const authorizationParameters: AuthorizationParameters = {
             scope: this._scope,
-            state: newAuthData.state,
-            nonce: newAuthData.nonce,
+            state: authReqData.state,
+            nonce: authReqData.nonce,
             code_challenge,
             code_challenge_method,
             ...this._extraAuthParams,
@@ -84,14 +85,13 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
     async checkAuthentication(request: Request): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
 
-        const user = this.getUser(request);
+        let user = this.getUser(request);
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (!user || !authData || !authData.tokenSet || !authData.lastTokenCheck) {
+        if (!authData) {
             return;
         }
 
-        if (Date.now() - authData.lastTokenCheck < TOKEN_CHECK_INTERVAL_MS) {
-            // Don't check the token too frequently
+        if (!this.shouldRefreshToken(authData)) {
             return;
         }
 
@@ -116,17 +116,18 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
 
+            user = this.getUser(request);
             logger.debug(`Token refreshed for user ${user?.username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
 
         } catch (e) {
-            logger.error(`Refreshing access token failed. Signing out user: ${user?.username}`, e);
+            logger.info(`Refreshing token failed. Signing out user: ${user?.username}`, e);
             delete request.session[OICD_AUTH_DATA_SESSION_KEY];
         }
     }
 
     getAuthenticationExpiration(request: Request): number | null | undefined {
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (authData && authData.tokenSet && authData.tokenSet.expires_at) {
+        if (authData?.tokenSet.expires_at) {
             return authData.tokenSet.expires_at * 1000;
         }
 
@@ -138,7 +139,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
 
         const client = await openIDConnectClient(request);
         const authData: OpenIDConnectAuthData | undefined = request.session[OICD_AUTH_DATA_SESSION_KEY];
-        if (!client || !authData || !authData.tokenSet) {
+        if (!client || !authData?.tokenSet) {
             return;
         }
 
@@ -191,4 +192,21 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         };
     }
 
+    /*
+     * We need to refresh the token periodically, otherwise the session would just expire after some time
+     * To avoid too much load at the Identity Provider we do that only from time to time, when a third of the
+     * expire time (which is usually a few minutes) has elapsed
+     */
+    private shouldRefreshToken(authData: OpenIDConnectAuthData): boolean {
+        const {lastTokenCheck, tokenSet: {expires_at} = {}} = authData;
+        let checkPeriod;
+        if (!expires_at) {
+            // If the token doesn't expire, check it every 30sec
+            checkPeriod = 30000;
+        } else {
+            checkPeriod = (expires_at * 1000 - lastTokenCheck) / 3;
+        }
+
+        return Date.now() - lastTokenCheck > checkPeriod;
+    }
 }
