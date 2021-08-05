@@ -6,7 +6,7 @@ type Props = {
 }
 
 type State = {
-    status: 'PENDING' | 'OPEN' | 'CLOSED' | 'ERROR';
+    status: 'CONNECTING' | 'OPEN' | 'CLOSED' | 'ERROR';
     error: string | null;
     receivedMessage: string | null;
     inputMessage: string;
@@ -19,7 +19,7 @@ export default class App extends PureComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            status: 'PENDING',
+            status: 'CONNECTING',
             error: null,
             receivedMessage: null,
             inputMessage: '',
@@ -84,6 +84,11 @@ export default class App extends PureComponent<Props, State> {
 
         return (
             <div className='mashroom-demo-websocket-proxy-app'>
+                {status === 'CONNECTING' && (
+                    <div className='connecting'>
+                        Connecting...
+                    </div>
+                )}
                 {status === 'ERROR' && (
                     <div className='error'>
                         Error: {error}
