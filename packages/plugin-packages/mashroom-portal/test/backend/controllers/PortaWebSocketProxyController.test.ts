@@ -69,7 +69,8 @@ const pluginContext: any = {
     services: {
         core: {
             middlewareStackService: {
-                apply: () => { /* nothing to do */ }
+                apply: () => { /* nothing to do */ },
+                has: () => false,
             }
         },
         storage: {

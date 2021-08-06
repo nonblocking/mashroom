@@ -1,4 +1,5 @@
 
+import {PORTAL_APP_REST_PROXY_BASE_PATH, PORTAL_INTERNAL_SEPARATOR} from './constants';
 import context, {setPortalPluginConfig} from './context/global_portal_context';
 import storageFixture from './storage-fixture';
 import setupWebapp from './setup-webapp';
@@ -24,7 +25,8 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
     const proxyUpgradeHandler: MashroomHttpUpgradeHandler = (request, socket, head) => {
         proxyController.forward(request, socket, head);
     };
-    httpUpgradeService.registerUpgradeHandler(proxyUpgradeHandler, pluginConfig.path);
+
+    httpUpgradeService.registerUpgradeHandler(proxyUpgradeHandler, PORTAL_INTERNAL_SEPARATOR + PORTAL_APP_REST_PROXY_BASE_PATH);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         httpUpgradeService.unregisterUpgradeHandler(proxyUpgradeHandler);
     });

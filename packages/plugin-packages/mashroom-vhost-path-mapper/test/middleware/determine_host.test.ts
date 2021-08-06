@@ -92,6 +92,18 @@ describe('determine_host', () => {
         });
     });
 
+    it('determines the host correctly if hostname is undefined',  () => {
+        const req: any = {
+            headers: {
+                host: 'my-host.at:8080'
+            }
+        };
+
+        expect(determineHost([], req)).toEqual({
+            hostname: 'my-host.at',
+            port: '8080',
+        });
+    });
 
 });
 

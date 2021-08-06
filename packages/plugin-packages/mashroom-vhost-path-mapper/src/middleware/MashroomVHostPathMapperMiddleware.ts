@@ -33,23 +33,23 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
                     if (mappingResult) {
                         req.url = mappingResult.url;
                         req.originalUrl = mappingResult.url;
-                        // @ts-ignore
                         req[VHOST_MAPPING_INFO_REQUEST_PROP_NAME] = mappingResult.info;
                         logger.debug(`Path has been mapped: ${originalPath} -> ${mappingResult.url}`);
                     }
 
                     // Intercept redirects and map them
-                    const originalLocationFn = res.location.bind(res);
-                    // @ts-ignore
-                    res.location = (redirectUrl: string) => {
-                        let newRedirectUrl = redirectUrl;
-                        const redirectMappingResult = mapPath(redirectUrl, hostDefinition, true);
-                        if (redirectMappingResult) {
-                            newRedirectUrl = redirectMappingResult.url || '/';
-                            logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${redirectMappingResult.url}`);
-                        }
-                        return originalLocationFn(newRedirectUrl);
-                    };
+                    if (res.location) {
+                        const originalLocationFn = res.location.bind(res);
+                        res.location = (redirectUrl: string) => {
+                            let newRedirectUrl = redirectUrl;
+                            const redirectMappingResult = mapPath(redirectUrl, hostDefinition, true);
+                            if (redirectMappingResult) {
+                                newRedirectUrl = redirectMappingResult.url || '/';
+                                logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${redirectMappingResult.url}`);
+                            }
+                            return originalLocationFn(newRedirectUrl);
+                        };
+                    }
                 }
 
                 next();

@@ -44,7 +44,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
                     pluginName: plugin.name,
                     upgradeHandler,
                 })
-                this.getHttpUpgradeService().registerUpgradeHandler(upgradeHandler, pluginConfig.path);
+                this.getHttpUpgradeService().registerUpgradeHandler(upgradeHandler, `^${pluginConfig.path}`);
             } else {
                 this._logger2.error(`Ignoring upgrade handler of webapp ${plugin.name} because a valid path is missing in the config`);
             }

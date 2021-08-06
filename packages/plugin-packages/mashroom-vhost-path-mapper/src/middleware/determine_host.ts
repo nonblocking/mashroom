@@ -3,7 +3,7 @@ import type {Request} from 'express';
 import type {DeterminedHost} from '../../type-definitions/internal';
 
 export default (considerHttpHeaders: Array<string>, req: Request): DeterminedHost => {
-    const hostHeader = req.headers.host;
+    const hostHeader = req.headers.host as string;
     let hostname = undefined;
     let port = undefined;
 
@@ -25,14 +25,17 @@ export default (considerHttpHeaders: Array<string>, req: Request): DeterminedHos
         hostname = req.hostname;
     }
 
-    hostname = hostname.trim();
-
-    if (hostHeader && hostHeader.indexOf(':') !== -1) {
+    if (hostHeader) {
         const [hostFromHeader, portFromHeader] = hostHeader.split(':');
-        if (hostFromHeader === hostname) {
+        if (!hostname) {
+            hostname = hostFromHeader;
+        }
+        if (portFromHeader && hostFromHeader === hostname) {
             port = portFromHeader;
         }
     }
+
+    hostname = hostname.trim();
 
     return {
         hostname,

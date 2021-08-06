@@ -44,6 +44,7 @@
                     "frontendBasePath": "/mashroom-portal",
                     "mapping": {
                         "/login": "/login",
+                        "/websocket": "/websocket",
                         "/": "/portal/web"
                     }
                 }

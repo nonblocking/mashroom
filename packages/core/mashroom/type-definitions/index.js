@@ -361,9 +361,9 @@ export type MashroomHttpUpgradeHandler = (request: HttpServerRequest, socket: ne
  */
 export interface MashroomHttpUpgradeService {
     /**
-     * Register an upgrade handler for given path
+     * Register an upgrade handler for given path expression
      */
-    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, path: string): void;
+    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, pathExpression: string | RegExp): void;
     /**
      * Unregister an upgrade handler
      */

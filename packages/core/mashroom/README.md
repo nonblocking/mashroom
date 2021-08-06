@@ -99,7 +99,7 @@ export interface MashroomHttpUpgradeService {
     /**
      * Register an upgrade handler for given path
      */
-    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, path: string): void;
+    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, pathExpression: string | RegExp): void;
     /**
      * Unregister an upgrade handler
      */

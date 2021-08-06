@@ -37,6 +37,15 @@ export default class PortalRestProxyController {
         };
 
         try {
+            // We need to apply the session middleware for this upgrade req, otherwise we have no user context;
+            // and also the vhost path mapping middleware, if present, which fixes the url
+            const middlewareStackService: MashroomMiddlewareStackService = req.pluginContext.services.core.middlewareStackService;
+            const dummyResponse: any = {};
+            await middlewareStackService.apply('Mashroom Session Middleware', req, dummyResponse);
+            if (middlewareStackService.has('Mashroom VHost Path Mapper Middleware')) {
+                await middlewareStackService.apply('Mashroom VHost Path Mapper Middleware', req, dummyResponse);
+            }
+
             // The url has the format /<basePath>/<sitePath>/___/proxy/<encodedAppName>/<proxyName>/path?q=1
             const url = message.url;
             if (!url) {
@@ -53,11 +62,6 @@ export default class PortalRestProxyController {
                 sendStatus(400);
                 return;
             }
-
-            // First wie need to apply the session middleware for this upgrade req, otherwise we have no user context
-            const middlewareStackService: MashroomMiddlewareStackService = req.pluginContext.services.core.middlewareStackService;
-            const dummyResponse: any = {};
-            await middlewareStackService.apply('Mashroom Session Middleware', req, dummyResponse);
 
             const user = getUser(req);
 

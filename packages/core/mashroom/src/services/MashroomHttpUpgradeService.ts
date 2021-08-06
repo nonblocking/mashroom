@@ -13,7 +13,7 @@ import type {InternalMashroomHttpUpgradeService} from '../../type-definitions/in
 export default class MashroomHttpUpgradeService implements InternalMashroomHttpUpgradeService {
 
     private _upgradeHandlers: Array<{
-        path: string,
+        pathExpression: string | RegExp,
         handler: MashroomHttpUpgradeHandler
     }>;
 
@@ -21,12 +21,12 @@ export default class MashroomHttpUpgradeService implements InternalMashroomHttpU
         this._upgradeHandlers = [];
     }
 
-    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, path: string): void {
-        const logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.websockets');
+    registerUpgradeHandler(handler: MashroomHttpUpgradeHandler, pathExpression: string | RegExp): void {
+        const logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.upgrade.service');
         this.unregisterUpgradeHandler(handler);
-        logger.info(`Installing HTTP upgrade handler for path: ${path}`);
+        logger.info(`Installing HTTP upgrade handler for path expression: ${pathExpression}`);
         this._upgradeHandlers.push({
-            path,
+            pathExpression,
             handler,
         })
     }
@@ -40,12 +40,12 @@ export default class MashroomHttpUpgradeService implements InternalMashroomHttpU
     }
 
     private _upgradeHandler(req: IncomingMessage, socket: Socket, head: Buffer) {
-        const logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.websockets');
+        const logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.upgrade.service');
         logger.debug('Request for upgrade to:', req.headers.upgrade);
 
 
         const path = req.url;
-        const entry = path && this._upgradeHandlers.find((ul) => path.startsWith(ul.path));
+        const entry = path && this._upgradeHandlers.find((ul) => path.match(ul.pathExpression));
         if (entry) {
             const reqWithContext = req as IncomingMessageWithContext;
             reqWithContext.pluginContext = requestPluginContext(req, this._pluginContextHolder);
