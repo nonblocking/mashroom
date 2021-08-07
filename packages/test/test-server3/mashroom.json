@@ -74,8 +74,7 @@
                 "mashroom-admin"
             ],
             "extraDataMapping": {
-                "phone": "phone",
-                "updatedAt": "updated_at"
+                "preferredUsername": "preferred_username"
             },
             "httpRequestRejectUnauthorized": false,
             "httpRequestTimeoutMs": 5000,
