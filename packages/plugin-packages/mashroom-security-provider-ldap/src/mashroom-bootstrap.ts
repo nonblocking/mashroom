@@ -19,7 +19,7 @@ const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (plugin
     const logger = loggerFactory('mashroom.security.provider.ldap');
 
     const fixedTlsOptions = fixTlsOptions(tlsOptions, serverRootFolder, logger);
-    logger.debug('Using TLS options for LDAPS: ', fixedTlsOptions);
+    logger.debug('Using TLS options for LDAPS:', fixedTlsOptions);
 
     const ldapClient = new LdapClientImpl(serverUrl, ldapConnectTimeout, ldapTimeout, baseDN, bindDN, bindCredentials, fixedTlsOptions, loggerFactory);
 

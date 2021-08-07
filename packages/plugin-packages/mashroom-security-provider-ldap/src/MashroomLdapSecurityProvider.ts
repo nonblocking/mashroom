@@ -293,11 +293,13 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
 
         const roles: Array<string> = [];
         Object.values(mapping).forEach((mappingRoles) => {
-            mappingRoles?.forEach((role) => {
-                if (roles.indexOf(role) === -1) {
-                    roles.push(role);
-                }
-            });
+            if (Array.isArray(mappingRoles)) {
+                mappingRoles.forEach((role) => {
+                    if (roles.indexOf(role) === -1) {
+                        roles.push(role);
+                    }
+                });
+            }
         });
 
         logger.debug('Adding role definitions:', roles);

@@ -12,7 +12,11 @@ type Logger = {
 
 const CERT_PROPERTIES: Array<keyof TlsOptions> = ['cert', 'ca', 'key', 'crl', 'pfx'];
 
-export const fixTlsOptions = (tlsOptions: TlsOptions, serverRootFolder: string, logger: Logger): TlsOptions => {
+export const fixTlsOptions = (tlsOptions: TlsOptions | undefined | null, serverRootFolder: string, logger: Logger): TlsOptions | null => {
+    if (!tlsOptions) {
+        return null;
+    }
+
     const fixedTlsOptions: TlsOptions = {
         ...tlsOptions
     };

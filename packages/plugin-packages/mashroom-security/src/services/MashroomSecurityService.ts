@@ -207,10 +207,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 }
                 const authenticationHints = this._getAuthenticationHints(request);
                 this._removeAuthenticationHintsFromUrl(request, authenticationHints);
-                const result = await securityProvider.authenticate(request, response, authenticationHints);
-
-
-
+                return await securityProvider.authenticate(request, response, authenticationHints);
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
             }
