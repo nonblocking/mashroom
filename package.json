@@ -32,14 +32,9 @@
         "jest": "^27.0.6",
         "lerna": "^4.0.0",
         "copyfiles": "^2.4.1",
-        "rimraf": "^3.0.2",
-        "npm-force-resolutions": "^0.0.10"
-    },
-    "resolutions": {
-        "@zkochan/cmd-shim": "5.1.0"
+        "rimraf": "^3.0.2"
     },
     "scripts": {
-        "preinstall": "npx npm-force-resolutions",
         "setup": "npm install && lerna bootstrap && npm run build:core",
         "type-check": "lerna run type-check && flow check",
         "lint": "lerna run lint",
