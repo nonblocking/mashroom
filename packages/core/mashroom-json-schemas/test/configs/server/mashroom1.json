@@ -241,7 +241,7 @@
             }
         },
         "Mashroom Session Filestore Provider": {
-            "path": "../../data/sessions",
+            "path": "${env.TMPDIR}/mr4/sessions",
             "retries": 10
         },
         "Mashroom Session MongoDB Provider": {

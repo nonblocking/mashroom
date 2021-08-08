@@ -27,7 +27,7 @@
         },
         "HttpUrl": {
             "type": "string",
-            "pattern": "^(http://|https://).*$"
+            "pattern": "^(\\$\\{env\\..+\\}|http://|https://).*$"
         },
         "PackagerRelativePath": {
             "type": "string",
@@ -35,11 +35,11 @@
         },
         "PackagerRelativeOrSystemPath": {
             "type": "string",
-            "pattern": "^(\\./|\\../|/|[a-zA-Z]:/).*$"
+            "pattern": "^(\\$\\{env\\..+\\}|\\./|\\../|/|[a-zA-Z]:/).*$"
         },
         "PackagerRelativeOrSystemPathOrHttp": {
             "type": "string",
-            "pattern": "^(\\./|\\../|/|http://|https://).*$"
+            "pattern": "^(\\$\\{env\\..+\\}|\\./|\\../|/|http://|https://).*$"
         },
         "PluginPackageFolder": {
             "type": "object",
