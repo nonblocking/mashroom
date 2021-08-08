@@ -91,7 +91,9 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const req: any = {
-            session: {},
+            session: {
+                save: (cb: () => void) => cb(),
+            },
             pluginContext: {
                 loggerFactory,
                 services: {

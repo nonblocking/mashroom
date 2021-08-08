@@ -332,7 +332,6 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                     // Copy only the security stuff we need for ongoing authentication flows
                     Object.keys(oldSession).forEach((sessionKey) => {
                        if (sessionKey.indexOf(SECURITY_SESSION_PROPERTY_PREFX) === 0) {
-                           // @ts-ignore
                            request.session[sessionKey] = oldSession[sessionKey];
                        }
                     });

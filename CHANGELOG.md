@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
- * Portal: Fixed login failures due to "ENOENT: no such file or directory" errors when using mashroom-session-provider-filestore
+ * Portal: Fixed login failures due to "ENOENT: no such file or directory" errors when using mashroom-session-provider-filestore on Windows
  * Portal: Reduced the number of session expiration checks to the server
  * OpenID Connect Security Provider: Allow multiple parallel auth requests. This fixes the problem that the login
    failed if multiple browser tabs were open and triggered the login at the same time.

@@ -57,6 +57,7 @@ describe('MashroomSimpleSecurityProvider', () => {
     it('processes the form login correctly', async () => {
         const req: any = {
             session: {
+                save: (cb: () => void) => cb(),
             },
             pluginContext: {
                 loggerFactory,

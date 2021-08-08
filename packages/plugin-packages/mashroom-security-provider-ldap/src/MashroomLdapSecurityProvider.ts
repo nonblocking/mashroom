@@ -182,6 +182,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             request.session[LDAP_AUTH_USER_SESSION_KEY] = mashroomUser;
             request.session[LDAP_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
 
+            // Make sure the user is in the session when this method returns (file session store is async)
+            await new Promise<void>((resolve) => request.session.save(() => resolve()));
+
             return {
                 success: true
             };

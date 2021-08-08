@@ -81,6 +81,9 @@ export default (defaultBackUrl: string) => {
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
             request.session[OICD_USER_SESSION_KEY] = mashroomUser;
 
+            // Make sure the user is in the session before we redirect (file session store is async)
+            await new Promise<void>((resolve) => request.session.save(() => resolve()));
+
             if (backUrl) {
                 response.redirect(backUrl);
             } else {
