@@ -50,6 +50,9 @@ describe('MashroomSecurityService', () => {
             },
             session: {
                 regenerate(cb: (err: Error | null) => void) { cb(null); sessionRegenerated = true; },
+                save(cb: () => void) {
+                    cb();
+                }
             },
         };
         const res: any = {

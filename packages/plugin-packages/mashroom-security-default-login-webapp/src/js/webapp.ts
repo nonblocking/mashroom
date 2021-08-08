@@ -77,7 +77,7 @@ app.post('/', async (req: Request, res: Response) => {
             return;
         }
 
-        logger.debug('Processing login attempt. Username: ', username);
+        logger.debug('Processing login attempt. Username:', username);
 
         const result = await securityService.login(req, username, password);
         if (result.success) {
@@ -137,7 +137,7 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
 };
 
 const redirect = (req: Request, res: Response) => {
-    let redirectUrl = null;
+    let redirectUrl: string | null = null;
 
     const query: Record<string, any> = req.query;
     if (req.method === 'POST' && req.headers.referer) {
@@ -157,7 +157,10 @@ const redirect = (req: Request, res: Response) => {
         redirectUrl = context.indexPage;
     }
 
-    res.redirect(redirectUrl);
+    // Make sure the session with the new user is saved before redirecting
+    req.session.save(() => {
+        res.redirect(redirectUrl!);
+    });
 };
 
 export default app;

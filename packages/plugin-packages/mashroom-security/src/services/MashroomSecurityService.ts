@@ -329,14 +329,15 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 if (err) {
                     logger.warn('Session invalidation failed!', err);
                 } else {
-                    // Copy the security stuff we need for ongoing authentication flows
+                    // Copy only the security stuff we need for ongoing authentication flows
                     Object.keys(oldSession).forEach((sessionKey) => {
                        if (sessionKey.indexOf(SECURITY_SESSION_PROPERTY_PREFX) === 0) {
+                           // @ts-ignore
                            request.session[sessionKey] = oldSession[sessionKey];
                        }
                     });
                 }
-                resolve();
+                request.session.save(() => resolve());
             });
         });
     }

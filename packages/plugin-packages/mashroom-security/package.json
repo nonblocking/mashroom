@@ -15,6 +15,7 @@
         "@mashroom/mashroom-utils": "1.7.10",
         "@babel/cli": "^7.14.8",
         "@types/express": "^4.17.13",
+        "@types/express-session": "^1.17.4",
         "@types/jest": "^26.0.24",
         "eslint": "^7.32.0",
         "express": "^4.17.1",
