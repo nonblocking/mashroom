@@ -3,14 +3,17 @@
 
 ## [unreleased]
 
- * Portal: Fixed login failures due to "ENOENT: no such file or directory" errors when using mashroom-session-provider-filestore on Windows
+
+## 1.8.0 (August 9, 2021)
+
+ * Portal: Fixed login failures due to "ENOENT: no such file or directory" errors when using mashroom-session-provider-filestore under Windows
  * Portal: Reduced the number of session expiration checks to the server
- * OpenID Connect Security Provider: Allow multiple parallel auth requests. This fixes the problem that the login
-   failed if multiple browser tabs were open and triggered the login at the same time.
+ * OpenID Connect Security Provider: Allowed multiple parallel auth requests.
+   This fixes the problem that the login failed if multiple browser tabs were open and triggered the login at the same time.
  * OpenID Connect Security Provider: Reduced the number of token refreshes
  * Added a demo App for WebSocket proxy usage (@mashroom/mashroom-portal-demo-websocket-proxy-app)
  * Portal: The App proxy supports now WebSocket. This means, that Apps (Microfrontends) can open WebSocket connections
-   to servers "behind" the Portal. All the usual (optional) Security headers going to be sent with the initial
+   to servers "behind" the Portal. The usual (optional) Security headers going to be sent with the initial
    upgrade/handshake request. Proxy interceptors are ignored for WebSocket connections.
  * HTTP Proxy: Added WebSocket support
  * HTTP Proxy: Fixed rewriting the host header, so forwarding works even if the target server uses virtual hosting
@@ -62,15 +65,15 @@
    }
    ```
    The possible file name can be changed in the server config via the *externalPluginConfigFileNames* config property.
-  * Introduced JSON Schemas for all config files:
-    * *package.json*: schemas/mashroom-packagejson-extension.json
-    * *mashroom.json* (Server config): schemas/mashroom-server-config.json
-    * *acl.json*: schemas/mashroom-security-acl.json
-    * *groupToRoleMapping.json*: schemas/mashroom-security-ldap-provider-group-to-role-mapping.json
-    * *userToRoleMapping.json*: schemas/mashroom-security-ldap-provider-user-to-role-mapping.json
-    * *users.json*: schemas/mashroom-security-simple-provider-users.json
-    * *topicACL.json*: schemas/mashroom-security-topic-acl.json
-    * *remotePortalApps.json*: schemas/mashroom-portal-remote-apps.json
+ * Introduced JSON Schemas for all config files:
+   * *package.json*: schemas/mashroom-packagejson-extension.json
+   * *mashroom.json* (Server config): schemas/mashroom-server-config.json
+   * *acl.json*: schemas/mashroom-security-acl.json
+   * *groupToRoleMapping.json*: schemas/mashroom-security-ldap-provider-group-to-role-mapping.json
+   * *userToRoleMapping.json*: schemas/mashroom-security-ldap-provider-user-to-role-mapping.json
+   * *users.json*: schemas/mashroom-security-simple-provider-users.json
+   * *topicACL.json*: schemas/mashroom-security-topic-acl.json
+   * *remotePortalApps.json*: schemas/mashroom-portal-remote-apps.json
    The schema can be applied by adding *@mashroom/mashroom-json-schemas* to your dependencies:
    ```json
    {
@@ -85,7 +88,7 @@
       "name": "my-package"
    }
    ```
- * **BREAKING CHANGE**: All default config file names are now camel case. The following config files had been renamed:
+ * **BREAKING CHANGE**: All default config file names are now in camel case. The following config files had been renamed:
     * remote-portal-apps.json -> remotePortalApps.json
     * topic_acl.json -> topicACL.json
  * Tabify App: Added the possibility to have fixed titles for the tabs (appConfig.fixedTabTitles)
