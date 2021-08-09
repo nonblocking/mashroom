@@ -293,19 +293,20 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
 
     private async _createRoleDefinitions(mapping: GroupToRoleMapping | UserToRoleMapping, request: Request, logger: MashroomLogger): Promise<void> {
         const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
+        const existingRoles = (await securityService.getExistingRoles(request)).map((def) => def.id);
 
         const roles: Array<string> = [];
         Object.values(mapping).forEach((mappingRoles) => {
             if (Array.isArray(mappingRoles)) {
                 mappingRoles.forEach((role) => {
-                    if (roles.indexOf(role) === -1) {
+                    if (existingRoles.indexOf(role) === -1 && roles.indexOf(role) === -1) {
                         roles.push(role);
                     }
                 });
             }
         });
 
-        logger.debug('Adding role definitions:', roles);
+        logger.debug('Adding new role definitions:', roles);
         for (const id of roles) {
             await securityService.addRoleDefinition(request, {
                 id,

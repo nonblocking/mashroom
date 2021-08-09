@@ -142,17 +142,20 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
     private async _createRoleDefinitions(userStore: UserStore, request: Request, logger: MashroomLogger): Promise<void> {
         const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
+        const existingRoles = (await securityService.getExistingRoles(request)).map((def) => def.id);
 
         const roles: Array<string> = [];
         userStore.forEach((user) => {
-            user.roles?.forEach((role) => {
-                if (roles.indexOf(role) === -1) {
-                    roles.push(role);
-                }
-            });
+            if (Array.isArray(user.roles)) {
+                user.roles.forEach((role) => {
+                    if (existingRoles.indexOf(role) === -1 && roles.indexOf(role) === -1) {
+                        roles.push(role);
+                    }
+                });
+            }
         });
 
-        logger.debug('Adding role definitions:', roles);
+        logger.debug('Adding new role definitions:', roles);
         for (const id of roles) {
             await securityService.addRoleDefinition(request, {
                 id,
