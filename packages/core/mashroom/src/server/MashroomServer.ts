@@ -154,7 +154,7 @@ Pid ${process.pid}
                         this._logger.error('Failed to stop HTTPS server!', error);
                         reject(error);
                     } else {
-                        this._logger.info('HTTP server stopped');
+                        this._logger.info('HTTPS server stopped');
                         resolve();
                     }
                 });

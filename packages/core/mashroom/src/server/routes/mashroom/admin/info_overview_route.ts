@@ -23,7 +23,7 @@ const overview = (pluginContext: MashroomPluginContext) => `
     <div class="details-link">
         <a href="/mashroom/admin/server-info">Server Details</a>
     </div>
-    <h2>Overview Plugins</h2>
+    <h2>Plugins Overview</h2>
     ${pluginOverviewTable(pluginContext)}
 `;
 
