@@ -5,7 +5,6 @@ import type {
     MashroomPluginConfig,
     MashroomPluginContextHolder,
     MashroomLogger,
-    MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomBackgroundJobPluginRegistry} from '../../../../type-definitions/internal';
 import type {
@@ -18,8 +17,8 @@ export default class MashroomBackgroundJobPluginLoader implements MashroomPlugin
 
     private _logger: MashroomLogger;
 
-    constructor(private _registry: MashroomBackgroundJobPluginRegistry, private _backgroundJobsService: MashroomBackgroundJobService, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.backgroundJobs.plugin.loader');
+    constructor(private _registry: MashroomBackgroundJobPluginRegistry, private _pluginContextHolder: MashroomPluginContextHolder) {
+        this._logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.backgroundJobs.plugin.loader');
     }
 
     get name(): string {
@@ -41,12 +40,14 @@ export default class MashroomBackgroundJobPluginLoader implements MashroomPlugin
         this._registry.register(plugin.name, cronSchedule, jobCallback);
 
         // Start job
-        this._backgroundJobsService.scheduleJob(plugin.name, cronSchedule, jobCallback);
+        const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs.service;
+        backgroundJobsService.scheduleJob(plugin.name, cronSchedule, jobCallback);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void>  {
         // Stop job
-        this._backgroundJobsService.unscheduleJob(plugin.name);
+        const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs.service;
+        backgroundJobsService.unscheduleJob(plugin.name);
 
         this._logger.info(`Unregistering background job plugin: ${plugin.name}`);
         this._registry.unregister(plugin.name);

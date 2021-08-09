@@ -30,7 +30,7 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
     private _jobs: Array<BackgroundJobExt>;
 
     constructor(private _pluginContextHolder: MashroomPluginContextHolder) {
-        this._logger = _pluginContextHolder.getPluginContext().loggerFactory('mashroom.backgroundJobs.service');
+        this._logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.backgroundJobs.service');
         this._jobs = [];
     }
 
@@ -63,9 +63,9 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
     }
 
     unscheduleJob(name: string): void {
-        this._logger.info(`Unscheduling background job ${name}`);
         this._jobs = this._jobs.filter((job) => {
             if (job.name === name) {
+                this._logger.info(`Unscheduling background job ${name}`);
                 job._nodeScheduleJob.cancel(false);
                 return false;
             }

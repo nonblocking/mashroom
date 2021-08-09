@@ -25,6 +25,7 @@ describe('MashroomBackgroundJobService', () => {
             setTimeout(() => {
                 expect(job?.lastInvocation).toBeTruthy();
                 expect(job?.lastInvocation?.success).toBeTruthy();
+                expect(backgroundJobService.jobs.length).toBe(1);
                 backgroundJobService.unscheduleJob('Test Job');
                 done();
             }, 100);
@@ -33,6 +34,15 @@ describe('MashroomBackgroundJobService', () => {
         job = backgroundJobService.scheduleJob('Test Job', '0/5 * * * * *', jobCb);
     });
 
+    it('unschedules and cancels a job', () => {
+        const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
 
+        const jobCb = (pluginContext: any) => { /* nothing to do */ };
+
+        backgroundJobService.scheduleJob('Test Job 2', '0/5 * * * * *', jobCb);
+        backgroundJobService.unscheduleJob('Test Job 2');
+
+        expect(backgroundJobService.jobs.length).toBe(0);
+    });
 });
 
