@@ -64,7 +64,8 @@ describe('MashroomSimpleSecurityProvider', () => {
                 services: {
                     security: {
                         service: {
-                            addRoleDefinition: () => { /* nothing to do */ }
+                            addRoleDefinition: () => { /* nothing to do */ },
+                            getExistingRoles: () => Promise.resolve([]),
                         }
                     }
                 }
@@ -106,7 +107,8 @@ describe('MashroomSimpleSecurityProvider', () => {
                 services: {
                     security: {
                         service: {
-                            addRoleDefinition: () => { /* nothing to do */ }
+                            addRoleDefinition: () => { /* nothing to do */ },
+                            getExistingRoles: () => Promise.resolve([]),
                         }
                     }
                 }

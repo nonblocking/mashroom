@@ -99,7 +99,9 @@ describe('MashroomLdapSecurityProvider', () => {
                 services: {
                     security: {
                         service: {
-                            addRoleDefinition: () => { /* nothing to do */ }
+                            addRoleDefinition: () => { /* nothing to do */ },
+                            getExistingRoles: () => Promise.resolve([]),
+
                         }
                     }
                 }
