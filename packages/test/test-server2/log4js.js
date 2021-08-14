@@ -8,7 +8,8 @@ module.exports = {
         file: {
             type: 'file',
             filename: `log/mashroom.${WORKER_ID}.log`,
-            maxLogSize: 10485760, numBackups: 3,
+            maxLogSize: 10485760,
+            backups: 3,
             layout: {
                 type: 'pattern',
                 pattern: '%d %p %X{clientIP} %X{username} %c - %m'
