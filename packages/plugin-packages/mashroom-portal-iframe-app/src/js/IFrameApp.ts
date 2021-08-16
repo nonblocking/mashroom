@@ -39,8 +39,8 @@ export default class IFrameApp {
                 reject(event);
             };
 
-            hostElement.appendChild(this._iframe);
             iframe.src = this._url;
+            hostElement.appendChild(this._iframe);
 
             window.addEventListener('message', this._boundOnMessage);
         });
