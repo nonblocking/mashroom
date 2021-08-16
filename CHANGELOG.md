@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+* iframe source is set before adding element into the DOM. It prevents Chrome to fire onload on iframe twice
 
 ## 1.8.0 (August 9, 2021)
 
