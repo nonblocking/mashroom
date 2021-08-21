@@ -41,7 +41,9 @@ export default class MashroomCacheControlService implements MashroomCacheControl
         if (securityService) {
             const user = securityService.getUser(request);
             authenticated = !!user;
-            publicResource = !authenticated;
+            if (cachingPolicy === 'PRIVATE_IF_AUTHENTICATED' && authenticated) {
+                publicResource = false;
+            }
         }
 
         if (cachingPolicy === 'ONLY_FOR_ANONYMOUS_USERS' && authenticated) {

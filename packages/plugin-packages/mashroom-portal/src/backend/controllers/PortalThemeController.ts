@@ -30,7 +30,7 @@ export default class PortalThemeController {
             logger.debug(`Sending theme resource: ${resourceFile}`);
 
             if (cacheControlService) {
-                cacheControlService.addCacheControlHeader('ALWAYS', req, res);
+                cacheControlService.addCacheControlHeader('SHARED', req, res);
             }
 
             try {

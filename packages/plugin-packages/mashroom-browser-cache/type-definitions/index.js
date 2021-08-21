@@ -2,7 +2,7 @@
 
 import type {ExpressRequest, ExpressResponse} from '@mashroom/mashroom/type-definitions';
 
-export type CachingPolicy = 'ALWAYS' | 'NEVER' | 'ONLY_FOR_ANONYMOUS_USERS';
+export type CachingPolicy = 'SHARED' | 'PRIVATE_IF_AUTHENTICATED' | 'NEVER' | 'ONLY_FOR_ANONYMOUS_USERS';
 
 export interface MashroomCacheControlService {
     /**

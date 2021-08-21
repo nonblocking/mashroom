@@ -13,7 +13,7 @@ export default class PortalResourcesController {
         res.type('application/javascript');
 
         if (cacheControlService) {
-            cacheControlService.addCacheControlHeader('ALWAYS', req, res);
+            cacheControlService.addCacheControlHeader('SHARED', req, res);
         }
 
         res.sendFile(portalClientBundle);

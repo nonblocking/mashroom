@@ -220,7 +220,7 @@ export default class PortalPageRenderController {
     }
 
     private async _render(themeName: string | undefined | null, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger) {
-        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
         const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
         if (theme) {
             try {

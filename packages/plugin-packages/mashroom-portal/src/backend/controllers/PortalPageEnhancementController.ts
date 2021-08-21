@@ -38,7 +38,7 @@ export default class PortalPageEnhancementController {
     private async _sendResource(type: 'js' | 'css', resource: MashroomPortalPageEnhancementResource | undefined,
                                plugin: MashroomPortalPageEnhancement, req: Request, res: Response) {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
-        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache && req.pluginContext.services.browserCache.cacheControl;
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         if (!resource || !resource.path) {
             res.sendStatus(404);
@@ -46,7 +46,7 @@ export default class PortalPageEnhancementController {
         }
 
         if (cacheControlService) {
-            cacheControlService.addCacheControlHeader('ALWAYS', req, res);
+            cacheControlService.addCacheControlHeader('SHARED', req, res);
         }
 
         const resourceUri = `${plugin.resourcesRootUri}/${resource.path}`;

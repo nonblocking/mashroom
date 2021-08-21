@@ -3,7 +3,9 @@
 
 ## [unreleased]
 
-* iframe source is set before adding element into the DOM. It prevents Chrome to fire onload on iframe twice
+ * Portal: Allow proxies to cache shared resources such as Theme assets and shared page enhancement assets
+   (by setting "public" in the Cache-Control header)
+ * Portal IFrame App: iframe source is now set before adding element into the DOM; this prevents Chrome to fire onload on iframe twice
 
 ## 1.8.0 (August 9, 2021)
 
