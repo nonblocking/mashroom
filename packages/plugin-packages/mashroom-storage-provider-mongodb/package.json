@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "files": [
         "dist/**"
     ],
@@ -13,10 +13,10 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.14.8",
-        "@mashroom/mashroom": "1.8.0",
-        "@mashroom/mashroom-monitoring-metrics-collector": "1.8.0",
-        "@mashroom/mashroom-storage": "1.8.0",
-        "@mashroom/mashroom-utils": "1.8.0",
+        "@mashroom/mashroom": "1.8.1",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.8.1",
+        "@mashroom/mashroom-storage": "1.8.1",
+        "@mashroom/mashroom-utils": "1.8.1",
         "@shelf/jest-mongodb": "^2.0.1",
         "@types/jest": "^26.0.24",
         "@types/mongodb": "^3.6.20",

@@ -1,10 +1,10 @@
 {
     "name": "@mashroom/mashroom-test-server1",
-    "version": "1.8.0",
+    "version": "1.8.1",
     "private": true,
     "devDependencies": {
         "@babel/cli": "^7.14.8",
-        "@mashroom/mashroom-json-schemas": "1.8.0",
+        "@mashroom/mashroom-json-schemas": "1.8.1",
         "nodemon": "^2.0.12"
     },
     "scripts": {
