@@ -3,9 +3,12 @@
 
 ## [unreleased]
 
+
+## 1.8.1 (August 23, 2021)
+
  * Portal: Allow proxies to cache shared resources such as Theme assets and shared page enhancement assets
    (by setting "public" in the Cache-Control header)
- * Portal IFrame App: iframe source is now set before adding element into the DOM; this prevents Chrome to fire onload on iframe twice
+ * Portal IFrame App: Waiting until the iframe content is available works now in Chrome also (prevents an empty iframe from being shown)
 
 ## 1.8.0 (August 9, 2021)
 
