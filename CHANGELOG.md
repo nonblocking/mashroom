@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * Portal: Fixed caching problem in IE11 that confused the auth expiration check
+
 ## 1.8.1 (August 23, 2021)
 
  * Portal: Allow proxies to cache shared resources such as Theme assets and shared page enhancement assets

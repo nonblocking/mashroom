@@ -5,6 +5,7 @@ import {getFrontendSiteBasePath} from '../utils/path_utils';
 import type {Request, Response} from 'express';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
 
 type NewLanguage = {
     lang: string
@@ -17,11 +18,16 @@ export default class PortalUserController {
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
             const expirationTime = await securityService.getAuthenticationExpiration(req);
             if (!expirationTime) {
                 res.sendStatus(400);
                 return;
+            }
+
+            if (cacheControlService) {
+                cacheControlService.addCacheControlHeader('NEVER', req, res);
             }
 
             res.json({
@@ -64,6 +70,8 @@ export default class PortalUserController {
 
         try {
             const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+
             if (securityService.getUser(req)) {
                 await securityService.revokeAuthentication(req);
             }
@@ -81,6 +89,10 @@ export default class PortalUserController {
                 if (!redirectUrl) {
                     // Default: Redirect to the site root
                     redirectUrl = getFrontendSiteBasePath(req) || '/';
+                }
+
+                if (cacheControlService) {
+                    cacheControlService.addCacheControlHeader('NEVER', req, res);
                 }
 
                 res.redirect(redirectUrl);
