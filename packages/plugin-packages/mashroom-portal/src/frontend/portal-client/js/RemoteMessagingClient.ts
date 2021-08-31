@@ -1,5 +1,5 @@
 
-import shortId from 'shortid';
+import {nanoid} from 'nanoid';
 
 import type {
     MashroomMessagingWebSocketSubscribeRequest,
@@ -51,7 +51,7 @@ export default class RemoteMessagingClient {
 
     subscribe(topic: string): Promise<void> {
         const subscribeRequest: MashroomMessagingWebSocketSubscribeRequest = {
-            messageId: shortId.generate(),
+            messageId: this._createId(),
             command: 'subscribe',
             topic,
         };
@@ -66,7 +66,7 @@ export default class RemoteMessagingClient {
 
     unsubscribe(topic: string): Promise<void> {
         const subscribeRequest: MashroomMessagingWebSocketUnsubscribeRequest = {
-            messageId: shortId.generate(),
+            messageId: this._createId(),
             command: 'unsubscribe',
             topic,
         };
@@ -79,7 +79,7 @@ export default class RemoteMessagingClient {
 
     publish(topic: string, message: any): Promise<void> {
         const subscribeRequest: MashroomMessagingWebSocketPublishRequest = {
-            messageId: shortId.generate(),
+            messageId: this._createId(),
             command: 'publish',
             topic,
             message,
@@ -238,5 +238,9 @@ export default class RemoteMessagingClient {
         this._subscribedTopics.forEach((topic) => {
             this.subscribe(topic);
         });
+    }
+
+    private _createId() {
+        return nanoid(8);
     }
 }

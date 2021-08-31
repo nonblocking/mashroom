@@ -1,6 +1,6 @@
 
 import React, {PureComponent} from 'react';
-import shortId from 'shortid';
+import {nanoid} from 'nanoid';
 import {
     Form,
     TextFieldContainer,
@@ -61,7 +61,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         const { topic, message } = values;
         const jsonMessage = JSON.parse(message);
         const remoteTopic = `${messageBus.getRemotePrefix()}${topic}`;
-        const id = shortId.generate();
+        const id = nanoid(8);
 
         const publishedMessage: PublishedMessage = {
             id,

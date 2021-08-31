@@ -39,8 +39,8 @@ module.exports = (env, argv) => {
                     ],
                 },
                 {
-                    test: /\.(ts|tsx)$/,
-                    exclude: /node_modules/,
+                    test: /\.(ts|js|tsx)$/,
+                    exclude: /node_modules\/(?!nanoid)/,
                     use: [
                         {
                             loader: 'babel-loader',

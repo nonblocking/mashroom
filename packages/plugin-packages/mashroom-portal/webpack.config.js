@@ -27,11 +27,15 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(ts)$/,
-                exclude: /node_modules/,
+                test: /\.(ts|js)$/,
+                exclude: /node_modules\/(?!nanoid)/,
                 use: [
                     {
-                        loader: 'babel-loader'
+                        loader: 'babel-loader',
+                        options: {
+                            // Explicit config file for the node modules we need to transpile
+                            configFile: __dirname + '/src/frontend/.babelrc'
+                        }
                     }
                 ]
             },

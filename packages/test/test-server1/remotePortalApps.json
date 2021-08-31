@@ -1,6 +1,6 @@
 {
     "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-portal-remote-apps.json",
     "remotePortalApps": [
-        "http://demo-remote-app.mashroom-server.com"
+        "http://localhost:6088"
     ]
 }

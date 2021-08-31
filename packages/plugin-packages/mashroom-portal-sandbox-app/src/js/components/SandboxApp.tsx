@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {IntlProvider} from 'react-intl';
 import {Provider as ReduxProvider} from 'react-redux';
-import shortId from 'shortid';
+import {nanoid} from 'nanoid';
 import store from '../store/store';
 import messages from '../messages/messages';
 import getMessageBusPortalAppUnderTest from '../message_bus_portal_app_under_test';
@@ -33,7 +33,7 @@ export default class SandboxApp extends PureComponent<Props> {
 
     constructor(props: Props) {
         super(props);
-        this.hostElementId = `mashroom-sandbox-app-host-elem_${shortId()}`;
+        this.hostElementId = `mashroom-sandbox-app-host-elem_${nanoid(8)}`;
         this.messageBusPortalAppUnderTest = getMessageBusPortalAppUnderTest();
         this.messageBusPortalAppUnderTest.onMessageSent((topic, data) => {
             store.dispatch(addMessagePublishedByApp({

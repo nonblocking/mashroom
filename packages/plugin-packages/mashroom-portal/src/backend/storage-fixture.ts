@@ -1,6 +1,6 @@
 
-import shortid from 'shortid';
 import {PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION, SITES_COLLECTION} from './constants';
+import {createAppInstanceId} from './utils/id_utils';
 
 import type {MashroomLoggerFactory, MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
@@ -21,12 +21,12 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const welcomeAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Welcome Portal App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
     };
 
     const reactDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
         appConfig: {
             firstName: 'Jimmy',
         },
@@ -34,7 +34,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const reactDemoAppInstance2: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
         appConfig: {
             firstName: 'Mike',
         },
@@ -42,7 +42,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const reactDemoAppInstance3: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
         appConfig: {
             firstName: 'Gus',
         },
@@ -50,7 +50,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const reactDemoAppInstance4: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo React App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
         appConfig: {
             firstName: 'Marvin',
         },
@@ -58,7 +58,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const angularDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Angular App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
         appConfig: {
             firstName: 'Kim',
         },
@@ -66,22 +66,22 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const loadDynamicallyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Load Dynamically App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
     };
 
     const restProxyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Rest Proxy App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
     };
 
     const tabifyAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Tabify App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
     };
 
     const sandboxAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Sandbox App',
-        instanceId: shortid.generate(),
+        instanceId: createAppInstanceId(),
     };
 
     const pageHome: MashroomPortalPage = {

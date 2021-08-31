@@ -2,7 +2,7 @@
 import fs from 'fs';
 import {promisify} from 'util';
 import {lock as lockFile} from 'proper-lockfile';
-import shortId from 'shortid';
+import {nanoid} from 'nanoid';
 import lodashFilter from 'lodash.filter';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 
@@ -39,7 +39,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
 
     async insertOne(item: T): Promise<StorageObject<T>> {
         return this._updateOperation((collection) => {
-            const insertedItem = {...item, _id: shortId.generate(),};
+            const insertedItem = {...item, _id:  this._generateId()};
             collection.push(insertedItem);
             return insertedItem;
         });
@@ -93,7 +93,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
             }
 
             const index = collection.indexOf(existingItem);
-            collection[index] = {...newItem, _id: shortId.generate(),};
+            collection[index] = {...newItem, _id: this._generateId()};
 
             return {
                 modifiedCount: 1,
@@ -221,5 +221,9 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
             }
             throw e;
         }
+    }
+
+    private _generateId(): string {
+        return nanoid(8);
     }
 }

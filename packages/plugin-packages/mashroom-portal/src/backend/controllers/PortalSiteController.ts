@@ -1,7 +1,7 @@
 
-import shortId from 'shortid';
 import {isAdmin, isSitePermitted} from '../utils/security_utils';
 import {getPortalPath} from '../utils/path_utils';
+import {createPageId, createSiteId} from '../utils/id_utils';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 
 import type {Request, Response} from 'express';
@@ -94,13 +94,13 @@ export default class PortalSiteController {
                 return;
             }
 
-            const siteId = shortId.generate();
+            const siteId = createSiteId();
             site.siteId = siteId;
 
             // Add a page if none is given
             if (!site.pages) {
                 const page: MashroomPortalPage = {
-                    pageId: shortId.generate()
+                    pageId: createPageId()
                 };
                 await portalService.insertPage(page);
                 site = {

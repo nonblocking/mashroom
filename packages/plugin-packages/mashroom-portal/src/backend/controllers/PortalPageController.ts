@@ -1,8 +1,7 @@
 
-import shortId from 'shortid';
-
 import {findPortalAppInstanceOnPage} from '../utils/model_utils';
 import {getPortalAppResourceKey, isAdmin} from '../utils/security_utils';
+import {createPageId, createAppInstanceId} from '../utils/id_utils';
 
 import type {Request, Response} from 'express';
 import type {
@@ -71,7 +70,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = shortId.generate();
+            const pageId = createPageId();
             page = {
                 ...page,
                 pageId,
@@ -309,7 +308,7 @@ export default class PortalPageController {
 
             const appConfig = {...portalApp.defaultAppConfig || {}, ...data.appConfig || {}};
 
-            const instanceId = shortId.generate();
+            const instanceId = createAppInstanceId();
             const instance = {
                 pluginName: data.pluginName,
                 instanceId
