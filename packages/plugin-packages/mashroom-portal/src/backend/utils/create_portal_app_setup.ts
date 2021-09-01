@@ -6,6 +6,7 @@ import {
     PORTAL_APP_REST_PROXY_BASE_PATH
 } from '../constants';
 import {calculatePermissions} from './security_utils';
+import {createAppId} from './id_utils';
 
 import type {Request} from 'express';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
@@ -74,11 +75,14 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
     const appConfig = {...portalApp.defaultAppConfig, ...portalAppInstance.appConfig};
 
     const portalAppSetup: MashroomPortalAppSetup = {
+        appId: portalAppInstance.instanceId || createAppId(),
         pluginName: portalApp.name,
         title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
         version: portalApp.version,
         instanceId: portalAppInstance.instanceId,
         lastReloadTs: portalApp.lastReloadTs,
+        // TODO
+        ssr: false,
         restProxyPaths,
         sharedResourcesBasePath,
         sharedResources: portalApp.sharedResources,

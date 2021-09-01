@@ -133,11 +133,13 @@ export type MashroomPortalAppUserPermissions = {
 }
 
 export type MashroomPortalAppSetup = {
+    +appId: string;
     +pluginName: string,
     +title: ?string,
     +version: string,
     +instanceId: ?string,
     +lastReloadTs: number,
+    +ssr: boolean;
     +restProxyPaths: MashroomRestProxyPaths,
     +sharedResourcesBasePath: string,
     +sharedResources: ?MashroomPortalAppResources,
@@ -184,6 +186,20 @@ export interface MashroomPortalPageRenderModel {
     +csrfToken: ?string,
     +userAgent: UserAgent,
     +lastThemeReloadTs: number,
+}
+
+export interface MashroomPortalAppWrapperRenderModel {
+    +appId: string,
+    +pluginName: string,
+    +title: string,
+    +appHtml: string,
+}
+
+export interface MashroomPortalAppErrorRenderModel {
+    +appId: string,
+    +pluginName: string,
+    +title: string,
+    +message: string,
 }
 
 /* Plugins */
