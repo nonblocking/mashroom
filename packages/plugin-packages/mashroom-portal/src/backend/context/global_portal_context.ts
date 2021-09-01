@@ -15,7 +15,7 @@ const globalPortalContext: MashroomPortalContext = {
     },
 };
 
-export const setPortalPluginConfig = (config: MashroomPortalPluginConfig) => {
+export const setPortalPluginConfig = (config: MashroomPortalPluginConfig): void => {
     portalPluginConfig = config;
 };
 

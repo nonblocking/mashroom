@@ -12,22 +12,22 @@ import type {
     MashroomPortalRolePermissions,
 } from '../../../type-definitions';
 
-export const getUser = (req: Request) => {
+export const getUser = (req: Request): MashroomSecurityUser | null | undefined => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     return securityService.getUser(req);
 };
 
-export const isAdmin = (req: Request) => {
+export const isAdmin = (req: Request): boolean => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     return securityService.isAdmin(req);
 };
 
-export const isSignedIn = (req: Request) => {
+export const isSignedIn = (req: Request): boolean => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     return securityService.isAuthenticated(req);
 };
 
-export const forceAuthentication = async (path: string, req: Request, res: Response, logger: MashroomLogger) => {
+export const forceAuthentication = async (path: string, req: Request, res: Response, logger: MashroomLogger): Promise<void> => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
     const result = await securityService.authenticate(req, res);
     switch (result.status) {
@@ -96,7 +96,7 @@ export const isAppPermitted = async (req: Request, pluginName: string, portalApp
     const user = securityService.getUser(req);
     const defaultRestrictViewToRoles = existingPortalApp.defaultRestrictViewToRoles;
     if (defaultRestrictViewToRoles && Array.isArray(defaultRestrictViewToRoles) && defaultRestrictViewToRoles.length > 0) {
-        const permitted = defaultRestrictViewToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
+        const permitted = defaultRestrictViewToRoles.some((r) => user?.roles?.find((ur) => ur === r));
         if (!permitted) {
             logger.error(`Dynamic portal app access denied: User has none of the roles in the defaultRestrictViewToRoles list: ${defaultRestrictViewToRoles.join(', ')}`);
             return false;
@@ -119,7 +119,7 @@ export const isProxyAccessPermitted = async (req: Request, restProxyDef: Mashroo
         restrictToRoles.push(...restProxyDef.restrictToRoles);
     }
     if (restrictToRoles.length > 0) {
-        const permitted = restrictToRoles.some((r) => user && user.roles && user.roles.find((ur) => ur === r));
+        const permitted = restrictToRoles.some((r) => user?.roles?.find((ur) => ur === r));
         if (!permitted) {
             logger.error(`Proxy access denied: User has none of the roles in the restrictToRoles list: ${restrictToRoles.join(', ')}`);
             return false;
@@ -135,7 +135,7 @@ export const calculatePermissions = (rolePermissions: MashroomPortalRolePermissi
         for (const permission in rolePermissions) {
             if (rolePermissions.hasOwnProperty(permission)) {
                 const roles = rolePermissions[permission];
-                if (roles && Array.isArray(roles) && roles.find((requiredRole) => user && user.roles && user.roles.find((role) => role === requiredRole))) {
+                if (roles && Array.isArray(roles) && roles.find((requiredRole) => user?.roles?.find((role) => role === requiredRole))) {
                     permissions[permission] = true;
                 }
             }

@@ -30,14 +30,14 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
         return 'Portal App Enhancement Plugin Loader';
     }
 
-    generateMinimumConfig(plugin: MashroomPlugin) {
+    generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
         return {
             order: DEFAULT_ORDER,
             resourcesRoot: '.',
         };
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
 
         let resourcesRootUri = config.resourcesRoot;
         if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
@@ -93,7 +93,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
         this._registry.registerPortalPageEnhancement(enhancement);
     }
 
-    async unload(plugin: MashroomPlugin) {
+    async unload(plugin: MashroomPlugin): Promise<void> {
         this._logger.info(`Unregistering portal page enhancement: ${plugin.name}`);
         this._registry.unregisterPortalPageEnhancement(plugin.name);
     }

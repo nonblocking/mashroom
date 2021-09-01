@@ -4,7 +4,8 @@ import {WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
 import type {LogLevel} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomRestService,
-    MasterMashroomPortalRemoteLogger
+    MasterMashroomPortalRemoteLogger,
+    MashroomPortalRemoteLogger
 } from '../../../../type-definitions';
 import type {ClientLogMessage} from '../../../../type-definitions/internal';
 
@@ -23,19 +24,19 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         this._timeout = null;
     }
 
-    error(msg: string, error?: Error, portalAppName?: string | null | undefined) {
+    error(msg: string, error?: Error, portalAppName?: string | null | undefined): void {
         this._log('error', msg, error, portalAppName);
     }
 
-    warn(msg: string, error?: Error, portalAppName?: string | null | undefined) {
+    warn(msg: string, error?: Error, portalAppName?: string | null | undefined): void {
         this._log('warn', msg, error, portalAppName);
     }
 
-    info(msg: string, portalAppName?: string | null | undefined) {
+    info(msg: string, portalAppName?: string | null | undefined): void {
         this._log('info', msg, undefined, portalAppName);
     }
 
-    getAppInstance(portalAppName: string) {
+    getAppInstance(portalAppName: string): MashroomPortalRemoteLogger {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const master = this;
         return {

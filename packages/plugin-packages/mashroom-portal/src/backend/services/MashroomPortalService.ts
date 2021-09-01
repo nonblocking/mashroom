@@ -9,6 +9,12 @@ import type {
     MashroomPortalPage,
     MashroomPortalService as MashroomPortalServiceType,
     MashroomPortalSite,
+    MashroomPortalApp,
+    MashroomPortalAppEnhancement,
+    MashroomPortalLayout,
+    MashroomPortalPageEnhancement,
+    MashroomPortalPageRef,
+    MashroomPortalTheme
 } from '../../../type-definitions';
 import type {
     MashroomPortalPluginRegistry,
@@ -22,23 +28,23 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         this._logger = _pluginContextHolder.getPluginContext().loggerFactory('mashroom.portal.service');
     }
 
-    getPortalApps() {
+    getPortalApps(): Readonly<Array<MashroomPortalApp>> {
         return this._pluginRegistry.portalApps;
     }
 
-    getThemes() {
+    getThemes(): Readonly<Array<MashroomPortalTheme>> {
         return this._pluginRegistry.themes;
     }
 
-    getLayouts() {
+    getLayouts(): Readonly<Array<MashroomPortalLayout>> {
         return this._pluginRegistry.layouts;
     }
 
-    getPortalPageEnhancements() {
+    getPortalPageEnhancements(): Readonly<Array<MashroomPortalPageEnhancement>> {
         return this._pluginRegistry.portalPageEnhancements;
     }
 
-    getPortalAppEnhancements() {
+    getPortalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>> {
         return this._pluginRegistry.portalAppEnhancements;
     }
 
@@ -47,22 +53,22 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         return await sitesCollection.find(undefined, limit);
     }
 
-    async getSite(siteId: string) {
+    async getSite(siteId: string): Promise<MashroomPortalSite | null | undefined> {
         const sitesCollection = await this._getSitesCollections();
         return await sitesCollection.findOne({siteId});
     }
 
-    async findSiteByPath(path: string) {
+    async findSiteByPath(path: string): Promise<MashroomPortalSite | null | undefined> {
         const sitesCollection = await this._getSitesCollections();
         return await sitesCollection.findOne({path});
     }
 
-    async insertSite(site: MashroomPortalSite) {
+    async insertSite(site: MashroomPortalSite): Promise<void> {
         const sitesCollection = await this._getSitesCollections();
         await sitesCollection.insertOne(site);
     }
 
-    async updateSite(site: MashroomPortalSite) {
+    async updateSite(site: MashroomPortalSite): Promise<void> {
         const siteId = site.siteId;
         if (!siteId) {
             throw new Error('Cannot update site because siteId is undefined!');
@@ -71,29 +77,29 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         await sitesCollection.updateOne({siteId}, site);
     }
 
-    async deleteSite(siteId: string) {
+    async deleteSite(siteId: string): Promise<void> {
         if (!siteId) {
             throw new Error('Cannot delete the site because siteId is undefined!');
         }
         const sitesCollection = await this._getSitesCollections();
-        sitesCollection.deleteOne({siteId});
+        await sitesCollection.deleteOne({siteId});
     }
 
-    async getPage(pageId: string) {
+    async getPage(pageId: string): Promise<MashroomPortalPage | null | undefined> {
         const pagesCollection = await this._getPagesCollection();
         return await pagesCollection.findOne({pageId});
     }
 
-    async findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string) {
+    async findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<MashroomPortalPageRef | null | undefined> {
         return new SitePagesTraverser(site.pages).findPageByFriendlyUrl(friendlyUrl);
     }
 
-    async insertPage(page: MashroomPortalPage) {
+    async insertPage(page: MashroomPortalPage): Promise<void> {
         const pagesCollection = await this._getPagesCollection();
         await pagesCollection.insertOne(page);
     }
 
-    async updatePage(page: MashroomPortalPage) {
+    async updatePage(page: MashroomPortalPage): Promise<void> {
         const pageId = page.pageId;
         if (!pageId) {
             throw new Error('Cannot update page because pageId is undefined!');
@@ -102,7 +108,7 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         await pagesCollection.updateOne({pageId}, page);
     }
 
-    async deletePage(pageId: string) {
+    async deletePage(pageId: string): Promise<void> {
         if (!pageId) {
             throw new Error('Cannot delete the page because pageId is undefined!');
         }
@@ -110,24 +116,24 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         pagesCollection.deleteOne({pageId});
     }
 
-    async getPortalAppInstance(pluginName: string, instanceId: string | undefined | null) {
+    async getPortalAppInstance(pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppInstance | null | undefined> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
         return await portalAppInstancesCollection.findOne({pluginName, instanceId});
     }
 
-    async insertPortalAppInstance(portalAppInstance: MashroomPortalAppInstance) {
+    async insertPortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
         await portalAppInstancesCollection.insertOne(portalAppInstance);
     }
 
-    async updatePortalAppInstance(portalAppInstance: MashroomPortalAppInstance) {
+    async updatePortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
         const pluginName = portalAppInstance.pluginName;
         const instanceId = portalAppInstance.instanceId;
         await portalAppInstancesCollection.updateOne({pluginName, instanceId}, portalAppInstance);
     }
 
-    async deletePortalAppInstance(pluginName: string, instanceId: string | undefined | null) {
+    async deletePortalAppInstance(pluginName: string, instanceId: string | undefined | null): Promise<void> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
         await portalAppInstancesCollection.deleteOne({pluginName, instanceId});
     }

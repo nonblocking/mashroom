@@ -12,16 +12,16 @@ const registerListener: MashroomPortalRegisterListener = (type, event) => {
     }
 };
 
-export const startPushPluginUpdates = (pluginRegistry: MashroomPortalPluginRegistry) => {
+export const startPushPluginUpdates = (pluginRegistry: MashroomPortalPluginRegistry): void => {
     sse = new SSE();
     pluginRegistry.addRegisterListener(registerListener);
 };
 
-export const stopPushPluginUpdates = (pluginRegistry: MashroomPortalPluginRegistry) => {
+export const stopPushPluginUpdates = (pluginRegistry: MashroomPortalPluginRegistry): void => {
     pluginRegistry.removeRegisterListener(registerListener);
 };
 
-export const getPortalPushPluginUpdatesRoute = () => (request: Request, response: Response) => {
+export const getPortalPushPluginUpdatesRoute = () => (request: Request, response: Response): void => {
     if (sse) {
         sse.init(request, response, () => { /* stop processing */ });
     }

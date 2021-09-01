@@ -1,7 +1,7 @@
 
 import {WINDOW_VAR_PORTAL_API_PATH, WINDOW_VAR_PORTAL_SITE_URL} from '../../../backend/constants';
 
-import type {MashroomRestService, MashroomPortalSiteService} from '../../../../type-definitions';
+import type {MashroomRestService, MashroomPortalSiteService, MashroomPortalPageRefLocalized, MashroomPortalSiteLinkLocalized} from '../../../../type-definitions';
 
 export default class MashroomPortalSiteServiceImpl implements MashroomPortalSiteService {
 
@@ -12,7 +12,7 @@ export default class MashroomPortalSiteServiceImpl implements MashroomPortalSite
         this._restService = restService.withBasePath(apiPath);
     }
 
-    getCurrentSiteUrl() {
+    getCurrentSiteUrl(): string {
         const siteId = (global as any)[WINDOW_VAR_PORTAL_SITE_URL];
         if (!siteId) {
             throw new Error('Unable to determine the current site path!');
@@ -20,12 +20,12 @@ export default class MashroomPortalSiteServiceImpl implements MashroomPortalSite
         return siteId;
     }
 
-    getSites() {
+    getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>> {
         const path = '/sites';
         return this._restService.get(path);
     }
 
-    getPageTree(siteId: string) {
+    getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>> {
         const path = `/sites/${siteId}/pageTree`;
         return this._restService.get(path);
     }

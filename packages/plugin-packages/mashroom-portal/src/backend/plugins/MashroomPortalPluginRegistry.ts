@@ -34,89 +34,89 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         this._registerListeners = [];
     }
 
-    registerPortalApp(portalApp: MashroomPortalApp) {
+    registerPortalApp(portalApp: MashroomPortalApp): void {
         this.unregisterPortalApp(portalApp.name);
         this._portalApps.push(portalApp);
         this._registerListeners.forEach(listener => listener('app', portalApp));
     }
 
-    unregisterPortalApp(pluginName: string) {
+    unregisterPortalApp(pluginName: string): void {
         const idx = this._portalApps.findIndex((pa) => pa.name === pluginName);
         if (idx !== -1) {
             this._portalApps.splice(idx, 1);
         }
     }
 
-    registerTheme(theme: MashroomPortalTheme) {
+    registerTheme(theme: MashroomPortalTheme): void {
         this.unregisterTheme(theme.name);
         this._themes.push(theme);
         this._registerListeners.forEach(listener => listener('theme', theme));
     }
 
-    unregisterTheme(themeName: string) {
+    unregisterTheme(themeName: string): void {
         const idx = this._themes.findIndex((pa) => pa.name === themeName);
         if (idx !== -1) {
             this._themes.splice(idx, 1);
         }
     }
 
-    registerLayout(layout: MashroomPortalLayout) {
+    registerLayout(layout: MashroomPortalLayout): void {
         this.unregisterLayout(layout.name);
         this._layouts.push(layout);
         this._registerListeners.forEach(listener => listener('layout', layout));
     }
 
-    unregisterLayout(layoutName: string) {
+    unregisterLayout(layoutName: string): void {
         const idx = this._layouts.findIndex((pa) => pa.name === layoutName);
         if (idx !== -1) {
             this._layouts.splice(idx, 1);
         }
     }
 
-    registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder) {
+    registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder): void {
         this.unregisterRemotePortalAppRegistry(registry.name);
         this._remotePortalAppRegistries.push(registry);
         this._registerListeners.forEach(listener => listener('registry', registry));
     }
 
-    unregisterRemotePortalAppRegistry(name: string) {
+    unregisterRemotePortalAppRegistry(name: string): void {
         const idx = this._remotePortalAppRegistries.findIndex((holder) => holder.name === name);
         if (idx !== -1) {
             this._remotePortalAppRegistries.splice(idx, 1);
         }
     }
 
-    registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement) {
+    registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement): void {
         this.unregisterPortalPageEnhancement(enhancement.name);
         this._portalPageEnhancements.push(enhancement);
         this._registerListeners.forEach(listener => listener('page-enhancement', enhancement));
     }
 
-    unregisterPortalPageEnhancement(name: string) {
+    unregisterPortalPageEnhancement(name: string): void {
         const idx = this._portalPageEnhancements.findIndex((holder) => holder.name === name);
         if (idx !== -1) {
             this._portalPageEnhancements.splice(idx, 1);
         }
     }
 
-    registerPortalAppEnhancement(enhancement: MashroomPortalAppEnhancement) {
+    registerPortalAppEnhancement(enhancement: MashroomPortalAppEnhancement): void {
         this.unregisterPortalAppEnhancement(enhancement.name);
         this._portalAppEnhancements.push(enhancement);
         this._registerListeners.forEach(listener => listener('app-enhancement', enhancement));
     }
 
-    unregisterPortalAppEnhancement(name: string) {
+    unregisterPortalAppEnhancement(name: string): void {
         const idx = this._portalAppEnhancements.findIndex((holder) => holder.name === name);
         if (idx !== -1) {
             this._portalAppEnhancements.splice(idx, 1);
         }
     }
 
-    addRegisterListener(listener: MashroomPortalRegisterListener) {
+    addRegisterListener(listener: MashroomPortalRegisterListener): void {
         this._registerListeners.push(listener);
     }
 
-    removeRegisterListener(listener: MashroomPortalRegisterListener) {
+    removeRegisterListener(listener: MashroomPortalRegisterListener): void {
         this._registerListeners = this._registerListeners.filter((l) => l !== listener);
     }
 

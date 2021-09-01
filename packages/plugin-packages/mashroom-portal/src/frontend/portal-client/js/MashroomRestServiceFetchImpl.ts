@@ -33,7 +33,7 @@ export default class RestServiceFetchImpl implements MashroomRestService {
         return this._fetch(path, 'DELETE', null, extraHeaders);
     }
 
-    withBasePath(apiBasePath: string) {
+    withBasePath(apiBasePath: string): MashroomRestService {
         return new RestServiceFetchImpl(apiBasePath);
     }
 

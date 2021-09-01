@@ -15,7 +15,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         this._restService = restService.withBasePath(apiPath);
     }
 
-    getAuthenticationExpiration() {
+    getAuthenticationExpiration(): Promise<number | null | undefined> {
         const path = '/users/authenticated/authExpiration';
         return this._restService.get(path, {
             'x-mashroom-does-not-extend-auth': '1'
@@ -32,13 +32,13 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         );
     }
 
-    extendAuthentication() {
+    extendAuthentication(): void {
         // For the moment: Just request the authentication expiration without the x-mashroom-does-not-extend-auth header
         const path = '/users/authenticated/authExpiration';
         this._restService.get(path);
     }
 
-    logout() {
+    logout(): Promise<void> {
         const path = '/logout';
         return this._restService.get(path).then(
             () => {
@@ -54,11 +54,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         );
     }
 
-    getUserLanguage() {
+    getUserLanguage(): string {
         return (global as any)[WINDOW_VAR_PORTAL_LANGUAGE];
     }
 
-    setUserLanguage(lang: string) {
+    setUserLanguage(lang: string): Promise<void> {
         const path = '/users/authenticated/lang';
         const data = {
             lang
@@ -71,12 +71,12 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         );
     }
 
-    getAvailableLanguages() {
+    getAvailableLanguages(): Promise<Array<string>> {
         const path = '/languages';
         return this._restService.get(path);
     }
 
-    getDefaultLanguage() {
+    getDefaultLanguage(): Promise<string> {
         const path = '/languages/default';
         return this._restService.get(path);
     }

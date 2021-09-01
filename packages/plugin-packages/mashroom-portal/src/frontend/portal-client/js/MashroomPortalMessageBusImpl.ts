@@ -10,7 +10,8 @@ import RemoteMessagingClient, {webSocketSupport} from './RemoteMessagingClient';
 import type {
     MashroomPortalMasterMessageBus,
     MashroomPortalMessageBusInterceptor,
-    MashroomPortalMessageBusSubscriberCallback
+    MashroomPortalMessageBusSubscriberCallback,
+    MashroomPortalMessageBus
 } from '../../../../type-definitions';
 
 const REMOTE_MESSAGING_TOPIC_PREFIX = 'remote:';
@@ -72,7 +73,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         return this._publish(topic, data);
     }
 
-    getRemoteUserPrivateTopic(username?: string) {
+    getRemoteUserPrivateTopic(username?: string): string | null | undefined {
         const privateTopicAuthenticatedUser = REMOTE_MESSAGING_PRIVATE_USER_TOPIC;
         if (!this._remoteMessageClient || !privateTopicAuthenticatedUser) {
             return null;
@@ -86,19 +87,19 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         return `${topicLevels.join('/')}/${username}`;
     }
 
-    getRemotePrefix() {
+    getRemotePrefix(): string {
         return REMOTE_MESSAGING_TOPIC_PREFIX;
     }
 
-    registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
+    registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void {
         this._registerMessageInterceptor(interceptor);
     }
 
-    unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
+    unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void {
         this._unregisterMessageInterceptor(interceptor);
     }
 
-    getAppInstance(appId: string) {
+    getAppInstance(appId: string): MashroomPortalMessageBus {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const master = this;
 
@@ -126,14 +127,11 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
             },
             unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor) {
                 return master._unregisterMessageInterceptor(interceptor);
-            },
-            getAppInstance() {
-                throw new Error('Not available');
             }
         };
     }
 
-    unsubscribeEverythingFromApp(appId: string) {
+    unsubscribeEverythingFromApp(appId: string): void {
         console.info('Unregistering all MessageBus handlers from app:', appId);
 
         for (const topic in this._subscriptionMap) {

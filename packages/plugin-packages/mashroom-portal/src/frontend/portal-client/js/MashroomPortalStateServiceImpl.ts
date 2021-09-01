@@ -34,11 +34,11 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
         }
     }
 
-    getStateProperty(key: string) {
+    getStateProperty(key: string): any | null | undefined {
         return this._getStateProperty(key);
     }
 
-    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: Record<string, string> | undefined | null, hash?: string | undefined | null) {
+    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: Record<string, string> | undefined | null, hash?: string | undefined | null): string {
         let additionalQuery = '';
         for (const paramName in additionalQueryParams) {
             if (additionalQueryParams.hasOwnProperty(paramName)) {
@@ -48,7 +48,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
         return `${baseUrl}?${ENCODED_STATE_QUERY_PARAM_NAME}=${btoa(JSON.stringify(state))}${additionalQuery}${hash ? `#${hash}` : ''}`;
     }
 
-    setUrlStateProperty(key: string, value: any | undefined | null) {
+    setUrlStateProperty(key: string, value: any | undefined | null): void {
         if (!value) {
             delete this._urlState[key];
         } else {
@@ -63,11 +63,11 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
         history.pushState({}, '', url);
     }
 
-    setSessionStateProperty(key: string, value: any) {
+    setSessionStateProperty(key: string, value: any): void {
         this._sessionStorage && this._sessionStorage.setItem(key, this._toStorableString(value));
     }
 
-    setLocalStoreStateProperty(key: string, value: any) {
+    setLocalStoreStateProperty(key: string, value: any): void {
         this._localStorage && this._localStorage.setItem(key, this._toStorableString(value));
     }
 

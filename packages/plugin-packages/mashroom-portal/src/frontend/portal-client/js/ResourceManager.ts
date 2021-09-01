@@ -97,7 +97,7 @@ export default class ResourceManager {
         };
     }
 
-    unloadAppResources(loadedPortalApp: LoadedPortalAppInternal) {
+    unloadAppResources(loadedPortalApp: LoadedPortalAppInternal): void {
         const unloadResources = (resources: Resources<any>) => {
             for (const path in resources) {
                 if (resources.hasOwnProperty(path)) {

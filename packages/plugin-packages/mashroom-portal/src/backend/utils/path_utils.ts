@@ -5,7 +5,7 @@ import {PORTAL_INTERNAL_PATH} from '../constants';
 import type {Request} from 'express';
 import type {MashroomVHostPathMapperService} from '@mashroom/mashroom-vhost-path-mapper/type-definitions';
 
-export const getPortalPath = () => {
+export const getPortalPath = (): string => {
     // We just take the path from the plugin config
     return context.portalPluginConfig.path;
 };

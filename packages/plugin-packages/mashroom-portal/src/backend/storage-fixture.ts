@@ -10,7 +10,7 @@ import type {MashroomSecurityRoleDefinition} from '@mashroom/mashroom-security/t
 const ROLE_DEFINITIONS_COLLECTION_NAME = 'mashroom-security-role-definitions';
 export const ROLE_ADMINISTRATOR = 'Administrator';
 
-export default async (pluginConfig: MashroomPluginConfig, portalName: string, storageService: MashroomStorageService, loggerFactory: MashroomLoggerFactory) => {
+export default async (pluginConfig: MashroomPluginConfig, portalName: string, storageService: MashroomStorageService, loggerFactory: MashroomLoggerFactory): Promise<void> => {
 
     const log = loggerFactory('mashroom.portal.storage.fixture');
 

@@ -20,11 +20,11 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
         return 'Portal Layout Plugin Loader';
     }
 
-    generateMinimumConfig(plugin: MashroomPlugin) {
+    generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
         return {};
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const layouts = plugin.pluginDefinition.layouts;
         if (!layouts) {
             throw new PluginConfigurationError(`Invalid configuration of layouts plugin ${plugin.name}: No layouts property defined`);
@@ -61,7 +61,7 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
 
     }
 
-    async unload(plugin: MashroomPlugin) {
+    async unload(plugin: MashroomPlugin): Promise<void> {
         if (this._loadedLayouts.has(plugin.name)) {
             const pluginLayouts = this._loadedLayouts.get(plugin.name);
             for (const pluginName in pluginLayouts) {

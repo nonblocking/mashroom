@@ -25,13 +25,13 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         return 'Portal App Plugin Loader';
     }
 
-    generateMinimumConfig(plugin: MashroomPlugin) {
+    generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
         return {
             resourcesRoot: '.',
         };
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
 
         const globalLaunchFunction = plugin.pluginDefinition.bootstrap;
         if (!globalLaunchFunction) {
@@ -111,7 +111,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         this._registry.registerPortalApp(portalApp);
     }
 
-    async unload(plugin: MashroomPlugin) {
+    async unload(plugin: MashroomPlugin): Promise<void> {
         this._logger.info(`Unregistering portal app: ${plugin.name}`);
         this._registry.unregisterPortalApp(plugin.name);
     }

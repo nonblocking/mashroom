@@ -17,11 +17,11 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
         return 'Portal Theme Plugin Loader';
     }
 
-    generateMinimumConfig(plugin: MashroomPlugin) {
+    generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
         return {};
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
 
         const themeBootstrap: MashroomPortalThemePluginBootstrapFunction = plugin.requireBootstrap();
         const {engineName, engineFactory} = await themeBootstrap(plugin.name, config, contextHolder);
@@ -56,7 +56,7 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
         this._registry.registerTheme(theme);
     }
 
-    async unload(plugin: MashroomPlugin) {
+    async unload(plugin: MashroomPlugin): Promise<void> {
         this._logger.info(`Unregistering theme: ${plugin.name}`);
         this._registry.unregisterTheme(plugin.name);
     }

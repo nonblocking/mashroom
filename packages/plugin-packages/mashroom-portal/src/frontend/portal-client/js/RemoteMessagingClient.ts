@@ -87,7 +87,7 @@ export default class RemoteMessagingClient {
         return this._webSocketSend(subscribeRequest);
     }
 
-    onMessage(handler: (message: any, topic: string) => void) {
+    onMessage(handler: (message: any, topic: string) => void): void {
         this._messageHandler = handler;
     }
 

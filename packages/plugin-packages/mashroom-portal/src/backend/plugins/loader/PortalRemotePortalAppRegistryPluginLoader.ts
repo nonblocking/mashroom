@@ -15,13 +15,13 @@ export default class PortalRemotePortalAppRegistryPluginLoader implements Mashro
         return 'Portal Remote Portal App Registry Plugin Loader';
     }
 
-    generateMinimumConfig(plugin: MashroomPlugin) {
+    generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
         return {
             priority: 1
         };
     }
 
-    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = plugin.requireBootstrap();
         const registry = await bootstrap(plugin.name, config, contextHolder);
 
@@ -37,7 +37,7 @@ export default class PortalRemotePortalAppRegistryPluginLoader implements Mashro
         this._registry.registerRemotePortalAppRegistry(registryHolder);
     }
 
-    async unload(plugin: MashroomPlugin) {
+    async unload(plugin: MashroomPlugin): Promise<void> {
         this._logger.info(`Unregistering remote portal app registry: ${plugin.name}`);
         this._registry.unregisterRemotePortalAppRegistry(plugin.name);
     }
