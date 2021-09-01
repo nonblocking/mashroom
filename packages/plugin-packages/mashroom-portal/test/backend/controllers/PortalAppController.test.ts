@@ -232,11 +232,13 @@ describe('PortalAppController', () => {
 
         expect(json).toBeTruthy();
         expect(json).toEqual({
+            appId: 'ABCD',
             pluginName: 'Test Portal App 1',
             title: 'Translated title',
             version: '1.0',
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
+            ssr: false,
             restProxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
@@ -287,7 +289,7 @@ describe('PortalAppController', () => {
             pluginContext,
         };
 
-        let json = null;
+        let json: any = null;
         const res: any = {
             json: (data: string) => json = data,
         };
@@ -296,12 +298,15 @@ describe('PortalAppController', () => {
         await controller.getPortalAppSetup(req, res);
 
         expect(json).toBeTruthy();
+        expect(json.appId).toBeTruthy();
+        delete json.appId;
         expect(json).toEqual({
             pluginName: 'Test Portal App 1',
             title: 'Translated title',
             version: '1.0',
             instanceId: null,
             lastReloadTs: 222222222,
+            ssr: false,
             restProxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
