@@ -59,7 +59,6 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const poolConfig = getPoolConfig();
         this._globalLogger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${_socketTimeoutMs}ms`);
         this._httpProxy = createProxyServer({
-            proxyTimeout: _socketTimeoutMs, // timeout will be set on the proxy request
             agent: getHttpPool(),
             changeOrigin: true,
             followRedirects: false,
@@ -67,7 +66,6 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             xfwd: true,
         });
         this._httpsProxy = createProxyServer({
-            proxyTimeout: _socketTimeoutMs, // timeout will be set on the proxy request
             agent: getHttpsPool(),
             changeOrigin: true,
             secure: rejectUnauthorized,
@@ -201,6 +199,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     }
 
     private async onProxyRequest(proxyReq: ClientRequest, req: IncomingMessage, res: ServerResponse, options: ServerOptions): Promise<void> {
+        const clientRequest = req as Request;
+        const clientResponse = res as Response;
+        const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy');
         const requestMeta = (req as any)[REQUEST_META_PROP];
         if (!requestMeta || requestMeta.type !== 'HTTP') {
             return;
@@ -223,6 +224,16 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         if (queryStr) {
             proxyReq.path = `${proxyReq.path}?${queryStr}`;
         }
+
+        // Proper timeout handling
+        proxyReq.setTimeout(this._socketTimeoutMs, () => {
+            logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`);
+            if (!clientResponse.headersSent) {
+                clientResponse.sendStatus(504);
+            }
+            delete clientRequest[REQUEST_META_PROP];
+            proxyReq.destroy();
+        });
     }
 
     private async onProxyResponse(proxyRes: IncomingMessage, req: IncomingMessage, res: ServerResponse): Promise<void> {
@@ -283,21 +294,20 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const clientResponse = res as Response;
         const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy');
         const requestMeta = clientRequest[REQUEST_META_PROP];
+
         if (!requestMeta) {
             return;
         }
 
+        if (req.aborted) {
+            // Ignore client abort
+            return;
+        }
+
         if (requestMeta.type === 'HTTP') {
-            if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
-                logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
-                if (!clientResponse.headersSent) {
-                    clientResponse.sendStatus(504);
-                }
-            } else {
-                logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
-                if (!clientResponse.headersSent) {
-                    clientResponse.sendStatus(503);
-                }
+            logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
+            if (!clientResponse.headersSent) {
+                clientResponse.sendStatus(503);
             }
         } else if (requestMeta.type === 'WS') {
             logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
@@ -307,11 +317,16 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         requestMeta.end();
     }
 
-    private onWsProxyRequest(proxyReq: ClientRequest, req: IncomingMessage) {
+    private onWsProxyRequest(proxyReq: ClientRequest, req: IncomingMessage, socket: Socket) {
+        const logger = (req as IncomingMessageWithContext).pluginContext.loggerFactory('mashroom.httpProxy');
         const requestMeta = (req as any)[REQUEST_META_PROP];
         if (!requestMeta || requestMeta.type !== 'WS') {
             return;
         }
+
+        socket.on('error', (error) => {
+            logger.error(`WebSocket proxy socket error`, error);
+        });
 
         // Get the proxy socket to copy the request metadata
         proxyReq.on('upgrade', (proxyRes, proxySocket) => {
@@ -319,10 +334,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         });
         proxyReq.on('response', (proxyRes) => {
             if (proxyRes.statusCode !== 101) {
-                const logger = (req as IncomingMessageWithContext).pluginContext.loggerFactory('mashroom.httpProxy');
-                logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed! Status: `, proxyRes.statusCode);
+                logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed! Status:`, proxyRes.statusCode);
             }
-        })
+        });
     }
 
     private onWsOpen(proxySocket: Socket) {
