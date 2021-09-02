@@ -103,8 +103,7 @@ export default class App extends PureComponent<Props, State> {
                     <div className="echo">
                         <div className="info">
                             <span className="info-icon" />
-                            This App connects via the Mashroom HTTP Proxy to the WebSocket
-                            echo server on websocket.org
+                            This App connects via the Mashroom HTTP Proxy to a WebSocket echo server
                         </div>
                         <div className="input-form">
                             <input type="text" value={inputMessage} onChange={(e) => this.onChange(e.target.value)} />

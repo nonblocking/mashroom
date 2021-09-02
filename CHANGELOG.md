@@ -3,7 +3,8 @@
 
 ## [unreleased]
 
-
+ * HTTP Proxy: Fixed the error handling in the node-http-proxy based (default) proxy implementation; this fixes #77
+ * WebSocket Demo Portal App: Switched to a working WebSocket echo server
  * Portal: Fixed caching problem in IE11 that confused the auth expiration check
 
 ## 1.8.1 (August 23, 2021)

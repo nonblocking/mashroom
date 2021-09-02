@@ -52,7 +52,7 @@
                     ],
                     "restProxies": {
                         "echo": {
-                            "targetUri": "ws://echo.websocket.org/",
+                            "targetUri": "ws://ws.ifelse.io/",
                             "restrictToRoles": [
                                 "Authenticated"
                             ]
