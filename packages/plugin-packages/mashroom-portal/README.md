@@ -868,12 +868,17 @@ const bootstrap: MashroomPortalThemePluginBootstrapFunction = async () => {
     };
 };
 
-
 export default bootstrap;
 
 ```
 
-A typical portal view with *Handlebars* might look like this:
+The theme can contain the following views:
+
+ * *portal*: The portal page (required)
+ * *appWrapper*: The wrapper for any Portal App (optional)
+ * *appError*: The error message if the loading of a Portal App fails (optional)
+
+A typical *portal* view with *Handlebars* might look like this:
 
 ```html
 <!doctype html>

@@ -3,6 +3,25 @@
 
 ## [unreleased]
 
+ * Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
+   You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
+   (when using Handlebars):
+   ```html
+   <div id="portal-app-{{appId}}" class="mashroom-portal-app-wrapper portal-app-{{safePluginName}}">
+     <div class="mashroom-portal-app-header">
+       <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
+     </div>
+     <div class="mashroom-portal-app-host" data-replace-content="app">
+       {{#if appSSRHtml}}
+         {{{appSSRHtml}}}
+       {{else}}
+         <div class="mashroom-portal-app-loading"><span/></div>
+       {{/if}}
+     </div>
+   </div>
+   ```
+   **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
+   functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
  * HTTP Proxy: Fixed the error handling in the node-http-proxy based (default) proxy implementation; this fixes #77
  * WebSocket Demo Portal App: Switched to a working WebSocket echo server
  * Portal: Fixed caching problem in IE11 that confused the auth expiration check
