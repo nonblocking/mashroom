@@ -3,16 +3,14 @@ import {nanoid} from 'nanoid';
 import {
     WINDOW_VAR_PORTAL_API_PATH,
     WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
-    WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC,
-    WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC,
     WINDOW_VAR_PORTAL_DEV_MODE,
     WINDOW_VAR_PORTAL_PAGE_ID,
     WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
     WINDOW_VAR_PORTAL_SERVICES,
+    WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
+    WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
 } from '../../../backend/constants';
 import ResourceManager from './ResourceManager';
-import defaultCreateAppWrapper from './default_create_app_wrapper';
-import defaultCreateLoadingError from './default_create_loading_error';
 
 import type {
     MashroomAvailablePortalApp,
@@ -43,7 +41,7 @@ export type LoadedPortalAppInternal = {
     portalAppAreaId: string;
     portalAppWrapperElement: HTMLDivElement;
     portalAppHostElement: HTMLDivElement;
-    portalAppTitleElement: HTMLDivElement;
+    portalAppTitleElement: HTMLDivElement | undefined;
     lifecycleHooks: MashroomPortalAppLifecycleHooks | void;
     readonly modal: boolean;
     error: boolean;
@@ -518,10 +516,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
     }
 
-    private _appendAppWrapper(id: string, pluginName: string, instanceId: string | undefined | null, portalAppAreaId: string, position?: number | undefined | null) {
+    private _appendAppWrapper(id: string, pluginName: string, title: string | undefined | null, portalAppAreaId: string, position?: number | undefined | null) {
         console.log(`Adding wrapper for app: ${pluginName}, host element: ${portalAppAreaId}, position: ${String(position)}`);
 
-        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._createAppWrapper(id, pluginName, instanceId);
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._createAppWrapper(id, pluginName, title);
 
         this._insertPortalAppIntoDOM(portalAppWrapperElement, portalAppAreaId, position);
 
@@ -578,7 +576,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                                   portalAppAreaId: string, position: number | undefined | null, modal: boolean): LoadedPortalAppInternal {
         const {appId, title} = appSetup || { appId: nanoid(8) };
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
-            this._appendAppWrapper(appId, pluginName, instanceId, portalAppAreaId, position);
+            this._appendAppWrapper(appId, pluginName, title, portalAppAreaId, position);
         const loadedAppInternal: LoadedPortalAppInternal = {
             id: appId,
             pluginName,
@@ -599,20 +597,43 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _createAppWrapper(id: string, pluginName: string, title: string | undefined | null) {
-        const createAppWrapper = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC] || defaultCreateAppWrapper;
-        return createAppWrapper(id, pluginName, title);
+        const appWrapperTemplate = (global as any)[WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE];
+        const appWrapperHtml = this._processTemplate(appWrapperTemplate, id, pluginName, title);
+        const el = document.createElement('div');
+        el.innerHTML = appWrapperHtml;
+        const portalAppWrapperElement = el.firstElementChild as HTMLDivElement;
+        let portalAppHostElement = portalAppWrapperElement.querySelector('[data-replace-content="app"]') as HTMLDivElement | undefined;
+        const portalAppTitleElement = portalAppWrapperElement.querySelector('[data-replace-content="title"]') as HTMLDivElement | undefined;
+
+        if (!portalAppHostElement) {
+            console.error('No element annotated with data-replace-content="app" found in the app template. Adding a extra element node.');
+            portalAppHostElement = document.createElement('div');
+            portalAppWrapperElement.appendChild(portalAppHostElement);
+        }
+
+        return {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement};
     }
 
-    private _showLoadingError(portalApp: LoadedPortalAppInternal) {
-        const createLoadingError = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC] || defaultCreateLoadingError;
-        const errorElement = createLoadingError(portalApp.id, portalApp.pluginName, portalApp.title);
+    private _showLoadingError(portalApp: LoadedPortalAppInternal): void {
+        const appErrorTemplate = (global as any)[WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE];
+        const appErrorHtml = this._processTemplate(appErrorTemplate, portalApp.id, portalApp.pluginName, portalApp.title);
+        portalApp.portalAppHostElement.innerHTML = appErrorHtml;
+    }
 
-        portalApp.portalAppHostElement.innerHTML = '';
-        portalApp.portalAppHostElement.appendChild(errorElement);
+    private _processTemplate(template: string, id: string, pluginName: string, title: string | undefined | null) {
+        const safePluginName = pluginName.toLowerCase().replace(/ /g, '-');
+        return template
+            .replace('__APP_ID__', id)
+            .replace('__PLUGIN_NAME__', pluginName)
+            .replace('__SAFE_PLUGIN_NAME__', safePluginName)
+            .replace('__TITLE__', title || pluginName);
     }
 
     private _setAppTitle(loadedAppInternal: LoadedPortalAppInternal, title: string) {
-        loadedAppInternal.portalAppTitleElement.innerHTML = title;
+        const portalAppTitleElement = loadedAppInternal.portalAppTitleElement;
+        if (portalAppTitleElement) {
+            portalAppTitleElement.innerHTML = title;
+        }
     }
 
     private _findLoadedPortalApps(pluginName: string, instanceId: string | undefined | null) {

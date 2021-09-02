@@ -109,7 +109,7 @@ export type MashroomPortalLoadedPortalApp = {
     +portalAppAreaId: string,
     +portalAppWrapperElement: HTMLDivElement,
     +portalAppHostElement: HTMLDivElement,
-    +portalAppTitleElement: HTMLDivElement,
+    +portalAppTitleElement: ?HTMLDivElement,
     +appConfig: any,
     +error: boolean
 }
@@ -191,15 +191,18 @@ export interface MashroomPortalPageRenderModel {
 export interface MashroomPortalAppWrapperRenderModel {
     +appId: string,
     +pluginName: string,
+    +safePluginName: string,
     +title: string,
-    +appHtml: string,
+    +appHtml: ?string,
 }
 
 export interface MashroomPortalAppErrorRenderModel {
     +appId: string,
     +pluginName: string,
+    +safePluginName: string,
     +title: string,
-    +message: string,
+    +errorMessage: ?string,
+    +messages: (key: string) => string,
 }
 
 /* Plugins */

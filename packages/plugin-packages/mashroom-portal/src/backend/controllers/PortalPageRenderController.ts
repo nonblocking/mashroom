@@ -4,14 +4,13 @@ import fs from 'fs';
 import {determineUserAgent} from '@mashroom/mashroom-utils/lib/user_agent_utils';
 import context from '../context/global_portal_context';
 import minimalLayout from '../layouts/minimal_layout';
-import minimalTemplatePortal from '../theme/minimal_template_portal';
 import {
     PORTAL_APP_API_PATH,
     PORTAL_JS_FILE,
     PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH,
     PORTAL_THEME_RESOURCES_BASE_PATH,
-    WINDOW_VAR_PORTAL_API_PATH,
-    WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG,
+    WINDOW_VAR_PORTAL_API_PATH, WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
+    WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG, WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
     WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION,
     WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION,
     WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
@@ -44,6 +43,11 @@ import {
     isSignedIn,
     isSitePermitted
 } from '../utils/security_utils';
+import {
+    renderPage,
+    renderAppWrapperToClientTemplate,
+    renderAppErrorToClientTemplate,
+} from '../utils/render_utils';
 import createPortalAppSetup from '../utils/create_portal_app_setup';
 
 import type {Request, Response, Application} from 'express';
@@ -61,7 +65,9 @@ import type {
     MashroomPortalPageRefLocalized,
     MashroomPortalPageRenderModel, MashroomPortalService,
     MashroomPortalSite,
-    MashroomPortalSiteLocalized, UserAgent,
+    MashroomPortalSiteLocalized,
+    MashroomPortalTheme,
+    UserAgent,
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
 import {MashroomPortalAppSetup} from '../../../type-definitions';
@@ -110,13 +116,15 @@ export default class PortalPageRenderController {
             }
 
             const themeName = page.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
+            const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
             const layoutName = page.layout || site.defaultLayout || context.portalPluginConfig.defaultLayout;
 
             const portalName = req.pluginContext.serverConfig.name;
             const devMode = req.pluginContext.serverInfo.devMode;
-            const model = await this._createPortalPageModel(req, portalName, devMode, portalPath, sitePath, site, pageRef, page, themeName, layoutName, logger);
 
-            await this._render(themeName, model, req, res, logger);
+            const model = await this._createPortalPageModel(req, res, portalName, devMode, portalPath, sitePath, site, pageRef, page, theme, layoutName, logger);
+
+            await this._renderPage(theme, model, req, res, logger);
 
         } catch (e) {
             logger.error(e);
@@ -124,9 +132,10 @@ export default class PortalPageRenderController {
         }
     }
 
-    private async _createPortalPageModel(req: Request, portalName: string, devMode: boolean, portalPath: string, sitePath: string,
-                                 site: MashroomPortalSite, pageRef: MashroomPortalPageRef, page: MashroomPortalPage,
-                                 themeName: string | undefined | null, layoutName: string | undefined | null, logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
+    private async _createPortalPageModel(req: Request, res: Response, portalName: string, devMode: boolean, portalPath: string, sitePath: string,
+                                         site: MashroomPortalSite, pageRef: MashroomPortalPageRef, page: MashroomPortalPage,
+                                         theme: MashroomPortalTheme | undefined | null, layoutName: string | undefined | null,
+                                         logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
         const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
@@ -154,22 +163,25 @@ export default class PortalPageRenderController {
         const userAgent = determineUserAgent(req);
 
         const appLoadingFailedMsg = i18nService.getMessage('portalAppLoadingFailed', lang);
+        const messages = (key: string) => i18nService.getMessage(key, lang);
+
         const portalLayout = await this._loadLayout(layoutName, logger);
-        const portalResourcesHeader = await this._resourcesHeader(req, portalPath, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang,
+        const appWrapperTemplateHtml =  await this._executeWithTheme(theme, logger, () => renderAppWrapperToClientTemplate(!!theme, messages, req, res, logger));
+        const appErrorTemplateHtml =  await this._executeWithTheme(theme, logger, () => renderAppErrorToClientTemplate(!!theme, messages, req, res, logger));
+        const portalResourcesHeader = await this._resourcesHeader(
+            req, portalPath, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
             messagingConnectPath, privateUserTopic, devMode, userAgent);
         const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent, user);
+
         const siteBasePath = getFrontendSiteBasePath(req);
 
         let lastThemeReloadTs = Date.now();
         let resourcesBasePath = null;
-        if (themeName) {
-            const encodedThemeName = encodeURIComponent(themeName);
+        if (theme) {
+            const encodedThemeName = encodeURIComponent(theme.name);
             resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
-            const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
-            if (theme) {
-                lastThemeReloadTs = theme.lastReloadTs;
-            }
+            lastThemeReloadTs = theme.lastReloadTs;
         }
         const apiBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}`;
 
@@ -190,7 +202,7 @@ export default class PortalPageRenderController {
             resourcesBasePath,
             lang,
             availableLanguages: i18nService.availableLanguages,
-            messages: (key) => i18nService.getMessage(key, lang),
+            messages,
             user: {
                 guest: !user,
                 username: user ? user.username : 'anonymous',
@@ -219,9 +231,7 @@ export default class PortalPageRenderController {
         return minimalLayout;
     }
 
-    private async _render(themeName: string | undefined | null, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger) {
-        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
-        const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
+    private _executeWithTheme = <T>(theme: MashroomPortalTheme | undefined | null, logger: MashroomLogger, fn: () => Promise<T>): Promise<T> => {
         if (theme) {
             try {
                 let engine;
@@ -235,22 +245,28 @@ export default class PortalPageRenderController {
                 this._portalWebapp.set('view engine', theme.engineName);
                 this._portalWebapp.set('views', theme.viewsPath);
 
-                if (cacheControlService) {
-                    // Disable the browser cache for authenticated users to prevent that back button exposes potential sensitive information.
-                    // If a CSRF token is present disable the caching always because it must not be cached.
-                    cacheControlService.addCacheControlHeader(model.csrfToken ? 'NEVER' : 'ONLY_FOR_ANONYMOUS_USERS' , req, res);
-                }
-
-                res.render('portal', model);
-                return;
+                return fn();
             } catch (err) {
-                logger.error(`Setting up theme failed: ${themeName ? themeName : '<undefined>'}`, err);
+                logger.error(`Setting up theme failed: ${theme.name}`, err);
             }
         }
 
-        logger.warn(`Theme not found or invalid: ${themeName ? themeName : '<undefined>'}. Using minimal fallback theme.`);
+        return fn();
+    }
+
+    private async _renderPage(theme: MashroomPortalTheme | undefined | null, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger) {
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+
+        const pageHtml = await this._executeWithTheme(theme, logger, () => renderPage(!!theme, model, req, res, logger));
+
+        if (cacheControlService) {
+            // Disable the browser cache for authenticated users to prevent that back button exposes potential sensitive information.
+            // If a CSRF token is present disable the caching always because it must not be cached.
+            cacheControlService.addCacheControlHeader(model.csrfToken ? 'NEVER' : 'ONLY_FOR_ANONYMOUS_USERS', req, res);
+        }
+
         res.type('text/html');
-        res.send(minimalTemplatePortal(model));
+        res.send(pageHtml);
     }
 
     private _localizePageRef(req: Request, pageRef: MashroomPortalPageRef): MashroomPortalPageRefLocalized {
@@ -281,15 +297,19 @@ export default class PortalPageRenderController {
     }
 
     private async _resourcesHeader(req: Request, portalPrefix: string, siteId: string, sitePath: string, pageId: string, pageFriendlyUrl: string, lang: string,
-                     appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, warnBeforeAuthenticationExpiresSec: number,
-                     autoExtendAuthentication: boolean, messagingConnectPath: string | undefined | null, privateUserTopic: string | undefined | null,
-                    devMode: boolean, userAgent: UserAgent): Promise<string> {
+                                   appWrapperTemplateHtml: string, appErrorTemplateHtml: string,
+                                   appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, warnBeforeAuthenticationExpiresSec: number,
+                                   autoExtendAuthentication: boolean, messagingConnectPath: string | undefined | null, privateUserTopic: string | undefined | null,
+                                   devMode: boolean, userAgent: UserAgent): Promise<string> {
         return `
             <script>
                 window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}';
                 window['${WINDOW_VAR_PORTAL_SITE_URL}'] = '${portalPrefix}${sitePath}';
                 window['${WINDOW_VAR_PORTAL_SITE_ID}'] = '${siteId}';
                 window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
+                window['${WINDOW_VAR_PORTAL_LANGUAGE}'] = '${lang}';
+                window['${WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE}'] = '${this._removeBreaks(appWrapperTemplateHtml).replace(/'/g, '\\\'')}';
+                window['${WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE}'] = '${this._removeBreaks(appErrorTemplateHtml).replace(/'/g, '\\\'')}';
                 window['${WINDOW_VAR_PORTAL_LANGUAGE}'] = '${lang}';
                 window['${WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG}'] = '${appLoadingFailedMsg}';
                 window['${WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION}'] = ${String(checkAuthenticationExpiration)};
@@ -317,6 +337,10 @@ export default class PortalPageRenderController {
             </script>
             ${await this._getPageEnhancementFooterResources(sitePath, pageFriendlyUrl, lang, userAgent, req)}
         `;
+    }
+
+    private _removeBreaks(html: string) {
+        return html.replace(/(\r\n|\r|\n)/g, '');
     }
 
     private async _getStaticAppStartupScript(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null,

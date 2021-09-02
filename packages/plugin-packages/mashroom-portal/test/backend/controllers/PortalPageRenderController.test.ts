@@ -316,22 +316,29 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            render: (template: string, model: MashroomPortalPageRenderModel) => {
-                expect(template).toBe('portal');
+            type: (t: string) => {},
+            render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
+                if (template === 'portal') {
+                    expect(engineName).toBe('fooEngine');
+                    expect(webappProps.get('view engine')).toBe('fooEngine');
+                    expect(webappProps.get('views')).toBe('./views');
 
-                expect(engineName).toBe('fooEngine');
-                expect(webappProps.get('view engine')).toBe('fooEngine');
-                expect(webappProps.get('views')).toBe('./views');
+                    expect(model.site).toEqual({siteId: 'default', pages: [{pageId: 'test-page', friendlyUrl: '/bar', hidden: false, subPages: [], title: 'Test Page'}], path: '/web', title: 'Default Site'});
+                    expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Mashroom Welcome Portal App'}, {instanceId: '3', pluginName: 'Mashroom Welcome Portal App 2'}]}, theme: 'my-theme', title: 'Test Page'});
+                    expect(model.siteBasePath).toBe('/portal/web');
+                    expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
+                    expect(model.apiBasePath).toBe('/portal/web/___/api');
+                    expect(model.portalLayout).toContain('<div class="row"><div id="app-area1"></div><div id="app-area2"></div></div>');
 
-                expect(model.site).toEqual({siteId: 'default', pages: [{pageId: 'test-page', friendlyUrl: '/bar', hidden: false, subPages: [], title: 'Test Page'}], path: '/web', title: 'Default Site'});
-                expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Mashroom Welcome Portal App'}, {instanceId: '3', pluginName: 'Mashroom Welcome Portal App 2'}]}, theme: 'my-theme', title: 'Test Page'});
-                expect(model.siteBasePath).toBe('/portal/web');
-                expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
-                expect(model.apiBasePath).toBe('/portal/web/___/api');
-                expect(model.portalLayout).toContain('<div class="row"><div id="app-area1"></div><div id="app-area2"></div></div>');
+                }
+
+                cb(null, '<div />');
+            },
+            send: (body: string) => {
+                expect(body).toBe('<div />');
 
                 done();
-            },
+            }
         };
 
         const controller = new PortalPageRenderController(webApp, pluginRegistry2);
@@ -362,26 +369,33 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            render: (template: string, model: MashroomPortalPageRenderModel) => {
+            type: (t: string) => {},
+            render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
+                if (template === 'portal') {
+                    // console.info(model.portalResourcesHeader);
+                    // console.info(model.portalResourcesFooter);
 
-                // console.info(model.portalResourcesHeader);
-                // console.info(model.portalResourcesFooter);
+                    expect(model.portalResourcesHeader).toContain('window[\'MashroomPortalCustomClientServices\'] = {"customService":"foo"};');
+                    expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js?v=2000"></script>');
+                    expect(model.portalResourcesHeader).toContain(' .bar {');
+                    expect(model.portalResourcesHeader).toContain('console.info("I am generated!");');
 
-                expect(model.portalResourcesHeader).toContain('window[\'MashroomPortalCustomClientServices\'] = {"customService":"foo"};');
-                expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js?v=2000"></script>');
-                expect(model.portalResourcesHeader).toContain(' .bar {');
-                expect(model.portalResourcesHeader).toContain('console.info("I am generated!");');
+                    expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
+                    expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css?v=2000" />');
+                    expect(model.portalResourcesFooter).not.toContain('test_script3.js');
 
-                expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
-                expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css?v=2000" />');
-                expect(model.portalResourcesFooter).not.toContain('test_script3.js');
+                    const posScript1 = model.portalResourcesHeader.indexOf('/test_script1.js');
+                    const posVeryImportantScript = model.portalResourcesHeader.indexOf('/very_important_stuff.js');
+                    expect(posVeryImportantScript < posScript1).toBeTruthy();
+                }
 
-                const posScript1 = model.portalResourcesHeader.indexOf('/test_script1.js');
-                const posVeryImportantScript = model.portalResourcesHeader.indexOf('/very_important_stuff.js');
-                expect(posVeryImportantScript < posScript1).toBeTruthy();
+                cb(null, '<div />');
+            },
+            send: (body: string) => {
+                expect(body).toBe('<div />');
 
                 done();
-            },
+            }
         };
 
         const controller = new PortalPageRenderController(webApp, pluginRegistry3);

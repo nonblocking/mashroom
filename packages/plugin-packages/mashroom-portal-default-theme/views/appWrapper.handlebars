@@ -1,0 +1,13 @@
+{{! This template is optional, since it resembles the default  }}
+<div id="portal-app-{{appId}}" class="mashroom-portal-app-wrapper portal-app-{{safePluginName}}">
+    <div class="mashroom-portal-app-header">
+        <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
+    </div>
+    <div class="mashroom-portal-app-host" data-replace-content="app">
+        {{#if appSSRHtml}}
+            {{{appSSRHtml}}}
+        {{else}}
+            <div class="mashroom-portal-app-loading"><span/></div>
+        {{/if}}
+    </div>
+</div>

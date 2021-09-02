@@ -3,6 +3,10 @@ export const SITES_COLLECTION = 'mashroom-portal-sites';
 export const PAGES_COLLECTION = 'mashroom-portal-pages';
 export const PORTAL_APP_INSTANCES_COLLECTION = 'mashroom-portal-app-instances';
 
+export const PORTAL_PAGE_TEMPLATE_NAME = 'portal';
+export const PORTAL_APP_WRAPPER_TEMPLATE_NAME = 'appWrapper';
+export const PORTAL_APP_ERROR_TEMPLATE_NAME = 'appError';
+
 export const PORTAL_INTERNAL_SEPARATOR = '___';
 export const PORTAL_INTERNAL_PATH = `/${PORTAL_INTERNAL_SEPARATOR}`;
 export const PORTAL_THEME_RESOURCES_BASE_PATH = '/theme';
@@ -23,8 +27,8 @@ export const WINDOW_VAR_PORTAL_SITE_URL = 'MashroomPortalSitePath';
 export const WINDOW_VAR_PORTAL_SITE_ID = 'MashroomPortalSiteId';
 export const WINDOW_VAR_PORTAL_LANGUAGE = 'MashroomPortalLanguage';
 export const WINDOW_VAR_PORTAL_DEV_MODE = 'MashroomPortalDevMode';
-export const WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC = 'MashroomPortalCreateAppWrapperFunc';
-export const WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC = 'MashroomPortalCreateLoadingErrorFunc';
+export const WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE = 'MashroomPortalAppWrapperTemplate';
+export const WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE = 'MashroomPortalAppErrorTemplate';
 export const WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES = 'MashroomPortalCustomClientServices';
 export const WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP = 'MashroomPortalPreloadedAppSetup';
 export const WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION = 'MashroomPortalCheckAuthenticationExpiration';

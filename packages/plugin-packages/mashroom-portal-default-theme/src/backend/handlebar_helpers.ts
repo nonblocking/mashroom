@@ -19,6 +19,11 @@ function i18n(messages: (key: string) => string, key: string): string {
     return messages(key) || key;
 }
 
+function defaultPluginErrorMessage(pluginName: string, messages: (key: string) => string): string {
+    const message = messages('portalAppLoadingFailed') || 'Portal app ${name} is temporarily not available';
+    return message.replace('${name}', pluginName);
+}
+
 function env(): string {
     return process.env.NODE_ENV || 'development';
 }
@@ -40,4 +45,5 @@ export default {
     mashroomVersion,
     ifShowEnvAndVersions,
     '__': i18n,
+    defaultPluginErrorMessage,
 };

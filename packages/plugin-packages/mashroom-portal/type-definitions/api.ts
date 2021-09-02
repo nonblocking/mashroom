@@ -113,7 +113,7 @@ export type MashroomPortalLoadedPortalApp = {
     readonly portalAppAreaId: string;
     readonly portalAppWrapperElement: HTMLDivElement;
     readonly portalAppHostElement: HTMLDivElement;
-    readonly portalAppTitleElement: HTMLDivElement;
+    readonly portalAppTitleElement: HTMLDivElement | undefined;
     readonly appConfig: any;
     readonly error: boolean;
 };
@@ -210,15 +210,19 @@ export interface MashroomPortalPageRenderModel {
 export interface MashroomPortalAppWrapperRenderModel {
     readonly appId: string;
     readonly pluginName: string;
+    readonly safePluginName: string;
     readonly title: string;
-    readonly appHtml: string;
+    readonly appSSRHtml: string | undefined | null;
+    readonly messages: (key: string) => string;
 }
 
 export interface MashroomPortalAppErrorRenderModel {
     readonly appId: string;
     readonly pluginName: string;
+    readonly safePluginName: string;
     readonly title: string;
-    readonly message: string;
+    readonly errorMessage: string | undefined | null;
+    readonly messages: (key: string) => string;
 }
 
 /* Plugins */
