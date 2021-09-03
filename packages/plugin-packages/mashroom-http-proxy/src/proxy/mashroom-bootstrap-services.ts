@@ -7,6 +7,7 @@ import MashroomHttpProxyService from './MashroomHttpProxyService';
 import {setPoolConfig} from '../connection_pool';
 import context from '../context/global_context';
 import {startExportPoolMetrics, stopExportPoolMetrics} from '../metrics/connection_pool_metrics';
+import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request_metrics';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 import type {Proxy} from '../../type-definitions/internal';
@@ -35,9 +36,11 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const service = new MashroomHttpProxyService(forwardMethods, proxy);
 
     startExportPoolMetrics(pluginContextHolder);
+    startExportRequestMetrics(proxy, pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         proxy.shutdown();
         stopExportPoolMetrics();
+        stopExportRequestMetrics();
     });
 
     return {
