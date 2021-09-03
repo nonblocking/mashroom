@@ -92,7 +92,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             return Promise.reject(`App ${pluginName}' with instance id ${instanceId} is already loaded!`);
         }
 
-        console.info(`Loading app '${pluginName}' with instance id: ${instanceId || '<undefined>'}`);
+        console.info(`Loading App '${pluginName}' with instance id: ${instanceId || '<undefined>'}`);
 
         return this._internalLoadApp(hostElementId, pluginName, instanceId, false, position, overrideAppConfig).then(
             (loadedApp) => {
@@ -106,7 +106,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     loadAppModal(pluginName: string, title?: string | undefined | null, overrideAppConfig?: any | undefined | null,
                  onClose?: ModalAppCloseCallback | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
-        console.info(`Loading app '${pluginName}' modal`);
+        console.info(`Loading App '${pluginName}' modal`);
 
         return this._internalLoadApp(HOST_ELEMENT_MODAL_OVERLAY, pluginName, null, true, null, overrideAppConfig).then(
             (loadedApp) => {
@@ -124,10 +124,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     reloadApp(id: string, overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
         const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
-            return Promise.reject(`No app found with id: ${id}`);
+            return Promise.reject(`No App found with id: ${id}`);
         }
 
-        console.info(`Reloading app '${loadedAppInternal.pluginName}' with id: ${id}`);
+        console.info(`Reloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
 
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
@@ -164,7 +164,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
                 return this._loadResources(loadedAppInternal).then(
                     () => {
-                        console.info(`Reloading portal app '${loadedAppInternal.pluginName}' with setup:`, appSetup);
+                        console.info(`Reloading App '${loadedAppInternal.pluginName}' with setup:`, appSetup);
                         return this._startApp(loadedAppInternal.id, loadedAppInternal.portalAppHostElement, appSetup, loadedAppInternal.pluginName).then(
                             (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
                                 loadedAppInternal.lifecycleHooks = lifecycleHooks;
@@ -190,7 +190,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             return;
         }
 
-        console.info(`Unloading app '${loadedAppInternal.pluginName}' with id: ${id}`);
+        console.info(`Unloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
         const removeHostElemAndUnloadResources = () => {
@@ -215,7 +215,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         };
 
         const handleError = (error: Error) => {
-            console.warn(`Calling willBeRemoved callback of app '${loadedAppInternal.pluginName}' failed`, error);
+            console.warn(`Calling willBeRemoved callback of App '${loadedAppInternal.pluginName}' failed`, error);
             removeHostElemAndUnloadResources();
         };
 
@@ -353,7 +353,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
                 return this._loadResources(loadedAppInternal).then(
                     () => {
-                        console.info(`Starting portal app '${pluginName}' with setup:`, appSetup);
+                        console.info(`Starting portal App '${pluginName}' with setup:`, appSetup);
                         return this._startApp(loadedAppInternal!.id, loadedAppInternal!.portalAppHostElement, appSetup, pluginName).then(
                             (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
                                 loadedAppInternal!.lifecycleHooks = lifecycleHooks;
@@ -379,7 +379,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         if (instanceId) {
             const preloadedAppSetup = (global as any)[WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP] || {};
             if (preloadedAppSetup.hasOwnProperty(instanceId)) {
-                console.info('Using preloaded app setup for app: ', pluginName);
+                console.info('Using preloaded App setup for app: ', pluginName);
                 const appSetup = preloadedAppSetup[instanceId];
                 // Use only once at the start and not on reload
                 delete preloadedAppSetup[instanceId];
@@ -481,7 +481,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 modalOverlayTitleElem.innerHTML = title || loadedApp.title || loadedApp.pluginName;
             }
 
-            // Hide app header
+            // Hide App header
             loadedApp.portalAppWrapperElement.classList.add('hide-header');
 
             const hideDialog = () => modalOverlayElem.classList.remove('show');
@@ -530,7 +530,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         let parentElem = document.getElementById(portalAppAreaId);
         if (!parentElem) {
-            console.error(`App Area ID not found: ${portalAppAreaId} - attaching app to body!`);
+            console.error(`App Area ID not found: ${portalAppAreaId} - attaching App to body!`);
             parentElem = document.body;
         }
 
@@ -721,7 +721,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _checkForAppUpdates() {
-        // console.info('Checking for app updates since: ', this._lastUpdatedCheckTs);
+        // console.info('Checking for App updates since: ', this._lastUpdatedCheckTs);
 
         this._restService.get(`/portal-apps?updatedSince=${this._lastUpdatedCheckTs}`, {
             'x-mashroom-does-not-extend-auth': '1'
