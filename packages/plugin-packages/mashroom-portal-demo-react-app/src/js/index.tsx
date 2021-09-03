@@ -16,12 +16,6 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     // Log on server
     remoteLogger?.info(`React Demo App started by user ${user.username}`);
 
-    console.error('foooo');
-
-    setTimeout(() => {
-        console.error('baaaar');
-    }, 2000);
-
     return {
         willBeRemoved: () => {
             console.info('Ummounting React app');
