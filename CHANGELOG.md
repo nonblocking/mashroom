@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Improved client side error handling; console errors are also logged to the server now and
+   errors are serialized properly
  * HTTP Proxy: Added additional metrics such as the served requests, connection errors and timeouts
  * HTTP Proxy: Fixed the error handling in the node-http-proxy based (default) proxy implementation; this fixes #77
  * WebSocket Demo Portal App: Switched to a working WebSocket echo server

@@ -28,7 +28,8 @@ import type {
     MashroomPortalStateService,
     MasterMashroomPortalRemoteLogger,
     MashroomRestService,
-    ModalAppCloseCallback, MashroomPortalRemoteLogger,
+    ModalAppCloseCallback,
+    MashroomPortalRemoteLogger,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType} from '../../../../type-definitions/internal';
 
@@ -70,7 +71,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     private _lastUpdatedCheckTs: number;
     private _appsUpdateEventSource: EventSource | undefined;
 
-    constructor(restService: MashroomRestService, private _resourceManager: ResourceManager, private _remoteLogger: MasterMashroomPortalRemoteLogger) {
+    constructor(restService: MashroomRestService, private _resourceManager: ResourceManager) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
         console.debug('Using portal api path:', apiPath);
         this._restService = restService.withBasePath(apiPath);
@@ -183,7 +184,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const handleError = (error: Error) => {
             console.warn(`Calling willBeRemoved callback of app '${loadedAppInternal.pluginName}' failed`, error);
-            this._remoteLogger.warn('Calling willBeRemoved callback failed', error, loadedAppInternal.pluginName);
             removeHostElemAndUnloadResources();
         };
 
@@ -359,7 +359,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             }
         ).catch((error) => {
             this._showLoadingError(loadedPortalAppInternal);
-            console.error('Loading app setup failed!', error);
+            console.error(`Loading app ${loadedPortalAppInternal.pluginName} failed!`, error);
             loadedPortalAppInternal.error = true;
             this._fireLoadEvent(loadedPortalAppInternal);
             return Promise.resolve();
@@ -425,7 +425,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const clientServices = this._getClientServicesForApp(appId, appSetup, pluginName);
         const handleError = (error: Error) => {
             console.error(`Error in bootstrap of app: ${pluginName}`, error);
-            this._remoteLogger.error('Error during bootstrap execution', error, pluginName);
         };
 
         let bootstrapRetVal = null;
@@ -680,7 +679,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                                 // Nothing to do
                             },
                             (error) => {
-                                console.error('Failed to update some apps', error);
+                                console.warn('Failed to update some apps', error);
                             }
                         )
                     }
@@ -726,7 +725,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         try {
             this._loadListeners.forEach((l) => l(loadedApp));
         } catch (e) {
-            this._remoteLogger.error('Load listener threw an error', e);
             console.error('Load listener threw an error: ', e);
         }
     }
@@ -736,8 +734,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         try {
             this._aboutToUnloadListeners.forEach((l) => l(loadedApp));
         } catch (e) {
-            this._remoteLogger.error('AboutToUnload listener threw an error', e);
-            console.error('AboutToUnload listener threw an error: ', e);
+            console.error('AboutToUnload listener threw an error', e);
         }
     }
 
