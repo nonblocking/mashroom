@@ -40,9 +40,9 @@ export type LoadedPortalAppInternal = {
     appSetup: MashroomPortalAppSetup | undefined | null;
     loadedTs: number;
     portalAppAreaId: string;
-    portalAppWrapperElement: HTMLDivElement;
-    portalAppHostElement: HTMLDivElement;
-    portalAppTitleElement: HTMLDivElement | undefined;
+    portalAppWrapperElement: HTMLElement;
+    portalAppHostElement: HTMLElement;
+    portalAppTitleElement: HTMLElement | undefined;
     lifecycleHooks: MashroomPortalAppLifecycleHooks | void;
     readonly modal: boolean;
     error: boolean;
@@ -133,7 +133,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         this._resourceManager.unloadAppResources(loadedAppInternal);
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
-            this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.instanceId);
+            this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.title);
         const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
         if (parent) {
             parent.replaceChild(portalAppWrapperElement, loadedAppInternal.portalAppWrapperElement);
@@ -157,9 +157,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 loadedAppInternal.appSetup = appSetup;
                 loadedAppInternal.instanceId = appSetup.instanceId;
                 loadedAppInternal.title = appSetup.title;
-                if (appSetup.title) {
-                    this._setAppTitle(loadedAppInternal, appSetup.title);
-                }
+
                 this._fireLoadEvent(loadedAppInternal);
 
                 return this._loadResources(loadedAppInternal).then(
@@ -346,9 +344,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 }
 
                 loadedAppInternal = this._createNewAppInstance(appSetup, pluginName, instanceId, portalAppAreaId, position, modal);
-                if (loadedAppInternal.title) {
-                    this._setAppTitle(loadedAppInternal, loadedAppInternal.title);
-                }
+
                 this._fireLoadEvent(loadedAppInternal);
 
                 return this._loadResources(loadedAppInternal).then(
@@ -525,7 +521,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement};
     }
 
-    private _insertPortalAppIntoDOM(portalAppWrapperElement: HTMLDivElement, portalAppAreaId: string, position?: number | undefined | null) {
+    private _insertPortalAppIntoDOM(portalAppWrapperElement: HTMLElement, portalAppAreaId: string, position?: number | undefined | null) {
         let inserted = false;
 
         let parentElem = document.getElementById(portalAppAreaId);
@@ -600,9 +596,13 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const appWrapperHtml = this._processTemplate(appWrapperTemplate, id, pluginName, title);
         const el = document.createElement('div');
         el.innerHTML = appWrapperHtml;
-        const portalAppWrapperElement = el.firstElementChild as HTMLDivElement;
-        let portalAppHostElement = portalAppWrapperElement.querySelector('[data-replace-content="app"]') as HTMLDivElement | undefined;
-        const portalAppTitleElement = portalAppWrapperElement.querySelector('[data-replace-content="title"]') as HTMLDivElement | undefined;
+        let portalAppWrapperElement = el.firstElementChild as HTMLElement | undefined;
+        if (!portalAppWrapperElement) {
+            console.error('The App template seems to be empty, using an empty div container');
+            portalAppWrapperElement = document.createElement('div');
+        }
+        let portalAppHostElement = portalAppWrapperElement.querySelector('[data-mr-app-content="app"]') as HTMLElement | undefined;
+        const portalAppTitleElement = portalAppWrapperElement.querySelector('[data-mr-app-content="title"]') as HTMLElement | undefined;
 
         if (!portalAppHostElement) {
             console.error('No element annotated with data-replace-content="app" found in the App template. Adding a extra element node.');
@@ -626,13 +626,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             .replace('__PLUGIN_NAME__', pluginName)
             .replace('__SAFE_PLUGIN_NAME__', safePluginName)
             .replace('__TITLE__', title || pluginName);
-    }
-
-    private _setAppTitle(loadedAppInternal: LoadedPortalAppInternal, title: string) {
-        const portalAppTitleElement = loadedAppInternal.portalAppTitleElement;
-        if (portalAppTitleElement) {
-            portalAppTitleElement.innerHTML = title;
-        }
     }
 
     private _findLoadedPortalApps(pluginName: string, instanceId: string | undefined | null) {

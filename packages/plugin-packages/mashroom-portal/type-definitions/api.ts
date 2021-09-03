@@ -111,9 +111,9 @@ export type MashroomPortalLoadedPortalApp = {
     readonly version: string | null | undefined;
     readonly instanceId: string | null | undefined;
     readonly portalAppAreaId: string;
-    readonly portalAppWrapperElement: HTMLDivElement;
-    readonly portalAppHostElement: HTMLDivElement;
-    readonly portalAppTitleElement: HTMLDivElement | undefined;
+    readonly portalAppWrapperElement: HTMLElement;
+    readonly portalAppHostElement: HTMLElement;
+    readonly portalAppTitleElement: HTMLElement | undefined;
     readonly appConfig: any;
     readonly error: boolean;
 };

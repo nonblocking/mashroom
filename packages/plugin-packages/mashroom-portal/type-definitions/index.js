@@ -107,9 +107,9 @@ export type MashroomPortalLoadedPortalApp = {
     +version: ?string,
     +instanceId: ?string,
     +portalAppAreaId: string,
-    +portalAppWrapperElement: HTMLDivElement,
-    +portalAppHostElement: HTMLDivElement,
-    +portalAppTitleElement: ?HTMLDivElement,
+    +portalAppWrapperElement: HTMLElement,
+    +portalAppHostElement: HTMLElement,
+    +portalAppTitleElement: ?HTMLElement,
     +appConfig: any,
     +error: boolean
 }
