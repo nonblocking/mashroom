@@ -14,6 +14,7 @@ import type {MashroomLogger, MashroomLoggerFactory, IncomingMessageWithContext} 
 import type {MashroomSecurityUser, MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
+import {RequestMetrics} from '../../type-definitions/internal';
 
 type ProxyServer = ReturnType<typeof createProxyServer>;
 
@@ -52,6 +53,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     private _globalLogger: MashroomLogger;
     private _httpProxy: ProxyServer;
     private _httpsProxy: ProxyServer;
+    private _metrics: RequestMetrics;
 
     constructor(private _socketTimeoutMs: number, rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, loggerFactory: MashroomLoggerFactory) {
@@ -73,6 +75,12 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             ignorePath: true, // do not append req.url path
             xfwd: true,
         });
+        this._metrics = {
+            httpRequests: 0,
+            wsRequests: 0,
+            targetConnectionErrors: 0,
+            targetTimeouts: 0
+        }
 
         this._httpProxy.on('proxyReq', this.onProxyRequest.bind(this));
         this._httpsProxy.on('proxyReq', this.onProxyRequest.bind(this));
@@ -92,6 +100,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
+        this._metrics.httpRequests ++;
 
         let effectiveTargetUri = encodeURI(targetUri);
         let effectiveAdditionalHeaders = {
@@ -147,6 +156,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                 user: null,
                 type: 'HTTP',
                 end: () => {
+                    delete req[REQUEST_META_PROP];
                     resolve();
                 }
             }
@@ -163,6 +173,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
+        this._metrics.wsRequests ++;
 
         if (req.headers.upgrade !== 'websocket') {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
@@ -202,7 +213,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const clientRequest = req as Request;
         const clientResponse = res as Response;
         const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy');
-        const requestMeta = (req as any)[REQUEST_META_PROP];
+        const requestMeta = clientRequest[REQUEST_META_PROP];
         if (!requestMeta || requestMeta.type !== 'HTTP') {
             return;
         }
@@ -228,11 +239,12 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         // Proper timeout handling
         proxyReq.setTimeout(this._socketTimeoutMs, () => {
             logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`);
+            this._metrics.targetTimeouts ++;
+            requestMeta.end();
+            proxyReq.destroy();
             if (!clientResponse.headersSent) {
                 clientResponse.sendStatus(504);
             }
-            delete clientRequest[REQUEST_META_PROP];
-            proxyReq.destroy();
         });
     }
 
@@ -299,19 +311,19 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             return;
         }
 
-        if (req.aborted) {
-            // Ignore client abort
-            return;
-        }
+        // node-http-proxy throws an error if the client has aborted, we don't want to log it
+        if (!req.aborted) {
+            this._metrics.targetConnectionErrors++;
 
-        if (requestMeta.type === 'HTTP') {
-            logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
-            if (!clientResponse.headersSent) {
-                clientResponse.sendStatus(503);
+            if (requestMeta.type === 'HTTP') {
+                logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
+                if (!clientResponse.headersSent) {
+                    clientResponse.sendStatus(503);
+                }
+            } else if (requestMeta.type === 'WS') {
+                logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
+                (res as Socket).end(`HTTP/1.1 503 Service Unavailable\r\n\r\n`, 'ascii');
             }
-        } else if (requestMeta.type === 'WS') {
-            logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
-            (res as Socket).end(`HTTP/1.1 503 Service Unavailable\r\n\r\n`, 'ascii');
         }
 
         requestMeta.end();
@@ -358,6 +370,10 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = this._globalLogger.withContext(userContext(requestMeta.user));
         logger.info(`WebSocket connection for ${requestMeta.uri} closed`);
         requestMeta.end();
+    }
+
+    getRequestMetrics(): RequestMetrics {
+        return this._metrics;
     }
 }
 

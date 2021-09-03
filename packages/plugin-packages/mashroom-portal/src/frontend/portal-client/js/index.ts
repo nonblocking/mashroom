@@ -19,7 +19,7 @@ import type {MashroomPortalClientServices} from '../../../../type-definitions';
 const restService = new MashroomRestServiceFetchImpl();
 const remoteLogger = new MashroomPortalRemoteLoggerImpl(restService);
 const resourceManager = new ResourceManager(remoteLogger);
-const portalAppService = new MashroomPortalAppServiceImpl(restService, resourceManager, remoteLogger);
+const portalAppService = new MashroomPortalAppServiceImpl(restService, resourceManager);
 const portalAdminService = new MashroomPortalAdminServiceImpl(restService);
 const messageBus = new MashroomPortalMessageBusImpl();
 const stateService = new MashroomPortalStateServiceImpl();

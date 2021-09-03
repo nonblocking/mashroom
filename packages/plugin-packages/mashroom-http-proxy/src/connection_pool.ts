@@ -5,7 +5,7 @@ import https from 'https';
 import type {Agent as HttpAgent} from 'http';
 import type {Agent as HttpsAgent} from 'https';
 
-import type {PoolConfig, PoolStats} from '../type-definitions/internal';
+import type {PoolConfig, PoolMetrics} from '../type-definitions/internal';
 
 let _config: PoolConfig = {
     keepAlive: true,
@@ -44,7 +44,7 @@ export const getHttpsPool = () => {
     return _httpsPool;
 };
 
-const getPoolStats = (agent: HttpAgent | HttpsAgent): PoolStats => {
+const getPoolStats = (agent: HttpAgent | HttpsAgent): PoolMetrics => {
     const countArrayEntries = (obj: NodeJS.ReadOnlyDict<any>) => Object.values(obj).reduce((acc, arr) => acc + arr.length, 0);
 
     return {
@@ -54,14 +54,14 @@ const getPoolStats = (agent: HttpAgent | HttpsAgent): PoolStats => {
     }
 };
 
-export const getHttpPoolStats = (): PoolStats | null => {
+export const getHttpPoolMetrics = (): PoolMetrics | null => {
     if (_httpPool) {
         return getPoolStats(_httpPool);
     }
     return null;
 };
 
-export const getHttpsPoolStats = (): PoolStats | null => {
+export const getHttpsPoolMetrics = (): PoolMetrics | null => {
     if (_httpsPool) {
         return getPoolStats(_httpsPool);
     }

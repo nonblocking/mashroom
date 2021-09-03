@@ -15,10 +15,17 @@ export type PoolConfig = {
     maxSockets: number;
 }
 
-export type PoolStats = {
+export type PoolMetrics = {
     activeConnections: number;
     idleConnections: number;
     waitingRequests: number;
+}
+
+export type RequestMetrics = {
+    httpRequests: number;
+    wsRequests: number;
+    targetConnectionErrors: number;
+    targetTimeouts: number;
 }
 
 export type MashroomHttpProxyInterceptorHolder = {
@@ -46,4 +53,5 @@ export interface Proxy {
     forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders): Promise<void>;
     forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
     shutdown(): void;
+    getRequestMetrics():  RequestMetrics;
 }

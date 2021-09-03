@@ -3,7 +3,6 @@ import MashroomPortalAppServiceImpl from '../../../src/frontend/portal-client/js
 
 describe('MashroomPortalAppServiceImpl', () => {
 
-    const mockRemoteLogger: any = console;
     const mockRestService: any = {
         withBasePath: () => mockRestService,
     };
@@ -25,11 +24,9 @@ describe('MashroomPortalAppServiceImpl', () => {
         loadedStyles = [];
     });
 
-    // TODO: add more tests
-
     it('loads the Portal App resources in the correct order', async () => {
 
-        const portalAppService = new MashroomPortalAppServiceImpl(mockRestService, mockResourceManager, mockRemoteLogger);
+        const portalAppService = new MashroomPortalAppServiceImpl(mockRestService, mockResourceManager);
 
         const portalApp = {
             appSetup: {

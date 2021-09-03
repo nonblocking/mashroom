@@ -1,5 +1,5 @@
 
-import {getPoolConfig, getHttpPoolStats, getHttpsPoolStats} from '../connection_pool';
+import {getPoolConfig, getHttpPoolMetrics, getHttpsPoolMetrics} from '../connection_pool';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
@@ -11,12 +11,12 @@ let interval: NodeJS.Timeout;
 export const startExportPoolMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
     interval = setInterval(async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
 
         if (collectorService) {
             const config = getPoolConfig();
-            const httpPoolStats = getHttpPoolStats();
-            const httpsPoolStats = getHttpsPoolStats();
+            const httpPoolStats = getHttpPoolMetrics();
+            const httpsPoolStats = getHttpsPoolMetrics();
 
             if (httpPoolStats) {
                 collectorService.gauge('mashroom_http_proxy_active_connections_total', 'Mashroom HTTP Proxy Active Connections Total').set(httpPoolStats.activeConnections);

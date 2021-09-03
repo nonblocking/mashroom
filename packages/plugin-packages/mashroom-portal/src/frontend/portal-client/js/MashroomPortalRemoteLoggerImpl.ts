@@ -1,5 +1,6 @@
 
 import {WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
+import {serializeError} from './serialization_utils';
 
 import type {LogLevel} from '@mashroom/mashroom/type-definitions';
 import type {
@@ -54,7 +55,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
 
     private _log(level: LogLevel, message: string, error?: Error | string, portalAppName?: string | undefined | null) {
         if (error) {
-            const serializedError = typeof (error) === 'string' ? error : this._serializeError(error);
+            const serializedError = typeof (error) === 'string' ? error : serializeError(error);
             message = `${message}\n${serializedError}`;
         }
 
@@ -69,7 +70,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         if (this._timeout) {
             clearTimeout(this._timeout);
         }
-        setTimeout(this._send.bind(this), SEND_INTERVAL);
+        this._timeout = setTimeout(this._send.bind(this), SEND_INTERVAL);
     }
 
     private _send() {
@@ -87,12 +88,5 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         }
     }
 
-    private _serializeError(error: any) {
-        const errorObj: any = {};
-        Object.getOwnPropertyNames(error).forEach((key) => {
-            errorObj[key] = error[key];
-        }, this);
-        const msg = JSON.stringify(errorObj, null, 2);
-        return msg.replace(/\\n/g, '\n');
-    }
+
 }
