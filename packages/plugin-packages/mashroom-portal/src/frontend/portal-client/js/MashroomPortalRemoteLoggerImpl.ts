@@ -83,6 +83,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
 
         try {
             this._restService.post('/log', messages);
+            this._unsentLogMessages = [];
         } catch (e) {
             console.error('Unable to send error message to server', e);
         }
