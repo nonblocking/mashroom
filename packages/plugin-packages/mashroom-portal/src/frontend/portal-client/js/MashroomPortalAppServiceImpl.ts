@@ -30,6 +30,8 @@ import type {
     MashroomRestService,
     ModalAppCloseCallback,
     MashroomPortalRemoteLogger,
+    CreateAppWrapper,
+    CreateLoadingError,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType} from '../../../../type-definitions/internal';
 
@@ -134,7 +136,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         this._resourceManager.unloadAppResources(loadedAppInternal);
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
-            this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.instanceId);
+            this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName);
         const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
         if (parent) {
             parent.replaceChild(portalAppWrapperElement, loadedAppInternal.portalAppWrapperElement);
@@ -507,7 +509,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     private _appendAppWrapper(id: string, pluginName: string, instanceId: string | undefined | null, portalAppAreaId: string, position?: number | undefined | null) {
         console.log(`Adding wrapper for App: ${pluginName}, host element: ${portalAppAreaId}, position: ${String(position)}`);
 
-        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._createAppWrapper(id, pluginName, instanceId);
+        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} = this._createAppWrapper(id, pluginName);
 
         this._insertPortalAppIntoDOM(portalAppWrapperElement, portalAppAreaId, position);
 
@@ -560,13 +562,13 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return Object.freeze(clonedClientServices);
     }
 
-    private _createAppWrapper(id: string, pluginName: string, title: string | undefined | null) {
-        const createAppWrapper = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC] || defaultCreateAppWrapper;
-        return createAppWrapper(id, pluginName, title);
+    private _createAppWrapper(id: string, pluginName: string) {
+        const createAppWrapper: CreateAppWrapper = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_APP_WRAPPER_FUNC] || defaultCreateAppWrapper;
+        return createAppWrapper(id, pluginName);
     }
 
     private _showLoadingError(portalApp: LoadedPortalAppInternal) {
-        const createLoadingError = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC] || defaultCreateLoadingError;
+        const createLoadingError: CreateLoadingError = (global as any)[WINDOW_VAR_PORTAL_CUSTOM_CREATE_LOADING_ERROR_FUNC] || defaultCreateLoadingError;
         const errorElement = createLoadingError(portalApp.id, portalApp.pluginName, portalApp.title);
 
         portalApp.portalAppHostElement.innerHTML = '';
