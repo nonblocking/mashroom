@@ -141,6 +141,23 @@ describe('ProxyImplRequest', () => {
         expect(res.statusCode).toBe(503);
     });
 
+    it('sets the correct status code if the connection times out', async () => {
+        nock('https://www.yyyyyyyyyyy.at')
+            .get('/')
+            .delay(3000)
+            .reply(200, 'test response');
+
+        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.yyyyyyyyyyy.at');
+
+        // Expect 504 Gateway Timeout
+        expect(res.statusCode).toBe(504);
+    });
+
     it('passes the response from the target endpoint',  async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo')
