@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Legacy Browser Support: Added a polyfill for document.currentScript to support lazy loading via webpack 5 automatic public path
  * Portal: Improved client side error handling; console errors are also logged to the server now and
    errors are serialized properly
  * HTTP Proxy: Added additional metrics such as the served requests, connection errors and timeouts
