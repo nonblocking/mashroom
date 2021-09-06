@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.8.1",
+    "version": "1.8.2",
     "files": [
         "dist/**",
         "views/**"
@@ -16,9 +16,9 @@
     "devDependencies": {
         "@babel/cli": "^7.14.8",
         "@fortawesome/fontawesome-free": "^5.15.3",
-        "@mashroom/mashroom": "1.8.1",
-        "@mashroom/mashroom-portal": "1.8.1",
-        "@mashroom/mashroom-portal-ui-commons": "1.8.1",
+        "@mashroom/mashroom": "1.8.2",
+        "@mashroom/mashroom-portal": "1.8.2",
+        "@mashroom/mashroom-portal-ui-commons": "1.8.2",
         "@types/express": "^4.17.13",
         "@types/express-handlebars": "^5.3.1",
         "bootstrap": "^4.6.0",

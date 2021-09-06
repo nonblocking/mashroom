@@ -4,21 +4,21 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.8.1",
+    "version": "1.8.2",
     "files": [
         "dist/**"
     ],
     "dependencies": {
         "fs-extra": "^10.0.0",
         "lodash.filter": "^4.6.0",
-        "proper-lockfile": "^4.1.2",
-        "nanoid": "^3.1.25"
+        "nanoid": "^3.1.25",
+        "proper-lockfile": "^4.1.2"
     },
     "devDependencies": {
         "@babel/cli": "7.14.8",
-        "@mashroom/mashroom": "1.8.1",
-        "@mashroom/mashroom-storage": "1.8.1",
-        "@mashroom/mashroom-utils": "1.8.1",
+        "@mashroom/mashroom": "1.8.2",
+        "@mashroom/mashroom-storage": "1.8.2",
+        "@mashroom/mashroom-utils": "1.8.2",
         "@types/fs-extra": "^9.0.12",
         "@types/jest": "^26.0.24",
         "@types/lodash.filter": "^4.6.6",
