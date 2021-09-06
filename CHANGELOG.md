@@ -3,9 +3,11 @@
 
 ## [unreleased]
 
- * Legacy Browser Support: Added a polyfill for document.currentScript to support lazy loading via webpack 5 automatic public path
- * Portal: Improved client side error handling; console errors are also logged to the server now and
-   errors are serialized properly
+
+## 1.8.2 (September 6, 2021)
+
+ * Legacy Browser Support: Added a polyfill for *document.currentScript* to support lazy loading via webpack 5 automatic public path
+ * Portal: Improved client side error handling; console errors are also logged to the server now and errors are serialized properly
  * HTTP Proxy: Added additional metrics such as the served requests, connection errors and timeouts
  * HTTP Proxy: Fixed the error handling in the node-http-proxy based (default) proxy implementation; this fixes #77
  * WebSocket Demo Portal App: Switched to a working WebSocket echo server
