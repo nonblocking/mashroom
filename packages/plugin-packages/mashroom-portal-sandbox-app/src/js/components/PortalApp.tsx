@@ -34,7 +34,7 @@ export default class PortalApp extends PureComponent<Props> {
         const { portalAppService, setAvailablePortalApps } = this.props;
         portalAppService.getAvailableApps().then(
             (apps) => {
-                setAvailablePortalApps(apps);
+                setAvailablePortalApps((apps || []).sort((app1, app2) => app1.name.localeCompare(app2.name)));
                 const queryParams = this.getQueryParams();
                 if (queryParams.appName || queryParams.preselectAppName) {
                     // Auto select
