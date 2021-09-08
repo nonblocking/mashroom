@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+* Sandbox: apps are sorted by their name
 
 ## 1.8.2 (September 6, 2021)
 
