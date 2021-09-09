@@ -28,16 +28,18 @@ export default class RoleInput extends PureComponent<Props> {
     }
 
     componentDidMount(): void {
-        this.props.portalAdminService.getExistingRoles().then(
-            (existingRoleDefs) => {
-                const existingRoles = existingRoleDefs.map((r) => r.id);
-                this.props.setExistingRoles(existingRoles);
-                this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(existingRoles);
-            },
-            (error) => {
-                console.error('Fetching existing roles failed', error);
-            }
-        )
+        if (this.props.existingRoles.length === 0) {
+            this.props.portalAdminService.getExistingRoles().then(
+                (existingRoleDefs) => {
+                    const existingRoles = existingRoleDefs.map((r) => r.id);
+                    this.props.setExistingRoles(existingRoles);
+                    this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(existingRoles);
+                },
+                (error) => {
+                    console.error('Fetching existing roles failed', error);
+                }
+            )
+        }
     }
 
     onRoleChange(role: string | undefined | null): void {
