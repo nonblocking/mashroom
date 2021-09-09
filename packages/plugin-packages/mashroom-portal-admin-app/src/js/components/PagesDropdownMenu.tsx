@@ -3,6 +3,7 @@ import React, {PureComponent} from 'react';
 import {CircularProgress, DropdownMenu, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_PAGE_DELETE} from '../constants';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService, MashroomPortalSiteService} from '@mashroom/mashroom-portal/type-definitions';
 import type {DataLoadingService, FlatPage, Pages} from '../types';
 
@@ -27,42 +28,42 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
 
     closeDropDownRef: (() => void) | undefined;
 
-    onOpen() {
+    onOpen(): void {
         this.props.dataLoadingService.loadPageTree();
     }
 
-    onGoto(page: FlatPage) {
+    onGoto(page: FlatPage): void {
         const pageUrl = `${this.props.portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
         setTimeout(() => {
             global.location.href = pageUrl;
         }, 0);
     }
 
-    onConfigure(page: FlatPage) {
+    onConfigure(page: FlatPage): void {
         this.closeDropDownRef && this.closeDropDownRef();
         this.props.initConfigurePage(page.pageId);
         this.props.showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
-    onDelete(page: FlatPage) {
+    onDelete(page: FlatPage): void {
         this.closeDropDownRef && this.closeDropDownRef();
         this.props.initConfigurePage(page.pageId);
         this.props.showModal(DIALOG_NAME_PAGE_DELETE);
     }
 
-    renderLoading() {
+    renderLoading(): ReactNode {
         return (
             <CircularProgress/>
         );
     }
 
-    renderError() {
+    renderError(): ReactNode {
         return (
             <ErrorMessage messageId='loadingFailed' />
         );
     }
 
-    renderContent() {
+    renderContent(): ReactNode {
         if (this.props.pages.loading) {
             return this.renderLoading();
         } else if (this.props.pages.error || !this.props.pages.pages) {
@@ -87,7 +88,7 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <DropdownMenu className='pages-dropdown-menu' labelId='pages' onOpen={this.onOpen.bind(this)} closeRef={(ref) => this.closeDropDownRef = ref}>
                 {this.renderContent()}

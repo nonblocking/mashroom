@@ -1,5 +1,4 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
 import PortalAppHost from '../components/PortalAppHost';
 import {setHostWidth} from '../store/actions';

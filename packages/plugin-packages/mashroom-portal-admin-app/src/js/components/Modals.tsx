@@ -6,12 +6,14 @@ import PageDeleteDialogContainer from '../containers/PageDeleteDialogContainer';
 import SiteConfigureDialogContainer from '../containers/SiteConfigureDialogContainer';
 import SiteDeleteDialogContainer from '../containers/SiteDeleteDialogContainer';
 
+import type {ReactNode} from 'react';
+
 type Props = {
 };
 
 export default class PortalAppConfigureDialog extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         return (
             <Fragment>
                 <PortalAppConfigureDialogContainer/>

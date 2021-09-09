@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {ErrorMessage, FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
 import type {I18NString} from '@mashroom/mashroom/type-definitions';
 import type {Languages} from '../types';
@@ -28,30 +29,30 @@ export default class I18NStringField extends PureComponent<Props> {
         };
     }
 
-    onValueChange(lang: string, value: string | undefined | null) {
+    onValueChange(lang: string, value: string | undefined | null): void {
         const val = {...this.getValue(), [lang]: value};
 
         this.props.fieldProps.input.onChange(val);
     }
 
-    onBlur() {
+    onBlur(): void {
         this.props.fieldProps.input.onBlur(this.props.fieldProps.input.value);
     }
 
-    onAddLang(lang: string) {
+    onAddLang(lang: string): void {
         const val = {...this.getValue(), [lang]: ''};
 
         this.props.fieldProps.input.onChange(val);
     }
 
-    onRemoveLang(lang: string) {
+    onRemoveLang(lang: string): void {
         const val = {...this.getValue()};
         delete val[lang];
 
         this.props.fieldProps.input.onChange(val);
     }
 
-    renderInputs() {
+    renderInputs(): ReactNode {
         const val = this.getValue();
         const inputs = [];
         inputs.push(
@@ -104,7 +105,7 @@ export default class I18NStringField extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         return (

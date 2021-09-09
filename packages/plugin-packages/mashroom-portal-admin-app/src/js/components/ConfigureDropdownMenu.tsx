@@ -3,6 +3,7 @@ import React, {PureComponent} from 'react';
 import {DropdownMenu, DropdownMenuItem} from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_SITE_CONFIGURE} from '../constants';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
@@ -16,19 +17,19 @@ export default class ConfigureDropdownMenu extends PureComponent<Props> {
 
     closeDropDownRef: (() => void) | undefined;
 
-    onConfigurePage() {
+    onConfigurePage(): void {
         this.closeDropDownRef && this.closeDropDownRef();
         this.props.initConfigurePage(this.props.portalAdminService.getCurrentPageId());
         this.props.showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
-    onConfigureSite() {
+    onConfigureSite(): void {
         this.closeDropDownRef && this.closeDropDownRef();
         this.props.initConfigureSite(this.props.portalAdminService.getCurrentSiteId());
         this.props.showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <DropdownMenu className='configure-dropdown-menu' labelId='configure' closeRef={(ref) => this.closeDropDownRef = ref}>
                 <DropdownMenuItem labelId='configurePage' onClick={this.onConfigurePage.bind(this)}/>

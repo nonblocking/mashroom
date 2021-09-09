@@ -9,6 +9,7 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_SITE_DELETE} from '../constants';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {Sites, SelectedSite} from '../types';
 
@@ -23,18 +24,18 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    onClose() {
+    onClose(): void {
         this.close && this.close();
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onConfirmDelete() {
+    onConfirmDelete(): void {
         const selectedSite = this.props.selectedSite;
         if (!selectedSite || !selectedSite.siteId) {
-            return null;
+            return;
         }
 
         this.props.portalAdminService.deleteSite(selectedSite.siteId).then(
@@ -51,13 +52,13 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError() {
+    renderUpdatingError(): ReactNode {
         return (
             <ErrorMessage messageId='updateFailed' />
         );
     }
 
-    renderContent() {
+    renderContent(): ReactNode {
         const selectedSite = this.props.selectedSite;
         if (!selectedSite) {
             return null;
@@ -83,7 +84,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <ModalContainer
                 appWrapperClassName='mashroom-portal-admin-app'

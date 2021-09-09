@@ -30,26 +30,26 @@ const CATEGORY_HIDDEN = 'hidden';
 
 export default class AvailableAppsPanel extends PureComponent<Props> {
 
-    renderLoading() {
+    renderLoading(): ReactNode {
         return (
             <CircularProgress/>
         );
     }
 
-    renderError() {
+    renderError(): ReactNode {
         return (
             <ErrorMessage messageId='loadingFailed' />
         );
     }
 
-    onDragStart(event: DragEvent, name: string) {
+    onDragStart(event: DragEvent, name: string): void {
         console.info('Drag start: ', name);
         if (this.props.onDragStart) {
             this.props.onDragStart(event, name);
         }
     }
 
-    onDragEnd() {
+    onDragEnd(): void {
         if (this.props.onDragEnd) {
             this.props.onDragEnd();
         }
@@ -136,7 +136,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         });
     }
 
-    renderAvailableApps() {
+    renderAvailableApps(): ReactNode {
         const tokens = this.getFilterTokens();
         const filteredAndGroupedByCategory = this.getAppsFilteredAndGroupedByCategory(tokens);
 
@@ -161,7 +161,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         let content;
         if (this.props.availableApps.loading) {
             content = this.renderLoading();

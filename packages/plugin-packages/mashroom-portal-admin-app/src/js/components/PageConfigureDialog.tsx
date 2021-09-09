@@ -25,6 +25,7 @@ import I18NStringFieldContainer from '../containers/I18NStringFieldContainer';
 import {DIALOG_NAME_PAGE_CONFIGURE} from '../constants';
 import {getPagePosition, getParentPage, insertOrUpdatePageAtPosition, searchPageRef} from '../services/model_utils';
 
+import type {ReactNode} from 'react';
 import type {Dispatch} from 'redux';
 import type {
     MashroomAvailablePortalLayout,
@@ -64,7 +65,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    componentDidUpdate(prevProps: Props) {
+    componentDidUpdate(prevProps: Props): void {
         if (this.props.selectedPage && (!prevProps.selectedPage || this.props.selectedPage.selectedTs !== prevProps.selectedPage.selectedTs)) {
             const pageId = this.props.selectedPage.pageId;
             const promises = [];
@@ -112,18 +113,18 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         }
     }
 
-    onClose() {
+    onClose(): void {
         this.close && this.close();
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onSubmit(values: FormValues) {
+    onSubmit(values: FormValues): void {
         const selectedPage = this.props.selectedPage;
         if (!selectedPage) {
-            return null;
+            return;
         }
 
         const pageId = selectedPage.pageId;
@@ -232,7 +233,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         };
     }
 
-    onChange(values: FormValues, dispatch: Dispatch<any>, props: any, previousValues: FormValues) {
+    onChange(values: FormValues, dispatch: Dispatch<any>, props: any, previousValues: FormValues): void {
 
         // Set friendlyUrl automatically based on the title for a new page
         if (values.page && previousValues.page && props.initialValues.page && !props.initialValues.page.friendlyUrl) {
@@ -249,7 +250,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         }
     }
 
-    validate(values: FormValues) {
+    validate(values: FormValues): any {
         const errors: any = {
             page: {}
         };
@@ -272,7 +273,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         return errors;
     }
 
-    renderPageGeneral() {
+    renderPageGeneral(): ReactNode {
         const selectedPage = this.props.selectedPage;
         if (!selectedPage) {
             return null;
@@ -300,7 +301,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderPageAppearance() {
+    renderPageAppearance(): ReactNode {
         let availableThemesOptions: SelectFieldOptions = [{
             value: null,
             label: '<Site Default>'
@@ -341,7 +342,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderPageSEO() {
+    renderPageSEO(): ReactNode {
         return (
             <DialogContent>
                 <FormRow>
@@ -359,7 +360,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderPagePermissions() {
+    renderPagePermissions(): ReactNode {
         return (
             <DialogContent>
                 <Permissions/>
@@ -367,7 +368,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderTabDialog() {
+    renderTabDialog(): ReactNode {
         return (
             <TabDialogContainer name='page-configure' tabs={[
                 {name: 'general', titleId: 'general', content: this.renderPageGeneral()},
@@ -378,7 +379,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderActions() {
+    renderActions(): ReactNode {
         return (
             <DialogButtons>
                 <Button id='cancel' labelId='cancel' onClick={this.onClose.bind(this)}/>
@@ -387,13 +388,13 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderLoading() {
+    renderLoading(): ReactNode {
         return (
             <CircularProgress/>
         );
     }
 
-    renderLoadingError() {
+    renderLoadingError(): ReactNode {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='loadingFailed'/>
@@ -401,7 +402,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError() {
+    renderUpdatingError(): ReactNode {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='updateFailed'/>
@@ -409,7 +410,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderContent() {
+    renderContent(): ReactNode {
         const selectedPage = this.props.selectedPage;
         if (!selectedPage) {
             return null;
@@ -434,7 +435,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <ModalContainer
                 appWrapperClassName='mashroom-portal-admin-app'

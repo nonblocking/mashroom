@@ -1,5 +1,4 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
 import {reset as resetForm} from 'redux-form';
 import {addPublishedMessage, updatePublishedMessageStatus} from '../store/actions';

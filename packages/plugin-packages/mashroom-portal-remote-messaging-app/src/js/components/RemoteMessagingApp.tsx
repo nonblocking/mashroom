@@ -8,6 +8,7 @@ import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
 import SubscriptionPanelContainer from '../containers/SubscriptionPanelContainer';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
@@ -17,7 +18,7 @@ type Props = {
 
 export default class RemoteMessagingApp extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         const { lang, messageBus } = this.props;
         let existingLang = lang;
         if (!messages[existingLang]) {

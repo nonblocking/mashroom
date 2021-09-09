@@ -5,6 +5,8 @@ import {Button} from '@mashroom/mashroom-portal-ui-commons';
 import RoleInputContainer from '../containers/RoleInputContainer';
 import RolesListContainer from '../containers/RolesListContainer';
 
+import type {ReactNode} from 'react';
+
 type Props = {
 };
 
@@ -30,13 +32,13 @@ export default class Permissions extends PureComponent<Props, State> {
         }
     }
 
-    onRoleChange(enteredRole: string | undefined | null) {
+    onRoleChange(enteredRole: string | undefined | null): void {
         this.setState({
             enteredRole
         });
     }
 
-    onRoleSelected(role: string) {
+    onRoleSelected(role: string): void {
         this.setState({
             enteredRole: role,
         }, () => {
@@ -44,18 +46,18 @@ export default class Permissions extends PureComponent<Props, State> {
         });
     }
 
-    onAddRole() {
+    onAddRole(): void {
         if (this.state.enteredRole) {
             this.addRole && this.addRole(this.state.enteredRole);
             this.inputReset && this.inputReset();
         }
     }
 
-    onResetRef(resetRef: () => void) {
+    onResetRef(resetRef: () => void): void {
         this.inputReset = resetRef;
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='permissions'>
                 <FormattedMessage id='restrictViewPermission'/>

@@ -20,18 +20,18 @@ export default class RolesList extends PureComponent<Props> {
         }
     }
 
-    onAddRole(fieldArray: WrappedFieldArrayProps, role: string) {
+    onAddRole(fieldArray: WrappedFieldArrayProps, role: string): void {
         const existingFields = fieldArray.fields.getAll() || [];
         if (existingFields.indexOf(role) === -1) {
             fieldArray.fields.insert(0, role);
         }
     }
 
-    onRemoveRole(fieldArray: WrappedFieldArrayProps, index: number) {
+    onRemoveRole(fieldArray: WrappedFieldArrayProps, index: number): void {
         fieldArray.fields.remove(index);
     }
 
-    render() {
+    render(): ReactNode {
         let rows: Array<ReactNode> = [];
         if (this.props.fieldArrayProps.fields) {
             rows = this.props.fieldArrayProps.fields.map((role, index) => (

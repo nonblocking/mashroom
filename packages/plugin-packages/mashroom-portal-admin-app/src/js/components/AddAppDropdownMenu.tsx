@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import {DropdownMenu} from '@mashroom/mashroom-portal-ui-commons';
 import AvailableAppsPanelContainer from '../containers/AvailableAppsPanelContainer';
 
-import type {DragEvent} from 'react';
+import type {ReactNode, DragEvent} from 'react';
 import type {IntlShape} from 'react-intl';
 import type {PortalAppManagementService, DataLoadingService} from '../types';
 
@@ -29,7 +29,7 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
         }
     }
 
-    onOpen() {
+    onOpen(): void {
         this.props.dataLoadingService.loadAvailableApps(true);
         this.setState({
             filter: null
@@ -42,26 +42,26 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
 
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onAppDragStart(event: DragEvent, name: string) {
+    onAppDragStart(event: DragEvent, name: string): void {
         this.props.portalAppManagementService.prepareDrag(event as any, null, name);
         this.close && this.close();
     }
 
-    onAppDragEnd() {
+    onAppDragEnd(): void {
         this.props.portalAppManagementService.dragEnd();
     }
 
-    onFilterChange(filter: string) {
+    onFilterChange(filter: string): void {
         this.setState({
             filter
         });
     }
 
-    render() {
+    render(): ReactNode {
         const filterLabel = this.props.intl.formatMessage({ id: 'filter'});
 
         return (

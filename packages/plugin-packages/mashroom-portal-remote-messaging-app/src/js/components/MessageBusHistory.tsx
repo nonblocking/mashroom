@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import type {ReactNode} from 'react';
 import type {PublishedMessages, ReceivedMessages} from '../types';
 
 type Props = {
@@ -11,7 +12,7 @@ type Props = {
 
 export default class MessageBusHistory extends PureComponent<Props> {
 
-    renderPublishedMessages() {
+    renderPublishedMessages(): ReactNode {
         const { publishedMessages } = this.props;
         if (publishedMessages.length === 0) {
             return null;
@@ -59,7 +60,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
         );
     }
 
-    renderReceivedMessages() {
+    renderReceivedMessages(): ReactNode {
         const { receivedMessages } = this.props;
         if (receivedMessages.length === 0) {
             return null;
@@ -103,7 +104,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-remote-messaging-app-history'>
                 <div className='mashroom-remote-messaging-app-output-row'>

@@ -10,6 +10,7 @@ import {
 import {DIALOG_NAME_PAGE_DELETE} from '../constants';
 import {getParentPage, removePageFromTree} from '../services/model_utils';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {SelectedPage, Pages} from '../types';
 
@@ -24,18 +25,18 @@ export default class PageDeleteDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    onClose() {
+    onClose(): void {
         this.close && this.close();
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onConfirmDelete() {
+    onConfirmDelete(): void {
         const selectedPage = this.props.selectedPage;
         if (!selectedPage || !selectedPage.pageId) {
-            return null;
+            return;
         }
         const pageId = selectedPage.pageId;
 
@@ -70,13 +71,13 @@ export default class PageDeleteDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError() {
+    renderUpdatingError(): ReactNode {
         return (
             <ErrorMessage messageId='updateFailed' />
         );
     }
 
-    renderContent() {
+    renderContent(): ReactNode {
         const selectedPage = this.props.selectedPage;
         if (!selectedPage) {
             return null;
@@ -102,7 +103,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <ModalContainer
                 appWrapperClassName='mashroom-portal-admin-app'

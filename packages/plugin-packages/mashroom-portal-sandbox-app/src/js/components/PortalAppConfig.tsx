@@ -8,6 +8,7 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 import {mergeAppConfig} from '../utils';
 
+import type {ReactNode} from 'react';
 import type {SelectedPortalApp} from '../types';
 
 type FormData = {
@@ -40,7 +41,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
         };
     }
 
-    validate(values: FormData) {
+    validate(values: FormData): any {
         const errors: { [k in keyof FormData]?: string } = {};
         const { permissions, appConfig } = values;
 
@@ -58,7 +59,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: FormData) {
+    onSubmit(values: FormData): void {
         const { selectedPortalApp, onConfigSubmit } = this.props;
         if (!selectedPortalApp) {
             return;
@@ -78,7 +79,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
         }),  width);
     }
 
-    render() {
+    render(): ReactNode {
         const { selectedPortalApp } = this.props;
         if (!selectedPortalApp) {
             return null;

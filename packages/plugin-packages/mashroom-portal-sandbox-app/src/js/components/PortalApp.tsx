@@ -6,6 +6,7 @@ import PortalAppSelectionContainer from'../containers/PortalAppSelectionContaine
 import loadPortalApp from '../load_portal_app';
 import {getQueryParams, mergeAppConfig} from '../utils';
 
+import type {ReactNode} from 'react';
 import type {
     MashroomAvailablePortalApp,
     MashroomPortalAppService,
@@ -13,6 +14,7 @@ import type {
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
 import type {ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
+import {PortalAppQueryParams} from '../types';
 
 type Props = {
     hostElementId: string;
@@ -30,7 +32,7 @@ type Props = {
 
 export default class PortalApp extends PureComponent<Props> {
 
-    componentDidMount() {
+    componentDidMount(): void {
         const { portalAppService, setAvailablePortalApps } = this.props;
         portalAppService.getAvailableApps().then(
             (apps) => {
@@ -47,12 +49,12 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    getQueryParams() {
+    getQueryParams(): PortalAppQueryParams {
         const { portalStateService } = this.props;
         return getQueryParams(portalStateService);
     }
 
-    selectionChanged(appName: string | undefined | null) {
+    selectionChanged(appName: string | undefined | null): void {
         const { messageBus, portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
 
         setTimeout(() => {
@@ -89,7 +91,7 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    loadPortalApp(selectedPortalApp: SelectedPortalApp, hostWidth: string | undefined | null) {
+    loadPortalApp(selectedPortalApp: SelectedPortalApp, hostWidth: string | undefined | null): void {
         console.info(`Loading app '${selectedPortalApp.appName}' with setup: `, selectedPortalApp.setup);
 
         const { hostElementId, messageBusPortalAppUnderTest, setActivePortalApp, setHostWidth } = this.props;
@@ -110,7 +112,7 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    renderNoActivePortalApp() {
+    renderNoActivePortalApp(): ReactNode {
         const { preselectAppName } = this.getQueryParams();
 
         return (
@@ -121,7 +123,7 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    renderActivePortalApp() {
+    renderActivePortalApp(): ReactNode {
         const { activePortalApp } = this.props;
         if (!activePortalApp) {
             return null;
@@ -149,7 +151,7 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         const { activePortalApp } = this.props;
 
         return (

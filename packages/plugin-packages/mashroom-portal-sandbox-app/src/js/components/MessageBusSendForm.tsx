@@ -7,6 +7,7 @@ import {
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 import type {ActivePortalApp, MessageBusMessage} from '../types';
 
@@ -34,7 +35,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         }
     }
 
-    validate(values: FormData) {
+    validate(values: FormData): any {
         const errors: { [k in keyof FormData]?: string } = {};
         const { topic, message } = values;
 
@@ -50,7 +51,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: FormData) {
+    onSubmit(values: FormData): void {
         const { messageBus, addMessagePublishedBySandbox, resetForm } = this.props;
         const { topic, message } = values;
         const data = JSON.parse(message);
@@ -62,7 +63,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         resetForm('mashroom-sandbox-app-publish-message-form');
     }
 
-    render() {
+    render(): ReactNode {
         const {activePortalApp, topicsSubscribedByApp} = this.props;
         if (!activePortalApp) {
             return null;

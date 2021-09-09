@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import type {ReactNode} from 'react';
 import type {
     ActivePortalApp,
     MessageBusCommunication,
@@ -15,7 +16,7 @@ type Props = {
 
 export default class MessageBusHistory extends PureComponent<Props> {
 
-    renderMessageTable(id: string, messages: Array<MessageBusMessage>) {
+    renderMessageTable(id: string, messages: Array<MessageBusMessage>): ReactNode {
         if (messages.length === 0) {
             return '-';
         }
@@ -60,7 +61,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         const { activePortalApp, messageBusCom : { publishedByApp, publishedBySandbox } } = this.props;
         if (!activePortalApp) {
             return null;

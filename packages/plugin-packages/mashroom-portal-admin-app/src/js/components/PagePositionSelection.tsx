@@ -2,6 +2,7 @@
 import React, {PureComponent, Fragment} from 'react';
 import {FormCell, FormRow, SelectFieldContainer} from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {AnyPage, FlatPage} from '../types';
 
 type Props = {
@@ -22,17 +23,17 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
         };
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.initSelectedParentPageId();
     }
 
-    componentDidUpdate(prevProps: Props) {
+    componentDidUpdate(prevProps: Props): void {
         if (prevProps.pageId !== this.props.pageId) {
             this.initSelectedParentPageId();
         }
     }
 
-    initSelectedParentPageId() {
+    initSelectedParentPageId(): void {
         if (this.props.pageId) {
             const parentPage = this.props.pages.find((p) => p.subPages && p.subPages.find((sp) => sp.pageId === this.props.pageId));
             if (parentPage) {
@@ -48,13 +49,13 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
         });
     }
 
-    onSelectedParentPageChange(pageId: string | undefined | null) {
+    onSelectedParentPageChange(pageId: string | undefined | null): void {
         this.setState({
             selectedParentPageId: pageId
         });
     }
 
-    render() {
+    render(): ReactNode {
         let parentPageOptions = [{
             value: '',
             label: '<Root>'

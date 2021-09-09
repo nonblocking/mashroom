@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {CircularProgress} from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {ActivePortalApp} from '../types';
 
 type Props = {
@@ -24,17 +25,17 @@ export default class PortalApp extends PureComponent<Props> {
         this.boundResizerMouseMove = this.resizerMouseMove.bind(this);
     }
 
-    resizerMouseDown() {
+    resizerMouseDown(): void {
         global.addEventListener('mousemove', this.boundResizerMouseMove);
         global.addEventListener('mouseup', this.boundResizerMouseUp);
     }
 
-    resizerMouseUp() {
+    resizerMouseUp(): void {
         global.removeEventListener('mousemove', this.boundResizerMouseMove);
         global.removeEventListener('mouseup', this.boundResizerMouseUp);
     }
 
-    resizerMouseMove(event: MouseEvent) {
+    resizerMouseMove(event: MouseEvent): void {
         if (!this.wrapperElemRef.current) {
             return;
         }
@@ -46,7 +47,7 @@ export default class PortalApp extends PureComponent<Props> {
         }
     }
 
-    render() {
+    render(): ReactNode {
         const {activePortalApp, hostElementId} = this.props;
         if (!activePortalApp) {
             return null;

@@ -32,7 +32,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.portalAppService.registerAppAboutToUnloadListener(this._appAboutToUnloadListener.bind(this));
     }
 
-    showPortalAppControls() {
+    showPortalAppControls(): void {
         this.portalAppService.loadedPortalApps.forEach((app) => {
             const appWrapper = app.portalAppWrapperElement;
             const parent = appWrapper.parentElement;
@@ -48,7 +48,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.controlsVisible = true;
     }
 
-    hidePortalAppControls() {
+    hidePortalAppControls(): void {
         Array.from(document.querySelectorAll(`.${CSS_CLASS_APP_CONTROLS}`)).forEach((controlsWrapper) => {
             const appWrapper = controlsWrapper.children[controlsWrapper.children.length - 1];
             const parent = controlsWrapper.parentElement;
@@ -61,7 +61,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.controlsVisible = false;
     }
 
-    prepareDrag(event: DragEvent, loadedAppId: string | undefined | null, portalAppName: string, instanceId: string | undefined | null) {
+    prepareDrag(event: DragEvent, loadedAppId: string | undefined | null, portalAppName: string, instanceId: string | undefined | null): void {
         this.dragRunning = false;
 
         // Hint: This doesn't work in IE11, since IE only accept "test" as format
@@ -80,13 +80,13 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         }, 0);
     }
 
-    dragEnd() {
+    dragEnd(): void {
         this.dragRunning = false;
 
         this.deactivatePortalAppDropZones();
     }
 
-    activatePortalAppDropZones() {
+    activatePortalAppDropZones(): void {
         this.deactivatePortalAppDropZones();
 
         Array.from(document.querySelectorAll(`.${CSS_CLASS_MASHROOM_PORTAL_APP_AREA}`)).forEach((areaElem) => {
@@ -106,7 +106,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         });
     }
 
-    deactivatePortalAppDropZones() {
+    deactivatePortalAppDropZones(): void {
         if (this.dragRunning) {
             return;
         }
@@ -116,7 +116,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         });
     }
 
-    getAppConfigForLoadedApp(portalAppName: string, instanceId: string | undefined | null) {
+    getAppConfigForLoadedApp(portalAppName: string, instanceId: string | undefined | null): any | undefined | null {
         const loadedApp = this.portalAppService.loadedPortalApps.find((la) => la.pluginName === portalAppName && la.instanceId === instanceId);
         if (!loadedApp) {
             return null;
@@ -125,7 +125,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     updateAndReloadApp(loadedAppId: string, portalAppName: string, instanceId: string, areaId: string | undefined | null,
-                       dynamic: boolean | undefined | null, position: number | undefined | null, appConfig: any | undefined | null) {
+                       dynamic: boolean | undefined | null, position: number | undefined | null, appConfig: any | undefined | null): Promise<void> {
         return this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, appConfig).then(
             () => {
                 this.portalAppService.reloadApp(loadedAppId);
@@ -134,13 +134,13 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         );
     }
 
-    private _onDragOverDropZone(event: DragEvent, dropZone: HTMLElement) {
+    private _onDragOverDropZone(event: DragEvent, dropZone: HTMLElement): void {
         event.preventDefault();
 
         dropZone.classList.add('drag-over');
     }
 
-    private _onDragLeaveDropZone(event: DragEvent, dropZone: HTMLElement) {
+    private _onDragLeaveDropZone(event: DragEvent, dropZone: HTMLElement): void {
         dropZone.classList.remove('drag-over');
     }
 

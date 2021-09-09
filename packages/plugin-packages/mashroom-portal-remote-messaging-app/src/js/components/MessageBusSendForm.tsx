@@ -7,9 +7,9 @@ import {
     TextareaFieldContainer,
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
-// @ts-ignore
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 import type {PublishedMessage, PublishedMessageStatus} from '../types';
 
@@ -36,7 +36,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         }
     }
 
-    validate(values: FormData) {
+    validate(values: FormData): any {
         const errors: { [k in keyof FormData]?: string } = {};
         const { topic, message } = values;
 
@@ -56,7 +56,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: FormData) {
+    onSubmit(values: FormData): void {
         const { messageBus, resetForm, addPublishedMessage, updateMessageStatus } = this.props;
         const { topic, message } = values;
         const jsonMessage = JSON.parse(message);
@@ -84,7 +84,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         resetForm('mashroom-remote-messaging-app-form');
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-remote-messaging-app-publish-form'>
                 <Form formId='mashroom-remote-messaging-app-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>

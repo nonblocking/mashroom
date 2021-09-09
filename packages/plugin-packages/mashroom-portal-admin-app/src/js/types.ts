@@ -118,7 +118,7 @@ export interface PortalAppManagementService {
     dragEnd(): void;
     activatePortalAppDropZones(): void;
     deactivatePortalAppDropZones(): void;
-    getAppConfigForLoadedApp(portalAppName: string, instanceId: string| undefined | null): any| undefined | null;
+    getAppConfigForLoadedApp(portalAppName: string, instanceId: string| undefined | null): any | undefined | null;
     updateAndReloadApp(loadedAppId: string, portalAppName: string, instanceId: string, areaId: string| undefined | null,
                        dynamic: boolean| undefined | null, position: number| undefined | null, appConfig: any| undefined | null): Promise<void>;
 }

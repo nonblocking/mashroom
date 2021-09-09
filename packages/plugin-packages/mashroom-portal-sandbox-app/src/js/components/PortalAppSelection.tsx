@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {Form, SelectFieldContainer, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
@@ -13,14 +14,14 @@ type Props = {
 
 export default class PortalAppSelection extends PureComponent<Props> {
 
-    getInitialValues() {
+    getInitialValues(): any {
         const { preselectAppName } = this.props;
         return {
             appName: preselectAppName,
         }
     }
 
-    render() {
+    render(): ReactNode {
         const { availablePortalApps, onSelectionChanged, appLoadingError } = this.props;
         const options = availablePortalApps.map((a) => ({
             value: a.name,
