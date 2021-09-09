@@ -4,8 +4,9 @@ import AutoSuggest from 'react-autosuggest';
 import FieldLabel from './FieldLabel';
 import ErrorMessage from './ErrorMessage';
 
-import type {ReactNode, ChangeEvent} from 'react';
+import type {ReactNode, ChangeEvent, KeyboardEvent} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
+import type {RenderInputComponentProps} from 'react-autosuggest';
 import type {IntlShape} from 'react-intl';
 import type {SuggestionHandler} from '../../type-definitions';
 
@@ -50,7 +51,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    onSuggestionsFetchRequested({ value }: { value: string }) {
+    onSuggestionsFetchRequested({ value }: { value: string }): void {
         this.props.suggestionHandler.getSuggestions(value).then(
             (suggestions) => {
                 if (suggestions && Array.isArray(suggestions)) {
@@ -62,13 +63,13 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         )
     }
 
-    onSuggestionsClearRequested() {
+    onSuggestionsClearRequested(): void {
         this.setState({
             suggestions: []
         });
     }
 
-    onSuggestionSelected(event: any, { suggestion }: any) {
+    onSuggestionSelected(event: any, { suggestion }: any): void {
         this.props.onSuggestionSelect && this.props.onSuggestionSelect(suggestion);
         this.props.fieldProps.input.onChange(suggestion);
         if (this.props.onValueChange) {
@@ -76,7 +77,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    onValueChange(value: string | undefined | null) {
+    onValueChange(value: string | undefined | null): void {
         this.setState({
             value
         });
@@ -89,7 +90,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    reset() {
+    reset(): void {
         this.setState({
             value: '',
         });
@@ -99,7 +100,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    shouldRenderSuggestions(value?: string) {
+    shouldRenderSuggestions(value?: string): boolean {
         if (!value) {
             return false;
         }
@@ -110,7 +111,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         return value.trim().length >= minCharactersForSuggestions;
     }
 
-    renderSuggestionsContainer({ containerProps, children }: { containerProps: any, children: ReactNode }) {
+    renderSuggestionsContainer({ containerProps, children }: { containerProps: any, children: ReactNode }): ReactNode {
         const width = this.inputRef ? this.inputRef.clientWidth : 'auto';
 
         return (
@@ -120,12 +121,12 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         );
     }
 
-    renderInputComponent(inputProps: any) {
+    renderInputComponent(inputProps: RenderInputComponentProps): ReactNode {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
         const mergedInputProps = {
             ...inputProps,
-            onKeyDown(e: KeyboardEvent) {
+            onKeyDown(e: KeyboardEvent<any>) {
                 // Ignore enter (could submit the form)
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -137,12 +138,13 @@ export default class AutocompleteField extends PureComponent<Props, State> {
             ref(elem: HTMLInputElement) {
                 outerThis.inputRef = elem;
                 if (inputProps.ref) {
+                    // @ts-ignore
                     inputProps.ref(elem);
                 }
             },
             onChange(e: ChangeEvent<HTMLInputElement>) {
                 const cursor = e.target.selectionStart;
-                inputProps.onChange(e);
+                inputProps.onChange?.(e);
                 // Prevent the cursor from jumping to the end
                 // This is just a quick fix, the actual problem seems to be a bug in react-autosuggest or redux-form
                 // TODO: investigate
@@ -158,7 +160,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;

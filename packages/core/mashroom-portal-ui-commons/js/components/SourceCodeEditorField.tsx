@@ -7,7 +7,9 @@ import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/javascript/javascript';
 
+import type {ReactNode} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
+import type {EditorConfiguration} from 'codemirror';
 
 type Props = {
     labelId: string,
@@ -19,7 +21,7 @@ type Props = {
 
 export default class SourceCodeEditorField extends PureComponent<Props> {
 
-    getCodeMirrorOptions() {
+    getCodeMirrorOptions(): EditorConfiguration {
         let mode = null;
         switch (this.props.language) {
             case 'json': {
@@ -48,7 +50,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
         }
     }
 
-    render() {
+    render(): ReactNode {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         return (

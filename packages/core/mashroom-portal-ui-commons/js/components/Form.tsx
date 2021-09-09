@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {reduxForm} from 'redux-form';
 
-import type {ReactNode} from 'react';
+import type {ReactNode, ComponentType} from 'react';
 import type {Dispatch} from 'redux';
 import type {InjectedFormProps} from 'redux-form';
 import type {AsyncFormValidator, FormValidator, ValidationErrors} from '../../type-definitions';
@@ -20,7 +20,7 @@ type Props = {
 
 export default class Form extends PureComponent<Props> {
 
-    focusFirstErroneousField(errors: ValidationErrors) {
+    focusFirstErroneousField(errors: ValidationErrors): void {
         const elements = document.querySelectorAll('input, select, textarea');
         for (let i = 0; i < elements.length; i++) {
             const elem: any = elements[i];
@@ -38,7 +38,7 @@ export default class Form extends PureComponent<Props> {
         }
     }
 
-    errorExists(path: string, errors: ValidationErrors) {
+    errorExists(path: string, errors: ValidationErrors): boolean {
         const props = path.split('.');
         let parent: any = errors;
         for (const prop of props) {
@@ -50,7 +50,7 @@ export default class Form extends PureComponent<Props> {
         return true;
     }
 
-    createForm() {
+    createForm(): ComponentType {
         const HtmlForm = (props: InjectedFormProps) => (
             <form onSubmit={props.handleSubmit}>
                 {this.props.children}
@@ -72,7 +72,7 @@ export default class Form extends PureComponent<Props> {
         })(HtmlForm);
     }
 
-    render() {
+    render(): ReactNode {
         const Form = this.createForm();
 
         return (

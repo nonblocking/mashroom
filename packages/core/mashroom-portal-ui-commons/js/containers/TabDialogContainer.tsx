@@ -1,5 +1,4 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
 import TabDialog from '../components/TabDialog';
 import {setActiveTab} from '../store/actions';

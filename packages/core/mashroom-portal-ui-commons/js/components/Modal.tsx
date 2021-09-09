@@ -57,7 +57,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         this.boundOnResize = this.onResize.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         const closeRef = this.props.closeRef;
         if (typeof(closeRef) === 'function') {
             closeRef(this.close.bind(this));
@@ -68,7 +68,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
 
     }
 
-    componentDidUpdate(prevProps: Props) {
+    componentDidUpdate(prevProps: Props): void {
         if (this.props.show !== prevProps.show) {
             if (this.props.show) {
                 setTimeout(() => {
@@ -96,7 +96,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         }
     }
 
-    handleEscapeKeyPress(event: KeyboardEvent) {
+    handleEscapeKeyPress(event: KeyboardEvent): void {
         if (event.target) {
             const target = event.target as HTMLElement;
             const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) !== -1;
@@ -106,19 +106,19 @@ export default class ModalDialog extends PureComponent<Props, State> {
         }
     }
 
-    onResize() {
+    onResize(): void {
         this.setState({
             marginTop: this.calcMarginTop(),
         });
     }
 
-    close() {
+    close(): void {
         if (this.props.onClose) {
             this.props.onClose();
         }
     }
 
-    calcMarginTop() {
+    calcMarginTop(): string | undefined {
         if (!this.modalWrapperEl) {
             return undefined;
         }
@@ -126,7 +126,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         return `${Math.max(10, (window.innerHeight - this.modalWrapperEl.offsetHeight) / 2)}px`;
     }
 
-    renderDefaultHeader() {
+    renderDefaultHeader(): ReactNode {
         return (
             <div className='mashroom-portal-ui-modal-header'>
                 <div className='title'>
@@ -137,7 +137,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         if (!this.modalsRoot || (!this.props.show && !this.state.fadeOut)) {
             return null;
         }

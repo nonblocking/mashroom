@@ -25,6 +25,8 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "no-console": "off",
-        "react/display-name": "off"
+        "react/display-name": "off",
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

@@ -9,7 +9,7 @@ type Props = {
 
 export default class DialogContent extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-portal-ui-dialog-content'>
                 {this.props.children}

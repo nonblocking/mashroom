@@ -9,7 +9,7 @@ type Props = {
 
 export default class FormRow extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         const cellCount = React.Children.count(this.props.children);
 
         let cellClass = '';

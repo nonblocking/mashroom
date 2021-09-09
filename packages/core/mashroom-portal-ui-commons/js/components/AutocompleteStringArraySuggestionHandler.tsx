@@ -1,7 +1,8 @@
 
 import React from 'react';
-import {escapeForRegExp} from '../services/escape_utils';
+import {escapeForRegExp} from '../utils/escape_utils';
 
+import type {ReactNode} from 'react';
 import type {SuggestionHandler} from '../../type-definitions';
 
 export default class AutocompleteStringArraySuggestionHandler implements SuggestionHandler<string> {
@@ -26,7 +27,7 @@ export default class AutocompleteStringArraySuggestionHandler implements Suggest
         return Promise.resolve(suggestions);
     }
 
-    renderSuggestion(suggestion: string, isHighlighted: boolean, query: string) {
+    renderSuggestion(suggestion: string, isHighlighted: boolean, query: string): ReactNode {
         if (query) {
             const regexp = this._getQueryRexExp(query);
             suggestion = suggestion.replace(regexp, '<span class="filter-match">$1</span>');
@@ -37,11 +38,11 @@ export default class AutocompleteStringArraySuggestionHandler implements Suggest
         );
     }
 
-    getSuggestionValue(suggestion: string) {
+    getSuggestionValue(suggestion: string): string {
         return suggestion;
     }
 
-    _getQueryRexExp(query: string) {
+    _getQueryRexExp(query: string): RegExp {
         const escaped = escapeForRegExp(query);
         return new RegExp(`(${escaped})`, 'ig');
     }

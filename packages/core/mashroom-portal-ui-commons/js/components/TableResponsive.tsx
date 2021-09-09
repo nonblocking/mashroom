@@ -9,7 +9,7 @@ type Props = {
 
 export default class TableResponsive extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-portal-ui-table-responsive'>
                 <table>

@@ -3,6 +3,7 @@ import React, {PureComponent} from 'react';
 import {Field} from 'redux-form';
 import SourceCodeEditorField from '../components/SourceCodeEditorField';
 
+import type {ReactNode} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
 
 type Props = {
@@ -15,7 +16,7 @@ type Props = {
 
 export default class SourceCodeEditorFieldContainer extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         return <Field name={this.props.name} component={(fieldProps: WrappedFieldProps) => <SourceCodeEditorField fieldProps={fieldProps} {...this.props}/>}/>;
     }
 }

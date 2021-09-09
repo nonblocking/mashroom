@@ -1,6 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
+import type {ReactNode} from 'react';
 
 type Props = {
     id: string;
@@ -12,7 +13,7 @@ type Props = {
 
 export default class Button extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         return (
             <button id={this.props.id} className='mashroom-portal-ui-button' type={this.props.type || 'button'} onClick={this.props.onClick} disabled={this.props.disabled}>
                 <FormattedMessage id={this.props.labelId}/>

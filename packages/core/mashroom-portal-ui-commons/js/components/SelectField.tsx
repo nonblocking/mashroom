@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
-import type {ChangeEvent} from 'react';
+import type {ReactNode, ChangeEvent} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
 import type {IntlShape} from 'react-intl';
 import type {SelectFieldOptions} from '../../type-definitions';
@@ -23,7 +23,7 @@ export const NULL_VALUE = '__null__';
 
 export default class SelectField extends PureComponent<Props> {
 
-    onChange(value: string | undefined | null) {
+    onChange(value: string | undefined | null): void {
         if (value === NULL_VALUE) {
             value = null;
         }
@@ -33,7 +33,7 @@ export default class SelectField extends PureComponent<Props> {
         }
     }
 
-    renderOptions() {
+    renderOptions(): ReactNode {
         const options = [];
 
         if (this.props.emptyOption) {
@@ -46,7 +46,7 @@ export default class SelectField extends PureComponent<Props> {
         return options;
     }
 
-    render() {
+    render(): ReactNode {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;

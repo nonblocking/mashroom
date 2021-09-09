@@ -3,6 +3,7 @@ import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
+import type {ReactNode} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
 import type {IntlShape} from 'react-intl';
 
@@ -18,7 +19,7 @@ type Props = {
 
 export default class TextareaField extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;

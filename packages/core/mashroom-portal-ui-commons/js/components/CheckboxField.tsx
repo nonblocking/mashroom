@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
-
+import type {ReactNode} from 'react';
 import type {WrappedFieldProps} from 'redux-form';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 
 export default class CheckboxField extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
 
         const inputProps = {...this.props.fieldProps.input, id: this.props.id,
