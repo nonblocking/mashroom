@@ -3,7 +3,8 @@
 
 ## [unreleased]
 
-* Sandbox: apps are sorted by their name
+ * Admin App: Fixed broken autocomplete of roles
+ * Sandbox App: Apps are sorted by their name now
 
 ## 1.8.2 (September 6, 2021)
 

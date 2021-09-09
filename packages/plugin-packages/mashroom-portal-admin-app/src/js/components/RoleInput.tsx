@@ -5,6 +5,7 @@ import {
     AutocompleteStringArraySuggestionHandler
 } from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {SuggestionHandler} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 
@@ -26,11 +27,12 @@ export default class RoleInput extends PureComponent<Props> {
         this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(props.existingRoles);
     }
 
-    componentDidMount() {
+    componentDidMount(): void {
         this.props.portalAdminService.getExistingRoles().then(
             (existingRoleDefs) => {
                 const existingRoles = existingRoleDefs.map((r) => r.id);
                 this.props.setExistingRoles(existingRoles);
+                this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(existingRoles);
             },
             (error) => {
                 console.error('Fetching existing roles failed', error);
@@ -38,19 +40,19 @@ export default class RoleInput extends PureComponent<Props> {
         )
     }
 
-    onRoleChange(role: string | undefined | null) {
+    onRoleChange(role: string | undefined | null): void {
         if (this.props.onRoleChange) {
             this.props.onRoleChange(role);
         }
     }
 
-    onRoleSelected(role: string) {
+    onRoleSelected(role: string): void {
         if (this.props.onRoleSelected) {
             this.props.onRoleSelected(role);
         }
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='role-input'>
                 <AutocompleteFieldContainer
