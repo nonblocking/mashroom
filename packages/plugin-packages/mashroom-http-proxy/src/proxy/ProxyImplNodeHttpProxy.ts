@@ -233,7 +233,11 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         const queryStr = query.toString();
         if (queryStr) {
-            proxyReq.path = `${proxyReq.path}?${queryStr}`;
+            if ( proxyReq.path.indexOf('?') === -1) {
+                proxyReq.path = `${proxyReq.path}?${queryStr}`;
+            } else {
+                proxyReq.path = `${proxyReq.path}&${queryStr}`;
+            }
         }
 
         // Proper timeout handling

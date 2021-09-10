@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+ * HTTP Proxy: The default implementation forwards now query parameters correctly if the base path already
+   contains query parameters - fixes #85
  * Sandbox App: Shows only Apps which are available for the authenticated user now
    (previously it also showed Apps that could not be loaded by the user)
  * Admin App: Fixed broken autocomplete of roles

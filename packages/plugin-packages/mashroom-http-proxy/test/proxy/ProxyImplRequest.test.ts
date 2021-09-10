@@ -129,6 +129,25 @@ describe('ProxyImplRequest', () => {
         expect(res.body).toBe('test response');
     });
 
+    it('forwards query parameters correctly if the base path already contain some',  async () => {
+        nock('https://www.mashroom-server.com')
+            .get('/foo?bar=2&q=javascript%205')
+            .reply(200, 'test response');
+
+        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, loggerFactory);
+
+        const req = createDummyRequest('GET');
+        req.query = {
+            q: 'javascript 5'
+        };
+
+        const res = createDummyResponse();
+
+        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo?bar=2');
+
+        expect(res.body).toBe('test response');
+    });
+
     it('sets the correct status code if the target is not available', async () => {
         const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, loggerFactory);
 
