@@ -10,6 +10,7 @@ log/
 *.iml
 .vscode
 .DS_Store
+globalConfig.json
 
 /packages/plugin-packages/mashroom-background-jobs/public/
 /packages/plugin-packages/mashroom-docs-static/public/docs/
