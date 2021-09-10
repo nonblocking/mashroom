@@ -146,24 +146,33 @@ export default class PortalAppController {
         }
     }
 
-    getAvailablePortalApps(req: Request, res: Response): void {
+    async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
+        const mashroomSecurityUser = await getUser(req);
         const {q, updatedSince} = req.query;
 
-        let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps.map((portalApp) => {
-            const encodedPortalAppName = encodeURIComponent(portalApp.name);
-            const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
-            const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
-            return {
-                name: portalApp.name,
-                category: portalApp.category,
-                description: portalApp.description,
-                tags: portalApp.tags,
-                screenshots,
-                metaInfo: portalApp.metaInfo,
-                lastReloadTs: portalApp.lastReloadTs,
-            }
-        });
+        let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps
+            .filter((portalApp) => {
+                // Remove Apps the user could not load anyways
+                if (Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
+                    return portalApp.defaultRestrictViewToRoles.some((r) => mashroomSecurityUser?.roles?.find((ur) => ur === r));
+                }
+                return true;
+            })
+            .map((portalApp) => {
+                const encodedPortalAppName = encodeURIComponent(portalApp.name);
+                const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
+                const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
+                return {
+                    name: portalApp.name,
+                    category: portalApp.category,
+                    description: portalApp.description,
+                    tags: portalApp.tags,
+                    screenshots,
+                    metaInfo: portalApp.metaInfo,
+                    lastReloadTs: portalApp.lastReloadTs,
+                }
+            });
 
         if (typeof (q) === 'string') {
             apps = apps.filter((app) => app.name.toLowerCase().indexOf(q.toLowerCase()) !== -1 || (app.description && app.description.toLowerCase().indexOf(q.toLowerCase()) !== -1));

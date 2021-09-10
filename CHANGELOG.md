@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Sandbox App: Shows only Apps which are available for the authenticated user now
+   (previously it also showed Apps that could not be loaded by the user)
  * Admin App: Fixed broken autocomplete of roles
  * Sandbox App: Apps are sorted by their name now
 
