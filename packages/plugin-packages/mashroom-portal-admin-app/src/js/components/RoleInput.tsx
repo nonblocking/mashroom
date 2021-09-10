@@ -20,20 +20,12 @@ type Props = {
 
 export default class RoleInput extends PureComponent<Props> {
 
-    suggestionHandler: SuggestionHandler<any>;
-
-    constructor(props: Props) {
-        super(props);
-        this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(props.existingRoles);
-    }
-
     componentDidMount(): void {
         if (this.props.existingRoles.length === 0) {
             this.props.portalAdminService.getExistingRoles().then(
                 (existingRoleDefs) => {
                     const existingRoles = existingRoleDefs.map((r) => r.id);
                     this.props.setExistingRoles(existingRoles);
-                    this.suggestionHandler = new AutocompleteStringArraySuggestionHandler(existingRoles);
                 },
                 (error) => {
                     console.error('Fetching existing roles failed', error);
@@ -65,7 +57,9 @@ export default class RoleInput extends PureComponent<Props> {
                     onSuggestionSelect={this.onRoleSelected.bind(this)}
                     minCharactersForSuggestions={2}
                     mustSelectSuggestion={false}
-                    suggestionHandler={this.suggestionHandler}
+                    suggestionHandler={
+                        new AutocompleteStringArraySuggestionHandler(this.props.existingRoles)
+                    }
                     resetRef={this.props.resetRef} />
             </div>
 
