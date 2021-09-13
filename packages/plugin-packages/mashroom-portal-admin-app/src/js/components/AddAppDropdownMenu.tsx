@@ -48,6 +48,22 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
 
     onAppDragStart(event: DragEvent, name: string): void {
         this.props.portalAppManagementService.prepareDrag(event as any, null, name);
+        if (window.sessionStorage) {
+            const { sessionStorage } = window;
+
+            let recentlyAddedApps: string[] = [];
+            let recentlyAddedAppsSet = new Set();
+            try {
+                recentlyAddedApps = JSON.parse(sessionStorage.getItem('__recentlyAddedApps__') || '[]');
+                recentlyAddedAppsSet = new Set(recentlyAddedApps);
+            } catch (e) {
+                // IGNORE
+            }
+
+            recentlyAddedAppsSet.add(name);
+
+            sessionStorage.setItem('__recentlyAddedApps__', JSON.stringify(Array.from(recentlyAddedAppsSet)));
+        }
         this.close && this.close();
     }
 

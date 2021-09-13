@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+* for the case where the same app has to be added in multiple pages and therefore search again and again in possible long list of apps, admin app should remember list of recently added apps and offer it at the top of available apps list
 
 ## 1.8.3 (September 11, 2021)
 

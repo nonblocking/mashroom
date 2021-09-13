@@ -136,6 +136,41 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         });
     }
 
+    renderRecentApps(): ReactNode {
+        const recentApps: string[] = [];
+
+        if (window.sessionStorage) {
+            const storedItem = window.sessionStorage.getItem('__recentlyAddedApps__');
+            let storedApps: string[] = []
+            try {
+                storedApps = JSON.parse(storedItem || '[]');
+            } catch (e) {
+                // ignore
+            }
+
+            if (Array.isArray(storedApps) && storedApps.length > 0) {
+                recentApps.push(...storedApps);
+            }
+        }
+
+        return recentApps && recentApps.length > 0 && (
+            <div className='grouped-apps'>
+                <div className='app-category'>
+                    <span>Recently used</span>
+                </div>
+                {
+                    recentApps.map((app) => {
+                        return (
+                            <div key={app} className='available-app' onDragStart={(e) => this.onDragStart(e, app)} onDragEnd={this.onDragEnd.bind(this)} draggable>
+                                <div className='app-name' dangerouslySetInnerHTML={{ __html: escapeForHtml(app) }} />
+                            </div>
+                        );
+                    })
+                }
+            </div>
+        )
+    }
+
     renderAvailableApps(): ReactNode {
         const tokens = this.getFilterTokens();
         const filteredAndGroupedByCategory = this.getAppsFilteredAndGroupedByCategory(tokens);
@@ -156,6 +191,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
 
         return (
             <div className='available-app-list-wrapper'>
+                {this.renderRecentApps()}
                 {groupedApps}
             </div>
         );
