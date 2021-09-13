@@ -58,7 +58,7 @@ export const getPageData = async (sitePath: string, friendlyUrl: string | undefi
 
     let pageRef = null;
     if (friendlyUrl) {
-        pageRef = await portalService.findPageRefByFriendlyUrl(site, friendlyUrl);
+        pageRef = await portalService.findPageRefByFriendlyUrl(site, decodeURIComponent(friendlyUrl));
     }
     if (!pageRef && (!friendlyUrl || friendlyUrl === '/') && site.pages && site.pages.length > 0) {
         // Take first page
