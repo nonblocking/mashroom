@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+* pages containing "umlaut" character (ä,ö,ü,ß) in friendlyUrl could not be resolved
+* propose to transcribe "umlaut" into ascii form (ä->ae) when creating new page
 
 ## 1.8.3 (September 11, 2021)
 
