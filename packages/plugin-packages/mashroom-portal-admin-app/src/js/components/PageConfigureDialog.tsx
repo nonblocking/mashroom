@@ -241,13 +241,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             const previousTitle = typeof (previousValues.page.title) === 'object' ? previousValues.page.title[this.props.languages.default] : previousValues.page.title;
 
             if (title && title !== previousTitle) {
-                let friendlyUrl = title
-                    .replace(/[ -]/g, '_')
-                    .replace(/ü/gi, 'ue')
-                    .replace(/ä/gi, 'ae')
-                    .replace(/ö/gi, 'oe')
-                    .replace(/ß/g, 'ss')
-                    .toLowerCase();
+                let friendlyUrl = title.replace(/[ -]/g, '_').toLowerCase();
                 if (friendlyUrl && friendlyUrl.indexOf('/') !== 0) {
                     friendlyUrl = `/${friendlyUrl}`;
                 }
