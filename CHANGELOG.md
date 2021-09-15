@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
+
 ## 1.8.3 (September 11, 2021)
 
  * HTTP Proxy: The default implementation forwards now query parameters correctly if the base path already

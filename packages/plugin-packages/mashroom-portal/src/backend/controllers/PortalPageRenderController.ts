@@ -81,7 +81,7 @@ export default class PortalPageRenderController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const path = req.path;
+            const path = decodeURIComponent(req.path);
             const sitePath = getSitePath(req);
             const portalPath = getPortalPath();
 
