@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {CircularProgress} from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {ActivePortalApp} from '../types';
 
 type Props = {
@@ -24,29 +25,29 @@ export default class PortalApp extends PureComponent<Props> {
         this.boundResizerMouseMove = this.resizerMouseMove.bind(this);
     }
 
-    resizerMouseDown() {
+    resizerMouseDown(): void {
         global.addEventListener('mousemove', this.boundResizerMouseMove);
         global.addEventListener('mouseup', this.boundResizerMouseUp);
     }
 
-    resizerMouseUp() {
+    resizerMouseUp(): void {
         global.removeEventListener('mousemove', this.boundResizerMouseMove);
         global.removeEventListener('mouseup', this.boundResizerMouseUp);
     }
 
-    resizerMouseMove(event: MouseEvent) {
+    resizerMouseMove(event: MouseEvent): void {
         if (!this.wrapperElemRef.current) {
             return;
         }
 
         const {setHostWidth} = this.props;
-        const width = event.pageX - this.wrapperElemRef.current.getBoundingClientRect().left;
+        const width = Math.trunc(event.pageX - this.wrapperElemRef.current.getBoundingClientRect().left);
         if (width > 100) {
             setHostWidth(`${width}px`);
         }
     }
 
-    render() {
+    render(): ReactNode {
         const {activePortalApp, hostElementId} = this.props;
         if (!activePortalApp) {
             return null;
@@ -62,6 +63,9 @@ export default class PortalApp extends PureComponent<Props> {
 
         return (
             <div className='mashroom-sandbox-app-host-wrapper' style={{width}} ref={this.wrapperElemRef}>
+                <div className='mashroom-sandbox-app-host-width'>
+                    {width}
+                </div>
                 <div id={hostElementId} className={`mashroom-sandbox-app-host-elem portal-app-${classFromPluginName}`}>
                     <CircularProgress/>
                 </div>

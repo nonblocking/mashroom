@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {setSelectedSiteUpdatingError} from '../store/actions';
 import {DependencyContextConsumer} from '../DependencyContext';
-import SiteDeleteDialog from '../components/SiteDeleteDialog';
+import SiteDeleteDialogComp from '../components/SiteDeleteDialog';
 
 import type {Dispatch, SelectedSite, Sites, State} from '../types';
 
@@ -18,12 +18,12 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps;
 
-class SiteDeleteDialogContainer extends PureComponent<Props> {
+class SiteDeleteDialog extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <SiteDeleteDialog portalAdminService={deps.portalAdminService} {...this.props}/>}
+                {(deps) => <SiteDeleteDialogComp portalAdminService={deps.portalAdminService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -38,4 +38,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     setErrorUpdating: (error) => { dispatch(setSelectedSiteUpdatingError(error)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SiteDeleteDialogContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SiteDeleteDialog);

@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {DependencyContextConsumer} from '../DependencyContext';
-import ConfigureDropdownMenu from '../components/ConfigureDropdownMenu';
+import ConfigureDropdownMenuComp from '../components/ConfigureDropdownMenu';
 import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
 import {setSelectedPage, setSelectedSite} from '../store/actions';
 
@@ -16,12 +16,12 @@ type DispatchProps = {
 
 type Props = DispatchProps;
 
-class ConfigureDropdownMenuContainer extends PureComponent<Props> {
+class ConfigureDropdownMenu extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <ConfigureDropdownMenu portalAdminService={deps.portalAdminService} {...this.props}/>}
+                {(deps) => <ConfigureDropdownMenuComp portalAdminService={deps.portalAdminService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -36,4 +36,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     initConfigurePage: (pageId) => { dispatch(setSelectedPage(pageId)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ConfigureDropdownMenuContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(ConfigureDropdownMenu);

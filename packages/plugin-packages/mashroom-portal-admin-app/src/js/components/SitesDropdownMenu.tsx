@@ -3,6 +3,7 @@ import React, {PureComponent} from 'react';
 import {CircularProgress, DropdownMenu, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_SITE_CONFIGURE, DIALOG_NAME_SITE_DELETE} from '../constants';
 
+import type {ReactNode} from 'react';
 import type {
     MashroomPortalAdminService,
     MashroomPortalSiteLinkLocalized
@@ -21,48 +22,52 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
 
     closeDropDownRef: (() => void) | undefined;
 
-    onOpen() {
-        this.props.dataLoadingService.loadSites();
+    onOpen(): void {
+        const {dataLoadingService} = this.props;
+        dataLoadingService.loadSites();
     }
 
-    onGoto(site: MashroomPortalSiteLinkLocalized) {
+    onGoto(site: MashroomPortalSiteLinkLocalized): void {
         setTimeout(() => {
             global.location.href = site.url;
         }, 0);
     }
 
-    onConfigure(site: MashroomPortalSiteLinkLocalized) {
+    onConfigure(site: MashroomPortalSiteLinkLocalized): void {
+        const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigureSite(site.siteId);
-        this.props.showModal(DIALOG_NAME_SITE_CONFIGURE);
+        initConfigureSite(site.siteId);
+        showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
-    onDelete(site: MashroomPortalSiteLinkLocalized) {
+    onDelete(site: MashroomPortalSiteLinkLocalized): void {
+        const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigureSite(site.siteId);
-        this.props.showModal(DIALOG_NAME_SITE_DELETE);
+        initConfigureSite(site.siteId);
+        showModal(DIALOG_NAME_SITE_DELETE);
     }
 
-    renderLoading() {
+    renderLoading(): ReactNode {
         return (
             <CircularProgress/>
         );
     }
 
-    renderError() {
+    renderError(): ReactNode {
         return (
             <ErrorMessage messageId='loadingFailed' />
         );
     }
 
-    renderContent() {
-        if (this.props.sites.loading) {
+    renderContent(): ReactNode {
+        const {sites} = this.props;
+        if (sites.loading) {
             return this.renderLoading();
-        } else if (this.props.sites.error || !this.props.sites.sites) {
+        } else if (sites.error || !sites.sites) {
             return this.renderError();
         }
 
-        const items = this.props.sites.sites.map((site) => (
+        const items = sites.sites.map((site) => (
             <div key={site.siteId} className='site'>
                 <a className='site-link' href='javascript:void(0)' onClick={this.onGoto.bind(this, site)}>{site.title}</a>
                 <div className='configure' onClick={this.onConfigure.bind(this, site)}>&nbsp;</div>
@@ -77,7 +82,7 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <DropdownMenu className='sites-dropdown-menu' labelId='sites' onOpen={this.onOpen.bind(this)} closeRef={(ref) => this.closeDropDownRef = ref}>
                 {this.renderContent()}

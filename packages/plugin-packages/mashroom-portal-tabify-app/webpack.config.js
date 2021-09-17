@@ -50,16 +50,15 @@ module.exports = (env, argv) => {
                         },
                         {
                             loader: 'css-loader',
+                            options: {
+                                url: false
+                            }
                         },
                         {
                             loader: 'sass-loader',
                         },
                     ],
                     sideEffects: true,
-                },
-                {
-                    test: /random-grey-variations/,
-                    use: 'null-loader',
                 },
             ],
         },

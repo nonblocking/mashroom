@@ -57,8 +57,8 @@ export default class ModalDialog extends PureComponent<Props, State> {
         this.boundOnResize = this.onResize.bind(this);
     }
 
-    componentDidMount() {
-        const closeRef = this.props.closeRef;
+    componentDidMount(): void {
+        const {closeRef} = this.props;
         if (typeof(closeRef) === 'function') {
             closeRef(this.close.bind(this));
         }
@@ -68,9 +68,10 @@ export default class ModalDialog extends PureComponent<Props, State> {
 
     }
 
-    componentDidUpdate(prevProps: Props) {
-        if (this.props.show !== prevProps.show) {
-            if (this.props.show) {
+    componentDidUpdate(prevProps: Props): void {
+        const {show} = this.props;
+        if (show !== prevProps.show) {
+            if (show) {
                 setTimeout(() => {
                     this.setState({
                         fadeIn: true,
@@ -96,7 +97,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         }
     }
 
-    handleEscapeKeyPress(event: KeyboardEvent) {
+    handleEscapeKeyPress(event: KeyboardEvent): void {
         if (event.target) {
             const target = event.target as HTMLElement;
             const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) !== -1;
@@ -106,19 +107,20 @@ export default class ModalDialog extends PureComponent<Props, State> {
         }
     }
 
-    onResize() {
+    onResize(): void {
         this.setState({
             marginTop: this.calcMarginTop(),
         });
     }
 
-    close() {
-        if (this.props.onClose) {
-            this.props.onClose();
+    close(): void {
+        const {onClose} = this.props;
+        if (onClose) {
+            onClose();
         }
     }
 
-    calcMarginTop() {
+    calcMarginTop(): string | undefined {
         if (!this.modalWrapperEl) {
             return undefined;
         }
@@ -126,37 +128,40 @@ export default class ModalDialog extends PureComponent<Props, State> {
         return `${Math.max(10, (window.innerHeight - this.modalWrapperEl.offsetHeight) / 2)}px`;
     }
 
-    renderDefaultHeader() {
+    renderDefaultHeader(): ReactNode {
+        const {titleId, title} = this.props;
         return (
             <div className='mashroom-portal-ui-modal-header'>
                 <div className='title'>
-                    {this.props.titleId ? <FormattedMessage id={this.props.titleId}/> : this.props.title}
+                    {titleId ? <FormattedMessage id={titleId}/> : title}
                 </div>
                 <div className='close-button' onClick={this.close.bind(this)}/>
             </div>
         );
     }
 
-    render() {
-        if (!this.modalsRoot || (!this.props.show && !this.state.fadeOut)) {
+    render(): ReactNode {
+        const {show, customHeader, className, minHeight, minWidth, children} = this.props;
+        const {fadeOut, fadeIn, marginTop} = this.state;
+        if (!this.modalsRoot || (!show && !fadeOut)) {
             return null;
         }
 
-        let header = null;
-        if (this.props.customHeader) {
-            header = this.props.customHeader;
+        let header;
+        if (customHeader) {
+            header = customHeader;
         } else {
             header = this.renderDefaultHeader();
         }
 
         return ReactDOM.createPortal((
-                <div className={`mashroom-portal-ui-modal ${this.props.className || ''}`} onWheel={(e) => e.stopPropagation()}>
-                    <div className={`mashroom-portal-ui-modal-wrapper ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''}`}
-                         style={{marginTop: this.state.marginTop}}
+                <div className={`mashroom-portal-ui-modal ${className || ''}`} onWheel={(e) => e.stopPropagation()}>
+                    <div className={`mashroom-portal-ui-modal-wrapper ${fadeIn ? 'fade-in' : ''} ${fadeOut ? 'fade-out' : ''}`}
+                         style={{marginTop: marginTop}}
                          ref={(elem) => this.modalWrapperEl = elem}>
                         {header}
-                        <div className='mashroom-portal-ui-modal-content' style={{minWidth: this.props.minWidth || 'auto', minHeight: this.props.minHeight || 'auto'}}>
-                            {this.props.children}
+                        <div className='mashroom-portal-ui-modal-content' style={{minWidth: minWidth || 'auto', minHeight: minHeight || 'auto'}}>
+                            {children}
                         </div>
                     </div>
                 </div>

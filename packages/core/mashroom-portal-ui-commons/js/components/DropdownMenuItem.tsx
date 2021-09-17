@@ -1,6 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
+import type {ReactNode} from 'react';
 
 type Props = {
     labelId?: string;
@@ -10,16 +11,18 @@ type Props = {
 
 export default class DropdownMenuItem extends PureComponent<Props> {
 
-    onClick() {
-        if (this.props.onClick) {
-            this.props.onClick();
+    onClick(): void {
+        const {onClick} = this.props;
+        if (onClick) {
+            onClick();
         }
     }
 
-    render() {
+    render(): ReactNode {
+        const {labelId, label} = this.props;
         return (
             <div className='mashroom-portal-ui-dropdown-menu-item' onClick={this.onClick.bind(this)}>
-                <span className='dropdown-menu-item-label'>{this.props.labelId ? <FormattedMessage id={this.props.labelId}/> : this.props.label}</span>
+                <span className='dropdown-menu-item-label'>{labelId ? <FormattedMessage id={labelId}/> : label}</span>
             </div>
         );
     }

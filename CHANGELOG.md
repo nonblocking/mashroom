@@ -3,27 +3,43 @@
 
 ## [unreleased]
 
-* Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
-  You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
-  (when using Handlebars):
-  ```html
-  <div id="portal-app-{{appId}}" class="mashroom-portal-app-wrapper portal-app-{{safePluginName}}">
-    <div class="mashroom-portal-app-header">
-      <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
-    </div>
-    <div class="mashroom-portal-app-host" data-replace-content="app">
-      {{#if appSSRHtml}}
-        {{{appSSRHtml}}}
-      {{else}}
-        <div class="mashroom-portal-app-loading"><span/></div>
-      {{/if}}
-    </div>
-  </div>
-  ```
-  **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
-  functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
- * Portal: Improved client side error handling; console errors are also logged to the server now and
-   errors are serialized properly
+
+ * Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
+   You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
+   (when using Handlebars):
+   ```html
+   <div id="portal-app-{{appId}}" class="mashroom-portal-app-wrapper portal-app-{{safePluginName}}">
+     <div class="mashroom-portal-app-header">
+       <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
+     </div>
+     <div class="mashroom-portal-app-host" data-replace-content="app">
+       {{#if appSSRHtml}}
+         {{{appSSRHtml}}}
+       {{else}}
+         <div class="mashroom-portal-app-loading"><span/></div>
+       {{/if}}
+     </div>
+   </div>
+   ```
+   **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
+   functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
+ * Admin App: Bundle size halved, loads now faster
+ * Sandbox App: It is possible to search for Apps now (autocomplete)
+ * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
+
+## 1.8.3 (September 11, 2021)
+
+ * HTTP Proxy: The default implementation forwards now query parameters correctly if the base path already
+   contains query parameters - fixes #85
+ * Sandbox App: Shows only Apps which are available for the authenticated user now
+   (previously it also showed Apps that could not be loaded by the user)
+ * Admin App: Fixed broken autocomplete of roles
+ * Sandbox App: Apps are sorted by their name now
+
+## 1.8.2 (September 6, 2021)
+
+ * Legacy Browser Support: Added a polyfill for *document.currentScript* to support lazy loading via webpack 5 automatic public path
+ * Portal: Improved client side error handling; console errors are also logged to the server now and errors are serialized properly
  * HTTP Proxy: Added additional metrics such as the served requests, connection errors and timeouts
  * HTTP Proxy: Fixed the error handling in the node-http-proxy based (default) proxy implementation; this fixes #77
  * WebSocket Demo Portal App: Switched to a working WebSocket echo server

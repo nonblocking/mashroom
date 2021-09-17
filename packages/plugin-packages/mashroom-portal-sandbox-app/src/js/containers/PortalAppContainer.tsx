@@ -1,5 +1,4 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
 import PortalApp from '../components/PortalApp';
 import {

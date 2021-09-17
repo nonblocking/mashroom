@@ -429,6 +429,7 @@ export type MashroomPortalApp = {
 
 export type MashroomAvailablePortalApp = {
     readonly name: string;
+    readonly version: string;
     readonly category: string | null | undefined;
     readonly description: string | null | undefined;
     readonly tags: Array<string>;

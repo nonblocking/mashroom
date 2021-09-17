@@ -9,10 +9,11 @@ type Props = {
 
 export default class FormCell extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
+        const {children} = this.props;
         return (
             <div className='mashroom-portal-ui-form-cell'>
-                {this.props.children}
+                {children}
             </div>
         );
     }

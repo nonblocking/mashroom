@@ -1,10 +1,9 @@
 
-import {AnyAction, CombinedState, combineReducers} from 'redux';
-import {reducer as form} from 'redux-form';
+import {AnyAction, combineReducers} from 'redux';
 import {SET_ACTIVE_TAB, SET_SHOW_MODAL} from './actions';
 
 import type {Reducer, ReducersMapObject} from 'redux';
-import type {CommonState, ModalState, TabDialogState} from '../../type-definitions';
+import type {ModalState, TabDialogState} from '../../type-definitions';
 
 const modals: Reducer<ModalState> = (state, action) => {
     if (typeof (state) === 'undefined') {
@@ -49,7 +48,6 @@ export const mashroomPortalCommonsCombineReducers = <S>(reducers: ReducersMapObj
         ...reducers,
         modals,
         tabDialogs,
-        form,
     };
     return combineReducers<S>(mergedReducers);
 };

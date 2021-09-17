@@ -1,24 +1,26 @@
 
 import React, {PureComponent, Fragment} from 'react';
-import PortalAppConfigureDialogContainer from '../containers/PortalAppConfigureDialogContainer';
-import PageConfigureDialogContainer from '../containers/PageConfigureDialogContainer';
-import PageDeleteDialogContainer from '../containers/PageDeleteDialogContainer';
-import SiteConfigureDialogContainer from '../containers/SiteConfigureDialogContainer';
-import SiteDeleteDialogContainer from '../containers/SiteDeleteDialogContainer';
+import PortalAppConfigureDialog from '../containers/PortalAppConfigureDialog';
+import PageConfigureDialog from '../containers/PageConfigureDialog';
+import PageDeleteDialog from '../containers/PageDeleteDialog';
+import SiteConfigureDialog from '../containers/SiteConfigureDialog';
+import SiteDeleteDialog from '../containers/SiteDeleteDialog';
+
+import type {ReactNode} from 'react';
 
 type Props = {
 };
 
-export default class PortalAppConfigureDialog extends PureComponent<Props> {
+export default class Modals extends PureComponent<Props> {
 
-    render() {
+    render(): ReactNode {
         return (
             <Fragment>
-                <PortalAppConfigureDialogContainer/>
-                <PageConfigureDialogContainer/>
-                <PageDeleteDialogContainer/>
-                <SiteConfigureDialogContainer/>
-                <SiteDeleteDialogContainer/>
+                <PortalAppConfigureDialog/>
+                <PageConfigureDialog/>
+                <PageDeleteDialog/>
+                <SiteConfigureDialog/>
+                <SiteDeleteDialog/>
             </Fragment>
         );
     }

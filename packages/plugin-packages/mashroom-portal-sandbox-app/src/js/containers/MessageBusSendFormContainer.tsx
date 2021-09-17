@@ -1,7 +1,5 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
-import {reset as resetForm} from 'redux-form';
 import MessageBusSendForm from '../components/MessageBusSendForm';
 import {addMessagePublishedBySandbox} from '../store/actions';
 
@@ -20,7 +18,6 @@ const mapStateToProps = (state: State) => {
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
     addMessagePublishedBySandbox: (message: MessageBusMessage) => { dispatch(addMessagePublishedBySandbox(message)); },
-    resetForm: (id: string) => { dispatch(resetForm(id)); }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(MessageBusSendForm);

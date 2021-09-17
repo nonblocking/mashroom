@@ -2,8 +2,9 @@
 .mashroom-portal-ui-text-field {
     display: flex;
     align-items: center;
+
     &>div {
-        flex: 2;
+        flex-grow: 2;
     }
 
     .mashroom-portal-ui-field-label {

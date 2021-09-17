@@ -16,6 +16,7 @@ import DataLoadingServiceImpl from '../services/DataLoadingServiceImpl';
 import AdminMenuBar from './AdminMenuBar';
 import Modals from './Modals';
 
+import type {ReactNode} from 'react';
 import type {
     MashroomPortalAppService,
     MashroomPortalAdminService,
@@ -34,7 +35,7 @@ type Props = {
 
 export default class App extends PureComponent<Props> {
 
-    componentDidMount() {
+    componentDidMount(): void {
         store.dispatch(setUserName(this.props.userName || 'Administrator'));
         store.dispatch(setCurrentLanguage(this.props.lang));
     }
@@ -51,8 +52,8 @@ export default class App extends PureComponent<Props> {
         };
     }
 
-    render() {
-        let lang = this.props.lang;
+    render(): ReactNode {
+        let {lang} = this.props;
         if (!messages[lang]) {
             lang = 'en';
         }

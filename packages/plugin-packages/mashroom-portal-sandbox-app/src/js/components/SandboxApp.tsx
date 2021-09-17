@@ -12,6 +12,7 @@ import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 
+import type {ReactNode} from 'react';
 import type {
     MashroomPortalAppService,
     MashroomPortalMessageBus,
@@ -46,7 +47,7 @@ export default class SandboxApp extends PureComponent<Props> {
         });
     }
 
-    render() {
+    render(): ReactNode {
         const { lang, messageBus, portalAppService, portalStateService } = this.props;
         let existingLang = lang;
         if (!messages[existingLang]) {

@@ -32,8 +32,9 @@ class DropdownMenu extends PureComponent<Props, State> {
     }
 
     componentDidMount() {
-        if (this.props.closeRef) {
-            this.props.closeRef(this.hideMenu.bind(this));
+        const {closeRef} = this.props;
+        if (closeRef) {
+            closeRef(this.hideMenu.bind(this));
         }
     }
 
@@ -62,10 +63,12 @@ class DropdownMenu extends PureComponent<Props, State> {
     }
 
     toggleMenu() {
-        if (!this.state.open) {
+        const {onOpen} = this.props;
+        const {open} = this.state;
+        if (!open) {
             this.openDropDown();
-            if (this.props.onOpen) {
-                this.props.onOpen();
+            if (onOpen) {
+                onOpen();
             }
         } else {
             this.closeDropDown();
@@ -73,25 +76,27 @@ class DropdownMenu extends PureComponent<Props, State> {
     }
 
     hideMenu() {
+        const {onClose} = this.props;
         this.setState({
             open: false,
         });
 
-        if (this.props.onClose) {
-            this.props.onClose();
+        if (onClose) {
+            onClose();
         }
     }
 
     render() {
+        const {className, labelId, label, children} = this.props;
         return (
-            <div className={`mashroom-portal-ui-dropdown-menu ${this.props.className || ''}`}>
+            <div className={`mashroom-portal-ui-dropdown-menu ${className || ''}`}>
                 <div className='dropdown-menu-button' onClick={this.toggleMenu.bind(this)}>
-                    <span className='dropdown-menu-button-label'>{this.props.labelId ? <FormattedMessage id={this.props.labelId}/> : this.props.label}</span>
+                    <span className='dropdown-menu-button-label'>{labelId ? <FormattedMessage id={labelId}/> : label}</span>
                 </div>
                 <div className='dropdown-menu-dropdown'>
                     <div className={`dropdown-menu-content-wrapper ${this.state.open ? 'show' : ''}`}>
                         <div className='dropdown-menu-content'>
-                            {this.props.children}
+                            {children}
                         </div>
                     </div>
                 </div>

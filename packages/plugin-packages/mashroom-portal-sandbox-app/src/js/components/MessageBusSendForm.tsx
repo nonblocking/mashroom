@@ -2,12 +2,14 @@
 import React, {PureComponent} from 'react';
 import {
     Form,
-    SelectFieldContainer,
-    TextareaFieldContainer,
+    SelectField,
+    SourceCodeEditorField,
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
+import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 import type {ActivePortalApp, MessageBusMessage} from '../types';
 
 type FormData = {
@@ -20,7 +22,6 @@ type Props = {
     activePortalApp: ActivePortalApp | undefined | null;
     topicsSubscribedByApp: Array<string>;
     addMessagePublishedBySandbox: (messageBus: MessageBusMessage) => void;
-    resetForm: (name: string) => void;
 }
 
 export default class MessageBusSendForm extends PureComponent<Props> {
@@ -34,7 +35,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         }
     }
 
-    validate(values: FormData) {
+    validate(values: FormData): any {
         const errors: { [k in keyof FormData]?: string } = {};
         const { topic, message } = values;
 
@@ -50,8 +51,8 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: FormData) {
-        const { messageBus, addMessagePublishedBySandbox, resetForm } = this.props;
+    onSubmit(values: FormData, context: FormContext): void {
+        const { messageBus, addMessagePublishedBySandbox } = this.props;
         const { topic, message } = values;
         const data = JSON.parse(message);
         messageBus.publish(topic, data);
@@ -59,10 +60,10 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             topic,
             data
         });
-        resetForm('mashroom-sandbox-app-publish-message-form');
+        context.resetForm();
     }
 
-    render() {
+    render(): ReactNode {
         const {activePortalApp, topicsSubscribedByApp} = this.props;
         if (!activePortalApp) {
             return null;
@@ -77,13 +78,13 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             <div className='mashroom-sandbox-app-messagebus-publish-form'>
                 <Form formId='mashroom-sandbox-app-publish-message-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <SelectFieldContainer id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
+                        <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
                     </div>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <TextareaFieldContainer id='mashroom-sandbox-publish-message-message' name='message' labelId='message' rows={4} />
+                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='idea' height={120} />
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
-                        <Button id='mashroom-sandbox-publish-message' type='submit' labelId='publishMessage'/>
+                        <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage'/>
                     </div>
                 </Form>
             </div>

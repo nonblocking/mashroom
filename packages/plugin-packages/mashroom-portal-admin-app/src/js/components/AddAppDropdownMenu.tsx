@@ -1,9 +1,9 @@
 
 import React, {PureComponent} from 'react';
 import {DropdownMenu} from '@mashroom/mashroom-portal-ui-commons';
-import AvailableAppsPanelContainer from '../containers/AvailableAppsPanelContainer';
+import AvailableAppsPanel from '../containers/AvailableAppsPanel';
 
-import type {DragEvent} from 'react';
+import type {ReactNode, DragEvent} from 'react';
 import type {IntlShape} from 'react-intl';
 import type {PortalAppManagementService, DataLoadingService} from '../types';
 
@@ -29,8 +29,9 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
         }
     }
 
-    onOpen() {
-        this.props.dataLoadingService.loadAvailableApps(true);
+    onOpen(): void {
+        const {dataLoadingService} = this.props;
+        dataLoadingService.loadAvailableApps(true);
         this.setState({
             filter: null
         });
@@ -42,42 +43,46 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
 
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onAppDragStart(event: DragEvent, name: string) {
-        this.props.portalAppManagementService.prepareDrag(event as any, null, name);
+    onAppDragStart(event: DragEvent, name: string): void {
+        const {portalAppManagementService} = this.props;
+        portalAppManagementService.prepareDrag(event as any, null, name);
         this.close && this.close();
     }
 
-    onAppDragEnd() {
-        this.props.portalAppManagementService.dragEnd();
+    onAppDragEnd(): void {
+        const {portalAppManagementService} = this.props;
+        portalAppManagementService.dragEnd();
     }
 
-    onFilterChange(filter: string) {
+    onFilterChange(filter: string): void {
         this.setState({
             filter
         });
     }
 
-    render() {
-        const filterLabel = this.props.intl.formatMessage({ id: 'filter'});
+    render(): ReactNode {
+        const {intl} = this.props;
+        const {filter} = this.state;
+        const filterLabel = intl.formatMessage({ id: 'filter'});
 
         return (
             <DropdownMenu className='add-app-dropdown-menu' labelId='addApp' onOpen={this.onOpen.bind(this)} closeRef={this.onCloseRef.bind(this)}>
                 <div className='add-app-content'>
                     <input type='search'
                            placeholder={filterLabel}
-                           value={this.state.filter || ''}
+                           value={filter || ''}
                            onChange={(event) => this.onFilterChange(event.target.value)}
                            ref={(e) => this.inputElem = e}
                     />
                     <div className='app-list'>
-                        <AvailableAppsPanelContainer
+                        <AvailableAppsPanel
                             onDragStart={this.onAppDragStart.bind(this)}
                             onDragEnd={this.onAppDragEnd.bind(this)}
-                            filter={this.state.filter}/>
+                            filter={filter}/>
                     </div>
                 </div>
             </DropdownMenu>

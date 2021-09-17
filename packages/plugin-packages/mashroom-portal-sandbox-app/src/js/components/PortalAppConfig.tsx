@@ -2,12 +2,13 @@
 import React, {PureComponent} from 'react';
 import {
     Form,
-    TextFieldContainer,
-    SourceCodeEditorFieldContainer,
+    TextField,
+    SourceCodeEditorField,
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
 import {mergeAppConfig} from '../utils';
 
+import type {ReactNode} from 'react';
 import type {SelectedPortalApp} from '../types';
 
 type FormData = {
@@ -20,6 +21,7 @@ type FormData = {
 type Props = {
     hostWidth: string;
     selectedPortalApp: SelectedPortalApp | undefined | null;
+    appLoadingError: boolean;
     onConfigSubmit: (app: SelectedPortalApp, width: string) => void,
 }
 
@@ -40,7 +42,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
         };
     }
 
-    validate(values: FormData) {
+    validate(values: FormData): any {
         const errors: { [k in keyof FormData]?: string } = {};
         const { permissions, appConfig } = values;
 
@@ -58,7 +60,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: FormData) {
+    onSubmit(values: FormData): void {
         const { selectedPortalApp, onConfigSubmit } = this.props;
         if (!selectedPortalApp) {
             return;
@@ -78,25 +80,25 @@ export default class PortalAppConfig extends PureComponent<Props> {
         }),  width);
     }
 
-    render() {
-        const { selectedPortalApp } = this.props;
-        if (!selectedPortalApp) {
+    render(): ReactNode {
+        const { selectedPortalApp, appLoadingError } = this.props;
+        if (!selectedPortalApp || appLoadingError) {
             return null;
         }
 
         return (
             <Form formId='mashroom-sandbox-app-config-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <TextFieldContainer id='mashroom-sandbox-app-config-width' name='width' labelId='width' maxLength={10} />
+                    <TextField id='mashroom-sandbox-app-config-width' name='width' labelId='width' maxLength={10} />
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <TextFieldContainer id='mashroom-sandbox-app-config-lang' name='lang' labelId='lang' maxLength={2} />
+                    <TextField id='mashroom-sandbox-app-config-lang' name='lang' labelId='lang' maxLength={2} />
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <SourceCodeEditorFieldContainer name='permissions' labelId='permissions' language='json' theme='idea' height={120} />
+                    <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions'  name='permissions' labelId='permissions' language='json' theme='idea' height={120} />
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <SourceCodeEditorFieldContainer name='appConfig' labelId='appConfig' language='json' theme='idea' height={120} />
+                    <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config'  name='appConfig' labelId='appConfig' language='json' theme='idea' height={120} />
                 </div>
                 <div>
                     <Button id='mashroom-sandbox-app-load' type='submit' labelId='load'/>

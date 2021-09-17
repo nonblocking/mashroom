@@ -1,6 +1,10 @@
 
 .roles-list {
 
+    tr {
+        background-color: transparent !important;
+    }
+
     td:nth-child(2) {
         width: 50px;
     }

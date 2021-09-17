@@ -1,9 +1,10 @@
 
 import React, {Suspense} from 'react';
 import CircularProgress from '../components/CircularProgress';
-const SourceCodeEditorFieldContainer = React.lazy(() => import('../containers/SourceCodeEditorFieldContainer'));
+const SourceCodeEditorField = React.lazy(() => import('../containers/SourceCodeEditorField'));
 
 type Props = {
+    id: string;
     name: string;
     labelId: string;
     language: 'javascript' | 'json' | 'css' | 'html';
@@ -13,6 +14,6 @@ type Props = {
 
 export default (props: Props) => (
     <Suspense fallback={<CircularProgress />}>
-        <SourceCodeEditorFieldContainer {...props}/>
+        <SourceCodeEditorField {...props}/>
     </Suspense>
 );

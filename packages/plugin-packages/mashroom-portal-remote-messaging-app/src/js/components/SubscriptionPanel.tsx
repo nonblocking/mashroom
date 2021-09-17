@@ -2,6 +2,7 @@
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 import type {Subscription, ReceivedMessage} from '../types';
 
@@ -14,7 +15,7 @@ type Props = {
 
 export default class SubscriptionPanel extends PureComponent<Props> {
 
-    componentDidMount() {
+    componentDidMount(): void {
         const { messageBus, setSubscription } = this.props;
         const userPrivateTopic = messageBus.getRemoteUserPrivateTopic();
         if (!userPrivateTopic) {
@@ -44,7 +45,7 @@ export default class SubscriptionPanel extends PureComponent<Props> {
         );
     }
 
-    onReceiveMessage(message: any, topic: string) {
+    onReceiveMessage(message: any, topic: string): void {
         const { addReceivedMessage} = this.props;
         const receivedMessage: ReceivedMessage = {
             topic,
@@ -54,7 +55,7 @@ export default class SubscriptionPanel extends PureComponent<Props> {
         addReceivedMessage(receivedMessage);
     }
 
-    render() {
+    render(): ReactNode {
         const { subscription: { topic, status, errorMessage } } = this.props;
 
         return (

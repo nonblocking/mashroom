@@ -18,29 +18,32 @@ type Props = {
 
 export default class TabDialog extends PureComponent<Props> {
 
-    getActiveTabIndex() {
-        const activeTab = this.props.tabs.find((t) => t.name === this.props.activeTab);
+    getActiveTabIndex(): number | null {
+        const {tabs} = this.props;
+        const activeTab = tabs.find((t) => t.name === this.props.activeTab);
         if (activeTab) {
-            return this.props.tabs.indexOf(activeTab);
+            return tabs.indexOf(activeTab);
         }
-        if (this.props.tabs.length > 0) {
+        if (tabs.length > 0) {
             return 0;
         }
 
         return null;
     }
 
-    onChangeActiveTab(name: string) {
-        this.props.setActiveTab(name);
+    onChangeActiveTab(name: string): void {
+        const {setActiveTab} = this.props;
+        setActiveTab(name);
     }
 
-    renderHeader() {
+    renderHeader(): ReactNode {
+        const {tabs} = this.props;
         const activeTabIndex = this.getActiveTabIndex();
         if (activeTabIndex === null) {
             return null;
         }
 
-        const buttons = this.props.tabs.map((t, idx) => (
+        const buttons = tabs.map((t, idx) => (
             <div key={t.name} className={`tab-dialog-button ${idx === activeTabIndex ? 'active' : ''}`} onClick={this.onChangeActiveTab.bind(this, t.name)}>
                 <div className='title'><FormattedMessage id={t.titleId} /></div>
             </div>
@@ -53,37 +56,33 @@ export default class TabDialog extends PureComponent<Props> {
         );
     }
 
-    listenErroneousFieldEvents(name: string, element: HTMLDivElement | null) {
+    listenErroneousFieldEvents(name: string, element: HTMLDivElement | null): void {
+        const {activeTab, setActiveTab} = this.props;
         if (element) {
             element.addEventListener('erroneous-field-focused', () => {
-                if (this.props.activeTab !== name) {
+                if (activeTab !== name) {
                     console.info(`Switching to tab ${name} because an erroneous field was focused there`);
-                    this.props.setActiveTab(name);
+                    setActiveTab(name);
                 }
             });
         }
     }
 
-    renderContent() {
+    renderContent(): ReactNode {
+        const {tabs} = this.props;
         const activeTabIndex = this.getActiveTabIndex();
         if (activeTabIndex === null) {
             return null;
         }
 
-        const tabs = this.props.tabs.map((t, idx) => (
-            <div key={t.name} className={`tab-dialog-content ${idx === activeTabIndex ? 'active' : ''}`} ref={(el) => this.listenErroneousFieldEvents(t.name, el)}>
-                {t.content}
-            </div>
-        ));
-
         return (
             <div className='tab-dialog-content-wrapper'>
-                {tabs}
+                {tabs[activeTabIndex]?.content}
             </div>
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-portal-ui-tab-dialog'>
                 {this.renderHeader()}

@@ -3,14 +3,15 @@ import React, {PureComponent} from 'react';
 import {nanoid} from 'nanoid';
 import {
     Form,
-    TextFieldContainer,
-    TextareaFieldContainer,
+    TextField,
+    SourceCodeEditorField,
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
-// @ts-ignore
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
+import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 import type {PublishedMessage, PublishedMessageStatus} from '../types';
 
 type FormData = {
@@ -20,7 +21,6 @@ type FormData = {
 
 type Props = {
     messageBus: MashroomPortalMessageBus,
-    resetForm: (name: string) => void,
     addPublishedMessage: (message: PublishedMessage) => void,
     updateMessageStatus: (messageId: string, status: PublishedMessageStatus, errorMessage?: string) => void,
 }
@@ -36,7 +36,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         }
     }
 
-    validate(values: FormData) {
+    validate(values: FormData): any {
         const errors: { [k in keyof FormData]?: string } = {};
         const { topic, message } = values;
 
@@ -56,8 +56,8 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         return errors;
     }
 
-    onSubmit(values: FormData) {
-        const { messageBus, resetForm, addPublishedMessage, updateMessageStatus } = this.props;
+    onSubmit(values: FormData, context: FormContext): void {
+        const { messageBus, addPublishedMessage, updateMessageStatus } = this.props;
         const { topic, message } = values;
         const jsonMessage = JSON.parse(message);
         const remoteTopic = `${messageBus.getRemotePrefix()}${topic}`;
@@ -81,21 +81,21 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             }
          );
 
-        resetForm('mashroom-remote-messaging-app-form');
+        context.resetForm();
     }
 
-    render() {
+    render(): ReactNode {
         return (
             <div className='mashroom-remote-messaging-app-publish-form'>
                 <Form formId='mashroom-remote-messaging-app-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
                     <div className='mashroom-remote-messaging-app-form-row'>
-                        <TextFieldContainer id='mashroom-remote-messaging-app-topic' type='text' name='topic' labelId='remoteTopic' />
+                        <TextField id='mashroom-remote-messaging-app-topic' type='text' name='topic' labelId='remoteTopic' />
                     </div>
                     <div className='mashroom-remote-messaging-app-form-row '>
-                        <TextareaFieldContainer id='mashroom-remote-messaging-app-message' name='message' labelId='message' rows={4} />
+                        <SourceCodeEditorField id='mashroom-remote-messaging-app-message' name="message" labelId='message' language='json' theme='idea' height={120} />
                     </div>
                     <div className='mashroom-remote-messaging-app-form-button-row'>
-                        <Button id='mashroom-remote-messaging-app-publish-message' type='submit' labelId='publishMessage'/>
+                        <Button id='mashroom-remote-messaging-app-publish-message' type='submit' labelId='sendMessage'/>
                     </div>
                 </Form>
             </div>

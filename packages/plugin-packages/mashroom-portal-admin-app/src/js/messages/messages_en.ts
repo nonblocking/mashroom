@@ -45,7 +45,7 @@ export default {
     path: 'Path',
     defaultTheme: 'Default Theme',
     defaultLayout: 'Default Layout',
-    extraCss: 'Inject CSS',
+    extraCss: 'Extra CSS',
     delete: 'Delete',
     deletePage: 'Delete Page',
     confirmDeletePage: 'Do you really want to delete page: {pageTitle}?',

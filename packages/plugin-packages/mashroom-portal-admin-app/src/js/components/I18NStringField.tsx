@@ -2,7 +2,8 @@
 import React, {PureComponent} from 'react';
 import {ErrorMessage, FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
 
-import type {WrappedFieldProps} from 'redux-form';
+import type {ReactNode} from 'react';
+import type {FieldProps} from 'formik';
 import type {I18NString} from '@mashroom/mashroom/type-definitions';
 import type {Languages} from '../types';
 
@@ -10,63 +11,79 @@ type Props = {
     id: string,
     labelId: string,
     languages: Languages,
-    fieldProps: WrappedFieldProps
+    fieldProps: FieldProps
 }
 
 export default class I18NStringField extends PureComponent<Props> {
 
     getValue(): Record<string, string> {
-        let val: I18NString = this.props.fieldProps.input.value;
+        const {fieldProps: {field}, languages} = this.props;
+        let val: I18NString = field.value;
         if (typeof (val) === 'string') {
             val = {
-                [this.props.languages.default]: val
+                [languages.default]: val
             }
         }
 
         return val || {
-            [this.props.languages.default]: ''
+            [languages.default]: ''
         };
     }
 
-    onValueChange(lang: string, value: string | undefined | null) {
+    onValueChange(lang: string, value: string | undefined | null): void {
         const val = {...this.getValue(), [lang]: value};
-
-        this.props.fieldProps.input.onChange(val);
+        this.simulateFieldChangeEvent(val);
     }
 
-    onBlur() {
-        this.props.fieldProps.input.onBlur(this.props.fieldProps.input.value);
+    simulateFieldChangeEvent(value: any) {
+        const {fieldProps: {field}} = this.props;
+        const e = {
+            target: {
+                name: field.name,
+                value,
+            }
+        };
+        field.onChange(e);
     }
 
-    onAddLang(lang: string) {
+    onBlur(): void {
+        const {fieldProps: {field}} = this.props;
+        const e = {
+            target: {
+                name: field.name,
+            }
+        };
+        field.onBlur(e);
+    }
+
+    onAddLang(lang: string): void {
         const val = {...this.getValue(), [lang]: ''};
-
-        this.props.fieldProps.input.onChange(val);
+        this.simulateFieldChangeEvent(val);
     }
 
-    onRemoveLang(lang: string) {
+    onRemoveLang(lang: string): void {
         const val = {...this.getValue()};
         delete val[lang];
-
-        this.props.fieldProps.input.onChange(val);
+        this.simulateFieldChangeEvent(val);
     }
 
-    renderInputs() {
+    renderInputs(): ReactNode {
+        const {fieldProps: {field}, languages} = this.props;
         const val = this.getValue();
         const inputs = [];
         inputs.push(
             <input key='default-lang' type='text'
-                   name={this.props.fieldProps.input.name}
-                   value={val[this.props.languages.default]}
-                   onChange={(e) => this.onValueChange(this.props.languages.default, e.target.value)}
+                   name={field.name}
+                   value={val[languages.default]}
+                   onChange={(e) => this.onValueChange(languages.default, e.target.value)}
                    onBlur={this.onBlur.bind(this)}
             />
         );
 
-        let availableLanguages = [...this.props.languages.available];
-        availableLanguages = availableLanguages.filter((l) => l !== this.props.languages.default);
-        for (const lang of this.props.languages.available) {
-            if (lang === this.props.languages.default) {
+        let availableLanguages = [...languages.available];
+        availableLanguages = availableLanguages.filter((l) => l !== languages.default);
+        for (const lang of languages.available) {
+            if (lang === languages.default) {
                 continue;
             }
             if (typeof (val[lang]) !== 'undefined') {
@@ -74,7 +91,7 @@ export default class I18NStringField extends PureComponent<Props> {
                     <div key={lang} className='translation'>
                         <div className='lang'>{lang}:</div>
                         <input type='text'
-                               name={`${this.props.fieldProps.input.name}.${lang}`}
+                               name={`${field.name}.${lang}`}
                                value={val[lang]}
                                onChange={(e) => this.onValueChange(lang, e.target.value)}
                                onBlur={this.onBlur.bind(this)}
@@ -104,15 +121,16 @@ export default class I18NStringField extends PureComponent<Props> {
         );
     }
 
-    render() {
-        const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
+    render(): ReactNode {
+        const {id, labelId, fieldProps: {meta}} = this.props;
+        const error = meta.touched && !!meta.error;
 
         return (
             <div className={`i18nstring-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
+                <FieldLabel htmlFor={id} labelId={labelId}/>
                 <div>
                     {this.renderInputs()}
-                    {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
+                    {error && <ErrorMessage messageId={meta.error || ''}/>}
                 </div>
             </div>
         );

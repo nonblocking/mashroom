@@ -8,12 +8,12 @@ export default {
     appSetup: 'App Setup',
     topic: 'Topic',
     message: 'Message',
-    publishedByApp: 'Published by App',
-    publishedBySandbox: 'Published by Sandbox',
+    messagesFromApp: 'Messages from App',
+    messagesFromSandbox: 'Messages from Sandbox',
     load: 'Load',
-    publishMessage: 'Publish Message',
+    sendMessage: 'Send Message',
     loading: 'Loading...',
-    errorLoadingApp: 'Could not load app (not found or no permission)',
-    errorTopicMandatory: 'Topic is mandatory',
+    errorLoadingApp: 'Could not load App (not found or no permission)',
+    errorTopicMandatory: 'Please select topic',
     errorInvalidJSON: 'Error: Invalid JSON'
 };

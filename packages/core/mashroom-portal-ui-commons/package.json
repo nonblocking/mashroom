@@ -4,7 +4,7 @@
     "private": true,
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
-    "version": "1.8.1",
+    "version": "1.8.3",
     "main": "dist",
     "dependencies": {
         "codemirror": "^5.62.2",
@@ -17,7 +17,7 @@
         "react-intl": "^5.20.6",
         "react-redux": "7.2.4",
         "redux": "^4.1.0",
-        "redux-form": "^8.3.7"
+        "formik": "^2.2.9"
     },
     "devDependencies": {
         "@babel/cli": "^7.14.8",
@@ -27,7 +27,6 @@
         "@types/react-click-outside": "^3.0.3",
         "@types/react-dom": "^17.0.9",
         "@types/react-redux": "^7.1.18",
-        "@types/redux-form": "^8.3.2",
         "cpy-cli": "^3.1.1",
         "del-cli": "^4.0.1",
         "eslint": "^7.32.0",

@@ -1,5 +1,4 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
 import {setSubscription, addReceivedMessage} from '../store/actions';
 import SubscriptionPanel from '../components/SubscriptionPanel';

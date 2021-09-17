@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import SiteConfigureDialog from '../components/SiteConfigureDialog';
+import SiteConfigureDialogComp from '../components/SiteConfigureDialog';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {
     setSelectedSiteLoading,
@@ -41,7 +41,7 @@ class PageConfigureDialogContainer extends PureComponent<Props> {
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <SiteConfigureDialog dataLoadingService={deps.dataLoadingService} portalAdminService={deps.portalAdminService} portalSiteService={deps.portalSiteService} {...this.props}/>}
+                {(deps) => <SiteConfigureDialogComp dataLoadingService={deps.dataLoadingService} portalAdminService={deps.portalAdminService} portalSiteService={deps.portalSiteService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }

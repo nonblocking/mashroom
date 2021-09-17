@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import PortalAppConfigureDialog from '../components/PortalAppConfigureDialog';
+import PortalAppConfigureDialogComp from '../components/PortalAppConfigureDialog';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {setSelectedPortalAppLoading, setSelectedPortalAppLoadingError, setSelectedPortalAppUpdatingError, setSelectedPortalAppPermittedRoles} from '../store/actions';
 
@@ -20,12 +20,12 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps;
 
-class PortalAppConfigureDialogContainer extends PureComponent<Props> {
+class PortalAppConfigureDialog extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <PortalAppConfigureDialog portalAppManagementService={deps.portalAppManagementService} portalAdminService={deps.portalAdminService} {...this.props}/>}
+                {(deps) => <PortalAppConfigureDialogComp portalAppManagementService={deps.portalAppManagementService} portalAdminService={deps.portalAdminService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -42,4 +42,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     setPermittedRoles: (roles) => { dispatch(setSelectedPortalAppPermittedRoles(roles)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PortalAppConfigureDialogContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PortalAppConfigureDialog);

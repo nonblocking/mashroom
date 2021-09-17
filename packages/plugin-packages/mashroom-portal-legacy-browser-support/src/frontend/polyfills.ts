@@ -9,4 +9,8 @@ import 'core-js/es/math';
 import 'core-js/es/promise';
 import 'whatwg-fetch';
 
+// Polyfill for document.currentScript lazy loading via webpack 5 automatic public path
+// See https://webpack.js.org/guides/public-path/
+import 'current-script-polyfill';
+
 (global as any).crypto = global.crypto || (global as any).msCrypto;

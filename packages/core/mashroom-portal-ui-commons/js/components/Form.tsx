@@ -1,34 +1,59 @@
 
 import React, {PureComponent} from 'react';
-import {reduxForm} from 'redux-form';
 
-import type {ReactNode} from 'react';
-import type {Dispatch} from 'redux';
-import type {InjectedFormProps} from 'redux-form';
-import type {AsyncFormValidator, FormValidator, ValidationErrors} from '../../type-definitions';
+import type {ReactNode, RefObject, FormEvent} from 'react';
+import type {FormikTouched} from 'formik/';
+import type {ValidationErrors, FormContext} from '../../type-definitions';
 
 type Props = {
-    formId: string;
-    initialValues?: any;
-    validator?: FormValidator;
-    asyncValidator?: AsyncFormValidator;
-    validateAsyncOnBlurFields?: Array<string>;
-    onSubmit?: (values: any, dispatch: Dispatch<any>, props: any) => void;
-    onChange?: (values: any, dispatch: Dispatch<any>, props: any, previousValues: any) => void;
+    id: string;
+    initialValues: any;
+    values: any;
+    errors: ValidationErrors;
+    handleSubmit: (e: FormEvent<HTMLFormElement>) => void;
+    resetForm: () => void;
+    setTouched: (touched: FormikTouched<any>) => void;
+    setFieldValue: (field: string, value: any) => void;
+    onChange?: (values: any, previousValues: any, context: FormContext) => void;
     children: ReactNode;
 };
 
 export default class Form extends PureComponent<Props> {
 
-    focusFirstErroneousField(errors: ValidationErrors) {
-        const elements = document.querySelectorAll('input, select, textarea');
+    formRef: RefObject<HTMLFormElement>;
+
+    constructor(props: Props) {
+        super(props);
+        this.formRef = React.createRef();
+    }
+
+    componentDidUpdate(prevProps: Readonly<Props>): void {
+        const {values, initialValues, resetForm, setFieldValue, onChange} = this.props;
+        if (prevProps.values !== values) {
+            if (onChange) {
+                onChange(values, prevProps.values, {
+                    resetForm,
+                    setFieldValue,
+                    initialValues,
+                });
+            }
+        }
+    }
+
+    focusFirstErroneousField(): void {
+        const {errors} = this.props;
+        if (Object.keys(errors).length === 0) {
+            return;
+        }
+        const elements = (this.formRef.current || document).querySelectorAll('input, select, textarea');
+        console.info('')
         for (let i = 0; i < elements.length; i++) {
             const elem: any = elements[i];
             if (elem.name) {
-                if (errors && this.errorExists(elem.name, errors)) {
+                if (errors && this.errorExists(elem.name)) {
                     console.info('Focusing erroneous field: ', elem);
                     elem.focus();
-                    // Fire a custom event that is used by the TabDialog to make the tab with the erronous element visible
+                    // Fire a custom event that is used by the TabDialog to make the tab with the erroneous element visible
                     const event = document.createEvent('Event');
                     event.initEvent('erroneous-field-focused', true, true);
                     elem.dispatchEvent(event);
@@ -38,7 +63,8 @@ export default class Form extends PureComponent<Props> {
         }
     }
 
-    errorExists(path: string, errors: ValidationErrors) {
+    errorExists(path: string): boolean {
+        const {errors} = this.props;
         const props = path.split('.');
         let parent: any = errors;
         for (const prop of props) {
@@ -50,34 +76,42 @@ export default class Form extends PureComponent<Props> {
         return true;
     }
 
-    createForm() {
-        const HtmlForm = (props: InjectedFormProps) => (
-            <form onSubmit={props.handleSubmit}>
-                {this.props.children}
-            </form>
-        );
-
-        return reduxForm({
-            form: this.props.formId,
-            initialValues: this.props.initialValues,
-            onSubmit: this.props.onSubmit,
-            onChange: this.props.onChange,
-            onSubmitFail: this.focusFirstErroneousField.bind(this),
-            validate: this.props.validator,
-            asyncValidate: this.props.asyncValidator,
-            asyncBlurFields: this.props.validateAsyncOnBlurFields,
-            destroyOnUnmount: false,
-            enableReinitialize: true,
-            keepDirtyOnReinitialize: false,
-        })(HtmlForm);
+    getTouchedObj(errors: any) {
+        const touched: FormikTouched<any> = {}
+        Object.keys(errors).map(key => {
+            const errorObj = errors[key];
+            if (Array.isArray(errorObj)) {
+                errorObj.map((val: any, index: any) => {
+                    if (index == 0) {
+                        touched[key] = [];
+                    }
+                    (touched[key] as any).push(this.getTouchedObj(val));
+                });
+            } else if (typeof (errorObj) === 'string') {
+                touched[key] = true;
+            } else if (errorObj && typeof (errorObj) === 'object') {
+                touched[key] = this.getTouchedObj(errorObj);
+            }
+        });
+        return touched;
     }
 
-    render() {
-        const Form = this.createForm();
+    onSubmit(e: FormEvent<HTMLFormElement>) {
+        const {handleSubmit, setTouched, errors} = this.props;
+        setTimeout(() => {
+            setTouched(this.getTouchedObj(errors));
+            this.focusFirstErroneousField();
+        }, 100);
+        handleSubmit(e);
+    }
 
+    render(): ReactNode {
+        const {id, children} = this.props;
         return (
             <div className='mashroom-portal-ui-form'>
-                <Form/>
+                <form id={id} onSubmit={this.onSubmit.bind(this)} ref={this.formRef}>
+                    {children}
+                </form>
             </div>
         );
     }

@@ -5,10 +5,11 @@ import {
     Button,
     DialogButtons,
     DialogContent, ErrorMessage,
-    ModalContainer,
+    Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_SITE_DELETE} from '../constants';
 
+import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {Sites, SelectedSite} from '../types';
 
@@ -23,42 +24,42 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    onClose() {
+    onClose(): void {
         this.close && this.close();
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onConfirmDelete() {
-        const selectedSite = this.props.selectedSite;
+    onConfirmDelete(): void {
+        const {selectedSite, portalAdminService, setErrorUpdating} = this.props;
         if (!selectedSite || !selectedSite.siteId) {
-            return null;
+            return;
         }
 
-        this.props.portalAdminService.deleteSite(selectedSite.siteId).then(
+        portalAdminService.deleteSite(selectedSite.siteId).then(
             () => {
                 this.onClose();
-                if (selectedSite.siteId === this.props.portalAdminService.getCurrentSiteId()) {
+                if (selectedSite.siteId === portalAdminService.getCurrentSiteId()) {
                     window.location.href = '/';
                 }
             },
             (error) => {
                 console.error('Error deleting site!', error);
-                this.props.setErrorUpdating(true);
+                setErrorUpdating(true);
             }
         );
     }
 
-    renderUpdatingError() {
+    renderUpdatingError(): ReactNode {
         return (
             <ErrorMessage messageId='updateFailed' />
         );
     }
 
-    renderContent() {
-        const selectedSite = this.props.selectedSite;
+    renderContent(): ReactNode {
+        const {selectedSite, sites} = this.props;
         if (!selectedSite) {
             return null;
         }
@@ -67,7 +68,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
             return this.renderUpdatingError();
         }
 
-        const site = this.props.sites.sites.find((s) => s.siteId === selectedSite.siteId);
+        const site = sites.sites.find((s) => s.siteId === selectedSite.siteId);
         const siteTitle = site && site.title || '???';
 
         return (
@@ -76,16 +77,16 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
                    <FormattedMessage id='confirmDeleteSite' values={{ siteTitle }}/>
                 </DialogContent>
                 <DialogButtons>
-                    <Button id='cancel' labelId='cancel' onClick={this.onClose.bind(this)}/>
+                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                     <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
                 </DialogButtons>
             </Fragment>
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
-            <ModalContainer
+            <Modal
                 appWrapperClassName='mashroom-portal-admin-app'
                 className='site-delete-dialog'
                 name={DIALOG_NAME_SITE_DELETE}
@@ -93,7 +94,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
                 minWidth={300}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}
-            </ModalContainer>
+            </Modal>
         );
     }
 

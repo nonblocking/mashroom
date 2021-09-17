@@ -1,10 +1,9 @@
 
 import React, {PureComponent} from 'react';
-import {change} from 'redux-form';
-
+import latinize from 'latinize';
 import {
     Button,
-    CheckboxFieldContainer,
+    CheckboxField,
     CircularProgress,
     DialogButtons,
     DialogContent,
@@ -12,20 +11,20 @@ import {
     Form,
     FormCell,
     FormRow,
-    ModalContainer,
-    SelectFieldContainer,
-    SourceCodeEditorFieldContainer,
-    TabDialogContainer,
-    TextareaFieldContainer,
-    TextFieldContainer
+    Modal,
+    SelectField,
+    SourceCodeEditorField,
+    TabDialog,
+    TextareaField,
+    TextField
 } from '@mashroom/mashroom-portal-ui-commons';
 import Permissions from './Permissions';
 import PagePositionSelection from './PagePositionSelection';
-import I18NStringFieldContainer from '../containers/I18NStringFieldContainer';
+import I18NStringField from '../containers/I18NStringField';
 import {DIALOG_NAME_PAGE_CONFIGURE} from '../constants';
 import {getPagePosition, getParentPage, insertOrUpdatePageAtPosition, searchPageRef} from '../services/model_utils';
 
-import type {Dispatch} from 'redux';
+import type {ReactNode} from 'react';
 import type {
     MashroomAvailablePortalLayout,
     MashroomAvailablePortalTheme,
@@ -34,7 +33,7 @@ import type {
     MashroomPortalPageRef,
     MashroomPortalSiteService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {SelectFieldOptions} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
+import type {FormContext, SelectFieldOptions} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 import type {DataLoadingService, Languages, PagePosition, Pages, SelectedPage} from '../types';
 
 type Props = {
@@ -64,30 +63,31 @@ export default class PageConfigureDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    componentDidUpdate(prevProps: Props) {
-        if (this.props.selectedPage && (!prevProps.selectedPage || this.props.selectedPage.selectedTs !== prevProps.selectedPage.selectedTs)) {
-            const pageId = this.props.selectedPage.pageId;
+    componentDidUpdate(prevProps: Props): void {
+        const {selectedPage, dataLoadingService, portalAdminService, setPage, setPermittedRoles, setLoading, setErrorLoading} = this.props;
+        if (selectedPage && (!prevProps.selectedPage || selectedPage.selectedTs !== prevProps.selectedPage.selectedTs)) {
+            const pageId = selectedPage.pageId;
             const promises = [];
 
-            promises.push(this.props.dataLoadingService.loadAvailableLanguages());
-            promises.push(this.props.dataLoadingService.loadAvailableThemes());
-            promises.push(this.props.dataLoadingService.loadAvailableLayouts());
-            promises.push(this.props.dataLoadingService.loadPageTree());
+            promises.push(dataLoadingService.loadAvailableLanguages());
+            promises.push(dataLoadingService.loadAvailableThemes());
+            promises.push(dataLoadingService.loadAvailableLayouts());
+            promises.push(dataLoadingService.loadPageTree());
 
             if (pageId) {
-                promises.push(this.props.portalAdminService.getPage(pageId).then(
+                promises.push(portalAdminService.getPage(pageId).then(
                     (page) => {
-                        this.props.setPage(page);
+                        setPage(page);
                     }
                 ));
-                promises.push(this.props.portalAdminService.getPagePermittedRoles(pageId).then(
+                promises.push(portalAdminService.getPagePermittedRoles(pageId).then(
                     (roles) => {
-                        this.props.setPermittedRoles(roles);
+                        setPermittedRoles(roles);
                     }
                 ));
             }
 
-            promises.push(this.props.portalAdminService.getSite(this.props.portalAdminService.getCurrentSiteId()).then(
+            promises.push(portalAdminService.getSite(portalAdminService.getCurrentSiteId()).then(
                 (site) => {
                     if (pageId) {
                         const pageRef = searchPageRef(pageId, site.pages);
@@ -102,28 +102,29 @@ export default class PageConfigureDialog extends PureComponent<Props> {
 
             Promise.all(promises).then(
                 () => {
-                    this.props.setLoading(false);
+                    setLoading(false);
                 },
                 (error) => {
                     console.error(error);
-                    this.props.setErrorLoading(true);
+                    setErrorLoading(true);
                 }
             )
         }
     }
 
-    onClose() {
+    onClose(): void {
         this.close && this.close();
     }
 
-    onCloseRef(close: () => void) {
+    onCloseRef(close: () => void): void {
         this.close = close;
     }
 
-    onSubmit(values: FormValues) {
+    onSubmit(values: FormValues): void {
+        const {portalSiteService, portalAdminService, setErrorUpdating, pages} = this.props;
         const selectedPage = this.props.selectedPage;
         if (!selectedPage) {
-            return null;
+            return;
         }
 
         const pageId = selectedPage.pageId;
@@ -146,31 +147,31 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             subPages: values.page.subPages
         };
 
-        const promise = this.props.portalAdminService.getSite(this.props.portalAdminService.getCurrentSiteId()).then(
+        const promise = portalAdminService.getSite(portalAdminService.getCurrentSiteId()).then(
             (site) => {
                 const siteClone = {...site, pages: [...site.pages]};
 
                 let parentPageId: string | undefined | null;
                 const updatePageRef = () => {
                     insertOrUpdatePageAtPosition(pageRef, siteClone.pages, values.position, parentPageId);
-                    return this.props.portalAdminService.updateSite(siteClone);
+                    return portalAdminService.updateSite(siteClone);
                 };
 
                 const updatePagePermittedRoles = (pageId: string) => {
-                    return this.props.portalAdminService.updatePagePermittedRoles(pageId, values.roles);
+                    return portalAdminService.updatePagePermittedRoles(pageId, values.roles);
                 };
 
                 if (pageId) {
-                    const parentPage = getParentPage(pageId, this.props.pages.pagesFlattened);
+                    const parentPage = getParentPage(pageId, pages.pagesFlattened);
                     parentPageId = parentPage ? parentPage.pageId : null;
 
-                    return this.props.portalAdminService.updatePage(page).then(
+                    return portalAdminService.updatePage(page).then(
                         () => {
                             return Promise.all([updatePageRef(), updatePagePermittedRoles(pageId)]);
                         }
                     );
                 } else {
-                    return this.props.portalAdminService.addPage(page).then(
+                    return portalAdminService.addPage(page).then(
                         (page) => {
                             pageRef = {...pageRef, pageId: page.pageId};
 
@@ -184,14 +185,14 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         promise.then(
             () => {
                 this.onClose();
-                if (pageId === this.props.portalAdminService.getCurrentPageId() && selectedPage.pageRef && selectedPage.pageRef.friendlyUrl !== pageRef.friendlyUrl) {
+                if (pageId === portalAdminService.getCurrentPageId() && selectedPage.pageRef && selectedPage.pageRef.friendlyUrl !== pageRef.friendlyUrl) {
                     // Friendly URL changed
                     const url = window.location.href.replace(selectedPage.pageRef.friendlyUrl, pageRef.friendlyUrl);
                     window.location.href = url;
                 } else {
                     if (!pageId) {
                         // Goto new page
-                        const url = `${this.props.portalSiteService.getCurrentSiteUrl()}${pageRef.friendlyUrl}`;
+                        const url = `${portalSiteService.getCurrentSiteUrl()}${pageRef.friendlyUrl}`;
                         window.location.href = url;
                     } else {
                         window.location.reload(true);
@@ -200,13 +201,14 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             },
             (error) => {
                 console.error('Updating page failed!', error);
-                this.props.setErrorUpdating(true);
+                setErrorUpdating(true);
             }
         )
     }
 
     getInitialValues(): FormValues | null {
-        const selectedPage = this.props.selectedPage;
+        const {pages} = this.props;
+        const {selectedPage} = this.props;
         if (!selectedPage) {
             return null;
         }
@@ -217,7 +219,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
 
         if (pageId) {
             page = {...selectedPage.page, ...selectedPage.pageRef};
-            position = getPagePosition(pageId, this.props.pages.pagesFlattened, this.props.pages.pages);
+            position = getPagePosition(pageId, pages.pagesFlattened, pages.pages);
         } else {
             position = {
                 parentPageId: null,
@@ -232,24 +234,27 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         };
     }
 
-    onChange(values: FormValues, dispatch: Dispatch<any>, props: any, previousValues: FormValues) {
+    onChange(values: FormValues, previousValues: FormValues, context: FormContext): void {
+        const {languages} = this.props;
 
         // Set friendlyUrl automatically based on the title for a new page
-        if (values.page && previousValues.page && props.initialValues.page && !props.initialValues.page.friendlyUrl) {
-            const title = typeof (values.page.title) === 'object' ? values.page.title[this.props.languages.default] : values.page.title;
-            const previousTitle = typeof (previousValues.page.title) === 'object' ? previousValues.page.title[this.props.languages.default] : previousValues.page.title;
+        if (values.page && previousValues.page && context.initialValues.page && !context.initialValues.page.friendlyUrl) {
+            const title = typeof (values.page.title) === 'object' ? values.page.title[languages.default] : values.page.title;
+            const previousTitle = typeof (previousValues.page.title) === 'object' ? previousValues.page.title[languages.default] : previousValues.page.title;
 
             if (title && title !== previousTitle) {
-                let friendlyUrl = title.replace(/[ -]/g, '_').toLowerCase();
+                let friendlyUrl = latinize(title.replace(/[ -,;.]/g, '_')).toLowerCase();
                 if (friendlyUrl && friendlyUrl.indexOf('/') !== 0) {
                     friendlyUrl = `/${friendlyUrl}`;
                 }
-                dispatch(change(props.form, 'page.friendlyUrl', friendlyUrl));
+                context.setFieldValue('page.friendlyUrl', friendlyUrl);
             }
         }
     }
 
-    validate(values: FormValues) {
+    validate(values: FormValues): any {
+        const {languages, pages, selectedPage} = this.props;
+
         const errors: any = {
             page: {}
         };
@@ -257,7 +262,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             return errors;
         }
 
-        const title = typeof (values.page.title) === 'object' ? values.page.title[this.props.languages.default] : values.page.title;
+        const title = typeof (values.page.title) === 'object' ? values.page.title[languages.default] : values.page.title;
         if (!title || title.trim() === '') {
             errors.page.title = 'required';
         }
@@ -265,15 +270,19 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             errors.page.friendlyUrl = 'required';
         } else if (values.page.friendlyUrl.indexOf('/') !== 0) {
             errors.page.friendlyUrl = 'mustStartWithSlash';
-        } else if (this.props.pages.pagesFlattened.find((page) => (!this.props.selectedPage || page.pageId !== this.props.selectedPage.pageId) && page.friendlyUrl.toLowerCase() === values.page.friendlyUrl?.toLowerCase())) {
+        } else if (pages.pagesFlattened.find((page) => (!selectedPage || page.pageId !== selectedPage.pageId) && page.friendlyUrl.toLowerCase() === values.page.friendlyUrl?.toLowerCase())) {
             errors.page.friendlyUrl = 'pathAlreadyExists';
+        }
+
+        if (Object.keys(errors.page).length === 0) {
+            delete errors.page;
         }
 
         return errors;
     }
 
-    renderPageGeneral() {
-        const selectedPage = this.props.selectedPage;
+    renderPageGeneral(): ReactNode {
+        const {selectedPage, pages} = this.props;
         if (!selectedPage) {
             return null;
         }
@@ -282,30 +291,32 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             <DialogContent>
                 <FormRow>
                     <FormCell>
-                        <I18NStringFieldContainer id='title' name='page.title' labelId='title'/>
+                        <I18NStringField id='title' name='page.title' labelId='title'/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <TextFieldContainer id='friendlyUrl' name='page.friendlyUrl' labelId='friendlyUrl'/>
+                        <TextField id='friendlyUrl' name='page.friendlyUrl' labelId='friendlyUrl'/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <CheckboxFieldContainer id='hidden' name='page.hidden' labelId='hideInNavigation'/>
+                        <CheckboxField id='hidden' name='page.hidden' labelId='hideInNavigation'/>
                     </FormCell>
                 </FormRow>
-                <PagePositionSelection pageId={selectedPage.pageId} pages={this.props.pages.pagesFlattened}/>
+                <PagePositionSelection pageId={selectedPage.pageId} pages={pages.pagesFlattened}/>
             </DialogContent>
         );
     }
 
-    renderPageAppearance() {
+    renderPageAppearance(): ReactNode {
+        const {availableThemes, availableLayouts} = this.props;
+
         let availableThemesOptions: SelectFieldOptions = [{
             value: null,
             label: '<Site Default>'
         }];
-        availableThemesOptions = availableThemesOptions.concat(this.props.availableThemes.map((theme) => ({
+        availableThemesOptions = availableThemesOptions.concat(availableThemes.map((theme) => ({
             value: theme.name,
             label: theme.name
         })));
@@ -313,7 +324,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             value: null,
             label: '<Site Default>'
         }];
-        availableLayoutsOptions = availableLayoutsOptions.concat(this.props.availableLayouts.map((layout) => ({
+        availableLayoutsOptions = availableLayoutsOptions.concat(availableLayouts.map((layout) => ({
             value: layout.name,
             label: layout.name
         })));
@@ -322,44 +333,44 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             <DialogContent>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='theme' name='page.theme' labelId='theme'
-                                              options={availableThemesOptions}/>
+                        <SelectField id='theme' name='page.theme' labelId='theme'
+                                     options={availableThemesOptions}/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='layout' name='page.layout' labelId='layout'
-                                              options={availableLayoutsOptions}/>
+                        <SelectField id='layout' name='page.layout' labelId='layout'
+                                     options={availableLayoutsOptions}/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SourceCodeEditorFieldContainer labelId='extraCss' name='page.extraCss' language='css'/>
+                        <SourceCodeEditorField id='extraCss' labelId='extraCss' name='page.extraCss' language='css'/>
                     </FormCell>
                 </FormRow>
             </DialogContent>
         );
     }
 
-    renderPageSEO() {
+    renderPageSEO(): ReactNode {
         return (
             <DialogContent>
                 <FormRow>
                     <FormCell>
-                        <TextFieldContainer id='keywords' name='page.keywords' labelId='keywords'/>
+                        <TextField id='keywords' name='page.keywords' labelId='keywords'/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <TextareaFieldContainer id='description' name='page.description' labelId='description'
-                                                rows={5}/>
+                        <TextareaField id='description' name='page.description' labelId='description'
+                                       rows={5}/>
                     </FormCell>
                 </FormRow>
             </DialogContent>
         );
     }
 
-    renderPagePermissions() {
+    renderPagePermissions(): ReactNode {
         return (
             <DialogContent>
                 <Permissions/>
@@ -367,9 +378,9 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderTabDialog() {
+    renderTabDialog(): ReactNode {
         return (
-            <TabDialogContainer name='page-configure' tabs={[
+            <TabDialog name='page-configure' tabs={[
                 {name: 'general', titleId: 'general', content: this.renderPageGeneral()},
                 {name: 'appearance', titleId: 'appearance', content: this.renderPageAppearance()},
                 {name: 'SEO', titleId: 'SEO', content: this.renderPageSEO()},
@@ -378,22 +389,22 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderActions() {
+    renderActions(): ReactNode {
         return (
             <DialogButtons>
-                <Button id='cancel' labelId='cancel' onClick={this.onClose.bind(this)}/>
+                <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                 <Button id='save' type='submit' labelId='save'/>
             </DialogButtons>
         );
     }
 
-    renderLoading() {
+    renderLoading(): ReactNode {
         return (
             <CircularProgress/>
         );
     }
 
-    renderLoadingError() {
+    renderLoadingError(): ReactNode {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='loadingFailed'/>
@@ -401,7 +412,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError() {
+    renderUpdatingError(): ReactNode {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='updateFailed'/>
@@ -409,8 +420,8 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderContent() {
-        const selectedPage = this.props.selectedPage;
+    renderContent(): ReactNode {
+        const {selectedPage} = this.props;
         if (!selectedPage) {
             return null;
         }
@@ -434,9 +445,9 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    render() {
+    render(): ReactNode {
         return (
-            <ModalContainer
+            <Modal
                 appWrapperClassName='mashroom-portal-admin-app'
                 className='page-configure-dialog'
                 name={DIALOG_NAME_PAGE_CONFIGURE}
@@ -445,7 +456,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 minHeight={400}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}
-            </ModalContainer>
+            </Modal>
         );
     }
 

@@ -1,12 +1,10 @@
 
 import type {ReactNode} from 'react';
 import type {Dispatch as ReduxDispatch, Store as ReduxStore, AnyAction} from 'redux';
-import type {FormStateMap} from 'redux-form';
 
 export type CommonState = {
     modals: ModalState;
     tabDialogs: TabDialogState;
-    form: FormStateMap;
 }
 
 export type Action = AnyAction;
@@ -20,7 +18,11 @@ export type ValidationErrors = {
 }
 export type FormValidator = (values: any) => ValidationErrors;
 
-export type AsyncFormValidator = (values: any) => Promise<void>;
+export type FormContext = {
+    resetForm: () => void;
+    setFieldValue: (field: string, value: any) => void;
+    initialValues: any;
+}
 
 export type SelectFieldOption = {
     value: string | undefined | null;
