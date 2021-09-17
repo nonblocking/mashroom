@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import RoleInput from '../components/RoleInput';
+import RoleInputComp from '../components/RoleInput';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {setExistingRoles} from '../store/actions';
 
@@ -23,12 +23,12 @@ type DispatchProps = {
 
 type Props = OwnProps & StateProps & DispatchProps;
 
-class RoleInputContainer extends PureComponent<Props> {
+class RoleInput extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <RoleInput portalAdminService={deps.portalAdminService} {...this.props}/>}
+                {(deps) => <RoleInputComp portalAdminService={deps.portalAdminService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -42,4 +42,4 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps): DispatchPro
     setExistingRoles: (roles) => { dispatch(setExistingRoles(roles)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoleInputContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(RoleInput);

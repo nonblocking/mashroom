@@ -5,7 +5,7 @@ import {
     Button,
     DialogButtons,
     DialogContent, ErrorMessage,
-    ModalContainer,
+    Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_PAGE_DELETE} from '../constants';
 import {getParentPage, removePageFromTree} from '../services/model_utils';
@@ -34,23 +34,23 @@ export default class PageDeleteDialog extends PureComponent<Props> {
     }
 
     onConfirmDelete(): void {
-        const selectedPage = this.props.selectedPage;
+        const {selectedPage, portalAdminService, setErrorUpdating, pages} = this.props;
         if (!selectedPage || !selectedPage.pageId) {
             return;
         }
         const pageId = selectedPage.pageId;
 
-        const promise = this.props.portalAdminService.getSite(this.props.portalAdminService.getCurrentSiteId()).then(
+        const promise = portalAdminService.getSite(portalAdminService.getCurrentSiteId()).then(
             (site) => {
                 const siteClone = {...site, pages: [...site.pages]};
 
-                const parentPage = getParentPage(pageId, this.props.pages.pagesFlattened);
+                const parentPage = getParentPage(pageId, pages.pagesFlattened);
                 const parentPageId = parentPage ? parentPage.pageId : null;
                 removePageFromTree(pageId, parentPageId, siteClone.pages);
 
                 return Promise.all([
-                    this.props.portalAdminService.deletePage(pageId),
-                    this.props.portalAdminService.updateSite(siteClone)
+                    portalAdminService.deletePage(pageId),
+                    portalAdminService.updateSite(siteClone)
                 ]);
             }
         );
@@ -58,7 +58,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
         promise.then(
             () => {
                 this.onClose();
-                if (selectedPage.pageId === this.props.portalAdminService.getCurrentPageId()) {
+                if (selectedPage.pageId === portalAdminService.getCurrentPageId()) {
                     window.location.href = '/';
                 } else {
                     window.location.reload(true);
@@ -66,7 +66,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
             },
             (error) => {
                 console.error('Error deleting page!', error);
-                this.props.setErrorUpdating(true);
+                setErrorUpdating(true);
             }
         );
     }
@@ -78,7 +78,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
     }
 
     renderContent(): ReactNode {
-        const selectedPage = this.props.selectedPage;
+        const {selectedPage, pages} = this.props;
         if (!selectedPage) {
             return null;
         }
@@ -87,7 +87,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
             return this.renderUpdatingError();
         }
 
-        const page = this.props.pages.pagesFlattened.find((p) => p.pageId === selectedPage.pageId);
+        const page = pages.pagesFlattened.find((p) => p.pageId === selectedPage.pageId);
         const pageTitle = page && page.title || '???';
 
         return (
@@ -96,7 +96,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
                    <FormattedMessage id='confirmDeletePage' values={{ pageTitle }}/>
                 </DialogContent>
                 <DialogButtons>
-                    <Button id='cancel' labelId='cancel' onClick={this.onClose.bind(this)}/>
+                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                     <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
                 </DialogButtons>
             </Fragment>
@@ -105,7 +105,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
 
     render(): ReactNode {
         return (
-            <ModalContainer
+            <Modal
                 appWrapperClassName='mashroom-portal-admin-app'
                 className='page-delete-dialog'
                 name={DIALOG_NAME_PAGE_DELETE}
@@ -113,7 +113,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
                 minWidth={300}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}
-            </ModalContainer>
+            </Modal>
         );
     }
 

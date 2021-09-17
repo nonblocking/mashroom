@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {DependencyContextConsumer} from '../DependencyContext';
-import PortalAppControlsToggle from '../components/PortalAppControlsToggle';
+import PortalAppControlsToggleComp from '../components/PortalAppControlsToggle';
 import {setShowPortalAppControls} from '../store/actions';
 
 import type {Dispatch, State} from '../types';
@@ -17,12 +17,12 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps;
 
-class PortalAppControlsToggleContainer extends PureComponent<Props> {
+class PortalAppControlsToggle extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <PortalAppControlsToggle portalAppManagementService={deps.portalAppManagementService} {...this.props}/>}
+                {(deps) => <PortalAppControlsToggleComp portalAppManagementService={deps.portalAppManagementService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -38,4 +38,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PortalAppControlsToggleContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PortalAppControlsToggle);

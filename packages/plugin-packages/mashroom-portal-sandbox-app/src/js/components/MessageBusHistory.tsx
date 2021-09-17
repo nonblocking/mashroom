@@ -71,7 +71,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
             <div className='mashroom-sandbox-app-messagebus-history'>
                 <div className='mashroom-sandbox-app-output-row'>
                     <div>
-                        <FormattedMessage id='publishedByApp' />
+                        <FormattedMessage id='messagesFromApp' />
                     </div>
                     <div>
                         {this.renderMessageTable('published-by-app', publishedByApp)}
@@ -79,7 +79,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
                 </div>
                 <div className='mashroom-sandbox-app-output-row'>
                     <div>
-                        <FormattedMessage id='publishedBySandbox' />
+                        <FormattedMessage id='messagesFromSandbox' />
                     </div>
                     <div>
                         {this.renderMessageTable('published-by-sandbox', publishedBySandbox)}

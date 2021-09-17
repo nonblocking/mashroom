@@ -8,22 +8,24 @@ import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/javascript/javascript';
 
 import type {ReactNode} from 'react';
-import type {WrappedFieldProps} from 'redux-form';
-import type {EditorConfiguration} from 'codemirror';
+import type {FieldProps} from 'formik';
+import type {EditorConfiguration, Editor} from 'codemirror';
 
 type Props = {
+    id: string;
     labelId: string,
     language: 'javascript' | 'json' | 'css' | 'html',
     theme?: 'blackboard' | 'idea',
     height?: number,
-    fieldProps: WrappedFieldProps
+    fieldProps: FieldProps
 }
 
 export default class SourceCodeEditorField extends PureComponent<Props> {
 
     getCodeMirrorOptions(): EditorConfiguration {
+        const {language, theme} = this.props;
         let mode = null;
-        switch (this.props.language) {
+        switch (language) {
             case 'json': {
                 mode = { name: 'javascript', json: true };
                 break;
@@ -45,36 +47,45 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
 
         return {
             mode,
-            theme: this.props.theme || 'blackboard',
+            theme: theme || 'blackboard',
             lineNumbers: true
         }
     }
 
     render(): ReactNode {
-        const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
+        const {id, fieldProps: {field, meta}, labelId, height} = this.props;
+        const error = meta.touched && !!meta.error;
 
         return (
-            <div className={`mashroom-portal-ui-source-code-editor-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <FieldLabel labelId={this.props.labelId}/>
-                <div style={{ width: '100%', height: this.props.height || 200 }}>
-                    <CodeMirror
-                        value={this.props.fieldProps.input.value}
-                        options={this.getCodeMirrorOptions()}
-                        onBeforeChange={(editor, data, value) => {
-                            this.props.fieldProps.input.onChange(value);
-                        }}
-                        onChange={(editor, data, value) => {
-                            // Nothing to do
-                        }}
-                        editorDidMount={(editor: any) => {
-                            // Fixes a problem with the cursor, see https://github.com/codemirror/CodeMirror/issues/5040
-                            setTimeout(() => {
-                                editor.refresh();
-                            }, 200);
-                        }}
-                    />
+            <div id={id} className={`mashroom-portal-ui-source-code-editor-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
+                <FieldLabel labelId={labelId}/>
+                <div>
+                    <div style={{ height: height || 200, marginBottom: 3 }}>
+                        <CodeMirror
+                            value={field.value}
+                            options={this.getCodeMirrorOptions()}
+                            onBeforeChange={(editor, data, value) => {
+                                const e = {
+                                    target: {
+                                        name: field.name,
+                                        value,
+                                    }
+                                };
+                                field.onChange(e);
+                            }}
+                            editorDidMount={(editor: Editor) => {
+                                // Necessary to be able to focus erroneous inputs
+                                editor.getInputField().name = field.name;
+
+                                // Fixes a problem with the cursor, see https://github.com/codemirror/CodeMirror/issues/5040
+                                setTimeout(() => {
+                                    editor.refresh();
+                                }, 200);
+                            }}
+                        />
+                    </div>
+                    {error && <ErrorMessage messageId={meta.error || ''}/>}
                 </div>
-                {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
             </div>
         );
     }

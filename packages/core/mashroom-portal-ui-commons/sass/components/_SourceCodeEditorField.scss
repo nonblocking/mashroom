@@ -5,6 +5,12 @@
     @import "../node_modules/codemirror/theme/blackboard.css";
     @import "../node_modules/codemirror/theme/idea.css";
 
+    display: flex;
+
+    &>div {
+        flex-grow: 2;
+    }
+
     label {
         display: block;
         padding-bottom: 3px;
@@ -14,9 +20,5 @@
         font-family: monospace;
         font-size: 0.9em;
         height: 100%;
-
-        &.CodeMirror-focused {
-
-        }
     }
 }

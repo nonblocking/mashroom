@@ -43,27 +43,30 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
     }
 
     onDragStart(event: DragEvent, name: string): void {
-        console.info('Drag start: ', name);
-        if (this.props.onDragStart) {
-            this.props.onDragStart(event, name);
+        const {onDragStart} = this.props;
+        console.debug('Drag start: ', name);
+        if (onDragStart) {
+            onDragStart(event, name);
         }
     }
 
     onDragEnd(): void {
-        if (this.props.onDragEnd) {
-            this.props.onDragEnd();
+        const {onDragEnd} = this.props;
+        if (onDragEnd) {
+            onDragEnd();
         }
     }
 
     getFilterTokens(): FilterTokens {
-        if (!this.props.filter) {
+        const {filter} = this.props;
+        if (!filter) {
             return {
                 tokens: [],
                 anyMatch: [],
                 fullMatch: []
             };
         }
-        const tokens = this.props.filter
+        const tokens = filter
             .split(' ')
             .filter((t) => t !== '')
             .map((t) => escapeForRegExp(t));
@@ -75,7 +78,8 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
     }
 
     getAppsFilteredAndGroupedByCategory(tokens: FilterTokens): AppsGroupedByCategory {
-        const availableApps = this.props.availableApps.apps;
+        const {availableApps: availableAppsWrapper} = this.props;
+        const availableApps = availableAppsWrapper.apps;
         if (!availableApps || !Array.isArray(availableApps)) {
             return [];
         }
@@ -162,10 +166,11 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
     }
 
     render(): ReactNode {
+        const {availableApps: {loading, error, apps}} = this.props;
         let content;
-        if (this.props.availableApps.loading) {
+        if (loading) {
             content = this.renderLoading();
-        } else if (this.props.availableApps.error || !this.props.availableApps.apps) {
+        } else if (error || !apps) {
             content = this.renderError();
         } else {
             content = this.renderAvailableApps();

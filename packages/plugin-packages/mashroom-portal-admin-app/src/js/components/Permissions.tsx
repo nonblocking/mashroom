@@ -2,8 +2,8 @@
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {Button} from '@mashroom/mashroom-portal-ui-commons';
-import RoleInputContainer from '../containers/RoleInputContainer';
-import RolesListContainer from '../containers/RolesListContainer';
+import RoleInputContainer from '../containers/RoleInput';
+import RolesList from '../containers/RolesList';
 
 import type {ReactNode} from 'react';
 
@@ -47,8 +47,9 @@ export default class Permissions extends PureComponent<Props, State> {
     }
 
     onAddRole(): void {
-        if (this.state.enteredRole) {
-            this.addRole && this.addRole(this.state.enteredRole);
+        const {enteredRole} = this.state;
+        if (enteredRole) {
+            this.addRole && this.addRole(enteredRole);
             this.inputReset && this.inputReset();
         }
     }
@@ -58,6 +59,8 @@ export default class Permissions extends PureComponent<Props, State> {
     }
 
     render(): ReactNode {
+        const {enteredRole} = this.state;
+
         return (
             <div className='permissions'>
                 <FormattedMessage id='restrictViewPermission'/>
@@ -68,10 +71,10 @@ export default class Permissions extends PureComponent<Props, State> {
                         onRoleSelected={this.boundOnRoleSelected}
                         resetRef={this.boundOnResetRef}
                     />
-                    <Button id='addButton' labelId='add' onClick={this.onAddRole.bind(this)} disabled={!this.state.enteredRole}/>
+                    <Button id='addButton' labelId='add' onClick={this.onAddRole.bind(this)} disabled={!enteredRole}/>
                 </div>
 
-                <RolesListContainer name='roles' addRoleRef={(addRole) => { this.addRole = addRole }}/>
+                <RolesList name='roles' addRoleRef={(addRole) => { this.addRole = addRole }}/>
             </div>
         );
     }

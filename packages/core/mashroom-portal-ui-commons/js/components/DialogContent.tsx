@@ -10,9 +10,10 @@ type Props = {
 export default class DialogContent extends PureComponent<Props> {
 
     render(): ReactNode {
+        const {children} = this.props;
         return (
             <div className='mashroom-portal-ui-dialog-content'>
-                {this.props.children}
+                {children}
             </div>
         );
     }

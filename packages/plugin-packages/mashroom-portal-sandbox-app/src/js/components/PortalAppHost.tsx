@@ -41,7 +41,7 @@ export default class PortalApp extends PureComponent<Props> {
         }
 
         const {setHostWidth} = this.props;
-        const width = event.pageX - this.wrapperElemRef.current.getBoundingClientRect().left;
+        const width = Math.trunc(event.pageX - this.wrapperElemRef.current.getBoundingClientRect().left);
         if (width > 100) {
             setHostWidth(`${width}px`);
         }
@@ -63,6 +63,9 @@ export default class PortalApp extends PureComponent<Props> {
 
         return (
             <div className='mashroom-sandbox-app-host-wrapper' style={{width}} ref={this.wrapperElemRef}>
+                <div className='mashroom-sandbox-app-host-width'>
+                    {width}
+                </div>
                 <div id={hostElementId} className={`mashroom-sandbox-app-host-elem portal-app-${classFromPluginName}`}>
                     <CircularProgress/>
                 </div>

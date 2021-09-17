@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
-import PageConfigureDialog from '../components/PageConfigureDialog';
+import PageConfigureDialogComp from '../components/PageConfigureDialog';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {
     setSelectedPageLoading,
@@ -39,17 +39,19 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps;
 
-class PageConfigureDialogContainer extends PureComponent<Props> {
+class PageConfigureDialog extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <PageConfigureDialog
-                    dataLoadingService={deps.dataLoadingService}
-                    portalAdminService={deps.portalAdminService}
-                    portalSiteService={deps.portalSiteService}
-                    {...this.props}
-                />}
+                {(deps) => (
+                    <PageConfigureDialogComp
+                        dataLoadingService={deps.dataLoadingService}
+                        portalAdminService={deps.portalAdminService}
+                        portalSiteService={deps.portalSiteService}
+                        {...this.props}
+                    />
+                )}
             </DependencyContextConsumer>
         );
     }
@@ -72,4 +74,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     setPermittedRoles: (roles) => { dispatch(setSelectedPagePermittedRoles(roles)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PageConfigureDialogContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PageConfigureDialog);

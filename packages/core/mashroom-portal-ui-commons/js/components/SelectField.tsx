@@ -4,7 +4,7 @@ import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
 import type {ReactNode, ChangeEvent} from 'react';
-import type {WrappedFieldProps} from 'redux-form';
+import type {FieldProps} from 'formik';
 import type {IntlShape} from 'react-intl';
 import type {SelectFieldOptions} from '../../type-definitions';
 
@@ -15,7 +15,7 @@ type Props = {
     emptyOption?: boolean;
     placeholder?: string;
     onValueChange?: (value: string | undefined | null) => void;
-    fieldProps: WrappedFieldProps;
+    fieldProps: FieldProps;
     intl: IntlShape;
 }
 
@@ -23,48 +23,52 @@ export const NULL_VALUE = '__null__';
 
 export default class SelectField extends PureComponent<Props> {
 
-    onChange(value: string | undefined | null): void {
+    onChange(e: ChangeEvent<HTMLSelectElement>): void {
+        const {fieldProps: {field}, onValueChange} = this.props;
+        let value: string | null = e.target.value;
         if (value === NULL_VALUE) {
             value = null;
         }
-        this.props.fieldProps.input.onChange(value);
-        if (this.props.onValueChange) {
-            this.props.onValueChange(value);
+        field.onChange(e);
+        if (onValueChange) {
+            onValueChange(value);
         }
     }
 
     renderOptions(): ReactNode {
-        const options = [];
+        const {emptyOption, options} = this.props;
+        const optionComps = [];
 
-        if (this.props.emptyOption) {
-            options.push(<option key='empty' value={NULL_VALUE} />);
+        if (emptyOption) {
+            optionComps.push(<option key='empty' value={NULL_VALUE} />);
         }
-        this.props.options.forEach((option) => {
-            options.push(<option key={option.value} value={option.value || NULL_VALUE}>{option.label}</option>);
+        options.forEach((option) => {
+            optionComps.push(<option key={option.value} value={option.value || NULL_VALUE}>{option.label}</option>);
         });
 
-        return options;
+        return optionComps;
     }
 
     render(): ReactNode {
-        const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
-
-        const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;
+        const {id, labelId, fieldProps: {field, meta}, placeholder: placeholderId, intl} = this.props;
+        const error = meta.touched && !!meta.error;
+        const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
 
         const inputProps: any = {
-            ...this.props.fieldProps.input,
-            id: this.props.id,
+            ...field,
+            id,
+            value: field.value || '',
             placeholder,
-            onChange: (e: ChangeEvent<HTMLSelectElement>) => this.onChange(e.target.value)};
+            onChange: (e: ChangeEvent<HTMLSelectElement>) => this.onChange(e)};
 
         return (
             <div className={`mashroom-portal-ui-select-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
+                <FieldLabel htmlFor={id} labelId={labelId}/>
                 <div>
                     <select {...inputProps}>
                         {this.renderOptions()}
                     </select>
-                    {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
+                    {error && <ErrorMessage messageId={meta.error || ''}/>}
                 </div>
             </div>
         );

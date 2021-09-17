@@ -16,15 +16,17 @@ export default class CreateDropdownMenu extends PureComponent<Props> {
     closeDropDownRef: (() => void) | undefined;
 
     onCreatePage(): void {
+        const {initConfigurePage, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigurePage();
-        this.props.showModal(DIALOG_NAME_PAGE_CONFIGURE);
+        initConfigurePage();
+        showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
     onCreateSite(): void {
+        const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigureSite();
-        this.props.showModal(DIALOG_NAME_SITE_CONFIGURE);
+        initConfigureSite();
+        showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
     render(): ReactNode {

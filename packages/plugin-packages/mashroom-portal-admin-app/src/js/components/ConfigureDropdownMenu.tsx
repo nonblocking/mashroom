@@ -18,15 +18,17 @@ export default class ConfigureDropdownMenu extends PureComponent<Props> {
     closeDropDownRef: (() => void) | undefined;
 
     onConfigurePage(): void {
+        const {initConfigurePage, portalAdminService, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigurePage(this.props.portalAdminService.getCurrentPageId());
-        this.props.showModal(DIALOG_NAME_PAGE_CONFIGURE);
+        initConfigurePage(portalAdminService.getCurrentPageId());
+        showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
     onConfigureSite(): void {
+        const {initConfigureSite, portalAdminService, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigureSite(this.props.portalAdminService.getCurrentSiteId());
-        this.props.showModal(DIALOG_NAME_SITE_CONFIGURE);
+        initConfigureSite(portalAdminService.getCurrentSiteId());
+        showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
     render(): ReactNode {

@@ -53,7 +53,7 @@ export default class App extends PureComponent<Props> {
     }
 
     render(): ReactNode {
-        let lang = this.props.lang;
+        let {lang} = this.props;
         if (!messages[lang]) {
             lang = 'en';
         }

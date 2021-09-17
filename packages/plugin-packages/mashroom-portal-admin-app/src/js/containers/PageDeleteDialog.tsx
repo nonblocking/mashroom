@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {setSelectedPageUpdatingError} from '../store/actions';
-import PageDeleteDialog from '../components/PageDeleteDialog';
+import PageDeleteDialogComp from '../components/PageDeleteDialog';
 
 import type {Dispatch, Pages, SelectedPage, State} from '../types';
 
@@ -18,15 +18,17 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps;
 
-class PageDeleteDialogContainer extends PureComponent<Props> {
+class PageDeleteDialog extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <PageDeleteDialog
-                    portalAdminService={deps.portalAdminService}
-                    {...this.props}
-                />}
+                {(deps) => (
+                    <PageDeleteDialogComp
+                        portalAdminService={deps.portalAdminService}
+                        {...this.props}
+                    />
+                )}
             </DependencyContextConsumer>
         );
     }
@@ -41,4 +43,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     setErrorUpdating: (error) => { dispatch(setSelectedPageUpdatingError(error)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(PageDeleteDialogContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(PageDeleteDialog);

@@ -624,7 +624,7 @@ footer {
         content: '\f12a';
         position: absolute;
         left: 2px;
-        top: 4px;
+        top: 5px;
         font-size: 0.9em;
     }
 }
@@ -995,6 +995,11 @@ footer {
         background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
         border: 1px solid transparent;
         color: $ADMIN_APP_COLOR_TEXT;
+
+        &.secondary {
+            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+            background-color: transparent;
+        }
 
         &:hover {
             background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;

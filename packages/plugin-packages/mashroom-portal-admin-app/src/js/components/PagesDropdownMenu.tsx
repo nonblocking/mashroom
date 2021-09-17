@@ -29,26 +29,30 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
     closeDropDownRef: (() => void) | undefined;
 
     onOpen(): void {
-        this.props.dataLoadingService.loadPageTree();
+        const {dataLoadingService} = this.props;
+        dataLoadingService.loadPageTree();
     }
 
     onGoto(page: FlatPage): void {
-        const pageUrl = `${this.props.portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
+        const {portalSiteService} = this.props;
+        const pageUrl = `${portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
         setTimeout(() => {
             global.location.href = pageUrl;
         }, 0);
     }
 
     onConfigure(page: FlatPage): void {
+        const {initConfigurePage, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigurePage(page.pageId);
-        this.props.showModal(DIALOG_NAME_PAGE_CONFIGURE);
+        initConfigurePage(page.pageId);
+        showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
     onDelete(page: FlatPage): void {
+        const {initConfigurePage, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigurePage(page.pageId);
-        this.props.showModal(DIALOG_NAME_PAGE_DELETE);
+        initConfigurePage(page.pageId);
+        showModal(DIALOG_NAME_PAGE_DELETE);
     }
 
     renderLoading(): ReactNode {
@@ -64,13 +68,14 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
     }
 
     renderContent(): ReactNode {
-        if (this.props.pages.loading) {
+        const {pages} = this.props;
+        if (pages.loading) {
             return this.renderLoading();
-        } else if (this.props.pages.error || !this.props.pages.pages) {
+        } else if (pages.error || !pages.pages) {
             return this.renderError();
         }
 
-        const items = this.props.pages.pagesFlattened.map((page) => (
+        const items = pages.pagesFlattened.map((page) => (
             <div key={page.pageId} className='page'>
                 <div className='portal-page-link'>
                     {padWithSpaces(page.level * 2)}

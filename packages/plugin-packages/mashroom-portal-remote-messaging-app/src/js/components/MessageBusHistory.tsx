@@ -109,7 +109,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
             <div className='mashroom-remote-messaging-app-history'>
                 <div className='mashroom-remote-messaging-app-output-row'>
                     <div>
-                        <FormattedMessage id='publishedRemoteMessages' />
+                        <FormattedMessage id='sentRemoteMessages' />
                     </div>
                     <div>
                         {this.renderPublishedMessages()}

@@ -1,10 +1,10 @@
 
 import React, {PureComponent} from 'react';
 import {injectIntl} from 'react-intl';
-import {Field} from 'redux-form';
-import SelectField, {NULL_VALUE} from '../components/SelectField';
+import {Field} from 'formik';
+import SelectFieldComp from '../components/SelectField';
 
-import type {WrappedFieldProps} from 'redux-form';
+import type {FieldProps} from 'formik';
 import type {IntlShape} from 'react-intl';
 import type {SelectFieldOptions} from '../../type-definitions';
 
@@ -25,15 +25,16 @@ type IntlProps = {
 
 type Props = OwnProps & IntlProps;
 
-class SelectFieldContainer extends PureComponent<Props> {
+class SelectField extends PureComponent<Props> {
 
     render() {
-        return <Field
-            name={this.props.name}
-            normalize={(value: string | undefined | null) => value === NULL_VALUE ? null : value}
-            component={(fieldProps: WrappedFieldProps) => <SelectField fieldProps={fieldProps} {...this.props}/>}
-        />;
+        const {name} = this.props;
+        return (
+            <Field name={name}>
+                {(fieldProps: FieldProps) => <SelectFieldComp fieldProps={fieldProps} {...this.props}/>}
+            </Field>
+        );
     }
 }
 
-export default injectIntl(SelectFieldContainer);
+export default injectIntl(SelectField);

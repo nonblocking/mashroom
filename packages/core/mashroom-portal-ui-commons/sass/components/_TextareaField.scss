@@ -1,8 +1,9 @@
 
 .mashroom-portal-ui-textarea-field {
     display: flex;
+
     &>div {
-        flex: 2;
+        flex-grow: 2;
     }
 
     textarea {

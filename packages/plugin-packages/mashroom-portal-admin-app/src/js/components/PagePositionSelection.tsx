@@ -1,6 +1,6 @@
 
 import React, {PureComponent, Fragment} from 'react';
-import {FormCell, FormRow, SelectFieldContainer} from '@mashroom/mashroom-portal-ui-commons';
+import {FormCell, FormRow, SelectField} from '@mashroom/mashroom-portal-ui-commons';
 
 import type {ReactNode} from 'react';
 import type {AnyPage, FlatPage} from '../types';
@@ -28,14 +28,16 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
     }
 
     componentDidUpdate(prevProps: Props): void {
-        if (prevProps.pageId !== this.props.pageId) {
+        const {pageId} = this.props;
+        if (prevProps.pageId !== pageId) {
             this.initSelectedParentPageId();
         }
     }
 
     initSelectedParentPageId(): void {
-        if (this.props.pageId) {
-            const parentPage = this.props.pages.find((p) => p.subPages && p.subPages.find((sp) => sp.pageId === this.props.pageId));
+        const {pageId, pages} = this.props;
+        if (pageId) {
+            const parentPage = pages.find((p) => p.subPages && p.subPages.find((sp) => sp.pageId === pageId));
             if (parentPage) {
                 this.setState({
                     selectedParentPageId: parentPage.pageId
@@ -56,12 +58,14 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
     }
 
     render(): ReactNode {
+        const {pageId, pages} = this.props;
+        const {selectedParentPageId} = this.state;
         let parentPageOptions = [{
             value: '',
             label: '<Root>'
         }];
-        parentPageOptions = parentPageOptions.concat(this.props.pages
-            .filter((pp) => pp.pageId !== this.props.pageId)
+        parentPageOptions = parentPageOptions.concat(pages
+            .filter((pp) => pp.pageId !== pageId)
             .map((pp) => ({
                 value: pp.pageId,
                 label: ''.padStart(pp.level * 2, '-') + pp.title
@@ -73,17 +77,17 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
         }];
 
         let subPages: Array<AnyPage> | null | undefined = null;
-        if (!this.state.selectedParentPageId) {
-            subPages = this.props.pages && this.props.pages.filter((p) => p.level === 0);
+        if (!selectedParentPageId) {
+            subPages = pages?.filter((p) => p.level === 0);
         } else {
-            const currentParent = this.props.pages.find((p) => p.pageId === this.state.selectedParentPageId);
+            const currentParent = pages.find((p) => p.pageId === selectedParentPageId);
             if (currentParent) {
                 subPages = currentParent.subPages;
             }
         }
         if (subPages) {
             insertAfterOptions = insertAfterOptions.concat(subPages
-                .filter((sp) => sp.pageId !== this.props.pageId)
+                .filter((sp) => sp.pageId !== pageId)
                 .map((sp) => ({
                     value: sp.pageId,
                     label: sp.title
@@ -94,12 +98,12 @@ export default class PagePositionSelection extends PureComponent<Props, State> {
             <Fragment>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='parentPage' name='position.parentPageId' labelId='parentPage' options={parentPageOptions} onValueChange={this.onSelectedParentPageChange.bind(this)}/>
+                        <SelectField id='parentPage' name='position.parentPageId' labelId='parentPage' options={parentPageOptions} onValueChange={this.onSelectedParentPageChange.bind(this)}/>
                     </FormCell>
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SelectFieldContainer id='insertAfter' name='position.insertAfterPageId' labelId='insertAfter' options={insertAfterOptions}/>
+                        <SelectField id='insertAfter' name='position.insertAfterPageId' labelId='insertAfter' options={insertAfterOptions}/>
                     </FormCell>
                 </FormRow>
             </Fragment>

@@ -10,7 +10,8 @@ type Props = {
 export default class FormRow extends PureComponent<Props> {
 
     render(): ReactNode {
-        const cellCount = React.Children.count(this.props.children);
+        const {children} = this.props;
+        const cellCount = React.Children.count(children);
 
         let cellClass = '';
         switch (cellCount) {
@@ -28,7 +29,7 @@ export default class FormRow extends PureComponent<Props> {
 
         return (
             <div className={`mashroom-portal-ui-form-row ${cellClass}`}>
-                {this.props.children}
+                {children}
             </div>
         );
     }

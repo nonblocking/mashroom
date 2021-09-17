@@ -1,6 +1,5 @@
 
 import {AnyAction, combineReducers} from 'redux';
-import {reducer as form} from 'redux-form';
 import {SET_ACTIVE_TAB, SET_SHOW_MODAL} from './actions';
 
 import type {Reducer, ReducersMapObject} from 'redux';
@@ -49,7 +48,6 @@ export const mashroomPortalCommonsCombineReducers = <S>(reducers: ReducersMapObj
         ...reducers,
         modals,
         tabDialogs,
-        form,
     };
     return combineReducers<S>(mergedReducers);
 };

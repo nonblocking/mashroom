@@ -7,7 +7,8 @@ import type {State} from '../types';
 const mapStateToProps = (state: State) => {
     return {
         hostWidth: state.host.width,
-        selectedPortalApp: state.selectedPortalApp
+        selectedPortalApp: state.selectedPortalApp,
+        appLoadingError: state.appLoadingError
     };
 };
 

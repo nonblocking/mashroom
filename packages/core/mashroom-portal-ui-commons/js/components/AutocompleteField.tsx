@@ -5,8 +5,8 @@ import FieldLabel from './FieldLabel';
 import ErrorMessage from './ErrorMessage';
 
 import type {ReactNode, ChangeEvent, KeyboardEvent} from 'react';
-import type {WrappedFieldProps} from 'redux-form';
-import type {RenderInputComponentProps} from 'react-autosuggest';
+import type {FieldProps} from 'formik';
+import type {RenderInputComponentProps, ShouldRenderReasons} from 'react-autosuggest';
 import type {IntlShape} from 'react-intl';
 import type {SuggestionHandler} from '../../type-definitions';
 
@@ -20,7 +20,7 @@ type Props = {
     suggestionHandler: SuggestionHandler<any>;
     onValueChange?: (value: string | undefined | null) => void;
     onSuggestionSelect?: (suggestion: any) => void;
-    fieldProps: WrappedFieldProps;
+    fieldProps: FieldProps;
     resetRef?: (ref: () => void) => void;
     intl: IntlShape;
 }
@@ -45,14 +45,18 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         };
     }
 
-    static getDerivedStateFromProps(props: Props) {
-        return {
-            value: props.fieldProps.input.value
+    componentDidUpdate(prevProps: Readonly<Props>): void {
+        const {fieldProps: {field}} = this.props;
+        if (field.value !== prevProps.fieldProps.field.value) {
+            this.setState({
+                value: field.value || '',
+            });
         }
     }
 
     onSuggestionsFetchRequested({ value }: { value: string }): void {
-        this.props.suggestionHandler.getSuggestions(value).then(
+        const {suggestionHandler} = this.props;
+        suggestionHandler.getSuggestions(value).then(
             (suggestions) => {
                 if (suggestions && Array.isArray(suggestions)) {
                     this.setState({
@@ -70,45 +74,80 @@ export default class AutocompleteField extends PureComponent<Props, State> {
     }
 
     onSuggestionSelected(event: any, { suggestion }: any): void {
-        this.props.onSuggestionSelect && this.props.onSuggestionSelect(suggestion);
-        this.props.fieldProps.input.onChange(suggestion);
-        if (this.props.onValueChange) {
-            this.props.onValueChange(suggestion);
+        const {onSuggestionSelect, onValueChange, suggestionHandler} = this.props;
+        if (onSuggestionSelect) {
+            onSuggestionSelect(suggestion);
+        }
+
+        const value = suggestionHandler.getSuggestionValue(suggestion);
+        this.simulateFieldChangeEvent(value);
+        if (onValueChange) {
+            onValueChange(value);
         }
     }
 
-    onValueChange(value: string | undefined | null): void {
+    onValueChange(e: ChangeEvent<HTMLInputElement>): void {
+        const {mustSelectSuggestion, onValueChange} = this.props;
+        const value = e.target.value;
         this.setState({
-            value
+            value: value || ''
         });
 
-        if (!this.props.mustSelectSuggestion) {
-            this.props.fieldProps.input.onChange(value);
-            if (this.props.onValueChange) {
-                this.props.onValueChange(value);
+        if (!mustSelectSuggestion) {
+            this.simulateFieldChangeEvent(value);
+            if (onValueChange) {
+                onValueChange(value);
             }
         }
     }
 
-    reset(): void {
-        this.setState({
-            value: '',
-        });
-        this.props.fieldProps.input.onChange('');
-        if (this.props.onValueChange) {
-            this.props.onValueChange('');
+    onBlur(): void {
+        const {mustSelectSuggestion, fieldProps: {field}} = this.props;
+        if (mustSelectSuggestion) {
+            setTimeout(() => {
+                this.setState({
+                    value: field.value || ''
+                });
+            }, 100);
         }
     }
 
-    shouldRenderSuggestions(value?: string): boolean {
-        if (!value) {
-            return false;
+    simulateFieldChangeEvent(value: string | undefined | null) {
+        const {fieldProps: {field}} = this.props;
+        const e = {
+            target: {
+                name: field.name,
+                value,
+            }
+        };
+        field.onChange(e);
+    }
+
+    reset(): void {
+        const {onValueChange} = this.props;
+        this.setState({
+            value: '',
+        });
+        this.simulateFieldChangeEvent('');
+        if (onValueChange) {
+            onValueChange('');
         }
-        const minCharactersForSuggestions = this.props.minCharactersForSuggestions;
-        if (!minCharactersForSuggestions) {
-            return true;
+    }
+
+    shouldRenderSuggestions(value: string, reason: ShouldRenderReasons): boolean {
+        const {minCharactersForSuggestions = 3} = this.props;
+        switch (reason) {
+            case 'input-focused':
+                return minCharactersForSuggestions === 0;
+            case 'input-changed':
+            case 'render':
+                return (value || '').trim().length >= minCharactersForSuggestions;
+            case 'input-blurred':
+            case 'escape-pressed':
+                return true;
+            default:
+                return false;
         }
-        return value.trim().length >= minCharactersForSuggestions;
     }
 
     renderSuggestionsContainer({ containerProps, children }: { containerProps: any, children: ReactNode }): ReactNode {
@@ -141,18 +180,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                     // @ts-ignore
                     inputProps.ref(elem);
                 }
-            },
-            onChange(e: ChangeEvent<HTMLInputElement>) {
-                const cursor = e.target.selectionStart;
-                inputProps.onChange?.(e);
-                // Prevent the cursor from jumping to the end
-                // This is just a quick fix, the actual problem seems to be a bug in react-autosuggest or redux-form
-                // TODO: investigate
-                setTimeout(() => {
-                    e.target.selectionStart = cursor;
-                    e.target.selectionEnd = cursor;
-                }, 0);
-            },
+            }
         };
 
         return (
@@ -161,26 +189,30 @@ export default class AutocompleteField extends PureComponent<Props, State> {
     }
 
     render(): ReactNode {
-        const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
+        const {id, labelId, fieldProps: {field, meta}, maxLength, placeholder: placeholderId, intl, suggestionHandler} = this.props;
+        const {value} = this.state;
+        const error = meta.touched && !!meta.error;
 
-        const placeholder = this.props.placeholder ? this.props.intl.formatMessage({ id: this.props.placeholder }) : null;
+        const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
         const inputProps: any = {
-            ...this.props.fieldProps.input,
+            ...field,
             type: 'search',
-            value: this.state.value,
-            onChange: (e: ChangeEvent<HTMLInputElement>) => this.onValueChange(e.target.value),
+            value,
+            onChange: (e: ChangeEvent<HTMLInputElement>) => this.onValueChange(e),
+            onBlur: () => this.onBlur(),
             placeholder,
-            maxLength: this.props.maxLength};
+            maxLength
+        };
 
         return (
             <div className={`mashroom-portal-autocomplete-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/>
+                <FieldLabel htmlFor={id} labelId={labelId}/>
                 <AutoSuggest
                     suggestions={this.state.suggestions}
                     onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
                     onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
-                    getSuggestionValue={(suggestion: any) => this.props.suggestionHandler.getSuggestionValue(suggestion)}
-                    renderSuggestion={(suggestion: any, {query, isHighlighted}) => this.props.suggestionHandler.renderSuggestion(suggestion, isHighlighted, query)}
+                    getSuggestionValue={(suggestion: any) => suggestionHandler.getSuggestionValue(suggestion)}
+                    renderSuggestion={(suggestion: any, {query, isHighlighted}) => suggestionHandler.renderSuggestion(suggestion, isHighlighted, query)}
                     onSuggestionSelected={this.onSuggestionSelected.bind(this)}
                     inputProps={inputProps}
                     renderInputComponent={this.renderInputComponent.bind(this)}
@@ -195,10 +227,8 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                         suggestion: 'suggestion-list-item',
                     }}
                 />
-                {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
+                {error && <ErrorMessage messageId={meta.error || ''}/>}
             </div>
         );
     }
-
 }
-

@@ -23,7 +23,8 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
     closeDropDownRef: (() => void) | undefined;
 
     onOpen(): void {
-        this.props.dataLoadingService.loadSites();
+        const {dataLoadingService} = this.props;
+        dataLoadingService.loadSites();
     }
 
     onGoto(site: MashroomPortalSiteLinkLocalized): void {
@@ -33,15 +34,17 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
     }
 
     onConfigure(site: MashroomPortalSiteLinkLocalized): void {
+        const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigureSite(site.siteId);
-        this.props.showModal(DIALOG_NAME_SITE_CONFIGURE);
+        initConfigureSite(site.siteId);
+        showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
     onDelete(site: MashroomPortalSiteLinkLocalized): void {
+        const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef && this.closeDropDownRef();
-        this.props.initConfigureSite(site.siteId);
-        this.props.showModal(DIALOG_NAME_SITE_DELETE);
+        initConfigureSite(site.siteId);
+        showModal(DIALOG_NAME_SITE_DELETE);
     }
 
     renderLoading(): ReactNode {
@@ -57,13 +60,14 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
     }
 
     renderContent(): ReactNode {
-        if (this.props.sites.loading) {
+        const {sites} = this.props;
+        if (sites.loading) {
             return this.renderLoading();
-        } else if (this.props.sites.error || !this.props.sites.sites) {
+        } else if (sites.error || !sites.sites) {
             return this.renderError();
         }
 
-        const items = this.props.sites.sites.map((site) => (
+        const items = sites.sites.map((site) => (
             <div key={site.siteId} className='site'>
                 <a className='site-link' href='javascript:void(0)' onClick={this.onGoto.bind(this, site)}>{site.title}</a>
                 <div className='configure' onClick={this.onConfigure.bind(this, site)}>&nbsp;</div>

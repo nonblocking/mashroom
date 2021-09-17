@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
-import SitesDropdownMenu from '../components/SitesDropdownMenu';
+import SitesDropdownMenuComp from '../components/SitesDropdownMenu';
 import {DependencyContextConsumer} from '../DependencyContext';
 import {setSelectedSite} from '../store/actions';
 
@@ -19,12 +19,12 @@ type DispatchProps = {
 
 type Props = StateProps & DispatchProps;
 
-class SitesDropdownMenuContainer extends PureComponent<Props> {
+class SitesDropdownMenu extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <SitesDropdownMenu portalAdminService={deps.portalAdminService} dataLoadingService={deps.dataLoadingService} {...this.props}/>}
+                {(deps) => <SitesDropdownMenuComp portalAdminService={deps.portalAdminService} dataLoadingService={deps.dataLoadingService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -39,4 +39,4 @@ const mapDispatchToProps = (dispatch: Dispatch): DispatchProps => ({
     initConfigureSite: (siteId) => { dispatch(setSelectedSite(siteId)); }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SitesDropdownMenuContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(SitesDropdownMenu);

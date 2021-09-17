@@ -165,6 +165,7 @@ export default class PortalAppController {
                 const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
                 return {
                     name: portalApp.name,
+                    version: portalApp.version,
                     category: portalApp.category,
                     description: portalApp.description,
                     tags: portalApp.tags,

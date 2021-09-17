@@ -10,10 +10,11 @@ type Props = {
 export default class TableResponsive extends PureComponent<Props> {
 
     render(): ReactNode {
+        const {children} = this.props;
         return (
             <div className='mashroom-portal-ui-table-responsive'>
                 <table>
-                    {this.props.children}
+                    {children}
                 </table>
             </div>
         );

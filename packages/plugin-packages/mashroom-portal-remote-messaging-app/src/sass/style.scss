@@ -16,13 +16,6 @@ $LABEL_ROW_WIDTH: 170px;
                 vertical-align: top;
             }
         }
-
-        .mashroom-portal-ui-source-code-editor-field {
-
-            label {
-                float: left;
-            }
-        }
     }
 
     .mashroom-remote-messaging-app-form-button-row {
@@ -31,7 +24,7 @@ $LABEL_ROW_WIDTH: 170px;
 
     .mashroom-remote-messaging-app-output-row {
         display: flex;
-        margin: 10px 0;
+        margin: 20px 0;
 
         &>*:first-child {
             flex: 0 0 $LABEL_ROW_WIDTH;

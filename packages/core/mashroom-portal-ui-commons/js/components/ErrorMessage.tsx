@@ -10,9 +10,10 @@ type Props = {
 export default class ErrorMessage extends PureComponent<Props> {
 
     render(): ReactNode {
+        const {messageId} = this.props;
         return (
             <div className='mashroom-portal-ui-error-message'>
-                <FormattedMessage id={this.props.messageId}/>
+                <FormattedMessage id={messageId}/>
             </div>
         );
     }

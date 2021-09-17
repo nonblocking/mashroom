@@ -3,28 +3,32 @@ import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 import type {ReactNode} from 'react';
-import type {WrappedFieldProps} from 'redux-form';
+import type {FieldProps} from 'formik';
 
 type Props = {
     id: string;
     labelId?: string;
-    fieldProps: WrappedFieldProps;
+    fieldProps: FieldProps;
 }
 
 export default class CheckboxField extends PureComponent<Props> {
 
     render(): ReactNode {
-        const error = this.props.fieldProps.meta.touched && !!this.props.fieldProps.meta.error;
+        const {id, labelId, fieldProps: {field, meta}} = this.props;
+        const error = meta.touched && !!meta.error;
 
-        const inputProps = {...this.props.fieldProps.input, id: this.props.id,
+        const inputProps = {
+            ...field,
+            id,
             type: 'checkbox',
-            checked: !!this.props.fieldProps.input.value};
+            checked: !!field.value
+        };
 
         return (
             <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
                 <input className='mashroom-portal-checkbox' {...inputProps}/>
-                {this.props.labelId ? <FieldLabel htmlFor={this.props.id} labelId={this.props.labelId}/> : <label htmlFor={this.props.id}>&nbsp;</label>}
-                {error && <ErrorMessage messageId={this.props.fieldProps.meta.error || ''}/>}
+                {labelId ? <FieldLabel htmlFor={id} labelId={labelId}/> : <label htmlFor={id}>&nbsp;</label>}
+                {error && <ErrorMessage messageId={meta.error || ''}/>}
             </div>
         );
     }

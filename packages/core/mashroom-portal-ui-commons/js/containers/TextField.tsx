@@ -1,10 +1,10 @@
 
 import React, {PureComponent} from 'react';
 import {injectIntl} from 'react-intl';
-import {Field} from 'redux-form';
-import TextField from '../components/TextField';
+import {Field} from 'formik';
+import TextFieldComp from '../components/TextField';
 
-import type {WrappedFieldProps} from 'redux-form';
+import type {FieldProps} from 'formik';
 import type {IntlShape} from 'react-intl';
 
 type OwnProps = {
@@ -24,11 +24,16 @@ type IntlProps = {
 
 type Props = OwnProps & IntlProps;
 
-class TextFieldContainer extends PureComponent<Props> {
+class TextField extends PureComponent<Props> {
 
     render() {
-        return <Field name={this.props.name} component={(fieldProps: WrappedFieldProps) => <TextField fieldProps={fieldProps} {...this.props}/>}/>;
+        const {name} = this.props;
+        return (
+            <Field name={name} >
+                {(fieldProps: FieldProps) => <TextFieldComp fieldProps={fieldProps} {...this.props}/>}
+            </Field>
+        );
     }
 }
 
-export default injectIntl(TextFieldContainer);
+export default injectIntl(TextField);

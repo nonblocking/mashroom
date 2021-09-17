@@ -11,9 +11,10 @@ type Props = {
 export default class FieldLabel extends PureComponent<Props> {
 
     render(): ReactNode {
+        const {htmlFor, labelId} = this.props;
         return (
-            <label htmlFor={this.props.htmlFor} className='mashroom-portal-ui-field-label'>
-                <FormattedMessage id={this.props.labelId}/>
+            <label htmlFor={htmlFor} className='mashroom-portal-ui-field-label'>
+                <FormattedMessage id={labelId}/>
             </label>
         );
     }

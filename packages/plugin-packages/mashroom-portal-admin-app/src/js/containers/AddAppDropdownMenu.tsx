@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {injectIntl} from 'react-intl';
-import AddAppDropdownMenu from '../components/AddAppDropdownMenu';
+import AddAppDropdownMenuComp from '../components/AddAppDropdownMenu';
 import {DependencyContextConsumer} from '../DependencyContext';
 
 import type {IntlShape} from 'react-intl';
@@ -15,12 +15,12 @@ type IntlProps = {
 
 type Props = IntlProps;
 
-class AddAppDropdownMenuContainer extends PureComponent<Props> {
+class AddAppDropdownMenu extends PureComponent<Props> {
 
     render() {
         return (
             <DependencyContextConsumer>
-                {(deps) => <AddAppDropdownMenu dataLoadingService={deps.dataLoadingService} portalAppManagementService={deps.portalAppManagementService} {...this.props}/>}
+                {(deps) => <AddAppDropdownMenuComp dataLoadingService={deps.dataLoadingService} portalAppManagementService={deps.portalAppManagementService} {...this.props}/>}
             </DependencyContextConsumer>
         );
     }
@@ -30,4 +30,4 @@ const mapStateToProps = (state: State) => ({
 });
 
 
-export default connect(mapStateToProps)(injectIntl(AddAppDropdownMenuContainer));
+export default connect(mapStateToProps)(injectIntl(AddAppDropdownMenu));

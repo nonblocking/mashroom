@@ -1,13 +1,12 @@
 
 import React, {PureComponent} from 'react';
 import {
-    AutocompleteFieldContainer,
+    AutocompleteField,
     AutocompleteStringArraySuggestionHandler
 } from '@mashroom/mashroom-portal-ui-commons';
 
 import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
-import type {SuggestionHandler} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 
 type Props = {
     portalAdminService: MashroomPortalAdminService;
@@ -21,11 +20,12 @@ type Props = {
 export default class RoleInput extends PureComponent<Props> {
 
     componentDidMount(): void {
-        if (this.props.existingRoles.length === 0) {
-            this.props.portalAdminService.getExistingRoles().then(
+        const {existingRoles, portalAdminService, setExistingRoles} = this.props;
+        if (existingRoles.length === 0) {
+            portalAdminService.getExistingRoles().then(
                 (existingRoleDefs) => {
                     const existingRoles = existingRoleDefs.map((r) => r.id);
-                    this.props.setExistingRoles(existingRoles);
+                    setExistingRoles(existingRoles);
                 },
                 (error) => {
                     console.error('Fetching existing roles failed', error);
@@ -35,21 +35,24 @@ export default class RoleInput extends PureComponent<Props> {
     }
 
     onRoleChange(role: string | undefined | null): void {
-        if (this.props.onRoleChange) {
-            this.props.onRoleChange(role);
+        const {onRoleChange} = this.props;
+        if (onRoleChange) {
+            onRoleChange(role);
         }
     }
 
     onRoleSelected(role: string): void {
-        if (this.props.onRoleSelected) {
-            this.props.onRoleSelected(role);
+        const {onRoleSelected} = this.props;
+        if (onRoleSelected) {
+            onRoleSelected(role);
         }
     }
 
     render(): ReactNode {
+        const {existingRoles, resetRef} = this.props;
         return (
             <div className='role-input'>
-                <AutocompleteFieldContainer
+                <AutocompleteField
                     id='roleToAdd'
                     name='roleToAdd'
                     labelId='addRole'
@@ -58,9 +61,9 @@ export default class RoleInput extends PureComponent<Props> {
                     minCharactersForSuggestions={2}
                     mustSelectSuggestion={false}
                     suggestionHandler={
-                        new AutocompleteStringArraySuggestionHandler(this.props.existingRoles)
+                        new AutocompleteStringArraySuggestionHandler(existingRoles)
                     }
-                    resetRef={this.props.resetRef} />
+                    resetRef={resetRef} />
             </div>
 
         );

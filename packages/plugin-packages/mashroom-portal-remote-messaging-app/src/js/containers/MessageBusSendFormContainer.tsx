@@ -1,6 +1,5 @@
 
 import {connect} from 'react-redux';
-import {reset as resetForm} from 'redux-form';
 import {addPublishedMessage, updatePublishedMessageStatus} from '../store/actions';
 import MessageBusSendForm from '../components/MessageBusSendForm';
 
@@ -15,9 +14,6 @@ const mapStateToProps = (state: State) => {
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    resetForm: (id: string) => {
-        dispatch(resetForm(id));
-    },
     addPublishedMessage: (message: PublishedMessage) => {
         dispatch(addPublishedMessage(message));
     },

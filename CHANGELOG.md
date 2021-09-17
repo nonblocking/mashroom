@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * Admin App: Bundle size halved, loads now faster
+ * Sandbox App: It is possible to search for Apps now (autocomplete)
  * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
 
 ## 1.8.3 (September 11, 2021)

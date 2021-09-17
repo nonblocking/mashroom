@@ -15,25 +15,29 @@ type Props = {
 export default class PortalAppControlsToggle extends PureComponent<Props> {
 
     componentDidMount(): void {
-        if (this.props.portalAppControls) {
+        const {portalAppControls} = this.props;
+        if (portalAppControls) {
             this.showPortalAppControls();
         }
     }
 
     showPortalAppControls(): void {
-        this.props.setShowPortalAppControls(true);
-        this.props.portalAppManagementService.showPortalAppControls();
+        const {setShowPortalAppControls, portalAppManagementService} = this.props;
+        setShowPortalAppControls(true);
+        portalAppManagementService.showPortalAppControls();
         global.localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'true');
     }
 
     hidePortalAppControls(): void {
-        this.props.setShowPortalAppControls(false);
-        this.props.portalAppManagementService.hidePortalAppControls();
+        const {setShowPortalAppControls, portalAppManagementService} = this.props;
+        setShowPortalAppControls(false);
+        portalAppManagementService.hidePortalAppControls();
         global.localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'true');
     }
 
     toggle(): void {
-        if (this.props.portalAppControls) {
+        const {portalAppControls} = this.props;
+        if (portalAppControls) {
             this.hidePortalAppControls();
         } else {
             this.showPortalAppControls();
@@ -41,8 +45,9 @@ export default class PortalAppControlsToggle extends PureComponent<Props> {
     }
 
     render(): ReactNode {
+        const {portalAppControls} = this.props;
         return (
-           <div className={`portal-apps-control-toggle ${this.props.portalAppControls ? 'active' : ''}`} onClick={this.toggle.bind(this)}>
+           <div className={`portal-apps-control-toggle ${portalAppControls ? 'active' : ''}`} onClick={this.toggle.bind(this)}>
                 <span><FormattedMessage id='portalAppControls'/></span>
            </div>
         );

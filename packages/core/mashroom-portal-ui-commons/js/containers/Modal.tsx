@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {connect} from 'react-redux';
-import Modal from '../components/Modal';
+import ModalComp from '../components/Modal';
 import {setShowModal} from '../store/actions';
 
 import type {ReactNode} from 'react';
@@ -30,4 +30,4 @@ const mapDispatchToProps = (dispatch: Dispatch, ownProps: OwnProps) => ({
     },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Modal);
+export default connect(mapStateToProps, mapDispatchToProps)(ModalComp);

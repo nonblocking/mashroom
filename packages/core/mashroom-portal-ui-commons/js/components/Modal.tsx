@@ -58,7 +58,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     componentDidMount(): void {
-        const closeRef = this.props.closeRef;
+        const {closeRef} = this.props;
         if (typeof(closeRef) === 'function') {
             closeRef(this.close.bind(this));
         }
@@ -69,8 +69,9 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     componentDidUpdate(prevProps: Props): void {
-        if (this.props.show !== prevProps.show) {
-            if (this.props.show) {
+        const {show} = this.props;
+        if (show !== prevProps.show) {
+            if (show) {
                 setTimeout(() => {
                     this.setState({
                         fadeIn: true,
@@ -113,8 +114,9 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     close(): void {
-        if (this.props.onClose) {
-            this.props.onClose();
+        const {onClose} = this.props;
+        if (onClose) {
+            onClose();
         }
     }
 
@@ -127,10 +129,11 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     renderDefaultHeader(): ReactNode {
+        const {titleId, title} = this.props;
         return (
             <div className='mashroom-portal-ui-modal-header'>
                 <div className='title'>
-                    {this.props.titleId ? <FormattedMessage id={this.props.titleId}/> : this.props.title}
+                    {titleId ? <FormattedMessage id={titleId}/> : title}
                 </div>
                 <div className='close-button' onClick={this.close.bind(this)}/>
             </div>
@@ -138,25 +141,27 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     render(): ReactNode {
-        if (!this.modalsRoot || (!this.props.show && !this.state.fadeOut)) {
+        const {show, customHeader, className, minHeight, minWidth, children} = this.props;
+        const {fadeOut, fadeIn, marginTop} = this.state;
+        if (!this.modalsRoot || (!show && !fadeOut)) {
             return null;
         }
 
-        let header = null;
-        if (this.props.customHeader) {
-            header = this.props.customHeader;
+        let header;
+        if (customHeader) {
+            header = customHeader;
         } else {
             header = this.renderDefaultHeader();
         }
 
         return ReactDOM.createPortal((
-                <div className={`mashroom-portal-ui-modal ${this.props.className || ''}`} onWheel={(e) => e.stopPropagation()}>
-                    <div className={`mashroom-portal-ui-modal-wrapper ${this.state.fadeIn ? 'fade-in' : ''} ${this.state.fadeOut ? 'fade-out' : ''}`}
-                         style={{marginTop: this.state.marginTop}}
+                <div className={`mashroom-portal-ui-modal ${className || ''}`} onWheel={(e) => e.stopPropagation()}>
+                    <div className={`mashroom-portal-ui-modal-wrapper ${fadeIn ? 'fade-in' : ''} ${fadeOut ? 'fade-out' : ''}`}
+                         style={{marginTop: marginTop}}
                          ref={(elem) => this.modalWrapperEl = elem}>
                         {header}
-                        <div className='mashroom-portal-ui-modal-content' style={{minWidth: this.props.minWidth || 'auto', minHeight: this.props.minHeight || 'auto'}}>
-                            {this.props.children}
+                        <div className='mashroom-portal-ui-modal-content' style={{minWidth: minWidth || 'auto', minHeight: minHeight || 'auto'}}>
+                            {children}
                         </div>
                     </div>
                 </div>

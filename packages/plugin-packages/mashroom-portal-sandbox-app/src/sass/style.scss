@@ -6,6 +6,20 @@ $LABEL_ROW_WIDTH: 240px;
 .mashroom-sandbox-app {
     padding: 10px;
 
+    .portal-app-suggestion {
+
+
+        .portal-app-suggestion-name {
+            display: flex;
+        }
+
+        .portal-app-suggestion-desc {
+            font-size: 0.8em;
+            opacity: 0.8;
+            line-height: 1.2em;
+        }
+    }
+
     .mashroom-sandbox-app-form-row {
         margin: 10px 0;
 
@@ -16,13 +30,6 @@ $LABEL_ROW_WIDTH: 240px;
                 vertical-align: top;
             }
         }
-
-        .mashroom-portal-ui-source-code-editor-field {
-
-            label {
-                float: left;
-            }
-        }
     }
 
     .mashroom-sandbox-app-form-button-row {
@@ -31,7 +38,7 @@ $LABEL_ROW_WIDTH: 240px;
 
     .mashroom-sandbox-app-output-row {
         display: flex;
-        margin: 10px 0;
+        margin: 20px 0;
 
         &>*:first-child {
             flex: 0 0 $LABEL_ROW_WIDTH;
@@ -56,6 +63,17 @@ $LABEL_ROW_WIDTH: 240px;
         margin-bottom: 30px;
         min-height: 60px;
         display: flex;
+        position: relative;
+
+        .mashroom-sandbox-app-host-width {
+            font-family: monospace;
+            font-size: 12px;
+            position: absolute;
+            right: 3px;
+            top: 3px;
+            background-color: rgba(256, 256, 256, 0.7);
+            padding: 2px;
+        }
 
         .mashroom-sandbox-app-host-resizer {
             cursor: col-resize;

@@ -12,15 +12,17 @@ type Props = {
 export default class DropdownMenuItem extends PureComponent<Props> {
 
     onClick(): void {
-        if (this.props.onClick) {
-            this.props.onClick();
+        const {onClick} = this.props;
+        if (onClick) {
+            onClick();
         }
     }
 
     render(): ReactNode {
+        const {labelId, label} = this.props;
         return (
             <div className='mashroom-portal-ui-dropdown-menu-item' onClick={this.onClick.bind(this)}>
-                <span className='dropdown-menu-item-label'>{this.props.labelId ? <FormattedMessage id={this.props.labelId}/> : this.props.label}</span>
+                <span className='dropdown-menu-item-label'>{labelId ? <FormattedMessage id={labelId}/> : label}</span>
             </div>
         );
     }
