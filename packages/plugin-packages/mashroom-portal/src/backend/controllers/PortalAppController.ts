@@ -30,6 +30,7 @@ export default class PortalAppController {
 
     async getPortalAppSetup(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
             const sitePath = getSitePath(req);
@@ -86,6 +87,10 @@ export default class PortalAppController {
 
             logger.debug(`Sending portal app setup for: ${portalApp.name}`, portalAppSetup);
 
+            if (cacheControlService) {
+                cacheControlService.addCacheControlHeader('PRIVATE_IF_AUTHENTICATED', req, res);
+            }
+
             res.json(portalAppSetup);
 
         } catch (e) {
@@ -123,13 +128,12 @@ export default class PortalAppController {
             return;
         }
 
-        const resourceType = parts[0];
+        const resourceType = parts[0] as 'css' | 'js';
         const resourcePath = parts.slice(1).join('/');
 
         // Find portal apps that provide the shared resource
         const portalApps = this._pluginRegistry.portalApps.filter((portalApp) =>
-            // @ts-ignore
-            portalApp.sharedResources && portalApp.sharedResources[resourceType] && portalApp.sharedResources[resourceType].find((res) => res === resourcePath));
+            portalApp.sharedResources?.[resourceType]?.find((res) => res === resourcePath));
 
         let sent = false;
         while (portalApps.length > 0 && !sent) {
@@ -148,6 +152,7 @@ export default class PortalAppController {
 
     async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
         const mashroomSecurityUser = await getUser(req);
         const {q, updatedSince} = req.query;
 
@@ -186,6 +191,10 @@ export default class PortalAppController {
                 apps = [];
                 logger.error(`Invalid updatedSince timestamp: ${updatedSince}`);
             }
+        }
+
+        if (cacheControlService) {
+            cacheControlService.addCacheControlHeader('PRIVATE_IF_AUTHENTICATED', req, res);
         }
 
         res.json(apps);
