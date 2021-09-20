@@ -4,7 +4,11 @@
 ## [unreleased]
 
 
- * Admin App: Bundle size halved, loads now faster
+ * MongoDB client upgraded to v4
+   **BREAKING CHANGE**: If you use *mashroom-session-provider-mongodb* or *mashroom-storage-provider-mongodb*
+   please check your connection options since they have changed. E.g. *poolSize* and *useUnifiedTopology* no
+   longer exist. Check out https://mongodb.github.io/node-mongodb-native/4.1/classes/MongoClient.html#options
+ * Admin App: Bundle size cut in halve, loads now faster
  * Sandbox App: It is possible to search for Apps now (autocomplete)
  * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
 

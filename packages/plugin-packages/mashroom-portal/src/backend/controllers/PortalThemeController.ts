@@ -43,7 +43,7 @@ export default class PortalThemeController {
                 res.sendStatus(500);
             }
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             if (cacheControlService) {
                 cacheControlService.removeCacheControlHeader(res);
@@ -69,7 +69,7 @@ export default class PortalThemeController {
 
             res.json(availableThemes);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

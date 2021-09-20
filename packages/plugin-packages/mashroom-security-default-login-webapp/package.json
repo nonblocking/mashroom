@@ -13,17 +13,17 @@
     "dependencies": {
         "body-parser": "^1.19.0",
         "express": "^4.17.1",
-        "express-handlebars": "^5.3.2",
+        "express-handlebars": "^5.3.3",
         "handlebars": "^4.7.7"
     },
     "devDependencies": {
-        "@babel/cli": "^7.14.8",
         "@mashroom/mashroom": "1.8.3",
         "@mashroom/mashroom-browser-cache": "1.8.3",
         "@mashroom/mashroom-csrf-protection": "1.8.3",
         "@mashroom/mashroom-i18n": "1.8.3",
         "@mashroom/mashroom-security": "1.8.3",
         "@mashroom/mashroom-vhost-path-mapper": "1.8.3",
+        "@babel/cli": "^7.15.7",
         "@types/body-parser": "^1.19.1",
         "@types/express": "^4.17.13",
         "@types/express-handlebars": "^5.3.1",
@@ -31,8 +31,8 @@
         "eslint": "^7.32.0",
         "node-sass": "^6.0.1",
         "node-sass-tilde-importer": "^1.0.2",
-        "nodemon": "^2.0.9",
-        "typescript": "^4.3.5"
+        "nodemon": "^2.0.12",
+        "typescript": "^4.4.3"
     },
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",

@@ -34,7 +34,7 @@ export default class PortalUserController {
                 expirationTime,
             });
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -58,7 +58,7 @@ export default class PortalUserController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -99,7 +99,7 @@ export default class PortalUserController {
             } else {
                 res.end();
             }
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

@@ -93,7 +93,7 @@ export default class PortalAppController {
 
             res.json(portalAppSetup);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -254,7 +254,7 @@ export default class PortalAppController {
 
             return true;
 
-        } catch (err) {
+        } catch (err: any) {
             logger.error(`Cannot load portal app resource: ${resourceUri}`, err);
             if (cacheControlService) {
                 cacheControlService.removeCacheControlHeader(res);

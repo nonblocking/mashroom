@@ -128,7 +128,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         if (user) {
             try {
                 await this._ldapClient.login(user, password);
-            } catch (e) {
+            } catch (e: any) {
                 return {
                     success: false,
                     failureReason: loginFailureReason(e.message),

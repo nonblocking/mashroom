@@ -9,7 +9,9 @@ import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
 
 import type {Server} from 'http';
+import type {Socket} from 'net';
 import type {Request, Response} from 'express';
+import type {IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 import type {HttpHeaders, QueryParams} from '../../type-definitions';
 import type {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
@@ -561,12 +563,12 @@ describe('ProxyImplNodeHttpProxy', () => {
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
                 server.on('error', (e) => reject(e));
-                server.on('upgrade', (req, socket, head) => {
+                server.on('upgrade', (req: IncomingMessageWithContext, socket: Socket, head) => {
                     console.info('Received upgrade request');
                     req.pluginContext = {
                         loggerFactory,
                         services: {}
-                    }
+                    } as any;
                     httpProxyService.forwardWs(req, socket, head, 'ws://localhost:30001?test=1', {
                         foo: '2'
                     });
@@ -589,7 +591,7 @@ describe('ProxyImplNodeHttpProxy', () => {
                 ws.on('message', async (message) => {
                     expect(req.url).toBe('/?test=1');
                     expect(req.headers.foo).toBe('2');
-                    expect(message).toBe('hello server');
+                    expect(message.toString()).toBe('hello server');
                     proxyServer.close();
                     targetWsServer.close();
                     targetServer.close();
@@ -651,12 +653,12 @@ describe('ProxyImplNodeHttpProxy', () => {
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
                 server.on('error', (e) => reject(e));
-                server.on('upgrade', (req, socket, head) => {
+                server.on('upgrade', (req: IncomingMessageWithContext, socket: Socket, head) => {
                     console.info('Received upgrade request');
                     req.pluginContext = {
                         loggerFactory,
                         services: {}
-                    }
+                    } as any;
                     httpProxyService.forwardWs(req, socket, head, 'ws://localhost:30333', {
                         foo: '2'
                     });

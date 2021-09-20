@@ -21,7 +21,7 @@ export default class PortalRolesController {
 
             res.json(existingRoles);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

@@ -26,7 +26,7 @@ export default class PortalLayoutController {
             }));
 
             res.json(availableLayouts);
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

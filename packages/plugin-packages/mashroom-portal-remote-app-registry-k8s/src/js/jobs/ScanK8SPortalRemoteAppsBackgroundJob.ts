@@ -94,7 +94,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                         }
                     }
                 }
-            } catch (error) {
+            } catch (error: any) {
                 this._logger.error(`Error during scan of k8s namespace: ${namespace}`, error);
                 context.error = error.message;
             }
@@ -113,7 +113,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
             portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, service);
             this._logger.info(`Registered portal apps for Kubernetes service: ${service.name}:`, portalApps);
-        } catch (error) {
+        } catch (error: any) {
             service.status = 'Error';
             service.error = error.message;
             service.foundPortalApps = [];

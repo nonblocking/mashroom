@@ -47,7 +47,7 @@ const addLog = (log: string) => {
                 if (type === 'setClientId') {
                     global.sessionStorage.setItem('MashroomPortalWebSocketClientId', payload);
                 }
-            } catch (e) {
+            } catch (e: any) {
                 console.error('Cannot parse event payload:', e.message);
             }
         };

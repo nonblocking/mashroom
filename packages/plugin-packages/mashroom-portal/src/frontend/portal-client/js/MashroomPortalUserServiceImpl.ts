@@ -82,6 +82,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
     }
 
     private _reloadPage() {
-        global.location.reload(true);
+        global.location.reload();
     }
 }

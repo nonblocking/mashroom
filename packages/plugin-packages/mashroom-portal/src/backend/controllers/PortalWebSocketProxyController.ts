@@ -133,7 +133,7 @@ export default class PortalRestProxyController {
             logger.info(`Forwarding WebSocket API call: ${message.url} --> ${fullTargetUri}`);
             return httpProxyService.forwardWs(message, socket, head, fullTargetUri, headers);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             sendStatus(500);
         }

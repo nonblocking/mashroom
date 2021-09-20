@@ -51,7 +51,7 @@
             "uri": "mongodb://localhost:27017/mashroom_sessions",
             "collection": "sessions",
             "connectionOptions": {
-                "poolSize": 2
+                "minPoolSize": 2
             }
         },
         "Mashroom Security Services": {
@@ -101,7 +101,7 @@
         "Mashroom Storage MongoDB Provider": {
             "uri": "mongodb://localhost:27017/mashroom_storage_db",
             "connectionOptions": {
-                "poolSize": 2
+                "minPoolSize": 2
             }
         },
         "Mashroom Memory Cache Services": {

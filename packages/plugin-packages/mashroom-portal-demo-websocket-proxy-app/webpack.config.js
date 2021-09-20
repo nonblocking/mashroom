@@ -62,11 +62,16 @@ module.exports = {
         mainFields: ['browser', 'main', 'module'],
     },
     devServer: {
-        inline: true,
         host: '0.0.0.0',
-        disableHostCheck: true,
+        allowedHosts: 'all',
         port: 8089,
-        contentBase: 'src',
+        static: 'src',
         open: true,
+        client: {
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+        }
     },
 };

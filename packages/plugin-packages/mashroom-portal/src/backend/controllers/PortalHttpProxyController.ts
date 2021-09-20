@@ -105,7 +105,7 @@ export default class PortalHttpProxyController {
             logger.info(`Forwarding Rest API call: ${req.method} /${decodedPath} --> ${fullTargetUri}`);
             await httpProxyService.forward(req, res, fullTargetUri, headers);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

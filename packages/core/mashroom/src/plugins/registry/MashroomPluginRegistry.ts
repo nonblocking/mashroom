@@ -250,7 +250,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
             this._eventEmitter.emit('loaded', {
                 pluginName: plugin.name,
             });
-        } catch (error) {
+        } catch (error: any) {
             this._logger.error(`Loading plugin: ${plugin.name}, type: ${plugin.type} failed!`, error);
             pluginConnector.emitError({
                 errorMessage: `Loading failed (${error.toString()}`,
@@ -290,7 +290,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
                     this._eventEmitter.emit('loaded', {
                         pluginName: plugin.name,
                     });
-                } catch (error) {
+                } catch (error: any) {
                     this._logger.error(`Loading plugin: ${plugin.name}, type: ${plugin.type} failed!`, error);
                     const pluginConnector = this._plugins.get(plugin);
                     if (pluginConnector) {

@@ -42,7 +42,7 @@ app.get('/', async (req: Request, res: Response) => {
         }
 
         renderLoginPage(req, res, i18nService, lang);
-    } catch (e) {
+    } catch (e: any) {
         logger.error(e);
         res.sendStatus(500);
     }
@@ -88,7 +88,7 @@ app.post('/', async (req: Request, res: Response) => {
         logger.warn(`Login of user ${username} failed. Reason:`, (result.failureReason || '-'), ' Details:', (result.failureReasonDetails || '-'));
 
         renderLoginPage(req, res, i18nService, lang, i18nService.getMessage('loginFailed', lang));
-    } catch (e) {
+    } catch (e: any) {
         logger.error(e);
         res.sendStatus(500);
     }

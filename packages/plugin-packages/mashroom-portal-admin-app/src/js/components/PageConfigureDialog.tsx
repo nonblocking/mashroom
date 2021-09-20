@@ -195,7 +195,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                         const url = `${portalSiteService.getCurrentSiteUrl()}${pageRef.friendlyUrl}`;
                         window.location.href = url;
                     } else {
-                        window.location.reload(true);
+                        window.location.reload();
                     }
                 }
             },

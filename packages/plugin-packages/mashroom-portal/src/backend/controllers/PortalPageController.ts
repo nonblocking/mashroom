@@ -45,7 +45,7 @@ export default class PortalPageController {
 
             res.json(page);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -81,7 +81,7 @@ export default class PortalPageController {
 
             res.json(page);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -120,7 +120,7 @@ export default class PortalPageController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -151,7 +151,7 @@ export default class PortalPageController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -184,7 +184,7 @@ export default class PortalPageController {
 
             res.json(roles);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -232,7 +232,7 @@ export default class PortalPageController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -267,7 +267,7 @@ export default class PortalPageController {
 
             res.json(instances);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -342,7 +342,7 @@ export default class PortalPageController {
 
             res.json(result);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -398,7 +398,7 @@ export default class PortalPageController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -443,7 +443,7 @@ export default class PortalPageController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -490,7 +490,7 @@ export default class PortalPageController {
 
             res.json(roles);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -549,7 +549,7 @@ export default class PortalPageController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

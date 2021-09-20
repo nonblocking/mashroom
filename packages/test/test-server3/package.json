@@ -3,8 +3,8 @@
     "version": "1.8.3",
     "private": true,
     "devDependencies": {
-        "@babel/cli": "^7.14.8",
         "@mashroom/mashroom-json-schemas": "1.8.3",
+        "@babel/cli": "^7.15.7",
         "nodemon": "^2.0.12"
     },
     "scripts": {

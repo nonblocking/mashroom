@@ -76,12 +76,17 @@ module.exports = (env, argv) => {
             },
         },
         devServer: {
-            inline: true,
             host: '0.0.0.0',
-            disableHostCheck: true,
+            allowedHosts: 'all',
             port: 8088,
-            contentBase: 'src',
+            static: 'src',
             open: true,
+            client: {
+                overlay: {
+                    errors: true,
+                    warnings: false,
+                },
+            }
         },
     };
 

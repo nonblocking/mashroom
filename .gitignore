@@ -11,6 +11,7 @@ log/
 .vscode
 .DS_Store
 globalConfig.json
+lerna-debug.log
 
 /packages/plugin-packages/mashroom-background-jobs/public/
 /packages/plugin-packages/mashroom-docs-static/public/docs/

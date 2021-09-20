@@ -68,11 +68,16 @@ module.exports = {
         extensions: ['.js', '.ts', '.tsx'],
     },
     devServer: {
-        inline: true,
         host: '0.0.0.0',
-        disableHostCheck: true,
+        allowedHosts: 'all',
         port: 8081,
-        contentBase: 'src',
+        static: 'src',
         open: true,
+        client: {
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+        }
     },
 };
