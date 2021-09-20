@@ -4,6 +4,7 @@ import type {Socket} from 'net';
 import type {Request, Response} from 'express';
 import type {MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyInterceptor, MashroomHttpProxyResponseInterceptorResult, HttpHeaders, MashroomHttpProxyRequestInterceptorResult} from './api';
+import {MashroomWsProxyRequestInterceptorResult} from './api';
 
 export interface HttpHeaderFilter {
     filter(headers: IncomingHttpHeaders): void;
@@ -41,10 +42,12 @@ export interface MashroomHttpProxyInterceptorRegistry {
 }
 
 export interface InterceptorHandler {
-    processRequest(clientRequest: Request, clientResponse: Response,
+    processHttpRequest(clientRequest: Request, clientResponse: Response,
                    targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger):
         Promise<MashroomHttpProxyRequestInterceptorResult>;
-    processResponse(clientRequest: Request, clientResponse: Response, targetUri: string,
+    processWsRequest(clientRequest: IncomingMessageWithContext, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger):
+        Promise<MashroomWsProxyRequestInterceptorResult>;
+    processHttpResponse(clientRequest: Request, clientResponse: Response, targetUri: string,
                     targetResponse: IncomingMessage, logger: MashroomLogger):
         Promise<MashroomHttpProxyResponseInterceptorResult>;
 }

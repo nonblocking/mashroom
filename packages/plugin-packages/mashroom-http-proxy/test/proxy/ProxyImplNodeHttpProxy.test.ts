@@ -550,10 +550,8 @@ describe('ProxyImplNodeHttpProxy', () => {
 
     it('forwards WebSocket connections to the target URI',  (done) => {
         (async () => {
-            const pluginRegistry: any = {};
-            const interceptorHandler = new InterceptorHandler(pluginRegistry);
             const headerFilter = new HttpHeaderFilter([])
-            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, loggerFactory);
 
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
@@ -600,10 +598,8 @@ describe('ProxyImplNodeHttpProxy', () => {
     /*
     it('forwards WebSocket connections to echo server',  (done) => {
         (async () => {
-            const pluginRegistry: any = {};
-            const interceptorHandler = new InterceptorHandler(pluginRegistry);
             const headerFilter = new HttpHeaderFilter([])
-            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, loggerFactory);
 
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
@@ -644,10 +640,8 @@ describe('ProxyImplNodeHttpProxy', () => {
 
     it('processes WebSocket forwarding errors',  (done) => {
         (async () => {
-            const pluginRegistry: any = {};
-            const interceptorHandler = new InterceptorHandler(pluginRegistry);
             const headerFilter = new HttpHeaderFilter([])
-            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
+            const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, loggerFactory);
 
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();

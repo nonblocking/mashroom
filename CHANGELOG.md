@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * HTTP Proxy: The HTTP interceptor can now also process WebSocket upgrade requests
+   (added optional method interceptWsRequest())
  * MongoDB client upgraded to v4
    **BREAKING CHANGE**: If you use *mashroom-session-provider-mongodb* or *mashroom-storage-provider-mongodb*
    please check your connection options since they have changed. E.g. *poolSize* and *useUnifiedTopology* no

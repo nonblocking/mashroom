@@ -109,8 +109,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         let effectiveQueryParams = {
             ...req.query
         };
+
         // Process request interceptors
-        const interceptorResult = await this._interceptorHandler.processRequest(req, res, targetUri, additionalHeaders, logger);
+        const interceptorResult = await this._interceptorHandler.processHttpRequest(req, res, targetUri, additionalHeaders, logger);
         if (interceptorResult.responseHandled) {
             return Promise.resolve();
         }
@@ -179,13 +180,36 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
         }
 
-        const proxyServer = targetUri.startsWith('wss') || targetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
+        let effectiveTargetUri = encodeURI(targetUri);
+        let effectiveAdditionalHeaders = {
+            ...additionalHeaders,
+        };
+
+        // Process request interceptors
+        const interceptorResult = await this._interceptorHandler.processWsRequest(req, targetUri, additionalHeaders, logger);
+        if (interceptorResult.rewrittenTargetUri) {
+            effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
+        }
+        if (interceptorResult.addHeaders) {
+            effectiveAdditionalHeaders = {
+                ...effectiveAdditionalHeaders,
+                ...interceptorResult.addHeaders,
+            };
+        }
+        if (interceptorResult.removeHeaders) {
+            interceptorResult.removeHeaders.forEach((headerKey) => {
+                delete effectiveAdditionalHeaders[headerKey];
+                delete req.headers[headerKey];
+            });
+        }
+
+        const proxyServer = effectiveTargetUri.startsWith('wss') || effectiveTargetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
 
         const startTime = process.hrtime();
-        logger.info(`Forwarding WebSocket request to: ${targetUri}`);
+        logger.info(`Forwarding WebSocket request to: ${effectiveTargetUri}`);
         const requestMeta: ProxyRequestMeta = {
             startTime,
-            uri: targetUri,
+            uri: effectiveTargetUri,
             additionalQueryParams: {},
             user: securityService?.getUser(req as Request),
             type: 'WS',
@@ -194,9 +218,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         (req as any)[REQUEST_META_PROP] = requestMeta;
 
         proxyServer.ws(req, socket, head, {
-            target: targetUri,
+            target: effectiveTargetUri,
             headers: toSimpleHeaders({
-                ...additionalHeaders
+                ...effectiveAdditionalHeaders
             }),
             autoRewrite: true,
         });
@@ -262,7 +286,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         }
 
         // Execute response interceptors
-        const interceptorResult = await this._interceptorHandler.processResponse(clientRequest, clientResponse, requestMeta.uri, proxyRes, logger);
+        const interceptorResult = await this._interceptorHandler.processHttpResponse(clientRequest, clientResponse, requestMeta.uri, proxyRes, logger);
 
         if (interceptorResult.responseHandled) {
             return;

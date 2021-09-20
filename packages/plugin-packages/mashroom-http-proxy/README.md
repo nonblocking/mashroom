@@ -89,7 +89,6 @@ export interface MashroomHttpProxyService {
     /**
      * Forwards a WebSocket request (ws or wss).
      * The passed additional headers are only available at the upgrade/handshake request (most WS frameworks allow you to access it).
-     * Proxy interceptors are not applied for WebSockets!
      */
     forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
 
@@ -142,6 +141,7 @@ The provider has to implement the following interface:
 ```ts
 interface MashroomHttpProxyInterceptor {
 
+
     /**
      * Intercept request to given targetUri.
      *
@@ -152,9 +152,21 @@ interface MashroomHttpProxyInterceptor {
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
-    interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
-                     clientRequest: Request, clientResponse: Response):
+    interceptRequest?(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
+                      clientRequest: Request, clientResponse: Response):
         Promise<MashroomHttpProxyRequestInterceptorResult | undefined | null>;
+
+    /**
+     * Intercept WebSocket request to given targetUri.
+     *
+     * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
+     *
+     * The changes are ONLY applied to the upgrade request, not to WebSocket messages.
+     *
+     * Return null or undefined if you don't want to interfere with a call.
+     */
+    interceptWsRequest?(targetUri: string, existingHeaders: Readonly<HttpHeaders>, clientRequest: IncomingMessageWithContext):
+        Promise<MashroomWsProxyRequestInterceptorResult | undefined | null>;
 
     /**
      * Intercept response from given targetUri.
@@ -164,13 +176,14 @@ interface MashroomHttpProxyInterceptor {
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
-    interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage,
-                      clientRequest: Request, clientResponse: Response):
+    interceptResponse?(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage,
+                       clientRequest: Request, clientResponse: Response):
         Promise<MashroomHttpProxyResponseInterceptorResult | undefined | null>;
+
 }
 ```
 
-As an example you could add a Bearer token to each request like this:
+As an example you could add a Bearer token to each request like this (implemented like this in the *mashroom-http-proxy-add-id-token* module):
 
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
@@ -187,13 +200,9 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
         return {
            addHeaders: {
-              Authorization: `Bearer ${user.secrets.accessToken}`
+              Authorization: `Bearer ${user.secrets.idToken}`
            }
         };
-    }
-
-    async interceptResponse() {
-      return null;
     }
 }
 ```
@@ -211,20 +220,12 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
           responseHandled: true
         };
     }
-
-    async interceptResponse() {
-        return null;
-    }
 }
 ```
 
 Or even manipulate the response:
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
-
-    async interceptRequest() {
-        return null;
-    }
 
     async interceptResponse(targetUri: string, existingHeaders: Readonly<HttpHeaders>, targetResponse: IncomingMessage, clientRequest: ExpressRequest, clientResponse: ExpressResponse) {
         let body = [];
