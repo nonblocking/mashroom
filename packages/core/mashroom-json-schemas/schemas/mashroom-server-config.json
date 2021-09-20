@@ -270,7 +270,7 @@
                             "items": {
                                 "type": "string"
                             },
-                            "description": "The target URIs that should receive the headers (Default: All)"
+                            "description": "A list of regular expressions that match URIs that should receive the headers (Default: [.*])"
                         }
                     }
                 },
@@ -290,7 +290,7 @@
                             "items": {
                                 "type": "string"
                             },
-                            "description": "The target URIs that should receive the headers (Default: All)"
+                            "description": "A list of regular expressions that match URIs that should receive the headers (Default: [.*])"
                         }
                     }
                 },

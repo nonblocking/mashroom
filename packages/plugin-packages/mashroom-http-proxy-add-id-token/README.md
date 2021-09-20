@@ -25,4 +25,4 @@ You can override the default config in your Mashroom config file like this:
 
  * _addBearer_: Add the token as authorization bearer header (Default: false)
  * _idTokenHeader_: The HTTP header for the ID token - has no effect if _addBearer_ is true (Default: X-USER-ID-TOKEN)
- * _targetUris_: The target URIs that should receive the headers (Default: All)
+ * _targetUris_: A list of regular expressions that match URIs that should receive the headers (Default: [.*])
