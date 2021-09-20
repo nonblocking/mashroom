@@ -3,7 +3,11 @@
 
 ## [unreleased]
 
-
+ * Portal: **BREAKING CHANGE**: Removed *sendUserHeaders* and *addHeaders* from the proxy config of Portal Apps
+   because both should be done via HTTP Proxy Interceptor now.
+   If you were using *sendUserHeaders* just add *mashroom-http-proxy-add-user-headers* to your plugins.
+ * Added a plugin to add the ID/JWT token to backend requests if OpenID connect is used (*mashroom-http-proxy-add-id-token*)
+ * Added a plugin to add user data as headers to backend requests (*mashroom-http-proxy-add-user-headers*)
  * HTTP Proxy: The HTTP interceptor can now also process WebSocket upgrade requests
    (added optional method interceptWsRequest())
  * MongoDB client upgraded to v4

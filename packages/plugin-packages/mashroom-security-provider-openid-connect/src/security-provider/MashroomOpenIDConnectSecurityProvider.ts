@@ -187,7 +187,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         return {
             ...user,
             secrets: {
-                accessToken: authData.tokenSet.access_token,
+                idToken: authData.tokenSet.id_token,
             },
         };
     }

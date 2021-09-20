@@ -2,9 +2,6 @@
 import {STATUS_CODES} from 'http';
 import {
     HTTP_HEADER_REST_PROXY_PERMISSIONS,
-    HTTP_HEADER_REST_PROXY_USER,
-    HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME,
-    HTTP_HEADER_REST_PROXY_USER_EMAIL,
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_INTERNAL_PATH,
 } from '../constants';
@@ -107,27 +104,12 @@ export default class PortalRestProxyController {
                 fullTargetUri += `/${targetPathParts.join('/')}`;
             }
 
-            let headers: Record<string, string> = {};
+            const headers: Record<string, string> = {};
             if (user) {
-                if (restProxyDef.sendUserHeaders || (restProxyDef as any).sendUserHeader || defaultProxyConfig.sendUserHeaders) {
-                    headers[HTTP_HEADER_REST_PROXY_USER] = user.username;
-                    if (user.displayName) {
-                        headers[HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME] = user.displayName;
-                    }
-                    if (user.email) {
-                        headers[HTTP_HEADER_REST_PROXY_USER_EMAIL] = user.email;
-                    }
-                }
                 if ((restProxyDef.sendPermissionsHeader || defaultProxyConfig.sendPermissionsHeader) && portalApp.rolePermissions) {
                     const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
                     headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => permissions[p]).join(',');
                 }
-            }
-
-            headers = {
-                ...headers,
-                ...restProxyDef.addHeaders || {},
-                ...defaultProxyConfig.addHeaders || {},
             }
 
             logger.info(`Forwarding WebSocket API call: ${message.url} --> ${fullTargetUri}`);

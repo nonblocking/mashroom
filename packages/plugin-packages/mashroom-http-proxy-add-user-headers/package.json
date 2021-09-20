@@ -1,0 +1,56 @@
+{
+    "name": "@mashroom/mashroom-http-proxy-add-user-headers",
+    "description": "Mashroom Http Proxy interceptor that adds user data to every backend call",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@mashroom/mashroom": "1.8.3",
+        "@mashroom/mashroom-security": "1.8.3",
+        "@mashroom/mashroom-http-proxy": "1.8.3",
+        "@babel/cli": "^7.15.7",
+        "@types/express": "^4.17.13",
+        "@types/jest": "^27.0.1",
+        "eslint": "^7.32.0",
+        "jest": "^27.2.0",
+        "typescript": "^4.4.3"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts$"
+    },
+    "scripts": {
+        "lint": "eslint src test --ext \".ts\" --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src -d dist --extensions \".ts\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Http Proxy Add User Headers Interceptor",
+                "type": "http-proxy-interceptor",
+                "namespace": "csrf",
+                "bootstrap": "./dist/mashroom-bootstrap.js",
+                "requires": [
+                    "Mashroom Security Services"
+                ],
+                "defaultConfig": {
+                    "userNameHeader": "X-USER-NAME",
+                    "displayNameHeader": "X-USER-DISPLAY-NAME",
+                    "emailHeader": "X-USER-EMAIL",
+                    "targetUris": [".*"]
+                }
+            }
+        ]
+    }
+}

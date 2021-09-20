@@ -27,11 +27,7 @@ The plugin allows the following configuration properties:
             "warnBeforeAuthenticationExpiresSec": 120,
             "autoExtendAuthentication": false,
             "defaultProxyConfig": {
-                "sendUserHeaders": false,
                 "sendPermissionsHeader": false,
-                "addHeaders": {
-                    "test": "2"
-                },
                 "restrictToRoles": ["ROLE_X"]
             }
         }
@@ -230,9 +226,7 @@ To register a new portal-app plugin add this to _package.json_:
                     "restProxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v3",
-                            "sendUserHeaders": false,
                             "sendPermissionsHeader": false,
-                            "addHeaders": {},
                             "restrictToRoles": [
                                 "Role1"
                             ]
@@ -265,9 +259,7 @@ To register a new portal-app plugin add this to _package.json_:
      * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
      * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
          * _targetUri_: The API target URI
-         * _sendUserHeader_: Optional. Add the headers _X-USER-NAME_, _X-USER-DISPLAY-NAME_ and _X-USER-EMAIL_ with data about the authenticated user to each request (Default: false)
          * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_ (Default: false)
-         * _addHeaders_: Optional. Add extra headers to every API call.
          * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
             The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
             can access the proxy if this property is set. You can use this to protect sensitive data only a small group of

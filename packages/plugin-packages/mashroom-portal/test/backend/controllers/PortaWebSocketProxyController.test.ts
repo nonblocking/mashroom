@@ -12,12 +12,8 @@ setPortalPluginConfig({
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
     defaultProxyConfig: {
-        sendUserHeaders: false,
         sendPermissionsHeader: false,
         restrictToRoles: [],
-        addHeaders: {
-            defaultHeader: 'x',
-        }
     }
 });
 

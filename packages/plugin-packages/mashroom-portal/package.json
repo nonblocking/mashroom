@@ -81,9 +81,7 @@
                     "warnBeforeAuthenticationExpiresSec": 120,
                     "autoExtendAuthentication": false,
                     "defaultProxyConfig": {
-                        "sendUserHeaders": false,
                         "sendPermissionsHeader": false,
-                        "addHeaders": null,
                         "restrictToRoles": null
                     }
                 }

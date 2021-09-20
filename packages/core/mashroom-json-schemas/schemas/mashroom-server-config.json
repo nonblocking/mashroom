@@ -250,6 +250,50 @@
                     },
                     "additionalProperties": false
                 },
+                "Mashroom Http Proxy Add User Headers Interceptor": {
+                    "type": "object",
+                    "properties": {
+                        "userNameHeader": {
+                            "type": "string",
+                            "description": "The HTTP header for the username (Default: X-USER-NAME)"
+                        },
+                        "displayNameHeader": {
+                            "type": "string",
+                            "description": "The HTTP header for the display name (Default: X-USER-DISPLAY-NAME)"
+                        },
+                        "emailHeader": {
+                            "type": "string",
+                            "description": "The HTTP header for the email address (Default: X-USER-EMAIL)"
+                        },
+                        "targetUris": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The target URIs that should receive the headers (Default: All)"
+                        }
+                    }
+                },
+                "Mashroom Http Proxy Add ID Token Interceptor": {
+                    "type": "object",
+                    "properties": {
+                        "addBearer": {
+                            "type": "boolean",
+                            "description": "Add the token as authorization bearer header (Default: false)"
+                        },
+                        "idTokenHeader": {
+                            "type": "string",
+                            "description": "The HTTP header for the ID token - has no effect if _addBearer_ is true (Default: X-USER-ID-TOKEN)"
+                        },
+                        "targetUris": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "The target URIs that should receive the headers (Default: All)"
+                        }
+                    }
+                },
                 "Mashroom Internationalization Services": {
                     "type": "object",
                     "properties": {
@@ -532,17 +576,9 @@
                         "defaultProxyConfig": {
                             "type": "object",
                             "properties": {
-                                "sendUserHeaders": {
-                                    "type": "boolean",
-                                    "description": "Add the headers X-USER-NAME_, X-USER-DISPLAY-NAME and X-USER-EMAIL with data about the authenticated user to each request"
-                                },
                                 "sendPermissionsHeader": {
                                     "type": "boolean",
                                     "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions"
-                                },
-                                "addHeaders": {
-                                    "type": "object",
-                                    "description": "Add extra headers to every API call"
                                 },
                                 "restrictToRoles": {
                                     "type": "array",

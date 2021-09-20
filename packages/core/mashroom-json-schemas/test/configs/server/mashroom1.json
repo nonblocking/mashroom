@@ -128,11 +128,7 @@
             "warnBeforeAuthenticationExpiresSec": 120,
             "autoExtendAuthentication": false,
             "defaultProxyConfig": {
-                "sendUserHeaders": false,
                 "sendPermissionsHeader": false,
-                "addHeaders": {
-                    "test": "2"
-                },
                 "restrictToRoles": ["ROLE_X"]
             }
         },

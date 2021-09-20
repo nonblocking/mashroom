@@ -258,9 +258,7 @@ export type MashroomAvailablePortalTheme = {
 
 export type MashroomPortalProxyDefinition = {
     +targetUri: string,
-    +sendUserHeaders?: boolean,
     +sendPermissionsHeader?: boolean,
-    +addHeaders?: any,
     +restrictToRoles?: Array<string>,
 }
 

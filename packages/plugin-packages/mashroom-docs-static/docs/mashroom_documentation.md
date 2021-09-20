@@ -623,6 +623,10 @@ this in the _Mashroom_ config file:
 
 [mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc]
 
+[mashroom-http-proxy-add-user-headers](../../mashroom-http-proxy-add-user-headers/README.md) [inc]
+
+[mashroom-http-proxy-add-id-token](../../mashroom-http-proxy-add-id-token/README.md) [inc]
+
 [mashroom-websocket](../../mashroom-websocket/README.md) [inc]
 
 [mashroom-messaging](../../mashroom-messaging/README.md) [inc]

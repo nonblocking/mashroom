@@ -34,9 +34,6 @@ export const WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG = 'MashroomPortalAppLoadin
 export const WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH = 'MashroomPortalRemoteMessagingConnectPath';
 export const WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC = 'MashroomPortalRemoteMessagingPrivateUserTopic';
 
-export const HTTP_HEADER_REST_PROXY_USER = 'X-USER-NAME';
-export const HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME = 'X-USER-DISPLAY-NAME';
-export const HTTP_HEADER_REST_PROXY_USER_EMAIL = 'X-USER-EMAIL';
 export const HTTP_HEADER_REST_PROXY_PERMISSIONS = 'X-USER-PERMISSIONS';
 
 export const SESSION_STORAGE_WS_CLIENT_ID = 'MashroomPortalWebSocketClientId';

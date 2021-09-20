@@ -49,7 +49,6 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             restProxies: {
                 'bff': {
                     targetUri: 'http://localhost:4444/api',
-                    sendUserHeaders: true,
                     sendPermissionsHeader: true
                 },
                 'two': {
@@ -130,7 +129,6 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 {
                     bff: {
                         targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
-                        sendUserHeaders: true,
                         sendPermissionsHeader: true
                     },
                     two: {
@@ -182,7 +180,6 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 {
                     bff: {
                         targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
-                        sendUserHeaders: true,
                         sendPermissionsHeader: true
                     },
                     two: {

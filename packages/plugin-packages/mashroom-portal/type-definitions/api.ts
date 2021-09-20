@@ -285,9 +285,7 @@ export type MashroomAvailablePortalTheme = {
 
 export type MashroomPortalProxyDefinition = {
     readonly targetUri: string;
-    readonly sendUserHeaders?: boolean;
     readonly sendPermissionsHeader?: boolean;
-    readonly addHeaders?: Record<string, string>;
     readonly restrictToRoles?: Array<string>;
 };
 

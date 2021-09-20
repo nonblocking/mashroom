@@ -12,12 +12,8 @@ setPortalPluginConfig({
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
     defaultProxyConfig: {
-        sendUserHeaders: false,
         sendPermissionsHeader: false,
         restrictToRoles: [],
-        addHeaders: {
-            defaultHeader: 'x',
-        }
     }
 });
 
@@ -88,11 +84,7 @@ const portalApp2: MashroomPortalApp = {
     restProxies: {
         'my-proxy': {
             targetUri: 'https://www.mashroom-server.com/api',
-            sendUserHeaders: true,
             sendPermissionsHeader: true,
-            addHeaders: {
-                'X-EXTRA': 'test',
-            },
         },
     },
     defaultAppConfig: {
@@ -261,12 +253,7 @@ describe('PortalPageController', () => {
         expect(httpProxyServiceForwardMock.mock.calls.length).toBe(1);
         expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api');
         expect(httpProxyServiceForwardMock.mock.calls[0][3]).toEqual({
-            'X-USER-NAME': 'john',
-            'X-USER-DISPLAY-NAME': 'John Do',
-            'X-USER-EMAIL': 'john.do@gmail.com',
             'X-USER-PERMISSIONS': 'edit',
-            'X-EXTRA': 'test',
-            defaultHeader: 'x'
         });
     });
 
