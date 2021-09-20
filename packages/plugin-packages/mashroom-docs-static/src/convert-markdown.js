@@ -71,36 +71,38 @@ async function main() {
             <script>
                 const tocMenu = document.getElementById('toc-menu');
                 const tocWrapper = document.getElementById('toc-wrapper');
-                tocMenu.addEventListener('click', () => {
-                  tocWrapper.style.display = 'block';
-                  tocMenu.style.display = 'none';
+                tocMenu.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    tocWrapper.style.display = 'block';
+                    tocMenu.style.display = 'none';
                 });
                 tocWrapper.addEventListener('click', (e) => {
-                  if (e.target instanceof HTMLAnchorElement) {
+                    e.stopPropagation();
+                    if (e.target instanceof HTMLAnchorElement) {
                     tocWrapper.style.display = 'none';
                     tocMenu.style.display = 'block';
-                  }
+                    }
                 });
                 document.addEventListener('click', (e) => {
-                  if (tocWrapper.style.display === 'block' && e.screenX > tocWrapper.clientWidth) {
-                      tocWrapper.style.display = 'none';
-                      tocMenu.style.display = 'block';
-                  }
+                    if (tocWrapper.style.display === 'block' && e.screenX > tocWrapper.clientWidth) {
+                        tocWrapper.style.display = 'none';
+                        tocMenu.style.display = 'block';
+                    }
                 })
                 const [toc] = document.getElementsByClassName('toc');
                 tocWrapper.innerHTML = toc.innerHTML;
                 if (toc) {
-                  const { clientHeight: tocHeight } = toc;
-                  window.addEventListener('scroll', () => {
+                    const { clientHeight: tocHeight } = toc;
+                    window.addEventListener('scroll', () => {
+                      if (window.scrollY > (toc.offsetTop + tocHeight)) {
+                          tocMenu.style.display = 'block';
+                      } else {
+                          tocMenu.style.display = 'none';
+                      }
+                    });
                     if (window.scrollY > (toc.offsetTop + tocHeight)) {
                       tocMenu.style.display = 'block';
-                    } else {
-                      tocMenu.style.display = 'none';
                     }
-                  });
-                  if (window.scrollY > (toc.offsetTop + tocHeight)) {
-                    tocMenu.style.display = 'block';
-                  }
                 }
             </script>
         </body>`;
