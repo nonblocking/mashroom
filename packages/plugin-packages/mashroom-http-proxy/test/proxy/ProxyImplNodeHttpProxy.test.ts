@@ -555,11 +555,6 @@ describe('ProxyImplNodeHttpProxy', () => {
             const headerFilter = new HttpHeaderFilter([])
             const httpProxyService = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, loggerFactory);
 
-            const targetServer = await new Promise<Server>((resolve, reject) => {
-                const server = createHttpServer();
-                server.on('error', (e) => reject(e));
-                server.listen(30001, () => resolve(server));
-            })
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
                 server.on('error', (e) => reject(e));
@@ -576,7 +571,7 @@ describe('ProxyImplNodeHttpProxy', () => {
                 server.listen(30003, () => resolve(server));
             });
 
-            const targetWsServer = new WebSocket.Server(({server: targetServer}));
+            const targetWsServer = new WebSocket.Server(({port: 30001}));
 
             const client = new WebSocket('ws://localhost:30003?test=1');
             client.on('error', (error) => {
@@ -592,9 +587,10 @@ describe('ProxyImplNodeHttpProxy', () => {
                     expect(req.url).toBe('/?test=1');
                     expect(req.headers.foo).toBe('2');
                     expect(message.toString()).toBe('hello server');
+
+                    client.close();
                     proxyServer.close();
                     targetWsServer.close();
-                    targetServer.close();
                     done();
                 });
             });
@@ -612,13 +608,13 @@ describe('ProxyImplNodeHttpProxy', () => {
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
                 server.on('error', (e) => reject(e));
-                server.on('upgrade', (req, socket, head) => {
+                server.on('upgrade', (req: IncomingMessageWithContext, socket: Socket, head) => {
                     console.info('Received upgrade request');
                     req.pluginContext = {
                         loggerFactory,
                         services: {}
-                    }
-                    httpProxyService.forwardWs(req, socket, head, 'ws://echo.websocket.org/', {
+                    } as any;
+                    httpProxyService.forwardWs(req, socket, head, 'ws://ws.ifelse.io/', {
 
                     });
                 })
@@ -634,7 +630,10 @@ describe('ProxyImplNodeHttpProxy', () => {
                 client.send('hello echo');
             });
             client.on('message', (message) => {
-                expect(message).toBe('hello echo');
+                if (message.toString().startsWith('Request served by')) {
+                    return;
+                }
+                expect(message.toString()).toBe('hello echo');
                 client.close();
                 proxyServer.close();
                 done();
