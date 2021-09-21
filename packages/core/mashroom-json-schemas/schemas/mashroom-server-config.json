@@ -265,6 +265,11 @@
                             "type": "string",
                             "description": "The HTTP header for the email address (Default: X-USER-EMAIL)"
                         },
+                        "extraDataHeaders": {
+                            "type": "object",
+                            "additionalProperties": true,
+                            "description": "A mapping of *user.extraData* properties to headers (Default: {})"
+                        },
                         "targetUris": {
                             "type": "array",
                             "items": {

@@ -22,6 +22,7 @@ You can override the default config in your Mashroom config file like this:
             "userNameHeader": "X-USER-NAME",
             "displayNameHeader": "X-USER-DISPLAY-NAME",
             "emailHeader": "X-USER-EMAIL",
+            "extraDataHeaders": {},
             "targetUris": [".*"]
         }
     }
@@ -31,4 +32,5 @@ You can override the default config in your Mashroom config file like this:
  * _userNameHeader_: The HTTP header for the username (Default: X-USER-NAME)
  * _displayNameHeader_: The HTTP header for the display name (Default: X-USER-DISPLAY-NAME)
  * _emailHeader_: The HTTP header for the email address (Default: X-USER-EMAIL)
+ * _extraDataHeaders_: A mapping of *user.extraData* properties to headers (Default: {})
  * _targetUris_: A list of regular expressions that match URIs that should receive the headers (Default: [.*])

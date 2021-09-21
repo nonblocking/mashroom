@@ -48,6 +48,7 @@
                     "userNameHeader": "X-USER-NAME",
                     "displayNameHeader": "X-USER-DISPLAY-NAME",
                     "emailHeader": "X-USER-EMAIL",
+                    "extraDataHeaders": {},
                     "targetUris": [".*"]
                 }
             }

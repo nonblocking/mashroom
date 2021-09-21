@@ -4,7 +4,10 @@ import AddUserDataHttpProxyInterceptor from '../../src/AddUserHeadersHttpProxyIn
 describe('AddUserDataHttpProxyInterceptor', () => {
 
     it('adds headers if the uri matches', async () => {
-        const interceptor = new AddUserDataHttpProxyInterceptor('X-USER-NAME', 'X-USER-DISPLAY-NAME', 'X-USER-EMAIL', ['foo', 'ba.r']);
+        const extraDataMapping = {
+            'X-USER-TEST': 'test',
+        };
+        const interceptor = new AddUserDataHttpProxyInterceptor('X-USER-NAME', 'X-USER-DISPLAY-NAME', 'X-USER-EMAIL', extraDataMapping, ['foo', 'ba.r']);
 
         const req: any = {
             pluginContext: {
@@ -15,7 +18,10 @@ describe('AddUserDataHttpProxyInterceptor', () => {
                             getUser: () => ({
                                 username: 'john',
                                 displayName: 'John',
-                                email: 'john@test.com'
+                                email: 'john@test.com',
+                                extraData: {
+                                    test: 1,
+                                }
                             }),
                         }
                     }
@@ -30,13 +36,14 @@ describe('AddUserDataHttpProxyInterceptor', () => {
             addHeaders: {
                 'X-USER-DISPLAY-NAME': 'John',
                 'X-USER-EMAIL': 'john@test.com',
-                'X-USER-NAME': 'john'
+                'X-USER-NAME': 'john',
+                'X-USER-TEST': 1,
             }
         });
     });
 
     it('does not add headers if the uri doesn\' match', async () => {
-        const interceptor = new AddUserDataHttpProxyInterceptor('X-USER-NAME', 'X-USER-DISPLAY-NAME', 'X-USER-EMAIL', ['foo', 'ba.r']);
+        const interceptor = new AddUserDataHttpProxyInterceptor('X-USER-NAME', 'X-USER-DISPLAY-NAME', 'X-USER-EMAIL', {}, ['foo', 'ba.r']);
 
         const req: any = {
             pluginContext: {

@@ -5,7 +5,8 @@ import type {MashroomHttpProxyInterceptor, HttpHeaders, QueryParams, MashroomHtt
 
 export default class AddUserHeadersHttpProxyInterceptor implements MashroomHttpProxyInterceptor {
 
-    constructor(private userNameHeader: string, private displayNameHeader: string, private emailHeader: string, private targetUris: Array<string>) {
+    constructor(private userNameHeader: string, private displayNameHeader: string, private emailHeader: string,
+                private extraDataHeaders: any, private targetUris: Array<string>) {
     }
 
     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
@@ -59,10 +60,24 @@ export default class AddUserHeadersHttpProxyInterceptor implements MashroomHttpP
 
         logger.debug('Adding user headers to request', targetUri);
 
-        return {
+        const headers: HttpHeaders = {
             [this.userNameHeader]: user.username,
-            [this.displayNameHeader]: user.displayName || '',
-            [this.emailHeader]: user.email || '',
         };
+        if (user.displayName) {
+            headers[this.displayNameHeader] = user.displayName;
+        }
+        if (user.email) {
+            headers[this.emailHeader] = user.email;
+        }
+        if (this.extraDataHeaders) {
+            Object.keys(this.extraDataHeaders).forEach((headerName) => {
+               const extraDataProp = this.extraDataHeaders[headerName];
+               if (user.extraData?.[extraDataProp]) {
+                   headers[headerName] = user.extraData[extraDataProp];
+               }
+            });
+        }
+
+        return headers;
     }
 }
