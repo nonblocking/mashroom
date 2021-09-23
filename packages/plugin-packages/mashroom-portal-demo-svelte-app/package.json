@@ -1,7 +1,7 @@
 {
     "name": "@mashroom/mashroom-portal-demo-svelte-app",
     "version": "1.8.3",
-    "description": "Simple Svelte based app that integrates into the Portal",
+    "description": "Simple Svelte based App that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
     "main": "index.js",
@@ -60,7 +60,8 @@
                     "resourcesRoot": "./public",
                     "restProxies": {},
                     "appConfig": {
-                        "firstName": "Gus"
+                        "firstName": "Gus",
+                        "pingButtonLabel": "Send Ping"
                     }
                 }
             }

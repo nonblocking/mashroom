@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-vue-app",
-    "description": "Simple Vue based app that integrates into the Portal",
+    "description": "Simple Vue based App that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -49,7 +49,8 @@
                     "resourcesRoot": "./dist",
                     "restProxies": {},
                     "appConfig": {
-                        "firstName": "Mike"
+                        "firstName": "Mike",
+                        "pingButtonLabel": "Send Ping"
                     }
                 }
             }

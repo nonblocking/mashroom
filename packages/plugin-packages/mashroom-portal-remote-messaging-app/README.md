@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a portal app (SPA) to test the remote messaging capabilities. This app requires the
+Adds a Portal App to test the remote messaging capabilities. This App requires the
 _mashroom-messaging_ and _mashroom-websocket_ plugins to be installed.
 
 ## Usage

@@ -13,15 +13,19 @@
             window.startSvelteDemoApp(document.body, {
                 appConfig: {
                     firstName: 'Michael',
-                }}, { messageBus: {
-                publish: function () {
-                    console.info('Publish called with arguments: ', arguments);
-                },
-                subscribe: function (topic) {
-                    console.info('Subscribed for topic: ', topic);
-                }
-            }});
-        });
+                    pingButtonLabel: 'Send Ping'
+                }},
+                {
+                    messageBus: {
+                        publish: function () {
+                            console.info('Publish called with arguments: ', arguments);
+                        },
+                        subscribe: function (topic) {
+                            console.info('Subscribed for topic: ', topic);
+                        }
+                    }
+                });
+            });
     </script>
 </body>
 </html>

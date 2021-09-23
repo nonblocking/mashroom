@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-react-app",
-    "description": "Simple React based app that integrates into the Portal",
+    "description": "Simple React based App that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -52,7 +52,8 @@
                     "resourcesRoot": "./dist",
                     "restProxies": {},
                     "appConfig": {
-                        "firstName": "Jimmy"
+                        "firstName": "Jimmy",
+                        "pingButtonLabel": "Send Ping"
                     }
                 }
             }

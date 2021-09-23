@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Added a demo Composite App: Demonstrates the possibility to use existing Apps as building blocks within other Apps.
+   Basically it uses the *MashroomPortalAppService* to tell the Portal where it should place an App with a given name and
+   a custom appConfig. Additional it demonstrates how such a Composite App can have a "private" message bus.
  * Portal: **BREAKING CHANGE**: Removed *sendUserHeaders* and *addHeaders* from the proxy config of Portal Apps
    because both should be done via HTTP Proxy Interceptor now.
    If you were using *sendUserHeaders* just add *mashroom-http-proxy-add-user-headers* to your plugins.

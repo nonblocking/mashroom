@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a portal app that turns the app area it is placed in automatically into a tabbed container.
+Adds a Portal App that turns the app area it is placed in automatically into a tabbed container.
 
 ## Usage
 

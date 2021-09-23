@@ -2,13 +2,13 @@
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
-    <title>Demo React App</title>
+    <title>Demo Composite App</title>
 
     <script src="bundle.js"></script>
 </head>
 <body>
 
-    <div id="demo-react-app-container">
+    <div id="demo-composite-app-container">
         Loading...
     </div>
 
@@ -16,29 +16,28 @@
         (function () {
 
             document.addEventListener("DOMContentLoaded", function () {
-                var element = document.getElementById("demo-react-app-container");
+                var element = document.getElementById("demo-composite-app-container");
                 var portalAppConfig = {
-                    firstName: 'Franz',
-                    pingButtonLabel: 'Send Ping'
+                    firstName: 'Michael'
                 };
                 var portalAppSetup = {
                     lang: 'en',
-                    resourcesBasePath: '',
                     appConfig: portalAppConfig
                 };
                 var portalClientServices = {
                     messageBus: {
-                        publish: function() {
-                            console.info('Publish called with arguemnts: ', arguments);
-                        },
-                        subscribe: function(topic, handler) {
-                            window.PING = function() {
-                                handler();
-                            }
+                        registerMessageInterceptor: function() {},
+                    },
+                    portalAppService: {
+                        loadApp: function(hostElementId, name) {
+                            document.getElementById(hostElementId).innerHTML = '<div>App loaded: ' + name + '</div>';
+                            return Promise.resolve({
+                                id: 'foo'
+                            });
                         }
                     }
                 };
-                window.startVueDemoApp(element, portalAppSetup, portalClientServices);
+                window.startCompositeDemoApp(element, portalAppSetup, portalClientServices);
             });
         })();
 

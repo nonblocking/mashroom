@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-rest-proxy-app",
-    "description": "Simple app that demonstrates rest proxy usage and i18n",
+    "description": "Simple App that demonstrates rest proxy usage and i18n",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
