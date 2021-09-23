@@ -68,7 +68,7 @@ describe('WebSocketServer', () => {
         });
 
         if (onMessageHandler) {
-            onMessageHandler('{ "test": 1 }');
+            onMessageHandler(Buffer.from('{ "test": 1 }'));
         }
     });
 

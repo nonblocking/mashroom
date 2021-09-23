@@ -65,7 +65,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                 portalApps
             };
 
-        } catch (error) {
+        } catch (error: any) {
             this._logger.error('Processing remote portal app endpoint failed!', error);
 
             return {

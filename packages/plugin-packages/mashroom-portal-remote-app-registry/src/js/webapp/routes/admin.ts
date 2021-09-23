@@ -69,7 +69,7 @@ export const adminUpdate = async (req: Request, res: Response) => {
                     logger.info(`Adding portal app endpoint: ${url}`);
                     await portalRemoteAppEndpointService.registerRemoteAppUrl(url);
                 }
-            } catch (error) {
+            } catch (error: any) {
                 logger.error('Adding endpoint failed', error);
                 const errorMessage = `Error: Adding endpoint failed: ${error.message}`;
                 await renderAdminPage(req, res, errorMessage);

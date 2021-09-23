@@ -39,7 +39,6 @@ wrapperApp.use((req: Request, res: Response, next) => {
         },
     }
 
-    // @ts-ignore
     req.pluginContext = pluginContext;
 
     next();

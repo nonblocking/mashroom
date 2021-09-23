@@ -682,17 +682,9 @@
                                             "$ref": "#/definitions/HttpOrWebSocketUrl",
                                             "description": " The API target URI (HTTP, HTTPS or WebSocket)"
                                         },
-                                        "sendUserHeaders": {
-                                            "type": "boolean",
-                                            "description": "Optional. Add the headers X-USER-NAME, X-USER-DISPLAY-NAME and X-USER-EMAIL with data about the authenticated user to each request (Default: false)"
-                                        },
                                         "sendPermissionsHeader": {
                                             "type": "boolean",
                                             "description": "Optional. Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
-                                        },
-                                        "addHeaders": {
-                                            "type": "object",
-                                            "description": "Optional. Add extra headers to every API call"
                                         },
                                         "restrictToRoles": {
                                             "type": "array",

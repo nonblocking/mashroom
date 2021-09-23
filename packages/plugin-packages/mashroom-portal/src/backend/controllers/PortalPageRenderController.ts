@@ -126,7 +126,7 @@ export default class PortalPageRenderController {
 
             await this._renderPage(theme, model, req, res, logger);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

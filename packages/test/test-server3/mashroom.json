@@ -17,7 +17,9 @@
         "Mashroom Portal Remote App Kubernetes Registry",
         "Mashroom Portal Remote App Kubernetes Admin Webapp",
         "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
-        "Mashroom Monitoring PM2 Exporter"
+        "Mashroom Monitoring PM2 Exporter",
+        "Mashroom Http Proxy Add User Headers Interceptor",
+        "Mashroom Http Proxy Add ID Token Interceptor"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {
@@ -51,7 +53,7 @@
             "uri": "mongodb://localhost:27017/mashroom_sessions",
             "collection": "sessions",
             "connectionOptions": {
-                "poolSize": 2
+                "minPoolSize": 2
             }
         },
         "Mashroom Security Services": {
@@ -101,7 +103,7 @@
         "Mashroom Storage MongoDB Provider": {
             "uri": "mongodb://localhost:27017/mashroom_storage_db",
             "connectionOptions": {
-                "poolSize": 2
+                "minPoolSize": 2
             }
         },
         "Mashroom Memory Cache Services": {

@@ -13,17 +13,31 @@
        <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
      </div>
      <div class="mashroom-portal-app-host" data-replace-content="app">
-       {{#if appSSRHtml}}
-         {{{appSSRHtml}}}
-       {{else}}
-         <div class="mashroom-portal-app-loading"><span/></div>
-       {{/if}}
-     </div>
+      {{#if appSSRHtml}}
+        {{{appSSRHtml}}}
+      {{else}}
+        <div class="mashroom-portal-app-loading"><span/></div>
+      {{/if}}
+    </div>
    </div>
    ```
    **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
    functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
- * Admin App: Bundle size halved, loads now faster
+ * Added a demo Composite App: Demonstrates the possibility to use existing Apps as building blocks within other Apps.
+   Basically it uses the *MashroomPortalAppService* to tell the Portal where it should place an App with a given name and
+   a custom appConfig. Additional it demonstrates how such a Composite App can have a "private" message bus.
+ * Portal: **BREAKING CHANGE**: Removed *sendUserHeaders* and *addHeaders* from the proxy config of Portal Apps
+   because both should be done via HTTP Proxy Interceptor now.
+   If you were using *sendUserHeaders* just add *mashroom-http-proxy-add-user-headers* to your plugins.
+ * Added a plugin to add the ID/JWT token to backend requests if OpenID connect is used (*mashroom-http-proxy-add-id-token*)
+ * Added a plugin to add user data as headers to backend requests (*mashroom-http-proxy-add-user-headers*)
+ * HTTP Proxy: The HTTP interceptor can now also process WebSocket upgrade requests
+   (added optional method interceptWsRequest())
+ * MongoDB client upgraded to v4
+   **BREAKING CHANGE**: If you use *mashroom-session-provider-mongodb* or *mashroom-storage-provider-mongodb*
+   please check your connection options since they have changed. E.g. *poolSize* and *useUnifiedTopology* no
+   longer exist. Check out https://mongodb.github.io/node-mongodb-native/4.1/classes/MongoClient.html#options
+ * Admin App: Bundle size cut in halve, loads now faster
  * Sandbox App: It is possible to search for Apps now (autocomplete)
  * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
 

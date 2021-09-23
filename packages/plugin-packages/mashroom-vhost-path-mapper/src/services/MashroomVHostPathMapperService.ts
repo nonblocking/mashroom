@@ -10,7 +10,6 @@ import type {
 export default class MashroomVHostPathMapperService implements MashroomVHostPathMapperServiceType {
 
     getMappingInfo(request: Request): RequestVHostMappingInfo | undefined {
-        // @ts-ignore
         return request[VHOST_MAPPING_INFO_REQUEST_PROP_NAME];
     }
 }

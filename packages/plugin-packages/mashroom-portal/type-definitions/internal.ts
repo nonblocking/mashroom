@@ -67,9 +67,7 @@ export type MashroomPortalPluginConfig = {
     readonly warnBeforeAuthenticationExpiresSec: number;
     readonly autoExtendAuthentication: boolean;
     readonly defaultProxyConfig: {
-        readonly sendUserHeaders?: boolean;
         readonly sendPermissionsHeader?: boolean;
-        readonly addHeaders?: Record<string, string>;
         readonly restrictToRoles?: Array<string>;
     }
 }

@@ -8,7 +8,7 @@ body {
     -ms-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
-    padding: 20px;
+    padding: 20px 40px;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -58,7 +58,7 @@ p {
 }
 
 ul {
-    padding-left: 30px;
+    padding-left: 20px;
 }
 
 li {

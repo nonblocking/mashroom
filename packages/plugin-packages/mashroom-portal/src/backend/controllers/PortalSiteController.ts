@@ -42,7 +42,7 @@ export default class PortalSiteController {
 
             res.json(sites);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -69,7 +69,7 @@ export default class PortalSiteController {
 
             res.json(site);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -119,7 +119,7 @@ export default class PortalSiteController {
 
             res.json(site);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -159,7 +159,7 @@ export default class PortalSiteController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -190,7 +190,7 @@ export default class PortalSiteController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -224,7 +224,7 @@ export default class PortalSiteController {
 
             res.json(roles);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -273,7 +273,7 @@ export default class PortalSiteController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -298,7 +298,7 @@ export default class PortalSiteController {
 
             res.json(pageTree);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

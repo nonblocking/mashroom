@@ -13,7 +13,6 @@ export type UserAgent = {
 }
 
 export const determineUserAgent = (req: IncomingMessage): UserAgent => {
-    // @ts-ignore
     const ua = UAParser(req.headers['user-agent']);
 
     return {

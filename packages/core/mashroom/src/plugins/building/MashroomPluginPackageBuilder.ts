@@ -4,10 +4,10 @@ import fs from 'fs';
 import {EventEmitter} from 'events';
 import {ensureDirSync} from 'fs-extra';
 import {promisify} from 'util';
-import ansiRegex from 'ansi-regex';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
 import NpmUtils from './NpmUtils';
+import {stripAnsiColors} from '../../utils/log_utils';
 import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
 
 import type {
@@ -223,9 +223,9 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
                 success: true,
             });
 
-        } catch (error) {
+        } catch (error: any) {
             this._logger.error(`Error building plugin package: ${queueEntry.pluginPackageName}.`, error);
-            const errorMessage = error.toString().replace(ansiRegex(), '');
+            const errorMessage = stripAnsiColors(error.toString());
 
             if (buildInfo) {
                 buildInfo.buildStatus = 'error';

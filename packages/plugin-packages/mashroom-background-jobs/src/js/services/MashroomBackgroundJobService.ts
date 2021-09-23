@@ -93,7 +93,7 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
                         executionTimeMs,
                         success: true,
                     };
-                } catch (error) {
+                } catch (error: any) {
                     const executionTimeMs = Date.now() - timestamp.getTime();
                     this._logger.error(`Execution of job ${name} failed!`, error);
                     wrapper.lastInvocation = {

@@ -6,7 +6,6 @@ import type {MashroomApiPluginBootstrapFunction} from '@mashroom/mashroom/type-d
 const bootstrap: MashroomApiPluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const defaultBackUrl = contextHolder.getPluginContext().serverConfig.indexPage;
     const router = Router();
-    // @ts-ignore
     router.all('/*', callbackRoute(defaultBackUrl));
     return router;
 };

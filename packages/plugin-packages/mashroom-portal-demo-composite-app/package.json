@@ -1,0 +1,63 @@
+{
+    "name": "@mashroom/mashroom-portal-demo-composite-app",
+    "description": "A composite App that consists of other Portal Apps",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "sideEffects": false,
+    "files": [
+        "dist/**"
+    ],
+    "devDependencies": {
+        "@mashroom/mashroom-portal": "1.8.3",
+        "@mashroom/mashroom-portal-ui-commons": "1.8.3",
+        "@babel/cli": "^7.15.7",
+        "@types/react": "^17.0.21",
+        "@types/react-dom": "^17.0.9",
+        "eslint": "^7.32.0",
+        "jest": "^27.2.0",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "typescript": "^4.4.3",
+        "webpack": "^5.53.0",
+        "webpack-cli": "^4.8.0",
+        "webpack-dev-server": "^4.2.1"
+    },
+    "scripts": {
+        "lint": "eslint --ext .ts,.tsx --fix --quiet ./src",
+        "type-check": "tsc --noEmit",
+        "dev": "webpack serve --hot --mode development",
+        "build": "webpack --mode production"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Composite App",
+                "title": "Demo Composite App",
+                "type": "portal-app",
+                "bootstrap": "startCompositeDemoApp",
+                "requires": [
+                    "Mashroom Portal Demo Angular App",
+                    "Mashroom Portal Demo Vue App",
+                    "Mashroom Portal Demo Svelte App"
+                ],
+                "category": "Demo",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": []
+                },
+                "defaultConfig": {
+                    "resourcesRoot": "./dist",
+                    "restProxies": {},
+                    "appConfig": {
+                        "firstName": "Linus"
+                    }
+                }
+            }
+        ]
+    }
+}

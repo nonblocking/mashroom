@@ -59,7 +59,7 @@ export default class PortalPageEnhancementController {
 
             return true;
 
-        } catch (err) {
+        } catch (err: any) {
             logger.error(`Cannot load page enhancement resource: ${resourceUri}`, err);
             if (cacheControlService) {
                 cacheControlService.removeCacheControlHeader(res);

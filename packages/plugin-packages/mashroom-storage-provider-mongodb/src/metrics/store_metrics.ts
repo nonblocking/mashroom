@@ -1,5 +1,5 @@
 
-import {getClient} from '../mongodb_client';
+import {isConnected} from '../mongodb_client';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
@@ -14,8 +14,7 @@ export const startExportStoreMetrics = (pluginContextHolder: MashroomPluginConte
         const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
 
         if (collectorService) {
-            const client = getClient();
-            const connected = client && client.isConnected() ? 1 : 0;
+            const connected = isConnected()? 1 : 0;
 
             collectorService.gauge('mashroom_storage_mongodb_connected', 'Mashroom Storage MongoDB Connected').set(connected);
         }

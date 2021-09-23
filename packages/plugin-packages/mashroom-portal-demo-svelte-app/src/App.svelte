@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import type { MashroomPluginConfig } from '@mashroom/mashroom/type-definitions';
   import logo from './assets/svelte-logo.svg';
 
   export let messageBus: any;
-  export let appConfig: MashroomPluginConfig & { firstName?: string } = {};
+  export let appConfig: { firstName?: string, pingButtonLabel?: string } = {};
   let pings = 0;
 
   const incrementPing = (): number => pings += 1;
@@ -45,7 +44,9 @@
         <h4>Svelte Demo App</h4>
         <p>Hello {appConfig.firstName}!</p>
         <div>
-            <button on:click={sendPing}>Send Ping</button>
+            <button on:click={sendPing}>
+                {appConfig.pingButtonLabel || 'Send Ping'}
+            </button>
             <span>Received pings: {pings}</span>
         </div>
     </div>

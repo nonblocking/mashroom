@@ -55,11 +55,16 @@ module.exports = {
     mode,
     devtool: prod ? false : 'source-map',
     devServer: {
-        inline: true,
         host: '0.0.0.0',
-        disableHostCheck: true,
+        allowedHosts: 'all',
         port: 8081,
-        contentBase: 'public',
+        static: 'public',
         open: true,
+        client: {
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+        }
     },
 };

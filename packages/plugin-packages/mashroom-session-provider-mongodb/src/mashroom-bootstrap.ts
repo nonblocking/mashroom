@@ -26,7 +26,37 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
         }
     });
 
-    startExportStoreMetrics(store, pluginContextHolder);
+    const client = store.client;
+    let connected = false;
+    client.on('open', () => {
+        logger.info('MongoDB: Connection opened');
+        connected = true;
+    });
+    client.on('close', () => {
+        logger.info('MongoDB: Connection closed');
+        connected = false;
+    });
+    client.on('error', (event) => {
+        logger.error('MongoDB: Error:', event);
+    });
+
+    client.on('serverDescriptionChanged', (event) => {
+        logger.debug('MongoDB:', event);
+    });
+    client.on('serverHeartbeatSucceeded', (event) => {
+        if (!connected) {
+            connected = true;
+            logger.info('MongoDB: Reconnected to cluster: ', event);
+        } else {
+            logger.debug('MongoDB:', event);
+        }
+    });
+    client.on('serverHeartbeatFailed', (event) => {
+        logger.error('MongoDB: Disconnected from cluster: ', event);
+        connected = false;
+    });
+
+    startExportStoreMetrics(() => connected, pluginContextHolder);
 
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads

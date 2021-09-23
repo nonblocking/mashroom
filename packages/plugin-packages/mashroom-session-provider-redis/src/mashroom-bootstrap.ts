@@ -47,7 +47,6 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
 
     const RedisStore = createRedisStore(expressSession);
     return new RedisStore({
-        // @ts-ignore
         client,
         prefix,
     });

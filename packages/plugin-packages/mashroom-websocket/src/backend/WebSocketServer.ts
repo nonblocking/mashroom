@@ -2,6 +2,7 @@
 import {Server, CLOSING, OPEN} from 'ws';
 import {v4} from 'uuid';
 import context from './context';
+import ReconnectMessageBufferStore from './webapp/ReconnectMessageBufferStore';
 
 import type WebSocket from 'ws';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -17,7 +18,6 @@ import type {
     IntervalID,
     MashroomWebSocketServer,
 } from '../../type-definitions/internal';
-import ReconnectMessageBufferStore from './webapp/ReconnectMessageBufferStore';
 
 const CHECK_CONNECTIONS_INTERVAL_MS = 30 * 1000;
 const KEEP_ALIVE_MESSAGE = 'keepalive';
@@ -235,11 +235,16 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         return `${username}_${clientId}`;
     }
 
-    private _handleMessage(textMsg: any, client: MashroomWebSocketClient): void {
+    private _handleMessage(msg: WebSocket.Data, client: MashroomWebSocketClient): void {
         const contextLogger = this._logger.withContext(client.loggerContext);
 
-        if (typeof (textMsg) !== 'string') {
-            contextLogger.warn('Ignoring WebSocket message because currently binary is not supported');
+        let textMsg: string;
+        if (typeof (msg) === 'string') {
+            textMsg = msg;
+        } else if (msg instanceof Buffer) {
+            textMsg = msg.toString();
+        } else {
+            contextLogger.warn('Ignoring WebSocket message because format is not supported:', msg);
             return;
         }
 

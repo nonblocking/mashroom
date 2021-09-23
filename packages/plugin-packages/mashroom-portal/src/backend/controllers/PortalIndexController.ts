@@ -21,7 +21,7 @@ export default class IndexController {
                 res.sendStatus(404);
             }
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

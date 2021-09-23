@@ -21,7 +21,9 @@
         "Mashroom Portal Remote App Kubernetes Background Job",
         "Mashroom Portal Remote App Kubernetes Registry",
         "Mashroom Portal Remote App Kubernetes Admin Webapp",
-        "Mashroom Portal Remote App Kubernetes Admin Webapp Integration"
+        "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
+        "Mashroom Http Proxy Add User Headers Interceptor",
+        "Mashroom Http Proxy Add ID Token Interceptor"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {

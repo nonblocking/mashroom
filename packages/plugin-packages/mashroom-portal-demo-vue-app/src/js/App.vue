@@ -5,7 +5,9 @@
             <h4>Vue Demo App</h4>
             <p>Hello {{firstName}}!</p>
             <div>
-                <button v-on:click="onClick">Send Ping</button>
+                <button v-on:click="onClick">
+                    {{pingButtonLabel || 'Send Ping'}}
+                </button>
                 <span>Received pings: {{pings}}</span>
             </div>
         </div>
@@ -17,7 +19,7 @@
 
     export default {
         name: 'app',
-        props: ['resourcesBasePath', 'firstName', 'messageBus'],
+        props: ['resourcesBasePath', 'firstName', 'pingButtonLabel', 'messageBus'],
         data: () => ({
             pings: 0
         }),

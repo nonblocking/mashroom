@@ -18,7 +18,7 @@ export default class PortalLanguageController {
 
             res.json(i18nService.availableLanguages);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
@@ -37,7 +37,7 @@ export default class PortalLanguageController {
 
             res.json(i18nService.defaultLanguage);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

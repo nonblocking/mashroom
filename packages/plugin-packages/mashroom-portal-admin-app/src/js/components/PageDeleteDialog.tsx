@@ -61,7 +61,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
                 if (selectedPage.pageId === portalAdminService.getCurrentPageId()) {
                     window.location.href = '/';
                 } else {
-                    window.location.reload(true);
+                    window.location.reload();
                 }
             },
             (error) => {

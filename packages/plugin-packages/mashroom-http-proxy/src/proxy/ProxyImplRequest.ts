@@ -45,8 +45,9 @@ export default class ProxyImplRequest implements Proxy {
         let effectiveQueryParams = {
             ...req.query
         };
+
         // Process request interceptors
-        const interceptorResult = await this._interceptorHandler.processRequest(req, res, targetUri, additionalHeaders, logger);
+        const interceptorResult = await this._interceptorHandler.processHttpRequest(req, res, targetUri, additionalHeaders, logger);
         if (interceptorResult.responseHandled) {
             return Promise.resolve();
         }
@@ -102,7 +103,7 @@ export default class ProxyImplRequest implements Proxy {
                     // Execute response interceptors
                     // Pause the stream flow until the async op is finished
                     targetResponse.pause();
-                    const interceptorResult = await this._interceptorHandler.processResponse(req, res, targetUri, targetResponse, logger);
+                    const interceptorResult = await this._interceptorHandler.processHttpResponse(req, res, targetUri, targetResponse, logger);
                     targetResponse.resume();
 
                     if (interceptorResult.responseHandled) {

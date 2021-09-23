@@ -130,7 +130,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
                         const url = window.location.href.replace(selectedSite.site.path, values.site.path);
                         window.location.href = url;
                     } else {
-                        window.location.reload(true);
+                        window.location.reload();
                     }
                 } else if (!siteId) {
                     // Goto new site

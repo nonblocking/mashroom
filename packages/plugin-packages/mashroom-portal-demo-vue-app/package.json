@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-vue-app",
-    "description": "Simple Vue based app that integrates into the Portal",
+    "description": "Simple Vue based App that integrates into the Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -10,19 +10,19 @@
         "dist/**"
     ],
     "devDependencies": {
-        "@babel/cli": "^7.14.8",
+        "@babel/cli": "^7.15.7",
         "@vue/cli-plugin-eslint": "^4.5.13",
         "copyfiles": "^2.4.1",
         "eslint": "^7.32.0",
-        "eslint-plugin-vue": "^7.15.1",
-        "jest": "^27.0.6",
+        "eslint-plugin-vue": "^7.18.0",
+        "jest": "^27.2.0",
         "vue": "^2.6.14",
-        "vue-eslint-parser": "^7.10.0",
+        "vue-eslint-parser": "^7.11.0",
         "vue-loader": "^15.9.8",
         "vue-template-compiler": "^2.6.14",
-        "webpack": "^5.48.0",
-        "webpack-cli": "^4.7.2",
-        "webpack-dev-server": "^3.11.2"
+        "webpack": "^5.53.0",
+        "webpack-cli": "^4.8.0",
+        "webpack-dev-server": "^4.2.1"
     },
     "scripts": {
         "lint": "eslint src --fix",
@@ -49,7 +49,8 @@
                     "resourcesRoot": "./dist",
                     "restProxies": {},
                     "appConfig": {
-                        "firstName": "Mike"
+                        "firstName": "Mike",
+                        "pingButtonLabel": "Send Ping"
                     }
                 }
             }

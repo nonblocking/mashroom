@@ -9,6 +9,7 @@ import httpUpgradeHandlerFn from './http_upgrade_handler';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
+import type {Socket} from 'net';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', loggerFactory);
@@ -77,8 +78,8 @@ context.server.addMessageListener((path) => path.startsWith('/test'), (message, 
 });
 
 const upgradeHandler = httpUpgradeHandlerFn();
-httpServer.on('upgrade', (req, socket, head) => {
-    const reqWithContext = {...req, pluginContext};
+httpServer.on('upgrade', (req, socket: Socket, head) => {
+    const reqWithContext: any = {...req, pluginContext};
     upgradeHandler(reqWithContext, socket, head);
 });
 

@@ -277,9 +277,7 @@ export type MashroomAvailablePortalTheme = {
 
 export type MashroomPortalProxyDefinition = {
     +targetUri: string,
-    +sendUserHeaders?: boolean,
     +sendPermissionsHeader?: boolean,
-    +addHeaders?: any,
     +restrictToRoles?: Array<string>,
 }
 
@@ -858,7 +856,7 @@ export interface MashroomPortalAdminService {
 }
 
 export type MashroomPortalMessageBusSubscriberCallback = (data: any, topic: string, senderAppId: ?string) => void;
-export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string, cancelMessage: () => void) => ?any;
+export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string, cancelMessage: () => void) => void;
 
 export interface MashroomPortalMessageBus {
     /**
@@ -901,7 +899,7 @@ export interface MashroomPortalMessageBus {
     /**
      * Register a message interceptor.
      * A interceptor can be useful for debugging or to manipulate the messages.
-     * It is also possible to block messages by returning 'undefined' or 'null'.
+     * It is also possible to block messages calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
 

@@ -51,7 +51,7 @@ export default class PortalLogController {
 
             res.end();
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }

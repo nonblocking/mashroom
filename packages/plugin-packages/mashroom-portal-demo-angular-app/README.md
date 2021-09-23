@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) based on [Angular 9](https://angular.io) to the _Mashroom Portal_.
+Adds a demo App (Microfrontend) based on [Angular](https://angular.io) to the _Mashroom Portal_.
 
 ## Usage
 

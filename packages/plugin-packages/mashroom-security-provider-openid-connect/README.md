@@ -98,7 +98,7 @@ roles to a scope (which means we can get it as claim). See Example Configuration
 
 ### Secrets
 
-The plugin maps the accessToken to _user.secrets.accessToken_ so it can for example be used in a Http Proxy Interceptor to set
+The plugin maps the ID/JWT Token to _user.secrets.idToken_ so it can for example be used in a Http Proxy Interceptor to set
 the Bearer for backend calls.
 
 ### Authentication Expiration

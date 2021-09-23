@@ -3,11 +3,17 @@ module.exports = {
     context: __dirname,
     entry: './index.js',
     devServer: {
-        contentBase: __dirname,
+        static: __dirname,
         compress: true,
         port: 8888,
-        disableHostCheck: true,
+        allowedHosts: 'all',
         open: true,
+        client: {
+            overlay: {
+                errors: false,
+                warnings: false,
+            },
+        },
         proxy: {
             '/mashroom-portal/*':{
                 target: 'http://localhost:5050',

@@ -1,5 +1,5 @@
 
-import type {RequestHandler} from 'express';
+import type {Request, Response, NextFunction, RequestHandler} from 'express';
 
 /**
  * Request handler wrapper that allows hot reload of a plugin
@@ -11,21 +11,16 @@ export default class ExpressRequestHandlerWrapper {
     constructor(private _pluginName: string) {
     }
 
-    handler() {
+    handler(): RequestHandler {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this;
 
         // We create a handler with the name (function.name) pluginName.
-        // The handler might receive three arguments (req, res, next) or four if it is an error handling middleware (err, req, res, next).
-        // We pass just all arguments to the actual handler.
-
         const handlers = {
-            [this._pluginName]: function(...args: any[]) {
+            [this._pluginName]: function(req: Request, res: Response, next: NextFunction) {
                 if (self._requestHandler) {
-                    // @ts-ignore
-                    self._requestHandler(...args);
+                    self._requestHandler(req, res, next);
                 } else {
-                    const next: () => void = args[args.length - 1];
                     next();
                 }
             },
@@ -35,7 +30,7 @@ export default class ExpressRequestHandlerWrapper {
         return handlers[this._pluginName];
     }
 
-    updateRequestHandler(requestHandler: RequestHandler) {
+    updateRequestHandler(requestHandler: RequestHandler): void {
         this._requestHandler = requestHandler;
     }
 }

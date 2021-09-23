@@ -16,6 +16,18 @@ const interceptor1: MashroomHttpProxyInterceptor = {
             removeHeaders: ['accept'],
         }
     },
+    async interceptWsRequest() {
+        return {
+            rewrittenTargetUri: 'wss://whatever.com/',
+            addHeaders: {
+                'X-Foo': 'bar',
+            },
+            addQueryParams: {
+                'q': 'x'
+            },
+            removeHeaders: ['accept'],
+        }
+    },
     async interceptResponse() {
         return {
             addHeaders: {
@@ -66,15 +78,9 @@ const interceptor4: MashroomHttpProxyInterceptor = {
             responseHandled: true,
         }
     },
-    async interceptResponse() {
-        return null;
-    }
 }
 
 const interceptor5: MashroomHttpProxyInterceptor = {
-    async interceptRequest() {
-        return null;
-    },
     async interceptResponse() {
         return {
             responseHandled: true,
@@ -124,7 +130,7 @@ describe('InterceptorHandler', () => {
 
         };
         const handler = new InterceptorHandler(pluginRegistry1);
-        const result = await handler.processRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
+        const result = await handler.processHttpRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
 
         expect(result).toEqual({
             addHeaders: {
@@ -146,13 +152,34 @@ describe('InterceptorHandler', () => {
         });
     });
 
+    it('processes the request interceptors for upgrade requests (WebSockets)', async () => {
+        const clientRequest: any = {
+            headers: {
+                existing1: '1',
+                existing2: '2',
+            },
+        };
+        const handler = new InterceptorHandler(pluginRegistry1);
+        const result = await handler.processWsRequest(clientRequest, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
+
+        expect(result).toEqual({
+            addHeaders: {
+                'X-Foo': 'bar',
+            },
+            removeHeaders: [
+                'accept',
+            ],
+            rewrittenTargetUri: 'wss://whatever.com/'
+        });
+    });
+
     it('processes the request interceptors with responseHandled', async () => {
         const clientRequest: any = {
         };
         const clientResponse: any = {
         };
         const handler = new InterceptorHandler(pluginRegistry2);
-        const result = await handler.processRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
+        const result = await handler.processHttpRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
 
         expect(result).toEqual({
             responseHandled: true,
@@ -171,7 +198,7 @@ describe('InterceptorHandler', () => {
         const clientResponse: any = {
         };
         const handler = new InterceptorHandler(pluginRegistry1);
-        const result = await handler.processResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggerFactory());
+        const result = await handler.processHttpResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggerFactory());
 
         expect(result).toEqual({
             addHeaders: {
@@ -192,7 +219,7 @@ describe('InterceptorHandler', () => {
         const clientResponse: any = {
         };
         const handler = new InterceptorHandler(pluginRegistry3);
-        const result = await handler.processResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggerFactory());
+        const result = await handler.processHttpResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggerFactory());
 
         expect(result).toEqual({
             responseHandled: true,

@@ -12,7 +12,7 @@ describe('MashroomOpenIDConnectSecurityProvider', () => {
             session: {
                 [OICD_AUTH_DATA_SESSION_KEY]: {
                     tokenSet: {
-                        access_token: 'xxxxxxx',
+                        id_token: 'xxxxxxx',
                         expires_at: Date.now() / 1000 + 2000,
                     }
                 },
@@ -39,7 +39,7 @@ describe('MashroomOpenIDConnectSecurityProvider', () => {
             pictureUrl: null,
             roles: [],
             secrets: {
-                accessToken: 'xxxxxxx'
+                idToken: 'xxxxxxx'
             },
             username: 'test'
         });

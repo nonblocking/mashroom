@@ -10,6 +10,7 @@ import {MashroomPortalAppSetup, MashroomPortalClientServices, MashroomPortalMess
 export class AppComponent {
 
     firstName: string;
+    pingButtonLabel: string | undefined;
     resourcesBasePath: string;
     pings: number;
     messageBus: MashroomPortalMessageBus;
@@ -17,6 +18,7 @@ export class AppComponent {
     constructor(cdRef: ChangeDetectorRef, @Inject('app.setup') private _appSetup: MashroomPortalAppSetup, @Inject('client.services') private _clientServices: MashroomPortalClientServices) {
         this.resourcesBasePath = _appSetup.resourcesBasePath;
         this.firstName = _appSetup.appConfig.firstName;
+        this.pingButtonLabel = _appSetup.appConfig.pingButtonLabel;
         this.pings = 0;
         this.messageBus = _clientServices.messageBus;
         this.messageBus.subscribe('ping', () => {

@@ -234,7 +234,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 } else {
                     removeHostElemAndUnloadResources();
                 }
-            } catch (error) {
+            } catch (error: any) {
                 handleError(error);
             }
         } else {
@@ -437,7 +437,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         let bootstrapRetVal = null;
         try {
             bootstrapRetVal = bootstrap(wrapper, appSetup, clientServices) as any;
-        } catch (error) {
+        } catch (error: any) {
             handleError(error);
             return Promise.reject(error);
         }

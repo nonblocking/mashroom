@@ -6,13 +6,13 @@ const EXPORT_INTERVAL_MS = 5000;
 
 let interval: NodeJS.Timeout;
 
-export const startExportStoreMetrics = (mongoDBStore: any, pluginContextHolder: MashroomPluginContextHolder) => {
+export const startExportStoreMetrics = (isConnected: () => boolean, pluginContextHolder: MashroomPluginContextHolder) => {
     interval = setInterval(async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
         const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
 
         if (collectorService) {
-            const connected = mongoDBStore.client && mongoDBStore.client.isConnected() ? 1 : 0;
+            const connected = isConnected() ? 1 : 0;
 
             collectorService.gauge('mashroom_sessions_mongodb_connected', 'Mashroom Session Store MongoDB Connected').set(connected);
         }

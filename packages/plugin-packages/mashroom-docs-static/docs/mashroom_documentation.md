@@ -201,7 +201,7 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 
 ### Minimum Requirements
 
- * Node.js >= 10
+ * Node.js >= 12
 
 ### Install
 
@@ -623,6 +623,10 @@ this in the _Mashroom_ config file:
 
 [mashroom-http-proxy](../../mashroom-http-proxy/README.md) [inc]
 
+[mashroom-http-proxy-add-user-headers](../../mashroom-http-proxy-add-user-headers/README.md) [inc]
+
+[mashroom-http-proxy-add-id-token](../../mashroom-http-proxy-add-id-token/README.md) [inc]
+
 [mashroom-websocket](../../mashroom-websocket/README.md) [inc]
 
 [mashroom-messaging](../../mashroom-messaging/README.md) [inc]
@@ -671,6 +675,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-portal-sandbox-app](../../mashroom-portal-sandbox-app/README.md) [inc]
 
+[mashroom-portal-remote-messaging-app](../../mashroom-portal-remote-messaging-app/README.md) [inc]
+
 ## Demo Plugins
 
 [mashroom-demo-webapp](../../mashroom-demo-webapp/README.md) [inc]
@@ -685,13 +691,9 @@ this in the _Mashroom_ config file:
 
 [mashroom-portal-demo-svelte-app](../../mashroom-portal-demo-svelte-app/README.md) [inc]
 
-[mashroom-portal-demo-reasonreact-app](../../mashroom-portal-demo-reasonreact-app/README.md) [inc]
-
 [mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc]
 
 [mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc]
-
-[mashroom-portal-demo-remote-messaging](../../mashroom-portal-demo-remote-messaging/README.md) [inc]
 
 ## 3rd Party Plugins
 

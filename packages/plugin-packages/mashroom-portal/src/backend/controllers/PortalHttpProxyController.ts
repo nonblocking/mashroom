@@ -1,9 +1,6 @@
 
 import {
     HTTP_HEADER_REST_PROXY_PERMISSIONS,
-    HTTP_HEADER_REST_PROXY_USER,
-    HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME,
-    HTTP_HEADER_REST_PROXY_USER_EMAIL,
 } from '../constants';
 import context from '../context/global_portal_context';
 import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security_utils';
@@ -79,33 +76,18 @@ export default class PortalHttpProxyController {
                 fullTargetUri += `/${pathParts.splice(2).join('/')}`;
             }
 
-            let headers: Record<string, string> = {};
+            const headers: Record<string, string> = {};
             if (user) {
-                if (restProxyDef.sendUserHeaders || (restProxyDef as any).sendUserHeader || defaultProxyConfig.sendUserHeaders) {
-                    headers[HTTP_HEADER_REST_PROXY_USER] = user.username;
-                    if (user.displayName) {
-                        headers[HTTP_HEADER_REST_PROXY_USER_DISPLAY_NAME] = user.displayName;
-                    }
-                    if (user.email) {
-                        headers[HTTP_HEADER_REST_PROXY_USER_EMAIL] = user.email;
-                    }
-                }
                 if ((restProxyDef.sendPermissionsHeader || defaultProxyConfig.sendPermissionsHeader) && portalApp.rolePermissions) {
                     const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
                     headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => permissions[p]).join(',');
                 }
             }
 
-            headers = {
-                ...headers,
-                ...restProxyDef.addHeaders || {},
-                ...defaultProxyConfig.addHeaders || {},
-            }
-
             logger.info(`Forwarding Rest API call: ${req.method} /${decodedPath} --> ${fullTargetUri}`);
             await httpProxyService.forward(req, res, fullTargetUri, headers);
 
-        } catch (e) {
+        } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
         }
