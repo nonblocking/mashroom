@@ -10,7 +10,7 @@
         "lib/**"
     ],
     "dependencies": {
-        "find-process": "^1.4.4",
+        "find-process": "^1.4.5",
         "ip-filter": "^3.0.5",
         "kind-of": "^6.0.3",
         "request-ip": "^2.1.3",
