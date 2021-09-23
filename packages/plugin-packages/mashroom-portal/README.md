@@ -662,7 +662,7 @@ export interface MashroomPortalMessageBus {
     /**
      * Register a message interceptor.
      * A interceptor can be useful for debugging or to manipulate the messages.
-     * It is also possible to block messages calling cancelMessage() from the interceptor arguments
+     * It is also possible to block messages calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(
         interceptor: MashroomPortalMessageBusInterceptor,

@@ -951,7 +951,7 @@ export type MashroomPortalMessageBusInterceptor = (
     senderAppId: string | null | undefined,
     receiverAppId: string | null | undefined,
     cancelMessage: () => void,
-) => any | null | undefined;
+) => void;
 
 export interface MashroomPortalMessageBus {
     /**
@@ -1003,7 +1003,7 @@ export interface MashroomPortalMessageBus {
     /**
      * Register a message interceptor.
      * A interceptor can be useful for debugging or to manipulate the messages.
-     * It is also possible to block messages by returning 'undefined' or 'null'.
+     * It is also possible to block messages calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(
         interceptor: MashroomPortalMessageBusInterceptor,
