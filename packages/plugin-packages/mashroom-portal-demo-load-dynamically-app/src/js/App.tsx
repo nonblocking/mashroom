@@ -57,7 +57,7 @@ export default class App extends PureComponent<Props, State> {
                         this.props.portalAppService.unloadApp(loadedApp.id);
                     };
 
-                    loadedApp.portalAppTitleElement.parentElement && loadedApp.portalAppTitleElement.parentElement.appendChild(closeButton);
+                    loadedApp.portalAppTitleElement?.parentElement?.appendChild(closeButton);
                 }
             }
         );

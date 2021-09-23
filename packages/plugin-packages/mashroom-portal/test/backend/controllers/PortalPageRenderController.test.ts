@@ -316,7 +316,7 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            type: (t: string) => {},
+            type: (t: string) => { /* nothing to do */ },
             render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
                 if (template === 'portal') {
                     expect(engineName).toBe('fooEngine');
@@ -369,7 +369,7 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            type: (t: string) => {},
+            type: (t: string) => { /* nothing to do */ },
             render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
                 if (template === 'portal') {
                     // console.info(model.portalResourcesHeader);
