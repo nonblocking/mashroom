@@ -5,15 +5,14 @@
     display: table;
 
     span:before {
-        content: '\f070';
+        content: '\f06e';
         font-family: $FONT_ICON;
-        font-weight: 900;
         padding-right: 5px;
     }
 
     &.active {
         span:before {
-            content: '\f06e';
+            content: '\f070';
             padding-right: 7px;
         }
     }
