@@ -463,7 +463,7 @@ header {
     }
 
     .mashroom-portal-app-header {
-        display: flex;
+        display: none;
         align-items: center;
         background-color: $COLOR_PRIMARY;
         color: white;
@@ -496,12 +496,14 @@ header {
     }
 
     &.show-header {
-
+        .mashroom-portal-app-header {
+            display: flex !important;
+        }
     }
 
     &.hide-header {
         .mashroom-portal-app-header {
-            display: none;
+            display: none !important;
         }
     }
 
@@ -521,6 +523,14 @@ header {
 
 main {
     margin: 20px 0;
+
+    &.show-portal-app-headers {
+        .mashroom-portal-app-wrapper {
+            .mashroom-portal-app-header {
+                display: flex;
+            }
+        }
+    }
 
     nav {
         display: none;

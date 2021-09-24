@@ -15,10 +15,13 @@ You can override the default config in your Mashroom config file like this:
 {
     "plugins": {
         "Mashroom Portal Default Theme": {
+            "showPortalAppHeaders": true,
             "showEnvAndVersions": true
         }
     }
 }
 ```
+
+ * _showPortalAppHeaders_: Show or hide Portal App headers (Default: true)
  * _showEnvAndVersions_: Show the environment (_NODE_ENV_) and version information in the header (Default: false)
 

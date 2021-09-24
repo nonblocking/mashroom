@@ -7,8 +7,9 @@ import themeParams from './theme_params';
 import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalThemePluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
-    const { showEnvAndVersions } = pluginConfig;
+    const { showPortalAppHeaders, showEnvAndVersions } = pluginConfig;
     themeParams.setParams({
+        showPortalAppHeaders,
         showEnvAndVersions,
         mashroomVersion: contextHolder.getPluginContext().serverInfo.version,
     });

@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+
+ * Default Theme: Added a flag (showPortalAppHeaders) to the config to be able to
+   hide the App headers
+ * Admin App: Show/Hide App Control is now persisted during page navigation
  * Added a demo Composite App: Demonstrates the possibility to use existing Apps as building blocks within other Apps.
    Basically it uses the *MashroomPortalAppService* to tell the Portal where it should place an App with a given name and
    a custom appConfig. Additional it demonstrates how such a Composite App can have a "private" message bus.

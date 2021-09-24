@@ -27,6 +27,14 @@ function mashroomVersion(): string {
     return themeParams.mashroomVersion;
 }
 
+function extraMainClasses(): string {
+    let classes = '';
+    if (themeParams.showPortalAppHeaders) {
+        classes += 'show-portal-app-headers';
+    }
+    return classes;
+}
+
 function ifShowEnvAndVersions(this: any, options: any): any {
     if (themeParams.showEnvAndVersions) {
         return options.fn(this);
@@ -38,6 +46,7 @@ export default {
     equals,
     env,
     mashroomVersion,
+    extraMainClasses,
     ifShowEnvAndVersions,
     '__': i18n,
 };
