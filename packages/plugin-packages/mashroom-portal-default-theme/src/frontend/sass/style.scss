@@ -132,14 +132,14 @@ button, input[type="submit"] {
     & + label {
         cursor: pointer;
         position: relative;
-        padding-left: 22px;
+        padding-left: 23px;
 
         &:before {
             position: absolute;
             left: 2px;
-            top: 1px;
+            top: 0;
             font-family: $FONT_ICON;
-            font-size: 1em;
+            font-size: 1.1em;
             content: "\f0c8";
             color: $COLOR_PRIMARY;
             @include focus-animation();
@@ -173,14 +173,14 @@ button, input[type="submit"] {
     & + label {
         cursor: pointer;
         position: relative;
-        padding-left: 22px;
+        padding-left: 23px;
 
         &:before {
             position: absolute;
             left: 1px;
-            top: 1px;
+            top: 0;
             font-family: $FONT_ICON;
-            font-size: 1em;
+            font-size: 1.1em;
             content: "\f111";
             color: $COLOR_PRIMARY;
             @include focus-animation();
