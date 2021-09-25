@@ -321,7 +321,6 @@ header {
     background-color: $COLOR_PRIMARY;
     background-image: url(assets/random-grey-variations.png);
     color: white;
-    border-bottom: 2px solid $COLOR_SECONDARY;
     position: relative;
 
     .logo {
@@ -394,6 +393,22 @@ header {
             font-family: $FONT_ICON;
             font-size: 1.2em;
             font-weight: 900;
+        }
+    }
+}
+
+.loading-animation {
+    width: 100%;
+    height: 2px;
+    background-color: $COLOR_SECONDARY;
+
+    .loading-animation-progress {
+        height: 2px;
+        background-color: $COLOR_PRIMARY_DARK;
+        width: 0;
+
+        &.anim {
+            transition: width 0.3s ease-out;
         }
     }
 }

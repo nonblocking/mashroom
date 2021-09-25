@@ -602,6 +602,10 @@
                 "Mashroom Portal Default Theme": {
                     "type": "object",
                     "properties": {
+                        "spaMode": {
+                            "type": "boolean",
+                            "description": "The theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM (Default: true)"
+                        },
                         "showPortalAppHeaders": {
                             "type": "boolean",
                             "description": "Show or hide Portal App headers (Default: true)"

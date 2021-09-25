@@ -3,9 +3,17 @@
         {{#unless hidden}}
             <li class="nav-item">
                 {{#equals pageId @root.page.pageId}}
-                    <a class="nav-link active" href="">{{title}}</a>
+                    {{#ifSpaMode}}
+                        <a class="nav-link active" href="javascript:replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
+                    {{else}}
+                        <a class="nav-link active" href="">{{title}}</a>
+                    {{/ifSpaMode}}
                 {{else}}
-                    <a class="nav-link" href="{{@root.siteBasePath}}{{friendlyUrl}}">{{title}}</a>
+                    {{#ifSpaMode}}
+                        <a class="nav-link" href="javascript:replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
+                    {{else}}
+                        <a class="nav-link" href="{{@root.siteBasePath}}{{friendlyUrl}}">{{title}}</a>
+                    {{/ifSpaMode}}
                 {{/equals}}
                 {{#if subPages}}
                     {{> pages subPages}}

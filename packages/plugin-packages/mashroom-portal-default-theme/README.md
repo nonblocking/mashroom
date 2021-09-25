@@ -15,6 +15,7 @@ You can override the default config in your Mashroom config file like this:
 {
     "plugins": {
         "Mashroom Portal Default Theme": {
+            "spaMode": true,
             "showPortalAppHeaders": true,
             "showEnvAndVersions": true
         }
@@ -22,6 +23,9 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
+ * _spaMode_: The theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM.
+   This only works until the user does not navigate on a page with a different page or different page enhancements,
+   in that case a full page load is triggered (Default: true)
  * _showPortalAppHeaders_: Show or hide Portal App headers (Default: true)
  * _showEnvAndVersions_: Show the environment (_NODE_ENV_) and version information in the header (Default: false)
 
