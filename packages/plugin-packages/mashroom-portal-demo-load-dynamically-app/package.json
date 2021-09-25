@@ -35,7 +35,7 @@
                 "name": "Mashroom Portal Demo Load Dynamically App",
                 "title": {
                     "en": "Demo Load Dynamically",
-                    "de": "Demo dynamisches Laden App"
+                    "de": "Demo Dynamisches Laden App"
                 },
                 "type": "portal-app",
                 "bootstrap": "startLoadDynamicallyDemoApp",

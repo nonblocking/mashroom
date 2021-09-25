@@ -32,7 +32,7 @@ export default class PortalAppControlsToggle extends PureComponent<Props> {
         const {setShowPortalAppControls, portalAppManagementService} = this.props;
         setShowPortalAppControls(false);
         portalAppManagementService.hidePortalAppControls();
-        global.localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'true');
+        global.localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'false');
     }
 
     toggle(): void {
@@ -48,7 +48,7 @@ export default class PortalAppControlsToggle extends PureComponent<Props> {
         const {portalAppControls} = this.props;
         return (
            <div className={`portal-apps-control-toggle ${portalAppControls ? 'active' : ''}`} onClick={this.toggle.bind(this)}>
-                <span><FormattedMessage id='portalAppControls'/></span>
+                <span><FormattedMessage id={portalAppControls ? 'hidePortalAppControls' : 'showPortalAppControls'} /></span>
            </div>
         );
     }

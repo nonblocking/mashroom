@@ -51,6 +51,7 @@
                 "resourcesRoot": "./dist/public",
                 "views": "./views",
                 "defaultConfig": {
+                    "showPortalAppHeaders": true,
                     "showEnvAndVersions": false
                 }
             }

@@ -9,6 +9,7 @@ import type {Request, Response} from 'express';
 import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions';
 
 themeParams.setParams({
+    showPortalAppHeaders: true,
     showEnvAndVersions: true,
     mashroomVersion: '1.0.0'
 });

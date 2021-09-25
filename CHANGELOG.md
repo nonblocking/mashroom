@@ -3,7 +3,6 @@
 
 ## [unreleased]
 
-
  * Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
    You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
    (when using Handlebars):
@@ -23,6 +22,9 @@
    ```
    **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
    functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
+ * Default Theme: Added a flag (showPortalAppHeaders) to the config to be able to
+   hide the App headers
+ * Admin App: Show/Hide App Control is now persisted during page navigation
  * Added a demo Composite App: Demonstrates the possibility to use existing Apps as building blocks within other Apps.
    Basically it uses the *MashroomPortalAppService* to tell the Portal where it should place an App with a given name and
    a custom appConfig. Additional it demonstrates how such a Composite App can have a "private" message bus.

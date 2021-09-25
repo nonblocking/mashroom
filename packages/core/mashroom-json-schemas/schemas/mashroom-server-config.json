@@ -602,6 +602,10 @@
                 "Mashroom Portal Default Theme": {
                     "type": "object",
                     "properties": {
+                        "showPortalAppHeaders": {
+                            "type": "boolean",
+                            "description": "Show or hide Portal App headers (Default: true)"
+                        },
                         "showEnvAndVersions": {
                             "type": "boolean",
                             "description": "Show the environment (NODE_ENV) and version information in the header (Default: false)"

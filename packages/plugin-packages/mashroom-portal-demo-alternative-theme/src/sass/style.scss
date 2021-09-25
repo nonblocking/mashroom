@@ -141,7 +141,7 @@ button, input[type="submit"] {
         &:before {
             position: absolute;
             left: 2px;
-            top: 1px;
+            top: 0;
             font-family: $FONT_ICON;
             font-size: 1em;
             content: "\f0c8";
@@ -182,7 +182,7 @@ button, input[type="submit"] {
         &:before {
             position: absolute;
             left: 1px;
-            top: 1px;
+            top: 0;
             font-family: $FONT_ICON;
             font-size: 1em;
             content: "\f111";
