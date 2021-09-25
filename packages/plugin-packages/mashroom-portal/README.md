@@ -917,7 +917,7 @@ A typical *portal* view with *Handlebars* might look like this:
         {{> navigation}}
 
         <div class="mashroom-portal-apps-container container-fluid">
-            {{{portalLayout}}}
+            {{{pageContent}}}
         </div>
     </main>
 
@@ -947,7 +947,7 @@ A typical *portal* view with *Handlebars* might look like this:
 
 ```
 
-The _portalLayout_ variable contains the layout with the areas for the portal apps (see below).
+The _pageContent_ variable contains the actual content with the Portal layout (see below) and the Apps.
 
 ### portal-layouts
 

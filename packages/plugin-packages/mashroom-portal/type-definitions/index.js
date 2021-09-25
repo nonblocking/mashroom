@@ -178,6 +178,8 @@ export interface MashroomPortalPageRenderModel {
     +page: MashroomPortalPage & MashroomPortalPageRefLocalized,
     +portalResourcesHeader: string,
     +portalResourcesFooter: string,
+    +pageContent: string;
+    // @Deprecated, use pageContent
     +portalLayout: string,
     +lang: string,
     +availableLanguages: Array<string>,

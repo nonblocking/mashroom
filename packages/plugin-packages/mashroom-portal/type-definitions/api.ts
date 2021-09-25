@@ -197,6 +197,8 @@ export interface MashroomPortalPageRenderModel {
     readonly page: MashroomPortalPage & MashroomPortalPageRefLocalized;
     readonly portalResourcesHeader: string;
     readonly portalResourcesFooter: string;
+    readonly pageContent: string;
+    // @Deprecated, use pageContent
     readonly portalLayout: string;
     readonly lang: string;
     readonly availableLanguages: Readonly<Array<string>>;

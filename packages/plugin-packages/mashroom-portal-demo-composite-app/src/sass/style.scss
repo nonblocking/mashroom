@@ -16,6 +16,8 @@
     }
 
     .dialog {
+        min-height: 130px;
+
         .mashroom-portal-app-wrapper {
             margin-bottom: 0 !important;
 
@@ -24,8 +26,6 @@
             }
 
             .mashroom-portal-app-host {
-                min-height: 130px;
-
                 button + span {
                     // Hide "Received pings"
                     display: none;

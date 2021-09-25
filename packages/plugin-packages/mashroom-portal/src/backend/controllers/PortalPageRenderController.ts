@@ -49,6 +49,7 @@ import {
     renderPage,
     renderAppWrapperToClientTemplate,
     renderAppErrorToClientTemplate,
+    renderPageContent,
 } from '../utils/render_utils';
 import createPortalAppSetup from '../utils/create_portal_app_setup';
 
@@ -73,6 +74,7 @@ import type {
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
 import {MashroomPortalAppSetup} from '../../../type-definitions';
+import {MashroomPortalPageAppsInfo} from '../../../type-definitions/internal';
 
 const readFile = promisify(fs.readFile);
 const viewEngineCache = new Map();
@@ -168,13 +170,17 @@ export default class PortalPageRenderController {
         const messages = (key: string) => i18nService.getMessage(key, lang);
 
         const portalLayout = await this._loadLayout(layoutName, logger);
-        const appWrapperTemplateHtml =  await this._executeWithTheme(theme, logger, () => renderAppWrapperToClientTemplate(!!theme, messages, req, res, logger));
-        const appErrorTemplateHtml =  await this._executeWithTheme(theme, logger, () => renderAppErrorToClientTemplate(!!theme, messages, req, res, logger));
+        const appWrapperTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppWrapperToClientTemplate(!!theme, messages, req, res, logger));
+        const appErrorTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppErrorToClientTemplate(!!theme, messages, req, res, logger));
+
+        const portalAppInfo = await this._getPagePortalAppsInfo(req, page, user);
+        const pageContent = await renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger);
+
         const portalResourcesHeader = await this._resourcesHeader(
             req, portalPath, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
             messagingConnectPath, privateUserTopic, devMode, userAgent);
-        const portalResourcesFooter = await this._resourcesFooter(req, page, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent, user);
+        const portalResourcesFooter = await this._resourcesFooter(req, portalAppInfo, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent);
 
         const siteBasePath = getFrontendSiteBasePath(req);
 
@@ -199,7 +205,9 @@ export default class PortalPageRenderController {
             page: mergedPageData,
             portalResourcesHeader,
             portalResourcesFooter,
-            portalLayout,
+            pageContent,
+            // Deprecated
+            portalLayout: pageContent,
             apiBasePath,
             resourcesBasePath,
             lang,
@@ -326,11 +334,10 @@ export default class PortalPageRenderController {
         `;
     }
 
-    private async _resourcesFooter(req: Request, page: MashroomPortalPage, adminPluginName: string | undefined | null,
-                                  sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent,
-                                  mashroomSecurityUser: MashroomSecurityUser | undefined | null): Promise<string> {
+    private async _resourcesFooter(req: Request, portalAppInfo: MashroomPortalPageAppsInfo, adminPluginName: string | undefined | null,
+                                  sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent): Promise<string> {
 
-        const staticAppStartupScript = await this._getStaticAppStartupScript(req, page, mashroomSecurityUser, adminPluginName);
+        const staticAppStartupScript = await this._getStaticAppStartupScript(portalAppInfo, adminPluginName);
 
         return `
             <script>
@@ -345,8 +352,7 @@ export default class PortalPageRenderController {
         return html.replace(/(\r\n|\r|\n)/g, '');
     }
 
-    private async _getStaticAppStartupScript(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
-                                            adminPluginName: string | undefined | null) {
+    private async _getStaticAppStartupScript(portalAppInfo: MashroomPortalPageAppsInfo, adminPluginName: string | undefined | null) {
         const loadStatements = [];
         const preloadedPortalAppSetup: Record<string, MashroomPortalAppSetup> = {};
 
@@ -356,36 +362,57 @@ export default class PortalPageRenderController {
             );
         }
 
-        if (page.portalApps) {
-            for (const areaId in page.portalApps) {
-                if (areaId && page.portalApps.hasOwnProperty(areaId)) {
-                    for (const portalAppInstance of page.portalApps[areaId]) {
-                        const portalApp = this._getPortalApp(portalAppInstance.pluginName);
-                        if (!await isAppPermitted(req, portalAppInstance.pluginName, portalAppInstance.instanceId, portalApp)) {
-                            continue;
-                        }
-
-                        const instanceId = portalAppInstance.instanceId;
-                        if (instanceId) {
-                            loadStatements.push(
-                                `portalAppService.loadApp('${areaId}', '${portalAppInstance.pluginName}', '${instanceId}', null, null);`
-                            );
-                            if (portalApp) {
-                                const instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
-                                if (instanceData) {
-                                    preloadedPortalAppSetup[instanceId] = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, this._pluginRegistry, req);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        Object.keys(portalAppInfo).forEach((areaId) => {
+           portalAppInfo[areaId].forEach((appInfo) => {
+               loadStatements.push(
+                   `portalAppService.loadApp('${areaId}', '${appInfo.pluginName}', '${appInfo.instanceId}', null, null);`
+               );
+               preloadedPortalAppSetup[appInfo.instanceId] = appInfo.appSetup;
+           });
+        });
 
         return `
             window['${WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP}'] = ${JSON.stringify(preloadedPortalAppSetup)};
             ${loadStatements.join('\n')};
         `;
+    }
+
+    private async _getPagePortalAppsInfo(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null): Promise<MashroomPortalPageAppsInfo> {
+        const info: MashroomPortalPageAppsInfo = {};
+        if (page.portalApps) {
+            for (const areaId in page.portalApps) {
+                if (areaId && page.portalApps.hasOwnProperty(areaId)) {
+                    for (const {pluginName, instanceId} of page.portalApps[areaId]) {
+                        const portalApp = this._getPortalApp(pluginName);
+                        if (!instanceId || !portalApp || !await isAppPermitted(req, pluginName, instanceId, portalApp)) {
+                            continue;
+                        }
+
+                        let instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
+                        if (!instanceData) {
+                            // Data inconsistency?
+                            instanceData = {
+                                pluginName,
+                                instanceId,
+                                appConfig: {}
+                            }
+                        }
+
+                        const appSetup = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, this._pluginRegistry, req);
+
+                        if (!info[areaId]) {
+                            info[areaId] = [];
+                        }
+                        info[areaId].push({
+                            pluginName,
+                            instanceId,
+                            appSetup,
+                        });
+                    }
+                }
+            }
+        }
+        return info;
     }
 
     private async _getPageEnhancementHeaderResources(sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: Request): Promise<string> {

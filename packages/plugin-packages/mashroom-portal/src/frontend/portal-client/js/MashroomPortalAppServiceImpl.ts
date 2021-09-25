@@ -592,14 +592,18 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _createAppWrapper(id: string, pluginName: string, title: string | undefined | null) {
-        const appWrapperTemplate = (global as any)[WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE];
-        const appWrapperHtml = this._processTemplate(appWrapperTemplate, id, pluginName, title);
-        const el = document.createElement('div');
-        el.innerHTML = appWrapperHtml;
-        let portalAppWrapperElement = el.firstElementChild as HTMLElement | undefined;
+        // Check if there is a server side rendered wrapper
+        let portalAppWrapperElement = document.querySelector(`[data-mr-app-id="${id}"]`) as HTMLElement | undefined;
         if (!portalAppWrapperElement) {
-            console.error('The App template seems to be empty, using an empty div container');
-            portalAppWrapperElement = document.createElement('div');
+            const appWrapperTemplate = (global as any)[WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE];
+            const appWrapperHtml = this._processTemplate(appWrapperTemplate, id, pluginName, title);
+            const el = document.createElement('div');
+            el.innerHTML = appWrapperHtml;
+            portalAppWrapperElement = el.firstElementChild as HTMLElement | undefined;
+            if (!portalAppWrapperElement) {
+                console.error('The App template seems to be empty, using an empty div container');
+                portalAppWrapperElement = document.createElement('div');
+            }
         }
         let portalAppHostElement = portalAppWrapperElement.querySelector('[data-mr-app-content="app"]') as HTMLElement | undefined;
         const portalAppTitleElement = portalAppWrapperElement.querySelector('[data-mr-app-content="title"]') as HTMLElement | undefined;

@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Portal: Initial pages are now completely rendered on the server side (including the App wrapper).
+   To make clear that no longer only the *layout* is rendered the property *pageContent* should now be used
+   in the template instead of *portalLayout* (but both contain the same for the moment).
  * Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
    You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
    (when using Handlebars):

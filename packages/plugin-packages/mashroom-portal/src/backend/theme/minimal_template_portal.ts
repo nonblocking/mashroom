@@ -36,7 +36,7 @@ export default (model: MashroomPortalPageRenderModel) => (`
             ${minimalNavigation(model.siteBasePath, model.site)}
 
             <div class="mashroom-portal-apps-container container-fluid" style="min-height: 420px">
-                ${model.portalLayout}
+                ${model.pageContent}
             </div>
 
             <footer style="border-top: 1px solid #dee2e6">

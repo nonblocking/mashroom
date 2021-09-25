@@ -7,6 +7,7 @@ import type {
     MashroomPortalPageEnhancement,
     MashroomPortalTheme,
     MashroomRemotePortalAppRegistry,
+    MashroomPortalAppSetup,
 } from './api';
 
 export interface MashroomRemotePortalAppRegistryHolder {
@@ -70,6 +71,14 @@ export type MashroomPortalPluginConfig = {
         readonly sendPermissionsHeader?: boolean;
         readonly restrictToRoles?: Array<string>;
     }
+}
+
+export type MashroomPortalPageAppsInfo = {
+    [areaId: string]: Array<{
+        pluginName: string;
+        instanceId: string;
+        appSetup: MashroomPortalAppSetup;
+    }>
 }
 
 export type MashroomPortalContext = {

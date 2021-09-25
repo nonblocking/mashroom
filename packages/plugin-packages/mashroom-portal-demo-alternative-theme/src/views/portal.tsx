@@ -6,7 +6,7 @@ import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type
 
 export default ({
                     user, site, siteBasePath, page, csrfToken, resourcesBasePath, apiBasePath,
-                    portalResourcesHeader, portalResourcesFooter, portalLayout, messages, lastThemeReloadTs
+                    portalResourcesHeader, portalResourcesFooter, pageContent, messages, lastThemeReloadTs
                 }: MashroomPortalPageRenderModel) => (
     <html>
         <head dangerouslySetInnerHTML={{ __html: `
@@ -61,7 +61,7 @@ export default ({
                 <Navigation siteBasePath={siteBasePath} currentPage={page} pages={site.pages} />
 
                 <div className="mashroom-portal-apps-container container-fluid">
-                    <div dangerouslySetInnerHTML={{__html: portalLayout}}/>
+                    <div dangerouslySetInnerHTML={{__html: pageContent}}/>
                 </div>
             </main>
 
