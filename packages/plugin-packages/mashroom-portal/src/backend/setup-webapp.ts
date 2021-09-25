@@ -69,6 +69,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
 
     restApi.get('/portal-apps', portalAppController.getAvailablePortalApps.bind(portalAppController));
 
+    restApi.get('/pages/:pageId/content', portalPageRenderController.getPortalPageContent.bind(portalPageRenderController));
     restApi.get('/pages/:pageId/portal-app-instances', portalPageController.getPortalAppInstances.bind(portalPageController));
     restApi.post('/pages/:pageId/portal-app-instances', portalPageController.addPortalApp.bind(portalPageController));
     restApi.get('/pages/:pageId/portal-app-instances/:pluginName/:portalAppInstanceId?', portalAppController.getPortalAppSetup.bind(portalAppController));

@@ -17,6 +17,10 @@ export default class SitePagesTraverser {
         return this._internalFindPageByFriendlyUrl(this._pages, friendlyUrl);
     }
 
+    findPageRefByPageId(pageId: string): MashroomPortalPageRef | undefined | null {
+        return this._internalFindPageByPageId(this._pages, pageId);
+    }
+
     async filterAndTranslate(req: Request): Promise<Array<MashroomPortalPageRefLocalized> | undefined | null> {
         return await this._internalFilterAndTranslate(this._pages, req);
     }
@@ -33,6 +37,24 @@ export default class SitePagesTraverser {
             }
 
             const subPage = this._internalFindPageByFriendlyUrl(pageRef.subPages, friendlyUrl);
+            if (subPage) {
+                return subPage;
+            }
+        }
+    }
+
+    private _internalFindPageByPageId(pages: Array<MashroomPortalPageRef> | undefined | null, pageId: string): MashroomPortalPageRef | undefined | null {
+        if (!pages) {
+            return null;
+        }
+
+        for (let i = 0; i < pages.length; i++) {
+            const pageRef = pages[i];
+            if (pageRef.pageId === pageId) {
+                return pageRef;
+            }
+
+            const subPage = this._internalFindPageByPageId(pageRef.subPages, pageId);
             if (subPage) {
                 return subPage;
             }

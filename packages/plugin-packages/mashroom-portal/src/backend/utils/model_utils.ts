@@ -47,6 +47,11 @@ export const findSiteByPath = async (req: Request, sitePath: string): Promise<Ma
     return portalService.findSiteByPath(sitePath);
 };
 
+export const findPageRefByPageId = async (req: Request, site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | undefined | null> => {
+    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    return portalService.findPageRefByPageId(site, pageId);
+};
+
 export const getPageData = async (sitePath: string, friendlyUrl: string | undefined | null, req: Request, logger: MashroomLogger):
     Promise<{ site?: MashroomPortalSite, pageRef?: MashroomPortalPageRef, page?: MashroomPortalPage }> => {
     const portalService: MashroomPortalService = req.pluginContext.services.portal.service;

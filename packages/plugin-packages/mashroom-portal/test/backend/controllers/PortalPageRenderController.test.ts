@@ -209,6 +209,9 @@ const pluginContext: any = {
                 findPageRefByFriendlyUrl() {
                     return site.pages[0];
                 },
+                findPageRefByPageId() {
+                    return site.pages[0];
+                },
                 getPage() {
                     return page1;
                 },
@@ -400,6 +403,45 @@ describe('PortalPageRenderController', () => {
 
         const controller = new PortalPageRenderController(webApp, pluginRegistry3);
         controller.renderPortalPage(req, res);
+    });
+
+    it('returns the page content of a given pageId', (done) => {
+        let engineName: string | undefined;
+        const webappProps = new Map();
+        const webApp: any = {
+            engine: (name: string) => engineName = name,
+            set: (key: string, value: any) => webappProps.set(key, value),
+        };
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            query: {
+            },
+            params: {
+                pageId: 'test-page',
+                sitePath: 'web',
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            type: (t: string) => { /* nothing to do */ },
+            render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
+            json: (content: any) => {
+                expect(content).toBeTruthy();
+
+                expect(content.pageContent).toContain('<div id="app-area1">');
+                expect(content.pageContent).toContain('<div data-mr-app-id="ABCDEF" class="mashroom-portal-app-wrapper portal-app-mashroom-welcome-portal-app">');
+
+                expect(content.evalScript).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null);');
+
+                done();
+            }
+        };
+
+        const controller = new PortalPageRenderController(webApp, pluginRegistry2);
+        controller.getPortalPageContent(req, res);
     });
 
 });

@@ -187,7 +187,13 @@ export type MashroomPortalUser = {
     readonly roles?: Array<string>;
 };
 
-export interface MashroomPortalPageRenderModel {
+export type MashroomPortalPageContent = {
+    readonly fullPageRefreshRequired: boolean | undefined;
+    readonly pageContent: string;
+    readonly evalScript: string;
+};
+
+export type MashroomPortalPageRenderModel = {
     readonly portalName: string;
     readonly portalBasePath: string;
     readonly siteBasePath: string;
@@ -209,7 +215,7 @@ export interface MashroomPortalPageRenderModel {
     readonly lastThemeReloadTs: number;
 }
 
-export interface MashroomPortalAppWrapperRenderModel {
+export type MashroomPortalAppWrapperRenderModel = {
     readonly appId: string;
     readonly pluginName: string;
     readonly safePluginName: string;
@@ -218,7 +224,7 @@ export interface MashroomPortalAppWrapperRenderModel {
     readonly messages: (key: string) => string;
 }
 
-export interface MashroomPortalAppErrorRenderModel {
+export type MashroomPortalAppErrorRenderModel = {
     readonly appId: string;
     readonly pluginName: string;
     readonly safePluginName: string;
@@ -600,6 +606,14 @@ export interface MashroomPortalService {
     findPageRefByFriendlyUrl(
         site: MashroomPortalSite,
         friendlyUrl: string,
+    ): Promise<MashroomPortalPageRef | null | undefined>;
+
+    /**
+     * Find the page ref within a site by the given pageId
+     */
+    findPageRefByPageId(
+        site: MashroomPortalSite,
+        pageId: string,
     ): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**

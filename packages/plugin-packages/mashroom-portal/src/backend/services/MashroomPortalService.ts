@@ -94,6 +94,10 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         return new SitePagesTraverser(site.pages).findPageByFriendlyUrl(friendlyUrl);
     }
 
+    async findPageRefByPageId(site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | null | undefined> {
+        return new SitePagesTraverser(site.pages).findPageRefByPageId(pageId);
+    }
+
     async insertPage(page: MashroomPortalPage): Promise<void> {
         const pagesCollection = await this._getPagesCollection();
         await pagesCollection.insertOne(page);

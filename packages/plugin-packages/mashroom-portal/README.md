@@ -132,6 +132,14 @@ export interface MashroomPortalService {
     ): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**
+     * Find the page ref within a site by the given pageId
+     */
+    findPageRefByPageId(
+        site: MashroomPortalSite,
+        pageId: string,
+    ): Promise<MashroomPortalPageRef | null | undefined>;
+
+    /**
      * Insert new page
      */
     insertPage(page: MashroomPortalPage): Promise<void>;

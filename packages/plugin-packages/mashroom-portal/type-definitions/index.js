@@ -168,7 +168,13 @@ export type MashroomPortalUser = {
     +roles?: Array<string>
 }
 
-export interface MashroomPortalPageRenderModel {
+export type MashroomPortalPageContent = {
+    +fullPageRefreshRequired: ?boolean;
+    +pageContent: string;
+    +evalScript: string;
+};
+
+export type MashroomPortalPageRenderModel = {
     +portalName: string,
     +portalBasePath: string,
     +siteBasePath: string,
@@ -190,7 +196,7 @@ export interface MashroomPortalPageRenderModel {
     +lastThemeReloadTs: number,
 }
 
-export interface MashroomPortalAppWrapperRenderModel {
+export type MashroomPortalAppWrapperRenderModel = {
     +appId: string,
     +pluginName: string,
     +safePluginName: string,
@@ -198,7 +204,7 @@ export interface MashroomPortalAppWrapperRenderModel {
     +appHtml: ?string,
 }
 
-export interface MashroomPortalAppErrorRenderModel {
+export type MashroomPortalAppErrorRenderModel = {
     +appId: string,
     +pluginName: string,
     +safePluginName: string,
@@ -547,6 +553,11 @@ export interface MashroomPortalService {
      * Find the page ref within a site with given friendly URL
      */
     findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<?MashroomPortalPageRef>;
+
+    /**
+     * Find the page ref within a site by the given pageId
+     */
+    findPageRefByPageId(site: MashroomPortalSite, pageId: string): Promise<?MashroomPortalPageRef>;
 
     /**
      * Insert new page
