@@ -39,8 +39,9 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         if (props.resetRef) {
             props.resetRef(() => this.reset());
         }
+        const {fieldProps: {field}} = props;
         this.state = {
-            value: '',
+            value: field.value || '',
             suggestions: []
         };
     }
