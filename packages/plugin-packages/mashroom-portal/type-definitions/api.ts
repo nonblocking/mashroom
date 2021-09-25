@@ -188,7 +188,7 @@ export type MashroomPortalUser = {
 };
 
 export type MashroomPortalPageContent = {
-    readonly fullPageRefreshRequired: boolean | undefined;
+    readonly fullPageLoadRequired: boolean | undefined;
     readonly pageContent: string;
     readonly evalScript: string;
 };

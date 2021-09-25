@@ -130,7 +130,7 @@ export default class PortalPageRenderController {
             const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
             const layoutName = page.layout || site.defaultLayout || context.portalPluginConfig.defaultLayout;
 
-            let fullPageRefreshRequired;
+            let fullPageLoadRequired;
             let pageContent;
             let evalScript;
             if (currentPage && currentPageRef) {
@@ -139,10 +139,10 @@ export default class PortalPageRenderController {
                 const userAgent = determineUserAgent(req);
                 const sameEnhancements = await sameEnhancementsOnBothPages(this._pluginRegistry, sitePath, pageRef.friendlyUrl, currentPageRef.friendlyUrl,
                     lang, userAgent, req);
-                fullPageRefreshRequired = themeName !== currentPageTheme || !sameEnhancements;
+                fullPageLoadRequired = themeName !== currentPageTheme || !sameEnhancements;
             }
 
-            if (fullPageRefreshRequired) {
+            if (fullPageLoadRequired) {
                 pageContent = '';
                 evalScript = '';
             } else {
@@ -167,7 +167,7 @@ export default class PortalPageRenderController {
             }
 
             const content: MashroomPortalPageContent = {
-                fullPageRefreshRequired,
+                fullPageLoadRequired,
                 pageContent,
                 evalScript,
             };

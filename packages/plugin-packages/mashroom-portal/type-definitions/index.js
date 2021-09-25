@@ -169,7 +169,7 @@ export type MashroomPortalUser = {
 }
 
 export type MashroomPortalPageContent = {
-    +fullPageRefreshRequired: ?boolean;
+    +fullPageLoadRequired: ?boolean;
     +pageContent: string;
     +evalScript: string;
 };

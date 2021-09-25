@@ -7,8 +7,8 @@
    This can be used for dynamic page transitions.
    Example:
    ```http://localhost:5050/portal/web/___/api/pages/test2/content?currentPageId=subpage1```
-   Means: Give me the content (and scripts to launch/hydrate the Apps) for page _test2_ and I'm currently
-   on page _subpage1_, tell me if I need a full page refresh because the theme or something else outside of
+   Means: Give me the content (and scripts to launch/hydrate the Apps) for page _test2_, and I'm currently
+   on page _subpage1_, tell me if I need a full page load because the theme or something else outside
    the content area is different.
  * Portal: Initial pages are now completely rendered on the server side (including the App wrapper).
    To make clear that no longer only the *layout* is rendered the property *pageContent* should now be used
