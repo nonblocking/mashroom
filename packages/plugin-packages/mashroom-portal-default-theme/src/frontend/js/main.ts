@@ -40,38 +40,31 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     if (!contentEl) {
         return;
     }
-    const currentPageId = getCurrentPageId();
-    if (pageId === currentPageId) {
-        return;
-    }
-
-    const pageContentUrl = `${clientServices.portalSiteService.getCurrentSiteUrl()}/___/api/pages/${pageId}/content?currentPageId=${currentPageId}`;
 
     showPageLoadingIndicator(true);
-    fetch(pageContentUrl, {
-        credentials: 'same-origin'
-    })
-    .then((result) => result.json())
-    .then((content: MashroomPortalPageContent) => {
-        if (content.fullPageLoadRequired) {
+    clientServices.portalPageService.getPageContent(pageId).then(
+        (content: MashroomPortalPageContent) => {
+            if (content.fullPageLoadRequired) {
+                document.location.replace(fullPageUrl);
+            } else {
+                contentEl.innerHTML = content.pageContent;
+                // console.log('Evaluating', content.evalScript);
+                eval(content.evalScript);
+                highlightPageIdInNavigation(pageId);
+                window.history.pushState({
+                    pageId,
+                }, '', fullPageUrl);
+                setTimeout(() => {
+                    showPageLoadingIndicator(false);
+                }, 250);
+            }
+        },
+        (error) => {
+            // If an error occurs we do a full page load
+            console.error('Dynamically replacing the page content failed!', error);
             document.location.replace(fullPageUrl);
-        } else {
-            contentEl.innerHTML = content.pageContent;
-            eval(content.evalScript);
-            highlightPageIdInNavigation(pageId);
-            window.history.pushState({
-                pageId,
-            }, '', fullPageUrl);
-            setTimeout(() => {
-                showPageLoadingIndicator(false);
-            }, 250);
         }
-    })
-    .catch((error) => {
-        // If an error occurs we do a full page load
-        console.error('Dynamically replacing the page content failed!', error);
-        document.location.replace(fullPageUrl);
-    });
+    )
 }
 
 const showPageLoadingIndicator = (show: boolean) => {
@@ -85,18 +78,6 @@ const showPageLoadingIndicator = (show: boolean) => {
         loadingAnimationEl.classList.remove('show');
     }
 }
-
-const getCurrentPageId = (): string | null => {
-    const navigationEl = document.getElementById('navigation');
-    if (!navigationEl) {
-        return null;
-    }
-    const activeNavItem = navigationEl.querySelector('.nav-link.active');
-    if (!activeNavItem) {
-        return null;
-    }
-    return activeNavItem.getAttribute('data-mr-page-id');
-};
 
 const highlightPageIdInNavigation = (pageId: string): void => {
     const navigationEl = document.getElementById('navigation') as HTMLElement | undefined;
