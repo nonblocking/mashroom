@@ -136,10 +136,18 @@ export default class PortalPageRenderController {
             if (currentPage && currentPageRef) {
                 // If we know the current page we can decide if a full page refresh would be required
                 const currentPageTheme = currentPage.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
-                const userAgent = determineUserAgent(req);
-                const sameEnhancements = await sameEnhancementsOnBothPages(this._pluginRegistry, sitePath, pageRef.friendlyUrl, currentPageRef.friendlyUrl,
-                    lang, userAgent, req);
-                fullPageLoadRequired = themeName !== currentPageTheme || !sameEnhancements;
+                if (themeName !== currentPageTheme) {
+                    logger.info(`Requesting full page reload because page ${currentPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different themes`);
+                    fullPageLoadRequired = true;
+                } else {
+                    const userAgent = determineUserAgent(req);
+                    const sameEnhancements = await sameEnhancementsOnBothPages(this._pluginRegistry, sitePath, pageRef.friendlyUrl, currentPageRef.friendlyUrl,
+                        lang, userAgent, req);
+                    if (!sameEnhancements) {
+                        logger.info(`Requesting full page reload because page ${currentPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different page enhancements`);
+                        fullPageLoadRequired = true;
+                    }
+                }
             }
 
             if (fullPageLoadRequired) {
