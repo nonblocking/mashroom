@@ -712,6 +712,14 @@ export interface MashroomPortalSiteService {
     getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
 }
 
+export interface MashroomPortalPageService {
+    /**
+     * Get the content for given pageId.
+     * The request also calculates if a content replacement is possible without a full page load.
+     */
+    getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
+}
+
 export interface MashroomPortalUserService {
     /**
      * Get the authentication expiration time in unix time ms
@@ -1011,14 +1019,14 @@ export interface MasterMashroomPortalRemoteLogger extends MashroomPortalRemoteLo
 }
 
 export type MashroomPortalClientServices = {
+    +messageBus: MashroomPortalMessageBus,
+    +stateService: MashroomPortalStateService,
+    +remoteLogger: MashroomPortalRemoteLogger,
     +portalAdminService: MashroomPortalAdminService,
     +portalAppService: MashroomPortalAppService,
     +portalUserService: MashroomPortalUserService,
+    +portalPageService: MashroomPortalPageService,
     +portalSiteService: MashroomPortalSiteService,
-    +messageBus: MashroomPortalMessageBus,
-    +restService: MashroomRestService,
-    +stateService: MashroomPortalStateService,
-    +remoteLogger: MashroomPortalRemoteLogger,
     +[customService: string]: any
 }
 

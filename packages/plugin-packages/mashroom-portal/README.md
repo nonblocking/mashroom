@@ -366,14 +366,115 @@ The _clientServices_ argument contains the client services, see below.
 
 The following client side services are available for all portal apps:
 
- * _MashroomPortalAppService_: Provides methods wo load, unload and reload apps
- * _MashroomPortalAdminService_: Provides methods to administer sites and pages (only available for users with the _Administrator_ role)
  * _MashroomPortalMessageBus_: A simple message bus implementation for inter app communication
- * _MashroomRestService_: Convenient methods to access the REST API
  * _MashroomPortalStateService_: State management
+ * _MashroomPortalAppService_: Provides methods wo load, unload and reload apps
  * _MashroomPortalUserService_: User management services (such as logout)
  * _MashroomPortalSiteService_: Site services
+ * _MashroomPortalPageService_: Page services
  * _MashroomPortalRemoteLogger_: A facility to log messages on the server
+ * _MashroomPortalAdminService_: Provides methods to administer sites and pages (only available for users with the _Administrator_ role)
+
+_MashroomPortalMessageBus_
+
+```ts
+export interface MashroomPortalMessageBus {
+    /**
+     * Subscribe to given topic.
+     * Topics starting with getRemotePrefix() will be subscribed server side via WebSocket (if available).
+     * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
+     * (e.g. remote:/foo/+/bar)
+     */
+    subscribe(
+        topic: string,
+        callback: MashroomPortalMessageBusSubscriberCallback,
+    ): Promise<void>;
+
+    /**
+     * Subscribe once to given topic. The handler will be removed after the first message has been received.
+     * Remote topics are accepted.
+     */
+    subscribeOnce(
+        topic: string,
+        callback: MashroomPortalMessageBusSubscriberCallback,
+    ): Promise<void>;
+
+    /**
+     * Unsubscribe from given topic.
+     * Remote topics are accepted.
+     */
+    unsubscribe(
+        topic: string,
+        callback: MashroomPortalMessageBusSubscriberCallback,
+    ): Promise<void>;
+
+    /**
+     * Publish to given topic.
+     * Remote topics are accepted.
+     */
+    publish(topic: string, data: any): Promise<void>;
+
+    /**
+     * Get the private user topic for the given user or the currently authenticated user if no argument given.
+     * You can subscribe to "sub" topics as well, e.g. <private_topic>/foo
+     */
+    getRemoteUserPrivateTopic(username?: string): string | null | undefined;
+
+    /**
+     * The prefix for remote topics
+     */
+    getRemotePrefix(): string;
+
+    /**
+     * Register a message interceptor.
+     * A interceptor can be useful for debugging or to manipulate the messages.
+     * It is also possible to block messages calling cancelMessage() from the interceptor arguments.
+     */
+    registerMessageInterceptor(
+        interceptor: MashroomPortalMessageBusInterceptor,
+    ): void;
+
+    /**
+     * Unregister a message interceptor.
+     */
+    unregisterMessageInterceptor(
+        interceptor: MashroomPortalMessageBusInterceptor,
+    ): void;
+}
+```
+
+_MashroomPortalStateService_
+
+```ts
+export interface MashroomPortalStateService {
+    /**
+     * Get a property from state.
+     * It will be looked up in the URL (query param or encoded) and in the local and session storage
+     */
+    getStateProperty(key: string): any | null | undefined;
+
+    /**
+     * Add given key value pair into the URL (encoded)
+     */
+    setUrlStateProperty(key: string, value: any | null | undefined): void;
+
+    /**
+     * Generate a URL with the given state encoded into it
+     */
+    encodeStateIntoUrl(baseUrl: string, state: any,
+                       additionalQueryParams?: { [key: string]: string; } | null | undefined, hash?: string | null | undefined): string;
+
+    /**
+     * Add given key value pair to the session storage
+     */
+    setSessionStateProperty(key: string, value: any): void;
+
+    /**
+     * Add given key value pair to the local storage
+     */
+    setLocalStoreStateProperty(key: string, value: any): void;
+}
+```
 
 _MashroomPortalAppService_
 
@@ -469,6 +570,103 @@ export interface MashroomPortalAppService {
     prefetchResources(pluginName: string): Promise<void>;
 
     readonly loadedPortalApps: Array<MashroomPortalLoadedPortalApp>;
+}
+```
+
+_MashroomPortalUserService_
+
+```ts
+export interface MashroomPortalUserService {
+    /**
+     * Get the authentication expiration time in unix time ms
+     */
+    getAuthenticationExpiration(): Promise<number | null | undefined>;
+
+    /**
+     * Extend the authentication.
+     * Can be used to update the authentication when no server interaction has occurred for a while and the authentication is about to expire.
+     */
+    extendAuthentication(): void;
+
+    /**
+     * Logout the current user
+     */
+    logout(): Promise<void>;
+
+    /**
+     * Get the current user's language
+     */
+    getUserLanguage(): string;
+
+    /**
+     * Set the new user language
+     */
+    setUserLanguage(lang: string): Promise<void>;
+
+    /**
+     * Get all available languages (e.g. en, de)
+     */
+    getAvailableLanguages(): Promise<Array<string>>;
+
+    /**
+     * Get the configured default language
+     */
+    getDefaultLanguage(): Promise<string>;
+}
+
+```
+
+_MashroomPortalSiteService_
+
+```ts
+export interface MashroomPortalSiteService {
+    /**
+     * Get the base url for the current site
+     */
+        getCurrentSiteUrl(): string;
+
+    /**
+     * Get a list with all sites
+     */
+        getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
+
+    /**
+     * Get the page tree for given site
+     */
+        getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
+}
+```
+
+_MashroomPortalPageService_
+
+```ts
+export interface MashroomPortalPageService {
+    /**
+     * Get the content for given pageId.
+     * The request also calculates if a content replacement is possible without a full page load.
+     */
+    getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
+}
+```
+
+_MashroomPortalRemoteLogger_
+
+```ts
+export interface MashroomPortalRemoteLogger {
+    /**
+     * Send a client error to the server log
+     */
+    error(msg: string, error?: Error): void;
+
+    /**
+     * Send a client warning to the server log
+     */
+    warn(msg: string, error?: Error): void;
+
+    /**
+     * Send a client info to the server log
+     */
+    info(msg: string): void;
 }
 ```
 
@@ -614,208 +812,6 @@ export interface MashroomPortalAdminService {
         siteId: string,
         roles: string[] | null | undefined,
     ): Promise<void>;
-}
-```
-
-_MashroomPortalMessageBus_
-
-```ts
-export interface MashroomPortalMessageBus {
-    /**
-     * Subscribe to given topic.
-     * Topics starting with getRemotePrefix() will be subscribed server side via WebSocket (if available).
-     * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
-     * (e.g. remote:/foo/+/bar)
-     */
-    subscribe(
-        topic: string,
-        callback: MashroomPortalMessageBusSubscriberCallback,
-    ): Promise<void>;
-
-    /**
-     * Subscribe once to given topic. The handler will be removed after the first message has been received.
-     * Remote topics are accepted.
-     */
-    subscribeOnce(
-        topic: string,
-        callback: MashroomPortalMessageBusSubscriberCallback,
-    ): Promise<void>;
-
-    /**
-     * Unsubscribe from given topic.
-     * Remote topics are accepted.
-     */
-    unsubscribe(
-        topic: string,
-        callback: MashroomPortalMessageBusSubscriberCallback,
-    ): Promise<void>;
-
-    /**
-     * Publish to given topic.
-     * Remote topics are accepted.
-     */
-    publish(topic: string, data: any): Promise<void>;
-
-    /**
-     * Get the private user topic for the given user or the currently authenticated user if no argument given.
-     * You can subscribe to "sub" topics as well, e.g. <private_topic>/foo
-     */
-    getRemoteUserPrivateTopic(username?: string): string | null | undefined;
-
-    /**
-     * The prefix for remote topics
-     */
-    getRemotePrefix(): string;
-
-    /**
-     * Register a message interceptor.
-     * A interceptor can be useful for debugging or to manipulate the messages.
-     * It is also possible to block messages calling cancelMessage() from the interceptor arguments.
-     */
-    registerMessageInterceptor(
-        interceptor: MashroomPortalMessageBusInterceptor,
-    ): void;
-
-    /**
-     * Unregister a message interceptor.
-     */
-    unregisterMessageInterceptor(
-        interceptor: MashroomPortalMessageBusInterceptor,
-    ): void;
-}
-```
-
-_MashroomRestService_
-
-```ts
-export interface MashroomRestService {
-    get(path: string, extraHeaders?: Record<string, string>): Promise<any>;
-
-    post(path: string, data: any, extraHeaders?: Record<string, string>): Promise<any>;
-
-    put(path: string, data: any, extraHeaders?: Record<string, string>): Promise<void>;
-
-    delete(path: string, extraHeaders?: Record<string, string>): Promise<void>;
-
-    withBasePath(apiBasePath: string): MashroomRestService;
-}
-```
-
-_MashroomPortalStateService_
-
-```ts
-export interface MashroomPortalStateService {
-    /**
-     * Get a property from state.
-     * It will be looked up in the URL (query param or encoded) and in the local and session storage
-     */
-    getStateProperty(key: string): any | null | undefined;
-
-    /**
-     * Add given key value pair into the URL (encoded)
-     */
-    setUrlStateProperty(key: string, value: any | null | undefined): void;
-
-    /**
-     * Generate a URL with the given state encoded into it
-     */
-    encodeStateIntoUrl(baseUrl: string, state: any,
-                       additionalQueryParams?: { [key: string]: string; } | null | undefined, hash?: string | null | undefined): string;
-
-    /**
-     * Add given key value pair to the session storage
-     */
-    setSessionStateProperty(key: string, value: any): void;
-
-    /**
-     * Add given key value pair to the local storage
-     */
-    setLocalStoreStateProperty(key: string, value: any): void;
-}
-```
-
-_MashroomPortalUserService_
-
-```ts
-export interface MashroomPortalUserService {
-    /**
-     * Get the authentication expiration time in unix time ms
-     */
-    getAuthenticationExpiration(): Promise<number | null | undefined>;
-
-    /**
-     * Extend the authentication.
-     * Can be used to update the authentication when no server interaction has occurred for a while and the authentication is about to expire.
-     */
-    extendAuthentication(): void;
-
-    /**
-     * Logout the current user
-     */
-    logout(): Promise<void>;
-
-    /**
-     * Get the current user's language
-     */
-    getUserLanguage(): string;
-
-    /**
-     * Set the new user language
-     */
-    setUserLanguage(lang: string): Promise<void>;
-
-    /**
-     * Get all available languages (e.g. en, de)
-     */
-    getAvailableLanguages(): Promise<Array<string>>;
-
-    /**
-     * Get the configured default language
-     */
-    getDefaultLanguage(): Promise<string>;
-}
-
-```
-
-_MashroomPortalSiteService_
-
-```ts
-export interface MashroomPortalSiteService {
-    /**
-     * Get the base url for the current site
-     */
-        getCurrentSiteUrl(): string;
-
-    /**
-     * Get a list with all sites
-     */
-        getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
-
-    /**
-     * Get the page tree for given site
-     */
-        getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
-}
-```
-
-_MashroomPortalSiteService_
-
-```ts
-export interface MashroomPortalRemoteLogger {
-    /**
-     * Send a client error to the server log
-     */
-    error(msg: string, error?: Error): void;
-
-    /**
-     * Send a client warning to the server log
-     */
-    warn(msg: string, error?: Error): void;
-
-    /**
-     * Send a client info to the server log
-     */
-    info(msg: string): void;
 }
 ```
 

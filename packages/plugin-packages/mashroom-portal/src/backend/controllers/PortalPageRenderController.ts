@@ -162,11 +162,17 @@ export default class PortalPageRenderController {
                 pageContent = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
 
                 evalScript = `
-                    var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;\n
-                    // Unload all running apps\n
-                    portalAppService.loadedPortalApps.forEach((app) => app.pluginName !== '${adminPluginName}' && portalAppService.unloadApp(app.id));\n
-                    // Load/hydrate all new ones\n
-                    ${await this._getStaticAppStartupScript(portalAppInfo, undefined)}\n
+                    // Update pageId
+                    window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
+                    var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;
+                    // Unload all running apps
+                    portalAppService.loadedPortalApps.forEach(function(app) {
+                      if (app.pluginName !== '${adminPluginName}') {
+                        portalAppService.unloadApp(app.id);
+                      }
+                    });
+                    // Load/hydrate all new ones
+                    ${await this._getStaticAppStartupScript(portalAppInfo, undefined)}
                 `;
             }
 
