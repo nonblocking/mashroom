@@ -143,7 +143,6 @@ export type MashroomPortalAppSetup = {
     readonly version: string;
     readonly instanceId: string | null | undefined;
     readonly lastReloadTs: number;
-    readonly ssr: boolean;
     readonly restProxyPaths: MashroomRestProxyPaths;
     readonly sharedResourcesBasePath: string;
     readonly sharedResources: MashroomPortalAppResources | null | undefined;

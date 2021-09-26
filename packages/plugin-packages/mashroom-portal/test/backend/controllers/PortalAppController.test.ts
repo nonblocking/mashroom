@@ -238,7 +238,6 @@ describe('PortalAppController', () => {
             version: '1.0',
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
-            ssr: false,
             restProxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
@@ -306,7 +305,6 @@ describe('PortalAppController', () => {
             version: '1.0',
             instanceId: null,
             lastReloadTs: 222222222,
-            ssr: false,
             restProxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
