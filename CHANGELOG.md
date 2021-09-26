@@ -6,7 +6,7 @@
  * Portal: **BREAKING CHANGE**: Removed *MashroomRestService* from client services because it is only intended
    for internal use. Portal Apps should use *fetch* directly.
  * Default Theme: Added an _SPA mode_ where the theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM.
-   This only works until the user does not navigate on a page with a different page or different page enhancements, in that case a full page load is triggered.
+   This only works until the user does not navigate on a page with a different theme or different page enhancements, in that case a full page load is triggered.
  * Portal: Added an API endpoint to just fetch the page content without header, navigation, page enhancements and so on.
    This can be used for dynamic page transitions.
    Example:
