@@ -36,12 +36,10 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     if (!clientServices) {
         return;
     }
-
     const contentEl = document.getElementById('portal-page-content');
     if (!contentEl) {
         return;
     }
-
     const currentPageId = getCurrentPageId();
     if (pageId === currentPageId) {
         return;
@@ -49,20 +47,11 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
 
     const pageContentUrl = `${clientServices.portalSiteService.getCurrentSiteUrl()}/___/api/pages/${pageId}/content?currentPageId=${currentPageId}`;
 
+    showPageLoadingIndicator(true);
     fetch(pageContentUrl, {
         credentials: 'same-origin'
     })
-    .then((result) => {
-        const contentLength = parseInt(result.headers.get('Content-Length') || '0');
-        const reader = result.body?.getReader();
-        if (!reader) {
-            return result.json();
-        }
-        setPageLoadingProgress(10);
-        return readStreamWithProgress(reader, contentLength, (progress) => {
-            setPageLoadingProgress(progress);
-        });
-    })
+    .then((result) => result.json())
     .then((content: MashroomPortalPageContent) => {
         if (content.fullPageLoadRequired) {
             document.location.replace(fullPageUrl);
@@ -74,8 +63,8 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
                 pageId,
             }, '', fullPageUrl);
             setTimeout(() => {
-                setPageLoadingProgress(0);
-            }, 500);
+                showPageLoadingIndicator(false);
+            }, 250);
         }
     })
     .catch((error) => {
@@ -85,15 +74,15 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     });
 }
 
-const setPageLoadingProgress = (progress: number) => {
+const showPageLoadingIndicator = (show: boolean) => {
     const loadingAnimationEl = document.getElementById('page-loading-progress');
-    if (loadingAnimationEl) {
-        if (progress > 0) {
-            loadingAnimationEl.classList.add('anim');
-        } else {
-            loadingAnimationEl.classList.remove('anim');
-        }
-        loadingAnimationEl.style.width = `${Math.min(100, progress)}%`;
+    if (!loadingAnimationEl) {
+        return;
+    }
+    if (show) {
+        loadingAnimationEl.classList.add('show');
+    } else {
+        loadingAnimationEl.classList.remove('show');
     }
 }
 
@@ -122,40 +111,4 @@ const highlightPageIdInNavigation = (pageId: string): void => {
     if (newActiveNavItem) {
         newActiveNavItem.classList.add('active');
     }
-};
-
-const readStreamWithProgress = (reader: ReadableStreamDefaultReader, contentLength: number, progressCb: (progress: number) => void): Promise<any> => {
-    return new Promise((resolve, reject) => {
-        let receivedLength = 0;
-        const chunks: Array<any> = [];
-        const readChunk = () => {
-            reader.read().then(
-                ({done, value}) => {
-                    if (!done) {
-                        chunks.push(value);
-                        receivedLength += value.length;
-                        const progress = Math.trunc(receivedLength / contentLength * 100);
-                        progressCb(progress);
-                        readChunk();
-                    } else {
-                        try {
-                            const chunksAll = new Uint8Array(receivedLength);
-                            let position = 0;
-                            for (const chunk of chunks) {
-                                chunksAll.set(chunk, position);
-                                position += chunk.length;
-                            }
-                            const result = new TextDecoder('utf-8').decode(chunksAll);
-                            resolve(JSON.parse(result));
-                        } catch (e) {
-                            reject(e);
-                        }
-                    }
-                },
-                (error) => {
-                    reject(error);
-                });
-        };
-        readChunk();
-    });
 };

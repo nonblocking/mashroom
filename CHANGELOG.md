@@ -3,55 +3,57 @@
 
 ## [unreleased]
 
- * Portal: Added an API endpoint to just fetch the page content without header, navigation, page enhancements and so on.
-   This can be used for dynamic page transitions.
-   Example:
-   ```http://localhost:5050/portal/web/___/api/pages/test2/content?currentPageId=subpage1```
-   Means: Give me the content (and scripts to launch/hydrate the Apps) for page _test2_, and I'm currently
-   on page _subpage1_, tell me if I need a full page load because the theme or something else outside
-   the content area is different.
- * Portal: Initial pages are now completely rendered on the server side (including the App wrapper).
-   To make clear that no longer only the *layout* is rendered the property *pageContent* should now be used
-   in the template instead of *portalLayout* (but both contain the same for the moment).
- * Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
-   You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
-   (when using Handlebars):
-   ```html
-   <div id="portal-app-{{appId}}" class="mashroom-portal-app-wrapper portal-app-{{safePluginName}}">
-     <div class="mashroom-portal-app-header">
-       <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
+  * Default Theme: Added an _SPA mode_ where the theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM.
+    This only works until the user does not navigate on a page with a different page or different page enhancements, in that case a full page load is triggered.
+  * Portal: Added an API endpoint to just fetch the page content without header, navigation, page enhancements and so on.
+    This can be used for dynamic page transitions.
+    Example:
+    ```http://localhost:5050/portal/web/___/api/pages/test2/content?currentPageId=subpage1```
+    Means: Give me the content (and scripts to launch/hydrate the Apps) for page _test2_, and I'm currently
+    on page _subpage1_, tell me if I need a full page load because the theme or something else outside
+    the content area is different.
+  * Portal: Initial pages are now completely rendered on the server side (including the App wrapper).
+    To make clear that no longer only the *layout* is rendered the property *pageContent* should now be used
+    in the template instead of *portalLayout* (but both contain the same for the moment).
+  * Portal: It is now possible to define how to render an App and errors during App loading are rendered in the theme.
+    You just need to add the new views *appWrapper* and *appError*. The content of *appWrapper* could look like this
+    (when using Handlebars):
+    ```html
+    <div id="portal-app-{{appId}}" class="mashroom-portal-app-wrapper portal-app-{{safePluginName}}">
+      <div class="mashroom-portal-app-header">
+        <div class="mashroom-portal-app-header-title" data-replace-content="title">{{title}}</div>
+      </div>
+      <div class="mashroom-portal-app-host" data-replace-content="app">
+       {{#if appSSRHtml}}
+         {{{appSSRHtml}}}
+       {{else}}
+         <div class="mashroom-portal-app-loading"><span/></div>
+       {{/if}}
      </div>
-     <div class="mashroom-portal-app-host" data-replace-content="app">
-      {{#if appSSRHtml}}
-        {{{appSSRHtml}}}
-      {{else}}
-        <div class="mashroom-portal-app-loading"><span/></div>
-      {{/if}}
     </div>
-   </div>
-   ```
-   **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
-   functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
- * Default Theme: Added a flag (showPortalAppHeaders) to the config to be able to
-   hide the App headers
- * Admin App: Show/Hide App Control is now persisted during page navigation
- * Added a demo Composite App: Demonstrates the possibility to use existing Apps as building blocks within other Apps.
-   Basically it uses the *MashroomPortalAppService* to tell the Portal where it should place an App with a given name and
-   a custom appConfig. Additional it demonstrates how such a Composite App can have a "private" message bus.
- * Portal: **BREAKING CHANGE**: Removed *sendUserHeaders* and *addHeaders* from the proxy config of Portal Apps
-   because both should be done via HTTP Proxy Interceptor now.
-   If you were using *sendUserHeaders* just add *mashroom-http-proxy-add-user-headers* to your plugins.
- * Added a plugin to add the ID/JWT token to backend requests if OpenID connect is used (*mashroom-http-proxy-add-id-token*)
- * Added a plugin to add user data as headers to backend requests (*mashroom-http-proxy-add-user-headers*)
- * HTTP Proxy: The HTTP interceptor can now also process WebSocket upgrade requests
-   (added optional method interceptWsRequest())
- * MongoDB client upgraded to v4
-   **BREAKING CHANGE**: If you use *mashroom-session-provider-mongodb* or *mashroom-storage-provider-mongodb*
-   please check your connection options since they have changed. E.g. *poolSize* and *useUnifiedTopology* no
-   longer exist. Check out https://mongodb.github.io/node-mongodb-native/4.1/classes/MongoClient.html#options
- * Admin App: Bundle size cut in halve, loads now faster
- * Sandbox App: It is possible to search for Apps now (autocomplete)
- * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
+    ```
+    **BREAKING CHANGE**: Previously it was possible to customize the App wrapper and error message using the client side
+    functions *MashroomPortalCreateAppWrapperFunc* and *MashroomPortalCreateLoadingErrorFunc* - those are ignored now.
+  * Default Theme: Added a flag (showPortalAppHeaders) to the config to be able to
+    hide the App headers
+  * Admin App: Show/Hide App Control is now persisted during page navigation
+  * Added a demo Composite App: Demonstrates the possibility to use existing Apps as building blocks within other Apps.
+    Basically it uses the *MashroomPortalAppService* to tell the Portal where it should place an App with a given name and
+    a custom appConfig. Additional it demonstrates how such a Composite App can have a "private" message bus.
+  * Portal: **BREAKING CHANGE**: Removed *sendUserHeaders* and *addHeaders* from the proxy config of Portal Apps
+    because both should be done via HTTP Proxy Interceptor now.
+    If you were using *sendUserHeaders* just add *mashroom-http-proxy-add-user-headers* to your plugins.
+  * Added a plugin to add the ID/JWT token to backend requests if OpenID connect is used (*mashroom-http-proxy-add-id-token*)
+  * Added a plugin to add user data as headers to backend requests (*mashroom-http-proxy-add-user-headers*)
+  * HTTP Proxy: The HTTP interceptor can now also process WebSocket upgrade requests
+    (added optional method interceptWsRequest())
+  * MongoDB client upgraded to v4
+    **BREAKING CHANGE**: If you use *mashroom-session-provider-mongodb* or *mashroom-storage-provider-mongodb*
+    please check your connection options since they have changed. E.g. *poolSize* and *useUnifiedTopology* no
+    longer exist. Check out https://mongodb.github.io/node-mongodb-native/4.1/classes/MongoClient.html#options
+  * Admin App: Bundle size cut in halve, loads now faster
+  * Sandbox App: It is possible to search for Apps now (autocomplete)
+  * Portal: Fixed the problem that pages with special characters (like Umlaute) in their path didn't work
 
 ## 1.8.3 (September 11, 2021)
 
