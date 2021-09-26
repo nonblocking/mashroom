@@ -139,7 +139,6 @@ export type MashroomPortalAppSetup = {
     +version: string,
     +instanceId: ?string,
     +lastReloadTs: number,
-    +ssr: boolean;
     +restProxyPaths: MashroomRestProxyPaths,
     +sharedResourcesBasePath: string,
     +sharedResources: ?MashroomPortalAppResources,

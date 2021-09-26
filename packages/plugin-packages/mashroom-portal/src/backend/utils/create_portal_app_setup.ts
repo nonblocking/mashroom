@@ -69,7 +69,7 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
         }
     }
 
-    const lang = await i18nService.getLanguage(req);
+    const lang = i18nService.getLanguage(req);
     const user = toPortalAppUser(mashroomSecurityUser, portalApp);
 
     const appConfig = {...portalApp.defaultAppConfig, ...portalAppInstance.appConfig};
@@ -81,8 +81,6 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
         version: portalApp.version,
         instanceId: portalAppInstance.instanceId,
         lastReloadTs: portalApp.lastReloadTs,
-        // TODO
-        ssr: false,
         restProxyPaths,
         sharedResourcesBasePath,
         sharedResources: portalApp.sharedResources,
