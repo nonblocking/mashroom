@@ -4,7 +4,7 @@
 import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mashroom/mashroom-portal/type-definitions';
 
 (global as any).toggleMenu = () => {
-    document.querySelector('nav')?.classList.toggle('show');
+    document.getElementById('navigation')?.classList.toggle('show');
 }
 
 (global as any).toggleShowAppVersions = () => {
@@ -54,6 +54,7 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
                 window.history.pushState({
                     pageId,
                 }, '', fullPageUrl);
+                hideMobileMenu();
                 setTimeout(() => {
                     showPageLoadingIndicator(false);
                 }, 250);
@@ -65,6 +66,10 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
             document.location.replace(fullPageUrl);
         }
     )
+}
+
+const hideMobileMenu = () => {
+    document.getElementById('navigation')?.classList.remove('show');
 }
 
 const showPageLoadingIndicator = (show: boolean) => {
