@@ -743,7 +743,7 @@ mashroom-portal-ui-error-message {
 
 #mashroom-portal-auth-expires-warning {
     position: fixed;
-    top: -100px;
+    top: -150px;
     left: calc(50% - 170px);
     width: 320px;
     transition: top 1s ease-out;
@@ -783,7 +783,6 @@ mashroom-portal-ui-error-message {
 
 #mashroom-portal-admin-app-container {
     background-color: $COLOR_BLACK;
-    min-height: 32px;
 
     .mashroom-portal-app-wrapper {
         min-height: 32px;
