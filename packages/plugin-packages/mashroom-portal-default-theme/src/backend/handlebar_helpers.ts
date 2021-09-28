@@ -10,9 +10,8 @@ function equals(this: any, lvalue: any, rvalue: any, options: any): any {
     }
     if (lvalue !== rvalue) {
         return options.inverse(this);
-    } else {
-        return options.fn(this);
     }
+    return options.fn(this);
 }
 
 function i18n(messages: (key: string) => string, key: string): string {
@@ -26,6 +25,13 @@ function defaultPluginErrorMessage(pluginName: string, messages: (key: string) =
 
 function env(): string {
     return process.env.NODE_ENV || 'development';
+}
+
+function ifSpaMode(this: any, options: any): any {
+    if (!themeParams.spaMode) {
+        return options.inverse(this);
+    }
+    return options.fn(this);
 }
 
 function mashroomVersion(): string {
@@ -49,6 +55,7 @@ function ifShowEnvAndVersions(this: any, options: any): any {
 
 export default {
     equals,
+    ifSpaMode,
     env,
     mashroomVersion,
     extraMainClasses,

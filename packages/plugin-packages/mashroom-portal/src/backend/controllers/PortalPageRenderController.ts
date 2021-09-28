@@ -136,10 +136,18 @@ export default class PortalPageRenderController {
             if (currentPage && currentPageRef) {
                 // If we know the current page we can decide if a full page refresh would be required
                 const currentPageTheme = currentPage.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
-                const userAgent = determineUserAgent(req);
-                const sameEnhancements = await sameEnhancementsOnBothPages(this._pluginRegistry, sitePath, pageRef.friendlyUrl, currentPageRef.friendlyUrl,
-                    lang, userAgent, req);
-                fullPageLoadRequired = themeName !== currentPageTheme || !sameEnhancements;
+                if (themeName !== currentPageTheme) {
+                    logger.info(`Requesting full page reload because page ${currentPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different themes`);
+                    fullPageLoadRequired = true;
+                } else {
+                    const userAgent = determineUserAgent(req);
+                    const sameEnhancements = await sameEnhancementsOnBothPages(this._pluginRegistry, sitePath, pageRef.friendlyUrl, currentPageRef.friendlyUrl,
+                        lang, userAgent, req);
+                    if (!sameEnhancements) {
+                        logger.info(`Requesting full page reload because page ${currentPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different page enhancements`);
+                        fullPageLoadRequired = true;
+                    }
+                }
             }
 
             if (fullPageLoadRequired) {
@@ -154,11 +162,17 @@ export default class PortalPageRenderController {
                 pageContent = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
 
                 evalScript = `
-                    var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;\n
-                    // Unload all running apps\n
-                    portalAppService.loadedPortalApps.forEach((app) => app.pluginName !== '${adminPluginName}' && portalAppService.unloadApp(app.id));\n
-                    // Load/hydrate all new ones\n
-                    ${await this._getStaticAppStartupScript(portalAppInfo, undefined)}\n
+                    // Update pageId
+                    window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
+                    var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;
+                    // Unload all running apps
+                    portalAppService.loadedPortalApps.forEach(function(app) {
+                      if (app.pluginName !== '${adminPluginName}') {
+                        portalAppService.unloadApp(app.id);
+                      }
+                    });
+                    // Load/hydrate all new ones
+                    ${await this._getStaticAppStartupScript(portalAppInfo, undefined)}
                 `;
             }
 

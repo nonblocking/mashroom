@@ -62,10 +62,14 @@
         <div class="menu-open" onclick="toggleMenu()"></div>
     </header>
 
+    <div class="loading-animation">
+        <div id="page-loading-progress" class="loading-animation-progress"></div>
+    </div>
+
     <main class="{{extraMainClasses}}">
         {{> navigation}}
 
-        <div class="mashroom-portal-apps-container container-fluid">
+        <div id="portal-page-content" class="mashroom-portal-apps-container container-fluid">
             {{{pageContent}}}
         </div>
     </main>

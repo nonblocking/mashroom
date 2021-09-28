@@ -6,6 +6,7 @@ import MashroomPortalStateServiceImpl from './MashroomPortalStateServiceImpl';
 import MashroomRestServiceFetchImpl from './MashroomRestServiceFetchImpl';
 import MashroomPortalUserServiceImpl from './MashroomPortalUserServiceImpl';
 import MashroomPortalSiteServiceImpl from './MashroomPortalSiteServiceImpl';
+import MashroomPortalPageServiceImpl from './MashroomPortalPageServiceImpl';
 import PageUnloadHandler from './PageUnloadHandler';
 import BrowserErrorHandler from './BrowserErrorHandler';
 import AuthenticationExpirationChecker from './AuthenticationExpirationChecker';
@@ -25,11 +26,12 @@ const messageBus = new MashroomPortalMessageBusImpl();
 const stateService = new MashroomPortalStateServiceImpl();
 const portalUserService = new MashroomPortalUserServiceImpl(restService);
 const portalSiteService = new MashroomPortalSiteServiceImpl(restService);
+const portalPageService = new MashroomPortalPageServiceImpl(restService);
 
 const globalMashroomPortalModule: MashroomPortalClientServices = {
-    restService,
     portalAppService,
     portalAdminService,
+    portalPageService,
     portalSiteService,
     messageBus,
     stateService,
