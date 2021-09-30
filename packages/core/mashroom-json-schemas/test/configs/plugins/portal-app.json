@@ -37,10 +37,11 @@
                 "restProxies": {
                     "spaceXApi": {
                         "targetUri": "https://api.spacexdata.com/v3",
-                        "sendUserHeaders": false,
                         "sendPermissionsHeader": false,
-                        "addHeaders": {},
                         "restrictToRoles": ["Role1"]
+                    },
+                    "tracer": {
+                        "targetUri": "${env.TRACER_URL}"
                     }
                 },
                 "metaInfo": {
