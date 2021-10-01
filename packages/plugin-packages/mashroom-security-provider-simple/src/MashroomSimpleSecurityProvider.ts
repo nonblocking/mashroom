@@ -109,6 +109,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     getUser(request: Request): MashroomSecurityUser | null | undefined {
+        if (!request.session) {
+            return null;
+        }
         const timeout: number = request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY];
         if (!timeout) {
             return null;

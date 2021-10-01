@@ -39,7 +39,7 @@
         },
         "HttpOrWebSocketUrl": {
             "type": "string",
-            "pattern": "^(http://|https://|ws://|wss://).*$"
+            "pattern": "^(\\$|http://|https://|ws://|wss://).*$"
         },
         "JavaScriptIdentifier": {
             "type": "string",
@@ -694,10 +694,11 @@
                                             "description": "Optional list of roles that are permitted to access the proxy"
                                         }
                                     },
+                                    "additionalProperties": false,
                                     "required": ["targetUri"]
                                 }
-                            },
-                            "additionalProperties": false
+                            }
+
                         },
                         "metaInfo": {
                             "type": "object",
