@@ -197,6 +197,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     }
 
     getUser(request: Request): MashroomSecurityUser | null | undefined {
+        if (!request.session) {
+            return null;
+        }
         const timeout: number | undefined = request.session[LDAP_AUTH_EXPIRES_SESSION_KEY];
         if (!timeout) {
             return null;
