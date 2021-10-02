@@ -77,7 +77,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
     }
 
-    private async _processInBackground(): Promise<void> {
+    async _processInBackground(): Promise<void> {
         this._logger.info('Start processing remote portal app endpoints');
         const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
         const endpoints = await portalRemoteAppEndpointService.findAll();

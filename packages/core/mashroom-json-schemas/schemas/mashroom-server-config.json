@@ -660,6 +660,14 @@
                             "type": "string",
                             "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
                         },
+                        "serviceNameFilter": {
+                            "type": "string",
+                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
+                        },
+                        "k8sNamespacesLabelSelector": {
+                            "type": "string",
+                            "description": "Search in all namespaces matching the label selector (e.g. environment=development,tier=frontend) (Default: null)"
+                        },
                         "k8sNamespaces": {
                             "type": "array",
                             "items": {
@@ -674,10 +682,6 @@
                         "refreshIntervalSec": {
                             "type": "integer",
                             "description": "The time in seconds after that a registered services show be re-checked (Default: 600)"
-                        },
-                        "serviceNameFilter": {
-                            "type": "string",
-                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
                         },
                         "accessViaClusterIP": {
                             "type": "boolean",

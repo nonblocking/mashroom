@@ -18,8 +18,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     private _serviceNameFilter: RegExp;
     private _logger: MashroomLogger;
 
-    constructor(private _k8sNamespaces: Array<string>, serviceNameFilterStr: string, private _socketTimeoutSec: number,
-                private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
+    constructor(serviceNameFilterStr: string, private _k8sNamespacesLabelSelector: string | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
+                private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
                 private _externalPluginConfigFileNames: Array<string>,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
         this._serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
@@ -30,15 +30,16 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         this._scanKubernetesServices()
     }
 
-    private async _scanKubernetesServices(): Promise<void> {
+    async _scanKubernetesServices(): Promise<void> {
         this._logger.info('Starting scan of k8s namespaces: ', this._k8sNamespaces);
         context.lastScan = Date.now();
         context.error = null;
 
-        for (let i = 0; i < this._k8sNamespaces.length; i++) {
-            const namespace = this._k8sNamespaces[i];
+        const namespaces = await this._determineNamespaces();
+        for (let i = 0; i < namespaces.length; i++) {
+            const namespace = namespaces[i];
             try {
-                const res = await this._kubernetesConnector.listNamespaceServices(namespace);
+                const res = await this._kubernetesConnector.getNamespaceServices(namespace);
                 const serviceItems = res.items;
 
                 for (let j = 0; j < serviceItems.length; j++) {
@@ -101,6 +102,24 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         }
 
         this._removeAppsNotSeenForALongTime();
+    }
+
+    private async _determineNamespaces(): Promise<Array<string>> {
+        const namespaces = [...this._k8sNamespaces || []];
+        if (this._k8sNamespacesLabelSelector) {
+            try {
+                const additionalNamespaces = await this._kubernetesConnector.getNamespacesByLabel(this._k8sNamespacesLabelSelector);
+                additionalNamespaces.items.forEach((ns) => {
+                    if (ns.metadata?.name) {
+                        namespaces.push(ns.metadata.name);
+                    }
+                });
+            } catch (e) {
+                this._logger.error(`Unable to determine namespaces from labelSelector: ${this._k8sNamespacesLabelSelector}`, e);
+            }
+        }
+        this._logger.debug('Determined namespaces to scan:', namespaces.join(', '));
+        return namespaces;
     }
 
     private async _checkServiceForRemotePortalApps(service: KubernetesService): Promise<void> {

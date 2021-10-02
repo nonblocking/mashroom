@@ -1,13 +1,14 @@
 
 import {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
-import {V1ServiceList} from '@kubernetes/client-node';
+import {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
 
 export interface ScanBackgroundJob {
     run(): void;
 }
 
 export interface KubernetesConnector {
-    listNamespaceServices(namespace: string): Promise<V1ServiceList>;
+    getNamespacesByLabel(labelSelector: string): Promise<V1NamespaceList>;
+    getNamespaceServices(namespace: string): Promise<V1ServiceList>;
 }
 
 export type KubernetesServiceStatus = 'Checking' | 'Valid' | 'Headless Service' | 'No Descriptor' | 'Error';

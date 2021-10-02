@@ -1,9 +1,11 @@
 
+import nock from 'nock';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
 import DummyKubernetesConnector from '../src/js/k8s/DummyKubernetesConnector';
+import context from '../src/js/context';
 
-import {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
+import type {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
 
 describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
@@ -73,8 +75,54 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         version: '1.1.2'
     };
 
+    it('scans a remote service', async () => {
+        nock('http://my-remote-app.dev-namespace2:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('.*', null, ['dev-namespace2'],  3,
+            300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(1);
+
+        const service = context.registry.services[0];
+        expect(service.name).toBe('my-remote-app');
+        expect(service.status).toBe('Valid');
+
+        expect(service.foundPortalApps.length).toBe(1);
+        expect(service.foundPortalApps[0].name).toBe('Test App');
+
+        context.registry.removeService('my-remote-app');
+        expect(context.registry.services.length).toBe(0);
+    });
+
+    it('scans a remote service in a namespace found via labelSelector', async () => {
+        nock('http://my-remote-app.dev-namespace2:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('.*', 'environment=development', null,  3,
+            300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(1);
+
+        const service = context.registry.services[0];
+        expect(service.name).toBe('my-remote-app');
+        expect(service.status).toBe('Valid');
+
+        expect(service.foundPortalApps.length).toBe(1);
+        expect(service.foundPortalApps[0].name).toBe('Test App');
+
+        context.registry.removeService('my-remote-app');
+        expect(context.registry.services.length).toBe(0);
+    });
+
     it('processes package.json correctly', () => {
-        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('.*', null, ['default'],  3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
         const portalApps = backgroundJob.processPluginDefinition(packageJson, null, {
@@ -130,7 +178,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('processes an external plugin package definition correctly', () => {
-        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['default'], '.*', 3,
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('.*', null, ['default'],  3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
         const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, {

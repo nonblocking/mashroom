@@ -1,10 +1,16 @@
 
+import nock from 'nock';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import RegisterPortalRemoteAppsBackgroundJob from '../src/js/jobs/RegisterPortalRemoteAppsBackgroundJob';
+import context from '../src/js/context';
 
 import type {MashroomPluginDefinition} from '@mashroom/mashroom/type-definitions';
+import type {RemotePortalAppEndpoint} from '../type-definitions';
 
 describe('RegisterPortalRemoteAppsBackgroundJob', () => {
+
+    const mockFindAll = jest.fn();
+    const mockUpdateRemotePortalAppEndpoint = jest.fn();
 
     const pluginContextHolder: any = {
         getPluginContext: () => {
@@ -12,6 +18,14 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 loggerFactory: dummyLoggerFactory,
                 serverConfig: {
                     externalPluginConfigFileNames: []
+                },
+                services: {
+                    remotePortalAppEndpoint: {
+                        service: {
+                            findAll: mockFindAll,
+                            updateRemotePortalAppEndpoint: mockUpdateRemotePortalAppEndpoint,
+                        }
+                    }
                 }
             }
         }
@@ -86,6 +100,43 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     const remotePortalAppEndpoint: any = {
         url: 'https://www.mashroom-server.com/test-remote-app'
     };
+
+    beforeEach(() => {
+       mockFindAll.mockReset();
+    });
+
+    it('scans a remote service', async () => {
+
+        const endpoints: Array<RemotePortalAppEndpoint> = [{
+            url: 'http://my-remote-app.io:6066',
+            sessionOnly: false,
+            lastError: null,
+            retries: 0,
+            registrationTimestamp: null,
+            portalApps: [],
+        }];
+        mockFindAll.mockReturnValue(endpoints);
+
+        let updatedEndpoint: RemotePortalAppEndpoint | undefined;
+        mockUpdateRemotePortalAppEndpoint.mockImplementation((e) => updatedEndpoint = e);
+
+        nock('http://my-remote-app.io:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+
+        await backgroundJob._processInBackground();
+
+        expect(updatedEndpoint).toBeTruthy();
+        expect(updatedEndpoint?.lastError).toBeFalsy();
+        expect(updatedEndpoint?.portalApps.length).toBe(1);
+        expect(updatedEndpoint?.portalApps[0].name).toBe('Test App');
+
+        expect(context.registry.portalApps.length).toBe(1);
+        context.registry.unregisterRemotePortalApp('Test App');
+        expect(context.registry.portalApps.length).toBe(0);
+    });
 
     it('processes package.json correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);

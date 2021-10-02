@@ -1,11 +1,65 @@
 
-import {V1ServiceList} from '@kubernetes/client-node';
+import {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
 
 import type {KubernetesConnector as KubernetesConnectorType} from '../../../type-definitions';
 
 export default class KubernetesConnector implements KubernetesConnectorType {
 
-    async listNamespaceServices(namespace: string): Promise<V1ServiceList> {
+    async getNamespacesByLabel(labelSelector: string): Promise<V1NamespaceList> {
+        if (labelSelector === 'environment=development') {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'dev-namespace1',
+                            labels: {
+                                environment: 'development'
+                            },
+                        },
+                    },
+                    {
+                        metadata: {
+                            name: 'dev-namespace2',
+                            labels: {
+                                environment: 'development'
+                            },
+                        },
+                    },
+                ]
+            };
+        }
+        return {
+            items: [
+
+            ]
+        };
+    }
+
+    async getNamespaceServices(namespace: string): Promise<V1ServiceList> {
+        if (namespace === 'dev-namespace1') {
+            return {
+                items: []
+            };
+        } else if (namespace === 'dev-namespace2') {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace2',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6066
+                                }
+                            ]
+                        }
+                    },
+                ]
+            };
+        }
         return {
             items: [
                 {

@@ -3,6 +3,13 @@
 
 ## [unreleased]
 
+ * K8S remote app registry: Added the possibility to scan in namespaces identified by a [labelSelector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors).
+   Example: Scan all services in namespaces with label _environment=development_ and _microfrontend_ in the name:
+   ```json
+     "serviceNameFilter": "(microfrontend-)",
+     "k8sNamespacesLabelSelector": "environment=development",
+     "k8sNamespaces": null,
+   ```
  * Portal: **BREAKING CHANGE**: Removed *MashroomRestService* from client services because it is only intended
    for internal use. Portal Apps should use *fetch* directly.
  * Default Theme: Added an _SPA mode_ where the theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM.
