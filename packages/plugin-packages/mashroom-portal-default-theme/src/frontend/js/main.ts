@@ -3,6 +3,8 @@
 
 import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mashroom/mashroom-portal/type-definitions';
 
+let startPageAddedToHistory = false;
+
 (global as any).toggleMenu = () => {
     document.getElementById('navigation')?.classList.toggle('show');
 }
@@ -23,23 +25,37 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     const pageId = ev.state?.pageId;
     const pageContentUrl = document.location.pathname;
     if (pageId) {
-        console.debug('Browser navigation. Replacing page content with pageId', pageId);
-        (global as any).replacePageContent(pageId, pageContentUrl);
+        console.debug('Browser navigation. Replacing page content with pageId:', pageId);
+        (global as any).replacePageContent(pageId, pageContentUrl, true);
     }
 };
 
 // Dynamically replace the page content
-(global as any).replacePageContent = (pageId: string, fullPageUrl: string) => {
-    console.debug('Replacing page content with pageId', pageId);
-
+(global as any).replacePageContent = (pageId: string, fullPageUrl: string, dontAddToHistory = false) => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
     if (!clientServices) {
+        return;
+    }
+
+    const currentPageId = clientServices.portalAdminService.getCurrentPageId();
+    if (pageId === currentPageId) {
         return;
     }
     const contentEl = document.getElementById('portal-page-content');
     if (!contentEl) {
         return;
     }
+
+    if (!startPageAddedToHistory) {
+        // Add first page to history, otherwise it won't be possible to navigate back to it
+        const fullPageUrl = document.location.pathname;
+        window.history.pushState({
+            pageId: currentPageId,
+        }, '', fullPageUrl);
+        startPageAddedToHistory = true;
+    }
+
+    console.debug('Replacing page content with pageId:', pageId);
 
     showPageLoadingIndicator(true);
     clientServices.portalPageService.getPageContent(pageId).then(
@@ -51,10 +67,14 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
                 // console.log('Evaluating', content.evalScript);
                 eval(content.evalScript);
                 highlightPageIdInNavigation(pageId);
-                window.history.pushState({
-                    pageId,
-                }, '', fullPageUrl);
                 hideMobileMenu();
+
+                if (!dontAddToHistory) {
+                    window.history.pushState({
+                        pageId,
+                    }, '', fullPageUrl);
+                }
+
                 setTimeout(() => {
                     showPageLoadingIndicator(false);
                 }, 250);
