@@ -709,6 +709,7 @@
                             "description": "The default configuration that will be passed to the App. Can be adapted in the Admin App"
                         }
                     },
+                    "additionalProperties": false,
                     "required": ["resourcesRoot"]
                 }
             },
