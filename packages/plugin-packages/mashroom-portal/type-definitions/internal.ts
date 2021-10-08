@@ -90,5 +90,6 @@ export type MashroomPortalContext = {
 export type ClientLogMessage = {
     level: LogLevel;
     portalAppName?: string | undefined | null;
+    path: string;
     message: string;
 }

@@ -23,12 +23,12 @@ export default class PortalLogController {
             }
 
             for (const logMessage of logMessages) {
-                let sourceAppInfo = '';
+                let sourceAppInfo = `[Page: ${logMessage.path}]`;
                 if (logMessage.portalAppName) {
                     const portalApp = this._getPortalApp(logMessage.portalAppName);
                     if (portalApp) {
                         logger.addContext(portalAppContext(portalApp));
-                        sourceAppInfo = `[${portalApp.name} v${portalApp.version}]`;
+                        sourceAppInfo += ` [App: ${portalApp.name} v${portalApp.version}]`;
                     }
                 }
 

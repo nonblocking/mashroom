@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Client log messages contain now the path of the page where they were generated
  * K8S remote app registry: Added the possibility to scan in namespaces identified by a [labelSelector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors).
    Example: Scan all services in namespaces with label _environment=development_ and _microfrontend_ in the name:
    ```json

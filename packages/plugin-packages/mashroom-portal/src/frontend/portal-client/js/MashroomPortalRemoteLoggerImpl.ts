@@ -62,6 +62,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         const logMessage: ClientLogMessage = {
             level,
             portalAppName,
+            path: global.location.pathname,
             message
         };
 
