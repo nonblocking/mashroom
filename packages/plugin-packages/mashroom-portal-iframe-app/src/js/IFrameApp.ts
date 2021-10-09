@@ -26,12 +26,12 @@ export default class IFrameApp {
 
             iframe.onload = () => {
                 iframe.style.height = this._defaultHeight;
-                hostElement.childNodes.forEach((node) => {
-                    // Remove other child nodes after loading if any
-                    if (node !== this._iframe) {
-                        hostElement.removeChild(node);
+                for (let i = 0; i < hostElement.children.length; i++) {
+                    const childEl = hostElement.children[i];
+                    if (childEl !== this._iframe) {
+                        hostElement.removeChild(childEl);
                     }
-                });
+                }
                 resolve();
             };
             iframe.onerror = (event) => {
