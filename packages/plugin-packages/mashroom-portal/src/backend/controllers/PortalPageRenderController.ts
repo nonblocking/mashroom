@@ -27,7 +27,7 @@ import {
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
 } from '../constants';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
-import {getPageEnhancementResources, sameEnhancementsOnBothPages} from '../utils/page_enhancement_utils';
+import {getPageEnhancementResources, allEnhancementsExistOnOriginalPage} from '../utils/page_enhancement_utils';
 import {
     getFrontendApiResourcesBasePath,
     getFrontendSiteBasePath,
@@ -88,7 +88,7 @@ export default class PortalPageRenderController {
 
     /*
      * Get the content part of a given page (without header, navigation, theme or page enhancements).
-     * This only works properly if also the currentPageId is given as query parameter
+     * This only works properly if also the originalPageId (the page that was fully loaded) is given as query parameter
      */
     async getPortalPageContent(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
@@ -96,16 +96,16 @@ export default class PortalPageRenderController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
-            const {currentPageId} = req.query as { currentPageId: string | undefined };
+            const {originalPageId} = req.query as { originalPageId: string | undefined };
             const {pageId} = req.params as { pageId: string };
             const sitePath = getSitePath(req);
             const user = getUser(req);
 
             const site = await findSiteByPath(req, sitePath);
-            const currentPage = currentPageId ? await getPage(req, currentPageId) : undefined;
+            const originalPage = originalPageId ? await getPage(req, originalPageId) : undefined;
             const page = await getPage(req, pageId);
             const pageRef = site ? await findPageRefByPageId(req, site, pageId) : undefined;
-            const currentPageRef = site && currentPageId ? await findPageRefByPageId(req, site, currentPageId) : undefined;
+            const originalPageRef = site && originalPageId ? await findPageRefByPageId(req, site, originalPageId) : undefined;
 
             logger.debug('Site:', site);
             logger.debug('PageRef:', pageRef);
@@ -117,7 +117,7 @@ export default class PortalPageRenderController {
                 return;
             }
 
-            logger.debug(`Request for content page: ${page} on site: ${sitePath}`);
+            logger.debug(`Request for content page: ${pageRef.friendlyUrl} on site: ${sitePath}`);
 
             if (!await isSitePermitted(req, site.siteId) || !await isPagePermitted(req, page.pageId)) {
                 logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access path: ${pageRef.friendlyUrl}`);
@@ -133,18 +133,18 @@ export default class PortalPageRenderController {
             let fullPageLoadRequired;
             let pageContent;
             let evalScript;
-            if (currentPage && currentPageRef) {
+            if (originalPage && originalPageRef) {
                 // If we know the current page we can decide if a full page refresh would be required
-                const currentPageTheme = currentPage.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
+                const currentPageTheme = originalPage.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
                 if (themeName !== currentPageTheme) {
-                    logger.info(`Requesting full page reload because page ${currentPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different themes`);
+                    logger.info(`Requesting full page reload because original page ${originalPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different themes`);
                     fullPageLoadRequired = true;
                 } else {
                     const userAgent = determineUserAgent(req);
-                    const sameEnhancements = await sameEnhancementsOnBothPages(this._pluginRegistry, sitePath, pageRef.friendlyUrl, currentPageRef.friendlyUrl,
-                        lang, userAgent, req);
-                    if (!sameEnhancements) {
-                        logger.info(`Requesting full page reload because page ${currentPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different page enhancements`);
+                    const allEnhancementsLoaded = await allEnhancementsExistOnOriginalPage(
+                        this._pluginRegistry, sitePath, pageRef.friendlyUrl, originalPageRef.friendlyUrl, lang, userAgent, req);
+                    if (!allEnhancementsLoaded) {
+                        logger.info(`Requesting full page reload because original page ${originalPageRef.friendlyUrl} does not contain all page enhancements for ${pageRef.friendlyUrl}`);
                         fullPageLoadRequired = true;
                     }
                 }

@@ -110,7 +110,7 @@ const pluginRegistry3: any = {
                 inline: true,
             }, {
                 path: 'test_script3.js',
-                rule: 'no',
+                rule: 'onlyOnPage4',
                 location: 'footer',
                 inline: false,
             }, {
@@ -135,6 +135,7 @@ const pluginRegistry3: any = {
             rules: {
                 'yes': () => true,
                 'no': () => false,
+                'onlyOnPage4': (sitePath: string, pageFriendlyUrl: string) => pageFriendlyUrl === '/same',
             }
         }
     }, {
@@ -161,6 +162,24 @@ const site: any = {
             friendlyUrl: '/bar',
             subPages: [],
         },
+        {
+            pageId: 'test-page2',
+            title: 'Test Page 2',
+            friendlyUrl: '/foo',
+            subPages: [],
+        },
+        {
+            pageId: 'test-page3',
+            title: 'Test Page 3',
+            friendlyUrl: '/woohooo',
+            subPages: [],
+        },
+        {
+            pageId: 'test-page4',
+            title: 'Test Page 4',
+            friendlyUrl: '/same',
+            subPages: [],
+        },
     ],
 };
 
@@ -182,6 +201,21 @@ const page1: any = {
         }],
     },
 };
+
+const page2: any = {
+    pageId: 'test-page2',
+    theme: 'my-theme2'
+}
+
+const page3: any = {
+    pageId: 'test-page3',
+    theme: 'my-theme'
+}
+
+const page4: any = {
+    pageId: 'test-page4',
+    theme: 'my-theme'
+}
 
 const portalAppInstance1: any = {
     pluginName: 'Mashroom Welcome Portal App',
@@ -209,10 +243,17 @@ const pluginContext: any = {
                 findPageRefByFriendlyUrl() {
                     return site.pages[0];
                 },
-                findPageRefByPageId() {
-                    return site.pages[0];
+                findPageRefByPageId(site: any, pageId: string) {
+                    return site.pages.find((page: any) => page.pageId === pageId);
                 },
-                getPage() {
+                getPage(pageId: string) {
+                    if (pageId === 'test-page2') {
+                        return page2;
+                    } else if (pageId === 'test-page3') {
+                        return page3;
+                    } else if (pageId === 'test-page4') {
+                        return page4;
+                    }
                     return page1;
                 },
                 updatePage() { /* nothing to do */ },
@@ -319,14 +360,50 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            type: (t: string) => { /* nothing to do */ },
+            type: () => { /* nothing to do */ },
             render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
                 if (template === 'portal') {
                     expect(engineName).toBe('fooEngine');
                     expect(webappProps.get('view engine')).toBe('fooEngine');
                     expect(webappProps.get('views')).toBe('./views');
 
-                    expect(model.site).toEqual({siteId: 'default', pages: [{pageId: 'test-page', friendlyUrl: '/bar', hidden: false, subPages: [], title: 'Test Page'}], path: '/web', title: 'Default Site'});
+                    console.info(model.site);
+
+                    expect(model.site).toEqual({
+                        siteId: 'default',
+                        title: 'Default Site',
+                        path: '/web',
+                        pages: [
+                            {
+                                pageId: 'test-page',
+                                title: 'Test Page',
+                                friendlyUrl: '/bar',
+                                hidden: false,
+                                subPages: []
+                            },
+                            {
+                                pageId: 'test-page2',
+                                title: 'Test Page 2',
+                                friendlyUrl: '/foo',
+                                hidden: false,
+                                subPages: []
+                            },
+                            {
+                                pageId: 'test-page3',
+                                title: 'Test Page 3',
+                                friendlyUrl: '/woohooo',
+                                hidden: false,
+                                subPages: []
+                            },
+                            {
+                                pageId: 'test-page4',
+                                title: 'Test Page 4',
+                                friendlyUrl: '/same',
+                                hidden: false,
+                                subPages: []
+                            }
+                        ]
+                    });
                     expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Mashroom Welcome Portal App'}, {instanceId: '3', pluginName: 'Mashroom Welcome Portal App 2'}]}, theme: 'my-theme', title: 'Test Page'});
                     expect(model.siteBasePath).toBe('/portal/web');
                     expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
@@ -339,7 +416,6 @@ describe('PortalPageRenderController', () => {
             },
             send: (body: string) => {
                 expect(body).toBe('<div />');
-
                 done();
             }
         };
@@ -349,10 +425,9 @@ describe('PortalPageRenderController', () => {
     });
 
     it('renders a page with enhancement plugins', (done) => {
-        let engineName: string | undefined;
         const webappProps = new Map();
         const webApp: any = {
-            engine: (name: string) => engineName = name,
+            engine: () => { /* ignore */ },
             set: (key: string, value: any) => webappProps.set(key, value),
         };
 
@@ -372,7 +447,7 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            type: (t: string) => { /* nothing to do */ },
+            type: () => { /* nothing to do */ },
             render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
                 if (template === 'portal') {
                     // console.info(model.portalResourcesHeader);
@@ -406,10 +481,9 @@ describe('PortalPageRenderController', () => {
     });
 
     it('returns the page content of a given pageId', (done) => {
-        let engineName: string | undefined;
         const webappProps = new Map();
         const webApp: any = {
-            engine: (name: string) => engineName = name,
+            engine: () => { /* ignore */ },
             set: (key: string, value: any) => webappProps.set(key, value),
         };
 
@@ -426,21 +500,166 @@ describe('PortalPageRenderController', () => {
         };
 
         const res: any = {
-            type: (t: string) => { /* nothing to do */ },
+            type: () => { /* nothing to do */ },
             render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
             json: (content: any) => {
                 expect(content).toBeTruthy();
-
                 expect(content.pageContent).toContain('<div id="app-area1">');
                 expect(content.pageContent).toContain('<div data-mr-app-id="ABCDEF" class="mashroom-portal-app-wrapper portal-app-mashroom-welcome-portal-app">');
-
-                expect(content.evalScript).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null);');
-
                 done();
             }
         };
 
         const controller = new PortalPageRenderController(webApp, pluginRegistry2);
+        controller.getPortalPageContent(req, res);
+    });
+
+    it('doesn\'t return the page content if the theme is different from the original page', (done) => {
+        const webappProps = new Map();
+        const webApp: any = {
+            engine: () => { /* ignore */ },
+            set: (key: string, value: any) => webappProps.set(key, value),
+        };
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            query: {
+                originalPageId: 'test-page2',
+            },
+            params: {
+                pageId: 'test-page',
+                sitePath: 'web',
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            type: () => { /* nothing to do */ },
+            render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
+            json: (content: any) => {
+                expect(content).toBeTruthy();
+                expect(content).toEqual({
+                    fullPageLoadRequired: true, pageContent: '', evalScript: '',
+                });
+                done();
+            }
+        };
+
+        const controller = new PortalPageRenderController(webApp, pluginRegistry2);
+        controller.getPortalPageContent(req, res);
+    });
+
+    it('returns the page content of a given pageId if the theme and the page enhancements of the original page match', (done) => {
+        const webappProps = new Map();
+        const webApp: any = {
+            engine: () => { /* ignore */ },
+            set: (key: string, value: any) => webappProps.set(key, value),
+        };
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+            },
+            query: {
+                originalPageId: 'test-page3',
+            },
+            params: {
+                pageId: 'test-page',
+                sitePath: 'web',
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            type: () => { /* nothing to do */ },
+            render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
+            json: (content: any) => {
+                expect(content).toBeTruthy();
+                expect(content.pageContent).toContain('<div id="app-area1">');
+                done();
+            }
+        };
+
+        const controller = new PortalPageRenderController(webApp, pluginRegistry3);
+        controller.getPortalPageContent(req, res);
+    });
+
+    it('doesn\'t return the page content if page enhancements are missing', (done) => {
+        const webappProps = new Map();
+        const webApp: any = {
+            engine: () => { /* ignore */ },
+            set: (key: string, value: any) => webappProps.set(key, value),
+        };
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/whatever',
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+            },
+            query: {
+                originalPageId: 'test-page',
+            },
+            params: {
+                pageId: 'test-page4',
+                sitePath: 'web',
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            type: () => { /* nothing to do */ },
+            render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
+            json: (content: any) => {
+                expect(content).toBeTruthy();
+                expect(content).toEqual({
+                    fullPageLoadRequired: true, pageContent: '', evalScript: '',
+                });
+                done();
+            }
+        };
+
+        const controller = new PortalPageRenderController(webApp, pluginRegistry3);
+        controller.getPortalPageContent(req, res);
+    });
+
+    it('returns the page content if the enhancements don\'t match but all required enhancements exist', (done) => {
+        const webappProps = new Map();
+        const webApp: any = {
+            engine: () => { /* ignore */ },
+            set: (key: string, value: any) => webappProps.set(key, value),
+        };
+
+        const req: any = {
+            baseUrl: '/portal',
+            path: '/foo/bar',
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
+            },
+            query: {
+                originalPageId: 'test-page4',
+            },
+            params: {
+                pageId: 'test-page',
+                sitePath: 'web',
+            },
+            pluginContext,
+        };
+
+        const res: any = {
+            type: () => { /* nothing to do */ },
+            render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
+            json: (content: any) => {
+                expect(content).toBeTruthy();
+                expect(content.pageContent).toContain('<div id="app-area1">');
+                done();
+            }
+        };
+
+        const controller = new PortalPageRenderController(webApp, pluginRegistry3);
         controller.getPortalPageContent(req, res);
     });
 

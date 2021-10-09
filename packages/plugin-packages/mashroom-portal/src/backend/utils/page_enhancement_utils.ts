@@ -42,22 +42,20 @@ export const getPageEnhancementResources = async (pluginRegistry: MashroomPortal
     return enhancement;
 }
 
-export const sameEnhancementsOnBothPages = async (pluginRegistry: MashroomPortalPluginRegistry, sitePath: string, pageFriendlyUrl1: string, pageFriendlyUrl2: string, lang: string, userAgent: UserAgent, req: Request): Promise<boolean> => {
-    const page1Header = await getRelevantPageEnhancements(pluginRegistry, 'header', sitePath, pageFriendlyUrl1, lang, userAgent, req);
-    const page2Header = await getRelevantPageEnhancements(pluginRegistry, 'header', sitePath, pageFriendlyUrl2, lang, userAgent, req);
-    const page1Footer = await getRelevantPageEnhancements(pluginRegistry, 'footer', sitePath, pageFriendlyUrl1, lang, userAgent, req);
-    const page2Footer = await getRelevantPageEnhancements(pluginRegistry, 'footer', sitePath, pageFriendlyUrl2, lang, userAgent, req);
+export const allEnhancementsExistOnOriginalPage = async (pluginRegistry: MashroomPortalPluginRegistry, sitePath: string,
+                                                        pageFriendlyUrl: string, originalPageFriendlyUrl: string, lang: string,
+                                                        userAgent: UserAgent, req: Request): Promise<boolean> => {
+    const originalPageHeader = await getRelevantPageEnhancements(pluginRegistry, 'header', sitePath, originalPageFriendlyUrl, lang, userAgent, req);
+    const pageHeader = await getRelevantPageEnhancements(pluginRegistry, 'header', sitePath, pageFriendlyUrl, lang, userAgent, req);
+    const originalPageFooter = await getRelevantPageEnhancements(pluginRegistry, 'footer', sitePath, originalPageFriendlyUrl, lang, userAgent, req);
+    const pageFooter = await getRelevantPageEnhancements(pluginRegistry, 'footer', sitePath, pageFriendlyUrl, lang, userAgent, req);
 
-    const page1Enhancements = [...page1Header.js, ...page1Header.css, ...page1Footer.js, ...page1Footer.css];
-    const page2Enhancements = [...page2Header.js, ...page2Header.css, ...page2Footer.js, ...page2Footer.css];
+    const originalPageEnhancements = [...originalPageHeader.js, ...originalPageHeader.css, ...originalPageFooter.js, ...originalPageFooter.css];
+    const pageEnhancements = [...pageHeader.js, ...pageHeader.css, ...pageFooter.js, ...pageFooter.css];
 
-    if (page1Enhancements.length !== page2Enhancements.length) {
-        return false;
-    }
-
-    // The page enhancements need to be same instances, if the enhancement plugin was reloaded its no longer the same
-    return page1Enhancements.every((page1Enhancement, idx) => {
-        return page1Enhancement.resource === page2Enhancements[idx].resource;
+    // The page enhancement resources need to be same instances, if the enhancement plugin was reloaded its no longer the same
+    return pageEnhancements.every((pageEnhancement) => {
+        return !!originalPageEnhancements.find((cpe) => pageEnhancement.resource === cpe.resource);
     })
 }
 

@@ -643,7 +643,8 @@ _MashroomPortalPageService_
 export interface MashroomPortalPageService {
     /**
      * Get the content for given pageId.
-     * The request also calculates if a content replacement is possible without a full page load.
+     * It also calculates if the correct theme and all necessary page enhancements for the requested page
+     * are already loaded. Otherwise fullPageLoadRequired is going to be true and no content returned.
      */
     getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
 }
