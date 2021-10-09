@@ -29,7 +29,13 @@ export default class SelectField extends PureComponent<Props> {
         if (value === NULL_VALUE) {
             value = null;
         }
-        field.onChange(e);
+        const syntheticEvent = {
+            target: {
+                name: field.name,
+                value,
+            }
+        };
+        field.onChange(syntheticEvent);
         if (onValueChange) {
             onValueChange(value);
         }

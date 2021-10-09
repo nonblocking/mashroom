@@ -115,13 +115,13 @@ export default class AutocompleteField extends PureComponent<Props, State> {
 
     simulateFieldChangeEvent(value: string | undefined | null) {
         const {fieldProps: {field}} = this.props;
-        const e = {
+        const syntheticEvent = {
             target: {
                 name: field.name,
                 value,
             }
         };
-        field.onChange(e);
+        field.onChange(syntheticEvent);
     }
 
     reset(): void {
