@@ -3,7 +3,7 @@
 
 import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mashroom/mashroom-portal/type-definitions';
 
-let startPageAddedToHistory = false;
+let originalPageId: string | undefined;
 
 (global as any).toggleMenu = () => {
     document.getElementById('navigation')?.classList.toggle('show');
@@ -22,7 +22,7 @@ let startPageAddedToHistory = false;
 }
 
 (global as any).onpopstate = (ev: PopStateEvent) => {
-    const pageId = ev.state?.pageId;
+    const pageId = ev.state?.pageId || originalPageId;
     const pageContentUrl = document.location.pathname;
     if (pageId) {
         console.debug('Browser navigation. Replacing page content with pageId:', pageId);
@@ -46,13 +46,8 @@ let startPageAddedToHistory = false;
         return;
     }
 
-    if (!startPageAddedToHistory) {
-        // Add first page to history, otherwise it won't be possible to navigate back to it
-        const fullPageUrl = document.location.pathname;
-        window.history.pushState({
-            pageId: currentPageId,
-        }, '', fullPageUrl);
-        startPageAddedToHistory = true;
+    if (!originalPageId) {
+        originalPageId = currentPageId;
     }
 
     console.debug('Replacing page content with pageId:', pageId);
