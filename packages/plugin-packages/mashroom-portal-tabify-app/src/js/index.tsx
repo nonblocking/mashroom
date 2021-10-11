@@ -22,7 +22,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 
     return {
         willBeRemoved: () => {
-            ReactDOM.unmountComponentAtNode(portalAppHostElement)
+            ReactDOM.unmountComponentAtNode(portalAppHostElement);
         }
     };
 };
