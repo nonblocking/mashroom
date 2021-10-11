@@ -645,6 +645,14 @@ main {
             }
         }
     }
+
+    #portal-page-content {
+        &.transition {
+            // Content transition animation
+            filter: blur(2px);
+            // filter: grayscale(1);
+        }
+    }
 }
 
 footer {

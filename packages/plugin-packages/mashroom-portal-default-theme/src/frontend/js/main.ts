@@ -51,6 +51,7 @@ let originalPageId: string | undefined;
     }
 
     console.debug('Replacing page content with pageId:', pageId);
+    contentEl.classList.add('transition');
 
     showPageLoadingIndicator(true);
     clientServices.portalPageService.getPageContent(pageId).then(
@@ -72,6 +73,7 @@ let originalPageId: string | undefined;
 
                 setTimeout(() => {
                     showPageLoadingIndicator(false);
+                    contentEl.classList.remove('transition');
                 }, 250);
             }
         },
