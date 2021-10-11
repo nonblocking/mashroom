@@ -59,11 +59,12 @@
                 "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
                 "defaultConfig": {
                     "cronSchedule": "0/1 * * * *",
-                    "serviceNameFilter": ".*",
                     "k8sNamespacesLabelSelector": null,
                     "k8sNamespaces": [
                         "default"
                     ],
+                    "k8sServiceLabelSelector": null,
+                    "serviceNameFilter": ".*",
                     "socketTimeoutSec": 3,
                     "refreshIntervalSec": 600,
                     "accessViaClusterIP": false

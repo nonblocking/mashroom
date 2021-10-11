@@ -17,7 +17,8 @@ async function testListNamespaces() {
 async function testListServices() {
     const connector = new KubernetesConnector(true);
 
-    const services = await connector.getNamespaceServices('mashroom');
+    const labelSelector = 'exclude=me';
+    const services = await connector.getNamespaceServices('mashroom', labelSelector);
 
     console.info('Found services:');
     services.items.forEach((service) => {

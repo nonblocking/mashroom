@@ -4,12 +4,19 @@
 ## [unreleased]
 
  * Portal: Client log messages contain now the path of the page where they were generated
+ * K8S remote app registry: Added the possibility to filter services by [label selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors)
+   Example:
+   ```json
+     "k8sNamespacesLabelSelector": "environment=development,tier=frontend",
+     "k8sNamespaces": null,
+     "k8sServiceLabelSelector": "microfrontend=true,channel!=alpha"
+   ```
  * K8S remote app registry: Added the possibility to scan in namespaces identified by a [labelSelector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors).
    Example: Scan all services in namespaces with label _environment=development_ and _microfrontend_ in the name:
    ```json
-     "serviceNameFilter": "(microfrontend-)",
      "k8sNamespacesLabelSelector": "environment=development",
      "k8sNamespaces": null,
+     "serviceNameFilter": "(microfrontend-)",
    ```
  * Portal: **BREAKING CHANGE**: Removed *MashroomRestService* from client services because it is only intended
    for internal use. Portal Apps should use *fetch* directly.

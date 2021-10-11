@@ -660,10 +660,6 @@
                             "type": "string",
                             "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
                         },
-                        "serviceNameFilter": {
-                            "type": "string",
-                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
-                        },
                         "k8sNamespacesLabelSelector": {
                             "type": "string",
                             "description": "Search in all namespaces matching the label selector (e.g. environment=development,tier=frontend) (Default: null)"
@@ -674,6 +670,14 @@
                                 "type": "string"
                             },
                             "description": "The Kubernetes namespaces to scan (Default: [\"default\"])"
+                        },
+                        "k8sServiceLabelSelector": {
+                            "type": "string",
+                            "description": "Search for services in the selected namespaces with given labels (e.g. microfrontend=true) (Default: null)"
+                        },
+                        "serviceNameFilter": {
+                            "type": "string",
+                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
                         },
                         "socketTimeoutSec": {
                             "type": "integer",

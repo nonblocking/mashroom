@@ -21,14 +21,15 @@ export default class KubernetesConnector implements KubernetesConnectorType {
         return result.body;
     }
 
-    async getNamespaceServices(namespace: string): Promise<V1ServiceList> {
+    async getNamespaceServices(namespace: string, labelSelector?: string | null | undefined): Promise<V1ServiceList> {
         if (!this._k8sApi) {
             this.init();
         }
         if (!this._k8sApi) {
             throw new Error('No k8s client found.');
         }
-        const result = await this._k8sApi.listNamespacedService(namespace);
+        const result = await this._k8sApi.listNamespacedService(namespace, undefined, undefined, undefined, undefined, labelSelector || undefined);
+
         return result.body;
     }
 

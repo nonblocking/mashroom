@@ -7,14 +7,15 @@ import type {MashroomBackgroundJobPluginBootstrapFunction} from '@mashroom/mashr
 
 const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();
-    const {serviceNameFilter, k8sNamespacesLabelSelector, k8sNamespaces, socketTimeoutSec, refreshIntervalSec, accessViaClusterIP} = pluginConfig;
+    const {k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter, socketTimeoutSec, refreshIntervalSec, accessViaClusterIP} = pluginConfig;
 
     context.serviceNameFilter = serviceNameFilter;
 
     const kubernetesConnector = process.env.DUMMY_K8S_CONNECTOR ? new DummyKubernetesConnector() : new KubernetesConnector();
 
     const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(
-        serviceNameFilter, k8sNamespacesLabelSelector, k8sNamespaces,
+        k8sNamespacesLabelSelector, k8sNamespaces,
+        k8sServiceLabelSelector,serviceNameFilter,
         socketTimeoutSec, refreshIntervalSec, accessViaClusterIP,
         pluginContext.serverConfig.externalPluginConfigFileNames,
         kubernetesConnector, pluginContext.loggerFactory);

@@ -30,17 +30,21 @@ export default class KubernetesConnector implements KubernetesConnectorType {
         }
         return {
             items: [
-
+                {
+                    metadata: {
+                        name: 'whata-namespace',
+                    },
+                },
             ]
         };
     }
 
-    async getNamespaceServices(namespace: string): Promise<V1ServiceList> {
+    async getNamespaceServices(namespace: string, labelSelector?: string | null | undefined): Promise<V1ServiceList> {
         if (namespace === 'dev-namespace1') {
             return {
                 items: []
             };
-        } else if (namespace === 'dev-namespace2') {
+        } else if (namespace === 'dev-namespace2' || labelSelector === 'environment=dev') {
             return {
                 items: [
                     {

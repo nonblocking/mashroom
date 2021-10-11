@@ -18,11 +18,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     private _serviceNameFilter: RegExp;
     private _logger: MashroomLogger;
 
-    constructor(serviceNameFilterStr: string, private _k8sNamespacesLabelSelector: string | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
+    constructor(private _k8sNamespacesLabelSelector: string | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
+                private _k8sServiceLabelSelector: string | null | undefined, serviceNameFilterStr: string | null | undefined,
                 private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
                 private _externalPluginConfigFileNames: Array<string>,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
-        this._serviceNameFilter = new RegExp(serviceNameFilterStr, 'i');
+        this._serviceNameFilter = new RegExp(serviceNameFilterStr || '.*', 'i');
         this._logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
     }
 
@@ -39,7 +40,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         for (let i = 0; i < namespaces.length; i++) {
             const namespace = namespaces[i];
             try {
-                const res = await this._kubernetesConnector.getNamespaceServices(namespace);
+                const res = await this._kubernetesConnector.getNamespaceServices(namespace, this._k8sServiceLabelSelector);
                 const serviceItems = res.items;
 
                 for (let j = 0; j < serviceItems.length; j++) {
