@@ -651,10 +651,11 @@ main {
     }
 
     #portal-page-content {
+        transition: filter 0.1s;
+
         &.transition {
-            // Content transition animation
-            filter: blur(2px);
-            // filter: grayscale(1);
+            // Comment this in for some fancy page transition animation
+            // filter: blur(2px);
         }
     }
 }
