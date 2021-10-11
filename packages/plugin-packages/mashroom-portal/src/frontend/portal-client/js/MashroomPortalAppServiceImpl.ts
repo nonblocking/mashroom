@@ -128,49 +128,51 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
 
         console.info(`Reloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
-
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
-        this._resourceManager.unloadAppResources(loadedAppInternal);
-        const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
-            this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.title);
-        const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
-        if (parent) {
-            parent.replaceChild(portalAppWrapperElement, loadedAppInternal.portalAppWrapperElement);
-        }
-        loadedAppInternal.portalAppWrapperElement = portalAppWrapperElement;
-        loadedAppInternal.portalAppHostElement = portalAppHostElement;
-        loadedAppInternal.portalAppTitleElement = portalAppTitleElement;
-        loadedAppInternal.loadedTs = Date.now();
+        return this._executeWillBeRemovedCallback(loadedAppInternal).then(() => {
+            this._resourceManager.unloadAppResources(loadedAppInternal);
 
-        const pageId = this._getPageId();
+            const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
+                this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.title);
+            const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
+            if (parent) {
+                parent.replaceChild(portalAppWrapperElement, loadedAppInternal.portalAppWrapperElement);
+            }
+            loadedAppInternal.portalAppWrapperElement = portalAppWrapperElement;
+            loadedAppInternal.portalAppHostElement = portalAppHostElement;
+            loadedAppInternal.portalAppTitleElement = portalAppTitleElement;
+            loadedAppInternal.loadedTs = Date.now();
 
-        return this._internalLoadAppSetup(pageId, loadedAppInternal.pluginName, loadedAppInternal.instanceId).then(
-            (appSetup: MashroomPortalAppSetup) => {
-                if (overrideAppConfig) {
-                    const existingAppConfig = loadedAppInternal.appSetup?.appConfig || {};
-                    appSetup = {
-                        ...appSetup,
-                        appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig}
-                    };
-                }
-                loadedAppInternal.appSetup = appSetup;
-                loadedAppInternal.instanceId = appSetup.instanceId;
-                loadedAppInternal.title = appSetup.title;
+            const pageId = this._getPageId();
 
-                this._fireLoadEvent(loadedAppInternal);
-
-                return this._loadResources(loadedAppInternal).then(
-                    () => {
-                        console.info(`Reloading App '${loadedAppInternal.pluginName}' with setup:`, appSetup);
-                        return this._startApp(loadedAppInternal.id, loadedAppInternal.portalAppHostElement, appSetup, loadedAppInternal.pluginName).then(
-                            (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
-                                loadedAppInternal.lifecycleHooks = lifecycleHooks;
-                                return this._toLoadedApp(loadedAppInternal);
-                            }
-                        );
+            return this._internalLoadAppSetup(pageId, loadedAppInternal.pluginName, loadedAppInternal.instanceId).then(
+                (appSetup: MashroomPortalAppSetup) => {
+                    if (overrideAppConfig) {
+                        const existingAppConfig = loadedAppInternal.appSetup?.appConfig || {};
+                        appSetup = {
+                            ...appSetup,
+                            appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig}
+                        };
                     }
-                )
+                    loadedAppInternal.appSetup = appSetup;
+                    loadedAppInternal.instanceId = appSetup.instanceId;
+                    loadedAppInternal.title = appSetup.title;
+
+                    this._fireLoadEvent(loadedAppInternal);
+
+                    return this._loadResources(loadedAppInternal).then(
+                        () => {
+                            console.info(`Reloading App '${loadedAppInternal.pluginName}' with setup:`, appSetup);
+                            return this._startApp(loadedAppInternal.id, loadedAppInternal.portalAppHostElement, appSetup, loadedAppInternal.pluginName).then(
+                                (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
+                                    loadedAppInternal.lifecycleHooks = lifecycleHooks;
+                                    return this._toLoadedApp(loadedAppInternal);
+                                }
+                            );
+                        }
+                    )
+                });
             }
         ).catch((error) => {
             this._showLoadingError(loadedAppInternal);
@@ -191,7 +193,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         console.info(`Unloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
-        const removeHostElemAndUnloadResources = () => {
+        this._executeWillBeRemovedCallback(loadedAppInternal).then(() => {
             const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
             if (parent) {
                 parent.removeChild(loadedAppInternal.portalAppWrapperElement);
@@ -210,36 +212,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     modalOverlayElem.classList.remove('show');
                 }
             }
-        };
-
-        const handleError = (error: Error) => {
-            console.warn(`Calling willBeRemoved callback of App '${loadedAppInternal.pluginName}' failed`, error);
-            removeHostElemAndUnloadResources();
-        };
-
-        if (loadedAppInternal.lifecycleHooks && loadedAppInternal.lifecycleHooks.willBeRemoved) {
-            try {
-                const promise = loadedAppInternal.lifecycleHooks.willBeRemoved();
-                if (promise && promise.then) {
-                    promise.then(
-                        () => {
-                            removeHostElemAndUnloadResources();
-                        },
-                        (error) => {
-                            handleError(error);
-                        }
-                    ).catch((error) => {
-                        handleError(error);
-                    });
-                } else {
-                    removeHostElemAndUnloadResources();
-                }
-            } catch (error: any) {
-                handleError(error);
-            }
-        } else {
-            removeHostElemAndUnloadResources();
-        }
+        })
     }
 
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void {
@@ -715,6 +688,30 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             console.info('Theme or Layout changed - reloading browser window');
             location.reload();
         }
+    }
+
+    private _executeWillBeRemovedCallback(loadedAppInternal: LoadedPortalAppInternal): Promise<void> {
+        const handleError = (error: Error) => {
+            console.warn(`Calling willBeRemoved callback of App '${loadedAppInternal.pluginName}' failed`, error);
+            return Promise.resolve();
+        };
+
+        if (loadedAppInternal.lifecycleHooks?.willBeRemoved) {
+            try {
+                const promise = loadedAppInternal.lifecycleHooks.willBeRemoved();
+                if (promise?.then) {
+                    return promise.then(() => { /* nothing to do */ }).catch((error) => {
+                        return handleError(error);
+                    });
+                } else {
+                    return Promise.resolve();
+                }
+            } catch (error: any) {
+                return handleError(error);
+            }
+        }
+
+        return Promise.resolve();
     }
 
     private _checkForAppUpdates() {
