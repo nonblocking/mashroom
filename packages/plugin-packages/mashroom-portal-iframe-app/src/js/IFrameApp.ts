@@ -26,12 +26,12 @@ export default class IFrameApp {
 
             iframe.onload = () => {
                 iframe.style.height = this._defaultHeight;
-                for (let i = 0; i < hostElement.children.length; i++) {
-                    const childEl = hostElement.children[i];
+                const childElements = [...hostElement.children];
+                childElements.forEach((childEl) => {
                     if (childEl !== this._iframe) {
                         hostElement.removeChild(childEl);
                     }
-                }
+                });
                 resolve();
             };
             iframe.onerror = (event) => {
@@ -41,6 +41,7 @@ export default class IFrameApp {
 
             iframe.src = this._url;
             hostElement.appendChild(this._iframe);
+            this._mounted = true;
 
             window.addEventListener('message', this._boundOnMessage);
         });
@@ -51,12 +52,13 @@ export default class IFrameApp {
             this._iframe.parentNode.removeChild(this._iframe);
             window.removeEventListener('message', this._boundOnMessage);
         }
+        this._iframe = null;
         this._mounted = false;
     }
 
     onMessage(event: MessageEvent) {
         if (this._iframe && event.source === this._iframe.contentWindow) {
-            console.info('Received message from iframe: ', event.data);
+            console.info('Received message from iframe:', event.data);
 
             const heightMessage: HeightMessage = event.data;
             if (this._iframe && typeof(heightMessage?.height) === 'number') {
