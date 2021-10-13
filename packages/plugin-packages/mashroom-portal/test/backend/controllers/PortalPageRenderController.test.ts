@@ -540,7 +540,7 @@ describe('PortalPageRenderController', () => {
             json: (content: any) => {
                 expect(content).toBeTruthy();
                 expect(content).toEqual({
-                    fullPageLoadRequired: true, pageId: 'test-page', pageContent: '', evalScript: '',
+                    fullPageLoadRequired: true, pageContent: '', evalScript: '',
                 });
                 done();
             }
@@ -616,7 +616,7 @@ describe('PortalPageRenderController', () => {
             json: (content: any) => {
                 expect(content).toBeTruthy();
                 expect(content).toEqual({
-                    fullPageLoadRequired: true, pageId: 'test-page4', pageContent: '', evalScript: '',
+                    fullPageLoadRequired: true, pageContent: '', evalScript: '',
                 });
                 done();
             }
