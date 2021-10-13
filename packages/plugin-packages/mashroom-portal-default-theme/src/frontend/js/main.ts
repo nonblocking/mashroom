@@ -1,9 +1,5 @@
 
-// Clientside JavaScript
-
 import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mashroom/mashroom-portal/type-definitions';
-
-let originalPageId: string | undefined;
 
 (global as any).toggleMenu = () => {
     document.getElementById('navigation')?.classList.toggle('show');
@@ -22,32 +18,45 @@ let originalPageId: string | undefined;
 }
 
 (global as any).onpopstate = (ev: PopStateEvent) => {
-    const pageId = ev.state?.pageId || originalPageId;
-    const pageContentUrl = document.location.pathname;
-    if (pageId) {
-        console.debug('Browser navigation. Replacing page content with pageId:', pageId);
-        (global as any).replacePageContent(pageId, pageContentUrl, true);
-    }
-};
-
-// Dynamically replace the page content
-(global as any).replacePageContent = (pageId: string, fullPageUrl: string, dontAddToHistory = false) => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
     if (!clientServices) {
         return;
     }
 
-    const currentPageId = clientServices.portalAdminService.getCurrentPageId();
-    if (pageId === currentPageId) {
+    const pageId = ev.state?.pageId;
+    const pageUrl = document.location.pathname;
+    console.debug('Browser navigation to URL:', pageUrl);
+
+    if (pageId) {
+        (global as any).replacePageContent(pageId, pageUrl, true);
+    } else {
+        clientServices.portalPageService.getPageId(pageUrl).then(
+            (pageId) => {
+                if (pageId) {
+                    (global as any).replacePageContent(pageId, pageUrl, true);
+                } else {
+                    throw new Error(`No page ID found for URL: ${pageUrl}`);
+                }
+            }
+        ).catch((e) => {
+            console.error(e);
+            document.location.reload();
+        });
+    }
+};
+
+// Dynamically replace the page content
+(global as any).replacePageContent = (pageId: string, pageUrl: string, dontAddToHistory = false) => {
+    const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
+    if (!clientServices) {
         return;
     }
     const contentEl = document.getElementById('portal-page-content');
     if (!contentEl) {
         return;
     }
-
-    if (!originalPageId) {
-        originalPageId = currentPageId;
+    if (pageId === clientServices.portalPageService.getCurrentPageId()) {
+        return;
     }
 
     console.debug('Replacing page content with pageId:', pageId);
@@ -57,7 +66,7 @@ let originalPageId: string | undefined;
     clientServices.portalPageService.getPageContent(pageId).then(
         (content: MashroomPortalPageContent) => {
             if (content.fullPageLoadRequired) {
-                document.location.replace(fullPageUrl);
+                document.location.replace(pageUrl);
             } else {
                 contentEl.innerHTML = content.pageContent;
                 // console.log('Evaluating', content.evalScript);
@@ -66,9 +75,7 @@ let originalPageId: string | undefined;
                 hideMobileMenu();
 
                 if (!dontAddToHistory) {
-                    window.history.pushState({
-                        pageId,
-                    }, '', fullPageUrl);
+                    window.history.pushState({ pageId }, '', pageUrl);
                 }
 
                 setTimeout(() => {
@@ -80,7 +87,7 @@ let originalPageId: string | undefined;
         (error) => {
             // If an error occurs we do a full page load
             console.error('Dynamically replacing the page content failed!', error);
-            document.location.replace(fullPageUrl);
+            document.location.replace(pageUrl);
         }
     )
 }
