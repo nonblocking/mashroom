@@ -16,7 +16,6 @@ setPortalPluginConfig({
     defaultProxyConfig: {}
 });
 
-
 const theme: MashroomPortalTheme = {
     name: 'my-theme',
     description: null,
@@ -240,8 +239,8 @@ const pluginContext: any = {
                 findSiteByPath() {
                     return site;
                 },
-                findPageRefByFriendlyUrl() {
-                    return site.pages[0];
+                findPageRefByFriendlyUrl(site: any, friendlyUrl: string) {
+                    return site.pages.find((page: any) => page.friendlyUrl === friendlyUrl);
                 },
                 findPageRefByPageId(site: any, pageId: string) {
                     return site.pages.find((page: any) => page.pageId === pageId);
@@ -302,7 +301,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             params: {
                 sitePath: 'web',
             },
@@ -346,7 +345,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             params: {
                 sitePath: 'web',
             },
@@ -433,7 +432,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             params: {
                 sitePath: 'web',
             },
@@ -489,8 +488,9 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             query: {
+
             },
             params: {
                 pageId: 'test-page',
@@ -523,7 +523,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             query: {
                 originalPageId: 'test-page2',
             },
@@ -540,7 +540,7 @@ describe('PortalPageRenderController', () => {
             json: (content: any) => {
                 expect(content).toBeTruthy();
                 expect(content).toEqual({
-                    fullPageLoadRequired: true, pageContent: '', evalScript: '',
+                    fullPageLoadRequired: true, pageId: 'test-page', pageContent: '', evalScript: '',
                 });
                 done();
             }
@@ -559,7 +559,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             headers: {
                 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
             },
@@ -596,7 +596,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/whatever',
+            path: '/same',
             headers: {
                 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
             },
@@ -616,7 +616,7 @@ describe('PortalPageRenderController', () => {
             json: (content: any) => {
                 expect(content).toBeTruthy();
                 expect(content).toEqual({
-                    fullPageLoadRequired: true, pageContent: '', evalScript: '',
+                    fullPageLoadRequired: true, pageId: 'test-page4', pageContent: '', evalScript: '',
                 });
                 done();
             }
@@ -635,7 +635,7 @@ describe('PortalPageRenderController', () => {
 
         const req: any = {
             baseUrl: '/portal',
-            path: '/foo/bar',
+            path: '/bar',
             headers: {
                 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.82 Safari/537.36'
             },

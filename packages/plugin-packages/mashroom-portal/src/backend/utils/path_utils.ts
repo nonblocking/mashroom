@@ -19,7 +19,7 @@ export const getSitePath = (req: Request): string => {
 };
 
 export const getFrontendSiteBasePath = (req: Request): string => {
-    const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper && req.pluginContext.services.vhostPathMapper.service;
+    const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper?.service;
     const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
     if (vhostMappingInfo) {
         return vhostMappingInfo.frontendBasePath !== '/' ? vhostMappingInfo.frontendBasePath : '';

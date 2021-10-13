@@ -31,7 +31,6 @@ app.get('/', (req: Request, res: Response) => {
 
     const model: MashroomPortalPageRenderModel = {
         portalName: 'Test Portal',
-        portalBasePath: '/portal',
         siteBasePath: '/portal/web',
         lang: 'en',
         availableLanguages: ['en', 'de', 'fr'],

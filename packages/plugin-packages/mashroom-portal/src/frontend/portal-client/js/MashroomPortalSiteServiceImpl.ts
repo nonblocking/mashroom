@@ -13,11 +13,11 @@ export default class MashroomPortalSiteServiceImpl implements MashroomPortalSite
     }
 
     getCurrentSiteUrl(): string {
-        const siteId = (global as any)[WINDOW_VAR_PORTAL_SITE_URL];
-        if (!siteId) {
+        const siteUrl = (global as any)[WINDOW_VAR_PORTAL_SITE_URL];
+        if (!siteUrl) {
             throw new Error('Unable to determine the current site path!');
         }
-        return siteId;
+        return siteUrl;
     }
 
     getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>> {

@@ -194,7 +194,6 @@ export type MashroomPortalPageContent = {
 
 export type MashroomPortalPageRenderModel = {
     readonly portalName: string;
-    readonly portalBasePath: string;
     readonly siteBasePath: string;
     readonly apiBasePath: string;
     readonly resourcesBasePath: string | null | undefined;
@@ -796,6 +795,18 @@ export interface MashroomPortalSiteService {
 }
 
 export interface MashroomPortalPageService {
+    /**
+     * Get current pageId
+     */
+    getCurrentPageId(): string;
+    /**
+     * Get the page friendlyUrl from given URL (e.g. /portal/web/test?x=1 -> /test)
+     */
+    getPageFriendlyUrl(pageUrl: string): string;
+    /**
+     * Find the pageId for given URL (can be a page friendlyUrl or a full URL as seen by the client).
+     */
+    getPageId(pageUrl: string): Promise<string | undefined>;
     /**
      * Get the content for given pageId.
      * It also calculates if the correct theme and all necessary page enhancements for the requested page

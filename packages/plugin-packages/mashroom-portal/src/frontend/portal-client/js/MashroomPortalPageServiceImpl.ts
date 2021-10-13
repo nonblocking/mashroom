@@ -1,21 +1,106 @@
 
-import {WINDOW_VAR_PORTAL_API_PATH, WINDOW_VAR_PORTAL_PAGE_ID} from '../../../backend/constants';
+import {
+    WINDOW_VAR_PORTAL_API_PATH,
+    WINDOW_VAR_PORTAL_PAGE_ID,
+    WINDOW_VAR_PORTAL_SITE_ID,
+    WINDOW_VAR_PORTAL_SITE_URL
+} from '../../../backend/constants';
 
-import type {MashroomRestService, MashroomPortalPageService, MashroomPortalPageContent} from '../../../../type-definitions';
+import type {MashroomRestService, MashroomPortalPageService, MashroomPortalPageContent, MashroomPortalPageRefLocalized} from '../../../../type-definitions';
 
 export default class MashroomPortalPageServiceImpl implements MashroomPortalPageService {
 
     private _restService: MashroomRestService;
     private _originalPageId: string;
+    private _pageTree: Array<MashroomPortalPageRefLocalized> | undefined;
 
     constructor(restService: MashroomRestService) {
         const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
         this._restService = restService.withBasePath(apiPath);
-        this._originalPageId = (global as any)[WINDOW_VAR_PORTAL_PAGE_ID];
+        this._originalPageId = this.getCurrentPageId();
+    }
+
+    getCurrentPageId(): string {
+        const pageId = (global as any)[WINDOW_VAR_PORTAL_PAGE_ID];
+        if (!pageId) {
+            throw new Error('Unable to determine the current pageId!');
+        }
+        return pageId;
+    }
+
+    getPageFriendlyUrl(pageUrl: string): string {
+        let friendlyUrl = pageUrl.split(/\\?#/)[0];
+        const siteUrl = this._getSiteUrl();
+        if (siteUrl && pageUrl.indexOf(siteUrl) === 0) {
+            friendlyUrl = friendlyUrl.substr(siteUrl.length);
+        }
+        // Remove trailing slash
+        if (friendlyUrl.lastIndexOf('/') === friendlyUrl.length -1) {
+            friendlyUrl = friendlyUrl.substr(0, friendlyUrl.length - 1);
+        }
+        if (!friendlyUrl) {
+            friendlyUrl = '/';
+        }
+        return friendlyUrl;
+    }
+
+    getPageId(pageUrl: string): Promise<string | undefined> {
+        const friendlyUrl = this.getPageFriendlyUrl(pageUrl);
+        if (this._pageTree) {
+            return Promise.resolve(this._findPageIdInTree(friendlyUrl, this._pageTree));
+        }
+
+        return this._getPageTree().then(
+            (pageTree) => {
+                this._pageTree = pageTree;
+                return this._findPageIdInTree(friendlyUrl, this._pageTree);
+            }
+        ).catch((e) => {
+            console.error('Loading page tree failed', e);
+            return Promise.resolve(undefined);
+        });
     }
 
     getPageContent(pageId: string): Promise<MashroomPortalPageContent> {
         const path = `/pages/${pageId}/content?originalPageId=${this._originalPageId}`;
         return this._restService.get(path);
+    }
+
+    private _findPageIdInTree(friendlyUrl: string, tree: Array<MashroomPortalPageRefLocalized> | undefined | null): string | undefined {
+        if (!tree) {
+            return;
+        }
+        for (let i = 0; i < tree.length; i++) {
+            const page = tree[i];
+            if (page.friendlyUrl === friendlyUrl) {
+                return page.pageId;
+            }
+            const subPageIdMatch = this._findPageIdInTree(friendlyUrl, page.subPages);
+            if (subPageIdMatch) {
+                return subPageIdMatch;
+            }
+        }
+    }
+
+    private _getPageTree(): Promise<Array<MashroomPortalPageRefLocalized>> {
+        const siteId = this._getSiteId();
+        const path = `/sites/${siteId}/pageTree`;
+        return this._restService.get(path);
+    }
+
+    private _getSiteUrl(): string {
+        const siteUrl = (global as any)[WINDOW_VAR_PORTAL_SITE_URL];
+        if (!siteUrl) {
+            throw new Error('Unable to determine the current site path!');
+        }
+        return siteUrl;
+    }
+
+    private _getSiteId(): string {
+        const siteId = (global as any)[WINDOW_VAR_PORTAL_SITE_ID];
+        if (!siteId) {
+            throw new Error('Unable to determine the current site path!');
+        }
+        return siteId;
     }
 }

@@ -31,7 +31,6 @@ import {getPageEnhancementResources, allEnhancementsExistOnOriginalPage} from '.
 import {
     getFrontendApiResourcesBasePath,
     getFrontendSiteBasePath,
-    getPortalPath,
     getSitePath
 } from '../utils/path_utils';
 import {findSiteByPath, findPageRefByPageId, getPage, getPageData} from '../utils/model_utils';
@@ -112,7 +111,7 @@ export default class PortalPageRenderController {
             logger.debug('Page:', page);
 
             if (!site || !pageRef || !page) {
-                logger.warn('Page not found:', pageId);
+                logger.warn('Page ID not found:', pageId);
                 res.sendStatus(404);
                 return;
             }
@@ -177,7 +176,7 @@ export default class PortalPageRenderController {
             }
 
             if (cacheControlService) {
-                cacheControlService.addCacheControlHeader('PRIVATE_IF_AUTHENTICATED', req, res);
+                cacheControlService.addCacheControlHeader('ONLY_FOR_ANONYMOUS_USERS', req, res);
             }
 
             const content: MashroomPortalPageContent = {
@@ -202,7 +201,6 @@ export default class PortalPageRenderController {
         try {
             const path = decodeURIComponent(req.path);
             const sitePath = getSitePath(req);
-            const portalPath = getPortalPath();
 
             logger.debug(`Request for portal page: ${path} on site: ${sitePath}`);
 
@@ -235,7 +233,7 @@ export default class PortalPageRenderController {
             const portalName = req.pluginContext.serverConfig.name;
             const devMode = req.pluginContext.serverInfo.devMode;
 
-            const model = await this._createPortalPageModel(req, res, portalName, devMode, portalPath, sitePath, site, pageRef, page, theme, layoutName, logger);
+            const model = await this._createPortalPageModel(req, res, portalName, devMode, sitePath, site, pageRef, page, theme, layoutName, logger);
 
             await this._renderPage(theme, model, req, res, logger);
 
@@ -245,7 +243,7 @@ export default class PortalPageRenderController {
         }
     }
 
-    private async _createPortalPageModel(req: Request, res: Response, portalName: string, devMode: boolean, portalPath: string, sitePath: string,
+    private async _createPortalPageModel(req: Request, res: Response, portalName: string, devMode: boolean, sitePath: string,
                                          site: MashroomPortalSite, pageRef: MashroomPortalPageRef, page: MashroomPortalPage,
                                          theme: MashroomPortalTheme | undefined | null, layoutName: string | undefined | null,
                                          logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
@@ -286,7 +284,7 @@ export default class PortalPageRenderController {
         const pageContent = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
 
         const portalResourcesHeader = await this._resourcesHeader(
-            req, portalPath, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
+            req, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
             messagingConnectPath, privateUserTopic, devMode, userAgent);
         const portalResourcesFooter = await this._resourcesFooter(req, portalAppInfo, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent);
@@ -308,7 +306,6 @@ export default class PortalPageRenderController {
 
         return {
             portalName,
-            portalBasePath: portalPath,
             siteBasePath,
             site: localizedSite,
             page: mergedPageData,
@@ -415,7 +412,7 @@ export default class PortalPageRenderController {
         return localizedSite;
     }
 
-    private async _resourcesHeader(req: Request, portalPrefix: string, siteId: string, sitePath: string, pageId: string, pageFriendlyUrl: string, lang: string,
+    private async _resourcesHeader(req: Request, siteId: string, sitePath: string, pageId: string, pageFriendlyUrl: string, lang: string,
                                    appWrapperTemplateHtml: string, appErrorTemplateHtml: string,
                                    appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, warnBeforeAuthenticationExpiresSec: number,
                                    autoExtendAuthentication: boolean, messagingConnectPath: string | undefined | null, privateUserTopic: string | undefined | null,
@@ -423,7 +420,7 @@ export default class PortalPageRenderController {
         return `
             <script>
                 window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}';
-                window['${WINDOW_VAR_PORTAL_SITE_URL}'] = '${portalPrefix}${sitePath}';
+                window['${WINDOW_VAR_PORTAL_SITE_URL}'] = '${getFrontendSiteBasePath(req)}';
                 window['${WINDOW_VAR_PORTAL_SITE_ID}'] = '${siteId}';
                 window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
                 window['${WINDOW_VAR_PORTAL_LANGUAGE}'] = '${lang}';

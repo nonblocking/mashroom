@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: **BREAKING CHANGE**: Removed *portalBasePath* from the page render model because it doesn't make sense in
+   combination with the vhost path mapper. Only use *siteBasePath*.
  * Portal: Client log messages contain now the path of the page where they were generated
  * K8S remote app registry: Added the possibility to filter services by [label selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors)
    Example:
