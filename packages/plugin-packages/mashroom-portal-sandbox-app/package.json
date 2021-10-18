@@ -4,15 +4,15 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.8.3",
+    "version": "1.9.0",
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "1.8.3",
-        "@mashroom/mashroom-portal": "1.8.3",
-        "@mashroom/mashroom-portal-ui-commons": "1.8.3",
         "@babel/cli": "^7.15.7",
+        "@mashroom/mashroom": "1.9.0",
+        "@mashroom/mashroom-portal": "1.9.0",
+        "@mashroom/mashroom-portal-ui-commons": "1.9.0",
         "@types/react": "^17.0.21",
         "@types/react-dom": "^17.0.9",
         "@types/react-redux": "^7.1.18",

@@ -4,10 +4,11 @@
     "private": true,
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
-    "version": "1.8.3",
+    "version": "1.9.0",
     "main": "dist",
     "dependencies": {
         "codemirror": "^5.62.3",
+        "formik": "^2.2.9",
         "react": "^17.0.2",
         "react-autosuggest": "^10.1.0",
         "react-click-outside": "^3.0.1",
@@ -15,8 +16,7 @@
         "react-dom": "^17.0.2",
         "react-intl": "^5.20.10",
         "react-redux": "7.2.5",
-        "redux": "^4.1.1",
-        "formik": "^2.2.9"
+        "redux": "^4.1.1"
     },
     "devDependencies": {
         "@babel/cli": "^7.15.7",

@@ -4,15 +4,15 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.9.0",
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "1.8.3",
-        "@mashroom/mashroom-security": "1.8.3",
-        "@mashroom/mashroom-http-proxy": "1.8.3",
         "@babel/cli": "^7.15.7",
+        "@mashroom/mashroom": "1.9.0",
+        "@mashroom/mashroom-http-proxy": "1.9.0",
+        "@mashroom/mashroom-security": "1.9.0",
         "@types/express": "^4.17.13",
         "@types/jest": "^27.0.1",
         "eslint": "^7.32.0",
@@ -48,7 +48,9 @@
                 "defaultConfig": {
                     "addBearer": false,
                     "idTokenHeader": "X-USER-ID-TOKEN",
-                    "targetUris": [".*"]
+                    "targetUris": [
+                        ".*"
+                    ]
                 }
             }
         ]

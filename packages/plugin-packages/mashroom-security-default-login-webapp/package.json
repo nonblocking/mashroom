@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.8.3",
+    "version": "1.9.0",
     "files": [
         "dist/**",
         "assets/**",
@@ -17,13 +17,13 @@
         "handlebars": "^4.7.7"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "1.8.3",
-        "@mashroom/mashroom-browser-cache": "1.8.3",
-        "@mashroom/mashroom-csrf-protection": "1.8.3",
-        "@mashroom/mashroom-i18n": "1.8.3",
-        "@mashroom/mashroom-security": "1.8.3",
-        "@mashroom/mashroom-vhost-path-mapper": "1.8.3",
         "@babel/cli": "^7.15.7",
+        "@mashroom/mashroom": "1.9.0",
+        "@mashroom/mashroom-browser-cache": "1.9.0",
+        "@mashroom/mashroom-csrf-protection": "1.9.0",
+        "@mashroom/mashroom-i18n": "1.9.0",
+        "@mashroom/mashroom-security": "1.9.0",
+        "@mashroom/mashroom-vhost-path-mapper": "1.9.0",
         "@types/body-parser": "^1.19.1",
         "@types/express": "^4.17.13",
         "@types/express-handlebars": "^5.3.1",
