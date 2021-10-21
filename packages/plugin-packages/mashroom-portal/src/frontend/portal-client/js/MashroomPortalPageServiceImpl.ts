@@ -6,7 +6,8 @@ import {
     WINDOW_VAR_PORTAL_SITE_URL
 } from '../../../backend/constants';
 
-import type {MashroomRestService, MashroomPortalPageService, MashroomPortalPageContent, MashroomPortalPageRefLocalized} from '../../../../type-definitions';
+import type {MashroomPortalPageService, MashroomPortalPageContent, MashroomPortalPageRefLocalized} from '../../../../type-definitions';
+import type {MashroomRestService} from '../../../../type-definitions/internal';
 
 export default class MashroomPortalPageServiceImpl implements MashroomPortalPageService {
 

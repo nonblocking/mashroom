@@ -4,7 +4,6 @@ import {WINDOW_VAR_PORTAL_API_PATH, WINDOW_VAR_PORTAL_PAGE_ID, WINDOW_VAR_PORTAL
 import type {MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomPortalAdminService,
-    MashroomRestService,
     MashroomCreatePagePortalAppInstance,
     MashroomUpdatePagePortalAppInstance,
     MashroomPortalPage,
@@ -14,6 +13,7 @@ import type {
     MashroomPagePortalAppInstance,
     RoleDefinition,
 } from '../../../../type-definitions';
+import type {MashroomRestService} from '../../../../type-definitions/internal';
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalAdminService {
 

@@ -4,7 +4,8 @@ import {
     WINDOW_VAR_PORTAL_LANGUAGE
 } from '../../../backend/constants';
 
-import type {MashroomPortalUserService, MashroomRestService} from '../../../../type-definitions';
+import type {MashroomPortalUserService} from '../../../../type-definitions';
+import type {MashroomRestService} from '../../../../type-definitions/internal';
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalUserService {
 

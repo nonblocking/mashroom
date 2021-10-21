@@ -10,6 +10,18 @@ import type {
     MashroomPortalAppSetup,
 } from './api';
 
+export interface MashroomRestService {
+    get(path: string, extraHeaders?: Record<string, string>): Promise<any>;
+
+    post(path: string, data: any, extraHeaders?: Record<string, string>): Promise<any>;
+
+    put(path: string, data: any, extraHeaders?: Record<string, string>): Promise<void>;
+
+    delete(path: string, extraHeaders?: Record<string, string>): Promise<void>;
+
+    withBasePath(apiBasePath: string): MashroomRestService;
+}
+
 export interface MashroomRemotePortalAppRegistryHolder {
     readonly name: string;
     readonly priority: number;

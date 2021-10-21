@@ -599,18 +599,6 @@ export type CreatedResponse = {
     +location: string
 }
 
-export interface MashroomRestService {
-    get(path: string, extraHeaders?: {}): Promise<any>;
-
-    post(path: string, data: any, extraHeaders?: {}): Promise<any>;
-
-    put(path: string, data: any, extraHeaders?: {}): Promise<void>;
-
-    delete(path: string, extraHeaders?: {}): Promise<void>;
-
-    withBasePath(apiBasePath: string): MashroomRestService;
-}
-
 export type ModalAppCloseCallback = (modalOverlayElem: HTMLElement, hideDialog: () => void, unloadApp: () => void) => void;
 
 export interface MashroomPortalAppService {

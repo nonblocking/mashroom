@@ -3,12 +3,8 @@ import {WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
 import {serializeError} from './serialization_utils';
 
 import type {LogLevel} from '@mashroom/mashroom/type-definitions';
-import type {
-    MashroomRestService,
-    MasterMashroomPortalRemoteLogger,
-    MashroomPortalRemoteLogger
-} from '../../../../type-definitions';
-import type {ClientLogMessage} from '../../../../type-definitions/internal';
+import type {MasterMashroomPortalRemoteLogger, MashroomPortalRemoteLogger} from '../../../../type-definitions';
+import type {ClientLogMessage, MashroomRestService} from '../../../../type-definitions/internal';
 
 const SEND_INTERVAL = 1000;
 

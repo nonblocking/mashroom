@@ -1,7 +1,8 @@
 
 import {WINDOW_VAR_PORTAL_API_PATH, WINDOW_VAR_PORTAL_SITE_URL} from '../../../backend/constants';
 
-import type {MashroomRestService, MashroomPortalSiteService, MashroomPortalPageRefLocalized, MashroomPortalSiteLinkLocalized} from '../../../../type-definitions';
+import type {MashroomPortalSiteService, MashroomPortalPageRefLocalized, MashroomPortalSiteLinkLocalized} from '../../../../type-definitions';
+import type {MashroomRestService} from '../../../../type-definitions/internal';
 
 export default class MashroomPortalSiteServiceImpl implements MashroomPortalSiteService {
 

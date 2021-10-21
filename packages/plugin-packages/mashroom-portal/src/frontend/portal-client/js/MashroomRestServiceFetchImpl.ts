@@ -1,5 +1,6 @@
 
-import type {CreatedResponse, MashroomRestService} from '../../../../type-definitions';
+import type {CreatedResponse} from '../../../../type-definitions';
+import type {MashroomRestService} from '../../../../type-definitions/internal';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 

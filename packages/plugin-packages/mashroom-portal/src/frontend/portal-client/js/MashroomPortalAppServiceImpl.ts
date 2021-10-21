@@ -26,11 +26,10 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService,
     MasterMashroomPortalRemoteLogger,
-    MashroomRestService,
     ModalAppCloseCallback,
     MashroomPortalRemoteLogger,
 } from '../../../../type-definitions';
-import type {MashroomPortalPluginType} from '../../../../type-definitions/internal';
+import type {MashroomPortalPluginType, MashroomRestService} from '../../../../type-definitions/internal';
 
 export type LoadedPortalAppInternal = {
     readonly id: string;
