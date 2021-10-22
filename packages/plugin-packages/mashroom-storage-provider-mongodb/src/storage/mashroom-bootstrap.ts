@@ -1,5 +1,5 @@
 
-import {setConnectionUriAndOptions, close} from '../mongodb_client';
+import {setConnectionUriAndOptions, close} from '../mongodb';
 import MashroomStorageMongoDB from './MashroomStorageMongoDB';
 import {startExportStoreMetrics, stopExportStoreMetrics} from '../metrics/store_metrics';
 

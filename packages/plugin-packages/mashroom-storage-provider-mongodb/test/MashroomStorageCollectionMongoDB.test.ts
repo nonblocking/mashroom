@@ -1,6 +1,6 @@
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import {setConnectionUriAndOptions, close} from '../src/mongodb_client';
+import {setConnectionUriAndOptions, close} from '../src/mongodb';
 import MashroomStorageCollectionMongoDB from '../src/storage/MashroomStorageCollectionMongoDB';
 
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';

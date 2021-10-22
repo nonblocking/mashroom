@@ -1,5 +1,5 @@
 
-import mongoDBClient from '../mongodb_client';
+import mongoDB from '../mongodb';
 
 import type {Collection, OptionalId} from 'mongodb';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -82,7 +82,7 @@ export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> i
     }
 
     private async _getCollection<T>(): Promise<Collection<T>> {
-        const client = await mongoDBClient(this._logger);
-        return client.collection(this._collectionName);
+        const db = await mongoDB(this._logger);
+        return db.collection(this._collectionName);
     }
 }
