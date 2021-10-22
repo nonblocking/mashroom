@@ -1,5 +1,5 @@
 
-import {isConnected} from '../mongodb_client';
+import {isConnected} from '../mongodb';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
