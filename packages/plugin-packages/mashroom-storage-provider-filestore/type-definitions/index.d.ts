@@ -1,6 +1,5 @@
 
-import type {MashroomStorageObject} from '@mashroom/mashroom-storage/type-definitions';
-import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
+import type {MashroomStorageObject, MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 
 export type CollectionMap = {
     [name: string]: MashroomStorageCollection<any>;
