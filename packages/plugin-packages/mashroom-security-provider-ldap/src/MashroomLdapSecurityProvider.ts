@@ -216,7 +216,8 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             return [];
         }
 
-        const groupSearchFilter = `(&${this._groupSearchFilter}(member=${user.dn}))`;
+        const distinguishedName = this._escapeSpecialCharactersInDistinguishedName(user.dn);
+        const groupSearchFilter = `(&${this._groupSearchFilter}(member=${distinguishedName}))`;
         logger.debug(`Search for user groups: ${groupSearchFilter}`);
         const groupEntries = await this._ldapClient.search(groupSearchFilter);
         return groupEntries.map((e) => e.cn);
@@ -315,5 +316,15 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
                 id,
             });
         }
+    }
+
+    // Escape special characters in the distinguished name.
+    // See RFC 2253: https://datatracker.ietf.org/doc/html/rfc2253
+    private _escapeSpecialCharactersInDistinguishedName(dn: string): string {
+        let escapedDn = dn;
+        [',', '=', '+', '<', '>', '#', ';'].forEach((specialChar) => {
+            escapedDn = escapedDn.replace(specialChar, `\\${specialChar}`);
+        });
+        return escapedDn;
     }
 }

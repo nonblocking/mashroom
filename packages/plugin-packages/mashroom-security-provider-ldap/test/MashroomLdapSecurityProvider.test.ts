@@ -142,6 +142,76 @@ describe('MashroomLdapSecurityProvider', () => {
         });
     });
 
+    it('processes a dn with sepcial characters correctly', async () => {
+        const userSearchFilter = '(&(objectClass=person)(uid=@username@))';
+        const groupSearchFilter = '(objectClass=group)';
+        const groupToRoleMappingPath = path.resolve(__dirname, './groupToRoleMapping.json');
+        const serverRootFolder = __dirname;
+
+        const mockLogin = jest.fn(() => {
+            return Promise.resolve();
+        });
+        const mockSearch = jest.fn((filter) => {
+            if (filter.indexOf('objectClass=person') !== -1 && filter.indexOf('test') !== -1) {
+                return Promise.resolve([{
+                    dn: 'uid=Mashroom+Server,ou=users,dc=nonblocking,dc=at',
+                    cn: 'user1',
+                    sn: 'User'
+                }]);
+            } else if (filter.indexOf('objectClass=group') !== -1 && filter.indexOf('Mashroom\\+Server') !== -1) {
+                return Promise.resolve([{
+                    dn: 'cn=group1,ou=users,dc=nonblocking,dc=at',
+                    cn: 'GROUP1'
+                }]);
+            }
+            return Promise.resolve([]);
+        });
+
+        const ldapClient: any = {
+            login: mockLogin,
+            search: mockSearch,
+        };
+
+        const req: any = {
+            session: {
+                save: (cb: () => void) => cb(),
+            },
+            pluginContext: {
+                loggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            addRoleDefinition: () => { /* nothing to do */ },
+                            getExistingRoles: () => Promise.resolve([]),
+
+                        }
+                    }
+                }
+            },
+        };
+
+        const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, undefined,
+            undefined, groupToRoleMappingPath, undefined, ldapClient, serverRootFolder, 1800, loggerFactory);
+
+        const result = await provider.login(req, 'test', 'passwd');
+
+        expect(result).toBeTruthy();
+        expect(result.success).toBeTruthy();
+
+        const user = provider.getUser(req);
+        expect(user).toEqual({
+            displayName: 'User',
+            extraData: null,
+            pictureUrl: null,
+            roles: [
+                'ROLE1',
+                'ROLE2',
+            ],
+            secrets: null,
+            username: 'test'
+        });
+    });
+
     it('revokes the authentication after given timeout', () => {
         const ldapClient: any = {
         };

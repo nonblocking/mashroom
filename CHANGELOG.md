@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * LDAP Security Provider: Fixed searching for groups if the distinguished name contains special characters (as defined in RFC 2253)
+
 ## 1.9.0 (October 18, 2021)
 
  * Portal: **BREAKING CHANGE**: Removed *portalBasePath* from the page render model because it doesn't make sense in
