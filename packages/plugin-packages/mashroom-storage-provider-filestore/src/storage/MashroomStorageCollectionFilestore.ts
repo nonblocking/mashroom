@@ -9,11 +9,12 @@ import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
-    StorageDeleteResult,
-    StorageObject,
-    StorageObjectFilter,
-    StorageRecord,
-    StorageUpdateResult
+    MashroomStorageDeleteResult,
+    MashroomStorageObject,
+    MashroomStorageObjectFilter,
+    MashroomStorageRecord,
+    MashroomStorageUpdateResult,
+    MashroomStorageSort,
 } from '@mashroom/mashroom-storage/type-definitions';
 import {JsonDB} from '../../type-definitions';
 
@@ -24,7 +25,7 @@ const LOCK_STALE_MS = 3000;
 const LOCK_RETRIES = 5;
 const LOCK_RETRY_MIN_WAIT = 100;
 
-export default class MashroomStorageCollectionFilestore<T extends StorageRecord> implements MashroomStorageCollection<T> {
+export default class MashroomStorageCollectionFilestore<T extends MashroomStorageRecord> implements MashroomStorageCollection<T> {
 
     private _lastExternalChangeCheck: number;
     private _dbCache: JsonDB<T> | null;
@@ -37,7 +38,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         this._logger = _loggerFactory('mashroom.storage.filestore');
     }
 
-    async insertOne(item: T): Promise<StorageObject<T>> {
+    async insertOne(item: T): Promise<MashroomStorageObject<T>> {
         return this._updateOperation((collection) => {
             const insertedItem = {...item, _id:  this._generateId()};
             collection.push(insertedItem);
@@ -45,9 +46,9 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>> {
+    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>,): Promise<Array<MashroomStorageObject<T>>> {
         return this._readOperation((collection) => {
-            let result = filter ? lodashFilter<StorageObject<T>>(collection, filter) : collection;
+            let result = filter ? lodashFilter<MashroomStorageObject<T>>(collection, filter) : collection;
             if (limit && result.length > limit) {
                 result = result.slice(0, limit);
             }
@@ -55,9 +56,9 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async findOne(filter: StorageObjectFilter<T>): Promise<StorageObject<T> | null | undefined> {
+    async findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined> {
         return this._readOperation((collection) => {
-            const result: Array<StorageObject<T>> = lodashFilter<StorageObject<T>>(collection, filter);
+            const result: Array<MashroomStorageObject<T>> = lodashFilter<MashroomStorageObject<T>>(collection, filter);
             if (result.length === 0) {
                 return null;
             }
@@ -65,7 +66,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: Partial<StorageObject<T>>): Promise<StorageUpdateResult> {
+    async updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
         return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
@@ -83,7 +84,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult> {
+    async replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult> {
         return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
@@ -101,7 +102,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult> {
+    async deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
             if (!existingItem) {
@@ -119,7 +120,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    async deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult> {
+    async deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._updateOperation(async (collection) => {
             const existingItems = await this.find(filter);
             existingItems.forEach((existingItem) => {
@@ -133,13 +134,13 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         });
     }
 
-    private async _readOperation<S>(op: (data: Array<StorageObject<T>>) => S): Promise<S> {
+    private async _readOperation<S>(op: (data: Array<MashroomStorageObject<T>>) => S): Promise<S> {
         const db = await this._getDb();
         const collection = this._getCollection(db);
         return op(collection);
     }
 
-    private async _updateOperation<S>(op: (data: Array<StorageObject<T>>) => S): Promise<S> {
+    private async _updateOperation<S>(op: (data: Array<MashroomStorageObject<T>>) => S): Promise<S> {
         let release: (() => Promise<void>) | null = null;
         try {
             release = await this._lock();
@@ -163,7 +164,7 @@ export default class MashroomStorageCollectionFilestore<T extends StorageRecord>
         }
     }
 
-    private _getCollection(db: JsonDB<T>): Array<StorageObject<T>> {
+    private _getCollection(db: JsonDB<T>): Array<MashroomStorageObject<T>> {
         return db.d;
     }
 

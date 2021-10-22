@@ -2,54 +2,54 @@
 
 import type {MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
 
-export type StorageRecord = {};
+export type MashroomStorageRecord = {};
 
-export type StorageObject<T: StorageRecord> = T & {|
+export type MashroomStorageObject<T: MashroomStorageRecord> = T & {|
     _id: any
 |}
 
-export type StorageObjectFilter<T: StorageRecord> = {[$Keys<StorageObject<T>>]: any};
+export type MashroomStorageObjectFilter<T: MashroomStorageRecord> = {[$Keys<MashroomStorageObject<T>>]: any};
 
-export type StorageUpdateResult = {
+export type MashroomStorageUpdateResult = {
     modifiedCount: number,
 };
 
-export type StorageDeleteResult = {
+export type MashroomStorageDeleteResult = {
     deletedCount: number;
 };
 
 /**
  * Mashroom storage collection
  */
-export interface MashroomStorageCollection<T: StorageRecord> {
+export interface MashroomStorageCollection<T: MashroomStorageRecord> {
     /**
      * Find all items that match given filter (e.g. { name: 'foo' }).
      */
-    find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>>;
+    find(filter?: MashroomStorageObjectFilter<T>, limit?: number): Promise<Array<MashroomStorageObject<T>>>;
     /**
      * Return the first item that matches the given filter or null otherwise.
      */
-    findOne(filter: StorageObjectFilter<T>): Promise<?StorageObject<T>>;
+    findOne(filter: MashroomStorageObjectFilter<T>): Promise<?MashroomStorageObject<T>>;
     /**
      * Insert one item
      */
-    insertOne(item: T): Promise<StorageObject<T>>;
+    insertOne(item: T): Promise<MashroomStorageObject<T>>;
     /**
      * Update the first item that matches the given filter.
      */
-    updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: $Shape<StorageObject<T>>): Promise<StorageUpdateResult>;
+    updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: $Shape<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
     /**
      * Replace the first item that matches the given filter.
      */
-    replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult>;
+    replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult>;
     /**
      * Delete the first item that matches the given filter.
      */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
     /**
      * Delete all items that matches the given filter.
      */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 }
 
 /**
@@ -59,14 +59,14 @@ export interface MashroomStorage {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T: StorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
+    getCollection<T: MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
 }
 
 export interface MashroomStorageService {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T: StorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
+    getCollection<T: MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
 }
 
 /**

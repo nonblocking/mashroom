@@ -2,73 +2,101 @@
 
 import type {MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
 
-export type StorageRecord = Record<string, any>;
+export type MashroomStorageRecord = Record<string, any>;
 
-export type StorageObject<T extends StorageRecord> = T & {
+export type MashroomStorageObject<T extends MashroomStorageRecord> = T & {
     _id: any;
 };
 
-export type StorageObjectFilter<T extends StorageRecord> = {
-    [key in keyof StorageObject<T>]?: any
-};
+type AlternativeType<T> = T extends ReadonlyArray<infer U> ? T | U : T;
 
-export type StorageUpdateResult = {
+type Condition<T> = AlternativeType<T> | MongoLikeFilterOperators<AlternativeType<T>>;
+
+type MongoLikeFilterOperators<T> = {
+    $eq?: T;
+    $ne?: T;
+    $gt?: T;
+    $gte?: T;
+    $lt?: T;
+    $lte?: T;
+    $in?: ReadonlyArray<T>;
+    $nin?: ReadonlyArray<T>;
+    $exists?: boolean;
+    $regex?: T extends string ? RegExp | string : never;
+}
+
+type MongoLikeRootFilterOperators<T> = {
+    $and?: Array<MashroomStorageObjectFilter<T>>;
+    $or?: Array<MashroomStorageObjectFilter<T>>;
+}
+
+export type MashroomStorageObjectFilter<T extends MashroomStorageRecord> = {
+    [P in keyof T]?: Condition<T[P]>;
+} & MongoLikeRootFilterOperators<T>;
+
+export type MashroomStorageSort<T extends MashroomStorageRecord> = {
+    [P in keyof Partial<T>]: 'asc' | 'desc';
+}
+
+export type MashroomStorageUpdateResult = {
     modifiedCount: number;
 };
 
-export type StorageDeleteResult = {
+export type MashroomStorageDeleteResult = {
     deletedCount: number;
 };
 
 /**
  * Mashroom storage collection
  */
-export interface MashroomStorageCollection<T extends StorageRecord> {
+export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     /**
      * Find all items that match given filter (e.g. { name: 'foo' }).
      */
     find(
-        filter?: StorageObjectFilter<T>,
+        filter?: MashroomStorageObjectFilter<T>,
         limit?: number,
-    ): Promise<Array<StorageObject<T>>>;
+        skip?: number,
+        sort?: MashroomStorageSort<T>,
+    ): Promise<Array<MashroomStorageObject<T>>>;
 
     /**
      * Return the first item that matches the given filter or null otherwise.
      */
     findOne(
-        filter: StorageObjectFilter<T>,
-    ): Promise<StorageObject<T> | null | undefined>;
+        filter: MashroomStorageObjectFilter<T>,
+    ): Promise<MashroomStorageObject<T> | null | undefined>;
 
     /**
      * Insert one item
      */
-    insertOne(item: T): Promise<StorageObject<T>>;
+    insertOne(item: T): Promise<MashroomStorageObject<T>>;
 
     /**
      * Update the first item that matches the given filter.
      */
     updateOne(
-        filter: StorageObjectFilter<T>,
-        propertiesToUpdate: Partial<StorageObject<T>>,
-    ): Promise<StorageUpdateResult>;
+        filter: MashroomStorageObjectFilter<T>,
+        propertiesToUpdate: Partial<MashroomStorageObject<T>>,
+    ): Promise<MashroomStorageUpdateResult>;
 
     /**
      * Replace the first item that matches the given filter.
      */
     replaceOne(
-        filter: StorageObjectFilter<T>,
+        filter: MashroomStorageObjectFilter<T>,
         newItem: T,
-    ): Promise<StorageUpdateResult>;
+    ): Promise<MashroomStorageUpdateResult>;
 
     /**
      * Delete the first item that matches the given filter.
      */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 
     /**
      * Delete all items that matches the given filter.
      */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 }
 
 /**
@@ -78,7 +106,7 @@ export interface MashroomStorage {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends StorageRecord>(
+    getCollection<T extends MashroomStorageRecord>(
         name: string,
     ): Promise<MashroomStorageCollection<T>>;
 }
@@ -87,7 +115,7 @@ export interface MashroomStorageService {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends StorageRecord>(
+    getCollection<T extends MashroomStorageRecord>(
         name: string,
     ): Promise<MashroomStorageCollection<T>>;
 }

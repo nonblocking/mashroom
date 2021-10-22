@@ -4,7 +4,7 @@ import MashroomStorageMemoryCacheWrapper from '../memorycache/MashroomStorageMem
 import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageService as MashroomStorageServiceType, MashroomStorage} from '../../type-definitions';
 import type {MashroomStorageRegistry, MemoryCacheConfig} from '../../type-definitions/internal';
-import type {MashroomStorageCollection, StorageRecord} from '../../type-definitions';
+import type {MashroomStorageCollection, MashroomStorageRecord} from '../../type-definitions';
 
 const MAX_WAIT_FOR_STORAGE = 30000;
 
@@ -42,7 +42,7 @@ export default class MashroomStorageService implements MashroomStorageServiceTyp
         };
     }
 
-    async getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
+    async getCollection<T extends MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
         const storage = await this._getStorage();
         return storage.getCollection<T>(name);
     }

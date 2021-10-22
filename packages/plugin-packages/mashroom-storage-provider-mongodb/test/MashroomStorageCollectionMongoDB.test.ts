@@ -63,11 +63,15 @@ describe('MashroomStorageCollectionMongoDB', () => {
 
         const result1 = await storage.find({b: 1});
         const result2 = await storage.find({b: 1}, 1);
+        const result3 = await storage.find({ $and: [{ b: { $gt: 1 }}, { x: { $exists: false }}]});
 
-        expect(result1).not.toBeNull();
-        expect(result2).not.toBeNull();
+        expect(result1).toBeTruthy();
+        expect(result2).toBeTruthy();
+        expect(result3).toBeTruthy();
         expect(result1.length).toBe(3);
         expect(result2.length).toBe(1);
+        expect(result3.length).toBe(1);
+        expect(result3[0].b).toBe(2);
     });
 
     it('updates all properties of an existing property with updateOne', async () => {

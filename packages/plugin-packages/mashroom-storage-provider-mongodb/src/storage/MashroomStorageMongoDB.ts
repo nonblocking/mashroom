@@ -2,7 +2,7 @@
 import MashroomStorageCollectionMongoDB from './MashroomStorageCollectionMongoDB';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorageCollection, MashroomStorage, StorageRecord} from '@mashroom/mashroom-storage/type-definitions';
+import type {MashroomStorageCollection, MashroomStorage, MashroomStorageRecord} from '@mashroom/mashroom-storage/type-definitions';
 
 export type CollectionMap = {
     [name: string]: MashroomStorageCollectionMongoDB<any>;
@@ -16,7 +16,7 @@ export default class MashroomStorageMongoDB implements MashroomStorage {
         this._collections = {};
     }
 
-    async getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
+    async getCollection<T extends MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
         const existingCollection = this._collections[name];
         if (existingCollection) {
             return existingCollection;

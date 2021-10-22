@@ -5,18 +5,19 @@ import type {MashroomPluginContextHolder, MashroomLogger} from '@mashroom/mashro
 import type {MashroomMemoryCacheService} from '@mashroom/mashroom-memory-cache/type-definitions';
 import type {
     MashroomStorageCollection,
-    StorageDeleteResult,
-    StorageObject,
-    StorageObjectFilter,
-    StorageRecord,
-    StorageUpdateResult
+    MashroomStorageDeleteResult,
+    MashroomStorageObject,
+    MashroomStorageObjectFilter,
+    MashroomStorageRecord,
+    MashroomStorageUpdateResult,
+    MashroomStorageSort
 } from '../../type-definitions';
 
 const CACHE_REGION_PREFIX = 'collection:';
 const WARN_NO_CACHE_SERVICE_PERIOD_MS = 60000;
 let lastNoCacheServiceWarning = 0;
 
-export default class MashroomStorageCollectionMemoryCacheWrapper<T extends StorageRecord> implements MashroomStorageCollection<T> {
+export default class MashroomStorageCollectionMemoryCacheWrapper<T extends MashroomStorageRecord> implements MashroomStorageCollection<T> {
 
     private _logger: MashroomLogger;
 
@@ -26,44 +27,44 @@ export default class MashroomStorageCollectionMemoryCacheWrapper<T extends Stora
         this._logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.storage.memorycache');
     }
 
-    async find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>> {
-       return this._wrapFind([filter, limit], () => {
-          return this._delegate.find(filter, limit);
+    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>> {
+       return this._wrapFind([filter, limit, skip, sort], () => {
+          return this._delegate.find(filter, limit, skip, sort);
        });
     }
 
-    async findOne(filter: StorageObjectFilter<T>): Promise<StorageObject<T> | null | undefined> {
+    async findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined> {
         return this._wrapFind([filter], () => {
             return this._delegate.findOne(filter);
         });
     }
 
-    async insertOne(item: T): Promise<StorageObject<T>> {
+    async insertOne(item: T): Promise<MashroomStorageObject<T>> {
         return this._wrapUpdate(() => {
             return this._delegate.insertOne(item);
         });
     }
 
-    async replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult> {
+    async replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult> {
         return this._wrapUpdate(() => {
             return this._delegate.replaceOne(filter, newItem);
         });
     }
 
-    async updateOne(filter: StorageObjectFilter<T>, propertiesToUpdate: Partial<StorageObject<T>>): Promise<StorageUpdateResult> {
+    async updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
         return this._wrapUpdate(() => {
             return this._delegate.updateOne(filter, propertiesToUpdate);
         });
     }
 
-    async deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult> {
+    async deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._wrapUpdate(() => {
             return this._delegate.deleteOne(filter);
         });
     }
 
 
-    async deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult> {
+    async deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._wrapUpdate(() => {
             return this._delegate.deleteMany(filter);
         });

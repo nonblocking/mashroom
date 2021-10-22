@@ -2,7 +2,7 @@
 import MashroomStorageCollectionMemoryCacheWrapper from './MashroomStorageCollectionMemoryCacheWrapper';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorage, MashroomStorageCollection, StorageRecord} from '../../type-definitions';
+import type {MashroomStorage, MashroomStorageCollection, MashroomStorageRecord} from '../../type-definitions';
 import type {MemoryCacheConfig, MemoryCacheProperties} from '../../type-definitions/internal';
 import {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 
@@ -22,7 +22,7 @@ export default class MashroomStorageMemoryCacheWrapper implements MashroomStorag
         this._logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.storage.memorycache');
     }
 
-    async getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
+    async getCollection<T extends MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>> {
         if (this._collectionMap[name]) {
             return this._collectionMap[name];
         }
