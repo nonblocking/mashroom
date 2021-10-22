@@ -1,7 +1,7 @@
 
 import mongoDBClient from '../mongodb_client';
 
-import type {Collection} from 'mongodb';
+import type {Collection, OptionalId} from 'mongodb';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
@@ -22,7 +22,7 @@ export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> i
 
     async find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>> {
         const collection = await this._getCollection<StorageObject<T>>();
-        let cursor = collection.find(filter as any);
+        let cursor = collection.find(filter || {});
         if (limit) {
             cursor = cursor.limit(limit);
         }
@@ -36,7 +36,7 @@ export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> i
 
     async insertOne(item: T): Promise<StorageObject<T>> {
         const collection = await this._getCollection<StorageObject<T>>();
-        const result = await collection.insertOne(item as any);
+        const result = await collection.insertOne(item as OptionalId<StorageObject<T>>);
         return {
             _id: result.insertedId,
             ...item,
@@ -59,7 +59,7 @@ export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> i
 
     async replaceOne(filter: StorageObjectFilter<T>, newItem: T): Promise<StorageUpdateResult> {
         const collection = await this._getCollection<StorageObject<T>>();
-        const result = await collection.replaceOne(filter, newItem as any);
+        const result = await collection.replaceOne(filter, newItem as StorageObject<T>);
         return {
             modifiedCount: result.modifiedCount,
         };
