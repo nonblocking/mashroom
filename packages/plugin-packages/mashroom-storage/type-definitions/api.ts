@@ -51,21 +51,14 @@ export type MashroomStorageDeleteResult = {
  */
 export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     /**
-     * Find all items that match given filter (e.g. { name: 'foo' }).
+     * Find all items that match given filter. The filter supports a subset of Mongo's filter operations (like $gt, $regex, ...).
      */
-    find(
-        filter?: MashroomStorageObjectFilter<T>,
-        limit?: number,
-        skip?: number,
-        sort?: MashroomStorageSort<T>,
-    ): Promise<Array<MashroomStorageObject<T>>>;
+    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>>;
 
     /**
      * Return the first item that matches the given filter or null otherwise.
      */
-    findOne(
-        filter: MashroomStorageObjectFilter<T>,
-    ): Promise<MashroomStorageObject<T> | null | undefined>;
+    findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined>;
 
     /**
      * Insert one item
@@ -75,18 +68,12 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     /**
      * Update the first item that matches the given filter.
      */
-    updateOne(
-        filter: MashroomStorageObjectFilter<T>,
-        propertiesToUpdate: Partial<MashroomStorageObject<T>>,
-    ): Promise<MashroomStorageUpdateResult>;
+    updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
 
     /**
      * Replace the first item that matches the given filter.
      */
-    replaceOne(
-        filter: MashroomStorageObjectFilter<T>,
-        newItem: T,
-    ): Promise<MashroomStorageUpdateResult>;
+    replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult>;
 
     /**
      * Delete the first item that matches the given filter.
@@ -106,25 +93,17 @@ export interface MashroomStorage {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends MashroomStorageRecord>(
-        name: string,
-    ): Promise<MashroomStorageCollection<T>>;
+    getCollection<T extends MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
 }
 
 export interface MashroomStorageService {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends MashroomStorageRecord>(
-        name: string,
-    ): Promise<MashroomStorageCollection<T>>;
+    getCollection<T extends MashroomStorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
 }
 
 /**
  * Bootstrap method definition for storage plugins
  */
-export type MashroomStoragePluginBootstrapFunction = (
-    pluginName: string,
-    pluginConfig: MashroomPluginConfig,
-    contextHolder: MashroomPluginContextHolder,
-) => Promise<MashroomStorage>;
+export type MashroomStoragePluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomStorage>;

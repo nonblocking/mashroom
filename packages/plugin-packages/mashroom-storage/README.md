@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This plugin adds a storage service.
+This plugin adds a storage service abstraction that delegates to a provider plugin.
 
 ## Usage
 
@@ -17,9 +17,10 @@ import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-defin
 export default async (req: Request, res: ExpressResponse) => {
     const storageService: MashroomStorageService = req.pluginContext.services.storage.service;
 
-    const pagesCollection = await storageService.getCollection('mashroom-portal-pages');
+    const customerCollection = await storageService.getCollection('my-collection');
 
-    const page = await pagesCollection.findOne({pageId});
+    const customer = await customerCollection.findOne({customerNr: 1234567});
+    const customers = await customerCollection.find({ $and: [{ name: { $regex: 'jo.*' } }, { visits: { $gt: 10 } }], 20, 10, { visits: 'desc' });
 
     // ...
 }
@@ -70,57 +71,44 @@ export interface MashroomStorageService {
     /**
      * Get (or create) the MashroomStorageCollection with given name.
      */
-    getCollection<T extends StorageRecord>(
-        name: string,
-    ): Promise<MashroomStorageCollection<T>>;
+    getCollection<T extends StorageRecord>(name: string): Promise<MashroomStorageCollection<T>>;
 }
 
-export interface MashroomStorageCollection<T extends StorageRecord> {
+export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     /**
-     * Find all items that match given filter (e.g. { name: 'foo' }).
+     * Find all items that match given filter. The filter supports a subset of Mongo's filter operations (like $gt, $regex, ...).
      */
-    find(
-        filter?: StorageObjectFilter<T>,
-        limit?: number,
-    ): Promise<Array<StorageObject<T>>>;
+    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>>;
 
     /**
      * Return the first item that matches the given filter or null otherwise.
      */
-    findOne(
-        filter: StorageObjectFilter<T>,
-    ): Promise<StorageObject<T> | null | undefined>;
+    findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined>;
 
     /**
      * Insert one item
      */
-    insertOne(item: T): Promise<StorageObject<T>>;
+    insertOne(item: T): Promise<MashroomStorageObject<T>>;
 
     /**
      * Update the first item that matches the given filter.
      */
-    updateOne(
-        filter: StorageObjectFilter<T>,
-        propertiesToUpdate: Partial<StorageObject<T>>,
-    ): Promise<StorageUpdateResult>;
+    updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
 
     /**
      * Replace the first item that matches the given filter.
      */
-    replaceOne(
-        filter: StorageObjectFilter<T>,
-        newItem: T,
-    ): Promise<StorageUpdateResult>;
+    replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult>;
 
     /**
      * Delete the first item that matches the given filter.
      */
-    deleteOne(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 
     /**
      * Delete all items that matches the given filter.
      */
-    deleteMany(filter: StorageObjectFilter<T>): Promise<StorageDeleteResult>;
+    deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 }
 ```
 
