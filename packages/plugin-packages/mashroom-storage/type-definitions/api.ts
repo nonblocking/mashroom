@@ -26,13 +26,18 @@ type MongoLikeFilterOperators<T> = {
 }
 
 type MongoLikeRootFilterOperators<T> = {
-    $and?: Array<MashroomStorageObjectFilter<T>>;
-    $or?: Array<MashroomStorageObjectFilter<T>>;
+    $and?: Array<MongoLikeFilter<T>>;
+    $or?: Array<MongoLikeFilter<T>>;
 }
 
-export type MashroomStorageObjectFilter<T extends MashroomStorageRecord> = {
+type MongoLikeFilter<T> = {
     [P in keyof T]?: Condition<T[P]>;
-} & MongoLikeRootFilterOperators<T>;
+} & {
+    // Nested properties
+    [key: string]: any
+}
+
+export type MashroomStorageObjectFilter<T extends MashroomStorageRecord> = MongoLikeFilter<T> & MongoLikeRootFilterOperators<T>;
 
 export type MashroomStorageSort<T extends MashroomStorageRecord> = {
     [P in keyof Partial<T>]: 'asc' | 'desc';

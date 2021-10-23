@@ -8,7 +8,11 @@ export type MashroomStorageObject<T: MashroomStorageRecord> = T & {|
     _id: any
 |}
 
-export type MashroomStorageObjectFilter<T: MashroomStorageRecord> = {[$Keys<MashroomStorageObject<T>>]: any};
+export type MashroomStorageObjectFilter<T: MashroomStorageRecord> = any;
+
+export type MashroomStorageSort<T: MashroomStorageRecord> = {
+    [$Keys<MashroomStorageObject<T>>]: 'asc' | 'desc',
+}
 
 export type MashroomStorageUpdateResult = {
     modifiedCount: number,
@@ -23,9 +27,9 @@ export type MashroomStorageDeleteResult = {
  */
 export interface MashroomStorageCollection<T: MashroomStorageRecord> {
     /**
-     * Find all items that match given filter (e.g. { name: 'foo' }).
+     * Find all items that match given filter. The filter supports a subset of Mongo's filter operations (like $gt, $regex, ...).
      */
-    find(filter?: MashroomStorageObjectFilter<T>, limit?: number): Promise<Array<MashroomStorageObject<T>>>;
+    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>>;
     /**
      * Return the first item that matches the given filter or null otherwise.
      */

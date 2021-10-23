@@ -11,7 +11,10 @@ type Test = {
     b?: any;
     c?: any;
     d?: any;
-    x?: any;
+    x?: {
+        m1?: string,
+        m2?: number,
+    }
 }
 
 describe('MashroomStorageCollectionMongoDB', () => {
@@ -51,7 +54,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
         expect(result2).toBeNull();
     });
 
-    it('returns items filtered with find', async () => {
+    it('supports simple filtering', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test3', dummyLoggerFactory);
 
         await storage.insertOne({a: 1});
@@ -63,26 +66,42 @@ describe('MashroomStorageCollectionMongoDB', () => {
 
         const result1 = await storage.find({b: 1});
         const result2 = await storage.find({b: 1}, 1);
-        const result3 = await storage.find({ $and: [{ b: { $gt: 1 }}, { x: { $exists: false }}]});
-        const result4 = await storage.find(undefined, undefined, 3, { b: 'asc' });
+
+        expect(result1).toBeTruthy();
+        expect(result2).toBeTruthy();
+        expect(result1.length).toBe(3);
+        expect(result2.length).toBe(1);
+    });
+
+    it('supports filter operators', async () => {
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test3', dummyLoggerFactory);
+
+        await storage.insertOne({a: 1, x: {}});
+        await storage.insertOne({b: 1, x: {}});
+        await storage.insertOne({b: 1, x: {}});
+        await storage.insertOne({b: 2});
+        await storage.insertOne({b: 1});
+        await storage.insertOne({c: 1, x: { m1: 'test' }});
+
+        const result1 = await storage.find({ $and: [{ b: { $gt: 1 }}, { x: { $exists: false }}]});
+        const result2 = await storage.find(undefined, undefined, 3, { b: 'asc' });
+        const result3 = await storage.find({ 'x.m1': 'test' });
 
         expect(result1).toBeTruthy();
         expect(result2).toBeTruthy();
         expect(result3).toBeTruthy();
-        expect(result4).toBeTruthy();
-        expect(result1.length).toBe(3);
-        expect(result2.length).toBe(1);
-        expect(result3.length).toBe(1);
-        expect(result3[0].b).toBe(2);
-        expect(result4.length).toBe(3);
-        expect(result4[2].b).toBe(2);
+        expect(result1.length).toBe(1);
+        expect(result1[0].b).toBe(2);
+        expect(result2.length).toBe(3);
+        expect(result2[2].b).toBe(2);
+        expect(result1.length).toBe(1);
     });
 
     it('updates all properties of an existing property with updateOne', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test4', dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1});
-        const result = await storage.updateOne({a: 1}, {a: 2, x: 'x'});
+        const result = await storage.updateOne({a: 1}, {a: 2, x: {}});
         const updatedItem = await storage.findOne({a: 2});
 
         expect(updatedItem).not.toBeNull();
@@ -98,7 +117,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test5', dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1, b: 2});
-        const result = await storage.replaceOne({a: 1}, {a: 2, x: 'x'});
+        const result = await storage.replaceOne({a: 1}, {a: 2, x: {}});
         const updatedItem = await storage.findOne({a: 2});
 
         expect(updatedItem).not.toBeNull();
