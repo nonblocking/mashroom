@@ -22,7 +22,7 @@ export default class MashroomStorageCollectionMongoDB<T extends StorageRecord> i
 
     async find(filter?: StorageObjectFilter<T>, limit?: number): Promise<Array<StorageObject<T>>> {
         const collection = await this._getCollection<StorageObject<T>>();
-        let cursor = collection.find(filter || {});
+        let cursor = filter ? collection.find(filter) : collection.find();
         if (limit) {
             cursor = cursor.limit(limit);
         }
