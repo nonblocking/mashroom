@@ -1,3 +1,4 @@
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -12,20 +13,6 @@ module.exports = {
     target: ['web', 'es5'],
     module: {
         rules: [
-            {
-                test: /\.(ts)$/,
-                exclude: [/node_modules/, /mashroom-utils/],
-                enforce: 'pre',
-                use: [
-                    {
-                        loader: 'eslint-loader',
-                        options: {
-                            fix: true,
-                            configFile: __dirname + '/.eslintrc.json'
-                        }
-                    }
-                ]
-            },
             {
                 test: /\.(ts|js)$/,
                 exclude: /node_modules\/(?!nanoid)/,
@@ -54,17 +41,19 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(png|gif|jpg|jpeg|svg|ttf|eot|woff(2)?)$/,
-                use: [
-                    {
-                        loader: 'file-loader'
-                    }
-                ]
+                test: /\.png/,
+                type: 'asset/resource'
             }
         ]
     },
     externals: [],
     resolve: {
-        extensions: ['.js', '.ts']
-    }
+        extensions: ['.js', '.ts'],
+    },
+    plugins: [
+        new ESLintPlugin({
+            extensions: ['.js', '.ts'],
+            fix: true,
+        })
+    ]
 };
