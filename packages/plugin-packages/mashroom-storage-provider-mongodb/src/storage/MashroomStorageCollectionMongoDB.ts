@@ -24,14 +24,14 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
     async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>> {
         const collection = await this._getCollection<MashroomStorageObject<T>>();
         let cursor = collection.find(filter || {});
+        if (sort) {
+            cursor = cursor.sort(sort);
+        }
         if (skip) {
             cursor = cursor.skip(skip);
         }
         if (limit) {
             cursor = cursor.limit(limit);
-        }
-        if (sort) {
-            cursor = cursor.sort(sort);
         }
         return await cursor.toArray();
     }

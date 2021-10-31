@@ -10,7 +10,7 @@
     ],
     "dependencies": {
         "fs-extra": "^10.0.0",
-        "lodash.filter": "^4.6.0",
+        "mingo": "^4.2.0",
         "nanoid": "^3.1.25",
         "proper-lockfile": "^4.1.2"
     },
@@ -21,7 +21,6 @@
         "@mashroom/mashroom-utils": "1.9.0",
         "@types/fs-extra": "^9.0.12",
         "@types/jest": "^27.0.1",
-        "@types/lodash.filter": "^4.6.6",
         "@types/proper-lockfile": "^4.1.2",
         "eslint": "^7.32.0",
         "jest": "^27.2.0",

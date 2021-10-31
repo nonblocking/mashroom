@@ -100,16 +100,20 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         const result1 = await storage.find({ $and: [{ b: { $gt: 1 }}, { x: { $exists: false }}]});
         const result2 = await storage.find(undefined, undefined, 3, { b: 'asc' });
-        const result3 = await storage.find({ 'x.m1': 'test' });
+        const result3 = await storage.find(undefined, 3, undefined, { b: 'desc' });
+        const result4 = await storage.find({ 'x.m1': 'test' });
 
         expect(result1).toBeTruthy();
         expect(result2).toBeTruthy();
         expect(result3).toBeTruthy();
+        expect(result4).toBeTruthy();
         expect(result1.length).toBe(1);
         expect(result1[0].b).toBe(2);
         expect(result2.length).toBe(3);
         expect(result2[2].b).toBe(2);
-        expect(result1.length).toBe(1);
+        expect(result3.length).toBe(3);
+        expect(result3[0].b).toBe(2);
+        expect(result4.length).toBe(1);
     });
 
     it('updates all properties of an existing property with updateOne', async () => {

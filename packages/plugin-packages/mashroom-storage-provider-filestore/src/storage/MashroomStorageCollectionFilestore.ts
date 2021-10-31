@@ -3,7 +3,7 @@ import fs from 'fs';
 import {promisify} from 'util';
 import {lock as lockFile} from 'proper-lockfile';
 import {nanoid} from 'nanoid';
-import lodashFilter from 'lodash.filter';
+import {Query} from 'mingo';
 import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -38,31 +38,27 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         this._logger = _loggerFactory('mashroom.storage.filestore');
     }
 
-    async insertOne(item: T): Promise<MashroomStorageObject<T>> {
-        return this._updateOperation((collection) => {
-            const insertedItem = {...item, _id:  this._generateId()};
-            collection.push(insertedItem);
-            return insertedItem;
-        });
-    }
-
-    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>,): Promise<Array<MashroomStorageObject<T>>> {
+    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>> {
         return this._readOperation((collection) => {
-            let result = filter ? lodashFilter<MashroomStorageObject<T>>(collection, filter) : collection;
-            if (limit && result.length > limit) {
-                result = result.slice(0, limit);
-            }
-            return result;
+            return this._find(collection, filter, limit, skip, sort);
         });
     }
 
     async findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined> {
         return this._readOperation((collection) => {
-            const result: Array<MashroomStorageObject<T>> = lodashFilter<MashroomStorageObject<T>>(collection, filter);
+            const result = this._find(collection, filter, 1);
             if (result.length === 0) {
                 return null;
             }
             return result[0];
+        });
+    }
+
+    async insertOne(item: T): Promise<MashroomStorageObject<T>> {
+        return this._updateOperation((collection) => {
+            const insertedItem = {...item, _id:  this._generateId()};
+            collection.push(insertedItem);
+            return insertedItem;
         });
     }
 
@@ -132,6 +128,38 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
                 deletedCount: existingItems.length,
             };
         });
+    }
+
+    private _find(data: Array<MashroomStorageObject<T>>, filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Array<MashroomStorageObject<T>> {
+        if (filter || sort) {
+            const query = new Query(filter || {});
+            let cursor = query.find(data);
+            if (sort) {
+                const fixedSort: Record<string, number> = {};
+                Object.keys(sort).forEach((key) => {
+                   const direction = sort[key];
+                   if (direction === 'asc') {
+                       fixedSort[key] = 1;
+                   } else if (direction === 'desc') {
+                       fixedSort[key] = -1;
+                   }
+                });
+                cursor = cursor.sort(fixedSort);
+            }
+            if (limit) {
+                cursor = cursor.limit(limit);
+            }
+            if (skip) {
+                cursor = cursor.skip(skip);
+            }
+            return cursor.all() as Array<MashroomStorageObject<T>>;
+        } else {
+            let result = data;
+            if (limit || skip) {
+                result = result.slice(skip || 0, limit ? (skip || 0) + limit : undefined);
+            }
+            return result;
+        }
     }
 
     private async _readOperation<S>(op: (data: Array<MashroomStorageObject<T>>) => S): Promise<S> {
