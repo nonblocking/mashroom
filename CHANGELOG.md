@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
-
+ * Portal: Fixed loading multiple instances of an App on the same page (was broken due to a caching issue, see issue #89)
  * LDAP Security Provider: Fixed searching for groups if the distinguished name contains special characters (as defined in RFC 2253)
 
 ## 1.9.0 (October 18, 2021)

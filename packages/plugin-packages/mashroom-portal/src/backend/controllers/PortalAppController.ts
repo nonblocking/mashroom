@@ -88,7 +88,8 @@ export default class PortalAppController {
             logger.debug(`Sending portal app setup for: ${portalApp.name}`, portalAppSetup);
 
             if (cacheControlService) {
-                cacheControlService.addCacheControlHeader('PRIVATE_IF_AUTHENTICATED', req, res);
+                // Never cache dynamically loaded apps because they need a different appId per instance
+                cacheControlService.addCacheControlHeader(portalAppInstanceId ? 'PRIVATE_IF_AUTHENTICATED' : 'NEVER', req, res);
             }
 
             res.json(portalAppSetup);
