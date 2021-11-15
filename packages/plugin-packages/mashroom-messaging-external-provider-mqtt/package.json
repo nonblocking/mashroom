@@ -4,19 +4,19 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.9.0",
+    "version": "1.9.1",
     "files": [
         "dist/**"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "1.9.0",
+        "@mashroom/mashroom-utils": "1.9.1",
         "mqtt": "^4.2.8"
     },
     "devDependencies": {
         "@babel/cli": "^7.15.7",
-        "@mashroom/mashroom": "1.9.0",
-        "@mashroom/mashroom-messaging": "1.9.0",
-        "@mashroom/mashroom-monitoring-metrics-collector": "1.9.0",
+        "@mashroom/mashroom": "1.9.1",
+        "@mashroom/mashroom-messaging": "1.9.1",
+        "@mashroom/mashroom-monitoring-metrics-collector": "1.9.1",
         "@types/jest": "^27.0.1",
         "@types/ws": "^7.4.7",
         "eslint": "^7.32.0",

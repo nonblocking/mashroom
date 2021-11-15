@@ -1,5 +1,6 @@
 
 const path = require('path');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -19,20 +20,6 @@ module.exports = (env, argv) => {
         target: ['web', 'es5'],
         module: {
             rules: [
-                {
-                    test: /\.(ts|tsx)$/,
-                    exclude: [/node_modules/, /mashroom-portal-ui-commons/],
-                    enforce: 'pre',
-                    use: [
-                        {
-                            loader: 'eslint-loader',
-                            options: {
-                                fix: true,
-                                configFile: __dirname + '/.eslintrc.json',
-                            },
-                        },
-                    ],
-                },
                 {
                     test: /\.(ts|tsx)$/,
                     exclude: /node_modules/,
@@ -75,6 +62,12 @@ module.exports = (env, argv) => {
                 './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
             },
         },
+        plugins: [
+            new ESLintPlugin({
+                extensions: ['.js', '.ts', '.tsx'],
+                fix: true,
+            })
+        ],
         devServer: {
             host: '0.0.0.0',
             allowedHosts: 'all',

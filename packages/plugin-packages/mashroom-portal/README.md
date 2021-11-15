@@ -459,12 +459,6 @@ export interface MashroomPortalStateService {
     setUrlStateProperty(key: string, value: any | null | undefined): void;
 
     /**
-     * Generate a URL with the given state encoded into it
-     */
-    encodeStateIntoUrl(baseUrl: string, state: any,
-                       additionalQueryParams?: { [key: string]: string; } | null | undefined, hash?: string | null | undefined): string;
-
-    /**
      * Add given key value pair to the session storage
      */
     setSessionStateProperty(key: string, value: any): void;
