@@ -1,8 +1,16 @@
 
+
 # Change Log
 
-## [unreleased]
+## [unreleased v2]
 
+ * Storage: The Storage API (MashroomStorage) supports now a subset of Mongo's filter operations ($gt, $regex, ...),
+   sorting and proper paging (skip + limit). So you can do something like:
+   ```ts
+        await storage.find({ $and: [{ b: { $gt: 1 }}, { x: { $exists: false }}]}, 10, 0, { b: 'asc' })
+   ```
+
+## [unreleased]
 
  * Portal: Made sure the *MashroomPortalStateService* works with dynamic routing (when paths are updated via History API)
 
