@@ -49,10 +49,10 @@ describe('MashroomStorageCollectionMemoryCacheWrapper', () => {
         expect(result).toEqual(collectionObject);
         expect(mockCacheGet.mock.calls.length).toBe(1);
         expect(mockCacheGet.mock.calls[0][0]).toBe('collection:collection1');
-        expect(mockCacheGet.mock.calls[0][1]).toBe('dff8538968372b755b6514d60a6b0ae0');
+        expect(mockCacheGet.mock.calls[0][1]).toBe('b67d563af0cb6a08be353788f15779f1');
         expect(mockCacheSet.mock.calls.length).toBe(1);
         expect(mockCacheSet.mock.calls[0][0]).toBe('collection:collection1');
-        expect(mockCacheSet.mock.calls[0][1]).toBe('dff8538968372b755b6514d60a6b0ae0');
+        expect(mockCacheSet.mock.calls[0][1]).toBe('b67d563af0cb6a08be353788f15779f1');
         expect(mockCacheSet.mock.calls[0][2]).toEqual(collectionObject)
         expect(mockCacheSet.mock.calls[0][3]).toEqual(10)
     });
@@ -69,7 +69,7 @@ describe('MashroomStorageCollectionMemoryCacheWrapper', () => {
         expect(result).toEqual(collectionObject);
         expect(mockCacheGet.mock.calls.length).toBe(1);
         expect(mockCacheGet.mock.calls[0][0]).toBe('collection:collection1');
-        expect(mockCacheGet.mock.calls[0][1]).toBe('221262c70534feb8e1126f700e15f359');
+        expect(mockCacheGet.mock.calls[0][1]).toBe('2a68d7d6edb0f4d50370a41c1a9d09e6');
         expect(mockCacheSet.mock.calls.length).toBe(0);
     });
 
@@ -80,16 +80,20 @@ describe('MashroomStorageCollectionMemoryCacheWrapper', () => {
         await collection.find({ x: 1, y: 2 });
         await collection.find({ x: 1, y: 2 }, 10);
         await collection.find({ x: 1, y: 2 }, 11);
+        await collection.find({ x: 1, y: 2 }, 11, 1);
+        await collection.find({ x: 1, y: 2 }, 11, 1, { x: 'asc' });
         await collection.find({ x: 1 });
         await collection.find({ x: '1' });
         await collection.find();
 
-        expect(mockCacheGet.mock.calls[0][1]).toBe('800f15b68afa9bfbef9459efaf8cfa03');
-        expect(mockCacheGet.mock.calls[1][1]).toBe('c69e3bf430400b632339d6ff38c9a8b4');
-        expect(mockCacheGet.mock.calls[2][1]).toBe('7222dd406548326ca6c1d5caaa47352a');
-        expect(mockCacheGet.mock.calls[3][1]).toBe('00662d87e5c40066d67b858bf964bc07');
-        expect(mockCacheGet.mock.calls[4][1]).toBe('dfe6f1317736139398887eb5279a7153');
-        expect(mockCacheGet.mock.calls[5][1]).toBe('18f05aeddc212b523b40818fa2b87b33');
+        expect(mockCacheGet.mock.calls[0][1]).toBe('82492f954b15b547fe26b1d52f043ebe');
+        expect(mockCacheGet.mock.calls[1][1]).toBe('a9f429cf2c50136c284d8317f87a4ae0');
+        expect(mockCacheGet.mock.calls[2][1]).toBe('4014c73a8afe5598d03a667afb4044cf');
+        expect(mockCacheGet.mock.calls[3][1]).toBe('9dcbb0b706fb3f7ec1cd472dde3abaa8');
+        expect(mockCacheGet.mock.calls[4][1]).toBe('76083ae77c59ee7cadbafea7ace6efe9');
+        expect(mockCacheGet.mock.calls[5][1]).toBe('6a1f23d1c4286ceb68f3754d7b2198e1');
+        expect(mockCacheGet.mock.calls[6][1]).toBe('e9f4ea702acc90dde002796870b28593');
+        expect(mockCacheGet.mock.calls[7][1]).toBe('7c0f6b5eab997392242695c2f98722c7');
     })
 
     it('invalidates the cache on update', async () => {
