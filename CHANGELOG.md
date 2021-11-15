@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * Portal: Made sure the *MashroomPortalStateService* works with dynamic routing (when paths are updated via History API)
+
 ## 1.9.1 (November 8, 2021)
 
  * Portal: Fixed loading multiple instances of an App on the same page (was broken due to a caching issue, see issue #89)

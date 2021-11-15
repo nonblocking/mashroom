@@ -955,11 +955,6 @@ export interface MashroomPortalStateService {
     setUrlStateProperty(key: string, value: ?any): void;
 
     /**
-     * Generate a URL with the given state encoded into it
-     */
-    encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: ?{ [string]: string }, hash?: ?string): string;
-
-    /**
      * Add given key value pair to the session storage
      */
     setSessionStateProperty(key: string, value: any): void;
@@ -1029,13 +1024,6 @@ export type MashroomPortalClientServices = {
     +portalSiteService: MashroomPortalSiteService,
     +[customService: string]: any
 }
-
-export type CreateAppWrapper = (id: string, pluginName: string) => {
-    portalAppWrapperElement: HTMLDivElement,
-    portalAppHostElement: HTMLDivElement,
-    portalAppTitleElement: HTMLDivElement,
-}
-export type CreateLoadingError = (id: string, pluginName: string, title: ?string) => HTMLDivElement;
 
 /* Plugin bootstrap functions */
 
