@@ -19,6 +19,7 @@
         "build": "copyfiles -u 1 docs/*.png public/docs/html && node ./src/convert-markdown"
     },
     "mashroom": {
+        "devModeBuildScript": "build",
         "plugins": [
             {
                 "name": "Mashroom Documentation",
