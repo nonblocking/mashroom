@@ -40,7 +40,7 @@
                 "name": "Mashroom Portal IFrame App",
                 "title": "IFrame App",
                 "type": "portal-app",
-                "bootstrap": "startPortalIFrameApp",
+                "clientBootstrap": "startPortalIFrameApp",
                 "category": "Content",
                 "resources": {
                     "js": [
@@ -48,8 +48,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
                     "appConfig": {
                         "url": "https://en.wikipedia.org/wiki/Main_Page",
                         "width": "100%",

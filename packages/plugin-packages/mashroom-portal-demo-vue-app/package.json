@@ -37,7 +37,7 @@
                 "name": "Mashroom Portal Demo Vue App",
                 "title": "Demo Vue App",
                 "type": "portal-app",
-                "bootstrap": "startVueDemoApp",
+                "clientBootstrap": "startVueDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -45,9 +45,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
-                    "restProxies": {},
                     "appConfig": {
                         "firstName": "Mike",
                         "pingButtonLabel": "Send Ping"

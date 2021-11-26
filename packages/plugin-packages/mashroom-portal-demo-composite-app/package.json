@@ -37,7 +37,7 @@
                 "name": "Mashroom Portal Demo Composite App",
                 "title": "Demo Composite App",
                 "type": "portal-app",
-                "bootstrap": "startCompositeDemoApp",
+                "clientBootstrap": "startCompositeDemoApp",
                 "requires": [
                     "Mashroom Portal Demo Angular App",
                     "Mashroom Portal Demo Vue App",
@@ -50,9 +50,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
-                    "restProxies": {},
                     "appConfig": {
                         "firstName": "Linus"
                     }

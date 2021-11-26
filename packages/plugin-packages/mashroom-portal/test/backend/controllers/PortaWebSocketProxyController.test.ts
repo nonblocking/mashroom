@@ -32,8 +32,13 @@ const portalApp1: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
-    globalLaunchFunction: 'foo',
+    clientBootstrap: 'foo',
     resourcesRootUri: `file://${__dirname}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['bundle.js'],
         css: [],
@@ -42,7 +47,7 @@ const portalApp1: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: null,
     rolePermissions: null,
-    restProxies: {
+    proxies: {
         'my-proxy': {
             targetUri: 'https://www.mashroom-server.com/api',
         },

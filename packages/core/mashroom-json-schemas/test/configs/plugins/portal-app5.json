@@ -1,0 +1,31 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Welcome Portal App",
+            "type": "portal-app",
+            "title": {
+                "en": "Welcome Portal App",
+                "de": "Willkommen Portal App"
+            },
+            "clientBootstrap": "startWelcomeApp",
+            "category": "Demo",
+            "resources": {
+                "js": [
+                    "welcome-app.js"
+                ],
+                "css": [
+                    "welcome-app.css"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist/frontend",
+                "ssrBootstrap": "indexSSR"
+            },
+            "caching": {
+                "ssrHtml": "same-config"
+            }
+        }
+    ]
+}

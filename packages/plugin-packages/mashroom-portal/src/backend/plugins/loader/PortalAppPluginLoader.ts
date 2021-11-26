@@ -32,10 +32,12 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
+        const version = plugin.pluginDefinition.clientBootstrap && plugin.pluginDefinition.local ? 2 : 1;
+        this._logger.debug(`Detected plugin config version for portal-app ${plugin.name}: ${version}`);
 
-        const globalLaunchFunction = plugin.pluginDefinition.bootstrap;
-        if (!globalLaunchFunction) {
-            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No bootstrap function defined`);
+        const clientBootstrap = version == 2 ? plugin.pluginDefinition.clientBootstrap : plugin.pluginDefinition.bootstrap;
+        if (!clientBootstrap) {
+            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No clientBootstrap function defined`);
         }
 
         const resourcesDef = plugin.pluginDefinition.resources;
@@ -63,8 +65,9 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
         const screenshots = plugin.pluginDefinition.screenshots;
 
-        let resourcesRootUri = config.resourcesRoot;
-        if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
+        // We consider only local resources
+        let resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
+        if (!resourcesRootUri.startsWith('/')) {
             // Process relative file path
             resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
         }
@@ -76,12 +79,23 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             }
         }
 
+        const proxies = version === 2 ? config.proxies : config.restProxies;
+
         const defaultAppConfig = {...plugin.pluginDefinition.defaultConfig?.appConfig || {}, ...config.appConfig || {}};
 
         let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
         if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {
             // Backward compatibility
             defaultRestrictViewToRoles = config.defaultRestrictedToRoles;
+        }
+
+        let ssrBootstrap;
+        let cachingConfig;
+        let editorConfig;
+        if (version === 2) {
+            ssrBootstrap = plugin.pluginDefinition.local?.ssrBootstrap;
+            cachingConfig = plugin.pluginDefinition.caching;
+            editorConfig = plugin.pluginDefinition.editor;
         }
 
         const portalApp: MashroomPortalApp = {
@@ -96,14 +110,19 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             category: plugin.pluginDefinition.category,
             metaInfo: config.metaInfo,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
-            globalLaunchFunction,
+            remoteApp: false,
+            clientBootstrap,
             screenshots,
+            ssrBootstrap,
+            ssrInitialHtmlPath: undefined,
             resourcesRootUri,
+            cachingConfig,
+            editorConfig,
             sharedResources,
             resources,
             defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,
-            restProxies: config.restProxies,
+            proxies,
             defaultAppConfig
         };
 

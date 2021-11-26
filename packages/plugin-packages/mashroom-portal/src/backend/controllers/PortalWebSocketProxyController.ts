@@ -79,13 +79,13 @@ export default class PortalRestProxyController {
 
             logger.addContext(portalAppContext(portalApp));
 
-            if (!portalApp.restProxies) {
+            if (!portalApp.proxies) {
                 logger.warn(`Invalid proxy path: ${url}`);
                 sendStatus(400);
                 return;
             }
 
-            const restProxyDef: MashroomPortalProxyDefinition = portalApp.restProxies[proxyName];
+            const restProxyDef: MashroomPortalProxyDefinition = portalApp.proxies[proxyName];
 
             if (!restProxyDef || !restProxyDef.targetUri) {
                 logger.warn(`Invalid proxy path: ${url}`);

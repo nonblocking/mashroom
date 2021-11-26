@@ -50,7 +50,7 @@
             {
                 "name": "Mashroom Sandbox App",
                 "type": "portal-app",
-                "bootstrap": "startSandboxApp",
+                "clientBootstrap": "startSandboxApp",
                 "category": "Testing",
                 "resources": {
                     "js": [
@@ -58,8 +58,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
                     "appConfig": {}
                 }
             }

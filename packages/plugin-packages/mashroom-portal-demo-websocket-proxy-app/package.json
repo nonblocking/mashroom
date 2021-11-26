@@ -37,7 +37,7 @@
                 "name": "Mashroom Portal Demo WebSocket Proxy App",
                 "title": "Demo WebSocket Proxy App",
                 "type": "portal-app",
-                "bootstrap": "startWebSocketProxyDemoApp",
+                "clientBootstrap": "startWebSocketProxyDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -45,12 +45,14 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
                     "defaultRestrictViewToRoles": [
                         "Authenticated"
                     ],
-                    "restProxies": {
+                    "proxies": {
                         "echo": {
                             "targetUri": "ws://ws.ifelse.io/",
                             "restrictToRoles": [

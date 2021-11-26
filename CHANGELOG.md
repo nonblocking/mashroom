@@ -4,6 +4,52 @@
 
 ## [unreleased v2]
 
+ * Portal: App definition updated to be able to integrate new features such as SSR and config editor.
+   Changes are:
+   * _bootstrap_ has been renamed to _clientBootstrap_
+   * The _resourcesRoot_ can now be defined for local deployment and remote access separately
+   * _restProxies_ has been renamed to _proxies_ because the proxy supports all kinds of HTTP and WebSocket connections.
+   Existing portal-app definitions are still valid, but if you want to upgrade change the following:
+   ```json
+     {
+       "name": "My Single Page App",
+       "type": "portal-app",
+       "bootstrap": "startMyApp",
+       "defaultConfig": {
+         "resourcesRoot": "./dist",
+         "restProxies": {
+            "spaceXApi": {
+                "targetUri": "https://api.spacexdata.com/v3",
+                "sendPermissionsHeader": false,
+                "restrictToRoles": ["Role1"]
+            }
+         }
+       }
+     }
+   ```
+   to:
+   ```json
+     {
+       "name": "My Single Page App",
+       "type": "portal-app",
+       "clientBootstrap": "startMyApp",
+       "local": {
+         "resourcesRoot": "./dist"
+       },
+       "remote": {
+         "resourcesRoot": "/if-remote-access-supported"
+       },
+       "defaultConfig": {
+         "proxies": {
+            "spaceXApi": {
+                "targetUri": "https://api.spacexdata.com/v3",
+                "sendPermissionsHeader": false,
+                "restrictToRoles": ["Role1"]
+            }
+         }
+       }
+     }
+   ```
  * Storage: The Storage API (MashroomStorage) supports now a subset of Mongo's filter operations ($gt, $regex, ...),
    sorting and proper paging (skip + limit). So you can do something like:
    ```ts

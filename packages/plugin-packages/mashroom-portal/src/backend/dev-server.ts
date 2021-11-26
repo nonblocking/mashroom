@@ -50,11 +50,16 @@ const welcomeApp: MashroomPortalApp = {
     license: null,
     metaInfo: null,
     lastReloadTs: Date.now(),
-    globalLaunchFunction: 'startWelcomeApp',
+    clientBootstrap: 'startWelcomeApp',
     resourcesRootUri: `file://${path.resolve(__dirname, '../frontend')}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['welcome-app.js'],
-        css: [],
+        css: ['welcome-app.css'],
     },
     sharedResources: {
         js: [],
@@ -63,7 +68,7 @@ const welcomeApp: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: null,
     rolePermissions: null,
-    restProxies: null,
+    proxies: null,
     defaultAppConfig: {},
 };
 

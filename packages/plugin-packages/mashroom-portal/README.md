@@ -200,6 +200,36 @@ To register a new portal-app plugin add this to _package.json_:
         "plugins": [
             {
                 "name": "My Single Page App",
+                "type": "portal-app",
+                "clientBootstrap": "startMyApp",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ]
+                },
+                "local": {
+                    "resourcesRoot": "./dist",
+                    "ssrBootstrap": "renderToString.js"
+                },
+                "defaultConfig": {
+                    "appConfig": {
+                        "myProperty": "foo"
+                    }
+                }
+            }
+        ]
+    }
+}
+```
+
+A full config with all optional properties would look like this:
+
+```json
+{
+    "mashroom": {
+        "plugins": [
+            {
+                "name": "My Single Page App",
                 "title": {
                     "en": "My Single Page App",
                     "de": "Meine Single Page App"
@@ -207,7 +237,7 @@ To register a new portal-app plugin add this to _package.json_:
                 "category": "My Category",
                 "tags": ["my", "stuff"],
                 "type": "portal-app",
-                "bootstrap": "startMyApp",
+                "clientBootstrap": "startMyApp",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -220,27 +250,38 @@ To register a new portal-app plugin add this to _package.json_:
                 "screenshots": [
                     "screenshot1.png"
                 ],
-                "defaultConfig": {
+                "local": {
                     "resourcesRoot": "./dist",
-                    "defaultRestrictViewToRoles": [
-                        "Role1"
-                    ],
+                    "ssrBootstrap": "renderToString.js"
+                },
+                "remote": {
+                    "resourcesRoot": "/public",
+                    "ssrInitialHtmlPath": "/ssr"
+                },
+                "caching": {
+                    "ssrHtml": "same-config-and-user"
+                },
+                "editor": {
+                    "editorPortalApp": "Demo Config Editor",
+                    "position": "in-place",
+                    "appConfig": {
+                    }
+                },
+                "defaultConfig": {
+                    "defaultRestrictViewToRoles": ["Role1"],
                     "rolePermissions": {
-                        "doSomethingSpecial": [
-                            "Role2",
-                            "Role3"
-                        ]
+                        "doSomethingSpecial": ["Role2", "Role3"]
                     },
-                    "restProxies": {
+                    "proxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v3",
                             "sendPermissionsHeader": false,
-                            "restrictToRoles": [
-                                "Role1"
-                            ]
+                            "restrictToRoles": ["Role1"]
                         }
                     },
-                    "metaInfo": null,
+                    "metaInfo": {
+                        "capabilities": ["foo"]
+                    },
                     "appConfig": {
                         "myProperty": "foo"
                     }
@@ -251,31 +292,42 @@ To register a new portal-app plugin add this to _package.json_:
 }
 ```
 
- * _title_: Optional human readable title of the App. Can be a string or an object with translations.
+ * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
  * _category_: An optional category to group the Apps in the Admin App
- * _tags: A list of tags that can also be used in the search (in the Admin App)
+ * _tags_: An optional list of tags that can also be used in the search (in the Admin App)
+ * _clientBootstrap_: The global function exposed on the client side to launch the App (see below for an example)
  * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
  * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
     This is useful if apps want to share vendor libraries or styles or such.
     Here you can find a demo how to use the *Webpack* *DllPlugin* together with this feature: [Mashroom Demo Shared DLL](https://github.com/nonblocking/mashroom-demo-shared-dll)
  * _screenshots_: Optional some screenshots of the App. The screenshots paths are relative to *resourcesRoot*.
+ * _local_: Basic configuration if the App is deployed locally
+   * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. Needs to be relative within the package
+   * _ssrBootstrap_: An optional local SSR bootstrap that returns an initial HTML for the App (see below for an example)
+ * _remote_: Optional configuration if the App is accessed remotely
+   * _resourcesRoot_: The root path for App resources such as JavaScript files and images
+   * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML
+ * _caching_: Optional caching configuration
+   * _ssrHtml_: Optional SSR caching configuration (Default: same-config-and-user)
+ * _editor_: Optional custom editor configuration that should be used for the appConfig in the Admin UI
+   * _editorPortalApp_: The name of the Portal App that should be used to edit the appConfig of this App
+   * _position_: Optional hint where to launch the editor. Possible values: in-place, sidebar. (Default: in-place)
+   * _appConfig_: The optional appConfig the editor App should be launched with (Default: {})
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
-     * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI.
-     * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
-       Use this to prevent that an App can just be loaded via JS API (dynamically) by any user, even an anonymous one
-       (if that is a problem).
-     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
-     * _restProxies_: Defines proxies to access the App's backend REST API without violating CORS restrictions.
-         * _targetUri_: The API target URI
-         * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_ (Default: false)
-         * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
-            The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
-            can access the proxy if this property is set. You can use this to protect sensitive data only a small group of
-            users are allowed to access.
-     * _metaInfo_: Optional meta info that could be used to lookup for Apps with specific features or capabilities.
-     * _appConfig_: The default configuration that will be passed to the App. Can be adapted in the Admin App.
+   * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
+     Use this to prevent that an App can just be loaded via JS API (dynamically) by any user, even an anonymous one.
+   * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
+   * _proxies_: Defines proxies to access the App's backend (HTTP or WebSocket)
+       * _targetUri_: The API target URI
+       * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_ (Default: false)
+       * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
+          The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
+          can access the proxy if this property is set. You can use this to protect sensitive data only a small group of
+          users is allowed to access.
+   * _metaInfo_: Optional meta info that could be used to lookup for Apps with specific features or capabilities
+   * _appConfig_: The default configuration that will be passed to the App. Can be adapted in the Admin App.
 
-The bootstrap is in this case a global function that starts the App within the given host element. Here for example a React app:
+The _clientBootstrap_ is in this case a global function that starts the App within the given host element. Here for example a React app:
 
 ```ts
 import React from 'react';
@@ -286,10 +338,14 @@ import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup, clientServices) => {
     ReactDOM.render(<App appConfig={portalAppSetup.appConfig} messageBus={clientServices.messageBus}/>, element);
+    // Or ReactDOM:hydrate() if this is a Hybrid App and a ssrBootstrap is configured
 
     return {
         willBeRemoved: () => {
             ReactDOM.unmountComponentAtNode(portalAppHostElement);
+        },
+        updateAppConfig: (appConfig) => {
+            // Implement if dynamic app config should be possible
         }
     };
 };
@@ -297,7 +353,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppS
 global.startMyApp = bootstrap;
 ```
 
-And in typescript for an Angular app:
+And for an Angular app:
 
 ```ts
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
@@ -322,40 +378,60 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portal
     );
 };
 
-global['startAngularDemoApp'] = bootstrap;
+global.startAngularDemoApp = bootstrap;
+```
+
+In case of a Hybrid App which supports Server Side Rendering (SSR) the server side bootstrap would look like this:
+
+```ts
+import React from 'react';
+import ReactDOMServer from 'react-dom/server';
+import App from './App';
+
+import type {MashroomPortalAppPluginSSLBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppPluginSSLBootstrapFunction = (portalAppSetup) => {
+    const dummyMessageBus: any = {};
+    return ReactDOMServer.renderToString(<App appConfig={portalAppSetup.appConfig} messageBus={dummyMessageBus}/>);
+};
+
+export default bootstrap;
 ```
 
 The _portalAppSetup_ has the following structure:
 
-```js
+```ts
 export type MashroomPortalAppSetup = {
-    +pluginName: string,
-    +title: ?string,
-    +version: string,
-    +instanceId: ?string,
-    +lastReloadTs: number,
-    +restProxyPaths: MashroomRestProxyPaths,
-    +resourcesBasePath: string,
-    +lang: string,
-    +user: MashroomPortalAppUser,
-    +appConfig: MashroomPluginConfig
+    readonly appId: string;
+    readonly title: string | null | undefined;
+    readonly proxyPaths: MashroomPortalProxyPaths;
+    // Legacy, will be removed in Mashroom v3
+    readonly restProxyPaths: MashroomPortalProxyPaths;
+    readonly resourcesBasePath: string;
+    readonly globalLaunchFunction: string;
+    readonly lang: string;
+    readonly user: MashroomPortalAppUser;
+    readonly appConfig: MashroomPluginConfig;
+    // This will only be set for config editor Apps
+    readonly editorTarget?: MashroomPortalConfigEditorTarget;
 }
 ```
 
+ * _appId_: The unique appId
  * _title_: Translated title (according to current _lang_)
- * _restProxyPaths_: The base paths to the proxies defined in the plugin config.
+ * _proxyPaths_: The base paths to the proxies defined in the plugin config.
    In the example below the base path to the _spaceXApi_ would be in _portalAppSetup.restProxyPaths.spaceXApi._
  * _resourceBasePath_: Base path to access assets in _resourceRoot_ such as images
  * _lang_: The current user language (e.g.: en)
  * _user_: User information such as user name, user display name and roles. It has the following structure:
-   ```js
+   ```ts
     export type MashroomPortalAppUser = {
-        +guest: boolean,
-        +username?: string,
-        +displayName?: string,
-        +email?: string;
-        +permissions: MashroomPortalAppUserPermissions,
-        +extraData?: any,
+        readonly guest: boolean;
+        readonly username: string;
+        readonly displayName: string;
+        readonly email: string | null;
+        readonly permissions: MashroomPortalAppUserPermissions;
+        readonly [customProp: string]: any;
     }
    ```
  * _appConfig_: The App config object. The default is defined in _defaultConfig.appConfig_, but it can be overwritten per instance (per Admin App).

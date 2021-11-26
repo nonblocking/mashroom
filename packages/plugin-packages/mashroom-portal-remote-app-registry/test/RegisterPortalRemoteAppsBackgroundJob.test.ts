@@ -36,6 +36,66 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         description: 'Test App',
         type: 'portal-app',
         category: 'Test App',
+        clientBootstrap: 'startTestApp',
+        title: {
+            en: 'Title'
+        },
+        sharedResources: {
+            js: [
+                'my-lib-dll-a1ef123a.js'
+            ]
+        },
+        resources: {
+            js: [
+                'bundle.js'
+            ]
+        },
+        screenshots: [
+            'assets/screenshot1.png',
+            'assets/screenshot2.png'
+        ],
+        local: {
+            resourcesRoot: './dist',
+            ssrBootstrap: 'renderToString.js'
+        },
+        remote: {
+            resourcesRoot: '/public',
+            ssrInitialHtmlPath: '/ssr'
+        },
+        caching: {
+            ssrHtml: 'same-config-and-user'
+        },
+        editor: {
+            editorPortalApp: 'Demo Config Editor',
+            position: 'in-place',
+            appConfig: {
+            }
+        },
+        defaultConfig: {
+            proxies: {
+                'bff': {
+                    targetUri: 'http://localhost:4444/api',
+                    sendPermissionsHeader: true
+                },
+                'two': {
+                    targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                }
+            },
+            rolePermissions: {},
+            metaInfo: {
+                test: 1
+            },
+            appConfig: {
+                customerId: '123123'
+            }
+        }
+    };
+
+    const pluginDefinitionV1: MashroomPluginDefinition = {
+        name: 'Test App',
+        description: 'Test App',
+        type: 'portal-app',
+        category: 'Test App',
         bootstrap: 'startTestApp',
         title: {
             en: 'Title'
@@ -54,7 +114,6 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             'assets/screenshot1.png',
             'assets/screenshot2.png'
         ],
-        requires: [],
         defaultConfig: {
             metaInfo: {
                 test: 1
@@ -79,6 +138,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     const pluginPackageDefinition: any = {
         plugins: [
             pluginDefinition,
+        ]
+    }
+
+    const pluginPackageDefinitionV1: any = {
+        plugins: [
+            pluginDefinitionV1,
         ]
     }
 
@@ -166,8 +231,10 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 test: 1
             },
             lastReloadTs: 22,
-            globalLaunchFunction: 'startTestApp',
-            resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app',
+            clientBootstrap: 'startTestApp',
+            remoteApp: true,
+            resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app/public',
+            ssrInitialHtmlPath: 'https://www.mashroom-server.com/test-remote-app/ssr',
             resources: {
                 js: ['bundle.js']
             },
@@ -175,8 +242,17 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 js: ['my-lib-dll-a1ef123a.js']
             },
             screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
+            cachingConfig: {
+                ssrHtml: 'same-config-and-user'
+            },
+            editorConfig: {
+                editorPortalApp: 'Demo Config Editor',
+                position: 'in-place',
+                appConfig: {
+                }
+            },
             rolePermissions: {},
-            restProxies:
+            proxies:
                 {
                     bff: {
                         targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
@@ -217,7 +293,132 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 test: 1
             },
             lastReloadTs: 22,
-            globalLaunchFunction: 'startTestApp',
+            clientBootstrap: 'startTestApp',
+            remoteApp: true,
+            resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app/public',
+            ssrInitialHtmlPath: 'https://www.mashroom-server.com/test-remote-app/ssr',
+            resources: {
+                js: ['bundle.js']
+            },
+            sharedResources: {
+                js: ['my-lib-dll-a1ef123a.js']
+            },
+            screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
+            cachingConfig: {
+                ssrHtml: 'same-config-and-user'
+            },
+            editorConfig: {
+                editorPortalApp: 'Demo Config Editor',
+                position: 'in-place',
+                appConfig: {
+                }
+            },
+            rolePermissions: {},
+            proxies:
+                {
+                    bff: {
+                        targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
+                        sendPermissionsHeader: true
+                    },
+                    two: {
+                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                    }
+                },
+            defaultAppConfig: {
+                customerId: '123123'
+            }
+        });
+    });
+
+    it('processes a portal-app config v2 correctly', () => {
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+
+        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, remotePortalAppEndpoint);
+
+        expect(portalApps).toBeTruthy();
+        expect(portalApps.length).toBe(1);
+
+        const portalApp = portalApps[0];
+        expect(portalApp.lastReloadTs).toBeTruthy();
+
+        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
+        expect(fixedPortalApp).toEqual({
+            name: 'Test App',
+            description: 'Test App',
+            tags: [],
+            title: {
+                en: 'Title'
+            },
+            version: '1.1.2',
+            category: 'Test App',
+            metaInfo: {
+                test: 1
+            },
+            lastReloadTs: 22,
+            clientBootstrap: 'startTestApp',
+            remoteApp: true,
+            resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app/public',
+            ssrInitialHtmlPath: 'https://www.mashroom-server.com/test-remote-app/ssr',
+            resources: {
+                js: ['bundle.js']
+            },
+            sharedResources: {
+                js: ['my-lib-dll-a1ef123a.js']
+            },
+            screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
+            cachingConfig: {
+                ssrHtml: 'same-config-and-user'
+            },
+            editorConfig: {
+                editorPortalApp: 'Demo Config Editor',
+                position: 'in-place',
+                appConfig: {
+                }
+            },
+            rolePermissions: {},
+            proxies:
+                {
+                    bff: {
+                        targetUri: 'https://www.mashroom-server.com/test-remote-app/api',
+                        sendPermissionsHeader: true
+                    },
+                    two: {
+                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                    }
+                },
+            defaultAppConfig: {
+                customerId: '123123'
+            }
+        });
+    });
+
+    it('processes a portal-app config v1 correctly', () => {
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+
+        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, remotePortalAppEndpoint);
+
+        expect(portalApps).toBeTruthy();
+        expect(portalApps.length).toBe(1);
+
+        const portalApp = portalApps[0];
+        expect(portalApp.lastReloadTs).toBeTruthy();
+
+        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
+        expect(fixedPortalApp).toEqual({
+            name: 'Test App',
+            description: 'Test App',
+            tags: [],
+            title: {
+                en: 'Title'
+            },
+            version: '1.1.2',
+            category: 'Test App',
+            metaInfo: {
+                test: 1
+            },
+            lastReloadTs: 22,
+            clientBootstrap: 'startTestApp',
+            remoteApp: true,
             resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app',
             resources: {
                 js: ['bundle.js']
@@ -227,7 +428,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             },
             screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
             rolePermissions: {},
-            restProxies:
+            proxies:
                 {
                     bff: {
                         targetUri: 'https://www.mashroom-server.com/test-remote-app/api',

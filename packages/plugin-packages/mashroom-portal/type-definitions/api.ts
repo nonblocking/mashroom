@@ -118,7 +118,7 @@ export type MashroomPortalLoadedPortalApp = {
     readonly error: boolean;
 };
 
-export type MashroomRestProxyPaths = {
+export type MashroomPortalProxyPaths = {
     __baseUrl: string;
     [id: string]: string;
 };
@@ -136,6 +136,13 @@ export type MashroomPortalAppUserPermissions = {
     [permission: string]: boolean;
 };
 
+export type MashroomPortalConfigEditorTarget = {
+    readonly appId: string;
+    readonly pluginName: string;
+    readonly appConfig: MashroomPluginConfig;
+    updateAppConfigAndClose: (appConfig: string) => void;
+}
+
 export type MashroomPortalAppSetup = {
     readonly appId: string;
     readonly pluginName: string;
@@ -143,7 +150,9 @@ export type MashroomPortalAppSetup = {
     readonly version: string;
     readonly instanceId: string | null | undefined;
     readonly lastReloadTs: number;
-    readonly restProxyPaths: MashroomRestProxyPaths;
+    readonly proxyPaths: MashroomPortalProxyPaths;
+    // Legacy, will be removed in Mashroom v3
+    readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly sharedResourcesBasePath: string;
     readonly sharedResources: MashroomPortalAppResources | null | undefined;
     readonly resourcesBasePath: string;
@@ -152,6 +161,8 @@ export type MashroomPortalAppSetup = {
     readonly lang: string;
     readonly user: MashroomPortalAppUser;
     readonly appConfig: MashroomPluginConfig;
+    // This will only be set for config editor Apps
+    readonly editorTarget?: MashroomPortalConfigEditorTarget;
 };
 
 export type UserAgent = {
@@ -328,6 +339,16 @@ export type MashroomPortalRolePermissions = {
     [permission: string]: Array<string>;
 };
 
+export type MashroomPortalAppCaching = {
+    readonly ssrHtml: 'none' | 'same-config' | 'same-config-and-user';
+}
+
+export type MashroomPortalAppConfigEditor = {
+    readonly editorPortalApp: string;
+    readonly position: 'in-place' | 'sidebar' | null | undefined;
+    readonly appConfig: any | null | undefined;
+}
+
 export type MashroomPortalApp = {
     /**
      * Portal App name
@@ -343,6 +364,11 @@ export type MashroomPortalApp = {
      * Optional tags
      */
     readonly tags: Array<string>;
+
+    /**
+     * Any kind of optional meta information
+     */
+    readonly metaInfo: any | null | undefined;
 
     /**
      * An optional internationalized title (will be shown in the header)
@@ -375,24 +401,9 @@ export type MashroomPortalApp = {
     readonly category: string | null | undefined;
 
     /**
-     * Any kind of optional meta information
-     */
-    readonly metaInfo: any | null | undefined;
-
-    /**
      * Last reload of the app
      */
     readonly lastReloadTs: number;
-
-    /**
-     * Name of the global launch function to start the app
-     */
-    readonly globalLaunchFunction: string;
-
-    /**
-     * Resources root URI (can be file, http or https)
-     */
-    readonly resourcesRootUri: string;
 
     /**
      * Resource to load
@@ -410,6 +421,47 @@ export type MashroomPortalApp = {
     readonly screenshots: Array<string> | null | undefined;
 
     /**
+     * Defines if the App is locally deployed within Mashroom Server or a only accessible remote.
+     */
+    readonly remoteApp: boolean;
+
+    /**
+     * Name of client-side bootstrap function to start or hydrate the App
+     * The signature must be compatible to MashroomPortalAppPluginBootstrapFunction
+     */
+    readonly clientBootstrap: string;
+
+    /**
+     * Optional SSR bootstrap script that delivers the initial HTML.
+     * Needs to export a function compatible to MashroomPortalAppPluginSSLBootstrapFunction.
+     * This will only be used if remoteApp is false.
+     */
+    readonly ssrBootstrap: string | null | undefined;
+
+    /**
+     * Optional SSR route that delivers the initial HTML.
+     * The route will receive a POST with a JSON body with a "portalAppSetup" property.
+     * This will only be used if remoteApp is true.
+     */
+    readonly ssrInitialHtmlPath: string | null | undefined;
+
+    /**
+     * Resources root URI (local path if remoteApp false, otherwise a HTTP, HTTPS or FTP url)
+     */
+    readonly resourcesRootUri: string;
+
+    /**
+     * Optional caching information
+     */
+    readonly cachingConfig: MashroomPortalAppCaching | null | undefined;
+
+    /**
+     * Optional definition of a "editor" App that should be used to edit the appConfig
+     * of this one. Instead of the default one which is basically just a raw JSON editor.
+     */
+    readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
+
+    /**
      * If no role restrictions were defined via Admin App in the UI only these roles can view the app.
      * If not set every user can load the app.
      */
@@ -421,9 +473,9 @@ export type MashroomPortalApp = {
     readonly rolePermissions: MashroomPortalRolePermissions | null | undefined;
 
     /**
-     * REST proxy definitions
+     * Proxy definitions
      */
-    readonly restProxies: MashroomPortalProxyDefinitions | null | undefined;
+    readonly proxies: MashroomPortalProxyDefinitions | null | undefined;
 
     /**
      * The default plugin config
@@ -526,11 +578,7 @@ export interface MashroomPortalAppEnhancementPlugin {
     /**
      * Enhance the portalAppSetup object passed as the first argument (if necessary)
      */
-    enhancePortalAppSetup: (
-        portalAppSetup: MashroomPortalAppSetup,
-        portalApp: MashroomPortalApp,
-        request: Request
-    ) => Promise<MashroomPortalAppSetup>;
+    enhancePortalAppSetup: (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, request: Request) => Promise<MashroomPortalAppSetup>;
 }
 
 /* Backend services */
@@ -1173,11 +1221,16 @@ export type MashroomRemotePortalAppRegistryBootstrapFunction = (
 // portal-app
 
 export type MashroomPortalAppLifecycleHooks = {
-    /*+
+    /**
      * Will be called before the host element will be removed from the DOM.
      * Can be used to cleanup (e.g. to unmount a React App).
      */
-    readonly willBeRemoved: () => void | Promise<void>;
+    readonly willBeRemoved?: () => void | Promise<void>;
+    /**
+     * Dynamically update the appConfig.
+     * If present this will be used to update the appConfig instead of restarting the whole App.
+     */
+    readonly updateAppConfig?: (appConfig: MashroomPluginConfig) => void;
 };
 
 export type MashroomPortalAppPluginBootstrapFunction = (
@@ -1188,6 +1241,8 @@ export type MashroomPortalAppPluginBootstrapFunction = (
     | void
     | MashroomPortalAppLifecycleHooks
     | Promise<void | MashroomPortalAppLifecycleHooks>;
+
+export type MashroomPortalAppPluginSSLBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup) => Promise<string>;
 
 // portal-theme
 

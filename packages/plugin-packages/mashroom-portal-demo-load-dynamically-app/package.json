@@ -38,7 +38,7 @@
                     "de": "Demo Dynamisches Laden App"
                 },
                 "type": "portal-app",
-                "bootstrap": "startLoadDynamicallyDemoApp",
+                "clientBootstrap": "startLoadDynamicallyDemoApp",
                 "requires": [
                     "Mashroom Portal Demo React App",
                     "Mashroom Portal Demo Angular App"
@@ -50,8 +50,12 @@
                     ],
                     "css": []
                 },
-                "defaultConfig": {
+                "local": {
                     "resourcesRoot": "./dist"
+                },
+                "defaultConfig": {
+                    "appConfig": {
+                    }
                 }
             }
         ]

@@ -37,7 +37,7 @@
                 "name": "Mashroom Portal Demo React App",
                 "title": "Demo React App",
                 "type": "portal-app",
-                "bootstrap": "startReactDemoApp",
+                "clientBootstrap": "startReactDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -48,9 +48,10 @@
                 "screenshots": [
                     "screenshot.png"
                 ],
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
-                    "restProxies": {},
                     "appConfig": {
                         "firstName": "Jimmy",
                         "pingButtonLabel": "Send Ping"

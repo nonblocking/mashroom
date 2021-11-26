@@ -1,6 +1,4 @@
 
-import '../sass/style.scss';
-
 import template from './template';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '../../../../type-definitions';

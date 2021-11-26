@@ -1,0 +1,72 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Single Page App",
+            "type": "portal-app",
+            "title": {
+                "en": "My Single Page App",
+                "de": "Meine Single Page App"
+            },
+            "category": "My Category",
+            "tags": ["my", "stuff"],
+            "screenshots": [
+                "screenshot1.png"
+            ],
+            "clientBootstrap": "startMyApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ],
+                "css": [
+                    "style.css"
+                ]
+            },
+            "sharedResources": {
+                "js": [
+                    "whatever.js"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist",
+                "ssrBootstrap": "renderToString.js"
+            },
+            "remote": {
+                "resourcesRoot": "/public",
+                "ssrInitialHtmlPath": "/ssr"
+            },
+            "caching": {
+                "ssrHtml": "same-config-and-user"
+            },
+            "editor": {
+                "editorPortalApp": "Demo Config Editor",
+                "position": "in-place",
+                "appConfig": {
+                }
+            },
+            "defaultConfig": {
+                "defaultRestrictViewToRoles": ["Role1"],
+                "rolePermissions": {
+                    "doSomethingSpecial": ["Role2", "Role3"]
+                },
+                "proxies": {
+                    "spaceXApi": {
+                        "targetUri": "https://api.spacexdata.com/v3",
+                        "sendPermissionsHeader": false,
+                        "restrictToRoles": ["Role1"]
+                    },
+                    "tracer": {
+                        "targetUri": "${env.TRACER_URL}"
+                    }
+                },
+                "metaInfo": {
+                    "capabilities": ["foo"]
+                },
+                "appConfig": {
+                    "myProperty": "foo"
+                }
+            }
+        }
+    ]
+}

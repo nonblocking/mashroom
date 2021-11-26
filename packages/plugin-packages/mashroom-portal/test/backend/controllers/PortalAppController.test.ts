@@ -37,8 +37,13 @@ const portalApp1: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
-    globalLaunchFunction: 'foo',
+    clientBootstrap: 'foo',
     resourcesRootUri: `file:/${__dirname}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['bundle.js'],
         css: [],
@@ -53,7 +58,7 @@ const portalApp1: MashroomPortalApp = {
         'edit': ['Role1'],
         'delete': ['Administrator']
     },
-    restProxies: {
+    proxies: {
         '': {
             targetUri: 'https://www.mashroom-server.com/api',
         },
@@ -79,8 +84,13 @@ const portalApp2: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
-    globalLaunchFunction: 'foo',
+    clientBootstrap: 'foo',
     resourcesRootUri: `file:/${__dirname}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['bundle.js'],
         css: [],
@@ -92,7 +102,7 @@ const portalApp2: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: ['OtherRole'],
     rolePermissions: {},
-    restProxies: {},
+    proxies: {},
     defaultAppConfig: {},
 };
 
@@ -238,6 +248,10 @@ describe('PortalAppController', () => {
             version: '1.0',
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
+            proxyPaths: {
+                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
+                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
+            },
             restProxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
@@ -305,6 +319,10 @@ describe('PortalAppController', () => {
             version: '1.0',
             instanceId: null,
             lastReloadTs: 222222222,
+            proxyPaths: {
+                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
+                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
+            },
             restProxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',

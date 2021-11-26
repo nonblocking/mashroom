@@ -132,12 +132,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             const packageJson = await this._loadPackageJson(service.url);
 
             portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, service);
-            this._logger.info(`Registered portal apps for Kubernetes service: ${service.name}:`, portalApps);
+            this._logger.info(`Registered Portal Apps for Kubernetes service: ${service.name}:`, portalApps);
         } catch (error: any) {
             service.status = 'Error';
             service.error = error.message;
             service.foundPortalApps = [];
-            this._logger.error(`Processing remote portal app info for Kubernetes service ${service.name} failed!`, error);
+            this._logger.error(`Processing remote Portal App info for Kubernetes service ${service.name} failed!`, error);
             return;
         }
 
@@ -219,7 +219,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const portalAppDefinitions = definition.plugins.filter((plugin) => plugin.type === 'portal-app');
 
         if (portalAppDefinitions.length === 0) {
-            throw new Error('No plugin of type portal-app found in remote portal app');
+            throw new Error('No plugin of type portal-app found in remote Portal App');
         }
 
         const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, service.url));
@@ -236,20 +236,23 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     }
 
     private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
+        const version = definition.clientBootstrap && definition.local ? 2 : 1;
+        this._logger.debug(`Detected plugin config version for portal-app ${definition.name}: ${version}`);
+
         const name = definition.name;
         if (!name) {
-            throw new Error('Invalid portal app definition: No "name" attribute!');
+            throw new Error('Invalid Portal App definition: No "name" attribute!');
         }
         if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
-            throw new Error(`Invalid portal app definition ${name}: The name contains invalid characters (/,?).`);
+            throw new Error(`Invalid Portal App definition ${name}: The name contains invalid characters (/,?).`);
         }
         const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && serviceUrl.indexOf(a.resourcesRootUri) !== 0);
         if (existingPortalApp) {
-            throw new Error(`Invalid portal app '${name}': The name is already defined on service ${existingPortalApp.resourcesRootUri}`);
+            throw new Error(`Invalid Portal App '${name}': The name is already defined on service ${existingPortalApp.resourcesRootUri}`);
         }
 
-        const globalLaunchFunction = definition.bootstrap;
-        if (!globalLaunchFunction) {
+        const clientBootstrap = version === 2 ? definition.clientBootstrap : definition.bootstrap;
+        if (!clientBootstrap) {
             throw new Error(`Invalid configuration of plugin ${name}: No bootstrap function defined.`);
         }
 
@@ -277,10 +280,20 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
         const screenshots = definition.screenshots;
 
+        let resourcesRootUri;
+        if (version === 2) {
+            resourcesRootUri = `${serviceUrl}${definition.remote?.resourcesRoot || ''}`;
+            if (resourcesRootUri.endsWith('/')) {
+                resourcesRootUri = resourcesRootUri.slice(0, -1);
+            }
+        } else {
+            resourcesRootUri = serviceUrl;
+        }
+
         const config = definition.defaultConfig || {};
         evaluateTemplatesInConfigObject(config, this._logger);
-        const definedRestProxies = config.restProxies;
-        const restProxies: MashroomPortalProxyDefinitions = {};
+        const definedRestProxies = version === 2 ? config.proxies : config.restProxies;
+        const proxies: MashroomPortalProxyDefinitions = {};
 
         let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
         if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {
@@ -288,7 +301,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             defaultRestrictViewToRoles = config.defaultRestrictedToRoles;
         }
 
-        // Fix proxy target urls
+        // Rewrite proxy target urls if they refer to localhost
         if (definedRestProxies) {
             for (const proxyName in definedRestProxies) {
                 if (Object.prototype.hasOwnProperty.call(definedRestProxies, proxyName)) {
@@ -304,9 +317,21 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     } catch (e) {
                         // Ignore
                     }
-                    restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
+                    proxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }
             }
+        }
+
+        let ssrInitialHtmlPath;
+        let cachingConfig;
+        let editorConfig;
+        if (version === 2) {
+            ssrInitialHtmlPath = `${serviceUrl}${definition.remote?.ssrInitialHtmlPath || ''}`;
+            if (ssrInitialHtmlPath.endsWith('/')) {
+                ssrInitialHtmlPath = ssrInitialHtmlPath.slice(0, -1);
+            }
+            cachingConfig = definition.caching;
+            editorConfig = definition.editor;
         }
 
         const portalApp: MashroomPortalApp = {
@@ -321,14 +346,19 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             category: definition.category,
             metaInfo: config.metaInfo,
             lastReloadTs: Date.now(),
-            globalLaunchFunction,
-            resourcesRootUri: serviceUrl,
+            clientBootstrap,
+            resourcesRootUri,
+            remoteApp: true,
+            ssrBootstrap: undefined,
+            ssrInitialHtmlPath,
             sharedResources,
             resources,
+            cachingConfig,
+            editorConfig,
             screenshots,
             defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,
-            restProxies,
+            proxies,
             defaultAppConfig: config.appConfig
         };
 

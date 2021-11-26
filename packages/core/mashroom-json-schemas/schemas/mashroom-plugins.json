@@ -25,15 +25,15 @@
             "type": "string",
             "pattern": "^/[a-zA-Z0-9-_/]+$"
         },
-        "PackagerRelativePath": {
+        "PackageRelativePath": {
             "type": "string",
             "pattern": "^\\./.*$"
         },
-        "PackagerRelativeOrSystemPath": {
+        "PackageRelativeOrSystemPath": {
             "type": "string",
             "pattern": "^(\\./|\\../|/|[a-zA-Z]:/).*$"
         },
-        "PackagerRelativeOrSystemPathOrHttpOrFtp": {
+        "PackageRelativeOrSystemPathOrHttpOrFtp": {
             "type": "string",
             "pattern": "^(\\./|\\../|/|http://|https://|ftp://|ftps://).*$"
         },
@@ -45,7 +45,7 @@
             "type": "string",
             "pattern": "^[a-zA-Z_]\\w+$"
         },
-        "AppResources": {
+        "PortalAppResources": {
             "type": "object",
             "properties": {
                 "js": {
@@ -66,6 +66,67 @@
                 }
             },
             "required": ["js"],
+            "additionalProperties": false
+        },
+        "PortalAppLocalConfig": {
+            "type": "object",
+            "properties": {
+                "resourcesRoot": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
+                },
+                "ssrBootstrap": {
+                    "type": "string",
+                    "description": "An optional local SSR bootstrap that returns an initial HTML for the App. Needs to export a function compatible to MashroomPortalAppPluginSSLBootstrapFunction."
+                }
+            },
+            "required": ["resourcesRoot"],
+            "additionalProperties": false
+        },
+        "PortalAppRemoteConfig": {
+            "type": "object",
+            "properties": {
+                "resourcesRoot": {
+                    "$ref": "#/definitions/WebAppPath",
+                    "description": "The root path for App resources such as JavaScript files and images"
+                },
+                "ssrInitialHtmlPath": {
+                    "$ref": "#/definitions/WebAppPath",
+                    "description": "The path to a route that renders the initial HTML. The route will receive a POST with a JSON body with a \"portalAppSetup\" property."
+                }
+            },
+            "required": ["resourcesRoot"],
+            "additionalProperties": false
+        },
+        "PortalAppCachingConfig": {
+            "type": "object",
+            "properties": {
+                "ssrHtml": {
+                    "type": "string",
+                    "enum": ["none", "same-config", "same-config-and-user"],
+                    "description": "SSR caching configuration (Default: same-config-and-user)"
+                }
+            },
+            "additionalProperties": false
+        },
+        "PortalAppEditorConfig": {
+            "type": "object",
+            "properties": {
+                "editorPortalApp": {
+                    "type": "string",
+                    "description": "The name of the Portal App that should be used to edit the appConfig of this App (Default: in-place)"
+                },
+                "position": {
+                    "type": "string",
+                    "enum": ["in-place", "sidebar"],
+                    "description": "Where to launch the editor"
+                },
+                "appConfig": {
+                    "type": "object",
+                    "description": "The appConfig the editor App should be launched with (Default: {})"
+                }
+            },
+            "required": ["editorPortalApp"],
             "additionalProperties": false
         },
         "PageEnhancementResources": {
@@ -158,7 +219,7 @@
                     "description": "The plugin type this loader can load"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -194,7 +255,7 @@
                     "const": "web-app"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomWebAppPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -237,7 +298,7 @@
                     "const": "api"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomApiPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -280,7 +341,7 @@
                     "const": "middleware"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomMiddlewarePluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -322,7 +383,7 @@
                     "const": "static"
                 },
                 "documentRoot": {
-                    "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                    "$ref": "#/definitions/PackageRelativeOrSystemPath",
                     "description": "Defines the local root path of the documents"
                 },
                 "defaultConfig": {
@@ -369,7 +430,7 @@
                     "description": "Defines the path to the services. The services ill be accessible through pluginContext.services.myNamespace.service"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomServicesPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -460,7 +521,7 @@
                     "const": "background-job"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomBackgroundJobPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -503,7 +564,7 @@
                     "const": "external-messaging-provider"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomMessagingExternalProvider"
                 },
                 "defaultConfig": {
@@ -539,7 +600,7 @@
                     "const": "http-proxy-interceptor"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomHttpProxyInterceptorPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -581,7 +642,7 @@
                     "const": "memory-cache-provider"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomMemoryCacheProviderPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -591,7 +652,7 @@
             "required": ["name", "type", "bootstrap"],
             "additionalProperties": false
         },
-        "MashroomPortalAppPluginDefinition": {
+        "MashroomPortalAppV1PluginDefinition": {
             "type": "object",
             "properties": {
                 "name": {
@@ -626,12 +687,12 @@
                     "description": "A list of tags that can also be used in the search (in the Admin App)"
                 },
                 "resources": {
-                    "$ref": "#/definitions/AppResources",
-                    "description": ""
+                    "$ref": "#/definitions/PortalAppResources",
+                    "description": "Javascript and CSS resources that must be loaded before the bootstrap method is invoked."
                 },
                 "sharedResources": {
-                    "$ref": "#/definitions/AppResources",
-                    "description": ""
+                    "$ref": "#/definitions/PortalAppResources",
+                    "description": "Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it."
                 },
                 "screenshots": {
                     "type": "array",
@@ -649,8 +710,8 @@
                     "type": "object",
                     "properties": {
                         "resourcesRoot": {
-                            "$ref": "#/definitions/PackagerRelativeOrSystemPathOrHttpOrFtp",
-                            "description": "The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI."
+                            "$ref": "#/definitions/PackageRelativePath",
+                            "description": "The root path for APP resources such as JavaScript files and images."
                         },
                         "defaultRestrictViewToRoles": {
                             "type": "array",
@@ -716,6 +777,142 @@
             "required": ["name", "type", "resources", "bootstrap", "defaultConfig"],
             "additionalProperties": false
         },
+        "MashroomPortalAppV2PluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-app"
+                },
+                "title": {
+                    "$ref": "#/definitions/I18NString",
+                    "description": "Optional human readable title of the App. Can be a string or an object with translations."
+                },
+                "category": {
+                    "type": "string",
+                    "description": "An optional category to group the Apps in the Admin App"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of tags that can also be used in the search (in the Admin App)"
+                },
+                "screenshots": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[^/].*\\.(png|jpg|jpeg|gif|svg)$"
+                    },
+                    "description": "Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot"
+                },
+                "clientBootstrap": {
+                    "$ref": "#/definitions/JavaScriptIdentifier",
+                    "description": "A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element"
+                },
+                "resources": {
+                    "$ref": "#/definitions/PortalAppResources",
+                    "description": "Javascript and CSS resources that must be loaded before the bootstrap method is invoked."
+                },
+                "sharedResources": {
+                    "$ref": "#/definitions/PortalAppResources",
+                    "description": "Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it."
+                },
+                "local": {
+                    "$ref": "#/definitions/PortalAppLocalConfig",
+                    "description": "Basic configuration if the App is deployed locally."
+                },
+                "remote": {
+                    "$ref": "#/definitions/PortalAppRemoteConfig",
+                    "description": "Optional configuration if the App is accessed remotely."
+                },
+                "caching": {
+                    "$ref": "#/definitions/PortalAppCachingConfig",
+                    "description": "Optional caching configuration."
+                },
+                "editor": {
+                    "$ref": "#/definitions/PortalAppEditorConfig",
+                    "description": "Optional custom editor configuration that should be used for the appConfig in the Admin UI."
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "defaultRestrictViewToRoles": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "Optional default list of roles that have the VIEW permission if not set via Admin App."
+                        },
+                        "rolePermissions": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^[a-zA-Z_]\\w+$":{
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App"
+                        },
+                        "proxies": {
+                            "type": "object",
+                            "patternProperties": {
+                                "^[a-zA-Z_]\\w+$":{
+                                    "type": "object",
+                                    "properties": {
+                                        "targetUri": {
+                                            "$ref": "#/definitions/HttpOrWebSocketUrl",
+                                            "description": " The API target URI (HTTP, HTTPS or WebSocket)"
+                                        },
+                                        "sendPermissionsHeader": {
+                                            "type": "boolean",
+                                            "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
+                                        },
+                                        "restrictToRoles": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            },
+                                            "description": "Optional list of roles that are permitted to access the proxy"
+                                        }
+                                    },
+                                    "additionalProperties": false,
+                                    "required": ["targetUri"]
+                                }
+                            }
+
+                        },
+                        "metaInfo": {
+                            "type": "object",
+                            "description": "Optional meta info that could be used to lookup for Apps with specific features or capabilities"
+                        },
+                        "appConfig": {
+                            "type": "object",
+                            "description": "The default configuration that will be passed to the App. Can be adapted in the Admin App"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "required": ["name", "type", "resources", "clientBootstrap", "local"],
+            "additionalProperties": false
+        },
         "MashroomPortalThemePluginDefinition": {
             "type": "object",
             "properties": {
@@ -742,15 +939,15 @@
                     "const": "portal-theme"
                 },
                 "resourcesRoot": {
-                    "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                    "$ref": "#/definitions/PackageRelativeOrSystemPath",
                     "description": "Folder that contains assets (can be accessed in the theme via resourcesBasePath)"
                 },
                 "views": {
-                    "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                    "$ref": "#/definitions/PackageRelativeOrSystemPath",
                     "description": "The folder with the views. There must exist a view  portal which renders a portal page"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomPortalThemePluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -789,7 +986,7 @@
                     "type": "object",
                     "patternProperties": {
                         "^.*$": {
-                            "$ref": "#/definitions/PackagerRelativeOrSystemPath"
+                            "$ref": "#/definitions/PackageRelativeOrSystemPath"
                         }
                     },
                     "additionalProperties": false,
@@ -825,7 +1022,7 @@
                     "const": "remote-portal-app-registry"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Script that exports MashroomRemotePortalAppRegistryBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -871,7 +1068,7 @@
                     "description": "A list of JavaScript and CSS resourced that should be added to all portal pages"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Optional script that exports MashroomPortalPageEnhancementPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -882,8 +1079,8 @@
                             "description": "The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)"
                         },
                         "resourcesRoot": {
-                            "$ref": "#/definitions/PackagerRelativeOrSystemPathOrHttpOrFtp",
-                            "description": "The root path for APP resources such as JavaScript files and images. This can be a local file path or a http, https or ftp URI."
+                            "$ref": "#/definitions/PackageRelativePath",
+                            "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
                         }
                     },
                     "required": ["resourcesRoot"]
@@ -918,7 +1115,7 @@
                     "const": "portal-app-enhancement"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Optional script that exports MashroomPortalAppEnhancementPluginBootstrapFunction"
                 },
                 "portalCustomClientServices": {
@@ -964,7 +1161,7 @@
                     "const": "security-provider"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Optional script that exports MashroomSecurityProviderPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -1000,7 +1197,7 @@
                     "const": "session-store-provider"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Optional script that exports MashroomSessionStoreProviderPluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -1036,7 +1233,7 @@
                     "const": "storage-provider"
                 },
                 "bootstrap": {
-                    "$ref": "#/definitions/PackagerRelativePath",
+                    "$ref": "#/definitions/PackageRelativePath",
                     "description": "Optional script that exports MashroomStoragePluginBootstrapFunction"
                 },
                 "defaultConfig": {
@@ -1083,7 +1280,10 @@
                     "$ref": "#/definitions/MashroomMemoryCacheProviderPluginDefinition"
                 },
                 {
-                    "$ref": "#/definitions/MashroomPortalAppPluginDefinition"
+                    "$ref": "#/definitions/MashroomPortalAppV1PluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalAppV2PluginDefinition"
                 },
                 {
                     "$ref": "#/definitions/MashroomPortalThemePluginDefinition"

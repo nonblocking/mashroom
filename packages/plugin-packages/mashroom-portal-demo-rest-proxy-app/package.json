@@ -38,7 +38,7 @@
                 "name": "Mashroom Portal Demo Rest Proxy App",
                 "title": "Demo REST Proxy App",
                 "type": "portal-app",
-                "bootstrap": "startRestProxyDemoApp",
+                "clientBootstrap": "startRestProxyDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -46,12 +46,14 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
                     "defaultRestrictViewToRoles": [
                         "Authenticated"
                     ],
-                    "restProxies": {
+                    "proxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v4",
                             "restrictToRoles": [

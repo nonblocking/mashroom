@@ -17,7 +17,7 @@ import type {
     MashroomPortalAppInstance,
     MashroomPortalAppUserPermissions,
     MashroomPortalAppUser,
-    MashroomRestProxyPaths
+    MashroomPortalProxyPaths
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
@@ -58,13 +58,13 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
     const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
     const sharedResourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
     const restProxyBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
-    const restProxyPaths: MashroomRestProxyPaths = {
+    const proxyPaths: MashroomPortalProxyPaths = {
         __baseUrl: restProxyBasePath
     };
-    if (portalApp.restProxies && Object.keys(portalApp.restProxies).length > 0) {
-        for (const proxyId in portalApp.restProxies) {
-            if (proxyId && portalApp.restProxies.hasOwnProperty(proxyId)) {
-                restProxyPaths[proxyId] = `${restProxyBasePath}/${proxyId}`;
+    if (portalApp.proxies && Object.keys(portalApp.proxies).length > 0) {
+        for (const proxyId in portalApp.proxies) {
+            if (proxyId && portalApp.proxies.hasOwnProperty(proxyId)) {
+                proxyPaths[proxyId] = `${restProxyBasePath}/${proxyId}`;
             }
         }
     }
@@ -81,15 +81,16 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
         version: portalApp.version,
         instanceId: portalAppInstance.instanceId,
         lastReloadTs: portalApp.lastReloadTs,
-        restProxyPaths,
+        proxyPaths,
+        restProxyPaths: proxyPaths,
         sharedResourcesBasePath,
         sharedResources: portalApp.sharedResources,
         resourcesBasePath,
         resources: portalApp.resources,
-        globalLaunchFunction: portalApp.globalLaunchFunction,
+        globalLaunchFunction: portalApp.clientBootstrap,
         lang,
         user,
-        appConfig
+        appConfig,
     };
 
     return enhancePortalAppSetup(portalAppSetup, portalApp, pluginRegistry, req);

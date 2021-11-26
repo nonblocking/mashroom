@@ -32,8 +32,13 @@ const portalApp1: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
-    globalLaunchFunction: 'foo',
+    clientBootstrap: 'foo',
     resourcesRootUri: `file://${__dirname}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['bundle.js'],
         css: [],
@@ -42,7 +47,7 @@ const portalApp1: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: null,
     rolePermissions: null,
-    restProxies: {
+    proxies: {
         'my-proxy': {
             targetUri: 'https://www.mashroom-server.com/api',
         },
@@ -68,8 +73,13 @@ const portalApp2: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
-    globalLaunchFunction: 'foo',
+    clientBootstrap: 'foo',
     resourcesRootUri: `file://${__dirname}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['bundle.js'],
         css: [],
@@ -81,7 +91,7 @@ const portalApp2: MashroomPortalApp = {
         'edit': ['Role2'],
         'delete': ['Administrator']
     },
-    restProxies: {
+    proxies: {
         'my-proxy': {
             targetUri: 'https://www.mashroom-server.com/api',
             sendPermissionsHeader: true,
@@ -105,8 +115,13 @@ const portalApp3: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
-    globalLaunchFunction: 'foo',
+    clientBootstrap: 'foo',
     resourcesRootUri: `file://${__dirname}`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlPath: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
     resources: {
         js: ['bundle.js'],
         css: [],
@@ -115,7 +130,7 @@ const portalApp3: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: null,
     rolePermissions: {},
-    restProxies: {
+    proxies: {
         'my-proxy': {
             targetUri: 'https://www.mashroom-server.com/api',
             restrictToRoles: ['Role5'],

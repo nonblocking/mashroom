@@ -52,7 +52,7 @@
                 "name": "Mashroom Portal Remote Messaging App",
                 "title": "Remote Messaging App",
                 "type": "portal-app",
-                "bootstrap": "startRemoteMessagingApp",
+                "clientBootstrap": "startRemoteMessagingApp",
                 "category": "Testing",
                 "resources": {
                     "js": [
@@ -60,8 +60,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
                     "appConfig": {}
                 }
             }

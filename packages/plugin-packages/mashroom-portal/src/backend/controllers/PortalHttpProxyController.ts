@@ -51,13 +51,13 @@ export default class PortalHttpProxyController {
 
             logger.addContext(portalAppContext(portalApp));
 
-            if (!portalApp.restProxies) {
+            if (!portalApp.proxies) {
                 logger.warn(`Invalid rest proxy path: ${decodedPath}`);
                 res.sendStatus(400);
                 return;
             }
 
-            const restProxyDef: MashroomPortalProxyDefinition = portalApp.restProxies[restApiId];
+            const restProxyDef: MashroomPortalProxyDefinition = portalApp.proxies[restApiId];
 
             if (!restProxyDef || !restProxyDef.targetUri) {
                 logger.warn(`Invalid rest proxy path: ${decodedPath}`);

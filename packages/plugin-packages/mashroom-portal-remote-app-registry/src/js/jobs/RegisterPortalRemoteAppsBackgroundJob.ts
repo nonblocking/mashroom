@@ -36,13 +36,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         if (!updatedEndpoint.lastError) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
-                this._logger.info('Registering remote portal app:', {portalApp});
+                this._logger.info('Registering remote Portal App:', {portalApp});
                 context.registry.registerRemotePortalApp(portalApp)
             });
         } else {
-            this._logger.error(`Registering apps for remote portal apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
+            this._logger.error(`Registering apps for remote Portal Apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
             remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
-                this._logger.info('Unregister remote portal app:', {portalApp});
+                this._logger.info('Unregister remote Portal App:', {portalApp});
                 context.registry.unregisterRemotePortalApp(portalApp.name)
             });
         }
@@ -66,7 +66,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             };
 
         } catch (error: any) {
-            this._logger.error('Processing remote portal app endpoint failed!', error);
+            this._logger.error('Processing remote Portal App endpoint failed!', error);
 
             return {
                 ...remotePortalAppEndpoint, lastError: error.message,
@@ -78,7 +78,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     async _processInBackground(): Promise<void> {
-        this._logger.info('Start processing remote portal app endpoints');
+        this._logger.info('Start processing remote Portal App endpoints');
         const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
         const endpoints = await portalRemoteAppEndpointService.findAll();
 
@@ -92,19 +92,19 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): Array<MashroomPortalApp> {
-        this._logger.debug(`Processing plugin definition of remote portal app endpoint: ${remotePortalAppEndpoint.url}`, packageJson, definition);
+        this._logger.debug(`Processing plugin definition of remote Portal App endpoint: ${remotePortalAppEndpoint.url}`, packageJson, definition);
 
         if (!definition) {
             definition = packageJson?.mashroom;
         }
         if (!definition || !Array.isArray(definition.plugins)) {
-            throw new Error(`No plugin definition found for remote portal app endpoint: ${remotePortalAppEndpoint.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
+            throw new Error(`No plugin definition found for remote Portal App endpoint: ${remotePortalAppEndpoint.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
         }
 
         const portalAppDefinitions = definition.plugins.filter((plugin) => plugin.type === 'portal-app');
 
         if (portalAppDefinitions.length === 0) {
-            throw new Error(`No plugin of type portal-app found in remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
+            throw new Error(`No plugin of type portal-app found in remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
         const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
@@ -121,26 +121,29 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
+        const version = definition.clientBootstrap && definition.local ? 2 : 1;
+        this._logger.debug(`Detected plugin config version for portal-app ${definition.name}: ${version}`);
+
         const name = definition.name;
         if (!name) {
-            throw new Error(`Invalid portal app definition: No 'name' attribute! Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
+            throw new Error(`Invalid Portal App definition: No 'name' attribute! Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
         if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
-            throw new Error(`Invalid portal app '${name}': The name contains invalid characters (/,?).`);
+            throw new Error(`Invalid Portal App '${name}': The name contains invalid characters (/,?).`);
         }
         const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && remotePortalAppEndpoint.url.indexOf(a.resourcesRootUri) !== 0);
         if (existingPortalApp) {
-            throw new Error(`Invalid portal app '${name}': The name is already defined on endpoint ${existingPortalApp.resourcesRootUri}`);
+            throw new Error(`Invalid Portal App '${name}': The name is already defined on endpoint ${existingPortalApp.resourcesRootUri}`);
         }
 
-        const globalLaunchFunction = definition.bootstrap;
-        if (!globalLaunchFunction) {
-            throw new Error(`Invalid configuration of plugin ${name}: No bootstrap function defined. Remote protal app endpoint: ${remotePortalAppEndpoint.url}`);
+        const clientBootstrap = version === 2 ? definition.clientBootstrap : definition.bootstrap;
+        if (!clientBootstrap) {
+            throw new Error(`Invalid configuration of plugin ${name}: No bootstrap function defined. Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
         const resourcesDef = definition.resources;
         if (!resourcesDef) {
-            throw new Error(`Invalid configuration of plugin ${name}: No resources defined. Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
+            throw new Error(`Invalid configuration of plugin ${name}: No resources defined. Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
         const resources = {
@@ -148,7 +151,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             css: resourcesDef.css,
         };
         if (!resources.js) {
-            throw new Error(`Invalid configuration of plugin ${name}: No resources.js defined. Remote portal app endpoint: ${remotePortalAppEndpoint.url}`);
+            throw new Error(`Invalid configuration of plugin ${name}: No resources.js defined. Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
         const sharedResourcesDef = definition.sharedResources;
@@ -162,10 +165,20 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const screenshots = definition.screenshots;
 
+        let resourcesRootUri;
+        if (version === 2) {
+            resourcesRootUri = `${remotePortalAppEndpoint.url}${definition.remote?.resourcesRoot || ''}`;
+            if (resourcesRootUri.endsWith('/')) {
+                resourcesRootUri = resourcesRootUri.slice(0, -1);
+            }
+        } else {
+            resourcesRootUri = remotePortalAppEndpoint.url;
+        }
+
         const config = definition.defaultConfig || {};
         evaluateTemplatesInConfigObject(config, this._logger);
-        const definedRestProxies = config.restProxies;
-        const restProxies: MashroomPortalProxyDefinitions = {};
+        const definedRestProxies = version === 2 ? config.proxies : config.restProxies;
+        const proxies: MashroomPortalProxyDefinitions = {};
 
         let defaultRestrictViewToRoles = config.defaultRestrictViewToRoles;
         if (!defaultRestrictViewToRoles && config.defaultRestrictedToRoles) {
@@ -173,7 +186,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             defaultRestrictViewToRoles = config.defaultRestrictedToRoles;
         }
 
-        // Fix proxy target urls
+        // Rewrite proxy target urls if they refer to localhost
         if (definedRestProxies) {
             for (const proxyName in definedRestProxies) {
                 if (definedRestProxies.hasOwnProperty(proxyName)) {
@@ -189,9 +202,21 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     } catch (e) {
                         // Ignore
                     }
-                    restProxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
+                    proxies[proxyName] = {...definedRestProxies[proxyName], targetUri};
                 }
             }
+        }
+
+        let ssrInitialHtmlPath;
+        let cachingConfig;
+        let editorConfig;
+        if (version === 2) {
+            ssrInitialHtmlPath = `${remotePortalAppEndpoint.url}${definition.remote?.ssrInitialHtmlPath || ''}`;
+            if (ssrInitialHtmlPath.endsWith('/')) {
+                ssrInitialHtmlPath = ssrInitialHtmlPath.slice(0, -1);
+            }
+            cachingConfig = definition.caching;
+            editorConfig = definition.editor;
         }
 
         const portalApp: MashroomPortalApp = {
@@ -206,14 +231,19 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             category: definition.category,
             metaInfo: config.metaInfo,
             lastReloadTs: Date.now(),
-            globalLaunchFunction,
-            resourcesRootUri: remotePortalAppEndpoint.url,
+            clientBootstrap,
+            resourcesRootUri,
+            remoteApp: true,
+            ssrBootstrap: undefined,
+            ssrInitialHtmlPath,
             sharedResources,
             resources,
+            cachingConfig,
+            editorConfig,
             screenshots,
             defaultRestrictViewToRoles,
             rolePermissions: config.rolePermissions,
-            restProxies,
+            proxies,
             defaultAppConfig: config.appConfig
         };
 

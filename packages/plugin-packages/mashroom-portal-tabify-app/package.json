@@ -43,7 +43,7 @@
             {
                 "name": "Mashroom Portal Tabify App",
                 "type": "portal-app",
-                "bootstrap": "startPortalTabifyApp",
+                "clientBootstrap": "startPortalTabifyApp",
                 "category": "Layout",
                 "resources": {
                     "js": [
@@ -51,8 +51,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
                     "appConfig": {
                         "addCloseButtons": false,
                         "pluginNameTitleMapping": {

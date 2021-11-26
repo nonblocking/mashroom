@@ -39,7 +39,7 @@
                 "name": "Mashroom Portal Demo Angular App",
                 "title": "Demo Angular App",
                 "type": "portal-app",
-                "bootstrap": "startAngularDemoApp",
+                "clientBootstrap": "startAngularDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -50,9 +50,10 @@
                         "styles.css"
                     ]
                 },
+                "local": {
+                    "resourcesRoot": "./dist"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./dist",
-                    "restProxies": {},
                     "appConfig": {
                         "firstName": "Kim",
                         "pingButtonLabel": "Send Ping"

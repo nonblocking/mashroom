@@ -48,7 +48,7 @@
                 "name": "Mashroom Portal Demo Svelte App",
                 "title": "Demo Svelte App",
                 "type": "portal-app",
-                "bootstrap": "startSvelteDemoApp",
+                "clientBootstrap": "startSvelteDemoApp",
                 "category": "Demo",
                 "resources": {
                     "js": [
@@ -56,9 +56,10 @@
                     ],
                     "css": []
                 },
+                "local": {
+                    "resourcesRoot": "./public"
+                },
                 "defaultConfig": {
-                    "resourcesRoot": "./public",
-                    "restProxies": {},
                     "appConfig": {
                         "firstName": "Gus",
                         "pingButtonLabel": "Send Ping"
