@@ -1,12 +1,12 @@
 
 import path from 'path';
 import express from 'express';
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import services from './routes/services';
 
 const app = express();
 
-app.engine('handlebars', exphbs({
+app.engine('handlebars', engine({
     defaultLayout: '',
 }));
 app.set('view engine', 'handlebars');

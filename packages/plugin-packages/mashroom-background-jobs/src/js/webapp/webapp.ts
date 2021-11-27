@@ -1,7 +1,7 @@
 
 import path from 'path';
 import express from 'express';
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import index from './routes';
 import {adminIndex} from './routes/admin';
 
@@ -9,7 +9,7 @@ const app = express();
 
 const admin = express();
 
-admin.engine('handlebars', exphbs({
+admin.engine('handlebars', engine({
     defaultLayout: '',
 }));
 admin.set('view engine', 'handlebars');

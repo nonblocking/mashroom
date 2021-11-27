@@ -2,7 +2,7 @@
 import path from 'path';
 import {URL} from 'url';
 import express from 'express';
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
 import helpers, {i18nHelper} from './handlebar_helpers';
 import context from './context';
@@ -21,7 +21,7 @@ app.use(bodyParser.urlencoded({
     extended: true,
 }));
 
-app.engine('handlebars', exphbs({
+app.engine('handlebars', engine({
     helpers,
     defaultLayout: '',
 }));

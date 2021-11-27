@@ -6,9 +6,9 @@
         "@mashroom/mashroom": "1.9.1"
     },
     "devDependencies": {
-        "@babel/cli": "^7.15.7",
         "@mashroom/mashroom-json-schemas": "1.9.1",
-        "nodemon": "^2.0.12"
+        "@babel/cli": "^7.16.0",
+        "nodemon": "^2.0.15"
     },
     "scripts": {
         "start": "mashroom",

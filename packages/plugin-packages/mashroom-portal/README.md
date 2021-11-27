@@ -930,7 +930,7 @@ Since *Mashroom Portal* uses the *Express* render mechanism all Template Engines
 The bootstrap returns the template engine and the engine name like so:
 
 ```ts
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import path from 'path';
 
 import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -939,10 +939,9 @@ const bootstrap: MashroomPortalThemePluginBootstrapFunction = async () => {
     return {
         engineName: 'handlebars',
         engineFactory: () => {
-            const hbs = exphbs.create({
+            return engine({
                 partialsDir: path.resolve(__dirname, '../views/partials/'),
             });
-            return hbs.engine;
         },
     };
 };

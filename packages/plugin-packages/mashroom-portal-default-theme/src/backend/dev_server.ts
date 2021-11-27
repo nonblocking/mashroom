@@ -1,7 +1,7 @@
 /* eslint no-console: off */
 
 import express from 'express';
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import helpers from './handlebar_helpers';
 import themeParams from './theme_params';
 
@@ -19,12 +19,10 @@ const app = express();
 
 app.use('/resources', express.static('dist/public'));
 
-const hbs = exphbs.create({
+app.engine('handlebars', engine({
     helpers,
     defaultLayout: '',
-});
-
-app.engine('handlebars', hbs.engine);
+}));
 app.set('view engine', 'handlebars');
 
 app.get('/', (req: Request, res: Response) => {

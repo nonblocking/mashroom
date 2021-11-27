@@ -1,7 +1,7 @@
 
 import path from 'path';
 import express, {Router} from 'express';
-import exphbs from 'express-handlebars';
+import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
 import index from './routes';
 import {adminIndex, adminUpdate} from './routes/admin';
@@ -14,7 +14,7 @@ admin.use(bodyParser.urlencoded({
     extended: true,
 }));
 
-admin.engine('handlebars', exphbs({
+admin.engine('handlebars', engine({
     defaultLayout: '',
 }));
 admin.set('view engine', 'handlebars');

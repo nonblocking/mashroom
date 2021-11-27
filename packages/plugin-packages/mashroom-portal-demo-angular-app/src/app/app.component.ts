@@ -3,7 +3,7 @@ import {ChangeDetectorRef, Component, Inject} from '@angular/core';
 import {MashroomPortalAppSetup, MashroomPortalClientServices, MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 
 @Component({
-    selector: 'angular-demo-app',
+    selector: 'app-mashroom-portal-angular-demo',
     templateUrl: './app.component.html',
     providers: []
 })

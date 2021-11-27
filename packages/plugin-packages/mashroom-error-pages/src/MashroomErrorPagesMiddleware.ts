@@ -153,7 +153,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             .replace(PLACEHOLDER_STATUS_CODE, String(res.statusCode))
             .replace(PLACEHOLDER_MASHROOM_VERSION, this._serverVersion)
             .replace(PLACEHOLDER_I18N_MESSAGE, (substring, messageKeyAndDefault) => {
-                const [messageKey, defaultMessage] = messageKeyAndDefault?.split(',');
+                const [messageKey, defaultMessage] = messageKeyAndDefault?.split(',') || {};
                 const message = i18nService?.getMessage(messageKey, lang);
                 if (!message || message === messageKey) {
                     return defaultMessage || '';

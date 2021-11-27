@@ -33,12 +33,12 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         if (limit) {
             cursor = cursor.limit(limit);
         }
-        return await cursor.toArray();
+        return await cursor.toArray() as Array<MashroomStorageObject<T>>;
     }
 
     async findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined> {
         const collection = await this._getCollection<MashroomStorageObject<T>>();
-        return collection.findOne(filter);
+        return await collection.findOne(filter) as MashroomStorageObject<T> | null;
     }
 
     async insertOne(item: T): Promise<MashroomStorageObject<T>> {
