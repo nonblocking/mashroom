@@ -209,7 +209,7 @@ To register a new portal-app plugin add this to _package.json_:
                 },
                 "local": {
                     "resourcesRoot": "./dist",
-                    "ssrBootstrap": "renderToString.js"
+                    "ssrBootstrap": "./dist/renderToString.js"
                 },
                 "defaultConfig": {
                     "appConfig": {
@@ -252,7 +252,7 @@ A full config with all optional properties would look like this:
                 ],
                 "local": {
                     "resourcesRoot": "./dist",
-                    "ssrBootstrap": "renderToString.js"
+                    "ssrBootstrap": "/dist/renderToString.js"
                 },
                 "remote": {
                     "resourcesRoot": "/public",
@@ -303,7 +303,7 @@ A full config with all optional properties would look like this:
  * _screenshots_: Optional some screenshots of the App. The screenshots paths are relative to *resourcesRoot*.
  * _local_: Basic configuration if the App is deployed locally
    * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. Needs to be relative within the package
-   * _ssrBootstrap_: An optional local SSR bootstrap that returns an initial HTML for the App (see below for an example)
+   * _ssrBootstrap_: An optional local SSR bootstrap that returns an initial HTML for the App, relative within the package (see below for an example)
  * _remote_: Optional configuration if the App is accessed remotely
    * _resourcesRoot_: The root path for App resources such as JavaScript files and images
    * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML
@@ -388,9 +388,9 @@ import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import App from './App';
 
-import type {MashroomPortalAppPluginSSLBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
-const bootstrap: MashroomPortalAppPluginSSLBootstrapFunction = (portalAppSetup) => {
+const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup) => {
     const dummyMessageBus: any = {};
     return ReactDOMServer.renderToString(<App appConfig={portalAppSetup.appConfig} messageBus={dummyMessageBus}/>);
 };
