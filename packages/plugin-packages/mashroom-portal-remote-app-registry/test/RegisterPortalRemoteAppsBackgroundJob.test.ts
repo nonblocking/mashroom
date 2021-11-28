@@ -234,7 +234,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             clientBootstrap: 'startTestApp',
             remoteApp: true,
             resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app/public',
-            ssrInitialHtmlPath: 'https://www.mashroom-server.com/test-remote-app/ssr',
+            ssrInitialHtmlUri: 'https://www.mashroom-server.com/test-remote-app/ssr',
             resources: {
                 js: ['bundle.js']
             },
@@ -296,7 +296,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             clientBootstrap: 'startTestApp',
             remoteApp: true,
             resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app/public',
-            ssrInitialHtmlPath: 'https://www.mashroom-server.com/test-remote-app/ssr',
+            ssrInitialHtmlUri: 'https://www.mashroom-server.com/test-remote-app/ssr',
             resources: {
                 js: ['bundle.js']
             },
@@ -358,7 +358,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             clientBootstrap: 'startTestApp',
             remoteApp: true,
             resourcesRootUri: 'https://www.mashroom-server.com/test-remote-app/public',
-            ssrInitialHtmlPath: 'https://www.mashroom-server.com/test-remote-app/ssr',
+            ssrInitialHtmlUri: 'https://www.mashroom-server.com/test-remote-app/ssr',
             resources: {
                 js: ['bundle.js']
             },

@@ -41,7 +41,7 @@ const portalApp1: MashroomPortalApp = {
     resourcesRootUri: `file:/${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlPath: undefined,
+    ssrInitialHtmlUri: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -88,7 +88,7 @@ const portalApp2: MashroomPortalApp = {
     resourcesRootUri: `file:/${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlPath: undefined,
+    ssrInitialHtmlUri: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {

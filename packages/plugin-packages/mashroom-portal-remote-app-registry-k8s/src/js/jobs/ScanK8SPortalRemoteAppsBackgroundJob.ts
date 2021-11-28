@@ -322,13 +322,13 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             }
         }
 
-        let ssrInitialHtmlPath;
+        let ssrInitialHtmlUri;
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            ssrInitialHtmlPath = `${serviceUrl}${definition.remote?.ssrInitialHtmlPath || ''}`;
-            if (ssrInitialHtmlPath.endsWith('/')) {
-                ssrInitialHtmlPath = ssrInitialHtmlPath.slice(0, -1);
+            ssrInitialHtmlUri = `${serviceUrl}${definition.remote?.ssrInitialHtmlPath || ''}`;
+            if (ssrInitialHtmlUri.endsWith('/')) {
+                ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
             }
             cachingConfig = definition.caching;
             editorConfig = definition.editor;
@@ -350,7 +350,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             resourcesRootUri,
             remoteApp: true,
             ssrBootstrap: undefined,
-            ssrInitialHtmlPath,
+            ssrInitialHtmlUri,
             sharedResources,
             resources,
             cachingConfig,

@@ -242,7 +242,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             lastReloadTs: 22,
             clientBootstrap: 'startTestApp',
             resourcesRootUri: 'http://my-service.default:6789/public',
-            ssrInitialHtmlPath: 'http://my-service.default:6789/ssr',
+            ssrInitialHtmlUri: 'http://my-service.default:6789/ssr',
             remoteApp: true,
             resources: {
                 js: ['bundle.js']
@@ -306,7 +306,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             lastReloadTs: 22,
             clientBootstrap: 'startTestApp',
             resourcesRootUri: 'http://my-service.default:6789/public',
-            ssrInitialHtmlPath: 'http://my-service.default:6789/ssr',
+            ssrInitialHtmlUri: 'http://my-service.default:6789/ssr',
             remoteApp: true,
             resources: {
                 js: ['bundle.js']

@@ -114,7 +114,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             clientBootstrap,
             screenshots,
             ssrBootstrap,
-            ssrInitialHtmlPath: undefined,
+            ssrInitialHtmlUri: undefined,
             resourcesRootUri,
             cachingConfig,
             editorConfig,

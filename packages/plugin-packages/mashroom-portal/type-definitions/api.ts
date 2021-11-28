@@ -439,11 +439,11 @@ export type MashroomPortalApp = {
     readonly ssrBootstrap: string | null | undefined;
 
     /**
-     * Optional SSR route that delivers the initial HTML.
+     * Optional SSR (remote) route that delivers the initial HTML.
      * The route will receive a POST with a JSON body with a "portalAppSetup" property.
      * This will only be used if remoteApp is true.
      */
-    readonly ssrInitialHtmlPath: string | null | undefined;
+    readonly ssrInitialHtmlUri: string | null | undefined;
 
     /**
      * Resources root URI (local path if remoteApp false, otherwise a HTTP, HTTPS or FTP url)

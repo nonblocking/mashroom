@@ -207,13 +207,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             }
         }
 
-        let ssrInitialHtmlPath;
+        let ssrInitialHtmlUri;
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            ssrInitialHtmlPath = `${remotePortalAppEndpoint.url}${definition.remote?.ssrInitialHtmlPath || ''}`;
-            if (ssrInitialHtmlPath.endsWith('/')) {
-                ssrInitialHtmlPath = ssrInitialHtmlPath.slice(0, -1);
+            ssrInitialHtmlUri = `${remotePortalAppEndpoint.url}${definition.remote?.ssrInitialHtmlPath || ''}`;
+            if (ssrInitialHtmlUri.endsWith('/')) {
+                ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
             }
             cachingConfig = definition.caching;
             editorConfig = definition.editor;
@@ -235,7 +235,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             resourcesRootUri,
             remoteApp: true,
             ssrBootstrap: undefined,
-            ssrInitialHtmlPath,
+            ssrInitialHtmlUri,
             sharedResources,
             resources,
             cachingConfig,

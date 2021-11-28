@@ -53,8 +53,8 @@ const welcomeApp: MashroomPortalApp = {
     clientBootstrap: 'startWelcomeApp',
     resourcesRootUri: `file://${path.resolve(__dirname, '../frontend')}`,
     remoteApp: false,
-    ssrBootstrap: undefined,
-    ssrInitialHtmlPath: undefined,
+    ssrBootstrap: 'indexSSR.js',
+    ssrInitialHtmlUri: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
