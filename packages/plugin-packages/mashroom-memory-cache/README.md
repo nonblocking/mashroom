@@ -21,14 +21,14 @@ You can override the default config in your Mashroom config file like this:
     "plugins": {
         "Mashroom Memory Cache Services": {
             "provider": "local",
-            "defaultTTLSec": 10
+            "defaultTTLSec": 300
         }
     }
 }
 ```
 
  * _provider_: The name of the provider. Default is *local* which uses the local Node.js memory.
- * _defaultTTLSec_: The default TTL in seconds (Default: 10)
+ * _defaultTTLSec_: The default TTL in seconds (Default: 300)
 
 ## Services
 

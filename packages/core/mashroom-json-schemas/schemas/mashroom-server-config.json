@@ -331,7 +331,7 @@
                         },
                         "defaultTTLSec": {
                             "type": "integer",
-                            "description": "The default TTL in seconds (Default: 10)"
+                            "description": "The default TTL in seconds (Default: 300)"
                         }
                     },
                     "additionalProperties": false

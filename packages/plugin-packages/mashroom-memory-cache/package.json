@@ -38,7 +38,7 @@
                 "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
                 "defaultConfig": {
                     "provider": "local",
-                    "defaultTTLSec": 10
+                    "defaultTTLSec": 300
                 }
             },
             {
