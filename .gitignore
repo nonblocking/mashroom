@@ -18,6 +18,7 @@ lerna-debug.log
 /packages/plugin-packages/mashroom-portal-remote-app-registry/public/
 /packages/plugin-packages/mashroom-portal-remote-app-registry-k8s/public/
 /packages/plugin-packages/mashroom-portal-demo-svelte-app/public/
+/packages/plugin-packages/mashroom-portal-demo-angular-app/.angular
 
 /packages/test/test-server1/data
 /packages/test/test-server2/data
