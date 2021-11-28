@@ -56,7 +56,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         ],
         local: {
             resourcesRoot: './dist',
-            ssrBootstrap: 'renderToString.js'
+            ssrBootstrap: './dist/renderToString.js'
         },
         remote: {
             resourcesRoot: '/public',

@@ -405,7 +405,7 @@ export type MashroomPortalApp = {
 
     /**
      * Optional SSR bootstrap script that delivers the initial HTML.
-     * Needs to export a function compatible to MashroomPortalAppPluginSSLBootstrapFunction.
+     * Needs to export a function compatible to MashroomPortalAppPluginSSRBootstrapFunction.
      * This will only be used if remoteApp is false.
      */
     +ssrBootstrap: ?string,
@@ -1124,7 +1124,7 @@ export type MashroomPortalAppLifecycleHooks = {
 export type MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement: HTMLElement, portalAppSetup: MashroomPortalAppSetup, clientServices: MashroomPortalClientServices)
     => void | MashroomPortalAppLifecycleHooks | Promise<void> | Promise<MashroomPortalAppLifecycleHooks>;
 
-export type MashroomPortalAppPluginSSLBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup) => Promise<string>;
+export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup) => Promise<string>;
 
 // portal-theme
 

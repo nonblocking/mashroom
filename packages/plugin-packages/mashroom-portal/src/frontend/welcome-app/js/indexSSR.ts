@@ -1,10 +1,10 @@
 
 import template from './template';
 
-import type {MashroomPortalAppPluginSSLBootstrapFunction} from '../../../../type-definitions';
+import type {MashroomPortalAppPluginSSRBootstrapFunction} from '../../../../type-definitions';
 
-const bootstrap: MashroomPortalAppPluginSSLBootstrapFunction = (portalAppSetup) => {
-    return Promise.resolve(template(portalAppSetup.resourcesBasePath));
+const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup) => {
+    return template(portalAppSetup.resourcesBasePath);
 };
 
 export default bootstrap;

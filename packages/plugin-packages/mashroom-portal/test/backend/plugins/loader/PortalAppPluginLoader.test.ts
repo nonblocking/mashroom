@@ -48,7 +48,7 @@ describe('PortalAppPluginLoader', () => {
                 ],
                 local: {
                     resourcesRoot: './dist',
-                    ssrBootstrap: 'renderToString.js'
+                    ssrBootstrap: './dist/renderToString.js'
                 },
                 remote: {
                     resourcesRoot: '/public',
@@ -101,7 +101,7 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': ['style.css']});
         expect(registry.portalApps[0].sharedResources).toEqual({'js': ['globalLib.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
-        expect(registry.portalApps[0].ssrBootstrap).toEqual('renderToString.js');
+        expect(registry.portalApps[0].ssrBootstrap).toEqual('/foo/bar/dist/renderToString.js');
         expect(registry.portalApps[0].cachingConfig).toEqual({ ssrHtml: 'same-config-and-user' });
         expect(registry.portalApps[0].editorConfig).toEqual({ editorPortalApp: 'Demo Config Editor', position: 'in-place', appConfig: {} });
         expect(registry.portalApps[0].screenshots).toEqual(['screenshot1.png']);

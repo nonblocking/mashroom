@@ -1,5 +1,5 @@
 
-import path from 'path';
+import {resolve} from 'path';
 import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
 
 import type {
@@ -69,7 +69,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         let resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
         if (!resourcesRootUri.startsWith('/')) {
             // Process relative file path
-            resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
+            resourcesRootUri = resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
         }
         if (resourcesRootUri.indexOf('://') === -1) {
             if (resourcesRootUri.startsWith('/')) {
@@ -93,7 +93,8 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            ssrBootstrap = plugin.pluginDefinition.local?.ssrBootstrap;
+            const relativeSSRBootstrap = plugin.pluginDefinition.local?.ssrBootstrap;
+            ssrBootstrap = relativeSSRBootstrap && resolve(plugin.pluginPackage.pluginPackagePath, relativeSSRBootstrap);
             cachingConfig = plugin.pluginDefinition.caching;
             editorConfig = plugin.pluginDefinition.editor;
         }

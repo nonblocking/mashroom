@@ -34,7 +34,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         ],
         local: {
             resourcesRoot: './dist',
-            ssrBootstrap: 'renderToString.js'
+            ssrBootstrap: './dist/renderToString.js'
         },
         remote: {
             resourcesRoot: '/public',

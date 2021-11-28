@@ -76,8 +76,8 @@
                     "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
                 },
                 "ssrBootstrap": {
-                    "type": "string",
-                    "description": "An optional local SSR bootstrap that returns an initial HTML for the App. Needs to export a function compatible to MashroomPortalAppPluginSSLBootstrapFunction."
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "An optional local SSR bootstrap that returns an initial HTML for the App, relative within the package. Needs to export a function compatible to MashroomPortalAppPluginSSRBootstrapFunction."
                 }
             },
             "required": ["resourcesRoot"],

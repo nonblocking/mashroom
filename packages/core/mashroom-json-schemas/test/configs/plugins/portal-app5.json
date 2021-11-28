@@ -21,7 +21,7 @@
             },
             "local": {
                 "resourcesRoot": "./dist/frontend",
-                "ssrBootstrap": "indexSSR"
+                "ssrBootstrap": "./dist/indexSSR"
             },
             "caching": {
                 "ssrHtml": "same-config"
