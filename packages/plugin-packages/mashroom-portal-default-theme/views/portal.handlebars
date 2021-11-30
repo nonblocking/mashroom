@@ -16,9 +16,10 @@
 
     <link rel="shortcut icon" type="image/x-icon" href="{{resourcesBasePath}}/assets/mashroom_favicon.ico">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/bootstrap/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/regular.css">
-    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/solid.css">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/style.css?v={{lastThemeReloadTs}}">
+    {{! Style that can be loaded async...  }}
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/regular.css" media="print" onload="this.media='all'; this.onload=null;">
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/solid.css" media="print" onload="this.media='all'; this.onload=null;">
 
     {{{portalResourcesHeader}}}
 
