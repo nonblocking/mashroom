@@ -28,7 +28,7 @@ To add some additional users open the LDAP Admin UI: https://localhost:4433 - lo
 
 ### RabbitMQ
 
-To publish and subscribe messages you can use the RabbitMQ Admin Ui: http://localhost:15672 - login with admin/admin
+To publish and subscribe messages you can use the RabbitMQ Admin Ui: http://localhost:15672 - login with guest/guest
 
 Send a message from the Portal to an external system:
 

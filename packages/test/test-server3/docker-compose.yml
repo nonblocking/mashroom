@@ -1,7 +1,7 @@
 version: "3"
 
 volumes:
-    mashroom_testserver3_keycloak_mysql_data:
+    mashroom_testserver3_keycloak_mariadb_data:
 
 services:
     redis:
@@ -22,24 +22,24 @@ services:
             - "9001:9001"
         volumes:
             - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
-    mysql:
-        container_name: mashroom_testserver3_mysql
-        image: mysql:5.7
+    mariadb:
+        container_name: mashroom_testserver3_mariadb
+        image: mariadb
         environment:
-            - MYSQL_DATABASE=keycloak
-            - MYSQL_USER=keycloak
-            - MYSQL_PASSWORD=keycloak
-            - MYSQL_ROOT_PASSWORD=mysql
+            - MARIADB_DATABASE=keycloak
+            - MARIADB_USER=keycloak
+            - MARIADB_PASSWORD=keycloak
+            - MARIADB_ROOT_PASSWORD=mysql
         volumes:
-            - mashroom_testserver3_keycloak_mysql_data:/var/lib/mysql
+            - mashroom_testserver3_keycloak_mariadb_data:/var/lib/mysql
     keycloak:
         container_name: mashroom_testserver3_keycloak
-        image: jboss/keycloak
+        image: jboss/keycloak:15.0.2
         depends_on:
-            - mysql
+            - mariadb
         environment:
-            - DB_VENDOR=mysql
-            - DB_ADDR=mysql
+            - DB_VENDOR=mariadb
+            - DB_ADDR=mariadb
             - DB_USER=keycloak
             - DB_PASSWORD=keycloak
             - KEYCLOAK_USER=admin
