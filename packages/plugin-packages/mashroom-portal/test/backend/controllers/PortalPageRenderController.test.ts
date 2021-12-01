@@ -13,7 +13,13 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
-    defaultProxyConfig: {}
+    defaultProxyConfig: {},
+    sslConfig: {
+        sslEnabled: false,
+        renderTimoutMs: 2000,
+        cacheTTLSec: 300,
+        inlineStyles: true,
+    }
 });
 
 const theme: MashroomPortalTheme = {
@@ -236,6 +242,9 @@ const pluginContext: any = {
     services: {
         portal: {
             service: {
+                getPortalApps() {
+                    return []
+                },
                 findSiteByPath() {
                     return site;
                 },

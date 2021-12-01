@@ -14,6 +14,12 @@ setPortalPluginConfig({
     defaultProxyConfig: {
         sendPermissionsHeader: false,
         restrictToRoles: [],
+    },
+    sslConfig: {
+        sslEnabled: false,
+        renderTimoutMs: 2000,
+        cacheTTLSec: 300,
+        inlineStyles: true,
     }
 });
 

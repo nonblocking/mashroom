@@ -19,7 +19,13 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
-    defaultProxyConfig: {}
+    defaultProxyConfig: {},
+    sslConfig: {
+        sslEnabled: false,
+        renderTimoutMs: 2000,
+        cacheTTLSec: 300,
+        inlineStyles: true,
+    }
 });
 
 const portalApp1: MashroomPortalApp = {

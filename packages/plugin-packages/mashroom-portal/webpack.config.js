@@ -21,7 +21,7 @@ module.exports = {
                         loader: 'babel-loader',
                         options: {
                             // Explicit config file for the node modules we need to transpile
-                            configFile: __dirname + '/src/frontend/.babelrc'
+                            configFile: __dirname + '/.babelrc.client'
                         }
                     }
                 ]

@@ -340,7 +340,7 @@ export type MashroomPortalRolePermissions = {
 };
 
 export type MashroomPortalAppCaching = {
-    readonly ssrHtml: 'none' | 'same-config' | 'same-config-and-user';
+    readonly ssrHtml: 'never' | 'same-config' | 'same-config-and-user';
 }
 
 export type MashroomPortalAppConfigEditor = {
@@ -448,7 +448,7 @@ export type MashroomPortalApp = {
     /**
      * Resources root URI (local path if remoteApp false, otherwise a HTTP, HTTPS or FTP url)
      */
-    readonly resourcesRootUri: string;
+    readonly fresourcesRootUri: string;
 
     /**
      * Optional caching information

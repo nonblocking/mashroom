@@ -312,7 +312,7 @@ export type MashroomPortalRolePermissions = {
 }
 
 export type MashroomPortalAppCaching = {
-    +ssr: 'none' | 'same-config' | 'same-config-and-user';
+    +ssrHtml: 'never' | 'same-config' | 'same-config-and-user';
 }
 
 export type MashroomPortalAppConfigEditor = {

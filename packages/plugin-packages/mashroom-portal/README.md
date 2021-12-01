@@ -29,6 +29,12 @@ The plugin allows the following configuration properties:
             "defaultProxyConfig": {
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
+            },
+            "sslConfig": {
+                "sslEnabled": true,
+                "renderTimoutMs": 2000,
+                "cacheTTLSec": 300,
+                "inlineStyles": true
             }
         }
     }
@@ -43,6 +49,12 @@ The plugin allows the following configuration properties:
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
  * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
+ * _sslConfig_: Optional config for server side rendering
+   * _sslEnabled_: Allow server side rendering if Apps support it (Default: true)
+   * _renderTimoutMs_: Timeout for SSR which defines how long the page rendering can be blocked. Even if SSR takes too long the result is
+     put into the cache and might be available for the next page rendering (Default: 2000)
+   * _cacheTTLSec_: The timeout in seconds for cached SSR HTML (Default: 300)
+   * _inlineStyles_: Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)
 
 ## Browser support
 

@@ -82,7 +82,13 @@ export type MashroomPortalPluginConfig = {
     readonly defaultProxyConfig: {
         readonly sendPermissionsHeader?: boolean;
         readonly restrictToRoles?: Array<string>;
-    }
+    };
+    readonly sslConfig: {
+        readonly sslEnabled: boolean;
+        readonly renderTimoutMs: number;
+        readonly cacheTTLSec: number;
+        readonly inlineStyles: boolean;
+    };
 }
 
 export type MashroomPortalPageAppsInfo = {
@@ -97,6 +103,16 @@ export type MashroomPortalContext = {
     readonly startTs: number;
     readonly pluginRegistry: MashroomPortalPluginRegistry;
     readonly portalPluginConfig: MashroomPortalPluginConfig;
+}
+
+export type MashroomPortalPageContentRenderResult = {
+    readonly pageContent: string;
+    readonly serverSideRenderedApps: Array<string>;
+}
+
+export type MashroomPortalIncludeStyleServerSideRenderedAppsResult = {
+    readonly headerContent: string;
+    readonly includedAppStyles: Array<string>;
 }
 
 export type ClientLogMessage = {

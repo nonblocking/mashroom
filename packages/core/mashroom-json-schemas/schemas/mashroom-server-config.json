@@ -595,6 +595,29 @@
                             },
                             "additionalProperties": false,
                             "description": "Optional default http proxy config for portal apps"
+                        },
+                        "sslConfig": {
+                            "type": "object",
+                            "properties": {
+                                "sslEnabled": {
+                                    "type": "boolean",
+                                    "description": "Allow server side rendering if Apps support it (Default: true)"
+                                },
+                                "renderTimoutMs": {
+                                    "type": "number",
+                                    "description": "Timeout for SSR which defines how long the page rendering can be blocked (Default: 2000)"
+                                },
+                                "cacheTTLSec": {
+                                    "type": "number",
+                                    "description": "The timeout in seconds for cached SSR HTML (Default: 300)"
+                                },
+                                "inlineStyles": {
+                                    "type": "string",
+                                    "description": "Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Optional config for server side rendering"
                         }
                     },
                     "additionalProperties": false

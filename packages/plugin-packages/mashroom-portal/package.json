@@ -15,6 +15,7 @@
         "express": "^4.17.1",
         "express-sse-ts": "^1.0.2",
         "get-uri": "^4.0.0",
+        "node-fetch": "^2.6.6",
         "nanoid": "^3.1.30",
         "proper-lockfile": "^4.1.2"
     },
@@ -27,14 +28,17 @@
         "@mashroom/mashroom-messaging": "1.9.1",
         "@mashroom/mashroom-security": "1.9.1",
         "@mashroom/mashroom-storage": "1.9.1",
+        "@mashroom/mashroom-memory-cache": "1.9.1",
         "@mashroom/mashroom-vhost-path-mapper": "1.9.1",
         "@babel/cli": "^7.16.0",
         "@types/body-parser": "^1.19.2",
+        "@types/node-fetch": "^2.5.12",
         "@types/express": "^4.17.13",
         "@types/jest": "^27.0.3",
         "eslint": "^8.3.0",
         "node-sass": "^6.0.1",
         "jest": "^27.3.1",
+        "nock": "^13.2.1",
         "nodemon": "^2.0.15",
         "typescript": "^4.5.2",
         "webpack": "^5.64.4",
@@ -55,7 +59,7 @@
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build-backend": "babel src -d dist --extensions \".ts\"",
+        "build-backend": "babel src -d dist --extensions \".ts\" --copy-files",
         "build-frontend": "webpack --mode production && node-sass src/frontend/welcome-app/sass/style.scss dist/frontend/welcome-app.css",
         "build": "npm run build-backend && npm run build-frontend",
         "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node dist/backend/dev-server.js\""
@@ -84,6 +88,12 @@
                     "defaultProxyConfig": {
                         "sendPermissionsHeader": false,
                         "restrictToRoles": null
+                    },
+                    "sslConfig": {
+                        "sslEnabled": true,
+                        "renderTimoutMs": 2000,
+                        "cacheTTLSec": 300,
+                        "inlineStyles": true
                     }
                 }
             },
@@ -112,7 +122,7 @@
                 },
                 "local": {
                     "resourcesRoot": "./dist/frontend",
-                    "ssrBootstrap": "indexSSR"
+                    "ssrBootstrap": "./dist/frontend/welcome-app/js/indexSSR.js"
                 },
                 "caching": {
                     "ssrHtml": "same-config"

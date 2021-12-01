@@ -1,4 +1,6 @@
 
+import {WINDOW_VAR_PORTAL_INLINED_STYLE_APPS} from '../../../backend/constants';
+
 import type {LoadedPortalAppInternal} from './MashroomPortalAppServiceImpl';
 import type {MasterMashroomPortalRemoteLogger} from '../../../../type-definitions';
 
@@ -14,6 +16,7 @@ type Resources<T> = {
 
 const LOADED_JS_RESOURCES: Resources<HTMLScriptElement> = {};
 const LOADED_CSS_RESOURCES: Resources<HTMLLinkElement> = {};
+const inlinedStyleApps = (global as any)[WINDOW_VAR_PORTAL_INLINED_STYLE_APPS] || [];
 
 export default class ResourceManager {
 
@@ -70,6 +73,11 @@ export default class ResourceManager {
     }
 
     loadStyle(path: string, loadedPortalApp: LoadedPortalAppInternal): void {
+        if (inlinedStyleApps.indexOf(loadedPortalApp.pluginName) !== -1) {
+            // Ignore inlined style
+            return;
+        }
+
         const resource = LOADED_CSS_RESOURCES[path];
         if (resource) {
             console.info('CSS resource is already loaded: ', path);

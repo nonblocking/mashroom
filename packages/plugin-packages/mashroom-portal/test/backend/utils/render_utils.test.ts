@@ -1,9 +1,26 @@
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import {
     renderPageContent
 } from '../../../src/backend/utils/render_utils';
 import type {MashroomPortalPageAppsInfo} from '../../../type-definitions/internal';
+
+setPortalPluginConfig({
+    path: '/portal',
+    adminApp: 'admin-portal-app',
+    defaultTheme: 'foo',
+    defaultLayout: 'foo',
+    warnBeforeAuthenticationExpiresSec: 120,
+    autoExtendAuthentication: false,
+    defaultProxyConfig: {},
+    sslConfig: {
+        sslEnabled: true,
+        renderTimoutMs: 2000,
+        cacheTTLSec: 300,
+        inlineStyles: true,
+    }
+});
 
 describe('path_utils', () => {
 
@@ -48,23 +65,42 @@ describe('path_utils', () => {
                 }
             ]
         };
-        const req: any = {};
+        const pluginContext: any = {
+            loggerFactory: dummyLoggerFactory,
+            services: {
+                portal: {
+                    service: {
+                        getPortalApps() {
+                            return [
+                                {
+                                    name: 'App 1',
+                                    ssrBootstrap: `${__dirname}/ssr_bootstrap.js`,
+                                },
+                            ]
+                        }
+                    },
+                }
+            }
+        };
+        const req: any = {
+            pluginContext,
+        };
         const res: any = {};
         const logger = dummyLoggerFactory();
 
-        const content = await renderPageContent(layout, appInfo, false, (key) => key, req, res, logger);
+        const result = await renderPageContent(layout, appInfo, false, (key) => key, req, res, logger);
 
         // console.info('!!!', content);
 
-        expect(content).toBeTruthy();
-        expect(content).toContain('data-mr-app-id="app1"');
-        expect(content).toContain('data-mr-app-id="app2"');
-        expect(content).toContain('data-mr-app-id="app3"');
+        expect(result).toBeTruthy();
+        expect(result.pageContent).toContain('data-mr-app-id="app1"');
+        expect(result.pageContent).toContain('data-mr-app-id="app2"');
+        expect(result.pageContent).toContain('data-mr-app-id="app3"');
 
-        expect(content.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app1"/) > 0).toBeTruthy();
-        expect(content.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
+        expect(result.pageContent.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app1"/) > 0).toBeTruthy();
+        expect(result.pageContent.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
+
+        expect(result.serverSideRenderedApps).toEqual(['App 1']);
     });
-
-
 
 });

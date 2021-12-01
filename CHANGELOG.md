@@ -3,6 +3,21 @@
 
 ## [unreleased v2]
 
+ * Portal: Support for Hybrid Apps with server side rendering added.
+   When a page is rendered the Portal tries to get the initial HTML for all Apps on in and integrated it into the template.
+   The server side HTML will also be cached (if configured). If the server side rendering takes too long (default more than 2000 ms)
+   the Portal automatically switches to client side rendering, but puts the result into the cache anyways for subsequent page requests.
+   The additional configuration in the *mashroom-portal* plugin looks like this:
+   ```json
+     {
+       "sslConfig": {
+         "sslEnabled": true,
+         "renderTimoutMs": 2000,
+         "cacheTTLSec": 300,
+         "inlineStyles": true
+       }
+     }
+   ```
  * Portal: App definition updated to be able to integrate new features such as SSR and config editor.
    Changes are:
    * _bootstrap_ has been renamed to _clientBootstrap_

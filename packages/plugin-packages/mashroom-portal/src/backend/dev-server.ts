@@ -30,7 +30,13 @@ setPortalPluginConfig({
     adminApp: '',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
-    defaultProxyConfig: {}
+    defaultProxyConfig: {},
+    sslConfig: {
+        sslEnabled: true,
+        renderTimoutMs: 2000,
+        cacheTTLSec: 300,
+        inlineStyles: true,
+    }
 });
 
 // Plugins
@@ -53,7 +59,7 @@ const welcomeApp: MashroomPortalApp = {
     clientBootstrap: 'startWelcomeApp',
     resourcesRootUri: `file://${path.resolve(__dirname, '../frontend')}`,
     remoteApp: false,
-    ssrBootstrap: 'indexSSR.js',
+    ssrBootstrap: `${path.resolve(__dirname, '../frontend/welcome-app/js/indexSSR.js')}`,
     ssrInitialHtmlUri: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,

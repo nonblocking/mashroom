@@ -16,6 +16,7 @@ import {
     WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION,
     WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
     WINDOW_VAR_PORTAL_DEV_MODE,
+    WINDOW_VAR_PORTAL_INLINED_STYLE_APPS,
     WINDOW_VAR_PORTAL_LANGUAGE,
     WINDOW_VAR_PORTAL_PAGE_ID,
     WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
@@ -49,6 +50,7 @@ import {
     renderAppErrorToClientTemplate,
     renderPageContent,
 } from '../utils/render_utils';
+import {renderInlineStyleForServerSideRenderedApps} from '../utils/ssr_utils';
 import createPortalAppSetup from '../utils/create_portal_app_setup';
 
 import type {Request, Response, Application} from 'express';
@@ -158,7 +160,8 @@ export default class PortalPageRenderController {
                 const messages = (key: string) => i18nService.getMessage(key, lang);
 
                 const portalAppInfo = await this._getPagePortalAppsInfo(req, page, user);
-                pageContent = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
+                const result = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
+                pageContent = result.pageContent;
 
                 evalScript = `
                     // Update pageId
@@ -281,12 +284,15 @@ export default class PortalPageRenderController {
         const appErrorTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppErrorToClientTemplate(!!theme, messages, req, res, logger));
 
         const portalAppInfo = await this._getPagePortalAppsInfo(req, page, user);
-        const pageContent = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
+        const {pageContent, serverSideRenderedApps} = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
 
+        const {inlineStyles} = context.portalPluginConfig.sslConfig;
+        const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
+            await renderInlineStyleForServerSideRenderedApps(serverSideRenderedApps, req, logger) : {};
         const portalResourcesHeader = await this._resourcesHeader(
             req, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
-            messagingConnectPath, privateUserTopic, devMode, userAgent);
+            messagingConnectPath, privateUserTopic, devMode, userAgent, inlineStyleHeaderContent, includedAppStyles);
         const portalResourcesFooter = await this._resourcesFooter(req, portalAppInfo, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent);
 
         const siteBasePath = getFrontendSiteBasePath(req);
@@ -413,10 +419,11 @@ export default class PortalPageRenderController {
     }
 
     private async _resourcesHeader(req: Request, siteId: string, sitePath: string, pageId: string, pageFriendlyUrl: string, lang: string,
-                                   appWrapperTemplateHtml: string, appErrorTemplateHtml: string,
-                                   appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean, warnBeforeAuthenticationExpiresSec: number,
-                                   autoExtendAuthentication: boolean, messagingConnectPath: string | undefined | null, privateUserTopic: string | undefined | null,
-                                   devMode: boolean, userAgent: UserAgent): Promise<string> {
+                                   appWrapperTemplateHtml: string, appErrorTemplateHtml: string, appLoadingFailedMsg: string, checkAuthenticationExpiration: boolean,
+                                   warnBeforeAuthenticationExpiresSec: number, autoExtendAuthentication: boolean, messagingConnectPath: string | undefined | null,
+                                   privateUserTopic: string | undefined | null, devMode: boolean, userAgent: UserAgent,
+                                   inlineStyleHeaderContent: string, includedAppStyles: Array<string>): Promise<string> {
+
         return `
             <script>
                 window['${WINDOW_VAR_PORTAL_API_PATH}'] = '${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_API_PATH}';
@@ -430,13 +437,15 @@ export default class PortalPageRenderController {
                 window['${WINDOW_VAR_PORTAL_APP_LOADING_FAILED_MSG}'] = '${appLoadingFailedMsg}';
                 window['${WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION}'] = ${String(checkAuthenticationExpiration)};
                 window['${WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC}'] = ${String(warnBeforeAuthenticationExpiresSec)};
-                window['${WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION}'] = ${String(autoExtendAuthentication)}
+                window['${WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION}'] = ${String(autoExtendAuthentication)};
+                window['${WINDOW_VAR_PORTAL_INLINED_STYLE_APPS}'] = [${includedAppStyles.map((a) => `'${a}'`).join(',')}];
                 ${messagingConnectPath ? `window['${WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH}'] = '${messagingConnectPath}';` : ''}
                 ${privateUserTopic ? `window['${WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC}'] = '${privateUserTopic}';` : ''}
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true;` : ''}
             </script>
             ${await this._getPageEnhancementHeaderResources(sitePath, pageFriendlyUrl, lang, userAgent, req)}
             <script src="${getFrontendApiResourcesBasePath(req)}/${PORTAL_JS_FILE}?v=${this._startTimestamp}"></script>
+            ${inlineStyleHeaderContent}
         `;
     }
 

@@ -130,6 +130,12 @@
             "defaultProxyConfig": {
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
+            },
+            "sslConfig": {
+                "sslEnabled": true,
+                "renderTimoutMs": 2000,
+                "cacheTTLSec": 300,
+                "inlineStyles": true
             }
         },
         "Mashroom Portal Default Theme": {
