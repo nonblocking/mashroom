@@ -1,5 +1,6 @@
 
-import requestNative from 'request-promise-native';
+import https from 'https';
+import fetch from 'node-fetch';
 import {AuthorizationParameters, generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
 import {OICD_AUTH_DATA_SESSION_KEY, OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_USER_SESSION_KEY} from '../constants';
@@ -152,10 +153,12 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
                 id_token_hint: authData.tokenSet.id_token,
             });
 
-            await requestNative({
-                uri: endSessionUrl,
-                method: 'GET',
+            const agent = endSessionUrl.startsWith('https://') ? new https.Agent({
                 rejectUnauthorized: this._rejectUnauthorized,
+            }) : undefined;
+
+            await fetch(endSessionUrl, {
+                agent,
             });
         } catch (e) {
             logger.error('Revoking identity provider session failed!', e);

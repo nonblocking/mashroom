@@ -29,8 +29,7 @@
         "@types/express-handlebars": "^6.0.0",
         "@types/express-session": "^1.17.4",
         "eslint": "^8.3.0",
-        "node-sass": "^6.0.1",
-        "node-sass-tilde-importer": "^1.0.2",
+        "sass": "^1.44.0",
         "nodemon": "^2.0.15",
         "typescript": "^4.5.2"
     },
@@ -38,7 +37,7 @@
         "lint": "eslint src --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev_server.js\"",
-        "build": "babel src/js --extensions \".ts\" -d dist && node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/sass/style.scss dist/style.css"
+        "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss dist/style.css"
     },
     "mashroom": {
         "devModeBuildScript": "build",

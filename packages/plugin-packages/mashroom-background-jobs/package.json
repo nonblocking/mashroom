@@ -28,7 +28,7 @@
         "eslint": "^8.3.0",
         "express": "^4.17.1",
         "jest": "^27.3.1",
-        "node-sass": "^6.0.1",
+        "sass": "^1.44.0",
         "nodemon": "^2.0.15",
         "typescript": "^4.5.2"
     },
@@ -44,7 +44,7 @@
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src/js --extensions \".ts\" -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
+        "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
     },
     "mashroom": {

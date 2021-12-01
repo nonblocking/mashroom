@@ -16,7 +16,7 @@
         "express": "^4.17.1",
         "express-handlebars": "^6.0.2",
         "handlebars": "^4.7.7",
-        "request": "^2.88.2"
+        "node-fetch": "^2.6.6"
     },
     "devDependencies": {
         "@mashroom/mashroom": "1.9.1",
@@ -30,12 +30,12 @@
         "@types/body-parser": "^1.19.2",
         "@types/express": "^4.17.13",
         "@types/express-handlebars": "^6.0.0",
+        "@types/node-fetch": "^2.5.12",
         "@types/jest": "^27.0.3",
-        "@types/request": "^2.48.7",
         "eslint": "^8.3.0",
         "jest": "^27.3.1",
         "nock": "^13.2.1",
-        "node-sass": "^6.0.1",
+        "sass": "^1.44.0",
         "nodemon": "^2.0.15",
         "typescript": "^4.5.2"
     },
@@ -51,7 +51,7 @@
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build": "babel src/js --extensions \".ts\" -d dist && node-sass --output-style compressed src/sass/style.scss public/style.css",
+        "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
     },
     "mashroom": {

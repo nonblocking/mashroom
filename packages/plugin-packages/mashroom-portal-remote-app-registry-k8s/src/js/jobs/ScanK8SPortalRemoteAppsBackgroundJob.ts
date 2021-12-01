@@ -1,6 +1,6 @@
 
 import {URL} from 'url';
-import request from 'request';
+import fetch from 'node-fetch';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
@@ -152,54 +152,37 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             timeout: this._socketTimeoutSec * 1000,
         };
 
-        return new Promise((resolve) => {
-            request.get(requestOptions, (error, response, body) => {
-                if (error) {
-                    this._logger.warn(`Fetching package.json from ${serviceUrl} failed`, error);
-                    resolve(null);
-                    return;
-                }
-                if (response.statusCode !== 200) {
-                    this._logger.warn(`Fetching package.json from ${serviceUrl} failed with status code ${response.statusCode}`);
-                    resolve(null);
-                    return;
-                }
-                try {
-                    const json = JSON.parse(body);
-                    resolve(json);
-                } catch (parseError) {
-                    this._logger.error(`Parsing package.json from ${serviceUrl} failed`, parseError);
-                    resolve(null);
-                }
+        try {
+            const result = await fetch(`${serviceUrl}/package.json`, {
+                timeout: this._socketTimeoutSec * 1000,
             });
-        });
+            if (result.ok) {
+                return result.json();
+            } else {
+                this._logger.warn(`Fetching package.json from ${serviceUrl} failed with status code ${result.status}`);
+            }
+        } catch (e) {
+            this._logger.warn(`Fetching package.json from ${serviceUrl} failed`, e);
+        }
+        return null;
     }
 
     private async _loadExternalPluginDefinition(serviceUrl: string): Promise<MashroomPluginPackageDefinition | null> {
-        const promises = this._externalPluginConfigFileNames.map((name) => {
-            const requestOptions = {
-                url: `${serviceUrl}/${name}.json`,
-                followRedirect: false,
-                timeout: this._socketTimeoutSec * 1000,
-            };
-
-            return new Promise<MashroomPluginPackageDefinition | null>((resolve) => {
-                request.get(requestOptions, (error, response, body) => {
-                    if (error || response.statusCode !== 200) {
-                        this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed`);
-                        resolve(null);
-                        return;
-                    }
-                    try {
-                        const packageJson = JSON.parse(body);
-                        this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
-                        resolve(packageJson);
-                    } catch (parseError) {
-                        this._logger.error(`Parsing ${name}.json from ${serviceUrl} failed`, parseError);
-                        resolve(null);
-                    }
+        const promises = this._externalPluginConfigFileNames.map(async (name) => {
+            try {
+                const result = await fetch(`${serviceUrl}/${name}.json`, {
+                    timeout: this._socketTimeoutSec * 1000,
                 });
-            });
+                if (result.ok) {
+                    const json = result.json();
+                    this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
+                    return json;
+                } else {
+                    this._logger.warn(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
+                }
+            } catch (e) {
+                this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed`, e);
+            }
         });
 
         const configs = await Promise.all(promises);

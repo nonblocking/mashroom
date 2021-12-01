@@ -1,6 +1,6 @@
 
 import {URL} from 'url';
-import request from 'request';
+import fetch from 'node-fetch';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
@@ -251,60 +251,37 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any | null> {
-        const requestOptions = {
-            url: `${remotePortalAppEndpoint.url}/package.json`,
-            followRedirect: false,
-            timeout: this._socketTimeoutSec * 1000,
-        };
-
-        return new Promise((resolve) => {
-            request.get(requestOptions, (error, response, body) => {
-                if (error) {
-                    this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed`, error);
-                    resolve(null);
-                    return;
-                }
-                if (response.statusCode !== 200) {
-                    this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed with status code ${response.statusCode}`);
-                    resolve(null);
-                    return;
-                }
-                try {
-                    const packageJson = JSON.parse(body);
-                    resolve(packageJson);
-                } catch (parseError) {
-                    this._logger.error(`Parsing package.json from ${remotePortalAppEndpoint.url} failed`, parseError);
-                    resolve(null);
-                }
+        try {
+            const result = await fetch(`${remotePortalAppEndpoint.url}/package.json`, {
+                timeout: this._socketTimeoutSec * 1000,
             });
-        });
+            if (result.ok) {
+                return result.json();
+            } else {
+                this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
+            }
+        } catch (e) {
+            this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed`, e);
+        }
+        return null;
     }
 
     private async _loadExternalPluginDefinition(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<MashroomPluginPackageDefinition | null> {
-        const promises = this._externalPluginConfigFileNames.map((name) => {
-            const requestOptions = {
-                url: `${remotePortalAppEndpoint.url}/${name}.json`,
-                followRedirect: false,
-                timeout: this._socketTimeoutSec * 1000,
-            };
-
-            return new Promise<MashroomPluginPackageDefinition | null>((resolve) => {
-                request.get(requestOptions, (error, response, body) => {
-                    if (error || response.statusCode !== 200) {
-                        this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed`);
-                        resolve(null);
-                        return;
-                    }
-                    try {
-                        const packageJson = JSON.parse(body);
-                        this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
-                        resolve(packageJson);
-                    } catch (parseError) {
-                        this._logger.error(`Parsing ${name}.json from ${remotePortalAppEndpoint.url} failed`, parseError);
-                        resolve(null);
-                    }
+        const promises = this._externalPluginConfigFileNames.map(async (name) => {
+            try {
+                const result = await fetch(`${remotePortalAppEndpoint.url}/${name}.json`, {
+                    timeout: this._socketTimeoutSec * 1000,
                 });
-            });
+                if (result.ok) {
+                    const json = result.json();
+                    this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
+                    return json;
+                } else {
+                    this._logger.warn(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
+                }
+            } catch (e) {
+                this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed`, e);
+            }
         });
 
         const configs = await Promise.all(promises);

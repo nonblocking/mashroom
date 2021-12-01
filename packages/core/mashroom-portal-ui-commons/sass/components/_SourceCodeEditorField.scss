@@ -1,9 +1,9 @@
 
 .mashroom-portal-ui-source-code-editor-field {
 
-    @import "../node_modules/codemirror/lib/codemirror.css";
-    @import "../node_modules/codemirror/theme/blackboard.css";
-    @import "../node_modules/codemirror/theme/idea.css";
+    @import "../../node_modules/codemirror/lib/codemirror";
+    @import "../../node_modules/codemirror/theme/blackboard";
+    @import "../../node_modules/codemirror/theme/idea";
 
     display: flex;
 

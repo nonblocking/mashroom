@@ -25,8 +25,7 @@
         "copyfiles": "^2.4.1",
         "eslint": "^8.3.0",
         "express": "^4.17.1",
-        "node-sass": "^6.0.1",
-        "node-sass-tilde-importer": "^1.0.2",
+        "sass": "^1.44.0",
         "nodemon": "^2.0.15",
         "typescript": "^4.5.2"
     },
@@ -35,7 +34,7 @@
         "type-check": "tsc --noEmit",
         "dev": "nodemon --watch src --watch views -e ts,tsx,scss --exec \"npm run build && node dist/plugin/dev_server.js\"",
         "build:ts": "babel src -d dist --extensions .ts,.tsx",
-        "build:style": "node-sass --importer=node_modules/node-sass-tilde-importer --output-style compressed src/sass/style.scss dist/public/style.css",
+        "build:style": "sass --style compressed --load-path=. src/sass/style.scss dist/public/style.css",
         "build:copy-assets": "copyfiles -u 1 assets/* dist/public/assets && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
         "build": "npm run build:ts && npm run build:style && npm run build:copy-assets"
     },
