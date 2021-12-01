@@ -1,5 +1,4 @@
 
-
 # Change Log
 
 ## [unreleased v2]
@@ -58,6 +57,7 @@
 
 ## [unreleased]
 
+ * Admin UI: Works now if the site path is "/" (because the /portal/my-site is mapped to / via vhost path mapper)
  * Portal: Made sure the *MashroomPortalStateService* works with dynamic routing (when paths are updated via History API)
 
 ## 1.9.1 (November 8, 2021)

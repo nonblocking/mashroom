@@ -1,8 +1,5 @@
-/* eslint-disable no-invalid-this */
 
 import themeParams from './theme_params';
-
-import type {UserAgent} from '@mashroom/mashroom-portal/type-definitions';
 
 function equals(this: any, lvalue: any, rvalue: any, options: any): any {
     if (arguments.length < 3) {

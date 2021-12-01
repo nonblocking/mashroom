@@ -31,7 +31,7 @@ export default class MashroomPortalPageServiceImpl implements MashroomPortalPage
 
     getPageFriendlyUrl(pageUrl: string): string {
         let friendlyUrl = pageUrl.split(/\\?#/)[0];
-        const siteUrl = this._getSiteUrl();
+        const siteUrl = (global as any)[WINDOW_VAR_PORTAL_SITE_URL] || '';
         if (siteUrl && pageUrl.indexOf(siteUrl) === 0) {
             friendlyUrl = friendlyUrl.substr(siteUrl.length);
         }
@@ -89,18 +89,10 @@ export default class MashroomPortalPageServiceImpl implements MashroomPortalPage
         return this._restService.get(path);
     }
 
-    private _getSiteUrl(): string {
-        const siteUrl = (global as any)[WINDOW_VAR_PORTAL_SITE_URL];
-        if (!siteUrl) {
-            throw new Error('Unable to determine the current site path!');
-        }
-        return siteUrl;
-    }
-
     private _getSiteId(): string {
         const siteId = (global as any)[WINDOW_VAR_PORTAL_SITE_ID];
         if (!siteId) {
-            throw new Error('Unable to determine the current site path!');
+            throw new Error('Unable to determine the current site ID!');
         }
         return siteId;
     }
