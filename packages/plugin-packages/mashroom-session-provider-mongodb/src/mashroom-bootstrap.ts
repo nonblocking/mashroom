@@ -12,9 +12,6 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
 
     const MongoDBStore = createMongoDBStore(expressSession);
     const store = new MongoDBStore(connectionInfo);
-    store.on('error', (err: any) => {
-        logger.error('MongoDB store error:', err);
-    });
 
     // Redirect MongoDB logger
     Logger.setLevel('info');
@@ -26,33 +23,13 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
         }
     });
 
-    const client = store.client;
     let connected = false;
-    client.on('open', () => {
-        logger.info('MongoDB: Connection opened');
+    store.on('connected', () => {
+        logger.info('MongoDB connected');
         connected = true;
     });
-    client.on('close', () => {
-        logger.info('MongoDB: Connection closed');
-        connected = false;
-    });
-    client.on('error', (event) => {
-        logger.error('MongoDB: Error:', event);
-    });
-
-    client.on('serverDescriptionChanged', (event) => {
-        logger.debug('MongoDB:', event);
-    });
-    client.on('serverHeartbeatSucceeded', (event) => {
-        if (!connected) {
-            connected = true;
-            logger.info('MongoDB: Reconnected to cluster: ', event);
-        } else {
-            logger.debug('MongoDB:', event);
-        }
-    });
-    client.on('serverHeartbeatFailed', (event) => {
-        logger.error('MongoDB: Disconnected from cluster: ', event);
+    store.on('error', (event) => {
+        logger.error('MongoDB error:', event);
         connected = false;
     });
 
