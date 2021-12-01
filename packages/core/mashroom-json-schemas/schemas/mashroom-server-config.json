@@ -612,7 +612,7 @@
                                     "description": "The timeout in seconds for cached SSR HTML (Default: 300)"
                                 },
                                 "inlineStyles": {
-                                    "type": "string",
+                                    "type": "boolean",
                                     "description": "Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)"
                                 }
                             },
