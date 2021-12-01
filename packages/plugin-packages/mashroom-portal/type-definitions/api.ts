@@ -448,7 +448,7 @@ export type MashroomPortalApp = {
     /**
      * Resources root URI (local path if remoteApp false, otherwise a HTTP, HTTPS or FTP url)
      */
-    readonly fresourcesRootUri: string;
+    readonly resourcesRootUri: string;
 
     /**
      * Optional caching information
