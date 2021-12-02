@@ -72,6 +72,7 @@
 
 ## [unreleased]
 
+ * Fixed broken MongoDB session provider
  * Admin UI: Works now if the site path is "/" (because the /portal/my-site is mapped to / via vhost path mapper)
  * Portal: Made sure the *MashroomPortalStateService* works with dynamic routing (when paths are updated via History API)
 

@@ -3,8 +3,8 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) to the _Mashroom Portal_ that demonstrates how the Portal can proxy a WebSocket
-server that cannot be reached directly by the client.
+This is a simple SPA that demonstrate how the _Mashroom Portal_ proxy can be used to connect to a
+WebSocket server that cannot be reached directly by the client.
 
 By default, it connects to an echo server on ws://ws.ifelse.io/, but that server might go down any time.
 If you can't connect, you can always launch a local WebSocket server (like https://github.com/pmuellr/ws-echo)

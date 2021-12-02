@@ -114,8 +114,8 @@
             "brokerTopicMatchAny": "#",
             "brokerHost": "localhost",
             "brokerPort": 5672,
-            "brokerUsername": "admin",
-            "brokerPassword": "admin"
+            "brokerUsername": "guest",
+            "brokerPassword": "guest"
         },
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",

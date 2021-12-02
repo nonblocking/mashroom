@@ -3,7 +3,8 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) based on [Angular](https://angular.io) to the _Mashroom Portal_.
+This is a simple [Angular](https://angular.io) based SPA which can be developed and run standalone, but can also
+act as a building block in the _Mashroom Portal_.
 
 ## Usage
 
@@ -19,5 +20,4 @@ like a *Microfrontend* you have to change a few things in the template generated
  * Since you can register a *NgModule* only once use a dummy main module that loads the actual app module (see *loader.module.ts*),
    otherwise you could not load the App multiple times with different configurations on the same page
  * Remove all polyfills, since *Microfrontends* should not install global libraries
- * Load *zone.js* as shared resource (see *sharedResources* in the plugin configuration in *package.json*)
-
+ * Get rid of *zone.js* because it installs itself globally and interferes with other Apps as well

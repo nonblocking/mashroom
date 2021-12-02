@@ -24,7 +24,7 @@ services:
             - PHPLDAPADMIN_LDAP_HOSTS=openLdap
     rabbitmq:
         container_name: mashroom_testserver4_rabbitqm
-        image: isikh/rabbitmq_amqp1_0
+        build: ./rabbitmq
         ports:
             - "5672:5672"
             - "15672:15672"
