@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) based on [React](https://reactjs.org) to the _Mashroom Portal_.
+This is a simple [React](https://reactjs.org) based SPA which can be developed and run standalone, but can also
 
 ## Usage
 

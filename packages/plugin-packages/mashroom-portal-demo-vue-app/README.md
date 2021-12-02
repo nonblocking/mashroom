@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) based on [Vue](https://vuejs.org) to the _Mashroom Portal_.
+This is a simple [Vue](https://vuejs.org) based SPA which can be developed and run standalone, but can also
 
 ## Usage
 

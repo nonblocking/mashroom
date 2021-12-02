@@ -3,8 +3,11 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) to the _Mashroom Portal_ that demonstrates how the Portal can proxy a REST API
-that cannot be reached directly by the client (e.g. because of CORS).
+This is a simple SPA that demonstrate how the _Mashroom Portal_ proxy could be used to connect to a
+REST API that cannot be reached directly by the client.
+
+It fetches data from the SpaceX API, but connects through the Portal. So the actual endpoint will not be visible
+in the browser.
 
 ## Usage
 

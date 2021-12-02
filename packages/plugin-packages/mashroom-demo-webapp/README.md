@@ -3,7 +3,8 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Contains a demo Express web-app plugin.
+This a simple demo Express webapp which can be developed and run standalone, but can also be integrated into _Mashroom Server_
+on an arbitrary (configurable) path.
 
 ## Usage
 

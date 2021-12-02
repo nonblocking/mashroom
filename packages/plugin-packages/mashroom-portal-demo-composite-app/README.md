@@ -3,10 +3,10 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-Adds a demo App (Microfrontend) to the _Mashroom Portal_ that demonstrate how to use other Portal Apps as building
-blocks **within** your App. Which again could be then a possible building block for other composite Apps.
+This is a simple SPA that uses other SPA's (which are registered to the _Mashroom Portal_) as building blocks.
+We call this a **Composite App* and it could again be a building block for other Composite Apps.
 
-The App itself is written in React but is uses other ones written in Angular and Vue and Svelte to create a dialog.
+The SPA itself is written in React but is uses other ones written in Angular, Vue and Svelte to create a dialog.
 
 ## Usage
 
