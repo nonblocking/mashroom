@@ -35,10 +35,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Vue App",
-                "title": "Demo Vue App",
                 "type": "portal-app",
                 "clientBootstrap": "startVueDemoApp",
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -49,6 +47,8 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": "Demo Vue App",
+                    "category": "Demo",
                     "appConfig": {
                         "firstName": "Mike",
                         "pingButtonLabel": "Send Ping"

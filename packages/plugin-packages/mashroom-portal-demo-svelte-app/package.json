@@ -46,10 +46,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Svelte App",
-                "title": "Demo Svelte App",
                 "type": "portal-app",
                 "clientBootstrap": "startSvelteDemoApp",
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -60,6 +58,8 @@
                     "resourcesRoot": "./public"
                 },
                 "defaultConfig": {
+                    "title": "Demo Svelte App",
+                    "category": "Demo",
                     "appConfig": {
                         "firstName": "Gus",
                         "pingButtonLabel": "Send Ping"

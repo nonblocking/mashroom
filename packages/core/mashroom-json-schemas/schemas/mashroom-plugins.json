@@ -796,29 +796,6 @@
                 "type": {
                     "const": "portal-app"
                 },
-                "title": {
-                    "$ref": "#/definitions/I18NString",
-                    "description": "Optional human readable title of the App. Can be a string or an object with translations."
-                },
-                "category": {
-                    "type": "string",
-                    "description": "An optional category to group the Apps in the Admin App"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "A list of tags that can also be used in the search (in the Admin App)"
-                },
-                "screenshots": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "pattern": "^[^/].*\\.(png|jpg|jpeg|gif|svg)$"
-                    },
-                    "description": "Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot"
-                },
                 "clientBootstrap": {
                     "$ref": "#/definitions/JavaScriptIdentifier",
                     "description": "A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element"
@@ -831,6 +808,14 @@
                     "$ref": "#/definitions/PortalAppResources",
                     "description": "Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it."
                 },
+                "screenshots": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "pattern": "^[^/].*\\.(png|jpg|jpeg|gif|svg)$"
+                    },
+                    "description": "Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot"
+                },
                 "local": {
                     "$ref": "#/definitions/PortalAppLocalConfig",
                     "description": "Basic configuration if the App is deployed locally."
@@ -839,17 +824,24 @@
                     "$ref": "#/definitions/PortalAppRemoteConfig",
                     "description": "Optional configuration if the App is accessed remotely."
                 },
-                "caching": {
-                    "$ref": "#/definitions/PortalAppCachingConfig",
-                    "description": "Optional caching configuration."
-                },
-                "editor": {
-                    "$ref": "#/definitions/PortalAppEditorConfig",
-                    "description": "Optional custom editor configuration that should be used for the appConfig in the Admin UI."
-                },
                 "defaultConfig": {
                     "type": "object",
                     "properties": {
+                        "title": {
+                            "$ref": "#/definitions/I18NString",
+                            "description": "Optional human readable title of the App. Can be a string or an object with translations."
+                        },
+                        "category": {
+                            "type": "string",
+                            "description": "An optional category to group the Apps in the Admin App"
+                        },
+                        "tags": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of tags that can also be used in the search (in the Admin App)"
+                        },
                         "defaultRestrictViewToRoles": {
                             "type": "array",
                             "items": {
@@ -869,6 +861,14 @@
                             },
                             "additionalProperties": false,
                             "description": "Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App"
+                        },
+                        "caching": {
+                            "$ref": "#/definitions/PortalAppCachingConfig",
+                            "description": "Optional caching configuration."
+                        },
+                        "editor": {
+                            "$ref": "#/definitions/PortalAppEditorConfig",
+                            "description": "Optional custom editor configuration that should be used for the appConfig in the Admin UI."
                         },
                         "proxies": {
                             "type": "object",

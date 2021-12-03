@@ -35,10 +35,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo React App",
-                "title": "Demo React App",
                 "type": "portal-app",
                 "clientBootstrap": "startReactDemoApp",
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -52,6 +50,8 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": "Demo React App",
+                    "category": "Demo",
                     "appConfig": {
                         "firstName": "Jimmy",
                         "pingButtonLabel": "Send Ping"

@@ -35,10 +35,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo WebSocket Proxy App",
-                "title": "Demo WebSocket Proxy App",
                 "type": "portal-app",
                 "clientBootstrap": "startWebSocketProxyDemoApp",
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -49,6 +47,8 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": "Demo WebSocket Proxy App",
+                    "category": "Demo",
                     "defaultRestrictViewToRoles": [
                         "Authenticated"
                     ],

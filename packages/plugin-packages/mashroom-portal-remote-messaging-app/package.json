@@ -50,10 +50,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Remote Messaging App",
-                "title": "Remote Messaging App",
                 "type": "portal-app",
                 "clientBootstrap": "startRemoteMessagingApp",
-                "category": "Testing",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -64,7 +62,8 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
-                    "appConfig": {}
+                    "title": "Remote Messaging Test App",
+                    "category": "Testing"
                 }
             }
         ]

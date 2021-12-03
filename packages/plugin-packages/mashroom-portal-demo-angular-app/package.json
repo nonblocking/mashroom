@@ -40,10 +40,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Angular App",
-                "title": "Demo Angular App",
                 "type": "portal-app",
                 "clientBootstrap": "startAngularDemoApp",
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "runtime.js",
@@ -57,6 +55,8 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": "Demo Angular App",
+                    "category": "Demo",
                     "appConfig": {
                         "firstName": "Kim",
                         "pingButtonLabel": "Send Ping"

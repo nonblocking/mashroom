@@ -33,17 +33,12 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Load Dynamically App",
-                "title": {
-                    "en": "Demo Load Dynamically",
-                    "de": "Demo Dynamisches Laden App"
-                },
                 "type": "portal-app",
                 "clientBootstrap": "startLoadDynamicallyDemoApp",
                 "requires": [
                     "Mashroom Portal Demo React App",
                     "Mashroom Portal Demo Angular App"
                 ],
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -54,6 +49,11 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": {
+                        "en": "Demo Load Dynamically",
+                        "de": "Demo Dynamisches Laden App"
+                    },
+                    "category": "Demo",
                     "appConfig": {
                     }
                 }

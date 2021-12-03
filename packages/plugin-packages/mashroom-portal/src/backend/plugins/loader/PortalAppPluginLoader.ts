@@ -79,6 +79,10 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             }
         }
 
+        const title = version === 2 ? config.title : plugin.pluginDefinition.title;
+        const category = version === 2 ? config.category : plugin.pluginDefinition.category;
+        const tags = version === 2 ? config.tags : plugin.pluginDefinition.tags;
+
         const proxies = version === 2 ? config.proxies : config.restProxies;
 
         const defaultAppConfig = {...plugin.pluginDefinition.defaultConfig?.appConfig || {}, ...config.appConfig || {}};
@@ -95,20 +99,20 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         if (version === 2) {
             const relativeSSRBootstrap = plugin.pluginDefinition.local?.ssrBootstrap;
             ssrBootstrap = relativeSSRBootstrap && resolve(plugin.pluginPackage.pluginPackagePath, relativeSSRBootstrap);
-            cachingConfig = plugin.pluginDefinition.caching;
-            editorConfig = plugin.pluginDefinition.editor;
+            cachingConfig = config.caching;
+            editorConfig = config.editor;
         }
 
         const portalApp: MashroomPortalApp = {
             name: plugin.name,
-            title: plugin.pluginDefinition.title,
+            title,
             description: plugin.description,
-            tags: plugin.tags,
+            tags,
             version: plugin.pluginPackage.version,
             homepage: plugin.pluginDefinition.homepage || plugin.pluginPackage.homepage,
             author: plugin.pluginDefinition.author || plugin.pluginPackage.author,
             license: plugin.pluginPackage.license,
-            category: plugin.pluginDefinition.category,
+            category,
             metaInfo: config.metaInfo,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
             remoteApp: false,

@@ -36,10 +36,8 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Rest Proxy App",
-                "title": "Demo REST Proxy App",
                 "type": "portal-app",
                 "clientBootstrap": "startRestProxyDemoApp",
-                "category": "Demo",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -50,6 +48,8 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": "Demo REST Proxy App",
+                    "category": "Demo",
                     "defaultRestrictViewToRoles": [
                         "Authenticated"
                     ],

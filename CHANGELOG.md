@@ -20,13 +20,19 @@
    ```
  * Portal: App definition updated to be able to integrate new features such as SSR and config editor.
    Changes are:
+   * Moved _title_, _tags_ and _category_ to _defaultConfig_, so it can be overwritten per server instance
    * _bootstrap_ has been renamed to _clientBootstrap_
    * The _resourcesRoot_ can now be defined for local deployment and remote access separately
-   * _restProxies_ has been renamed to _proxies_ because the proxy supports all kinds of HTTP and WebSocket connections.
+   * _restProxies_ has been renamed to _proxies_ because the proxy supports all kinds of HTTP and WebSocket connections
+   * Caching config added
+   * Custom editor config added
    Existing portal-app definitions are still valid, but if you want to upgrade change the following:
    ```json
      {
        "name": "My Single Page App",
+       "title": "My Single Page App",
+       "category": "Demo",
+       "tags": ["what", "ever"],
        "type": "portal-app",
        "bootstrap": "startMyApp",
        "defaultConfig": {
@@ -48,12 +54,26 @@
        "type": "portal-app",
        "clientBootstrap": "startMyApp",
        "local": {
-         "resourcesRoot": "./dist"
+         "resourcesRoot": "./dist",
+          "ssrBootstrap": "optional-ssr-bootstrap-file"
        },
        "remote": {
-         "resourcesRoot": "/if-remote-access-supported"
+         "resourcesRoot": "/if-remote-access-supported",
+         "ssrInitialHtmlPath": "optional-ssr-route"
        },
        "defaultConfig": {
+         "title": "My Single Page App",
+         "category": "Demo",
+         "tags": ["what", "ever"],
+         "caching": {
+           "ssrHtml": "same-config-and-user"
+         },
+         "editor": {
+           "editorPortalApp": "My Optional App Config Editor",
+           "position": "in-place",
+           "appConfig": {
+           }
+         },
          "proxies": {
             "spaceXApi": {
                 "targetUri": "https://api.spacexdata.com/v3",

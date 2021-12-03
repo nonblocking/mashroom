@@ -55,6 +55,10 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "title": {
+                        "en": "Tabify App",
+                        "de": "Reiterisierung App"
+                    },
                     "appConfig": {
                         "addCloseButtons": false,
                         "pluginNameTitleMapping": {

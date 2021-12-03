@@ -5,15 +5,6 @@
         {
             "name": "My Single Page App",
             "type": "portal-app",
-            "title": {
-                "en": "My Single Page App",
-                "de": "Meine Single Page App"
-            },
-            "category": "My Category",
-            "tags": ["my", "stuff"],
-            "screenshots": [
-                "screenshot1.png"
-            ],
             "clientBootstrap": "startMyApp",
             "resources": {
                 "js": [
@@ -28,6 +19,9 @@
                     "whatever.js"
                 ]
             },
+            "screenshots": [
+                "screenshot1.png"
+            ],
             "local": {
                 "resourcesRoot": "./dist",
                 "ssrBootstrap": "./dist/renderToString.js"
@@ -36,19 +30,28 @@
                 "resourcesRoot": "/public",
                 "ssrInitialHtmlPath": "/ssr"
             },
-            "caching": {
-                "ssrHtml": "same-config-and-user"
-            },
-            "editor": {
-                "editorPortalApp": "Demo Config Editor",
-                "position": "in-place",
-                "appConfig": {
-                }
-            },
             "defaultConfig": {
+                "title": {
+                    "en": "My Single Page App",
+                    "de": "Meine Single Page App"
+                },
+                "category": "My Category",
+                "tags": ["my", "stuff"],
+                "metaInfo": {
+                    "capabilities": ["foo"]
+                },
                 "defaultRestrictViewToRoles": ["Role1"],
                 "rolePermissions": {
                     "doSomethingSpecial": ["Role2", "Role3"]
+                },
+                "caching": {
+                    "ssrHtml": "same-config-and-user"
+                },
+                "editor": {
+                    "editorPortalApp": "Demo Config Editor",
+                    "position": "in-place",
+                    "appConfig": {
+                    }
                 },
                 "proxies": {
                     "spaceXApi": {
@@ -59,9 +62,6 @@
                     "tracer": {
                         "targetUri": "${env.TRACER_URL}"
                     }
-                },
-                "metaInfo": {
-                    "capabilities": ["foo"]
                 },
                 "appConfig": {
                     "myProperty": "foo"

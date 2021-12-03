@@ -106,11 +106,6 @@
             {
                 "name": "Mashroom Welcome Portal App",
                 "type": "portal-app",
-                "title": {
-                    "en": "Welcome Portal App",
-                    "de": "Willkommen Portal App"
-                },
-                "category": "Demo",
                 "clientBootstrap": "startWelcomeApp",
                 "resources": {
                     "js": [
@@ -124,8 +119,15 @@
                     "resourcesRoot": "./dist/frontend",
                     "ssrBootstrap": "./dist/frontend/welcome-app/js/indexSSR.js"
                 },
-                "caching": {
-                    "ssrHtml": "same-config"
+                "defaultConfig": {
+                    "title": {
+                        "en": "Welcome Portal App",
+                        "de": "Willkommen Portal App"
+                    },
+                    "category": "Demo",
+                    "caching": {
+                        "ssrHtml": "same-config"
+                    }
                 }
             },
             {

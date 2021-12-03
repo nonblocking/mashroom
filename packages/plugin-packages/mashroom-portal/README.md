@@ -244,12 +244,6 @@ A full config with all optional properties would look like this:
         "plugins": [
             {
                 "name": "My Single Page App",
-                "title": {
-                    "en": "My Single Page App",
-                    "de": "Meine Single Page App"
-                },
-                "category": "My Category",
-                "tags": ["my", "stuff"],
                 "type": "portal-app",
                 "clientBootstrap": "startMyApp",
                 "resources": {
@@ -272,19 +266,28 @@ A full config with all optional properties would look like this:
                     "resourcesRoot": "/public",
                     "ssrInitialHtmlPath": "/ssr"
                 },
-                "caching": {
-                    "ssrHtml": "same-config-and-user"
-                },
-                "editor": {
-                    "editorPortalApp": "Demo Config Editor",
-                    "position": "in-place",
-                    "appConfig": {
-                    }
-                },
                 "defaultConfig": {
+                    "title": {
+                        "en": "My Single Page App",
+                        "de": "Meine Single Page App"
+                    },
+                    "category": "My Category",
+                    "tags": ["my", "stuff"],
+                    "metaInfo": {
+                        "capabilities": ["foo"]
+                    },
                     "defaultRestrictViewToRoles": ["Role1"],
                     "rolePermissions": {
                         "doSomethingSpecial": ["Role2", "Role3"]
+                    },
+                    "caching": {
+                        "ssrHtml": "same-config-and-user"
+                    },
+                    "editor": {
+                        "editorPortalApp": "Demo Config Editor",
+                        "position": "in-place",
+                        "appConfig": {
+                        }
                     },
                     "proxies": {
                         "spaceXApi": {
@@ -292,9 +295,6 @@ A full config with all optional properties would look like this:
                             "sendPermissionsHeader": false,
                             "restrictToRoles": ["Role1"]
                         }
-                    },
-                    "metaInfo": {
-                        "capabilities": ["foo"]
                     },
                     "appConfig": {
                         "myProperty": "foo"
@@ -306,9 +306,6 @@ A full config with all optional properties would look like this:
 }
 ```
 
- * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
- * _category_: An optional category to group the Apps in the Admin App
- * _tags_: An optional list of tags that can also be used in the search (in the Admin App)
  * _clientBootstrap_: The global function exposed on the client side to launch the App (see below for an example)
  * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
  * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
@@ -321,25 +318,28 @@ A full config with all optional properties would look like this:
  * _remote_: Optional configuration if the App is accessed remotely
    * _resourcesRoot_: The root path for App resources such as JavaScript files and images
    * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML
- * _caching_: Optional caching configuration
-   * _ssrHtml_: Optional SSR caching configuration (Default: same-config-and-user)
- * _editor_: Optional custom editor configuration that should be used for the appConfig in the Admin UI
-   * _editorPortalApp_: The name of the Portal App that should be used to edit the appConfig of this App
-   * _position_: Optional hint where to launch the editor. Possible values: in-place, sidebar. (Default: in-place)
-   * _appConfig_: The optional appConfig the editor App should be launched with (Default: {})
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
-   * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
+    * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
+    * _category_: An optional category to group the Apps in the Admin App
+    * _tags_: An optional list of tags that can also be used in the search (in the Admin App)
+    * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
      Use this to prevent that an App can just be loaded via JS API (dynamically) by any user, even an anonymous one.
-   * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
-   * _proxies_: Defines proxies to access the App's backend (HTTP or WebSocket)
-       * _targetUri_: The API target URI
-       * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_ (Default: false)
-       * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
-          The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
-          can access the proxy if this property is set. You can use this to protect sensitive data only a small group of
-          users is allowed to access.
-   * _metaInfo_: Optional meta info that could be used to lookup for Apps with specific features or capabilities
-   * _appConfig_: The default configuration that will be passed to the App. Can be adapted in the Admin App.
+    * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
+    * _caching_: Optional caching configuration
+        * _ssrHtml_: Optional SSR caching configuration (Default: same-config-and-user)
+    * _editor_: Optional custom editor configuration that should be used for the appConfig in the Admin UI
+        * _editorPortalApp_: The name of the Portal App that should be used to edit the appConfig of this App
+        * _position_: Optional hint where to launch the editor. Possible values: in-place, sidebar. (Default: in-place)
+        * _appConfig_: The optional appConfig the editor App should be launched with (Default: {})
+    * _proxies_: Defines proxies to access the App's backend (HTTP or WebSocket)
+        * _targetUri_: The API target URI
+        * _sendPermissionsHeader_: Optional. Add the header _X-USER-PERMISSIONS_ with a comma separated list of permissions calculated from _rolePermissions_ (Default: false)
+        * _restrictToRoles_: Optional list of roles that are permitted to access the proxy.
+           The difference to using ACL rules to restrict the access to an API is that not even the _Administrator_ role
+           can access the proxy if this property is set. You can use this to protect sensitive data only a small group of
+           users is allowed to access.
+    * _metaInfo_: Optional meta info that could be used to lookup for Apps with specific features or capabilities
+    * _appConfig_: The default configuration that will be passed to the App. Can be adapted in the Admin App.
 
 The _clientBootstrap_ is in this case a global function that starts the App within the given host element. Here for example a React app:
 

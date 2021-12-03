@@ -26,7 +26,6 @@ describe('PortalAppPluginLoader', () => {
             pluginDefinition: {
                 name: 'Portal App 1',
                 description: null,
-                tags: ['tag1', 'tag2'],
                 type: 'portal-app',
                 requires: null,
                 clientBootstrap: 'startApp',
@@ -54,16 +53,22 @@ describe('PortalAppPluginLoader', () => {
                     resourcesRoot: '/public',
                     ssrInitialHtmlPath: '/ssr'
                 },
-                caching: {
-                    ssrHtml: 'same-config-and-user'
-                },
-                editor: {
-                    editorPortalApp: 'Demo Config Editor',
-                    position: 'in-place',
-                    appConfig: {
-                    }
-                },
                 defaultConfig: {
+                    title: 'Portal App 1',
+                    category: 'Test',
+                    tags: ['tag1', 'tag2'],
+                    metaInfo: {
+                        capabilities: ['foo']
+                    },
+                    caching: {
+                        ssrHtml: 'same-config-and-user'
+                    },
+                    editor: {
+                        editorPortalApp: 'Demo Config Editor',
+                        position: 'in-place',
+                        appConfig: {
+                        }
+                    },
                     defaultRestrictViewToRoles: ['Role1'],
                     rolePermissions: {
                         doSomethingSpecial: ['Role2', 'Role3']
@@ -74,9 +79,6 @@ describe('PortalAppPluginLoader', () => {
                             sendPermissionsHeader: false,
                             restrictToRoles: ['Role1']
                         }
-                    },
-                    metaInfo: {
-                        capabilities: ['foo']
                     },
                     appConfig: {
                         firstName: 'John',
@@ -97,7 +99,9 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps.length).toBe(1);
         expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
         expect(registry.portalApps[0].description).toBe('my description');
+        expect(registry.portalApps[0].title).toEqual('Portal App 1');
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
+        expect(registry.portalApps[0].category).toEqual('Test');
         expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': ['style.css']});
         expect(registry.portalApps[0].sharedResources).toEqual({'js': ['globalLib.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
@@ -128,9 +132,11 @@ describe('PortalAppPluginLoader', () => {
             config: null,
             pluginDefinition: {
                 name: 'Portal App 1',
-                description: null,
-                tags: ['tag1', 'tag2'],
                 type: 'portal-app',
+                description: null,
+                title: 'Portal App 1',
+                category: 'Test',
+                tags: ['tag1', 'tag2'],
                 requires: null,
                 bootstrap: 'startApp',
                 resources: {
@@ -184,7 +190,9 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps.length).toBe(1);
         expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
         expect(registry.portalApps[0].description).toBe('my description');
+        expect(registry.portalApps[0].title).toEqual('Portal App 1');
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
+        expect(registry.portalApps[0].category).toEqual('Test');
         expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': ['style.css']});
         expect(registry.portalApps[0].sharedResources).toEqual({'js': ['globalLib.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');

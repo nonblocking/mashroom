@@ -56,7 +56,6 @@
                 "name": "Mashroom Portal Admin App",
                 "type": "portal-app",
                 "clientBootstrap": "startPortalAdminApp",
-                "category": "hidden",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -67,6 +66,7 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
+                    "category": "hidden",
                     "defaultRestrictViewToRoles": [
                         "Administrator"
                     ],
