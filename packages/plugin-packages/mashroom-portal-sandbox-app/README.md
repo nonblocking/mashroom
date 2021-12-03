@@ -3,9 +3,8 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-When you place this Portal App on an empty page it allows sandbox testing of any other App.
-This means you can load any other portal app with a specific configuration and you can interact with it via Message Bus.
-You can also pass the desired Portal App and configuration via query parameter which is useful for end-2-end testing with tools such as _Selenium_.
+This _Mashroom Portal_ App can be used to load any other Portal App with a specific configuration and to interact with the App via Message Bus.
+It can also be used for end-2-end testing with tools such as Selenium.
 
 ## Usage
 

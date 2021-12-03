@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-sandbox-app",
-    "description": "This App can be used to load any other Portal App with a specific configuration and to interact with the App via Message Bus. Can also be used for end-2-end testing with tools such as Selenium.",
+    "description": "A Mashroom Portal App that can be used to load any other Portal App with a specific configuration and to interact with the App via Message Bus",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

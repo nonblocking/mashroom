@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-websocket-proxy-app",
-    "description": "Simple App that demonstrates how to use a WebSocket proxy",
+    "description": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server that cannot be reached directly by the client",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-tabify-app",
-    "description": "App that turns an app area into a tabbed dialog",
+    "description": "This Mashroom Portal App turns any app area where it is placed automatically into a tabbed container",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

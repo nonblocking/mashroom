@@ -1,7 +1,7 @@
 {
     "name": "@mashroom/mashroom-portal-demo-svelte-app",
     "version": "1.9.1",
-    "description": "Simple Svelte based App that integrates into the Portal",
+    "description": "A simple Svelte based SPA that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
     "main": "index.js",
