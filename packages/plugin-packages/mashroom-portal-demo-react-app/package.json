@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-react-app",
-    "description": "Simple React based App that integrates into the Portal",
+    "description": "A simple React based SPA that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

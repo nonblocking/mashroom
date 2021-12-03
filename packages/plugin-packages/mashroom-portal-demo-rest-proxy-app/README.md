@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This is a simple SPA that demonstrate how the _Mashroom Portal_ proxy could be used to connect to a
+This is a simple SPA that demonstrates how the _Mashroom Portal_ proxy could be used to connect to a
 REST API that cannot be reached directly by the client.
 
 It fetches data from the SpaceX API, but connects through the Portal. So the actual endpoint will not be visible

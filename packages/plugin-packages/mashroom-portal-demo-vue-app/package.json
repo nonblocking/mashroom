@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-vue-app",
-    "description": "Simple Vue based App that integrates into the Portal",
+    "description": "A simple Vue based SPA that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

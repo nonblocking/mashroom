@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-iframe-app",
-    "description": "App that shows an arbitrary page in an IFrame. With support for responsiveness.",
+    "description": "An Mashroom Portal App that shows an arbitrary page in an IFrame. With support for responsiveness.",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
