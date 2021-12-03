@@ -163,7 +163,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
 
     const headerContent = styleResources.flat().map((style) => (`
         <style>${style}</style>
-    `)).join();
+    `)).join('\n');
 
     return {
         headerContent,
