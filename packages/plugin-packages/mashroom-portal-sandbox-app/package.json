@@ -61,7 +61,7 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
-                    "title": "Sandbox App"
+                    "title": "Sandbox App",
                     "category": "Testing"
                 }
             }
