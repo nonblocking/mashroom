@@ -5,7 +5,7 @@ export default (resourcesBasePath: string) => `
     <div class="mashroom-welcome-portal-app">
         <h4>Welcome to the Mashroom Portal Server!</h4>
         <div class="welcome-app-content">
-            <img src="${resourcesBasePath}/${logoImg}"/>
+            <img src="${resourcesBasePath}/${logoImg}" width="60" height="60" alt="Mashroom Server" />
             <p>
                 This demonstration portal page integrates multiple standalone (single page) apps.
                 <br/>

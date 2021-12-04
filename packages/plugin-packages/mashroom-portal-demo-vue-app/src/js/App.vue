@@ -1,6 +1,6 @@
 <template>
     <div class="mashroom-demo-vue-app">
-        <img :src="resourcesBasePath + '/assets/vue_logo.png'"/>
+        <img :src="resourcesBasePath + '/assets/vue_logo.png'" width="76" height="76" alt="Vue" />
         <div class="demo-vue-app-content">
             <h4>Vue Demo App</h4>
             <p>Hello {{firstName}}!</p>
