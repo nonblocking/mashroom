@@ -64,6 +64,13 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         },
     };
 
+    const compositeDemoAppInstance1: MashroomPortalAppInstance = {
+        pluginName: 'Mashroom Portal Demo Composite App',
+        instanceId: createAppInstanceId(),
+        appConfig: {
+        },
+    };
+
     const loadDynamicallyDemoAppInstance1: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Portal Demo Load Dynamically App',
         instanceId: createAppInstanceId(),
@@ -124,6 +131,12 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pageId: 'test2',
         description: 'Mashroom Portal Demo Site Test Page 2',
         layout: 'Mashroom Portal Default Layouts 1 Column',
+        portalApps: {
+            'app-area1': [{
+                pluginName: compositeDemoAppInstance1.pluginName,
+                instanceId: compositeDemoAppInstance1.instanceId,
+            }],
+        },
     };
 
     const subPage1: MashroomPortalPage = {
@@ -249,6 +262,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
             await portalAppInstancesCollection.insertOne(reactDemoAppInstance3);
             await portalAppInstancesCollection.insertOne(reactDemoAppInstance4);
             await portalAppInstancesCollection.insertOne(angularDemoAppInstance1);
+            await portalAppInstancesCollection.insertOne(compositeDemoAppInstance1);
             await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
             await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);
             await portalAppInstancesCollection.insertOne(tabifyAppInstance1);
