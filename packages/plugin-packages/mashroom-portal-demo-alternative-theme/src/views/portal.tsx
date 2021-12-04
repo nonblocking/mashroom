@@ -5,10 +5,10 @@ import themeParams from '../plugin/theme_params';
 import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions'
 
 export default ({
-                    user, site, siteBasePath, page, csrfToken, resourcesBasePath, apiBasePath,
+                    user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
                     portalResourcesHeader, portalResourcesFooter, pageContent, messages, lastThemeReloadTs
                 }: MashroomPortalPageRenderModel) => (
-    <html>
+    <html lang={lang}>
         <head dangerouslySetInnerHTML={{ __html: `
             <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
             <meta charSet="utf-8"/>
@@ -88,7 +88,7 @@ export default ({
 
             <footer>
                 <div className="powered-by">
-                    Powered by: <a href="https://www.mashroom-server.com" target="_blank">Mashroom Portal Server</a> {themeParams.mashroomVersion}
+                    Powered by: <a href="https://www.mashroom-server.com" rel="noopener" target="_blank">Mashroom Portal Server</a> {themeParams.mashroomVersion}
                 </div>
             </footer>
 

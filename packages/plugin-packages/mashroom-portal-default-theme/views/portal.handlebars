@@ -1,13 +1,13 @@
 {{! Portal page template  }}
 <!doctype html>
-<html>
+<html lang="{{lang}}">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <meta name="description" content="{{model.page.description}}">
-    <meta name="keywords" content="{{model.page.keywords}}">
+    <meta name="description" content="{{page.description}}">
+    <meta name="keywords" content="{{page.keywords}}">
     {{#if csrfToken}}
         <meta name="csrf-token" content="{{csrfToken}}">
     {{/if}}
@@ -38,7 +38,7 @@
 
     <header>
         <div class="logo">
-            <img src="{{resourcesBasePath}}/assets/mashroom_logo.svg"/>
+            <img src="{{resourcesBasePath}}/assets/mashroom_logo.svg" width="40" height="40" alt="Mashroom Server" />
         </div>
         <div class="site-name">
             <h1>{{site.title}}</h1>
@@ -97,7 +97,7 @@
 
     <footer>
         <div class="powered-by">
-            Powered by: <a href="https://www.mashroom-server.com" target="_blank">Mashroom Portal Server</a>
+            Powered by: <a href="https://www.mashroom-server.com" rel="noopener" target="_blank">Mashroom Portal Server</a>
         </div>
     </footer>
 

@@ -161,6 +161,15 @@ export default class PortalPageRenderController {
                 pageContent = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
 
                 evalScript = `
+                    // Update page metadata
+                    const metaDescription = document.querySelector('meta[name="description"]');
+                    const metaKeywords = document.querySelector('meta[name="keywords"]');
+                    if (metaDescription) {
+                        metaDescription.setAttribute('content', '${page.description || ''}');
+                    }
+                    if (metaKeywords) {
+                        metaKeywords.setAttribute('content', '${page.keywords || ''}');
+                    }
                     // Update pageId
                     window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
                     var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;

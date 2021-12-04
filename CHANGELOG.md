@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal Default Theme: Fixed setting and updating meta description and keywords
  * Portal Default Theme: Fixed crawlability (some href's were missing)
  * MongoDB Session Provider: Fixed startup and detecting connected state
  * Admin UI: Works now if the site path is "/" (because the /portal/my-site is mapped to / via vhost path mapper)
