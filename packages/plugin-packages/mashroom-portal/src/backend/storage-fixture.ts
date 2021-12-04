@@ -86,6 +86,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const pageHome: MashroomPortalPage = {
         pageId: 'home',
+        description: 'Mashroom Portal Demo Site Home',
         layout: 'Mashroom Portal Default Layouts 2 Columns with 1 Column Header',
         portalApps: {
             'app-area1': [{
@@ -105,6 +106,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const pageTest1: MashroomPortalPage = {
         pageId: 'test1',
+        description: 'Mashroom Portal Demo Site Test Page 1',
         layout: 'Mashroom Portal Default Layouts 2 Columns',
         portalApps: {
             'app-area1': [{
@@ -120,11 +122,13 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const pageTest2: MashroomPortalPage = {
         pageId: 'test2',
+        description: 'Mashroom Portal Demo Site Test Page 2',
         layout: 'Mashroom Portal Default Layouts 1 Column',
     };
 
     const subPage1: MashroomPortalPage = {
         pageId: 'subpage1',
+        description: 'Mashroom Portal Demo Site Test Subpage 1',
         layout: 'Mashroom Portal Default Layouts 2 Columns',
         portalApps: {
             'app-area1': [{
@@ -137,6 +141,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const subPage2: MashroomPortalPage = {
         pageId: 'subpage2',
+        description: 'Mashroom Portal Demo Site Test Subpage 2',
         layout: 'Mashroom Portal Default Layouts 1 Column',
         portalApps: {
             'app-area1': [{
@@ -154,6 +159,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
 
     const pageSandbox: MashroomPortalPage = {
         pageId: 'sandbox',
+        description: 'Mashroom Portal Demo Site Sandbox Page',
         layout: 'Mashroom Portal Default Layouts 1 Column',
         portalApps: {
             'app-area1': [{

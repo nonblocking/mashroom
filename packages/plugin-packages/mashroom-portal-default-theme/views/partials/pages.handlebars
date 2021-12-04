@@ -4,13 +4,13 @@
             <li class="nav-item">
                 {{#equals pageId @root.page.pageId}}
                     {{#ifSpaMode}}
-                        <a class="nav-link active" href="javascript:replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
+                        <a class="nav-link active" href="{{@root.siteBasePath}}{{friendlyUrl}}" onclick="return replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
                     {{else}}
-                        <a class="nav-link active" href="">{{title}}</a>
+                        <a class="nav-link active" href="" onclick="return false">{{title}}</a>
                     {{/ifSpaMode}}
                 {{else}}
                     {{#ifSpaMode}}
-                        <a class="nav-link" href="javascript:replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
+                        <a class="nav-link" href="{{@root.siteBasePath}}{{friendlyUrl}}" onclick="return replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')" data-mr-page-id="{{pageId}}">{{title}}</a>
                     {{else}}
                         <a class="nav-link" href="{{@root.siteBasePath}}{{friendlyUrl}}">{{title}}</a>
                     {{/ifSpaMode}}

@@ -46,17 +46,17 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
 };
 
 // Dynamically replace the page content
-(global as any).replacePageContent = (pageId: string, pageUrl: string, dontAddToHistory = false) => {
+(global as any).replacePageContent = (pageId: string, pageUrl: string, dontAddToHistory = false): boolean => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
     if (!clientServices) {
-        return;
+        return false;
     }
     const contentEl = document.getElementById('portal-page-content');
     if (!contentEl) {
-        return;
+        return false;
     }
     if (pageId === clientServices.portalPageService.getCurrentPageId()) {
-        return;
+        return false;
     }
 
     console.debug('Replacing page content with pageId:', pageId);
@@ -90,6 +90,8 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
             document.location.replace(pageUrl);
         }
     )
+
+    return false;
 }
 
 const hideMobileMenu = () => {
