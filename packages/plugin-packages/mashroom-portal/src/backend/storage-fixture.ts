@@ -36,7 +36,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            firstName: 'Mike',
+            message: 'This simple React based SPA was launched with a different...',
         },
     };
 
@@ -44,7 +44,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            firstName: 'Gus',
+            message: '...configuration than this instance of the same SPA',
         },
     };
 
@@ -52,7 +52,7 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            firstName: 'Marvin',
+            message: 'This React SPA is part of a tabbed container formed by the Mashroom Portal Tabify App',
         },
     };
 
@@ -60,7 +60,6 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         pluginName: 'Mashroom Portal Demo Angular App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            firstName: 'Kim',
         },
     };
 

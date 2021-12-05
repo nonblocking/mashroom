@@ -3,7 +3,7 @@
   import logo from './assets/svelte-logo.svg';
 
   export let messageBus: any;
-  export let appConfig: { firstName?: string, pingButtonLabel?: string } = {};
+  export let appConfig: { message?: string, pingButtonLabel?: string } = {};
   let pings = 0;
 
   const incrementPing = (): number => pings += 1;
@@ -42,7 +42,7 @@
     </div>
     <div class="demo-svelte-app-content">
         <h4>Svelte Demo App</h4>
-        <p>Hello {appConfig.firstName}!</p>
+        <p>{appConfig.message}</p>
         <div>
             <button on:click={sendPing}>
                 {appConfig.pingButtonLabel || 'Send Ping'}

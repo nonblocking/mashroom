@@ -58,7 +58,7 @@
                     "title": "Demo Angular App",
                     "category": "Demo",
                     "appConfig": {
-                        "firstName": "Kim",
+                        "message": "This is simple Angular based SPA that communicates with other Apps on the page via message bus",
                         "pingButtonLabel": "Send Ping"
                     }
                 }

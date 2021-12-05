@@ -9,10 +9,10 @@ type Props = {
 }
 
 type State = {
-    firstNames: {
+    messages: {
         [pluginName: string]: string;
     };
-    addCloseButton: {
+    addCloseButtons: {
         [pluginName: string]: boolean;
     };
 }
@@ -28,8 +28,8 @@ export default class App extends PureComponent<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            firstNames: {},
-            addCloseButton: {}
+            messages: {},
+            addCloseButtons: {}
         };
     }
 
@@ -47,7 +47,7 @@ export default class App extends PureComponent<Props, State> {
     loadApp(pluginName: string) {
         this.props.portalAppService.loadApp('app-area2', pluginName, null, null, this.getOverrideConfig(pluginName)).then(
             (loadedApp) => {
-                if (this.state.addCloseButton[pluginName]) {
+                if (this.state.addCloseButtons[pluginName]) {
                     // Force show header
                     loadedApp.portalAppWrapperElement.classList.add('show-header');
 
@@ -76,23 +76,23 @@ export default class App extends PureComponent<Props, State> {
     }
 
     getOverrideConfig(pluginName: string) {
-        if (this.state.firstNames[pluginName]) {
+        if (this.state.messages[pluginName]) {
             return {
-                firstName: this.state.firstNames[pluginName]
+                message: this.state.messages[pluginName]
             }
         }
         return null;
     }
 
-    onFirstNameValueChange(firstName: string, pluginName: string) {
+    onMessageValueChange(message: string, pluginName: string) {
         this.setState({
-            firstNames: { ...this.state.firstNames, [pluginName]: firstName,}
+            messages: { ...this.state.messages, [pluginName]: message,}
         });
     }
 
     onAddCloseButtonChange(checked: boolean, pluginName: string) {
         this.setState({
-            addCloseButton: { ...this.state.addCloseButton, [pluginName]: checked,}
+            addCloseButtons: { ...this.state.addCloseButtons, [pluginName]: checked,}
         });
     }
 
@@ -107,11 +107,11 @@ export default class App extends PureComponent<Props, State> {
                 <tr>
                     <td>{pluginName}</td>
                     <td>
-                        First name:
-                        <input type='text' value={this.state.firstNames[pluginName] || ''} onChange={(e) => this.onFirstNameValueChange(e.target.value, pluginName)}/>
+                        Message:
+                        <input type='text' value={this.state.messages[pluginName] || ''} onChange={(e) => this.onMessageValueChange(e.target.value, pluginName)}/>
                     </td>
                     <td>
-                        <input type='checkbox' name={`add_close_button_${idx}`} checked={this.state.addCloseButton[pluginName]} onChange={(e) => this.onAddCloseButtonChange(e.target.checked, pluginName)}/>
+                        <input type='checkbox' name={`add_close_button_${idx}`} checked={this.state.addCloseButtons[pluginName]} onChange={(e) => this.onAddCloseButtonChange(e.target.checked, pluginName)}/>
                     </td>
                     <td>
                         <a href="javascript:void(0)" onClick={this.loadApp.bind(this, pluginName)}>Load</a><br/>

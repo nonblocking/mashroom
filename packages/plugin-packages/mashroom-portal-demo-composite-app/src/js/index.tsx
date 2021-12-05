@@ -11,7 +11,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     const {appConfig, user} = portalAppSetup;
     const {messageBus, portalAppService} = clientServices;
 
-    ReactDOM.render(<App appConfig={appConfig} messageBus={messageBus} portalAppService={portalAppService}/>, portalAppHostElement);
+    ReactDOM.render(<App messageBus={messageBus} portalAppService={portalAppService}/>, portalAppHostElement);
 
     return {
         willBeRemoved: () => {

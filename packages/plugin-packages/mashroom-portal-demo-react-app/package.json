@@ -53,7 +53,7 @@
                     "title": "Demo React App",
                     "category": "Demo",
                     "appConfig": {
-                        "firstName": "Jimmy",
+                        "message": "This is simple React based SPA that communicates with other Apps on the page via message bus",
                         "pingButtonLabel": "Send Ping"
                     }
                 }

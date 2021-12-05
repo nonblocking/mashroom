@@ -61,7 +61,7 @@
                     "title": "Demo Svelte App",
                     "category": "Demo",
                     "appConfig": {
-                        "firstName": "Gus",
+                        "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",
                         "pingButtonLabel": "Send Ping"
                     }
                 }

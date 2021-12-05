@@ -3,7 +3,7 @@
         <img :src="resourcesBasePath + '/assets/vue_logo.png'" width="76" height="76" alt="Vue" />
         <div class="demo-vue-app-content">
             <h4>Vue Demo App</h4>
-            <p>Hello {{firstName}}!</p>
+            <p>{{message}}</p>
             <div>
                 <button v-on:click="onClick">
                     {{pingButtonLabel || 'Send Ping'}}
@@ -19,7 +19,7 @@
 
     export default {
         name: 'app',
-        props: ['resourcesBasePath', 'firstName', 'pingButtonLabel', 'messageBus'],
+        props: ['resourcesBasePath', 'message', 'pingButtonLabel', 'messageBus'],
         data: () => ({
             pings: 0
         }),

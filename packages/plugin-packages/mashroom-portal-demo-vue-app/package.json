@@ -50,7 +50,7 @@
                     "title": "Demo Vue App",
                     "category": "Demo",
                     "appConfig": {
-                        "firstName": "Mike",
+                        "message": "This is simple Vue based SPA that communicates with other Apps on the page via message bus",
                         "pingButtonLabel": "Send Ping"
                     }
                 }

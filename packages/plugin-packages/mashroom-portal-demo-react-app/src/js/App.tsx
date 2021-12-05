@@ -7,7 +7,7 @@ import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-defi
 
 type Props = {
     appConfig: {
-        firstName?: string;
+        message?: string;
         pingButtonLabel?: string;
     };
     messageBus: MashroomPortalMessageBus;
@@ -51,7 +51,7 @@ export default class App extends PureComponent<Props, State> {
                 <InlineSVG className='react-logo' svgData={ReactLogo}/>
                 <div className="demo-react-app-content">
                     <h4>React Demo App</h4>
-                    <p>Hello {this.props.appConfig.firstName}!</p>
+                    <p>{this.props.appConfig.message}</p>
                     <div>
                         <button onClick={this.sendPing.bind(this)}>
                             {this.props.appConfig.pingButtonLabel || 'Send Ping'}

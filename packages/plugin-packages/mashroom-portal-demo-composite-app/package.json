@@ -53,10 +53,7 @@
                 },
                 "defaultConfig": {
                     "title": "Demo Composite App",
-                    "category": "Demo",
-                    "appConfig": {
-                        "firstName": "Linus"
-                    }
+                    "category": "Demo"
                 }
             }
         ]

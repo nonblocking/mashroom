@@ -9,32 +9,32 @@ const DIALOG = [
     {
         name: 'Mashroom Portal Demo Angular App',
         appConfig: {
+            message: 'This simple Angular SPA forms the first page',
             pingButtonLabel: 'Next'
         }
     },
     {
         name: 'Mashroom Portal Demo Vue App',
         appConfig: {
+            message: 'This simple Vue SPA forms the second page',
             pingButtonLabel: 'Next'
         }
     },
     {
         name: 'Mashroom Portal Demo Svelte App',
         appConfig: {
+            message: 'This simple Svelte SPA forms the third and last page',
             pingButtonLabel: 'Start over'
         }
     }
 ];
 
 type Props = {
-    appConfig: {
-        firstName?: string;
-    };
     messageBus: MashroomPortalMessageBus;
     portalAppService: MashroomPortalAppService;
 }
 
-const loadDialogPage = (dialogIdx: number, firstName: string | undefined, activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogElementId: string, portalAppService: MashroomPortalAppService) => {
+const loadDialogPage = (dialogIdx: number,activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogElementId: string, portalAppService: MashroomPortalAppService) => {
     if (activeAppRef.current) {
         // Unload current
         portalAppService.unloadApp(activeAppRef.current?.appId);
@@ -42,7 +42,6 @@ const loadDialogPage = (dialogIdx: number, firstName: string | undefined, active
     }
     portalAppService.loadApp(dialogElementId, DIALOG[dialogIdx].name, null, null, {
         ...DIALOG[dialogIdx].appConfig,
-        firstName,
     }).then(
         (portalApp) => {
             if (!portalApp.error) {
@@ -60,24 +59,24 @@ const loadDialogPage = (dialogIdx: number, firstName: string | undefined, active
     );
 }
 
-const onPing = (firstName: string | undefined, activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogElementId: string, portalAppService: MashroomPortalAppService) => {
+const onPing = (activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogElementId: string, portalAppService: MashroomPortalAppService) => {
     if (!activeAppRef.current) {
         return;
     }
     const nextIdx = activeAppRef.current.dialogIdx < DIALOG.length - 1 ? activeAppRef.current.dialogIdx + 1 : 0;
-    loadDialogPage(nextIdx, firstName, activeAppRef, dialogElementId, portalAppService);
+    loadDialogPage(nextIdx, activeAppRef, dialogElementId, portalAppService);
 };
 
-export default ({appConfig, messageBus, portalAppService}: Props) => {
+export default ({messageBus, portalAppService}: Props) => {
     const dialogElementId = useMemo(() => `_${Math.floor(Math.random() * 100000)}`, []);
     const activeAppRef = useRef<ActiveApp | undefined>();
 
     useEffect(() => {
         // Load first page
-        loadDialogPage(0, appConfig.firstName, activeAppRef, dialogElementId, portalAppService);
+        loadDialogPage(0, activeAppRef, dialogElementId, portalAppService);
         // Install a private message bus
         const privateMessageBus = new PrivateMessageBus(messageBus, activeAppRef,
-            () => onPing(appConfig.firstName, activeAppRef, dialogElementId, portalAppService));
+            () => onPing(activeAppRef, dialogElementId, portalAppService));
         return () => {
             privateMessageBus.uninstall();
         };

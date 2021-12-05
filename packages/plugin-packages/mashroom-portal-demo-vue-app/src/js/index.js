@@ -3,7 +3,7 @@ import Vue from 'vue';
 import App from './App.vue';
 
 const bootstrap = (portalAppHostElement, portalAppSetup, clientServices) => {
-    const { resourcesBasePath, appConfig: { firstName, pingButtonLabel }} = portalAppSetup;
+    const { resourcesBasePath, appConfig: { message, pingButtonLabel }} = portalAppSetup;
     const { messageBus } = clientServices;
 
     // Vue seems to replace the host element, so we create a sub node
@@ -14,7 +14,7 @@ const bootstrap = (portalAppHostElement, portalAppSetup, clientServices) => {
         render: h => h(App, {
             props: {
                 resourcesBasePath,
-                firstName,
+                message,
                 pingButtonLabel,
                 messageBus
             }
