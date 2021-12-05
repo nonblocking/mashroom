@@ -1,6 +1,9 @@
 
 import themeParams from './theme_params';
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const packageJson = require('../package.json');
+
 function equals(this: any, lvalue: any, rvalue: any, options: any): any {
     if (arguments.length < 3) {
         throw new Error('Handlebars Helper equal needs 2 parameters');
@@ -35,6 +38,14 @@ function mashroomVersion(): string {
     return themeParams.mashroomVersion;
 }
 
+function bootstrapVersion(): string {
+    return packageJson.devDependencies['bootstrap']?.replace(/[^]/, '');
+}
+
+function fontawesomeVersion(): string {
+    return packageJson.devDependencies['@fortawesome/fontawesome-free']?.replace(/[^]/, '');
+}
+
 function extraMainClasses(): string {
     let classes = '';
     if (themeParams.showPortalAppHeaders) {
@@ -55,6 +66,8 @@ export default {
     ifSpaMode,
     env,
     mashroomVersion,
+    bootstrapVersion,
+    fontawesomeVersion,
     extraMainClasses,
     ifShowEnvAndVersions,
     '__': i18n,

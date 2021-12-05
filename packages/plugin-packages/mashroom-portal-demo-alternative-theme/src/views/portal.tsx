@@ -2,6 +2,11 @@
 import React from 'react';
 import Navigation from './navigation';
 import themeParams from '../plugin/theme_params';
+import packageJson from '../../package.json';
+
+const bootstrapVersion = packageJson.devDependencies['bootstrap']?.replace(/[^]/, '');
+const fontawesomeVersion = packageJson.devDependencies['@fortawesome/fontawesome-free']?.replace(/[^]/, '');
+
 import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions'
 
 export default ({
@@ -23,9 +28,9 @@ export default ({
 
             <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
             <link href='https://fonts.googleapis.com/css?family=Domine' rel='stylesheet' type='text/css'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css?v=${bootstrapVersion}'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css?v=${fontawesomeVersion}'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css?v=${fontawesomeVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/style.css?v=${lastThemeReloadTs}'/>
 
             ${page.extraCss ? `<style type="text/css">${page.extraCss}</style>` : ''}

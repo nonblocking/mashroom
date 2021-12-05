@@ -30,13 +30,13 @@ You can override the default config in your Mashroom config file like this:
   "plugins": {
         "Mashroom Cache Control Services": {
             "disabled": false,
-            "maxAgeSec": 86400
+            "maxAgeSec": 31536000
         }
     }
 }
 ```
  * _disabled_: Disable browser caching (default: false)
- * _maxAgeSec_: Max age in seconds (default: 86400 (1d))
+ * _maxAgeSec_: Max age in seconds (default: 31536000 (30d))
 
 ## Services
 

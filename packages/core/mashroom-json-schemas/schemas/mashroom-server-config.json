@@ -147,7 +147,7 @@
                     "properties": {
                         "maxAgeSec": {
                             "type": "integer",
-                            "description": "Max age in seconds (default: 86400 (1d))"
+                            "description": "Max age in seconds (default: 31536000 (30d))"
                         },
                         "disabled": {
                             "type": "boolean",
