@@ -3,7 +3,7 @@ import logoImg from '../assets/mashroom_logo.png';
 
 export default (resourcesBasePath: string) => `
     <div class="mashroom-welcome-portal-app">
-        <h4>Welcome to the Mashroom Portal Server!</h4>
+        <h4>Welcome to the Mashroom Portal!</h4>
         <div class="welcome-app-content">
             <img src="${resourcesBasePath}/${logoImg}" width="60" height="60" alt="Mashroom Server" />
             <p>
