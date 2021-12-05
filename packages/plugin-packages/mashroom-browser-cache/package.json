@@ -45,7 +45,7 @@
                 "bootstrap": "./dist/mashroom-bootstrap-services.js",
                 "defaultConfig": {
                     "disabled": false,
-                    "maxAgeSec": 86400
+                    "maxAgeSec": 31536000
                 }
             }
         ]

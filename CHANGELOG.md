@@ -3,6 +3,17 @@
 
 ## [unreleased]
 
+ * Browser Cache: Increased the default TTL to 30d to improve the (Lighthouse)[https://developers.google.com/web/tools/lighthouse] score.
+   Make sure all your resources in the Theme use cache busting or set a lower TTL value for your server like this:
+   ```
+    {
+      "plugins": {
+        "Mashroom Cache Control Services": {
+          "maxAgeSec": 86400
+        }
+      }
+    }
+   ```
  * Portal Default Theme: Fixed setting and updating meta description and keywords
  * Portal Default Theme: Fixed crawlability (some href's were missing)
  * MongoDB Session Provider: Fixed startup and detecting connected state
