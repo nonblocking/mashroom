@@ -65,7 +65,7 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     showPageLoadingIndicator(true);
     clientServices.portalPageService.getPageContent(pageId).then(
         (content: MashroomPortalPageContent) => {
-            if (content.fullPageLoadRequired) {
+            if (content.fullPageLoadRequired || !content.pageContent) {
                 document.location.replace(pageUrl);
             } else {
                 contentEl.innerHTML = content.pageContent;
