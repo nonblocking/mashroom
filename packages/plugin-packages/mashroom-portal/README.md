@@ -3,9 +3,9 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
 
-This plugin adds a Portal component which allows composing pages from Single Page Applications (SPA's).
+This plugin adds a Portal component which allows composing pages from Single Page Applications (SPAs).
 
-Registered SPA's (Portal Apps) can be registered as plugin and placed on arbitrary pages via Drag'n'Drop.
+Registered SPAs (Portal Apps) can be registered as plugin and placed on arbitrary pages via Drag'n'Drop.
 Or loaded dynamically via client-side JavaScript API.
 
 The Portal supports i18n, theming, role based security and comes with a client-side message bus which can be connected to a server-side broker.

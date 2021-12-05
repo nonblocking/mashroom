@@ -6,10 +6,10 @@
 server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as
 security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and supports custom middleware and services via plugins.
 
-Mashroom Server allows it to implemented SPA's (and express webapps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
+Mashroom Server allows it to implemented SPAs (and express webapps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
 with different configurations and even multiple times on the same page. It also allows it to restrict the access to apps based on user roles.
 
-It is even possible to integrate SPA's deployed on a different server (e.g. a different docker container) which allows independent release cycles.
+It is even possible to integrate SPAs deployed on a different server (e.g. a different docker container) which allows independent release cycles.
 
 From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for
 plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally
@@ -35,11 +35,11 @@ has similar concepts than a Java Portal Server such as [Liferay](https://www.lif
  * No compile or runtime dependencies to the server
  * Fast and lightweight
  * Portal plugin
-    * Build pages from independent SPA's, even written in different technologies
+    * Build pages from independent SPAs, even written in different technologies
     * Client-side message bus for inter-app communication which can be extended to server-side messaging
       to communicate with Apps in other browsers or even 3rd party systems
     * Proxying of REST API calls to avoid CORS problems (HTTP, SSE, WebSocket)
-    * Life registration of _Remote Apps_ (SPA's that run on a different server)
+    * Life registration of _Remote Apps_ (SPAs that run on a different server)
     * JS API to programmatically load portal apps into an arbitrary DOM node (even within another app)
     * Support for multiple sites that can be mapped to virtual hosts
     * Role based permissions for pages and Apps
