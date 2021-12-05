@@ -35,11 +35,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         name: 'Test App',
         description: 'Test App',
         type: 'portal-app',
-        category: 'Test App',
         clientBootstrap: 'startTestApp',
-        title: {
-            en: 'Title'
-        },
         sharedResources: {
             js: [
                 'my-lib-dll-a1ef123a.js'
@@ -62,16 +58,24 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             resourcesRoot: '/public',
             ssrInitialHtmlPath: '/ssr'
         },
-        caching: {
-            ssrHtml: 'same-config-and-user'
-        },
-        editor: {
-            editorPortalApp: 'Demo Config Editor',
-            position: 'in-place',
-            appConfig: {
-            }
-        },
         defaultConfig: {
+            title: {
+                en: 'Title'
+            },
+            category: 'Test',
+            tags: ['what', 'ever'],
+            metaInfo: {
+                test: 1
+            },
+            caching: {
+                ssrHtml: 'same-config-and-user'
+            },
+            editor: {
+                editorPortalApp: 'Demo Config Editor',
+                position: 'in-place',
+                appConfig: {
+                }
+            },
             proxies: {
                 'bff': {
                     targetUri: 'http://localhost:4444/api',
@@ -82,9 +86,6 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 }
             },
             rolePermissions: {},
-            metaInfo: {
-                test: 1
-            },
             appConfig: {
                 customerId: '123123'
             }
@@ -94,8 +95,9 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     const pluginDefinitionV1: MashroomPluginDefinition = {
         name: 'Test App',
         description: 'Test App',
+        tags: ['what', 'ever'],
         type: 'portal-app',
-        category: 'Test App',
+        category: 'Test',
         bootstrap: 'startTestApp',
         title: {
             en: 'Title'
@@ -218,7 +220,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
@@ -226,7 +228,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             homepage: 'https://www.mashroom-server.com',
             author: 'juergen.kofler@nonblocking.at',
             license: 'MIT',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },
@@ -283,12 +285,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
             version: '1.1.2',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },
@@ -345,12 +347,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
             version: '1.1.2',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },
@@ -407,12 +409,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
             version: '1.1.2',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },

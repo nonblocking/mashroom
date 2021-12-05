@@ -177,6 +177,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const config = definition.defaultConfig || {};
         evaluateTemplatesInConfigObject(config, this._logger);
+
+        const title = version === 2 ? config.title : definition.title;
+        const category = version === 2 ? config.category : definition.category;
+        const tags = (version === 2 ? config.tags : definition.tags) || [];
+
         const definedRestProxies = version === 2 ? config.proxies : config.restProxies;
         const proxies: MashroomPortalProxyDefinitions = {};
 
@@ -215,20 +220,20 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             if (ssrInitialHtmlUri.endsWith('/')) {
                 ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
             }
-            cachingConfig = definition.caching;
-            editorConfig = definition.editor;
+            cachingConfig = config.caching;
+            editorConfig = config.editor;
         }
 
         const portalApp: MashroomPortalApp = {
             name,
-            title: definition.title,
+            title,
             description: definition.description || packageJson?.description,
-            tags: definition.tags || [],
+            tags,
             version: packageJson?.version || new Date().toISOString(),
             homepage: definition.homepage || packageJson?.homepage,
             author: definition.author || packageJson?.author,
             license: packageJson?.license,
-            category: definition.category,
+            category,
             metaInfo: config.metaInfo,
             lastReloadTs: Date.now(),
             clientBootstrap,

@@ -81,7 +81,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
         const title = version === 2 ? config.title : plugin.pluginDefinition.title;
         const category = version === 2 ? config.category : plugin.pluginDefinition.category;
-        const tags = version === 2 ? config.tags : plugin.pluginDefinition.tags;
+        const tags = (version === 2 ? config.tags : plugin.pluginDefinition.tags) || [];
 
         const proxies = version === 2 ? config.proxies : config.restProxies;
 

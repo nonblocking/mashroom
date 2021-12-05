@@ -13,11 +13,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         name: 'Test App',
         description: 'Test App',
         type: 'portal-app',
-        category: 'Test App',
         clientBootstrap: 'startTestApp',
-        title: {
-            en: 'Title'
-        },
         sharedResources: {
             js: [
                 'my-lib-dll-a1ef123a.js'
@@ -40,16 +36,24 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             resourcesRoot: '/public',
             ssrInitialHtmlPath: '/ssr'
         },
-        caching: {
-            ssrHtml: 'same-config-and-user'
-        },
-        editor: {
-            editorPortalApp: 'Demo Config Editor',
-            position: 'in-place',
-            appConfig: {
-            }
-        },
         defaultConfig: {
+            title: {
+                en: 'Title'
+            },
+            category: 'Test',
+            tags: ['what', 'ever'],
+            metaInfo: {
+                test: 1
+            },
+            caching: {
+                ssrHtml: 'same-config-and-user'
+            },
+            editor: {
+                editorPortalApp: 'Demo Config Editor',
+                position: 'in-place',
+                appConfig: {
+                }
+            },
             proxies: {
                 'bff': {
                     targetUri: 'http://localhost:4444/api',
@@ -60,9 +64,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
                 }
             },
             rolePermissions: {},
-            metaInfo: {
-                test: 1
-            },
             appConfig: {
                 customerId: '123123'
             }
@@ -72,8 +73,9 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     const pluginDefinitionV1: MashroomPluginDefinition = {
         name: 'Test App',
         description: 'Test App',
+        tags: ['what', 'ever'],
         type: 'portal-app',
-        category: 'Test App',
+        category: 'Test',
         bootstrap: 'startTestApp',
         title: {
             en: 'Title'
@@ -92,7 +94,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             'assets/screenshot1.png',
             'assets/screenshot2.png'
         ],
-        requires: [],
         defaultConfig: {
             metaInfo: {
                 test: 1
@@ -227,7 +228,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
@@ -235,7 +236,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             homepage: 'https://www.mashroom-server.com',
             author: 'juergen.kofler@nonblocking.at',
             license: 'MIT',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },
@@ -294,12 +295,12 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
             version: '1.1.2',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },
@@ -358,12 +359,12 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
             description: 'Test App',
-            tags: [],
+            tags: ['what', 'ever'],
             title: {
                 en: 'Title'
             },
             version: '1.1.2',
-            category: 'Test App',
+            category: 'Test',
             metaInfo: {
                 test: 1
             },
