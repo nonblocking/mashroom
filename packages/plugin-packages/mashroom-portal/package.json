@@ -67,7 +67,6 @@
                 "type": "web-app",
                 "bootstrap": "./dist/backend/mashroom-bootstrap-webapp.js",
                 "requires": [
-                    "Mashroom Session Middleware",
                     "Mashroom Storage Services",
                     "Mashroom Security Services",
                     "Mashroom Internationalization Services",
