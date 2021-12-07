@@ -92,6 +92,9 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
             request.session[SIMPLE_AUTH_USER_SESSION_KEY] = mashroomUser;
             request.session[SIMPLE_AUTH_EXPIRES_SESSION_KEY] = Date.now() + this._authenticationTimeoutSec * 1000;
+            if (request.session.cookie.maxAge && this._authenticationTimeoutSec * 1000 >= request.session.cookie.maxAge) {
+                logger.error(`Configuration error detected: The authenticationTimeoutSec (${this._authenticationTimeoutSec}s) value is higher than the session cookie maxAge (${Math.trunc(request.session.cookie.maxAge / 1000)}s). Since the authentication is stored in the session this might lead to unexpected behaviour.`);
+            }
 
             // Make sure the user is in the session when this method returns (file session store is async)
             await new Promise<void>((resolve) => request.session.save(() => resolve()));

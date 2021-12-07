@@ -80,6 +80,9 @@ export default (defaultBackUrl: string) => {
             }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
             request.session[OICD_USER_SESSION_KEY] = mashroomUser;
+            if (request.session.cookie.maxAge && authData?.tokenSet.expires_at && authData.tokenSet.expires_at * 1000 >= Date.now() + request.session.cookie.maxAge) {
+                logger.error(`Configuration error detected: The auth token expiration time (${new Date(authData.tokenSet.expires_at * 1000)}) is after the session expiration time (${new Date(Date.now() + request.session.cookie.maxAge)}). Since the token is stored in the session this might lead to unexpected behaviour.`);
+            }
 
             // Make sure the user is in the session before we redirect (file session store is async)
             await new Promise<void>((resolve) => request.session.save(() => resolve()));
