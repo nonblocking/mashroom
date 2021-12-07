@@ -230,7 +230,7 @@ The typical configuration could look like this:
 
 ```json
 {
-    "$schema": "https://www.mashroom-server.com/schemas/mashroom-portal-remote-apps.json",
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-server-config.json",
     "name": "Mashroom Test Server 1",
     "port": 8080,
     "indexPage": "/portal",
@@ -256,11 +256,11 @@ The typical configuration could look like this:
         },
         "Mashroom Security Services": {
             "provider": "Mashroom Security Simple Provider",
-            "acl": "./acl.json",
-            "loginPage": "/login"
+            "acl": "./acl.json"
         },
         "Mashroom Security Simple Provider": {
-            "users": "./users.json"
+            "users": "./users.json",
+            "loginPage": "/login"
         },
         "Mashroom Storage Services": {
             "provider": "Mashroom Storage Filestore Provider"
@@ -273,7 +273,7 @@ The typical configuration could look like this:
             "defaultLanguage": "en"
         },
         "Mashroom Http Proxy Services": {
-            "rejectUntrustedCerts": false,
+            "rejectUnauthorized": false,
             "poolMaxSockets": 10
         }
     }
