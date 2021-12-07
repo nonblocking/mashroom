@@ -203,7 +203,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                 // If this is a html request, create a new session to prevent session fixation attacks
                 // See https://owasp.org/www-community/attacks/Session_fixation
                 if (isHtmlRequest(request)) {
-                    await this._createNewSession(request);
+                    await this._createNewSessionIfAny(request);
                 }
                 const authenticationHints = this._getAuthenticationHints(request);
                 this._removeAuthenticationHintsFromUrl(request, authenticationHints);
@@ -252,7 +252,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             try {
                 await securityProvider.revokeAuthentication(request);
                 // Create a new session to make sure no data of the authenticated user remains
-                await this._createNewSession(request);
+                await this._createNewSessionIfAny(request);
             } catch (e) {
                 logger.error('Security provider returned error: ', e);
             }
@@ -317,8 +317,12 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
     }
 
-    private async _createNewSession(request: Request): Promise<void> {
+    private async _createNewSessionIfAny(request: Request): Promise<void> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.service');
+        if (!request.session) {
+            return;
+        }
+
         logger.debug('Creating a new session');
 
         return new Promise((resolve) => {

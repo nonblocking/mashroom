@@ -92,6 +92,8 @@
 
 ## [unreleased]
 
+ * Security: The security providers that rely on the Express Session (Simple, LDAP, OpenID-Connect) are going to log an error now
+   if the session configuration is not suitable (e.g. when the access token lives longer than the session that stores it).
  * Browser Cache: Increased the default TTL to 30d to improve the [Lighthouse](https://developers.google.com/web/tools/lighthouse) score.
    Make sure all your resources in the Theme use cache busting or set a lower TTL value for your server like this:
    ```

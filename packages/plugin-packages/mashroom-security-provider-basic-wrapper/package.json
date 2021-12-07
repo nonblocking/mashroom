@@ -41,9 +41,6 @@
                 "name": "Mashroom Basic Wrapper Security Provider",
                 "type": "security-provider",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Session Middleware"
-                ],
                 "defaultConfig": {
                     "targetSecurityProvider": "Mashroom Security Simple Provider",
                     "onlyPreemptive": true,
