@@ -8,7 +8,7 @@ import {IntlProvider} from 'react-intl';
 
 import store from '../store/store';
 import {setUserName, setCurrentLanguage} from '../store/actions';
-import allMessages from '../messages/messages';
+import loadMessages from '../messages';
 import {DependencyContextProvider} from '../DependencyContext';
 import PortalAppManagementServiceImpl from '../services/PortalAppManagementServiceImpl';
 import DataLoadingServiceImpl from '../services/DataLoadingServiceImpl';
@@ -33,13 +33,24 @@ type Props = {
     portalAdminService: MashroomPortalAdminService;
 }
 
-export let messages: any = {};
+type State = {
+    messages: any;
+}
 
-export default class App extends PureComponent<Props> {
+export default class App extends PureComponent<Props, State> {
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            messages: {}
+        }
+    }
 
     componentDidMount(): void {
-        store.dispatch(setUserName(this.props.userName || 'Administrator'));
-        store.dispatch(setCurrentLanguage(this.props.lang));
+        const {userName, lang} = this.props;
+        store.dispatch(setUserName(userName || 'Administrator'));
+        store.dispatch(setCurrentLanguage(lang));
+        loadMessages(lang).then((messages) => this.setState({messages}));
     }
 
     getDependencyContext(): DependencyContextType {
@@ -55,11 +66,12 @@ export default class App extends PureComponent<Props> {
     }
 
     render(): ReactNode {
-        let {lang} = this.props;
-        if (!allMessages[lang]) {
-            lang = 'en';
+        const {lang} = this.props;
+        const {messages} = this.state;
+
+        if (Object.keys(messages).length === 0) {
+            return null;
         }
-        messages = allMessages[lang];
 
         return (
             <ReduxProvider store={store}>

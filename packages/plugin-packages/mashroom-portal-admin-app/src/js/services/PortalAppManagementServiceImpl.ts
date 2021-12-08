@@ -8,7 +8,7 @@ import {
     CSS_CLASS_APP_DROP_ZONE,
     DIALOG_NAME_PORTAL_APP_CONFIGURE,
 } from '../constants';
-import {messages} from '../components/App';
+import {currentMessages} from '../messages';
 
 import type {
     MashroomPortalAppService,
@@ -179,25 +179,25 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     private _createControlsWrapper(app: MashroomPortalLoadedPortalApp) {
-        const {id: appId, pluginName, instanceId, editorConfig} = app;
+        const {editorConfig} = app;
 
         const controlsWrapper = document.createElement('div');
         controlsWrapper.className = CSS_CLASS_APP_CONTROLS;
         const removeButton = document.createElement('div');
         removeButton.className = 'tool-button remove-button';
-        removeButton.title = messages.toolRemoveApp;
+        removeButton.title = currentMessages.toolRemoveApp;
         const moveButton = document.createElement('div');
         moveButton.className = 'tool-button move-button';
         moveButton.draggable = true;
-        moveButton.title = messages.toolMoveApp;
+        moveButton.title = currentMessages.toolMoveApp;
         const configureButton = document.createElement('div');
         configureButton.className = 'tool-button configure-button';
-        configureButton.title = messages.toolConfigureApp;
+        configureButton.title = currentMessages.toolConfigureApp;
         let editButton;
         if (editorConfig) {
             editButton = document.createElement('div');
             editButton.className = 'tool-button edit-button';
-            editButton.title = messages.toolEditApp;
+            editButton.title = currentMessages.toolEditApp;
         }
 
         controlsWrapper.appendChild(removeButton);
