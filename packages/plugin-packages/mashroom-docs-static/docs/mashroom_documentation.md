@@ -683,6 +683,8 @@ this in the _Mashroom_ config file:
 
 [mashroom-portal-demo-alternative-theme](../../mashroom-portal-demo-alternative-theme/README.md) [inc]
 
+[mashroom-portal-demo-react-app2](../../mashroom-portal-demo-react-app2/README.md) [inc]
+
 [mashroom-portal-demo-react-app](../../mashroom-portal-demo-react-app/README.md) [inc]
 
 [mashroom-portal-demo-angular-app](../../mashroom-portal-demo-angular-app/README.md) [inc]

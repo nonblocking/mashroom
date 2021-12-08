@@ -91,6 +91,7 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
         lang,
         user,
         appConfig,
+        editorConfig: portalApp.editorConfig,
     };
 
     return enhancePortalAppSetup(portalAppSetup, portalApp, pluginRegistry, req);

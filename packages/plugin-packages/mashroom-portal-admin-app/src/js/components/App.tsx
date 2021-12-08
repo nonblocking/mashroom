@@ -8,7 +8,7 @@ import {IntlProvider} from 'react-intl';
 
 import store from '../store/store';
 import {setUserName, setCurrentLanguage} from '../store/actions';
-import messages from '../messages/messages';
+import allMessages from '../messages/messages';
 import {DependencyContextProvider} from '../DependencyContext';
 import PortalAppManagementServiceImpl from '../services/PortalAppManagementServiceImpl';
 import DataLoadingServiceImpl from '../services/DataLoadingServiceImpl';
@@ -33,6 +33,8 @@ type Props = {
     portalAdminService: MashroomPortalAdminService;
 }
 
+export let messages: any = {};
+
 export default class App extends PureComponent<Props> {
 
     componentDidMount(): void {
@@ -54,13 +56,14 @@ export default class App extends PureComponent<Props> {
 
     render(): ReactNode {
         let {lang} = this.props;
-        if (!messages[lang]) {
+        if (!allMessages[lang]) {
             lang = 'en';
         }
+        messages = allMessages[lang];
 
         return (
             <ReduxProvider store={store}>
-                <IntlProvider messages={messages[lang]} locale={lang}>
+                <IntlProvider messages={messages} locale={lang}>
                     <DependencyContextProvider deps={this.getDependencyContext()}>
                         <div className='mashroom-portal-admin-app'>
                             <div className='menu-bar'>

@@ -44,7 +44,6 @@
                 "name": "Mashroom Portal Tabify App",
                 "type": "portal-app",
                 "clientBootstrap": "startPortalTabifyApp",
-                "category": "Layout",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -59,6 +58,7 @@
                         "en": "Tabify App",
                         "de": "Reiterisierung App"
                     },
+                    "category": "Layout",
                     "appConfig": {
                         "addCloseButtons": false,
                         "pluginNameTitleMapping": {

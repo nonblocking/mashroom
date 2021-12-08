@@ -232,6 +232,7 @@ const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null> = (state,
                 portalAppName: action.portalAppName,
                 instanceId: action.instanceId,
                 loading: true,
+                customConfigEditor: action.customConfigEditor,
                 errorLoading: false,
                 errorUpdating: false,
                 permittedRoles: null

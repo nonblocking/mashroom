@@ -111,6 +111,8 @@ export type MashroomPortalLoadedPortalApp = {
     +portalAppHostElement: HTMLElement,
     +portalAppTitleElement: ?HTMLElement,
     +appConfig: any,
+    +editorConfig: ?MashroomPortalAppConfigEditor,
+    +updateAppConfig: ?(appConfig: MashroomPluginConfig) => void;
     +error: boolean
 }
 
@@ -132,11 +134,15 @@ export type MashroomPortalAppUserPermissions = {
     [permission: string]: boolean
 }
 
+/**
+ * This will be injected as "editorTarget" to the appConfig of config editors
+ */
 export type MashroomPortalConfigEditorTarget = {
     +appId: string,
     +pluginName: string,
     +appConfig: MashroomPluginConfig,
-    updateAppConfigAndClose: (appConfig: string) => void,
+    updateAppConfig: (appConfig: MashroomPluginConfig) => void,
+    close: () => void,
 }
 
 export type MashroomPortalAppSetup = {
@@ -157,8 +163,7 @@ export type MashroomPortalAppSetup = {
     +lang: string,
     +user: MashroomPortalAppUser,
     +appConfig: MashroomPluginConfig,
-    // This will only be set for config editor Apps
-    +editorTarget?: MashroomPortalConfigEditorTarget,
+    +editorConfig: ?MashroomPortalAppConfigEditor,
 }
 
 export type UserAgent = {

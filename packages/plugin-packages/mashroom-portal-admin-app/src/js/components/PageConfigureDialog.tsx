@@ -452,7 +452,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 className='page-configure-dialog'
                 name={DIALOG_NAME_PAGE_CONFIGURE}
                 titleId='configurePage'
-                minWidth={500}
+                width={500}
                 minHeight={400}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}

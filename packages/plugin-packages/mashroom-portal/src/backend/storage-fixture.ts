@@ -25,10 +25,9 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
     };
 
     const reactDemoAppInstance1: MashroomPortalAppInstance = {
-        pluginName: 'Mashroom Portal Demo React App',
+        pluginName: 'Mashroom Portal Demo React App 2',
         instanceId: createAppInstanceId(),
         appConfig: {
-            firstName: 'Jimmy',
         },
     };
 

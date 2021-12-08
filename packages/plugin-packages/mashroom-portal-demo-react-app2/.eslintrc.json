@@ -10,10 +10,9 @@
         "plugin:@typescript-eslint/recommended"
     ],
     "env": {
-        "node": true,
+        "node": false,
         "browser": true,
-        "es6": true,
-        "jest": true
+        "es6": true
     },
     "settings": {
         "react": {
@@ -25,8 +24,6 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "no-console": "off",
-        "no-unused-vars": "warn",
-        "react/display-name": "off",
-        "@typescript-eslint/ban-ts-comment": "warn"
+        "react/display-name": "off"
     }
 }

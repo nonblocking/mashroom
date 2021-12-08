@@ -1,0 +1,52 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo React App 2",
+            "type": "portal-app",
+            "clientBootstrap": "startReactDemoApp2",
+            "resources": {
+                "js": ["app.js"],
+                "css": ["app.css"]
+            },
+            "local": {
+                "resourcesRoot": "./dist",
+                "ssrBootstrap": "./dist/app-ssr.js"
+            },
+            "defaultConfig": {
+                "title": "Demo React App 2",
+                "category": "Demo",
+                "editor": {
+                    "editorPortalApp": "Mashroom Portal Demo React App 2 Config Editor",
+                    "position": "in-place"
+                },
+                "caching": {
+                    "ssrHtml": "same-config"
+                },
+                "appConfig": {
+                    "markdownMessage": "This is simple React *SPA* that supports **SSR** and brings a custom config editor",
+                    "pingButtonLabel": "Send Ping"
+                }
+            }
+        },
+        {
+            "name": "Mashroom Portal Demo React App 2 Config Editor",
+            "type": "portal-app",
+            "clientBootstrap": "startReactDemoApp2ConfigEditor",
+            "resources": {
+                "js": ["editor.js"]
+            },
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Edit Demo React App 2 Config",
+                "category": "hidden",
+                "appConfig": {
+                    "editorTarget": null
+                }
+            }
+        }
+    ]
+}

@@ -28,6 +28,7 @@ import type {
     MasterMashroomPortalRemoteLogger,
     ModalAppCloseCallback,
     MashroomPortalRemoteLogger,
+    MashroomPortalAppConfigEditor,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType, MashroomRestService} from '../../../../type-definitions/internal';
 
@@ -44,6 +45,7 @@ export type LoadedPortalAppInternal = {
     portalAppTitleElement: HTMLElement | undefined;
     lifecycleHooks: MashroomPortalAppLifecycleHooks | void;
     readonly modal: boolean;
+    readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
     error: boolean;
 }
 
@@ -541,7 +543,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     private _createNewAppInstance(appSetup: MashroomPortalAppSetup | undefined, pluginName: string, instanceId: string | undefined | null,
                                   portalAppAreaId: string, position: number | undefined | null, modal: boolean): LoadedPortalAppInternal {
-        const {appId, title} = appSetup || { appId: nanoid(8) };
+        const {appId, title, editorConfig} = appSetup || { appId: nanoid(8) };
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
             this._appendAppWrapper(appId, pluginName, title, portalAppAreaId, position);
         const loadedAppInternal: LoadedPortalAppInternal = {
@@ -557,6 +559,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             portalAppTitleElement,
             lifecycleHooks: undefined,
             modal,
+            editorConfig,
             error: false
         };
         loadedPortalAppsInternal.push(loadedAppInternal);
@@ -664,6 +667,8 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             portalAppHostElement: loadedAppInternal.portalAppHostElement,
             portalAppTitleElement: loadedAppInternal.portalAppTitleElement,
             appConfig: loadedAppInternal.appSetup && loadedAppInternal.appSetup.appConfig,
+            updateAppConfig: loadedAppInternal.lifecycleHooks?.updateAppConfig,
+            editorConfig: loadedAppInternal.editorConfig,
             error: loadedAppInternal.error
         };
     }

@@ -115,6 +115,8 @@ export type MashroomPortalLoadedPortalApp = {
     readonly portalAppHostElement: HTMLElement;
     readonly portalAppTitleElement: HTMLElement | undefined;
     readonly appConfig: any;
+    readonly updateAppConfig: ((appConfig: MashroomPluginConfig) => void) | null | undefined;
+    readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
     readonly error: boolean;
 };
 
@@ -136,11 +138,15 @@ export type MashroomPortalAppUserPermissions = {
     [permission: string]: boolean;
 };
 
+/**
+ * This will be injected as "editorTarget" to the appConfig of config editors
+ */
 export type MashroomPortalConfigEditorTarget = {
     readonly appId: string;
     readonly pluginName: string;
     readonly appConfig: MashroomPluginConfig;
-    updateAppConfigAndClose: (appConfig: string) => void;
+    updateAppConfig: (appConfig: MashroomPluginConfig) => void;
+    close: () => void;
 }
 
 export type MashroomPortalAppSetup = {
@@ -161,8 +167,7 @@ export type MashroomPortalAppSetup = {
     readonly lang: string;
     readonly user: MashroomPortalAppUser;
     readonly appConfig: MashroomPluginConfig;
-    // This will only be set for config editor Apps
-    readonly editorTarget?: MashroomPortalConfigEditorTarget;
+    readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
 };
 
 export type UserAgent = {

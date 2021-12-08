@@ -1,0 +1,53 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Demo React App 2 Config Editor</title>
+
+    <script src="editor.js"></script>
+
+    <style>
+        body {
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="demo-react-app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("demo-react-app-container");
+                var editorTarget = {
+                    appId: "xx",
+                    pluginName: 'Mashroom Portal Demo React App 2',
+                    appConfig: {
+                        markdownMessage: 'This is simple React *SPA* that supports **SSR** and brings a custom config editor',
+                        pingButtonLabel: 'Send Ping'
+                    },
+                    updateAppConfig: (appConfig) => {
+                        console.info('New app config:', appConfig);
+                        alert('appConfig updated!');
+                    },
+                    close: () => {
+                        alert('closing editor!');
+                    },
+                };
+                var portalAppSetup = {
+                    lang: 'en',
+                    appConfig: {
+                        editorTarget,
+                    },
+                };
+                window.startReactDemoApp2ConfigEditor(element, portalAppSetup);
+            });
+        })();
+
+    </script>
+</body>
+</html>

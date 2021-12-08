@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "ES2020",
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "jsx": "react",
+        "moduleResolution": "node",
+        "isolatedModules": false
+    }
+}

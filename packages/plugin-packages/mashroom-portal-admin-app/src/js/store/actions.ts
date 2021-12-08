@@ -151,12 +151,13 @@ export const setAvailableLanguages = (languages: Array<string>) => {
     };
 };
 
-export const setSelectedPortalApp = (loadedAppId: string, portalAppName: string | undefined | null, instanceId: string | undefined | null) => {
+export const setSelectedPortalApp = (loadedAppId: string, portalAppName: string | undefined | null, instanceId: string, customConfigEditor: boolean) => {
     return {
         type: SET_SELECTED_PORTAL_APP,
         loadedAppId,
         portalAppName,
         instanceId,
+        customConfigEditor,
     };
 };
 

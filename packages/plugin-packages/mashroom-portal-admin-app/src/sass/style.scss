@@ -64,13 +64,15 @@ $COLOR_DROP_ZONE: #645e9d;
     z-index: 100;
     right: 0;
     cursor: pointer;
-    font-size: 0.8em;
-    width: 1.6em;
-    height: 1.6em;
-    line-height: 1.6em;
     text-align: center;
 
     &:after {
+        display: block;
+        margin-top: -1px;
+        font-size: 0.8em;
+        line-height: 1.8em;
+        width: 1.8em;
+        height: 1.8em;
         content: $iconCode;
         font-family: $FONT_ICON;
         font-weight: 900;
@@ -88,12 +90,63 @@ $COLOR_DROP_ZONE: #645e9d;
     .move-button {
         @include toolButton('\f0b2');
         cursor: move;
-        right: 1.8em;
+        right: 1.7em;
     }
 
     .configure-button {
         @include toolButton('\f0ad');
-        right: 3.7em;
+        right: 3.4em;
+    }
+
+    .edit-button {
+        @include toolButton('\f304');
+        right: 5.2em;
+    }
+
+    .mashroom-portal-app-wrapper {
+        .mashroom-portal-app-host {
+        }
+
+        .mashroom-portal-app-config-editor {
+            .mashroom-portal-app-header-title {
+                display: none !important;
+            }
+        }
+
+        &.editor-open {
+            &>.mashroom-portal-app-host {
+                display: none !important;
+            }
+        }
+    }
+}
+
+.mashroom-portal-app-sidebar-host {
+    position: relative;
+    width: 100%;
+    transition: width 0.2s ease-out;
+
+    .mashroom-portal-app-sidebar {
+        position: absolute;
+        top: 0;
+        right: -42%;
+        width: 0;
+        transition: width 0.2s ease-out;
+        overflow: hidden;
+        background-color: white;
+        box-shadow: -2px 2px 8px #aaa;
+
+        .mashroom-portal-app-wrapper {
+            margin: 0;
+        }
+    }
+
+    &.editor-open {
+        width: 70%;
+
+        .mashroom-portal-app-sidebar {
+            width: 41%;
+        }
     }
 }
 

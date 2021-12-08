@@ -85,6 +85,7 @@ export type SelectedPortalApp = {
     readonly portalAppName: string;
     readonly instanceId: string;
     readonly permittedRoles: Array<string> | undefined | null;
+    readonly customConfigEditor: boolean;
     readonly loading: boolean;
     readonly errorLoading: boolean;
     readonly errorUpdating: boolean;

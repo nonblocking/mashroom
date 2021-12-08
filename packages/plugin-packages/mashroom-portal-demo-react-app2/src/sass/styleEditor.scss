@@ -1,0 +1,29 @@
+
+@import "../../node_modules/react-markdown-editor-lite/lib/index";
+
+.mashroom-demo-react-app-2-config-editor {
+    padding: 10px;
+
+    .form-row {
+        padding: 5px 0;
+
+        label {
+            margin-right: 20px;
+        }
+    }
+
+    .button-row {
+        margin-top: 10px;
+        display: flex;
+
+        button {
+            display: block;
+        }
+
+        a {
+            margin-top: 5px;
+            display: block;
+            margin-left: auto;
+        }
+    }
+}

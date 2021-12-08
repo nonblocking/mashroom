@@ -110,7 +110,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
                 className='page-delete-dialog'
                 name={DIALOG_NAME_PAGE_DELETE}
                 titleId='deletePage'
-                minWidth={300}
+                width={400}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}
             </Modal>

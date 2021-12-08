@@ -11,7 +11,6 @@
 
     .mashroom-portal-ui-modal-wrapper {
         position: relative;
-        display: table;
         margin: 15% auto 0 auto;
         min-width: 250px;
         max-width: 90%;
@@ -63,7 +62,6 @@
 
     .mashroom-portal-ui-modal-content {
         overflow: hidden;
-        height: 100%;
         background-color: white;
     }
 }

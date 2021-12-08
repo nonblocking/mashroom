@@ -334,7 +334,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
                 className='site-configure-dialog'
                 name={DIALOG_NAME_SITE_CONFIGURE}
                 titleId='configureSite'
-                minWidth={500}
+                width={500}
                 minHeight={300}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}

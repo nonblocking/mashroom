@@ -426,8 +426,6 @@ export type MashroomPortalAppSetup = {
     readonly lang: string;
     readonly user: MashroomPortalAppUser;
     readonly appConfig: MashroomPluginConfig;
-    // This will only be set for config editor Apps
-    readonly editorTarget?: MashroomPortalConfigEditorTarget;
 }
 ```
 

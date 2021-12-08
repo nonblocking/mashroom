@@ -17,7 +17,7 @@ type Props = {
     appWrapperClassName: string;
     className?: string;
     customHeader?: ReactNode;
-    minWidth?: number;
+    width?: number;
     minHeight?: number;
 }
 
@@ -141,7 +141,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
     }
 
     render(): ReactNode {
-        const {show, customHeader, className, minHeight, minWidth, children} = this.props;
+        const {show, customHeader, className, minHeight, width, children} = this.props;
         const {fadeOut, fadeIn, marginTop} = this.state;
         if (!this.modalsRoot || (!show && !fadeOut)) {
             return null;
@@ -157,10 +157,10 @@ export default class ModalDialog extends PureComponent<Props, State> {
         return ReactDOM.createPortal((
                 <div className={`mashroom-portal-ui-modal ${className || ''}`} onWheel={(e) => e.stopPropagation()}>
                     <div className={`mashroom-portal-ui-modal-wrapper ${fadeIn ? 'fade-in' : ''} ${fadeOut ? 'fade-out' : ''}`}
-                         style={{marginTop: marginTop}}
+                         style={{marginTop, width, minHeight}}
                          ref={(elem) => this.modalWrapperEl = elem}>
                         {header}
-                        <div className='mashroom-portal-ui-modal-content' style={{minWidth: minWidth || 'auto', minHeight: minHeight || 'auto'}}>
+                        <div className='mashroom-portal-ui-modal-content'>
                             {children}
                         </div>
                     </div>

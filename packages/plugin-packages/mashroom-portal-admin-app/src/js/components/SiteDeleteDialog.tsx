@@ -91,7 +91,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
                 className='site-delete-dialog'
                 name={DIALOG_NAME_SITE_DELETE}
                 titleId='deleteSite'
-                minWidth={300}
+                width={400}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}
             </Modal>

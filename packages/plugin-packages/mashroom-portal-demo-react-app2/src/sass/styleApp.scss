@@ -1,0 +1,17 @@
+
+.mashroom-demo-react-app-2 {
+    padding: 10px;
+    display: flex;
+
+    .react-logo {
+        align-self: center;
+
+        svg {
+            height: 80px;
+        }
+    }
+
+    button {
+        margin-right: 10px;
+    }
+}

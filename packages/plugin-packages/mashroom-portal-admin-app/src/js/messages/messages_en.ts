@@ -52,6 +52,10 @@ export default {
     confirmDeletePage: 'Do you really want to delete page: {pageTitle}?',
     deleteSite: 'Delete Site',
     confirmDeleteSite: 'Do you really want to delete site: {siteTitle}?',
-
+    hintCustomConfigEditor: 'This Portal App comes with a custom App Config editor. Please use the edit icon to open it.',
+    toolRemoveApp: 'Remove',
+    toolMoveApp: 'Move',
+    toolConfigureApp: 'Configure',
+    toolEditApp: 'Edit Content',
     errorInvalidJSON: 'Invalid JSON'
 };

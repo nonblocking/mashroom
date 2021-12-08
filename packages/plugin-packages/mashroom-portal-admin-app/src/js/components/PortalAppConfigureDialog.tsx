@@ -1,5 +1,6 @@
 
 import React, {PureComponent} from 'react';
+import {FormattedMessage} from 'react-intl';
 import {
     Modal,
     TabDialog,
@@ -123,6 +124,17 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
     renderPageGeneral(): ReactNode {
         const {selectedPortalApp} = this.props;
 
+        let appConfigEditor;
+        if (!selectedPortalApp?.customConfigEditor) {
+            appConfigEditor = (
+                <SourceCodeEditorField id='appConfig' labelId='appConfig' name='appConfig' language='json' />
+            );
+        } else {
+            appConfigEditor = (
+                <FormattedMessage id="hintCustomConfigEditor" />
+            )
+        }
+
         return (
             <DialogContent>
                 <FormRow>
@@ -139,7 +151,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
                 </FormRow>
                 <FormRow>
                     <FormCell>
-                        <SourceCodeEditorField id='appConfig' labelId='appConfig' name='appConfig' language='json' />
+                        {appConfigEditor}
                     </FormCell>
                 </FormRow>
             </DialogContent>
@@ -224,7 +236,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
                 className='portal-app-configure-dialog'
                 name={DIALOG_NAME_PORTAL_APP_CONFIGURE}
                 titleId='configureApp'
-                minWidth={450}
+                width={550}
                 minHeight={300}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}

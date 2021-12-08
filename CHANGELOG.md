@@ -3,6 +3,31 @@
 
 ## [unreleased v2]
 
+ * Portal: Added to possibility to define custom App Config editors per Portal App. This is useful for Apps that have
+   an editable content (e.g. from a Headless CMS).
+   A custom editor is basically just another Portal App (SPA) that receives a special object within the appConfig with the config
+   of the target App and a function to update it:
+   ```ts
+    const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
+      const {appConfig: {editorTarget /* MashroomPortalConfigEditorTarget */}} = portalAppSetup;
+
+      const currentAppConfig = editorTarget.appConfig;
+      // Open Editor with current config
+
+      // Update with new Config
+      editorTarget.updateAppConfig(newAppConfig);
+    };
+   ```
+   In the App that wants to use the editor just update the plugin definition like this:
+   ```json
+        "defaultConfig": {
+          "editor": {
+            "editorPortalApp": "My Editor App",
+            "position": "in-place"
+          }
+       }
+   ```
+   Since the target App remains active it is also possible to use the message bus to exchange information between the editor and the actual App.
  * Portal: Support for Hybrid Apps with server side rendering added.
    When a page is rendered the Portal tries to get the initial HTML for all Apps on in and integrated it into the template.
    The server side HTML will also be cached (if configured). If the server side rendering takes too long (default more than 2000 ms)

@@ -1,4 +1,5 @@
 
+import {nanoid} from 'nanoid';
 import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
 import {setSelectedPortalApp} from '../store/actions';
 import {
@@ -7,8 +8,14 @@ import {
     CSS_CLASS_APP_DROP_ZONE,
     DIALOG_NAME_PORTAL_APP_CONFIGURE,
 } from '../constants';
+import {messages} from '../components/App';
 
-import type {MashroomPortalAppService, MashroomPortalAdminService, MashroomPortalLoadedPortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {
+    MashroomPortalAppService,
+    MashroomPortalAdminService,
+    MashroomPortalLoadedPortalApp,
+    MashroomPortalConfigEditorTarget,
+} from '@mashroom/mashroom-portal/type-definitions';
 import type {
     Store, PortalAppManagementService,
 } from '../types';
@@ -39,7 +46,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
 
             if (app.instanceId && parent && parent.className.indexOf(CSS_CLASS_APP_CONTROLS) === -1) {
                 // No control wrapper yet
-                const controlsWrapper = this._createControlsWrapper(app.id, app.pluginName, app.instanceId);
+                const controlsWrapper = this._createControlsWrapper(app);
                 parent.insertBefore(controlsWrapper, appWrapper);
                 controlsWrapper.appendChild(appWrapper);
             }
@@ -171,24 +178,42 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         areaElement.insertBefore(dropZone, beforeApp);
     }
 
-    private _createControlsWrapper(loadedAppId: string, portalAppName: string, instanceId: string) {
+    private _createControlsWrapper(app: MashroomPortalLoadedPortalApp) {
+        const {id: appId, pluginName, instanceId, editorConfig} = app;
+
         const controlsWrapper = document.createElement('div');
         controlsWrapper.className = CSS_CLASS_APP_CONTROLS;
         const removeButton = document.createElement('div');
         removeButton.className = 'tool-button remove-button';
+        removeButton.title = messages.toolRemoveApp;
         const moveButton = document.createElement('div');
         moveButton.className = 'tool-button move-button';
         moveButton.draggable = true;
+        moveButton.title = messages.toolMoveApp;
         const configureButton = document.createElement('div');
         configureButton.className = 'tool-button configure-button';
+        configureButton.title = messages.toolConfigureApp;
+        let editButton;
+        if (editorConfig) {
+            editButton = document.createElement('div');
+            editButton.className = 'tool-button edit-button';
+            editButton.title = messages.toolEditApp;
+        }
+
         controlsWrapper.appendChild(removeButton);
         controlsWrapper.appendChild(moveButton);
         controlsWrapper.appendChild(configureButton);
+        if (editButton) {
+            controlsWrapper.appendChild(editButton);
+        }
 
-        removeButton.addEventListener('click', this._removeApp.bind(this, loadedAppId, portalAppName, instanceId));
-        moveButton.addEventListener('dragstart', (e: DragEvent) => this._onMoveAppDragStart(e, loadedAppId, portalAppName, instanceId));
+        removeButton.addEventListener('click', this._removeApp.bind(this, app));
+        moveButton.addEventListener('dragstart', (e: DragEvent) => this._onMoveAppDragStart(e, app));
         moveButton.addEventListener('dragend', this._onMoveAppDragEnd.bind(this));
-        configureButton.addEventListener('click', this._configureApp.bind(this, loadedAppId, portalAppName, instanceId));
+        configureButton.addEventListener('click', this._configureApp.bind(this, app));
+        if (editorConfig && editButton) {
+            editButton.addEventListener('click', this._editAppContent.bind(this, app));
+        }
 
         return controlsWrapper;
     }
@@ -235,21 +260,21 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         }
     }
 
-    private _removeApp(id: string, portalAppName: string, instanceId: string) {
+    private _removeApp({id, pluginName, instanceId}: MashroomPortalLoadedPortalApp) {
         this.portalAppService.unloadApp(id);
-        this.portalAdminService.removeAppInstance(portalAppName, instanceId);
+        this.portalAdminService.removeAppInstance(pluginName, instanceId!);
     }
 
-    private _onMoveAppDragStart(event: DragEvent, loadedAppId: string, portalAppName: string, instanceId: string | undefined | null) {
+    private _onMoveAppDragStart(event: DragEvent, {id, pluginName, instanceId}: MashroomPortalLoadedPortalApp) {
         const dragImage = document.createElement('div');
         dragImage.className = 'mashroom-portal-admin-drag-ghost';
-        dragImage.innerHTML = `<span>${portalAppName}</span>`;
+        dragImage.innerHTML = `<span>${pluginName}</span>`;
         dragImage.style.position = 'absolute';
         dragImage.style.top = '-100px';
         document.body && document.body.appendChild(dragImage);
         event.dataTransfer && event.dataTransfer.setDragImage(dragImage, 0, 0);
 
-        this.prepareDrag(event, loadedAppId, portalAppName, instanceId);
+        this.prepareDrag(event, id, pluginName, instanceId);
     }
 
     private _onMoveAppDragEnd() {
@@ -260,8 +285,104 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.dragEnd();
     }
 
-    private _configureApp(loadedAppId: string, portalAppName: string, instanceId: string | undefined | null) {
-        this.store.dispatch(setSelectedPortalApp(loadedAppId, portalAppName, instanceId));
+    private _configureApp({id, pluginName, instanceId, editorConfig}: MashroomPortalLoadedPortalApp) {
+        this.store.dispatch(setSelectedPortalApp(id, pluginName, instanceId!, !!editorConfig?.editorPortalApp));
         this.store.dispatch(setShowModal(DIALOG_NAME_PORTAL_APP_CONFIGURE, true));
+    }
+
+    private _editAppContent(loadedPortalApp: MashroomPortalLoadedPortalApp) {
+        const {id: appId, instanceId, pluginName, appConfig, editorConfig, portalAppWrapperElement, portalAppHostElement} = loadedPortalApp;
+        if (!editorConfig) {
+            return;
+        }
+
+        const {editorPortalApp, position = 'in-place', appConfig: appConfigEditor = {}} = editorConfig;
+
+        let closeEditor = () => { /* dummy */ };
+        const editorTarget: MashroomPortalConfigEditorTarget = {
+            appId,
+            pluginName,
+            appConfig,
+            updateAppConfig: (appConfig) => {
+                return this.portalAdminService.updateAppInstance(pluginName, instanceId!, null, null, appConfig).then(
+                    () => {
+                        // @ts-ignore
+                        loadedPortalApp.appConfig = appConfig;
+                        if (loadedPortalApp.updateAppConfig) {
+                            loadedPortalApp.updateAppConfig(appConfig);
+                        } else {
+                            this.portalAppService.reloadApp(appId);
+                        }
+                    }
+                );
+            },
+            close: () => {
+                closeEditor();
+            },
+        };
+
+        const editorAreaId = nanoid(6);
+        const editorWrapper = document.createElement('div');
+        editorWrapper.className = 'mashroom-portal-app-config-editor';
+        editorWrapper.id = editorAreaId;
+
+        if (position === 'sidebar') {
+            if (document.querySelector('.mashroom-portal-app-sidebar')) {
+                // Editor already open
+                return;
+            }
+
+            // sidebar
+            const sidebar = document.createElement('div');
+            sidebar.className = 'mashroom-portal-app-sidebar';
+            const sidebarHost = document.querySelector('main') || document.body;
+            sidebarHost.classList.add('mashroom-portal-app-sidebar-host');
+            sidebarHost.appendChild(sidebar);
+            sidebar.appendChild(editorWrapper);
+            this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
+                ...appConfigEditor,
+                editorTarget,
+            }).then(
+                (loadedEditor) => {
+                    sidebarHost.classList.add('editor-open');
+                    closeEditor = () => {
+                        sidebarHost.classList.remove('editor-open');
+                        setTimeout(() => {
+                            sidebarHost.classList.remove('mashroom-portal-app-sidebar-host');
+                            this.portalAppService.unloadApp(loadedEditor.id);
+                            sidebarHost.removeChild(sidebar);
+                        }, 500);
+                    }
+                },
+                (error) => {
+                    console.error(`Loading Config Editor for ${pluginName} failed!`, error);
+                }
+            )
+
+        } else {
+            // in-place
+            if (portalAppWrapperElement.querySelector('.mashroom-portal-app-config-editor')) {
+                // Editor already open
+                return;
+            }
+
+            portalAppWrapperElement.appendChild(editorWrapper);
+            this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
+                ...appConfigEditor,
+                editorTarget,
+            }).then(
+                (loadedEditor) => {
+                    portalAppWrapperElement.classList.add('editor-open');
+                    closeEditor = () => {
+                        portalAppWrapperElement.classList.remove('editor-open');
+                        this.portalAppService.unloadApp(loadedEditor.id);
+                        portalAppWrapperElement.removeChild(editorWrapper);
+                    }
+                },
+                (error) => {
+                    console.error(`Loading Config Editor for ${pluginName} failed!`, error);
+                }
+            )
+        }
     }
 }
