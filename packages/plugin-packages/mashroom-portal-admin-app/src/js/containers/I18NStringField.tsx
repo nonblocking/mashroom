@@ -23,8 +23,9 @@ type Props = OwnProps & StateProps;
 class I18NStringField extends PureComponent<Props> {
 
     render() {
+        const {name} = this.props;
         return (
-            <Field name={this.props.name}>
+            <Field name={name}>
                 {(fieldProps: FieldProps) => <I18NStringFieldComp fieldProps={fieldProps} {...this.props}/>}
             </Field>
         );

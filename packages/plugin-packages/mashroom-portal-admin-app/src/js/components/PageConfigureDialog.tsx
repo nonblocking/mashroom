@@ -64,7 +64,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     close: (() => void) | undefined;
 
     componentDidUpdate(prevProps: Props): void {
-        const {selectedPage, dataLoadingService, portalAdminService, setPage, setPermittedRoles, setLoading, setErrorLoading} = this.props;
+        const {selectedPage, dataLoadingService, portalAdminService, setPage, setPageRef, setPermittedRoles, setLoading, setErrorLoading} = this.props;
         if (selectedPage && (!prevProps.selectedPage || selectedPage.selectedTs !== prevProps.selectedPage.selectedTs)) {
             const pageId = selectedPage.pageId;
             const promises = [];
@@ -92,7 +92,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                     if (pageId) {
                         const pageRef = searchPageRef(pageId, site.pages);
                         if (pageRef) {
-                            this.props.setPageRef(pageRef);
+                            setPageRef(pageRef);
                         } else {
                             return Promise.reject(`No pageRef found for pageId: ${pageId}`);
                         }
@@ -121,8 +121,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     }
 
     onSubmit(values: FormValues): void {
-        const {portalSiteService, portalAdminService, setErrorUpdating, pages} = this.props;
-        const selectedPage = this.props.selectedPage;
+        const {portalSiteService, portalAdminService, setErrorUpdating, pages, selectedPage} = this.props;
         if (!selectedPage) {
             return;
         }

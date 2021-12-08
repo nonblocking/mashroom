@@ -15,8 +15,9 @@ export default class RolesList extends PureComponent<Props> {
 
     constructor(props: Props) {
         super(props);
-        if (this.props.addRoleRef) {
-            this.props.addRoleRef(this.onAddRole.bind(this));
+        const {addRoleRef} = this.props;
+        if (addRoleRef) {
+            addRoleRef(this.onAddRole.bind(this));
         }
     }
 

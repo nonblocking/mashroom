@@ -54,14 +54,15 @@ export default class App extends PureComponent<Props, State> {
     }
 
     getDependencyContext(): DependencyContextType {
-        const portalAppManagementService = new PortalAppManagementServiceImpl(store, this.props.portalAppService, this.props.portalAdminService);
-        const dataLoadingService = new DataLoadingServiceImpl(store, this.props.portalUserService, this.props.portalSiteService, this.props.portalAppService, this.props.portalAdminService);
+        const {portalAppService, portalAdminService, portalSiteService, portalUserService} = this.props;
+        const portalAppManagementService = new PortalAppManagementServiceImpl(store, portalAppService, portalAdminService);
+        const dataLoadingService = new DataLoadingServiceImpl(store, portalUserService, portalSiteService, portalAppService, portalAdminService);
         return {
             portalAppManagementService,
             dataLoadingService,
-            portalAdminService: this.props.portalAdminService,
-            portalSiteService: this.props.portalSiteService,
-            portalUserService: this.props.portalUserService
+            portalAdminService,
+            portalSiteService,
+            portalUserService
         };
     }
 
