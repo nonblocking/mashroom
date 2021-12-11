@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 1.9.2 (December 11, 2021)
+
  * Security: The security providers that rely on the Express Session (Simple, LDAP, OpenID-Connect) are going to log an error now
    if the session configuration is not suitable (e.g. when the access token lives longer than the session that stores it).
  * Browser Cache: Increased the default TTL to 30d to improve the [Lighthouse](https://developers.google.com/web/tools/lighthouse) score.
@@ -17,7 +20,7 @@
     }
    ```
  * Portal Default Theme: Fixed setting and updating meta description and keywords
- * Portal Default Theme: Fixed crawlability (some href's were missing)
+ * Portal Default Theme: Fixed crawlability (some hrefs were missing)
  * MongoDB Session Provider: Fixed startup and detecting connected state
  * Admin UI: Works now if the site path is "/" (because the /portal/my-site is mapped to / via vhost path mapper)
  * Portal: Made sure the *MashroomPortalStateService* works with dynamic routing (when paths are updated via History API)
