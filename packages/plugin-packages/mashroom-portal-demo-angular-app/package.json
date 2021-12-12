@@ -4,12 +4,12 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.9.1",
+    "version": "1.9.2",
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "1.9.1",
+        "@mashroom/mashroom-portal": "1.9.2",
         "@angular-devkit/build-angular": "^13.0.3",
         "@angular/cli": "^13.0.3",
         "@angular/common": "^13.0.2",
