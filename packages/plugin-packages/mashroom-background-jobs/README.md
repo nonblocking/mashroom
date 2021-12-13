@@ -6,6 +6,8 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin adds a background job scheduler to the _Mashroom Server_ that supports cron expressions.
 It is possible to add background jobs via service or as custom plugin.
 
+This plugin also comes with an Admin UI extension (_/mashroom/admin/ext/background-jobs_) that can be used to check the jobs.
+
 ## Usage
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-background-jobs** as *dependency*.

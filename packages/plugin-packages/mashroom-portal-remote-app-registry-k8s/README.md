@@ -19,7 +19,7 @@ It also expects a _remote_ config in the plugin definition, like this:
 
 You can find an example remote app here: [Mashroom Demo Remote Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
 
-This plugin also comes with an Admin UI extension (_/mashroom/admin/ext/remote-portal-apps-k8s_).
+This plugin also comes with an Admin UI extension (_/mashroom/admin/ext/remote-portal-apps-k8s_) that can be used to check all registered Apps.
 
 ## Usage
 
