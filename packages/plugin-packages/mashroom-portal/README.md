@@ -1,14 +1,23 @@
 
 # Mashroom Portal
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds a Portal component which allows composing pages from Single Page Applications (SPAs).
 
-Registered SPAs (Portal Apps) can be registered as plugin and placed on arbitrary pages via Drag'n'Drop.
-Or loaded dynamically via client-side JavaScript API.
+Registered SPAs (Portal Apps) can be placed on arbitrary pages via Drag'n'Drop. Each *instance* receives a **config object** during startup and
+a bunch of **client services**, which for example allow access to the message bus. The config is basically an arbitrary JSON object, which can be edited via Admin Toolbar.
+A Portal App can also bring its own config editor App, which again is just a simple SPA.
 
-The Portal supports i18n, theming, role based security and comes with a client-side message bus which can be connected to a server-side broker.
+One of the provided client services allow Portal Apps to load any *other* App (known by name) into any existing DOM node. This can be used to:
+ * Create **dynamic cockpits** where Apps are loaded dynamically based on some user input or search result
+ * Create **composite Apps** that consist of other Apps (which again could be used within other Apps again)
+
+The Portal supports **hybrid rendering** for both the Portal pages and SPAs. So, if an SPA supports server side rendering the initial HTML can be incorporated
+into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering (needs to be supported by the Theme).
+
+The Portal also supports **i18n**, **theming**, **role based security**, a client-side message bus which can be connected to a server-side broker and
+a registry for **Remote Apps** on a separate server or container.
 
 ## Usage
 
@@ -327,7 +336,7 @@ A full config with all optional properties would look like this:
     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
     * _caching_: Optional caching configuration
         * _ssrHtml_: Optional SSR caching configuration (Default: same-config-and-user)
-    * _editor_: Optional custom editor configuration that should be used for the appConfig in the Admin UI
+    * _editor_: Optional custom editor configuration that should be used for the appConfig by the Admin Toolbar
         * _editorPortalApp_: The name of the Portal App that should be used to edit the appConfig of this App
         * _position_: Optional hint where to launch the editor. Possible values: in-place, sidebar. (Default: in-place)
         * _appConfig_: The optional appConfig the editor App should be launched with (Default: {})

@@ -1,7 +1,7 @@
 
 # Mashroom Add ID Token Http Proxy Interceptor
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 If you add this plugin it will add the ID/JWT token from the OpenId Connect plugin to every backend call.
 

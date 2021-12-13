@@ -1,7 +1,7 @@
 
 # Mashroom Portal iFrame App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 Adds a (responsive) iFrame Portal App to the _Mashroom Portal_.
 

@@ -1,7 +1,7 @@
 
 # Test Server
 
-A test server that runs in cluster mode. Doesn't require any external services.
+A test server which runs in cluster mode. Doesn't require any external services.
 
 ## Requirements
 

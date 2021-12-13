@@ -1,7 +1,7 @@
 
 # Mashroom Messaging
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds server side messaging support to _Mashroom Server_.
 If an external provider plugin (e.g. MQTT) is configured the messages can also be sent across multiple nodes (cluster support!)

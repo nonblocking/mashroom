@@ -5,16 +5,21 @@ const showdown = require('showdown');
 
 const MIN_HEADER_LEVEL = 3;
 const HEADER_REGEX = /^([#]+)/;
+const PART_OF_HINT_REGEX = /^Plugin for/;
 
 const getAndProcessInclude = (file) => {
     const content = fs.readFileSync(file, 'utf8');
     const lines = content.split('\n');
     let addHeaderIndentation = null;
     return lines.map(line => {
-        const match = line.match(HEADER_REGEX);
-        if (match) {
+        const partOfHintMatch = line.match(PART_OF_HINT_REGEX);
+        const headerMatch = line.match(HEADER_REGEX);
+        if (partOfHintMatch) {
+            return '';
+        }
+        if (headerMatch) {
             if (addHeaderIndentation === null) {
-                addHeaderIndentation = MIN_HEADER_LEVEL - match[0].length;
+                addHeaderIndentation = MIN_HEADER_LEVEL - headerMatch[0].length;
                 if (addHeaderIndentation > 0) {
                     console.info('Adding header indentation:', addHeaderIndentation)
                 }

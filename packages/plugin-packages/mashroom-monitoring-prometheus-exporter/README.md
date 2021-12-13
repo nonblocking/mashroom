@@ -1,9 +1,9 @@
 
 # Mashroom Monitoring Prometheus Exporter
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin exports metrics for the [Prometheus](https://prometheus.io) monitoring system.
+This plugin exports the following metrics to the [Prometheus](https://prometheus.io) monitoring system:
 
  * The standard metrics like CPU and memory usage described [here](https://prometheus.io/docs/instrumenting/writing_clientlibs/#standard-and-runtime-collectors)
  * Additional V8 GC metrics (if the module _prometheus-gc-stats_ is present)

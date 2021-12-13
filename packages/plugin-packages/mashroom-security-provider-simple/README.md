@@ -1,7 +1,7 @@
 
 # Mashroom Security Simple Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds a simple, JSON file based security provider.
 

@@ -1,9 +1,9 @@
 
 # Mashroom Portal Default Layouts
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds some default layouts to the _Mashroom Portal_.
+This plugin adds some default layouts to the _Mashroom Portal_.
 
 ## Usage
 

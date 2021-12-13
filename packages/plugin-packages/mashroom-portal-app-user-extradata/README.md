@@ -1,10 +1,10 @@
 
 # Mashroom Portal App User ExtraData
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Copies the property *extraData" from the server user object to the Portal App user. This is useful if the security provider
-adds some extra information (such as the phone number) and you want to use it in a Portal App.
+This plugin copies the property *extraData" from the server user object to the Portal App user.
+This is useful if the security provider adds some extra information (such as the phone number) and you want to use it in a Portal App.
 
 ## Usage
 

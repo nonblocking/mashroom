@@ -1,10 +1,10 @@
 
 # Mashroom CSRF Protection
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-If you add this plugin all updating HTTP methods (such as POST, PUT and DELETE)
-must contain a CSRF token automatically generated for the session. Otherwise the request will be rejected.
+If you add this plugin all updating HTTP methods (such as POST, PUT and DELETE) must contain a CSRF token automatically generated for the session.
+Otherwise, the request will be rejected.
 
 There are two ways to pass the token:
 

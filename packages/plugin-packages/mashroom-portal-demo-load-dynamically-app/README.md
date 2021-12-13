@@ -1,7 +1,7 @@
 
 # Mashroom Portal Demo Load Dynamically App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This is a simple SPA that demonstrates how an App registered to the _Mashroom Portal_ can load and unload other Portal Apps
 on a page with a specific config.

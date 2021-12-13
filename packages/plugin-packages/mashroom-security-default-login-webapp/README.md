@@ -1,9 +1,9 @@
 
 # Mashroom Security Default Login Webapp
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a login webapp that can be used for security provides that require a login page.
+This plugin adds a default login webapp which can be used for security providers that require a login page.
 
 ## Usage
 

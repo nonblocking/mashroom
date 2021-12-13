@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-admin-app",
-    "description": "Mashroom Portal Admin App",
+    "description": "Mashroom Portal default Admin Toolbar",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",

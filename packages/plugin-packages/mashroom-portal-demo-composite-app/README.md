@@ -1,7 +1,7 @@
 
 # Mashroom Portal Demo Composite App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This is a simple SPA that uses other SPAs (which are registered to the _Mashroom Portal_) as building blocks.
 We call this a **Composite App* and it could again be a building block for other Composite Apps.

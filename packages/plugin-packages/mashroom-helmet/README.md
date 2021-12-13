@@ -1,10 +1,9 @@
 
 # Mashroom Helmet
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds the [Helmet](https://helmetjs.github.io/) middleware which sets a bunch of protective HTTP headers
-on each response.
+This plugin adds the [Helmet](https://helmetjs.github.io/) middleware which sets a bunch of protective HTTP headers on each response.
 
 ## Usage
 
@@ -44,5 +43,6 @@ You can override the default config in your Mashroom config file like this:
 ```
 
 * _helmet_: The configuration will directly be passed to _Helmet_ middelware. Checkout the [Helmet Documentation](https://helmetjs.github.io/docs/)
-for available options. You should enable the _noCache_ module because this would significantly decrease the performance
-of the _Mashroom Portal_.
+for available options.
+
+**NOTE**: You shouldn't enable the _noCache_ module because this would significantly decrease the performance of the _Mashroom Portal_.

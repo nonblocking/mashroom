@@ -1,7 +1,7 @@
 
 # Mashroom Session Redis Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds a Redis session store that can be used by _Mashroom Session_.
 Actually this is just a wrapper for the [connect-redis](https://github.com/tj/connect-redis) package.

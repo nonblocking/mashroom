@@ -1,7 +1,7 @@
 
 # Mashroom Error Pages
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin allows it to show proper HTML pages for arbitrary HTTP status codes.
 It delivers error pages only if the request accept header contains text/html. So, typically not for AJAX requests.

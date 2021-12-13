@@ -1,7 +1,7 @@
 
 # Mashroom Background Jobs
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds a background job scheduler to the _Mashroom Server_ that supports cron expressions.
 It is possible to add background jobs via service or as custom plugin.

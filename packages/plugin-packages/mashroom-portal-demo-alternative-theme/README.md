@@ -1,9 +1,9 @@
 
 # Mashroom Portal Demo Alternative Theme
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds adds a alternative demo theme to the _Mashroom Portal_.
+This is an alternative demo theme for the _Mashroom Portal_.
 
 This theme demonstrates how to create a **type safe** theme with *express-react-views* and *TypeScript*.
 

@@ -1,7 +1,7 @@
 
 # Mashroom Portal Demo Vue App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This is a simple [Vue](https://vuejs.org) based SPA which can be developed and run standalone, but can also
 act as a building block in the _Mashroom Portal_.

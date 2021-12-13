@@ -1,10 +1,10 @@
 
 # Mashroom Memory Cache
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds a general purpose memory cache service. Some other plugins will automatically use
-it when present, for example *mashroom-storage*.
+it if present, for example *mashroom-storage*.
 
 The cache service provides multiple _regions_ with the possibility to clear single regions.
 It comes with a built-in provider that uses the local Node.js memory, which is not ideal for clusters.

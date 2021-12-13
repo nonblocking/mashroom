@@ -1,7 +1,7 @@
 
 # Mashroom Monitoring Metrics Collector
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin provides a service to add metrics to the monitoring system that can be used by plugins.
 It also adds a middleware that collects request metrics like duration and HTTP status.
@@ -80,5 +80,3 @@ export interface MashroomMonitoringMetricsCollectorService {
 
     collectorService.counter('http_request_counter', 'HTTP Request Counter').inc();
 ```
-
-

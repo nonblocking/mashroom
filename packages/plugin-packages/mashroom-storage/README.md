@@ -1,7 +1,7 @@
 
 # Mashroom Storage
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds a storage service abstraction that delegates to a provider plugin.
 
@@ -9,7 +9,7 @@ This plugin adds a storage service abstraction that delegates to a provider plug
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-storage** as *dependency*.
 
-Then use the security service like this:
+Then use the storage service like this:
 
 ```ts
 import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';

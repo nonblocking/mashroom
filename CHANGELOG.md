@@ -136,7 +136,7 @@
  * Portal Default Theme: Fixed setting and updating meta description and keywords
  * Portal Default Theme: Fixed crawlability (some hrefs were missing)
  * MongoDB Session Provider: Fixed startup and detecting connected state
- * Admin UI: Works now if the site path is "/" (because the /portal/my-site is mapped to / via vhost path mapper)
+ * Admin Toolbar: Works now if the site path is "/" (because the /portal/my-site is mapped to / via vhost path mapper)
  * Portal: Made sure the *MashroomPortalStateService* works with dynamic routing (when paths are updated via History API)
 
 ## 1.9.1 (November 8, 2021)

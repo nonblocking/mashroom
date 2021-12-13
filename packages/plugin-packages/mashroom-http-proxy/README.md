@@ -1,9 +1,9 @@
 
 # Mashroom HTTP proxy
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds a service for forwarding requests to a target URI. It supports HTTP, HTTPS and WebSockets (only the default/nodeHttpProxy implementation, see below).
+This plugin adds a service for forwarding requests to a target URI. It supports HTTP, HTTPS and WebSockets (only the default/nodeHttpProxy implementation, see below).
 
 ## Usage
 

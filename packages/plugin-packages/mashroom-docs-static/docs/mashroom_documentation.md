@@ -14,44 +14,60 @@ Version: [version]
 
 ## About
 
-*Mashroom Server* is a *Node.js* based **Integration Platform for Microfrontends**. It supports the integration of *Express* webapps and API's on the
-server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such
-as logging, i18n, storage and security out of the box and supports custom middleware and services in form of plugins.
+*Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* webapps on the
+server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as
+security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and supports custom middleware and services via plugins.
+
+Mashroom Server allows it to implemented SPAs (and express webapps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
+with different configurations and even multiple times on the same page. It also allows it to restrict the access to resources (Pages, Apps) based on user roles.
 
 From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for
 plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally
 all kind of code it knows how to load, which is determined by the available plugin loaders.
-Plugin loaders itself are also just plugins so it is possible to extend the list of known plugin types.
-
-Compared with the concepts in the Java world *Mashroom Server* would be an Application Server. And the *Mashroom Portal* plugin
-has similar concepts than a Java Portal Server.
+Plugin loaders itself are also just plugins, so it is possible to extend the list of known plugin types.
 
 ### Key features
 
- * Integration of existing _Express_ webapps
- * Shared middlewares and services
- * Out of the box services for security, internationalization, messaging, HTTP proxying, memory cache and storage
- * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
- * Role and IP based access control for URLs
- * Single configuration file to override plugin default configurations
- * Support for custom plugin types
- * Extensive monitoring and export in Prometheus format
- * Hot deploy, undeploy and reload of all kind of plugins
- * No compile or runtime dependencies to the server
- * Fast and lightweight
- * Portal plugin
-    * Build pages from independent SPAs, even written in different technologies
-    * Client-side message bus for inter-app communication which can be extended to server-side messaging
-      to communicate with apps in other browsers or even 3rd party systems
-    * Proxying of REST API calls to avoid CORS problems
-    * Life registration of _Remote Apps_ (SPAs that run on a different server)
-    * JS API to programmatically load portal apps into an arbitrary DOM node (even within another app)
-    * Support for multiple sites that can be mapped to virtual hosts
-    * Role based permissions for pages and apps
-    * Support for global libraries that can be shared between the apps
-    * Support for theming
-    * Admin Toolbar to create pages and place apps via Drag'n'Drop
-    * Hot reload of apps in development mode
+#### Portal
+
+  * Registration of Single Page Applications written with any frontend framework
+    (basically you just need to implement a startup function and provide some metadata)
+  * Automatic registration of SPAs on remote servers or Kubernetes clusters (**Remote Apps**)
+    (this allows independent life cycles and teams per SPA)
+  * Create static pages with registered SPAs (Apps) as building blocks
+  * Support for **dynamic cockpits** where Apps are loaded (and unloaded) based on some user interaction or search results
+  * Support for **composite Apps** which can use any registered SPA as building blocks
+    (which again can serve as building blocks for other composite Apps)
+  * Each App receives a config object which can be different per instance and a number of JavaScript services
+    (e.g. to connect to the message bus or to load other Apps)
+  * The App config can be edited via Admin Toolbar or a custom Editor App which again is just an SPA
+  * Client-side message bus for inter-app communication which can be extended to server-side messaging
+    (to communicate with Apps in other browsers or even in 3rd party systems)
+  * Support for **hybrid rendering** for both the Portal pages and SPAs.
+    (If an SPA supports server side rendering the initial HTML can be incorporated
+    into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering)
+  * Arbitrary (custom) layouts for pages
+  * Extensive **theming** support. Themes can be written in any Express template language
+  * Support for multiple sites that can be mapped to virtual hosts
+  * Proxying of REST API calls to avoid CORS problems (HTTP, SSE, WebSocket)
+  * Support for global libraries that can be shared between multiple SPAs
+  * Admin Toolbar to create pages and place Apps via Drag'n'Drop
+  * **Hot reload** of SPAs in development mode
+
+#### Core
+
+  * Shared middlewares and services
+  * **Service abstractions** for security, internationalization, messaging, HTTP proxying, memory cache and storage
+  * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
+  * Integration of existing _Express_ webapps
+  * Role and IP based **access control** for URLs
+  * Definition of access restrictions for arbitrary resources (such as Sites, Pages, App instances)
+  * Single configuration file to override plugin defaults
+  * Support for **custom plugin types**
+  * Extensive **monitoring** and export in Prometheus format
+  * Hot deploy, undeploy and reload of all kind of plugins
+  * No compile or runtime dependencies to the server
+  * Fast and lightweight
 
 ### Feature/Compatibility Matrix
 
@@ -119,7 +135,7 @@ A _package.json_ with a _Mashroom Server_ plugin definition looks like this:
     }
 }
 ```
-Multiple plugins can be defined within a npm module.
+Multiple plugins can be defined within a single npm module.
 
 The _type_ element determines which plugin loader will be used to load the plugin. The optional _requires_ defines plugins
 that must be loaded before this plugin can be loaded.
@@ -129,23 +145,7 @@ The _devModeBuildScript_ property is optional. If present _npm run &lt;devModeBu
 
 The bootstrap script for this case might look like this:
 
-```js
-// @flow
-
-import webapp from './my-express-webapp';
-
-import type {MashroomWebAppPluginBootstrapFunction} from 'mashroom/type-definitions';
-
-const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    return webapp;
-};
-
-export default bootstrap;
-```
-
-In typescript:
-
-```js
+```ts
 import webapp from './my-express-webapp';
 
 import {MashroomWebAppPluginBootstrapFunction} from 'mashroom/type-definitions';
@@ -157,19 +157,18 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
 export default bootstrap;
 ```
 
-
 The context element allows access to the server configuration, the logger factory and all services.
 
 ### Plugin context
 
 The plugin context allows access to the logger factory und all services. The plugin context is available via:
 
-* The pluginContextHolder argument in the bootstrap function
-* The express request object (*req.pluginContext*)
+  * The pluginContextHolder argument in the bootstrap function
+  * The express request object (*req.pluginContext*)
 
 Examples:
 
-```js
+```ts
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 
@@ -183,7 +182,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
 };
 ```
 
-```js
+```ts
 app.get('/', (req, res) => {
 
     const pluginContext = req.pluginContext;
@@ -208,7 +207,7 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 Just checkout the [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart) repo for a typical portal setup.
 Or [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart) if you don't need the portal plugin.
 
-A single _package.json_ is enough to setup a server instance. Plugins are just npm dependencies.
+A single _package.json_ is enough to set up a server instance. Plugins are just npm dependencies.
 
 ### Configuration
 
@@ -218,13 +217,13 @@ The configuration files are expected in the folder where _mashroom_ is executed.
 
 The following config files are loaded and merged together if present (in this order):
 
-* mashroom.json
-* mashroom.js
-* mashroom.&lt;node_env&gt;.json
-* mashroom.&lt;node_env&gt;.js
-* mashroom.&lt;hostname&gt;.&lt;node_env&gt;.json
-* mashroom.&lt;hostname&gt;.&lt;node_env&gt;.js
-* mashroom.&lt;hostname&gt;.&lt;node_env&gt;.js
+  * mashroom.json
+  * mashroom.js
+  * mashroom.&lt;node_env&gt;.json
+  * mashroom.&lt;node_env&gt;.js
+  * mashroom.&lt;hostname&gt;.&lt;node_env&gt;.json
+  * mashroom.&lt;hostname&gt;.&lt;node_env&gt;.js
+  * mashroom.&lt;hostname&gt;.&lt;node_env&gt;.js
 
 The typical configuration could look like this:
 
@@ -361,14 +360,14 @@ The logger is currently backed by [log4js](https://www.npmjs.com/package/log4js)
 
 The configuration is expected to be in the same folder as *mashroom.cfg*. Possible config files are:
 
-* log4js.&lt;hostname&gt;.&lt;node_env&gt;.js
-* log4js.&lt;hostname&gt;.&lt;node_env&gt;.json
-* log4js.&lt;hostname&gt;.js
-* log4js.&lt;hostname&gt;.json
-* log4js.&lt;node_env&gt;.js
-* log4js.&lt;node_env&gt;.json
-* log4js.js
-* log4js.json
+  * log4js.&lt;hostname&gt;.&lt;node_env&gt;.js
+  * log4js.&lt;hostname&gt;.&lt;node_env&gt;.json
+  * log4js.&lt;hostname&gt;.js
+  * log4js.&lt;hostname&gt;.json
+  * log4js.&lt;node_env&gt;.js
+  * log4js.&lt;node_env&gt;.json
+  * log4js.js
+  * log4js.json
 
 The first config file found from this list will be used. A file logger would be configured like this:
 
@@ -393,13 +392,14 @@ The first config file found from this list will be used. A file logger would be 
 ```
 
 The following built in context properties can be used with %X{<name>} or a custom layout:
-* _clientIP_
-* _browser_ (e.g. Chrome, Firefox)
-* _browserVersion_
-* _os_ (e.g. Windows)
-* _sessionID_ (if a session is available)
-* _portalAppName_ (if the request is related to a portal app)
-* _portalAppVersion_ (if the request is related to a portal app)
+
+  * _clientIP_
+  * _browser_ (e.g. Chrome, Firefox)
+  * _browserVersion_
+  * _os_ (e.g. Windows)
+  * _sessionID_ (if a session is available)
+  * _portalAppName_ (if the request is related to a portal app)
+  * _portalAppVersion_ (if the request is related to a portal app)
 
 You can use _logger.withContext()_ or _logger.addContext()_ to add context information.
 
@@ -518,16 +518,19 @@ The access to a proxy url can be restricted to specific roles.
 
 #### Remote apps
 
-The Portal App resources (JavaScript and CSS files) can be remote. The *resourcesRoot* parameter of local pluings accept HTTP, HTTPS and FTP urls.
+Portal Apps (SPA) can reside on a remote server and automatically be registered. Currently, there are two different remote
+registries that can also be combined:
 
-There is also a plugin to register portal apps running on a remote server. The remote apps have to expose the _package.json_
-with the plugin definition at _http://&lt;remote-server&gt;/package.json_
+ * _mashroom-portal-remote-app-registry_
+ * _mashroom-portal-remote-app-registry-k8s_ (for Kubernetes)
+
+Here is how it works:
 
 ![Remote app resources](mashroom_portal_remote_app.png)
 
-##### Register a remote app with the mashroom-portal-remote-app-registry plugin
+##### Ad hoc register a remote app with the mashroom-portal-remote-app-registry plugin
 
-Open _/portal-remote-app-registry_, paste the URL into the input and lick _Add_:
+Open _/mashroom/admin/ext/remote-portal-apps_, paste the URL into the input and lick _Add_:
 
 ![Register remote portal app](mashroom_portal_register_remote_app.png)
 
@@ -585,7 +588,7 @@ this in the _Mashroom_ config file:
 
 ## Core
 
-[mashroom](../../../core/mashroom/README.md) [inc]
+[mashroom](../../../core/mashroom/CoreServices.md) [inc]
 
 ## Plugins
 

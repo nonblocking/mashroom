@@ -1,9 +1,9 @@
 
 # Mashroom Browser Cache
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a Service to manage cache control headers. It allows to disable the cache globally.
+This plugin adds a Service to manage cache control headers. It also allows to disable the cache globally.
 
 ## Usage
 
@@ -59,4 +59,3 @@ export interface MashroomCacheControlService {
      removeCacheControlHeader(response: Response): void;
 }
 ```
-

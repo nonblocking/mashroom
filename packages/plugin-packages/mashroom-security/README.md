@@ -1,9 +1,10 @@
 
 # Mashroom Security
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds role based security to the _Mashroom Server_.
+
 It comes with the following mechanisms:
 
  * A new *Security Provider* plugin type that does the actual authentication and can be used to obtain the user roles

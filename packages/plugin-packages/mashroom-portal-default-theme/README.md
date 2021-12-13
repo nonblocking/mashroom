@@ -1,9 +1,9 @@
 
 # Mashroom Portal Default Theme
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds adds the default theme to the _Mashroom Portal_.
+This plugins adds the default theme for the _Mashroom Portal_.
 
 ## Usage
 

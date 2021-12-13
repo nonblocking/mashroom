@@ -1,10 +1,10 @@
 
 # Mashroom Monitoring PM2 Exporter
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin exports metrics to the [PM2](https://pm2.keymetrics.io) via [pm2/io](https://github.com/keymetrics/pm2-io-apm#readme).
-Useful if you use the PM2 process manager to run *Mashroom Server*.
+Which is useful if you use the PM2 process manager to run *Mashroom Server*.
 
 It activates the pm2/io default metrics like v8, runtime, network, http (configurable).
 And it exports *Mashroom* plugin metrics like session count, memory cache stats, MongoDB/Redis connection stats, ...

@@ -868,7 +868,7 @@
                         },
                         "editor": {
                             "$ref": "#/definitions/PortalAppEditorConfig",
-                            "description": "Optional custom editor configuration that should be used for the appConfig in the Admin UI."
+                            "description": "Optional custom editor configuration that should be used for the appConfig by the Portal Admin Toolbar."
                         },
                         "proxies": {
                             "type": "object",

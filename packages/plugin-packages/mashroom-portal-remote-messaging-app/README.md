@@ -1,9 +1,9 @@
 
 # Mashroom Portal Remote Messaging App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This is a simple SPA that demonstrates the remote messaging capabilities of the _Mashroom Portal_.
+This _Mashroom Portal_ App can be used to test remote messaging in the _Mashroom Portal_.
 This App requires the _mashroom-messaging_ and _mashroom-websocket_ plugins to be installed.
 
 ## Usage

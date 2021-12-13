@@ -1,12 +1,10 @@
 
 # Mashroom Basic Authentication Wrapper Security Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds support for Basic authentication to any other security provider that implements _login()_ properly.
 This can be useful when you need to access some APIs on the server from an external system or for test purposes.
-
-**Only use Basic over HTTPS in production!**
 
 ## Usage
 

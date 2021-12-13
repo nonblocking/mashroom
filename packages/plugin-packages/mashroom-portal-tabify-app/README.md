@@ -1,7 +1,7 @@
 
 # Mashroom Portal Tabify App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This _Mashroom Portal_ App turns any app area where it is placed automatically into a tabbed container.
 
@@ -13,6 +13,7 @@ After placing it on a page use the Portal Admin Toolbar to set the following pro
 
  * _addCloseButtons_: Defines if a close button will be added to remove a portal app displayed as tab
  * _appNameTitleMapping_: A map to override the displayed title in the tab (Portal App Name -> Title to display)
+ * _fixedTabTitles_: A list of fixed tab titles per position (null means not fixed). E.g.: [null, 'the second tag']
 
 **Updates via MessageBus**
 
@@ -24,7 +25,6 @@ Available topics:
  * tabify-add-plugin-name-title-mapping
  * tabify-add-app-id-title-mapping
  * tabify-focus-app
-
 
 _tabify-add-plugin-name-title-mapping_ expect a message like this:
 

@@ -1,9 +1,9 @@
 
 # Mashroom Add User Header Http Proxy Interceptor
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-If you add this plugin it will add HTTP headers with user information to all proxy backend calls. By default it adds:
+If you add this plugin it will add HTTP headers with user information to all proxy backend calls. By default, it adds:
 
  * X-USER-NAME
  * X-USER-DISPLAY-NAME

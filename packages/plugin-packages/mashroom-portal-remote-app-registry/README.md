@@ -1,49 +1,26 @@
 
 # Mashroom Portal Remote App Registry
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds a remote app registry to _Mashroom Portal_. Scans periodically a list of remote servers for Portal Apps.
-It expects the _package.json_ (containing a _mashroom_ property) to be exposed at _/_. You can find an example
-remote app here: [Mashroom Demo Remote Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
-
-It also comes with an Admin UI (_/portal-remote-app-registry/admin_) and a REST API to add and remote URL's. The Admin UI allows adding a URL
-temporary only for the current session.
-
-Rewrites the _resourcesRoot_ and rest proxy _targetUri_ properties if necessary (when they point to the local filesystem or localhost).
-
-*Example:*
+This plugin adds a remote app registry to _Mashroom Portal_, which scans periodically a list of remote servers for Portal Apps.
+It expects the _package.json_ and optionally an external plugin config file (default _mashroom.json_) to be exposed at _/_.
+It also expects a _remote_ config in the plugin definition, like this:
 
 ```json
-{
-    "name": "My App On A Remote Server",
-    "defaultConfig": {
-         "resourcesRoot": "./dist",
-         "restProxies": {
-             "bff": {
-                 "targetUri": "http://localhost/app1/api"
-             }
-         }
-     }
-}
-
-```
-
-Hosted on _http://my-server.com/app1_ it will be converted to:
-
-```json
-{
-    "name": "My App On A Remote Server",
-    "defaultConfig": {
-        "resourcesRoot": "http://my-server.com/app1",
-        "restProxies": {
-            "bff": {
-                "targetUri": "http://my-server.com/app1/api"
-            }
-        }
+ {
+    "name": "My Single Page App",
+    "remote": {
+        "resourcesRoot": "/public",
+         "ssrInitialHtmlPath": "/ssr"
     }
-}
+ }
 ```
+
+You can find an example remote app here: [Mashroom Demo Remote Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
+
+This plugin also comes with an Admin UI extension (_/mashroom/admin/ext/remote-portal-apps_) and a REST API to add and remote URL's. The Admin UI allows adding a URL
+temporary only for the current session.
 
 ## Usage
 

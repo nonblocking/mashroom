@@ -1,7 +1,7 @@
 
 # Mashroom Session
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds [Express session](https://www.npmjs.com/package/express-session) as middleware.
 

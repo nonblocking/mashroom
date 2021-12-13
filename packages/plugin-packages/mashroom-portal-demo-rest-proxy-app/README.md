@@ -1,7 +1,7 @@
 
 # Mashroom Portal Demo Rest Proxy App
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This is a simple SPA that demonstrates how the _Mashroom Portal_ proxy could be used to connect to a
 REST API that cannot be reached directly by the client.

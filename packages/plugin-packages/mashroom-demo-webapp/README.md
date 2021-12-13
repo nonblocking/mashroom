@@ -1,9 +1,9 @@
 
 # Mashroom Demo Webapp
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This a simple demo Express webapp which can be developed and run standalone, but can also be integrated into _Mashroom Server_
+This a simple demo Express webapp which can be developed and run standalone, but also be integrated into _Mashroom Server_
 on an arbitrary (configurable) path.
 
 ## Usage

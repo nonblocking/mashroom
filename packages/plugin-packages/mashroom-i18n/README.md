@@ -1,10 +1,9 @@
 
 # Mashroom I18N
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds a service for internationalization. It determines the language from the HTTP headers and
-supports translation of messages.
+This plugin adds a service for internationalization. It determines the language from the HTTP headers and supports translation of messages.
 
 ## Usage
 
@@ -43,7 +42,7 @@ You can override the default config in your Mashroom config file like this:
  * _availableLanguages_: A list of available languages (Default: ["en"])
  * _defaultLanguage_: The default language if it can not be determined from the request (Default: en)
  * _messages_: The folder with custom i18n messages (Default: ./messages). There are default messages
-   in the messages folder of this package.
+   in the *messages* folder of this package.
 
 The lookup for message files works like this:
 

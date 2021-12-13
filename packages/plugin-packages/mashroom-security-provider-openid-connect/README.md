@@ -1,9 +1,9 @@
 
 # Mashroom OpenID Connect Security Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a OpenID Connect/OAuth2 security provider that can be used to integrate *Mashroom Server* with almost
+This plugin adds an OpenID Connect/OAuth2 security provider that can be used to integrate *Mashroom Server* with almost
 all Identity Providers or Identity Platforms.
 
 Tested with:
@@ -25,7 +25,7 @@ Should work with (among others):
 
 If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-ldap** as *dependency*.
 
-To activate this provider configure the _Mashroom Security_ plugin like this:
+To activate this provider, configure the _Mashroom Security_ plugin like this:
 
 ```json
 {

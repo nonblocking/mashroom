@@ -1,9 +1,9 @@
 
 # Mashroom Memory Cache Redis Provider
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds *Redis* based provider for the *mashroom-memory-cache*.
+This plugin adds a *Redis* based provider for the *mashroom-memory-cache*.
 
 ## Usage
 
@@ -104,4 +104,3 @@ For a [sharding cluster](https://redis.io/topics/cluster-spec) configure the plu
 * *redisOptions*: Passed as *redisOptions* in the *clusterOptions*
 
 Checkout out the *Cluster* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
-

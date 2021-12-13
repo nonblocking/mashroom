@@ -1,12 +1,12 @@
 
 # Mashroom WebSocket
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds WebSocket support to the _Mashroom Server_.
-It exposes a new Service that can be used to interact with clients that connect at _/websocket/*_.
+It exposes a new service that can be used to interact with clients that connect at _/websocket/*_.
 
-It allows only authenticated users to connect.
+**NOTE**: This implementation only allows authenticated users to connect.
 
 ## Usage
 

@@ -1,9 +1,9 @@
 
 # Mashroom Portal Legacy Browser Support
 
-Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Integration Platform for Microfrontends**.
+Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds adds support for legacy browsers such as IE11 to the *Mashroom Portal*.
+This plugin adds support for legacy browsers such as IE11 to the *Mashroom Portal*.
 
 ## Usage
 
