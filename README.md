@@ -22,7 +22,7 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
 
   * Registration of Single Page Applications written with any frontend framework
     (basically you just need to implement a startup function and provide some metadata)
-  * Automatic registration of SPAs on remote servers or Kubernetes clusters (**Remote Apps**)
+  * Automatic registration of SPAs (**Remote Apps**) on remote servers or Kubernetes clusters
     (this allows independent life cycles and teams per SPA)
   * Create static pages with registered SPAs (Apps) as building blocks
   * Support for **dynamic cockpits** where Apps are loaded (and unloaded) based on some user interaction or search results
@@ -30,14 +30,15 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
     (which again can serve as building blocks for other composite Apps)
   * Each App receives a config object which can be different per instance and a number of JavaScript services
     (e.g. to connect to the message bus or to load other Apps)
-  * The App config can be edited via Admin Toolbar or a custom Editor App which again is just an SPA
+  * The App config can be edited via Admin Toolbar or a custom Editor App which again is just a plain SPA
   * Client-side message bus for inter-app communication which can be extended to server-side messaging
     (to communicate with Apps in other browsers or even in 3rd party systems)
-  * Support for **hybrid rendering** for both the Portal pages and SPAs.
+  * Support for **hybrid rendering** for both the Portal pages and SPAs
     (If an SPA supports server side rendering the initial HTML can be incorporated
     into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering)
   * Arbitrary (custom) layouts for pages
-  * Extensive **theming** support. Themes can be written in any Express template language
+  * Extensive **theming** support
+    (Themes can be written in any Express template language)
   * Support for multiple sites that can be mapped to virtual hosts
   * Proxying of REST API calls to avoid CORS problems (HTTP, SSE, WebSocket)
   * Support for global libraries that can be shared between multiple SPAs
