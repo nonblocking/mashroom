@@ -62,8 +62,12 @@ export default class NpmUtils {
             const childProc = exec(commandString, execOptions, (error, stdout, stderr) => {
                 if (error) {
                     const stdErrStr = stderr.toString();
+                    const stdOutStr = stdout.toString();
                     if (stdErrStr) {
                         this._logger.error(stdErrStr);
+                    }
+                    if (stdOutStr) {
+                        this._logger.error(stdOutStr);
                     }
                     if (childProc.killed) {
                         reject(new Error(`Execution of command '${commandString}' aborted because it took longer than ${this._npmExecutionTimeoutSec}sec!`));
