@@ -42,6 +42,7 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
   * Support for multiple sites that can be mapped to virtual hosts
   * Proxying of REST API calls to avoid CORS problems (HTTP, SSE, WebSocket)
   * Support for global libraries that can be shared between multiple SPAs
+  * Delivering of Theme and Portal App resources via CDN
   * Admin Toolbar to create pages and place Apps via Drag'n'Drop
   * **Hot reload** of SPAs in development mode
 

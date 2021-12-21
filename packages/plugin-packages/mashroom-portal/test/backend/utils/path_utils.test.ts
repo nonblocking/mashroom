@@ -2,8 +2,8 @@
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import {
     getSitePath,
-    getFrontendApiResourcesBasePath,
-    getFrontendSiteBasePath
+    getFrontendApiBasePath,
+    getFrontendSiteBasePath, getFrontendResourcesBasePath
 } from '../../../src/backend/utils/path_utils';
 
 const portalConfig: any = {
@@ -84,7 +84,7 @@ describe('path_utils', () => {
         expect(getFrontendSiteBasePath(req)).toBe('');
     });
 
-    it('resolves the frontend API and resources base path', () => {
+    it('resolves the frontend API path', () => {
         const req: any = {
             params: {
                 sitePath: 'web1',
@@ -95,10 +95,38 @@ describe('path_utils', () => {
             },
         };
 
-        expect(getFrontendApiResourcesBasePath(req)).toBe('/portal/web1/___');
+        expect(getFrontendApiBasePath(req)).toBe('/portal/web1/___');
     });
 
-    it('resolves the frontend API and resources base path when virtual host path mapping is active', () => {
+    it('resolves the resource base path', () => {
+        const req: any = {
+            params: {
+                sitePath: 'web1',
+            },
+            pluginContext: {
+                services: {
+                },
+            },
+        };
+
+        expect(getFrontendResourcesBasePath(req, null)).toBe('/portal/web1/___');
+    });
+
+    it('resolves the resource base path when a CDN is present', () => {
+        const req: any = {
+            params: {
+                sitePath: 'web1',
+            },
+            pluginContext: {
+                services: {
+                },
+            },
+        };
+
+        expect(getFrontendResourcesBasePath(req, '//locahost:1234')).toBe('//locahost:1234/portal/web1/___');
+    });
+
+    it('resolves the frontend API base path when virtual host path mapping is active', () => {
         const req: any = {
             params: {
                 sitePath: 'web1',
@@ -118,7 +146,7 @@ describe('path_utils', () => {
             },
         };
 
-        expect(getFrontendApiResourcesBasePath(req)).toBe('/mashroom-portal/___');
+        expect(getFrontendApiBasePath(req)).toBe('/mashroom-portal/___');
     });
 
 });

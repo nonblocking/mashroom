@@ -51,14 +51,11 @@
                     "title": "Demo REST Proxy App",
                     "category": "Demo",
                     "defaultRestrictViewToRoles": [
-                        "Authenticated"
                     ],
                     "proxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v4",
-                            "restrictToRoles": [
-                                "Authenticated"
-                            ]
+                            "restrictToRoles": []
                         }
                     }
                 }

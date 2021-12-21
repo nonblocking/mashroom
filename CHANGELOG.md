@@ -3,6 +3,21 @@
 
 ## [unreleased v2]
 
+ * Portal: Added CDN support for Theme and all Portal App resources. All you need to do is to add *mashroom-cdn* to your
+   dependencies and configure it like shown below.
+ * Added a CDN Service that can be used to obtain a CDN host to fetch resources. Basically, it just returns a host from
+   a configurable list (round-robin):
+   ```json
+     {
+       "Mashroom CDN Services": {
+         "cdnHosts": [
+           "//cdn1.my-portal.com",
+           "//cdn2.my-portal.com"
+         ]
+       }
+     }
+   ```
+ * Added a middleware to deliver a robots.txt
  * Portal: Added to possibility to define custom App Config editors per Portal App. This is useful for Apps that have
    an editable content (e.g. from a Headless CMS).
    A custom editor is basically just another Portal App (SPA) that receives a special object within the appConfig with the config

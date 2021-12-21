@@ -1,10 +1,14 @@
 {
     "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-server-config.json",
-    "name": "Mashroom Test Server 4",
+    "name": "Mashroom Test Server 5",
     "port": 5050,
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages",
+            "devMode": true
+        },
+        {
+            "path": "../../../../mashroom-content/packages",
             "devMode": true
         }
     ],
@@ -12,11 +16,13 @@
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
         "Mashroom Memory Cache Services",
-        "Mashroom Security Simple Provider",
+        "Mashroom LDAP Security Provider",
         "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
+        "Mashroom Messaging External Provider AMQP",
         "Mashroom Session MongoDB Provider",
         "Mashroom Session Redis Provider",
+        "Mashroom Session Filestore Provider",
         "Mashroom Memory Cache Redis Provider",
         "Mashroom Portal Remote App Kubernetes Background Job",
         "Mashroom Portal Remote App Kubernetes Registry",
@@ -24,49 +30,54 @@
         "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
         "Mashroom Monitoring PM2 Exporter",
         "Mashroom Http Proxy Add User Headers Interceptor",
-        "Mashroom Http Proxy Add ID Token Interceptor",
-        "Mashroom CDN Services",
-        "Mashroom Robots Middleware"
+        "Mashroom Http Proxy Add ID Token Interceptor"
     ],
     "plugins": {
+        "Mashroom CDN Services": {
+            "cdnHosts": [
+                "//localhost:7070"
+            ]
+        },
+        "Mashroom Robots Middleware": {
+            "robots.txt": "./robots.txt"
+        },
+        "Mashroom VHost Path Mapper Middleware": {
+            "hosts": {
+                "localhost:6060": {
+                    "frontendBasePath": "/",
+                    "mapping": {
+                        "/mashroom": "/mashroom",
+                        "/login": "/login",
+                        "/websocket": "/websocket",
+                        "/": "/portal/web"
+                    }
+                }
+            }
+        },
         "Mashroom Session Middleware": {
-            "provider": "Mashroom Session Filestore Provider",
+            "provider": "memory",
             "session": {
                 "cookie": {
                     "maxAge": 3600000
                 }
             }
         },
-        "Mashroom Session Filestore Provider": {
-            "path": "./data/sessions"
-        },
         "Mashroom Security Services": {
-            "provider": "Mashroom LDAP Security Provider",
+            "provider": "Mashroom Security Simple Provider",
             "forwardQueryHintsToProvider": [
                 "test1"
             ],
             "acl": "./acl.json"
         },
-        "Mashroom LDAP Security Provider": {
-            "serverUrl": "ldap://localhost:1389",
-            "bindDN": "uid=mashroom,ou=applications,dc=nonblocking,dc=at",
-            "bindCredentials": "mashroom",
-            "baseDN": "ou=users,dc=nonblocking,dc=at",
-            "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
-            "groupSearchFilter": "(objectClass=groupOfNames)",
-            "secretsMapping": {
-                "userId": "uid"
-            },
-            "extraDataMapping": {
-                "mobile": "mobile",
-                "address": "postalAddress"
-            },
-            "groupToRoleMapping": "./groupToRoleMapping.json"
+        "Mashroom Security Simple Provider": {
+            "users": "./users.json",
+            "loginPage": "/login",
+            "authenticationTimeoutSec": 300
         },
         "Mashroom Security Default Login Webapp": {
             "loginFormTitle": {
-                "en": "Mashroom Test Server 4 Login",
-                "de": "Mashroom Test Server 4 Anmeldung"
+                "en": "Mashroom Test Server Login",
+                "de": "Mashroom Test Server Anmeldung"
             },
             "styleFile": "./login_style.css"
         },
@@ -78,10 +89,6 @@
             "checkExternalChangePeriodMs": 2000,
             "prettyPrintJson": true
         },
-        "Mashroom Memory Cache Services": {
-            "provider": "local",
-            "defaultTTLSec": 10
-        },
         "Mashroom Internationalization Services": {
             "availableLanguages": [
                 "en",
@@ -92,32 +99,8 @@
         "Mashroom Http Proxy Services": {
             "rejectUnauthorized": false,
             "poolMaxSockets": 10,
-            "socketTimeoutMs": 3000
-        },
-        "Mashroom WebSocket Webapp": {
-            "restrictToRoles": null,
-            "enableKeepAlive": true,
-            "keepAliveIntervalSec": 15,
-            "maxConnections": 20
-        },
-        "Mashroom Messaging Services": {
-            "externalProvider": "Mashroom Messaging External Provider AMQP",
-            "externalTopics": [
-                "external1",
-                "external2"
-            ],
-            "userPrivateBaseTopic": "user",
-            "enableWebSockets": true,
-            "topicACL": "./topic_acl.json"
-        },
-        "Mashroom Messaging External Provider AMQP": {
-            "internalRoutingKey": "mashroom",
-            "brokerTopicExchangePrefix": "/topic/",
-            "brokerTopicMatchAny": "#",
-            "brokerHost": "localhost",
-            "brokerPort": 5672,
-            "brokerUsername": "guest",
-            "brokerPassword": "guest"
+            "socketTimeoutMs": 3000,
+            "proxyImpl": "default"
         },
         "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App",
@@ -127,9 +110,6 @@
         },
         "Mashroom Portal Default Theme": {
             "showEnvAndVersions": true
-        },
-        "Mashroom Portal Remote App Registry Webapp": {
-            "showAddRemoteAppForm": true
         }
     }
 }

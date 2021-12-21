@@ -30,6 +30,7 @@
         "@mashroom/mashroom-storage": "1.9.2",
         "@mashroom/mashroom-memory-cache": "1.9.2",
         "@mashroom/mashroom-vhost-path-mapper": "1.9.2",
+        "@mashroom/mashroom-cdn": "1.0.0",
         "@babel/cli": "^7.16.0",
         "@types/body-parser": "^1.19.2",
         "@types/node-fetch": "^2.5.12",

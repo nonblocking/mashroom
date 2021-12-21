@@ -1,15 +1,16 @@
 import {PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH} from '../constants';
-import {getFrontendApiResourcesBasePath} from './path_utils';
+import {getFrontendResourcesBasePath} from './path_utils';
 import {getResourceAsString} from './resource_utils';
 
 import type {Request} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {
     MashroomPortalPageEnhancement,
     MashroomPortalPageEnhancementResource,
     UserAgent
 } from '../../../type-definitions';
-import {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
 type RelevantEnhancements = {
     js: Array<{
@@ -101,15 +102,16 @@ const getRelevantPageEnhancements = async (pluginRegistry: MashroomPortalPluginR
 
 const getPageEnhancementResource = async (type: 'js' | 'css', enhancement: MashroomPortalPageEnhancement, resource: MashroomPortalPageEnhancementResource, sitePath: string,
                                           pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: Request, logger: MashroomLogger): Promise<string> => {
+    const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
     const {path: resourcePath, dynamicResource} = resource;
     if (!resource.inline && resourcePath) {
         if (type === 'js') {
             return `
-                <script src="${getFrontendApiResourcesBasePath(req)}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}"></script>
+                <script src="${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}"></script>
             `;
         } else {
             return `
-                <link rel="stylesheet" href="${getFrontendApiResourcesBasePath(req)}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}" />
+                <link rel="stylesheet" href="${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}" />
             `;
         }
     } else {

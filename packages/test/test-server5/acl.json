@@ -1,0 +1,17 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-security-acl.json",
+    "/mashroom": {
+        "*": {
+            "allow": {
+                "roles": ["Administrator"]
+            }
+        }
+    },
+    "/mashroom/**": {
+        "*": {
+            "allow": {
+                "roles": ["Administrator"]
+            }
+        }
+    }
+}

@@ -1,7 +1,7 @@
 
 import {portalAppContext} from '../utils/logging_utils';
 import {getResourceAsStream} from '../utils/resource_utils';
-import {getFrontendApiResourcesBasePath, getSitePath} from '../utils/path_utils';
+import {getFrontendResourcesBasePath, getSitePath} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage, getPage} from '../utils/model_utils';
 import {
     getUser,
@@ -14,6 +14,7 @@ import {PORTAL_APP_RESOURCES_BASE_PATH} from '../constants';
 
 import type {Request, Response} from 'express';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
+import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {
     MashroomAvailablePortalApp,
     MashroomPortalApp,
@@ -31,6 +32,7 @@ export default class PortalAppController {
     async getPortalAppSetup(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+        const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
 
         try {
             const sitePath = getSitePath(req);
@@ -83,7 +85,7 @@ export default class PortalAppController {
                 return;
             }
 
-            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, this._pluginRegistry, req);
+            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
 
             logger.debug(`Sending portal app setup for: ${portalApp.name}`, portalAppSetup);
 
@@ -154,6 +156,8 @@ export default class PortalAppController {
     async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+        const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
+
         const mashroomSecurityUser = await getUser(req);
         const {q, updatedSince} = req.query;
 
@@ -167,7 +171,7 @@ export default class PortalAppController {
             })
             .map((portalApp) => {
                 const encodedPortalAppName = encodeURIComponent(portalApp.name);
-                const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
+                const resourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
                 const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
                 return {
                     name: portalApp.name,

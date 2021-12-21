@@ -1,5 +1,5 @@
 
-import {getFrontendApiResourcesBasePath} from './path_utils';
+import {getFrontendApiBasePath, getFrontendResourcesBasePath} from './path_utils';
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
     PORTAL_APP_RESOURCES_SHARED_PATH,
@@ -11,6 +11,7 @@ import {createAppId} from './id_utils';
 import type {Request} from 'express';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {
     MashroomPortalAppSetup,
     MashroomPortalApp,
@@ -51,13 +52,13 @@ const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, por
 }
 
 export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
-                      pluginRegistry: MashroomPortalPluginRegistry, req: Request) => {
+                      cdnService: MashroomCDNService | undefined | null, pluginRegistry: MashroomPortalPluginRegistry, req: Request) => {
     const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
     const encodedPortalAppName = encodeURIComponent(portalApp.name);
-    const resourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
-    const sharedResourcesBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
-    const restProxyBasePath = `${getFrontendApiResourcesBasePath(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
+    const resourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
+    const sharedResourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_APP_RESOURCES_BASE_PATH}${PORTAL_APP_RESOURCES_SHARED_PATH}`;
+    const restProxyBasePath = `${getFrontendApiBasePath(req)}${PORTAL_APP_REST_PROXY_BASE_PATH}/${encodedPortalAppName}`;
     const proxyPaths: MashroomPortalProxyPaths = {
         __baseUrl: restProxyBasePath
     };

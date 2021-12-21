@@ -1160,6 +1160,29 @@
                             "description": "Max allowed WebSocket connections per node (Default: 2000)"
                         }
                     }
+                },
+                "Mashroom Robots Middleware": {
+                    "type": "object",
+                    "properties": {
+                        "robots.txt": {
+                            "type": "string",
+                            "description": "The path to the robots.txt file. Can be relative to the server config file or absolute"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom CDN Services": {
+                    "type": "object",
+                    "properties": {
+                        "cdnHosts": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            },
+                            "description": "A list of CDN hosts (default: [])"
+                        }
+                    },
+                    "additionalProperties": false
                 }
             }
         }

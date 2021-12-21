@@ -52,6 +52,7 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
   * Support for multiple sites that can be mapped to virtual hosts
   * Proxying of REST API calls to avoid CORS problems (HTTP, SSE, WebSocket)
   * Support for global libraries that can be shared between multiple SPAs
+  * Delivering of Theme and Portal App resources via CDN
   * Admin Toolbar to create pages and place Apps via Drag'n'Drop
   * **Hot reload** of SPAs in development mode
 
@@ -85,6 +86,7 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
 | Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
 | Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
 | API Proxy           | HTTP, HTTPS, SSE, WebSocket                                                                                                    |
+| CDN                 | Any that can be configured as caching proxy                                                                                    |
 | Clustering          | yes (tested with PM2)                                                                                                          |
 | Monitoring          | CPU, Heap, Requests + Plugin Metrics; Exporter for Prometheus                                                                  |
 | Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest), IE 11 (only with mashroom-portal-legacy-browser-support)    |
@@ -648,6 +650,10 @@ this in the _Mashroom_ config file:
 [mashroom-background-jobs](../../mashroom-background-jobs/README.md) [inc]
 
 [mashroom-browser-cache](../../mashroom-browser-cache/README.md) [inc]
+
+[mashroom-cdn](../../mashroom-cdn/README.md) [inc]
+
+[mashroom-robots](../../mashroom-robots/README.md) [inc]
 
 [mashroom-vhost-path-mapper](../../mashroom-vhost-path-mapper/README.md) [inc]
 

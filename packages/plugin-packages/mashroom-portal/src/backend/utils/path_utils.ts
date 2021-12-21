@@ -18,15 +18,19 @@ export const getSitePath = (req: Request): string => {
     return '';
 };
 
-export const getFrontendSiteBasePath = (req: Request): string => {
+export const getFrontendSiteBasePath = (req: Request, ignoreVhostMapping = false): string => {
     const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper?.service;
     const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
-    if (vhostMappingInfo) {
+    if (vhostMappingInfo && !ignoreVhostMapping) {
         return vhostMappingInfo.frontendBasePath !== '/' ? vhostMappingInfo.frontendBasePath : '';
     }
     return `${getPortalPath()}${getSitePath(req)}`;
 };
 
-export const getFrontendApiResourcesBasePath = (req: Request): string => {
+export const getFrontendApiBasePath = (req: Request): string => {
     return `${getFrontendSiteBasePath(req)}${PORTAL_INTERNAL_PATH}`;
+};
+
+export const getFrontendResourcesBasePath = (req: Request, cdnHost: string | undefined | null): string => {
+    return `${cdnHost || ''}${getFrontendSiteBasePath(req, !!cdnHost)}${PORTAL_INTERNAL_PATH}`;
 };
