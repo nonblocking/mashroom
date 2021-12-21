@@ -61,7 +61,8 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
   * Shared middlewares and services
   * **Service abstractions** for security, internationalization, messaging, HTTP proxying, memory cache and storage
   * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
-  * Integration of existing _Express_ webapps
+  * Integration of (existing) _Express_ webapps
+  * Integration of (existing) _Express_ (REST) APIs
   * Role and IP based **access control** for URLs
   * Definition of access restrictions for arbitrary resources (such as Sites, Pages, App instances)
   * Single configuration file to override plugin defaults
