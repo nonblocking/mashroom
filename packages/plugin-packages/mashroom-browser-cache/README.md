@@ -46,7 +46,7 @@ The Cache Control service is accessible through _pluginContext.services.browserC
 
 **Interface:**
 
-```js
+```ts
 export interface MashroomCacheControlService {
     /**
      * Add the Cache-Control header based on the policy and authentication status.
