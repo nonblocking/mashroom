@@ -7,8 +7,7 @@ import RolesList from '../containers/RolesList';
 
 import type {ReactNode} from 'react';
 
-type Props = {
-};
+type Props = Record<string, never>;
 
 type State = {
     enteredRole: string | undefined | null;

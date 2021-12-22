@@ -9,9 +9,7 @@ import PortalAppControlsToggle from '../containers/PortalAppControlsToggle';
 
 import type {ReactNode} from 'react';
 
-type Props = {
-
-};
+type Props = Record<string, never>;
 
 export default class AdminMenuBar extends PureComponent<Props> {
 

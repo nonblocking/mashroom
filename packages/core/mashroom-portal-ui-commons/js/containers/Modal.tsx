@@ -1,5 +1,4 @@
 
-import React from 'react';
 import {connect} from 'react-redux';
 import ModalComp from '../components/Modal';
 import {setShowModal} from '../store/actions';

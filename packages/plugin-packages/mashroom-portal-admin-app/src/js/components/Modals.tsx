@@ -8,8 +8,7 @@ import SiteDeleteDialog from '../containers/SiteDeleteDialog';
 
 import type {ReactNode} from 'react';
 
-type Props = {
-};
+type Props = Record<string, never>;
 
 export default class Modals extends PureComponent<Props> {
 
