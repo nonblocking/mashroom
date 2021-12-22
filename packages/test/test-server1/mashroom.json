@@ -17,6 +17,10 @@
         {
             "path": "../../../../mashroom-plugin-demos/packages",
             "devMode": true
+        },
+        {
+            "path": "../../../../mashroom-portal-demo-go-wasm-app",
+            "devMode": true
         }
     ],
     "indexPage": "/",

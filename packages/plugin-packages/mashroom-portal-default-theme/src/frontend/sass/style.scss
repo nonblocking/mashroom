@@ -1,3 +1,5 @@
+@use "sass:math";
+
 @import "node_modules/@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults";
 
 $COLOR_BLACK: #343633;
@@ -6,14 +8,15 @@ $COLOR_GREY: #888;
 $COLOR_GREY_LIGHT: #999;
 $COLOR_ERROR: #FF0033;
 
-$COLOR_PRIMARY: #645e9d;
-$COLOR_PRIMARY_LIGHT: #938bce;
-$COLOR_PRIMARY_DARK: #36346e;
-$COLOR_PRIMARY_EXTRA_LIGHT: lighten($COLOR_PRIMARY_LIGHT, 25);
+$COLOR_PRIMARY: #504B88;
+$COLOR_PRIMARY_LIGHT: #655fa7; // 10%
+$COLOR_PRIMARY_DARK: #3d3967; // 10%
+$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8; // 55%
 
-$COLOR_SECONDARY: #5cc8ff;
-$COLOR_SECONDARY_LIGHT: #96fbff;
-$COLOR_SECONDARY_DARK: #0097cc;
+$COLOR_SECONDARY: #C49B5E;
+$COLOR_SECONDARY_LIGHT: #d2b283; // 10%
+$COLOR_SECONDARY_DARK: #af8240; // 10%
+$COLOR_SECONDARY_EXTRA_LIGHT: #f4ece1; // 35%
 
 $COLOR_LOADING_DOTS: $COLOR_PRIMARY;
 $COLOR_LOADING_DOTS_LIGHTEN:  lighten($COLOR_PRIMARY, 30%);
@@ -24,8 +27,8 @@ $ADMIN_APP_COLOR_BACKGROUND_LIGHTER: lighten($ADMIN_APP_COLOR_BACKGROUND, 20);
 $ADMIN_APP_COLOR_TEXT: white;
 $ADMIN_APP_COLOR_TEXT_DARK: lighten($ADMIN_APP_COLOR_BACKGROUND, 50);
 
-$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
-$FONT_HEADER: Georgia, serif;
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 $GUTTER_WIDTH: 15px;
 
@@ -110,11 +113,11 @@ a, a:visited, a:focus {
     @include hover-animation();
 
     &:hover {
-        color: $COLOR_PRIMARY_LIGHT;
+        color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        color: $COLOR_PRIMARY_LIGHT;
+        color: $COLOR_PRIMARY_DARK;
     }
 }
 
@@ -131,11 +134,11 @@ button, input[type="submit"] {
     @include hover-animation();
 
     &:hover {
-        background-color: $COLOR_PRIMARY_LIGHT;
+        background-color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        background-color: $COLOR_PRIMARY_LIGHT;
+        background-color: $COLOR_PRIMARY_DARK;
     }
 
     &[disabled] {
@@ -342,7 +345,6 @@ table {
 
 header {
     background-color: $COLOR_PRIMARY;
-    background-image: url(assets/random-grey-variations.png);
     color: white;
     position: relative;
 
@@ -559,8 +561,8 @@ header {
     .mashroom-portal-app-info {
         left: 0;
         top: 0;
-        background-color: lightyellow;
-        border: 2px solid yellow;
+        background-color: $COLOR_SECONDARY_EXTRA_LIGHT;
+        border: 2px solid $COLOR_SECONDARY_LIGHT;
         font-size: 0.7em;
         font-weight: bold;
         line-height: 1.2em;
@@ -613,7 +615,8 @@ main {
         .nav-item {
 
             .nav-link {
-                padding: 5px 20px;
+                position: relative;
+                padding: 6px 20px;
                 margin-bottom: 2px;
                 color: $COLOR_BLACK;
                 text-decoration: none;
@@ -621,20 +624,27 @@ main {
                 @include hover-animation();
 
                 &:hover {
-                    color: $COLOR_WHITE;
-                    background-color: $COLOR_PRIMARY_LIGHT;
+                    &:before {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 4px;
+                        height: 100%;
+                        content: ' ';
+                        display: block;
+                        background-color: $COLOR_SECONDARY;
+                    }
                 }
 
                 &.active {
                     cursor: default;
                     font-weight: bold;
-                    position: relative;
 
                     &:before {
                         position: absolute;
                         left: 0;
                         top: 0;
-                        width: 3px;
+                        width: 4px;
                         height: 100%;
                         content: ' ';
                         display: block;
@@ -643,7 +653,6 @@ main {
 
                     &:hover {
                         color: $COLOR_BLACK;
-                        background-color: $COLOR_PRIMARY_EXTRA_LIGHT;
                     }
                 }
             }
@@ -967,15 +976,15 @@ footer {
 
     a, a:visited, a:focus {
         color: $ADMIN_APP_COLOR_TEXT;
-        text-decoration: underline;
+        text-decoration: none;
         @include hover-animation();
 
         &:hover {
-            color: $COLOR_SECONDARY;
+            text-decoration: underline;
         }
 
         &:active {
-            color: $COLOR_SECONDARY;
+            text-decoration: underline;
         }
     }
 
@@ -1218,7 +1227,7 @@ footer {
         nav {
             margin-bottom: 0;
             display: block;
-            margin-right: $GUTTER_WIDTH / 2;
+            margin-right: math.div($GUTTER_WIDTH, 2);
             margin-top: 0;
         }
     }
@@ -1237,7 +1246,7 @@ footer {
 
 
             h1 {
-                font-size: 2em;
+
             }
         }
 

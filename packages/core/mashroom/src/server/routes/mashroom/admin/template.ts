@@ -18,17 +18,17 @@ export default (content: string, req: Request) => {
                 body {
                     margin: 0;
                     padding: 0;
-                    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                 }
 
                 h1 {
                     font-size: 1.4em;
-                    font-family: Georgia, serif;
+                    font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
                 }
 
                 h2 {
                     font-size: 1.2em;
-                    font-family: Georgia, serif;
+                    font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
                     margin: 20px 0;
                 }
 
@@ -37,29 +37,27 @@ export default (content: string, req: Request) => {
                 }
 
                 a {
-                    color: #645e9d;
+                    color: #504B88;
+                    text-decoration: none;
                 }
 
                 a:hover {
-                    color: #36346e;
+                    color: #3d3967;
                 }
 
                 header {
-                    background-color: #645e9d;
+                    background-color: #504B88;
                     display: flex;
                 }
 
                 header h1 {
                     color: white;
-                    margin-top: 22px;
+                    font-weight: normal;
+                    margin-top: 17px;
                 }
 
                 header .logo {
-                    padding: 20px;
-                }
-
-                header .logo svg {
-                    height: 30px;
+                    padding: 10px 25px;
                 }
 
                 #content-wrapper {
@@ -67,12 +65,13 @@ export default (content: string, req: Request) => {
                 }
 
                 nav ul {
-                    padding: 20px 0;
-                    margin: 0;
-                    background-color: #EFEFEF;
+                    padding: 0;
+                    margin: 20px 0;
+                    background-color: #f4f3f8;
                 }
 
                 .menu-item {
+                    position: relative;
                     list-style-type: none;
                     padding: 7px 25px;
                     border-top: 1px solid white;
@@ -80,19 +79,31 @@ export default (content: string, req: Request) => {
                 }
 
                 .menu-item a {
-                    color: #444;
+                    color: black;
                     text-decoration: none;
                     white-space: nowrap;
                 }
 
-                .menu-item a:hover, .menu-item a:active {
-                    color: black;
+                .menu-item a:hover:before {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 4px;
+                    height: 100%;
+                    content: ' ';
+                    display: block;
+                    background-color: #C49B5E;
                 }
 
-                .menu-item.active {
-                    background-color: white;
-                    border-top: 1px solid #AAA;
-                    border-bottom: 1px solid #AAA;
+                .menu-item.active:before {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 4px;
+                    height: 100%;
+                    content: ' ';
+                    display: block;
+                    background-color: #504B88;
                 }
 
                 .menu-item.active a {
@@ -108,7 +119,7 @@ export default (content: string, req: Request) => {
 
                 main {
                     margin: 0;
-                    padding: 10px 30px;
+                    padding: 5px 30px;
                     overflow-x: auto;
                     width: 100%;
                 }
@@ -135,17 +146,19 @@ export default (content: string, req: Request) => {
                     text-align: left;
                     vertical-align: top;
                     white-space: nowrap;
-                    border-bottom: 1px solid #666;
                     font-weight: normal;
-                    font-family: Georgia, serif;
+                    font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
                     font-size: 1.05em;
                 }
 
                 td {
                     padding: 8px 10px;
                     line-height: 1.25em;
-                    border-bottom: 1px solid #AAA;
                     vertical-align: top;
+                }
+
+                tr:nth-child(even) {
+                    background-color: #f4f3f8;
                 }
 
                 .details-link {
@@ -227,18 +240,10 @@ export default (content: string, req: Request) => {
         <html>
             <header>
                 <div class="logo">
-                    <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 269.4 270">
-                        <defs>
-                            <style>
-                                .cls-1{fill:white;}.cls-2,.cls-3{fill:none;stroke-miterlimit:10;}.cls-2{stroke:white;stroke-width:0.5px;}.cls-3{stroke:white;stroke-width:20px;}
-                            </style>
-                        </defs>
-                        <title>mashroom_logo</title>
-                        <path class="cls-1"
-                              d="M98.16,58.35h27.65v88.31q0,13,6.67,13,8.27,0,8.27-21.41V58.35h27.41V180.8H142V169.45q-5.21,13.1-16.23,13.28v35.62H98.16Z"
-                              transform="translate(-0.64 -0.4)"/>
-                        <path class="cls-2" d="M116.87,124.37" transform="translate(-0.64 -0.4)"/>
-                        <rect class="cls-3" x="10" y="10" width="249.4" height="250"/>
+                   <svg width="40" height="40" viewBox="0 0 250 190" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 72.0771C0 70.7653 0.580079 69.5203 1.5854 68.6744L81.9425 1.05795C84.8452 -1.38445 89.2857 0.673238 89.2857 4.46067V116.796C89.2857 118.095 88.7168 119.329 87.7281 120.175L7.37091 188.918C4.47539 191.395 0 189.344 0 185.539V72.0771Z" fill="white"/>
+                        <path d="M80.3571 72.0771C80.3571 70.7653 80.9372 69.5203 81.9425 68.6744L162.3 1.05795C165.202 -1.38445 169.643 0.673238 169.643 4.46067V116.796C169.643 118.095 169.074 119.329 168.085 120.175L87.7281 188.918C84.8325 191.395 80.3571 189.344 80.3571 185.539V72.0771Z" fill="white"/>
+                        <path d="M160.714 72.0771C160.714 70.7653 161.294 69.5203 162.3 68.6744L242.657 1.05795C245.559 -1.38445 250 0.673238 250 4.46067V116.796C250 118.095 249.431 119.329 248.442 120.175L168.085 188.918C165.19 191.395 160.714 189.344 160.714 185.539V72.0771Z" fill="white"/>
                     </svg>
                 </div>
                 <h1>Mashroom Server Admin UI</h1>

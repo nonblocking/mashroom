@@ -7,17 +7,17 @@ body {
     -moz-font-smoothing: antialiased;
     -ms-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     padding: 20px 40px;
     line-height: 1.3em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-    font-family: Georgia, serif;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 }
 
 h1, h2, h3 {
-    color: #645e9d;
+    color: black;
 }
 
 h4, h5, h6 {
@@ -29,16 +29,16 @@ h2 {
 }
 
 h3 {
-    margin: 40px 0 10px 0;
+    margin: 30px 0 10px 0;
 }
 
 h4 {
-    margin: 30px 0 5px 0;
+    margin: 20px 0 5px 0;
 }
 
 /* Logo image */
 body > p:first-child {
-    float: left;
+    padding-left: 5px;
 }
 
 body > p:first-child img {
@@ -48,9 +48,7 @@ body > p:first-child img {
 
 /* Title */
 p + h1 {
-    float: left;
-    margin: 20px 15px;
-    color: black;
+    margin: 20px 0 60px 0;
 }
 
 p {
@@ -67,16 +65,16 @@ li {
 }
 
 a {
-    color: #645e9d;
+    color: #504B88;
     text-decoration: none;
 }
 
 a:hover {
-    color: #36346e;
+    color: #3d3967;
 }
 
 pre {
-    background-color: #EEE;
+    background-color: #f4f3f8;
     padding: 10px;
     font-family: Consolas, 'Liberation Mono', Courier, monospace;
 }
@@ -91,15 +89,13 @@ img {
 table {
     width: 100%;
     border-spacing: 0;
-    border: 1px solid #645e9d;
 }
 
 table tr {
-    border-bottom: 1px solid #645e9d;
 }
 
 table tr:nth-child(even) {
-    background-color: #eee;
+    background-color: #f4f3f8;
 }
 
 table tr:last-child {
@@ -109,8 +105,10 @@ table tr:last-child {
 table th {
     text-align: left;
     padding: 7px 10px;
-    background-color: #645e9d;
+    background-color: #504B88;
     color: white;
+    font-family: "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+    font-weight: normal;
     border-right: 1px solid white;
 }
 
@@ -120,7 +118,7 @@ table th:last-child {
 
 table td {
     padding: 5px 10px;
-    border-right: 1px solid #645e9d;
+    border-right: 1px solid #504B88;
 }
 
 table td:last-child {

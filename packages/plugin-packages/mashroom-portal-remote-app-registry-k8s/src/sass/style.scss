@@ -1,20 +1,20 @@
 
-$COLOR_BLACK: #343633;
+$COLOR_BLACK: black;
 $COLOR_WHITE: white;
 $COLOR_GREY: #888;
-$COLOR_ERROR: red;
+$COLOR_ERROR: #FF0033;
 
-$COLOR_PRIMARY: #645e9d;
-$COLOR_PRIMARY_LIGHT: #938bce;
-$COLOR_PRIMARY_DARK: #36346e;
-$COLOR_PRIMARY_EXTRA_LIGHT: lighten($COLOR_PRIMARY_LIGHT, 25);
+$COLOR_PRIMARY: #504B88;
+$COLOR_PRIMARY_LIGHT: #655fa7;
+$COLOR_PRIMARY_DARK: #3d3967;
+$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8;
 
-$COLOR_SECONDARY: #5cc8ff;
-$COLOR_SECONDARY_LIGHT: #96fbff;
-$COLOR_SECONDARY_DARK: #0097cc;
+$COLOR_SECONDARY: #C49B5E;
+$COLOR_SECONDARY_LIGHT: #d2b283;
+$COLOR_SECONDARY_DARK: #af8240;
 
-$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
-$FONT_HEADER: Georgia, serif;
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
@@ -42,17 +42,21 @@ h1, h2, h3 {
     font-family: $FONT_HEADER;
 }
 
+h2 {
+    font-size: 1.2em;
+}
+
 a, a:visited, a:focus {
     color: $COLOR_PRIMARY;
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: $COLOR_PRIMARY_LIGHT;
+        color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        color: $COLOR_PRIMARY_LIGHT;
+        color: $COLOR_PRIMARY_DARK;
     }
 }
 
@@ -77,12 +81,15 @@ table {
     border-collapse: collapse;
 }
 
+tr:nth-child(even) {
+    background-color: $COLOR_PRIMARY_EXTRA_LIGHT;
+}
+
 th {
     padding: 8px 10px;
     text-align: left;
     vertical-align: top;
     white-space: nowrap;
-    border-bottom: 1px solid #666;
     font-weight: normal;
     font-family: Georgia, serif;
     font-size: 1.05em;
@@ -90,7 +97,6 @@ th {
 
 td {
     padding: 8px 10px;
-    border-bottom: 1px solid #AAA;
     vertical-align: top;
 }
 

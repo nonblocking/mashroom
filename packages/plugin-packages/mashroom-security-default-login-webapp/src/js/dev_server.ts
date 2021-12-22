@@ -45,6 +45,11 @@ wrapperApp.use((req: Request, res: Response, next) => {
                 service: {
                     getCSRFToken: () => 'asdfjiwomv'
                 }
+            },
+            browserCache: {
+                cacheControl: {
+                    addCacheControlHeader: () => { /* nothing to do */ }
+                }
             }
         },
     }

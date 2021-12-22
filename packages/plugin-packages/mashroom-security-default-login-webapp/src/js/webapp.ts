@@ -52,9 +52,7 @@ app.get('/style.css', (req: Request, res: Response) => {
     res.sendFile(context.styleFile);
 });
 
-app.get('/assets/bg.png', (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, '../assets/random-grey-variations.png'));
-});
+app.use('/assets', express.static(path.resolve(__dirname, '../assets')));
 
 app.post('/', async (req: Request, res: Response) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');

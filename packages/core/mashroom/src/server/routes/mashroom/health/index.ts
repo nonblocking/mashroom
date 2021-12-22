@@ -22,11 +22,12 @@ router.get('/', (req: Request, res: Response) => {
                 body {
                     margin: 15px;
                     padding: 0;
-                    font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+                    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                 }
 
-                table, th, td {
-                    border: 1px solid #CCC;
+                h1 {
+                    font-size: 1.4em;
+                    font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
                 }
 
                 table {
@@ -39,11 +40,14 @@ router.get('/', (req: Request, res: Response) => {
                 }
 
                 th {
-                    background-color: #EFEFEF;
                     padding: 8px 10px;
                     text-align: left;
                     vertical-align: top;
                     white-space: nowrap;
+                }
+
+                tr:nth-child(odd) {
+                    background-color: #f4f3f8;
                 }
             </style>
         </head>

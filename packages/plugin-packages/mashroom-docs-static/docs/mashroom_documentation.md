@@ -1,5 +1,5 @@
 
-![Mashroom Logo](mashroom_logo.png =55x55)
+![Mashroom Logo](logo-primary-shades.png =150x120)
 
 # Mashroom Server
 Version: [version]
@@ -708,6 +708,3 @@ this in the _Mashroom_ config file:
 
 [mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc]
 
-## 3rd Party Plugins
-
-Coming soon.

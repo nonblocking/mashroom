@@ -15,6 +15,9 @@ const pluginConfig = {
 const contextHolder: any = {
     getPluginContext: () => ({
         loggerFactory: () => console,
+        serverConfig: {
+            externalPluginConfigFileNames: ['mashroom']
+        },
         services: {
             core: {
                 pluginService: {

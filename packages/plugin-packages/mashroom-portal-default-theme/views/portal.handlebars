@@ -14,7 +14,19 @@
 
     <title>{{site.title}} - {{page.title}}</title>
 
-    <link rel="shortcut icon" type="image/x-icon" href="{{resourcesBasePath}}/assets/mashroom_favicon.ico">
+    <link rel="icon" type="image/png" href="{{resourcesBasePath}}/assets/logo-white-196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="{{resourcesBasePath}}/assets/logo-white-32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{resourcesBasePath}}/assets/logo-white-16.png">
+    <link sizes="16x16 32x32" type="image/x-icon" rel="icon" href="{{resourcesBasePath}}/assets/logo-white.ico">
+
+    <link rel="apple-touch-icon" href="{{resourcesBasePath}}/assets/logo-badge-primary-white-180.png">
+    <link rel="apple-touch-icon" href="{{resourcesBasePath}}/assets/logo-badge-primary-white-167.png" sizes="167x167">
+    <link rel="apple-touch-icon" href="{{resourcesBasePath}}/assets/logo-badge-primary-white-152.png" sizes="152x152">
+
+    <meta name="msapplication-square70x70logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-70.png">
+    <meta name="msapplication-square150x150logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-150.png">
+    <meta name="msapplication-square310x310logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-310.png">
+
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/bootstrap/css/bootstrap.css?v={{bootstrapVersion}}">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/style.css?v={{lastThemeReloadTs}}">
     {{! Style that can be loaded async...  }}
@@ -38,7 +50,7 @@
 
     <header>
         <div class="logo">
-            <img src="{{resourcesBasePath}}/assets/mashroom_logo.svg" width="40" height="40" alt="Mashroom Server" />
+            <img src="{{resourcesBasePath}}/assets/logo-white.svg" width="40" height="40" alt="Mashroom Server" />
         </div>
         <div class="site-name">
             <h1>{{site.title}}</h1>

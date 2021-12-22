@@ -1,20 +1,25 @@
 
+$SMALL_DEVICE_MIN: 576px;
+$MEDIUM_DEVICE_MIN: 768px;
+$LARGE_DEVICE_MIN: 992px;
+$X_LARGE_DEVICE_MIN: 1200px;
+
 $COLOR_BLACK: #343633;
 $COLOR_WHITE: white;
-$COLOR_GREY: #888;
-$COLOR_ERROR: red;
+$COLOR_ERROR: #FF0033;
 
-$COLOR_PRIMARY: #645e9d;
-$COLOR_PRIMARY_LIGHT: #938bce;
-$COLOR_PRIMARY_DARK: #36346e;
-$COLOR_PRIMARY_EXTRA_LIGHT: lighten($COLOR_PRIMARY_LIGHT, 25);
+$COLOR_PRIMARY: #504B88;
+$COLOR_PRIMARY_LIGHT: #655fa7;
+$COLOR_PRIMARY_DARK: #3d3967;
+$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8;
 
-$COLOR_SECONDARY: #5cc8ff;
-$COLOR_SECONDARY_LIGHT: #96fbff;
-$COLOR_SECONDARY_DARK: #0097cc;
+$COLOR_SECONDARY: #C49B5E;
+$COLOR_SECONDARY_LIGHT: #d2b283;
+$COLOR_SECONDARY_DARK: #af8240;
+$COLOR_SECONDARY_EXTRA_LIGHT: #f4ece1;
 
-$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
-$FONT_HEADER: Georgia, serif;
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
@@ -35,9 +40,11 @@ body {
     color: $COLOR_BLACK;
     font-size: 16px;
     font-family: $FONT_DEFAULT;
-    background-image: url(assets/bg.png);
 }
 
+.background-image {
+    position: fixed;
+}
 
 h1, h2, h3 {
     font-family: $FONT_HEADER;
@@ -49,11 +56,11 @@ a, a:visited, a:focus {
     @include hover-animation();
 
     &:hover {
-        color: $COLOR_PRIMARY_LIGHT;
+        color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        color: $COLOR_PRIMARY_LIGHT;
+        color: $COLOR_PRIMARY_DARK;
     }
 }
 
@@ -69,11 +76,11 @@ button, input[type="submit"] {
     @include hover-animation();
 
     &:hover {
-        background-color: $COLOR_PRIMARY_LIGHT;
+        background-color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        background-color: $COLOR_PRIMARY_LIGHT;
+        background-color: $COLOR_PRIMARY_DARK;
     }
 }
 
@@ -105,12 +112,16 @@ label {
 
 .login {
     max-width: 500px;
-    margin: 40px auto;
+    margin: 15% auto;
+    background-color: rgba(white, 0.9);
+    box-shadow: 0 0 8px $COLOR_PRIMARY;
 
     .login-form-title {
+        overflow: hidden;
+
         h1 {
             font-size: 1.5em;
-            margin: 30px 18px;
+            margin: 20px 18px;
         }
     }
 
@@ -120,8 +131,6 @@ label {
     }
 
     .login-form {
-        border: 1px solid #888;
-        background-color: white;
         padding: 20px;
 
         .login-form-row {
@@ -142,8 +151,23 @@ label {
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: $MEDIUM_DEVICE_MIN) {
+    .background-image {
+        top: 0;
+        left: 0;
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        background-image: url(assets/logo-white-shades.svg);
+        background-repeat: no-repeat;
+        background-position: 5vw 5vh;
+        background-size: 90vw 90vh;
+        z-index: -1;
+    }
+
     .login {
+        margin: 30% auto;
+
         .login-form {
             .login-form-row {
                 display: flex;
@@ -160,3 +184,14 @@ label {
         }
     }
 };
+
+@media (min-width: $LARGE_DEVICE_MIN) {
+    .background-image {
+        background-position: 15vw 15vh;
+        background-size: 70vw 70vh;
+    }
+
+    .login {
+        margin: 20% auto;
+    }
+}
