@@ -3,7 +3,7 @@
 
 ## [unreleased v2]
 
- * Theme refurbishment: Switched to a new cool logo and a slightly more bluish primary color
+ * Theme refurbishment: Switched to a new cool logo and a slightly more blueish primary color
  * Portal: Added CDN support for Theme and all Portal App resources. All you need to do is to add *mashroom-cdn* to your
    dependencies and configure it like shown below.
  * Added a CDN Service that can be used to obtain a CDN host to fetch resources. Basically, it just returns a host from
@@ -59,15 +59,15 @@
        }
      }
    ```
- * Portal: App definition updated to be able to integrate new features such as SSR and config editor.
-   Changes are:
+ * Portal: New plugin definition for Portal Apps with type **portal-app2** added to be able to integrate new features such as SSR and config editor.
+   Changes are compared to *portal-app* are:
    * Moved _title_, _tags_ and _category_ to _defaultConfig_, so it can be overwritten per server instance
    * _bootstrap_ has been renamed to _clientBootstrap_
    * The _resourcesRoot_ can now be defined for local deployment and remote access separately
    * _restProxies_ has been renamed to _proxies_ because the proxy supports all kinds of HTTP and WebSocket connections
    * Caching config added
    * Custom editor config added
-   Existing portal-app definitions are still valid, but if you want to upgrade change the following:
+   Existing portal-app definitions are still valid, but if you want to upgrade, change the following:
    ```json
      {
        "name": "My Single Page App",
@@ -92,7 +92,7 @@
    ```json
      {
        "name": "My Single Page App",
-       "type": "portal-app",
+       "type": "portal-app2",
        "clientBootstrap": "startMyApp",
        "local": {
          "resourcesRoot": "./dist",

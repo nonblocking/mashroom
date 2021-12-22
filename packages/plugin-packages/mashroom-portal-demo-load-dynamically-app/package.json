@@ -33,7 +33,7 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Load Dynamically App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startLoadDynamicallyDemoApp",
                 "requires": [
                     "Mashroom Portal Demo React App",

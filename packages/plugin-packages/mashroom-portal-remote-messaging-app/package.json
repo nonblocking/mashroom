@@ -50,7 +50,7 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Remote Messaging App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startRemoteMessagingApp",
                 "resources": {
                     "js": [

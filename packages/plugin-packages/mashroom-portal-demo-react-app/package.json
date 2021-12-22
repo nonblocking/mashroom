@@ -35,7 +35,7 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo React App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startReactDemoApp",
                 "resources": {
                     "js": [

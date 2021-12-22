@@ -101,10 +101,10 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             throw new Error(`No plugin definition found for remote Portal App endpoint: ${remotePortalAppEndpoint.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
         }
 
-        const portalAppDefinitions = definition.plugins.filter((plugin) => plugin.type === 'portal-app');
+        const portalAppDefinitions = definition.plugins.filter((plugin) => plugin.type === 'portal-app' || plugin.type === 'portal-app2');
 
         if (portalAppDefinitions.length === 0) {
-            throw new Error(`No plugin of type portal-app found in remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
+            throw new Error(`No plugin of type portal-app or portal-app2 found in remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
         const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
@@ -121,7 +121,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
-        const version = definition.clientBootstrap && definition.local ? 2 : 1;
+        const version = definition.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${definition.name}: ${version}`);
 
         const name = definition.name;
@@ -138,7 +138,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const clientBootstrap = version === 2 ? definition.clientBootstrap : definition.bootstrap;
         if (!clientBootstrap) {
-            throw new Error(`Invalid configuration of plugin ${name}: No bootstrap function defined. Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
+            if (version === 2) {
+                throw new Error(`Invalid configuration of plugin ${name}: No clientBootstrap property defined. Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
+            } else {
+                throw new Error(`Invalid configuration of plugin ${name}: No bootstrap property defined. Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
+            }
         }
 
         const resourcesDef = definition.resources;

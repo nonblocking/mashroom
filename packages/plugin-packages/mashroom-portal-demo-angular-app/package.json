@@ -40,7 +40,7 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Angular App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startAngularDemoApp",
                 "resources": {
                     "js": [

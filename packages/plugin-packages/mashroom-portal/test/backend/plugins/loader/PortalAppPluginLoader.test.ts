@@ -17,7 +17,7 @@ describe('PortalAppPluginLoader', () => {
             name: 'Portal App 1',
             description: 'my description',
             tags: ['tag1', 'tag2'],
-            type: 'portal-app',
+            type: 'portal-app2',
             errorMessage: null,
             lastReloadTs: Date.now(),
             requireBootstrap: () => { /* nothing to do */ },
@@ -26,7 +26,7 @@ describe('PortalAppPluginLoader', () => {
             pluginDefinition: {
                 name: 'Portal App 1',
                 description: null,
-                type: 'portal-app',
+                type: 'portal-app2',
                 requires: null,
                 clientBootstrap: 'startApp',
                 resources: {

@@ -38,7 +38,7 @@
         "plugins": [
             {
                 "name": "Mashroom Portal IFrame App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startPortalIFrameApp",
                 "resources": {
                     "js": [

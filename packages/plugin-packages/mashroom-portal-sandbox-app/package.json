@@ -49,7 +49,7 @@
         "plugins": [
             {
                 "name": "Mashroom Sandbox App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startSandboxApp",
                 "resources": {
                     "js": [

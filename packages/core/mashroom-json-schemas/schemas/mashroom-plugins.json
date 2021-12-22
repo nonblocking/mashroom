@@ -794,7 +794,7 @@
                     "description": "Required plugins"
                 },
                 "type": {
-                    "const": "portal-app"
+                    "const": "portal-app2"
                 },
                 "clientBootstrap": {
                     "$ref": "#/definitions/JavaScriptIdentifier",

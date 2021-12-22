@@ -58,7 +58,7 @@ The plugin allows the following configuration properties:
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
  * _warnBeforeAuthenticationExpiresSec_: The time when the Portal should start to warn that the authentication is about to expire (Default: 120)
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
- * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app* plugins).
+ * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app2* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
  * _sslConfig_: Optional config for server side rendering
    * _sslEnabled_: Allow server side rendering if Apps support it (Default: true)
@@ -213,6 +213,10 @@ export interface MashroomPortalService {
 
 ### portal-app
 
+*Deprecated* since Mashroom v2, please use *portal-app2*.
+
+### portal-app2
+
 This plugin type makes a Single Page Application (SPA) available in the Portal.
 
 To register a new portal-app plugin add this to _package.json_:
@@ -223,7 +227,7 @@ To register a new portal-app plugin add this to _package.json_:
         "plugins": [
             {
                 "name": "My Single Page App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startMyApp",
                 "resources": {
                     "js": [
@@ -253,7 +257,7 @@ A full config with all optional properties would look like this:
         "plugins": [
             {
                 "name": "My Single Page App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startMyApp",
                 "resources": {
                     "js": [

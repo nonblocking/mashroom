@@ -12,7 +12,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     const pluginDefinition: MashroomPluginDefinition = {
         name: 'Test App',
         description: 'Test App',
-        type: 'portal-app',
+        type: 'portal-app2',
         clientBootstrap: 'startTestApp',
         sharedResources: {
             js: [

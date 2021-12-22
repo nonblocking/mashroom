@@ -35,7 +35,7 @@
         "plugins": [
             {
                 "name": "Mashroom Portal Demo Composite App",
-                "type": "portal-app",
+                "type": "portal-app2",
                 "clientBootstrap": "startCompositeDemoApp",
                 "requires": [
                     "Mashroom Portal Demo Angular App",

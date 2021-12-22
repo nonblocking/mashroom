@@ -4,7 +4,7 @@
     "plugins": [
         {
             "name": "Mashroom Portal Demo React App 2",
-            "type": "portal-app",
+            "type": "portal-app2",
             "clientBootstrap": "startReactDemoApp2",
             "resources": {
                 "js": ["app.js"],
@@ -32,7 +32,7 @@
         },
         {
             "name": "Mashroom Portal Demo React App 2 Config Editor",
-            "type": "portal-app",
+            "type": "portal-app2",
             "clientBootstrap": "startReactDemoApp2ConfigEditor",
             "resources": {
                 "js": ["editor.js"]

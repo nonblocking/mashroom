@@ -32,12 +32,16 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        const version = plugin.pluginDefinition.clientBootstrap && plugin.pluginDefinition.local ? 2 : 1;
+        const version = plugin.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${plugin.name}: ${version}`);
 
         const clientBootstrap = version == 2 ? plugin.pluginDefinition.clientBootstrap : plugin.pluginDefinition.bootstrap;
         if (!clientBootstrap) {
-            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No clientBootstrap function defined`);
+            if (version === 2) {
+                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No clientBootstrap property defined`);
+            } else {
+                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No bootstrap property defined`);
+            }
         }
 
         const resourcesDef = plugin.pluginDefinition.resources;
