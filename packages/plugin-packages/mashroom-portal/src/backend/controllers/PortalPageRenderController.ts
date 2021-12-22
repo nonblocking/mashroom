@@ -185,6 +185,8 @@ export default class PortalPageRenderController {
                         portalAppService.unloadApp(app.id);
                       }
                     });
+                    // Execute scripts in the new page content (from SSR)
+                    ${this._executeSSRAppContentScripts(portalAppInfo)}
                     // Load/hydrate all new ones
                     ${await this._getStaticAppStartupScript(portalAppInfo, undefined)}
                 `;
@@ -502,6 +504,22 @@ export default class PortalPageRenderController {
         return `
             window['${WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP}'] = ${JSON.stringify(preloadedPortalAppSetup)};
             ${loadStatements.join('\n')};
+        `;
+    }
+
+    private _executeSSRAppContentScripts(portalAppInfo: MashroomPortalPageAppsInfo): string {
+        const appAreaIds = Object.keys(portalAppInfo);
+        return `
+            ['${appAreaIds.join('\', \'')}'].forEach(function(appAreaId) {
+                const scripts = document.getElementById(appAreaId).querySelectorAll('script');
+                for (var i = 0; i < scripts.length; i++) {
+                    try {
+                        eval(scripts[i].innerText);
+                    } catch (e) {
+                        console.error(e);
+                    }
+                }
+            });
         `;
     }
 
