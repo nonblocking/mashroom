@@ -112,7 +112,9 @@ label {
 
 .login {
     max-width: 500px;
-    margin: 15% auto;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20%;
     background-color: rgba(white, 0.9);
     box-shadow: 0 0 8px $COLOR_PRIMARY;
 
@@ -158,7 +160,7 @@ label {
         position: fixed;
         width: 100vw;
         height: 100vh;
-        background-image: url(assets/logo-white-shades.svg);
+        background-image: url(assets/logo-primary-shades.svg);
         background-repeat: no-repeat;
         background-position: 5vw 5vh;
         background-size: 90vw 90vh;
@@ -166,7 +168,7 @@ label {
     }
 
     .login {
-        margin: 30% auto;
+        margin-top: calc(50vh - 140px);
 
         .login-form {
             .login-form-row {
@@ -187,11 +189,11 @@ label {
 
 @media (min-width: $LARGE_DEVICE_MIN) {
     .background-image {
-        background-position: 15vw 15vh;
-        background-size: 70vw 70vh;
+        background-position: 20vw 20vh;
+        background-size: 60vw 60vh;
     }
 
     .login {
-        margin: 20% auto;
+
     }
 }
