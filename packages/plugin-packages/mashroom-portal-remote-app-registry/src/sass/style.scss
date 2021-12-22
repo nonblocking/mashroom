@@ -52,7 +52,7 @@ h3 {
 
 a, a:visited, a:focus {
     color: $COLOR_PRIMARY;
-    text-decoration: underline;
+    text-decoration: none;
     @include hover-animation();
 
     &:hover {
