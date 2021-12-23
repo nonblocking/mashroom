@@ -1,7 +1,7 @@
 
 import React, {useState} from 'react';
 import Markdown from 'markdown-it';
-import MdEditor from 'react-markdown-editor-lite';
+import ReactMde from 'react-mde';
 
 import type {MashroomPortalConfigEditorTarget} from '@mashroom/mashroom-portal/type-definitions';
 
@@ -22,17 +22,20 @@ const saveAndClose = (markdownMessage: string, pingButtonLabel: string, updateAp
 export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
     const [markdownMessage, setMarkdownMessage] = useState(appConfig.markdownMessage || '');
     const [pingButtonLabel, setPingButtonLabel] = useState(appConfig.pingButtonLabel || '');
+    const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
 
     return (
         <div className='mashroom-demo-react-app-2-config-editor'>
             <div className='form-row'>
                 <label htmlFor="message">Message</label>
-                <MdEditor
-                    renderHTML={text => markdown.render(text)}
+                <ReactMde
+                    toolbarCommands={[['bold', 'italic', 'strikethrough'], ['link', 'image'], ['unordered-list', 'ordered-list']]}
+                    getIcon={(iconName) => <span className={`icon-${iconName}`}/>}
+                    generateMarkdownPreview={(md) => Promise.resolve(markdown.render(md))}
                     value={markdownMessage}
-                    onChange={({text}) => setMarkdownMessage(text)}
-                    view={{ menu: true, md: true, html: false }}
-                    allowPasteImage={false}
+                    onChange={setMarkdownMessage}
+                    selectedTab={selectedTab}
+                    onTabChange={setSelectedTab}
                 />
             </div>
             <div className='form-row'>

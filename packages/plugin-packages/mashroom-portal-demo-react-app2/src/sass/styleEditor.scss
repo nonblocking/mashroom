@@ -1,19 +1,29 @@
 
-@import "../../node_modules/react-markdown-editor-lite/lib/index";
+$FONT_ICON: 'Font Awesome 5 Free';
+
+@mixin toolbarIcon($content) {
+    &:before {
+        font-family: $FONT_ICON;
+        font-weight: bold;
+        content: $content;
+    }
+}
 
 .mashroom-demo-react-app-2-config-editor {
     padding: 10px;
 
     .form-row {
-        padding: 5px 0;
+        padding-bottom: 5px;
 
         label {
-            margin-right: 20px;
+            display: block;
+            font-weight: bold;
+            padding-bottom: 5px;
         }
     }
 
     .button-row {
-        margin-top: 10px;
+        margin-top: 20px;
         display: flex;
 
         button {
@@ -24,6 +34,42 @@
             margin-top: 5px;
             display: block;
             margin-left: auto;
+        }
+    }
+
+    @import "../../node_modules/react-mde/lib/styles/scss/react-mde-all";
+
+    .react-mde {
+        .icon-bold {
+            @include toolbarIcon('\f032');
+        }
+
+        .icon-italic {
+            @include toolbarIcon('\f033');
+        }
+
+        .icon-strikethrough {
+            @include toolbarIcon('\f0cc');
+        }
+
+        .icon-link {
+            @include toolbarIcon('\f0c1');
+        }
+
+        .icon-image {
+            @include toolbarIcon('\f03e');
+        }
+
+        .icon-ordered-list {
+            @include toolbarIcon('\f0cb');
+        }
+
+        .icon-unordered-list {
+            @include toolbarIcon('\f0ca');
+        }
+
+        button {
+            color: black;
         }
     }
 }
