@@ -16,7 +16,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
     const logger = loggerFactory('mashroom.portal');
 
     // Run async
-    storageFixture(pluginConfig, pluginContext.serverConfig.name, storageService, loggerFactory);
+    storageFixture(pluginContext.serverConfig.name, pluginConfig.addDemoPages, storageService, loggerFactory);
 
     setPortalPluginConfig(pluginConfig as any);
 

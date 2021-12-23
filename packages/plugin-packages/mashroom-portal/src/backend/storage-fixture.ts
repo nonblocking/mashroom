@@ -2,7 +2,7 @@
 import {PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION, SITES_COLLECTION} from './constants';
 import {createAppInstanceId} from './utils/id_utils';
 
-import type {MashroomLoggerFactory, MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {MashroomPortalAppInstance, MashroomPortalPage, MashroomPortalSite} from '../../type-definitions';
 import type {MashroomSecurityRoleDefinition} from '@mashroom/mashroom-security/type-definitions';
@@ -10,9 +10,18 @@ import type {MashroomSecurityRoleDefinition} from '@mashroom/mashroom-security/t
 const ROLE_DEFINITIONS_COLLECTION_NAME = 'mashroom-security-role-definitions';
 export const ROLE_ADMINISTRATOR = 'Administrator';
 
-export default async (pluginConfig: MashroomPluginConfig, portalName: string, storageService: MashroomStorageService, loggerFactory: MashroomLoggerFactory): Promise<void> => {
-
+export default async (portalName: string, addDemoPages: boolean, storageService: MashroomStorageService, loggerFactory: MashroomLoggerFactory): Promise<void> => {
     const log = loggerFactory('mashroom.portal.storage.fixture');
+
+    const sitesCollection: MashroomStorageCollection<MashroomPortalSite> = await storageService.getCollection(SITES_COLLECTION);
+    const pagesCollection: MashroomStorageCollection<MashroomPortalPage> = await storageService.getCollection(PAGES_COLLECTION);
+    const portalAppInstancesCollection: MashroomStorageCollection<MashroomPortalAppInstance> = await storageService.getCollection(PORTAL_APP_INSTANCES_COLLECTION);
+    const rolesCollection: MashroomStorageCollection<MashroomSecurityRoleDefinition> = await storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
+
+    const sites = await sitesCollection.find(undefined, 1);
+    if (sites.length > 0) {
+        return;
+    }
 
     const adminRole: MashroomSecurityRoleDefinition = {
         id: ROLE_ADMINISTRATOR,
@@ -87,6 +96,13 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
     const sandboxAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Sandbox App',
         instanceId: createAppInstanceId(),
+    };
+
+    const pageHomeEmpty: MashroomPortalPage = {
+        pageId: 'home',
+        description: 'Home',
+        layout: 'Mashroom Portal Default Layouts 2 Columns with 1 Column Header',
+        portalApps: {},
     };
 
     const pageHome: MashroomPortalPage = {
@@ -180,6 +196,19 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         },
     };
 
+    const siteMinimal: MashroomPortalSite = {
+        siteId: 'default',
+        title: portalName,
+        path: '/web',
+        pages: [
+            {
+                pageId: 'home',
+                title: 'Home',
+                friendlyUrl: '/',
+            },
+        ],
+    };
+
     const site: MashroomPortalSite = {
         siteId: 'default',
         title: portalName,
@@ -236,38 +265,36 @@ export default async (pluginConfig: MashroomPluginConfig, portalName: string, st
         ],
     };
 
-    const sitesCollection: MashroomStorageCollection<MashroomPortalSite> = await storageService.getCollection(SITES_COLLECTION);
-    const pagesCollection: MashroomStorageCollection<MashroomPortalPage> = await storageService.getCollection(PAGES_COLLECTION);
-    const portalAppInstancesCollection: MashroomStorageCollection<MashroomPortalAppInstance> = await storageService.getCollection(PORTAL_APP_INSTANCES_COLLECTION);
-    const rolesCollection: MashroomStorageCollection<MashroomSecurityRoleDefinition> = await storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
+     try {
+         log.info('Creating portal demo data');
 
-    try {
-        const sites = await sitesCollection.find(undefined, 1);
-        if (sites.length === 0) {
-            log.info('Creating portal demo data');
-            await sitesCollection.insertOne(site);
+         if (addDemoPages) {
+             await sitesCollection.insertOne(site);
+             await pagesCollection.insertOne(pageHome);
 
-            await pagesCollection.insertOne(pageHome);
-            await pagesCollection.insertOne(pageTest1);
-            await pagesCollection.insertOne(pageTest2);
-            await pagesCollection.insertOne(subPage1);
-            await pagesCollection.insertOne(subPage2);
-            await pagesCollection.insertOne(pageSandbox);
+             await pagesCollection.insertOne(pageTest1);
+             await pagesCollection.insertOne(pageTest2);
+             await pagesCollection.insertOne(subPage1);
+             await pagesCollection.insertOne(subPage2);
+             await pagesCollection.insertOne(pageSandbox);
 
-            await portalAppInstancesCollection.insertOne(welcomeAppInstance1);
-            await portalAppInstancesCollection.insertOne(reactDemoAppInstance1);
-            await portalAppInstancesCollection.insertOne(reactDemoAppInstance2);
-            await portalAppInstancesCollection.insertOne(reactDemoAppInstance3);
-            await portalAppInstancesCollection.insertOne(reactDemoAppInstance4);
-            await portalAppInstancesCollection.insertOne(angularDemoAppInstance1);
-            await portalAppInstancesCollection.insertOne(compositeDemoAppInstance1);
-            await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
-            await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);
-            await portalAppInstancesCollection.insertOne(tabifyAppInstance1);
-            await portalAppInstancesCollection.insertOne(sandboxAppInstance);
+             await portalAppInstancesCollection.insertOne(welcomeAppInstance1);
+             await portalAppInstancesCollection.insertOne(reactDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(reactDemoAppInstance2);
+             await portalAppInstancesCollection.insertOne(reactDemoAppInstance3);
+             await portalAppInstancesCollection.insertOne(reactDemoAppInstance4);
+             await portalAppInstancesCollection.insertOne(angularDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(compositeDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);
+             await portalAppInstancesCollection.insertOne(tabifyAppInstance1);
+             await portalAppInstancesCollection.insertOne(sandboxAppInstance);
+         } else {
+             await sitesCollection.insertOne(siteMinimal);
+             await pagesCollection.insertOne(pageHomeEmpty);
+         }
 
-            await rolesCollection.insertOne(adminRole);
-        }
+         await rolesCollection.insertOne(adminRole);
     } catch (e) {
         log.error('Inserting portal demo data failed', e);
     }

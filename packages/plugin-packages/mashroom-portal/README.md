@@ -46,7 +46,8 @@ The plugin allows the following configuration properties:
                 "renderTimoutMs": 2000,
                 "cacheTTLSec": 300,
                 "inlineStyles": true
-            }
+            },
+            "addDemoPages": true
         }
     }
 }
@@ -66,6 +67,7 @@ The plugin allows the following configuration properties:
      put into the cache and might be available for the next page rendering (Default: 2000)
    * _cacheTTLSec_: The timeout in seconds for cached SSR HTML (Default: 300)
    * _inlineStyles_: Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)
+ * _addDemoPages_: Add some demo pages if the configuration storage is empty (Default: true)
 
 ## Browser support
 

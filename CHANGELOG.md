@@ -3,6 +3,7 @@
 
 ## [unreleased v2]
 
+ * Portal: Added config property *addDemoPages* to start with an empty Portal if set to false
  * Theme refurbishment: Switched to a new cool logo and a slightly more blueish primary color
  * Portal: Added CDN support for Theme and all Portal App resources. All you need to do is to add *mashroom-cdn* to your
    dependencies and configure it like shown below.

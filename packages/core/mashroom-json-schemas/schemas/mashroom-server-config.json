@@ -618,6 +618,10 @@
                             },
                             "additionalProperties": false,
                             "description": "Optional config for server side rendering"
+                        },
+                        "addDemoPages": {
+                            "type": "boolean",
+                            "description": "Add some demo pages if the configuration storage is empty (Default: true)"
                         }
                     },
                     "additionalProperties": false

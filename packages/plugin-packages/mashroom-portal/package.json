@@ -84,7 +84,8 @@
                         "renderTimoutMs": 2000,
                         "cacheTTLSec": 300,
                         "inlineStyles": true
-                    }
+                    },
+                    "addDemoPages": true
                 }
             },
             {

@@ -100,13 +100,20 @@ The test server will be available at http://localhost:5050
 
 https://github.com/nonblocking/mashroom-plugin-demos
 
-### Example Remote Portal App
+### Remote Portal App Demos
 
-https://github.com/nonblocking/mashroom-demo-remote-portal-app
+ * https://github.com/nonblocking/mashroom-demo-remote-portal-app
+ * https://github.com/nonblocking/mashroom-demo-remote-portal-app-ssr (supports server-side rendering)
 
-(Support SSR)
+### Dynamic Cockpit Demo
 
-### Example Microfrontend Platform based on Mashroom and Kubernetes
+TODO
+
+### CRM Demo
+
+TODO
+
+### Microfrontend Platform based on Mashroom and Kubernetes Demo
 
 https://github.com/nonblocking/microfrontend-platform-kubernetes
 
