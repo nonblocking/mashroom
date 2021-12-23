@@ -149,13 +149,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
             return this._internalLoadAppSetup(pageId, loadedAppInternal.pluginName, loadedAppInternal.instanceId).then(
                 (appSetup: MashroomPortalAppSetup) => {
-                    if (overrideAppConfig) {
-                        const existingAppConfig = loadedAppInternal.appSetup?.appConfig || {};
-                        appSetup = {
-                            ...appSetup,
-                            appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig}
-                        };
-                    }
+                    const existingAppConfig = loadedAppInternal.appSetup?.appConfig || {};
+                    appSetup = {
+                        ...appSetup,
+                        appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig || {}}
+                    };
                     loadedAppInternal.appSetup = appSetup;
                     loadedAppInternal.instanceId = appSetup.instanceId;
                     loadedAppInternal.title = appSetup.title;
