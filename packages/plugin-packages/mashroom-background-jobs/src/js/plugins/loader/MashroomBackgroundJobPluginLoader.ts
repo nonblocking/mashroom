@@ -33,9 +33,6 @@ export default class MashroomBackgroundJobPluginLoader implements MashroomPlugin
         const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = plugin.requireBootstrap();
         const jobCallback: MashroomBackgroundJobCallback = bootstrap(plugin.name, config, contextHolder);
         const cronSchedule = config.cronSchedule;
-        if (!cronSchedule) {
-            throw new Error(`Cannot register background job ${plugin.name} because the 'cronSchedule' config attribute is missing!`);
-        }
         this._logger.info(`Registering background job plugin: ${plugin.name} with schedule: ${cronSchedule}`);
         this._registry.register(plugin.name, cronSchedule, jobCallback);
 

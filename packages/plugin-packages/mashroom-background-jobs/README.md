@@ -6,6 +6,9 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin adds a background job scheduler to the _Mashroom Server_ that supports cron expressions.
 It is possible to add background jobs via service or as custom plugin.
 
+If you don't provide a cron expression the job is only executed now (immediately), this is useful if you need
+some code that should be executed once during server startup.
+
 This plugin also comes with an Admin UI extension (_/mashroom/admin/ext/background-jobs_) that can be used to check the jobs.
 
 ## Usage
@@ -44,9 +47,10 @@ export interface MashroomBackgroundJobService {
 
     /**
      * Schedule a job.
-     * Throws an error if the cron expression is invalid
+     * If cronSchedule is not defined the job is executed once (immediately).
+     * Throws an error if the cron expression is invalid.
      */
-    scheduleJob(name: string, cronSchedule: string, callback: MashroomBackgroundJobCallback): MashroomBackgroundJob;
+    scheduleJob(name: string, cronSchedule: string | undefined | null, callback: MashroomBackgroundJobCallback): MashroomBackgroundJob;
 
     /**
      * Unschedule an existing job
@@ -83,7 +87,8 @@ To register your custom background-job plugin add this to _package.json_:
 }
 ```
 
- * _cronSchedule_: The execution schedule for the job, must be a valid cron expression, see: https://github.com/node-cron/node-cron
+ * _cronSchedule_: The execution schedule for the job, must be a valid cron expression, see: https://github.com/node-cron/node-cron;
+   if this is null or undefined the job is executed exactly one during startup.
 
 The bootstrap returns the job callback:
 

@@ -44,5 +44,26 @@ describe('MashroomBackgroundJobService', () => {
 
         expect(backgroundJobService.jobs.length).toBe(0);
     });
+
+    it('runs a job without a cron expression immediately', (done) => {
+        const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
+
+        let job: MashroomBackgroundJob | null = null;
+
+        const jobCb = (pluginContext: any) => {
+            expect(pluginContext).toBeTruthy();
+
+            setTimeout(() => {
+                expect(job?.lastInvocation).toBeTruthy();
+                expect(job?.lastInvocation?.success).toBeTruthy();
+                expect(backgroundJobService.jobs.length).toBe(1);
+                backgroundJobService.unscheduleJob('Test Job');
+                done();
+            }, 100);
+        };
+
+        job = backgroundJobService.scheduleJob('Test Job', undefined, jobCb);
+    });
+
 });
 

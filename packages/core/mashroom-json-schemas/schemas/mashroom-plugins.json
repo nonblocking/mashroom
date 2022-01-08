@@ -531,8 +531,7 @@
                             "type": "string",
                             "description": "The execution schedule for the job, must be a valid cron expression, see: https://github.com/node-cron/node-cron"
                         }
-                    },
-                    "required": ["cronSchedule"]
+                    }
                 }
             },
             "required": ["name", "type", "bootstrap", "defaultConfig"],

@@ -21,9 +21,10 @@ export interface MashroomBackgroundJobService {
 
     /**
      * Schedule a job.
-     * Throws an error if the cron expression is invalid
+     * If cronSchedule is not defined the job is executed once (immediately).
+     * Throws an error if the cron expression is invalid.
      */
-    scheduleJob(name: string, cronSchedule: string, callback: MashroomBackgroundJobCallback): MashroomBackgroundJob;
+    scheduleJob(name: string, cronSchedule: ?string, callback: MashroomBackgroundJobCallback): MashroomBackgroundJob;
 
     /**
      * Unschedule an existing job
