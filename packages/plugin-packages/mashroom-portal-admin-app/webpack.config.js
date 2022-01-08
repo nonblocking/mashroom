@@ -40,9 +40,6 @@ module.exports = (env, argv) => {
                         },
                         {
                             loader: 'css-loader',
-                            options: {
-                                url: false
-                            }
                         },
                         {
                             loader: 'sass-loader',
@@ -56,11 +53,8 @@ module.exports = (env, argv) => {
             modules: [
                 __dirname + '/node_modules',
                 __dirname + '/node_modules/@mashroom/mashroom-portal-ui-commons/node_modules',
-            ],
-            alias: {
-                // Only for dev mode when the theme is included
-                './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
-            },
+                __dirname + '/../../../node_modules',
+            ]
         },
         plugins: [
             new ESLintPlugin({
