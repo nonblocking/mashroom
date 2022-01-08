@@ -20,7 +20,6 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
     startExportBackgroundJobMetrics(service, pluginContextHolder);
 
-
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         cancelAllJobs(service);
         stopExportBackgroundJobMetrics();

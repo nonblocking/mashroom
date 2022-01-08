@@ -15,7 +15,7 @@ import type {
 } from '../../../type-definitions';
 
 type BackgroundJobExt = MashroomBackgroundJob & {
-    _nodeScheduleJob: Job;
+    _cancel(): void;
 };
 
 type CallbackWrapper = {
@@ -34,12 +34,9 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
         this._jobs = [];
     }
 
-    scheduleJob(name: string, cronSchedule: string, callback: MashroomBackgroundJobCallback): MashroomBackgroundJob {
+    scheduleJob(name: string, cronSchedule: string | undefined | null, callback: MashroomBackgroundJobCallback): MashroomBackgroundJob {
         if (!name) {
             throw new Error('Argument name is required!');
-        }
-        if (!cronSchedule) {
-            throw new Error('Argument cronExpression is required!');
         }
         if (!callback || typeof (callback) !== 'function') {
             throw new Error('Argument callback is required and needs to be a function!');
@@ -51,14 +48,23 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
         this._logger.info(`Scheduling background job ${name}`);
 
         const callbackWrapper = this.createCallbackWrapper(name, callback);
-        const nodeScheduleJob = nodeSchedule.scheduleJob(cronSchedule, callbackWrapper.callback);
-        if (!nodeScheduleJob) {
-            this._logger.error(`Creating background job ${name} failed! Invalid cron expression!`);
-            throw new InvalidCronExpressionError(cronSchedule);
+
+        let nodeScheduleJob;
+        if (cronSchedule) {
+            nodeScheduleJob = nodeSchedule.scheduleJob(cronSchedule, callbackWrapper.callback);
+            if (!nodeScheduleJob) {
+                this._logger.error(`Creating background job ${name} failed! Invalid cron expression!`);
+                throw new InvalidCronExpressionError(cronSchedule);
+            }
         }
 
         const job = this.createBackgroundJobInstance(name, nodeScheduleJob, callbackWrapper);
         this._jobs.push(job);
+
+        if (!cronSchedule) {
+            job.invokeNow();
+        }
+
         return job;
     }
 
@@ -66,7 +72,7 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
         this._jobs = this._jobs.filter((job) => {
             if (job.name === name) {
                 this._logger.info(`Unscheduling background job ${name}`);
-                job._nodeScheduleJob.cancel(false);
+                job._cancel();
                 return false;
             }
             return true;
@@ -109,18 +115,25 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
         return wrapper;
     }
 
-    private createBackgroundJobInstance(name: string, nodeScheduleJob: Job, callbackWrapper: CallbackWrapper): BackgroundJobExt {
+    private createBackgroundJobInstance(name: string, nodeScheduleJob: Job | undefined, callbackWrapper: CallbackWrapper): BackgroundJobExt {
         return {
             name,
-            _nodeScheduleJob: nodeScheduleJob,
             get lastInvocation() {
                 return callbackWrapper.lastInvocation;
             },
             get nextInvocation() {
-                return nodeScheduleJob.nextInvocation();
+                return nodeScheduleJob?.nextInvocation();
             },
             invokeNow() {
-                nodeScheduleJob.invoke();
+                if (nodeScheduleJob) {
+                    nodeScheduleJob.invoke();
+                } else {
+                    // Call directly
+                    callbackWrapper.callback();
+                }
+            },
+            _cancel() {
+                nodeScheduleJob?.cancel(false);
             }
         };
     }

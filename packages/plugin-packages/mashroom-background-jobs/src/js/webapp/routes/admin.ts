@@ -12,7 +12,7 @@ type JobModel = {
 }
 
 const formatDate = (date: Date | undefined): string => {
-    return date ? new Date(date).toISOString().replace(/T/, ' ').replace(/\..+/, '') : '';
+    return date ? new Date(date).toISOString().replace(/T/, ' ').replace(/\..+/, '') : '-';
 };
 
 export const adminIndex = async (req: Request, res: Response) => {
