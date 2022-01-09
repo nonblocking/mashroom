@@ -62,6 +62,10 @@ $GUTTER_WIDTH: 20px;
     outline: none !important;
 }
 
+::placeholder {
+    color: $COLOR_GREY_LIGHT;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
@@ -487,7 +491,7 @@ main {
         min-width: 220px;
         position: absolute;
         z-index: 1000;
-        top: 80px;
+        top: 100px;
         right: -500px;
         background-color: white;
         border: 1px solid $COLOR_SECONDARY;
@@ -1092,11 +1096,7 @@ mashroom-portal-ui-error-message {
     }
 
     main {
-        display: flex;
-
-        nav {
-            margin-bottom: 0;
-        }
+        min-height: 70vh;
     }
 
     #mashroom-portal-auth-expires-warning {
