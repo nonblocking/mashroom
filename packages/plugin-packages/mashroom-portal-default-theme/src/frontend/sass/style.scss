@@ -1234,12 +1234,6 @@ footer {
             display: block;
             margin-right: math.div($GUTTER_WIDTH, 2);
             margin-top: 0;
-
-            &:after {
-                content: "";
-                display: table;
-                clear: both;
-            }
         }
     }
 
