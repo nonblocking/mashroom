@@ -463,6 +463,7 @@ export type MashroomPortalApp = {
 export type MashroomAvailablePortalApp = {
     +name: string;
     +version: string;
+    +title: ?string;
     +category: ?string;
     +description: ?string;
     +tags: Array<string>,
