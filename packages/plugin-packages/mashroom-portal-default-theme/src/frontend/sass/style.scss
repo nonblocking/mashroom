@@ -87,6 +87,10 @@ $GUTTER_WIDTH: 15px;
     outline: none !important;
 }
 
+::placeholder {
+    color: $COLOR_GREY_LIGHT;
+}
+
 body {
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
@@ -1223,12 +1227,19 @@ footer {
 
     main {
         display: flex;
+        min-height: 70vh;
 
         nav {
             margin-bottom: 0;
             display: block;
             margin-right: math.div($GUTTER_WIDTH, 2);
             margin-top: 0;
+
+            &:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
         }
     }
 
