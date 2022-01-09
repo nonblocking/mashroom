@@ -29,12 +29,11 @@
     "devDependencies": {
         "@mashroom/mashroom": "1.9.2",
         "@mashroom/mashroom-portal": "1.9.2",
-        "@tsconfig/svelte": "^2.0.1",
-        "cross-env": "^7.0.3",
-        "svelte": "^3.44.2",
-        "svelte-check": "^2.2.10",
+        "@tsconfig/svelte": "^3.0.0",
+        "svelte": "^3.45.0",
+        "svelte-check": "^2.2.11",
         "svelte-loader": "^3.1.2",
-        "svelte-preprocess": "^4.9.8"
+        "svelte-preprocess": "^4.10.1"
     },
     "mashroom": {
         "devModeBuildScript": "build",

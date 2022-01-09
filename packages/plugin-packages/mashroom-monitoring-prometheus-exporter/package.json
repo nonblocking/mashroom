@@ -9,7 +9,6 @@
         "dist/**"
     ],
     "dependencies": {
-        "express": "^4.17.1",
         "prom-client": "^14.0.1"
     },
     "optionalDependencies": {
@@ -18,7 +17,8 @@
     "devDependencies": {
         "@mashroom/mashroom": "1.9.2",
         "@mashroom/mashroom-monitoring-metrics-collector": "1.9.2",
-        "@types/express": "^4.17.13"
+        "@types/express": "^4.17.13",
+        "express": "^4.17.2"
     },
     "jest": {
         "verbose": true,

@@ -1,7 +1,7 @@
 
 import mongoDB from '../mongodb';
 
-import type {Collection, OptionalId} from 'mongodb';
+import type {Collection, OptionalUnlessRequiredId} from 'mongodb';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
@@ -43,7 +43,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
 
     async insertOne(item: T): Promise<MashroomStorageObject<T>> {
         const collection = await this._getCollection<MashroomStorageObject<T>>();
-        const result = await collection.insertOne(item as OptionalId<MashroomStorageObject<T>>);
+        const result = await collection.insertOne(item as OptionalUnlessRequiredId<MashroomStorageObject<T>>);
         return {
             _id: result.insertedId,
             ...item,

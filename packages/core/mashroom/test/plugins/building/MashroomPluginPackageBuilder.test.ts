@@ -20,10 +20,10 @@ const getPluginPackageFolder = () => {
         name: 'test2',
         version: '1.0.0',
         dependencies: {
-            copyfiles: '^1',
+            'cpy-cli': '^3',
         },
         scripts: {
-            build: 'copyfiles package.json package-copy.json',
+            build: 'cpy package.json package-copy.json',
         },
     });
     return packageFolder;
@@ -36,7 +36,7 @@ const getPluginPackageFolder2 = () => {
         name: 'test3',
         version: '1.0.0',
         dependencies: {
-            copyfiles: '^1',
+            'cpy-cli': '^3',
         },
         scripts: {
             build: 'xxxx',
@@ -54,7 +54,7 @@ const getErroneousPluginPackageFolder = () => {
         dependencies: {
         },
         scripts: {
-            build: 'copyfiles package.json package-copy.json',
+            build: 'cpy package.json package-copy.json',
         },
     });
     return packageFolder;

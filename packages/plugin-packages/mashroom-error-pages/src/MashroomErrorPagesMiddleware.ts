@@ -77,7 +77,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
                 });
                 return true;
             };
-            res.end = (...args: any) => {
+            res.end = (...args: any): any => {
                 doWrite(args, () => {
                     originalEnd.apply(res, args);
                 });

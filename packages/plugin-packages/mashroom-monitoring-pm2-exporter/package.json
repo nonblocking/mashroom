@@ -9,12 +9,12 @@
         "dist/**"
     ],
     "dependencies": {
-        "@pm2/io": "^5.0.0",
-        "express": "^4.17.1"
+        "@pm2/io": "^5.0.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "1.9.2",
         "@mashroom/mashroom-monitoring-metrics-collector": "1.9.2",
+        "express": "^4.17.2",
         "@types/express": "^4.17.13"
     },
     "jest": {

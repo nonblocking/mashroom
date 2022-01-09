@@ -19,10 +19,9 @@
         "@mashroom/mashroom-portal-ui-commons": "1.9.2",
         "@fortawesome/fontawesome-free": "^5.15.4",
         "@types/express": "^4.17.13",
-        "@types/react": "^17.0.37",
+        "@types/react": "^17.0.38",
         "bootstrap": "^5.1.3",
-        "copyfiles": "^2.4.1",
-        "express": "^4.17.1"
+        "express": "^4.17.2"
     },
     "scripts": {
         "lint": "eslint --ext .ts --ext .tsx src --fix",
@@ -30,7 +29,7 @@
         "dev": "nodemon --watch src --watch views -e ts,tsx,scss --exec \"npm run build && node dist/plugin/dev_server.js\"",
         "build:ts": "babel src -d dist --extensions .ts,.tsx",
         "build:style": "sass --style compressed --load-path=. src/sass/style.scss dist/public/style.css",
-        "build:copy-assets": "copyfiles -u 1 assets/* dist/public/assets && copyfiles -u 3 node_modules/bootstrap/dist/**/* dist/public/bootstrap && copyfiles -u 3 node_modules/@fortawesome/fontawesome-free/**/* dist/public/fontawesome",
+        "build:copy-assets": "cpy assets dist/public/assets && cpy . ../../../dist/public/bootstrap --cwd=node_modules/bootstrap/dist --parents && cpy . ../../../dist/public/fontawesome --cwd=node_modules/@fortawesome/fontawesome-free --parents",
         "build": "npm run build:ts && npm run build:style && npm run build:copy-assets"
     },
     "mashroom": {

@@ -10,13 +10,12 @@
     ],
     "devDependencies": {
         "cheerio": "^1.0.0-rc.10",
-        "copyfiles": "^2.4.1",
-        "puppeteer": "^11.0.0",
+        "puppeteer": "^13.0.1",
         "showdown": "^1.9.1",
         "showdown-highlightjs-extension": "^0.1.2"
     },
     "scripts": {
-        "build": "copyfiles -u 1 docs/*.png public/docs/html && node ./src/convert-markdown"
+        "build": "cpy docs/*.png public/docs/html && node ./src/convert-markdown"
     },
     "mashroom": {
         "devModeBuildScript": "build",

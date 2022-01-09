@@ -44,7 +44,7 @@ export default ({
 
             <header>
                 <div className="logo">
-                    <img src={`${resourcesBasePath}/assets/mashroom_logo.svg`} />
+                    <img src={`${resourcesBasePath}/assets/logo-red.svg`} />
                 </div>
                 <div className="site-name">
                     <h1>{site.title}</h1>

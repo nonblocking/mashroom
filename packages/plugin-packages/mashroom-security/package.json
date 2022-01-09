@@ -14,7 +14,7 @@
         "@mashroom/mashroom-storage": "1.9.2",
         "@mashroom/mashroom-utils": "1.9.2",
         "@types/express": "^4.17.13",
-        "express": "^4.17.1"
+        "express": "^4.17.2"
     },
     "jest": {
         "verbose": true,

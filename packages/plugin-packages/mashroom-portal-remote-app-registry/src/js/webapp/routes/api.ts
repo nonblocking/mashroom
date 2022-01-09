@@ -55,5 +55,5 @@ export const deleteRemotePortalAppUrl = async (req: Request, res: Response): Pro
     logger.info(`Removing portal app endpoint: ${url}`);
     await portalRemoteAppEndpointService.unregisterRemoteAppUrl(url);
 
-    return res.end();
+    res.end();
 };
