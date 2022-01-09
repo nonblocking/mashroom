@@ -30,6 +30,10 @@ $LABEL_ROW_WIDTH: 240px;
                 vertical-align: top;
             }
         }
+
+        label + div {
+            width: calc(100% - #{$LABEL_ROW_WIDTH});
+        }
     }
 
     .mashroom-sandbox-app-form-button-row {
