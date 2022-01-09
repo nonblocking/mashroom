@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Added i18n *title* to MashroomPortalAppService.getAvailableApps()
  * Background Jobs: The *cronSchedule* property is now optional for backend jobs. If you omit it the job will be executed
    exactly **once** at startup. Which is useful if you want to do something during startup.
  * Core: When the build fails, also info gathered from stdout is logged. Tools like eslint use this channel to provide more detailed info about the failure

@@ -14,6 +14,7 @@ import {PORTAL_APP_RESOURCES_BASE_PATH} from '../constants';
 
 import type {Request, Response} from 'express';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
+import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {
     MashroomAvailablePortalApp,
     MashroomPortalApp,
@@ -154,6 +155,7 @@ export default class PortalAppController {
     async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const mashroomSecurityUser = await getUser(req);
         const {q, updatedSince} = req.query;
 
@@ -172,6 +174,7 @@ export default class PortalAppController {
                 return {
                     name: portalApp.name,
                     version: portalApp.version,
+                    title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
                     category: portalApp.category,
                     description: portalApp.description,
                     tags: portalApp.tags,
