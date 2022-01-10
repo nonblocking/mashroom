@@ -154,7 +154,7 @@ describe('ProxyImplRequest', () => {
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.xxxxxxxxxxxxxxxxxxs.at');
+        await httpProxyService.forward(req, res, 'https://localhost:22334/foo');
 
         // Expect 503 Service Unavailable
         expect(res.statusCode).toBe(503);
