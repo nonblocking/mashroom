@@ -1,7 +1,8 @@
 
 # Change Log
 
-## [unreleased]
+
+## 1.9.3 (January 11, 2022)
 
  * Portal: Added i18n *title* to MashroomPortalAppService.getAvailableApps()
  * Background Jobs: The *cronSchedule* property is now optional for backend jobs. If you omit it the job will be executed
