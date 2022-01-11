@@ -44,7 +44,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
             const appWrapper = app.portalAppWrapperElement;
             const parent = appWrapper.parentElement;
 
-            if (app.instanceId && parent && parent.className.indexOf(CSS_CLASS_APP_CONTROLS) === -1) {
+            if (app.instanceId && parent?.className.indexOf(CSS_CLASS_APP_CONTROLS) === -1) {
                 // No control wrapper yet
                 const controlsWrapper = this._createControlsWrapper(app);
                 parent.insertBefore(controlsWrapper, appWrapper);
@@ -72,12 +72,12 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.dragRunning = false;
 
         // Hint: This doesn't work in IE11, since IE only accept "test" as format
-        event.dataTransfer && event.dataTransfer.setData('portal-app-name', portalAppName);
+        event.dataTransfer?.setData('portal-app-name', portalAppName);
         if (loadedAppId) {
-            event.dataTransfer && event.dataTransfer.setData('portal-app-id', loadedAppId);
+            event.dataTransfer?.setData('portal-app-id', loadedAppId);
         }
         if (instanceId) {
-            event.dataTransfer && event.dataTransfer.setData('portal-app-instanceId', instanceId);
+            event.dataTransfer?.setData('portal-app-instanceId', instanceId);
         }
 
         // setTimeout() is necessary, otherwise in Chrome a DOM manipulation in the same event stops the drag immediately
@@ -119,7 +119,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         }
 
         Array.from(document.querySelectorAll(`.${CSS_CLASS_APP_DROP_ZONE}`)).forEach((dropZone) => {
-            dropZone.parentElement && dropZone.parentElement.removeChild(dropZone);
+            dropZone.parentElement?.removeChild(dropZone);
         });
     }
 
@@ -154,9 +154,9 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     private _onDropDropZone(event: DragEvent, areaElement: HTMLElement, position: number) {
         event.preventDefault();
 
-        const id = event.dataTransfer && event.dataTransfer.getData('portal-app-id');
-        const portalAppName = event.dataTransfer && event.dataTransfer.getData('portal-app-name');
-        const instanceId = event.dataTransfer && event.dataTransfer.getData('portal-app-instanceId');
+        const id = event.dataTransfer?.getData('portal-app-id');
+        const portalAppName = event.dataTransfer?.getData('portal-app-name');
+        const instanceId = event.dataTransfer?.getData('portal-app-instanceId');
         console.info('Drop event: ', portalAppName, instanceId, 'Position: ', position);
 
         if (portalAppName) {
@@ -249,7 +249,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     private _appAboutToUnloadListener(loadedApp: MashroomPortalLoadedPortalApp) {
         if (this.controlsVisible) {
             const controlsWrapper = loadedApp.portalAppWrapperElement.parentElement;
-            if (controlsWrapper && controlsWrapper.className === CSS_CLASS_APP_CONTROLS) {
+            if (controlsWrapper?.className === CSS_CLASS_APP_CONTROLS) {
                 // Remove controls wrapper
                 const parent = controlsWrapper.parentElement;
                 if (parent) {
@@ -271,15 +271,15 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         dragImage.innerHTML = `<span>${pluginName}</span>`;
         dragImage.style.position = 'absolute';
         dragImage.style.top = '-100px';
-        document.body && document.body.appendChild(dragImage);
-        event.dataTransfer && event.dataTransfer.setDragImage(dragImage, 0, 0);
+        document.body.appendChild(dragImage);
+        event.dataTransfer?.setDragImage(dragImage, 0, 0);
 
         this.prepareDrag(event, id, pluginName, instanceId);
     }
 
     private _onMoveAppDragEnd() {
         Array.from(document.querySelectorAll('.drag-ghost')).forEach((dragGhost) => {
-            document.body && document.body.removeChild(dragGhost);
+            document.body.removeChild(dragGhost);
         });
 
         this.dragEnd();

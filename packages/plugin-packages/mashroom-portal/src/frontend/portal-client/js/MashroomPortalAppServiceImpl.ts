@@ -249,7 +249,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const overlays = document.querySelectorAll(`.${APP_INFO_CLASS_NAME}`);
         for (let i = 0; i < overlays.length; ++i) {
             const overlay = overlays[i];
-            overlay.parentElement && overlay.parentElement.removeChild(overlay);
+            overlay.parentElement?.removeChild(overlay);
         }
     }
 
@@ -658,13 +658,13 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             id: loadedAppInternal.id,
             pluginName: loadedAppInternal.pluginName,
             title: loadedAppInternal.title,
-            version: loadedAppInternal.appSetup && loadedAppInternal.appSetup.version,
+            version: loadedAppInternal.appSetup?.version,
             instanceId: loadedAppInternal.instanceId,
             portalAppAreaId: loadedAppInternal.portalAppAreaId,
             portalAppWrapperElement: loadedAppInternal.portalAppWrapperElement,
             portalAppHostElement: loadedAppInternal.portalAppHostElement,
             portalAppTitleElement: loadedAppInternal.portalAppTitleElement,
-            appConfig: loadedAppInternal.appSetup && loadedAppInternal.appSetup.appConfig,
+            appConfig: loadedAppInternal.appSetup?.appConfig,
             updateAppConfig: loadedAppInternal.lifecycleHooks?.updateAppConfig,
             editorConfig: loadedAppInternal.editorConfig,
             error: loadedAppInternal.error
