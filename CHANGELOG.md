@@ -2,10 +2,10 @@
 # Change Log
 
 
-
-
  * Portal: Disabled browser cache for public pages as well, because they can contain dynamic content from
    enhancement plugins.
+ * Portal: Prevent misusing resource requests for Remote Apps to access proxy targets
+   (if a proxy target is a sub-path of the resource base URL)
 
 ## 1.9.3 (January 11, 2022)
 
