@@ -1,7 +1,7 @@
 
 # Change Log
 
-## [unreleased v2]
+## [unreleased]
 
  * Portal: Added config property *addDemoPages* to start with an empty Portal if set to false
  * Theme refurbishment: Switched to a new cool logo and a slightly more blueish primary color
@@ -132,7 +132,7 @@
         await storage.find({ $and: [{ b: { $gt: 1 }}, { x: { $exists: false }}]}, 10, 0, { b: 'asc' })
    ```
 
-## [unreleased]
+## 1.9.3 (January 11, 2022)
 
  * Portal: Added i18n *title* to MashroomPortalAppService.getAvailableApps()
  * Background Jobs: The *cronSchedule* property is now optional for backend jobs. If you omit it the job will be executed

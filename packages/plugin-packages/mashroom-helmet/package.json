@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.9.2",
+    "version": "1.9.3",
     "files": [
         "dist/**"
     ],
@@ -12,7 +12,7 @@
         "helmet": "^5.0.1"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "1.9.2"
+        "@mashroom/mashroom": "1.9.3"
     },
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",

@@ -10,7 +10,7 @@
         "default-robots.txt"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "1.9.2"
+        "@mashroom/mashroom": "1.9.3"
     },
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",
