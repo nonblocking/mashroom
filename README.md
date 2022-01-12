@@ -81,6 +81,8 @@ https://medium.com/mashroom-server
 
 ## Development
 
+For development Node.js >= 16 is required.
+
 After cloning the repository just run
 
     npm run setup
