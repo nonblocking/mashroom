@@ -2,15 +2,15 @@ const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
     entry: {
-        'portal-client': __dirname + '/src/frontend/portal-client/js',
-        'welcome-app': __dirname + '/src/frontend/welcome-app/js'
+        'portal-client': `${__dirname  }/src/frontend/portal-client/js`,
+        'welcome-app': `${__dirname  }/src/frontend/welcome-app/js`
     },
     output: {
-        path: __dirname + '/dist/frontend',
+        path: `${__dirname  }/dist/frontend`,
         filename: '[name].js',
         publicPath: '',
     },
-    target: ['web', 'es5'],
+    target: ['web', 'es3'],
     module: {
         rules: [
             {
@@ -20,8 +20,20 @@ module.exports = {
                     {
                         loader: 'babel-loader',
                         options: {
-                            // Explicit config file for the node modules we need to transpile
-                            configFile: __dirname + '/.babelrc.client'
+                            presets: [
+                                [
+                                    '@babel/preset-env',
+                                    {
+                                        'targets': {
+                                            'browsers': [
+                                                'last 2 versions',
+                                                'ie >= 11'
+                                            ]
+                                        }
+                                    }
+                                ],
+                                '@babel/preset-typescript'
+                            ]
                         }
                     }
                 ]

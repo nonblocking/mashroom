@@ -1,5 +1,6 @@
 
 import {nanoid} from 'nanoid';
+import { SESSION_STORAGE_WS_CLIENT_ID } from '../../../backend/constants';
 
 import type {
     MashroomMessagingWebSocketSubscribeRequest,
@@ -7,7 +8,6 @@ import type {
     MashroomMessagingWebSocketPublishRequest,
     MashroomMessagingWebSocketPublishMessage,
 } from '@mashroom/mashroom-messaging/type-definitions';
-import { SESSION_STORAGE_WS_CLIENT_ID } from '../../../backend/constants';
 
 export const webSocketSupport = 'WebSocket' in global;
 
