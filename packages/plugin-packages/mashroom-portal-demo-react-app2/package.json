@@ -9,13 +9,15 @@
     "files": [
         "dist/**"
     ],
-    "devDependencies": {
-        "@mashroom/mashroom-portal": "1.9.3",
-        "@mashroom/mashroom-json-schemas": "1.9.3",
+    "dependencies": {
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-mde": "^11.5.0",
-        "markdown-it": "^12.3.2",
+        "markdown-it": "^12.3.2"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom-portal": "1.9.3",
+        "@mashroom/mashroom-json-schemas": "1.9.3",
         "@types/react": "^17.0.38",
         "@types/react-dom": "^17.0.11",
         "@types/markdown-it": "^12.2.3"
