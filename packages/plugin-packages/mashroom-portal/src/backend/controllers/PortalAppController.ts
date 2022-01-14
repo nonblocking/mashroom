@@ -156,7 +156,6 @@ export default class PortalAppController {
 
     async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
-        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const mashroomSecurityUser = await getUser(req);
@@ -198,10 +197,6 @@ export default class PortalAppController {
                 apps = [];
                 logger.error(`Invalid updatedSince timestamp: ${updatedSince}`);
             }
-        }
-
-        if (cacheControlService) {
-            cacheControlService.addCacheControlHeader('PRIVATE_IF_AUTHENTICATED', req, res);
         }
 
         res.json(apps);
