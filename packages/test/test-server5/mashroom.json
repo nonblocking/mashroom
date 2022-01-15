@@ -15,7 +15,6 @@
     "indexPage": "/portal",
     "ignorePlugins": [
         "Mashroom Storage MongoDB Provider",
-        "Mashroom Memory Cache Services",
         "Mashroom LDAP Security Provider",
         "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
