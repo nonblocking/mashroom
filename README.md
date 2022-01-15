@@ -109,11 +109,7 @@ https://github.com/nonblocking/mashroom-plugin-demos
 
 ### Dynamic Cockpit Demo
 
-TODO
-
-### CRM Demo
-
-TODO
+https://github.com/nonblocking/mashroom-demo-dynamic-cockpit
 
 ### Microfrontend Platform based on Mashroom and Kubernetes Demo
 
