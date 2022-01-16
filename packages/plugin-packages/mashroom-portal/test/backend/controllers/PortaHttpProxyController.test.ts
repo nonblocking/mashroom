@@ -15,8 +15,8 @@ setPortalPluginConfig({
         sendPermissionsHeader: false,
         restrictToRoles: [],
     },
-    sslConfig: {
-        sslEnabled: false,
+    ssrConfig: {
+        ssrEnabled: false,
         renderTimoutMs: 2000,
         cacheTTLSec: 300,
         inlineStyles: true,

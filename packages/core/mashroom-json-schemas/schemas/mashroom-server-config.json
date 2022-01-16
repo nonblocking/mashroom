@@ -596,10 +596,10 @@
                             "additionalProperties": false,
                             "description": "Optional default http proxy config for portal apps"
                         },
-                        "sslConfig": {
+                        "ssrConfig": {
                             "type": "object",
                             "properties": {
-                                "sslEnabled": {
+                                "ssrEnabled": {
                                     "type": "boolean",
                                     "description": "Allow server side rendering if Apps support it (Default: true)"
                                 },

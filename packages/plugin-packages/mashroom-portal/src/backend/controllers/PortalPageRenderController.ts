@@ -301,7 +301,7 @@ export default class PortalPageRenderController {
         const portalAppInfo = await this._getPagePortalAppsInfo(req, page, user, cdnService);
         const {pageContent, serverSideRenderedApps} = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
 
-        const {inlineStyles} = context.portalPluginConfig.sslConfig;
+        const {inlineStyles} = context.portalPluginConfig.ssrConfig;
         const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
             await renderInlineStyleForServerSideRenderedApps(serverSideRenderedApps, req, logger) : {};
         const portalResourcesHeader = await this._resourcesHeader(

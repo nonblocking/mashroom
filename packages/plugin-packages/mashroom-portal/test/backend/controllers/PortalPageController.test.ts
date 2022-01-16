@@ -13,8 +13,8 @@ setPortalPluginConfig({
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
     defaultProxyConfig: {},
-    sslConfig: {
-        sslEnabled: false,
+    ssrConfig: {
+        ssrEnabled: false,
         renderTimoutMs: 2000,
         cacheTTLSec: 300,
         inlineStyles: true,

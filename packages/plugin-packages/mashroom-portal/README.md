@@ -41,8 +41,8 @@ The plugin allows the following configuration properties:
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
             },
-            "sslConfig": {
-                "sslEnabled": true,
+            "ssrConfig": {
+                "ssrEnabled": true,
                 "renderTimoutMs": 2000,
                 "cacheTTLSec": 300,
                 "inlineStyles": true
@@ -61,8 +61,8 @@ The plugin allows the following configuration properties:
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
  * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app2* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
- * _sslConfig_: Optional config for server side rendering
-   * _sslEnabled_: Allow server side rendering if Apps support it (Default: true)
+ * _ssrConfig_: Optional config for server side rendering
+   * _ssrEnabled_: Allow server side rendering if Apps support it (Default: true)
    * _renderTimoutMs_: Timeout for SSR which defines how long the page rendering can be blocked. Even if SSR takes too long the result is
      put into the cache and might be available for the next page rendering (Default: 2000)
    * _cacheTTLSec_: The timeout in seconds for cached SSR HTML (Default: 300)
@@ -360,18 +360,27 @@ The _clientBootstrap_ is in this case a global function that starts the App with
 
 ```ts
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {render, hydrate, unmountComponentAtNode} from 'react-dom';
 import App from './App';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup, clientServices) => {
-    ReactDOM.render(<App appConfig={portalAppSetup.appConfig} messageBus={clientServices.messageBus}/>, element);
-    // Or ReactDOM:hydrate() if this is a Hybrid App and a ssrBootstrap is configured
+    const {appConfig, restProxyPaths, lang} = portalAppSetup;
+    const {messageBus} = clientServices;
+
+    // Check if the Apps has been rendered in the server-side, if this is a Hybrid App and a ssrBootstrap is configured
+    //const ssrHost = element.querySelector('[data-ssr-host="true"]');
+    //if (ssrHost) {
+    //    hydrate(<App appConfig={appConfig} messageBus={messageBus}/>, ssrHost);
+    //} else {
+        // CSR
+        render(<App appConfig={appConfig} messageBus={messageBus}/>, element);
+    //}
 
     return {
         willBeRemoved: () => {
-            ReactDOM.unmountComponentAtNode(portalAppHostElement);
+            unmountComponentAtNode(portalAppHostElement);
         },
         updateAppConfig: (appConfig) => {
             // Implement if dynamic app config should be possible
@@ -414,14 +423,15 @@ In case of a Hybrid App which supports Server Side Rendering (SSR) the server si
 
 ```ts
 import React from 'react';
-import ReactDOMServer from 'react-dom/server';
+import {renderToString} from 'react-dom/server';
 import App from './App';
 
 import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup) => {
+    const {appConfig, restProxyPaths, lang} = portalAppSetup;
     const dummyMessageBus: any = {};
-    return ReactDOMServer.renderToString(<App appConfig={portalAppSetup.appConfig} messageBus={dummyMessageBus}/>);
+    return renderToString(<App appConfig={appConfig} messageBus={dummyMessageBus}/>);
 };
 
 export default bootstrap;

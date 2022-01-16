@@ -30,7 +30,7 @@ const getCacheKey = async (portalAppSetup: MashroomPortalAppSetup, cachingConfig
 };
 
 const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
-    const sslConfig = context.portalPluginConfig.sslConfig;
+    const ssrConfig = context.portalPluginConfig.ssrConfig;
     const cacheService: MashroomMemoryCacheService = req.pluginContext.services.memorycache?.service;
     const {ssrBootstrap: ssrBootstrapPath, ssrInitialHtmlUri, cachingConfig} = portalApp;
 
@@ -81,15 +81,15 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
 
     if (html && cacheKey) {
         // We deliberately don't wait
-        cacheService.set(CACHE_REGION, cacheKey, html, sslConfig.cacheTTLSec);
+        cacheService.set(CACHE_REGION, cacheKey, html, ssrConfig.cacheTTLSec);
     }
 
     return html;
 }
 
 export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
-    const sslConfig = context.portalPluginConfig.sslConfig;
-    if (!sslConfig.sslEnabled) {
+    const ssrConfig = context.portalPluginConfig.ssrConfig;
+    if (!ssrConfig.ssrEnabled) {
         return null;
     }
 
@@ -101,13 +101,13 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
 
     return Promise.race([
         renderServerSideWithCache(pluginName, portalApp, portalAppSetup, req, logger),
-        new Promise<null>((resolve) => setTimeout(() => resolve(null), sslConfig.renderTimoutMs)),
+        new Promise<null>((resolve) => setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
     ]);
 }
 
 export const renderInlineStyleForServerSideRenderedApps = async (serverSideRenderedApps: Array<string>, req: Request, logger: MashroomLogger): Promise<MashroomPortalIncludeStyleServerSideRenderedAppsResult> => {
-    const sslConfig = context.portalPluginConfig.sslConfig;
-    if (!sslConfig.sslEnabled || serverSideRenderedApps.length === 0) {
+    const ssrConfig = context.portalPluginConfig.ssrConfig;
+    if (!ssrConfig.ssrEnabled || serverSideRenderedApps.length === 0) {
         return {
             headerContent: '',
             includedAppStyles: [],
@@ -146,7 +146,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
 
             const styles = await Promise.race([
                 Promise.all(portalAppStyleResourcePromises),
-                new Promise<[]>((resolve) => setTimeout(() => resolve([]), sslConfig.renderTimoutMs)),
+                new Promise<[]>((resolve) => setTimeout(() => resolve([]), ssrConfig.renderTimoutMs)),
             ]);
 
             const validStyles = styles.filter((s) => !!s) as Array<string>;

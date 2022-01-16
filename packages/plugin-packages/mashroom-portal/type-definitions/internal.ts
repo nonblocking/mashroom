@@ -83,8 +83,8 @@ export type MashroomPortalPluginConfig = {
         readonly sendPermissionsHeader?: boolean;
         readonly restrictToRoles?: Array<string>;
     };
-    readonly sslConfig: {
-        readonly sslEnabled: boolean;
+    readonly ssrConfig: {
+        readonly ssrEnabled: boolean;
         readonly renderTimoutMs: number;
         readonly cacheTTLSec: number;
         readonly inlineStyles: boolean;
