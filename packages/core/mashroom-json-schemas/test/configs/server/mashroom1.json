@@ -131,8 +131,8 @@
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
             },
-            "sslConfig": {
-                "sslEnabled": true,
+            "ssrConfig": {
+                "ssrEnabled": true,
                 "renderTimoutMs": 2000,
                 "cacheTTLSec": 300,
                 "inlineStyles": true

@@ -53,8 +53,8 @@
    The additional configuration in the *mashroom-portal* plugin looks like this:
    ```json
      {
-       "sslConfig": {
-         "sslEnabled": true,
+       "ssrConfig": {
+         "ssrEnabled": true,
          "renderTimoutMs": 2000,
          "cacheTTLSec": 300,
          "inlineStyles": true
