@@ -6,7 +6,9 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin adds WebSocket support to the _Mashroom Server_.
 It exposes a new service that can be used to interact with clients that connect at _/websocket/*_.
 
+<span class="panel-info">
 **NOTE**: This implementation only allows authenticated users to connect.
+</span>
 
 ## Usage
 

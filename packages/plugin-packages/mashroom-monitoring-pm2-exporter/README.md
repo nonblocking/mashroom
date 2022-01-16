@@ -55,8 +55,12 @@ You can change the default configuration in your Mashroom config file like this:
 ```
 
  * _pmxMetrics_: Will be passed as *metrics* to the [pm2/io configuration](https://github.com/keymetrics/pm2-io-apm/tree/master#configuration)
- * _mashroomMetrics_: A list of Mashroom plugin metrics that should be exposed. Please note: Currently only *counter* and *gauge* metrics can be exported!
-   For a full list install the *mashroom-monitoring-prometheus-exporter* and check the output of /metrics
+ * _mashroomMetrics_: A list of Mashroom plugin metrics that should be exposed.
+
+<span class="panel-info">
+**NOTE**: Currently only *counter* and *gauge* metrics can be exported!
+For a full list install the *mashroom-monitoring-prometheus-exporter* and check the output of /metrics
+</span>
 
 After starting the server with pm2 you can see the metrics in the "Custom metrics" pane when you start:
 

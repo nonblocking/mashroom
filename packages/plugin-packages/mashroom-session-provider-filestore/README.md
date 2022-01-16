@@ -34,7 +34,9 @@ And to change the default config of this plugin add:
 }
 ```
 
-Please Note: The base for relative paths is the Mashroom config file.
+<span class="panel-info">
+**NOTE**: The base for relative paths is the Mashroom config file.
+</span>
 
 All config options are passed to the _session-file-store_. See [session-file-store](https://github.com/valery-barysok/session-file-store) for available options.
 

@@ -81,9 +81,9 @@ pre {
 
 img {
     max-width: 80vw;
-    max-height: 100vh;
+    max-height: 60vh;
     margin: 5px;
-    box-shadow: 2px 2px 10px #CCC;
+    box-shadow: 0 0 8px #999;
 }
 
 table {
@@ -123,6 +123,24 @@ table td {
 
 table td:last-child {
     border-right: none;
+}
+
+.panel-info {
+    display: block;
+    padding: 10px;
+    margin: 30px 0;
+    border: 1px solid #504B88;
+    background-color: #f4f3f8;
+    max-width: 80vw;
+}
+
+.panel-warning {
+    display: block;
+    padding: 10px;
+    margin: 30px 0;
+    border: 1px solid #ffc107;
+    background-color: #fffbf2;
+    max-width: 80vw;
 }
 
 /*

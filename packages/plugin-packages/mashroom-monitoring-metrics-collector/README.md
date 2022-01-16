@@ -73,7 +73,9 @@ export interface MashroomMonitoringMetricsCollectorService {
 }
 ```
 
-**NOTE**: Don't keep a reference to the returned metrics objects. Instead use the service like this:
+<span class="panel-warning">
+**NOTE**: Don't keep a reference to the returned metrics objects. Instead, use the service like this:
+</span>
 
 ```js
     const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;

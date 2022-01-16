@@ -31,8 +31,10 @@ export default async (req: Request, res: Response) => {
 }
 ```
 
+<span class="panel-warning">
 **NOTE**: Despite its name a job is started in the main thread and therefore blocks the event loop.
-          So, if you do CPU intensive work you need to spawn a [Worker Thread](https://nodejs.org/api/worker_threads.html) yourself.
+So, if you do CPU intensive work you need to spawn a [Worker Thread](https://nodejs.org/api/worker_threads.html) yourself.
+</span>
 
 ## Services
 

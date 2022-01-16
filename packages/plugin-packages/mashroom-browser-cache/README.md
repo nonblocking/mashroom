@@ -17,7 +17,7 @@ import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache
 export default async (req: Request, res: Response) => {
 
     const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
-    await cacheControlService.addCacheControlHeader(req, res);
+    await cacheControlService.addCacheControlHeader('ONLY_FOR_ANONYMOUS_USERS', req, res);
 
     // ..
 };
@@ -58,4 +58,10 @@ export interface MashroomCacheControlService {
      */
      removeCacheControlHeader(response: Response): void;
 }
+```
+
+Caching Policies are:
+
+```ts
+export type CachingPolicy =  'SHARED' | 'PRIVATE_IF_AUTHENTICATED' | 'NEVER' | 'ONLY_FOR_ANONYMOUS_USERS';
 ```

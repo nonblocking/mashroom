@@ -9,7 +9,9 @@ This is required for web-apps that need to know the actual "base path" to genera
 For example *Mashroom Portal* can use this to move *Sites* to different paths but keep the ability to generate
 absolute paths for resources and API calls. Which is useful if you want to expose specific *Sites* via a virtual host.
 
+<span class="panel-warning">
 **NOTE**: All other plugins will only deal with the rewritten paths, keep that in mind especially when defining ACLs.
+</span>
 
 ## Usage
 

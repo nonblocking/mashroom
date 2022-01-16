@@ -6,7 +6,10 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin adds a Service to manage CDN hosts.
 It basically just returns a host from a configurable list, which can be used to access an asset via CDN.
 
-This setup only works for CDN that work as caching proxy.
+<span class="panel-info">
+**NOTE**: The *mashroom-cdn* plugin requires a CDN that works like a transparent proxy, which forwards an identical request to
+the *origin* (in this case Mashroom) if does not exist yet.
+</span>
 
 ## Usage
 

@@ -45,4 +45,6 @@ You can override the default config in your Mashroom config file like this:
 * _helmet_: The configuration will directly be passed to _Helmet_ middelware. Checkout the [Helmet Documentation](https://helmetjs.github.io/docs/)
 for available options.
 
+<span class="panel-info">
 **NOTE**: You shouldn't enable the _noCache_ module because this would significantly decrease the performance of the _Mashroom Portal_.
+</span>

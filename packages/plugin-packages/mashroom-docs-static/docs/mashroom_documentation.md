@@ -6,7 +6,7 @@ Version: [version]
 
 [https://www.mashroom-server.com](https://www.mashroom-server.com)
 
-(c) 2021 nonblocking.at gmbh
+(c) 2022 nonblocking.at gmbh
 
 ## Table of contents
 
@@ -103,7 +103,7 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
 
 A plugin definition consists of two parts:
 
- 1. A plugin definition element in _package.json_ of the npm module
+ 1. A plugin definition element, either in _package.json_ or a separate _mashroom.json_ file
  2. A loader script (bootstrap)
 
 A _package.json_ with a _Mashroom Server_ plugin definition looks like this:
@@ -139,7 +139,29 @@ A _package.json_ with a _Mashroom Server_ plugin definition looks like this:
     }
 }
 ```
-Multiple plugins can be defined within a single npm module.
+
+The same in a separate _mashroom.json_
+```json
+{
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "My Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "requires": [
+                "A special service plugin"
+            ],
+            "defaultConfig": {
+                "path": "/my/webapp"
+            }
+        }
+    ]
+}
+```
+
+Multiple plugins can be defined within a single npm package.
 
 The _type_ element determines which plugin loader will be used to load the plugin. The optional _requires_ defines plugins
 that must be loaded before this plugin can be loaded.
@@ -197,8 +219,10 @@ app.get('/', (req, res) => {
 });
 ```
 
-**IMPORTANT NOTE**: Never store the *pluginContext* outside a bootstrap or request handler because service references my change over time
+<span class="panel-warning">
+**NOTE**: Never store the *pluginContext* outside a bootstrap or request handler because service references my change over time
 when plugins are reloaded. But it save to store the *pluginContextHolder* instance.
+</span>
 
 ## Setup
 
@@ -281,7 +305,6 @@ The typical configuration could look like this:
         }
     }
 }
-
 ```
 
 The same as a Javascript file:
@@ -353,10 +376,86 @@ To enable HTTPS and/or HTTP2 you would add:
 To enable security you have to add the *mashroom-security* package and a provider package such as *mashroom-security-provide-simple*.
 
 The security package provides access control lists based on URLs and a Service for managing and checking resource permissions manually.
-Please read the *mashroom-security* documentation for more details.
 
-The portal uses the security plugin to control the access to pages and portal apps. It also introduced a concept of fain grain
-permissions (mapped to roles) which can be checked in portal apps and in backends (passed via HTTP header by the API Proxy).
+<span class="panel-info">
+**NOTE**: The security in the Portal and for Portal Apps (SPA) is described below in *Mashroom Portal* -> *Security*.
+</span>
+
+#### ACL
+
+You can secure every URL in *Mashroom* with the ACL, based on user role or IP. For example:
+
+```json
+{
+    "$schema": "https://www.mashroom-server.com/schemas/mashroom-security-acl.json",
+    "/portal/**": {
+        "*": {
+            "allow": {
+                "roles": ["Authenticated"]
+            }
+        }
+    },
+    "/mashroom/**": {
+        "*": {
+            "allow": {
+                "roles": ["Administrator"],
+                "ips": ["127.0.0.1", "::1"]
+            }
+        }
+    }
+}
+```
+
+<span class="panel-info">
+**NOTE**: For more details check the *mashroom-security* documentation below.
+</span>
+
+#### Resource permissions
+
+The *SecurityService* allows it to define and check resource permissions based on a *permission* key and the user roles. For example:
+
+```ts
+import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
+
+export default async (req: Request, res: Response) => {
+    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+
+    // Create a permission
+    await securityService.updateResourcePermission(req, {
+        type: 'Page',
+        key: pageId,
+        permissions: [{
+            permissions: ['View'],
+            roles: ['Role1', 'Role2']
+        }]
+    });
+
+    // Check a permission
+    const mayAccess = await securityService.checkResourcePermission(req, 'Page', pageId, 'View');
+
+    // ...
+}
+```
+
+This mechanism is used by the Portal for Site, Page and Portal App permissions.
+
+<span class="panel-info">
+**NOTE**: For more details check the *mashroom-security* documentation below.
+</span>
+
+#### HTTP Security Headers
+
+Use the *mashroom-helmet* plugin to add the [Helmet](https://github.com/helmetjs/helmet) middleware,
+which adds a bunch of HTTP headers to prevent XSS and other attacks.
+
+#### CSRF
+
+The *mashroom-csrf* plugin adds middleware that checks every POST, PUT and DELETE request for a CSRF token in the HTTP headers or the query.
+You need to use the *MashroomCSRFService* to get the current token.
+
+<span class="panel-info">
+**NOTE**: The default Portal theme automatically adds the current CSRF token in a meta tag with the name *csrf-token*.
+</span>
 
 ### Logging
 
@@ -402,8 +501,8 @@ The following built in context properties can be used with %X{<name>} or a custo
   * _browserVersion_
   * _os_ (e.g. Windows)
   * _sessionID_ (if a session is available)
-  * _portalAppName_ (if the request is related to a portal app)
-  * _portalAppVersion_ (if the request is related to a portal app)
+  * _portalAppName_ (if the request is related to a Portal App)
+  * _portalAppVersion_ (if the request is related to a Portal App)
 
 You can use _logger.withContext()_ or _logger.addContext()_ to add context information.
 
@@ -439,12 +538,133 @@ And configure log4js like this:
 }
 ```
 
+### Internationalization
+
+The *mashroom-i18n* plugin provides a simple service to lookup messages on the file system based on the current user language.
+
+You can use it like this from where ever the *pluginContext* is available:
+
+```ts
+import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
+
+export default (req: Request, res: Response) => {
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+
+    const currentLang = i18nService.getLanguage(req);
+    const message =  i18nService.getMessage('username', 'de');
+    // message will be 'Benutzernamen'
+
+    // ...
+}
+```
+
+One the client-side (in Portal Apps) you can use an arbitrary i18n framework (such as [intl-messageformat](https://formatjs.io/docs/intl-messageformat/)).
+The current Portal locale will be passed to the Apps with the *portalAppSetup*:
+
+```ts
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
+    const { lang } = portalAppSetup;
+    // lang will be 'en' or 'fr' or whatever
+    const { messageBus, portalAppService } = clientServices;
+    // ...
+};
+```
+
+### Caching
+
+*Mashroom* tries to automatically use the most efficient caching mechanisms. All you need to do is to add the appropriate plugins.
+
+#### Server-side
+
+Add *mashroom-memory-cache* plugin and optionally *mashroom-memory-cache-provider-redis* if you want to use Redis instead of the local memory.
+Many other plugins (such as *mashroom-storage* and *mashroom-portal*) will automatically detect it and use it (see their documentation for more details).
+
+#### Browser
+
+The *mashroom-browser-cache* plugin provides a service to set *Cache-Control* headers based on a policy. For example:
+
+```ts
+import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
+
+export default async (req: Request, res: Response) => {
+
+    const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
+    await cacheControlService.addCacheControlHeader('ONLY_FOR_ANONYMOUS_USERS', req, res);
+
+    // ..
+};
+```
+
+Other plugins (such as *mashroom-portal*) will automatically use it if present.
+
+<span class="panel-info">
+**NOTE**: This plugin will always set *no-cache* header in *devMode*.
+</span>
+
+### CDN
+
+Since v2 *Mashroom* ships a CDN plugin that will automatically be used by *mashroom-portal* and other plugins to deliver static assets.
+
+Basically, *mashroom-cdn* consists of a list of CDN hosts and a service to get the next host to use:
+
+```ts
+import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
+
+export default async (req: Request, res: Response) => {
+
+    const cdnService: MashroomCDNService = req.pluginContext.services.cdn.service;
+
+    const cdnHost = cdnService.getCDNHost();
+    const resourceUrl = `${cdnHost}/<the-actual-path>`;
+
+    // ..
+};
+```
+
+<span class="panel-info">
+**NOTE**: The *mashroom-cdn* plugin requires a CDN that works like a transparent proxy, which forwards an identical request to
+the *origin* (in this case Mashroom) if does not exist yet.
+</span>
+
+### Virtual Host Path Mapping
+
+The *mashroom-vhost-path-mapper* plugin can be used to map frontend paths to *internal* paths, based on virtual hosts.
+
+So, lets say you want to map the *Mashroom Portal* site *site1*, reachable under http://localhost:5050/portal/site1,
+to www.my-company.com. In that case you would configure the plugin like this:
+
+```json
+{
+  "plugins": {
+       "Mashroom VHost Path Mapper Middleware": {
+           "hosts": {
+              "www.my-company.com": {
+                 "mapping": {
+                    "/login": "/login",
+                    "/": "/portal/site1"
+                 }
+              }
+          }
+       }
+    }
+}
+```
+
+If your *frontend base path* is different, e.g. www.my-company.com/foo, you would also have to set the *frontendBasePath* in the configuration.
+
+<span class="panel-warning">
+**NOTE**: All other plugins will only deal with the rewritten paths, keep that in mind especially when defining ACLs.
+</span>
+
 ### Clustering
 
-When you're going to run _Mashroom Server_ in a cluster you should keep in mind:
+If you're going to run _Mashroom Server_ in a cluster you should keep in mind:
 
- * Use as session provider that provides clustering (such as _mashroom-session-provider-filestore_)
- * If you use file appenders you either have to make sure that your _log4js_ config creates a file per node process or
+ * Use as session provider that can provide a shared session for all instances (such as _mashroom-session-provider-filestore_)
+ * If you use *mashroom-messaging* to communicate between browser windows you need to configure an external broker
+ * If you use *mashroom-memory-cache* you should configure Redis as shared cache server to maximize the hits
+ * If you use *mashroom-storage* (e.g. for the Portal) you either have to use Mongo as backend or to use a shared folder (e.g. SAN) for all instances
+ * If you use file log appenders you either have to make sure that your _log4js_ config creates a file per node process, or
  you have to install _pm2-intercom_ if you're using _pm2_. Read the _log4js_ clustering documentation for details:
  [https://github.com/log4js-node/log4js-node/blob/master/docs/clustering.md](https://github.com/log4js-node/log4js-node/blob/master/docs/clustering.md)
 
@@ -464,21 +684,14 @@ module.exports = {
     disableClustering: true
 };
 ```
-### Health checks
-
-There are a few integrated health checks available that can be used as probes for monitoring tools or to check the readiness/liveness of Kubernetes pods.
-
-An overview of the health checks is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/health
 
 ### Monitoring
 
-_Mashroom Server_ gathers a lot of internal metrics that can be exposed in different formats. Currently there is only
-an exporter for [Prometheus](https://prometheus.io) but it would be simple to write an exporter for a different format.
+_Mashroom Server_ gathers a lot of internal metrics that can be exposed in different formats. Currently, there are two exporters available:
+ * for [Prometheus](https://prometheus.io)
+ * for [PM2 monitoring](https://pm2.keymetrics.io/docs/usage/monitoring/)
 
-To enable the metrics and the Prometheus exporter add the following plugins:
-
- * @mashroom/mashroom-monitoring-metrics-collector
- * @mashroom/mashroom-monitoring-prometheus-exporter
+To enable the metrics, just add  *@mashroom/mashroom-monitoring-metrics-collector* and one of the exporter plugins.
 
 The Prometheus metrics will be available at **/metrics**. An example [Grafana](https://grafana.com) Dashboard can be found
 [in the Mashroom repo](https://github.com/nonblocking/mashroom/tree/master/packages/plugin-packages/mashroom-monitoring-prometheus-exporter/test/grafana-test/grafana/provisioning/dashboards/Mashroom%20Dashboard.json).
@@ -486,6 +699,12 @@ The Prometheus metrics will be available at **/metrics**. An example [Grafana](h
 Here how it looks:
 
 ![Mashroom Monitoring Dashboard](mashroom_monitoring.png "Mashroom Monitoring Dashboard")
+
+### Health checks
+
+There are a few integrated health checks available that can be used as probes for monitoring tools or to check the readiness/liveness of Kubernetes pods.
+
+An overview of the health checks is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/health
 
 ## Admin UI
 
@@ -510,17 +729,17 @@ It contains:
 
 #### How does it work?
 
-Every portal app (SPA) has to expose a global _bootstrap_ method. The _Portal Client_ fetches the app metadata from the
+Every Portal App (SPA) has to expose a global _bootstrap_ method. The _Portal Client_ fetches the app metadata from the
 server, loads all required resources and calls then the _bootstrap_ with the configuration object and the DOM element
 where the app should run in.
 
-#### API Proxy
+### Proxy
 
-The API proxy allows the portal app to access it's REST API. The API can be deploy within *Mashroom Server* or be remote.
+The built-in proxy allows the Portal App to access internal APIs. It supports HTTP, Websocket and SSE.
 
 The access to a proxy url can be restricted to specific roles.
 
-#### Remote apps
+### Remote Apps
 
 Portal Apps (SPA) can reside on a remote server and automatically be registered. Currently, there are two different remote
 registries that can also be combined:
@@ -532,17 +751,128 @@ Here is how it works:
 
 ![Remote app resources](mashroom_portal_remote_app.png)
 
-##### Ad hoc register a remote app with the mashroom-portal-remote-app-registry plugin
+#### Ad hoc register a remote app with the mashroom-portal-remote-app-registry plugin
 
 Open _/mashroom/admin/ext/remote-portal-apps_, paste the URL into the input and lick _Add_:
 
-![Register remote portal app](mashroom_portal_register_remote_app.png)
+![Register Remote Portal App](mashroom_portal_register_remote_app.png)
 
-After that you can add the new portal app via Drag'n'Drop where ever you want:
+After that you can add the new Portal App via Drag'n'Drop where ever you want:
 
 ![Register remote portal app](mashroom_portal_register_remote_app2.png =350x*)
 
-#### Messaging
+### Server Side Rendering
+
+Since v2 the Portal can render the whole Portal page on the server-side and even include the initial HTML of Portal Apps,
+capable of server-side rendering.
+
+<span class="panel-info">
+**NOTE**: If an App support SSR it should provide its style in separate CSS file, because in that case the Portal will try
+to inline all styles so everything gets rendered correctly without any extra resources.
+</span>
+
+To enable SSR in an App you have to:
+
+  * Use the new plugin type *portal-app2*
+  * Add a *ssrBootstrap* that will be executed on the server side
+  * Check in the (client-side) *bootstrap* if there is a pre-rendered DOM and use *hydrate()* in that case
+
+The *ssrBootstrap* could look like this in React:
+
+```ts
+import React from 'react';
+import {renderToString} from 'react-dom/server';
+import App from './App';
+
+import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup) => {
+    const {appConfig, restProxyPaths, lang} = portalAppSetup;
+    const dummyMessageBus: any = {};
+    return renderToString(<App appConfig={appConfig} messageBus={dummyMessageBus}/>);
+};
+
+export default bootstrap;
+```
+
+<span class="panel-info">
+**NOTE**: The server-side bootstrap will receive the same *portalAppSetup* like on the client-side, but no client services.
+If you need the *messageBus* or other services make sure the App renders without them or with a mock implementation.
+</span>
+
+On the client-side you would do:
+
+```ts
+import React from 'react';
+import {render, hydrate, unmountComponentAtNode} from 'react-dom';
+import App from './App';
+
+import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup, clientServices) => {
+    const {appConfig, restProxyPaths, lang} = portalAppSetup;
+    const {messageBus} = clientServices;
+
+    const ssrHost = element.querySelector('[data-ssr-host="true"]');
+    if (ssrHost) {
+        hydrate(<App appConfig={appConfig} messageBus={messageBus}/>, ssrHost);
+    } else {
+        render(<App appConfig={appConfig} messageBus={messageBus}/>, element);
+    }
+};
+
+global.startMyApp = bootstrap;
+```
+
+Remote Apps would basically work the same, but the server-side bootstrap needs to be exposed as route that receives a POST
+with the *portalAppSetup* in the content. Checkout the [Mashroom Demo SSR Portal App](https://github.com/nonblocking/mashroom-demo-remote-portal-app).
+
+All put together rendering a page works like this:
+
+![SSR Rendering](mashroom_portal_ssr.png)
+
+<span class="panel-warning">
+**NOTE**: Every App should support client-side rendering, because they can be added dynamically to a page.
+If you don't want to render on the client (e.g. for security reasons) at least render an error message on the client-side.
+</span>
+
+#### Performance/SEO hints
+
+SSR improves page performance and SEO heavily. To improve it further we recommend:
+
+ * Consider the *renderTimoutMs* value in the Portal's *ssrConfig*. This timeout determines how long the Portal will wait for
+   an SSR result. It is safe to use a very low value, because if the SSR takes to long it automatically switches to client-side rendering,
+   but puts the result (when ready) into the memory cache. So, subsequent calls will get the cached SSR HTML.
+ * Use the *mashroom-memory-cache*, because the Portal will use it to cache the results of server-side rendering
+ * Use a reverse proxy for TLS termination and enable compression and caching there
+ * Use a CDN to accelerate the delivering of resources
+ * In your server-side rendering Apps make sure to avoid [Cumulative Layout Shift](https://web.dev/cls/)
+   (e.g. by always defining height and width for media)
+ * Use the [Google Lighthouse](https://developers.google.com/web/tools/lighthouse) to check your site:
+
+![SSR Performance](mashroom_portal_ssr_performance.png)
+
+### "SPA Mode"
+
+TODO
+
+### Composite Apps
+
+TODO
+
+![Mashroom Portal Composite App](mashroom_portal_composite_app.png)
+
+### Dynamic Cockpits
+
+TODO
+
+https://github.com/nonblocking/mashroom-demo-dynamic-cockpit
+
+### Theming
+
+TOOD
+
+### Messaging
 
 The Portal comes with a client-side _MessageBus_ that can be used by Portal Apps to communicate with each other locally.
 
@@ -552,6 +882,21 @@ browsers and even with 3rd party systems (when a external messaging system such 
 
 ![Messaging](mashroom_messaging.png)
 
+### Page Enhancements
+
+TODO
+
+### Portal App Enhancements
+
+TODO
+
+### Security
+
+The Mashroom Portal uses the security plugin to control the access to pages and Portal Apps. It also introduced a concept of fine grain
+permissions (mapped to roles) which can be checked in Portal Apps and in backends (passed via HTTP header by the API Proxy).
+
+TODO
+
 ### User Interface
 
 #### Page layout
@@ -559,23 +904,27 @@ browsers and even with 3rd party systems (when a external messaging system such 
 ![Mashroom Portal Layout](mashroom_portal_layout.png)
 
 The *theme* is responsible for rendering the page. It defines where the main content is.
-The portal adds the selected layout to the main content and the configured portal apps within the app areas of this layout.
+The portal adds the selected layout to the main content and the configured Portal Apps within the app areas of this layout.
 
 #### Default start page with demo apps
 
 ![Mashroom Portal](mashroom_portal_ui.png)
 
-#### Add a new portal app
+#### Add a new Portal App
 
 ![Mashroom Portal Add App](mashroom_portal_ui_add_app.png)
 
-#### Page settings
+#### Portal App configuration
 
-![Mashroom Portal Page Settings](mashroom_portal_ui_page_settings.png)
+TODO
 
-#### Show portal app versions
+![Mashroom Portal App Settings](mashroom_portal_ui_app_settings.png)
 
-The default portal theme allows to show all portal app versions by clicking on _App versions_. You can enable it like
+![Mashroom Portal Custom App Config Editor](mashroom_portal_custom_app_config_editor.png)
+
+#### Show Portal App versions
+
+The default portal theme allows to show all Portal App versions by clicking on _App versions_. You can enable it like
 this in the _Mashroom_ config file:
 
 ```json
@@ -589,6 +938,18 @@ this in the _Mashroom_ config file:
 ```
 
 ![Mashroom Portal show versions](mashroom_portal_show_versions.png)
+
+#### Adding a new page
+
+TODO
+
+![Mashroom Portal Page Settings](mashroom_portal_ui_page_settings.png)
+
+#### Adding a new site
+
+TODO
+
+![Mashroom Portal Site Settings](mashroom_portal_ui_site_settings.png)
 
 ## Core
 
