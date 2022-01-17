@@ -342,8 +342,9 @@ A full config with all optional properties would look like this:
     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.
     * _caching_: Optional caching configuration
         * _ssrHtml_: Optional SSR caching configuration (Default: same-config-and-user)
-    * _editor_: Optional custom editor configuration that should be used for the appConfig by the Admin Toolbar
-        * _editorPortalApp_: The name of the Portal App that should be used to edit the appConfig of this App
+    * _editor_: Optional custom editor configuration that should be used for the *appConfig* by the Admin Toolbar
+        * _editorPortalApp_: The name of the Portal App that should be used to edit the *appConfig* of this App.
+          The App will receive an extra *appConfig* property *editorTarget* of type *MashroomPortalConfigEditorTarget*.
         * _position_: Optional hint where to launch the editor. Possible values: in-place, sidebar. (Default: in-place)
         * _appConfig_: The optional appConfig the editor App should be launched with (Default: {})
     * _proxies_: Defines proxies to access the App's backend (HTTP or WebSocket)

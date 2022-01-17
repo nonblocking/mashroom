@@ -779,7 +779,7 @@ To enable SSR in an App you have to:
 
 The *ssrBootstrap* could look like this in React:
 
-```ts
+```tsx
 import React from 'react';
 import {renderToString} from 'react-dom/server';
 import App from './App';
@@ -802,7 +802,7 @@ If you need the *messageBus* or other services make sure the App renders without
 
 On the client-side you would do:
 
-```ts
+```tsx
 import React from 'react';
 import {render, hydrate, unmountComponentAtNode} from 'react-dom';
 import App from './App';
@@ -1062,7 +1062,81 @@ Checkout the *mashroom-portal* documentation for details.
 The Mashroom Portal uses the security plugin to control the access to pages and Portal Apps. It also introduced a concept of fine grain
 permissions (mapped to roles) which can be checked in Portal Apps and in backends (passed via HTTP header by the API Proxy).
 
-TODO
+#### Portal App Security
+
+If a user requires specific roles to be able to load an App (dynamically) you have to set the *defaultRestrictViewToRoles*
+in the plugin definition. Otherwise, any user, which is able to access the Portal API (which can be controlled via ACL), will
+be able to load it.
+
+<span class="panel-info">
+**NOTE**: Users with the role *Administrator* are able to load **all** Apps, regardless of *defaultRestrictViewToRoles*.
+They are also able to override/redefine the *view* permission when adding Apps to a page.
+</span>
+
+Within Portal Apps you should not work with roles but with abstract *permission* keys such as "mayDeleteCustomer". In the plugin definition
+this keys can then be mapped to roles like this:
+
+```json
+"defaultConfig": {
+  "rolePermissions": {
+    "mayDeleteCustomer": ["Role1", "Role2"]
+  }
+}
+```
+
+And the *permission* can be checked like this:
+
+```ts
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
+    const {appConfig, user: {permissions, username, displayName, email}} = portalAppSetup;
+
+    // True if user has role "Role1" OR "Role2"
+    if (permissions.mayDeleteCustomer) {
+        // ...
+    }
+}
+```
+
+#### Securing backend access
+
+Proxy access can be restricted by adding a *restrictToRole* property in the plugin definition:
+
+```json
+"defaultConfig": {
+  "proxies": {
+    "spaceXApi": {
+      "targetUri": "https://api.spacexdata.com/v3",
+      "sendPermissionsHeader": false,
+      "restrictToRoles": ["Role1"]
+    }
+  }
+}
+```
+
+<span class="panel-info">
+**NOTE**: Not even users with the *Administrator* role can override that restriction. So, even if they can
+load a restricted App they will not be able to access the backend.
+</span>
+
+Furthermore, it is possible to pass the Portal App security context to the backend via HTTP headers.
+This is useful if you want to check some fine grain permissions there as well.
+
+Headers that can be passed to the Backend:
+
+ * X-USER-PERMISSIONS: A comma separated list of the permission keys that resolve to true; can be activated by setting
+   *sendPermissionsHeader* to true on the proxy definition
+ * X-USER-NAME and others: Can be activated by adding the *mashroom-http-proxy-add-user-headers* plugin
+ * X-USER-ID-TOKEN: The ID token if the OpenID-Connect is used a security provider;
+   can be activated by adding the *mashroom-http-proxy-add-id-token* plugin
+
+#### Site and Page Security
+
+Sites and Pages can be secured by:
+
+ * The ACL
+ * Individually, via Admin Toolbar (see below)
+
+Both approaches can be combined.
 
 ### User Interface
 
@@ -1079,13 +1153,43 @@ The portal adds the selected layout to the main content and the configured Porta
 
 #### Add a new Portal App
 
+As an *Administrator* you can add Portal Apps via Admin Toolbar: *Add Apps*
+
 ![Mashroom Portal Add App](mashroom_portal_ui_add_app.png)
 
 #### Portal App configuration
 
-TODO
+After adding an App you can click on the *Configure* icon to edit the *appConfig* and the permissions:
 
 ![Mashroom Portal App Settings](mashroom_portal_ui_app_settings.png)
+
+#### Custom App Config Editor
+
+Instead of the default JSON editor you can define a custom editor App for you *appConfig*.
+The custom editor is itself a plain Portal App (SPA) which gets an extra *appConfig* property *editorTarget*
+of type *MashroomPortalConfigEditorTarget* that can be used to communicate back with the Admin Toolbar:
+
+```ts
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
+    const {appConfig: {editorTarget}} = portalAppSetup;
+
+    if (!editorTarget || !editorTarget.pluginName) {
+        throw new Error('This app can only be started as App Config Editor!');
+    }
+
+    const currentAppConfig = editorTarget.appConfig;
+
+    // ...
+
+    // When the user is done:
+    editorTarget.updateAppConfig(updatedAppConfig);
+    editorTarget.close();
+
+    //...
+};
+```
+
+Here for example the *mashroom-portal-demo-react-app2* plugin which has a custom editor:
 
 ![Mashroom Portal Custom App Config Editor](mashroom_portal_custom_app_config_editor.png)
 
@@ -1108,15 +1212,19 @@ this in the _Mashroom_ config file:
 
 #### Adding a new page
 
-TODO
+As an *Administrator* you can add a new Page from the Admin Toolbar: *Create* -> *Create New Page*:
 
 ![Mashroom Portal Page Settings](mashroom_portal_ui_page_settings.png)
 
+After that you can start to place Portal Apps via *Add Apps*.
+
 #### Adding a new site
 
-TODO
+As an *Administrator* you can add a new Site from the Admin Toolbar: *Create* -> *Create New Page*:
 
 ![Mashroom Portal Site Settings](mashroom_portal_ui_site_settings.png)
+
+After that you can start to add additional pages.
 
 ## Core Services
 

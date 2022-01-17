@@ -3,7 +3,7 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 
 const showdown = require('showdown');
-require('showdown-highlightjs-extension');
+const showdownHighlight = require('showdown-highlight');
 require('./showdown-toc');
 require('./showdown-include');
 require('./showdown-replace-version');
@@ -21,7 +21,7 @@ async function main() {
     const markdown = fs.readFileSync(path.resolve(__dirname, '../docs/mashroom_documentation.md'), 'utf-8');
 
     const converter = new showdown.Converter({
-        extensions: ['highlightjs', 'toc', 'showdown-include', 'showdown-replace-version'],
+        extensions: [showdownHighlight, 'toc', 'showdown-include', 'showdown-replace-version'],
         parseImgDimensions: true,
         tables: true
     });
