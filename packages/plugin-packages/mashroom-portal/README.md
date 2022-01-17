@@ -11,7 +11,7 @@ A Portal App can also bring its own config editor App, which again is just a sim
 
 One of the provided client services allow Portal Apps to load any *other* App (known by name) into any existing DOM node. This can be used to:
  * Create **dynamic cockpits** where Apps are loaded dynamically based on some user input or search result
- * Create **composite Apps** that consist of other Apps (which again could be used within other Apps again)
+ * Create **Composite Apps** that consist of other Apps (which again could be used within other Apps again)
 
 The Portal supports **hybrid rendering** for both the Portal pages and SPAs. So, if an SPA supports server side rendering the initial HTML can be incorporated
 into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering (needs to be supported by the Theme).

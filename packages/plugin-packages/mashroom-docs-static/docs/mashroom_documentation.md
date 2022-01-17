@@ -233,7 +233,7 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 ### Install
 
 Just checkout the [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart) repo for a typical portal setup.
-Or [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart) if you don't need the portal plugin.
+Or [mashroom-quickstart](https://github.com/nonblocking/mashroom-quickstart) if you don't need the Portal plugin.
 
 A single _package.json_ is enough to set up a server instance. Plugins are just npm dependencies.
 
@@ -854,23 +854,182 @@ SSR improves page performance and SEO heavily. To improve it further we recommen
 
 ### "SPA Mode"
 
-TODO
+The Portal supports dynamically replacing the content of a page (that's the layout + all Apps) by the content of another page.
+This can be used to avoid full page loads and let the Portal behave like an SPA itself, so it basically can switch to client-side rendering.
+
+The client-side rendering needs to be implemented in the *Theme*, which needs to the following during page navigation:
+
+ * Update the URL via *window.history*
+ * Update the navigation area (highlight the new page)
+ * Fetch the page content of the target page:
+
+```html
+<!-- in the template -->
+<a class="nav-link active"
+   href="{{@root.siteBasePath}}{{friendlyUrl}}"
+   onclick="return replacePageContent('{{pageId}}', '{{@root.siteBasePath}}{{friendlyUrl}}')"
+   data-mr-page-id="{{pageId}}">
+    {{title}}
+</a>
+```
+
+```ts
+import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mashroom/mashroom-portal/type-definitions';
+
+const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
+if (!clientServices) {
+    return;
+}
+
+(global as any).replacePageContent = (pageId: string, pageUrl: string): boolean => {
+    showPageLoadingIndicator(true);
+    clientServices.portalPageService.getPageContent(pageId).then(
+        (content: MashroomPortalPageContent) => {
+            if (content.fullPageLoadRequired || !content.pageContent) {
+                // Full page load required!
+                document.location.replace(pageUrl);
+            } else {
+                contentEl.innerHTML = content.pageContent;
+                // Execute page scripts
+                eval(content.evalScript);
+                highlightPageIdInNavigation(pageId);
+                window.history.pushState({ pageId }, '', pageUrl);
+                showPageLoadingIndicator(false);
+            }
+        },
+        (error) => {
+            // If an error occurs we do a full page load
+            console.error('Dynamically replacing the page content failed!', error);
+            document.location.replace(pageUrl);
+        }
+    );
+    return false;
+}
+```
+
+<span class="panel-info">
+**NOTE**: The Portal will automatically detect if the requested page is not compatible to the initial loaded one
+(because the Theme oder Page Enhancements differ). In that case it will return ```fullPageLoadRequired: true```.
+</span>
 
 ### Composite Apps
 
-TODO
+A *Composite App* is a higher order App, which uses other Portal Apps (SPAs) as building blocks. So, its App in App,
+or SPA in SPA, or picture in picture ;-) Such a Composite App can itself be used as building block for another Composite App,
+which can be continued infinite.
+
+This approach takes advantage of *Mashroom Portal*'s ability to load any registered App into any DOM element.
+Basically, you just render a *div* element in your SPA with a unique (random) ID and load the App like so:
+
+```ts
+// Get the portalAppService in the bootstrap
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup, clientServices) => {
+    const {portalAppService} = clientServices;
+    //...
+}
+
+// Load the app
+const loadedApp = await portalAppService.loadApp(domElID, 'My App', null, /* position */ null, /* appConfig */ {
+    someProp: 'foo',
+});
+```
+
+And unload it like this:
+
+```ts
+await portalAppService.unloadApp(loadedApp.id);
+```
+
+Make sure you call unloadApp() if you want to remove/replace an App and not just remove the host DOM node,
+because like that the resources are not properly removed from the browser.
+
+Here for example the *Mashroom Portal Demo Composite App*:
 
 ![Mashroom Portal Composite App](mashroom_portal_composite_app.png)
 
+<span class="panel-warning">
+**NOTE**: A Composite App only runs in *Mashroom Portal* and leads to a vendor lock-in. At very least other integration hosts
+need to provide a compatible implementation of *MashroomPortalAppService*.
+</span>
+
 ### Dynamic Cockpits
 
-TODO
+One key feature of *Mashroom Portal* is the possibility to create dynamic pages (or cockpits) based:
 
-https://github.com/nonblocking/mashroom-demo-dynamic-cockpit
+ * Backend data (e.g. a search)
+ * The available (registered) Portal Apps
+ * Messages published on the message bus
+
+This is quite similar to a *Composite App* but in this case the page loads a single (static) App, which takes over the page
+and manages loading and unloading other Apps *outside* of itself. Typically, the names of the Apps that get loaded are not pre-defined,
+but determined from some *metaInfo* of the available Apps. So, such a cockpit can be dynamically extended by just adding
+new Apps with some *capabilities* (at runtime).
+
+To find Apps you would use the *portalAppService* like this:
+
+```ts
+const availableApps = await portalAppService.getAvailableApps();
+const appToShowWhatever = availableApps.filter(({metaInfo}) => metaInfo?.canShow === 'whatever');
+```
+
+Have a look at this [Demo Dynamic Cockpit](https://github.com/nonblocking/mashroom-demo-dynamic-cockpit), it consist of a central
+search bar and tries to load found data with Apps with apropriate *metaInfo*. E.g. this App could load customers:
+
+```json
+{
+    "plugins": [
+        {
+            "name": "Mashroom Dynamic Cockpit Demo Customer Details App",
+            // ...
+            "defaultConfig": {
+                "metaInfo": {
+                    "demoCockpit": {
+                        "viewType": "Details",
+                        "entity": "Customer"
+                    }
+                },
+                // ...
+            }
+        }
+    ]
+}
+```
 
 ### Theming
 
-TOOD
+A *Mashroom Portal* Theme can be written with any [template engine that works with Express](https://expressjs.com/en/resources/template-engines.html).
+
+You need to implement three templates:
+ * *portal*: A Portal page
+ * *appWrapper*: Renders the Portal App wrapper (optional, can be omitted)
+ * *appError*: Renders the error if loading an App fails (optional, can be omitted)
+
+<span class="panel-info">
+**NOTE**: If you want to have a type-safe template we recommend using [React](https://github.com/reactjs/express-react-views).
+Have a look at *mashroom-portal-demo-alternative-theme* for an example.
+</span>
+
+#### Themable Portal Apps
+
+Obviously, *theming* only works properly if all the Apps on a page regard the currently applied theme and in particular **do not**:
+
+ * Just hardcode colors
+ * Override "global" styles (e.g. for headers, inputs, etc.)
+ * Bring their own fonts
+
+Here some best practices:
+
+ * In your Theme
+     * Ship the style for all HTML elements and a common grid system (such as [bootstrap](https://getbootstrap.com/))
+     * Define your UI component library in pure CSS without any JavaScript or markup (like bootstrap does it)
+     * Expose your design constants (colors, fonts, ...) via CSS variables or utility classes
+ * In your Apps:
+     * Implement your UI components with the framework of your choice but use the CSS classes and the given structure from the Theme
+     * Use only custom classes to apply your style within the App
+     * Make sure your custom classes don't collide by using [CSS modules](https://blog.logrocket.com/how-to-configure-css-modules-webpack/)
+       or prefixing them with some unique key
+     * For colors, fonts and such use the CSS variables or utility classes exposed by the Theme
+     * To be able to run your Apps standalone make sure the relevant parts of the Theme are available as standalone CSS file
 
 ### Messaging
 
@@ -884,11 +1043,19 @@ browsers and even with 3rd party systems (when a external messaging system such 
 
 ### Page Enhancements
 
-TODO
+Page enhancement plugins allow to add some extra script or style to a page. Either to any page or based on some rules
+(e.g. page URL or the user agent).
+
+Checkout the *mashroom-portal* documentation for details.
 
 ### Portal App Enhancements
 
-TODO
+Portal app enhancement plugins can be used to modify the *portalAppSetup* of some (or any) Apps before loading.
+It can also be used to add custom services on the client side (passed with *clientServices* to every App).
+
+A typical use case would be to add some extra data to the *user* or to augment the *appConfig*.
+
+Checkout the *mashroom-portal* documentation for details.
 
 ### Security
 
@@ -951,11 +1118,11 @@ TODO
 
 ![Mashroom Portal Site Settings](mashroom_portal_ui_site_settings.png)
 
-## Core
+## Core Services
 
 [mashroom](../../../core/mashroom/CoreServices.md) [inc]
 
-## Plugins
+## Available Plugins
 
 [mashroom-security](../../mashroom-security/README.md) [inc]
 

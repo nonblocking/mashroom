@@ -89,7 +89,7 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
             console.error('Dynamically replacing the page content failed!', error);
             document.location.replace(pageUrl);
         }
-    )
+    );
 
     return false;
 }
