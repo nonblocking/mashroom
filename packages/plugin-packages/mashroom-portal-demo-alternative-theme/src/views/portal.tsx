@@ -26,8 +26,8 @@ export default ({
 
             <title>${site.title} - ${page.title}</title>
 
-            <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'/>
-            <link href='https://fonts.googleapis.com/css?family=Domine' rel='stylesheet' type='text/css'/>
+            <link href='https://fonts.googleapis.com/css?family=Roboto' rel='prefetch stylesheet' type='text/css'/>
+            <link href='https://fonts.googleapis.com/css?family=Domine' rel='prefetch stylesheet' type='text/css'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css?v=${bootstrapVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css?v=${fontawesomeVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css?v=${fontawesomeVersion}'/>
