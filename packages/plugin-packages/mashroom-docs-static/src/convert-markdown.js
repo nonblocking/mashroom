@@ -82,6 +82,7 @@ async function main() {
                 // Load external links in new tabs
                 document.querySelectorAll('a[href*="//"]').forEach(function(link) {
                     link.target = '_blank';
+                    link.classList.add('external');
                 });
             </script>
         </body>`;

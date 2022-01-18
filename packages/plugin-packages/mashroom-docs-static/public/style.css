@@ -24,7 +24,7 @@ h4, h5, h6 {
     font-weight: bold;
 }
 
-h1 {
+p + h1 {
     margin: 40px 0 120px 0;
 }
 
@@ -68,7 +68,7 @@ a {
     text-decoration: none;
 }
 
-a[href*="//"]:after {
+a.external:after {
     display: inline-block;
     content: ' ' url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgIHZpZXdCb3g9IjAgLTI1NiAxODUwIDE4NTAiCiAgICB3aWR0aD0iMTAwJSIKICAgIGhlaWdodD0iMTAwJSI+CiAgICA8ZyB0cmFuc2Zvcm09Im1hdHJpeCgxLDAsMCwtMSwzMC4zNzI4ODEsMTQyNi45NDkyKSIgaWQ9ImczMDI3Ij4KICAgICAgICA8cGF0aAogICAgICAgICAgICBkPSJNIDE0MDgsNjA4IFYgMjg4IFEgMTQwOCwxNjkgMTMyMy41LDg0LjUgMTIzOSwwIDExMjAsMCBIIDI4OCBRIDE2OSwwIDg0LjUsODQuNSAwLDE2OSAwLDI4OCB2IDgzMiBRIDAsMTIzOSA4NC41LDEzMjMuNSAxNjksMTQwOCAyODgsMTQwOCBoIDcwNCBxIDE0LDAgMjMsLTkgOSwtOSA5LC0yMyB2IC02NCBxIDAsLTE0IC05LC0yMyAtOSwtOSAtMjMsLTkgSCAyODggcSAtNjYsMCAtMTEzLC00NyAtNDcsLTQ3IC00NywtMTEzIFYgMjg4IHEgMCwtNjYgNDcsLTExMyA0NywtNDcgMTEzLC00NyBoIDgzMiBxIDY2LDAgMTEzLDQ3IDQ3LDQ3IDQ3LDExMyB2IDMyMCBxIDAsMTQgOSwyMyA5LDkgMjMsOSBoIDY0IHEgMTQsMCAyMywtOSA5LC05IDksLTIzIHogbSAzODQsODY0IFYgOTYwIHEgMCwtMjYgLTE5LC00NSAtMTksLTE5IC00NSwtMTkgLTI2LDAgLTQ1LDE5IEwgMTUwNywxMDkxIDg1NSw0MzkgcSAtMTAsLTEwIC0yMywtMTAgLTEzLDAgLTIzLDEwIEwgNjk1LDU1MyBxIC0xMCwxMCAtMTAsMjMgMCwxMyAxMCwyMyBsIDY1Miw2NTIgLTE3NiwxNzYgcSAtMTksMTkgLTE5LDQ1IDAsMjYgMTksNDUgMTksMTkgNDUsMTkgaCA1MTIgcSAyNiwwIDQ1LC0xOSAxOSwtMTkgMTksLTQ1IHoiCiAgICAgICAgICAgIHN0eWxlPSJmaWxsOiM1MDRCODgiIC8+CiAgICA8L2c+Cjwvc3ZnPg==);
     width: 14px;
@@ -158,6 +158,11 @@ table td:last-child {
     height: 100%;
 }
 
+a[href="#coredocumentation"] {
+    display: block;
+    margin-top: 50px;
+}
+
 .panel-info {
     display: block;
     padding: 10px;
@@ -180,8 +185,8 @@ table td:last-child {
 
 @media print {
 
-    #tableofcontents {
-        margin-top: 550px;
+    h2 {
+        page-break-before: always;
     }
 
 }

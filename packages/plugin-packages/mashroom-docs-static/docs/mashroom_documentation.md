@@ -779,14 +779,16 @@ Checkout out the <a href="#mashroomhttpproxy">mashroom-http-proxy</a> documentat
 Portal Apps (SPA) can reside on a remote server and automatically be registered. Currently, there are two different remote
 registries that can also be combined:
 
- * _mashroom-portal-remote-app-registry_
- * _mashroom-portal-remote-app-registry-k8s_ (for Kubernetes)
+ * <a href="#mashroomportalremoteappregistry">mashroom-portal-remote-app-registry</a>
+ * <a href="#mashroomportalremoteappregistryforkubernetes">mashroom-portal-remote-app-registry-k8s</a> (for Kubernetes)
 
-Here is how it works:
+Here, how it works:
 
 ![Remote app resources](mashroom_portal_remote_app.png)
 
-#### Ad hoc register a remote app with the mashroom-portal-remote-app-registry plugin
+#### Ad hoc register a remote app
+
+Here for example with <a href="#mashroomportalremoteappregistry">mashroom-portal-remote-app-registry</a>.
 
 Open _/mashroom/admin/ext/remote-portal-apps_, paste the URL into the input and lick _Add_:
 
@@ -1261,11 +1263,14 @@ As an *Administrator* you can add a new Site from the Admin Toolbar: *Create* ->
 
 After that you can start to add additional pages.
 
-## Core Services
+
+
+
+## Core Documentation
 
 [mashroom](../../../core/mashroom/CoreServices.md) [inc]
 
-## Available Plugins
+## Plugin Documentation
 
 [mashroom-security](../../mashroom-security/README.md) [inc]
 
@@ -1359,7 +1364,7 @@ After that you can start to add additional pages.
 
 [mashroom-portal-remote-messaging-app](../../mashroom-portal-remote-messaging-app/README.md) [inc]
 
-## Demo Plugins
+## Demo Plugin Documentation
 
 [mashroom-demo-webapp](../../mashroom-demo-webapp/README.md) [inc]
 

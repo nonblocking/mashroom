@@ -7,16 +7,12 @@ const cheerio = require('cheerio');
 showdown.extension('toc', () => {
 
     function getHeaderEntries(sourceHtml) {
-        if (typeof window === 'undefined') {
-            return getHeaderEntriesInNodeJs(sourceHtml);
-        } else {
-            return getHeaderEntriesInBrowser(sourceHtml);
-        }
+        return getHeaderEntriesInNodeJs(sourceHtml);
     }
 
     function getHeaderEntriesInNodeJs(sourceHtml) {
         var $ = cheerio.load(sourceHtml);
-        var headers = $('h2, h3, h4, h5, h6');
+        var headers = $('h2, h3, h4');
 
         var headerList = [];
         for (var i = 0; i < headers.length; i++) {
@@ -25,22 +21,6 @@ showdown.extension('toc', () => {
                 continue;
             }
             headerList.push(new TocEntry(el.name, $(el).text(), $(el).attr('id')));
-        }
-
-        return headerList;
-    }
-
-    function getHeaderEntriesInBrowser(sourceHtml) {
-        // Generate dummy element
-        var source = document.createElement('div');
-        source.innerHTML = sourceHtml;
-
-        // Find headers
-        var headers = source.querySelectorAll('h2, h3, h4, h5, h6');
-        var headerList = [];
-        for (var i = 0; i < headers.length; i++) {
-            var el = headers[i];
-            headerList.push(new TocEntry(el.tagName, el.textContent, el.id));
         }
 
         return headerList;
