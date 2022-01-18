@@ -928,7 +928,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppS
     //...
 }
 
-// Load the app
+// Load the App
 const loadedApp = await portalAppService.loadApp(domElID, 'My App', null, /* position */ null, /* appConfig */ {
     someProp: 'foo',
 });
