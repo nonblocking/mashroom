@@ -8,7 +8,9 @@ import App from './App';
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup) => {
-    ReactDOM.render(<App echoWSPath={portalAppSetup.restProxyPaths.echo}/>, portalAppHostElement);
+    const {restProxyPaths} = portalAppSetup;
+
+    ReactDOM.render(<App echoWSPath={restProxyPaths.echo}/>, portalAppHostElement);
 
     return {
         willBeRemoved: () => {
