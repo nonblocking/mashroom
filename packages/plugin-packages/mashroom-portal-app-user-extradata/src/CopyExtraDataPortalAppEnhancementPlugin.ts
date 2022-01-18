@@ -23,7 +23,7 @@ export default class CopyExtraDataPortalAppEnhancementPlugin implements Mashroom
             ...portalAppSetup,
             user: {
                 ...portalAppSetup.user,
-                extraData: user.extraData,
+                extraData: user.extraData || undefined,
             }
         };
     }
