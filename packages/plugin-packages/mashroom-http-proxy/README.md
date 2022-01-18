@@ -64,7 +64,7 @@ You can override the default config in your Mashroom config file like this:
  * _poolMaxSockets_: Max pool size for connections (Default: 10)
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
  * _keepAlive_: Enable/disable connection keep-alive. Set this to *false* if you experience random ECONNRESET with the *nodeHttpProxy* implementation,
-    see: https://github.com/nonblocking/mashroom/issues/77
+    see: [https://github.com/nonblocking/mashroom/issues/77](https://github.com/nonblocking/mashroom/issues/77)
  * _proxyImpl_: Switch the proxy implementation. Currently available are *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy)),
    *request* (based on [request](https://github.com/request/request)) and *default* (which is *nodeHttpProxy* at the moment)
 

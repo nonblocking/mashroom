@@ -179,7 +179,7 @@ If your OpenAM server runs on localhost, the Realm name is *Test* amd the client
 
 Setup:
 
- * Go to: https://console.developers.google.com/
+ * Go to: [https://console.developers.google.com](https://console.developers.google.com)
  * Select *Credentials* from the menu and then the auto created client under *OAuth 2.0 Client IDs*
  * Make sure the *Authorized* redirect URIs contains your redirect URL (e.g. http://localhost:5050/openid-connect-cb)
  * Create a *OAuth consent screen*
@@ -212,7 +212,7 @@ Since Google users don't have authorization roles there is no way to make some u
 
 Setup:
 
- * Go to: https://github.com/settings/developers
+ * Go to: [https://github.com/settings/developers](https://github.com/settings/developers)
  * Click on "New OAuth App"
  * Enter the application name and correct callback URL (e.g. http://localhost:5050/openid-connect-cb)
 

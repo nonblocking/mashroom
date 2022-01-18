@@ -37,7 +37,6 @@ showdown.extension('showdown-include', () => {
     return {
         type: 'lang', //or output
         filter: (text, converter, options) => {
-
             return text
                 .split('\n')
                 .map((line) => {

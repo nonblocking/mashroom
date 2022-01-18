@@ -7,7 +7,7 @@ This is a simple SPA that demonstrates how the _Mashroom Portal_ proxy can be us
 WebSocket server that cannot be reached directly by the client.
 
 By default, it connects to an echo server on ws://ws.ifelse.io/, but that server might go down any time.
-If you can't connect, you can always launch a local WebSocket server (like https://github.com/pmuellr/ws-echo)
+If you can't connect, you can always launch a local WebSocket server (like [https://github.com/pmuellr/ws-echo](https://github.com/pmuellr/ws-echo))
 and change the *targetUri* in *package.json* accordingly.
 
 ## Usage

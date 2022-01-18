@@ -89,7 +89,7 @@ To register your custom background-job plugin add this to _package.json_:
 }
 ```
 
- * _cronSchedule_: The execution schedule for the job, must be a valid cron expression, see: https://github.com/node-cron/node-cron;
+ * _cronSchedule_: The execution schedule for the job, must be a valid cron expression, see [node-cron](https://github.com/node-cron/node-cron);
    if this is null or undefined the job is executed exactly one during startup.
 
 The bootstrap returns the job callback:

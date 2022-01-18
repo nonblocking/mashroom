@@ -1,8 +1,9 @@
 
-![Mashroom Logo](logo-primary-shades.png =150x120)
+<img src="logo-primary-shades.png" alt="Mashroom Logo" style="width:200px;margin-top:40px;"/>
 
 # Mashroom Server
-Version: [version]
+
+Version: **[version]**
 
 [https://www.mashroom-server.com](https://www.mashroom-server.com)
 
@@ -373,7 +374,8 @@ To enable HTTPS and/or HTTP2 you would add:
 
 ### Security
 
-To enable security you have to add the *mashroom-security* package and a provider package such as *mashroom-security-provide-simple*.
+To enable security you have to add the <a href="#mashroomsecurity">mashroom-security</a> package
+and a provider package such as <a href="#mashroomsecuritysimpleprovider">mashroom-security-provider-simple</a>.
 
 The security package provides access control lists based on URLs and a Service for managing and checking resource permissions manually.
 
@@ -407,7 +409,7 @@ You can secure every URL in *Mashroom* with the ACL, based on user role or IP. F
 ```
 
 <span class="panel-info">
-**NOTE**: For more details check the *mashroom-security* documentation below.
+**NOTE**: For more details check the <a href="#mashroomsecurity">mashroom-security</a> documentation below.
 </span>
 
 #### Resource permissions
@@ -440,17 +442,17 @@ export default async (req: Request, res: Response) => {
 This mechanism is used by the Portal for Site, Page and Portal App permissions.
 
 <span class="panel-info">
-**NOTE**: For more details check the *mashroom-security* documentation below.
+**NOTE**: For more details check the <a href="#mashroomsecurity">mashroom-security</a> documentation below.
 </span>
 
 #### HTTP Security Headers
 
-Use the *mashroom-helmet* plugin to add the [Helmet](https://github.com/helmetjs/helmet) middleware,
+Use the <a href="#mashroomhelmet">mashroom-helmet</a> plugin to add the [Helmet](https://github.com/helmetjs/helmet) middleware,
 which adds a bunch of HTTP headers to prevent XSS and other attacks.
 
 #### CSRF
 
-The *mashroom-csrf* plugin adds middleware that checks every POST, PUT and DELETE request for a CSRF token in the HTTP headers or the query.
+The <a href="#mashroomcsrf">mashroom-csrf</a> plugin adds middleware that checks every POST, PUT and DELETE request for a CSRF token in the HTTP headers or the query.
 You need to use the *MashroomCSRFService* to get the current token.
 
 <span class="panel-info">
@@ -540,7 +542,7 @@ And configure log4js like this:
 
 ### Internationalization
 
-The *mashroom-i18n* plugin provides a simple service to lookup messages on the file system based on the current user language.
+The <a href="#mashroomi18n">mashroom-i18n</a> plugin provides a simple service to lookup messages on the file system based on the current user language.
 
 You can use it like this from where ever the *pluginContext* is available:
 
@@ -576,12 +578,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 
 #### Server-side
 
-Add *mashroom-memory-cache* plugin and optionally *mashroom-memory-cache-provider-redis* if you want to use Redis instead of the local memory.
-Many other plugins (such as *mashroom-storage* and *mashroom-portal*) will automatically detect it and use it (see their documentation for more details).
+Add <a href="#mashroommemorycache">mashroom-memory-cache</a> plugin and optionally <a href="#mashroommemorycacheredisprovider">mashroom-memory-cache-provider-redis</a> if you want to use Redis instead of the local memory.
+Many other plugins (such as <a href="#mashroomstorage">mashroom-storage</a> and <a href="#mashroomportal">mashroom-portal</a>) will automatically detect it and use it (see their documentation for more details).
 
 #### Browser
 
-The *mashroom-browser-cache* plugin provides a service to set *Cache-Control* headers based on a policy. For example:
+The <a href="#mashroombrowsercache">mashroom-browser-cache</a> plugin provides a service to set *Cache-Control* headers based on a policy. For example:
 
 ```ts
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
@@ -595,7 +597,7 @@ export default async (req: Request, res: Response) => {
 };
 ```
 
-Other plugins (such as *mashroom-portal*) will automatically use it if present.
+Other plugins (such as <a href="#mashroomportal">mashroom-portal</a>) will automatically use it if present.
 
 <span class="panel-info">
 **NOTE**: This plugin will always set *no-cache* header in *devMode*.
@@ -603,9 +605,9 @@ Other plugins (such as *mashroom-portal*) will automatically use it if present.
 
 ### CDN
 
-Since v2 *Mashroom* ships a CDN plugin that will automatically be used by *mashroom-portal* and other plugins to deliver static assets.
+Since v2 *Mashroom* ships a CDN plugin that will automatically be used by <a href="#mashroomportal">mashroom-portal</a> and other plugins to deliver static assets.
 
-Basically, *mashroom-cdn* consists of a list of CDN hosts and a service to get the next host to use:
+Basically, <a href="#mashroomcdn">mashroom-cdn</a> consists of a list of CDN hosts and a service to get the next host to use:
 
 ```ts
 import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
@@ -622,13 +624,13 @@ export default async (req: Request, res: Response) => {
 ```
 
 <span class="panel-info">
-**NOTE**: The *mashroom-cdn* plugin requires a CDN that works like a transparent proxy, which forwards an identical request to
+**NOTE**: The <a href="#mashroomcdn">mashroom-cdn</a> plugin requires a CDN that works like a transparent proxy, which forwards an identical request to
 the *origin* (in this case Mashroom) if does not exist yet.
 </span>
 
 ### Virtual Host Path Mapping
 
-The *mashroom-vhost-path-mapper* plugin can be used to map frontend paths to *internal* paths, based on virtual hosts.
+The <a href="#mashroomvirtualhostpathmapper">mashroom-vhost-path-mapper</a> plugin can be used to map frontend paths to *internal* paths, based on virtual hosts.
 
 So, lets say you want to map the *Mashroom Portal* site *site1*, reachable under http://localhost:5050/portal/site1,
 to www.my-company.com. In that case you would configure the plugin like this:
@@ -661,9 +663,9 @@ If your *frontend base path* is different, e.g. www.my-company.com/foo, you woul
 If you're going to run _Mashroom Server_ in a cluster you should keep in mind:
 
  * Use as session provider that can provide a shared session for all instances (such as _mashroom-session-provider-filestore_)
- * If you use *mashroom-messaging* to communicate between browser windows you need to configure an external broker
- * If you use *mashroom-memory-cache* you should configure Redis as shared cache server to maximize the hits
- * If you use *mashroom-storage* (e.g. for the Portal) you either have to use Mongo as backend or to use a shared folder (e.g. SAN) for all instances
+ * If you use <a href="#mashroommessaging">mashroom-messaging</a> to communicate between browser windows you need to configure an external broker
+ * If you use <a href="#mashroommemorycache">mashroom-memory-cache</a> you should configure Redis as shared cache server to maximize the hits
+ * If you use <a href="#mashroomstorage">mashroom-storage</a> (e.g. for the Portal) you either have to use Mongo as backend or to use a shared folder (e.g. SAN) for all instances
  * If you use file log appenders you either have to make sure that your _log4js_ config creates a file per node process, or
  you have to install _pm2-intercom_ if you're using _pm2_. Read the _log4js_ clustering documentation for details:
  [https://github.com/log4js-node/log4js-node/blob/master/docs/clustering.md](https://github.com/log4js-node/log4js-node/blob/master/docs/clustering.md)
@@ -733,11 +735,44 @@ Every Portal App (SPA) has to expose a global _bootstrap_ method. The _Portal Cl
 server, loads all required resources and calls then the _bootstrap_ with the configuration object and the DOM element
 where the app should run in.
 
-### Proxy
+### HTTP/Websocket Proxy
 
 The built-in proxy allows the Portal App to access internal APIs. It supports HTTP, Websocket and SSE.
 
-The access to a proxy url can be restricted to specific roles.
+You have to define proxies like this in the plugin definition:
+
+```json
+"defaultConfig": {
+  "proxies": {
+    "myApi": {
+      "targetUri": "http://localhost:1234/api/v1"
+    }
+  }
+}
+```
+
+To be able to use it in the boostrap of your App like this:
+
+```ts
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup) => {
+    const {lang, restProxyPaths} = portalAppSetup;
+
+    fetch(`${restProxyPaths.myApi}/foo/bar?q=xxx`, {
+        credentials: 'same-origin',
+    }).then( /* ... */ );
+
+    // ...
+};
+```
+
+#### Proxy Interceptors
+
+Plugins of type *http-proxy-interceptor* can be used to intercept all proxy calls and to check, enrich or manipulate
+requests or responses.
+
+A typical use case is to add some security headers (e.g. Bearer) or do some redirect or caching.
+
+Checkout out the <a href="#mashroomhttpproxy">mashroom-http-proxy</a> documentation for details.
 
 ### Remote Apps
 
@@ -843,7 +878,7 @@ SSR improves page performance and SEO heavily. To improve it further we recommen
  * Consider the *renderTimoutMs* value in the Portal's *ssrConfig*. This timeout determines how long the Portal will wait for
    an SSR result. It is safe to use a very low value, because if the SSR takes to long it automatically switches to client-side rendering,
    but puts the result (when ready) into the memory cache. So, subsequent calls will get the cached SSR HTML.
- * Use the *mashroom-memory-cache*, because the Portal will use it to cache the results of server-side rendering
+ * Use the <a href="#mashroommemorycache">mashroom-memory-cache</a>, because the Portal will use it to cache the results of server-side rendering
  * Use a reverse proxy for TLS termination and enable compression and caching there
  * Use a CDN to accelerate the delivering of resources
  * In your server-side rendering Apps make sure to avoid [Cumulative Layout Shift](https://web.dev/cls/)
@@ -943,7 +978,7 @@ await portalAppService.unloadApp(loadedApp.id);
 Make sure you call unloadApp() if you want to remove/replace an App and not just remove the host DOM node,
 because like that the resources are not properly removed from the browser.
 
-Here for example the *Mashroom Portal Demo Composite App*:
+Here for example the <a href="#mashroomportaldemocompositeapp">mashroom-portal-demo-composite-app</a>:
 
 ![Mashroom Portal Composite App](mashroom_portal_composite_app.png)
 
@@ -1006,7 +1041,7 @@ You need to implement three templates:
 
 <span class="panel-info">
 **NOTE**: If you want to have a type-safe template we recommend using [React](https://github.com/reactjs/express-react-views).
-Have a look at *mashroom-portal-demo-alternative-theme* for an example.
+Have a look at <a href="#mashroomportaldemoalternativetheme">mashroom-portal-demo-alternative-theme</a> for an example.
 </span>
 
 #### Themable Portal Apps
@@ -1046,7 +1081,7 @@ browsers and even with 3rd party systems (when a external messaging system such 
 Page enhancement plugins allow to add some extra script or style to a page. Either to any page or based on some rules
 (e.g. page URL or the user agent).
 
-Checkout the *mashroom-portal* documentation for details.
+Checkout the <a href="#mashroomportal">mashroom-portal</a> documentation for details.
 
 ### Portal App Enhancements
 
@@ -1055,7 +1090,7 @@ It can also be used to add custom services on the client side (passed with *clie
 
 A typical use case would be to add some extra data to the *user* or to augment the *appConfig*.
 
-Checkout the *mashroom-portal* documentation for details.
+Checkout the <a href="#mashroomportal">mashroom-portal</a> documentation for details.
 
 ### Security
 
@@ -1104,8 +1139,8 @@ Proxy access can be restricted by adding a *restrictToRole* property in the plug
 ```json
 "defaultConfig": {
   "proxies": {
-    "spaceXApi": {
-      "targetUri": "https://api.spacexdata.com/v3",
+    "myApi": {
+      "targetUri": "http://localhost:1234/api/v1",
       "sendPermissionsHeader": false,
       "restrictToRoles": ["Role1"]
     }
@@ -1125,9 +1160,9 @@ Headers that can be passed to the Backend:
 
  * X-USER-PERMISSIONS: A comma separated list of the permission keys that resolve to true; can be activated by setting
    *sendPermissionsHeader* to true on the proxy definition
- * X-USER-NAME and others: Can be activated by adding the *mashroom-http-proxy-add-user-headers* plugin
+ * X-USER-NAME and others: Can be activated by adding the <a href="#mashroomadduserheaderhttpproxyinterceptor">http-proxy-add-user-headers</a> plugin
  * X-USER-ID-TOKEN: The ID token if the OpenID-Connect is used a security provider;
-   can be activated by adding the *mashroom-http-proxy-add-id-token* plugin
+   can be activated by adding the <a href="#mashroomaddidtokenhttpproxyinterceptor">mashroom-http-proxy-add-id-token</a> plugin
 
 #### Site and Page Security
 
@@ -1189,7 +1224,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 };
 ```
 
-Here for example the *mashroom-portal-demo-react-app2* plugin which has a custom editor:
+Here for example the <a href="#mashroomportaldemoreactapp2">mashroom-portal-demo-react-app2</a> plugin which has a custom editor:
 
 ![Mashroom Portal Custom App Config Editor](mashroom_portal_custom_app_config_editor.png)
 
@@ -1342,5 +1377,8 @@ After that you can start to add additional pages.
 
 [mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc]
 
+[mashroom-portal-demo-websocket-proxy-app](../../mashroom-portal-demo-websocket-proxy-app/README.md) [inc]
+
 [mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc]
 
+[mashroom-portal-demo-composite-app](../../mashroom-portal-demo-composite-app/README.md) [inc]

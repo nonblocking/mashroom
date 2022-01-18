@@ -24,6 +24,10 @@ h4, h5, h6 {
     font-weight: bold;
 }
 
+h1 {
+    margin: 40px 0 120px 0;
+}
+
 h2 {
     margin: 120px 0 30px 0;
 }
@@ -46,11 +50,6 @@ body > p:first-child img {
     margin: 0;
 }
 
-/* Title */
-p + h1 {
-    margin: 20px 0 60px 0;
-}
-
 p {
     clear: both;
     margin: 10px 0;
@@ -67,6 +66,15 @@ li {
 a {
     color: #504B88;
     text-decoration: none;
+}
+
+a[href*="//"]:after {
+    display: inline-block;
+    content: ' ' url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgIHZpZXdCb3g9IjAgLTI1NiAxODUwIDE4NTAiCiAgICB3aWR0aD0iMTAwJSIKICAgIGhlaWdodD0iMTAwJSI+CiAgICA8ZyB0cmFuc2Zvcm09Im1hdHJpeCgxLDAsMCwtMSwzMC4zNzI4ODEsMTQyNi45NDkyKSIgaWQ9ImczMDI3Ij4KICAgICAgICA8cGF0aAogICAgICAgICAgICBkPSJNIDE0MDgsNjA4IFYgMjg4IFEgMTQwOCwxNjkgMTMyMy41LDg0LjUgMTIzOSwwIDExMjAsMCBIIDI4OCBRIDE2OSwwIDg0LjUsODQuNSAwLDE2OSAwLDI4OCB2IDgzMiBRIDAsMTIzOSA4NC41LDEzMjMuNSAxNjksMTQwOCAyODgsMTQwOCBoIDcwNCBxIDE0LDAgMjMsLTkgOSwtOSA5LC0yMyB2IC02NCBxIDAsLTE0IC05LC0yMyAtOSwtOSAtMjMsLTkgSCAyODggcSAtNjYsMCAtMTEzLC00NyAtNDcsLTQ3IC00NywtMTEzIFYgMjg4IHEgMCwtNjYgNDcsLTExMyA0NywtNDcgMTEzLC00NyBoIDgzMiBxIDY2LDAgMTEzLDQ3IDQ3LDQ3IDQ3LDExMyB2IDMyMCBxIDAsMTQgOSwyMyA5LDkgMjMsOSBoIDY0IHEgMTQsMCAyMywtOSA5LC05IDksLTIzIHogbSAzODQsODY0IFYgOTYwIHEgMCwtMjYgLTE5LC00NSAtMTksLTE5IC00NSwtMTkgLTI2LDAgLTQ1LDE5IEwgMTUwNywxMDkxIDg1NSw0MzkgcSAtMTAsLTEwIC0yMywtMTAgLTEzLDAgLTIzLDEwIEwgNjk1LDU1MyBxIC0xMCwxMCAtMTAsMjMgMCwxMyAxMCwyMyBsIDY1Miw2NTIgLTE3NiwxNzYgcSAtMTksMTkgLTE5LDQ1IDAsMjYgMTksNDUgMTksMTkgNDUsMTkgaCA1MTIgcSAyNiwwIDQ1LC0xOSAxOSwtMTkgMTksLTQ1IHoiCiAgICAgICAgICAgIHN0eWxlPSJmaWxsOiM1MDRCODgiIC8+CiAgICA8L2c+Cjwvc3ZnPg==);
+    width: 14px;
+    height: 14px;
+    color: #504B88;
+    padding: 0 5px;
 }
 
 a:hover {
@@ -125,6 +133,31 @@ table td:last-child {
     border-right: none;
 }
 
+#toc-menu {
+    display: none;
+    position: fixed;
+    top: 30px;
+    left: 0;
+    padding: 5px;
+    cursor: pointer;
+    border: 1px solid #aaa;
+    box-shadow: 0 0 2px #aaa;
+    background-color: white;
+}
+
+#toc-wrapper {
+    display: none;
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #aaa;
+    max-width: 30%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    overflow-y: scroll;
+    height: 100%;
+}
+
 .panel-info {
     display: block;
     padding: 10px;
@@ -141,6 +174,16 @@ table td:last-child {
     border: 1px solid #ffc107;
     background-color: #fffbf2;
     max-width: 80vw;
+}
+
+/* PDF only */
+
+@media print {
+
+    #tableofcontents {
+        margin-top: 550px;
+    }
+
 }
 
 /*

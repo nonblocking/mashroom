@@ -9,7 +9,6 @@ showdown.extension('showdown-replace-version', () => {
     return {
         type: 'lang', //or output
         filter: (text, converter, options) => {
-
             return text.replace(/\[version\]/, serverPackageJson.version);
         }
     };

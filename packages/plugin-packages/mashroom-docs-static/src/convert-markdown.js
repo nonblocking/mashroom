@@ -42,48 +42,22 @@ async function main() {
 
             <div id="toc-menu" style="display: none">&#9776;</div>
             <div id="toc-wrapper"></div>
-            <style>
-                #toc-menu {
-                    display: none;
-                    position: fixed;
-                    top: 30px;
-                    left: 0;
-                    padding: 5px;
-                    cursor: pointer;
-                    border: 1px solid #aaa;
-                    box-shadow: 0 0 2px #aaa;
-                    background-color: white;
-                }
-
-                #toc-wrapper {
-                    display: none;
-                    background-color: white;
-                    padding: 10px;
-                    border: 1px solid #aaa;
-                    max-width: 30%;
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    overflow-y: scroll;
-                    height: 100%;
-                }
-            </style>
             <script>
                 const tocMenu = document.getElementById('toc-menu');
                 const tocWrapper = document.getElementById('toc-wrapper');
-                tocMenu.addEventListener('click', (e) => {
+                tocMenu.addEventListener('click', function(e) {
                     e.stopPropagation();
                     tocWrapper.style.display = 'block';
                     tocMenu.style.display = 'none';
                 });
-                tocWrapper.addEventListener('click', (e) => {
+                tocWrapper.addEventListener('click', function(e) {
                     e.stopPropagation();
                     if (e.target instanceof HTMLAnchorElement) {
                     tocWrapper.style.display = 'none';
                     tocMenu.style.display = 'block';
                     }
                 });
-                document.addEventListener('click', (e) => {
+                document.addEventListener('click', function(e) {
                     if (tocWrapper.style.display === 'block' && e.screenX > tocWrapper.clientWidth) {
                         tocWrapper.style.display = 'none';
                         tocMenu.style.display = 'block';
@@ -93,7 +67,7 @@ async function main() {
                 tocWrapper.innerHTML = toc.innerHTML;
                 if (toc) {
                     const { clientHeight: tocHeight } = toc;
-                    window.addEventListener('scroll', () => {
+                    window.addEventListener('scroll', function() {
                       if (window.scrollY > (toc.offsetTop + tocHeight)) {
                           tocMenu.style.display = 'block';
                       } else {
@@ -104,6 +78,11 @@ async function main() {
                       tocMenu.style.display = 'block';
                     }
                 }
+
+                // Load external links in new tabs
+                document.querySelectorAll('a[href*="//"]').forEach(function(link) {
+                    link.target = '_blank';
+                });
             </script>
         </body>`;
 
