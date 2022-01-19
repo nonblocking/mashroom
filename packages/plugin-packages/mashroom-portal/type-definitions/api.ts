@@ -577,7 +577,7 @@ export type MashroomPortalAppEnhancement = {
     /**
      * The actual plugin
      */
-    plugin: MashroomPortalAppEnhancementPlugin
+    plugin: MashroomPortalAppEnhancementPlugin | undefined;
 }
 
 export interface MashroomPortalAppEnhancementPlugin {

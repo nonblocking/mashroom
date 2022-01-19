@@ -42,7 +42,10 @@ const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, por
     const enhancements = pluginRegistry.portalAppEnhancements;
     for (let i = 0; i < enhancements.length; i++) {
         try {
-            enhancedAppSetup = await enhancements[i].plugin.enhancePortalAppSetup(enhancedAppSetup, portalApp, req);
+            const plugin = enhancements[i].plugin;
+            if (plugin) {
+                enhancedAppSetup = await plugin.enhancePortalAppSetup(enhancedAppSetup, portalApp, req);
+            }
         } catch (e) {
             logger.warn(`Calling Portal App enhancer ${enhancements[i].name} failed!`, e);
         }

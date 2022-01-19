@@ -1131,7 +1131,7 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": ["name", "type"],
             "additionalProperties": false
         },
         "MashroomSecurityProviderPluginDefinition": {

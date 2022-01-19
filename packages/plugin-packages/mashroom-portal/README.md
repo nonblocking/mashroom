@@ -1286,7 +1286,7 @@ To register a new portal-app-enhancement plugin add this to _package.json_:
 }
 ```
 
- * _bootstrap_: Path to the script that contains the bootstrap for the plugin
+ * _bootstrap_: Path to the script that contains the bootstrap for the plugin (could be omitted, if portalCustomClientServices is used)
  * _portalCustomClientServices_: A map of client services that should be injected in the _clientServices_ object the
   Portal Apps receive. The value (in this example MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in _window_).
 
