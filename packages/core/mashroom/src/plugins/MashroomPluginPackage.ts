@@ -84,7 +84,6 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
     private async _buildPackage() {
         this._status = 'building';
         this._errorMessage = null;
-        this._registryConnector.removeListener('updated', this._boundOnUpdated);
 
         let packageJson = null;
         try {
@@ -142,10 +141,11 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         this._pluginPackageDefinition.plugins = plugins;
 
         if (this._builder) {
+            // Ignore updates during build
+            this._registryConnector.removeListener('updated', this._boundOnUpdated);
             this._builder.addToBuildQueue(this._name, this._pluginPackagePath, this._pluginPackageDefinition.devModeBuildScript);
         } else {
             this._emitReady();
-            this._registryConnector.on('updated', this._boundOnUpdated);
         }
     }
 
@@ -161,9 +161,14 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         }
 
         this._logger.debug('Loading plugin config file:', externalPluginConfigFile);
+
         // Reload
         delete require.cache[externalPluginConfigFile];
-        return require(externalPluginConfigFile);
+        try {
+            return require(externalPluginConfigFile);
+        } catch (e) {
+            this._logger.error(`Error processing plugin definition in: ${externalPluginConfigFile}: File exists but is not readable!`);
+        }
     }
 
     private _onBuildFinished(event: MashroomPluginPackageBuilderEvent) {
