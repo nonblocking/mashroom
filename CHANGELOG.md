@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.0.0-alpha.1 (January 21, 2022)
+
  * Portal: Prevent misusing resource requests for Remote Apps to access proxy targets (if a proxy target is a sub-path of the resource base URL)
  * Portal: Added config property *addDemoPages* to start with an empty Portal if set to false
  * Theme refurbishment: Switched to a new cool logo and a slightly more blueish primary color
