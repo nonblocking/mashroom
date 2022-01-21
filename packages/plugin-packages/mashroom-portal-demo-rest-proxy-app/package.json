@@ -4,14 +4,14 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.9.3",
+    "version": "2.0.0-alpha.0",
     "sideEffects": false,
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "1.9.3",
-        "@mashroom/mashroom-portal-ui-commons": "1.9.3",
+        "@mashroom/mashroom-portal": "2.0.0-alpha.0",
+        "@mashroom/mashroom-portal-ui-commons": "2.0.0-alpha.0",
         "@types/react": "^17.0.38",
         "@types/react-dom": "^17.0.11",
         "react": "^17.0.2",
@@ -43,8 +43,7 @@
                 "defaultConfig": {
                     "title": "Demo REST Proxy App",
                     "category": "Demo",
-                    "defaultRestrictViewToRoles": [
-                    ],
+                    "defaultRestrictViewToRoles": [],
                     "proxies": {
                         "spaceXApi": {
                             "targetUri": "https://api.spacexdata.com/v4",
