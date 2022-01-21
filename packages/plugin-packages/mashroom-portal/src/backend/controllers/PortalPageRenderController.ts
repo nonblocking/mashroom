@@ -168,8 +168,8 @@ export default class PortalPageRenderController {
 
                 evalScript = `
                     // Update page metadata
-                    const metaDescription = document.querySelector('meta[name="description"]');
-                    const metaKeywords = document.querySelector('meta[name="keywords"]');
+                    var metaDescription = document.querySelector('meta[name="description"]');
+                    var metaKeywords = document.querySelector('meta[name="keywords"]');
                     if (metaDescription) {
                         metaDescription.setAttribute('content', '${page.description || ''}');
                     }
@@ -511,12 +511,15 @@ export default class PortalPageRenderController {
         const appAreaIds = Object.keys(portalAppInfo);
         return `
             ['${appAreaIds.join('\', \'')}'].forEach(function(appAreaId) {
-                const scripts = document.getElementById(appAreaId).querySelectorAll('script');
-                for (var i = 0; i < scripts.length; i++) {
-                    try {
-                        eval(scripts[i].innerText);
-                    } catch (e) {
-                        console.error(e);
+                var appAreaEl = document.getElementById(appAreaId);
+                if (appAreaEl) {
+                    var scripts = appAreaEl.querySelectorAll('script');
+                    for (var i = 0; i < scripts.length; i++) {
+                        try {
+                            eval(scripts[i].innerText);
+                        } catch (e) {
+                            console.error(e);
+                        }
                     }
                 }
             });
