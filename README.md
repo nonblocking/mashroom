@@ -73,11 +73,11 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 ## Homepage
 
-https://www.mashroom-server.com
+[https://www.mashroom-server.com](https://www.mashroom-server.com)
 
 ## Blog
 
-https://medium.com/mashroom-server
+[https://medium.com/mashroom-server](https://medium.com/mashroom-server)
 
 ## Development
 
@@ -100,22 +100,22 @@ The test server will be available at http://localhost:5050
 
 ### Plugin Examples
 
-https://github.com/nonblocking/mashroom-plugin-demos
+[https://github.com/nonblocking/mashroom-plugin-demos](https://github.com/nonblocking/mashroom-plugin-demos)
 
 ### Remote Portal App Demos
 
- * https://github.com/nonblocking/mashroom-demo-remote-portal-app
- * https://github.com/nonblocking/mashroom-demo-remote-portal-app-ssr (supports server-side rendering)
+ * [https://github.com/nonblocking/mashroom-demo-remote-portal-app](https://github.com/nonblocking/mashroom-demo-remote-portal-app)
+ * [https://github.com/nonblocking/mashroom-demo-ssr-remote-portal-app](https://github.com/nonblocking/mashroom-demo-ssr-remote-portal-app) (supports server-side rendering)
 
 ### Dynamic Cockpit Demo
 
-https://github.com/nonblocking/mashroom-demo-dynamic-cockpit
+[https://github.com/nonblocking/mashroom-demo-dynamic-cockpit](https://github.com/nonblocking/mashroom-demo-dynamic-cockpit)
 
 ### Microfrontend Platform based on Mashroom and Kubernetes Demo
 
-https://github.com/nonblocking/microfrontend-platform-kubernetes
+[https://github.com/nonblocking/microfrontend-platform-kubernetes](https://github.com/nonblocking/microfrontend-platform-kubernetes)
 
 ### Full Documentation
 
-https://www.mashroom-server.com/documentation
+[https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
 
