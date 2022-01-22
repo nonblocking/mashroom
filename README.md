@@ -30,12 +30,12 @@ Plugin loaders itself are also just plugins, so it is possible to extend the lis
     (which again can serve as building blocks for other composite Apps)
   * Each App receives a config object which can be different per instance and a number of JavaScript services
     (e.g. to connect to the message bus or to load other Apps)
+  * Support for **hybrid rendering** for both the Portal pages and SPAs
+    (If an SPA supports server-side rendering the initial HTML can be incorporated
+    into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering)
   * The App config can be edited via Admin Toolbar or a custom Editor App which again is just a plain SPA
   * Client-side message bus for inter-app communication which can be extended to server-side messaging
     (to communicate with Apps in other browsers or even in 3rd party systems)
-  * Support for **hybrid rendering** for both the Portal pages and SPAs
-    (If an SPA supports server side rendering the initial HTML can be incorporated
-    into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering)
   * Arbitrary (custom) layouts for pages
   * Extensive **theming** support
     (Themes can be written in any Express template language)
