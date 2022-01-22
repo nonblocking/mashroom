@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * JSON Schemas: Fixed validation of custom plugin definitions
 
 ## 2.0.0-alpha.1 (January 21, 2022)
 

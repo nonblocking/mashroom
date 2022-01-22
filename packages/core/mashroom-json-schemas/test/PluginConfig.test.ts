@@ -213,4 +213,12 @@ describe('plugin config validation', () => {
         expect(valid).toBeTruthy();
     });
 
+    it('succeeds at a custom plugin config', () => {
+        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'custom-plugin.json')).toString("utf-8"));
+        const validate = ajv.compile(schema);
+        const valid = validate(config);
+
+        expect(valid).toBeTruthy();
+    });
+
 });

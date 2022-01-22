@@ -1242,6 +1242,49 @@
             "required": ["name", "type", "bootstrap"],
             "additionalProperties": false
         },
+        "MashroomCustomPluginDefinition": {
+            "not": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "pattern": "(plugin-loader|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|remote-portal-app-registry|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
+                    }
+                }
+            },
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": ["name", "type", "bootstrap"]
+        },
         "MashroomPlugins": {
             "type": "object",
             "oneOf": [
@@ -1307,6 +1350,9 @@
                 },
                 {
                     "$ref": "#/definitions/MashroomStorageProviderPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomCustomPluginDefinition"
                 }
             ]
         }

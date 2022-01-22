@@ -1,0 +1,17 @@
+{
+    "$schema": "../../../schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "A fancy custom plugin",
+            "type": "my-custom-plugin-type",
+            "bootstrap": "./dist/bootstrap.js",
+            "requires": [
+                "Mashroom Session Middleware"
+            ],
+            "defaultConfig": {
+                "foo": 2
+            }
+        }
+    ]
+}
