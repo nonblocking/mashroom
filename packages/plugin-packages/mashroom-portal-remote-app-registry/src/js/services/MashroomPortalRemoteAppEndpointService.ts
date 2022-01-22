@@ -100,9 +100,9 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         }
 
         const collection = await this._getRemotePortalAppEndpointsCollection();
-        const endpoints = await collection.find();
+        const {result} = await collection.find();
 
-        return Object.freeze([...sessionEndpoints, ...endpoints]);
+        return Object.freeze([...sessionEndpoints, ...result]);
     }
 
     async updateRemotePortalAppEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {

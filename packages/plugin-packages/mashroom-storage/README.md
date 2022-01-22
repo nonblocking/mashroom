@@ -78,7 +78,7 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     /**
      * Find all items that match given filter. The filter supports a subset of Mongo's filter operations (like $gt, $regex, ...).
      */
-    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>>;
+    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<MashroomStorageSearchResult<T>>;
 
     /**
      * Return the first item that matches the given filter or null otherwise.

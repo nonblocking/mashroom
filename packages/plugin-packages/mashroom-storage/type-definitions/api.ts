@@ -1,6 +1,6 @@
 
 
-import type {MashroomPluginConfig, MashroomPluginContextHolder} from "@mashroom/mashroom/type-definitions";
+import type {MashroomPluginConfig, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 
 export type MashroomStorageRecord = Record<string, any>;
 
@@ -32,15 +32,20 @@ type MongoLikeRootFilterOperators<T> = {
 
 type MongoLikeFilter<T> = {
     [P in keyof T]?: Condition<T[P]>;
-} & {
+}  & MongoLikeRootFilterOperators<T> & {
     // Nested properties
     [key: string]: any
 }
 
-export type MashroomStorageObjectFilter<T extends MashroomStorageRecord> = MongoLikeFilter<T> & MongoLikeRootFilterOperators<T>;
+export type MashroomStorageObjectFilter<T extends MashroomStorageRecord> = MongoLikeFilter<T>;
 
 export type MashroomStorageSort<T extends MashroomStorageRecord> = {
     [P in keyof Partial<T>]: 'asc' | 'desc';
+}
+
+export type MashroomStorageSearchResult<T> = {
+    result: Array<MashroomStorageObject<T>>;
+    totalCount: number;
 }
 
 export type MashroomStorageUpdateResult = {
@@ -58,7 +63,7 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     /**
      * Find all items that match given filter. The filter supports a subset of Mongo's filter operations (like $gt, $regex, ...).
      */
-    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>>;
+    find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<MashroomStorageSearchResult<T>>;
 
     /**
      * Return the first item that matches the given filter or null otherwise.

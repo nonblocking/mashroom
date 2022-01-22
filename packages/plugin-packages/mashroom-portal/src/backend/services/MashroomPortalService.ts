@@ -50,7 +50,8 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
 
     async getSites(limit?: number): Promise<Array<MashroomPortalSite>> {
         const sitesCollection = await this._getSitesCollections();
-        return await sitesCollection.find(undefined, limit);
+        const {result} = await sitesCollection.find(undefined, limit);
+        return result;
     }
 
     async getSite(siteId: string): Promise<MashroomPortalSite | null | undefined> {

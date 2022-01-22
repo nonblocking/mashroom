@@ -107,7 +107,8 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
 
     async getExistingRoles(request: Request): Promise<Array<MashroomSecurityRoleDefinition>> {
         const roleDefinitionsCollection = await this._getRoleDefinitionsCollection(request);
-        return await roleDefinitionsCollection.find();
+        const {result} = await roleDefinitionsCollection.find();
+        return result;
     }
 
     async updateResourcePermission(request: Request, resource: MashroomSecurityProtectedResource): Promise<void> {

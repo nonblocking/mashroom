@@ -9,14 +9,15 @@ import ConcurrentAccessError from '../errors/ConcurrentAccessError';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
-    MashroomStorageDeleteResult,
     MashroomStorageObject,
     MashroomStorageObjectFilter,
     MashroomStorageRecord,
+    MashroomStorageSearchResult,
     MashroomStorageUpdateResult,
+    MashroomStorageDeleteResult,
     MashroomStorageSort,
 } from '@mashroom/mashroom-storage/type-definitions';
-import {JsonDB} from '../../type-definitions';
+import type {JsonDB} from '../../type-definitions';
 
 const readFile = promisify(fs.readFile);
 const writeFile = promisify(fs.writeFile);
@@ -38,15 +39,15 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         this._logger = _loggerFactory('mashroom.storage.filestore');
     }
 
-    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>> {
+    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<MashroomStorageSearchResult<T>> {
         return this._readOperation((collection) => {
-            return this._find(collection, filter, limit, skip, sort);
+            return this._find(collection, true, filter, limit, skip, sort);
         });
     }
 
     async findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined> {
         return this._readOperation((collection) => {
-            const result = this._find(collection, filter, 1);
+            const {result} = this._find(collection, false, filter, 1);
             if (result.length === 0) {
                 return null;
             }
@@ -119,18 +120,18 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
     async deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._updateOperation(async (collection) => {
             const existingItems = await this.find(filter);
-            existingItems.forEach((existingItem) => {
+            existingItems.result.forEach((existingItem) => {
                 const index = collection.indexOf(existingItem);
                 collection.splice(index, 1);
             });
 
             return {
-                deletedCount: existingItems.length,
+                deletedCount: existingItems.result.length,
             };
         });
     }
 
-    private _find(data: Array<MashroomStorageObject<T>>, filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Array<MashroomStorageObject<T>> {
+    private _find(data: Array<MashroomStorageObject<T>>, withTotalCount: boolean, filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): MashroomStorageSearchResult<T> {
         if (filter || sort) {
             const query = new Query(filter || {});
             let cursor = query.find(data);
@@ -152,13 +153,24 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
             if (skip) {
                 cursor = cursor.skip(skip);
             }
-            return cursor.all() as Array<MashroomStorageObject<T>>;
+            const result = cursor.all() as Array<MashroomStorageObject<T>>;
+            let totalCount = -1;
+            if (withTotalCount) {
+                totalCount = cursor.count();
+            }
+            return {
+                result,
+                totalCount
+            };
         } else {
             let result = data;
             if (limit || skip) {
                 result = result.slice(skip || 0, limit ? (skip || 0) + limit : undefined);
             }
-            return result;
+            return {
+                result,
+                totalCount: -1,
+            };
         }
     }
 

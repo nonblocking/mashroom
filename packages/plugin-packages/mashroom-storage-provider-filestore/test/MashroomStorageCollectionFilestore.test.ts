@@ -48,7 +48,7 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         const insertedItems = await storage.find();
 
-        expect(insertedItems.length).toBe(100);
+        expect(insertedItems.result.length).toBe(100);
     });
 
     it('returns first match with findOne', async () => {
@@ -84,8 +84,8 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         expect(result1).toBeTruthy();
         expect(result2).toBeTruthy();
-        expect(result1.length).toBe(3);
-        expect(result2.length).toBe(1);
+        expect(result1.result.length).toBe(3);
+        expect(result2.result.length).toBe(1);
     });
 
     it('supports filter operators', async () => {
@@ -107,13 +107,17 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result2).toBeTruthy();
         expect(result3).toBeTruthy();
         expect(result4).toBeTruthy();
-        expect(result1.length).toBe(1);
-        expect(result1[0].b).toBe(2);
-        expect(result2.length).toBe(3);
-        expect(result2[2].b).toBe(2);
-        expect(result3.length).toBe(3);
-        expect(result3[0].b).toBe(2);
-        expect(result4.length).toBe(1);
+        expect(result1.result.length).toBe(1);
+        expect(result1.totalCount).toBe(1);
+        expect(result1.result[0].b).toBe(2);
+        expect(result2.result.length).toBe(3);
+        expect(result2.totalCount).toBe(3);
+        expect(result2.result[2].b).toBe(2);
+        expect(result3.result.length).toBe(3);
+        expect(result3.totalCount).toBe(3);
+        expect(result3.result[0].b).toBe(2);
+        expect(result4.result.length).toBe(1);
+        expect(result4.totalCount).toBe(1);
     });
 
     it('updates all properties of an existing property with updateOne', async () => {
@@ -160,8 +164,8 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result2 = await storage.find({b: 1});
 
         expect(deleteResult.deletedCount).toBe(1);
-        expect(result1.length).toBe(1);
-        expect(result2.length).toBe(0);
+        expect(result1.result.length).toBe(1);
+        expect(result2.result.length).toBe(0);
     });
 
     it('deletes all existing items with deleteMany', async () => {
@@ -177,8 +181,8 @@ describe('MashroomStorageCollectionFilestore', () => {
         const result2 = await storage.find({a: 1});
 
         expect(deleteResult.deletedCount).toBe(3);
-        expect(result1.length).toBe(3);
-        expect(result2.length).toBe(0);
+        expect(result1.result.length).toBe(3);
+        expect(result2.result.length).toBe(0);
     });
 
 });

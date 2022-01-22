@@ -5,11 +5,12 @@ import type {MashroomPluginContextHolder, MashroomLogger} from '@mashroom/mashro
 import type {MashroomMemoryCacheService} from '@mashroom/mashroom-memory-cache/type-definitions';
 import type {
     MashroomStorageCollection,
-    MashroomStorageDeleteResult,
     MashroomStorageObject,
     MashroomStorageObjectFilter,
     MashroomStorageRecord,
+    MashroomStorageSearchResult,
     MashroomStorageUpdateResult,
+    MashroomStorageDeleteResult,
     MashroomStorageSort
 } from '../../type-definitions';
 
@@ -27,7 +28,7 @@ export default class MashroomStorageCollectionMemoryCacheWrapper<T extends Mashr
         this._logger = this._pluginContextHolder.getPluginContext().loggerFactory('mashroom.storage.memorycache');
     }
 
-    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>> {
+    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<MashroomStorageSearchResult<T>> {
        return this._wrapFind([filter, limit, skip, sort], () => {
           return this._delegate.find(filter, limit, skip, sort);
        });

@@ -5,11 +5,12 @@ import type {Collection, OptionalUnlessRequiredId} from 'mongodb';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
-    MashroomStorageDeleteResult,
     MashroomStorageObject,
     MashroomStorageObjectFilter,
     MashroomStorageRecord,
+    MashroomStorageSearchResult,
     MashroomStorageUpdateResult,
+    MashroomStorageDeleteResult,
     MashroomStorageSort,
 } from '@mashroom/mashroom-storage/type-definitions';
 
@@ -21,7 +22,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         this._logger = _loggerFactory('mashroom.storage.mongodb');
     }
 
-    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<Array<MashroomStorageObject<T>>> {
+    async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<MashroomStorageSearchResult<T>> {
         const collection = await this._getCollection<MashroomStorageObject<T>>();
         let cursor = collection.find(filter || {});
         if (sort) {
@@ -33,7 +34,12 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         if (limit) {
             cursor = cursor.limit(limit);
         }
-        return await cursor.toArray() as Array<MashroomStorageObject<T>>;
+        const result = await cursor.toArray() as Array<MashroomStorageObject<T>>;
+        const totalCount = await cursor.count();
+        return {
+            result,
+            totalCount,
+        };
     }
 
     async findOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageObject<T> | null | undefined> {

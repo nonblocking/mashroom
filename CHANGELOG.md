@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Storage: **BREAKING CHANGE**: *MashroomStorageCollection.find()* returns now a wrapper object with metadata
+   such as the *totalCount* instead of directly the result
  * JSON Schemas: Fixed validation of custom plugin definitions
 
 ## 2.0.0-alpha.1 (January 21, 2022)

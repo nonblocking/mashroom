@@ -18,8 +18,8 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
     const portalAppInstancesCollection: MashroomStorageCollection<MashroomPortalAppInstance> = await storageService.getCollection(PORTAL_APP_INSTANCES_COLLECTION);
     const rolesCollection: MashroomStorageCollection<MashroomSecurityRoleDefinition> = await storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
 
-    const sites = await sitesCollection.find(undefined, 1);
-    if (sites.length > 0) {
+    const {result} = await sitesCollection.find(undefined, 1);
+    if (result.length > 0) {
         return;
     }
 
