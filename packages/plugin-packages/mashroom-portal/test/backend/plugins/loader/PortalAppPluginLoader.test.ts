@@ -97,7 +97,9 @@ describe('PortalAppPluginLoader', () => {
         loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
-        expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+        if (process.platform !== 'win32') {
+            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+        }
         expect(registry.portalApps[0].description).toBe('my description');
         expect(registry.portalApps[0].title).toEqual('Portal App 1');
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
@@ -188,7 +190,9 @@ describe('PortalAppPluginLoader', () => {
         loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
-        expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+        if (process.platform !== 'win32') {
+            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+        }
         expect(registry.portalApps[0].description).toBe('my description');
         expect(registry.portalApps[0].title).toEqual('Portal App 1');
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
