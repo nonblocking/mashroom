@@ -48,8 +48,7 @@
                 "resources": {
                     "js": [
                         "bundle.js"
-                    ],
-                    "css": []
+                    ]
                 },
                 "local": {
                     "resourcesRoot": "./dist"

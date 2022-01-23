@@ -35,8 +35,7 @@
                             "location": "header",
                             "inline": false
                         }
-                    ],
-                    "css": []
+                    ]
                 },
                 "defaultConfig": {
                     "order": -1000,
