@@ -20,11 +20,6 @@ export type ExpressErrorHandler = (error: Error, req: ExpressRequestWithContext,
 export type ExpressRouter = Router<ExpressRequestWithContext, ExpressResponse>;
 export type ExpressRequestHandler = ExpressApplication | ExpressRouter | ExpressMiddleware | ExpressErrorHandler;
 
-/*
- * @deprecated use IncomingMessageWithContext
- */
-export type HttpServerRequest = IncomingMessageWithContext;
-
 export type I18NString = string | {
     [lang: string]: string
 };

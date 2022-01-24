@@ -26,36 +26,6 @@ export type ExpressRequestWithContext = Request & {
     session?: any;
 };
 
-/*
- * @deprecated use IncomingMessageWithContext
- * Will be removed in 2.0
- */
-export type HttpServerRequest = IncomingMessageWithContext;
-/*
- * @deprecated use express.Request
- * Will be removed in 2.0
- */
-export type ExpressRequest = ExpressRequestWithContext;
-/*
- * @deprecated Use express.Response
- * Will be removed in 2.0
- */
-export type ExpressResponse = Response;
-/*
- * @deprecated Use express.Response
- */
-export type ExpressNextFunction = NextFunction;
-/*
- * @deprecated Use express.Application
- * Will be removed in 2.0
- */
-export type ExpressApplication = Application;
-/*
- * @deprecated Use express.RequestHandler
- * Will be removed in 2.0
- */
-export type ExpressMiddleware = RequestHandler;
-
 export type I18NString =
     | string
     | { [lang: string]: string; };
@@ -538,4 +508,5 @@ export type MashroomServicesPluginBootstrapFunction = (
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
 ) => Promise<MashroomServices>;
+
 

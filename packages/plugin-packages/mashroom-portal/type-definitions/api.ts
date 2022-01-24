@@ -218,7 +218,7 @@ export type MashroomPortalPageRenderModel = {
     readonly portalResourcesHeader: string;
     readonly portalResourcesFooter: string;
     readonly pageContent: string;
-    // @Deprecated, use pageContent
+    // @Deprecated, use pageContent; will be removed in 3.0
     readonly portalLayout: string;
     readonly lang: string;
     readonly availableLanguages: Readonly<Array<string>>;
