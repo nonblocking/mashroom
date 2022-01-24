@@ -349,7 +349,7 @@ export interface MashroomMiddlewareStackService {
 /**
  * Http/1 Upgrade Handler
  */
-export type MashroomHttpUpgradeHandler = (request: HttpServerRequest, socket: net$Socket, head: Buffer) => void;
+export type MashroomHttpUpgradeHandler = (request: IncomingMessageWithContext, socket: net$Socket, head: Buffer) => void;
 
 /**
  * A services to add and remove HTTP/1 upgrade listeners
@@ -393,26 +393,44 @@ export type ExpressApplicationWithUpgradeHandler = {
 /**
  * Bootstrap method definition for plugin-loader plugins
  */
-export type MashroomPluginLoaderPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomPluginLoader>;
+export type MashroomPluginLoaderPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder
+) => Promise<MashroomPluginLoader>;
 
 /**
  * Bootstrap method definition for web-app plugins
  */
-export type MashroomWebAppPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressApplication | ExpressApplicationWithUpgradeHandler>;
+export type MashroomWebAppPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder
+) => Promise<ExpressApplication | ExpressApplicationWithUpgradeHandler>;
 
 /**
  * Bootstrap method definition for API plugins
  */
-export type MashroomApiPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressRouter>;
+export type MashroomApiPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder
+) => Promise<ExpressRouter>;
 
 /**
  * Bootstrap method definition for middleware plugins
  */
-export type MashroomMiddlewarePluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<ExpressMiddleware>;
+export type MashroomMiddlewarePluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder
+) => Promise<ExpressMiddleware>;
 
 /**
  * Bootstrap method definition for services plugins
  */
-export type MashroomServicesPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomServices>;
-
-
+export type MashroomServicesPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder
+) => Promise<MashroomServices>;

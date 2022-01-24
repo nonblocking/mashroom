@@ -1,5 +1,5 @@
 
-import type {Request, Response, Application, NextFunction, RequestHandler, Router} from 'express';
+import type {Request, Response, Application, RequestHandler, Router} from 'express';
 import type {IncomingMessage} from 'http';
 import type {Socket} from 'net';
 import type {TlsOptions} from 'tls';
@@ -508,5 +508,3 @@ export type MashroomServicesPluginBootstrapFunction = (
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
 ) => Promise<MashroomServices>;
-
-
