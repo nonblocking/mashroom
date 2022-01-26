@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Disabled browser cache for public pages as well, because they can contain dynamic content from
+   enhancement plugins.
  * Storage: **BREAKING CHANGE**: *MashroomStorageCollection.find()* returns now a wrapper object with metadata
    such as the *totalCount* instead of directly the result
  * JSON Schemas: Fixed validation of custom plugin definitions
