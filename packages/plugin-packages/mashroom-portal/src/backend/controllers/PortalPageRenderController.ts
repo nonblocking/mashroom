@@ -185,7 +185,8 @@ export default class PortalPageRenderController {
             }
 
             if (cacheControlService) {
-                cacheControlService.addCacheControlHeader('ONLY_FOR_ANONYMOUS_USERS', req, res);
+                // Since the appConfig can be dynamic (enhancement plugins), never cache
+                cacheControlService.addCacheControlHeader('NEVER', req, res);
             }
 
             const content: MashroomPortalPageContent = {
@@ -385,9 +386,9 @@ export default class PortalPageRenderController {
         const pageHtml = await this._executeWithTheme(theme, logger, () => renderPage(!!theme, model, req, res, logger));
 
         if (cacheControlService) {
-            // Disable the browser cache for authenticated users to prevent that back button exposes potential sensitive information.
-            // If a CSRF token is present disable the caching always because it must not be cached.
-            cacheControlService.addCacheControlHeader(model.csrfToken ? 'NEVER' : 'ONLY_FOR_ANONYMOUS_USERS', req, res);
+            // Since the appConfig can be dynamic (enhancement plugins), never cache.
+            // Also, the back button could expose  potential sensitive information.
+            cacheControlService.addCacheControlHeader('NEVER', req, res);
         }
 
         res.type('text/html');

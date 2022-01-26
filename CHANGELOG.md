@@ -2,6 +2,11 @@
 # Change Log
 
 
+
+
+ * Portal: Disabled browser cache for public pages as well, because they can contain dynamic content from
+   enhancement plugins.
+
 ## 1.9.3 (January 11, 2022)
 
  * Portal: Added i18n *title* to MashroomPortalAppService.getAvailableApps()
