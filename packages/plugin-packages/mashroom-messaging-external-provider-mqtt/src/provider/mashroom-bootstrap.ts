@@ -1,23 +1,26 @@
 
 import MashroomMessagingExternalProviderMQTT from './MashroomMessagingExternalProviderMQTT';
+import healthProbe from '../health/health_probe';
 import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider_metrics';
 
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
 
 const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { internalTopic, mqttConnectUrl, mqttProtocolVersion, mqttQoS, mqttUser, mqttPassword, rejectUnauthorized } = pluginConfig;
-    const pluginContext = pluginContextHolder.getPluginContext();
+    const {loggerFactory, services: {core: {pluginService, healthProbeService}}} = pluginContextHolder.getPluginContext();
 
     const provider = new MashroomMessagingExternalProviderMQTT(
         internalTopic, mqttConnectUrl, mqttProtocolVersion, mqttQoS,
-        mqttUser, mqttPassword, rejectUnauthorized, pluginContext.loggerFactory);
+        mqttUser, mqttPassword, rejectUnauthorized, loggerFactory);
 
     provider.subscribeToInternalTopic();
 
+    healthProbeService.registerProbe(pluginName, healthProbe(provider));
     startExportProviderMetrics(provider, pluginContextHolder);
 
-    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+    pluginService.onUnloadOnce(pluginName, () => {
         provider.unsubscribeFromInternalTopic();
+        healthProbeService.unregisterProbe(pluginName);
         stopExportProviderMetrics();
     });
 

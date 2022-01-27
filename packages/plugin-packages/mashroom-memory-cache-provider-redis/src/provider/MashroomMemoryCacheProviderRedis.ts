@@ -68,7 +68,7 @@ export default class MashroomMemoryCacheProviderRedis implements MashroomMemoryC
 
     private async _doWithClient<T>(op: (client: IORedisClient) => Promise<T>): Promise<T | undefined> {
         try {
-            const client = await getClient();
+            const client = await getClient(this._logger);
             return await op(client);
         } catch (e) {
             this._logger.error('Redis operation failed. Memory cache is inactive!', e);

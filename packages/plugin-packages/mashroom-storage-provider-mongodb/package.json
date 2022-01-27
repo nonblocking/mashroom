@@ -43,7 +43,8 @@
                 "defaultConfig": {
                     "uri": "mongodb://localhost:27017/mashroom_storage_db",
                     "connectionOptions": {
-                        "minPoolSize": 5
+                        "minPoolSize": 5,
+                        "serverSelectionTimeoutMS": 3000
                     }
                 }
             }

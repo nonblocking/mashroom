@@ -12,13 +12,16 @@ const router = Router();
 const yes = '<td style="color:white;background-color:green;">Yes</td>';
 const no = '<td style="color:white;background-color:red;">No</td>';
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', async (req: Request, res: Response) => {
+    const isUp = up(req);
+    const readyCheckResult = await ready(req);
+    const healthyCheckResult = await healthy(req);
     res.type('text/html');
     res.send(`
         <!doctype html>
         <head>
             <title>Mashroom Administration</title>
-            <style type="text/css">
+            <style>
                 body {
                     margin: 15px;
                     padding: 0;
@@ -57,26 +60,23 @@ router.get('/', (req: Request, res: Response) => {
             <table>
                 <tr>
                     <th>Up</th>
-                    ${up(req) ? yes : no}
                     <td><a target="_blank" href="/mashroom/health/up">/mashroom/health/up</a></td>
+                    ${isUp ? yes : no}
+                    <td>&nbsp;</td>
                 </tr>
                 <tr>
-                    <th>Ready <sup>1)</sup></th>
-                    ${ready(req) ? yes : no}
+                    <th>Ready</th>
                     <td><a target="_blank" href="/mashroom/health/ready">/mashroom/health/ready</a></td>
+                    ${readyCheckResult.ok ? yes : no}
+                    <td><span style="color:red">${(readyCheckResult.errors || []).join('<br/>')}</span></td>
                 </tr>
                 <tr>
-                    <th>Healthy <sup>2)</sup></th>
-                    ${healthy(req) ? yes : no}
+                    <th>Healthy</th>
                     <td><a target="_blank" href="/mashroom/health/healthy">/mashroom/health/healthy</a></td>
+                    ${healthyCheckResult.ok ? yes : no}
+                    <td><span style="color:red">${(healthyCheckResult.errors || []).join('<br/>')}</span></td>
                 </tr>
             </table>
-            <p>
-                <sup>1)</sup> All plugins are loaded successfully.
-            </p>
-            <p>
-                <sup>2)</sup> No unhandled exceptions (which normally would have terminated Node.js) occurred.
-            </p>
         </html>
     `);
 });

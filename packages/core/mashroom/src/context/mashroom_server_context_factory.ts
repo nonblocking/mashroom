@@ -19,13 +19,14 @@ import MashroomMiddlewarePluginLoader from '../plugins/loader/MashroomMiddleware
 import MashroomStaticDocumentsPluginLoader from '../plugins/loader/MashroomStaticDocumentsPluginLoader';
 import MashroomAdminUIIntegrationLoader from '../plugins/loader/MashroomAdminUIIntegrationLoader';
 import MashroomServicesLoader from '../plugins/loader/MashroomServicesLoader';
-import MashroomServiceRegistry from '../services/MashroomServiceRegistry';
+import MashroomServiceRegistry from '../plugins/MashroomServiceRegistry';
 import MashroomPluginService from '../services/MashroomPluginService';
 import GlobalNodeErrorHandler from '../server/GlobalNodeErrorHandler';
 import ExposePluginContextMiddleware from '../server/ExposePluginContextMiddleware';
 import MiddlewarePluginDelegate from '../server/MiddlewarePluginDelegate';
 import MashroomMiddlewareStackService from '../services/MashroomMiddlewareStackService';
 import MashroomHttpUpgradeService from '../services/MashroomHttpUpgradeService';
+import MashroomHealthProbeService from '../services/MashroomHealthProbeService';
 import XPoweredByHeaderMiddleware from '../server/XPoweredByHeaderMiddleware';
 import MashroomServer from '../server/MashroomServer';
 import InitializationError from '../errors/InitializationError';
@@ -156,11 +157,13 @@ const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType,
     const pluginService = new MashroomPluginService(pluginRegistry, loggerFactory);
     const middlewareStackService = new MashroomMiddlewareStackService(middlewareDelegate, loggerFactory);
     const httpUpgradeService = new MashroomHttpUpgradeService(pluginContextHolder);
+    const healthProbeService = new MashroomHealthProbeService();
 
     const coreService: MashroomCoreServices = {
         pluginService,
         middlewareStackService,
         httpUpgradeService,
+        healthProbeService,
     };
 
     serviceNamespacesRegistry.registerServices('core', coreService);

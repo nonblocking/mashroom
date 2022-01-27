@@ -28,7 +28,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     }
 
     run(): void {
-        this._scanKubernetesServices()
+        try {
+            this._scanKubernetesServices()
+        } finally {
+            context.oneFullScanDone = true;
+        }
     }
 
     async _scanKubernetesServices(): Promise<void> {

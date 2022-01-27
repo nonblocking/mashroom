@@ -296,6 +296,7 @@ export type MashroomCoreServices = {
     +pluginService: MashroomPluginService,
     +middlewareStackService: MashroomMiddlewareStackService,
     +httpUpgradeService: MashroomHttpUpgradeService,
+    +healthProbeService: MashroomHealthProbeService,
 }
 
 /* Services */
@@ -366,6 +367,24 @@ export interface MashroomHttpUpgradeService {
 }
 
 /**
+ * A services to obtain all available health probes
+ */
+export interface MashroomHealthProbeService {
+    /**
+     * Register a new health probe for given plugin
+     */
+    registerProbe(forPlugin: string, probe: MashroomHealthProbe): void;
+    /**
+     * Unregister a health probe for given plugin
+     */
+    unregisterProbe(forPlugin: string): void;
+    /**
+     * Get all registered probes
+     */
+    getProbes(): Array<MashroomHealthProbe>;
+}
+
+/**
  * Mashroom plugin context
  *
  * This context will be available in the plugin bootstrap methods
@@ -388,6 +407,15 @@ export interface MashroomPluginContextHolder {
 export type ExpressApplicationWithUpgradeHandler = {
     expressApp: ExpressApplication,
     upgradeHandler?: MashroomHttpUpgradeHandler
+};
+
+export type MashroomHealthProbeStatus = {
+    ready: boolean;
+    message?: string;
+}
+
+export type MashroomHealthProbe = {
+    check(): Promise<MashroomHealthProbeStatus>;
 };
 
 /**

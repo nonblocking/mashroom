@@ -26,7 +26,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     run(): void {
-        this._processInBackground();
+        try {
+            this._processInBackground();
+        } finally {
+            context.oneFullScanDone = true;
+        }
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {

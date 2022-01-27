@@ -38,6 +38,7 @@ export type Context = {
     serviceNameFilter: string;
     lastScan: number;
     error: string | null;
+    oneFullScanDone: boolean;
 }
 
 export type ServicesRenderModel = {

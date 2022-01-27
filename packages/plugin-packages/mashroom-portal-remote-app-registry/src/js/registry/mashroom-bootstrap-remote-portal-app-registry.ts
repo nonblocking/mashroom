@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import context from '../context';
+import healthProbe from '../health/health_probe';
 import {startExportRemoteAppMetrics, stopExportRemoteAppMetrics} from '../metrics/remote_app_metrics';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -10,17 +11,17 @@ import type {MashroomPortalRemoteAppEndpointService} from '../../../type-definit
 
 const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { remotePortalAppUrls } = pluginConfig;
+    const {loggerFactory, services, serverConfig} = pluginContextHolder.getPluginContext();
 
-    const pluginContext = pluginContextHolder.getPluginContext();
+    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = services.remotePortalAppEndpoint.service;
 
+    await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, serverConfig.serverRootFolder, portalRemoteAppEndpointService, loggerFactory);
 
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = pluginContext.services.remotePortalAppEndpoint.service;
-
-    await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, pluginContext.serverConfig.serverRootFolder, portalRemoteAppEndpointService, pluginContext.loggerFactory);
-
+    services.core.healthProbeService.registerProbe(pluginName, healthProbe);
     startExportRemoteAppMetrics(pluginContextHolder);
 
-    pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
+    services.core.pluginService.onUnloadOnce(pluginName, () => {
+        services.core.healthProbeService.unregisterProbe(pluginName);
         stopExportRemoteAppMetrics();
     });
 

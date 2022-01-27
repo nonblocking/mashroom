@@ -3,6 +3,27 @@
 
 ## [unreleased]
 
+ * Added health probes for the Remote App registry, so, the server will only be ready once the initial scan has
+   been done (otherwise requests will hit instances with missing Apps).
+ * Added health probes for Mongo, Redis, MQTT and AMQP. This means, if some plugins (e.g. storage) rely on them,
+   the server ready probe (/mashroom/health/ready) will return an error if they are not available.
+ * Core: Added the possibility to register **health probes** for plugins.
+   Use this if your plugin relies on external service, and you want the flag the instance *not ready* if
+   it is not available.
+   Usage:
+   ```ts
+   const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+       const {services: {core: {pluginService, healthProbeService}}} = pluginContextHolder.getPluginContext();
+
+       healthProbeService.registerProbe(pluginName, healthProbe);
+
+       pluginService.onUnloadOnce(pluginName, () => {
+           healthProbeService.unregisterProbe(pluginName);
+       });
+
+       // ...
+   };
+   ```
  * Portal: Disabled browser cache for public pages as well, because they can contain dynamic content from
    enhancement plugins.
  * Storage: **BREAKING CHANGE**: *MashroomStorageCollection.find()* returns now a wrapper object with metadata
@@ -11,7 +32,8 @@
 
 ## 2.0.0-alpha.1 (January 21, 2022)
 
- * Portal: Prevent misusing resource requests for Remote Apps to access proxy targets (if a proxy target is a sub-path of the resource base URL)
+ * Portal: Prevent misusing resource requests for Remote Apps to access proxy targets
+   (if a proxy target is a sub-path of the resource base URL)
  * Portal: Added config property *addDemoPages* to start with an empty Portal if set to false
  * Theme refurbishment: Switched to a new cool logo and a slightly more blueish primary color
  * Portal: Added CDN support for Theme and all Portal App resources. All you need to do is to add *mashroom-cdn* to your

@@ -24,10 +24,6 @@ export const setConfig = async (redisConfig: IORedisConfig): Promise<void> => {
     _redisConfig = redisConfig;
 };
 
-export const getKeyPrefix = (): string | null | undefined => {
-    return _redisConfig && _redisConfig.redisOptions && _redisConfig.redisOptions.keyPrefix;
-}
-
 export const getAvailableNodes = () => {
     if (!_client) {
         return 0;
@@ -65,20 +61,6 @@ export default async (logger: MashroomLogger): Promise<IORedisClient> => {
 
     _client.on('error', (err: any) => {
         logger.error('Redis client error:', err);
-    });
-
-    // Wait for a connection a few seconds
-    await new Promise<void>((resolve) => {
-        let resolved = false;
-        _client && _client.on('connect', () => {
-            setTimeout(() => {
-                resolved = true;
-                resolve();
-            }, 0);
-        });
-        setTimeout(() => {
-            !resolved && resolve();
-        }, 2000);
     });
 
     return _client;

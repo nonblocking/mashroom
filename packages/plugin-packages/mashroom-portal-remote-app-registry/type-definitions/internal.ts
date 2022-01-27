@@ -26,6 +26,7 @@ export type Context = {
     readonly registry: RemotePortalAppRegistry;
     webUIShowAddRemoteAppForm: boolean;
     backgroundJob: RegisterPortalRemoteAppsBackgroundJob;
+    oneFullScanDone: boolean;
 }
 
 export type GlobalRequestHolder = {

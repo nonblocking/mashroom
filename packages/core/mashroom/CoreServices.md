@@ -88,6 +88,47 @@ export interface MashroomHttpUpgradeService {
 }
 ```
 
+### MashroomHealthProbeService
+
+A service that allows it plugins to register health probes.
+If a probe fails the server state goes to unready.
+
+```ts
+/**
+ * A services to obtain all available health probes
+ */
+export interface MashroomHealthProbeService {
+    /**
+     * Register a new health probe for given plugin
+     */
+    registerProbe(forPlugin: string, probe: MashroomHealthProbe): void;
+    /**
+     * Unregister a health probe for given plugin
+     */
+    unregisterProbe(forPlugin: string): void;
+    /**
+     * Get all registered probes
+     */
+    getProbes(): Readonly<Array<MashroomHealthProbe>>;
+}
+```
+
+You can use it like this in your plugin bootstrap:
+
+```ts
+const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+    const {services: {core: {pluginService, healthProbeService}}} = pluginContextHolder.getPluginContext();
+
+    healthProbeService.registerProbe(pluginName, healthProbe);
+
+    pluginService.onUnloadOnce(pluginName, () => {
+        healthProbeService.unregisterProbe(pluginName);
+    });
+
+    // ...
+};
+```
+
 ## Plugin Types
 
 ### plugin-loader
@@ -329,7 +370,7 @@ To register a service plugin add this to package.json:
 {
     "mashroom": {
         "plugins": [{
-            "name": "My services Services",
+            "name": "My Services",
             "type": "services",
             "namespace": "myNamespace",
             "bootstrap": "./dist/mashroom-bootstrap.js",
@@ -398,4 +439,3 @@ To register an admin-ui-integration plugin add this to package.json:
     parent.postMessage({ height: contentHeight + 20 }, "*");
   ```
 * _defaultConfig.weight_: The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)
-

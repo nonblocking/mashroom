@@ -52,11 +52,7 @@
             }
         },
         "Mashroom Session MongoDB Provider": {
-            "uri": "mongodb://localhost:27017/mashroom_sessions",
-            "collection": "sessions",
-            "connectionOptions": {
-                "minPoolSize": 2
-            }
+            "uri": "mongodb://localhost:27017/mashroom_sessions"
         },
         "Mashroom Security Services": {
             "provider": "Mashroom OpenID Connect Security Provider",

@@ -7,11 +7,11 @@ import type {
     GlobalNodeErrorHandler as GlobalNodeErrorHandlerType
 } from '../../type-definitions/internal';
 
-let unhandledRejection = false;
-let uncaughtException = false;
+let unhandledRejections = false;
+let uncaughtExceptions = false;
 
-export const hasUnhandledRejection = () => unhandledRejection;
-export const hasUncaughtException = () => uncaughtException;
+export const hasUnhandledRejections = () => unhandledRejections;
+export const hasUncaughtExceptions = () => uncaughtExceptions;
 
 export default class GlobalNodeErrorHandler implements GlobalNodeErrorHandlerType {
 
@@ -23,12 +23,12 @@ export default class GlobalNodeErrorHandler implements GlobalNodeErrorHandlerTyp
 
     install() {
         process.on('unhandledRejection', (error) => {
-            unhandledRejection = true;
+            unhandledRejections = true;
             this._logger.error(`Unhandled promise rejection. This is usually a programming mistake. \nContinuing but server might not work as expected.`, error);
         });
 
         process.on('uncaughtException', (error) => {
-            uncaughtException = true;
+            uncaughtExceptions = true;
             this._logger.error(`FATAL: Uncaught exception. This is usually a programming mistake. \nContinuing but server might not work as expected.`, error);
         });
     }

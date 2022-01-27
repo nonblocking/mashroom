@@ -18,7 +18,8 @@ import type {
     MashroomLoggerFactory,
     MashroomPluginContextHolder,
     MashroomCoreServices,
-    MashroomHttpUpgradeService
+    MashroomHttpUpgradeService,
+    MashroomHealthProbe,
 } from './api';
 
 export interface GlobalNodeErrorHandler {

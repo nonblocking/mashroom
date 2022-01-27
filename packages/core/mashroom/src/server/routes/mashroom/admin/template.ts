@@ -14,7 +14,7 @@ export default (content: string, req: Request) => {
         <!doctype html>
         <head>
             <title>Mashroom Administration</title>
-            <style type="text/css">
+            <style>
                 body {
                     margin: 0;
                     padding: 0;

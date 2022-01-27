@@ -4,18 +4,19 @@ import RemotePortalAppRegistry from './registry/RemotePortalAppRegistry';
 import type {Request} from 'express';
 import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob, Context} from '../../type-definitions/internal';
 
-let currentRequest: Request | undefined | null = null;
-let registerBackgroundJob: any = null;
-let webUIShowAddRemoteAppForm = true;
+let _currentRequest: Request | undefined | null = null;
+let _registerBackgroundJob: any = null;
+let _webUIShowAddRemoteAppForm = true;
+let _oneFullScanDone = false;
 
 export const globalRequestHolder: GlobalRequestHolder = {
 
     get request() {
-        return currentRequest;
+        return _currentRequest;
     },
 
     set request(request: Request | undefined | null) {
-        currentRequest = request;
+        _currentRequest = request;
     }
 
 };
@@ -23,27 +24,27 @@ export const globalRequestHolder: GlobalRequestHolder = {
 const registry = new RemotePortalAppRegistry(globalRequestHolder);
 
 const context: Context = {
-
     get registry() {
         return registry;
     },
-
     get backgroundJob(): RegisterPortalRemoteAppsBackgroundJob {
-        return registerBackgroundJob;
+        return _registerBackgroundJob;
     },
-
     set backgroundJob(job: RegisterPortalRemoteAppsBackgroundJob) {
-        registerBackgroundJob = job;
+        _registerBackgroundJob = job;
     },
-
     get webUIShowAddRemoteAppForm() {
-        return webUIShowAddRemoteAppForm;
+        return _webUIShowAddRemoteAppForm;
     },
-
     set webUIShowAddRemoteAppForm(show: boolean) {
-        webUIShowAddRemoteAppForm = show;
+        _webUIShowAddRemoteAppForm = show;
+    },
+    get oneFullScanDone() {
+        return _oneFullScanDone;
+    },
+    set oneFullScanDone(done: boolean) {
+        _oneFullScanDone = done;
     }
-
 };
 
 export default context;

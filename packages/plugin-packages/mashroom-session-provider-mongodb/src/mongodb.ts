@@ -1,5 +1,5 @@
 
-import {Db, MongoClient, Logger} from 'mongodb';
+import {MongoClient, Logger} from 'mongodb';
 
 import type {MongoClientOptions, TopologyDescription} from 'mongodb';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -7,7 +7,6 @@ import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 let _connectionUri: string | null = null;
 let _connectionOptions: MongoClientOptions | null = null;
 let _client: MongoClient | null = null;
-let _db: Db | null = null;
 let _lastHeartbeatSucceeded = false;
 
 export const close = async (): Promise<void> => {
@@ -19,7 +18,6 @@ export const close = async (): Promise<void> => {
         }
     }
     _client = null;
-    _db = null;
 };
 
 export const setConnectionUriAndOptions = async (connectionUri: string, options: MongoClientOptions): Promise<void> => {
@@ -27,10 +25,6 @@ export const setConnectionUriAndOptions = async (connectionUri: string, options:
     _connectionUri = connectionUri;
     _connectionOptions = options;
 };
-
-export const getClient = (): MongoClient | null => {
-    return _client;
-}
 
 const getTopology = (): TopologyDescription | undefined => {
     // @ts-ignore Accessing the private property topology
@@ -57,10 +51,7 @@ export const isConnected = () => {
     return availableNodes > 0;
 }
 
-export default async (logger: MashroomLogger): Promise<Db> => {
-    if (_db) {
-        return _db;
-    }
+export default async (logger: MashroomLogger): Promise<MongoClient> => {
     if (!_connectionUri) {
         throw new Error('No connection URI set!');
     }
@@ -106,8 +97,6 @@ export default async (logger: MashroomLogger): Promise<Db> => {
         }
     });
 
-    _db = _client.db();
-
-    return _db;
+    return _client;
 };
 

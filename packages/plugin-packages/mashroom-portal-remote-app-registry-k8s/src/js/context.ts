@@ -7,6 +7,7 @@ export const _registry = new KubernetesServiceRegistry();
 let _serviceNameFilter = '';
 let _error: string | null = null;
 let _lastScan = 0;
+let _oneFullScanDone = false;
 
 const context: Context = {
     get registry() {
@@ -29,7 +30,13 @@ const context: Context = {
     },
     set serviceNameFilter(serviceNameFilter: string) {
         _serviceNameFilter = serviceNameFilter;
-    }
+    },
+    get oneFullScanDone() {
+        return _oneFullScanDone;
+    },
+    set oneFullScanDone(done: boolean) {
+        _oneFullScanDone = done;
+    },
 };
 
 export default context;

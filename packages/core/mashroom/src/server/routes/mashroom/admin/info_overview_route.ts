@@ -1,4 +1,5 @@
 
+import {ready} from '../health/checks';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -6,7 +7,7 @@ import type {MashroomPluginContext} from '../../../../../type-definitions';
 
 const overviewRoute = async (req: Request, res: Response) => {
     res.type('text/html');
-    res.send(infoTemplate(overview(req.pluginContext), req));
+    res.send(infoTemplate(await overview(req, req.pluginContext), req));
 };
 
 export default overviewRoute;
@@ -17,9 +18,9 @@ const getUptime = () => {
     return date.toISOString().substr(11, 8);
 };
 
-const overview = (pluginContext: MashroomPluginContext) => `
+const overview = async (req: Request, pluginContext: MashroomPluginContext) => `
     <h2>Server Overview</h2>
-    ${serverOverviewTable(pluginContext)}
+    ${await serverOverviewTable(req)}
     <div class="details-link">
         <a href="/mashroom/admin/server-info">Server Details</a>
     </div>
@@ -27,24 +28,35 @@ const overview = (pluginContext: MashroomPluginContext) => `
     ${pluginOverviewTable(pluginContext)}
 `;
 
-const serverOverviewTable = (pluginContext: MashroomPluginContext) => {
+const serverOverviewTable = async (req: Request) => {
+    const {serverConfig, serverInfo} = req.pluginContext;
+    const readyCheckResult = await ready(req);
     return `
         <table>
             <tr>
                 <th>Server Name</th>
-                <td>${pluginContext.serverConfig.name}</td>
+                <td>${serverConfig.name}</td>
+                <td>&nbsp;</td>
             </tr>
-                <tr>
+            <tr>
                 <th>Server Uptime</th>
                 <td>${getUptime()}</td>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <th><a href="/mashroom/health">Server Health</a></th>
+                <td>${readyCheckResult.ok ? '<span style="color:green">Ready</span>' : '<span style="color:red">Not ready</span>'}</td>
+                <td><span style="color:red">${(readyCheckResult.errors || []).join('<br/>')}</span></td>
             </tr>
             <tr>
                 <th>Mashroom Server Version</th>
-                <td>${pluginContext.serverInfo.version}</td>
+                <td>${serverInfo.version}</td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
                 <th>Packages in Dev Mode</th>
-                <td>${pluginContext.serverInfo.devMode ? '<span style="color:orange">Yes</span>' : 'No'}</td>
+                <td>${serverInfo.devMode ? '<span style="color:orange">Yes</span>' : 'No'}</td>
+                <td>&nbsp;</td>
             </tr>
         </table>
     `;
