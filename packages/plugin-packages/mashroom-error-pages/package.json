@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "1.9.3",
+    "version": "1.9.4",
     "files": [
         "dist/**",
         "pages/**"
@@ -14,9 +14,9 @@
     },
     "devDependencies": {
         "@babel/cli": "^7.15.7",
-        "@mashroom/mashroom": "1.9.3",
-        "@mashroom/mashroom-i18n": "1.9.3",
-        "@mashroom/mashroom-utils": "1.9.3",
+        "@mashroom/mashroom": "1.9.4",
+        "@mashroom/mashroom-i18n": "1.9.4",
+        "@mashroom/mashroom-utils": "1.9.4",
         "@types/express": "^4.17.13",
         "@types/jest": "^27.0.1",
         "@types/node": "^14.17.17",
