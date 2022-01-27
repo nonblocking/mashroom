@@ -250,7 +250,7 @@ export default class PortalAppController {
 
         // Security check: A proxy target could be a sub path of the resource base URL, so,
         //  make sure this route is not misused to access an API endpoint
-        if (portalApp.proxies && Object.values(portalApp.proxies).some(({targetUri}) => resourceUri.startsWith(targetUri))) {
+        if (portalApp.restProxies && Object.values(portalApp.restProxies).some(({targetUri}) => resourceUri.startsWith(targetUri))) {
             logger.error('Attempted access to an API endpoint via resource request:', resourceUri);
             res.sendStatus(401);
             return false;
