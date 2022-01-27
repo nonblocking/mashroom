@@ -1,6 +1,7 @@
 
 # Change Log
 
+## 1.9.4 (January 27, 2022)
 
  * Portal: Disabled browser cache for public pages as well, because they can contain dynamic content from
    enhancement plugins.
