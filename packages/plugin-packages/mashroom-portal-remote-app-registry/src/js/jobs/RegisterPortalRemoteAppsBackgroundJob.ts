@@ -135,7 +135,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
             throw new Error(`Invalid Portal App '${name}': The name contains invalid characters (/,?).`);
         }
-        const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && remotePortalAppEndpoint.url.indexOf(a.resourcesRootUri) !== 0);
+        const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && a.resourcesRootUri.indexOf(remotePortalAppEndpoint.url) !== 0);
         if (existingPortalApp) {
             throw new Error(`Invalid Portal App '${name}': The name is already defined on endpoint ${existingPortalApp.resourcesRootUri}`);
         }
