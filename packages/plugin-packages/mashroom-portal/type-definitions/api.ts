@@ -5,6 +5,7 @@ import type {
     MashroomPluginConfig,
     MashroomPluginContextHolder
 } from '@mashroom/mashroom/type-definitions';
+import {MashroomSecurityRoles} from "@mashroom/mashroom-security/type-definitions";
 
 /* Model */
 
@@ -197,9 +198,12 @@ export type UserAgent = {
 
 export type MashroomPortalUser = {
     readonly guest: boolean;
-    readonly username?: string;
-    readonly displayName?: string;
-    readonly roles?: Array<string>;
+    readonly username: string;
+    readonly displayName: string;
+    readonly email?: string | null | undefined;
+    readonly pictureUrl?: string | null | undefined;
+    readonly extraData?: Record<string, any> | null | undefined;
+    readonly roles: MashroomSecurityRoles;
 };
 
 export type MashroomPortalPageContent = {

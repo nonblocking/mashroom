@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Allowed the Theme templates to access the full user, including *extraData*
  * Added health probes for the Remote App registry, so, the server will only be ready once the initial scan has
    been done (otherwise requests will hit instances with missing Apps).
  * Added health probes for Mongo, Redis, MQTT and AMQP. This means, if some plugins (e.g. storage) rely on them,

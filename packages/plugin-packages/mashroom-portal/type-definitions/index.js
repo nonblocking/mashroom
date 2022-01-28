@@ -178,9 +178,12 @@ export type UserAgent = {
 
 export type MashroomPortalUser = {
     +guest: boolean,
-    +username?: string,
-    +displayName?: string,
-    +roles?: Array<string>
+    +username: string,
+    +displayName: string,
+    +email?: ?string,
+    +pictureUrl?: ?string,
+    +extraData?: ?{ [string]: any },
+    +roles?: Array<string>,
 }
 
 export type MashroomPortalPageContent = {
