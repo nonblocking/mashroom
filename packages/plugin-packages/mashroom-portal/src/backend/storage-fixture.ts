@@ -93,6 +93,13 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         instanceId: createAppInstanceId(),
     };
 
+    const remoteDemoAppInstance1: MashroomPortalAppInstance = {
+        pluginName: 'Mashroom Demo SSR Remote Portal App',
+        instanceId: createAppInstanceId(),
+        appConfig: {
+        },
+    };
+
     const sandboxAppInstance: MashroomPortalAppInstance = {
         pluginName: 'Mashroom Sandbox App',
         instanceId: createAppInstanceId(),
@@ -141,18 +148,6 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         },
     };
 
-    const pageTest2: MashroomPortalPage = {
-        pageId: 'test2',
-        description: 'Mashroom Portal Demo Site Test Page 2',
-        layout: 'Mashroom Portal Default Layouts 1 Column',
-        portalApps: {
-            'app-area1': [{
-                pluginName: compositeDemoAppInstance1.pluginName,
-                instanceId: compositeDemoAppInstance1.instanceId,
-            }],
-        },
-    };
-
     const subPage1: MashroomPortalPage = {
         pageId: 'subpage1',
         description: 'Mashroom Portal Demo Site Test Subpage 1',
@@ -181,6 +176,30 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 pluginName: restProxyDemoAppInstance1.pluginName,
                 instanceId: restProxyDemoAppInstance1.instanceId,
             }]
+        },
+    };
+
+    const pageTest2: MashroomPortalPage = {
+        pageId: 'test2',
+        description: 'Mashroom Portal Demo Site Test Page 2',
+        layout: 'Mashroom Portal Default Layouts 1 Column',
+        portalApps: {
+            'app-area1': [{
+                pluginName: compositeDemoAppInstance1.pluginName,
+                instanceId: compositeDemoAppInstance1.instanceId,
+            }],
+        },
+    };
+
+    const pageTest3: MashroomPortalPage = {
+        pageId: 'test3',
+        description: 'Mashroom Portal Demo Site Test Page 3',
+        layout: 'Mashroom Portal Default Layouts 1 Column',
+        portalApps: {
+            'app-area1': [{
+                pluginName: remoteDemoAppInstance1.pluginName,
+                instanceId: remoteDemoAppInstance1.instanceId,
+            }],
         },
     };
 
@@ -255,6 +274,15 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 subPages: [],
             },
             {
+                pageId: 'test3',
+                title: {
+                    en: 'Test Page 3',
+                    de: 'Test Seite 3'
+                },
+                friendlyUrl: '/test3',
+                subPages: [],
+            },
+            {
                 pageId: 'sandbox',
                 title: {
                     en: 'Sandbox'
@@ -273,9 +301,10 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
              await pagesCollection.insertOne(pageHome);
 
              await pagesCollection.insertOne(pageTest1);
-             await pagesCollection.insertOne(pageTest2);
              await pagesCollection.insertOne(subPage1);
              await pagesCollection.insertOne(subPage2);
+             await pagesCollection.insertOne(pageTest2);
+             await pagesCollection.insertOne(pageTest3);
              await pagesCollection.insertOne(pageSandbox);
 
              await portalAppInstancesCollection.insertOne(welcomeAppInstance1);
@@ -288,6 +317,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
              await portalAppInstancesCollection.insertOne(loadDynamicallyDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(restProxyDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(tabifyAppInstance1);
+             await portalAppInstancesCollection.insertOne(remoteDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(sandboxAppInstance);
          } else {
              await sitesCollection.insertOne(siteMinimal);
