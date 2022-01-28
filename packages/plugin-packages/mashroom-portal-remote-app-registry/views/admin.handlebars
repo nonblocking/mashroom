@@ -64,7 +64,7 @@
 <body>
 {{#if showAddRemoteAppForm}}
     <div class="add-endpoint-form">
-        <h2>Add a new Remote Portal App Endpoint</h2>
+        <h2>Add a new Remote Portal App</h2>
 
         <form method="POST" action="?csrfToken={{csrfToken}}">
         <input type="hidden" name="_action" value="add"/>
@@ -94,7 +94,7 @@
 {{/if}}
 
 <div class="endpoints">
-    <h3>Remote Portal App Endpoints</h3>
+    <h3>Remote Portal Apps</h3>
 
     <table border="1" cellspacing="0" cellpadding="10">
         <tr>
@@ -106,7 +106,7 @@
         </tr>
         {{#each endpoints}}
             <tr class="{{this.rowClass}}">
-                <td>{{this.url}}</td>
+                <td><a href="{{this.url}}" target="_blank">{{this.url}}</a></td>
                 <td>{{this.sessionOnly}}</td>
                 <td class="{{this.statusClass}}">{{this.status}}</td>
                 <td>

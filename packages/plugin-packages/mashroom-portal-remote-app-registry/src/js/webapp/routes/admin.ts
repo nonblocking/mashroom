@@ -6,6 +6,10 @@ import type {Request, Response} from 'express';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
 import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../../type-definitions';
 
+const formatDate = (ts: number): string => {
+    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+};
+
 const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
@@ -38,7 +42,7 @@ const status = (endpoint: RemotePortalAppEndpoint) => {
         return `Error: ${endpoint.lastError}`;
     }
     if (endpoint.registrationTimestamp) {
-        return `Registered at ${new Date(endpoint.registrationTimestamp).toLocaleString()}`;
+        return `Registered at ${formatDate(endpoint.registrationTimestamp)}`;
     }
     return 'Pending...';
 };
