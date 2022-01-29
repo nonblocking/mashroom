@@ -81,6 +81,11 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
 
     /**
+     * Update multiple entries
+     */
+    updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
+
+    /**
      * Replace the first item that matches the given filter.
      */
     replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult>;
@@ -91,7 +96,7 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
     deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 
     /**
-     * Delete all items that matches the given filter.
+     * Delete all items that match the given filter.
      */
     deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult>;
 }

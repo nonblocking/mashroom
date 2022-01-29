@@ -81,6 +81,21 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         });
     }
 
+    async updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
+        return this._updateOperation(async (collection) => {
+            const existingItems = await this.find(filter);
+
+            existingItems.result.forEach((item) => {
+                const index = collection.indexOf(item);
+                collection[index] = {...item, ...propertiesToUpdate};
+            });
+
+            return {
+                modifiedCount: existingItems.result.length,
+            };
+        });
+    }
+
     async replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult> {
         return this._updateOperation(async (collection) => {
             const existingItem = await this.findOne(filter);
@@ -135,6 +150,12 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         if (filter || sort) {
             const query = new Query(filter || {});
             let cursor = query.find(data);
+            let totalCount;
+            if (withTotalCount && (limit || skip)) {
+                totalCount = cursor.count();
+            }
+
+            cursor = query.find(data);
             if (sort) {
                 const fixedSort: Record<string, number> = {};
                 Object.keys(sort).forEach((key) => {
@@ -154,13 +175,9 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
                 cursor = cursor.skip(skip);
             }
             const result = cursor.all() as Array<MashroomStorageObject<T>>;
-            let totalCount = -1;
-            if (withTotalCount) {
-                totalCount = cursor.count();
-            }
             return {
                 result,
-                totalCount
+                totalCount: totalCount || result.length,
             };
         } else {
             let result = data;

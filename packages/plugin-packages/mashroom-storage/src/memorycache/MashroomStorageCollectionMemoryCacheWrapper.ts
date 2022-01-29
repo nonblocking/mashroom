@@ -58,6 +58,12 @@ export default class MashroomStorageCollectionMemoryCacheWrapper<T extends Mashr
         });
     }
 
+    async updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
+        return this._wrapUpdate(() => {
+            return this._delegate.updateMany(filter, propertiesToUpdate);
+        });
+    }
+
     async deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._wrapUpdate(() => {
             return this._delegate.deleteOne(filter);

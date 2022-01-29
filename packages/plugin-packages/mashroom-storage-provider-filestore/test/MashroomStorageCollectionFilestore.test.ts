@@ -111,10 +111,10 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result1.totalCount).toBe(1);
         expect(result1.result[0].b).toBe(2);
         expect(result2.result.length).toBe(3);
-        expect(result2.totalCount).toBe(3);
+        expect(result2.totalCount).toBe(6);
         expect(result2.result[2].b).toBe(2);
         expect(result3.result.length).toBe(3);
-        expect(result3.totalCount).toBe(3);
+        expect(result3.totalCount).toBe(6);
         expect(result3.result[0].b).toBe(2);
         expect(result4.result.length).toBe(1);
         expect(result4.totalCount).toBe(1);
@@ -134,6 +134,20 @@ describe('MashroomStorageCollectionFilestore', () => {
             expect(updatedItem._id).toBe(insertedItem._id);
             expect(updatedItem.a).toBe(2);
         }
+    });
+
+    it('updates all properties of an existing property with updateMany', async () => {
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+
+        await storage.insertOne({a: 1, b: 1});
+        await storage.insertOne({a: 1, b: 2});
+        await storage.insertOne({a: 1, b: 3});
+        await storage.insertOne({a: 3, b: 3});
+        const result = await storage.updateMany({a: 1}, {a: 2, x: {}});
+        const updatedItems = await storage.find({a: 2});
+
+        expect(updatedItems.result.length).toBe(3);
+        expect(result.modifiedCount).toBe(3);
     });
 
     it('replaces the existing item with replaceOne', async () => {

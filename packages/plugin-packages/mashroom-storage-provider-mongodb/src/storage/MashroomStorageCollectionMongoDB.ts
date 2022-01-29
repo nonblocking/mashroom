@@ -25,6 +25,12 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
     async find(filter?: MashroomStorageObjectFilter<T>, limit?: number, skip?: number, sort?: MashroomStorageSort<T>): Promise<MashroomStorageSearchResult<T>> {
         const collection = await this._getCollection<MashroomStorageObject<T>>();
         let cursor = collection.find(filter || {});
+        let totalCount;
+        if (skip || limit) {
+            totalCount = await cursor.count();
+        }
+
+        cursor = collection.find(filter || {});
         if (sort) {
             cursor = cursor.sort(sort);
         }
@@ -35,10 +41,9 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
             cursor = cursor.limit(limit);
         }
         const result = await cursor.toArray() as Array<MashroomStorageObject<T>>;
-        const totalCount = await cursor.count();
         return {
             result,
-            totalCount,
+            totalCount: totalCount || result.length,
         };
     }
 
@@ -63,6 +68,20 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         };
         delete cleanProperties._id;
         const result = await collection.updateOne(filter, {
+            $set: cleanProperties,
+        });
+        return {
+            modifiedCount: result.modifiedCount,
+        };
+    }
+
+    async updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
+        const collection = await this._getCollection<MashroomStorageObject<T>>();
+        const cleanProperties = {
+            ...propertiesToUpdate,
+        };
+        delete cleanProperties._id;
+        const result = await collection.updateMany(filter, {
             $set: cleanProperties,
         });
         return {
