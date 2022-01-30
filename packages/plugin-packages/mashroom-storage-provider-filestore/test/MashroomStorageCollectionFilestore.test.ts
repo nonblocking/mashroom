@@ -120,6 +120,23 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result4.totalCount).toBe(1);
     });
 
+    it('supports regex search', async () => {
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+
+        await storage.insertOne({foo: 'this is a test'});
+        await storage.insertOne({foo: 'this is something else'});
+        await storage.insertOne({foo: 'this is a test2!'});
+        await storage.insertOne({foo: 'test this is'});
+
+        const result1 = await storage.find({ foo: { $regex: /test/ }});
+        const result2 = await storage.find({ foo: { $regex: 'test' }});
+        const result3 = await storage.find({ foo: { $regex: /^te.{2}/ }});
+
+        expect(result1.result.length).toBe(3);
+        expect(result2.result.length).toBe(3);
+        expect(result3.result.length).toBe(1);
+    });
+
     it('updates all properties of an existing property with updateOne', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
 
