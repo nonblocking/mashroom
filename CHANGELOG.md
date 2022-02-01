@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.0.0-alpha.2 (February 1, 2022)
+
  * Storage: Added a new method *updateMany* to update multiple entries at once
  * Portal: Allowed the Theme templates to access the full user, including *extraData*
  * Added health probes for the Remote App registry, so, the server will only be ready once the initial scan has
