@@ -96,7 +96,7 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
     const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper?.service;
     const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
-    const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
+    const vhostMappingInfo = pathMapperService?.getMappingInfo(req);
 
     const queryParams: Array<string> = [];
     if (req.query) {
@@ -125,7 +125,7 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
 
     res.render('login', {
         loginFormTitle: i18nService.translate(req, context.loginFormTitle),
-        baseUrl: (vhostMappingInfo && vhostMappingInfo.frontendPath) || req.baseUrl,
+        baseUrl: (vhostMappingInfo?.frontendPath) || req.baseUrl,
         query,
         error,
         helpers: {

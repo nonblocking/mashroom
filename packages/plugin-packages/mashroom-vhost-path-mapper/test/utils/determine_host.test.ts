@@ -1,5 +1,5 @@
 
-import determineHost from '../../src/middleware/determine_host';
+import determineHost from '../../src/utils/determine_host';
 
 describe('determine_host', () => {
 
@@ -11,7 +11,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost([], req)).toEqual({
+        expect(determineHost(req, [])).toEqual({
             hostname: 'my-host.at',
             port: undefined,
         });
@@ -25,7 +25,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost([], req)).toEqual({
+        expect(determineHost(req, [])).toEqual({
             hostname: 'my-host.at',
             port: '8080',
         });
@@ -40,7 +40,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost(['x-forwarded-host'], req)).toEqual({
+        expect(determineHost(req, ['x-forwarded-host'])).toEqual({
             hostname: 'my-original-host.at',
             port: undefined,
         });
@@ -55,7 +55,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost(['x-forwarded-host'], req)).toEqual({
+        expect(determineHost(req, ['x-forwarded-host'])).toEqual({
             hostname: 'my-original-host.at',
             port: undefined,
         });
@@ -70,7 +70,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost(['x-forwarded-host'], req)).toEqual({
+        expect(determineHost(req, ['x-forwarded-host'])).toEqual({
             hostname: 'my-original-host.at',
             port: undefined,
         });
@@ -86,7 +86,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost(['x-my-custom-host-header', 'x-forwarded-host'], req)).toEqual({
+        expect(determineHost(req, ['x-my-custom-host-header', 'x-forwarded-host'])).toEqual({
             hostname: 'the-real-original-host.at',
             port: undefined,
         });
@@ -99,7 +99,7 @@ describe('determine_host', () => {
             }
         };
 
-        expect(determineHost([], req)).toEqual({
+        expect(determineHost(req, [])).toEqual({
             hostname: 'my-host.at',
             port: '8080',
         });

@@ -1,32 +1,25 @@
 
-import determineHost from './determine_host';
-import findHostDefinition from './find_host_definition';
-import mapPath from './map_path';
+import context from '../context';
+import determineHost from '../utils/determine_host';
+import findHostDefinition from '../utils/find_host_definition';
+import mapPath from '../utils/map_path';
 import {VHOST_MAPPING_INFO_REQUEST_PROP_NAME} from '../constants';
 
 import type {Request, Response, NextFunction} from 'express';
-import type {
-    MashroomLogger
-} from '@mashroom/mashroom/type-definitions';
-import type {
-    MashroomVHostPathMapperMiddleware as MashroomVHostPathMapperMiddlewareType,
-    VHostDefinitions
-} from '../../type-definitions/internal';
+import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
+import type {MashroomVHostPathMapperMiddleware as MashroomVHostPathMapperMiddlewareType} from '../../type-definitions/internal';
 
 export default class MashroomVHostPathMapperMiddleware implements MashroomVHostPathMapperMiddlewareType {
-
-    constructor(private _considerHttpHeaders: Array<string>, private _vhostDefinitions: VHostDefinitions) {
-    }
 
     middleware() {
         return (req: Request, res: Response, next: NextFunction) => {
             const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.vhost.pathmapper');
 
             try {
-                const host = determineHost(this._considerHttpHeaders, req);
+                const host = determineHost(req, context.considerHttpHeaders);
                 // logger.debug('Determined host', host);
 
-                const hostDefinition = findHostDefinition(host, this._vhostDefinitions);
+                const hostDefinition = findHostDefinition(host, context.vhostDefinitions);
                 if (hostDefinition) {
                     const originalPath = req.url;
                     const mappingResult = mapPath(originalPath, hostDefinition);
@@ -45,7 +38,7 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
                             const redirectMappingResult = mapPath(redirectUrl, hostDefinition, true);
                             if (redirectMappingResult) {
                                 newRedirectUrl = redirectMappingResult.url || '/';
-                                logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${redirectMappingResult.url}`);
+                                logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${newRedirectUrl}`);
                             }
                             return originalLocationFn(newRedirectUrl);
                         };

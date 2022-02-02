@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * VHost Path Mapper: It is now possible to map multiple Portal sites to different base paths on the same virtual host
+ * VHost Path Mapper: Fixed reverse mapping of the location header if a *frontendBasePath* exists
 
 ## 2.0.0-alpha.2 (February 1, 2022)
 

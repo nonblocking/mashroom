@@ -2,7 +2,7 @@
 import type {Request} from 'express';
 import type {DeterminedHost} from '../../type-definitions/internal';
 
-export default (considerHttpHeaders: Array<string>, req: Request): DeterminedHost => {
+export default (req: Request, considerHttpHeaders: Array<string>): DeterminedHost => {
     const hostHeader = req.headers.host as string;
     let hostname = undefined;
     let port = undefined;

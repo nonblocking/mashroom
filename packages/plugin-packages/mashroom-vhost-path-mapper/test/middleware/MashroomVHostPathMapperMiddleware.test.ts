@@ -1,7 +1,6 @@
 
+import context from '../../src/context';
 import MashroomVHostPathMapperMiddleware from '../../src/middleware/MashroomVHostPathMapperMiddleware';
-
-import type {VHostDefinitions} from '../../type-definitions/internal';
 
 describe('MashroomVHostPathMapperMiddleware', () => {
 
@@ -11,8 +10,9 @@ describe('MashroomVHostPathMapperMiddleware', () => {
     };
 
     it('does nothing if no vhosts defined', () => {
-        const vhostDefinitions: VHostDefinitions = {};
-        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {};
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
 
         const req: any = {
             hostname: 'localhost',
@@ -28,14 +28,15 @@ describe('MashroomVHostPathMapperMiddleware', () => {
     });
 
     it('maps the path if a vhost definition exists', () => {
-        const vhostDefinitions: VHostDefinitions = {
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {
             'my-company.com': {
                 mapping: {
                     '/': '/portal/web'
                 }
             }
         };
-        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
 
         const req: any = {
             hostname: 'my-company.com',
@@ -55,14 +56,15 @@ describe('MashroomVHostPathMapperMiddleware', () => {
     });
 
     it('maps the redirect if a vhost definitions exists', () => {
-        const vhostDefinitions: VHostDefinitions = {
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {
             'my-company.com': {
                 mapping: {
                     '/': '/portal/web'
                 }
             }
         };
-        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
 
         const req: any = {
             hostname: 'my-company.com',
@@ -82,17 +84,18 @@ describe('MashroomVHostPathMapperMiddleware', () => {
 
         expect(location.mock.calls.length).toBe(1);
         expect(location.mock.calls[0][0]).toBe('/x/foo?x=4');
-    })
+    });
 
     it('maps the redirect to / if the location is the root path', () => {
-        const vhostDefinitions: VHostDefinitions = {
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {
             'my-company.com': {
                 mapping: {
                     '/': '/portal/web'
                 }
             }
         };
-        const middleware = new MashroomVHostPathMapperMiddleware([], vhostDefinitions).middleware();
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
 
         const req: any = {
             hostname: 'my-company.com',
@@ -112,7 +115,39 @@ describe('MashroomVHostPathMapperMiddleware', () => {
 
         expect(location.mock.calls.length).toBe(1);
         expect(location.mock.calls[0][0]).toBe('/');
-    })
+    });
+
+    it('maps the redirect if a frontendBasePath exists', () => {
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {
+            'my-company.com': {
+                frontendBasePath: '/base',
+                mapping: {
+                    '/': '/portal/web'
+                }
+            }
+        };
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
+
+        const req: any = {
+            hostname: 'my-company.com',
+            url: '/bar?y=1',
+            headers: {},
+            pluginContext,
+        };
+        const location = jest.fn();
+        const res: any = {
+            location,
+        };
+        const next = jest.fn();
+
+        middleware(req, res, next);
+
+        res.location('/y/foo?x=4');
+
+        expect(location.mock.calls.length).toBe(1);
+        expect(location.mock.calls[0][0]).toBe('/base/y/foo?x=4');
+    });
 
 });
 

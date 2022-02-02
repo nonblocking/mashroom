@@ -1,5 +1,5 @@
 
-import findHostDefinition from '../../src/middleware/find_host_definition';
+import findHostDefinition from '../../src/utils/find_host_definition';
 
 import type {DeterminedHost, VHostDefinitions} from '../../type-definitions/internal';
 

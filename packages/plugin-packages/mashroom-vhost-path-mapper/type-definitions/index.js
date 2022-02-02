@@ -20,17 +20,20 @@ export type RequestVHostMappingInfo = {
      */
     +frontendPath: string;
     /**
-     * The full frontend url seen by the user (browser url)
+     * The full frontend url seen by the user (including query and so on)
      */
     +frontendUrl: string;
 }
 
 export interface MashroomVHostPathMapperService {
+    /**
+     * Reverse map the given server url to the url as seen by the user (browser).
+     * The given URL must not contain host, only path with query params and so on.
+     */
+    getFrontendUrl(req: ExpressRequest, url: string): string;
 
     /**
      * Get the details if the url of the current path has been rewritten
      */
-    getMappingInfo(request: ExpressRequest): ?RequestVHostMappingInfo;
-
+    getMappingInfo(req: ExpressRequest): ?RequestVHostMappingInfo;
 }
-

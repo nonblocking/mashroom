@@ -20,11 +20,13 @@ export const getSitePath = (req: Request): string => {
 
 export const getFrontendSiteBasePath = (req: Request, ignoreVhostMapping = false): string => {
     const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper?.service;
-    const vhostMappingInfo = pathMapperService && pathMapperService.getMappingInfo(req);
-    if (vhostMappingInfo && !ignoreVhostMapping) {
-        return vhostMappingInfo.frontendBasePath !== '/' ? vhostMappingInfo.frontendBasePath : '';
+
+    const siteBasePath = `${getPortalPath()}${getSitePath(req)}`;
+    if (pathMapperService && !ignoreVhostMapping) {
+        return pathMapperService.getFrontendUrl(req, siteBasePath);
     }
-    return `${getPortalPath()}${getSitePath(req)}`;
+
+    return siteBasePath;
 };
 
 export const getFrontendApiBasePath = (req: Request): string => {

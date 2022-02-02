@@ -1,4 +1,4 @@
-import mapPath from '../../src/middleware/map_path';
+import mapPath from '../../src/utils/map_path';
 
 import type {VHostDefinition} from '../../type-definitions/internal';
 
