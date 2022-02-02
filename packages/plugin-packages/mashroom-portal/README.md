@@ -1185,6 +1185,9 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
                         "rule": "includeExtraScript",
                         "location": "header",
                         "inline": false
+                    }, {
+                        "dynamicResource": "myScript",
+                        "location": "header"
                     }],
                     "css": []
                 },
@@ -1199,9 +1202,9 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
 ```
 
  * _bootstrap_: Path to the script that contains the bootstrap for the plugin (optional)
- * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages. They can be added
-   to the header or footer (location) and can also be inlined. The (optional) rule property refers to a rule in the
-   instantiated plugin (bootstrap), see below.
+ * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages.
+   They can be static or dynamically generated. And they can be added to the header or footer (location)
+   and also be inlined. The (optional) rule property refers to a rule in the instantiated plugin (bootstrap), see below.
  * _defaultConfig.order_: The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)
  * _defaultConfig.resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
 
@@ -1212,6 +1215,9 @@ import type {MashroomPortalPageEnhancementPluginBootstrapFunction} from '@mashro
 
 const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
     return {
+        dynamicResources: {
+            myScript: () => `console.info('My Script loaded');`,
+        },
         rules: {
             // Example rule: Show only for IE
             includeExtraScript: (sitePath, pageFriendlyUrl, lang, userAgent) => userAgent.browser.name === 'IE',

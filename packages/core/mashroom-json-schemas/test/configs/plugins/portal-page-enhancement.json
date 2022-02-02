@@ -12,6 +12,9 @@
                     "rule": "includeExtraScript",
                     "location": "header",
                     "inline": false
+                }, {
+                    "dynamicResource": "myScript",
+                    "location": "header"
                 }],
                 "css": [{
                     "path": "test.css"

@@ -65,7 +65,9 @@
                     "description": "CSS resources. Relative to resourcesRoot"
                 }
             },
-            "required": ["js"],
+            "required": [
+                "js"
+            ],
             "additionalProperties": false
         },
         "PortalAppLocalConfig": {
@@ -80,7 +82,9 @@
                     "description": "An optional local SSR bootstrap that returns an initial HTML for the App, relative within the package. Needs to export a function compatible to MashroomPortalAppPluginSSRBootstrapFunction."
                 }
             },
-            "required": ["resourcesRoot"],
+            "required": [
+                "resourcesRoot"
+            ],
             "additionalProperties": false
         },
         "PortalAppRemoteConfig": {
@@ -95,7 +99,9 @@
                     "description": "The path to a route that renders the initial HTML. The route will receive a POST with a JSON body with a \"portalAppSetup\" property."
                 }
             },
-            "required": ["resourcesRoot"],
+            "required": [
+                "resourcesRoot"
+            ],
             "additionalProperties": false
         },
         "PortalAppCachingConfig": {
@@ -103,7 +109,11 @@
             "properties": {
                 "ssrHtml": {
                     "type": "string",
-                    "enum": ["none", "same-config", "same-config-and-user"],
+                    "enum": [
+                        "none",
+                        "same-config",
+                        "same-config-and-user"
+                    ],
                     "description": "SSR caching configuration (Default: same-config-and-user)"
                 }
             },
@@ -118,7 +128,10 @@
                 },
                 "position": {
                     "type": "string",
-                    "enum": ["in-place", "sidebar"],
+                    "enum": [
+                        "in-place",
+                        "sidebar"
+                    ],
                     "description": "Where to launch the editor"
                 },
                 "appConfig": {
@@ -126,7 +139,9 @@
                     "description": "The appConfig the editor App should be launched with (Default: {})"
                 }
             },
-            "required": ["editorPortalApp"],
+            "required": [
+                "editorPortalApp"
+            ],
             "additionalProperties": false
         },
         "PageEnhancementResources": {
@@ -139,7 +154,12 @@
                         "properties": {
                             "path": {
                                 "type": "string",
-                                "pattern": "^[^/].*\\.js$"
+                                "pattern": "^[^/].*\\.js$",
+                                "description": "Name to the JavaScript or CSS file"
+                            },
+                            "dynamicResource": {
+                                "$ref": "#/definitions/JavaScriptIdentifier",
+                                "description": "The name of the dynamic resource that should be added"
                             },
                             "rule": {
                                 "type": "string",
@@ -147,7 +167,10 @@
                             },
                             "location": {
                                 "type": "string",
-                                "enum": ["header", "footer"],
+                                "enum": [
+                                    "header",
+                                    "footer"
+                                ],
                                 "description": "The location of the script"
                             },
                             "inline": {
@@ -155,8 +178,7 @@
                                 "description": "Inline the script"
                             }
                         },
-                        "additionalProperties": false,
-                        "required": ["path"]
+                        "additionalProperties": false
                     }
                 },
                 "css": {
@@ -174,7 +196,10 @@
                             },
                             "location": {
                                 "type": "string",
-                                "enum": ["header", "footer"],
+                                "enum": [
+                                    "header",
+                                    "footer"
+                                ],
                                 "description": "The location of the style"
                             },
                             "inline": {
@@ -183,7 +208,9 @@
                             }
                         },
                         "additionalProperties": false,
-                        "required": ["path"]
+                        "required": [
+                            "path"
+                        ]
                     }
                 }
             },
@@ -226,7 +253,12 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "loads", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "loads",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomWebAppPluginDefinition": {
@@ -266,10 +298,17 @@
                             "description": "The default path where the WebApp will be available"
                         }
                     },
-                    "required": ["path"]
+                    "required": [
+                        "path"
+                    ]
                 }
             },
-            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomApiPluginDefinition": {
@@ -309,10 +348,17 @@
                             "description": "The default path where the API will be available"
                         }
                     },
-                    "required": ["path"]
+                    "required": [
+                        "path"
+                    ]
                 }
             },
-            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomMiddlewarePluginDefinition": {
@@ -354,7 +400,12 @@
                     }
                 }
             },
-            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomStaticPluginDefinition": {
@@ -394,10 +445,17 @@
                             "description": "The default path where the static documents will be available"
                         }
                     },
-                    "required": ["path"]
+                    "required": [
+                        "path"
+                    ]
                 }
             },
-            "required": ["name", "type", "documentRoot", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "documentRoot",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomServicesPluginDefinition": {
@@ -437,7 +495,12 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "namespace", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "namespace",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomAdminUiIntegrationPluginDefinition": {
@@ -489,10 +552,18 @@
                             "description": "The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)"
                         }
                     },
-                    "required": ["menuTitle", "path"]
+                    "required": [
+                        "menuTitle",
+                        "path"
+                    ]
                 }
             },
-            "required": ["name", "type", "target", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "target",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomBackgroundJobPluginDefinition": {
@@ -534,7 +605,12 @@
                     }
                 }
             },
-            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomExternalMessagingProviderPluginDefinition": {
@@ -570,7 +646,11 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomHttpProxyInterceptorPluginDefinition": {
@@ -612,7 +692,12 @@
                     }
                 }
             },
-            "required": ["name", "type", "bootstrap", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomMemoryCacheProviderPluginDefinition": {
@@ -648,7 +733,11 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomPortalAppV1PluginDefinition": {
@@ -722,7 +811,7 @@
                         "rolePermissions": {
                             "type": "object",
                             "patternProperties": {
-                                "^[a-zA-Z_]\\w+$":{
+                                "^[a-zA-Z_]\\w+$": {
                                     "type": "array",
                                     "items": {
                                         "type": "string"
@@ -735,7 +824,7 @@
                         "restProxies": {
                             "type": "object",
                             "patternProperties": {
-                                "^[a-zA-Z_]\\w+$":{
+                                "^[a-zA-Z_]\\w+$": {
                                     "type": "object",
                                     "properties": {
                                         "targetUri": {
@@ -755,10 +844,11 @@
                                         }
                                     },
                                     "additionalProperties": false,
-                                    "required": ["targetUri"]
+                                    "required": [
+                                        "targetUri"
+                                    ]
                                 }
                             }
-
                         },
                         "metaInfo": {
                             "type": "object",
@@ -770,10 +860,18 @@
                         }
                     },
                     "additionalProperties": false,
-                    "required": ["resourcesRoot"]
+                    "required": [
+                        "resourcesRoot"
+                    ]
                 }
             },
-            "required": ["name", "type", "resources", "bootstrap", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "resources",
+                "bootstrap",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomPortalAppV2PluginDefinition": {
@@ -851,7 +949,7 @@
                         "rolePermissions": {
                             "type": "object",
                             "patternProperties": {
-                                "^[a-zA-Z_]\\w+$":{
+                                "^[a-zA-Z_]\\w+$": {
                                     "type": "array",
                                     "items": {
                                         "type": "string"
@@ -872,7 +970,7 @@
                         "proxies": {
                             "type": "object",
                             "patternProperties": {
-                                "^[a-zA-Z_]\\w+$":{
+                                "^[a-zA-Z_]\\w+$": {
                                     "type": "object",
                                     "properties": {
                                         "targetUri": {
@@ -892,10 +990,11 @@
                                         }
                                     },
                                     "additionalProperties": false,
-                                    "required": ["targetUri"]
+                                    "required": [
+                                        "targetUri"
+                                    ]
                                 }
                             }
-
                         },
                         "metaInfo": {
                             "type": "object",
@@ -909,7 +1008,13 @@
                     "additionalProperties": false
                 }
             },
-            "required": ["name", "type", "resources", "clientBootstrap", "local"],
+            "required": [
+                "name",
+                "type",
+                "resources",
+                "clientBootstrap",
+                "local"
+            ],
             "additionalProperties": false
         },
         "MashroomPortalThemePluginDefinition": {
@@ -953,7 +1058,13 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "resourcesRoot", "views", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "resourcesRoot",
+                "views",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomPortalLayoutsPluginDefinition": {
@@ -992,7 +1103,11 @@
                     "description": " A map with the layout html files (on the local file system)"
                 }
             },
-            "required": ["name", "type", "layouts"],
+            "required": [
+                "name",
+                "type",
+                "layouts"
+            ],
             "additionalProperties": false
         },
         "MashroomRemotePortalAppRegistryPluginDefinition": {
@@ -1034,7 +1149,11 @@
                     }
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomPortalPageEnhancementPluginDefinition": {
@@ -1082,10 +1201,17 @@
                             "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
                         }
                     },
-                    "required": ["resourcesRoot"]
+                    "required": [
+                        "resourcesRoot"
+                    ]
                 }
             },
-            "required": ["name", "type", "pageResources", "defaultConfig"],
+            "required": [
+                "name",
+                "type",
+                "pageResources",
+                "defaultConfig"
+            ],
             "additionalProperties": false
         },
         "MashroomPortalAppEnhancementPluginDefinition": {
@@ -1120,7 +1246,7 @@
                 "portalCustomClientServices": {
                     "type": "object",
                     "patternProperties": {
-                        "^[a-zA-Z_]\\w+$":{
+                        "^[a-zA-Z_]\\w+$": {
                             "$ref": "#/definitions/JavaScriptIdentifier"
                         }
                     },
@@ -1131,7 +1257,10 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type"],
+            "required": [
+                "name",
+                "type"
+            ],
             "additionalProperties": false
         },
         "MashroomSecurityProviderPluginDefinition": {
@@ -1167,7 +1296,11 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomSessionStoreProviderPluginDefinition": {
@@ -1203,7 +1336,11 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomStorageProviderPluginDefinition": {
@@ -1239,7 +1376,11 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"],
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
             "additionalProperties": false
         },
         "MashroomCustomPluginDefinition": {
@@ -1283,7 +1424,11 @@
                     "type": "object"
                 }
             },
-            "required": ["name", "type", "bootstrap"]
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ]
         },
         "MashroomPlugins": {
             "type": "object",
@@ -1372,6 +1517,8 @@
             "type": "string"
         }
     },
-    "required": ["plugins"],
+    "required": [
+        "plugins"
+    ],
     "additionalProperties": false
 }
