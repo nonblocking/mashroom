@@ -8,7 +8,7 @@ import App from './App';
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
-    const {appConfig, user} = portalAppSetup;
+    const {appConfig: {markdownMessage, pingButtonLabel}, user} = portalAppSetup;
     const {messageBus, remoteLogger} = clientServices;
 
     const ssrHost = portalAppHostElement.querySelector('[data-ssr-host="true"]');
@@ -16,11 +16,11 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     if (ssrHost) {
         // SSR
         console.info('Hydrating React Demo App 2');
-        hydrate(<App appConfig={appConfig} messageBus={messageBus}/>, ssrHost);
+        hydrate(<App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={messageBus}/>, ssrHost);
     } else {
         // CSR
         console.info('Starting React Demo App 2');
-        render(<App appConfig={appConfig} messageBus={messageBus}/>, portalAppHostElement);
+        render(<App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={messageBus}/>, portalAppHostElement);
     }
 
     // Log on server
@@ -31,9 +31,9 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
             console.info('Ummounting React App 2');
             unmountComponentAtNode(portalAppHostElement);
         },
-        updateAppConfig: (appConfig) => {
+        updateAppConfig: ({markdownMessage, pingButtonLabel}) => {
             console.info('Rerending React App 2 because appConfig changed');
-            render(<App appConfig={appConfig} messageBus={messageBus}/>, portalAppHostElement);
+            render(<App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={messageBus}/>, portalAppHostElement);
         },
     };
 };

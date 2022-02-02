@@ -3,18 +3,18 @@ import '../sass/styleEditor.scss';
 
 import React from 'react';
 import {render, unmountComponentAtNode} from 'react-dom';
-import AppConfigEditor from './AppConfigEditor';
+import Editor from './Editor';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
-const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup) => {
     const {appConfig: {editorTarget}} = portalAppSetup;
 
     if (!editorTarget || !editorTarget.pluginName) {
         throw new Error('This app can only be started as App Config Editor!');
     }
 
-    render(<AppConfigEditor editorTarget={editorTarget} />, portalAppHostElement);
+    render(<Editor editorTarget={editorTarget} />, portalAppHostElement);
 
     return {
         willBeRemoved: () => {

@@ -9,14 +9,12 @@ import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-defi
 const markdown = new Markdown();
 
 type Props = {
-    appConfig: {
-        markdownMessage?: string;
-        pingButtonLabel?: string;
-    };
+    markdownMessage?: string;
+    pingButtonLabel?: string;
     messageBus: MashroomPortalMessageBus;
 }
 
-export default ({appConfig: {markdownMessage, pingButtonLabel}, messageBus}: Props) => {
+export default ({markdownMessage, pingButtonLabel, messageBus}: Props) => {
     const [pings, setPings] = useState(0);
     const pingReceiver = useCallback(() => setPings((p) => p + 1), []);
     const message = useMemo(() => markdown.render(markdownMessage || 'Hello World'), [markdownMessage]);
