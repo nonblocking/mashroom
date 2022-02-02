@@ -47,10 +47,8 @@ describe('path_utils', () => {
                 services: {
                     vhostPathMapper: {
                         service: {
-                            getMappingInfo() {
-                                return {
-                                    frontendBasePath: '/mashroom-portal',
-                                };
+                            getFrontendUrl() {
+                                return '/mashroom-portal';
                             },
                         },
                     },
@@ -59,29 +57,6 @@ describe('path_utils', () => {
         };
 
         expect(getFrontendSiteBasePath(req)).toBe('/mashroom-portal');
-    });
-
-    it('resolves the frontend site base path when virtual host frontend base path is root', () => {
-        const req: any = {
-            params: {
-                sitePath: 'web1',
-            },
-            pluginContext: {
-                services: {
-                    vhostPathMapper: {
-                        service: {
-                            getMappingInfo() {
-                                return {
-                                    frontendBasePath: '/',
-                                };
-                            },
-                        },
-                    },
-                },
-            },
-        };
-
-        expect(getFrontendSiteBasePath(req)).toBe('');
     });
 
     it('resolves the frontend API path', () => {
@@ -135,10 +110,8 @@ describe('path_utils', () => {
                 services: {
                     vhostPathMapper: {
                         service: {
-                            getMappingInfo() {
-                                return {
-                                    frontendBasePath: '/mashroom-portal',
-                                };
+                            getFrontendUrl() {
+                                return '/mashroom-portal';
                             },
                         },
                     },
