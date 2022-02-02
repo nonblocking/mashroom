@@ -5,7 +5,6 @@ import type {
     MashroomPluginConfig,
     MashroomPluginContextHolder
 } from '@mashroom/mashroom/type-definitions';
-import {MashroomSecurityRoles} from "@mashroom/mashroom-security/type-definitions";
 
 /* Model */
 
@@ -203,7 +202,7 @@ export type MashroomPortalUser = {
     readonly email?: string | null | undefined;
     readonly pictureUrl?: string | null | undefined;
     readonly extraData?: Record<string, any> | null | undefined;
-    readonly roles: MashroomSecurityRoles;
+    readonly roles: Array<string> | null | undefined;
 };
 
 export type MashroomPortalPageContent = {
