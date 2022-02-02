@@ -429,7 +429,7 @@ import App from './App';
 
 import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
-const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup) => {
+const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup, req) => {
     const {appConfig, restProxyPaths, lang} = portalAppSetup;
     const dummyMessageBus: any = {};
     return renderToString(<App appConfig={appConfig} messageBus={dummyMessageBus}/>);

@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Added the Express Request to the SSR bootstrap, so it can access the *pluginContext* (logger, services)
  * VHost Path Mapper: It is now possible to map multiple Portal sites to different base paths on the same virtual host
  * VHost Path Mapper: Fixed reverse mapping of the location header if a *frontendBasePath* exists
 

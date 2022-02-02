@@ -55,7 +55,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
             } else {
                 ssrBootstrap = bootstrap.default;
             }
-            html = await ssrBootstrap(portalAppSetup);
+            html = await ssrBootstrap(portalAppSetup, req);
         } catch (e) {
             logger.error(`Loading or executing local SSR bootstrap '${ssrBootstrapPath}' for app '${pluginName}' failed!`, e);
         }

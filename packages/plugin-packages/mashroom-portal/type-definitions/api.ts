@@ -1252,7 +1252,7 @@ export type MashroomPortalAppPluginBootstrapFunction = (
     | MashroomPortalAppLifecycleHooks
     | Promise<void | MashroomPortalAppLifecycleHooks>;
 
-export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup) => Promise<string>;
+export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup, req: Request) => Promise<string>;
 
 // portal-theme
 
