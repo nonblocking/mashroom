@@ -20,5 +20,4 @@ const bootstrap: MashroomPortalThemePluginBootstrapFunction = async (pluginName,
     };
 };
 
-
 export default bootstrap;

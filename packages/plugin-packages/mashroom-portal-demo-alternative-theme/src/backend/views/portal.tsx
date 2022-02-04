@@ -31,17 +31,20 @@ export default ({
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/bootstrap/css/bootstrap.css?v=${bootstrapVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css?v=${fontawesomeVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css?v=${fontawesomeVersion}'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/style.css?v=${lastThemeReloadTs}'/>
-
-            ${page.extraCss ? `<style type="text/css">${page.extraCss}</style>` : ''}
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/portal.css?v=${lastThemeReloadTs}'/>
+            ${user.admin ? `<link rel="stylesheet" type="text/css" href='${resourcesBasePath}/admin.css?v=${lastThemeReloadTs}'/>` : ''}
 
             ${portalResourcesHeader}
+
+             ${page.extraCss ? `<style >${page.extraCss}</style>` : ''}
+             <script type="application/javascript" src="${resourcesBasePath}/main.js?v={{${lastThemeReloadTs}"></script>
         `}} />
         <body>
-            <div id="mashroom-portal-admin-app-container">
-                {/* Admin app goes here */}
-            </div>
-
+            {user.admin && (
+                <div id="mashroom-portal-admin-app-container">
+                    {/* Admin app goes here */}
+                </div>
+            )}
             <header>
                 <div className="logo">
                     <img src={`${resourcesBasePath}/assets/logo-red.svg`} />
@@ -59,13 +62,12 @@ export default ({
                         </div>
                     </div>
                 )}
-                <div id="menu-open" />
             </header>
 
-            <main>
-                <Navigation siteBasePath={siteBasePath} currentPage={page} pages={site.pages} />
+            <Navigation siteBasePath={siteBasePath} currentPage={page} pages={site.pages} />
 
-                <div className="mashroom-portal-apps-container container-fluid">
+            <main>
+                <div id="portal-page-content" className="mashroom-portal-apps-container container-fluid">
                     <div dangerouslySetInnerHTML={{__html: pageContent}}/>
                 </div>
             </main>
@@ -100,22 +102,7 @@ export default ({
             <span dangerouslySetInnerHTML={{__html: portalResourcesFooter}}/>
 
             <script dangerouslySetInnerHTML={{__html: `
-                document.getElementById('menu-open').addEventListener('click', toggleMenu);
 
-                function toggleMenu() {
-                    var nav = document.querySelector('nav');
-                    if (nav.classList.contains('show')) {
-                        nav.classList.remove('fade-in');
-                        setTimeout(function() {
-                            nav.classList.remove('show');
-                        }, 200);
-                    } else {
-                        nav.classList.add('show');
-                        setTimeout(function() {
-                            nav.classList.add('fade-in');
-                        }, 10);
-                    }
-                }
             `}} />
         </body>
     </html>

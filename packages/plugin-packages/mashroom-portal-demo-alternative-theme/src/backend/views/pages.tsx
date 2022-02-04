@@ -9,7 +9,7 @@ type Props = {
 }
 
 const Pages = ({ currentPage, pages, siteBasePath }: Props) => (
-    <ul key={currentPage.pageId} className="nav flex-column">
+    <ul key={currentPage.pageId} className="nav">
         {
             pages.map(({ hidden, pageId, title, friendlyUrl, subPages }) => {
                 if (hidden) {
@@ -18,8 +18,8 @@ const Pages = ({ currentPage, pages, siteBasePath }: Props) => (
                 const isCurrentPage = pageId === currentPage.pageId;
                 return (
                     <li key={pageId} className="nav-item">
-                        {isCurrentPage && <a className="nav-link active" href="">{title}</a>}
-                        {!isCurrentPage && <a className="nav-link" href={`${siteBasePath}${friendlyUrl}`}>{title}</a>}
+                        {isCurrentPage && <a className="nav-link active" href="" data-mr-page-id={pageId} data-mr-page-title={title}>{title}</a>}
+                        {!isCurrentPage && <a className="nav-link" href={`${siteBasePath}${friendlyUrl}`} data-mr-page-id={pageId} data-mr-page-title={title}>{title}</a>}
                         {subPages && <Pages pages={subPages} currentPage={currentPage} siteBasePath={siteBasePath} />}
                     </li>
                 )
@@ -28,8 +28,4 @@ const Pages = ({ currentPage, pages, siteBasePath }: Props) => (
     </ul>
 );
 
-export default (props: Props) => (
-    <nav>
-        <Pages {...props} />
-    </nav>
-);
+export default Pages;

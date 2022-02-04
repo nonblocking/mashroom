@@ -1,61 +1,5 @@
-@import "node_modules/@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults";
-
-
-$COLOR_BLACK: #343633;
-$COLOR_WHITE: white;
-$COLOR_GREY: #888;
-$COLOR_GREY_LIGHT: #999;
-$COLOR_ERROR: red;
-
-$COLOR_PRIMARY: #8E181A;
-$COLOR_PRIMARY_LIGHT: #B2373A;
-$COLOR_PRIMARY_DARK: #660204;
-$COLOR_PRIMARY_EXTRA_LIGHT: #D86568;
-
-$COLOR_SECONDARY: #8F4D18;
-$COLOR_SECONDARY_LIGHT: #B36E37;
-$COLOR_SECONDARY_DARK: #672F02;
-
-$ADMIN_APP_COLOR_BACKGROUND: $COLOR_BLACK;
-$ADMIN_APP_COLOR_BACKGROUND_LIGHT: lighten($ADMIN_APP_COLOR_BACKGROUND, 10);
-$ADMIN_APP_COLOR_BACKGROUND_LIGHTER: lighten($ADMIN_APP_COLOR_BACKGROUND, 20);
-$ADMIN_APP_COLOR_TEXT: white;
-$ADMIN_APP_COLOR_TEXT_DARK: lighten($ADMIN_APP_COLOR_BACKGROUND, 50);
-
-$FONT_DEFAULT: Roboto, Arial, sans-serif;
-$FONT_HEADER: Domine, Georgia, serif;
-
-$GUTTER_WIDTH: 20px;
-
-@-webkit-keyframes spin {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
-@keyframes spin {
-    0% {
-        -webkit-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-    }
-}
-
-@mixin hover-animation() {
-    transition: color 500ms ease-out, background-color 500ms ease-out;
-}
-
-@mixin focus-animation() {
-    transition: color 500ms ease-out, border-color 500ms ease-out;
-}
+@use "variables" as *;
+@use "node_modules/@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults" as *;
 
 /* Remove Chrome's input focus border */
 :focus {
@@ -75,11 +19,10 @@ body {
     text-rendering: optimizeLegibility;
     color: $COLOR_BLACK;
     font-family: $FONT_DEFAULT;
-    background-color: #EEE;
+    background-color: $COLOR_BACKGROUND;
     overflow-x: hidden;
     font-size: 16px;
 }
-
 
 h1, h2, h3 {
     font-family: $FONT_HEADER;
@@ -332,13 +275,30 @@ header {
     position: relative;
 
     .logo {
-        display: none;
+        display: block;
+        background-color: white;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        position: absolute;
+        left: 15px;
+        top: 8px;
+
+        img {
+            display: inline-block;
+            height: 32px;
+            margin-left: 10px;
+            margin-top: 15px;
+        }
     }
 
     .site-name {
+        margin-left: 90px;
+
         h1 {
             display: inline-block;
-            padding: 16px $GUTTER_WIDTH 0 $GUTTER_WIDTH;
+            padding: 10px 0 5px 0;
+            margin: 0;
             font-size: 1.4em;
             font-weight: 400;
         }
@@ -346,7 +306,7 @@ header {
 
     .user {
         padding: 0 20px 10px 20px;
-        margin-left: $GUTTER_WIDTH;
+        margin-left: 90px;
         display: flex;
         align-items: center;
         position: relative;
@@ -373,21 +333,6 @@ header {
                 color: $COLOR_WHITE;
                 font-size: 0.8em;
             }
-        }
-    }
-
-    #menu-open {
-        cursor: pointer;
-        position: absolute;
-        bottom: 5px;
-        right: 10px;
-        padding: 2px 5px;
-
-        &:before {
-            content: '\f142';
-            font-family: $FONT_ICON;
-            font-size: 1.2em;
-            font-weight: 900;
         }
     }
 }
@@ -481,80 +426,106 @@ header {
     }
 }
 
-main {
-    margin: 25px 10px;
+nav {
+    white-space: nowrap;
+    background-color: #EEE;
+    border-bottom: 1px solid #CCC;
 
-    nav {
-        white-space: nowrap;
-        min-width: 220px;
-        position: absolute;
-        z-index: 1000;
-        top: 100px;
-        right: -500px;
-        background-color: white;
-        border: 1px solid $COLOR_SECONDARY;
-        box-shadow: 0 0 4px #AAA;
-        transition: right 0.2s ease-out;
-        display: none;
+    .menu-toggle-wrapper {
+        display: flex;
+
+        #menu-toggle {
+            margin: 2px 19px;
+            padding: 2px 6px;
+            cursor: pointer;
+            border-radius: 5px;
+
+            &:before {
+                content: '\f0c9';
+                font-family: $FONT_ICON;
+                font-size: 1.1em;
+                font-weight: 900;
+            }
+
+            &:hover {
+                background-color: #CCC;
+            }
+        }
+
+        .current-page {
+            font-family: $FONT_HEADER;
+            padding: 5px 0;
+        }
+    }
+
+    .nav-wrapper {
+        max-height: 0;
+        overflow: hidden;
+        padding-left: 40px;
+        transition: max-height 0.3s ease-out;
 
         &.show {
-            display: block;
+            max-height: 512px;
+            box-shadow: 0 4px 4px #CCC;
         }
+    }
 
-        &.fade-in {
-            right: 0;
+    .nav {
+        display: block;
+    }
+
+    .nav .nav {
+        .nav-item .nav-link {
+            padding-left: 30px;
         }
+    }
 
-        .nav .nav {
-            .nav-item .nav-link {
-                padding-left: 30px;
+    .nav .nav .nav {
+        .nav-item .nav-link {
+            padding-left: 40px;
+        }
+    }
+
+    .nav .nav .nav .nav {
+        .nav-item .nav-link {
+            padding-left: 50px;
+        }
+    }
+
+    .nav-item {
+        .nav-link {
+            color: $COLOR_BLACK;
+            text-decoration: none;
+            padding: 6px 12px;
+
+            &:before {
+                content: '\f0da';
+                font-family: $FONT_ICON;
+                padding-right: 10px;
+                font-weight: 900;
+                font-size: 0.8em;
             }
-        }
 
-        .nav .nav .nav {
-            .nav-item .nav-link {
-                padding-left: 40px;
+            &:hover {
+                font-weight: bold;
             }
-        }
 
-        .nav .nav .nav .nav {
-            .nav-item .nav-link {
-                padding-left: 50px;
-            }
-        }
-
-        .nav-item {
-
-            .nav-link {
-                padding: 5px 20px;
-                margin-bottom: 2px;
-                color: $COLOR_BLACK;
-                text-decoration: none;
-
-                &:before {
-                    content: '\f0da';
-                    font-family: $FONT_ICON;
-                    padding-right: 10px;
-                    font-weight: 900;
-                    font-size: 0.8em;
-                }
+            &.active {
+                cursor: default;
+                font-style: italic;
 
                 &:hover {
-                    background-color: lighten($COLOR_SECONDARY_LIGHT, 25);
-                }
-
-                &.active {
-                    cursor: default;
-                    font-weight: bold;
-                    color: $COLOR_SECONDARY;
-
-                    &:hover {
-                        background-color: white;
-                    }
+                    font-weight: normal;
                 }
             }
         }
     }
+}
+
+main {
+    margin: 25px 10px;
+
+
 }
 
 footer {
@@ -693,7 +664,7 @@ mashroom-portal-ui-error-message {
     background-color: rgba(#444, 0.6);
     z-index: 5000;
     top: -100%;
-    transition: top 0.3s ease-out;
+    transition: top 0.2s ease-out;
 
     &.show {
         top: 0;
@@ -781,293 +752,21 @@ mashroom-portal-ui-error-message {
     background-color: #EEE;
 }
 
-// Admin app styles
-
-#mashroom-portal-admin-app-container {
-    background-color: $COLOR_BLACK;
-
-    .mashroom-portal-app-wrapper {
-        min-height: 32px;
-        margin: 0;
-
-        .mashroom-portal-app-header {
-            display: none !important;
-        }
-    }
-
-    .mashroom-portal-app-loading {
-        min-height: 32px;
-        background-color: $COLOR_BLACK;
-
-        &:before {
-            color: $COLOR_WHITE;
-            font-size: 14px;
-        }
-    }
-}
-
-.mashroom-portal-admin-app {
-    background-color: $ADMIN_APP_COLOR_BACKGROUND;
-    color: $ADMIN_APP_COLOR_TEXT;
-
-    .menu-bar {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND;
-    }
-
-    .available-apps-panel {
-
-        .available-app {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-            margin-bottom: 2px;
-
-            &:hover {
-                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-            }
-
-            .filter-match {
-                color: $COLOR_SECONDARY;
-            }
-        }
-    }
-
-    .dropdown-menu-button {
-        &:hover {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-        }
-    }
-
-    .portal-apps-control-toggle {
-        &:hover {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-        }
-    }
-
-    a, a:visited, a:focus {
-        color: $ADMIN_APP_COLOR_TEXT;
-        text-decoration: underline;
-        @include hover-animation();
-
-        &:hover {
-            color: $COLOR_SECONDARY;
-        }
-
-        &:active {
-            color: $COLOR_SECONDARY;
-        }
-    }
-
-    table {
-        color: $ADMIN_APP_COLOR_TEXT;
-        border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER !important;
-
-        tr {
-            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER !important;
-
-            &:nth-child(odd) {
-                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-            }
-        }
-
-        th {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT !important;
-        }
-
-        td {
-            text-align: center;
-            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER !important;
-
-            &:first-child {
-                text-align: left;
-            }
-        }
-    }
-
-    .mashroom-portal-checkbox {
-        & + label {
-            &:before {
-                color: $ADMIN_APP_COLOR_TEXT_DARK;
-            }
-        }
-
-        &:focus + label {
-            &:before {
-
-            }
-        }
-    }
-
-    .mashroom-portal-radio {
-        & + label {
-            &:before {
-                color: $ADMIN_APP_COLOR_TEXT_DARK;
-            }
-        }
-
-        &:focus + label {
-            &:before {
-
-            }
-        }
-    }
-
-    input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"], textarea {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-        border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-        color: $ADMIN_APP_COLOR_TEXT;
-
-        &:focus {
-            border-color: $COLOR_SECONDARY;
-        }
-    }
-
-    select {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-        border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-        color: $ADMIN_APP_COLOR_TEXT;
-
-        option {
-            color: $ADMIN_APP_COLOR_TEXT;
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-        }
-
-        &:focus {
-            border-color: $COLOR_SECONDARY;
-        }
-    }
-
-    button {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-        border: 1px solid transparent;
-        color: $ADMIN_APP_COLOR_TEXT;
-
-        &:hover {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-        }
-
-        &[disabled] {
-            color: $COLOR_GREY;
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-
-            &:hover, &:active {
-                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-            }
-        }
-
-        &:focus {
-            border-color: $COLOR_SECONDARY;
-        }
-    }
-
-    .mashroom-portal-ui-field-label {
-        color: $COLOR_GREY;
-
-    }
-
-    .mashroom-portal-ui-source-code-editor-field {
-        .CodeMirror {
-            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-
-            &.CodeMirror-focused {
-                border-color: $COLOR_SECONDARY;
-            }
-        }
-    }
-
-    .mashroom-portal-ui-dropdown-menu {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND;
-        color: $ADMIN_APP_COLOR_TEXT;
-
-        .dropdown-menu-content {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND;
-            color: $ADMIN_APP_COLOR_TEXT;
-            border: 1px solid #555;
-        }
-
-        .mashroom-portal-ui-dropdown-menu-item {
-            &:hover {
-                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-            }
-        }
-    }
-
-    .mashroom-portal-ui-modal {
-        .mashroom-portal-ui-modal-header {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
-        }
-
-        .mashroom-portal-ui-modal-content {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND;
-            color: $ADMIN_APP_COLOR_TEXT;
-        }
-    }
-
-    .mashroom-portal-autocomplete-field {
-        .suggestions-container-open {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND;
-
-            li:nth-child(even) {
-
-            }
-        }
-
-        .suggestion-highlighted {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER !important;
-        }
-    }
-}
-
-.mashroom-portal-admin-app-controls {
-    .tool-button {
-        color: $ADMIN_APP_COLOR_TEXT;
-        background-color: $ADMIN_APP_COLOR_BACKGROUND;
-        opacity: 0.6;
-
-        &:hover {
-            opacity: 1;
-        }
-    }
-}
-
-.mashroom-portal-admin-drag-ghost {
-    color: $COLOR_WHITE;
-    background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-}
-
-
 @include small {
 
     header {
         display: flex;
         align-items: center;
 
-        .logo {
-            display: block;
-            background-color: white;
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            position: absolute;
-            left: 15px;
-            top: 12px;
-            box-shadow: 0 0 4px #AAA;
-
-            img {
-                display: inline-block;
-                height: 32px;
-                margin-left: 15px;
-                margin-top: 18px;
-            }
-        }
-
         .site-name {
+            margin-left: 0;
             flex-grow: 2;
             padding-left: 80px;
             margin-top: 4px;
 
             h1 {
                 font-size: 1.6em;
-                padding: 16px $GUTTER_WIDTH 8px $GUTTER_WIDTH;
+                padding: 20px $GUTTER_WIDTH;
             }
         }
 
@@ -1075,6 +774,7 @@ mashroom-portal-ui-error-message {
             display: block;
             padding-top: 10px;
             padding-left: 30px;
+            margin-left: 0;
 
             &:before {
                 font-size: 1.6em;
@@ -1085,11 +785,6 @@ mashroom-portal-ui-error-message {
                 text-align: right;
                 margin-top: -3px;
             }
-        }
-
-        #menu-open {
-            position: static;
-            margin: 0 15px 0 0;
         }
     }
 
@@ -1106,12 +801,10 @@ mashroom-portal-ui-error-message {
 @include medium {
 
     header {
-
         .site-name {
-
-
             h1 {
                 font-size: 2em;
+                padding: 16px $GUTTER_WIDTH;
             }
         }
 
