@@ -1,4 +1,6 @@
 
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
 import themeParams from './theme_params';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -54,6 +56,15 @@ function extraMainClasses(): string {
     return classes;
 }
 
+function inlineStyle(cssFile: string): string {
+    try {
+        const file = readFileSync(resolve(__dirname, 'public', cssFile));
+        return `<style>${file.toString('utf-8')}</style>`;
+    } catch (e) {
+        return `<!-- Error: CSS file not found: ${cssFile} -->`;
+    }
+}
+
 function ifShowEnvAndVersions(this: any, options: any): any {
     if (themeParams.showEnvAndVersions) {
         return options.fn(this);
@@ -69,6 +80,7 @@ export default {
     bootstrapVersion,
     fontawesomeVersion,
     extraMainClasses,
+    inlineStyle,
     ifShowEnvAndVersions,
     '__': i18n,
     defaultPluginErrorMessage,

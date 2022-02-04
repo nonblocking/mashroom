@@ -343,6 +343,7 @@ export default class PortalPageRenderController {
             messages,
             user: {
                 guest: !user,
+                admin: securityService.isAdmin(req),
                 username: user ? user.username : 'anonymous',
                 displayName: user ? user.displayName || user.username : 'Anonymous',
                 email: user?.email,

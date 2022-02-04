@@ -197,6 +197,7 @@ export type UserAgent = {
 
 export type MashroomPortalUser = {
     readonly guest: boolean;
+    readonly admin: boolean;
     readonly username: string;
     readonly displayName: string;
     readonly email?: string | null | undefined;

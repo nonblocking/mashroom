@@ -35,6 +35,7 @@ app.get('/', (req: Request, res: Response) => {
         messages: (key) => key,
         user: {
             guest: false,
+            admin: false,
             username: 'john',
             displayName: 'John Do',
             roles: [],

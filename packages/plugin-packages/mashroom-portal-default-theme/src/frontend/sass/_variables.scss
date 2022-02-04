@@ -1,0 +1,82 @@
+
+
+$COLOR_BLACK: #343633;
+$COLOR_WHITE: white;
+$COLOR_GREY: #888;
+$COLOR_GREY_LIGHT: #999;
+$COLOR_ERROR: #FF0033;
+
+$COLOR_PRIMARY: #504B88;
+$COLOR_PRIMARY_LIGHT: #655fa7; // 10%
+$COLOR_PRIMARY_DARK: #3d3967; // 10%
+$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8; // 55%
+
+$COLOR_SECONDARY: #C49B5E;
+$COLOR_SECONDARY_LIGHT: #d2b283; // 10%
+$COLOR_SECONDARY_DARK: #af8240; // 10%
+$COLOR_SECONDARY_EXTRA_LIGHT: #f4ece1; // 35%
+
+$COLOR_LOADING_DOTS: $COLOR_PRIMARY;
+$COLOR_LOADING_DOTS_LIGHTEN:  lighten($COLOR_PRIMARY, 30%);
+
+$ADMIN_APP_COLOR_BACKGROUND: $COLOR_BLACK;
+$ADMIN_APP_COLOR_BACKGROUND_LIGHT: lighten($ADMIN_APP_COLOR_BACKGROUND, 10);
+$ADMIN_APP_COLOR_BACKGROUND_LIGHTER: lighten($ADMIN_APP_COLOR_BACKGROUND, 20);
+$ADMIN_APP_COLOR_TEXT: white;
+$ADMIN_APP_COLOR_TEXT_DARK: lighten($ADMIN_APP_COLOR_BACKGROUND, 50);
+
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
+
+$GUTTER_WIDTH: 15px;
+
+@keyframes show-delayed {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes dot-flashing {
+    0% {
+        background-color: $COLOR_LOADING_DOTS;
+    }
+    50%,
+    100% {
+        background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+    }
+}
+
+@keyframes progress-bar {
+    0% {
+        left:0;
+        right:100%;
+        width:0;
+    }
+    10% {
+        left: 0;
+        right: 75%;
+        width: 20%;
+    }
+    90% {
+        right: 0;
+        left: 75%;
+        width: 20%;
+    }
+    100% {
+        left: 100%;
+        right: 0;
+        width: 0;
+    }
+}
+
+@mixin hover-animation() {
+    transition: color 500ms ease-out, background-color 500ms ease-out;
+}
+
+@mixin focus-animation() {
+    transition: color 500ms ease-out, border-color 500ms ease-out;
+}
+

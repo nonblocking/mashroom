@@ -28,9 +28,10 @@
         "type-check": "tsc --noEmit",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev_server.js\"",
         "build:backend": "babel src/backend -d dist --extensions .ts",
-        "build:frontend": "webpack --mode production && sass --style compressed --load-path=. src/frontend/sass/style.scss dist/public/style.css",
+        "build:frontend": "webpack --mode production",
+        "build:style": "sass --style compressed --load-path=. src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
         "build:copy-assets": "cpy src/assets dist/public/assets && cpy . ../../../dist/public/bootstrap --cwd=node_modules/bootstrap/dist --parents && cpy . ../../../dist/public/fontawesome --cwd=node_modules/@fortawesome/fontawesome-free --parents",
-        "build": "npm run build:backend && npm run build:frontend  && npm run build:copy-assets"
+        "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
     },
     "mashroom": {
         "devModeBuildScript": "build",
