@@ -29,7 +29,7 @@
               "sourceMap": false,
               "namedChunks": false,
               "aot": true,
-              "extractLicenses": false,
+              "extractLicenses": true,
               "vendorChunk": false,
               "buildOptimizer": true
             }
@@ -78,35 +78,6 @@
           }
         }
       }
-    }
-  },
-  "defaultProject": "angular-bare-bones",
-  "schematics": {
-    "@schematics/angular:class": {
-      "spec": false
-    },
-    "@schematics/angular:component": {
-      "inlineStyle": true,
-      "inlineTemplate": true,
-      "spec": false,
-      "prefix": "app",
-      "styleext": "css"
-    },
-    "@schematics/angular:directive": {
-      "spec": false,
-      "prefix": "app"
-    },
-    "@schematics/angular:guard": {
-      "spec": false
-    },
-    "@schematics/angular:module": {
-      "spec": false
-    },
-    "@schematics/angular:pipe": {
-      "spec": false
-    },
-    "@schematics/angular:service": {
-      "spec": false
     }
   }
 }
