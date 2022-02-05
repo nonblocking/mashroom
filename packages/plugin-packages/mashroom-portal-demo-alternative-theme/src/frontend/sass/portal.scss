@@ -1,5 +1,21 @@
+
 @use "variables" as *;
 @use "node_modules/@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults" as *;
+
+// Reset styles
+@use "node_modules/bootstrap/scss/bootstrap-reboot";
+
+// Bootstrap grid
+@use "node_modules/bootstrap/scss/bootstrap-grid";
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 /* Remove Chrome's input focus border */
 :focus {
@@ -471,7 +487,8 @@ nav {
     }
 
     .nav {
-        display: block;
+        list-style: none;
+        padding: 0;
     }
 
     .nav .nav {
@@ -493,7 +510,10 @@ nav {
     }
 
     .nav-item {
+        display: block;
+
         .nav-link {
+            display: block;
             color: $COLOR_BLACK;
             text-decoration: none;
             padding: 6px 12px;

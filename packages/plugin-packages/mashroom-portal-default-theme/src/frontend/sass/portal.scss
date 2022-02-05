@@ -3,6 +3,54 @@
 @use "variables" as *;
 @use "node_modules/@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults" as *;
 
+// Reset styles
+@use "node_modules/bootstrap/scss/bootstrap-reboot";
+
+// Bootstrap grid
+@use "node_modules/bootstrap/scss/bootstrap-grid";
+
+@keyframes show-delayed {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes dot-flashing {
+    0% {
+        background-color: $COLOR_LOADING_DOTS;
+    }
+    50%,
+    100% {
+        background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+    }
+}
+
+@keyframes progress-bar {
+    0% {
+        left:0;
+        right:100%;
+        width:0;
+    }
+    10% {
+        left: 0;
+        right: 75%;
+        width: 20%;
+    }
+    90% {
+        right: 0;
+        left: 75%;
+        width: 20%;
+    }
+    100% {
+        left: 100%;
+        right: 0;
+        width: 0;
+    }
+}
+
 /* Remove Chrome's input focus border */
 :focus {
     outline: none !important;
@@ -519,6 +567,11 @@ main {
             display: block;
         }
 
+        .nav {
+            list-style: none;
+            padding: 0;
+        }
+
         .nav .nav {
             .nav-item .nav-link {
                 padding-left: 30px;
@@ -538,8 +591,10 @@ main {
         }
 
         .nav-item {
+            display: block;
 
             .nav-link {
+                display: block;
                 position: relative;
                 padding: 6px 20px;
                 margin-bottom: 2px;

@@ -30,48 +30,6 @@ $FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 $GUTTER_WIDTH: 15px;
 
-@keyframes show-delayed {
-    0% {
-        opacity: 0;
-    }
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes dot-flashing {
-    0% {
-        background-color: $COLOR_LOADING_DOTS;
-    }
-    50%,
-    100% {
-        background-color: $COLOR_LOADING_DOTS_LIGHTEN;
-    }
-}
-
-@keyframes progress-bar {
-    0% {
-        left:0;
-        right:100%;
-        width:0;
-    }
-    10% {
-        left: 0;
-        right: 75%;
-        width: 20%;
-    }
-    90% {
-        right: 0;
-        left: 75%;
-        width: 20%;
-    }
-    100% {
-        left: 100%;
-        right: 0;
-        width: 0;
-    }
-}
-
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
 }
