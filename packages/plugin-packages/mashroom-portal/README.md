@@ -1012,16 +1012,12 @@ A typical *portal* view with *Handlebars* might look like this:
 
     <title>{{site.title}} - {{page.title}}</title>
 
-    {{#isIE userAgent}}
-        <script type="application/javascript" src="{{resourcesBasePath}}/ie_polyfills.js"></script>
-    {{/isIE}}
-
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/style.css">
 
     {{{portalResourcesHeader}}}
 
     {{#if page.extraCss}}
-        <style type="text/css">
+        <style>
             {{{page.extraCss}}}
         </style>
     {{/if}}
@@ -1040,7 +1036,7 @@ A typical *portal* view with *Handlebars* might look like this:
     <main>
         {{> navigation}}
 
-        <div class="mashroom-portal-apps-container container-fluid">
+        <div id="portal-page-content" class="mashroom-portal-apps-container container-fluid">
             {{{pageContent}}}
         </div>
     </main>
@@ -1068,7 +1064,6 @@ A typical *portal* view with *Handlebars* might look like this:
     {{{portalResourcesFooter}}}
 </body>
 </html>
-
 ```
 
 The _pageContent_ variable contains the actual content with the Portal layout (see below) and the Apps.
