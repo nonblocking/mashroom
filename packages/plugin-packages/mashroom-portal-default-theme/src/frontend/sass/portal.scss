@@ -324,9 +324,10 @@ header {
     .logo {
         display: none;
 
-        img {
+        svg {
             display: inline-block;
-            height: 40px;
+            width: 40px;
+            height: 30px;
             margin-left: 20px;
         }
     }

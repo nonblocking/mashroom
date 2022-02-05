@@ -40,10 +40,6 @@ function mashroomVersion(): string {
     return themeParams.mashroomVersion;
 }
 
-function bootstrapVersion(): string {
-    return packageJson.devDependencies['bootstrap']?.replace(/[^]/, '');
-}
-
 function fontawesomeVersion(): string {
     return packageJson.devDependencies['@fortawesome/fontawesome-free']?.replace(/[^]/, '');
 }
@@ -65,6 +61,15 @@ function inlineStyle(cssFile: string): string {
     }
 }
 
+function inlineSVG(assetFile: string): string {
+    try {
+        const file = readFileSync(resolve(__dirname, 'public/assets', assetFile));
+        return file.toString('utf-8');
+    } catch (e) {
+        return `<!-- Error: SVG file not found: ${assetFile} -->`;
+    }
+}
+
 function ifShowEnvAndVersions(this: any, options: any): any {
     if (themeParams.showEnvAndVersions) {
         return options.fn(this);
@@ -77,10 +82,10 @@ export default {
     ifSpaMode,
     env,
     mashroomVersion,
-    bootstrapVersion,
     fontawesomeVersion,
     extraMainClasses,
     inlineStyle,
+    inlineSVG,
     ifShowEnvAndVersions,
     '__': i18n,
     defaultPluginErrorMessage,

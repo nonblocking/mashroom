@@ -1,13 +1,32 @@
 
+import {readFileSync} from 'fs';
+import {resolve} from 'path';
 import React from 'react';
 import Navigation from './navigation';
 import themeParams from '../plugin/theme_params';
 import packageJson from '../../package.json';
 
-const bootstrapVersion = packageJson.devDependencies['bootstrap']?.replace(/[^]/, '');
+import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions'
+
 const fontawesomeVersion = packageJson.devDependencies['@fortawesome/fontawesome-free']?.replace(/[^]/, '');
 
-import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions'
+const inlineStyle = (cssFile: string): string => {
+    try {
+        const file = readFileSync(resolve(__dirname, '../public', cssFile));
+        return `<style>${file.toString('utf-8')}</style>`;
+    } catch (e) {
+        return `<!-- Error: CSS file not found: ${cssFile} -->`;
+    }
+}
+
+const inlineSVG = (assetFile: string): string => {
+    try {
+        const file = readFileSync(resolve(__dirname, '../public/assets', assetFile));
+        return file.toString('utf-8');
+    } catch (e) {
+        return `<!-- Error: SVG file not found: ${assetFile} -->`;
+    }
+}
 
 export default ({
                     user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
@@ -30,7 +49,8 @@ export default ({
             <link href='https://fonts.googleapis.com/css?family=Domine' rel='prefetch stylesheet' type='text/css'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css?v=${fontawesomeVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css?v=${fontawesomeVersion}'/>
-            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/portal.css?v=${lastThemeReloadTs}'/>
+
+            ${inlineStyle('portal.css')}
             ${user.admin ? `<link rel="stylesheet" type="text/css" href='${resourcesBasePath}/admin.css?v=${lastThemeReloadTs}'/>` : ''}
 
             ${portalResourcesHeader}
@@ -45,9 +65,7 @@ export default ({
                 </div>
             )}
             <header>
-                <div className="logo">
-                    <img src={`${resourcesBasePath}/assets/logo-red.svg`} />
-                </div>
+                <div className="logo" dangerouslySetInnerHTML={{__html: inlineSVG('logo-red.svg')}} />
                 <div className="site-name">
                     <h1>{site.title}</h1>
                 </div>
