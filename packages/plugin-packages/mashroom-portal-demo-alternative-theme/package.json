@@ -30,7 +30,7 @@
         "build:backend": "babel src/backend -d dist --extensions .ts,.tsx",
         "build:frontend": "webpack --mode production",
         "build:style": "sass --style compressed --load-path=. src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
-        "build:copy-assets": "cpy assets dist/public/assets && cpy . ../../../dist/public/bootstrap --cwd=node_modules/bootstrap/dist --parents && cpy . ../../../dist/public/fontawesome --cwd=node_modules/@fortawesome/fontawesome-free --parents",
+        "build:copy-assets": "cpy assets dist/public/assets && cpy . ../../../dist/public/fontawesome --cwd=node_modules/@fortawesome/fontawesome-free --parents",
         "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
     },
     "mashroom": {
