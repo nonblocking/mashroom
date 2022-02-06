@@ -288,6 +288,10 @@ A full config with all optional properties would look like this:
                     },
                     "category": "My Category",
                     "tags": ["my", "stuff"],
+                    "description": {
+                        "en": "Here the english description",
+                        "de": "Hier die deutsche Beschreibung"
+                    },
                     "metaInfo": {
                         "capabilities": ["foo"]
                     },
@@ -337,6 +341,7 @@ A full config with all optional properties would look like this:
     * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
     * _category_: An optional category to group the Apps in the Admin App
     * _tags_: An optional list of tags that can also be used in the search (in the Admin App)
+    * _description_: Optional App description. Can be a string or an object with translations.
     * _defaultRestrictViewToRoles_: Optional default list of roles that have the VIEW permission if not set via Admin App.
      Use this to prevent that an App can just be loaded via JS API (dynamically) by any user, even an anonymous one.
     * _rolePermissions_: Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App.

@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-load-dynamically-app",
-    "description": "A simple SPA that demonstrates how an App registered to the _Mashroom Portal_ can load and unload other Portal Apps on a page with a specific config",
+    "description": "A simple SPA that demonstrates how to load and unload other registered SPAs on a page with a specific config",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -44,6 +44,10 @@
                     "title": {
                         "en": "Demo Load Dynamically",
                         "de": "Demo Dynamisches Laden App"
+                    },
+                    "description": {
+                        "en": "A simple SPA that demonstrates how to load and unload other registered SPAs on a page with a specific config",
+                        "de": "Ein einfacher SPA der demonstriert wie man andere, registrierte SPAs auf einer Seite laden und entfernen kann mit einer bestimmten Konfiguration"
                     },
                     "category": "Demo",
                     "appConfig": {}

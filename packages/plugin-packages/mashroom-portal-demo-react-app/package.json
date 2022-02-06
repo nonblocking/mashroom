@@ -42,6 +42,10 @@
                 },
                 "defaultConfig": {
                     "title": "Demo React App",
+                    "description": {
+                        "en": "A simple React SPA",
+                        "de": "Ein einfacher React SPA"
+                    },
                     "category": "Demo",
                     "appConfig": {
                         "message": "This is simple React based SPA that communicates with other Apps on the page via message bus",

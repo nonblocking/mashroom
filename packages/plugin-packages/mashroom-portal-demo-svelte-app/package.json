@@ -52,6 +52,10 @@
                 },
                 "defaultConfig": {
                     "title": "Demo Svelte App",
+                    "description": {
+                        "en": "A simple Svelte SPA",
+                        "de": "Ein einfacher Svelte SPA"
+                    },
                     "category": "Demo",
                     "appConfig": {
                         "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",

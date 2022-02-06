@@ -112,10 +112,10 @@
                 },
                 "defaultConfig": {
                     "title": {
-                        "en": "Welcome Portal App",
-                        "de": "Willkommen Portal App"
+                        "en": "Welcome App",
+                        "de": "Willkommen App"
                     },
-                    "category": "Demo",
+                    "category": "hidden",
                     "caching": {
                         "ssrHtml": "same-config"
                     }

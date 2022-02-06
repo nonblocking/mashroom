@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-vue-app",
-    "description": "A simple Vue based SPA that can be used in the Mashroom Portal",
+    "description": "A simple Vue.js based SPA that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -40,7 +40,11 @@
                     "resourcesRoot": "./dist"
                 },
                 "defaultConfig": {
-                    "title": "Demo Vue App",
+                    "title": "Demo Vue.js App",
+                    "description": {
+                        "en": "A simple Vue.js SPA",
+                        "de": "Ein einfacher Vue.js SPA"
+                    },
                     "category": "Demo",
                     "appConfig": {
                         "message": "This is simple Vue based SPA that communicates with other Apps on the page via message bus",

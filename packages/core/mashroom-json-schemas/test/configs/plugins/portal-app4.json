@@ -37,6 +37,10 @@
                 },
                 "category": "My Category",
                 "tags": ["my", "stuff"],
+                "description": {
+                    "en": "Here the english description",
+                    "de": "Hier die deutsche Beschreibung"
+                },
                 "metaInfo": {
                     "capabilities": ["foo"]
                 },

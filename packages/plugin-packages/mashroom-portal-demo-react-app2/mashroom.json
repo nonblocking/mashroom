@@ -16,6 +16,10 @@
             },
             "defaultConfig": {
                 "title": "Demo React App 2",
+                "description": {
+                    "en": "A simple React SPA that supports SSR and brings a custom config editor",
+                    "de": "Ein einfacher React SPA mit SSR Unterstützung und einem eigenen Config Editor"
+                },
                 "category": "Demo",
                 "editor": {
                     "editorPortalApp": "Mashroom Portal Demo React App 2 Config Editor",

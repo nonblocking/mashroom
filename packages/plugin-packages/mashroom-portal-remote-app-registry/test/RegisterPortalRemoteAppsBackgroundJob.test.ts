@@ -64,6 +64,9 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             },
             category: 'Test',
             tags: ['what', 'ever'],
+            description: {
+                en: 'The description'
+            },
             metaInfo: {
                 test: 1
             },
@@ -219,10 +222,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         const fixedPortalApp = {...portalApp, lastReloadTs: 22};
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
-            description: 'Test App',
             tags: ['what', 'ever'],
             title: {
                 en: 'Title'
+            },
+            description: {
+                en: 'The description',
             },
             version: '5.1.2',
             homepage: 'https://www.mashroom-server.com',
@@ -284,10 +289,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         const fixedPortalApp = {...portalApp, lastReloadTs: 22};
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
-            description: 'Test App',
             tags: ['what', 'ever'],
             title: {
                 en: 'Title'
+            },
+            description: {
+                en: 'The description',
             },
             version: '1.1.2',
             category: 'Test',
@@ -346,10 +353,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         const fixedPortalApp = {...portalApp, lastReloadTs: 22};
         expect(fixedPortalApp).toEqual({
             name: 'Test App',
-            description: 'Test App',
             tags: ['what', 'ever'],
             title: {
                 en: 'Title'
+            },
+            description: {
+                en: 'The description',
             },
             version: '1.1.2',
             category: 'Test',

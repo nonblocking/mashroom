@@ -337,11 +337,6 @@ export type MashroomPortalApp = {
     +name: string,
 
     /**
-     * Portal app description
-     */
-    +description: ?string,
-
-    /**
      * Optional tags
      */
     +tags: Array<string>,
@@ -352,9 +347,14 @@ export type MashroomPortalApp = {
     +metaInfo: ?any,
 
     /**
-     * An optional internationalized title (will be shown in the header)
+     * Portal App title (will be shown in the header)
      */
     +title: ?I18NString,
+
+    /**
+     * Portal App description
+     */
+    +description: ?I18NString,
 
     /**
      * The package version

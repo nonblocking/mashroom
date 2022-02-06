@@ -880,9 +880,6 @@
                 "name": {
                     "type": "string"
                 },
-                "description": {
-                    "type": "string"
-                },
                 "requires": {
                     "type": "array",
                     "items": {
@@ -938,6 +935,10 @@
                                 "type": "string"
                             },
                             "description": "A list of tags that can also be used in the search (in the Admin App)"
+                        },
+                        "description": {
+                            "$ref": "#/definitions/I18NString",
+                            "description": "Optional App description. Can be a string or an object with translations."
                         },
                         "defaultRestrictViewToRoles": {
                             "type": "array",

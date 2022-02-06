@@ -365,11 +365,6 @@ export type MashroomPortalApp = {
     readonly name: string;
 
     /**
-     * Portal app description
-     */
-    readonly description: string | null | undefined;
-
-    /**
      * Optional tags
      */
     readonly tags: Array<string>;
@@ -380,9 +375,14 @@ export type MashroomPortalApp = {
     readonly metaInfo: any | null | undefined;
 
     /**
-     * An optional internationalized title (will be shown in the header)
+     * Portal App title (will be shown in the header)
      */
     readonly title: I18NString | null | undefined;
+
+    /**
+     * Portal App description
+     */
+    readonly description: I18NString | null | undefined;
 
     /**
      * The package version

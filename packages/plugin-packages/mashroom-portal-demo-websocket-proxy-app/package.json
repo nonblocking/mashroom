@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-websocket-proxy-app",
-    "description": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server that cannot be reached directly by the client",
+    "description": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -40,6 +40,11 @@
                 },
                 "defaultConfig": {
                     "title": "Demo WebSocket Proxy App",
+                    "description": {
+                        "en": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
+                        "de": "Ein einfacher SPA der demonstriert wie man den Mashroom Portal Proxy verwenden kann um einen WebSocket Server anzusprechen, der nicht direkt vom Client erreichbar ist"
+                    },
+
                     "category": "Demo",
                     "defaultRestrictViewToRoles": [
                         "Authenticated"

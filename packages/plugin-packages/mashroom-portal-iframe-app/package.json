@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-iframe-app",
-    "description": "An Mashroom Portal App that shows an arbitrary page in an IFrame. With support for responsiveness.",
+    "description": "A Mashroom Portal App that shows an arbitrary site within an IFrame. Can be made responsive if the embedded site posts its height via message.",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -43,6 +43,10 @@
                 },
                 "defaultConfig": {
                     "title": "IFrame App",
+                    "description": {
+                        "en": "An App that shows an arbitrary site within an IFrame. Can be made responsive if the embedded site posts its height via message.",
+                        "de": "Eine App die eine beliebige Website innerhalb eines IFrame anzeigt. Kann responsive gemacht werden indem die eingebettete Website sein Höhe als Message sendet."
+                    },
                     "category": "Content",
                     "appConfig": {
                         "url": "https://en.wikipedia.org/wiki/Main_Page",

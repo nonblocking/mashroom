@@ -178,7 +178,7 @@ export default class PortalAppController {
                     version: portalApp.version,
                     title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
                     category: portalApp.category,
-                    description: portalApp.description,
+                    description: portalApp.description ? i18nService.translate(req, portalApp.description) : null,
                     tags: portalApp.tags,
                     screenshots,
                     metaInfo: portalApp.metaInfo,

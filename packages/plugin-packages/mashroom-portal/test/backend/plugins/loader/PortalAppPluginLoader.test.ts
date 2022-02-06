@@ -15,7 +15,7 @@ describe('PortalAppPluginLoader', () => {
         const appPlugin: MashroomPlugin = {
             pluginPackage,
             name: 'Portal App 1',
-            description: 'my description',
+            description: 'description from package',
             tags: ['tag1', 'tag2'],
             type: 'portal-app2',
             errorMessage: null,
@@ -25,7 +25,6 @@ describe('PortalAppPluginLoader', () => {
             config: null,
             pluginDefinition: {
                 name: 'Portal App 1',
-                description: null,
                 type: 'portal-app2',
                 requires: null,
                 clientBootstrap: 'startApp',
@@ -54,9 +53,16 @@ describe('PortalAppPluginLoader', () => {
                     ssrInitialHtmlPath: '/ssr'
                 },
                 defaultConfig: {
-                    title: 'Portal App 1',
+                    title: {
+                        en: 'Portal App 1',
+                        de: 'Portal App 1',
+                    },
                     category: 'Test',
                     tags: ['tag1', 'tag2'],
+                    description: {
+                        en: 'my description',
+                        de: 'my description',
+                    },
                     metaInfo: {
                         capabilities: ['foo']
                     },
@@ -100,8 +106,14 @@ describe('PortalAppPluginLoader', () => {
         if (process.platform !== 'win32') {
             expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
         }
-        expect(registry.portalApps[0].description).toBe('my description');
-        expect(registry.portalApps[0].title).toEqual('Portal App 1');
+        expect(registry.portalApps[0].description).toEqual({
+            en: 'my description',
+            de: 'my description',
+        });
+        expect(registry.portalApps[0].title).toEqual({
+            en: 'Portal App 1',
+            de: 'Portal App 1',
+        });
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
         expect(registry.portalApps[0].category).toEqual('Test');
         expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': ['style.css']});

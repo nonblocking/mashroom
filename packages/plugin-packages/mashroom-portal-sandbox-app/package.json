@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-sandbox-app",
-    "description": "A Mashroom Portal App that can be used to load any other Portal App with a specific configuration and to interact with the App via Message Bus",
+    "description": "A Mashroom Portal App that can be used to load any other Portal App with a specific configuration and to test message bus interaction",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -54,6 +54,10 @@
                 },
                 "defaultConfig": {
                     "title": "Sandbox App",
+                    "description": {
+                        "en": "An App that can be used to load any other Portal App with a specific configuration and to test message bus interaction",
+                        "de": "Eine App mit der man jede andere Portal App laden kann mit einer spezifischen Konfiguration und mit der man Message Bus Interaktionen testen kann"
+                    },
                     "category": "Testing"
                 }
             }

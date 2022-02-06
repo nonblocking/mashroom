@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-tabify-app",
-    "description": "This Mashroom Portal App turns any app area where it is placed automatically into a tabbed container",
+    "description": "A Mashroom Portal App that automatically organizes all other Apps in the area where it is placed in tabs",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
@@ -49,6 +49,10 @@
                     "title": {
                         "en": "Tabify App",
                         "de": "Reiterisierung App"
+                    },
+                    "description": {
+                        "en": "An App that automatically organizes all other Apps in the area where it is placed in tabs",
+                        "de": "Eine App die alle anderen Apps den Bereich auf dem sie platziert wird automatisch in Reitern organisiert"
                     },
                     "category": "Layout",
                     "appConfig": {

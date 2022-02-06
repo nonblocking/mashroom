@@ -45,6 +45,10 @@
                 },
                 "defaultConfig": {
                     "title": "Demo Composite App",
+                    "description": {
+                        "en": "A simple SPA that uses other SPAs (which are registered to the Mashroom Portal) as building blocks",
+                        "de": "Ein einfacher SPA der andere SPAs (die im Mashroom Portal registriert sind) als Komponenten benutzt"
+                    },
                     "category": "Demo"
                 }
             }

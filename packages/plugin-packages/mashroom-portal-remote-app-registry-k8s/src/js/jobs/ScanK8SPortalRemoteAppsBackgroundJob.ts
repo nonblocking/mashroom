@@ -281,6 +281,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const title = version === 2 ? config.title : definition.title;
         const category = version === 2 ? config.category : definition.category;
         const tags = (version === 2 ? config.tags : definition.tags) || [];
+        const description = config.description || definition.description || packageJson?.description;
 
         const definedRestProxies = version === 2 ? config.proxies : config.restProxies;
         const proxies: MashroomPortalProxyDefinitions = {};
@@ -327,7 +328,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const portalApp: MashroomPortalApp = {
             name,
             title,
-            description: definition.description || packageJson?.description,
+            description,
             tags,
             version: packageJson?.version || new Date().toISOString(),
             homepage: definition.homepage || packageJson?.homepage,

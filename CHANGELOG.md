@@ -3,6 +3,28 @@
 
 ## [unreleased]
 
+ * Portal: Plugins of type *portal-app2* can now have an internationalized description that will be showed in the Admin Toolbar:
+   ```json
+   {
+       "plugins": [
+           {
+                "name": "Unique Name For My App",
+                // ...
+               "defaultConfig": {
+                   "title": {
+                      "en": "My App",
+                      "de": "Meine App"
+                   },
+                   "description": {
+                       "en": "A simple React SPA with cool features",
+                       "de": "Ein einfacher React SPA mit tollen Features"
+                   },
+                   //...
+              }
+           }
+       ]
+   }
+   ```
  * Portal Default Theme: Inlined critical CSS for performance reasons
  * Portal: Added the Express Request to the SSR bootstrap, so it can access the *pluginContext* (logger, services)
  * VHost Path Mapper: It is now possible to map multiple Portal sites to different base paths on the same virtual host
