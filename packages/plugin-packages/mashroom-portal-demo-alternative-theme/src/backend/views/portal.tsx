@@ -55,8 +55,9 @@ export default ({
 
             ${portalResourcesHeader}
 
-             ${page.extraCss ? `<style >${page.extraCss}</style>` : ''}
-             <script type="application/javascript" src="${resourcesBasePath}/main.js?v={{${lastThemeReloadTs}"></script>
+            ${page.extraCss ? `<style >${page.extraCss}</style>` : ''}
+
+            <script type="application/javascript" src="${resourcesBasePath}/main.js?v={{${lastThemeReloadTs}"></script>
         `}} />
         <body>
             {user.admin && (
