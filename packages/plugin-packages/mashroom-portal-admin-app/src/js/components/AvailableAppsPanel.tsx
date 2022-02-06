@@ -88,7 +88,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
             if (tokens.anyMatch.length === 0) {
                 return true;
             }
-            if (tokens.anyMatch.every((matcher) => app.name.match(matcher) || (app.description && app.description.match(matcher)))) {
+            if (tokens.anyMatch.every((matcher) => app.name.match(matcher) || app.title?.match(matcher) || app.description?.match(matcher))) {
                 return true;
             }
             if (app.tags && tokens.fullMatch.some((matcher) => app.tags.find((tag) => tag.match(matcher)))) {
@@ -123,7 +123,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         const filterReplacement = '<span class="filter-match">$1</span>';
 
         return apps.map((app) => {
-            let appName = escapeForHtml(app.name);
+            let appName = escapeForHtml(app.title || app.name);
             let description = escapeForHtml(app.description || '');
             if (tokens.tokens.length > 0) {
                 const replaceExpr = new RegExp(`(${tokens.tokens.join('|')})`, 'gi');
