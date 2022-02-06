@@ -10,7 +10,7 @@ Tested with:
  * [Github OAuth 2.0](https://developer.github.com/v3/oauth)
  * [Google Identity Platform](https://developers.google.com/identity)
  * [Keylcoak Identity Provider](https://www.keycloak.org)
- * [Open AM](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
+ * [Open AM](https://github.com/OpenIdentityPlatform/OpenAM)
 
 Should work with (among others):
  * [Auth0](https://auth0.com/docs/protocols/oidc)
