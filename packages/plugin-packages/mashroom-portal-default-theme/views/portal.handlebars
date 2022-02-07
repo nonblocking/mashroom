@@ -27,7 +27,11 @@
     <meta name="msapplication-square150x150logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-150.png">
     <meta name="msapplication-square310x310logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-310.png">
 
-    {{{inlineStyle 'portal.css'}}}
+    {{#ifSpaMode}}
+        {{{inlineStyle 'portal.css'}}}
+    {{else}}
+        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/portal.css?v={{lastThemeReloadTs}}">
+     {{/ifSpaMode}}
     {{#if user.admin}}
         <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/admin.css?v={{lastThemeReloadTs}}">
     {{/if}}
