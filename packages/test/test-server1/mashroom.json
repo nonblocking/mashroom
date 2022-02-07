@@ -161,10 +161,14 @@
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
             "warnBeforeAuthenticationExpiresSec": 60,
-            "autoExtendAuthentication": false
+            "autoExtendAuthentication": false,
+            "ssrConfig": {
+                "ssrEnabled": true
+            }
         },
         "Mashroom Portal Default Theme": {
-            "showEnvAndVersions": true
+            "showEnvAndVersions": true,
+            "spaMode": true
         },
         "Mashroom Portal Remote App Registry": {
             "remotePortalAppUrls": "./remotePortalApps.json"
