@@ -40,10 +40,16 @@ body {
     color: $COLOR_BLACK;
     font-size: 16px;
     font-family: $FONT_DEFAULT;
+    background-color: #504B88;
 }
 
-.background-image {
-    position: fixed;
+.logo {
+    margin: 10px 2px;
+    background-image: url(assets/logo-white-shades.svg);
+    background-repeat: no-repeat;
+    width: 80px;
+    height: 61px;
+    background-size: cover;
 }
 
 h1, h2, h3 {
@@ -116,7 +122,6 @@ label {
     margin-right: auto;
     margin-top: 20%;
     background-color: rgba(white, 0.9);
-    box-shadow: 0 0 8px $COLOR_PRIMARY;
 
     .login-form-title {
         overflow: hidden;
@@ -154,21 +159,15 @@ label {
 }
 
 @media (min-width: $MEDIUM_DEVICE_MIN) {
-    .background-image {
-        top: 0;
-        left: 0;
-        position: fixed;
-        width: 100vw;
-        height: 100vh;
-        background-image: url(assets/logo-primary-shades.svg);
-        background-repeat: no-repeat;
-        background-position: 5vw 5vh;
-        background-size: 90vw 90vh;
-        z-index: -1;
+    .logo {
+        margin: 15px 10px;
+        width: 160px;
+        height: 122px;
+        background-size: cover;
     }
 
     .login {
-        margin-top: calc(50vh - 180px);
+        margin-top: calc(50vh - 280px);
 
         .login-form {
             .login-form-row {
@@ -188,9 +187,9 @@ label {
 };
 
 @media (min-width: $LARGE_DEVICE_MIN) {
-    .background-image {
-        background-position: 20vw 20vh;
-        background-size: 60vw 60vh;
+
+    .logo {
+
     }
 
     .login {

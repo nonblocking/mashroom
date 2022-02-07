@@ -4,7 +4,7 @@ import {URL} from 'url';
 import express from 'express';
 import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
-import helpers, {i18nHelper} from './handlebar_helpers';
+import helpers, {i18n} from './handlebar_helpers';
 import context from './context';
 
 import type {Request, Response} from 'express';
@@ -129,7 +129,7 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
         query,
         error,
         helpers: {
-            '__': i18nHelper(i18nService, lang),
+            '__': i18n(i18nService, lang),
         },
     });
 };
