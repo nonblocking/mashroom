@@ -39,22 +39,12 @@ module.exports = {
                 ]
             },
             {
-                test: /\.scss$/,
+                test: /\.svg$/,
                 use: [
                     {
-                        loader: 'style-loader'
+                        loader: 'svg-inline-loader',
                     },
-                    {
-                        loader: 'css-loader'
-                    },
-                    {
-                        loader: 'sass-loader'
-                    }
-                ]
-            },
-            {
-                test: /\.png/,
-                type: 'asset/resource'
+                ],
             }
         ]
     },

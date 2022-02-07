@@ -7,9 +7,14 @@
         align-items: center;
         padding: 10px 0;
 
-        img {
+        .logo {
             margin-left: 20px;
             margin-right: 5px;
+
+            svg {
+                width: 80px;
+                height: 61px;
+            }
         }
 
         p {

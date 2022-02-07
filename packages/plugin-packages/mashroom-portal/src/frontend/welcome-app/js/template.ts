@@ -1,9 +1,11 @@
 
-export default (resourcesBasePath: string) => `
+export default (svgData: string) => `
     <div class="mashroom-welcome-portal-app">
         <h4>Welcome to the Mashroom Portal!</h4>
         <div class="welcome-app-content">
-            <img src="${resourcesBasePath}/welcome-app/assets/logo-primary-shades.svg" width="80" height="80" alt="Mashroom Server" />
+            <div class="logo">
+                ${svgData}
+            </div>
             <p>
                 This demo Portal page integrates multiple Single Page Applications (SPAs).
                 <br/>

@@ -50,8 +50,8 @@
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
-        "build-backend": "babel src -d dist --extensions \".ts\" --copy-files",
-        "build-frontend": "webpack --mode production && sass --style compressed src/frontend/welcome-app/sass/style.scss dist/frontend/welcome-app.css",
+        "build-backend": "babel src/backend -d dist/backend --extensions \".ts\"",
+        "build-frontend": "webpack --mode production && babel src/frontend/welcome-app -d dist/frontend/welcome-app --extensions \".ts\" && cpy src/frontend/welcome-app/assets dist/frontend/welcome-app/assets && sass --style compressed src/frontend/welcome-app/sass/style.scss dist/frontend/welcome-app.css",
         "build": "npm run build-backend && npm run build-frontend",
         "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node dist/backend/dev-server.js\""
     },
