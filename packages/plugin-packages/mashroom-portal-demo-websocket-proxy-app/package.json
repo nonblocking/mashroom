@@ -4,14 +4,14 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.0-alpha.2",
+    "version": "2.0.0-alpha.3",
     "sideEffects": false,
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.0.0-alpha.2",
-        "@mashroom/mashroom-portal-ui-commons": "2.0.0-alpha.2",
+        "@mashroom/mashroom-portal": "2.0.0-alpha.3",
+        "@mashroom/mashroom-portal-ui-commons": "2.0.0-alpha.3",
         "@types/react": "^17.0.38",
         "@types/react-dom": "^17.0.11",
         "react": "^17.0.2",
@@ -44,7 +44,6 @@
                         "en": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
                         "de": "Ein einfacher SPA der demonstriert wie man den Mashroom Portal Proxy verwenden kann um einen WebSocket Server anzusprechen, der nicht direkt vom Client erreichbar ist"
                     },
-
                     "category": "Demo",
                     "defaultRestrictViewToRoles": [
                         "Authenticated"
