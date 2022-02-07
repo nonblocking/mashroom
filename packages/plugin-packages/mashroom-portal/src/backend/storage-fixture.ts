@@ -94,7 +94,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
     };
 
     const remoteDemoAppInstance1: MashroomPortalAppInstance = {
-        pluginName: 'Mashroom Demo SSR Remote Portal App',
+        pluginName: 'Mashroom Portal Demo Hybrid Rendering Remote App',
         instanceId: createAppInstanceId(),
         appConfig: {
         },
