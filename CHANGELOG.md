@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.0.0-alpha.3 (February 7, 2022)
+
  * Admin Toolbar: The Portal App selection shows now the i18n *title* instead of the App name and the i18n *description*
  * Portal: Plugins of type *portal-app2* can now have an internationalized description that will be showed in the Admin Toolbar:
    ```json
