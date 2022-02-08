@@ -102,10 +102,7 @@
             ]
         },
         "Mashroom Security Default Login Webapp": {
-            "loginFormTitle": {
-                "en": "Mashroom Test Server Login",
-                "de": "Mashroom Test Server Anmeldung"
-            },
+            "pageTitle": "Mashroom Test Server",
             "styleFile": "./login_style.css"
         },
         "Mashroom Storage Services": {

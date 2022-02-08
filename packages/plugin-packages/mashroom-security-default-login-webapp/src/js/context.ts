@@ -1,30 +1,32 @@
 
-import type {I18NString} from '@mashroom/mashroom/type-definitions';
-
-let loginFormTitle: I18NString = 'Mashroom Server';
-let styleFile = '';
-let indexPage = '/';
+let _pageTitle = 'Mashroom Server';
+let _loginFormTitle = 'login';
+let _styleFile = '';
+let _indexPage = '/';
 
 export default {
+    get pageTitle() {
+        return _pageTitle;
+    },
     get loginFormTitle() {
-        return loginFormTitle;
+        return _loginFormTitle;
     },
     get styleFile() {
-        return styleFile;
+        return _styleFile;
     },
     get indexPage() {
-        return indexPage;
+        return _indexPage;
     },
-};
-
-export const setLoginFormTitle = (name: I18NString) => {
-    loginFormTitle = name;
-};
-
-export const setStyleFile = (path: string) => {
-    styleFile = path;
-};
-
-export const setIndexPage = (page: string) => {
-    indexPage = page;
+    set pageTitle(title: string) {
+        _pageTitle = title;
+    },
+    set loginFormTitle(title: string) {
+        _loginFormTitle = title;
+    },
+    set styleFile(path: string) {
+        _styleFile = path;
+    },
+    set indexPage(url: string) {
+        _indexPage = url;
+    },
 };

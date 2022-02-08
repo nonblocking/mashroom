@@ -40,16 +40,8 @@ body {
     color: $COLOR_BLACK;
     font-size: 16px;
     font-family: $FONT_DEFAULT;
-    background-color: #504B88;
-}
-
-.logo {
-    margin: 10px 2px;
-    background-image: url(assets/logo-white-shades.svg);
-    background-repeat: no-repeat;
-    width: 80px;
-    height: 61px;
-    background-size: cover;
+    padding: 0;
+    margin: 0;
 }
 
 h1, h2, h3 {
@@ -116,83 +108,114 @@ label {
     margin: 0;
 }
 
-.login {
-    max-width: 500px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 20%;
-    background-color: rgba(white, 0.9);
+header {
+    background-color: $COLOR_PRIMARY;
+    padding-left: 20px;
+    display: flex;
+    color: white;
+    overflow: hidden;
+    border-bottom: 2px solid $COLOR_SECONDARY;
 
-    .login-form-title {
-        overflow: hidden;
+    .logo {
+        margin-top: 16px;
+        background-image: url(assets/logo-white.svg);
+        background-repeat: no-repeat;
+        width: 40px;
+        height: 30px;
+        background-size: cover;
+    }
 
+    .page-title {
         h1 {
-            font-size: 1.5em;
-            margin: 20px 18px;
+            display: inline-block;
+            padding: 16px 15px;
+            margin: 0;
+            font-size: 1.4em;
+            font-weight: 400;
         }
     }
+}
 
-    .login-error {
-        color: $COLOR_ERROR;
-        margin-bottom: 20px;
-    }
+main {
+    padding: 10px;
 
-    .login-form {
-        padding: 20px;
+    .login {
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20%;
+        background-color: rgba(white, 0.9);
+        box-shadow: 0 0 8px #888;
 
-        .login-form-row {
-            margin: 10px 0;
+        .login-form-title {
+            overflow: hidden;
 
-            .login-form-label {
-                margin-bottom: 10px;
-            }
-
-            .login-form-input {
-                width: 90%;
+            h2 {
+                font-size: 1.4em;
+                margin: 20px 18px;
             }
         }
 
-        .login-form-actions {
-            margin-top: 20px;
+        .login-error {
+            color: $COLOR_ERROR;
+            margin-bottom: 20px;
+        }
+
+        .login-form {
+            padding: 20px;
+
+            .login-form-row {
+                margin: 10px 0;
+
+                .login-form-label {
+                    margin-bottom: 10px;
+                }
+
+                .login-form-input {
+                    width: 90%;
+                }
+            }
+
+            .login-form-actions {
+                margin-top: 20px;
+            }
         }
     }
 }
 
 @media (min-width: $MEDIUM_DEVICE_MIN) {
-    .logo {
-        margin: 15px 10px;
-        width: 160px;
-        height: 122px;
-        background-size: cover;
+    header {
+        .page-title {
+            h1 {
+                font-size: 1.6em;
+            }
+        }
     }
 
-    .login {
-        margin-top: calc(50vh - 280px);
+    main {
+        .login {
+            margin-top: calc(50vh - 220px);
 
-        .login-form {
-            .login-form-row {
-                display: flex;
-                align-items: center;
+            .login-form {
+                .login-form-row {
+                    display: flex;
+                    align-items: center;
 
-                .login-form-label {
-                    width: 120px;
-                }
+                    .login-form-label {
+                        width: 120px;
+                    }
 
-                .login-form-input {
-                    width: calc(100% - 150px)
+                    .login-form-input {
+                        width: calc(100% - 150px)
+                    }
                 }
             }
         }
     }
+
+
 };
 
 @media (min-width: $LARGE_DEVICE_MIN) {
 
-    .logo {
-
-    }
-
-    .login {
-
-    }
 }

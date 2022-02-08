@@ -749,9 +749,13 @@
                             "$ref": "#/definitions/WebAppPath",
                             "description": "The path of the login page (Default: /login)"
                         },
+                        "pageTitle":  {
+                            "type": "string",
+                            "description": "A custom page title, can be the actual title or a message key (i18n) (Default is the server name)"
+                        },
                         "loginFormTitle":  {
-                            "$ref": "#/definitions/I18NString",
-                            "description": "A custom title for the login form (Default is the server name)"
+                            "type": "string",
+                            "description": "A custom title for the login form, can be the actual title or a message key (i18n) (Default: login)"
                         },
                         "styleFile":  {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",

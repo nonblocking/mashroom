@@ -81,11 +81,6 @@
             "httpRequestRetry": 0
         },
         "Mashroom Security Default Login Webapp": {
-            "loginFormTitle": {
-                "en": "Mashroom Test Server Login",
-                "de": "Mashroom Test Server Anmeldung"
-            },
-            "styleFile": "./login_style.css"
         },
         "Mashroom Helmet Middleware": {
 

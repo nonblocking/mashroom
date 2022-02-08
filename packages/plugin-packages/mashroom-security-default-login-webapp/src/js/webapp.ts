@@ -124,7 +124,8 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
     const query = queryParams.join(('&'));
 
     res.render('login', {
-        loginFormTitle: i18nService.translate(req, context.loginFormTitle),
+        pageTitle: i18nService.getMessage(context.pageTitle, lang),
+        loginFormTitle: i18nService.getMessage(context.loginFormTitle, lang),
         baseUrl: (vhostMappingInfo?.frontendPath) || req.baseUrl,
         query,
         error,

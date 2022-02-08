@@ -48,6 +48,7 @@
                 ],
                 "defaultConfig": {
                     "path": "/login",
+                    "pageTitle": null,
                     "loginFormTitle": null,
                     "styleFile": null
                 }

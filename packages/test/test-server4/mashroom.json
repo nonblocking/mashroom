@@ -64,11 +64,6 @@
             "groupToRoleMapping": "./groupToRoleMapping.json"
         },
         "Mashroom Security Default Login Webapp": {
-            "loginFormTitle": {
-                "en": "Mashroom Test Server 4 Login",
-                "de": "Mashroom Test Server 4 Anmeldung"
-            },
-            "styleFile": "./login_style.css"
         },
         "Mashroom Storage Services": {
             "provider": "Mashroom Storage Filestore Provider"

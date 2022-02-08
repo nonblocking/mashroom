@@ -2,34 +2,39 @@
 import {resolve, isAbsolute} from 'path';
 import {existsSync} from 'fs';
 import webapp from './webapp';
-import {setLoginFormTitle, setStyleFile, setIndexPage} from './context';
+import context from './context';
 
 import type {MashroomWebAppPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const pluginContext = pluginContextHolder.getPluginContext();
-    const logger = pluginContext.loggerFactory('mashroom.login.webapp');
+    const {loggerFactory, serverConfig} = pluginContextHolder.getPluginContext();
+    const {pageTitle: customPageTitle, loginFormTitle: customLoginFormTitle, styleFile: externalStyleFile} = pluginConfig;
+    const logger = loggerFactory('mashroom.login.webapp');
 
     let styleFile = resolve(__dirname, './style.css');
-    if (pluginConfig.styleFile) {
-        let externalStyleFile = null;
-        if (isAbsolute(pluginConfig.styleFile)) {
-            externalStyleFile = pluginConfig.styleFile;
+    if (externalStyleFile) {
+        let externalStyleFileFullPath;
+        if (isAbsolute(externalStyleFile)) {
+            externalStyleFileFullPath = externalStyleFile;
         } else {
-            externalStyleFile = resolve(pluginContext.serverConfig.serverRootFolder, pluginConfig.styleFile)
+            externalStyleFileFullPath = resolve(serverConfig.serverRootFolder, externalStyleFile)
         }
-        if (existsSync(externalStyleFile)) {
-            styleFile = externalStyleFile;
+        if (existsSync(externalStyleFileFullPath)) {
+            styleFile = externalStyleFileFullPath;
         } else {
-            logger.error(`Style file not found: ${externalStyleFile}`);
+            logger.error(`Style file not found: ${externalStyleFileFullPath}`);
         }
     }
-    setStyleFile(styleFile);
+    context.styleFile = styleFile;
 
-    const loginFormTitle = pluginConfig.loginFormTitle || pluginContext.serverConfig.name;
-    setLoginFormTitle(loginFormTitle);
+    const pageTitle = customPageTitle || serverConfig.name;
+    context.pageTitle = pageTitle;
 
-    setIndexPage(pluginContext.serverConfig.indexPage);
+    const loginFormTitle = customLoginFormTitle || 'login';
+    context.loginFormTitle = loginFormTitle;
+
+    context.indexPage = serverConfig.indexPage;
+
     return webapp;
 };
 

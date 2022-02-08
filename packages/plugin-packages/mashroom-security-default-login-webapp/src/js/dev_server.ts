@@ -2,15 +2,13 @@
 import {resolve} from 'path';
 import express from 'express';
 import app from './webapp';
-import {setLoginFormTitle, setStyleFile} from './context';
+import context from './context';
 
 import type {Request, Response} from 'express';
 
-setLoginFormTitle({
-    en: 'Login',
-    de: 'Anmelden'
-});
-setStyleFile(resolve(__dirname, './style.css'));
+context.pageTitle = 'Mashroom Server';
+context.loginFormTitle = 'Login';
+context.styleFile = resolve(__dirname, './style.css');
 
 const wrapperApp = express();
 

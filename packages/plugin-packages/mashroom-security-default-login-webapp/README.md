@@ -16,6 +16,7 @@ You can override the default config in your Mashroom config file like this:
   "plugins": {
         "Mashroom Security Default Login Webapp": {
             "path": "/my-login-page",
+            "pageTitle": "My fancy website",
             "loginFormTitle": "Login",
             "styleFile": "./login_style.css"
         }
@@ -24,5 +25,6 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _path_: The path of the login page (Default: /login)
- * _loginFormTitle_: A custom title for the login form (Default is the server name)
+ * _pageTitle_: A custom page title, can be the actual title or a message key (i18n) (Default is the server name)
+ * _loginFormTitle_: A custom title for the login form, can be the actual title or a message key (i18n) (Default: _login_)
  * _styleFile_: Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)
