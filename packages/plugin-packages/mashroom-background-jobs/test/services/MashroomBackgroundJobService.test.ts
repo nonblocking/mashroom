@@ -52,17 +52,17 @@ describe('MashroomBackgroundJobService', () => {
 
         const jobCb = (pluginContext: any) => {
             expect(pluginContext).toBeTruthy();
-
-            setTimeout(() => {
-                expect(job?.lastInvocation).toBeTruthy();
-                expect(job?.lastInvocation?.success).toBeTruthy();
-                expect(backgroundJobService.jobs.length).toBe(1);
-                backgroundJobService.unscheduleJob('Test Job');
-                done();
-            }, 100);
         };
 
         job = backgroundJobService.scheduleJob('Test Job', undefined, jobCb);
+
+        setTimeout(() => {
+            expect(job?.lastInvocation).toBeTruthy();
+            expect(job?.lastInvocation?.success).toBeTruthy();
+            expect(backgroundJobService.jobs.length).toBe(1);
+            backgroundJobService.unscheduleJob('Test Job');
+            done();
+        }, 250);
     });
 
 });
