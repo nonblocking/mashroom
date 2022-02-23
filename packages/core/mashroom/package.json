@@ -23,7 +23,7 @@
         "chokidar": "^3.5.2",
         "express": "^4.17.2",
         "fs-extra": "^10.0.0",
-        "log4js": "^6.3.0",
+        "log4js": "^6.4.1",
         "lucy-dirsum": "^0.1.1",
         "minimist": "^1.2.5",
         "spdy": "^4.0.2"

@@ -11,7 +11,7 @@
     "dependencies": {
         "fs-extra": "^10.0.0",
         "mingo": "^5.0.0",
-        "nanoid": "^3.1.30",
+        "nanoid": "^3.1.32",
         "proper-lockfile": "^4.1.2"
     },
     "devDependencies": {
