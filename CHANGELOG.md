@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * LDAP Security Provider: Made username lookup in userToRoleMapping case-insensitive
  * Admin Toolbar: Fixed applying new appConfig after reload
  * Default Login: Improved the style and added another config property *pageTitle* for the title in
    the header (Default is the server name).

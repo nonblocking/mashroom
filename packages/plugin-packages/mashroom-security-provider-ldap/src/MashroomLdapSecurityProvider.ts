@@ -247,12 +247,15 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         const userToRoles = this._getUserToRoleMapping(request, logger);
-        if (userToRoles && userToRoles.hasOwnProperty(username)) {
-            userToRoles[username].forEach((role) => {
-                if (roles.indexOf(role) === -1) {
-                    roles.push(role);
-                }
-            });
+        if (userToRoles) {
+            const roleProp = Object.keys(userToRoles).find((u) => u.toLowerCase() === username.toLowerCase());
+            if (roleProp) {
+                userToRoles[roleProp].forEach((role) => {
+                    if (roles.indexOf(role) === -1) {
+                        roles.push(role);
+                    }
+                });
+            }
         }
 
         return roles;
