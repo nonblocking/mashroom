@@ -5,8 +5,8 @@ import type {MashroomSecurityProviderPluginBootstrapFunction} from '@mashroom/ma
 
 const bootstrap: MashroomSecurityProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { users: userStorePath, loginPage, authenticationTimeoutSec } = pluginConfig;
-    const pluginContext = pluginContextHolder.getPluginContext();
-    return new MashroomSimpleSecurityProvider(userStorePath, loginPage, pluginContext.serverConfig.serverRootFolder, authenticationTimeoutSec, pluginContext.loggerFactory);
+    const { serverConfig, loggerFactory } = pluginContextHolder.getPluginContext();
+    return new MashroomSimpleSecurityProvider(userStorePath, loginPage, serverConfig.serverRootFolder, authenticationTimeoutSec, loggerFactory);
 };
 
 export default bootstrap;
