@@ -18,6 +18,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
     private _externalPluginConfigFileNames: Array<string>;
     private _logger: MashroomLogger;
+    private _failureDelays: { [url: string]: number } = {};
 
     constructor(private _socketTimeoutSec: number , private _registrationRefreshIntervalSec: number, private _pluginContextHolder: MashroomPluginContextHolder) {
         const pluginContext = _pluginContextHolder.getPluginContext();
@@ -34,6 +35,12 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {
+        const { url } = remotePortalAppEndpoint;
+
+        if (this._failureDelays[url] && this._failureDelays[url] > Date.now()) {
+            return this._logger.info(`Fetching remote endpoint data from URL: ${remotePortalAppEndpoint.url} postponed to ${new Date(this._failureDelays[url]).toISOString()} due to previous failure. Retry #${remotePortalAppEndpoint.retries}`);
+        }
+
         const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
 
         const updatedEndpoint = await this.fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint);
@@ -62,6 +69,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
 
             const portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, remotePortalAppEndpoint);
+            delete this._failureDelays[remotePortalAppEndpoint.url];
             return {
                 ...remotePortalAppEndpoint, lastError: null,
                 retries: 0,
@@ -72,9 +80,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         } catch (error: any) {
             this._logger.error('Processing remote Portal App endpoint failed!', error);
 
+            const retries = remotePortalAppEndpoint.retries + 1;
+            this._failureDelays[remotePortalAppEndpoint.url] = Date.now() + (2 ** Math.min(10, retries)) * 1000;
             return {
                 ...remotePortalAppEndpoint, lastError: error.message,
-                retries: remotePortalAppEndpoint.retries + 1,
+                retries,
                 registrationTimestamp: null,
                 portalApps: []
             };

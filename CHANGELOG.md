@@ -7,6 +7,7 @@
  * Admin Toolbar: Fixed applying new appConfig after reload
  * Default Login: Improved the style and added another config property *pageTitle* for the title in
    the header (Default is the server name).
+ * Exponential backoff strategy for failing remote apps
 
 ## 2.0.0-alpha.3 (February 7, 2022)
 
