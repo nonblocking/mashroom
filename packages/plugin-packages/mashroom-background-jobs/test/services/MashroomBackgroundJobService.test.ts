@@ -62,7 +62,7 @@ describe('MashroomBackgroundJobService', () => {
             expect(backgroundJobService.jobs.length).toBe(1);
             backgroundJobService.unscheduleJob('Test Job');
             done();
-        }, 250);
+        }, 500);
     });
 
 });
