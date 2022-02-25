@@ -15,7 +15,6 @@ type Props = {
     id: string;
     labelId: string,
     language: 'javascript' | 'json' | 'css' | 'html',
-    theme?: 'blackboard' | 'idea',
     height?: number,
     fieldProps: FieldProps
 }
@@ -23,7 +22,7 @@ type Props = {
 export default class SourceCodeEditorField extends PureComponent<Props> {
 
     getCodeMirrorOptions(): EditorConfiguration {
-        const {language, theme} = this.props;
+        const {language} = this.props;
         let mode = null;
         switch (language) {
             case 'json': {
@@ -47,7 +46,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
 
         return {
             mode,
-            theme: theme || 'blackboard',
+            theme: 'blackboard',
             lineNumbers: true
         }
     }
