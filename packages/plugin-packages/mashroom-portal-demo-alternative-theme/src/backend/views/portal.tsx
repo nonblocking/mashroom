@@ -49,6 +49,7 @@ export default ({
             <link href='https://fonts.googleapis.com/css?family=Domine' rel='prefetch stylesheet' type='text/css'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/regular.css?v=${fontawesomeVersion}'/>
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/solid.css?v=${fontawesomeVersion}'/>
+            <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/brands.css?v=${fontawesomeVersion}'/>
 
             ${inlineStyle('portal.css')}
             ${user.admin ? `<link rel="stylesheet" type="text/css" href='${resourcesBasePath}/admin.css?v=${lastThemeReloadTs}'/>` : ''}
