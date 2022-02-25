@@ -15,6 +15,14 @@ export const setCallbackConfiguration = (callbackConfiguration: CallbackConfigur
     _callbackConfiguration = callbackConfiguration;
 };
 
+const backToStartPage = (response: Response, defaultBackUrl: string, backUrl?: string | undefined) => {
+    if (backUrl) {
+        response.redirect(backUrl);
+    } else {
+        response.redirect(defaultBackUrl);
+    }
+}
+
 export default (defaultBackUrl: string) => {
     return async (request: Request, response: Response): Promise<void> => {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.openid.connect');
@@ -27,7 +35,7 @@ export default (defaultBackUrl: string) => {
 
         const client = await openIDConnectClient(request);
         if (!client) {
-            response.sendStatus(403);
+            response.sendStatus(500);
             return;
         }
 
@@ -37,8 +45,8 @@ export default (defaultBackUrl: string) => {
         const requestDataKey = `${OICD_REQUEST_DATA_SESSION_KEY_PREFIX}${reqParams.state}`;
         const authReqData: OpenIDConnectAuthRequestData | undefined = request.session[requestDataKey];
         if (!authReqData) {
-            logger.error('No authentication request found for state:', reqParams.state);
-            response.sendStatus(403);
+            logger.error('No ongoing authentication request found in current session. State:', reqParams.state);
+            backToStartPage(response, defaultBackUrl);
             return;
         }
 
@@ -87,15 +95,11 @@ export default (defaultBackUrl: string) => {
             // Make sure the user is in the session before we redirect (file session store is async)
             await new Promise<void>((resolve) => request.session.save(() => resolve()));
 
-            if (backUrl) {
-                response.redirect(backUrl);
-            } else {
-                response.redirect(defaultBackUrl);
-            }
+            backToStartPage(response, defaultBackUrl, backUrl);
 
         } catch (e) {
             logger.error('Fetching token failed!', e);
-            response.sendStatus(403);
+            backToStartPage(response, defaultBackUrl, backUrl);
         }
     };
 }

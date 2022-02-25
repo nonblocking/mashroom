@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * OpenID Connect Security Provider: If token validation in the callback fails retry authentication instead of just responding with 403
  * LDAP Security Provider: Made username lookup in userToRoleMapping case-insensitive
  * Admin Toolbar: Fixed applying new appConfig after reload
  * Default Login: Improved the style and added another config property *pageTitle* for the title in
