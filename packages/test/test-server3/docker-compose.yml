@@ -24,7 +24,7 @@ services:
             - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
     mariadb:
         container_name: mashroom_testserver3_mariadb
-        image: mariadb
+        image: mariadb:10.7
         environment:
             - MARIADB_DATABASE=keycloak
             - MARIADB_USER=keycloak
@@ -45,7 +45,7 @@ services:
             - KEYCLOAK_USER=admin
             - KEYCLOAK_PASSWORD=test
             - KEYCLOAK_IMPORT=/tmp/keycloak/realm-export.json
-            - JDBC_PARAMS=useSSL=false
+            - JDBC_PARAMS=?useSSL=false
         volumes:
             - ./keycloak:/tmp/keycloak/
         ports:

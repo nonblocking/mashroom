@@ -43,6 +43,13 @@ To add some additional users and manage roles:
   * Switch to the *Test* realm and add manage users and roles
   * Add the *mashroom-admin* role if the users should be Administrator
 
+*Export the realm with users*
+
+Exec into the container and in /opt/jboss/keycloak/bin execute:
+
+    ./standalone.sh -Dkeycloak.migration.action=export -Dkeycloak.migration.provider=singleFile -Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.realmName=test -Dkeycloak.migration.file=realm-export.json
+    cp realm-export.json /tmp/keycloak/
+
 ### Mosquitto
 
 To test the communication with Mashroom you can connect to Mosquitto on localhost:1883 (e.g. with http://mqtt-explorer.com)
