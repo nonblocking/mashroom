@@ -32,7 +32,7 @@
     "scripts": {
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
-        "type-gen": "tsc --emitDeclarationOnly --declaration && cpy --parents --cwd=lib/declarations/src '**/*.d.ts' '../../../lib' && del-cli lib/declarations",
+        "type-gen": "tsc --emitDeclarationOnly --declaration && cpy --parents --cwd=lib/declarations/src \"**/*.d.ts\" \"../../../lib\" && del-cli lib/declarations",
         "test": "jest",
         "build": "babel src -d lib --extensions \".ts\" && npm run type-gen"
     }
