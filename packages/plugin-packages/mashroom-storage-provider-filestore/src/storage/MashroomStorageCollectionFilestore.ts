@@ -186,7 +186,7 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
             }
             return {
                 result,
-                totalCount: -1,
+                totalCount: result.length,
             };
         }
     }
