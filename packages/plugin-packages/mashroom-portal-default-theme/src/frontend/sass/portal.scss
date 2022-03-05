@@ -316,6 +316,12 @@ table {
     }
 }
 
+blockquote {
+    padding: 15px 10px;
+    background-color: #EEE;
+    border-left: 7px solid $COLOR_GREY;
+}
+
 header {
     background-color: $COLOR_PRIMARY;
     color: white;

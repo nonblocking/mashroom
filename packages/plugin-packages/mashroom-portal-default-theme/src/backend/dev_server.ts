@@ -150,6 +150,22 @@ app.get('/', (req: Request, res: Response) => {
                             <div class="mashroom-portal-app-loading"><span/></div>
                         </div>
                     </div>
+                    <div class="mashroom-portal-app-wrapper">
+                        <div class="mashroom-portal-app-header">
+                            <div class="mashroom-portal-app-header-title">App 5</div>
+                            <div class="mashroom-portal-app-header-close"></div>
+                        </div>
+                        <div class="mashroom-portal-app-host">
+                            <div style="padding: 10px">
+                                <p>Here some text with a ruler</p>
+                                <hr/>
+                                <p>and a blockquote</p>
+                                <blockquote>
+                                    The quote
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="mashroom-portal-app-area col-md-6" id="app-area2">
                     <div class="mashroom-portal-app-wrapper">
