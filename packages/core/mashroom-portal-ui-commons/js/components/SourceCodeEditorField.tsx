@@ -79,7 +79,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
                                 // Fixes a problem with the cursor, see https://github.com/codemirror/CodeMirror/issues/5040
                                 setTimeout(() => {
                                     editor.refresh();
-                                }, 200);
+                                }, 500);
                             }}
                         />
                     </div>
