@@ -30,9 +30,6 @@ module.exports = (env, argv) => {
                     use: [
                         {
                             loader: 'babel-loader',
-                            options: {
-                                configFile: path.resolve(__dirname, '.babelrc')
-                            },
                         },
                     ],
                 },
