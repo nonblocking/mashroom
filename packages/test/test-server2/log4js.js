@@ -1,7 +1,7 @@
 
 const cluster = require('cluster');
 
-const WORKER_ID = process.env.pm_id || cluster.worker.id;
+const WORKER_ID = process.env.pm_id || (cluster.worker && cluster.worker.id) || '0';
 
 module.exports = {
     appenders: {

@@ -10,7 +10,7 @@
     },
     "scripts": {
         "start": "mashroom",
-        "start-cluster": "pm2 start mashroom -i max && pm2 logs",
+        "start-cluster": "pm2 start ./starter.js --name mashroom -i max && pm2 logs",
         "stop-cluster": "pm2 stop mashroom"
     }
 }
