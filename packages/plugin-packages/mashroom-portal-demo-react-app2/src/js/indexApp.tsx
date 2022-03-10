@@ -33,6 +33,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
         },
         updateAppConfig: ({markdownMessage, pingButtonLabel}) => {
             console.info('Rerending React App 2 because appConfig changed');
+            unmountComponentAtNode(portalAppHostElement);
             render(<App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={messageBus}/>, portalAppHostElement);
         },
     };
