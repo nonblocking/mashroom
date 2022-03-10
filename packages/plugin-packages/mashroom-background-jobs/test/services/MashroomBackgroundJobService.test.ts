@@ -28,7 +28,7 @@ describe('MashroomBackgroundJobService', () => {
                 expect(backgroundJobService.jobs.length).toBe(1);
                 backgroundJobService.unscheduleJob('Test Job');
                 done();
-            }, 100);
+            }, 500);
         };
 
         job = backgroundJobService.scheduleJob('Test Job', '0/5 * * * * *', jobCb);
