@@ -62,10 +62,11 @@ describe('PortalLogController', () => {
         const controller = new PortalLogController(pluginRegistry);
         await controller.log(req, res);
 
-        expect(errorMessage).toBe('This is the error message [Page: /test] [App: App2 v2.2.4]');
+        expect(errorMessage).toBe('This is the error message [Path: /test] [App: App2 v2.2.4]');
         expect(context).toEqual({
             portalAppName: 'App2',
-            portalAppVersion: '2.2.4'
+            portalAppVersion: '2.2.4',
+            portalPath: '/test',
         });
     });
 
