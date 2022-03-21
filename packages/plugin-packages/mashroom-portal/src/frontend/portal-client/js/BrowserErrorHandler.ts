@@ -18,12 +18,9 @@ export default class BrowserErrorHandler {
     install(): void {
         // Handle errors
         global.onerror = (event: Event | string, source: string | undefined, fileno: number | undefined, columnNumber: number | undefined, error?: Error) => {
-            let portalAppName = null;
+            let portalAppName = undefined;
             if (source) {
-                const match = source.match(`.*${PORTAL_INTERNAL_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/(.*)/.*`);
-                if (match) {
-                    portalAppName = decodeURIComponent(match[1]);
-                }
+                portalAppName = getAppNameFromScript(source);
             }
 
             const message = error ? error.message : event.toString();
@@ -37,18 +34,36 @@ export default class BrowserErrorHandler {
         };
 
         // Handle console errors
-        tapIntoConsoleLog('error', (args) => {
+        tapIntoConsoleLog('error', (portalAppName, args) => {
             const message = serializeObject(args.map((a) => serializeObject(a)).join(' '));
-            this._remoteLogger.error(`Client Error: ${message}`);
+            this._remoteLogger.error(`Client Error: ${message}`, undefined, portalAppName);
         });
     }
-
 }
 
-const tapIntoConsoleLog = (logType: 'error' | 'warn' | 'info', fn: (args: Array<any>) => void) => {
+const getAppNameFromScript = (source: string): string | undefined => {
+    const match = source.match(`.*${PORTAL_INTERNAL_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/(.*)/.*`);
+    if (match) {
+        return decodeURIComponent(match[1]);
+    }
+}
+
+const tapIntoConsoleLog = (logType: 'error' | 'warn' | 'info', fn: (portalAppName: string | undefined, args: Array<any>) => void) => {
     const original = console[logType];
-    console[logType] = (...args: Array<any>) => {
+    console[logType] = function (...args: Array<any>) {
+        // Try to detect the App which writes this error
+        let portalAppName = undefined;
+        const stack = new Error().stack?.split('/n');
+        if (stack) {
+            for (let i = 0; i < stack.length; i++) {
+                portalAppName = getAppNameFromScript(stack[i]);
+                if (portalAppName) {
+                    break;
+                }
+            }
+        }
+
         original.apply(console, args);
-        fn(args);
+        fn(portalAppName, args);
     };
 }
