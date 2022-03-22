@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: The themes expose now CSS variables, which could be used in Microfrontends (Portal Apps)
  * Portal: The Portal tries now to resolve the origin App for all console errors sent to the server.
    The App name and version is appended to the message and added to the log context. See issue #93
  * OpenID Connect Security Provider: If token validation in the callback fails retry authentication instead of just responding with 403

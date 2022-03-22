@@ -1,4 +1,6 @@
 
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 $COLOR_BLACK: #343633;
 $COLOR_WHITE: white;
@@ -16,6 +18,8 @@ $COLOR_SECONDARY_LIGHT: #d2b283; // 10%
 $COLOR_SECONDARY_DARK: #af8240; // 10%
 $COLOR_SECONDARY_EXTRA_LIGHT: #f4ece1; // 35%
 
+$COLOR_BACKGROUND: white;
+
 $COLOR_LOADING_DOTS: $COLOR_PRIMARY;
 $COLOR_LOADING_DOTS_LIGHTEN:  lighten($COLOR_PRIMARY, 30%);
 
@@ -24,9 +28,6 @@ $ADMIN_APP_COLOR_BACKGROUND_LIGHT: lighten($ADMIN_APP_COLOR_BACKGROUND, 10);
 $ADMIN_APP_COLOR_BACKGROUND_LIGHTER: lighten($ADMIN_APP_COLOR_BACKGROUND, 20);
 $ADMIN_APP_COLOR_TEXT: white;
 $ADMIN_APP_COLOR_TEXT_DARK: lighten($ADMIN_APP_COLOR_BACKGROUND, 50);
-
-$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 $GUTTER_WIDTH: 15px;
 

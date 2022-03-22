@@ -26,7 +26,7 @@
     color: $COLOR_GREY_LIGHT;
 }
 
-body {
+:root {
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
     -ms-font-smoothing: antialiased;
@@ -36,8 +36,24 @@ body {
     color: $COLOR_BLACK;
     font-family: $FONT_DEFAULT;
     background-color: $COLOR_BACKGROUND;
-    overflow-x: hidden;
     font-size: 16px;
+
+    /* CSS variables */
+    --mashroom-portal-font-default: #{$FONT_DEFAULT};
+    --mashroom-portal-font-header: #{$FONT_HEADER};
+    --mashroom-portal-color-black: #{$COLOR_BLACK};
+    --mashroom-portal-color-grey: #{$COLOR_GREY};
+    --mashroom-portal-color-grey-light: #{$COLOR_GREY_LIGHT};
+    --mashroom-portal-color-error: #{$COLOR_ERROR};
+    --mashroom-portal-color-primary: #{$COLOR_PRIMARY};
+    --mashroom-portal-color-primary-light: #{$COLOR_PRIMARY_LIGHT};
+    --mashroom-portal-color-primary-dark: #{$COLOR_PRIMARY_DARK};
+    --mashroom-portal-color-primary-extra-light: #{$COLOR_PRIMARY_EXTRA_LIGHT};
+    --mashroom-portal-color-secondary: #{$COLOR_SECONDARY};
+    --mashroom-portal-color-secondary-light: #{$COLOR_SECONDARY_LIGHT};
+    --mashroom-portal-color-secondary-dark: #{$COLOR_SECONDARY_DARK};
+    --mashroom-portal-color-secondary-extra-light: #{$COLOR_SECONDARY_EXTRA_LIGHT};
+    --mashroom-portal-color-background: #{$COLOR_BACKGROUND};
 }
 
 h1, h2, h3 {
