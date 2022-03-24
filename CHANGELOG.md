@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.0.0-alpha.4 (March 24, 2022)
+
  * Portal: The themes expose now CSS variables, which could be used in Microfrontends (Portal Apps)
  * Portal: The Portal tries now to resolve the origin App for all console errors sent to the server.
    The App name and version is appended to the message and added to the log context. See issue #93
