@@ -181,12 +181,14 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
             };
         } else {
             let result = data;
+            const totalCount = data.length;
+
             if (limit || skip) {
                 result = result.slice(skip || 0, limit ? (skip || 0) + limit : undefined);
             }
             return {
                 result,
-                totalCount: result.length,
+                totalCount,
             };
         }
     }

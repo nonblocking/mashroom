@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * File Storage: Fixed invalid _totalCount_ if _limit_ was set
+
 ## 2.0.0-alpha.4 (March 24, 2022)
 
  * Portal: The themes expose now CSS variables, which could be used in Microfrontends (Portal Apps)
