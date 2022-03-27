@@ -137,6 +137,18 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result3.result.length).toBe(1);
     });
 
+    it('supports the not operator', async () => {
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+
+        await storage.insertOne({foo: 'this is a test'});
+        await storage.insertOne({foo: 'this is something else'});
+
+        const result = await storage.find({ foo: { $not: { $regex: /test/ }}});
+
+        expect(result.result.length).toBe(1);
+        expect(result.result[0].foo).toBe('this is something else');
+    });
+
     it('updates all properties of an existing property with updateOne', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
 

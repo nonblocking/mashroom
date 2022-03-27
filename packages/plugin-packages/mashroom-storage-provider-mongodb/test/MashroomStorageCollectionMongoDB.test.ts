@@ -122,8 +122,20 @@ describe('MashroomStorageCollectionMongoDB', () => {
         expect(result3.result.length).toBe(1);
     });
 
-    it('updates all properties of an existing property with updateOne', async () => {
+    it('supports the not operator', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test6', dummyLoggerFactory);
+
+        await storage.insertOne({foo: 'this is a test'});
+        await storage.insertOne({foo: 'this is something else'});
+
+        const result = await storage.find({ foo: { $not: { $regex: /test/ }}});
+
+        expect(result.result.length).toBe(1);
+        expect(result.result[0].foo).toBe('this is something else');
+    });
+
+    it('updates all properties of an existing property with updateOne', async () => {
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test7', dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1});
         const result = await storage.updateOne({a: 1}, {a: 2, x: {}});
@@ -139,7 +151,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('updates all properties of an existing property with updateMany', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test7', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test8', dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({a: 1, b: 2});
@@ -153,7 +165,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('replaces the existing item with replaceOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test8', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test9', dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1, b: 2});
         const result = await storage.replaceOne({a: 1}, {a: 2, x: {}});
@@ -170,7 +182,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('deletes the existing item with deleteOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test9', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test10', dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({c: 1, d: 1});
@@ -185,7 +197,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('deletes all existing items with deleteMany', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test10', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test11', dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({c: 1, d: 1});

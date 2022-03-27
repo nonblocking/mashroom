@@ -13,28 +13,30 @@ type AlternativeType<T> = T extends ReadonlyArray<infer U> ? T | U : T;
 type Condition<T> = AlternativeType<T> | MongoLikeFilterOperators<AlternativeType<T>>;
 
 type MongoLikeFilterOperators<T> = {
-    $eq?: T;
-    $ne?: T;
-    $gt?: T;
-    $gte?: T;
-    $lt?: T;
-    $lte?: T;
-    $in?: ReadonlyArray<T>;
-    $nin?: ReadonlyArray<T>;
-    $exists?: boolean;
-    $regex?: T extends string ? RegExp | string : never;
+    readonly $eq?: T;
+    readonly $ne?: T;
+    readonly $gt?: T;
+    readonly $gte?: T;
+    readonly $lt?: T;
+    readonly $lte?: T;
+    readonly $in?: ReadonlyArray<T>;
+    readonly $nin?: ReadonlyArray<T>;
+    readonly $exists?: boolean;
+    readonly $not?: T extends string ? MongoLikeFilterOperators<T> | RegExp : MongoLikeFilterOperators<T>;
+    readonly $regex?: T extends string ? RegExp | string : never;
+    readonly $options?: string;
 }
 
 type MongoLikeRootFilterOperators<T> = {
-    $and?: Array<MongoLikeFilter<T>>;
-    $or?: Array<MongoLikeFilter<T>>;
+    readonly $and?: Array<MongoLikeFilter<T>>;
+    readonly $or?: Array<MongoLikeFilter<T>>;
 }
 
 type MongoLikeFilter<T> = {
-    [P in keyof T]?: Condition<T[P]>;
+    readonly [P in keyof T]?: Condition<T[P]>;
 }  & MongoLikeRootFilterOperators<T> & {
     // Nested properties
-    [key: string]: any
+    readonly [key: string]: any
 }
 
 export type MashroomStorageObjectFilter<T extends MashroomStorageRecord> = MongoLikeFilter<T>;
@@ -44,16 +46,16 @@ export type MashroomStorageSort<T extends MashroomStorageRecord> = {
 }
 
 export type MashroomStorageSearchResult<T> = {
-    result: Array<MashroomStorageObject<T>>;
-    totalCount: number;
+    readonly result: Array<MashroomStorageObject<T>>;
+    readonly totalCount: number;
 }
 
 export type MashroomStorageUpdateResult = {
-    modifiedCount: number;
+    readonly modifiedCount: number;
 };
 
 export type MashroomStorageDeleteResult = {
-    deletedCount: number;
+    readonly deletedCount: number;
 };
 
 /**

@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Storage: Added support for _$not_ in filters
  * File Storage: Fixed invalid _totalCount_ if _limit_ was set
 
 ## 2.0.0-alpha.4 (March 24, 2022)
