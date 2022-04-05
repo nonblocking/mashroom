@@ -38,7 +38,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
     withKeyPrefix(prefix: string): MashroomPortalStateService {
         return {
             getStateProperty: (key: string) => this._getStateProperty(key, prefix),
-            setUrlStateProperty: this.setUrlStateProperty,
+            setUrlStateProperty: (key: string, value: string) => this.setUrlStateProperty(key, value),
             setSessionStateProperty: (key: string, value: any) => this.setSessionStateProperty(prefix + key, value),
             setLocalStoreStateProperty: (key: string, value: any) => this.setLocalStoreStateProperty(prefix + key, value),
         };
