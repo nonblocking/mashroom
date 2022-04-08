@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Proxy paths starting with '/' are now accepted for Remote Apps (and considered to be on the server that hosts the App)
  * Portal: Fixed _clientServices.stateService.setUrlStateProperty()_
  * Storage: Added support for _$not_ in filters
  * File Storage: Fixed invalid _totalCount_ if _limit_ was set

@@ -300,6 +300,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     if (!targetUri) {
                         throw new Error(`Invalid configuration of plugin ${name}: No targetUri defined for proxy ${proxyName}.`);
                     }
+                    if (targetUri.startsWith('/')) {
+                        targetUri = serviceUrl + targetUri;
+                    }
                     try {
                         const parsedUri = new URL(targetUri);
                         if (parsedUri.hostname === 'localhost') {

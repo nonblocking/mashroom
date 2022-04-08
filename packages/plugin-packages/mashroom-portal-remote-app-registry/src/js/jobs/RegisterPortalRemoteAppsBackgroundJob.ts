@@ -208,6 +208,9 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     if (!targetUri) {
                         throw new Error(`Invalid configuration of plugin ${name}: No targetUri defined for proxy ${proxyName}.`);
                     }
+                    if (targetUri.startsWith('/')) {
+                        targetUri = remotePortalAppEndpoint.url + targetUri;
+                    }
                     try {
                         const parsedUri = new URL(targetUri);
                         if (parsedUri.hostname === 'localhost') {
