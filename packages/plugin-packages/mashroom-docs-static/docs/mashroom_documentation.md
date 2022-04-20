@@ -22,10 +22,11 @@ security, communication (publish/subscribe), theming, i18n, storage, and logging
 Mashroom Server allows it to implemented SPAs (and express webapps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
 with different configurations and even multiple times on the same page. It also allows it to restrict the access to resources (Pages, Apps) based on user roles.
 
-From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages (package.json) for
-plugin definitions and loads them at runtime. Such a plugin could be an *Express* webapp or a *SPA* or more generally
-all kind of code it knows how to load, which is determined by the available plugin loaders.
-Plugin loaders itself are also just plugins, so it is possible to extend the list of known plugin types.
+From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages for
+plugin definitions (package.json, mashroom.json) and loads them at runtime.
+Such a plugin could be an *Express* webapp or a *SPA* or more generally all kind of code it knows how to load,
+which is determined by the available plugin loaders.
+Plugin loaders itself are also just plugins, so it is possible to add any type of custom plugin type.
 
 ### Key features
 
