@@ -2,7 +2,7 @@
 import '../sass/style.scss';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import {render, unmountComponentAtNode} from 'react-dom';
 import App from './App';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -10,13 +10,13 @@ import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup) => {
     const {lang, restProxyPaths} = portalAppSetup;
 
-    ReactDOM.render(
+    render(
         <App lang={lang} spaceXApiPath={restProxyPaths.spaceXApi}/>,
         portalAppHostElement);
 
     return {
         willBeRemoved: () => {
-            ReactDOM.unmountComponentAtNode(portalAppHostElement);
+            unmountComponentAtNode(portalAppHostElement);
         }
     };
 };
