@@ -8,10 +8,10 @@ import App from './App';
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup) => {
-    const {lang, restProxyPaths} = portalAppSetup;
+    const {lang, proxyPaths} = portalAppSetup;
 
     render(
-        <App lang={lang} spaceXApiPath={restProxyPaths.spaceXApi}/>,
+        <App lang={lang} spaceXApiPath={proxyPaths.spaceXApi}/>,
         portalAppHostElement);
 
     return {
