@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.0.0 (April 25, 2022)
+
  * Portal: Proxy paths starting with '/' are now accepted for Remote Apps (and considered to be on the server that hosts the App)
  * Portal: Fixed _clientServices.stateService.setUrlStateProperty()_
  * Storage: Added support for _$not_ in filters
@@ -178,7 +181,7 @@
        "clientBootstrap": "startMyApp",
        "local": {
          "resourcesRoot": "./dist",
-          "ssrBootstrap": "optional-ssr-bootstrap-file"
+         "ssrBootstrap": "optional-ssr-bootstrap-file"
        },
        "remote": {
          "resourcesRoot": "/if-remote-access-supported",
