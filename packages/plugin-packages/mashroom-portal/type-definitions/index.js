@@ -153,7 +153,7 @@ export type MashroomPortalAppSetup = {
     +instanceId: ?string,
     +lastReloadTs: number,
     +proxyPaths: MashroomPortalProxyPaths,
-    // Legacy, will be removed in Mashroom v3
+    // @deprecated Use proxyPaths (will be removed in Mashroom v3)
     +restProxyPaths: MashroomPortalProxyPaths,
     +sharedResourcesBasePath: string,
     +sharedResources: ?MashroomPortalAppResources,

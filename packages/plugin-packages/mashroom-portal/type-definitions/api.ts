@@ -157,7 +157,7 @@ export type MashroomPortalAppSetup = {
     readonly instanceId: string | null | undefined;
     readonly lastReloadTs: number;
     readonly proxyPaths: MashroomPortalProxyPaths;
-    // Legacy, will be removed in Mashroom v3
+    // @deprecated Use proxyPaths (will be removed in Mashroom v3)
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly sharedResourcesBasePath: string;
     readonly sharedResources: MashroomPortalAppResources | null | undefined;
