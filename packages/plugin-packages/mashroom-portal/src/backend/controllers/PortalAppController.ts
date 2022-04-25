@@ -5,6 +5,7 @@ import {getFrontendResourcesBasePath, getSitePath} from '../utils/path_utils';
 import {findPortalAppInstanceOnPage, getPage} from '../utils/model_utils';
 import {
     getUser,
+    isAdmin,
     isAppPermitted,
     isPagePermitted,
     isSitePathPermitted
@@ -159,12 +160,13 @@ export default class PortalAppController {
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const mashroomSecurityUser = await getUser(req);
+        const admin = isAdmin(req);
         const {q, updatedSince} = req.query;
 
         let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps
             .filter((portalApp) => {
-                // Remove Apps the user could not load anyways
-                if (Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
+                // Remove Apps the user could not load anyway
+                if (!admin && Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
                     return portalApp.defaultRestrictViewToRoles.some((r) => mashroomSecurityUser?.roles?.find((ur) => ur === r));
                 }
                 return true;

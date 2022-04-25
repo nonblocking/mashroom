@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Sandbox: Show all Apps for the Administrator role, even if defaultRestrictViewToRoles is set
 
 ## 2.0.1 (April 25, 2022)
 
