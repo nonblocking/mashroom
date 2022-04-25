@@ -4,17 +4,17 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.0-alpha.4",
+    "version": "2.0.0",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "2.0.0-alpha.4"
+        "@mashroom/mashroom-utils": "2.0.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.0.0-alpha.4",
-        "@mashroom/mashroom-memory-cache": "2.0.0-alpha.4"
+        "@mashroom/mashroom": "2.0.0",
+        "@mashroom/mashroom-memory-cache": "2.0.0"
     },
     "jest": {
         "verbose": true,
