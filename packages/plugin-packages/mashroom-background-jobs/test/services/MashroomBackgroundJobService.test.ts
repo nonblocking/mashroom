@@ -18,11 +18,17 @@ describe('MashroomBackgroundJobService', () => {
         const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
 
         let job: MashroomBackgroundJob | null = null;
+        let executed = false;
 
         const jobCb = (pluginContext: any) => {
+            if (executed) {
+                return;
+            }
+
             expect(pluginContext).toBeTruthy();
 
             setTimeout(() => {
+                executed = true;
                 expect(job?.lastInvocation).toBeTruthy();
                 expect(job?.lastInvocation?.success).toBeTruthy();
                 expect(backgroundJobService.jobs.length).toBe(1);
