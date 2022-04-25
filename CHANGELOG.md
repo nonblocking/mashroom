@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Vue Demo App: Upgrade to Vue3 and server-side rendering added
  * Sandbox: Show all Apps for the Administrator role, even if defaultRestrictViewToRoles is set
 
 ## 2.0.1 (April 25, 2022)

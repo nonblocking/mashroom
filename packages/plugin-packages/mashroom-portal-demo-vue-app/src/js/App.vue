@@ -23,19 +23,17 @@
         data: () => ({
             pings: 0
         }),
-        mounted: function() {
+        mounted() {
             processPing = () => this.pings ++;
             this.messageBus.subscribe('ping', processPing);
         },
-        beforeDestroy: function() {
+        beforeUnmount() {
             this.messageBus.unsubscribe('ping', processPing);
         },
         methods: {
             onClick() {
                 this.messageBus.publish('ping', {});
             }
-        },
-        components: {
         },
     };
 </script>
