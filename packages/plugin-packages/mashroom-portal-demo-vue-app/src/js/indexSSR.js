@@ -14,7 +14,9 @@ const bootstrap = async (portalAppSetup) => {
         messageBus: dummyMessageBus,
     });
 
-    return renderToString(app);
+    const appHtml = await renderToString(app);
+
+    return `<div data-ssr-host="true">${appHtml}</div>`;
 };
 
 export default bootstrap;
