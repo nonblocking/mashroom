@@ -19,7 +19,7 @@ export default class MashroomVHostPathMapperService implements MashroomVHostPath
         if (hostDefinition) {
             const redirectMappingResult = mapPath(url, hostDefinition, true);
             if (redirectMappingResult) {
-                return redirectMappingResult.url || '/';
+                return redirectMappingResult.url;
             }
         }
 

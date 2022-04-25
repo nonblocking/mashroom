@@ -4,6 +4,10 @@
 ## [unreleased]
 
 
+## 2.0.1 (April 25, 2022)
+
+ * VHost Path Mapper: Fixed root url handling
+
 ## 2.0.0 (April 25, 2022)
 
  * Portal: Proxy paths starting with '/' are now accepted for Remote Apps (and considered to be on the server that hosts the App)

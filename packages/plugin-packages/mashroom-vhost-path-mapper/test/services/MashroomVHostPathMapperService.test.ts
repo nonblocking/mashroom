@@ -33,7 +33,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
 
         expect(frontendUrl1).toBe('/base/bar?x=2');
         expect(frontendUrl2).toBe('/base/foo');
-    })
+    });
 
 });
 
