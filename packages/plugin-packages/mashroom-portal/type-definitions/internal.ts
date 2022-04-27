@@ -74,7 +74,7 @@ export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginTy
 
 export type MashroomPortalPluginConfig = {
     readonly path: string;
-    readonly adminApp: string;
+    readonly adminApp: string | null | undefined;
     readonly defaultTheme: string;
     readonly defaultLayout: string;
     readonly warnBeforeAuthenticationExpiresSec: number;

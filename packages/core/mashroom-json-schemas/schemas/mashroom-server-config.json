@@ -559,7 +559,7 @@
                             "description": "The portal base path (Default: /portal)"
                         },
                         "adminApp": {
-                            "type": "string",
+                            "type": ["string", "null"],
                             "description": "The admin to use (Default: Mashroom Portal Admin App)"
                         },
                         "defaultTheme": {
