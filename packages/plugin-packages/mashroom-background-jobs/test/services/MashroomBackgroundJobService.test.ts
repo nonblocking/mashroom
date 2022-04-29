@@ -21,13 +21,12 @@ describe('MashroomBackgroundJobService', () => {
         let executed = false;
 
         const jobCb = (pluginContext: any) => {
-            if (executed) {
-                return;
-            }
-
             expect(pluginContext).toBeTruthy();
 
             setTimeout(() => {
+                if (executed) {
+                    return;
+                }
                 executed = true;
                 expect(job?.lastInvocation).toBeTruthy();
                 expect(job?.lastInvocation?.success).toBeTruthy();
