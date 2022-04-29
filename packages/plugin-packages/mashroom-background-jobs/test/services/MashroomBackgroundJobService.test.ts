@@ -15,19 +15,18 @@ const pluginContextHolder: any = {
 describe('MashroomBackgroundJobService', () => {
 
     it('schedules and runs a job', (done) => {
+        if (process.platform === 'win32') {
+            return;
+        }
+
         const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
 
         let job: MashroomBackgroundJob | null = null;
-        let executed = false;
 
         const jobCb = (pluginContext: any) => {
             expect(pluginContext).toBeTruthy();
 
             setTimeout(() => {
-                if (executed) {
-                    return;
-                }
-                executed = true;
                 expect(job?.lastInvocation).toBeTruthy();
                 expect(job?.lastInvocation?.success).toBeTruthy();
                 expect(backgroundJobService.jobs.length).toBe(1);
