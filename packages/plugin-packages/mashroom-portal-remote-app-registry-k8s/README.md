@@ -81,12 +81,13 @@ Create a role with the required permissions like this:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-    name: list-services-cluster-role
+    name: list-namespaces-services-cluster-role
 rules:
     -   apiGroups:
             - ""
         resources:
             - services
+            - namespaces
         verbs:
             - get
             - list
@@ -110,7 +111,7 @@ subjects:
         name: mashroom-portal
 roleRef:
     kind: ClusterRole
-    name: list-services-cluster-role
+    name: list-namespaces-services-cluster-role
     apiGroup: rbac.authorization.k8s.io
 ```
 
