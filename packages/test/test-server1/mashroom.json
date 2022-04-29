@@ -160,8 +160,9 @@
             "warnBeforeAuthenticationExpiresSec": 60,
             "autoExtendAuthentication": false,
             "ssrConfig": {
-                "ssrEnabled": true,
+                "ssrEnable": true,
                 "renderTimoutMs": 2000,
+                "cacheEnable": true,
                 "cacheTTLSec": 300
             }
         },

@@ -1,4 +1,5 @@
 
+import {createHash} from 'crypto';
 import fetch from 'node-fetch';
 import context from '../context/global_portal_context'
 import {getUser} from './security_utils';
@@ -18,23 +19,27 @@ import type {MashroomPortalIncludeStyleServerSideRenderedAppsResult} from '../..
 
 const CACHE_REGION = 'mashroom-portal-ssr';
 
-const getCacheKey = async (portalAppSetup: MashroomPortalAppSetup, cachingConfig: MashroomPortalAppCaching | null | undefined, req: Request): Promise<string | null> => {
+const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, cachingConfig: MashroomPortalAppCaching | null | undefined, req: Request): Promise<string | null> => {
     const cachePolicy = cachingConfig?.ssrHtml || 'same-config-and-user';
     const mashroomSecurityUser = await getUser(req);
+
+    let data = null;
     if (cachePolicy === 'same-config') {
-        return Buffer.from(JSON.stringify(portalAppSetup.appConfig)).toString('base64');
+        data = `${pluginName}___${JSON.stringify(portalAppSetup.appConfig)}`;
     } else if (cachePolicy === 'same-config-and-user') {
-        return Buffer.from(`${JSON.stringify(portalAppSetup.appConfig)}_${  mashroomSecurityUser?.username}`).toString('base64');
+        data = `${pluginName}__${JSON.stringify(portalAppSetup.appConfig)}__${mashroomSecurityUser?.username}`;
     }
-    return null;
+
+    return data ? createHash('sha256').update(data).digest('hex') : null;
 };
 
 const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
-    const ssrConfig = context.portalPluginConfig.ssrConfig;
+    const {cacheEnable, cacheTTLSec} = context.portalPluginConfig.ssrConfig;
     const cacheService: MashroomMemoryCacheService = req.pluginContext.services.memorycache?.service;
     const {ssrBootstrap: ssrBootstrapPath, ssrInitialHtmlUri, cachingConfig} = portalApp;
 
-    const cacheKey = cacheService ? await getCacheKey(portalAppSetup, cachingConfig, req) : null;
+    const cacheKey = cacheEnable && cacheService ? await getCacheKey(pluginName, portalAppSetup, cachingConfig, req) : null;
+
     if (cacheKey) {
        const cachedHtml = await cacheService.get(CACHE_REGION, cacheKey);
        if (cachedHtml) {
@@ -81,7 +86,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
 
     if (html && cacheKey) {
         // We deliberately don't wait
-        cacheService.set(CACHE_REGION, cacheKey, html, ssrConfig.cacheTTLSec);
+        cacheService.set(CACHE_REGION, cacheKey, html, cacheTTLSec);
     }
 
     return html;
@@ -89,7 +94,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
 
 export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
-    if (!ssrConfig.ssrEnabled) {
+    if (!ssrConfig.ssrEnable) {
         return null;
     }
 
@@ -107,7 +112,7 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
 
 export const renderInlineStyleForServerSideRenderedApps = async (serverSideRenderedApps: Array<string>, req: Request, logger: MashroomLogger): Promise<MashroomPortalIncludeStyleServerSideRenderedAppsResult> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
-    if (!ssrConfig.ssrEnabled || serverSideRenderedApps.length === 0) {
+    if (!ssrConfig.ssrEnable || serverSideRenderedApps.length === 0) {
         return {
             headerContent: '',
             includedAppStyles: [],

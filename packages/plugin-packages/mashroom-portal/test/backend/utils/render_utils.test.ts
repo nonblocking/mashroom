@@ -15,8 +15,9 @@ setPortalPluginConfig({
     autoExtendAuthentication: false,
     defaultProxyConfig: {},
     ssrConfig: {
-        ssrEnabled: true,
+        ssrEnable: true,
         renderTimoutMs: 2000,
+        cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,
     }

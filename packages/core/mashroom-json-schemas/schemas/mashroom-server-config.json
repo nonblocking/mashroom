@@ -599,13 +599,17 @@
                         "ssrConfig": {
                             "type": "object",
                             "properties": {
-                                "ssrEnabled": {
+                                "ssrEnable": {
                                     "type": "boolean",
                                     "description": "Allow server side rendering if Apps support it (Default: true)"
                                 },
                                 "renderTimoutMs": {
                                     "type": "number",
                                     "description": "Timeout for SSR which defines how long the page rendering can be blocked (Default: 2000)"
+                                },
+                                "cacheEnable": {
+                                    "type": "boolean",
+                                    "description": "Enable cache for server-side rendered HTML (Default: true)"
                                 },
                                 "cacheTTLSec": {
                                     "type": "number",
