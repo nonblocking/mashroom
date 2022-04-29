@@ -177,7 +177,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
                     return json;
                 } else {
-                    this._logger.warn(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
+                    this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
                 }
             } catch (e) {
                 this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed`, e);

@@ -294,7 +294,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
                     return json;
                 } else {
-                    this._logger.warn(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
+                    this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
                 }
             } catch (e) {
                 this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed`, e);
