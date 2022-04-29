@@ -160,7 +160,9 @@
             "warnBeforeAuthenticationExpiresSec": 60,
             "autoExtendAuthentication": false,
             "ssrConfig": {
-                "ssrEnabled": true
+                "ssrEnabled": true,
+                "renderTimoutMs": 2000,
+                "cacheTTLSec": 300
             }
         },
         "Mashroom Portal Default Theme": {
