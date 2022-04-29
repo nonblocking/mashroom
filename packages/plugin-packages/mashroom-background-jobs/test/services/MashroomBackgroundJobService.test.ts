@@ -15,12 +15,6 @@ const pluginContextHolder: any = {
 describe('MashroomBackgroundJobService', () => {
 
     it('schedules and runs a job', (done) => {
-        if (process.platform === 'win32') {
-            // skip this for the moment on Win
-            done();
-            return;
-        }
-
         const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
 
         let job: MashroomBackgroundJob | null = null;
@@ -37,7 +31,7 @@ describe('MashroomBackgroundJobService', () => {
             }, 500);
         };
 
-        job = backgroundJobService.scheduleJob('Test Job', '0/5 * * * * *', jobCb);
+        job = backgroundJobService.scheduleJob('Test Job', '0/1 * * * * *', jobCb);
     });
 
     it('unschedules and cancels a job', () => {
