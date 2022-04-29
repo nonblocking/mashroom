@@ -10,7 +10,6 @@ import type {MessageBusPortalAppUnderTest} from './types';
 const LOADED_SCRIPTS: Array<HTMLScriptElement> = [];
 const LOADED_STYLES: Array<HTMLLinkElement> = [];
 
-// TODO: implement unloading/loading of a different portal app?
 let loadedAppHooks: MashroomPortalAppLifecycleHooks | null = null;
 
 const loadJs = (path: string): Promise<void> => {
