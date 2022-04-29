@@ -66,7 +66,7 @@ describe('ssr_utils', () => {
             memorycache: {
                 service: {
                     get: (region: string, key: string) => {
-                        if (key === 'eyJjYWNoZVRlc3QiOjF9X3Rlc3Q=') {
+                        if (key === '1318d1d2a4691f35774f0706ee0ed7c0979822dbcc7982deaee0b2f635a4e5e5') {
                             return 'content from cache';
                         }
 
