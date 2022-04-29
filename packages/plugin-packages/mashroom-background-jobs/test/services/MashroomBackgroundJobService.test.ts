@@ -16,6 +16,8 @@ describe('MashroomBackgroundJobService', () => {
 
     it('schedules and runs a job', (done) => {
         if (process.platform === 'win32') {
+            // skip this for the moment on Win
+            done();
             return;
         }
 
