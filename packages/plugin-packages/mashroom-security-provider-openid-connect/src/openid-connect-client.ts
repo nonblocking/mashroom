@@ -1,7 +1,8 @@
 
-import {Client, custom, Issuer} from 'openid-client';
+import {Client, Issuer, custom} from 'openid-client';
 
 import type {Request} from 'express';
+import type {HttpOptions} from 'openid-client';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {ClientConfiguration} from '../type-definitions';
 
@@ -30,10 +31,8 @@ export default async (request: Request): Promise<Client | undefined> => {
         return undefined;
     }
 
-    const httpOptions = {
-        rejectUnauthorized: _clientConfiguration.httpRequestRejectUnauthorized,
+    const httpOptions: HttpOptions = {
         timeout: _clientConfiguration.httpRequestTimeoutMs,
-        retry: _clientConfiguration.httpRequestRetry,
     }
     logger.debug('Setting HTTP options:', httpOptions);
     custom.setHttpOptionsDefaults(httpOptions);

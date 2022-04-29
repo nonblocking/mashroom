@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * OpenID Connect Security Provider: Removed the options *httpRequestRejectUnauthorized* and *httpRequestRetry* because they are no
+   longer supported by [openid-client](https://github.com/panva/node-openid-client)
  * Vue Demo App: Upgrade to Vue3 and server-side rendering added
  * Sandbox: Show all Apps for the Administrator role, even if defaultRestrictViewToRoles is set
 

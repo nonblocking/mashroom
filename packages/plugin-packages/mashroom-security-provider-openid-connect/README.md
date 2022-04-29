@@ -62,9 +62,7 @@ And configure this plugin like this in the Mashroom config file:
             "adminRoles": [
                 "mashroom-admin"
             ],
-            "httpRequestRejectUnauthorized": true,
-            "httpRequestTimeoutMs": 3500,
-            "httpRequestRetry": 0
+            "httpRequestTimeoutMs": 3500
         },
         "Mashroom OpenID Connect Security Provider Callback": {
            "path": "/openid-connect-cb"
@@ -87,9 +85,7 @@ And configure this plugin like this in the Mashroom config file:
  * _extraDataMapping_: Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (Default: null)
  * _rolesClaimName_: Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array (Default: roles)
  * _adminRoles_: A list of user roles that should get the Mashroom _Administrator_ role (Default: ["mashroom-admin"])
- * _httpRequestRejectUnauthorized_: Reject self-signed certificates when contacting the Authorization Server (Default: true)
  * _httpRequestTimeoutMs_: Request timeout when contacting the Authorization Server (Default: 3500)
- * _httpRequestRetry_: Number of retries when contacting the Authorization Server (Default: 0)
 
 ### Roles
 

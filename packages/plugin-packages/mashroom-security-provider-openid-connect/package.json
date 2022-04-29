@@ -60,9 +60,7 @@
                     "adminRoles": [
                         "mashroom-admin"
                     ],
-                    "httpRequestRejectUnauthorized": true,
-                    "httpRequestTimeoutMs": 3500,
-                    "httpRequestRetry": 0
+                    "httpRequestTimeoutMs": 3500
                 }
             },
             {
