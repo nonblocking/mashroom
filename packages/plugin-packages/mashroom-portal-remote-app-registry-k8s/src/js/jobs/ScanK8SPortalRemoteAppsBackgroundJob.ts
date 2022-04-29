@@ -36,11 +36,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     }
 
     async _scanKubernetesServices(): Promise<void> {
-        this._logger.info('Starting scan of k8s namespaces: ', this._k8sNamespaces);
         context.lastScan = Date.now();
         context.error = null;
 
         const namespaces = await this._determineNamespaces();
+        this._logger.info('Starting scan of k8s namespaces: ', namespaces);
+
         for (let i = 0; i < namespaces.length; i++) {
             const namespace = namespaces[i];
             try {
