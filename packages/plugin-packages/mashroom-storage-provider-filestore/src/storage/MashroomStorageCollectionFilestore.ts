@@ -65,7 +65,8 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
 
     async updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
         return this._updateOperation(async (collection) => {
-            const existingItem = await this.findOne(filter);
+            const {result} = this._find(collection, false, filter, 1);
+            const existingItem = result.length > 0 ? result[0] : null;
             if (!existingItem) {
                 return {
                     modifiedCount: 0,
@@ -83,7 +84,7 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
 
     async updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {
         return this._updateOperation(async (collection) => {
-            const existingItems = await this.find(filter);
+            const existingItems = this._find(collection, false, filter);
 
             existingItems.result.forEach((item) => {
                 const index = collection.indexOf(item);
@@ -98,7 +99,8 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
 
     async replaceOne(filter: MashroomStorageObjectFilter<T>, newItem: T): Promise<MashroomStorageUpdateResult> {
         return this._updateOperation(async (collection) => {
-            const existingItem = await this.findOne(filter);
+            const {result} = this._find(collection, false, filter, 1);
+            const existingItem = result.length > 0 ? result[0] : null;
             if (!existingItem) {
                 return {
                     modifiedCount: 0,
@@ -116,7 +118,8 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
 
     async deleteOne(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._updateOperation(async (collection) => {
-            const existingItem = await this.findOne(filter);
+            const {result} = this._find(collection, false, filter, 1);
+            const existingItem = result.length > 0 ? result[0] : null;
             if (!existingItem) {
                 return {
                     deletedCount: 0,
@@ -134,7 +137,8 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
 
     async deleteMany(filter: MashroomStorageObjectFilter<T>): Promise<MashroomStorageDeleteResult> {
         return this._updateOperation(async (collection) => {
-            const existingItems = await this.find(filter);
+            const existingItems = this._find(collection, false, filter);
+
             existingItems.result.forEach((existingItem) => {
                 const index = collection.indexOf(existingItem);
                 collection.splice(index, 1);
