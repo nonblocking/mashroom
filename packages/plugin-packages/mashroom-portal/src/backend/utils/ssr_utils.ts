@@ -1,5 +1,4 @@
 
-import {setTimeout} from 'timers/promises';
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
 import context from '../context/global_portal_context'
@@ -105,12 +104,12 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
         return null;
     }
 
-    const ac = new AbortController();
+    let timeout: any;
     return Promise.race([
         renderServerSideWithCache(pluginName, portalApp, portalAppSetup, req, logger),
-        setTimeout(ssrConfig.renderTimoutMs, null, { signal: ac.signal }),
+        new Promise<null>((resolve) => timeout = setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
     ]).then((result) => {
-        ac.abort();
+        clearTimeout(timeout);
         return result;
     })
 }
@@ -154,12 +153,12 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
                     });
             });
 
-            const ac = new AbortController();
+            let timeout: any;
             const styles = await Promise.race([
                 Promise.all(portalAppStyleResourcePromises),
-                setTimeout(ssrConfig.renderTimoutMs, [], { signal: ac.signal }),
+                new Promise<[]>((resolve) => timeout = setTimeout(() => resolve([]), ssrConfig.renderTimoutMs)),
             ]).then((result) => {
-                ac.abort();
+                clearTimeout(timeout);
                 return result;
             });
 
