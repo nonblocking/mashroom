@@ -35,6 +35,8 @@ export interface KubernetesServiceRegistry extends MashroomRemotePortalAppRegist
 
 export type Context = {
     readonly registry: KubernetesServiceRegistry;
+    namespaces: Array<string>;
+    serviceLabelSelector: string | null;
     serviceNameFilter: string;
     lastScan: number;
     error: string | null;
@@ -45,6 +47,8 @@ export type ServicesRenderModel = {
     baseUrl: string;
     scanError: string | null;
     lastScan: string;
+    namespaces: string;
+    serviceLabelSelector: string | null;
     serviceNameFilter: string;
     services: Array<{
         name: string;

@@ -38,6 +38,8 @@ export default (request: Request, response: Response) => {
         baseUrl: request.baseUrl,
         scanError: context.error,
         lastScan: formatDate(context.lastScan),
+        namespaces: context.namespaces.join(', '),
+        serviceLabelSelector: context.serviceLabelSelector,
         serviceNameFilter: context.serviceNameFilter,
         services: context.registry.services
             .map((service) => ({

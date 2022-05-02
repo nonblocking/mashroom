@@ -66,9 +66,15 @@
         </table>
 
         <div class="footnotes">
-            Service name filter: <strong>{{serviceNameFilter}}</strong>
+            <strong>Scanned namespaces:</strong> {{namespaces}}
             <br/>
-            Last scan: {{lastScan}}
+            {{#if serviceLabelSelector}}
+                <strong>Service label selector:</strong> {{serviceLabelSelector}}
+                <br/>
+            {{/if}}
+            <strong>Service name filter:</strong> {{serviceNameFilter}}
+            <br/>
+            <strong>Last scan:</strong> {{lastScan}}
         </div>
 
         <div id="modal" style="display: none">

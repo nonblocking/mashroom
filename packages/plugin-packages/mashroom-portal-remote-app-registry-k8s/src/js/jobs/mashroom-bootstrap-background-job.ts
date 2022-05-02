@@ -9,6 +9,8 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
     const pluginContext = pluginContextHolder.getPluginContext();
     const {k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter, socketTimeoutSec, refreshIntervalSec, accessViaClusterIP} = pluginConfig;
 
+    context.namespaces = [...k8sNamespaces || []];
+    context.serviceLabelSelector = k8sServiceLabelSelector;
     context.serviceNameFilter = serviceNameFilter;
 
     const kubernetesConnector = process.env.DUMMY_K8S_CONNECTOR ? new DummyKubernetesConnector() : new KubernetesConnector();

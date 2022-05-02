@@ -40,10 +40,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         context.error = null;
 
         const namespaces = await this._determineNamespaces();
+        context.namespaces = namespaces;
         this._logger.info('Starting scan of k8s namespaces: ', namespaces);
 
         for (let i = 0; i < namespaces.length; i++) {
             const namespace = namespaces[i];
+
             try {
                 const res = await this._kubernetesConnector.getNamespaceServices(namespace, this._k8sServiceLabelSelector);
                 const serviceItems = res.items;

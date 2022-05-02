@@ -7,9 +7,12 @@ import bootstrap from '../jobs/mashroom-bootstrap-background-job';
 process.env.DUMMY_K8S_CONNECTOR = true;
 
 const pluginConfig = {
+    k8sNamespacesLabelSelector: 'environment=development',
     k8sNamespaces: ['default'],
-    refreshIntervalSec: 120,
+    k8sServiceLabelSelector: 'foo!=bar',
     serviceNameFilter: '.*',
+    socketTimeoutSec: 2,
+    refreshIntervalSec: 120,
     accessViaClusterIP: true,
 };
 const contextHolder: any = {
