@@ -792,7 +792,9 @@ mashroom-portal-ui-error-message {
 }
 
 .portal-app-mashroom-portal-tabify-app {
-    background-color: #EEE;
+    .tab-dialog-header {
+        border-bottom: 2px solid $COLOR_GREY_LIGHT;
+    }
 }
 
 @include small {
