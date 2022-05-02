@@ -112,8 +112,9 @@ export type MashroomPortalLoadedPortalApp = {
     +portalAppTitleElement: ?HTMLElement,
     +appConfig: any,
     +editorConfig: ?MashroomPortalAppConfigEditor,
-    +updateAppConfig: ?(appConfig: MashroomPluginConfig) => void;
-    +error: boolean
+    +updateAppConfig: ?(appConfig: MashroomPluginConfig) => void,
+    +error: boolean,
+    +errorPluginMissing: boolean,
 }
 
 export type MashroomPortalProxyPaths = {
@@ -148,6 +149,7 @@ export type MashroomPortalConfigEditorTarget = {
 export type MashroomPortalAppSetup = {
     +appId: string;
     +pluginName: string,
+    +pluginMissing?: boolean,
     +title: ?string,
     +version: string,
     +instanceId: ?string,

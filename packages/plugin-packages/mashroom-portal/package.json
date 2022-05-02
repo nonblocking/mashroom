@@ -75,6 +75,7 @@
                     "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
                     "warnBeforeAuthenticationExpiresSec": 120,
                     "autoExtendAuthentication": false,
+                    "ignoreMissingAppsOnPages": false,
                     "defaultProxyConfig": {
                         "sendPermissionsHeader": false,
                         "restrictToRoles": null

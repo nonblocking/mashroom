@@ -52,7 +52,7 @@ import {
     renderPageContent,
 } from '../utils/render_utils';
 import {renderInlineStyleForServerSideRenderedApps} from '../utils/ssr_utils';
-import createPortalAppSetup from '../utils/create_portal_app_setup';
+import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create_portal_app_setup';
 
 import type {Request, Response, Application} from 'express';
 import type { MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -76,7 +76,7 @@ import type {
     MashroomPortalAppSetup,
     MashroomPortalPageContent,
 } from '../../../type-definitions';
-import type {MashroomPortalPluginRegistry, MashroomPortalPageAppsInfo} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry, MashroomPortalPageApps} from '../../../type-definitions/internal';
 
 const readFile = promisify(fs.readFile);
 const viewEngineCache = new Map();
@@ -162,8 +162,8 @@ export default class PortalPageRenderController {
                 const portalLayout = await this._loadLayout(layoutName, logger);
                 const messages = (key: string) => i18nService.getMessage(key, lang);
 
-                const portalAppInfo = await this._getPagePortalAppsInfo(req, page, user, cdnService);
-                const result = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
+                const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
+                const result = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalPageApps, !!theme, messages, req, res, logger));
                 pageContent = result.pageContent;
 
                 evalScript = `
@@ -186,9 +186,9 @@ export default class PortalPageRenderController {
                       }
                     });
                     // Execute scripts in the new page content (from SSR)
-                    ${this._executeSSRAppContentScripts(portalAppInfo)}
+                    ${this._executeSSRAppContentScripts(portalPageApps)}
                     // Load/hydrate all new ones
-                    ${await this._getStaticAppStartupScript(portalAppInfo, undefined)}
+                    ${await this._getStaticAppStartupScript(portalPageApps, undefined)}
                 `;
             }
 
@@ -299,8 +299,8 @@ export default class PortalPageRenderController {
         const appWrapperTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppWrapperToClientTemplate(!!theme, messages, req, res, logger));
         const appErrorTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppErrorToClientTemplate(!!theme, messages, req, res, logger));
 
-        const portalAppInfo = await this._getPagePortalAppsInfo(req, page, user, cdnService);
-        const {pageContent, serverSideRenderedApps} = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalAppInfo, !!theme, messages, req, res, logger));
+        const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
+        const {pageContent, serverSideRenderedApps} = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalPageApps, !!theme, messages, req, res, logger));
 
         const {inlineStyles} = context.portalPluginConfig.ssrConfig;
         const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
@@ -309,7 +309,7 @@ export default class PortalPageRenderController {
             req, site.siteId, sitePath, pageRef.pageId, pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
             appLoadingFailedMsg, checkAuthenticationExpiration, warnBeforeAuthenticationExpiresSec, autoExtendAuthentication,
             messagingConnectPath, privateUserTopic, userAgent, cdnService?.getCDNHost(), inlineStyleHeaderContent, includedAppStyles, devMode);
-        const portalResourcesFooter = await this._resourcesFooter(req, portalAppInfo, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent);
+        const portalResourcesFooter = await this._resourcesFooter(req, portalPageApps, adminPluginName, sitePath, pageRef.friendlyUrl, lang, userAgent);
 
         const siteBasePath = getFrontendSiteBasePath(req);
 
@@ -469,10 +469,10 @@ export default class PortalPageRenderController {
         `;
     }
 
-    private async _resourcesFooter(req: Request, portalAppInfo: MashroomPortalPageAppsInfo, adminPluginName: string | undefined | null,
+    private async _resourcesFooter(req: Request, portalPageApps: MashroomPortalPageApps, adminPluginName: string | undefined | null,
                                   sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent): Promise<string> {
 
-        const staticAppStartupScript = await this._getStaticAppStartupScript(portalAppInfo, adminPluginName);
+        const staticAppStartupScript = await this._getStaticAppStartupScript(portalPageApps, adminPluginName);
 
         return `
             <script>
@@ -487,16 +487,18 @@ export default class PortalPageRenderController {
         return html.replace(/(\r\n|\r|\n)/g, '');
     }
 
-    private async _getStaticAppStartupScript(portalAppInfo: MashroomPortalPageAppsInfo, adminPluginName: string | undefined | null) {
+    private async _getStaticAppStartupScript(portalPageApps: MashroomPortalPageApps, adminPluginName: string | undefined | null) {
         const loadStatements = [];
         const preloadedPortalAppSetup: Record<string, MashroomPortalAppSetup> = {};
 
-        Object.keys(portalAppInfo).forEach((areaId) => {
-           portalAppInfo[areaId].forEach((appInfo) => {
+        Object.keys(portalPageApps).forEach((areaId) => {
+            portalPageApps[areaId].forEach((portalPageApp) => {
                loadStatements.push(
-                   `portalAppService.loadApp('${areaId}', '${appInfo.pluginName}', '${appInfo.instanceId}', null, null);`
+                   `portalAppService.loadApp('${areaId}', '${portalPageApp.pluginName}', '${portalPageApp.instanceId}', null, null);`
                );
-               preloadedPortalAppSetup[appInfo.instanceId] = appInfo.appSetup;
+               if (portalPageApp.appSetup) {
+                   preloadedPortalAppSetup[portalPageApp.instanceId] = portalPageApp.appSetup;
+               }
            });
         });
 
@@ -512,8 +514,8 @@ export default class PortalPageRenderController {
         `;
     }
 
-    private _executeSSRAppContentScripts(portalAppInfo: MashroomPortalPageAppsInfo): string {
-        const appAreaIds = Object.keys(portalAppInfo);
+    private _executeSSRAppContentScripts(portalPageApps: MashroomPortalPageApps): string {
+        const appAreaIds = Object.keys(portalPageApps);
         return `
             ['${appAreaIds.join('\', \'')}'].forEach(function(appAreaId) {
                 var appAreaEl = document.getElementById(appAreaId);
@@ -531,33 +533,41 @@ export default class PortalPageRenderController {
         `;
     }
 
-    private async _getPagePortalAppsInfo(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null, cdnService: MashroomCDNService | undefined | null): Promise<MashroomPortalPageAppsInfo> {
-        const info: MashroomPortalPageAppsInfo = {};
+    private async _getPagePortalApps(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null, cdnService: MashroomCDNService | undefined | null): Promise<MashroomPortalPageApps> {
+        const portalPageApps: MashroomPortalPageApps = {};
         if (page.portalApps) {
             for (const areaId in page.portalApps) {
                 if (areaId && page.portalApps.hasOwnProperty(areaId)) {
                     for (const {pluginName, instanceId} of page.portalApps[areaId]) {
-                        const portalApp = this._getPortalApp(pluginName);
-                        if (!instanceId || !portalApp || !await isAppPermitted(req, pluginName, instanceId, portalApp)) {
+                        if (!instanceId) {
+                            // Data inconsistency?
                             continue;
                         }
 
-                        let instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
-                        if (!instanceData) {
-                            // Data inconsistency?
-                            instanceData = {
-                                pluginName,
-                                instanceId,
-                                appConfig: {}
+                        const portalApp = this._getPortalApp(pluginName);
+
+                        if (!portalApp && context.portalPluginConfig.ignoreMissingAppsOnPages) {
+                            continue;
+                        }
+                        if (!await isAppPermitted(req, pluginName, instanceId, portalApp)) {
+                            continue;
+                        }
+
+                        let appSetup;
+                        if (portalApp) {
+                            const instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
+                            if (instanceData) {
+                                appSetup = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
                             }
                         }
-
-                        const appSetup = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
-
-                        if (!info[areaId]) {
-                            info[areaId] = [];
+                        if (!appSetup) {
+                            appSetup = await createPortalAppSetupForMissingPlugin(pluginName, instanceId, mashroomSecurityUser, req);
                         }
-                        info[areaId].push({
+
+                        if (!portalPageApps[areaId]) {
+                            portalPageApps[areaId] = [];
+                        }
+                        portalPageApps[areaId].push({
                             pluginName,
                             instanceId,
                             appSetup,
@@ -566,7 +576,7 @@ export default class PortalPageRenderController {
                 }
             }
         }
-        return info;
+        return portalPageApps;
     }
 
     private async _getPageEnhancementHeaderResources(sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: Request): Promise<string> {

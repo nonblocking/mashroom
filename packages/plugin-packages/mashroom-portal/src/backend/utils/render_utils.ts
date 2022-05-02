@@ -8,7 +8,7 @@ import {renderServerSide} from './ssr_utils';
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalPageRenderModel, MashroomPortalAppErrorRenderModel, MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
-import type {MashroomPortalPageAppsInfo, MashroomPortalPageContentRenderResult} from '../../../type-definitions/internal';
+import type {MashroomPortalPageApps, MashroomPortalPageContentRenderResult} from '../../../type-definitions/internal';
 
 export const renderPage = async (themeExists: boolean, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => minimalTemplatePortal(model);
@@ -65,16 +65,16 @@ export const renderAppErrorToClientTemplate = async (themeExists: boolean, messa
     return renderAppError(themeExists, model, req, res, logger);
 }
 
-export const renderPageContent = async (portalLayout: string, portalAppInfo: MashroomPortalPageAppsInfo, themeExists: boolean, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalPageContentRenderResult> => {
+export const renderPageContent = async (portalLayout: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalPageContentRenderResult> => {
     const serverSideRenderedApps: Array<string> = [];
-    const appAreas = Object.keys(portalAppInfo);
+    const appAreas = Object.keys(portalPageApps);
     const promises: Array<Promise<Array<string>>> = [];
 
     let pageContent = portalLayout;
     for (const appAreaId of appAreas) {
         promises.push(
             Promise.all(
-                portalAppInfo[appAreaId].map(async ({pluginName, appSetup}) => {
+                portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
                     const {appId, title} = appSetup;
 
                     const appSSRHtml = await renderServerSide(pluginName, appSetup, req, logger);

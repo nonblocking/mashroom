@@ -11,10 +11,11 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {},
     ssrConfig: {
         ssrEnable: true,
-        renderTimoutMs: 2000,
+        renderTimoutMs: 500,
         cacheEnable: true,
         cacheTTLSec: 300,
         inlineStyles: true,
@@ -94,7 +95,9 @@ describe('ssr_utils', () => {
             pluginContext,
         }
         const logger = dummyLoggerFactory();
+
         const html = await renderServerSide('Test App 1', portalAppSetup, req, logger);
+
         expect(html).toBeTruthy();
         expect(html).toEqual('this is a test');
     });
@@ -109,7 +112,9 @@ describe('ssr_utils', () => {
             pluginContext,
         }
         const logger = dummyLoggerFactory();
+
         const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
+
         expect(html).toBeTruthy();
         expect(html).toEqual('this is a remote test');
     });

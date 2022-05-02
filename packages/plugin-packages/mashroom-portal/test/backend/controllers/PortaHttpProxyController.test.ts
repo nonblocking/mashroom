@@ -11,6 +11,7 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {
         sendPermissionsHeader: false,
         restrictToRoles: [],

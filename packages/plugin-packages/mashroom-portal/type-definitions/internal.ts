@@ -79,6 +79,7 @@ export type MashroomPortalPluginConfig = {
     readonly defaultLayout: string;
     readonly warnBeforeAuthenticationExpiresSec: number;
     readonly autoExtendAuthentication: boolean;
+    readonly ignoreMissingAppsOnPages: boolean;
     readonly defaultProxyConfig: {
         readonly sendPermissionsHeader?: boolean;
         readonly restrictToRoles?: Array<string>;
@@ -92,7 +93,7 @@ export type MashroomPortalPluginConfig = {
     };
 }
 
-export type MashroomPortalPageAppsInfo = {
+export type MashroomPortalPageApps = {
     [areaId: string]: Array<{
         pluginName: string;
         instanceId: string;

@@ -3,12 +3,19 @@
 
 ## [unreleased]
 
- * Portal: Fixed SSR cache key to avoid collisions
+
+ * Portal: If an App on a page cannot be found (if it is not registered (yet)), an error message will be displayed now, instead of just showing nothing.
+   The old behaviour can be restored by setting the *Mashroom Portal WebApp* config property *ignoreMissingAppsOnPages*.
+   On the client side you can check if an App is in error state because the plugin does not exist with
+   ```
+        clientServices.portalAppService.loadedPortalApps[0].errorPluginMissing;
+   ```
+ * Portal: Fixed SSR cache key to avoid possible collisions
  * Portal: Added possibility to turn of the SSR cache (even if @mashroom/mashroom-memory-cache is present)
  * OpenID Connect Security Provider: Removed the options *httpRequestRejectUnauthorized* and *httpRequestRetry* because they are no
    longer supported by [openid-client](https://github.com/panva/node-openid-client)
  * Vue Demo App: Upgrade to Vue3 and server-side rendering added
- * Sandbox: Show all Apps for the Administrator role, even if defaultRestrictViewToRoles is set
+ * Sandbox: Show all Apps for the Administrator role, even if *defaultRestrictViewToRoles* is set
 
 ## 2.0.1 (April 25, 2022)
 

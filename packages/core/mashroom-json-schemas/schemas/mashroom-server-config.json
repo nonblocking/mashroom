@@ -578,6 +578,10 @@
                             "type": "boolean",
                             "description": "Automatically extend the authentication as long as the portal page is open (Default: false)"
                         },
+                        "ignoreMissingAppsOnPages": {
+                            "type": "boolean",
+                            "description": "If an App on a page can't be found just show nothing instead of an error message (Default: false)"
+                        },
                         "defaultProxyConfig": {
                             "type": "object",
                             "properties": {

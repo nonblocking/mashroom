@@ -179,7 +179,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     private _createControlsWrapper(app: MashroomPortalLoadedPortalApp) {
-        const {editorConfig} = app;
+        const {editorConfig, errorPluginMissing} = app;
 
         const controlsWrapper = document.createElement('div');
         controlsWrapper.className = CSS_CLASS_APP_CONTROLS;
@@ -190,9 +190,12 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         moveButton.className = 'tool-button move-button';
         moveButton.draggable = true;
         moveButton.title = currentMessages.toolMoveApp;
-        const configureButton = document.createElement('div');
-        configureButton.className = 'tool-button configure-button';
-        configureButton.title = currentMessages.toolConfigureApp;
+        let configureButton;
+        if (!errorPluginMissing) {
+            configureButton = document.createElement('div');
+            configureButton.className = 'tool-button configure-button';
+            configureButton.title = currentMessages.toolConfigureApp;
+        }
         let editButton;
         if (editorConfig) {
             editButton = document.createElement('div');
@@ -202,7 +205,9 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
 
         controlsWrapper.appendChild(removeButton);
         controlsWrapper.appendChild(moveButton);
-        controlsWrapper.appendChild(configureButton);
+        if (configureButton) {
+            controlsWrapper.appendChild(configureButton);
+        }
         if (editButton) {
             controlsWrapper.appendChild(editButton);
         }
@@ -210,7 +215,9 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         removeButton.addEventListener('click', this._removeApp.bind(this, app));
         moveButton.addEventListener('dragstart', (e: DragEvent) => this._onMoveAppDragStart(e, app));
         moveButton.addEventListener('dragend', this._onMoveAppDragEnd.bind(this));
-        configureButton.addEventListener('click', this._configureApp.bind(this, app));
+        if (configureButton) {
+            configureButton.addEventListener('click', this._configureApp.bind(this, app));
+        }
         if (editorConfig && editButton) {
             editButton.addEventListener('click', this._editAppContent.bind(this, app));
         }

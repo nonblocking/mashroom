@@ -159,6 +159,7 @@
             "defaultTheme": "Mashroom Portal Default Theme",
             "warnBeforeAuthenticationExpiresSec": 60,
             "autoExtendAuthentication": false,
+            "ignoreMissingAppsOnPages": false,
             "ssrConfig": {
                 "ssrEnable": true,
                 "renderTimoutMs": 2000,

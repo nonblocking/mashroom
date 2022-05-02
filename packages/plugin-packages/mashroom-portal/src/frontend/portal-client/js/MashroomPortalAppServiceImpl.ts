@@ -47,6 +47,7 @@ export type LoadedPortalAppInternal = {
     readonly modal: boolean;
     readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
     error: boolean;
+    errorPluginMissing: boolean;
 }
 
 const HOST_ELEMENT_MODAL_OVERLAY = 'mashroom-portal-modal-overlay-app';
@@ -397,6 +398,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<MashroomPortalAppLifecycleHooks | void> {
+        if (appSetup.pluginMissing) {
+            return Promise.reject(new Error(`Plugin does not exist: ${pluginName}`));
+        }
+
         const bootstrap: MashroomPortalAppPluginBootstrapFunction = (global as any)[appSetup.globalLaunchFunction];
         if (!bootstrap) {
             return Promise.reject(`App bootstrap function not found: ${appSetup.globalLaunchFunction}`);
@@ -542,7 +547,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     private _createNewAppInstance(appSetup: MashroomPortalAppSetup | undefined, pluginName: string, instanceId: string | undefined | null,
                                   portalAppAreaId: string, position: number | undefined | null, modal: boolean): LoadedPortalAppInternal {
-        const {appId, title, editorConfig} = appSetup || { appId: nanoid(8) };
+        const {appId, title, editorConfig, pluginMissing} = appSetup || { appId: nanoid(8) };
         const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
             this._appendAppWrapper(appId, pluginName, title, portalAppAreaId, position);
         const loadedAppInternal: LoadedPortalAppInternal = {
@@ -559,7 +564,8 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             lifecycleHooks: undefined,
             modal,
             editorConfig,
-            error: false
+            error: !!pluginMissing,
+            errorPluginMissing: !!pluginMissing,
         };
         loadedPortalAppsInternal.push(loadedAppInternal);
         return loadedAppInternal;
@@ -658,6 +664,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return {
             id: loadedAppInternal.id,
             pluginName: loadedAppInternal.pluginName,
+            errorPluginMissing: loadedAppInternal.errorPluginMissing,
             title: loadedAppInternal.title,
             version: loadedAppInternal.appSetup?.version,
             instanceId: loadedAppInternal.instanceId,
@@ -668,7 +675,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             appConfig: loadedAppInternal.appSetup?.appConfig,
             updateAppConfig: loadedAppInternal.lifecycleHooks?.updateAppConfig,
             editorConfig: loadedAppInternal.editorConfig,
-            error: loadedAppInternal.error
+            error: loadedAppInternal.error,
         };
     }
 
