@@ -4,14 +4,14 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "2.0.1",
-        "@mashroom/mashroom-http-proxy": "2.0.1",
-        "@mashroom/mashroom-security": "2.0.1",
+        "@mashroom/mashroom": "2.0.2",
+        "@mashroom/mashroom-http-proxy": "2.0.2",
+        "@mashroom/mashroom-security": "2.0.2",
         "@types/express": "^4.17.13"
     },
     "jest": {
