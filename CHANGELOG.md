@@ -3,8 +3,10 @@
 
 ## [unreleased]
 
+## 2.0.2 (Mai 2, 2022)
+
  * K8S remote app registry: The admin UI shows now the scanned namespaces
- * Portal: If an App on a page cannot be found (if it is not registered (yet)), an error message will be displayed now, instead of just showing nothing.
+ * Portal: If an App on a page cannot be found (if it is not registered (yet)), an error message will be displayed now instead of just showing nothing.
    The old behaviour can be restored by setting the *Mashroom Portal WebApp* config property *ignoreMissingAppsOnPages*.
    On the client side you can check if an App is in error state because the plugin does not exist with
    ```
