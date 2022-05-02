@@ -79,7 +79,8 @@ import type {
 import type {MashroomPortalPluginRegistry, MashroomPortalPageApps} from '../../../type-definitions/internal';
 
 const readFile = promisify(fs.readFile);
-const viewEngineCache = new Map();
+const VIEW_ENGINE_CACHE = new Map<string, any>();
+const VIEW_CACHE = new Map<string, any>();
 
 export default class PortalPageRenderController {
 
@@ -98,6 +99,7 @@ export default class PortalPageRenderController {
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
+        const devMode = req.pluginContext.serverInfo.devMode;
 
         try {
             const {originalPageId} = req.query as { originalPageId: string | undefined };
@@ -163,7 +165,8 @@ export default class PortalPageRenderController {
                 const messages = (key: string) => i18nService.getMessage(key, lang);
 
                 const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
-                const result = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalPageApps, !!theme, messages, req, res, logger));
+                const setupTheme = () => this._setupTheme(theme, devMode, logger);
+                const result = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
                 pageContent = result.pageContent;
 
                 evalScript = `
@@ -253,7 +256,7 @@ export default class PortalPageRenderController {
 
             const model = await this._createPortalPageModel(req, res, portalName, devMode, sitePath, site, pageRef, page, theme, layoutName, logger);
 
-            await this._renderPage(theme, model, req, res, logger);
+            await this._renderPage(theme, model, devMode, req, res, logger);
 
         } catch (e: any) {
             logger.error(e);
@@ -296,11 +299,12 @@ export default class PortalPageRenderController {
         const messages = (key: string) => i18nService.getMessage(key, lang);
 
         const portalLayout = await this._loadLayout(layoutName, logger);
-        const appWrapperTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppWrapperToClientTemplate(!!theme, messages, req, res, logger));
-        const appErrorTemplateHtml = await this._executeWithTheme(theme, logger, () => renderAppErrorToClientTemplate(!!theme, messages, req, res, logger));
-
         const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
-        const {pageContent, serverSideRenderedApps} = await this._executeWithTheme(theme, logger, () => renderPageContent(portalLayout, portalPageApps, !!theme, messages, req, res, logger));
+
+        const setupTheme = () => this._setupTheme(theme, devMode, logger);
+        const appWrapperTemplateHtml = await renderAppWrapperToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
+        const appErrorTemplateHtml = await renderAppErrorToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
+        const {pageContent, serverSideRenderedApps} = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
 
         const {inlineStyles} = context.portalPluginConfig.ssrConfig;
         const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
@@ -358,8 +362,7 @@ export default class PortalPageRenderController {
     }
 
     private async _loadLayout(layoutName: string | undefined | null, logger: MashroomLogger): Promise<string> {
-        const pluginRegistry = this._pluginRegistry;
-        const layout = pluginRegistry.layouts.find((l) => l.name === layoutName);
+        const layout = this._pluginRegistry.layouts.find((l) => l.name === layoutName);
         if (layout) {
             try {
                 const fileData = await readFile(layout.layoutPath);
@@ -373,33 +376,46 @@ export default class PortalPageRenderController {
         return minimalLayout;
     }
 
-    private _executeWithTheme = <T>(theme: MashroomPortalTheme | undefined | null, logger: MashroomLogger, fn: () => Promise<T>): Promise<T> => {
+    private _setupTheme = (theme: MashroomPortalTheme | undefined | null, devMode: boolean, logger: MashroomLogger): void => {
         if (theme) {
             try {
                 let engine;
-                if (viewEngineCache.has(theme.name)) {
-                    engine = viewEngineCache.get(theme.name);
+                if (VIEW_ENGINE_CACHE.has(theme.name)) {
+                    engine = VIEW_ENGINE_CACHE.get(theme.name);
                 } else {
                     engine = theme.requireEngine();
-                    viewEngineCache.set(theme.name, engine);
+                    VIEW_ENGINE_CACHE.set(theme.name, engine);
                 }
+
                 this._portalWebapp.engine(theme.engineName, engine);
+
                 this._portalWebapp.set('view engine', theme.engineName);
                 this._portalWebapp.set('views', theme.viewsPath);
+                if (devMode) {
+                    this._portalWebapp.set('view cache', false);
+                } else {
+                    this._portalWebapp.set('view cache', true);
+                    // Switch cache per theme, otherwise we would have collisions, because the cache key is just the view name
+                    let viewCache = VIEW_CACHE.get(theme.name);
+                    if (!viewCache) {
+                        viewCache = {};
+                        VIEW_CACHE.set(theme.name, viewCache);
+                    }
+                    // @ts-ignore
+                    this._portalWebapp.cache = viewCache;
+                }
 
-                return fn();
             } catch (err) {
                 logger.error(`Setting up theme failed: ${theme.name}`, err);
             }
         }
-
-        return fn();
     }
 
-    private async _renderPage(theme: MashroomPortalTheme | undefined | null, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger) {
+    private async _renderPage(theme: MashroomPortalTheme | undefined | null, model: MashroomPortalPageRenderModel, devMode: boolean, req: Request, res: Response, logger: MashroomLogger) {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
-        const pageHtml = await this._executeWithTheme(theme, logger, () => renderPage(!!theme, model, req, res, logger));
+        const setupTheme = () => this._setupTheme(theme, devMode, logger);
+        const pageHtml = await renderPage(!!theme, setupTheme, model, req, res, logger);
 
         if (cacheControlService) {
             // Since the appConfig can be dynamic (enhancement plugins), never cache.

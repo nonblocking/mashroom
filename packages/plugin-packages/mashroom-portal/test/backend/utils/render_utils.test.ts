@@ -90,7 +90,7 @@ describe('path_utils', () => {
         const res: any = {};
         const logger = dummyLoggerFactory();
 
-        const result = await renderPageContent(layout, appInfo, false, (key) => key, req, res, logger);
+        const result = await renderPageContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
 
         // console.info('!!!', content);
 

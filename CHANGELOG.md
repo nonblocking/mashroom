@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+
+
+ * Portal: Fixed Express.js view caching if multiple Themes are involved. If NODE_ENV = production it was possible that
+   views from the invalid Theme were used.
+
 ## 2.0.2 (Mai 2, 2022)
 
  * K8S remote app registry: The admin UI shows now the scanned namespaces
