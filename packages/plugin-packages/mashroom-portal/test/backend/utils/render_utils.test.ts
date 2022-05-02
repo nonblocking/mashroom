@@ -17,7 +17,7 @@ setPortalPluginConfig({
     defaultProxyConfig: {},
     ssrConfig: {
         ssrEnable: true,
-        renderTimoutMs: 500,
+        renderTimoutMs: 2000,
         cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,

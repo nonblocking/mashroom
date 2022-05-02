@@ -1,4 +1,5 @@
 
+import {setTimeout} from 'timers/promises';
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
 import context from '../context/global_portal_context'
@@ -104,10 +105,14 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
         return null;
     }
 
+    const ac = new AbortController();
     return Promise.race([
         renderServerSideWithCache(pluginName, portalApp, portalAppSetup, req, logger),
-        new Promise<null>((resolve) => setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
-    ]);
+        setTimeout(ssrConfig.renderTimoutMs, null, { signal: ac.signal }),
+    ]).then((result) => {
+        ac.abort();
+        return result;
+    })
 }
 
 export const renderInlineStyleForServerSideRenderedApps = async (serverSideRenderedApps: Array<string>, req: Request, logger: MashroomLogger): Promise<MashroomPortalIncludeStyleServerSideRenderedAppsResult> => {
@@ -149,10 +154,14 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
                     });
             });
 
+            const ac = new AbortController();
             const styles = await Promise.race([
                 Promise.all(portalAppStyleResourcePromises),
-                new Promise<[]>((resolve) => setTimeout(() => resolve([]), ssrConfig.renderTimoutMs)),
-            ]);
+                setTimeout(ssrConfig.renderTimoutMs, [], { signal: ac.signal }),
+            ]).then((result) => {
+                ac.abort();
+                return result;
+            });
 
             const validStyles = styles.filter((s) => !!s) as Array<string>;
             if (styles.length === validStyles.length) {
