@@ -394,16 +394,16 @@ export default class PortalPageRenderController {
                 if (devMode) {
                     this._portalWebapp.set('view cache', false);
                 } else {
-                    this._portalWebapp.set('view cache', true);
-                    // Switch cache per theme, otherwise we would have collisions, because the cache key is just the view name
-                    let viewCache = VIEW_CACHE.get(theme.name);
-                    if (!viewCache) {
-                        viewCache = {};
-                        VIEW_CACHE.set(theme.name, viewCache);
-                    }
                     if ('cache' in this._portalWebapp) {
+                        // Switch cache per theme, otherwise we would have collisions, because the cache key is just the view name
+                        let viewCache = VIEW_CACHE.get(theme.name);
+                        if (!viewCache) {
+                            viewCache = {};
+                            VIEW_CACHE.set(theme.name, viewCache);
+                        }
                         // @ts-ignore
                         this._portalWebapp.cache = viewCache;
+                        this._portalWebapp.set('view cache', true);
                     } else {
                         logger.warn('Express.js view cache disabled because the implementation seems to have changed');
                     }

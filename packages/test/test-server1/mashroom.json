@@ -12,15 +12,7 @@
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages",
-            "devMode": true
-        },
-        {
-            "path": "../../../../mashroom-plugin-demos/packages",
-            "devMode": true
-        },
-        {
-            "path": "../../../../mashroom-portal-demo-go-wasm-app",
-            "devMode": true
+            "devMode": false
         }
     ],
     "indexPage": "/",
