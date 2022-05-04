@@ -401,8 +401,12 @@ export default class PortalPageRenderController {
                         viewCache = {};
                         VIEW_CACHE.set(theme.name, viewCache);
                     }
-                    // @ts-ignore
-                    this._portalWebapp.cache = viewCache;
+                    if ('cache' in this._portalWebapp) {
+                        // @ts-ignore
+                        this._portalWebapp.cache = viewCache;
+                    } else {
+                        logger.warn('Express.js view cache disabled because the implementation seems to have changed');
+                    }
                 }
 
             } catch (err) {
