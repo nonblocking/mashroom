@@ -4,13 +4,13 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "2.0.2",
-        "@mashroom/mashroom-portal": "2.0.2",
+        "@mashroom/mashroom": "2.0.3",
+        "@mashroom/mashroom-portal": "2.0.3",
         "core-js": "^3.20.2",
         "current-script-polyfill": "^1.0.0",
         "whatwg-fetch": "^3.6.2"
