@@ -4,9 +4,10 @@
 ## [unreleased]
 
 
+## 2.0.3 (Mai 6, 2022)
 
  * Portal: Fixed Express.js view caching if multiple Themes are involved. If NODE_ENV = production it was possible that
-   views from the invalid Theme were used.
+   views from the wrong Theme were used.
 
 ## 2.0.2 (Mai 2, 2022)
 
