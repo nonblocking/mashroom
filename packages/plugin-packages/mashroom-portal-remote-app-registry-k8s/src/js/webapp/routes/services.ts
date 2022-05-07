@@ -42,7 +42,22 @@ export default (request: Request, response: Response) => {
         namespaces: context.namespaces.join(', '),
         serviceLabelSelector: context.serviceLabelSelector,
         serviceNameFilter: context.serviceNameFilter,
-        services: context.registry.services
+        services: [...context.registry.services]
+            .sort((s1, s2) => {
+                if (s1.status === 'Error') {
+                    return -1;
+                }
+                if (s2.status === 'Error') {
+                    return 1;
+                }
+                if (s1.status === 'Checking') {
+                    return -1;
+                }
+                if (s2.status === 'Checking') {
+                    return 1;
+                }
+                return 0;
+            })
             .map((service) => ({
                 name: service.name,
                 namespace: service.namespace,

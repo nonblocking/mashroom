@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
-
+ * Remote App Registry and K8S remote app registry: Show Apps with errors on top of the list in the Admin UI
  * K8S remote app registry: The Admin UI shows now all successfully registered Apps even if scanning some namespaces fails due to
    missing permissions
 

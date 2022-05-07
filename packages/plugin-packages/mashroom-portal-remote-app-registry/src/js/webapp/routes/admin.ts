@@ -15,18 +15,34 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
     const remoteAppEndpoints = await portalRemoteAppEndpointService.findAll();
 
-    const endpoints = remoteAppEndpoints.map((endpoint) => ({
-        url: endpoint.url,
-        sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
-        status: status(endpoint),
-        statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
-        rowClass: endpoint.lastError ? 'row-error' : '',
-        portalApps: endpoint.portalApps.map((app) => ({
-            name: app.name,
-            version: app.version,
-            pluginDef: jsonToHtml(app),
-        }))
-    }));
+    const endpoints = [...remoteAppEndpoints]
+        .sort((e1, e2) => {
+            if (e1.lastError) {
+                return -1;
+            }
+            if (e2.lastError) {
+                return 1;
+            }
+            if (!e1.registrationTimestamp) {
+                return -1;
+            }
+            if (!e2.registrationTimestamp) {
+                return 1;
+            }
+            return 0;
+        })
+        .map((endpoint) => ({
+            url: endpoint.url,
+            sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
+            status: status(endpoint),
+            statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
+            rowClass: endpoint.lastError ? 'row-error' : '',
+            portalApps: endpoint.portalApps.map((app) => ({
+                name: app.name,
+                version: app.version,
+                pluginDef: jsonToHtml(app),
+            }))
+        }));
 
     res.render('admin', {
         baseUrl: req.baseUrl,
