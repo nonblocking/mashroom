@@ -60,11 +60,17 @@ a, a:visited, a:focus {
     }
 }
 
-.error-panel {
-    display: table;
-    border: 1px solid $COLOR_ERROR;
-    padding: 10px;
-    background-color: lighten($COLOR_ERROR, 40);
+.errors {
+    margin: 20px 0;
+    color: $COLOR_ERROR;
+
+    ul {
+        margin: 5px 0;
+    }
+
+    li {
+        padding: 2px 0;
+    }
 }
 
 .footnotes {

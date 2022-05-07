@@ -4,6 +4,9 @@
 ## [unreleased]
 
 
+ * K8S remote app registry: The Admin UI shows now all successfully registered Apps even if scanning some namespaces fails due to
+   missing permissions
+
 ## 2.0.3 (Mai 6, 2022)
 
  * Portal: Fixed Express.js view caching if multiple Themes are involved. If NODE_ENV = production it was possible that

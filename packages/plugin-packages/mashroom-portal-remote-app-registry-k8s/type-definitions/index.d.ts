@@ -39,13 +39,14 @@ export type Context = {
     serviceLabelSelector: string | null;
     serviceNameFilter: string;
     lastScan: number;
-    error: string | null;
+    errors: Array<string>;
     oneFullScanDone: boolean;
 }
 
 export type ServicesRenderModel = {
     baseUrl: string;
-    scanError: string | null;
+    hasErrors: boolean;
+    errors: Array<string>;
     lastScan: string;
     namespaces: string;
     serviceLabelSelector: string | null;

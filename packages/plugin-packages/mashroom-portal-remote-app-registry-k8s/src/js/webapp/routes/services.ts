@@ -36,7 +36,8 @@ export default (request: Request, response: Response) => {
 
     const model: ServicesRenderModel = {
         baseUrl: request.baseUrl,
-        scanError: context.error,
+        hasErrors: context.errors.length > 0,
+        errors: context.errors,
         lastScan: formatDate(context.lastScan),
         namespaces: context.namespaces.join(', '),
         serviceLabelSelector: context.serviceLabelSelector,

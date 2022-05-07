@@ -7,7 +7,7 @@ export const _registry = new KubernetesServiceRegistry();
 let _namespaces: Array<string> = [];
 let _serviceLabelSelector: string | null = null;
 let _serviceNameFilter = '';
-let _error: string | null = null;
+let _errors: Array<string>
 let _lastScan = 0;
 let _oneFullScanDone = false;
 
@@ -15,11 +15,11 @@ const context: Context = {
     get registry() {
         return _registry;
     },
-    get error() {
-        return _error;
+    get errors() {
+        return _errors;
     },
-    set error(error: string | null) {
-        _error = error;
+    set errors(errors: Array<string>) {
+        _errors = errors;
     },
     get lastScan() {
         return _lastScan;

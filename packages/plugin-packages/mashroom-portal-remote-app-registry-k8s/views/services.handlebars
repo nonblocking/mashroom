@@ -38,56 +38,61 @@
 <body>
     <h2>Kubernetes Services with Remote Portal Apps</h2>
 
-    {{#if scanError}}
-        <div class="error-panel">
-            {{scanError}}
-        </div>
-    {{else}}
-        <table border="1" cellspacing="0" cellpadding="10">
-            <tr>
-                <th>Name</th><th>Namespace</th><th>URL</th><th>Last Check</th><th>Status</th><th>Portal Apps</th>
-            </tr>
-            {{#each services}}
-                <tr class="{{this.rowClass}}">
-                    <td>{{this.name}}</td>
-                    <td>{{this.namespace}}</td>
-                    <td>{{this.url}}</td>
-                    <td>{{this.lastCheck}}</td>
-                    <td class="{{this.statusClass}}">{{this.status}}</td>
-                    <td>
-                       {{#each this.portalApps}}
-                           {{this.name}}&nbsp;({{this.version}})
-                           <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
-                           <br/>
-                       {{/each}}
-                    </td>
-                </tr>
-            {{/each}}
-        </table>
-
-        <div class="footnotes">
-            <strong>Scanned namespaces:</strong> {{namespaces}}
-            <br/>
-            {{#if serviceLabelSelector}}
-                <strong>Service label selector:</strong> {{serviceLabelSelector}}
-                <br/>
-            {{/if}}
-            <strong>Service name filter:</strong> {{serviceNameFilter}}
-            <br/>
-            <strong>Last scan:</strong> {{lastScan}}
-        </div>
-
-        <div id="modal" style="display: none">
-            <div class="modal-wrapper">
-                <div class="modal-header">
-                    <div class="modal-close" onclick="closeModal()">x</div>
-                </div>
-                <div id="modal-content">
-
-                </div>
-            </div>
+    {{#if hasErrors}}
+        <div class="errors">
+            <div class="errors-header">Scan Errors:</div>
+            <ul>
+                {{#each errors}}
+                   <li>{{this}}</li>
+                {{/each}}
+            </ul>
         </div>
     {{/if}}
+
+    <table border="1" cellspacing="0" cellpadding="10">
+        <tr>
+            <th>Name</th><th>Namespace</th><th>URL</th><th>Last Check</th><th>Status</th><th>Portal Apps</th>
+        </tr>
+        {{#each services}}
+            <tr class="{{this.rowClass}}">
+                <td>{{this.name}}</td>
+                <td>{{this.namespace}}</td>
+                <td>{{this.url}}</td>
+                <td>{{this.lastCheck}}</td>
+                <td class="{{this.statusClass}}">{{this.status}}</td>
+                <td>
+                   {{#each this.portalApps}}
+                       {{this.name}}&nbsp;({{this.version}})
+                       <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
+                       <br/>
+                   {{/each}}
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+
+    <div class="footnotes">
+        <strong>Scanned namespaces:</strong> {{namespaces}}
+        <br/>
+        {{#if serviceLabelSelector}}
+            <strong>Service label selector:</strong> {{serviceLabelSelector}}
+            <br/>
+        {{/if}}
+        <strong>Service name filter:</strong> {{serviceNameFilter}}
+        <br/>
+        <strong>Last scan:</strong> {{lastScan}}
+    </div>
+
+    <div id="modal" style="display: none">
+        <div class="modal-wrapper">
+            <div class="modal-header">
+                <div class="modal-close" onclick="closeModal()">x</div>
+            </div>
+            <div id="modal-content">
+
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
