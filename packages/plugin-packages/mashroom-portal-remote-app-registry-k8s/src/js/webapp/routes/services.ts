@@ -32,6 +32,16 @@ const getStatusClass = (status: KubernetesServiceStatus): string => {
     }
 };
 
+const getStatusWeight = (status: KubernetesServiceStatus): number => {
+    if (status === 'Error') {
+        return 2;
+    }
+    if (status === 'Checking') {
+        return 1;
+    }
+    return 0;
+}
+
 export default (request: Request, response: Response) => {
 
     const model: ServicesRenderModel = {
@@ -44,19 +54,12 @@ export default (request: Request, response: Response) => {
         serviceNameFilter: context.serviceNameFilter,
         services: [...context.registry.services]
             .sort((s1, s2) => {
-                if (s1.status === 'Error') {
-                    return -1;
+                const status1 = getStatusWeight(s1.status);
+                const status2 = getStatusWeight(s2.status);
+                if (status1 == status2) {
+                    return s1.name.localeCompare(s2.name);
                 }
-                if (s2.status === 'Error') {
-                    return 1;
-                }
-                if (s1.status === 'Checking') {
-                    return -1;
-                }
-                if (s2.status === 'Checking') {
-                    return 1;
-                }
-                return 0;
+                return status2 - status1;
             })
             .map((service) => ({
                 name: service.name,

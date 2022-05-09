@@ -10,6 +10,16 @@ const formatDate = (ts: number): string => {
     return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')
 };
 
+const getStatusWeight = (e: RemotePortalAppEndpoint): number => {
+    if (e.lastError) {
+        return 2;
+    }
+    if (!e.registrationTimestamp) {
+        return 1;
+    }
+    return 0;
+}
+
 const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
@@ -17,19 +27,12 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
 
     const endpoints = [...remoteAppEndpoints]
         .sort((e1, e2) => {
-            if (e1.lastError) {
-                return -1;
+            const status1 = getStatusWeight(e1);
+            const status2 = getStatusWeight(e2);
+            if (status1 == status2) {
+                return e1.url.localeCompare(e2.url);
             }
-            if (e2.lastError) {
-                return 1;
-            }
-            if (!e1.registrationTimestamp) {
-                return -1;
-            }
-            if (!e2.registrationTimestamp) {
-                return 1;
-            }
-            return 0;
+            return status2 - status1;
         })
         .map((endpoint) => ({
             url: endpoint.url,
