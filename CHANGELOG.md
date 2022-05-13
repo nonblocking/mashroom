@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Security Service: Start authentication flow (e.g. redirect to the login page) only for GET and non-Ajax requests
+
 ## 2.0.4 (Mai 9, 2022)
 
  * Remote App Registry and K8S remote app registry: Show Apps with errors on top of the list in the Admin UI

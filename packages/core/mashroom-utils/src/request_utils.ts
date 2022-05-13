@@ -6,5 +6,5 @@ export const isAjaxRequest = (req: Request): boolean => {
 };
 
 export const isHtmlRequest = (req: Request): boolean => {
-    return !req.xhr && (/html/i).test(req.headers.accept as string);
+    return (req.method === 'GET' || req.method === 'POST') && !req.xhr && (/html/i).test(req.headers.accept as string);
 };
