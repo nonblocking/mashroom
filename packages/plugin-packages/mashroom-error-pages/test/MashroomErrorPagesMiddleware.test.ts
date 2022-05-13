@@ -8,6 +8,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('sends an error page if statusCode is >= 400 and the mapping defines a valid file', (done) => {
         const req: any = {
+            method: 'GET',
             headers: {
                 accept: 'text/html',
             },
@@ -42,6 +43,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('sends an error page if a default file exists in the mapping', (done) => {
         const req: any = {
+            method: 'GET',
             headers: {
                 accept: 'text/html',
             },
@@ -76,6 +78,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('sends the original content if the error page cannot be loaded', (done) => {
         const req: any = {
+            method: 'GET',
             headers: {
                 accept: 'text/html',
             },
@@ -108,6 +111,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('processes placeholder correctly', (done) => {
         const req: any = {
+            method: 'GET',
             originalUrl: '/the/resource?a=b',
             headers: {
                 accept: 'text/html',
@@ -144,6 +148,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('translates messages correctly', (done) => {
         const req: any = {
+            method: 'GET',
             originalUrl: '/the/resource',
             headers: {
                 accept: 'text/html',
@@ -190,6 +195,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
     it('encodes the original url to avoid reflected xss', (done) => {
         const req: any = {
+            method: 'GET',
             originalUrl: '/the/resource?a<script>alert(1)</script>b',
             headers: {
                 accept: 'text/html',
