@@ -124,6 +124,7 @@ describe('PortalUserController', () => {
         let redirectUrl = null;
         const mockRevokeAuthentication = jest.fn();
         const req: any = {
+            method: 'GET',
             params: {
                 sitePath: 'web',
             },
@@ -161,6 +162,7 @@ describe('PortalUserController', () => {
         let redirectUrl = null;
         const mockRevokeAuthentication = jest.fn();
         const req: any = {
+            method: 'GET',
             params: {
                 sitePath: 'web',
             },
