@@ -18,7 +18,7 @@ export const renderPage = async (themeExists: boolean, setupTheme: () => void, m
     }
 
     return fallback();
-}
+};
 
 export const renderAppWrapper = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalAppWrapperRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => defaultTemplateAppWrapper(model);
@@ -28,7 +28,7 @@ export const renderAppWrapper = async (themeExists: boolean, setupTheme: () => v
     }
 
     return fallback();
-}
+};
 
 export const renderAppWrapperToClientTemplate = async (themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const model: MashroomPortalAppWrapperRenderModel = {
@@ -38,9 +38,9 @@ export const renderAppWrapperToClientTemplate = async (themeExists: boolean, set
         title: '__TITLE__',
         messages,
         appSSRHtml: null,
-    }
+    };
     return renderAppWrapper(themeExists, setupTheme, model, req, res, logger);
-}
+};
 
 export const renderAppError = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalAppErrorRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => defaultTemplateAppError(model);
@@ -50,7 +50,7 @@ export const renderAppError = async (themeExists: boolean, setupTheme: () => voi
     }
 
     return fallback();
-}
+};
 
 export const renderAppErrorToClientTemplate = async (themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const model: MashroomPortalAppErrorRenderModel = {
@@ -60,9 +60,9 @@ export const renderAppErrorToClientTemplate = async (themeExists: boolean, setup
         title: '__TITLE__',
         errorMessage: null,
         messages,
-    }
+    };
     return renderAppError(themeExists, setupTheme, model, req, res, logger);
-}
+};
 
 export const renderPageContent = async (portalLayout: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalPageContentRenderResult> => {
     const serverSideRenderedApps: Array<string> = [];
@@ -116,7 +116,7 @@ export const renderPageContent = async (portalLayout: string, portalPageApps: Ma
         pageContent,
         serverSideRenderedApps,
     };
-}
+};
 
 const renderToString = (template: string, templateMustExist: boolean, setupTheme: () => void, model: any, fallback: () => string, res: Response, logger: MashroomLogger): Promise<string> => {
     return new Promise((resolve) => {
@@ -133,7 +133,7 @@ const renderToString = (template: string, templateMustExist: boolean, setupTheme
                 resolve(html);
             }
         });
-    })
-}
+    });
+};
 
 const getSafePluginName = (pluginName: string) => pluginName.toLowerCase().replace(/ /g, '-');

@@ -186,7 +186,7 @@ export default class PortalAppController {
                     screenshots,
                     metaInfo: portalApp.metaInfo,
                     lastReloadTs: portalApp.lastReloadTs,
-                }
+                };
             });
 
         if (typeof (q) === 'string') {

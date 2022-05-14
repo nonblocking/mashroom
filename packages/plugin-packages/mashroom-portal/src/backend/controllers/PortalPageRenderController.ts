@@ -413,7 +413,7 @@ export default class PortalPageRenderController {
                 logger.error(`Setting up theme failed: ${theme.name}`, err);
             }
         }
-    }
+    };
 
     private async _renderPage(theme: MashroomPortalTheme | undefined | null, model: MashroomPortalPageRenderModel, devMode: boolean, req: Request, res: Response, logger: MashroomLogger) {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
@@ -609,7 +609,7 @@ export default class PortalPageRenderController {
                 customServices = {
                     ...customServices,
                     ...appEnhancement.portalCustomClientServices,
-                }
+                };
             }
         });
 

@@ -9,4 +9,4 @@ export default ({appId, pluginName, safePluginName, title, appSSRHtml}: Mashroom
            ${appSSRHtml ? appSSRHtml : '<div class="mashroom-portal-app-loading"><span/></div>'}
         </div>
     </div>
-`)
+`);

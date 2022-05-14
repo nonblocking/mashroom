@@ -212,17 +212,17 @@ const page1: any = {
 const page2: any = {
     pageId: 'test-page2',
     theme: 'my-theme2'
-}
+};
 
 const page3: any = {
     pageId: 'test-page3',
     theme: 'my-theme'
-}
+};
 
 const page4: any = {
     pageId: 'test-page4',
     theme: 'my-theme'
-}
+};
 
 const portalAppInstance1: any = {
     pluginName: 'Mashroom Welcome Portal App',
@@ -245,7 +245,7 @@ const pluginContext: any = {
         portal: {
             service: {
                 getPortalApps() {
-                    return []
+                    return [];
                 },
                 findSiteByPath() {
                     return site;

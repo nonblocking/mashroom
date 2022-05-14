@@ -172,7 +172,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                                 }
                             );
                         }
-                    )
+                    );
                 });
             }
         ).catch((error) => {
@@ -213,7 +213,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                     modalOverlayElem.classList.remove('show');
                 }
             }
-        })
+        });
     }
 
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void {
@@ -331,7 +331,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                             }
                         );
                     }
-                )
+                );
             }
         ).catch((error) => {
             if (!loadedAppInternal) {
@@ -540,7 +540,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             stateService: this._getStateServiceForApp(clientServices, pluginName, appSetup),
             remoteLogger: this._getRemoteLoggerForApp(clientServices, pluginName),
             ...customServices,
-        }
+        };
 
         return Object.freeze(clonedClientServices);
     }
@@ -747,7 +747,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                             (error) => {
                                 console.warn('Failed to update some apps', error);
                             }
-                        )
+                        );
                     }
                 }
             }

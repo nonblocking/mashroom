@@ -169,7 +169,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId
+            const pageId = req.params.pageId;
             const page = await portalService.getPage(pageId);
             if (!page) {
                 res.sendStatus(404);

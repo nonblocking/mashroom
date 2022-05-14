@@ -146,7 +146,7 @@ const portalAppEnhancement1: MashroomPortalAppEnhancement = {
             }
         })
     }
-}
+};
 
 const portalAppEnhancement2: MashroomPortalAppEnhancement = {
     name: 'Test Enhancement 2',
@@ -163,7 +163,7 @@ const portalAppEnhancement2: MashroomPortalAppEnhancement = {
             }
         })
     }
-}
+};
 
 const pluginRegistry: any = {
     portalApps: [portalApp1, portalApp2],
@@ -178,7 +178,7 @@ const pluginContext: any = {
                 async findSiteByPath() {
                     return {
 
-                    }
+                    };
                 },
                 async getPage() {
                     return page1;
@@ -202,7 +202,7 @@ const pluginContext: any = {
                     };
                 },
                 isAdmin() {
-                    return false
+                    return false;
                 },
                 async checkResourcePermission() {
                     return true;

@@ -115,12 +115,12 @@ const pluginContext: any = {
                         pages: [{
 
                         }]
-                    }
+                    };
                 },
                 async findPageRefByFriendlyUrl() {
                     return {
 
-                    }
+                    };
                 },
                 async getPage() {
                     return {
@@ -132,7 +132,7 @@ const pluginContext: any = {
                                 pluginName: 'Test Portal App 2',
                             }]
                         }
-                    }
+                    };
                 }
             }
         }

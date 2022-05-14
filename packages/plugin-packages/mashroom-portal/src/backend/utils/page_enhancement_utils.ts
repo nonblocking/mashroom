@@ -41,7 +41,7 @@ export const getPageEnhancementResources = async (pluginRegistry: MashroomPortal
     }
 
     return enhancement;
-}
+};
 
 export const allEnhancementsExistOnOriginalPage = async (pluginRegistry: MashroomPortalPluginRegistry, sitePath: string,
                                                         pageFriendlyUrl: string, originalPageFriendlyUrl: string, lang: string,
@@ -57,8 +57,8 @@ export const allEnhancementsExistOnOriginalPage = async (pluginRegistry: Mashroo
     // The page enhancement resources need to be same instances, if the enhancement plugin was reloaded its no longer the same
     return pageEnhancements.every((pageEnhancement) => {
         return !!originalPageEnhancements.find((cpe) => pageEnhancement.resource === cpe.resource);
-    })
-}
+    });
+};
 
 const getRelevantPageEnhancements = async (pluginRegistry: MashroomPortalPluginRegistry, location: 'header' | 'footer', sitePath: string, pageFriendlyUrl: string,
                                            lang: string, userAgent: UserAgent, req: Request): Promise<RelevantEnhancements> => {
@@ -98,7 +98,7 @@ const getRelevantPageEnhancements = async (pluginRegistry: MashroomPortalPluginR
     }
 
     return enhancements;
-}
+};
 
 const getPageEnhancementResource = async (type: 'js' | 'css', enhancement: MashroomPortalPageEnhancement, resource: MashroomPortalPageEnhancementResource, sitePath: string,
                                           pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: Request, logger: MashroomLogger): Promise<string> => {
@@ -153,7 +153,7 @@ const getPageEnhancementResource = async (type: 'js' | 'css', enhancement: Mashr
     }
 
     return '';
-}
+};
 
 const pageEnhancementResourceShallInclude = (location: 'header' | 'footer', enhancement: MashroomPortalPageEnhancement, resource: MashroomPortalPageEnhancementResource,
                                              sitePath: string, pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: Request): boolean => {
@@ -178,4 +178,4 @@ const pageEnhancementResourceShallInclude = (location: 'header' | 'footer', enha
         logger.error(`Executing rule '${resource.rule}' in page enhancement plugin ${enhancement.name} failed!`, e);
     }
     return false;
-}
+};

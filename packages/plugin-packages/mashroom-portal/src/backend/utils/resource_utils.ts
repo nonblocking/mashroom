@@ -13,5 +13,5 @@ export const getResourceAsString = async (resourceUri: string): Promise<string> 
         stream.on('data', (chunk) => chunks.push(chunk as Buffer));
         stream.on('error', (error) => reject(error));
         stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-    })
+    });
 };

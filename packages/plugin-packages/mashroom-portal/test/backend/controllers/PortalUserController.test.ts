@@ -47,10 +47,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             json: (json: any) => sentJson = json,
-        }
+        };
 
         await controller.getAuthenticatedUserAuthenticationExpiration(req, res);
 
@@ -78,10 +78,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             end: () => { /* nothing to do */ },
-        }
+        };
 
         await controller.setAuthenticatedUserLanguage(req, res);
 
@@ -108,10 +108,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             end: () => { /* nothing to do */ },
-        }
+        };
 
         await controller.setAuthenticatedUserLanguage(req, res);
 
@@ -145,10 +145,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             redirect: (url: string) => redirectUrl = url,
-        }
+        };
 
         await controller.logout(req, res);
 
@@ -183,10 +183,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             redirect: (url: string) => redirectUrl = url,
-        }
+        };
 
         await controller.logout(req, res);
 

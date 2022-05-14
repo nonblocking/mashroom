@@ -78,7 +78,7 @@ describe('path_utils', () => {
                                     name: 'App 1',
                                     ssrBootstrap: `${__dirname}/ssr_bootstrap.js`,
                                 },
-                            ]
+                            ];
                         }
                     },
                 }

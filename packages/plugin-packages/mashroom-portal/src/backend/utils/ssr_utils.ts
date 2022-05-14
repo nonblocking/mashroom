@@ -1,7 +1,7 @@
 
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
-import context from '../context/global_portal_context'
+import context from '../context/global_portal_context';
 import {getUser} from './security_utils';
 import {getResourceAsString} from './resource_utils';
 
@@ -90,7 +90,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     }
 
     return html;
-}
+};
 
 export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
@@ -111,8 +111,8 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
     ]).then((result) => {
         clearTimeout(timeout);
         return result;
-    })
-}
+    });
+};
 
 export const renderInlineStyleForServerSideRenderedApps = async (serverSideRenderedApps: Array<string>, req: Request, logger: MashroomLogger): Promise<MashroomPortalIncludeStyleServerSideRenderedAppsResult> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
@@ -181,6 +181,6 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
     return {
         headerContent,
         includedAppStyles,
-    }
-}
+    };
+};
 

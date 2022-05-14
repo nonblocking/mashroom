@@ -46,7 +46,7 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
             info(msg: string) {
                 master.info(msg, portalAppName);
             }
-        }
+        };
     }
 
     private _log(level: LogLevel, message: string, error?: Error | string, portalAppName?: string | undefined | null) {
