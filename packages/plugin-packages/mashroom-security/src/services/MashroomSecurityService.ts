@@ -52,7 +52,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
                         user = {
                             ...user,
                             roles: [],
-                        }
+                        };
                     }
                     if (user.roles.indexOf(ROLE_AUTHENTICATED_USER) === -1) {
                         user.roles.push(ROLE_AUTHENTICATED_USER);
@@ -138,7 +138,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         let roles: Array<string> = [];
         if (resource.permissions) {
             resource.permissions.forEach((p) => {
-                roles = roles.concat(p.roles)
+                roles = roles.concat(p.roles);
             });
         }
         for (let i = 0; i < roles.length; i++) {
@@ -330,7 +330,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         return new Promise((resolve) => {
             const oldSession = {
                 ...request.session,
-            }
+            };
             request.session.regenerate((err: Error | null) => {
                 if (err) {
                     logger.warn('Session invalidation failed!', err);

@@ -19,7 +19,7 @@ export const startExportStoreMetrics = (pluginContextHolder: MashroomPluginConte
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportStoreMetrics = () => {
     clearInterval(interval);

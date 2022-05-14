@@ -6,7 +6,7 @@ jest.setTimeout(10000);
 
 const pluginContext: any = {
     loggerFactory: () => console,
-}
+};
 
 const pluginContextHolder: any = {
     getPluginContext: () => pluginContext,

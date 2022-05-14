@@ -21,7 +21,7 @@ export const startExportPluginMetrics = (pluginContextHolder: MashroomPluginCont
         collectorService.gauge('mashroom_plugins_error_total', 'Mashroom Plugins with Status Error').set(pluginsError);
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportPluginMetrics = () => {
     clearInterval(interval);

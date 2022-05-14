@@ -17,11 +17,11 @@ let _httpsPool: HttpsAgent | undefined;
 
 export const setPoolConfig = (config: PoolConfig) => {
     _config = config;
-}
+};
 
 export const getPoolConfig = (): PoolConfig => {
     return _config;
-}
+};
 
 export const getHttpPool = () => {
     if (!_httpPool) {
@@ -51,7 +51,7 @@ const getPoolStats = (agent: HttpAgent | HttpsAgent): PoolMetrics => {
         activeConnections: countArrayEntries(agent.sockets),
         idleConnections: countArrayEntries(agent.freeSockets),
         waitingRequests: countArrayEntries(agent.requests),
-    }
+    };
 };
 
 export const getHttpPoolMetrics = (): PoolMetrics | null => {

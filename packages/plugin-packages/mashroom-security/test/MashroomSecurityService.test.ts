@@ -19,7 +19,7 @@ describe('MashroomSecurityService', () => {
                             roles: ['Role2']
                         };
                     }
-                }
+                };
             }
         };
 
@@ -68,9 +68,9 @@ describe('MashroomSecurityService', () => {
                     async authenticate(req: any, res: any, authenticationHints: any) {
                         return {
                             status: 'deferred',
-                        }
+                        };
                     }
-                }
+                };
             }
         };
 
@@ -118,9 +118,9 @@ describe('MashroomSecurityService', () => {
                         receivedAuthenticationHints = authenticationHints;
                         return {
                             status: 'deferred',
-                        }
+                        };
                     }
-                }
+                };
             }
         };
 
@@ -146,7 +146,7 @@ describe('MashroomSecurityService', () => {
             findProvider() {
                 return {
                     getUser: () => user
-                }
+                };
             }
         };
 
@@ -179,7 +179,7 @@ describe('MashroomSecurityService', () => {
                                             };
                                         }
                                     }
-                                }
+                                };
                             }
                         }
                     }
@@ -218,7 +218,7 @@ describe('MashroomSecurityService', () => {
                             roles: ['Role2']
                         };
                     }
-                }
+                };
             }
         };
 
@@ -249,7 +249,7 @@ describe('MashroomSecurityService', () => {
                         providerLoginCalled = true;
                         return null;
                     }
-                }
+                };
             }
         };
 

@@ -46,6 +46,6 @@ export const fixTlsOptions = (tlsOptions: TlsOptions | undefined | null, serverR
     });
 
     return fixedTlsOptions;
-}
+};
 
 

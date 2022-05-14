@@ -106,7 +106,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
                     }
                 }
             ]
-        }
+        };
     }
 
 }

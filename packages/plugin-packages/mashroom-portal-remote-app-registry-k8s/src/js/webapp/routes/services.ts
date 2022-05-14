@@ -6,7 +6,7 @@ import type {Request, Response} from 'express';
 import type {KubernetesServiceStatus, ServicesRenderModel} from '../../../../type-definitions';
 
 const formatDate = (ts: number): string => {
-    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
 const getRowClass = (status: KubernetesServiceStatus): string => {
@@ -40,7 +40,7 @@ const getStatusWeight = (status: KubernetesServiceStatus): number => {
         return 1;
     }
     return 0;
-}
+};
 
 export default (request: Request, response: Response) => {
 
@@ -78,4 +78,4 @@ export default (request: Request, response: Response) => {
     };
 
     response.render('services', model);
-}
+};

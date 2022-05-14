@@ -39,7 +39,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
                     labels: { foo: 2, bar: 'Test' },
                 },
             ]
-        }
+        };
 
         const adapter = new PromClientMashroomMetricsAdapter('metric_name');
         adapter.setMetrics(mashroomCounterData);
@@ -76,7 +76,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
                     labels: { foo: 2, bar: 'Test' },
                 },
             ]
-        }
+        };
 
         const adapter = new PromClientMashroomMetricsAdapter('metric2_name');
         adapter.setMetrics(mashroomGaugeData);
@@ -172,7 +172,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
                     labels: { foo: 2, bar: 'Test' },
                 },
             ]
-        }
+        };
 
         const adapter = new PromClientMashroomMetricsAdapter('metric3_name');
         adapter.setMetrics(mashroomHistogramData);
@@ -268,7 +268,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
                     labels: { foo: 2, bar: 'Test' },
                 },
             ]
-        }
+        };
 
         const adapter = new PromClientMashroomMetricsAdapter('metric4_name');
         adapter.setMetrics(mashroomSummaryData);
@@ -296,7 +296,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
                     labels: { foo: 2, bar: 'Test' },
                 },
             ]
-        }
+        };
 
         const adapter = new PromClientMashroomMetricsAdapter('metric_name');
         adapter.setMetrics(mashroomCounterData);

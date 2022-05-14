@@ -3,7 +3,7 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
 
 (global as any).toggleMenu = () => {
     document.getElementById('navigation')?.classList.toggle('show');
-}
+};
 
 (global as any).toggleShowAppVersions = () => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
@@ -11,11 +11,11 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
         return;
     }
     if (document.querySelector('.mashroom-portal-app-info')) {
-        clientServices.portalAppService.hideAppInfos()
+        clientServices.portalAppService.hideAppInfos();
     } else {
-        clientServices.portalAppService.showAppInfos()
+        clientServices.portalAppService.showAppInfos();
     }
-}
+};
 
 (global as any).onpopstate = (ev: PopStateEvent) => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
@@ -92,11 +92,11 @@ import type {MashroomPortalClientServices, MashroomPortalPageContent} from '@mas
     );
 
     return false;
-}
+};
 
 const hideMobileMenu = () => {
     document.getElementById('navigation')?.classList.remove('show');
-}
+};
 
 const showPageLoadingIndicator = (show: boolean) => {
     const loadingAnimationEl = document.getElementById('page-loading-progress');
@@ -108,7 +108,7 @@ const showPageLoadingIndicator = (show: boolean) => {
     } else {
         loadingAnimationEl.classList.remove('show');
     }
-}
+};
 
 const highlightPageIdInNavigation = (pageId: string): void => {
     const navigationEl = document.getElementById('navigation') as HTMLElement | undefined;

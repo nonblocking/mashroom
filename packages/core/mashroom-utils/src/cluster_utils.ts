@@ -31,4 +31,4 @@ export const getAllWorkerPids = (): Promise<Array<number>> => {
         // Ignore error
         return Promise.resolve([]);
     });
-}
+};

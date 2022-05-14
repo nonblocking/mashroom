@@ -58,7 +58,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         return {
             _id: result.insertedId,
             ...item,
-        }
+        };
     }
 
     async updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult> {

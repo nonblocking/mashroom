@@ -37,7 +37,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
                 }
             }
         },
-    }
+    };
 
     req.pluginContext = pluginContext;
 

@@ -43,7 +43,7 @@ export default class App extends PureComponent<Props, State> {
         super(props);
         this.state = {
             messages: {}
-        }
+        };
     }
 
     componentDidMount(): void {

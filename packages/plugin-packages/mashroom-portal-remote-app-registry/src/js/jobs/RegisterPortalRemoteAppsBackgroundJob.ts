@@ -41,13 +41,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         if (!updatedEndpoint.lastError) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Registering remote Portal App:', {portalApp});
-                context.registry.registerRemotePortalApp(portalApp)
+                context.registry.registerRemotePortalApp(portalApp);
             });
         } else {
             this._logger.error(`Registering apps for remote Portal Apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
             remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Unregister remote Portal App:', {portalApp});
-                context.registry.unregisterRemotePortalApp(portalApp.name)
+                context.registry.unregisterRemotePortalApp(portalApp.name);
             });
         }
 

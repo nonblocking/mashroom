@@ -129,7 +129,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
 
     private _fixUrl(url: string): string {
         if (url.endsWith('/')) {
-            return url.substr(0, url.length - 1)
+            return url.substr(0, url.length - 1);
         }
         return url;
     }

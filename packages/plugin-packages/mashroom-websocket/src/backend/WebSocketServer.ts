@@ -194,7 +194,7 @@ export default class WebSocketServer implements MashroomWebSocketServer {
     }
 
     private _getClientIdFromConnectPath(connectPath: string): string | null {
-        const CLIENT_ID_QUERY_PARAM = 'clientId'
+        const CLIENT_ID_QUERY_PARAM = 'clientId';
         if (connectPath.indexOf(`${CLIENT_ID_QUERY_PARAM}=`) > -1) {
             const params = connectPath.split('&');
             const idParam = params.find(p => p.indexOf(`${CLIENT_ID_QUERY_PARAM}=`) > -1);

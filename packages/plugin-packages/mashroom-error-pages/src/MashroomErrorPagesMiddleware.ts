@@ -69,7 +69,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
                         exec();
                     }
                 }
-            }
+            };
 
             res.write = (...args: any) => {
                 doWrite(args, () => {
@@ -169,7 +169,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             stream.on('data', (chunk) => chunks.push(chunk));
             stream.on('error', (error) => reject(error));
             stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-        })
+        });
     }
 
 }

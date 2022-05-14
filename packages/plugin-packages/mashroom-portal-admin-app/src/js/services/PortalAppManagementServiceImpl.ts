@@ -359,12 +359,12 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
                             this.portalAppService.unloadApp(loadedEditor.id);
                             sidebarHost.removeChild(sidebar);
                         }, 500);
-                    }
+                    };
                 },
                 (error) => {
                     console.error(`Loading Config Editor for ${pluginName} failed!`, error);
                 }
-            )
+            );
 
         } else {
             // in-place
@@ -384,12 +384,12 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
                         portalAppWrapperElement.classList.remove('editor-open');
                         this.portalAppService.unloadApp(loadedEditor.id);
                         portalAppWrapperElement.removeChild(editorWrapper);
-                    }
+                    };
                 },
                 (error) => {
                     console.error(`Loading Config Editor for ${pluginName} failed!`, error);
                 }
-            )
+            );
         }
     }
 }

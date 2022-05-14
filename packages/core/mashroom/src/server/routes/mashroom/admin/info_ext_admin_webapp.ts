@@ -20,7 +20,7 @@ const externalAdminApp = (req: Request) => {
             <div>
                 Not found
             </div>
-        `
+        `;
     }
 
     const targetPlugin = req.pluginContext.services.core.pluginService.getPlugins().find((p) => p.name === adminIntegrationPlugin.pluginDefinition.target);
@@ -29,7 +29,7 @@ const externalAdminApp = (req: Request) => {
             <div>
                 Not found
             </div>
-        `
+        `;
     }
 
     return  `
@@ -53,5 +53,5 @@ const externalAdminApp = (req: Request) => {
                 }
             </script>
         </div>
-    `
+    `;
 };

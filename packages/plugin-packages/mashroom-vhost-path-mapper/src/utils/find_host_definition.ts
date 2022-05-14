@@ -23,4 +23,4 @@ export default (determinedHost: DeterminedHost, vhostDefinitions: VHostDefinitio
     }
 
     return undefined;
-}
+};

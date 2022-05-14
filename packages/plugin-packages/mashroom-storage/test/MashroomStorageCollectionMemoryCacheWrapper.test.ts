@@ -9,7 +9,7 @@ describe('MashroomStorageCollectionMemoryCacheWrapper', () => {
     const targetCollection: any = {
         find: mockTargetFind,
         updateOne: mockTargetUpdateOne,
-    }
+    };
     const mockCacheGet = jest.fn();
     const mockCacheSet = jest.fn();
     const mockCacheClear = jest.fn();
@@ -53,8 +53,8 @@ describe('MashroomStorageCollectionMemoryCacheWrapper', () => {
         expect(mockCacheSet.mock.calls.length).toBe(1);
         expect(mockCacheSet.mock.calls[0][0]).toBe('collection:collection1');
         expect(mockCacheSet.mock.calls[0][1]).toBe('b67d563af0cb6a08be353788f15779f1');
-        expect(mockCacheSet.mock.calls[0][2]).toEqual(collectionObject)
-        expect(mockCacheSet.mock.calls[0][3]).toEqual(10)
+        expect(mockCacheSet.mock.calls[0][2]).toEqual(collectionObject);
+        expect(mockCacheSet.mock.calls[0][3]).toEqual(10);
     });
 
     it('returns the value from the cache if any', async () => {
@@ -94,7 +94,7 @@ describe('MashroomStorageCollectionMemoryCacheWrapper', () => {
         expect(mockCacheGet.mock.calls[5][1]).toBe('6a1f23d1c4286ceb68f3754d7b2198e1');
         expect(mockCacheGet.mock.calls[6][1]).toBe('e9f4ea702acc90dde002796870b28593');
         expect(mockCacheGet.mock.calls[7][1]).toBe('7c0f6b5eab997392242695c2f98722c7');
-    })
+    });
 
     it('invalidates the cache on update', async () => {
         const collection = new MashroomStorageCollectionMemoryCacheWrapper(

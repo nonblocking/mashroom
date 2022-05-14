@@ -122,13 +122,13 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         plugins: [
             pluginDefinition,
         ]
-    }
+    };
 
     const pluginPackageDefinitionV1: any = {
         plugins: [
             pluginDefinitionV1,
         ]
-    }
+    };
 
     const packageJson: any = {
         name: 'Test',

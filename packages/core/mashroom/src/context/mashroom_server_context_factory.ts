@@ -191,7 +191,7 @@ const setExpressConfig = (expressApp: Application, devMode: boolean, logger: Mas
         logger.info('Enabling express template cache');
         expressApp.enable('view cache');
     }
-}
+};
 
 const createServerContextHolder = () => {
     let _serverContext: MashroomServerContext | null = null;

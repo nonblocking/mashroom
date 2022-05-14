@@ -20,7 +20,7 @@ export const startExportProviderMetrics = (provider: MashroomMessagingExternalPr
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportProviderMetrics = () => {
     clearInterval(interval);

@@ -37,7 +37,7 @@ const clusterDetails = async () => {
             <td>${workerPids.join(', ')}</td>
         </tr>
     `;
-}
+};
 
 const overview = async (req: Request, clusterDetails: string) => {
     const {serverConfig, serverInfo} = req.pluginContext;
@@ -87,6 +87,6 @@ const overview = async (req: Request, clusterDetails: string) => {
                 <td><div class="json">${jsonToHtml(process.env)}</div></td>
             </tr>
         </table>
-    `
+    `;
 };
 

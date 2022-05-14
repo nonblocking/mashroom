@@ -29,7 +29,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     run(): void {
         try {
-            this._scanKubernetesServices()
+            this._scanKubernetesServices();
         } finally {
             context.oneFullScanDone = true;
         }
@@ -68,7 +68,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                     ...existingService, status: 'Checking',
                                     lastCheck: Date.now(),
                                     error: null,
-                                }
+                                };
                             }
                         } else {
                             const url = this._accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;

@@ -12,7 +12,7 @@ import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/t
 
 const cancelAllJobs = (service: MashroomBackgroundJobServiceType) => {
     service.jobs.forEach((job) => service.unscheduleJob(job.name));
-}
+};
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();

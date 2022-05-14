@@ -46,7 +46,7 @@ export default class Form extends PureComponent<Props> {
             return;
         }
         const elements = (this.formRef.current || document).querySelectorAll('input, select, textarea');
-        console.info('')
+        console.info('');
         for (let i = 0; i < elements.length; i++) {
             const elem: any = elements[i];
             if (elem.name) {
@@ -77,7 +77,7 @@ export default class Form extends PureComponent<Props> {
     }
 
     getTouchedObj(errors: any) {
-        const touched: FormikTouched<any> = {}
+        const touched: FormikTouched<any> = {};
         Object.keys(errors).map(key => {
             const errorObj = errors[key];
             if (Array.isArray(errorObj)) {

@@ -6,7 +6,7 @@ const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
         rules: {
             isLegacyBrowser: (sitePath, pageFriendlyUrl, lang, userAgent) => userAgent.browser.name === 'IE',
         }
-    }
+    };
 };
 
 export default bootstrap;

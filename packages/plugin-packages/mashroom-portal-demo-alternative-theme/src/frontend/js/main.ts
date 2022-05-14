@@ -82,7 +82,7 @@ const replacePageContent = (pageId: string, pageUrl: string, pageTitle: string, 
             document.location.replace(pageUrl);
         }
     );
-}
+};
 
 (global as any).onpopstate = (ev: PopStateEvent) => {
     const clientServices: MashroomPortalClientServices | undefined = (global as any).MashroomPortalServices;
@@ -102,7 +102,7 @@ const replacePageContent = (pageId: string, pageUrl: string, pageTitle: string, 
             (pageId) => {
                 if (pageId) {
                     let pageTitle = pageId;
-                    const navEl = document.querySelector(`[data-mr-page-id="${pageId}"]`)
+                    const navEl = document.querySelector(`[data-mr-page-id="${pageId}"]`);
                     if (navEl) {
                         pageTitle = navEl.attributes.getNamedItem('data-mr-page-title')?.value || pageId;
                     }

@@ -50,7 +50,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
                             retries: 0,
                             registrationTimestamp: null,
                             portalApps: []
-                        })
+                        });
                     },
                     async unregisterRemoteAppUrl(url: string) {
                         testEndpoints = testEndpoints.filter((endpoint) => endpoint.url !== url);
@@ -63,7 +63,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
                 }
             }
         },
-    }
+    };
     
     req.pluginContext = pluginContext;
 

@@ -281,5 +281,5 @@ export default (content: string, req: Request) => {
                 </div>
             </div>
         </html>
-    `
+    `;
 };

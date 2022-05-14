@@ -79,7 +79,7 @@ export default (appName: string, hostElementId: string, setup: MashroomPortalApp
                             if (typeof (result.then) === 'function') {
                                 result.then(
                                     (hooks: MashroomPortalAppLifecycleHooks | null) => {
-                                        loadedAppHooks = hooks
+                                        loadedAppHooks = hooks;
                                     }
                                 );
                             } else {
@@ -99,4 +99,4 @@ export default (appName: string, hostElementId: string, setup: MashroomPortalApp
     } catch (e) {
         return Promise.reject(e);
     }
-}
+};

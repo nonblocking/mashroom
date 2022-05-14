@@ -17,7 +17,7 @@ const saveAndClose = (markdownMessage: string, pingButtonLabel: string, updateAp
         pingButtonLabel,
     });
     close();
-}
+};
 
 export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
     const [markdownMessage, setMarkdownMessage] = useState(appConfig.markdownMessage || '');

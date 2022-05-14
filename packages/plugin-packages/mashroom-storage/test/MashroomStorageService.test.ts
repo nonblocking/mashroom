@@ -9,7 +9,7 @@ describe('MashroomStorageService', () => {
     const mockGetCollection = jest.fn();
     const myTestStorage: any = {
         getCollection: mockGetCollection,
-    }
+    };
     const pluginContextHolder: any = {
         getPluginContext: () => ({
             loggerFactory: () => console,
@@ -17,7 +17,7 @@ describe('MashroomStorageService', () => {
     };
     const registry: any = {
         getStorage: () => storage,
-    }
+    };
 
     beforeEach(() => {
         mockGetCollection.mockReset();
@@ -27,12 +27,12 @@ describe('MashroomStorageService', () => {
     it('waits for the storage provider for some time', async () => {
         const cacheConfig: MemoryCacheConfig = {
             enabled: false,
-        }
+        };
 
         const service = new MashroomStorageService('My Test Storage', cacheConfig, registry, pluginContextHolder);
 
         const coll = {};
-        mockGetCollection.mockReturnValue(coll)
+        mockGetCollection.mockReturnValue(coll);
 
         setTimeout(() => {
             // Make storage available
@@ -51,13 +51,13 @@ describe('MashroomStorageService', () => {
             enabled: true,
             ttlSec: 22,
             invalidateOnUpdate: true,
-        }
+        };
 
         storage = myTestStorage;
         const service = new MashroomStorageService('My Test Storage', cacheConfig, registry, pluginContextHolder);
 
         const coll = {};
-        mockGetCollection.mockReturnValue(coll)
+        mockGetCollection.mockReturnValue(coll);
 
         setTimeout(() => {
             // Make storage available

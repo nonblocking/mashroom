@@ -18,10 +18,10 @@ dummyLoggerFactory.bindToContext = () => dummyLoggerFactory;
 export const userContext = (mashroomUser: any | undefined | null) => {
     let username = null;
     if (mashroomUser) {
-        username = mashroomUser.username
+        username = mashroomUser.username;
     }
 
     return {
         username
-    }
+    };
 };

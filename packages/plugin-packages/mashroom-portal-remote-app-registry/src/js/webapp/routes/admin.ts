@@ -7,7 +7,7 @@ import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-
 import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../../type-definitions';
 
 const formatDate = (ts: number): string => {
-    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
 const getStatusWeight = (e: RemotePortalAppEndpoint): number => {
@@ -18,7 +18,7 @@ const getStatusWeight = (e: RemotePortalAppEndpoint): number => {
         return 1;
     }
     return 0;
-}
+};
 
 const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;

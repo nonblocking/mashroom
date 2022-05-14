@@ -22,7 +22,7 @@ const Pages = ({ currentPage, pages, siteBasePath }: Props) => (
                         {!isCurrentPage && <a className="nav-link" href={`${siteBasePath}${friendlyUrl}`} data-mr-page-id={pageId} data-mr-page-title={title}>{title}</a>}
                         {subPages && <Pages pages={subPages} currentPage={currentPage} siteBasePath={siteBasePath} />}
                     </li>
-                )
+                );
             })
         }
     </ul>

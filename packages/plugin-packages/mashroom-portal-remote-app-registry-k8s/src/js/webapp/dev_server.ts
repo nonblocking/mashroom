@@ -38,7 +38,7 @@ bootstrap('Mashroom Portal Remote App Registry Kubernetes', pluginConfig, contex
 const wrapperApp = express();
 
 wrapperApp.get('/', (req, res) => {
-    res.redirect('/portal-remote-app-registry-kubernetes')
+    res.redirect('/portal-remote-app-registry-kubernetes');
 });
 
 wrapperApp.use('/portal-remote-app-registry-kubernetes', app);

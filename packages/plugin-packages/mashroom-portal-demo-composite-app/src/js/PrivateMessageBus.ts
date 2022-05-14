@@ -17,7 +17,7 @@ export default class PrivateMessageBus {
                 onPingCb();
                 cancelMessage();
             }
-        }
+        };
         this.messageBus.registerMessageInterceptor(this.interceptor);
     }
 

@@ -46,7 +46,7 @@ const pluginContext: any = {
                         roles: ['Role2', 'Role1'],
                         secrets: null,
                         extraData: null,
-                    }
+                    };
                 }
             }
         }
@@ -58,7 +58,7 @@ setInterval(() => {
         context.server.sendMessage(client, {
             ping: new Date().toISOString(),
         });
-    })
+    });
 }, 3000);
 
 

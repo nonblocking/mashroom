@@ -31,7 +31,7 @@ export default class MashroomStorageMemoryCacheWrapper implements MashroomStorag
 
         try {
             if (this._cacheEnabledForCollection(name)) {
-                collection = new MashroomStorageCollectionMemoryCacheWrapper(name, collection, this._ttlSecForCollection(name), this._invalidateOnUpdateForCollection(name), this._pluginContextHolder)
+                collection = new MashroomStorageCollectionMemoryCacheWrapper(name, collection, this._ttlSecForCollection(name), this._invalidateOnUpdateForCollection(name), this._pluginContextHolder);
             }
         } catch (e) {
             this._logger.error(`Enabling memory cache for collection '${name}' failed`, e);

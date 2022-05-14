@@ -28,7 +28,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
                         };
                     },
                     getUrlBeforeAuthentication() {
-                        return 'https://www.mashroom-server.com'
+                        return 'https://www.mashroom-server.com';
                     }
                 },
             },
@@ -50,7 +50,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
                 }
             }
         },
-    }
+    };
 
     req.pluginContext = pluginContext;
 

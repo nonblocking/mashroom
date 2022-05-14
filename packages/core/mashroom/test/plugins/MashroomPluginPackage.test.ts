@@ -138,7 +138,7 @@ const getPluginPackageFolder4 = () => {
                 bootstrap: './dist/mashroom-bootstrap.js',
             }
         ],
-    })
+    });
     return pluginPackageFolder;
 };
 
@@ -167,7 +167,7 @@ const getPluginPackageFolder5 = () => {
                 }
             ],
         };
-    `)
+    `);
     return pluginPackageFolder;
 };
 

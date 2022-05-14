@@ -52,7 +52,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             if (Array.isArray(client.metadata.code_challenge_methods_supported) && client.metadata.code_challenge_methods_supported.includes('S256')) {
                 logger.debug('Using PKCE code challenge method: S256');
                 code_challenge = generators.codeChallenge(code_verifier);
-                code_challenge_method = 'S256'
+                code_challenge_method = 'S256';
             } else {
                 logger.debug('Using PKCE code challenge method: plain');
                 code_challenge = code_verifier;

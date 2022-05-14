@@ -17,7 +17,7 @@ export default (metricData: InternalSummaryMetricData): Summary => {
             };
         }
         return metricData.data[key];
-    }
+    };
 
     return {
         observe(value: number, labels: MetricLabels = {}): void {
@@ -28,5 +28,5 @@ export default (metricData: InternalSummaryMetricData): Summary => {
                 data.tDigest.push(value);
             }
         }
-    }
-}
+    };
+};

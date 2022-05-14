@@ -21,7 +21,7 @@ export const startExportBackgroundJobMetrics = (backgroundJobService: MashroomBa
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportBackgroundJobMetrics = () => {
     clearInterval(interval);

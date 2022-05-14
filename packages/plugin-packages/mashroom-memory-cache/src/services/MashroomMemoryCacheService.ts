@@ -79,7 +79,7 @@ export default class MashroomMemoryCacheService implements MashroomMemoryCacheSe
             regionCount,
             entriesAdded: _entriesAdded,
             cacheHitRatio,
-        }
+        };
     }
 
     private _getCacheProvider(): MashroomMemoryCacheProvider | undefined {

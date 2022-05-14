@@ -13,7 +13,7 @@ const AD_LOGIN_ERRORS: Record<string, string> = {
     ACCOUNT_EXPIRED: '701',
     MUST_RESET_PASSWORD: '773',
     ACCOUNT_LOCKED: '775',
-}
+};
 
 const AD_ERROR_MESSAGE_REGEX = /.*DSID-.*, data ([0-9a-f]{3}),.*/;
 
@@ -53,4 +53,4 @@ export default (errorMessage: string | undefined | null): MashroomSecurityLoginF
                 return 'Login not permitted';
         }
     }
-}
+};

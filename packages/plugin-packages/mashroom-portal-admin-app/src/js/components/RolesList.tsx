@@ -59,7 +59,7 @@ export default class RolesList extends PureComponent<Props> {
                     </tbody>
                 </TableResponsive>
             </div>
-        )
+        );
     }
 }
 

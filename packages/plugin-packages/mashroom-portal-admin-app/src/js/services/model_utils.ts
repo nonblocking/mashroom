@@ -68,7 +68,7 @@ export const getPagePosition = (pageId: string, pagesFlattened: Array<FlatPage>,
     return {
         parentPageId,
         insertAfterPageId
-    }
+    };
 };
 
 export const removePageFromTree = (pageId: string, parentPageId: string | undefined | null, pages: Array<MashroomPortalPageRef>) => {

@@ -21,7 +21,7 @@ const backToStartPage = (response: Response, defaultBackUrl: string, backUrl?: s
     } else {
         response.redirect(defaultBackUrl);
     }
-}
+};
 
 export default (defaultBackUrl: string) => {
     return async (request: Request, response: Response): Promise<void> => {
@@ -85,7 +85,7 @@ export default (defaultBackUrl: string) => {
             const authData: OpenIDConnectAuthData = {
                 lastTokenCheck: Date.now(),
                 tokenSet,
-            }
+            };
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
             request.session[OICD_USER_SESSION_KEY] = mashroomUser;
             if (request.session.cookie.maxAge && authData?.tokenSet.expires_at && authData.tokenSet.expires_at * 1000 >= Date.now() + request.session.cookie.maxAge) {
@@ -102,4 +102,4 @@ export default (defaultBackUrl: string) => {
             backToStartPage(response, defaultBackUrl, backUrl);
         }
     };
-}
+};

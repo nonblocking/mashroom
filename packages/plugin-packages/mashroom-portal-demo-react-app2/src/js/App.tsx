@@ -1,6 +1,6 @@
 
 import React, {useState, useCallback, useMemo, useEffect} from 'react';
-import Markdown from 'markdown-it'
+import Markdown from 'markdown-it';
 import InlineSVG from './InlineSVG';
 import ReactLogo from '../assets/React-icon.svg';
 
@@ -22,7 +22,7 @@ export default ({markdownMessage, pingButtonLabel, messageBus}: Props) => {
         messageBus.subscribe('ping', pingReceiver);
         return () => {
             messageBus.unsubscribe('ping', pingReceiver);
-        }
+        };
     }, [messageBus]);
 
     return (

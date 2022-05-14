@@ -28,7 +28,7 @@ export default class Permissions extends PureComponent<Props, State> {
         this.boundOnResetRef = this.onResetRef.bind(this);
         this.state = {
             enteredRole: null
-        }
+        };
     }
 
     onRoleChange(enteredRole: string | undefined | null): void {
@@ -73,7 +73,7 @@ export default class Permissions extends PureComponent<Props, State> {
                     <Button id='addButton' labelId='add' onClick={this.onAddRole.bind(this)} disabled={!enteredRole}/>
                 </div>
 
-                <RolesList name='roles' addRoleRef={(addRole) => { this.addRole = addRole }}/>
+                <RolesList name='roles' addRoleRef={(addRole) => { this.addRole = addRole; }}/>
             </div>
         );
     }

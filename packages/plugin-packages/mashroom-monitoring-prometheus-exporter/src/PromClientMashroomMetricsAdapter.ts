@@ -21,15 +21,15 @@ export default class PromClientMashroomMetricsAdapter {
             name,
             help,
             type,
-        }
+        };
 
         switch (type) {
             case 'counter':
                 const counterMetrics = metrics as CounterMetricData;
-                this._promClientData.values = counterMetrics.data.map(({labels, value}) => ({labels, value}))
+                this._promClientData.values = counterMetrics.data.map(({labels, value}) => ({labels, value}));
             case 'gauge':
                 const gaugeMetrics = metrics as GaugeMetricData;
-                this._promClientData.values = gaugeMetrics.data.map(({labels, value}) => ({labels, value}))
+                this._promClientData.values = gaugeMetrics.data.map(({labels, value}) => ({labels, value}));
                 break;
             case 'histogram':
                 const histogramData = metrics as HistogramMetricData;

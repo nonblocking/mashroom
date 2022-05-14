@@ -26,7 +26,7 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
         super(props);
         this.state = {
             filter: null
-        }
+        };
     }
 
     onOpen(): void {

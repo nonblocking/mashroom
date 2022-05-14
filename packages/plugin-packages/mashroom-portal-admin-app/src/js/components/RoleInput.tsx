@@ -30,7 +30,7 @@ export default class RoleInput extends PureComponent<Props> {
                 (error) => {
                     console.error('Fetching existing roles failed', error);
                 }
-            )
+            );
         }
     }
 

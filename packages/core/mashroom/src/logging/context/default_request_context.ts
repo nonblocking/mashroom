@@ -16,4 +16,4 @@ export default (req: Request | IncomingMessage) => {
         browserVersion: ua.browser.version,
         os: ua.os.name,
     };
-}
+};

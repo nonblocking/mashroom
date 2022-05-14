@@ -21,7 +21,7 @@ export const startExportMemoryCacheMetrics = (memoryCacheService: MashroomMemory
         }
         
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportMemoryCacheMetrics = () => {
     clearInterval(interval);

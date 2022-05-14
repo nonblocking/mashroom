@@ -2,7 +2,7 @@
 import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
-import {Controlled as CodeMirror} from 'react-codemirror2'
+import {Controlled as CodeMirror} from 'react-codemirror2';
 import 'codemirror/mode/css/css';
 import 'codemirror/mode/htmlmixed/htmlmixed';
 import 'codemirror/mode/javascript/javascript';
@@ -48,7 +48,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
             mode,
             theme: 'blackboard',
             lineNumbers: true
-        }
+        };
     }
 
     render(): ReactNode {

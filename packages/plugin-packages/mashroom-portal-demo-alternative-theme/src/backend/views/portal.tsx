@@ -6,7 +6,7 @@ import Navigation from './navigation';
 import themeParams from '../plugin/theme_params';
 import packageJson from '../../package.json';
 
-import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions'
+import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions';
 
 const fontawesomeVersion = packageJson.devDependencies['@fortawesome/fontawesome-free']?.replace(/[^]/, '');
 
@@ -17,7 +17,7 @@ const inlineStyle = (cssFile: string): string => {
     } catch (e) {
         return `<!-- Error: CSS file not found: ${cssFile} -->`;
     }
-}
+};
 
 const inlineSVG = (assetFile: string): string => {
     try {
@@ -26,7 +26,7 @@ const inlineSVG = (assetFile: string): string => {
     } catch (e) {
         return `<!-- Error: SVG file not found: ${assetFile} -->`;
     }
-}
+};
 
 export default ({
                     user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,

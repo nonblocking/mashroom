@@ -22,7 +22,7 @@ export default class I18NStringField extends PureComponent<Props> {
         if (typeof (val) === 'string') {
             val = {
                 [languages.default]: val
-            }
+            };
         }
 
         return val || {

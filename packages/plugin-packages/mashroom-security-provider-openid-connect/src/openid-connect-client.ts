@@ -33,7 +33,7 @@ export default async (request: Request): Promise<Client | undefined> => {
 
     const httpOptions: HttpOptions = {
         timeout: _clientConfiguration.httpRequestTimeoutMs,
-    }
+    };
     logger.debug('Setting HTTP options:', httpOptions);
     custom.setHttpOptionsDefaults(httpOptions);
 
@@ -81,4 +81,4 @@ export default async (request: Request): Promise<Client | undefined> => {
 
     _client = client;
     return client;
-}
+};
