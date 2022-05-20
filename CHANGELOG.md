@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.0.5 (Mai 20, 2022)
+
  * Portal: The resource and the proxy target URLs of Remote Apps can now overlap as long as requested resources have an extension.
    E.g.: If your plugin definition looks like this:
    ```json
