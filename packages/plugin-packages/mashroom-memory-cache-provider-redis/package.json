@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "files": [
         "dist/**"
     ],
@@ -12,9 +12,9 @@
         "ioredis": "^4.28.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.0.4",
-        "@mashroom/mashroom-memory-cache": "2.0.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.0.4",
+        "@mashroom/mashroom": "2.0.5",
+        "@mashroom/mashroom-memory-cache": "2.0.5",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.0.5",
         "@types/ioredis": "^4.28.7"
     },
     "jest": {

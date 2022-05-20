@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "files": [
         "dist/**"
     ],
@@ -12,8 +12,8 @@
         "@pm2/io": "^5.0.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.0.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.0.4",
+        "@mashroom/mashroom": "2.0.5",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.0.5",
         "@types/express": "^4.17.13",
         "express": "^4.17.2"
     },
