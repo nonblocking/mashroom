@@ -249,9 +249,10 @@ export default class PortalAppController {
 
         const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
 
-        // Security check: A proxy target could be a sub path of the resource base URL, so,
-        //  make sure this route is not misused to access an API endpoint
-        if (portalApp.proxies && Object.values(portalApp.proxies).some(({targetUri}) => resourceUri.startsWith(targetUri))) {
+        // Security check: A proxy target could be a sub path of the resource base URL,
+        // so, make sure this route is not misused to access an API endpoint
+        const hasExtension = !!resourceUri.match(/\.\w{2,5}$/);
+        if (!hasExtension && portalApp.proxies && Object.values(portalApp.proxies).some(({targetUri}) => resourceUri.startsWith(targetUri))) {
             logger.error('Attempted access to an API endpoint via resource request:', resourceUri);
             res.sendStatus(401);
             return false;

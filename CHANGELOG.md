@@ -3,6 +3,27 @@
 
 ## [unreleased]
 
+ * Portal: The resource and the proxy target URLs of Remote Apps can now overlap as long as requested resources have an extension.
+   E.g.: If your plugin definition looks like this:
+   ```json
+    {
+      "name": "My Remote App",
+      "type": "portal-app2",
+      "remote": {
+        "resourcesRoot": "/"
+      },
+      "defaultConfig": {
+        "proxies": {
+          "bff": {
+            "targetUri": "http://localhost:6089"
+          }
+        }
+      }
+    }
+   ```
+   the Portal will calculate a resource base URL http://yourhost.com/ and a base URL for the _bff_ proxy of http://yourhost.com/,
+   so they overlap. Now you can request a resource /index.js with this setup, previously you couldn't, because the Portal has treated
+   it as an attempt to fetch API data via (potentially less protected) resource request.
  * Security Service: Start authentication flow (e.g. redirect to the login page) only for GET and non-Ajax requests
 
 ## 2.0.4 (Mai 9, 2022)

@@ -67,9 +67,6 @@ const portalApp1: MashroomPortalApp = {
         'delete': ['Administrator']
     },
     proxies: {
-        '': {
-            targetUri: 'https://www.mashroom-server.com/api',
-        },
         '1': {
             targetUri: 'https://www.mashroom-server.com/api',
         },
@@ -111,6 +108,44 @@ const portalApp2: MashroomPortalApp = {
     defaultRestrictViewToRoles: ['OtherRole'],
     rolePermissions: {},
     proxies: {},
+    defaultAppConfig: {},
+};
+
+const portalApp3: MashroomPortalApp = {
+    name: 'Test Remote App',
+    title: {} ,
+    description: null,
+    tags: [],
+    version: '1.0',
+    homepage: null,
+    author: null,
+    license: null,
+    category: null,
+    metaInfo: null,
+    lastReloadTs: 222222222,
+    clientBootstrap: 'foo',
+    resourcesRootUri: `http://my.host.com`,
+    remoteApp: false,
+    ssrBootstrap: undefined,
+    ssrInitialHtmlUri: undefined,
+    cachingConfig: undefined,
+    editorConfig: undefined,
+    resources: {
+        js: ['bundle.js'],
+        css: [],
+    },
+    sharedResources: {
+        js: [],
+        css: [],
+    },
+    screenshots: null,
+    defaultRestrictViewToRoles: ['OtherRole'],
+    rolePermissions: {},
+    proxies: {
+        'bff': {
+            targetUri: 'http://my.host.com/api',
+        },
+    },
     defaultAppConfig: {},
 };
 
@@ -166,7 +201,7 @@ const portalAppEnhancement2: MashroomPortalAppEnhancement = {
 };
 
 const pluginRegistry: any = {
-    portalApps: [portalApp1, portalApp2],
+    portalApps: [portalApp1, portalApp2, portalApp3],
     portalAppEnhancements: [portalAppEnhancement1, portalAppEnhancement2],
 };
 
@@ -416,4 +451,28 @@ describe('PortalAppController', () => {
         const controller = new PortalAppController(pluginRegistry);
         controller.getPortalAppResource(req, res);
     });
+
+    it('disallows API access via resource URLs', () => {
+        const req: any = {
+            params: {
+                'pluginName': 'Test Remote App',
+                '0': 'api/customers',
+            },
+            pluginContext,
+            query: {},
+        };
+
+        let status;
+        const res: any = {
+            sendStatus: (stat: number) => {
+                status = stat;
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        controller.getPortalAppResource(req, res);
+
+        expect(status).toBe(401);
+    });
+
 });
