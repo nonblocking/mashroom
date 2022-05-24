@@ -2,7 +2,7 @@
 # Change Log
 
 ## [unreleased]
-
+ * MashroomPortalStateServiceImpl: state encoded in URL is encoded/decoded using encode/decodeURIComponent
  * Vue Demo App: Upgrade to Vue3 and server-side rendering added
  * Sandbox: Show all Apps for the Administrator role, even if defaultRestrictViewToRoles is set
 
