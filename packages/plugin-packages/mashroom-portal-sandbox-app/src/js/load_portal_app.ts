@@ -10,7 +10,6 @@ import type {MessageBusPortalAppUnderTest} from './types';
 const LOADED_SCRIPTS: Array<HTMLScriptElement> = [];
 const LOADED_STYLES: Array<HTMLLinkElement> = [];
 
-// TODO: implement unloading/loading of a different portal app?
 let loadedAppHooks: MashroomPortalAppLifecycleHooks | null = null;
 
 const loadJs = (path: string): Promise<void> => {
@@ -80,7 +79,7 @@ export default (appName: string, hostElementId: string, setup: MashroomPortalApp
                             if (typeof (result.then) === 'function') {
                                 result.then(
                                     (hooks: MashroomPortalAppLifecycleHooks | null) => {
-                                        loadedAppHooks = hooks
+                                        loadedAppHooks = hooks;
                                     }
                                 );
                             } else {
@@ -100,4 +99,4 @@ export default (appName: string, hostElementId: string, setup: MashroomPortalApp
     } catch (e) {
         return Promise.reject(e);
     }
-}
+};

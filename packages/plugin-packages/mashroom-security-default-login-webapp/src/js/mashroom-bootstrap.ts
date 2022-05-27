@@ -17,7 +17,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
         if (isAbsolute(externalStyleFile)) {
             externalStyleFileFullPath = externalStyleFile;
         } else {
-            externalStyleFileFullPath = resolve(serverConfig.serverRootFolder, externalStyleFile)
+            externalStyleFileFullPath = resolve(serverConfig.serverRootFolder, externalStyleFile);
         }
         if (existsSync(externalStyleFileFullPath)) {
             styleFile = externalStyleFileFullPath;

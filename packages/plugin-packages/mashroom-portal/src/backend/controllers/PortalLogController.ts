@@ -19,6 +19,7 @@ export default class PortalLogController {
 
             if (!logMessages || !Array.isArray(logMessages)) {
                 logger.error('Received invalid log messages from client', logMessages);
+                res.sendStatus(400);
                 return;
             }
 

@@ -149,7 +149,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result.result[0].foo).toBe('this is something else');
     });
 
-    it('updates all properties of an existing property with updateOne', async () => {
+    it('updates an existing item with updateOne', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1});
@@ -165,7 +165,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         }
     });
 
-    it('updates all properties of an existing property with updateMany', async () => {
+    it('updates multiple existing items with updateMany', async () => {
         const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});

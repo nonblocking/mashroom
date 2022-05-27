@@ -4,7 +4,7 @@ import {topicMatcher, containsWildcard, startsWithWildcard} from '@mashroom/mash
 
 import type {MashroomLogger, MashroomLoggerFactory, MashroomPluginService} from '@mashroom/mashroom/type-definitions';
 
-import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions'
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {
     MashroomMessagingExternalProvider,
     MashroomMessagingSubscriberCallback,

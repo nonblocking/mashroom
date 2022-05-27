@@ -10,7 +10,7 @@ import {
     isPagePermitted,
     isSitePathPermitted
 } from '../utils/security_utils';
-import createPortalAppSetup from '../utils/create_portal_app_setup';
+import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create_portal_app_setup';
 import {PORTAL_APP_RESOURCES_BASE_PATH} from '../constants';
 
 import type {Request, Response} from 'express';
@@ -63,10 +63,11 @@ export default class PortalAppController {
 
             const portalApp = this._getPortalApp(pluginName);
             if (!portalApp) {
-                logger.error(`Portal app not found: ${pluginName}`);
-                res.sendStatus(404);
+                const appSetup = await createPortalAppSetupForMissingPlugin(pluginName, undefined, mashroomSecurityUser, req);
+                res.json(appSetup);
                 return;
             }
+
             if (!await isAppPermitted(req, pluginName, portalAppInstanceId, portalApp)) {
                 logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access app: ${pluginName}:${portalAppInstanceId}`);
                 res.sendStatus(403);
@@ -185,7 +186,7 @@ export default class PortalAppController {
                     screenshots,
                     metaInfo: portalApp.metaInfo,
                     lastReloadTs: portalApp.lastReloadTs,
-                }
+                };
             });
 
         if (typeof (q) === 'string') {
@@ -248,9 +249,10 @@ export default class PortalAppController {
 
         const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
 
-        // Security check: A proxy target could be a sub path of the resource base URL, so,
-        //  make sure this route is not misused to access an API endpoint
-        if (portalApp.proxies && Object.values(portalApp.proxies).some(({targetUri}) => resourceUri.startsWith(targetUri))) {
+        // Security check: A proxy target could be a sub path of the resource base URL,
+        // so, make sure this route is not misused to access an API endpoint
+        const hasExtension = !!resourceUri.match(/\.\w{2,5}$/);
+        if (!hasExtension && portalApp.proxies && Object.values(portalApp.proxies).some(({targetUri}) => resourceUri.startsWith(targetUri))) {
             logger.error('Attempted access to an API endpoint via resource request:', resourceUri);
             res.sendStatus(401);
             return false;

@@ -9,7 +9,7 @@ export default (enableGcStats: boolean, loggerFactory: MashroomLoggerFactory) =>
 
     collectDefaultMetrics({
         register: registry,
-    })
+    });
 
     if (enableGcStats) {
 

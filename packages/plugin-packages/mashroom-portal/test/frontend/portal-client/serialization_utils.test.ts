@@ -11,7 +11,7 @@ describe('serializationUtils', () => {
         const o = {
             a: 2,
             b: '4'
-        }
+        };
         expect(serializeObject(o)).toBe('{"a":2,"b":"4"}');
     });
 

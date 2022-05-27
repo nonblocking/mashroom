@@ -7,7 +7,17 @@ import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-
 import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../../type-definitions';
 
 const formatDate = (ts: number): string => {
-    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
+};
+
+const getStatusWeight = (e: RemotePortalAppEndpoint): number => {
+    if (e.lastError) {
+        return 2;
+    }
+    if (!e.registrationTimestamp) {
+        return 1;
+    }
+    return 0;
 };
 
 const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
@@ -15,18 +25,27 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
     const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
     const remoteAppEndpoints = await portalRemoteAppEndpointService.findAll();
 
-    const endpoints = remoteAppEndpoints.map((endpoint) => ({
-        url: endpoint.url,
-        sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
-        status: status(endpoint),
-        statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
-        rowClass: endpoint.lastError ? 'row-error' : '',
-        portalApps: endpoint.portalApps.map((app) => ({
-            name: app.name,
-            version: app.version,
-            pluginDef: jsonToHtml(app),
-        }))
-    }));
+    const endpoints = [...remoteAppEndpoints]
+        .sort((e1, e2) => {
+            const status1 = getStatusWeight(e1);
+            const status2 = getStatusWeight(e2);
+            if (status1 == status2) {
+                return e1.url.localeCompare(e2.url);
+            }
+            return status2 - status1;
+        })
+        .map((endpoint) => ({
+            url: endpoint.url,
+            sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
+            status: status(endpoint),
+            statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
+            rowClass: endpoint.lastError ? 'row-error' : '',
+            portalApps: endpoint.portalApps.map((app) => ({
+                name: app.name,
+                version: app.version,
+                pluginDef: jsonToHtml(app),
+            }))
+        }));
 
     res.render('admin', {
         baseUrl: req.baseUrl,

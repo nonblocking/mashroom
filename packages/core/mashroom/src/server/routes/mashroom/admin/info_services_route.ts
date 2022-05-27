@@ -56,7 +56,7 @@ const serviceNames = (pluginContext: MashroomPluginContext) => {
         if (s2.namespace === 'core') {
             return 1;
         }
-        return s1.namespace.localeCompare(s2.namespace)
+        return s1.namespace.localeCompare(s2.namespace);
     });
 
     return services;

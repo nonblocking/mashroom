@@ -81,37 +81,39 @@ Create a role with the required permissions like this:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-    name: list-services-cluster-role
+  name: list-namespaces-services-cluster-role
 rules:
-    -   apiGroups:
-            - ""
-        resources:
-            - services
-        verbs:
-            - get
-            - list
+  - apiGroups:
+      - ""
+    resources:
+      - services
+      - namespaces
+    verbs:
+      - get
+      - list
 ```
-And then create the Service Account and attach the role:
+And then create the Service Account and bind the role
+(we use a *ClusterRoleBinding* here so the account can read services in **all** namespaces in the cluster, if you don't want that, you have to create a *RoleBinding* per allowed namespace):
 
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-    name: mashroom-portal
-    namespace: default
+  name: mashroom-portal
+  namespace: default
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
+kind: ClusterRoleBinding
 metadata:
-    name: mashroom-portal-role-binding
-    namespace: default
+  name: mashroom-portal-role-binding
 subjects:
-    -   kind: ServiceAccount
-        name: mashroom-portal
+  - kind: ServiceAccount
+    name: mashroom-portal
+    namespace: default
 roleRef:
-    kind: ClusterRole
-    name: list-services-cluster-role
-    apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: list-namespaces-services-cluster-role
+  apiGroup: rbac.authorization.k8s.io
 ```
 
 And in your deployment resource just state the Service Account name:

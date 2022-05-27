@@ -13,7 +13,7 @@ describe('MashroomMemoryCacheService', () => {
         const mockSet = jest.fn();
         const myProviderImpl: any = {
             set: mockSet,
-        }
+        };
         context.pluginRegistry.register('my provider', myProviderImpl);
 
         await service.set('reg1', 'test1', 'testVal1');

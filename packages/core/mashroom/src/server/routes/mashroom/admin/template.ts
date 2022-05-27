@@ -53,11 +53,11 @@ export default (content: string, req: Request) => {
                 header h1 {
                     color: white;
                     font-weight: normal;
-                    margin-top: 17px;
+                    margin: auto 0;
                 }
 
                 header .logo {
-                    padding: 10px 25px;
+                    padding: 10px 25px 8px 25px;
                 }
 
                 #content-wrapper {
@@ -281,5 +281,5 @@ export default (content: string, req: Request) => {
                 </div>
             </div>
         </html>
-    `
+    `;
 };

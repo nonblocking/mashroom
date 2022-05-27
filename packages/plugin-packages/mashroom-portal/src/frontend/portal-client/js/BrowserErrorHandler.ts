@@ -46,7 +46,7 @@ const getAppNameFromScript = (source: string): string | undefined => {
     if (match) {
         return decodeURIComponent(match[1]);
     }
-}
+};
 
 const tapIntoConsoleLog = (logType: 'error' | 'warn' | 'info', fn: (portalAppName: string | undefined, args: Array<any>) => void) => {
     const original = console[logType];
@@ -66,4 +66,4 @@ const tapIntoConsoleLog = (logType: 'error' | 'warn' | 'info', fn: (portalAppNam
         original.apply(console, args);
         fn(portalAppName, args);
     };
-}
+};

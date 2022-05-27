@@ -55,7 +55,7 @@ export default class ReconnectMessageBufferStore {
 
                 return res();
             });
-        })
+        });
     }
 
     async appendData(name: string, data: string): Promise<void> {
@@ -71,8 +71,8 @@ export default class ReconnectMessageBufferStore {
                 }
 
                 return res();
-            })
-        })
+            });
+        });
     }
 
     async getData(name: string): Promise<string[]> {

@@ -55,7 +55,7 @@ async function startServer() {
             logger.info(`Graceful shutdown, waiting for ${WAIT_BEFORE_SERVER_CLOSE}sec`);
             setTimeout(() => {
                 stopServer(server, logger);
-            }, WAIT_BEFORE_SERVER_CLOSE * 1000)
+            }, WAIT_BEFORE_SERVER_CLOSE * 1000);
         } else {
             stopServer(server, logger);
         }

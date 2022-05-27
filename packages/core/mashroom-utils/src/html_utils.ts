@@ -5,7 +5,7 @@ export const escapeHtml = (html: string) => {
         .replace(/"/g, '&quot;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
-}
+};
 
 export const jsonToHtml = (obj: any): string => {
     let json = JSON.stringify(obj, null, '  ');

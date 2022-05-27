@@ -33,11 +33,11 @@ export const getAvailableNodes = () => {
     }
     const nodes = (_client as Cluster).nodes();
     return nodes.filter((redis) => redis.status === 'ready').length;
-}
+};
 
 export const isConnected = () => {
     return getAvailableNodes() > 0;
-}
+};
 
 export default async (logger: MashroomLogger): Promise<IORedisClient> => {
     if (_client) {

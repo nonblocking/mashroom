@@ -110,7 +110,7 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
                     };
                 }
             }
-        }
+        };
 
         return wrapper;
     }

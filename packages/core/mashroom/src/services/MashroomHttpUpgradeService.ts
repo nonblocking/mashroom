@@ -28,7 +28,7 @@ export default class MashroomHttpUpgradeService implements InternalMashroomHttpU
         this._upgradeHandlers.push({
             pathExpression,
             handler,
-        })
+        });
     }
 
     unregisterUpgradeHandler(handler: MashroomHttpUpgradeHandler): void {

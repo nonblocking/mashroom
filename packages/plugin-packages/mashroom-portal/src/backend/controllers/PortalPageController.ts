@@ -169,7 +169,7 @@ export default class PortalPageController {
                 return;
             }
 
-            const pageId = req.params.pageId
+            const pageId = req.params.pageId;
             const page = await portalService.getPage(pageId);
             if (!page) {
                 res.sendStatus(404);
@@ -379,7 +379,7 @@ export default class PortalPageController {
                 return;
             }
 
-            if (data.areaId && data.areaId !== existingInstData.areaId || data.position && data.position !== existingInstData.position) {
+            if (data.areaId && data.areaId !== existingInstData.areaId || typeof (data.position) === 'number' && data.position !== existingInstData.position) {
                 const areaId = data.areaId || existingInstData.areaId;
                 portalApps[existingInstData.areaId].splice(existingInstData.position, 1);
                 const position = this._insertAppInstance(page, existingInstData.instance, areaId, data.position);

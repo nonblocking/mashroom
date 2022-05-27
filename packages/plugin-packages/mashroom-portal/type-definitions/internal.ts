@@ -74,24 +74,26 @@ export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginTy
 
 export type MashroomPortalPluginConfig = {
     readonly path: string;
-    readonly adminApp: string;
+    readonly adminApp: string | null | undefined;
     readonly defaultTheme: string;
     readonly defaultLayout: string;
     readonly warnBeforeAuthenticationExpiresSec: number;
     readonly autoExtendAuthentication: boolean;
+    readonly ignoreMissingAppsOnPages: boolean;
     readonly defaultProxyConfig: {
         readonly sendPermissionsHeader?: boolean;
         readonly restrictToRoles?: Array<string>;
     };
     readonly ssrConfig: {
-        readonly ssrEnabled: boolean;
+        readonly ssrEnable: boolean;
         readonly renderTimoutMs: number;
+        readonly cacheEnable: boolean;
         readonly cacheTTLSec: number;
         readonly inlineStyles: boolean;
     };
 }
 
-export type MashroomPortalPageAppsInfo = {
+export type MashroomPortalPageApps = {
     [areaId: string]: Array<{
         pluginName: string;
         instanceId: string;

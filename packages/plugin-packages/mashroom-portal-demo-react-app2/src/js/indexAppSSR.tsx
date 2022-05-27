@@ -12,7 +12,7 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
         <div data-ssr-host="true">
             <App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={fakeMessageBus}/>
         </div>
-    )
+    );
 };
 
 export default bootstrap;

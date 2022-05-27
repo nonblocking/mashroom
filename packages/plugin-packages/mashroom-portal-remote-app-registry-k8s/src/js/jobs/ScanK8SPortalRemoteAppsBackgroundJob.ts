@@ -29,20 +29,23 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     run(): void {
         try {
-            this._scanKubernetesServices()
+            this._scanKubernetesServices();
         } finally {
             context.oneFullScanDone = true;
         }
     }
 
     async _scanKubernetesServices(): Promise<void> {
-        this._logger.info('Starting scan of k8s namespaces: ', this._k8sNamespaces);
         context.lastScan = Date.now();
-        context.error = null;
+        context.errors = [];
 
         const namespaces = await this._determineNamespaces();
+        context.namespaces = namespaces;
+        this._logger.info('Starting scan of k8s namespaces: ', namespaces);
+
         for (let i = 0; i < namespaces.length; i++) {
             const namespace = namespaces[i];
+
             try {
                 const res = await this._kubernetesConnector.getNamespaceServices(namespace, this._k8sServiceLabelSelector);
                 const serviceItems = res.items;
@@ -65,7 +68,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                     ...existingService, status: 'Checking',
                                     lastCheck: Date.now(),
                                     error: null,
-                                }
+                                };
                             }
                         } else {
                             const url = this._accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
@@ -101,8 +104,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     }
                 }
             } catch (error: any) {
-                this._logger.error(`Error during scan of k8s namespace: ${namespace}`, error);
-                context.error = error.message;
+                context.errors.push(`Error scanning services in namespace ${namespace}: ${error.message}`);
+                this._logger.error(`Error scanning services in namespace ${namespace}`, error);
             }
         }
 
@@ -119,8 +122,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                         namespaces.push(ns.metadata.name);
                     }
                 });
-            } catch (e) {
-                this._logger.error(`Unable to determine namespaces from labelSelector: ${this._k8sNamespacesLabelSelector}`, e);
+            } catch (e: any) {
+                context.errors.push(`Error scanning namespaces in cluster: ${e.message}`);
+                this._logger.error(`Error scanning namespaces with labelSelector: ${this._k8sNamespacesLabelSelector}`, e);
             }
         }
         this._logger.debug('Determined namespaces to scan:', namespaces.join(', '));
@@ -176,7 +180,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
                     return json;
                 } else {
-                    this._logger.warn(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
+                    this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
                 }
             } catch (e) {
                 this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed`, e);

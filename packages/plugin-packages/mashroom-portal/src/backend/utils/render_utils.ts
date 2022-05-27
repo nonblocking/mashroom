@@ -8,29 +8,29 @@ import {renderServerSide} from './ssr_utils';
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalPageRenderModel, MashroomPortalAppErrorRenderModel, MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
-import type {MashroomPortalPageAppsInfo, MashroomPortalPageContentRenderResult} from '../../../type-definitions/internal';
+import type {MashroomPortalPageApps, MashroomPortalPageContentRenderResult} from '../../../type-definitions/internal';
 
-export const renderPage = async (themeExists: boolean, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
+export const renderPage = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => minimalTemplatePortal(model);
 
     if (themeExists) {
-        return renderToString(PORTAL_PAGE_TEMPLATE_NAME, true, model, fallback, res, logger);
+        return renderToString(PORTAL_PAGE_TEMPLATE_NAME, true, setupTheme, model, fallback, res, logger);
     }
 
     return fallback();
-}
+};
 
-export const renderAppWrapper = async (themeExists: boolean, model: MashroomPortalAppWrapperRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
+export const renderAppWrapper = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalAppWrapperRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => defaultTemplateAppWrapper(model);
 
     if (themeExists) {
-        return renderToString(PORTAL_APP_WRAPPER_TEMPLATE_NAME, false, model, fallback, res, logger);
+        return renderToString(PORTAL_APP_WRAPPER_TEMPLATE_NAME, false, setupTheme, model, fallback, res, logger);
     }
 
     return fallback();
-}
+};
 
-export const renderAppWrapperToClientTemplate = async (themeExists: boolean, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
+export const renderAppWrapperToClientTemplate = async (themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const model: MashroomPortalAppWrapperRenderModel = {
         appId: '__APP_ID__',
         pluginName: '__PLUGIN_NAME__',
@@ -38,22 +38,21 @@ export const renderAppWrapperToClientTemplate = async (themeExists: boolean, mes
         title: '__TITLE__',
         messages,
         appSSRHtml: null,
-    }
-    return renderAppWrapper(themeExists, model, req, res, logger);
-}
+    };
+    return renderAppWrapper(themeExists, setupTheme, model, req, res, logger);
+};
 
-export const renderAppError = async (themeExists: boolean, model: MashroomPortalAppErrorRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
+export const renderAppError = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalAppErrorRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => defaultTemplateAppError(model);
 
     if (themeExists) {
-        return renderToString(PORTAL_APP_ERROR_TEMPLATE_NAME, false, model, fallback, res, logger);
+        return renderToString(PORTAL_APP_ERROR_TEMPLATE_NAME, false, setupTheme, model, fallback, res, logger);
     }
 
     return fallback();
-}
+};
 
-export const renderAppErrorToClientTemplate = async (themeExists: boolean, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
-
+export const renderAppErrorToClientTemplate = async (themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const model: MashroomPortalAppErrorRenderModel = {
         appId: '__APP_ID__',
         pluginName: '__PLUGIN_NAME__',
@@ -61,20 +60,20 @@ export const renderAppErrorToClientTemplate = async (themeExists: boolean, messa
         title: '__TITLE__',
         errorMessage: null,
         messages,
-    }
-    return renderAppError(themeExists, model, req, res, logger);
-}
+    };
+    return renderAppError(themeExists, setupTheme, model, req, res, logger);
+};
 
-export const renderPageContent = async (portalLayout: string, portalAppInfo: MashroomPortalPageAppsInfo, themeExists: boolean, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalPageContentRenderResult> => {
+export const renderPageContent = async (portalLayout: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalPageContentRenderResult> => {
     const serverSideRenderedApps: Array<string> = [];
-    const appAreas = Object.keys(portalAppInfo);
+    const appAreas = Object.keys(portalPageApps);
     const promises: Array<Promise<Array<string>>> = [];
 
     let pageContent = portalLayout;
     for (const appAreaId of appAreas) {
         promises.push(
             Promise.all(
-                portalAppInfo[appAreaId].map(async ({pluginName, appSetup}) => {
+                portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
                     const {appId, title} = appSetup;
 
                     const appSSRHtml = await renderServerSide(pluginName, appSetup, req, logger);
@@ -90,7 +89,7 @@ export const renderPageContent = async (portalLayout: string, portalAppInfo: Mas
                         messages,
                         appSSRHtml,
                     };
-                    return renderAppWrapper(themeExists, model, req, res, logger);
+                    return renderAppWrapper(themeExists, setupTheme, model, req, res, logger);
                 })
             ).then(
                 (result) => result,
@@ -117,10 +116,11 @@ export const renderPageContent = async (portalLayout: string, portalAppInfo: Mas
         pageContent,
         serverSideRenderedApps,
     };
-}
+};
 
-const renderToString = (template: string, templateMustExist: boolean, model: any, fallback: () => string, res: Response, logger: MashroomLogger): Promise<string> => {
+const renderToString = (template: string, templateMustExist: boolean, setupTheme: () => void, model: any, fallback: () => string, res: Response, logger: MashroomLogger): Promise<string> => {
     return new Promise((resolve) => {
+        setupTheme();
         res.render(template, model, (error, html) => {
             if (error) {
                 if (templateMustExist || error.message.indexOf('Failed to lookup view') === -1) {
@@ -133,7 +133,7 @@ const renderToString = (template: string, templateMustExist: boolean, model: any
                 resolve(html);
             }
         });
-    })
-}
+    });
+};
 
 const getSafePluginName = (pluginName: string) => pluginName.toLowerCase().replace(/ /g, '-');

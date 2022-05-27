@@ -22,8 +22,8 @@ import type {
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
-const toPortalAppUser = (mashroomSecurityUser: MashroomSecurityUser | undefined | null, portalApp: MashroomPortalApp): MashroomPortalAppUser => {
-    const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, mashroomSecurityUser);
+const toPortalAppUser = (mashroomSecurityUser: MashroomSecurityUser | undefined | null, portalApp?: MashroomPortalApp): MashroomPortalAppUser => {
+    const permissions: MashroomPortalAppUserPermissions = portalApp ? calculatePermissions(portalApp.rolePermissions, mashroomSecurityUser) : {};
 
     return {
         guest: !mashroomSecurityUser,
@@ -32,7 +32,7 @@ const toPortalAppUser = (mashroomSecurityUser: MashroomSecurityUser | undefined 
         email: mashroomSecurityUser?.email ? mashroomSecurityUser.email : null,
         permissions
     };
-}
+};
 
 const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp,
                                      pluginRegistry: MashroomPortalPluginRegistry, req: Request): Promise<MashroomPortalAppSetup> => {
@@ -52,9 +52,9 @@ const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, por
     }
 
     return enhancedAppSetup;
-}
+};
 
-export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
+export const createPortalAppSetup = async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
                       cdnService: MashroomCDNService | undefined | null, pluginRegistry: MashroomPortalPluginRegistry, req: Request) => {
     const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
 
@@ -99,4 +99,35 @@ export default async (portalApp: MashroomPortalApp, portalAppInstance: MashroomP
     };
 
     return enhancePortalAppSetup(portalAppSetup, portalApp, pluginRegistry, req);
-}
+};
+
+export const createPortalAppSetupForMissingPlugin = async (pluginName: string, instanceId: string | undefined, mashroomSecurityUser: MashroomSecurityUser | undefined | null, req: Request) => {
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+
+    const lang = i18nService.getLanguage(req);
+    const user = toPortalAppUser(mashroomSecurityUser);
+
+    const portalAppSetup: MashroomPortalAppSetup = {
+        appId: createAppId(),
+        pluginName,
+        pluginMissing: true,
+        title: pluginName,
+        version: '',
+        instanceId,
+        lastReloadTs: Date.now(),
+        proxyPaths: { __baseUrl: '' },
+        restProxyPaths: { __baseUrl: '' },
+        sharedResourcesBasePath: '',
+        sharedResources: null,
+        resourcesBasePath: '',
+        resources: { js: [] },
+        globalLaunchFunction: '',
+        lang,
+        user,
+        appConfig: {},
+        editorConfig: null,
+    };
+
+    return portalAppSetup;
+};
+

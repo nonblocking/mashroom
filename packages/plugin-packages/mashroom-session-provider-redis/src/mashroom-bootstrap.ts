@@ -9,7 +9,7 @@ import type {IORedisConfig} from '../type-definitions';
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const {loggerFactory, services: {core: {pluginService, healthProbeService}}} =  pluginContextHolder.getPluginContext();
-    const logger = loggerFactory('mashroom.session.provider.redis')
+    const logger = loggerFactory('mashroom.session.provider.redis');
 
     await setConfig(pluginConfig as IORedisConfig);
     const client = await createClient(logger);

@@ -12,7 +12,7 @@ export default class PM2MetricExporter implements PM2MetricExporterType {
     private _intervalId: ReturnType<typeof setInterval> | undefined;
     private _pm2Metrics: {
         [name: string]: Gauge;
-    }
+    };
 
     constructor(private _config: Config, private _contextHolder: MashroomPluginContextHolder) {
         this._pm2Metrics = {};
@@ -21,7 +21,7 @@ export default class PM2MetricExporter implements PM2MetricExporterType {
     start(): void {
         pm2.init({
             metrics: this._config.pmxMetrics,
-        })
+        });
         this._intervalId = setInterval(() => this._exportMashroomMetrics(), EXPORT_INTERVAL_MS);
     }
 

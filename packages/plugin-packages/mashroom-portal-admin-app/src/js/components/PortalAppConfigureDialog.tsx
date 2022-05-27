@@ -132,7 +132,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         } else {
             appConfigEditor = (
                 <FormattedMessage id="hintCustomConfigEditor" />
-            )
+            );
         }
 
         return (

@@ -10,9 +10,7 @@ export type ClientConfiguration = {
     clientSecret: string;
     redirectUrl: string;
     responseType: ResponseType;
-    httpRequestRejectUnauthorized: boolean;
     httpRequestTimeoutMs: number;
-    httpRequestRetry: number;
 }
 
 export type CallbackConfiguration = {

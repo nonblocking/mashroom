@@ -19,7 +19,7 @@ describe('MashroomSecurityService', () => {
                             roles: ['Role2']
                         };
                     }
-                }
+                };
             }
         };
 
@@ -37,6 +37,7 @@ describe('MashroomSecurityService', () => {
         let sessionRegenerated = false;
 
         const req: any = {
+            method: 'GET',
             pluginContext: {
                 loggerFactory
             },
@@ -67,9 +68,9 @@ describe('MashroomSecurityService', () => {
                     async authenticate(req: any, res: any, authenticationHints: any) {
                         return {
                             status: 'deferred',
-                        }
+                        };
                     }
-                }
+                };
             }
         };
 
@@ -82,13 +83,14 @@ describe('MashroomSecurityService', () => {
 
     it('forwards query parameter hints to the provider', async () => {
         const req: any = {
+            method: 'GET',
             pluginContext: {
                 loggerFactory
             },
             url: 'http://localhost?hint1=foo&foo=bar&xxx=1',
             originalUrl: 'http://localhost?hint1=foo&foo=bar&xxx=1',
             headers: {
-                accept: 'xxxx',
+                accept: 'text/html',
             },
             query: {
                 hint1: 'foo',
@@ -97,6 +99,9 @@ describe('MashroomSecurityService', () => {
             },
             session: {
                 regenerate(cb: (err: Error | null) => void) { cb(null); },
+                save(cb: () => void) {
+                    cb();
+                },
             },
         };
         const res: any = {
@@ -113,9 +118,9 @@ describe('MashroomSecurityService', () => {
                         receivedAuthenticationHints = authenticationHints;
                         return {
                             status: 'deferred',
-                        }
+                        };
                     }
-                }
+                };
             }
         };
 
@@ -141,7 +146,7 @@ describe('MashroomSecurityService', () => {
             findProvider() {
                 return {
                     getUser: () => user
-                }
+                };
             }
         };
 
@@ -174,7 +179,7 @@ describe('MashroomSecurityService', () => {
                                             };
                                         }
                                     }
-                                }
+                                };
                             }
                         }
                     }
@@ -213,7 +218,7 @@ describe('MashroomSecurityService', () => {
                             roles: ['Role2']
                         };
                     }
-                }
+                };
             }
         };
 
@@ -244,7 +249,7 @@ describe('MashroomSecurityService', () => {
                         providerLoginCalled = true;
                         return null;
                     }
-                }
+                };
             }
         };
 

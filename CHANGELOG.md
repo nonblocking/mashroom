@@ -2,9 +2,61 @@
 # Change Log
 
 ## [unreleased]
- * MashroomPortalStateServiceImpl: state encoded in URL is encoded/decoded using encode/decodeURIComponent
+
+ * Portal: State encoded in URL via MashroomPortalStateService is encoded/decoded now
+
+## 2.0.5 (Mai 20, 2022)
+
+ * Portal: The resource and the proxy target URLs of Remote Apps can now overlap as long as requested resources have an extension.
+   E.g.: If your plugin definition looks like this:
+   ```json
+    {
+      "name": "My Remote App",
+      "type": "portal-app2",
+      "remote": {
+        "resourcesRoot": "/"
+      },
+      "defaultConfig": {
+        "proxies": {
+          "bff": {
+            "targetUri": "http://localhost:6089"
+          }
+        }
+      }
+    }
+   ```
+   the Portal will calculate a resource base URL http://yourhost.com/ and a base URL for the _bff_ proxy of http://yourhost.com/,
+   so they overlap. Now you can request a resource /index.js with this setup, previously you couldn't, because the Portal has treated
+   it as an attempt to fetch API data via (potentially less protected) resource request.
+ * Security Service: Start authentication flow (e.g. redirect to the login page) only for GET and non-Ajax requests
+
+## 2.0.4 (Mai 9, 2022)
+
+ * Remote App Registry and K8S remote app registry: Show Apps with errors on top of the list in the Admin UI
+ * K8S remote app registry: The Admin UI shows now all successfully registered Apps even if scanning some namespaces fails due to
+   missing permissions
+
+## 2.0.3 (Mai 6, 2022)
+
+ * Portal: Fixed Express.js view caching if multiple Themes are involved. If NODE_ENV = production it was possible that
+   views from the wrong Theme were used.
+
+## 2.0.2 (Mai 2, 2022)
+
+ * K8S remote app registry: The admin UI shows now the scanned namespaces
+ * Portal: If an App on a page cannot be found (if it is not registered (yet)), an error message will be displayed now instead of just showing nothing.
+   The old behaviour can be restored by setting the *Mashroom Portal WebApp* config property *ignoreMissingAppsOnPages*.
+   On the client side you can check if an App is in error state because the plugin does not exist with
+   ```
+        clientServices.portalAppService.loadedPortalApps[0].errorPluginMissing;
+   ```
+ * Portal: Fixed SSR cache key to avoid possible collisions
+ * Portal: Added possibility to turn of the SSR cache (even if @mashroom/mashroom-memory-cache is present)
+ * OpenID Connect Security Provider: Removed the options *httpRequestRejectUnauthorized* and *httpRequestRetry* because they are no
+   longer supported by [openid-client](https://github.com/panva/node-openid-client)
+>>>>>>> master
  * Vue Demo App: Upgrade to Vue3 and server-side rendering added
- * Sandbox: Show all Apps for the Administrator role, even if defaultRestrictViewToRoles is set
+ * Sandbox: Show all Apps for the Administrator role, even if *defaultRestrictViewToRoles* is set
 
 ## 2.0.1 (April 25, 2022)
 

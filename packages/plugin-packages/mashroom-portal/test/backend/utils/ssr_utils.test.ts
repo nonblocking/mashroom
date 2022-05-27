@@ -11,10 +11,12 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {},
     ssrConfig: {
-        ssrEnabled: true,
+        ssrEnable: true,
         renderTimoutMs: 2000,
+        cacheEnable: true,
         cacheTTLSec: 300,
         inlineStyles: true,
     }
@@ -46,7 +48,7 @@ describe('ssr_utils', () => {
                                 name: 'Test App 3',
                                 ssrInitialHtmlUri: 'http://localhost:1234/ssr-test',
                             }
-                        ]
+                        ];
                     }
                 },
             },
@@ -65,7 +67,7 @@ describe('ssr_utils', () => {
             memorycache: {
                 service: {
                     get: (region: string, key: string) => {
-                        if (key === 'eyJjYWNoZVRlc3QiOjF9X3Rlc3Q=') {
+                        if (key === '1318d1d2a4691f35774f0706ee0ed7c0979822dbcc7982deaee0b2f635a4e5e5') {
                             return 'content from cache';
                         }
 
@@ -81,7 +83,7 @@ describe('ssr_utils', () => {
         const portalAppSetup: any = {};
         const req: any  = {
             pluginContext,
-        }
+        };
         const logger = dummyLoggerFactory();
         const html = await renderServerSide('Test App 2', portalAppSetup, req, logger);
         expect(html).toBeFalsy();
@@ -91,9 +93,11 @@ describe('ssr_utils', () => {
         const portalAppSetup: any = {};
         const req: any  = {
             pluginContext,
-        }
+        };
         const logger = dummyLoggerFactory();
+
         const html = await renderServerSide('Test App 1', portalAppSetup, req, logger);
+
         expect(html).toBeTruthy();
         expect(html).toEqual('this is a test');
     });
@@ -106,9 +110,11 @@ describe('ssr_utils', () => {
         const portalAppSetup: any = {};
         const req: any  = {
             pluginContext,
-        }
+        };
         const logger = dummyLoggerFactory();
+
         const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
+
         expect(html).toBeTruthy();
         expect(html).toEqual('this is a remote test');
     });
@@ -122,7 +128,7 @@ describe('ssr_utils', () => {
         const portalAppSetup: any = {};
         const req: any  = {
             pluginContext,
-        }
+        };
         const logger = dummyLoggerFactory();
         const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
         expect(html).toBeFalsy();
@@ -136,7 +142,7 @@ describe('ssr_utils', () => {
         };
         const req: any  = {
             pluginContext,
-        }
+        };
         const logger = dummyLoggerFactory();
         const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
         expect(html).toBeTruthy();
@@ -146,7 +152,7 @@ describe('ssr_utils', () => {
     it('renders the inline CSS styles', async () => {
         const req: any  = {
             pluginContext,
-        }
+        };
         const logger = dummyLoggerFactory();
         const result = await renderInlineStyleForServerSideRenderedApps(['Test App 1', 'Test App 3'], req, logger);
         expect(result).toBeTruthy();

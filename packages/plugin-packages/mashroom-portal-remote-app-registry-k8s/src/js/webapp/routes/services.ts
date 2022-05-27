@@ -6,7 +6,7 @@ import type {Request, Response} from 'express';
 import type {KubernetesServiceStatus, ServicesRenderModel} from '../../../../type-definitions';
 
 const formatDate = (ts: number): string => {
-    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
 const getRowClass = (status: KubernetesServiceStatus): string => {
@@ -32,14 +32,35 @@ const getStatusClass = (status: KubernetesServiceStatus): string => {
     }
 };
 
+const getStatusWeight = (status: KubernetesServiceStatus): number => {
+    if (status === 'Error') {
+        return 2;
+    }
+    if (status === 'Checking') {
+        return 1;
+    }
+    return 0;
+};
+
 export default (request: Request, response: Response) => {
 
     const model: ServicesRenderModel = {
         baseUrl: request.baseUrl,
-        scanError: context.error,
+        hasErrors: context.errors.length > 0,
+        errors: context.errors,
         lastScan: formatDate(context.lastScan),
+        namespaces: context.namespaces.join(', '),
+        serviceLabelSelector: context.serviceLabelSelector,
         serviceNameFilter: context.serviceNameFilter,
-        services: context.registry.services
+        services: [...context.registry.services]
+            .sort((s1, s2) => {
+                const status1 = getStatusWeight(s1.status);
+                const status2 = getStatusWeight(s2.status);
+                if (status1 == status2) {
+                    return s1.name.localeCompare(s2.name);
+                }
+                return status2 - status1;
+            })
             .map((service) => ({
                 name: service.name,
                 namespace: service.namespace,
@@ -57,4 +78,4 @@ export default (request: Request, response: Response) => {
     };
 
     response.render('services', model);
-}
+};

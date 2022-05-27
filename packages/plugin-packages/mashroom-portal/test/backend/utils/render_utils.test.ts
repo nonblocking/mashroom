@@ -4,7 +4,7 @@ import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_
 import {
     renderPageContent
 } from '../../../src/backend/utils/render_utils';
-import type {MashroomPortalPageAppsInfo} from '../../../type-definitions/internal';
+import type {MashroomPortalPageApps} from '../../../type-definitions/internal';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -13,10 +13,12 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {},
     ssrConfig: {
-        ssrEnabled: true,
+        ssrEnable: true,
         renderTimoutMs: 2000,
+        cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,
     }
@@ -35,7 +37,7 @@ describe('path_utils', () => {
                 </div>
             </div>
         `;
-        const appInfo: MashroomPortalPageAppsInfo = {
+        const appInfo: MashroomPortalPageApps = {
             'app-area1': [
                 {
                     pluginName: 'App 1',
@@ -76,7 +78,7 @@ describe('path_utils', () => {
                                     name: 'App 1',
                                     ssrBootstrap: `${__dirname}/ssr_bootstrap.js`,
                                 },
-                            ]
+                            ];
                         }
                     },
                 }
@@ -88,7 +90,7 @@ describe('path_utils', () => {
         const res: any = {};
         const logger = dummyLoggerFactory();
 
-        const result = await renderPageContent(layout, appInfo, false, (key) => key, req, res, logger);
+        const result = await renderPageContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
 
         // console.info('!!!', content);
 

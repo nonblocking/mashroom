@@ -22,7 +22,7 @@ export const startExportRequestMetrics = (proxy: Proxy, pluginContextHolder: Mas
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportRequestMetrics = () => {
     clearInterval(interval);

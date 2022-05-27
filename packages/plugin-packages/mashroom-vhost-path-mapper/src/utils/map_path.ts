@@ -71,4 +71,4 @@ export default (originalUrl: string, vHostDefinition: VHostDefinition, reverse =
     }
 
     return undefined;
-}
+};

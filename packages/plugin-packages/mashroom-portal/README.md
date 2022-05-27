@@ -37,13 +37,15 @@ The plugin allows the following configuration properties:
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
             "warnBeforeAuthenticationExpiresSec": 120,
             "autoExtendAuthentication": false,
+            "ignoreMissingAppsOnPages": false,
             "defaultProxyConfig": {
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
             },
             "ssrConfig": {
-                "ssrEnabled": true,
+                "ssrEnable": true,
                 "renderTimoutMs": 2000,
+                "cacheEnable": true,
                 "cacheTTLSec": 300,
                 "inlineStyles": true
             },
@@ -59,12 +61,14 @@ The plugin allows the following configuration properties:
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
  * _warnBeforeAuthenticationExpiresSec_: The time when the Portal should start to warn that the authentication is about to expire (Default: 120)
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
+ * _ignoreMissingAppsOnPages_: If an App on a page can't be found just show nothing instead of an error message (Default: false)
  * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app2* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
  * _ssrConfig_: Optional config for server side rendering
-   * _ssrEnabled_: Allow server side rendering if Apps support it (Default: true)
+   * _ssrEnable_: Allow server side rendering if Apps support it (Default: true)
    * _renderTimoutMs_: Timeout for SSR which defines how long the page rendering can be blocked. Even if SSR takes too long the result is
      put into the cache and might be available for the next page rendering (Default: 2000)
+   * _cacheEnable": Enable cache for server-side rendered HTML (Default: true)
    * _cacheTTLSec_: The timeout in seconds for cached SSR HTML (Default: 300)
    * _inlineStyles_: Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)
  * _addDemoPages_: Add some demo pages if the configuration storage is empty (Default: true)

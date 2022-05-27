@@ -24,7 +24,7 @@ export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginC
             collectorService.gauge('mashroom_remote_apps_connection_timeout_total', 'Mashroom Remote Apps With Connection Timeout').set(endpointsWithTimeouts);
         }
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportRemoteAppMetrics = () => {
     if (interval) {

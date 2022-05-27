@@ -163,7 +163,7 @@ const pages: Reducer<Pages> = (state, action) => {
             error: false,
             pages: [],
             pagesFlattened: []
-        }
+        };
     }
 
     switch (action.type) {

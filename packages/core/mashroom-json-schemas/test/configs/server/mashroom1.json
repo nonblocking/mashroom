@@ -132,7 +132,7 @@
                 "restrictToRoles": ["ROLE_X"]
             },
             "ssrConfig": {
-                "ssrEnabled": true,
+                "ssrEnable": true,
                 "renderTimoutMs": 2000,
                 "cacheTTLSec": 300,
                 "inlineStyles": true

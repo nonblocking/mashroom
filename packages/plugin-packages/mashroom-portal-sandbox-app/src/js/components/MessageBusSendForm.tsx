@@ -32,7 +32,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             message: `{
 
 }`
-        }
+        };
     }
 
     validate(values: FormData): any {

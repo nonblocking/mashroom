@@ -13,10 +13,12 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {},
     ssrConfig: {
-        ssrEnabled: false,
+        ssrEnable: false,
         renderTimoutMs: 2000,
+        cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,
     }
@@ -43,7 +45,7 @@ const portalPageEnhancement: MashroomPortalPageEnhancement = {
             'no': () => false,
         }
     }
-}
+};
 
 const pluginRegistry: any = {
     portalPageEnhancements: [portalPageEnhancement],
@@ -79,7 +81,7 @@ describe('PortalPageEnhancementController', () => {
             },
         });
 
-        res.type = (_type: string) => { type = _type };
+        res.type = (_type: string) => { type = _type; };
         res.set = () => { /* nothing to do */ };
 
         const controller = new PortalPageEnhancementController(pluginRegistry);
@@ -104,7 +106,7 @@ describe('PortalPageEnhancementController', () => {
                 expect(status).toBe(404);
                 done();
             }
-        }
+        };
 
         res.type = () => { /* nothing to do */ };
         res.set = () => { /* nothing to do */ };
@@ -131,7 +133,7 @@ describe('PortalPageEnhancementController', () => {
                 expect(status).toBe(404);
                 done();
             }
-        }
+        };
 
         res.type = () => { /* nothing to do */ };
         res.set = () => { /* nothing to do */ };

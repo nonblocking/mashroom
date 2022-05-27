@@ -157,7 +157,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
                 contextLogger.error(`Publishing message to topic ${request.topic} failed`, error);
                 this._sendErrorResponse(request.messageId, `Publishing message to topic ${request.topic} failed`, client);
             }
-        )
+        );
     }
 
     private _sendMessage(topic: string, message: any, client: MashroomWebSocketClient): void {
@@ -172,7 +172,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
                 (error) => {
                     this._logger.error('Sending message failed', error);
                 }
-            )
+            );
         }
     }
 
@@ -191,7 +191,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
                 (error) => {
                     this._logger.error('Sending success message failed', error);
                 }
-            )
+            );
         }
     }
 
@@ -211,7 +211,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
                 (error) => {
                     this._logger.error('Sending error message failed', error);
                 }
-            )
+            );
         }
     }
 

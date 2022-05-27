@@ -25,7 +25,7 @@ export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginC
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportRemoteAppMetrics = () => {
     clearInterval(interval);

@@ -43,7 +43,6 @@ export default class RestServiceFetchImpl implements MashroomRestService {
 
             const headers: any = {
                 ...extraHeaders || {},
-                'Content-Type': 'application/json',
                 'Accept': 'application/json',
             };
 
@@ -57,7 +56,8 @@ export default class RestServiceFetchImpl implements MashroomRestService {
                 credentials: 'same-origin',
             };
 
-            if (jsonData) {
+            if (jsonData && method !== 'GET') {
+                headers['Content-Type'] = 'application/json';
                 config['body'] = JSON.stringify(jsonData);
             }
 

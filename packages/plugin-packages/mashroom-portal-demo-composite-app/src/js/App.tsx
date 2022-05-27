@@ -57,7 +57,7 @@ const loadDialogPage = (dialogIdx: number,activeAppRef: MutableRefObject<ActiveA
             console.error(`Loading App ${DIALOG[dialogIdx].name} failed`, error);
         }
     );
-}
+};
 
 const onPing = (activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogElementId: string, portalAppService: MashroomPortalAppService) => {
     if (!activeAppRef.current) {

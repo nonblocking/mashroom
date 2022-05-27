@@ -23,4 +23,4 @@ export const getExternalPluginDefinitionFilePath = (pluginPackagePath: string, e
     }
 
     return existingPluginConfigFiles[0];
-}
+};

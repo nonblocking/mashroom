@@ -108,7 +108,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                     console.error(error);
                     setErrorLoading(true);
                 }
-            )
+            );
         }
     }
 
@@ -202,7 +202,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 console.error('Updating page failed!', error);
                 setErrorUpdating(true);
             }
-        )
+        );
     }
 
     getInitialValues(): FormValues | null {

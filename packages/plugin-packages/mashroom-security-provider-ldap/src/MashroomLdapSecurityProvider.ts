@@ -109,7 +109,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         const users = await this._ldapClient.search(userSearchFilter, extraAttributes);
         if (users.length > 0) {
             if (users.length === 1) {
-                user = users[0]
+                user = users[0];
             } else {
                 logger.warn(`Multiple users found for search query: ${userSearchFilter}`);
                 return {

@@ -34,7 +34,7 @@ export const startExportPoolMetrics = (pluginContextHolder: MashroomPluginContex
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportPoolMetrics = () => {
     clearInterval(interval);

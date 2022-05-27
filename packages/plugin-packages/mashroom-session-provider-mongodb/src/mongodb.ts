@@ -29,7 +29,7 @@ export const setConnectionUriAndOptions = async (connectionUri: string, options:
 const getTopology = (): TopologyDescription | undefined => {
     // @ts-ignore Accessing the private property topology
     return _client?.topology?.description;
-}
+};
 
 export const getAvailableNodes = () => {
     const topology = getTopology();
@@ -44,12 +44,12 @@ export const getAvailableNodes = () => {
         }
     });
     return servers;
-}
+};
 
 export const isConnected = () => {
     const availableNodes = getAvailableNodes();
     return availableNodes > 0;
-}
+};
 
 export default async (logger: MashroomLogger): Promise<MongoClient> => {
     if (!_connectionUri) {

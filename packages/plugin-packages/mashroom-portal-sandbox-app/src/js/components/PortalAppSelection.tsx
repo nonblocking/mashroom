@@ -19,7 +19,7 @@ export default class PortalAppSelection extends PureComponent<Props> {
         const { preselectAppName } = this.props;
         return {
             appName: preselectAppName,
-        }
+        };
     }
 
     getSuggestionHandler(): SuggestionHandler<MashroomAvailablePortalApp> {
@@ -44,7 +44,7 @@ export default class PortalAppSelection extends PureComponent<Props> {
             getSuggestionValue(suggestion: MashroomAvailablePortalApp) {
               return suggestion.name;
             },
-        }
+        };
     }
 
     render(): ReactNode {
@@ -71,7 +71,7 @@ export default class PortalAppSelection extends PureComponent<Props> {
                     )}
                 </Form>
             </div>
-        )
+        );
     }
 
 }

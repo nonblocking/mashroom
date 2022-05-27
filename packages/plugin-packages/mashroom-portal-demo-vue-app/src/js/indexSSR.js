@@ -1,6 +1,6 @@
 
 import { createSSRApp } from 'vue';
-import { renderToString } from 'vue/server-renderer'
+import { renderToString } from 'vue/server-renderer';
 import App from './App';
 
 const bootstrap = async (portalAppSetup) => {

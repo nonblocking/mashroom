@@ -23,7 +23,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     private _metrics: {
         [name: string]: InternalMetricsData;
-    }
+    };
     private _logger: MashroomLogger;
 
     constructor(private _config: MashroomMonitoringMetricsCollectorConfig, loggerFactory: MashroomLoggerFactory) {
@@ -152,7 +152,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
                     metrics[metricName].data = Object.values(data);
                     break;
             }
-        })
+        });
         return metrics;
     }
 

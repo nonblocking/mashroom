@@ -19,7 +19,7 @@ export default (metricData: InternalHistogramMetricData): Histogram => {
             };
         }
         return metricData.data[key];
-    }
+    };
 
     return {
         observe(value: number, labels: MetricLabels = {}): void {
@@ -34,5 +34,5 @@ export default (metricData: InternalHistogramMetricData): Histogram => {
                 });
             }
         }
-    }
-}
+    };
+};

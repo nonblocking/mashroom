@@ -23,7 +23,7 @@ const pluginLoadersTable = (pluginContext: MashroomPluginContext) => {
     const pluginLoaders = pluginTypes.map((pluginType) => {
         const pluginLoader = pluginContext.services.core.pluginService.getPluginLoaders()[pluginType];
         return {name: pluginLoader?.name || '', loads: pluginType};
-    })
+    });
     pluginLoaders.sort((p1, p2) => p1.name.localeCompare(p2.name));
 
     pluginLoaders.forEach(({name, loads}) => {

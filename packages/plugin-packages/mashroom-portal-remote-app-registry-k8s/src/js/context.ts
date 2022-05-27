@@ -4,8 +4,10 @@ import KubernetesServiceRegistry from './registry/KubernetesServiceRegistry';
 import type {Context} from '../../type-definitions';
 
 export const _registry = new KubernetesServiceRegistry();
+let _namespaces: Array<string> = [];
+let _serviceLabelSelector: string | null = null;
 let _serviceNameFilter = '';
-let _error: string | null = null;
+let _errors: Array<string>;
 let _lastScan = 0;
 let _oneFullScanDone = false;
 
@@ -13,17 +15,29 @@ const context: Context = {
     get registry() {
         return _registry;
     },
-    get error() {
-        return _error;
+    get errors() {
+        return _errors;
     },
-    set error(error: string | null) {
-        _error = error;
+    set errors(errors: Array<string>) {
+        _errors = errors;
     },
     get lastScan() {
         return _lastScan;
     },
     set lastScan(lastScan: number) {
         _lastScan = lastScan;
+    },
+    get namespaces() {
+        return _namespaces;
+    },
+    set namespaces(namespaces: Array<string>) {
+        _namespaces = namespaces;
+    },
+    get serviceLabelSelector() {
+        return _serviceLabelSelector;
+    },
+    set serviceLabelSelector(serviceLabelSelector: string | null) {
+        _serviceLabelSelector = serviceLabelSelector;
     },
     get serviceNameFilter() {
         return _serviceNameFilter;

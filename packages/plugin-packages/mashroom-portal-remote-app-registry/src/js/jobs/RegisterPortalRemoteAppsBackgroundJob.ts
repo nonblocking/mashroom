@@ -41,13 +41,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         if (!updatedEndpoint.lastError) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Registering remote Portal App:', {portalApp});
-                context.registry.registerRemotePortalApp(portalApp)
+                context.registry.registerRemotePortalApp(portalApp);
             });
         } else {
             this._logger.error(`Registering apps for remote Portal Apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
             remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Unregister remote Portal App:', {portalApp});
-                context.registry.unregisterRemotePortalApp(portalApp.name)
+                context.registry.unregisterRemotePortalApp(portalApp.name);
             });
         }
 
@@ -294,7 +294,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
                     return json;
                 } else {
-                    this._logger.warn(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
+                    this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
                 }
             } catch (e) {
                 this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed`, e);

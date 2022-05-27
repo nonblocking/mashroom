@@ -65,7 +65,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                     });
                 }
             }
-        )
+        );
     }
 
     onSuggestionsClearRequested(): void {

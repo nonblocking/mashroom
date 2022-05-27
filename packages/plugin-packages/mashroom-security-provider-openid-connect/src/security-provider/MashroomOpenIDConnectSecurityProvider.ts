@@ -1,5 +1,4 @@
 
-import https from 'https';
 import fetch from 'node-fetch';
 import {AuthorizationParameters, generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
@@ -17,7 +16,7 @@ import type {OpenIDConnectAuthData, OpenIDConnectAuthRequestData} from '../../ty
 
 export default class MashroomOpenIDConnectSecurityProvider implements MashroomSecurityProvider {
 
-    constructor(private _scope: string, private _usePKCE: boolean = false, private _extraAuthParams: any = {}, private _rejectUnauthorized: boolean = true) {
+    constructor(private _scope: string, private _usePKCE: boolean = false, private _extraAuthParams: any = {}) {
     }
 
     async canAuthenticateWithoutUserInteraction(): Promise<boolean> {
@@ -53,7 +52,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             if (Array.isArray(client.metadata.code_challenge_methods_supported) && client.metadata.code_challenge_methods_supported.includes('S256')) {
                 logger.debug('Using PKCE code challenge method: S256');
                 code_challenge = generators.codeChallenge(code_verifier);
-                code_challenge_method = 'S256'
+                code_challenge_method = 'S256';
             } else {
                 logger.debug('Using PKCE code challenge method: plain');
                 code_challenge = code_verifier;
@@ -153,13 +152,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
                 id_token_hint: authData.tokenSet.id_token,
             });
 
-            const agent = endSessionUrl.startsWith('https://') ? new https.Agent({
-                rejectUnauthorized: this._rejectUnauthorized,
-            }) : undefined;
-
-            await fetch(endSessionUrl, {
-                agent,
-            });
+            await fetch(endSessionUrl);
         } catch (e) {
             logger.error('Revoking identity provider session failed!', e);
         }

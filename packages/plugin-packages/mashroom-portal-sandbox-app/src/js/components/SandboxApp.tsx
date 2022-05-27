@@ -40,7 +40,7 @@ export default class SandboxApp extends PureComponent<Props> {
             store.dispatch(addMessagePublishedByApp({
                 topic,
                 data
-            }))
+            }));
         });
         this.messageBusPortalAppUnderTest.onTopicsChanged((topics) => {
             store.dispatch(setTopicsSubscribedByApp(topics));

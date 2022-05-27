@@ -41,9 +41,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
 
     async getNamespaceServices(namespace: string, labelSelector?: string | null | undefined): Promise<V1ServiceList> {
         if (namespace === 'dev-namespace1') {
-            return {
-                items: []
-            };
+            throw new Error('Permission denied');
         } else if (namespace === 'dev-namespace2' || labelSelector === 'environment=dev') {
             return {
                 items: [
@@ -108,7 +106,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
                     }
                 }
             ]
-        }
+        };
     }
 
 }

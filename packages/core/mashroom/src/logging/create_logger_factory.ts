@@ -14,7 +14,7 @@ const create = (delegate: MashroomLoggerDelegate): MashroomLoggerFactory => {
            ...context2,
        });
        return subFactory;
-   }
+   };
    factory.bindToContext = (context: MashroomLoggerContext) => contextBoundFactory(context);
 
    return factory;

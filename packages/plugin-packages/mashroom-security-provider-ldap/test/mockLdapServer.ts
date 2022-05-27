@@ -4,7 +4,7 @@ import {createServer, InvalidCredentialsError} from 'ldapjs';
 const KNOWN_USERS: any = {
     'cn=john, ou=test, ou=users, dc=at, dc=nonblocking': 'john',
     'cn=admin, ou=test, ou=users, dc=at, dc=nonblocking': 'test',
-}
+};
 
 const server = createServer();
 

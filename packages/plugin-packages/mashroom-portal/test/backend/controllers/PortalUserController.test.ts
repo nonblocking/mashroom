@@ -10,10 +10,12 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {},
     ssrConfig: {
-        ssrEnabled: false,
+        ssrEnable: false,
         renderTimoutMs: 2000,
+        cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,
     }
@@ -45,10 +47,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             json: (json: any) => sentJson = json,
-        }
+        };
 
         await controller.getAuthenticatedUserAuthenticationExpiration(req, res);
 
@@ -76,10 +78,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             end: () => { /* nothing to do */ },
-        }
+        };
 
         await controller.setAuthenticatedUserLanguage(req, res);
 
@@ -106,10 +108,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             end: () => { /* nothing to do */ },
-        }
+        };
 
         await controller.setAuthenticatedUserLanguage(req, res);
 
@@ -122,6 +124,7 @@ describe('PortalUserController', () => {
         let redirectUrl = null;
         const mockRevokeAuthentication = jest.fn();
         const req: any = {
+            method: 'GET',
             params: {
                 sitePath: 'web',
             },
@@ -142,10 +145,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             redirect: (url: string) => redirectUrl = url,
-        }
+        };
 
         await controller.logout(req, res);
 
@@ -159,6 +162,7 @@ describe('PortalUserController', () => {
         let redirectUrl = null;
         const mockRevokeAuthentication = jest.fn();
         const req: any = {
+            method: 'GET',
             params: {
                 sitePath: 'web',
             },
@@ -179,10 +183,10 @@ describe('PortalUserController', () => {
                     }
                 }
             }
-        }
+        };
         const res: any = {
             redirect: (url: string) => redirectUrl = url,
-        }
+        };
 
         await controller.logout(req, res);
 

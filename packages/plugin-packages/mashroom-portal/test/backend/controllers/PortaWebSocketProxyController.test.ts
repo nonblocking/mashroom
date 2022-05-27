@@ -11,13 +11,15 @@ setPortalPluginConfig({
     defaultLayout: 'foo',
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
+    ignoreMissingAppsOnPages: false,
     defaultProxyConfig: {
         sendPermissionsHeader: false,
         restrictToRoles: [],
     },
     ssrConfig: {
-        ssrEnabled: false,
+        ssrEnable: false,
         renderTimoutMs: 2000,
+        cacheEnable: false,
         cacheTTLSec: 300,
         inlineStyles: true,
     }
@@ -113,12 +115,12 @@ const pluginContext: any = {
                         pages: [{
 
                         }]
-                    }
+                    };
                 },
                 async findPageRefByFriendlyUrl() {
                     return {
 
-                    }
+                    };
                 },
                 async getPage() {
                     return {
@@ -130,7 +132,7 @@ const pluginContext: any = {
                                 pluginName: 'Test Portal App 2',
                             }]
                         }
-                    }
+                    };
                 }
             }
         }

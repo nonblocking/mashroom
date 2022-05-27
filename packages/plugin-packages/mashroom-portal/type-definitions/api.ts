@@ -118,6 +118,7 @@ export type MashroomPortalLoadedPortalApp = {
     readonly updateAppConfig: ((appConfig: MashroomPluginConfig) => void) | null | undefined;
     readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
     readonly error: boolean;
+    readonly errorPluginMissing: boolean;
 };
 
 export type MashroomPortalProxyPaths = {
@@ -152,6 +153,7 @@ export type MashroomPortalConfigEditorTarget = {
 export type MashroomPortalAppSetup = {
     readonly appId: string;
     readonly pluginName: string;
+    readonly pluginMissing?: boolean;
     readonly title: string | null | undefined;
     readonly version: string;
     readonly instanceId: string | null | undefined;

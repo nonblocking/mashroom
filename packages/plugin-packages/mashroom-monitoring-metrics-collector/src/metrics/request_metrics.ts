@@ -11,7 +11,7 @@ const getCleanRoute = (originalUrl: string): string => {
         route = `${parts[0]}___/api/${parts[1].split('/')[0]}`;
     }
     return route;
-}
+};
 
 export const addRequestMetric = (req: Request, res: Response, timeSec: number) => {
     const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
@@ -24,5 +24,5 @@ export const addRequestMetric = (req: Request, res: Response, timeSec: number) =
         .inc(1, { route, method, status: statusCode });
     collectorService.histogram('mashroom_http_request_duration_seconds', 'HTTP Requests Duration in Seconds')
         .observe(timeSec, { route, method, status: statusCode });
-}
+};
 

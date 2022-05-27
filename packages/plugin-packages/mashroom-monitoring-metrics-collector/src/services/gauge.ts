@@ -14,7 +14,7 @@ export default (metricData: InternalGaugeMetricData): Gauge => {
             };
         }
         return metricData.data[key];
-    }
+    };
 
     return {
         set(value: number, labels: MetricLabels = {}): void {
@@ -23,4 +23,4 @@ export default (metricData: InternalGaugeMetricData): Gauge => {
             }
         },
     };
-}
+};

@@ -194,7 +194,7 @@ main {
 
     main {
         .login {
-            margin-top: calc(50vh - 250px);
+            margin-top: max(60px, calc(50vh - 250px));
 
             .login-form {
                 .login-form-row {

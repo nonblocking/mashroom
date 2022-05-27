@@ -22,7 +22,7 @@ export default class ProxyImplRequest implements Proxy {
             wsRequests: 0,
             targetConnectionErrors: 0,
             targetTimeouts: 0
-        }
+        };
         logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
     }
 

@@ -17,7 +17,7 @@ export default (): MashroomHttpUpgradeHandler => {
     return (message, socket, head) => {
         handle(message, socket, head);
     };
-}
+};
 
 const handle = async (message: IncomingMessageWithContext, socket: Socket, head: Buffer) => {
     const logger: MashroomLogger = message.pluginContext.loggerFactory('mashroom.websocket.service');

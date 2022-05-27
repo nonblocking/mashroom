@@ -43,7 +43,7 @@ const toSimpleHeaders = (httpHeaders: HttpHeaders): Record<string, string> => {
     });
 
     return result;
-}
+};
 
 /**
  * A Proxy implementation based on node-http-proxy
@@ -80,7 +80,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             wsRequests: 0,
             targetConnectionErrors: 0,
             targetTimeouts: 0
-        }
+        };
 
         this._httpProxy.on('proxyReq', this.onProxyRequest.bind(this));
         this._httpsProxy.on('proxyReq', this.onProxyRequest.bind(this));
@@ -160,7 +160,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                     delete req[REQUEST_META_PROP];
                     resolve();
                 }
-            }
+            };
             req[REQUEST_META_PROP] = requestMeta;
 
             proxyServer.web(req, res, {
@@ -168,7 +168,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                 headers: toSimpleHeaders(effectiveAdditionalHeaders),
                 selfHandleResponse: true,
             });
-        })
+        });
     }
 
     async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {

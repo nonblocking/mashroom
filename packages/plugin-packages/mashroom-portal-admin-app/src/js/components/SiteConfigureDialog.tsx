@@ -86,7 +86,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
                     console.error(error);
                     setErrorUpdating(true);
                 }
-            )
+            );
         }
     }
 
@@ -146,7 +146,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
                 console.error('Updating site failed!', error);
                 setErrorUpdating(true);
             }
-        )
+        );
     }
 
     getInitialValues(): FormValues | null {

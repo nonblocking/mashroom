@@ -79,7 +79,7 @@ export default class App extends PureComponent<Props, State> {
         if (this.state.messages[pluginName]) {
             return {
                 message: this.state.messages[pluginName]
-            }
+            };
         }
         return null;
     }

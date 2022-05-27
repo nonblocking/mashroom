@@ -14,7 +14,7 @@ export default (metricData: InternalCounterMetricData): Counter => {
             };
         }
         return metricData.data[key];
-    }
+    };
 
     return {
         inc(by = 1, labels: MetricLabels = {}): void {
@@ -32,4 +32,4 @@ export default (metricData: InternalCounterMetricData): Counter => {
             }
         },
     };
-}
+};

@@ -20,11 +20,11 @@ describe('MashroomStorageMemoryCacheWrapper', () => {
                 enabled: false,
             },
         }
-    }
+    };
     const mockGetCollection = jest.fn();
     const storage: any = {
         getCollection: mockGetCollection,
-    }
+    };
     const pluginContextHolder: any = {
         getPluginContext: () => ({
             loggerFactory: () => console,

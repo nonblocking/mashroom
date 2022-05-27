@@ -53,11 +53,11 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     addHeaders = {
                         ...addHeaders,
                         ...result.addHeaders,
-                    }
+                    };
                     existingHeaders = {
                         ...existingHeaders,
                         ...result.addHeaders,
-                    }
+                    };
                 }
                 if (result?.removeHeaders && Array.isArray(result.removeHeaders)) {
                     logger.debug(`Interceptor '${pluginName}' removed request headers:`, result.removeHeaders);
@@ -71,11 +71,11 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     addQueryParams = {
                         ...addQueryParams,
                         ...result.addQueryParams,
-                    }
+                    };
                     existingQueryParams = {
                         ...existingQueryParams,
                         ...result.addQueryParams,
-                    }
+                    };
                 }
                 if (result?.removeQueryParams && Array.isArray(result.removeQueryParams)) {
                     logger.debug(`Interceptor '${pluginName}' removed query parameters:`, result.removeQueryParams);
@@ -119,11 +119,11 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     addHeaders = {
                         ...addHeaders,
                         ...result.addHeaders,
-                    }
+                    };
                     existingHeaders = {
                         ...existingHeaders,
                         ...result.addHeaders,
-                    }
+                    };
                 }
                 if (result?.removeHeaders && Array.isArray(result.removeHeaders)) {
                     logger.debug(`Interceptor '${pluginName}' removed request headers:`, result.removeHeaders);
@@ -164,11 +164,11 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     addHeaders = {
                         ...addHeaders,
                         ...result.addHeaders,
-                    }
+                    };
                     existingHeaders = {
                         ...existingHeaders,
                         ...result.addHeaders,
-                    }
+                    };
                 }
                 if (result?.removeHeaders && Array.isArray(result.removeHeaders)) {
                     logger.debug(`Interceptor '${pluginName}' removed response headers:`, result.removeHeaders);

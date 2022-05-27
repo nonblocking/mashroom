@@ -60,7 +60,7 @@ const serverOverviewTable = async (req: Request) => {
             </tr>
         </table>
     `;
-}
+};
 
 const pluginOverviewTable = (pluginContext: MashroomPluginContext) => {
     const pluginService = pluginContext.services.core.pluginService;

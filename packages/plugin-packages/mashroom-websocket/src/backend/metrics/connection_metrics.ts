@@ -17,7 +17,7 @@ export const startExportConnectionMetrics = (server: MashroomWebSocketServer, pl
         }
 
     }, EXPORT_INTERVAL_MS);
-}
+};
 
 export const stopExportConnectionMetrics = (): void => {
     if (interval) {

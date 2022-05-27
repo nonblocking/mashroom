@@ -94,12 +94,12 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
                     return function (...args: any[]) {
                         // @ts-ignore
                         return prop.apply(this, args);
-                    }
+                    };
                 }
 
                 return prop;
             }
-        }
+        };
 
         return new Proxy(res, responseProxyHandler);
     }

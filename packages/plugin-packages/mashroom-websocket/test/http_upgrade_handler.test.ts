@@ -77,7 +77,7 @@ describe('http_upgrade_handler', () => {
                                     roles: ['Role2', 'Role3'],
                                     secrets: null,
                                     extraData: null,
-                                }
+                                };
                             }
                         }
                     }
@@ -125,7 +125,7 @@ describe('http_upgrade_handler', () => {
                                     roles: ['Role2', 'Role1'],
                                     secrets: null,
                                     extraData: null,
-                                }
+                                };
                             }
                         }
                     }
@@ -141,7 +141,7 @@ describe('http_upgrade_handler', () => {
                         const ws = {};
                         cb(ws);
                     }
-                }
+                };
             },
             createClient(webSocket: any, connectPath: any, user: any) {
                 expect(webSocket).toBeTruthy();

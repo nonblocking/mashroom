@@ -17,4 +17,4 @@ export const serializeError = (error: Error): string => {
     };
     const msg = JSON.stringify(errorObj, null, 2);
     return msg.replace(/\\n/g, '\n');
-}
+};
