@@ -54,7 +54,6 @@
  * Portal: Added possibility to turn of the SSR cache (even if @mashroom/mashroom-memory-cache is present)
  * OpenID Connect Security Provider: Removed the options *httpRequestRejectUnauthorized* and *httpRequestRetry* because they are no
    longer supported by [openid-client](https://github.com/panva/node-openid-client)
->>>>>>> master
  * Vue Demo App: Upgrade to Vue3 and server-side rendering added
  * Sandbox: Show all Apps for the Administrator role, even if *defaultRestrictViewToRoles* is set
 
