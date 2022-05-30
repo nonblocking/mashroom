@@ -51,7 +51,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
                 additionalQuery += `&${paramName}=${additionalQueryParams[paramName]}`;
             }
         }
-        return `${baseUrl}?${ENCODED_STATE_QUERY_PARAM_NAME}=${btoa(JSON.stringify(state))}${additionalQuery}${hash ? `#${hash}` : ''}`;
+        return `${baseUrl}?${ENCODED_STATE_QUERY_PARAM_NAME}=${encodeURIComponent(btoa(JSON.stringify(state)))}${additionalQuery}${hash ? `#${hash}` : ''}`;
     }
 
 
@@ -94,7 +94,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
         const queryParams = this._getQueryParams();
         if (queryParams[ENCODED_STATE_QUERY_PARAM_NAME]) {
             try {
-                urlState = JSON.parse(atob(queryParams[ENCODED_STATE_QUERY_PARAM_NAME]));
+                urlState = JSON.parse(atob(decodeURIComponent(queryParams[ENCODED_STATE_QUERY_PARAM_NAME])));
             } catch (e) {
                 console.error(`Unable to decode url parameter ${ENCODED_STATE_QUERY_PARAM_NAME}`, e);
             }

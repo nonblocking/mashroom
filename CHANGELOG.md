@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: State encoded in URL via MashroomPortalStateService is encoded/decoded now
 
 ## 2.0.5 (Mai 20, 2022)
 
