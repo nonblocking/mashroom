@@ -13,13 +13,13 @@ import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/t
 import type {Proxy} from '../../type-definitions/internal';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const {proxyImpl, forwardMethods = [], forwardHeaders = [], rejectUnauthorized, poolMaxSockets, socketTimeoutMs, keepAlive} = pluginConfig;
+    const {proxyImpl, forwardMethods = [], forwardHeaders = [], rejectUnauthorized, poolMaxSockets, socketTimeoutMs, keepAlive, retryOnReset} = pluginConfig;
     const pluginContext = pluginContextHolder.getPluginContext();
     const logger = pluginContext.loggerFactory('mashroom.httpProxy');
 
     setPoolConfig({
         keepAlive,
-        maxSockets: poolMaxSockets,
+        maxTotalSockets: poolMaxSockets,
         rejectUnauthorized,
     });
 
@@ -28,10 +28,10 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     let proxy: Proxy;
     if (proxyImpl === 'request') {
         logger.info('Using http-proxy impl based on "request"');
-        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, pluginContext.loggerFactory);
+        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, pluginContext.loggerFactory);
     } else {
         logger.info('Using http-proxy impl based on "node-http-proxy"');
-        proxy = new ProxyImplNodeHttpProxy(socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, pluginContext.loggerFactory);
+        proxy = new ProxyImplNodeHttpProxy(socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset, pluginContext.loggerFactory);
     }
     const service = new MashroomHttpProxyService(forwardMethods, proxy);
 

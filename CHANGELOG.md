@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Added a retry if the target resets the connection (ECONNRESET), which can happen if _keepAlive_ is activated
+   and a reused connection is broken already (see https://nodejs.org/api/http.html#requestreusedsocket)
  * HTTP Proxy: The _poolMaxSockets_ property set now the maximum total connections and not the max connections per host (which is infinity now)
  * HTTP Proxy: Fixed handling of client connection termination.
    Among others the misleading error message 'Target endpoint did not send a response within xxxxx' will no longer be logged

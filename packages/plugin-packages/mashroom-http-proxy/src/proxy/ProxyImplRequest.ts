@@ -14,7 +14,8 @@ export default class ProxyImplRequest implements Proxy {
 
     private _metrics: RequestMetrics;
 
-    constructor(private _socketTimeoutMs: number, private _interceptorHandler: InterceptorHandler, private _headerFilter: HttpHeaderFilter, loggerFactory: MashroomLoggerFactory) {
+    constructor(private _socketTimeoutMs: number, private _interceptorHandler: InterceptorHandler,
+                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean, loggerFactory: MashroomLoggerFactory) {
         const logger: MashroomLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._metrics = {
@@ -23,7 +24,10 @@ export default class ProxyImplRequest implements Proxy {
             targetConnectionErrors: 0,
             targetTimeouts: 0
         };
-        logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
+        logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxTotalSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
+        if (this._retryOnReset) {
+            logger.warn('Option retryOnReset not supported by this proxy implementation!');
+        }
     }
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {

@@ -35,6 +35,8 @@
             }
         },
         "Mashroom Http Proxy Services": {
+            "keepAlive": true,
+            "retryOnReset": true,
             "proxyImpl": "nodeHttpProxy"
         },
         "Mashroom Internationalization Services": {

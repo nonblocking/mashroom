@@ -238,6 +238,10 @@
                             "type": "boolean",
                             "description": "Enable/disable connection keep-alive (Default: true)"
                         },
+                        "retryOnReset": {
+                            "type": "boolean",
+                            "description": "If the target resets the connection (because a keep-alive connection is broken) retry once (Default: true)"
+                        },
                         "proxyImpl": {
                             "type": "string",
                             "enum": [

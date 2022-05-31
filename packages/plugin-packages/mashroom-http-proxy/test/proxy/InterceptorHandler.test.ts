@@ -14,7 +14,7 @@ const interceptor1: MashroomHttpProxyInterceptor = {
                 'q': 'x'
             },
             removeHeaders: ['accept'],
-        }
+        };
     },
     async interceptWsRequest() {
         return {
@@ -26,16 +26,16 @@ const interceptor1: MashroomHttpProxyInterceptor = {
                 'q': 'x'
             },
             removeHeaders: ['accept'],
-        }
+        };
     },
     async interceptResponse() {
         return {
             addHeaders: {
                 'X-Foo': 'bar',
             },
-        }
+        };
     }
-}
+};
 
 const interceptor2: MashroomHttpProxyInterceptor = {
     async interceptRequest(rewrittenTargetUri: string) {
@@ -47,46 +47,46 @@ const interceptor2: MashroomHttpProxyInterceptor = {
             addQueryParams: {
                 'foo': '1'
             },
-        }
+        };
     },
     async interceptResponse() {
         return {
             addHeaders: {
                 'X-Whatever': '123',
             },
-        }
+        };
     }
-}
+};
 
 const interceptor3: MashroomHttpProxyInterceptor = {
     async interceptRequest() {
         return {
             removeHeaders: ['x'],
             removeQueryParams: ['x']
-        }
+        };
     },
     async interceptResponse() {
         return {
             removeHeaders: ['x'],
-        }
+        };
     }
-}
+};
 
 const interceptor4: MashroomHttpProxyInterceptor = {
     async interceptRequest() {
         return {
             responseHandled: true,
-        }
+        };
     },
-}
+};
 
 const interceptor5: MashroomHttpProxyInterceptor = {
     async interceptResponse() {
         return {
             responseHandled: true,
-        }
+        };
     }
-}
+};
 
 const pluginRegistry1: any = {
     interceptors: [

@@ -22,15 +22,18 @@ import {RequestMetrics} from '../../type-definitions/internal';
 type ProxyServer = ReturnType<typeof createProxyServer>;
 
 type ProxyRequestMeta = {
-    startTime: [number, number];
-    uri: string;
-    additionalQueryParams: ParsedQs;
-    type: 'HTTP' | 'WS';
-    user: MashroomSecurityUser | undefined | null;
-    end: () => void;
+    readonly startTime: [number, number];
+    readonly uri: string;
+    readonly additionalQueryParams: ParsedQs;
+    readonly type: 'HTTP' | 'WS';
+    readonly user: MashroomSecurityUser | undefined | null;
+    retries: number;
+    readonly retry: () => void;
+    readonly end: () => void;
 }
 
 const REQUEST_META_PROP = 'mashroomRequestMeta';
+const MAX_RETRIES = 2;
 
 const toSimpleHeaders = (httpHeaders: HttpHeaders): Record<string, string> => {
     const result: Record<string, string> = {};
@@ -59,10 +62,10 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     private _metrics: RequestMetrics;
 
     constructor(private _socketTimeoutMs: number, rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
-                private _headerFilter: HttpHeaderFilter, loggerFactory: MashroomLoggerFactory) {
+                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean, loggerFactory: MashroomLoggerFactory) {
         this._globalLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
-        this._globalLogger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${_socketTimeoutMs}ms`);
+        this._globalLogger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxTotalSockets} and socket timeout: ${_socketTimeoutMs}ms`);
         this._httpProxy = createProxyServer({
             agent: getHttpPool(),
             changeOrigin: true,
@@ -153,24 +156,31 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         const proxyServer = targetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
         return new Promise((resolve) => {
+            const forward = () => {
+                proxyServer.web(req, res, {
+                    target: effectiveTargetUri,
+                    headers: toSimpleHeaders(effectiveAdditionalHeaders),
+                    selfHandleResponse: true,
+                });
+            };
             const requestMeta: ProxyRequestMeta = {
                 startTime,
                 uri: effectiveTargetUri,
                 additionalQueryParams: effectiveQueryParams,
                 user: null,
                 type: 'HTTP',
+                retries: 0,
+                retry: () => {
+                    requestMeta.retries ++;
+                    forward();
+                },
                 end: () => {
                     delete req[REQUEST_META_PROP];
                     resolve();
                 }
             };
             req[REQUEST_META_PROP] = requestMeta;
-
-            proxyServer.web(req, res, {
-                target: effectiveTargetUri,
-                headers: toSimpleHeaders(effectiveAdditionalHeaders),
-                selfHandleResponse: true,
-            });
+            forward();
         });
     }
 
@@ -216,8 +226,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             additionalQueryParams: {},
             user: securityService?.getUser(req as Request),
             type: 'WS',
-            end: () => { /* nothing to do */
-            }
+            retries: -1,
+            retry: () => { /* not supported */},
+            end: () => { /* nothing to do */}
         };
         (req as any)[REQUEST_META_PROP] = requestMeta;
 
@@ -356,9 +367,20 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             this._metrics.targetConnectionErrors++;
 
             if (requestMeta.type === 'HTTP') {
-                logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
-                if (!clientResponse.headersSent) {
-                    clientResponse.sendStatus(503);
+                if (error.code === 'ECONNRESET') {
+                    if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
+                        logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept the connection (retry #${requestMeta.retries + 1})`);
+                        requestMeta.retry();
+                        return;
+                    } else {
+                        logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection (${requestMeta.retries + 1} attempt(s))`, error);
+                        clientResponse.sendStatus(503);
+                    }
+                } else {
+                    logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
+                    if (!clientResponse.headersSent) {
+                        clientResponse.sendStatus(503);
+                    }
                 }
             } else if (requestMeta.type === 'WS') {
                 logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);

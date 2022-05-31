@@ -9,7 +9,7 @@ const interceptor1: MashroomHttpProxyInterceptor = {
     async interceptResponse() {
         return null;
     }
-}
+};
 
 const interceptor2: MashroomHttpProxyInterceptor = {
     async interceptRequest() {
@@ -18,7 +18,7 @@ const interceptor2: MashroomHttpProxyInterceptor = {
     async interceptResponse() {
         return null;
     }
-}
+};
 
 const interceptor3: MashroomHttpProxyInterceptor = {
     async interceptRequest() {
@@ -27,7 +27,7 @@ const interceptor3: MashroomHttpProxyInterceptor = {
     async interceptResponse() {
         return null;
     }
-}
+};
 
 describe('MashroomHttpProxyInterceptorRegistry', () => {
 
