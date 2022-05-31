@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: The _poolMaxSockets_ property set now the maximum total connections and not the max connections per host (which is infinity now)
  * HTTP Proxy: Fixed handling of client connection termination.
    Among others the misleading error message 'Target endpoint did not send a response within xxxxx' will no longer be logged
    in the case the client dropped the connection.

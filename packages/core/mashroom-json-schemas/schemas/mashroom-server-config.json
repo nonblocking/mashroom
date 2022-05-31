@@ -228,7 +228,7 @@
                         },
                         "poolMaxSockets": {
                             "type": "integer",
-                            "description": "Max pool size for connections (Default: 10)"
+                            "description": "Max total connections (Default: 10)"
                         },
                         "socketTimeoutMs": {
                             "type": "integer",

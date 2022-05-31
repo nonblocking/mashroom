@@ -27,7 +27,7 @@ export const getHttpPool = () => {
     if (!_httpPool) {
         _httpPool = new http.Agent({
             keepAlive: _config.keepAlive,
-            maxSockets: _config.maxSockets,
+            maxTotalSockets: _config.maxSockets,
         });
     }
     return _httpPool;
@@ -37,7 +37,7 @@ export const getHttpsPool = () => {
     if (!_httpsPool) {
         _httpsPool = new https.Agent({
             keepAlive: _config.keepAlive,
-            maxSockets: _config.maxSockets,
+            maxTotalSockets: _config.maxSockets,
             rejectUnauthorized: _config.rejectUnauthorized,
         });
     }
