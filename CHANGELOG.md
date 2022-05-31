@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Fixed handling of client connection termination.
+   Among others the misleading error message 'Target endpoint did not send a response within xxxxx' will no longer be logged
+   in the case the client dropped the connection.
  * Portal: State encoded in URL via MashroomPortalStateService is encoded/decoded now
 
 ## 2.0.5 (Mai 20, 2022)

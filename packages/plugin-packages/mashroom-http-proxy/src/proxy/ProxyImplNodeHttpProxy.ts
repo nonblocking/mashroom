@@ -1,4 +1,3 @@
-
 import {URLSearchParams} from 'url';
 
 import {createProxyServer} from 'http-proxy';
@@ -10,7 +9,11 @@ import type {Socket} from 'net';
 import type {ParsedQs} from 'qs';
 import type {Request, Response} from 'express';
 import type {ServerOptions} from 'http-proxy';
-import type {MashroomLogger, MashroomLoggerFactory, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
+import type {
+    MashroomLogger,
+    MashroomLoggerFactory,
+    IncomingMessageWithContext
+} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser, MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
@@ -100,7 +103,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        this._metrics.httpRequests ++;
+        this._metrics.httpRequests++;
 
         let effectiveTargetUri = encodeURI(targetUri);
         let effectiveAdditionalHeaders = {
@@ -174,7 +177,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
-        this._metrics.wsRequests ++;
+        this._metrics.wsRequests++;
 
         if (req.headers.upgrade !== 'websocket') {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
@@ -213,7 +216,8 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             additionalQueryParams: {},
             user: securityService?.getUser(req as Request),
             type: 'WS',
-            end: () => { /* nothing to do */ }
+            end: () => { /* nothing to do */
+            }
         };
         (req as any)[REQUEST_META_PROP] = requestMeta;
 
@@ -257,17 +261,25 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         const queryStr = query.toString();
         if (queryStr) {
-            if ( proxyReq.path.indexOf('?') === -1) {
+            if (proxyReq.path.indexOf('?') === -1) {
                 proxyReq.path = `${proxyReq.path}?${queryStr}`;
             } else {
                 proxyReq.path = `${proxyReq.path}&${queryStr}`;
             }
         }
 
+        // Handle client close event to prevent a memory leak, see https://github.com/http-party/node-http-proxy/issues/1586
+        res.on('close', () => {
+            logger.info(`Connection closed by client for request '${requestMeta.uri}'`);
+            requestMeta.end();
+            clientResponse.destroy();
+            proxyReq.destroy();
+        });
+
         // Proper timeout handling
         proxyReq.setTimeout(this._socketTimeoutMs, () => {
             logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`);
-            this._metrics.targetTimeouts ++;
+            this._metrics.targetTimeouts++;
             requestMeta.end();
             proxyReq.destroy();
             if (!clientResponse.headersSent) {
