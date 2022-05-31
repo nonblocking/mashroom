@@ -19,7 +19,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
     setPoolConfig({
         keepAlive,
-        maxTotalSockets: poolMaxSockets,
+        maxSockets: poolMaxSockets,
         rejectUnauthorized,
     });
 

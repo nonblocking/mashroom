@@ -68,7 +68,7 @@
                         "trace*"
                     ],
                     "rejectUnauthorized": true,
-                    "poolMaxSockets": 100,
+                    "poolMaxSockets": 10,
                     "socketTimeoutMs": 30000,
                     "keepAlive": true,
                     "retryOnReset": true,

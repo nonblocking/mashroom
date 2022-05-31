@@ -61,7 +61,7 @@ You can override the default config in your Mashroom config file like this:
  * _forwardMethods_: The HTTP methods that should be forwarded
  * _forwardHeaders_: The HTTP headers that should be forwarded. May contain a _*_ as wildcard.
  * _rejectUnauthorized_: Reject self-signed certificates (Default: true)
- * _poolMaxSockets_: Max total connections (Default: 10)
+ * _poolMaxSockets_: Max sockets per host (Default: 10)
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
  * _keepAlive_: Enable/disable connection keep-alive. Set this to *false* if you experience random ECONNRESET with the *nodeHttpProxy* implementation,
     see: [https://github.com/nonblocking/mashroom/issues/77](https://github.com/nonblocking/mashroom/issues/77)

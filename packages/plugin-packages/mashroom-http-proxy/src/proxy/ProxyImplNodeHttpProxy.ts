@@ -65,7 +65,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean, loggerFactory: MashroomLoggerFactory) {
         this._globalLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
-        this._globalLogger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxTotalSockets} and socket timeout: ${_socketTimeoutMs}ms`);
+        this._globalLogger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${_socketTimeoutMs}ms`);
         this._httpProxy = createProxyServer({
             agent: getHttpPool(),
             changeOrigin: true,

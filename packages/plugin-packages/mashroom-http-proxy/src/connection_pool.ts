@@ -9,7 +9,7 @@ import type {PoolConfig, PoolMetrics} from '../type-definitions/internal';
 
 let _config: PoolConfig = {
     keepAlive: true,
-    maxTotalSockets: 100,
+    maxSockets: 10,
     rejectUnauthorized: false,
 };
 let _httpPool: HttpAgent | undefined;
@@ -27,7 +27,7 @@ export const getHttpPool = () => {
     if (!_httpPool) {
         _httpPool = new http.Agent({
             keepAlive: _config.keepAlive,
-            maxTotalSockets: _config.maxTotalSockets,
+            maxSockets: _config.maxSockets,
         });
     }
     return _httpPool;
@@ -37,7 +37,7 @@ export const getHttpsPool = () => {
     if (!_httpsPool) {
         _httpsPool = new https.Agent({
             keepAlive: _config.keepAlive,
-            maxTotalSockets: _config.maxTotalSockets,
+            maxSockets: _config.maxSockets,
             rejectUnauthorized: _config.rejectUnauthorized,
         });
     }
