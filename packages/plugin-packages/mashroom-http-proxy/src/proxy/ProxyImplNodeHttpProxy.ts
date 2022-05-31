@@ -367,7 +367,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             this._metrics.targetConnectionErrors++;
 
             if (requestMeta.type === 'HTTP') {
-                if (error.code === 'ECONNRESET') {
+                if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
                     if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
                         logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept the connection (retry #${requestMeta.retries + 1})`);
                         requestMeta.retry();

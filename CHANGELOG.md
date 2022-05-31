@@ -3,8 +3,9 @@
 
 ## [unreleased]
 
- * HTTP Proxy: Added a retry if the target resets the connection (ECONNRESET), which can happen if _keepAlive_ is activated
-   and a reused connection is broken already (see https://nodejs.org/api/http.html#requestreusedsocket)
+ * HTTP Proxy: Added a retry if the target resets or drops the connection (ECONNRESET) which can happen when:
+    * _keepAlive_ is activated and a reused connection is broken already (see https://nodejs.org/api/http.html#requestreusedsocket)
+    * or a Pod/instance is no longer/not yet available
  * HTTP Proxy: Fixed handling of client connection termination.
    Among others the misleading error message 'Target endpoint did not send a response within xxxxx' will no longer be logged
    in the case the client dropped the connection.
