@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Remote App Registry and K8S remote app registry: Fixed registering Apps of type _portal-app2_ without SSR capability
  * HTTP Proxy: Added a retry if the target resets or drops the connection (ECONNRESET) which can happen when:
     * _keepAlive_ is activated and a reused connection is broken already (see https://nodejs.org/api/http.html#requestreusedsocket)
     * or a Pod/instance is no longer/not yet available

@@ -73,6 +73,33 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         }
     };
 
+    const pluginDefinition2: MashroomPluginDefinition = {
+        name: 'Test App No SSR',
+        description: 'Test App No SSR',
+        type: 'portal-app2',
+        clientBootstrap: 'startTestApp2',
+        resources: {
+            js: [
+                'bundle.js'
+            ]
+        },
+        local: {
+            resourcesRoot: './dist',
+        },
+        remote: {
+            resourcesRoot: '/public',
+        },
+        defaultConfig: {
+            title: {
+                en: 'Title'
+            },
+            category: 'Test',
+            appConfig: {
+                customerId: '123123'
+            }
+        }
+    };
+
     const pluginDefinitionV1: MashroomPluginDefinition = {
         name: 'Test App',
         description: 'Test App',
@@ -121,6 +148,13 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     const pluginPackageDefinition: any = {
         plugins: [
             pluginDefinition,
+        ]
+    };
+
+    const pluginPackageDefinition2: any = {
+        plugins: [
+            pluginDefinition,
+            pluginDefinition2,
         ]
     };
 
@@ -227,8 +261,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         const portalApp = portalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
-        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
-        expect(fixedPortalApp).toEqual({
+        expect(portalApp).toMatchObject({
             name: 'Test App',
             tags: ['what', 'ever'],
             title: {
@@ -245,7 +278,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             metaInfo: {
                 test: 1
             },
-            lastReloadTs: 22,
             clientBootstrap: 'startTestApp',
             resourcesRootUri: 'http://my-service.default:6789/public',
             ssrInitialHtmlUri: 'http://my-service.default:6789/ssr',
@@ -267,16 +299,15 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
                 }
             },
             rolePermissions: {},
-            proxies:
-                {
-                    bff: {
-                        targetUri: 'http://my-service.default:6789/api',
-                        sendPermissionsHeader: true
-                    },
-                    two: {
-                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
-                    }
+            proxies: {
+                bff: {
+                    targetUri: 'http://my-service.default:6789/api',
+                    sendPermissionsHeader: true
                 },
+                two: {
+                    targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                }
+            },
             defaultAppConfig: {
                 customerId: '123123'
             }
@@ -287,17 +318,16 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*',  3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, {
+        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, {
             url: 'http://my-service.default:6789',
             name: 'my-service'
         } as any);
         expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(1);
+        expect(portalApps.length).toBe(2);
 
         const portalApp = portalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
-        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
-        expect(fixedPortalApp).toEqual({
+        expect(portalApp).toMatchObject({
             name: 'Test App',
             tags: ['what', 'ever'],
             title: {
@@ -311,7 +341,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             metaInfo: {
                 test: 1
             },
-            lastReloadTs: 22,
             clientBootstrap: 'startTestApp',
             resourcesRootUri: 'http://my-service.default:6789/public',
             ssrInitialHtmlUri: 'http://my-service.default:6789/ssr',
@@ -333,16 +362,33 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
                 }
             },
             rolePermissions: {},
-            proxies:
-                {
-                    bff: {
-                        targetUri: 'http://my-service.default:6789/api',
-                        sendPermissionsHeader: true
-                    },
-                    two: {
-                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
-                    }
+            proxies: {
+                bff: {
+                    targetUri: 'http://my-service.default:6789/api',
+                    sendPermissionsHeader: true
                 },
+                two: {
+                    targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                }
+            },
+            defaultAppConfig: {
+                customerId: '123123'
+            }
+        });
+
+        const portalApp2 = portalApps[1];
+        expect(portalApp2.lastReloadTs).toBeTruthy();
+        expect(portalApp2).toMatchObject({
+            name: 'Test App No SSR',
+            version: '1.1.2',
+            clientBootstrap: 'startTestApp2',
+            remoteApp: true,
+            resourcesRootUri: 'http://my-service.default:6789/public',
+            ssrInitialHtmlUri: undefined,
+            resources: {
+                js: ['bundle.js']
+            },
+            proxies: {},
             defaultAppConfig: {
                 customerId: '123123'
             }
@@ -362,8 +408,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         const portalApp = portalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
-        const fixedPortalApp = {...portalApp, lastReloadTs: 22};
-        expect(fixedPortalApp).toEqual({
+        expect(portalApp).toMatchObject({
             name: 'Test App',
             description: 'Test App',
             tags: ['what', 'ever'],
@@ -375,7 +420,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             metaInfo: {
                 test: 1
             },
-            lastReloadTs: 22,
             clientBootstrap: 'startTestApp',
             resourcesRootUri: 'http://my-service.default:6789',
             remoteApp: true,
@@ -387,16 +431,15 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             },
             screenshots: ['assets/screenshot1.png', 'assets/screenshot2.png'],
             rolePermissions: {},
-            proxies:
-                {
-                    bff: {
-                        targetUri: 'http://my-service.default:6789/api',
-                        sendPermissionsHeader: true
-                    },
-                    two: {
-                        targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
-                    }
+            proxies: {
+                bff: {
+                    targetUri: 'http://my-service.default:6789/api',
+                    sendPermissionsHeader: true
                 },
+                two: {
+                    targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
+                }
+            },
             defaultAppConfig: {
                 customerId: '123123'
             }

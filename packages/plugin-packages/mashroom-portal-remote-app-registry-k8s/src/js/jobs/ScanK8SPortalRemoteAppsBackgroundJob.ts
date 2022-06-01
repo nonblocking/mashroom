@@ -324,9 +324,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            ssrInitialHtmlUri = `${serviceUrl}${definition.remote?.ssrInitialHtmlPath || ''}`;
-            if (ssrInitialHtmlUri.endsWith('/')) {
-                ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
+            if (definition.remote?.ssrInitialHtmlPath) {
+                ssrInitialHtmlUri = `${serviceUrl}${definition.remote.ssrInitialHtmlPath}`;
+                if (ssrInitialHtmlUri.endsWith('/')) {
+                    ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
+                }
             }
             cachingConfig = config.caching;
             editorConfig = config.editor;

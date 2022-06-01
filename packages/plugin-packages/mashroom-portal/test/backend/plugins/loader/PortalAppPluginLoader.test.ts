@@ -130,6 +130,89 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
+    it('loads and registers a portal app v2 without SSR capability', () => {
+
+        const pluginPackage: any = {
+            pluginPackagePath: '/foo/bar'
+        };
+        const appPlugin: MashroomPlugin = {
+            pluginPackage,
+            name: 'Portal App 1',
+            description: 'description from package',
+            tags: ['tag1', 'tag2'],
+            type: 'portal-app2',
+            errorMessage: null,
+            lastReloadTs: Date.now(),
+            requireBootstrap: () => { /* nothing to do */ },
+            status: 'loaded',
+            config: null,
+            pluginDefinition: {
+                name: 'Portal App 1',
+                type: 'portal-app2',
+                requires: null,
+                clientBootstrap: 'startApp',
+                resources: {
+                    js: [
+                        'bundle.js',
+                    ],
+                },
+                local: {
+                    resourcesRoot: './dist',
+                },
+                remote: {
+                    resourcesRoot: '/public',
+                },
+                defaultConfig: {
+                    title: {
+                        en: 'Portal App 1',
+                        de: 'Portal App 1',
+                    },
+                    category: 'Test',
+                    tags: ['tag1', 'tag2'],
+                    defaultRestrictViewToRoles: ['Role1'],
+                    rolePermissions: {
+                        doSomethingSpecial: ['Role2', 'Role3']
+                    },
+                    proxies: {
+                        'whatever': {
+                            targetUri: 'https://whatever.com/api',
+                            sendPermissionsHeader: false,
+                            restrictToRoles: ['Role1']
+                        }
+                    },
+                    appConfig: {
+                        firstName: 'John',
+                    },
+                },
+            },
+        };
+
+        const registry = new MashroomPortalPluginRegistry();
+        const loader = new PortalAppPluginLoader(registry, dummyLoggerFactory);
+
+        const context: any = {};
+        const config = {
+            ...appPlugin.pluginDefinition.defaultConfig
+        };
+        loader.load(appPlugin, config, context);
+
+        expect(registry.portalApps.length).toBe(1);
+        if (process.platform !== 'win32') {
+            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+        }
+        expect(registry.portalApps[0].title).toEqual({
+            en: 'Portal App 1',
+            de: 'Portal App 1',
+        });
+        expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
+        expect(registry.portalApps[0].category).toEqual('Test');
+        expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js']});
+        expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
+        expect(registry.portalApps[0].ssrBootstrap).toBeFalsy();
+        expect(registry.portalApps[0].proxies).toBeTruthy();
+        expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
+    });
+
     it('loads and registers a portal app v1', () => {
 
         const pluginPackage: any = {

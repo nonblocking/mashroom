@@ -228,9 +228,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            ssrInitialHtmlUri = `${remotePortalAppEndpoint.url}${definition.remote?.ssrInitialHtmlPath || ''}`;
-            if (ssrInitialHtmlUri.endsWith('/')) {
-                ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
+            if (definition.remote?.ssrInitialHtmlPath) {
+                ssrInitialHtmlUri = `${remotePortalAppEndpoint.url}${definition.remote.ssrInitialHtmlPath}`;
+                if (ssrInitialHtmlUri.endsWith('/')) {
+                    ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
+                }
             }
             cachingConfig = config.caching;
             editorConfig = config.editor;
