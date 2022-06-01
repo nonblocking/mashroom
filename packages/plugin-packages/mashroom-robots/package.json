@@ -4,13 +4,13 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.0.5",
+    "version": "2.0.6",
     "files": [
         "dist/**",
         "default-robots.txt"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "2.0.5"
+        "@mashroom/mashroom": "2.0.6"
     },
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",
