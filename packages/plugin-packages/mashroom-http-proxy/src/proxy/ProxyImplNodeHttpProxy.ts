@@ -227,7 +227,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             user: securityService?.getUser(req as Request),
             type: 'WS',
             retries: -1,
-            retry: () => { /* not supported */},
+            retry: () => {
+                throw new Error('Retry not supported!');
+            },
             end: () => { /* nothing to do */}
         };
         (req as any)[REQUEST_META_PROP] = requestMeta;
@@ -369,11 +371,11 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             if (requestMeta.type === 'HTTP') {
                 if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
                     if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
-                        logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept the connection (retry #${requestMeta.retries + 1})`);
+                        logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept or drop the connection (retry #${requestMeta.retries + 1})`);
                         requestMeta.retry();
                         return;
                     } else {
-                        logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection (${requestMeta.retries + 1} attempt(s))`, error);
+                        logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection after ${requestMeta.retries + 1} attempt(s)`, error);
                         clientResponse.sendStatus(503);
                     }
                 } else {
