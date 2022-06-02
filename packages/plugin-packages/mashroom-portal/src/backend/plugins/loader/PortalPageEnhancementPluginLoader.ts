@@ -82,6 +82,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
         const enhancement: MashroomPortalPageEnhancement = {
             name: plugin.name,
             description: plugin.description,
+            version: plugin.pluginPackage.version,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
             order,
             resourcesRootUri,

@@ -53,6 +53,7 @@ import {
 } from '../utils/render_utils';
 import {renderInlineStyleForServerSideRenderedApps} from '../utils/ssr_utils';
 import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create_portal_app_setup';
+import {getVersionHash, getPortalVersionHash} from '../utils/cache_utils';
 
 import type {Request, Response, Application} from 'express';
 import type { MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -84,10 +85,7 @@ const VIEW_CACHE = new Map<string, any>();
 
 export default class PortalPageRenderController {
 
-    private _startTimestamp: number;
-
     constructor(private _portalWebapp: Application, private _pluginRegistry: MashroomPortalPluginRegistry) {
-        this._startTimestamp = Date.now();
     }
 
     /*
@@ -318,11 +316,13 @@ export default class PortalPageRenderController {
         const siteBasePath = getFrontendSiteBasePath(req);
 
         let lastThemeReloadTs = Date.now();
+        let themeVersionHash = '';
         let resourcesBasePath = null;
         if (theme) {
             const encodedThemeName = encodeURIComponent(theme.name);
             resourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_THEME_RESOURCES_BASE_PATH}/${encodedThemeName}`;
             lastThemeReloadTs = theme.lastReloadTs;
+            themeVersionHash = getVersionHash(theme.version, theme.lastReloadTs, devMode);
         }
         const apiBasePath = `${getFrontendApiBasePath(req)}${PORTAL_APP_API_PATH}`;
 
@@ -358,6 +358,7 @@ export default class PortalPageRenderController {
             csrfToken,
             userAgent,
             lastThemeReloadTs,
+            themeVersionHash,
         };
     }
 
@@ -484,7 +485,7 @@ export default class PortalPageRenderController {
                 ${devMode ? `window['${WINDOW_VAR_PORTAL_DEV_MODE}'] = true;` : ''}
             </script>
             ${await this._getPageEnhancementHeaderResources(sitePath, pageFriendlyUrl, lang, userAgent, req)}
-            <script src="${getFrontendResourcesBasePath(req, cdnHost)}/${PORTAL_JS_FILE}?v=${this._startTimestamp}"></script>
+            <script src="${getFrontendResourcesBasePath(req, cdnHost)}/${PORTAL_JS_FILE}?v=${getPortalVersionHash(devMode)}"></script>
             ${inlineStyleHeaderContent}
         `;
     }

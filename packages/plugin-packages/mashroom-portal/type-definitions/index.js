@@ -154,6 +154,7 @@ export type MashroomPortalAppSetup = {
     +version: string,
     +instanceId: ?string,
     +lastReloadTs: number,
+    +versionHash: string,
     +proxyPaths: MashroomPortalProxyPaths,
     // @deprecated Use proxyPaths (will be removed in Mashroom v3)
     +restProxyPaths: MashroomPortalProxyPaths,
@@ -214,6 +215,7 @@ export type MashroomPortalPageRenderModel = {
     +csrfToken: ?string,
     +userAgent: UserAgent,
     +lastThemeReloadTs: number,
+    +themeVersionHash: string,
 }
 
 export type MashroomPortalAppWrapperRenderModel = {
@@ -244,6 +246,10 @@ export interface MashroomPortalTheme {
      * Optional description
      */
     +description: ?string;
+    /**
+     * Version of the theme
+     */
+    +version: string;
     /**
      * Last reload of the theme
      */
@@ -359,7 +365,7 @@ export type MashroomPortalApp = {
     +description: ?I18NString,
 
     /**
-     * The package version
+     * The App version
      */
     +version: string,
 
@@ -489,6 +495,10 @@ export type MashroomPortalPageEnhancement = {
      * Enhancer description
      */
     +description: ?string;
+    /**
+     * Enhancer version
+     */
+    +version: string;
     /**
      * Last reload of the plugin
      */

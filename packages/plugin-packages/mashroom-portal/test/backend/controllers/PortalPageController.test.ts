@@ -26,6 +26,7 @@ setPortalPluginConfig({
 const theme: MashroomPortalTheme = {
     name: 'my-theme',
     description: null,
+    version: '1.0.0',
     lastReloadTs: Date.now(),
     engineName: 'fooEngine',
     requireEngine: () => { /* nothing to do */ },

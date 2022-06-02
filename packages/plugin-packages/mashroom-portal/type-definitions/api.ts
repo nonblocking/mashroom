@@ -158,6 +158,7 @@ export type MashroomPortalAppSetup = {
     readonly version: string;
     readonly instanceId: string | null | undefined;
     readonly lastReloadTs: number;
+    readonly versionHash: string;
     readonly proxyPaths: MashroomPortalProxyPaths;
     // @deprecated Use proxyPaths (will be removed in Mashroom v3)
     readonly restProxyPaths: MashroomPortalProxyPaths;
@@ -233,6 +234,7 @@ export type MashroomPortalPageRenderModel = {
     readonly csrfToken: string | null | undefined;
     readonly userAgent: UserAgent;
     readonly lastThemeReloadTs: number;
+    readonly themeVersionHash: string;
 }
 
 export type MashroomPortalAppWrapperRenderModel = {
@@ -265,6 +267,11 @@ export interface MashroomPortalTheme {
      * Optional description
      */
     readonly description: string | null | undefined;
+
+    /**
+     * Version of the theme
+     */
+    readonly version: string;
 
     /**
      * Last reload of the theme
@@ -387,7 +394,7 @@ export type MashroomPortalApp = {
     readonly description: I18NString | null | undefined;
 
     /**
-     * The package version
+     * The App version
      */
     readonly version: string;
 
@@ -519,6 +526,10 @@ export type MashroomPortalPageEnhancement = {
      * Enhancer description
      */
     readonly description: string | undefined | null;
+    /**
+     * Enhancer version
+     */
+    readonly version: string;
     /**
      * Last reload of the plugin
      */

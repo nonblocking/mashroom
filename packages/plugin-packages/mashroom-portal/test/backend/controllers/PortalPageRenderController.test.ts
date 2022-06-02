@@ -28,6 +28,7 @@ const theme: MashroomPortalTheme = {
     name: 'my-theme',
     description: null,
     lastReloadTs: Date.now(),
+    version: '1.0.0',
     engineName: 'fooEngine',
     requireEngine: () => { /* nothing to do */ },
     resourcesRootPath: './public',
@@ -238,7 +239,7 @@ const pluginContext: any = {
         },
     },
     serverInfo: {
-        devMode: true,
+        devMode: false,
     },
     loggerFactory: dummyLoggerFactory,
     services: {
@@ -464,12 +465,12 @@ describe('PortalPageRenderController', () => {
                     // console.info(model.portalResourcesFooter);
 
                     expect(model.portalResourcesHeader).toContain('window[\'MashroomPortalCustomClientServices\'] = {"customService":"foo"};');
-                    expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js?v=2000"></script>');
+                    expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js?v=5e543256c4"></script>');
                     expect(model.portalResourcesHeader).toContain(' .bar {');
                     expect(model.portalResourcesHeader).toContain('console.info("I am generated!");');
 
                     expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
-                    expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css?v=2000" />');
+                    expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css?v=5e543256c4" />');
                     expect(model.portalResourcesFooter).not.toContain('test_script3.js');
 
                     const posScript1 = model.portalResourcesHeader.indexOf('/test_script1.js');

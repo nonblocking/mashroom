@@ -30,7 +30,7 @@ const inlineSVG = (assetFile: string): string => {
 
 export default ({
                     user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
-                    portalResourcesHeader, portalResourcesFooter, pageContent, messages, lastThemeReloadTs
+                    portalResourcesHeader, portalResourcesFooter, pageContent, messages, themeVersionHash
                 }: MashroomPortalPageRenderModel) => (
     <html lang={lang}>
         <head dangerouslySetInnerHTML={{ __html: `
@@ -52,13 +52,13 @@ export default ({
             <link rel="stylesheet" type="text/css" href='${resourcesBasePath}/fontawesome/css/brands.css?v=${fontawesomeVersion}'/>
 
             ${inlineStyle('portal.css')}
-            ${user.admin ? `<link rel="stylesheet" type="text/css" href='${resourcesBasePath}/admin.css?v=${lastThemeReloadTs}'/>` : ''}
+            ${user.admin ? `<link rel="stylesheet" type="text/css" href='${resourcesBasePath}/admin.css?v=${themeVersionHash}'/>` : ''}
 
             ${portalResourcesHeader}
 
             ${page.extraCss ? `<style >${page.extraCss}</style>` : ''}
 
-            <script type="application/javascript" src="${resourcesBasePath}/main.js?v={{${lastThemeReloadTs}"></script>
+            <script type="application/javascript" src="${resourcesBasePath}/main.js?v={{${themeVersionHash}"></script>
         `}} />
         <body>
             {user.admin && (

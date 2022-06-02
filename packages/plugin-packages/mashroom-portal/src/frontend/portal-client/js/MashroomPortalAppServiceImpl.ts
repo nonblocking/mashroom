@@ -809,7 +809,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _getJSResourceUrl(jsResource: string, appSetup: MashroomPortalAppSetup): string {
-        return `${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.lastReloadTs}`;
+        return `${appSetup.resourcesBasePath}/${jsResource}?v=${appSetup.versionHash}`;
     }
 
     private _getSharedCSSResourceUrl(cssResource: string, appSetup: MashroomPortalAppSetup): string {
@@ -817,7 +817,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _getCSSResourceUrl(cssResource: string, appSetup: MashroomPortalAppSetup): string {
-        return `${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.lastReloadTs}`;
+        return `${appSetup.resourcesBasePath}/${cssResource}?v=${appSetup.versionHash}`;
     }
 
     private _addPrefetchLink(url: string): void {

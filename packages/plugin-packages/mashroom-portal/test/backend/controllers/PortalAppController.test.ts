@@ -207,6 +207,9 @@ const pluginRegistry: any = {
 
 const pluginContext: any = {
     loggerFactory: dummyLoggerFactory,
+    serverInfo: {
+      devMode: false,
+    },
     services: {
         portal: {
             service: {
@@ -291,6 +294,7 @@ describe('PortalAppController', () => {
             version: '1.0',
             instanceId: 'ABCD',
             lastReloadTs: 222222222,
+            versionHash: 'e4c2e8edac',
             proxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
@@ -362,6 +366,7 @@ describe('PortalAppController', () => {
             version: '1.0',
             instanceId: null,
             lastReloadTs: 222222222,
+            versionHash: 'e4c2e8edac',
             proxyPaths: {
                 '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',

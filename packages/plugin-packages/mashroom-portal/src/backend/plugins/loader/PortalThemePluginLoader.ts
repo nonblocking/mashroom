@@ -45,6 +45,7 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
         const theme: MashroomPortalTheme = {
             name: plugin.name,
             description: plugin.description,
+            version: plugin.pluginPackage.version,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
             engineName,
             requireEngine: () => engineFactory(),

@@ -27,6 +27,7 @@ setPortalPluginConfig({
 const portalPageEnhancement: MashroomPortalPageEnhancement = {
     name: 'Test Page Enhancement',
     description: null,
+    version: '1.0.1',
     lastReloadTs: Date.now(),
     order: 1000,
     resourcesRootUri: `file:///${__dirname}`,

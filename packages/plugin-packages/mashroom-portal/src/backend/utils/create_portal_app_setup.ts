@@ -7,6 +7,7 @@ import {
 } from '../constants';
 import {calculatePermissions} from './security_utils';
 import {createAppId} from './id_utils';
+import {getVersionHash} from './cache_utils';
 
 import type {Request} from 'express';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
@@ -57,6 +58,7 @@ const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, por
 export const createPortalAppSetup = async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
                       cdnService: MashroomCDNService | undefined | null, pluginRegistry: MashroomPortalPluginRegistry, req: Request) => {
     const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+    const devMode = req.pluginContext.serverInfo.devMode;
 
     const encodedPortalAppName = encodeURIComponent(portalApp.name);
     const resourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
@@ -85,6 +87,7 @@ export const createPortalAppSetup = async (portalApp: MashroomPortalApp, portalA
         version: portalApp.version,
         instanceId: portalAppInstance.instanceId,
         lastReloadTs: portalApp.lastReloadTs,
+        versionHash: getVersionHash(portalApp.version, portalApp.lastReloadTs, devMode),
         proxyPaths,
         restProxyPaths: proxyPaths,
         sharedResourcesBasePath,
@@ -114,6 +117,7 @@ export const createPortalAppSetupForMissingPlugin = async (pluginName: string, i
         title: pluginName,
         version: '',
         instanceId,
+        versionHash: '',
         lastReloadTs: Date.now(),
         proxyPaths: { __baseUrl: '' },
         restProxyPaths: { __baseUrl: '' },

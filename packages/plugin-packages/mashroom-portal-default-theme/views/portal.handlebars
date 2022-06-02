@@ -34,10 +34,10 @@
     {{#ifSpaMode}}
         {{{inlineStyle 'portal.css'}}}
     {{else}}
-        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/portal.css?v={{lastThemeReloadTs}}">
+        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/portal.css?v={{themeVersionHash}}">
      {{/ifSpaMode}}
     {{#if user.admin}}
-        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/admin.css?v={{lastThemeReloadTs}}">
+        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/admin.css?v={{themeVersionHash}}">
     {{/if}}
 
     {{{portalResourcesHeader}}}
@@ -48,7 +48,7 @@
         </style>
     {{/if}}
 
-    <script type="application/javascript" src="{{resourcesBasePath}}/main.js?v={{lastThemeReloadTs}}"></script>
+    <script type="application/javascript" src="{{resourcesBasePath}}/main.js?v={{themeVersionHash}}"></script>
 </head>
 <body>
     {{#if user.admin}}

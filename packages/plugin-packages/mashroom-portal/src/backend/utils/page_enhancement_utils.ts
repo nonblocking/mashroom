@@ -1,6 +1,7 @@
 import {PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH} from '../constants';
 import {getFrontendResourcesBasePath} from './path_utils';
 import {getResourceAsString} from './resource_utils';
+import {getVersionHash} from './cache_utils';
 
 import type {Request} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -104,14 +105,16 @@ const getPageEnhancementResource = async (type: 'js' | 'css', enhancement: Mashr
                                           pageFriendlyUrl: string, lang: string, userAgent: UserAgent, req: Request, logger: MashroomLogger): Promise<string> => {
     const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
     const {path: resourcePath, dynamicResource} = resource;
+    const devMode = req.pluginContext.serverInfo.devMode;
+    const versionHash = getVersionHash(enhancement.version, enhancement.lastReloadTs, devMode);
     if (!resource.inline && resourcePath) {
         if (type === 'js') {
             return `
-                <script src="${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}"></script>
+                <script src="${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${versionHash}"></script>
             `;
         } else {
             return `
-                <link rel="stylesheet" href="${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${enhancement.lastReloadTs}" />
+                <link rel="stylesheet" href="${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH}/${encodeURIComponent(enhancement.name)}/${resourcePath}?v=${versionHash}" />
             `;
         }
     } else {

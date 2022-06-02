@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Portal: Fixed cache busting. The v=xxx query parameter is now constant for a plugin version (if the Portal ist not in dev mode).
+   You should now replace *lastThemeReloadTs* with *themeVersionHash* in your themes.
+ * Security Service: Don't log an error for AJAX requests to restricted resources (just return 403)
 
 ## 2.0.6 (June 1, 2022)
 
