@@ -120,7 +120,7 @@ export default class PortalAppController {
 
         logger.addContext(portalAppContext(portalApp));
 
-        await this._sendResource(resourcePath, portalApp, false, req, res);
+        await this._sendResource(resourcePath, portalApp, req, res);
     }
 
     async getSharedPortalAppResource(req: Request, res: Response): Promise<void> {
@@ -146,7 +146,7 @@ export default class PortalAppController {
             const portalApp = portalApps.pop();
             if (portalApp) {
                 logger.debug(`Taking the shared resource ${resourcePath} from portal app: ${portalApp.name}`);
-                sent = await this._sendResource(resourcePath, portalApp, true, req, res);
+                sent = await this._sendResource(resourcePath, portalApp, req, res);
             }
         }
 
@@ -239,12 +239,12 @@ export default class PortalAppController {
         return globalAppInstance;
     }
 
-    private async _sendResource(resourcePath: string, portalApp: MashroomPortalApp, shared: boolean, req: Request, res: Response): Promise<boolean> {
+    private async _sendResource(resourcePath: string, portalApp: MashroomPortalApp, req: Request, res: Response): Promise<boolean> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         if (cacheControlService) {
-            cacheControlService.addCacheControlHeader(shared ? 'SHARED' : 'PRIVATE_IF_AUTHENTICATED', req, res);
+            cacheControlService.addCacheControlHeader('SHARED', req, res);
         }
 
         const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;

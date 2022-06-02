@@ -5,6 +5,7 @@
 
 ## 2.0.7 (June 2, 2022)
 
+ * Portal: Switched to cache-control *public* for App resources, even for authenticated users
  * Portal: Fixed cache busting. The v=xxx query parameter is now constant for a plugin version (if the Portal ist not in dev mode).
    You should now replace *lastThemeReloadTs* with *themeVersionHash* in your themes.
  * Security Service: Don't log an error for AJAX requests to restricted resources (just return 403)
