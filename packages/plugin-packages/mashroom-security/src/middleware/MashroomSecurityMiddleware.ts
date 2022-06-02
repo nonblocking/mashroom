@@ -44,8 +44,6 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
                     } else if (result.status === 'deferred' || res.statusCode === 302) {
                         // Most likely a redirect to the login page
                         return;
-                    } else {
-                        logger.error('Security service return status error');
                     }
                 }
 
