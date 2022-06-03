@@ -504,8 +504,9 @@ The following built in context properties can be used with %X{<name>} or a custo
   * _browserVersion_
   * _os_ (e.g. Windows)
   * _sessionID_ (if a session is available)
-  * _portalAppName_ (if the request is related to a Portal App)
-  * _portalAppVersion_ (if the request is related to a Portal App)
+  * _portalAppName_ (if related to a Portal App)
+  * _portalAppVersion_ (if related to a Portal App)
+  * _portalAppHost_ (if related to a Remote Portal App)
 
 You can use _logger.withContext()_ or _logger.addContext()_ to add context information.
 

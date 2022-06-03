@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Added new property *portalAppHost* to the log context of Remote Portal Apps
+
 ## 2.0.7 (June 2, 2022)
 
  * Portal: Switched to cache-control *public* for App resources, even for authenticated users
