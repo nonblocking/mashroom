@@ -10,7 +10,7 @@ module.exports = (env, argv) => {
 
     if (argv.mode === 'development') {
         // Add portal theme
-        entry.bundle = [path.resolve(__dirname, '../mashroom-portal-default-theme/src/frontend/sass/style.scss')].concat(entry.bundle);
+        entry.bundle = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry.bundle);
     }
 
     return {
@@ -30,6 +30,17 @@ module.exports = (env, argv) => {
                             loader: 'babel-loader',
                         },
                     ],
+                },
+                {
+                    test: /\.css$/,
+                    use: [
+                        {
+                            loader: 'style-loader',
+                        },
+                        {
+                            loader: 'css-loader',
+                        },
+                    ]
                 },
                 {
                     test: /\.scss$/,
