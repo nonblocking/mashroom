@@ -59,6 +59,9 @@ type FormValues = {
     roles: Array<string> | undefined | null;
 }
 
+// RFC 3986
+const VALID_PATH = /^[a-zA-Z0-9.\-_~!$&'()*+,;=:@/]+$/;
+
 export default class PageConfigureDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
@@ -142,6 +145,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             pageId: pageId || '',
             title: values.page.title || '',
             friendlyUrl: values.page.friendlyUrl || '',
+            clientSideRouting: values.page.clientSideRouting,
             hidden: values.page.hidden,
             subPages: values.page.subPages
         };
@@ -267,10 +271,32 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         }
         if (!values.page.friendlyUrl || values.page.friendlyUrl.trim() === '') {
             errors.page.friendlyUrl = 'required';
-        } else if (values.page.friendlyUrl.indexOf('/') !== 0) {
+        } else if (!values.page.friendlyUrl.startsWith('/')) {
             errors.page.friendlyUrl = 'mustStartWithSlash';
-        } else if (pages.pagesFlattened.find((page) => (!selectedPage || page.pageId !== selectedPage.pageId) && page.friendlyUrl.toLowerCase() === values.page.friendlyUrl?.toLowerCase())) {
-            errors.page.friendlyUrl = 'pathAlreadyExists';
+        } else if (values.page.friendlyUrl.endsWith('/')) {
+            errors.page.friendlyUrl = 'mustNotEndWithSlash';
+        } else if (!values.page.friendlyUrl.match(VALID_PATH)) {
+            errors.page.friendlyUrl = 'invalidCharacters';
+        } else {
+            const conflictingRoute = pages.pagesFlattened.find((page) => {
+               if (selectedPage && page.pageId === selectedPage.pageId) {
+                   return false;
+               }
+               const friendlyUrl = values.page.friendlyUrl;
+               if (!friendlyUrl) {
+                   return false;
+               }
+               if (values.page.clientSideRouting && page.friendlyUrl.toLowerCase().startsWith(`${friendlyUrl.toLowerCase()}/`)) {
+                   return true;
+               }
+               if (page.clientSideRouting && friendlyUrl.toLowerCase().startsWith(`${page.friendlyUrl.toLowerCase()}/`)) {
+                    return true;
+               }
+               return page.friendlyUrl.toLowerCase() === friendlyUrl.toLowerCase();
+            });
+            if (conflictingRoute) {
+                errors.page.friendlyUrl = 'routeAlreadyExists';
+            }
         }
 
         if (Object.keys(errors.page).length === 0) {
@@ -296,6 +322,11 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                 <FormRow>
                     <FormCell>
                         <TextField id='friendlyUrl' name='page.friendlyUrl' labelId='friendlyUrl'/>
+                    </FormCell>
+                </FormRow>
+                <FormRow>
+                    <FormCell>
+                        <CheckboxField id='clientSideRouting' name='page.clientSideRouting' labelId='clientSideRouting'/>
                     </FormCell>
                 </FormRow>
                 <FormRow>

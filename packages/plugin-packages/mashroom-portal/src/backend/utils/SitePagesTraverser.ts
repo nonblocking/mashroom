@@ -12,7 +12,7 @@ export default class SitePagesTraverser {
 
     findPageByFriendlyUrl(friendlyUrl: string): MashroomPortalPageRef | undefined | null {
         if (friendlyUrl.length > 1 && friendlyUrl.endsWith('/')) {
-            friendlyUrl = friendlyUrl.substr(0, friendlyUrl.length - 1);
+            friendlyUrl = friendlyUrl.substring(0, friendlyUrl.length - 1);
         }
         return this._internalFindPageByFriendlyUrl(this._pages, friendlyUrl);
     }
@@ -32,7 +32,7 @@ export default class SitePagesTraverser {
 
         for (let i = 0; i < pages.length; i++) {
             const pageRef = pages[i];
-            if (pageRef.friendlyUrl === friendlyUrl) {
+            if (pageRef.friendlyUrl === friendlyUrl || (pageRef.clientSideRouting && friendlyUrl.startsWith(pageRef.friendlyUrl))) {
                 return pageRef;
             }
 
@@ -74,13 +74,10 @@ export default class SitePagesTraverser {
                         pageId: pageRef.pageId,
                         title: i18nService.translate(req, pageRef.title),
                         friendlyUrl: pageRef.friendlyUrl,
-                        hidden: !!pageRef.hidden
+                        clientSideRouting: pageRef.clientSideRouting,
+                        hidden: !!pageRef.hidden,
+                        subPages: pageRef.subPages && (await this._internalFilterAndTranslate(pageRef.subPages, req) || undefined),
                     };
-
-                    if (pageRef.subPages) {
-                        localizedPage.subPages = await this._internalFilterAndTranslate(pageRef.subPages, req) || undefined;
-                    }
-
                     result.push(localizedPage);
                 }
             }

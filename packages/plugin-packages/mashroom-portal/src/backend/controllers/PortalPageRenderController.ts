@@ -439,6 +439,7 @@ export default class PortalPageRenderController {
             pageId: pageRef.pageId,
             title: i18nService.translate(req, pageRef.title),
             friendlyUrl: pageRef.friendlyUrl,
+            clientSideRouting: pageRef.clientSideRouting,
             hidden: !!pageRef.hidden,
         };
     }

@@ -13,6 +13,11 @@ describe('SitePagesTraverser', () => {
             title: 'Test',
             friendlyUrl: '/foo',
         }, {
+            pageId: 'test client side routing',
+            title: 'Test Client Side Routing',
+            friendlyUrl: '/cs',
+            clientSideRouting: true,
+        }, {
             pageId: 'level1',
             title: 'Tree Test',
             friendlyUrl: '/l1',
@@ -46,6 +51,13 @@ describe('SitePagesTraverser', () => {
             pageId: 'level3',
             title: 'Tree Test',
             friendlyUrl: '/l1/l2/l3',
+        });
+
+        expect(traverser.findPageByFriendlyUrl('/cs/whats/o/every')).toEqual({
+            pageId: 'test client side routing',
+            title: 'Test Client Side Routing',
+            friendlyUrl: '/cs',
+            clientSideRouting: true,
         });
     });
 

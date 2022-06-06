@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Admin Toolbar: Only allow valid characters (according to RFC 3986) in Routes
+ * Admin Toolbar: Added checkbox for client-side routing and renamed *friendlyUrl* to *Route* because that's more what it is.
+ * Portal: Added support for client-side routing. If you enable it everything appended to the page URL is ignored.
  * Portal: Added new property *portalAppHost* to the log context of Remote Portal Apps
 
 ## 2.0.7 (June 2, 2022)

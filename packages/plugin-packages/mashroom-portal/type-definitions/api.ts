@@ -9,7 +9,7 @@ import type {
 /* Model */
 
 export type MashroomPortalSite = {
-    siteId: string;
+    readonly siteId: string;
     readonly title: I18NString;
     readonly path: string;
     readonly virtualHosts?: Array<string>;
@@ -36,16 +36,18 @@ export type MashroomPortalPageRef = {
     readonly pageId: string;
     readonly title: I18NString;
     readonly friendlyUrl: string;
+    readonly clientSideRouting?: boolean;
     readonly hidden?: boolean;
-    subPages?: Array<MashroomPortalPageRef>;
+    readonly subPages?: Array<MashroomPortalPageRef>;
 };
 
 export type MashroomPortalPageRefLocalized = {
     readonly pageId: string;
     readonly title: string;
     readonly friendlyUrl: string;
+    readonly clientSideRouting?: boolean;
     readonly hidden?: boolean;
-    subPages?: Array<MashroomPortalPageRefLocalized>;
+    readonly subPages?: Array<MashroomPortalPageRefLocalized>;
 };
 
 export type MashroomPortalPage = {
@@ -55,7 +57,7 @@ export type MashroomPortalPage = {
     readonly theme?: string;
     readonly layout?: string;
     readonly extraCss?: string;
-    portalApps?: MashroomPortalApps;
+    readonly portalApps?: MashroomPortalApps;
 };
 
 export type MashroomPortalApps = {
@@ -136,7 +138,7 @@ export type MashroomPortalAppUser = {
 };
 
 export type MashroomPortalAppUserPermissions = {
-    [permission: string]: boolean;
+    readonly [permission: string]: boolean;
 };
 
 /**

@@ -11,6 +11,10 @@ import type {
     MashroomPortalUserService
 } from '@mashroom/mashroom-portal/type-definitions';
 
+export type Writable<Type> = {
+    -readonly [Key in keyof Type]: Type[Key];
+}
+
 export type State = {
     readonly user: User;
     readonly languages: Languages;
@@ -75,6 +79,7 @@ export type FlatPage = {
     readonly pageId: string;
     readonly title: string;
     readonly friendlyUrl: string;
+    readonly clientSideRouting?: boolean;
     readonly level: number;
     readonly subPages?: Array<SubPage>;
 }

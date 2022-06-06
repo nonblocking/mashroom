@@ -17,7 +17,7 @@ import type {
     MashroomPortalService,
     MashroomUpdatePagePortalAppInstance
 } from '../../../type-definitions';
-import type {MashroomPortalPluginRegistry,} from '../../../type-definitions/internal';
+import type {MashroomPortalPluginRegistry, Writable} from '../../../type-definitions/internal';
 
 export default class PortalPageController {
 
@@ -556,8 +556,8 @@ export default class PortalPageController {
     }
 
     private _insertAppInstance(page: MashroomPortalPage, portalAppInstance: MashroomPortalAppInstanceRef, areaId: string, position?: number): number {
-        page.portalApps = page.portalApps || {};
-        const areaAppInstances = page.portalApps[areaId] = page.portalApps[areaId] || [];
+        (page as Writable<MashroomPortalPage>).portalApps = page.portalApps || {};
+        const areaAppInstances = page.portalApps![areaId] = page.portalApps![areaId] || [];
 
         let actualPos = areaAppInstances.length;
         if (typeof (position) === 'number' && position >= 0 && position < areaAppInstances.length) {

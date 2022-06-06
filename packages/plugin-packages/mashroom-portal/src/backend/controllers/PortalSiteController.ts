@@ -16,6 +16,7 @@ import type {
     MashroomPortalSite,
     MashroomPortalSiteLinkLocalized
 } from '../../../type-definitions';
+import type {Writable} from '../../../type-definitions/internal';
 
 export default class PortalSiteController {
 
@@ -95,7 +96,7 @@ export default class PortalSiteController {
             }
 
             const siteId = createSiteId();
-            site.siteId = siteId;
+            (site as Writable<MashroomPortalSite>).siteId = siteId;
 
             // Add a page if none is given
             if (!site.pages) {

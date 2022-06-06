@@ -1,26 +1,29 @@
 
 import type {MashroomPortalPageRef, MashroomPortalPageRefLocalized} from '@mashroom/mashroom-portal/type-definitions';
-import type {FlatPage, PagePosition} from '../types';
+import type {FlatPage, PagePosition, Writable} from '../types';
 
 export const flattenPageTree = (pageTree: Array<MashroomPortalPageRefLocalized>): Array<FlatPage> => {
     const pages: Array<FlatPage> = [];
 
     const iterate = (parent: MashroomPortalPageRefLocalized | undefined | null, level: number, pageRefs: Array<MashroomPortalPageRefLocalized>) => {
         for (const pageRef of pageRefs) {
-            const page: any = {
+            const page: FlatPage = {
                 pageId: pageRef.pageId,
                 title: pageRef.title,
                 friendlyUrl: pageRef.friendlyUrl,
+                clientSideRouting: pageRef.clientSideRouting,
                 level,
                 subPages: []
             };
             pages.push(page);
             const subPages = pageRef.subPages;
             if (subPages) {
-                page.subPages = subPages.map((sp) => ({
-                    pageId: sp.pageId,
-                    title: sp.title,
-                }));
+                subPages.forEach((sp) => {
+                    page.subPages!.push({
+                        pageId: sp.pageId,
+                        title: sp.title,
+                    });
+                });
                 iterate(pageRef, level + 1, subPages);
             }
         }
@@ -91,10 +94,9 @@ export const insertOrUpdatePageAtPosition = (pageRef: MashroomPortalPageRef, pag
 
     const parent = newPosition.parentPageId ? searchPageRef(newPosition.parentPageId, pages) : null;
     if (parent && !parent.subPages) {
-        parent.subPages = [];
+        (parent as Writable<MashroomPortalPageRef>).subPages = [];
     }
-    const subPages = parent ? (parent.subPages || []) : pages;
-
+    const subPages = parent ? parent.subPages! : pages;
 
     const index = newPosition.insertAfterPageId ? subPages.findIndex((p) => p.pageId === newPosition.insertAfterPageId) + 1 : 0;
     subPages.splice(index, 0, pageRef);

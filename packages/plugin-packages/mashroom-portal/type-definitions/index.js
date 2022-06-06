@@ -5,7 +5,7 @@ import type {I18NString, MashroomPluginConfig, MashroomPluginContextHolder, Expr
 /* Model */
 
 export type MashroomPortalSite = {
-    siteId: string,
+    +siteId: string,
     +title: I18NString,
     +path: string,
     +virtualHosts?: Array<string>,
@@ -32,16 +32,18 @@ export type MashroomPortalPageRef = {
     +pageId: string,
     +title: I18NString,
     +friendlyUrl: string,
+    +clientSideRouting?: boolean,
     +hidden?: boolean,
-    subPages?: Array<MashroomPortalPageRef>
+    +subPages?: Array<MashroomPortalPageRef>
 }
 
 export type MashroomPortalPageRefLocalized = {
     +pageId: string,
     +title: string,
     +friendlyUrl: string,
+    +clientSideRouting?: boolean;
     +hidden?: boolean,
-    subPages?: Array<MashroomPortalPageRefLocalized>
+    +subPages?: Array<MashroomPortalPageRefLocalized>
 }
 
 export type MashroomPortalPage = {
@@ -51,7 +53,7 @@ export type MashroomPortalPage = {
     +theme?: string,
     +layout?: string,
     +extraCss?: string,
-    portalApps?: MashroomPortalApps
+    +portalApps?: MashroomPortalApps
 }
 
 export type MashroomPortalApps = {
@@ -132,7 +134,7 @@ export type MashroomPortalAppUser = {
 }
 
 export type MashroomPortalAppUserPermissions = {
-    [permission: string]: boolean
+    +[permission: string]: boolean
 }
 
 /**

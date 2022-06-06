@@ -10,6 +10,10 @@ import type {
     MashroomPortalAppSetup,
 } from './api';
 
+export type Writable<Type> = {
+    -readonly [Key in keyof Type]: Type[Key];
+};
+
 export interface MashroomRestService {
     get(path: string, extraHeaders?: Record<string, string>): Promise<any>;
 

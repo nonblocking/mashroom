@@ -11,6 +11,7 @@ import type {
     MashroomPortalProxyDefinition,
     MashroomPortalRolePermissions,
 } from '../../../type-definitions';
+import type {Writable} from '../../../type-definitions/internal';
 
 export const getUser = (req: Request): MashroomSecurityUser | null | undefined => {
     const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
@@ -130,7 +131,7 @@ export const isProxyAccessPermitted = async (req: Request, restProxyDef: Mashroo
 };
 
 export const calculatePermissions = (rolePermissions: MashroomPortalRolePermissions | undefined | null, user: MashroomSecurityUser | undefined | null): MashroomPortalAppUserPermissions => {
-    const permissions: MashroomPortalAppUserPermissions = {};
+    const permissions: Writable<MashroomPortalAppUserPermissions> = {};
     if (rolePermissions) {
         for (const permission in rolePermissions) {
             if (rolePermissions.hasOwnProperty(permission)) {
