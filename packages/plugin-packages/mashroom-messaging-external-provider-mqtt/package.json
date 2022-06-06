@@ -10,13 +10,13 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.0.7",
-        "mqtt": "^4.3.4"
+        "mqtt": "^4.3.7"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.0.7",
         "@mashroom/mashroom-messaging": "2.0.7",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.0.7",
-        "@types/ws": "^8.2.2"
+        "@types/ws": "^8.5.3"
     },
     "jest": {
         "verbose": true,

@@ -10,18 +10,18 @@
         "dist/**"
     ],
     "dependencies": {
-        "vue": "^3.2.33"
+        "vue": "^3.2.36"
     },
     "devDependencies": {
         "@vue/cli-plugin-eslint": "^5.0.4",
-        "eslint-plugin-vue": "^8.7.1",
-        "vue-eslint-parser": "^8.3.0",
+        "eslint-plugin-vue": "^9.1.0",
+        "vue-eslint-parser": "^9.0.2",
         "vue-loader": "^17.0.0",
         "vue-template-compiler": "^2.6.14"
     },
     "scripts": {
         "lint": "eslint src --fix",
-        "copy-assets": "cpy src/assets/* dist",
+        "copy-assets": "cpy \"src/assets/*\" dist",
         "dev": "webpack serve --config ./webpack.config.client.js --hot --mode development",
         "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production && npm run copy-assets"
     },

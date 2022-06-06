@@ -9,13 +9,12 @@
         "dist/**"
     ],
     "dependencies": {
-        "ioredis": "^4.28.2"
+        "ioredis": "^5.0.6"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.0.7",
         "@mashroom/mashroom-memory-cache": "2.0.7",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.0.7",
-        "@types/ioredis": "^4.28.7"
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.0.7"
     },
     "jest": {
         "verbose": true,

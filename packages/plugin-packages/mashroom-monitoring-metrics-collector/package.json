@@ -11,7 +11,7 @@
     ],
     "dependencies": {
         "response-time": "^2.3.2",
-        "tdigest": "^0.1.1"
+        "tdigest": "^0.1.2"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.0.7",

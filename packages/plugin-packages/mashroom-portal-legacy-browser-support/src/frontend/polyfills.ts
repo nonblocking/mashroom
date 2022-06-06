@@ -7,6 +7,8 @@ import 'core-js/es/array';
 import 'core-js/es/string';
 import 'core-js/es/math';
 import 'core-js/es/promise';
+
+// Fetch
 import 'whatwg-fetch';
 
 // Polyfill for document.currentScript lazy loading via webpack 5 automatic public path

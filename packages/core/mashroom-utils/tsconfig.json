@@ -5,6 +5,7 @@
         "module": "commonjs",
         "sourceMap": true,
         "strict": true,
-        "esModuleInterop": true
+        "esModuleInterop": true,
+        "declaration": true
     }
 }

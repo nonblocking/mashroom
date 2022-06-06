@@ -1,6 +1,7 @@
 
 import {URL} from 'url';
 import fetch from 'node-fetch';
+import AbortController from 'abort-controller';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
@@ -155,9 +156,14 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     private async _loadPackageJson(serviceUrl: string): Promise<any | null> {
         try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => {
+                controller.abort();
+            },  this._socketTimeoutSec * 1000);
             const result = await fetch(`${serviceUrl}/package.json`, {
-                timeout: this._socketTimeoutSec * 1000,
+                signal: controller.signal,
             });
+            clearTimeout(timeout);
             if (result.ok) {
                 return result.json();
             } else {
@@ -172,9 +178,14 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     private async _loadExternalPluginDefinition(serviceUrl: string): Promise<MashroomPluginPackageDefinition | null> {
         const promises = this._externalPluginConfigFileNames.map(async (name) => {
             try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => {
+                    controller.abort();
+                },  this._socketTimeoutSec * 1000);
                 const result = await fetch(`${serviceUrl}/${name}.json`, {
-                    timeout: this._socketTimeoutSec * 1000,
+                    signal: controller.signal,
                 });
+                clearTimeout(timeout);
                 if (result.ok) {
                     const json = result.json();
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
@@ -188,7 +199,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         });
 
         const configs = await Promise.all(promises);
-        return configs.find((c) => !!c) || null;
+        return configs.find((c) => !!c) as MashroomPluginPackageDefinition || null;
     }
 
     processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, service: KubernetesService): Array<MashroomPortalApp> {

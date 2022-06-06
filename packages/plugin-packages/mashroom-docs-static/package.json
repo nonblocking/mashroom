@@ -9,13 +9,13 @@
         "public/**"
     ],
     "devDependencies": {
-        "cheerio": "^1.0.0-rc.10",
-        "puppeteer": "^13.0.1",
-        "showdown": "^1.9.1",
-        "showdown-highlight": "^2.1.8"
+        "cheerio": "^1.0.0-rc.11",
+        "puppeteer": "^14.2.1",
+        "showdown": "^2.1.0",
+        "showdown-highlight": "^3.0.0"
     },
     "scripts": {
-        "build": "cpy docs/*.png public/docs/html && node ./src/convert-markdown"
+        "build": "cpy \"docs/*.png\" public/docs/html && node ./src/convert-markdown"
     },
     "mashroom": {
         "devModeBuildScript": "build",

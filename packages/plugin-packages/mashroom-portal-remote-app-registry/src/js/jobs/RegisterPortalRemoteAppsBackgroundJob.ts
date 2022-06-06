@@ -1,6 +1,7 @@
 
 import {URL} from 'url';
 import fetch from 'node-fetch';
+import AbortController from 'abort-controller';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 
@@ -271,9 +272,14 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
     private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any | null> {
         try {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => {
+                controller.abort();
+            },  this._socketTimeoutSec * 1000);
             const result = await fetch(`${remotePortalAppEndpoint.url}/package.json`, {
-                timeout: this._socketTimeoutSec * 1000,
+                signal: controller.signal,
             });
+            clearTimeout(timeout);
             if (result.ok) {
                 return result.json();
             } else {
@@ -288,9 +294,14 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     private async _loadExternalPluginDefinition(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<MashroomPluginPackageDefinition | null> {
         const promises = this._externalPluginConfigFileNames.map(async (name) => {
             try {
+                const controller = new AbortController();
+                const timeout = setTimeout(() => {
+                    controller.abort();
+                },  this._socketTimeoutSec * 1000);
                 const result = await fetch(`${remotePortalAppEndpoint.url}/${name}.json`, {
-                    timeout: this._socketTimeoutSec * 1000,
+                    signal: controller.signal,
                 });
+                clearTimeout(timeout);
                 if (result.ok) {
                     const json = result.json();
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
@@ -304,6 +315,6 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         });
 
         const configs = await Promise.all(promises);
-        return configs.find((c) => !!c) || null;
+        return configs.find((c) => !!c) as MashroomPluginPackageDefinition || null;
     }
 }

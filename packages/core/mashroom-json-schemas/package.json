@@ -9,7 +9,7 @@
         "schemas/**"
     ],
     "devDependencies": {
-        "ajv": "^8.8.2"
+        "ajv": "^8.11.0"
     },
     "jest": {
         "verbose": true,

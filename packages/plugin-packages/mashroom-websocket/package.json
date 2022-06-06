@@ -11,11 +11,11 @@
         "type-definitions/*"
     ],
     "dependencies": {
-        "express-handlebars": "^6.0.2",
-        "fs-extra": "^10.0.0",
+        "express-handlebars": "^6.0.6",
+        "fs-extra": "^10.1.0",
         "handlebars": "^4.7.7",
         "uuid": "^8.3.2",
-        "ws": "^8.4.0"
+        "ws": "^8.7.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.0.7",
@@ -26,8 +26,8 @@
         "@types/express-handlebars": "^6.0.0",
         "@types/fs-extra": "^9.0.13",
         "@types/uuid": "^8.3.4",
-        "@types/ws": "^8.2.2",
-        "express": "^4.17.2"
+        "@types/ws": "^8.5.3",
+        "express": "^4.18.1"
     },
     "jest": {
         "verbose": true,

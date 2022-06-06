@@ -29,7 +29,7 @@ export default class MashroomMemoryCacheProviderRedis implements MashroomMemoryC
 
     async set(region: string, key: CacheKey, value: CacheValue, ttlSec: number): Promise<void> {
         return this._doWithClient<void>(async (client) => {
-            await client.set(this._getFullKey(region, key), JSON.stringify(value), 'ex', ttlSec);
+            await client.set(this._getFullKey(region, key), JSON.stringify(value), 'EX', ttlSec);
         });
     }
 

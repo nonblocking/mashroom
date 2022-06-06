@@ -7,24 +7,24 @@
     "version": "2.0.7",
     "main": "dist",
     "dependencies": {
-        "codemirror": "^5.65.0",
+        "codemirror": "^5.65.5",
         "formik": "^2.2.9",
         "react": "^17.0.2",
         "react-autosuggest": "^10.1.0",
         "react-click-outside": "^3.0.1",
         "react-codemirror2": "^7.2.1",
         "react-dom": "^17.0.2",
-        "react-intl": "^5.24.2",
-        "react-redux": "7.2.6",
-        "redux": "^4.1.2"
+        "react-intl": "^6.0.4",
+        "react-redux": "8.0.2",
+        "redux": "^4.2.0"
     },
     "devDependencies": {
         "@types/codemirror": "^5.60.5",
-        "@types/react": "^17.0.37",
+        "@types/react": "^17.0.45",
         "@types/react-autosuggest": "^10.1.5",
         "@types/react-click-outside": "^3.0.3",
-        "@types/react-dom": "^17.0.11",
-        "@types/react-redux": "^7.1.20"
+        "@types/react-dom": "^17.0.17",
+        "@types/react-redux": "^7.1.24"
     },
     "jest": {
         "verbose": true,
@@ -38,6 +38,6 @@
         "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen",
         "lint": "eslint --ext .ts --ext .tsx --fix js",
         "type-check": "tsc --noEmit",
-        "type-gen": "tsc --emitDeclarationOnly --declaration && cpy --parents --cwd=dist/declarations/js \"**/*.d.ts\" \"../../../dist\" && del-cli dist/declarations"
+        "type-gen": "tsc --emitDeclarationOnly && cpy --cwd= \"dist/declarations/js/**/*.d.ts\" \"dist\" && del-cli dist/declarations"
     }
 }

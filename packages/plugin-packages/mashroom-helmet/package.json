@@ -9,7 +9,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "helmet": "^5.0.1"
+        "helmet": "^5.1.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.0.7"

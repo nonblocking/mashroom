@@ -15,7 +15,7 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.0.7",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.0.7",
-        "express": "^4.17.2"
+        "express": "^4.18.1"
     },
     "scripts": {
         "lint": "eslint src test --ext \".ts\" --fix",
