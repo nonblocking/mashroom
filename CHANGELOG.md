@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Redis Session Provider: Fixed session count metric
  * Admin Toolbar: Only allow valid characters (according to RFC 3986) in Routes
  * Admin Toolbar: Added checkbox for client-side routing and renamed *friendlyUrl* to *Route* because that's more what it is.
  * Portal: Added support for client-side routing. If you enable it everything appended to the page URL is ignored.
