@@ -51,7 +51,7 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build-backend": "babel src/backend -d dist/backend --extensions \".ts\"",
-        "build-frontend": "webpack --mode production && babel src/frontend/welcome-app -d dist/frontend/welcome-app --extensions \".ts\" && cpy src/frontend/welcome-app/assets dist/frontend/welcome-app/assets && sass --style compressed --no-source-map src/frontend/welcome-app/sass/style.scss dist/frontend/welcome-app.css",
+        "build-frontend": "webpack --mode production && babel src/frontend/welcome-app -d dist/frontend/welcome-app --extensions \".ts\" && cpy \"src/frontend/welcome-app/assets/*\" dist/frontend/welcome-app/assets && sass --style compressed --no-source-map src/frontend/welcome-app/sass/style.scss dist/frontend/welcome-app.css",
         "build": "npm run build-backend && npm run build-frontend",
         "dev": "nodemon --watch src --exec \"npm run build-frontend && npm run build-backend && node dist/backend/dev-server.js\""
     },
