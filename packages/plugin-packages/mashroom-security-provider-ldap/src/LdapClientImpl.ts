@@ -167,14 +167,14 @@ export default class LdapClientImpl implements LdapClient {
                     }
                 });
                 client.on('connectError', (error: LdapError | null) => {
-                    this._logger.error('LDAP Connection error', error);
+                    this._logger.error('LDAP connection error', error);
                     if (!resolved) {
                         reject(error);
                         resolved = true;
                     }
                 });
                 client.on('error', (error: LdapError | null) => {
-                    this._logger.error('LDAP Error', error);
+                    this._logger.warn('LDAP connection error, reconnecting...', error);
                     if (!resolved) {
                         reject(error);
                         resolved = true;
