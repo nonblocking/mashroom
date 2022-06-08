@@ -295,7 +295,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                return page.friendlyUrl.toLowerCase() === friendlyUrl.toLowerCase();
             });
             if (conflictingRoute) {
-                errors.page.friendlyUrl = 'routeAlreadyExists';
+                errors.page.friendlyUrl = `routeConflict::pageTitle:${conflictingRoute.title}`;
             }
         }
 

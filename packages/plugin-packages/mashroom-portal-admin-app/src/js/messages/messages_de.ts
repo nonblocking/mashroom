@@ -44,7 +44,7 @@ export default {
     mustNotEndWithSlash: 'Darf nicht mit einem Slash enden',
     mustContainOnlyOneSlash: 'Darf nur ein einzelnen führenden Slash beinhalten',
     invalidCharacters: 'Ungültige Zeichen',
-    routeAlreadyExists: 'Route existiert bereits',
+    routeConflict: 'Die Route steht im Konflikt mit Seite "{pageTitle}"',
     path: 'Pfad',
     defaultTheme: 'Standard Theme',
     defaultLayout: 'Standard Layout',
