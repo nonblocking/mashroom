@@ -48,17 +48,22 @@
             }
         },
         "Mashroom Session Redis Provider": {
-            "redisOptions": {
-                "host": "localhost",
-                "port": "6379",
-                "keyPrefix": "mashroom:sess:",
-                "maxRetriesPerRequest": 3,
-                "enableOfflineQueue": false,
-                "lazyConnect": true
-            }
+            "client": {
+                "redisOptions": {
+                    "host": "localhost",
+                    "port": "6379",
+                    "maxRetriesPerRequest": 3,
+                    "enableOfflineQueue": false,
+                    "lazyConnect": true
+                }
+            },
+            "prefix": "mashroom:sess:"
         },
         "Mashroom Session MongoDB Provider": {
-            "uri": "mongodb://localhost:27017/mashroom_sessions"
+            "client": {
+                "uri": "mongodb://localhost:27017/mashroom_sessions"
+            },
+            "collectionName": "mashroom-sessions"
         },
         "Mashroom Security Services": {
             "provider": "Mashroom OpenID Connect Security Provider",

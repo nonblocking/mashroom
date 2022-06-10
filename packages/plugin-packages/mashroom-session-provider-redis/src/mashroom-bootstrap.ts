@@ -5,19 +5,15 @@ import healthProbe from './health/health_probe';
 import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store_metrics';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
-import type {IORedisConfig} from '../type-definitions';
 
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder, expressSession) => {
     const {loggerFactory, services: {core: {pluginService, healthProbeService}}} =  pluginContextHolder.getPluginContext();
     const logger = loggerFactory('mashroom.session.provider.redis');
-    const redisConfig = pluginConfig as IORedisConfig;
+    const {client: redisClintConfig, ...connectRedisOptions} = pluginConfig;
 
-    // We have to move the keyPrefix to RedisStore,
-    // otherwise counting and destroying of sessions won't work
-    const keyPrefix = redisConfig.redisOptions.keyPrefix;
-    delete redisConfig.redisOptions.keyPrefix;
+    logger.info('Using key prefix for sessions:', connectRedisOptions.prefix);
 
-    await setConfig(redisConfig);
+    await setConfig(redisClintConfig);
     const client = await createClient(logger);
 
     healthProbeService.registerProbe(pluginName, healthProbe);
@@ -33,7 +29,7 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     const RedisStore = createRedisStore(expressSession);
     return new RedisStore({
         client,
-        prefix: keyPrefix,
+        ...connectRedisOptions,
     });
 };
 

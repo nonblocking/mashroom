@@ -249,21 +249,25 @@
             "retries": 10
         },
         "Mashroom Session MongoDB Provider": {
-            "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
-            "collection": "sessions",
-            "expires": 123123123213,
-            "connectionOptions": {
-                "poolSize": 5,
-                "useUnifiedTopology": true,
-                "useNewUrlParser": true
-            }
+            "client": {
+                "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
+                "connectionOptions": {
+                    "poolSize": 5,
+                    "useUnifiedTopology": true,
+                    "useNewUrlParser": true
+                }
+            },
+            "collectionName": "mashroom-sessions"
         },
         "Mashroom Session Redis Provider": {
-            "redisOptions": {
-                "host": "localhost",
-                "port": "6379",
-                "keyPrefix": "mashroom:sess:"
-            }
+            "client": {
+                "redisOptions": {
+                    "host": "localhost",
+                    "port": "6379",
+                    "keyPrefix": "mashroom:sess:"
+                }
+            },
+            "prefix": "mashroom:session"
         },
         "Mashroom Storage Services": {
             "provider": "Mashroom Storage Filestore Provider",

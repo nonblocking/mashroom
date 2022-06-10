@@ -28,19 +28,27 @@ And to change the default config of this plugin add:
 {
   "plugins": {
       "Mashroom Session Redis Provider": {
-          "redisOptions": {
-              "host": "localhost",
-              "port": "6379",
-              "keyPrefix": "mashroom:sess:"
-          }
+          "client": {
+              "redisOptions": {
+                  "host": "localhost",
+                  "port": "6379",
+              }
+          },
+          "prefix": "mashroom:sess:",
+          "ttl": 86400
       }
   }
 }
 ```
 
-* *redisOptions*: Passed to the *Redis* constructor of [ioredis](https://github.com/luin/ioredis)
+ * *client*: Options for the Redis client. *redisOptions* are just to the *Redis* constructor of [ioredis](https://github.com/luin/ioredis
+   Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+ * *prefix*: The key prefix (Default: mashroom:sess:)
+ * *ttl*: TTL in seconds (Default: 86400 - one day)
 
-Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+<span class="panel-info">
+**NOTE**: Don't set *client.redisOptions.keyPrefix* because then the session metrics will not work properly.
+</span>
 
 ### Usage with Sentinel
 
@@ -50,21 +58,23 @@ For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel
 {
   "plugins": {
       "Mashroom Session Redis Provider": {
-          "redisOptions": {
-              "sentinels": [
-                  { "host": "localhost", "port": 26379 },
-                  { "host": "localhost", "port": 26380 }
-               ],
-              "name": "myMaster",
-              "keyPrefix": "mashroom:sess:"
-          }
+         "client": {
+             "redisOptions": {
+                 "sentinels": [
+                     { "host": "localhost", "port": 26379 },
+                     { "host": "localhost", "port": 26380 }
+                 ],
+                 "name": "myMaster",
+                 "keyPrefix": "mashroom:sess:"
+             }
+         }
       }
   }
 }
 ```
 
-* *sentinels*: list of sentinel nodes to connect to
-* *name*: identifies a group of Redis instances composed of a master and one or more slaves
+ * *sentinels*: list of sentinel nodes to connect to
+ * *name*: identifies a group of Redis instances composed of a master and one or more slaves
 
 Checkout out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
@@ -76,31 +86,33 @@ For a [sharding cluster](https://redis.io/topics/cluster-spec) configure the plu
 {
   "plugins": {
       "Mashroom Session Redis Provider": {
-          "cluster": true,
-          "clusterNodes": [
-              {
-                  "host": "redis-node1",
-                  "port": "6379"
-              },
-              {
-                  "host": "redis-node2",
-                  "port": "6379"
-              }
-          ],
-          "clusterOptions": {
-              "maxRedirections": 3
-          },
-          "redisOptions": {
-               "keyPrefix": "mashroom:sess:"
-          }
+         "client": {
+             "cluster": true,
+             "clusterNodes": [
+                 {
+                     "host": "redis-node1",
+                     "port": "6379"
+                 },
+                 {
+                     "host": "redis-node2",
+                     "port": "6379"
+                 }
+             ],
+             "clusterOptions": {
+                 "maxRedirections": 3
+             },
+             "redisOptions": {
+                 "keyPrefix": "mashroom:sess:"
+             }
+         }
       }
   }
 }
 ```
 
-* *cluster*: Enables cluster support, must be true
-* *clusterNodes*: Cluster start nodes
-* *clusterOptions*: Passed as second argument of the *Redis.Cluster* constructor of *ioredis*
-* *redisOptions*: Passed as *redisOptions* in the *clusterOptions*
+ * *cluster*: Enables cluster support, must be true
+ * *clusterNodes*: Cluster start nodes
+ * *clusterOptions*: Passed as second argument of the *Redis.Cluster* constructor of *ioredis*
+ * *redisOptions*: Passed as *redisOptions* in the *clusterOptions*
 
 Checkout out the *Cluster* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.

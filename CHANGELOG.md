@@ -3,7 +3,61 @@
 
 ## [unreleased]
 
- * Redis Session Provider: Fixed session count metric
+ * MongoDB Session Provider: **BREAKING CHANGE**: Changed config structure to be able to pass parameters to connect-mongo,
+   such as *ttl* and *autoRemove*.
+
+   Before:
+   ```json
+   {
+     "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
+     "collection": "sessions",
+     "connectionOptions": {
+       "poolSize": 5
+     }
+   }
+   ```
+   After:
+   ```json
+   {
+     "client": {
+       "uri": "mongodb://username:password@localhost:27017/mashroom_session_db?connectTimeoutMS=1000&socketTimeoutMS=2500",
+       "connectionOptions": {
+          "poolSize": 5
+       }
+     },
+     "collectionName": "sessions",
+     "ttl": 86400
+   }
+   ```
+ * Redis Session Provider: **BREAKING CHANGE**: Changed config structure to be able to pass parameters to connect-redis,
+   such as *prefix* and *ttl*. Setting *prefix* on this level instead of the Redis client level fixed the session count metric,
+   which was broken.
+
+   Before:
+   ```json
+   {
+     "redisOptions": {
+       "host": "localhost",
+       "port": "6379",
+       "keyPrefix": "mashroom:sess:"
+     },
+     "cluster": false
+   }
+   ```
+   After:
+   ```json
+   {
+     "client": {
+       "redisOptions": {
+         "host": "localhost",
+         "port": "6379",
+       },
+       "cluster": false
+     },
+     "prefix": "mashroom:sess:",
+     "ttl": 86400
+   }
+   ```
  * Admin Toolbar: Only allow valid characters (according to RFC 3986) in Routes
  * Admin Toolbar: Added checkbox for client-side routing and renamed *friendlyUrl* to *Route* because that's more what it is.
  * Portal: Added support for client-side routing. If you enable it everything appended to the page URL is ignored.

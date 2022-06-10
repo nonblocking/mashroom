@@ -73,7 +73,8 @@
                     "type": "object",
                     "description": "The MongoDB connection options (see https://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings)"
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "IORedisConfig": {
             "type": "object",
@@ -1000,28 +1001,61 @@
                 },
                 "Mashroom Session MongoDB Provider": {
                     "type": "object",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/MongoDbConfig"
+                    "properties": {
+                        "client": {
+                            "allOf": [{
+                                "$ref": "#/definitions/MongoDbConfig"
+                            }]
                         },
-                        {
-                            "properties": {
-                                "collection": {
-                                    "type": "string",
-                                    "description": "The MongoDB collection to store sessions in (Default: sessions)"
-                                }
-                            }
+                        "collectionName": {
+                            "type": "string",
+                            "description": "Mongo collection to store sessions (Default: mashroom-sessions)"
+                        },
+                        "ttl": {
+                            "type": "number",
+                            "description": "TTL in seconds (Default: 86400 - one day)"
+                        },
+                        "autoRemove": {
+                            "type": "string",
+                            "enum": ["native", "interval", "disabled"],
+                            "description": "Session remove strategy (Default: native)"
+                        },
+                        "autoRemoveInterval": {
+                            "type": "number",
+                            "description": "Remove interval in seconds if *autoRemove* is interval (Default: 10)"
+                        },
+                        "touchAfter": {
+                            "type": "number",
+                            "description": "Interval in seconds between session updates (Default: 0)"
+                        },
+                        "crypto": {
+                            "type": "object",
+                            "description": "Options regarding session encryption"
                         }
-                    ],
+                    },
+                    "additionalProperties": false,
                     "description": "All config options are passed to the connect-mongodb-session"
                 },
                 "Mashroom Session Redis Provider": {
                     "type": "object",
-                    "allOf": [
-                        {
-                            "$ref": "#/definitions/IORedisConfig"
+                    "properties": {
+                        "client": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/IORedisConfig"
+                                }
+                            ]
+                        },
+                        "prefix": {
+                            "type": "string",
+                            "description": "The key prefix (Default: mashroom:sess:)"
+                        },
+                        "ttl": {
+                            "type": "number",
+                            "description": "TTL in seconds (Default: 86400 - one day)"
                         }
-                    ]
+                    },
+                    "additionalProperties": false
                 },
                 "Mashroom Storage Services": {
                     "type": "object",

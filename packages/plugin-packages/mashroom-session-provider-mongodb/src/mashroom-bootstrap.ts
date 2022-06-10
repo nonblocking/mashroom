@@ -9,16 +9,16 @@ import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroo
 const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const {loggerFactory, services: {core: {pluginService, healthProbeService}}} = pluginContextHolder.getPluginContext();
     const logger = loggerFactory('mashroom.session.provider.mongodb');
-    const {uri, collection, connectionOptions} = pluginConfig;
+    const {client: {uri, connectionOptions}, ...connectMongoOptions} = pluginConfig;
 
-    logger.info('Using session collection:', collection);
+    logger.info('Using collection for sessions:', connectMongoOptions.collectionName);
 
     await setConnectionUriAndOptions(uri, connectionOptions);
     const clientPromise = createClient(logger);
 
     const store = MongoDbStore.create({
         clientPromise,
-        collectionName: collection,
+        ...connectMongoOptions,
     });
 
     healthProbeService.registerProbe(pluginName, healthProbe);
