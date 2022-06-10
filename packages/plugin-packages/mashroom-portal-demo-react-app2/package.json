@@ -24,7 +24,7 @@
         "@types/react-dom": "^18.0.5"
     },
     "resolutions": {
-        "react": "^18.1.0"
+        "react": "18.1.0"
     },
     "scripts": {
         "preinstall": "npx npm-force-resolutions",
