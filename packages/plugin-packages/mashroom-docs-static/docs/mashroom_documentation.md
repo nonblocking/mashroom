@@ -77,10 +77,10 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 ### Feature/Compatibility Matrix
 
 |                     | Supported                                                                                                                      |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------|
+| ------------------- |--------------------------------------------------------------------------------------------------------------------------------|
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
-| Node.js             | 12.x, 14.x, 16.x                                                                                                               |
-| HTTP                | 1.0, 1.1, 2 + TLS 1.1, 1.2, 1.3                                                                                                 |
+| Node.js             | 14.x, 16.x, 18.x                                                                                                               |
+| HTTP                | 1.0, 1.1, 2 + TLS 1.1, 1.2, 1.3                                                                                                |
 | Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
 | Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
@@ -230,7 +230,7 @@ when plugins are reloaded. But it save to store the *pluginContextHolder* instan
 
 ### Minimum Requirements
 
- * Node.js >= 12
+ * Node.js >= 14
 
 ### Install
 
