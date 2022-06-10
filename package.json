@@ -45,7 +45,7 @@
         "nodemon": "^2.0.16"
     },
     "scripts": {
-        "setup": "npm install && lerna bootstrap && npm run build:core",
+        "setup": "npm install && lerna bootstrap -- --force && npm run build:core",
         "type-check": "lerna run type-check && flow check",
         "lint": "lerna run lint",
         "test": "lerna run test",
