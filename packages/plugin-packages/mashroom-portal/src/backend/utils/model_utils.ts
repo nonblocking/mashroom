@@ -70,7 +70,7 @@ export const getPageData = async (sitePath: string, friendlyUrl: string | undefi
         pageRef = site.pages[0];
     }
     if (!pageRef) {
-        logger.warn(`Page not found in site '${site.siteId}' configuration: ${friendlyUrl || '/'}`);
+        logger.warn(`Route not found on site '${site.siteId}' configuration: ${friendlyUrl || '/'}`);
         return {};
     }
 

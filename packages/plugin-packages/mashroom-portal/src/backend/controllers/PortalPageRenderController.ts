@@ -121,10 +121,10 @@ export default class PortalPageRenderController {
                 return;
             }
 
-            logger.debug(`Request for content page: ${pageRef.friendlyUrl} on site: ${sitePath}`);
+            logger.debug(`Request for route: ${pageRef.friendlyUrl} on site: ${sitePath}`);
 
             if (!await isSitePermitted(req, site.siteId) || !await isPagePermitted(req, page.pageId)) {
-                logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access path: ${pageRef.friendlyUrl}`);
+                logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access route: ${pageRef.friendlyUrl}`);
                 res.sendStatus(403);
                 return;
             }
@@ -141,14 +141,14 @@ export default class PortalPageRenderController {
                 // If we know the current page we can decide if a full page refresh would be required
                 const currentPageTheme = originalPage.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
                 if (themeName !== currentPageTheme) {
-                    logger.info(`Requesting full page reload because original page ${originalPageRef.friendlyUrl} and ${pageRef.friendlyUrl} have different themes`);
+                    logger.info(`Requesting full page reload because original route ${originalPageRef.friendlyUrl} and requested route ${pageRef.friendlyUrl} have different themes`);
                     fullPageLoadRequired = true;
                 } else {
                     const userAgent = determineUserAgent(req);
                     const allEnhancementsLoaded = await allEnhancementsExistOnOriginalPage(
                         this._pluginRegistry, sitePath, pageRef.friendlyUrl, originalPageRef.friendlyUrl, lang, userAgent, req);
                     if (!allEnhancementsLoaded) {
-                        logger.info(`Requesting full page reload because original page ${originalPageRef.friendlyUrl} does not contain all page enhancements for ${pageRef.friendlyUrl}`);
+                        logger.info(`Requesting full page reload because original route ${originalPageRef.friendlyUrl} does not contain all page enhancements for route: ${pageRef.friendlyUrl}`);
                         fullPageLoadRequired = true;
                     }
                 }
