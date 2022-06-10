@@ -23,7 +23,11 @@
         "@types/react": "^18.0.12",
         "@types/react-dom": "^18.0.5"
     },
+    "resolutions": {
+        "react": "^18.1.0"
+    },
     "scripts": {
+        "preinstall": "npx npm-force-resolutions",
         "lint": "eslint --ext .ts,.tsx --fix --quiet ./src",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --config ./webpack.config.app.client.js --mode development",
