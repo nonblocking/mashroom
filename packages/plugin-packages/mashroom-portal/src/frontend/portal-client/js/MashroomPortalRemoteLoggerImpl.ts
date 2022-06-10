@@ -6,7 +6,7 @@ import type {LogLevel} from '@mashroom/mashroom/type-definitions';
 import type {MasterMashroomPortalRemoteLogger, MashroomPortalRemoteLogger} from '../../../../type-definitions';
 import type {ClientLogMessage, MashroomRestService} from '../../../../type-definitions/internal';
 
-const SEND_INTERVAL = 1000;
+const SEND_INTERVAL = 2000;
 
 export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPortalRemoteLogger {
 
@@ -79,7 +79,10 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         }
 
         try {
-            this._restService.post('/log', messages);
+            this._restService.post('/log', messages).catch(() => {
+               // Catch and ignore all errors,
+               // otherwise this will generate new log messages which will most probably fail again
+            });
             this._unsentLogMessages = [];
         } catch (e) {
             console.error('Unable to send error message to server', e);

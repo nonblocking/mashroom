@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Prevent a loop if error messages can not be sent to the server
  * MongoDB Session Provider: **BREAKING CHANGE**: Changed config structure to be able to pass parameters to connect-mongo,
    such as *ttl* and *autoRemove*.
 
