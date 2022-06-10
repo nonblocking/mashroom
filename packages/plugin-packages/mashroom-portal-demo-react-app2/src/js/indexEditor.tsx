@@ -2,7 +2,7 @@
 import '../sass/styleEditor.scss';
 
 import React from 'react';
-import {render, unmountComponentAtNode} from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import Editor from './Editor';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -14,11 +14,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
         throw new Error('This app can only be started as App Config Editor!');
     }
 
-    render(<Editor editorTarget={editorTarget} />, portalAppHostElement);
+    const root = createRoot(portalAppHostElement);
+    root.render(<Editor editorTarget={editorTarget} />);
 
     return {
         willBeRemoved: () => {
-            unmountComponentAtNode(portalAppHostElement);
+            root.unmount();
         }
     };
 };

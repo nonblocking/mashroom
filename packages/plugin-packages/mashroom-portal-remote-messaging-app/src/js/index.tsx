@@ -2,7 +2,7 @@
 import '../sass/style.scss';
 
 import React from 'react';
-import {render, unmountComponentAtNode} from 'react-dom';
+import {createRoot} from 'react-dom/client';
 import RemoteMessagingApp from './components/RemoteMessagingApp';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -11,13 +11,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     const { lang } = portalAppSetup;
     const { messageBus } = clientServices;
 
-    render(
-        <RemoteMessagingApp lang={lang} messageBus={messageBus} />,
-        portalAppHostElement);
+    const root = createRoot(portalAppHostElement);
+    root.render(<RemoteMessagingApp lang={lang} messageBus={messageBus} />);
 
     return {
         willBeRemoved: () => {
-            unmountComponentAtNode(portalAppHostElement);
+            root.unmount();
         }
     };
 };
