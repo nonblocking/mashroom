@@ -577,7 +577,7 @@
                         },
                         "warnBeforeAuthenticationExpiresSec": {
                             "type": "number",
-                            "description": "The time when the Portal should start to warn that the authentication is about to expire (Default: 120)"
+                            "description": "The time when the Portal should start to warn that the authentication is about to expire.\nA value of 0 or lower than 0 disables the warning. (Default: 60)"
                         },
                         "autoExtendAuthentication": {
                             "type": "boolean",
@@ -746,7 +746,7 @@
                             "items": {
                                 "type": "string"
                             },
-                            "description": "A list of query parameters that should be forwarded during the authentication.\n   (will be added to the login or authorization URL)"
+                            "description": "A list of query parameters that should be forwarded during the authentication.\n(will be added to the login or authorization URL)"
                         },
                         "acl": {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
@@ -1115,7 +1115,7 @@
                         },
                         "checkExternalChangePeriodMs": {
                             "type": "integer",
-                            "description": "Check JSON files for external changes after this period.\n   If you set this to a value <= 0 the file timestamp will be checked on every access which will cause (Default: 2000)"
+                            "description": "Check JSON files for external changes after this period.\nIf you set this to a value <= 0 the file timestamp will be checked on every access which will cause (Default: 2000)"
                         },
                         "prettyPrintJson": {
                             "type": "boolean",

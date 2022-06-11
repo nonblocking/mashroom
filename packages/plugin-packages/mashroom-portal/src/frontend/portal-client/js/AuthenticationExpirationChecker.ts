@@ -8,7 +8,7 @@ import {
 import type {MashroomPortalUserService} from '../../../../type-definitions';
 
 const checkAuthenticationExpiration: boolean = (global as any)[WINDOW_VAR_PORTAL_CHECK_AUTHENTICATION_EXPIRATION];
-const warnBeforeAuthenticationExpiresSec: number = (global as any)[WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC] || 120;
+const warnBeforeAuthenticationExpiresSec: number = (global as any)[WINDOW_VAR_PORTAL_WARN_BEFORE_AUTHENTICATION_EXPIRES_SEC] ?? 60;
 const autoExtendAuthentication: boolean = (global as any)[WINDOW_VAR_PORTAL_AUTO_EXTEND_AUTHENTICATION];
 
 const AUTH_EXPIRES_WARNING_PANEL_ID = 'mashroom-portal-auth-expires-warning';
@@ -28,7 +28,7 @@ export default class MashroomPortalUserInactivityHandler {
     }
 
     start(): void {
-        if (!checkAuthenticationExpiration) {
+        if (!checkAuthenticationExpiration || warnBeforeAuthenticationExpiresSec <= 0) {
             return;
         }
 
@@ -78,7 +78,8 @@ export default class MashroomPortalUserInactivityHandler {
             this._startCheckTimer(1);
         } else {
             this._hideWarningPanel();
-            const nextCheck = Math.max(10, timeLeft - warnBeforeAuthenticationExpiresSec - 30);
+            // Re-check after 60sec at latest
+            const nextCheck = Math.max(1, Math.min(60, timeLeft - warnBeforeAuthenticationExpiresSec));
             this._startCheckTimer(nextCheck);
         }
     }

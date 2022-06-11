@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Re-check authentication expiration at least every 60sec, so, if the session for some reason expires (or gets revoked)
+   the user will get notified faster.
  * Dropped Node.js 12.x support
  * Portal: Prevent a loop if error messages can not be sent to the server
  * MongoDB Session Provider: **BREAKING CHANGE**: Changed config structure to be able to pass parameters to connect-mongo,

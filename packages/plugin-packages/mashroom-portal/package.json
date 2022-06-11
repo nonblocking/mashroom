@@ -73,7 +73,7 @@
                     "adminApp": "Mashroom Portal Admin App",
                     "defaultTheme": "Mashroom Portal Default Theme",
                     "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
-                    "warnBeforeAuthenticationExpiresSec": 120,
+                    "warnBeforeAuthenticationExpiresSec": 60,
                     "autoExtendAuthentication": false,
                     "ignoreMissingAppsOnPages": false,
                     "defaultProxyConfig": {
