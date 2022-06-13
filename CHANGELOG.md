@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.1.0 (June 13, 2022)
+
  * Portal: Re-check authentication expiration at least every 60sec, so, if the session for some reason expires (or gets revoked)
    the user will get notified faster.
  * Dropped Node.js 12.x support
