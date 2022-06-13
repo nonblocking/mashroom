@@ -269,28 +269,26 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         if (!title || title.trim() === '') {
             errors.page.title = 'required';
         }
-        if (!values.page.friendlyUrl || values.page.friendlyUrl.trim() === '') {
+
+        const friendlyUrl = values.page.friendlyUrl;
+        if (!friendlyUrl || friendlyUrl.trim() === '') {
             errors.page.friendlyUrl = 'required';
-        } else if (!values.page.friendlyUrl.startsWith('/')) {
+        } else if (!friendlyUrl.startsWith('/')) {
             errors.page.friendlyUrl = 'mustStartWithSlash';
-        } else if (values.page.friendlyUrl.endsWith('/')) {
+        } else if (friendlyUrl !== '/' && friendlyUrl.endsWith('/')) {
             errors.page.friendlyUrl = 'mustNotEndWithSlash';
-        } else if (!values.page.friendlyUrl.match(VALID_PATH)) {
+        } else if (!friendlyUrl.match(VALID_PATH)) {
             errors.page.friendlyUrl = 'invalidCharacters';
         } else {
             const conflictingRoute = pages.pagesFlattened.find((page) => {
                if (selectedPage && page.pageId === selectedPage.pageId) {
                    return false;
                }
-               const friendlyUrl = values.page.friendlyUrl;
-               if (!friendlyUrl) {
-                   return false;
-               }
-               if (values.page.clientSideRouting && page.friendlyUrl.toLowerCase().startsWith(`${friendlyUrl.toLowerCase()}/`)) {
+               if (values.page.clientSideRouting && (friendlyUrl === '/' || page.friendlyUrl.toLowerCase().startsWith(`${friendlyUrl.toLowerCase()}/`))) {
                    return true;
                }
                if (page.clientSideRouting && friendlyUrl.toLowerCase().startsWith(`${page.friendlyUrl.toLowerCase()}/`)) {
-                    return true;
+                   return true;
                }
                return page.friendlyUrl.toLowerCase() === friendlyUrl.toLowerCase();
             });
