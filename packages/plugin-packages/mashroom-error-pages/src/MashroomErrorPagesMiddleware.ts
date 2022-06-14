@@ -13,6 +13,8 @@ import type {
 
 const FILE_MAPPING: Record<string, string> = {};
 
+const isNotJsonResponse = (res: Response) => (/json/i).test(res.getHeader('content-type') as string || '');
+
 export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesMiddlewareType {
 
     private _pluginRooterFolder: string;
@@ -31,7 +33,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             let writeBuffer: Array<() => void> = [];
 
             const doWrite = (args: Array<any>, exec: () => void) => {
-                if (res.statusCode >= 400 && !errorChecked && isHtmlRequest(req)) {
+                if (res.statusCode >= 400 && !errorChecked && isHtmlRequest(req) && !isNotJsonResponse(res)) {
                     errorChecked = true;
                     errorPageSendPending = true;
 

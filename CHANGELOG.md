@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Error Pages: Don't show an error page if the response has content type application/json
  * Core: The health and readiness probes return now a JSON with the actual errors
 
 ## 2.1.1 (June 13, 2022)

@@ -21,18 +21,19 @@ describe('MashroomErrorPagesMiddleware', () => {
         const res: any = {
             statusCode: 404,
             removeHeader: () => {},
+            getHeader: () => {},
             setHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
                 expect(chunk).toContain('404');
                 done();
             }
-        }
+        };
 
 
         const mapping: ErrorMapping = {
             '404': './html/404.html'
-        }
+        };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
 
@@ -57,17 +58,18 @@ describe('MashroomErrorPagesMiddleware', () => {
             statusCode: 404,
             removeHeader: () => {},
             setHeader: () => {},
+            getHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
                 expect(chunk).toContain('404');
                 done();
             }
-        }
+        };
 
 
         const mapping: ErrorMapping = {
             'default': './html/404.html'
-        }
+        };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
 
@@ -91,16 +93,17 @@ describe('MashroomErrorPagesMiddleware', () => {
         const res: any = {
             statusCode: 404,
             setHeader: () => {},
+            getHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
                 expect(chunk).toEqual('foo');
                 done();
             }
-        }
+        };
 
         const mapping: ErrorMapping = {
             '404': './html/non_existing.html'
-        }
+        };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
 
@@ -126,18 +129,19 @@ describe('MashroomErrorPagesMiddleware', () => {
             statusCode: 404,
             removeHeader: () => {},
             setHeader: () => {},
+            getHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
                 expect(chunk).toContain('status for /the/resource?a=b: 404');
                 expect(chunk).toContain('server version 1.0.0');
                 done();
             }
-        }
+        };
 
 
         const mapping: ErrorMapping = {
             '404': './html/404_2.html'
-        }
+        };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
 
@@ -174,17 +178,18 @@ describe('MashroomErrorPagesMiddleware', () => {
             statusCode: 404,
             removeHeader: () => {},
             setHeader: () => {},
+            getHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
                 expect(chunk).toContain('<div>Hallo World</div>');
                 done();
             }
-        }
+        };
 
 
         const mapping: ErrorMapping = {
             '404': './html/404_3.html'
-        }
+        };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
 
@@ -210,18 +215,89 @@ describe('MashroomErrorPagesMiddleware', () => {
             statusCode: 404,
             removeHeader: () => {},
             setHeader: () => {},
+            getHeader: () => {},
             write: (chunk: any) => {},
             end: (chunk: any) => {
                 expect(chunk).toContain('status for /the/resource?a%3Cscript%3Ealert(1)%3C/script%3Eb: 404');
                 expect(chunk).toContain('server version 1.0.0');
                 done();
             }
-        }
+        };
 
 
         const mapping: ErrorMapping = {
             '404': './html/404_2.html'
-        }
+        };
+
+        const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
+
+        mashroomErrorPagesMiddleware.middleware()(req, res, () => {});
+
+        res.end('foo');
+    });
+
+    it('sends the original content for AJAX requests', (done) => {
+        const req: any = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+            },
+            pluginContext: {
+                loggerFactory: dummyLoggerFactory,
+                services: {
+                }
+            }
+        };
+        const res: any = {
+            statusCode: 404,
+            setHeader: () => {},
+            write: (chunk: any) => {},
+            end: (chunk: any) => {
+                expect(chunk).toEqual('foo');
+                done();
+            }
+        };
+
+        const mapping: ErrorMapping = {
+            '404': './html/404_2.html'
+        };
+
+        const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
+
+        mashroomErrorPagesMiddleware.middleware()(req, res, () => {});
+
+        res.end('foo');
+    });
+
+    it('sends the original content for errors with JSON response', (done) => {
+        const req: any = {
+            method: 'GET',
+            headers: {
+                accept: 'text/html',
+            },
+            pluginContext: {
+                loggerFactory: dummyLoggerFactory,
+                services: {
+                }
+            }
+        };
+        const res: any = {
+            statusCode: 404,
+            getHeader: (header: string) => {
+                if (header === 'content-type') {
+                    return 'application/json';
+                }
+            },
+            write: (chunk: any) => {},
+            end: (chunk: any) => {
+                expect(chunk).toEqual('foo');
+                done();
+            }
+        };
+
+        const mapping: ErrorMapping = {
+            '404': './html/404_2.html'
+        };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
 
