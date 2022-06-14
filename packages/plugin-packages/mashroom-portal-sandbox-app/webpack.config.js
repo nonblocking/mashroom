@@ -20,6 +20,7 @@ module.exports = (env, argv) => {
         output: {
             path: __dirname + '/dist',
             filename: '[name].js',
+            chunkFilename: 'sandbox.[contenthash].js',
         },
         target: ['web', 'es5'],
         module: {

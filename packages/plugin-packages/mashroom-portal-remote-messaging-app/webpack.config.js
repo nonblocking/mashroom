@@ -18,6 +18,7 @@ module.exports = (env, argv) => {
         output: {
             path: __dirname + '/dist',
             filename: '[name].js',
+            chunkFilename: 'remote-messaging.[contenthash].js',
         },
         target: ['web', 'es5'],
         module: {

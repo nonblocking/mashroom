@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Sandbox App, Admin Toolbar: Make sure the chunks get new names when the content changes to avoid problems with browser caching
  * Error Pages: Don't show an error page if the response has content type application/json
  * Core: The health and readiness probes return now a JSON with the actual errors
 

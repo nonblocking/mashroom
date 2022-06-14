@@ -19,6 +19,7 @@ module.exports = (env, argv) => {
         output: {
             path: __dirname + '/dist',
             filename: 'bundle.js',
+            chunkFilename: 'admin-toolbar.[contenthash].js',
         },
         target: ['web', 'es5'],
         module: {
