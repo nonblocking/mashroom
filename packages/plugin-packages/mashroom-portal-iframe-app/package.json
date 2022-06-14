@@ -21,7 +21,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint --ext .ts,.tsx --fix --quiet ./src",
+        "lint": "eslint src --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve  --mode development --hot",
         "build": "webpack --mode production"

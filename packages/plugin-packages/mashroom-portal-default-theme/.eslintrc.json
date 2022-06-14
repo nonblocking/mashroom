@@ -19,6 +19,7 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "prefer-destructuring": ["warn", { "array": true, "object": true }],
-        "@typescript-eslint/ban-ts-comment": "off"
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

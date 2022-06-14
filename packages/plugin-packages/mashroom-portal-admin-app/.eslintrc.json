@@ -28,6 +28,7 @@
         "no-console": "off",
         "no-unused-vars": "warn",
         "react/display-name": "off",
-        "@typescript-eslint/ban-ts-comment": "warn"
+        "@typescript-eslint/ban-ts-comment": "warn",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

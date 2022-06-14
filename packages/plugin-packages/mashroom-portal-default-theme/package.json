@@ -24,7 +24,7 @@
         "express": "^4.18.1"
     },
     "scripts": {
-        "lint": "eslint --ext .ts src --fix",
+        "lint": "eslint src --ext .ts --fix",
         "type-check": "tsc --noEmit",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev_server.js\"",
         "build:backend": "babel src/backend -d dist --extensions .ts",

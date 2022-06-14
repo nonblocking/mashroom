@@ -19,7 +19,7 @@
         "react-intl": "^6.0.4"
     },
     "scripts": {
-        "lint": "eslint --ext .ts,.tsx --fix --quiet ./src",
+        "lint": "eslint src --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development",
         "build": "webpack --mode production"

@@ -19,6 +19,7 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "@typescript-eslint/ban-ts-comment": "off",
-        "@typescript-eslint/camelcase": "off"
+        "@typescript-eslint/camelcase": "off",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }
