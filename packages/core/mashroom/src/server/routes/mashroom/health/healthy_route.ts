@@ -9,8 +9,9 @@ const healthyRoute = async (req: Request, res: Response) => {
         res.end();
     } else {
         res.status(503);
+        res.type('json');
         res.json({
-            errors: req.messages,
+            errors: checkResult.errors,
         });
     }
 };
