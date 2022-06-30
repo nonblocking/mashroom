@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Simple Security Provider, LDAP Security Provider: Prevent a redirect loop if the login page is not accessible to the user
+
 ## 2.1.2 (June 14, 2022)
 
  * Sandbox App, Admin Toolbar: Make sure the chunks get new names when the content changes to avoid problems with browser caching

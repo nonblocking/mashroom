@@ -45,6 +45,13 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
     }
 
     async authenticate(request: Request, response: Response, authenticationHints: any = {}): Promise<MashroomSecurityAuthenticationResult> {
+        // Prevent a redirect loop if the login page is not accessible
+        if (request.originalUrl.startsWith(this._loginPage)) {
+            return {
+                status: 'error'
+            };
+        }
+
         const encodedRedirectUrl = encodeURIComponent(request.originalUrl);
         const authenticationHintsQuery = querystring.stringify(authenticationHints);
         response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? `&${authenticationHintsQuery}` : ''}`);

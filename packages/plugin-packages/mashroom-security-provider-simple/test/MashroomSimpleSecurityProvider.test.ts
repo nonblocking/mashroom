@@ -29,6 +29,29 @@ describe('MashroomSimpleSecurityProvider', () => {
         expect(redirectUrl).toBe('/login?redirectUrl=%2Ffoo%2Fbar');
     });
 
+    it('cancels the authentication process if the original url is the login page itself', async () => {
+        let redirectUrl = null;
+
+        const req: any = {
+            originalUrl: '/login?redirectUrl=https://foo.com',
+            pluginContext: {
+                loggerFactory,
+            }
+        };
+        const res: any = {
+            redirect: (url: string) => redirectUrl = url
+        };
+
+        const userStorePath = path.resolve(__dirname, './test_users.json');
+
+        const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggerFactory);
+
+        const result = await simpleSecurityProvider.authenticate(req, res);
+
+        expect(result).toBeTruthy();
+        expect(result.status).toBe('error');
+    });
+
     it('passes the authentication hints to the login page', async () => {
         let redirectUrl = null;
 
