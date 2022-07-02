@@ -3,7 +3,9 @@
 
 ## [unreleased]
 
- * Simple Security Provider, LDAP Security Provider: Prevent a redirect loop if the login page is not accessible to the user
+## 2.1.3 (July 2, 2022)
+
+ * Simple Security Provider, LDAP Security Provider: Prevent a redirect loop if the user has no permission to access the login page
 
 ## 2.1.2 (June 14, 2022)
 
