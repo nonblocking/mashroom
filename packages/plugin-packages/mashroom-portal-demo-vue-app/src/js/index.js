@@ -33,7 +33,7 @@ const bootstrap = (portalAppHostElement, portalAppSetup, clientServices) => {
 
     return {
         willBeRemoved: () => {
-            console.info('Ummounting Vue Demo App');
+            console.info('Unmounting Vue Demo App');
             app.unmount();
         }
     };

@@ -31,7 +31,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 
     return {
         willBeRemoved: () => {
-            console.info('Ummounting React App 2');
+            console.info('Unmounting React App 2');
             root.unmount();
         },
         updateAppConfig: ({markdownMessage, pingButtonLabel}) => {
