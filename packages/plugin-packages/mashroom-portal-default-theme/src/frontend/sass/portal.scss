@@ -141,6 +141,33 @@ button, input[type="submit"] {
     }
 }
 
+button.secondary {
+    background-color: transparent;
+    border: 1px solid $COLOR_PRIMARY;
+    color: $COLOR_PRIMARY;
+
+    &:hover {
+        color: $COLOR_PRIMARY_DARK;
+        border-color: $COLOR_PRIMARY_DARK;
+    }
+
+    &:active {
+        color: $COLOR_PRIMARY_DARK;
+        border-color: $COLOR_PRIMARY_DARK;
+    }
+
+    &[disabled] {
+        background-color: transparent;
+        border-color: $COLOR_GREY;
+        color: $COLOR_GREY;
+
+        &:hover, &:active {
+            border-color: $COLOR_GREY;
+            color: $COLOR_GREY;
+        }
+    }
+}
+
 .mashroom-portal-checkbox {
     position: absolute;
     opacity: 0;

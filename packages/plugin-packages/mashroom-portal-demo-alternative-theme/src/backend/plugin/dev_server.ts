@@ -160,6 +160,7 @@ app.get('/', (req: Request, res: Response) => {
                                 <br/>
                                 <div>
                                     <button onclick="document.getElementById('mashroom-portal-modal-overlay-app').innerHTML = '<strong>test</strong>'; document.getElementById('mashroom-portal-modal-overlay').classList.add('show');">Show modal app</button>
+                                    <button class="mashroom-portal-ui-button secondary">Secondary Button</button>
                                     <button disabled>Disabled button</button>
                                 </div>
                                 <br/>

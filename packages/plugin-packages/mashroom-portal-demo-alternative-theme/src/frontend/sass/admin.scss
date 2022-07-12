@@ -159,6 +159,23 @@
         border: 1px solid transparent;
         color: $ADMIN_APP_COLOR_TEXT;
 
+        &.secondary {
+            background-color: transparent;
+            border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+
+            &:hover, &:active {
+                color: $ADMIN_APP_COLOR_TEXT;
+            }
+
+            &[disabled] {
+                &:hover, &:active {
+                    color: $COLOR_GREY;
+                    border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+                    background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+                }
+            }
+        }
+
         &:hover {
             background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
         }
