@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Admin Toolbar: Cleanup the DOM properly after a drag ends
+
 ## 2.1.3 (July 2, 2022)
 
  * Simple Security Provider, LDAP Security Provider: Prevent a redirect loop if the user has no permission to access the login page

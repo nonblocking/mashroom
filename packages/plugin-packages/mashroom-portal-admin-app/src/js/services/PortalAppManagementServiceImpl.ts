@@ -285,7 +285,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     private _onMoveAppDragEnd() {
-        Array.from(document.querySelectorAll('.drag-ghost')).forEach((dragGhost) => {
+        Array.from(document.querySelectorAll('.mashroom-portal-admin-drag-ghost')).forEach((dragGhost) => {
             document.body.removeChild(dragGhost);
         });
 
