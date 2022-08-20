@@ -1,10 +1,10 @@
 
-import {getFrontendApiBasePath, getFrontendResourcesBasePath} from './path_utils';
 import {
     PORTAL_APP_RESOURCES_BASE_PATH,
     PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH
 } from '../constants';
+import {getFrontendApiBasePath, getFrontendResourcesBasePath} from './path_utils';
 import {calculatePermissions} from './security_utils';
 import {createAppId} from './id_utils';
 import {getVersionHash} from './cache_utils';

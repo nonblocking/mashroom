@@ -1,6 +1,6 @@
 
 // Active Directory errors
-import {MashroomSecurityLoginFailureReason} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomSecurityLoginFailureReason} from '@mashroom/mashroom-security/type-definitions';
 
 const AD_LOGIN_ERRORS: Record<string, string> = {
     USER_NOT_FOUND: '525',

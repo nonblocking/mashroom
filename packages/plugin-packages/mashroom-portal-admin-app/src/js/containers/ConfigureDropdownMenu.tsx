@@ -1,9 +1,9 @@
 
 import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
+import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
 import {DependencyContextConsumer} from '../DependencyContext';
 import ConfigureDropdownMenuComp from '../components/ConfigureDropdownMenu';
-import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
 import {setSelectedPage, setSelectedSite} from '../store/actions';
 
 import type {Dispatch, State} from '../types';

@@ -1,6 +1,6 @@
+import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import LdapClientImpl from '../src/LdapClientImpl';
 import {startMockLdapServer, stopMockLdapServer} from './mockLdapServer';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import type {LdapEntry} from '../type-definitions';
 
 describe('LdapClientImpl', () => {

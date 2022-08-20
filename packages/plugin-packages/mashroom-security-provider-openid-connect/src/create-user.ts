@@ -1,6 +1,6 @@
 
 import {UNDEFINED_USER_NAME} from './constants';
-import {IdTokenClaims, UserinfoResponse} from 'openid-client';
+import type {IdTokenClaims, UserinfoResponse} from 'openid-client';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 export default (

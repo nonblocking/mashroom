@@ -1,10 +1,10 @@
 
+import type {ActiveApp} from './types';
 import type {RefObject} from 'react';
 import type {
     MashroomPortalMessageBus,
     MashroomPortalMessageBusInterceptor
 } from '@mashroom/mashroom-portal/type-definitions';
-import {ActiveApp} from './types';
 
 export default class PrivateMessageBus {
 

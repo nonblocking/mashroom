@@ -1,6 +1,6 @@
 
-import {ClientOptions, createClient} from 'ldapjs';
-import type {Client as LdapJsClient, SearchOptions, Error as LdapError} from 'ldapjs';
+import { createClient} from 'ldapjs';
+import type {Client as LdapJsClient, SearchOptions, Error as LdapError,ClientOptions} from 'ldapjs';
 
 import type {TlsOptions} from 'tls';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';

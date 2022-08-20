@@ -4,6 +4,7 @@ import {createProxyServer} from 'http-proxy';
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {getHttpPool, getHttpsPool, getPoolConfig} from '../connection_pool';
 
+import type {RequestMetrics, Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
 import type {IncomingMessage, ServerResponse, ClientRequest} from 'http';
 import type {Socket} from 'net';
 import type {ParsedQs} from 'qs';
@@ -16,8 +17,6 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser, MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
-import type {Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
-import {RequestMetrics} from '../../type-definitions/internal';
 
 type ProxyServer = ReturnType<typeof createProxyServer>;
 

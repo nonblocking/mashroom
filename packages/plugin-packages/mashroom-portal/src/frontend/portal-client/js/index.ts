@@ -1,4 +1,5 @@
 
+import {WINDOW_VAR_PORTAL_SERVICES} from '../../../backend/constants';
 import MashroomPortalAppServiceImpl from './MashroomPortalAppServiceImpl';
 import MashroomPortalAdminServiceImpl from './MashroomPortalAdminServiceImpl';
 import MashroomPortalMessageBusImpl from './MashroomPortalMessageBusImpl';
@@ -13,7 +14,6 @@ import AuthenticationExpirationChecker from './AuthenticationExpirationChecker';
 import MashroomPortalRemoteLoggerImpl from './MashroomPortalRemoteLoggerImpl';
 import ResourceManager from './ResourceManager';
 
-import {WINDOW_VAR_PORTAL_SERVICES} from '../../../backend/constants';
 
 import type {MashroomPortalClientServices} from '../../../../type-definitions';
 

@@ -1,13 +1,13 @@
 
+import {setPoolConfig} from '../connection_pool';
+import context from '../context/global_context';
+import {startExportPoolMetrics, stopExportPoolMetrics} from '../metrics/connection_pool_metrics';
+import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request_metrics';
 import HttpHeaderFilter from './HttpHeaderFilter';
 import InterceptorHandler from './InterceptorHandler';
 import ProxyImplRequest from './ProxyImplRequest';
 import ProxyImplNodeHttpProxy from './ProxyImplNodeHttpProxy';
 import MashroomHttpProxyService from './MashroomHttpProxyService';
-import {setPoolConfig} from '../connection_pool';
-import context from '../context/global_context';
-import {startExportPoolMetrics, stopExportPoolMetrics} from '../metrics/connection_pool_metrics';
-import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request_metrics';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 import type {Proxy} from '../../type-definitions/internal';

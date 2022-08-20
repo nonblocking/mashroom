@@ -1,7 +1,5 @@
 
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
-
-import type {RequestHandler, Application} from 'express';
 import type {
     MashroomLogger,
     MashroomLoggerFactory,
@@ -11,8 +9,9 @@ import type {
     MashroomWebAppPluginBootstrapFunction,
     MashroomHttpUpgradeHandler,
     MashroomHttpUpgradeService,
+    ExpressApplicationWithUpgradeHandler,
 } from '../../../type-definitions';
-import {ExpressApplicationWithUpgradeHandler} from '../../../type-definitions';
+import type {RequestHandler, Application} from 'express';
 
 export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 

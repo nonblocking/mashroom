@@ -1,13 +1,13 @@
 
 import context from '../context/global_context';
 
+import type {CacheStatistics, MashroomMemoryCacheServiceWithStats} from '../../type-definitions/internal';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomMemoryCacheProvider,
     CacheKey,
     CacheValue,
 } from '../../type-definitions';
-import {CacheStatistics, MashroomMemoryCacheServiceWithStats} from '../../type-definitions/internal';
 
 export default class MashroomMemoryCacheService implements MashroomMemoryCacheServiceWithStats {
 

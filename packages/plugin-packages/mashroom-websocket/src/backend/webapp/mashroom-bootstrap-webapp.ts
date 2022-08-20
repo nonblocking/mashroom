@@ -1,18 +1,18 @@
 
 import context from '../context';
-import expressApp from './webapp';
-import httpUpgradeHandlerFn from './http_upgrade_handler';
 import WebSocketServer from '../WebSocketServer';
 import {
     startExportConnectionMetrics,
     stopExportConnectionMetrics
 } from '../metrics/connection_metrics';
+import expressApp from './webapp';
+import httpUpgradeHandlerFn from './http_upgrade_handler';
+import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 import type {
     MashroomHttpUpgradeHandler,
     MashroomWebAppPluginBootstrapFunction
 } from '@mashroom/mashroom/type-definitions';
-import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const { path, restrictToRoles, enableKeepAlive, keepAliveIntervalSec, maxConnections, reconnectMessageBufferFolder, reconnectTimeoutSec } = pluginConfig;

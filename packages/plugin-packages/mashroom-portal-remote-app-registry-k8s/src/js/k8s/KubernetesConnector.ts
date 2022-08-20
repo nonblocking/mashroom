@@ -1,5 +1,6 @@
 
-import {CoreV1Api, KubeConfig, V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
+import {CoreV1Api, KubeConfig} from '@kubernetes/client-node';
+import type { V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
 
 import type {KubernetesConnector as KubernetesConnectorType} from '../../../type-definitions';
 

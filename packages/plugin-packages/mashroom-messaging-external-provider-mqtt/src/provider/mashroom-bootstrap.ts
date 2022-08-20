@@ -1,7 +1,7 @@
 
-import MashroomMessagingExternalProviderMQTT from './MashroomMessagingExternalProviderMQTT';
 import healthProbe from '../health/health_probe';
 import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider_metrics';
+import MashroomMessagingExternalProviderMQTT from './MashroomMessagingExternalProviderMQTT';
 
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
 

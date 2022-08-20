@@ -1,10 +1,9 @@
 import openIDConnectClient from '../openid-connect-client';
 import createUser from '../create-user';
 import {OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
-import {OpenIDCallbackChecks} from 'openid-client';
+import type {OpenIDCallbackChecks,TokenSet} from 'openid-client';
 
 import type {Request, Response} from 'express';
-import type {TokenSet} from 'openid-client';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {CallbackConfiguration, OpenIDConnectAuthRequestData, OpenIDConnectAuthData} from '../../type-definitions';

@@ -6,8 +6,8 @@
  * node server.js [server-root]
  */
 
-import minimist from 'minimist';
 import path from 'path';
+import minimist from 'minimist';
 import {mashroomServerContextFactory} from './index';
 
 import type {MashroomLogger} from '../type-definitions';

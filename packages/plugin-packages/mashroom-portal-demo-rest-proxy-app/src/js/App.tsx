@@ -1,8 +1,8 @@
 
 import React, {PureComponent} from 'react';
 import {IntlProvider} from 'react-intl';
-import SpaceXLaunches from './SpaceXLaunches';
 import messages from '../messages/messages';
+import SpaceXLaunches from './SpaceXLaunches';
 
 type Props = {
     lang: string;

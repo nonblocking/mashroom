@@ -1,6 +1,6 @@
 
+import type {MashroomMonitoringMetricsCollectorService} from '../../type-definitions';
 import type {MashroomPluginContextHolder, MashroomPluginService} from '@mashroom/mashroom/type-definitions';
-import {MashroomMonitoringMetricsCollectorService} from '../../type-definitions';
 
 const EXPORT_INTERVAL_MS = 5000;
 

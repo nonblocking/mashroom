@@ -1,7 +1,7 @@
 
 import React, {PureComponent} from 'react';
-import InlineSVG from './InlineSVG';
 import ReactLogo from '../assets/React-icon.svg';
+import InlineSVG from './InlineSVG';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 

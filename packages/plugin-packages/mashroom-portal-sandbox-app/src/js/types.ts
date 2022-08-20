@@ -1,11 +1,10 @@
 
-import type {Store as ReduxStore, Dispatch as ReduxDispatch, AnyAction} from 'redux';
 import type {
+    MashroomPortalMessageBus,
     MashroomAvailablePortalApp,
     MashroomPortalAppSetup,
-    MashroomPortalMasterMessageBus,
 } from '@mashroom/mashroom-portal/type-definitions';
-import {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
+import type {Store as ReduxStore, Dispatch as ReduxDispatch, AnyAction} from 'redux';
 
 export type State = {
     readonly availablePortalApps: Array<MashroomAvailablePortalApp>;

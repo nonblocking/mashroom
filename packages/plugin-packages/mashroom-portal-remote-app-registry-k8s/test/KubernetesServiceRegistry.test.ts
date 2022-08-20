@@ -1,6 +1,6 @@
 import KubernetesServiceRegistry from '../src/js/registry/KubernetesServiceRegistry';
 
-import {KubernetesService} from '../type-definitions';
+import type {KubernetesService} from '../type-definitions';
 
 describe('KubernetesServiceRegistry', () => {
 

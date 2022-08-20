@@ -1,6 +1,6 @@
 
-import infoTemplate from './template';
 import {escapeHtml, jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
+import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
 import type {MashroomPluginContext} from '../../../../../type-definitions';

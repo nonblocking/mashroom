@@ -1,6 +1,6 @@
 
-import builtInLoaders from './built_in_loaders';
 import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
+import builtInLoaders from './built_in_loaders';
 
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomLoggerFactory,

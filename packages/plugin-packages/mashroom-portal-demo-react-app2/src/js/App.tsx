@@ -1,8 +1,8 @@
 
 import React, {useState, useCallback, useMemo, useEffect} from 'react';
 import Markdown from 'markdown-it';
-import InlineSVG from './InlineSVG';
 import ReactLogo from '../assets/React-icon.svg';
+import InlineSVG from './InlineSVG';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 

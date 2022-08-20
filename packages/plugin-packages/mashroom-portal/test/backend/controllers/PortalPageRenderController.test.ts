@@ -3,8 +3,7 @@ import path from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalPageRenderController from '../../../src/backend/controllers/PortalPageRenderController';
-import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
-import type {MashroomPortalPageRenderModel} from '../../../type-definitions';
+import type {MashroomPortalTheme, MashroomPortalLayout,MashroomPortalPageRenderModel} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',

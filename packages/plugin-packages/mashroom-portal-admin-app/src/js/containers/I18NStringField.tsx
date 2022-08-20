@@ -3,8 +3,8 @@ import React, {PureComponent} from 'react';
 import {connect} from 'react-redux';
 import {Field} from 'formik';
 
-import type {FieldProps} from 'formik';
 import I18NStringFieldComp from '../components/I18NStringField';
+import type {FieldProps} from 'formik';
 
 import type {Languages, State} from '../types';
 

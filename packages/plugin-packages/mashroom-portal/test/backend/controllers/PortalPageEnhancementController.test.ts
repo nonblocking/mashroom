@@ -1,9 +1,8 @@
 
 import {Writable} from 'stream';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import '../../../src/backend/context/global_portal_context';
-import PortalPageEnhancementController from '../../../src/backend/controllers/PortalPageEnhancementController';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import PortalPageEnhancementController from '../../../src/backend/controllers/PortalPageEnhancementController';
 import type {MashroomPortalPageEnhancement} from '../../../type-definitions';
 
 setPortalPluginConfig({

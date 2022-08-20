@@ -8,14 +8,13 @@ import {
 import context from '../context/global_portal_context';
 import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security_utils';
 import {portalAppContext} from '../utils/logging_utils';
+import type {MashroomMiddlewareStackService,IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 
 import type {Socket} from 'net';
 import type {Request} from 'express';
-import type {IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';
 import type {MashroomPortalAppUserPermissions, MashroomPortalProxyDefinition,} from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
-import {MashroomMiddlewareStackService} from '@mashroom/mashroom/type-definitions';
 
 export default class PortalRestProxyController {
 

@@ -2,13 +2,13 @@
 import path from 'path';
 import fs from 'fs';
 import {EventEmitter} from 'events';
-import {ensureDirSync} from 'fs-extra';
 import {promisify} from 'util';
+import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
-import NpmUtils from './NpmUtils';
 import {stripAnsiColors} from '../../utils/log_utils';
 import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
+import NpmUtils from './NpmUtils';
 
 import type {
     MashroomLogger,

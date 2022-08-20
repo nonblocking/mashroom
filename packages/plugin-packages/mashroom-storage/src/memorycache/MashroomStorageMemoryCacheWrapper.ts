@@ -1,10 +1,9 @@
 
 import MashroomStorageCollectionMemoryCacheWrapper from './MashroomStorageCollectionMemoryCacheWrapper';
 
-import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLogger,MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorage, MashroomStorageCollection, MashroomStorageRecord} from '../../type-definitions';
 import type {MemoryCacheConfig, MemoryCacheProperties} from '../../type-definitions/internal';
-import {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 
 export type CollectionMap = {
     [name: string]: MashroomStorageCollection<any>;

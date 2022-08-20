@@ -2,10 +2,10 @@
 import querystring from 'querystring';
 import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 
-import type {Request, Response} from 'express';
-import type {MashroomLogger,} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 import type {
+    MashroomSecurityAuthenticationResult,
+    MashroomSecurityLoginResult,
+    MashroomSecurityUser,
     MashroomSecurityPermission,
     MashroomSecurityProtectedResource,
     MashroomSecurityProvider,
@@ -13,12 +13,10 @@ import type {
     MashroomSecurityRoleDefinition,
     MashroomSecurityService as MashroomSecurityServiceType,
 } from '../../type-definitions';
+import type {Request, Response} from 'express';
+import type {MashroomLogger,} from '@mashroom/mashroom/type-definitions';
+import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
 import type {MashroomSecurityACLChecker, MashroomSecurityProviderRegistry,} from '../../type-definitions/internal';
-import {
-    MashroomSecurityAuthenticationResult,
-    MashroomSecurityLoginResult,
-    MashroomSecurityUser
-} from '../../type-definitions';
 
 export const ROLE_ADMINISTRATOR = 'Administrator';
 export const ROLE_AUTHENTICATED_USER = 'Authenticated';

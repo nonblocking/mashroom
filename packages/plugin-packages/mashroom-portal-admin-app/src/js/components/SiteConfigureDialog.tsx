@@ -15,9 +15,9 @@ import {
     CircularProgress,
     ErrorMessage
 } from '@mashroom/mashroom-portal-ui-commons';
-import Permissions from './Permissions';
 import I18NStringField from '../containers/I18NStringField';
 import {DIALOG_NAME_SITE_CONFIGURE} from '../constants';
+import Permissions from './Permissions';
 
 import type {ReactNode} from 'react';
 import type {

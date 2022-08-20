@@ -6,6 +6,7 @@ import {EventEmitter} from 'events';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
+import {getExternalPluginDefinitionFilePath} from '../utils/plugin_utils';
 
 import type {
     MashroomPluginPackage as MashroomPluginPackageType,
@@ -22,7 +23,6 @@ import type {
     MashroomPluginPackageBuilder,
     MashroomPluginPackageBuilderEvent,
 } from '../../type-definitions/internal';
-import {getExternalPluginDefinitionFilePath} from '../utils/plugin_utils';
 
 const readFile = promisify(readFileCb);
 

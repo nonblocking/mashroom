@@ -3,7 +3,6 @@ import path from 'path';
 import cluster from 'cluster';
 import express from 'express';
 
-import MashroomPluginContextHolder from './MashroomPluginContextHolder';
 import createLoggerDelegate from '../logging/delegates/create_logger_delegate';
 import createLoggerFactory from '../logging/create_logger_factory';
 import MashroomServerConfigLoader from '../config/MashroomServerConfigLoader';
@@ -30,6 +29,7 @@ import MashroomHealthProbeService from '../services/MashroomHealthProbeService';
 import XPoweredByHeaderMiddleware from '../server/XPoweredByHeaderMiddleware';
 import MashroomServer from '../server/MashroomServer';
 import InitializationError from '../errors/InitializationError';
+import MashroomPluginContextHolder from './MashroomPluginContextHolder';
 
 import type {Application} from 'express';
 import type {

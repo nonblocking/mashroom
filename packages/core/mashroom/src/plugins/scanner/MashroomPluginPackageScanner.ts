@@ -2,8 +2,8 @@
 import path from 'path';
 import fs from 'fs';
 import {EventEmitter} from 'events';
-import chokidar from 'chokidar';
 import {promisify} from 'util';
+import chokidar from 'chokidar';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {getExternalPluginDefinitionFilePath} from '../../utils/plugin_utils';
 import type {MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder} from '../../../type-definitions';

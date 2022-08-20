@@ -1,7 +1,7 @@
 
 import {connect} from 'react-redux';
-import CreateDropdownMenu from '../components/CreateDropdownMenu';
 import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
+import CreateDropdownMenu from '../components/CreateDropdownMenu';
 import {setSelectedPageNew, setSelectedSiteNew} from '../store/actions';
 
 import type {Dispatch, State} from '../types';

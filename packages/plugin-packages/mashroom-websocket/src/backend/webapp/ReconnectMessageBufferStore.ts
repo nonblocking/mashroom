@@ -1,9 +1,8 @@
 
 import { existsSync, unlink, appendFile, readFile } from 'fs';
-import { ensureDirSync } from 'fs-extra';
 import { isAbsolute, resolve } from 'path';
-import type { MashroomLogger } from '@mashroom/mashroom/type-definitions';
-import type { MashroomLoggerFactory } from '@mashroom/mashroom/type-definitions';
+import { ensureDirSync } from 'fs-extra';
+import type { MashroomLogger , MashroomLoggerFactory } from '@mashroom/mashroom/type-definitions';
 
 export default class ReconnectMessageBufferStore {
 

@@ -4,21 +4,19 @@ import path from 'path';
 import querystring from 'querystring';
 import {createHash} from 'crypto';
 
-import type {Request, Response} from 'express';
 import type {
+    MashroomSecurityAuthenticationResult,
+    MashroomSecurityLoginResult,
     MashroomSecurityProvider,
     MashroomSecurityService,
     MashroomSecurityUser
 } from '@mashroom/mashroom-security/type-definitions';
+import type {Request, Response} from 'express';
 import type {
     MashroomLogger,
     MashroomLoggerFactory
 } from '@mashroom/mashroom/type-definitions';
 import type {UserStore, UserStoreEntry} from '../type-definitions';
-import {
-    MashroomSecurityAuthenticationResult,
-    MashroomSecurityLoginResult
-} from '@mashroom/mashroom-security/type-definitions';
 
 const SIMPLE_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_USER';
 const SIMPLE_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_SIMPLE_AUTH_EXPIRES';

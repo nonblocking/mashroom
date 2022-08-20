@@ -1,8 +1,8 @@
 
-import {Client, Issuer, custom} from 'openid-client';
+import { Issuer, custom} from 'openid-client';
 
 import type {Request} from 'express';
-import type {HttpOptions} from 'openid-client';
+import type {HttpOptions,Client} from 'openid-client';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {ClientConfiguration} from '../type-definitions';
 

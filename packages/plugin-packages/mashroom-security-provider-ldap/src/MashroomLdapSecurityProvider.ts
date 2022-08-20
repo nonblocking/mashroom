@@ -4,19 +4,18 @@ import path from 'path';
 import querystring from 'querystring';
 import loginFailureReason from './login_failure_reason';
 
-import type {Request, Response} from 'express';
-import type {
-    MashroomLogger,
-    MashroomLoggerFactory,
-} from '@mashroom/mashroom/type-definitions';
-import type {
+import type {MashroomSecurityService,
     MashroomSecurityProvider,
     MashroomSecurityUser,
     MashroomSecurityAuthenticationResult,
     MashroomSecurityLoginResult
 } from '@mashroom/mashroom-security/type-definitions';
+import type {Request, Response} from 'express';
+import type {
+    MashroomLogger,
+    MashroomLoggerFactory,
+} from '@mashroom/mashroom/type-definitions';
 import type {GroupToRoleMapping, UserToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
-import {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 
 const LDAP_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
 const LDAP_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';

@@ -1,8 +1,8 @@
 
-import {ready} from '../health/checks';
-import infoTemplate from './template';
 import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
 import {isNodeCluster, getWorkerId, getAllWorkerPids} from '@mashroom/mashroom-utils/lib/cluster_utils';
+import {ready} from '../health/checks';
+import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
 

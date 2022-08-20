@@ -10,7 +10,7 @@ import {
     WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
     WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
 } from '../../../backend/constants';
-import ResourceManager from './ResourceManager';
+import type ResourceManager from './ResourceManager';
 
 import type {
     MashroomAvailablePortalApp,

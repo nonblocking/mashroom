@@ -14,7 +14,6 @@
         "semi": ["error", "always"],
         "prefer-template": "error",
         "prefer-object-spread": "error",
-        "no-console": "off",
-        "@typescript-eslint/no-explicit-any": "off"
+        "no-console": "off"
     }
 }

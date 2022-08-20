@@ -6,6 +6,7 @@ import PortalAppSelectionContainer from'../containers/PortalAppSelectionContaine
 import loadPortalApp from '../load_portal_app';
 import {getQueryParams, mergeAppConfig} from '../utils';
 
+import type {PortalAppQueryParams,ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
 import type {ReactNode} from 'react';
 import type {
     MashroomAvailablePortalApp,
@@ -13,8 +14,6 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
-import {PortalAppQueryParams} from '../types';
 
 type Props = {
     hostElementId: string;

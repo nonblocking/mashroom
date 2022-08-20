@@ -1,7 +1,7 @@
 
 import {createStore} from 'redux';
-import reducers from './reducers';
 import {PORTAL_APP_CONTROLS_SETTINGS_KEY} from '../constants';
+import reducers from './reducers';
 
 import type {State, Store} from '../types';
 

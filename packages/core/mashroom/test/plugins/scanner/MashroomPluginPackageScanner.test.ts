@@ -1,8 +1,8 @@
 
 import path from 'path';
 import fsExtra from 'fs-extra';
-import defaultConfig from '../../../src/config/mashroom_default_config';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import defaultConfig from '../../../src/config/mashroom_default_config';
 import MashroomPluginPackageScanner from '../../../src/plugins/scanner/MashroomPluginPackageScanner';
 
 const getPluginPackagesFolder = () => {

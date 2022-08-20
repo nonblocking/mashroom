@@ -1,6 +1,6 @@
 
 import MashroomHttpProxyInterceptorRegistry from '../../src/plugins/MashroomHttpProxyInterceptorRegistry';
-import {MashroomHttpProxyInterceptor} from '../../type-definitions';
+import type {MashroomHttpProxyInterceptor} from '../../type-definitions';
 
 const interceptor1: MashroomHttpProxyInterceptor = {
     async interceptRequest() {

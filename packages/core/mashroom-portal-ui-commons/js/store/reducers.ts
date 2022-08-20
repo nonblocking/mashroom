@@ -1,8 +1,8 @@
 
-import {AnyAction, combineReducers} from 'redux';
+import { combineReducers} from 'redux';
 import {SET_ACTIVE_TAB, SET_SHOW_MODAL} from './actions';
 
-import type {Reducer, ReducersMapObject} from 'redux';
+import type {Reducer, ReducersMapObject,AnyAction} from 'redux';
 import type {ModalState, TabDialogState} from '../../type-definitions';
 
 const modals: Reducer<ModalState> = (state, action) => {

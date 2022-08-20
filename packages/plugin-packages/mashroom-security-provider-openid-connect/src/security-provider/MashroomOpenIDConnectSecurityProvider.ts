@@ -1,8 +1,9 @@
 
 import fetch from 'node-fetch';
-import {AuthorizationParameters, generators} from 'openid-client';
+import { generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
 import {OICD_AUTH_DATA_SESSION_KEY, OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_USER_SESSION_KEY} from '../constants';
+import type {AuthorizationParameters} from 'openid-client';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger,} from '@mashroom/mashroom/type-definitions';

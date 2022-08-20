@@ -1,9 +1,8 @@
 
 import {Writable} from 'stream';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import '../../../src/backend/context/global_portal_context';
-import PortalAppController from '../../../src/backend/controllers/PortalAppController';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import PortalAppController from '../../../src/backend/controllers/PortalAppController';
 
 import type {
     MashroomPortalApp,

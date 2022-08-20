@@ -1,8 +1,8 @@
 
 import {promisify} from 'util';
-import type {SessionOptions, Store} from 'express-session';
 import session, {MemoryStore} from 'express-session';
 import context from '../context/global_context';
+import type {SessionOptions, Store} from 'express-session';
 
 import type {RequestHandler, Request, Response, NextFunction} from 'express';
 import type {MashroomSessionMiddleware as MashroomSessionMiddlewareType} from '../../type-definitions/internal';

@@ -2,9 +2,8 @@
 import MashroomStorageMemoryCacheWrapper from '../memorycache/MashroomStorageMemoryCacheWrapper';
 
 import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomStorageService as MashroomStorageServiceType, MashroomStorage} from '../../type-definitions';
+import type {MashroomStorageService as MashroomStorageServiceType, MashroomStorage,MashroomStorageCollection, MashroomStorageRecord} from '../../type-definitions';
 import type {MashroomStorageRegistry, MemoryCacheConfig} from '../../type-definitions/internal';
-import type {MashroomStorageCollection, MashroomStorageRecord} from '../../type-definitions';
 
 const MAX_WAIT_FOR_STORAGE = 30000;
 

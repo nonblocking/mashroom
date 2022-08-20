@@ -1,6 +1,6 @@
 
-import MashroomPlugin from '../../src/plugins/MashroomPlugin';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import MashroomPlugin from '../../src/plugins/MashroomPlugin';
 
 import type {MashroomPluginDefinition} from '../../type-definitions';
 

@@ -1,7 +1,7 @@
 
 import express from 'express';
-import app from './webapp';
 import bootstrap from '../jobs/mashroom-bootstrap-background-job';
+import app from './webapp';
 
 // @ts-ignore
 process.env.DUMMY_K8S_CONNECTOR = true;

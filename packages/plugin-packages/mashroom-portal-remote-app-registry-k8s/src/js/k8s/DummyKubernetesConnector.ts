@@ -1,6 +1,5 @@
 
-import {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
-
+import type {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
 import type {KubernetesConnector as KubernetesConnectorType} from '../../../type-definitions';
 
 export default class KubernetesConnector implements KubernetesConnectorType {

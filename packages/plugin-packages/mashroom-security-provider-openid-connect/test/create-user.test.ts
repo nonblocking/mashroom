@@ -1,6 +1,6 @@
 
 import createUser from '../src/create-user';
-import {IdTokenClaims, UserinfoResponse} from 'openid-client';
+import type {IdTokenClaims, UserinfoResponse} from 'openid-client';
 
 describe('create-user', () => {
 

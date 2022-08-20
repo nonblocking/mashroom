@@ -2,8 +2,8 @@
 import {Server, CLOSING, OPEN} from 'ws';
 import {v4} from 'uuid';
 import context from './context';
-import ReconnectMessageBufferStore from './webapp/ReconnectMessageBufferStore';
 
+import type ReconnectMessageBufferStore from './webapp/ReconnectMessageBufferStore';
 import type WebSocket from 'ws';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';

@@ -1,6 +1,6 @@
 
-import { ensureDirSync } from 'fs-extra';
 import { isAbsolute, resolve } from 'path';
+import { ensureDirSync } from 'fs-extra';
 import MashroomStorageCollectionFilestore from './MashroomStorageCollectionFilestore';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';

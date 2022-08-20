@@ -1,7 +1,7 @@
 
 import context from '../context/global_context';
-import MashroomSecurityService from './MashroomSecurityService';
 import MashroomSecurityACLChecker from '../acl/MashroomSecurityACLChecker';
+import MashroomSecurityService from './MashroomSecurityService';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 

@@ -2,12 +2,12 @@
 import os from 'os';
 import http from 'http';
 import express from 'express';
+import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import WebSocketServer from '../WebSocketServer';
 import context from '../context';
 import app from './webapp';
 import httpUpgradeHandlerFn from './http_upgrade_handler';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 
 import type {Socket} from 'net';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';

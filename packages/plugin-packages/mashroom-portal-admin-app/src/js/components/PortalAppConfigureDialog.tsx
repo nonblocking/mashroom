@@ -15,8 +15,8 @@ import {
     CircularProgress,
     ErrorMessage
 } from '@mashroom/mashroom-portal-ui-commons';
-import Permissions from './Permissions';
 import {DIALOG_NAME_PORTAL_APP_CONFIGURE} from '../constants';
+import Permissions from './Permissions';
 
 import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';

@@ -1,12 +1,12 @@
 
 import getClientServices from './client_services';
-
-import type {MashroomPortalMasterMessageBus} from '@mashroom/mashroom-portal/type-definitions';
-import type {MessageBusPortalAppUnderTest} from './types';
-import {
+import type {
     MashroomPortalMessageBusInterceptor,
-    MashroomPortalMessageBusSubscriberCallback
+    MashroomPortalMessageBusSubscriberCallback,
+    MashroomPortalMasterMessageBus
 } from '@mashroom/mashroom-portal/type-definitions';
+
+import type {MessageBusPortalAppUnderTest} from './types';
 
 export default (): MessageBusPortalAppUnderTest => {
 

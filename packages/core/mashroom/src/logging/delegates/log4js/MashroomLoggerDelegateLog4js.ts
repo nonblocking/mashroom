@@ -1,7 +1,7 @@
 
 import os from 'os';
-import log4js from 'log4js';
 import {existsSync} from 'fs';
+import log4js from 'log4js';
 import defaultConfig from './log4js_default_config';
 
 import type {LogLevel} from '../../../../type-definitions';

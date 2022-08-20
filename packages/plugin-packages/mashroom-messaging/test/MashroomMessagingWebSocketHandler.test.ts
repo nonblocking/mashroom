@@ -1,6 +1,6 @@
 
-import MashroomMessagingWebSocketHandler from '../src/services/MashroomMessagingWebSocketHandler';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import MashroomMessagingWebSocketHandler from '../src/services/MashroomMessagingWebSocketHandler';
 
 import type {
     MashroomMessagingWebSocketPublishRequest,
