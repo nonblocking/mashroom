@@ -22,7 +22,6 @@ module.exports = (env, argv) => {
             filename: '[name].js',
             chunkFilename: 'sandbox.[contenthash].js',
         },
-        target: ['web', 'es5'],
         module: {
             rules: [
                 {

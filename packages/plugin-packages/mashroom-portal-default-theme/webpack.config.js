@@ -7,7 +7,6 @@ module.exports = {
         path: __dirname + '/dist/public',
         filename: '[name].js'
     },
-    target: ['web', 'es5'],
     module: {
         rules: [
             {

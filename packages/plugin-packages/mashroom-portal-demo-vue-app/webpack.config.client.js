@@ -8,7 +8,6 @@ module.exports = merge(common,  {
         path: __dirname + '/dist',
         filename: 'bundle.js',
     },
-    target: ['web', 'es5'],
     devServer: {
         host: '0.0.0.0',
         allowedHosts: 'all',

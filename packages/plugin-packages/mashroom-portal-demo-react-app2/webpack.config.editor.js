@@ -6,7 +6,6 @@ module.exports = {
         path: __dirname + '/dist',
         filename: 'editor.js',
     },
-    target: ['web', 'es5'],
     module: {
         rules: [
             {

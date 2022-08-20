@@ -20,7 +20,6 @@ module.exports = (env, argv) => {
             filename: '[name].js',
             chunkFilename: 'remote-messaging.[contenthash].js',
         },
-        target: ['web', 'es5'],
         module: {
             rules: [
                 {

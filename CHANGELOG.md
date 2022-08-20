@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Dropped support for IE11 and ES5
  * Upgrade to CodeMirror 6 with autocomplete support in the CSS editor
  * Admin Toolbar: Cleanup the DOM properly after a drag ends
 
