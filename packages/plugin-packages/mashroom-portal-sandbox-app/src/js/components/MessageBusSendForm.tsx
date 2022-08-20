@@ -81,7 +81,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
                         <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
                     </div>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='idea' height={120} />
+                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} />
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
                         <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage'/>

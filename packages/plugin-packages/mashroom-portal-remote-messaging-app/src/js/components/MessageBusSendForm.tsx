@@ -92,7 +92,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
                         <TextField id='mashroom-remote-messaging-app-topic' type='text' name='topic' labelId='remoteTopic' />
                     </div>
                     <div className='mashroom-remote-messaging-app-form-row '>
-                        <SourceCodeEditorField id='mashroom-remote-messaging-app-message' name="message" labelId='message' language='json' theme='idea' height={120} />
+                        <SourceCodeEditorField id='mashroom-remote-messaging-app-message' name="message" labelId='message' language='json' theme='light' height={120} />
                     </div>
                     <div className='mashroom-remote-messaging-app-form-button-row'>
                         <Button id='mashroom-remote-messaging-app-publish-message' type='submit' labelId='sendMessage'/>

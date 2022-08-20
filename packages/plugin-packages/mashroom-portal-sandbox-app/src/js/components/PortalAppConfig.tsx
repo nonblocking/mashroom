@@ -95,10 +95,10 @@ export default class PortalAppConfig extends PureComponent<Props> {
                     <TextField id='mashroom-sandbox-app-config-lang' name='lang' labelId='lang' maxLength={2} />
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions'  name='permissions' labelId='permissions' language='json' theme='idea' height={120} />
+                    <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions'  name='permissions' labelId='permissions' language='json' theme='light' height={120} />
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config'  name='appConfig' labelId='appConfig' language='json' theme='idea' height={120} />
+                    <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config'  name='appConfig' labelId='appConfig' language='json' theme='light' height={120} />
                 </div>
                 <div>
                     <Button id='mashroom-sandbox-app-load' type='submit' labelId='load'/>

@@ -8,6 +8,7 @@ type Props = {
     name: string;
     labelId: string;
     language: 'json' | 'css';
+    theme?: 'light' | 'dark';
     height?: number;
 }
 

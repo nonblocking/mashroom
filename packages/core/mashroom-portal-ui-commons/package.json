@@ -16,7 +16,7 @@
         "react-redux": "8.0.2",
         "redux": "^4.2.0",
         "@uiw/react-codemirror": "^4.11.4",
-        "@uiw/codemirror-themes": "^4.11.4",
+        "@uiw/codemirror-theme-github": "^4.11.4",
         "@codemirror/lang-css": "^6.0.0",
         "@codemirror/lang-json": "^6.0.0"
     },
