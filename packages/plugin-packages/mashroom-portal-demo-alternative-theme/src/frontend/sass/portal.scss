@@ -1,6 +1,5 @@
 
 @use "variables" as *;
-@use "node_modules/@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults" as *;
 
 // Reset styles
 @use "node_modules/bootstrap/scss/bootstrap-reboot";
@@ -39,8 +38,9 @@
     font-size: 16px;
 
     /* CSS variables */
-    --mashroom-portal-font-default: #{$FONT_DEFAULT};
-    --mashroom-portal-font-header: #{$FONT_HEADER};
+    --mashroom-portal-font-icon: '#{$FONT_ICON}';
+    --mashroom-portal-font-default: '#{$FONT_DEFAULT}';
+    --mashroom-portal-font-header: '#{$FONT_HEADER}';
     --mashroom-portal-color-black: #{$COLOR_BLACK};
     --mashroom-portal-color-grey: #{$COLOR_GREY};
     --mashroom-portal-color-grey-light: #{$COLOR_GREY_LIGHT};

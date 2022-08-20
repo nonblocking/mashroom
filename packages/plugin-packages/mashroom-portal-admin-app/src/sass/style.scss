@@ -1,6 +1,5 @@
 
-@import "~@mashroom/mashroom-portal-ui-commons/sass/mashroom_portal_defaults";
-
+$FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 $COLOR_DROP_ZONE: #645e9d;
 
 .mashroom-portal-admin-app {

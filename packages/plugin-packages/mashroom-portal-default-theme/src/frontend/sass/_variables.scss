@@ -1,4 +1,5 @@
 
+$FONT_ICON: 'Font Awesome 6 Free';
 $FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 $FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
@@ -30,6 +31,35 @@ $ADMIN_APP_COLOR_TEXT: white;
 $ADMIN_APP_COLOR_TEXT_DARK: lighten($ADMIN_APP_COLOR_BACKGROUND, 50);
 
 $GUTTER_WIDTH: 15px;
+
+$SMALL_DEVICE_MIN: 576px;
+$MEDIUM_DEVICE_MIN: 768px;
+$LARGE_DEVICE_MIN: 992px;
+$X_LARGE_DEVICE_MIN: 1200px;
+
+@mixin small {
+    @media (min-width: #{$SMALL_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin medium {
+    @media (min-width: #{$MEDIUM_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin large {
+    @media (min-width: #{$LARGE_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin xlarge {
+    @media (min-width: #{$X_LARGE_DEVICE_MIN}) {
+        @content;
+    }
+}
 
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
