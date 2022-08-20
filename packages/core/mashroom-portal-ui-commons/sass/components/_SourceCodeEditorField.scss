@@ -1,9 +1,5 @@
 
 .mashroom-portal-ui-source-code-editor-field {
-
-    @import "../../node_modules/codemirror/lib/codemirror";
-    @import "../../node_modules/codemirror/theme/blackboard";
-
     display: flex;
 
     &>div {
@@ -15,10 +11,15 @@
         padding-bottom: 3px;
     }
 
-    .CodeMirror {
+    .cm-theme {
+        height: 100%;
+    }
+
+    .cm-editor {
+        height: 100%;
+        outline: none !important;
         font-family: monospace;
         font-size: 0.9em;
-        height: 100%;
     }
 
 }

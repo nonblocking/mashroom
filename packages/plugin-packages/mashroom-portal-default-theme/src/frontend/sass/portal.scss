@@ -820,16 +820,12 @@ footer {
 }
 
 .mashroom-portal-ui-source-code-editor-field {
-    .react-codemirror2 {
-        height: 100%;
-    }
-
-    .CodeMirror {
+    .cm-editor {
         border: 1px solid $COLOR_PRIMARY;
         padding: 1px;
         @include focus-animation();
 
-        &.CodeMirror-focused {
+        &.cm-focused {
             padding: 0;
             border: 2px solid $COLOR_SECONDARY;
         }

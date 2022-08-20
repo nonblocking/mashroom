@@ -16,12 +16,10 @@
         max-width: 90%;
         min-height: 100px;
         box-shadow: 4px 4px 8px #444;
-        transition: transform 0.2s ease, opacity 0.2s ease;
-        transform: scale(0.5);
+        transition: opacity 0.2s ease;
         opacity: 0;
 
         &.fade-in {
-            transform: scale(1);
             opacity: 1;
         }
 

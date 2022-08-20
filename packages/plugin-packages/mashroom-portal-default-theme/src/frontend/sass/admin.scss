@@ -199,10 +199,10 @@
     }
 
     .mashroom-portal-ui-source-code-editor-field {
-        .CodeMirror {
+        .cm-editor {
             border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
 
-            &.CodeMirror-focused {
+            &.cm-focused {
                 border-color: $COLOR_SECONDARY;
             }
         }

@@ -10,8 +10,7 @@ type Props = {
     id: string;
     name: string;
     labelId: string;
-    language: 'javascript' | 'json' | 'css' | 'html';
-    theme?: 'blackboard' | 'idea';
+    language: 'json' | 'css';
     height?: number;
 }
 
