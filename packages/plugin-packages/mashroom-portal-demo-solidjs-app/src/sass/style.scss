@@ -1,0 +1,19 @@
+
+.mashroom-demo-solidjs-app {
+    padding: 10px;
+    display: flex;
+
+    .demo-solidjs-app-logo {
+        margin: 0 18px;
+        align-self: center;
+
+        svg {
+            height: 80px;
+            width: 80px;
+        }
+    }
+
+    button {
+        margin-right: 10px;
+    }
+}

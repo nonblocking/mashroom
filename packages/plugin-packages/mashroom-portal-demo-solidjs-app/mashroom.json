@@ -1,0 +1,31 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo SolidJS App",
+            "type": "portal-app2",
+            "clientBootstrap": "startSolidJSDemoApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Demo SolidJS App",
+                "description": {
+                    "en": "A simple SolidJS SPA",
+                    "de": "Ein einfacher SolidJS SPA"
+                },
+                "category": "Demo",
+                "appConfig": {
+                    "message": "This is simple SolidJS based SPA that communicates with other Apps on the page via message bus",
+                    "pingButtonLabel": "Send Ping"
+                }
+            }
+        }
+    ]
+}

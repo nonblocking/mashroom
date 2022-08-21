@@ -1,0 +1,12 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "commonjs",
+        "sourceMap": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "jsx": "preserve",
+        "jsxImportSource": "solid-js",
+        "moduleResolution": "node"
+    }
+}

@@ -1380,6 +1380,8 @@ After that you can start to add additional pages.
 
 [mashroom-portal-demo-svelte-app](../../mashroom-portal-demo-svelte-app/README.md) [inc]
 
+[mashroom-portal-demo-solidjs-app](../../mashroom-portal-demo-solidjs-app/README.md) [inc]
+
 [mashroom-portal-demo-rest-proxy-app](../../mashroom-portal-demo-rest-proxy-app/README.md) [inc]
 
 [mashroom-portal-demo-websocket-proxy-app](../../mashroom-portal-demo-websocket-proxy-app/README.md) [inc]
