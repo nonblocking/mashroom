@@ -1,5 +1,6 @@
 
 @use "sass:math";
+@use "sass:meta";
 @use "variables" as *;
 
 // Reset styles
@@ -71,9 +72,9 @@
     font-size: 16px;
 
     /* CSS variables */
-    --mashroom-portal-font-icon: '#{$FONT_ICON}';
-    --mashroom-portal-font-default: '#{$FONT_DEFAULT}';
-    --mashroom-portal-font-header: '#{$FONT_HEADER}';
+    --mashroom-portal-font-icon: #{meta.inspect($FONT_ICON)};
+    --mashroom-portal-font-default: #{meta.inspect($FONT_DEFAULT)};
+    --mashroom-portal-font-header: #{meta.inspect($FONT_HEADER)};
     --mashroom-portal-color-black: #{$COLOR_BLACK};
     --mashroom-portal-color-grey: #{$COLOR_GREY};
     --mashroom-portal-color-grey-light: #{$COLOR_GREY_LIGHT};
