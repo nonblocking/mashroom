@@ -8,6 +8,12 @@ const healthyRoute = async (req: Request, res: Response) => {
     if (checkResult.ok) {
         res.end();
     } else {
+        if (req.pluginContext) {
+            const logger = req.pluginContext.loggerFactory('mashroom.health');
+            logger.warn('Server unhealthy:', checkResult.errors);
+        } else {
+            console.warn('Server unhealthy:', checkResult.errors);
+        }
         res.status(503);
         res.type('json');
         res.json({

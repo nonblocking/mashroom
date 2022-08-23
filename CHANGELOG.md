@@ -3,9 +3,17 @@
 
 ## [unreleased]
 
+ * Core: Failing ready and health probes log now the causes. This is helpful on K8S when the Admin UI is not available
+   if the ready probe fails.
  * Added a [SolidJS](https://www.solidjs.com) demo Portal App (Microfrontend)
- * Dropped support for IE11 and ES5
- * Upgrade to CodeMirror 6 with autocomplete support in the CSS editor
+ * Portal: **BREAKING CHANGE**: Themes must set now a CSS variable with the (fontawsome compatible) icon font, like so:
+   ```css
+     :root {
+        --mashroom-portal-font-icon: 'Font Awesome 6 Free';
+     }
+   ```
+ * Portal: Dropped support for IE11 (and all legacy browsers which don't support ES6)
+ * Admin Toolbar: Upgrade to CodeMirror 6 with autocomplete support in the CSS editor
  * Admin Toolbar: Cleanup the DOM properly after a drag ends
 
 ## 2.1.3 (July 2, 2022)
