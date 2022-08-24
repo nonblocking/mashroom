@@ -63,8 +63,14 @@ export default async (logger: MashroomLogger): Promise<IORedisClient> => {
         });
     }
 
+    _client.on('reconnecting', () => {
+        logger.warn('Reconnecting to Redis...');
+    });
     _client.on('error', (err: any) => {
         logger.error('Redis client error:', err);
+    });
+    _client.on('node error', (err: any, address: string) => {
+        logger.error('Redis cluster node error:', address, err);
     });
 
     // Wait for a connection a few seconds
