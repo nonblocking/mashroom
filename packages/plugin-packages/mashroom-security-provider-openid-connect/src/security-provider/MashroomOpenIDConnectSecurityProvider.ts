@@ -117,6 +117,13 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
 
+            try {
+                const userInfo = await client.userinfo(newTokenSet);
+                logger.info('NEW USER INFO', userInfo);
+            } catch (error) {
+                logger.error('Test', error);
+            }
+
             user = this.getUser(request);
             logger.debug(`Token refreshed for user ${user?.username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
 
@@ -184,6 +191,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         return {
             ...user,
             secrets: {
+                accessToken: authData.tokenSet.access_token,
                 idToken: authData.tokenSet.id_token,
             },
         };

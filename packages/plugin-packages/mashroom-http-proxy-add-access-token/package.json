@@ -1,10 +1,10 @@
 {
-    "name": "@mashroom/mashroom-http-proxy-add-id-token",
-    "description": "Mashroom Http Proxy interceptor that adds the OpenID ID/JWT token to every backend call",
+    "name": "@mashroom/mashroom-http-proxy-add-access-token",
+    "description": "Mashroom Http Proxy interceptor that adds the OpenID access token to every backend call",
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.1.3",
+    "version": "1.0.0",
     "files": [
         "dist/**"
     ],
@@ -32,7 +32,7 @@
         "devModeBuildScript": "build",
         "plugins": [
             {
-                "name": "Mashroom Http Proxy Add ID Token Interceptor",
+                "name": "Mashroom Http Proxy Add Access Token Interceptor",
                 "type": "http-proxy-interceptor",
                 "namespace": "csrf",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
@@ -41,8 +41,8 @@
                     "Mashroom OpenID Connect Security Provider"
                 ],
                 "defaultConfig": {
-                    "addBearer": false,
-                    "idTokenHeader": "X-USER-ID-TOKEN",
+                    "addBearer": true,
+                    "accessTokenHeader": "X-USER-ACCESS-TOKEN",
                     "targetUris": [
                         ".*"
                     ]

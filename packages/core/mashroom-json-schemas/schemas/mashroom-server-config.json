@@ -284,16 +284,16 @@
                         }
                     }
                 },
-                "Mashroom Http Proxy Add ID Token Interceptor": {
+                "Mashroom Http Proxy Add Access Token Interceptor": {
                     "type": "object",
                     "properties": {
                         "addBearer": {
                             "type": "boolean",
-                            "description": "Add the token as authorization bearer header (Default: false)"
+                            "description": "Add the access token as authorization bearer header (Default: true)"
                         },
                         "idTokenHeader": {
                             "type": "string",
-                            "description": "The HTTP header for the ID token - has no effect if _addBearer_ is true (Default: X-USER-ID-TOKEN)"
+                            "description": "The HTTP header for the access token - has no effect if _addBearer_ is true (Default: X-USER-ACCESS-TOKEN)"
                         },
                         "targetUris": {
                             "type": "array",

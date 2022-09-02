@@ -41,7 +41,7 @@
         "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
         "Mashroom Monitoring PM2 Exporter",
         "Mashroom Http Proxy Add User Headers Interceptor",
-        "Mashroom Http Proxy Add ID Token Interceptor",
+        "Mashroom Http Proxy Add Access Token Interceptor",
         "Mashroom CDN Services",
         "Mashroom Robots Middleware"
     ],

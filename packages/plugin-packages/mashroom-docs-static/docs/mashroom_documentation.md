@@ -1165,8 +1165,8 @@ Headers that can be passed to the Backend:
  * X-USER-PERMISSIONS: A comma separated list of the permission keys that resolve to true; can be activated by setting
    *sendPermissionsHeader* to true on the proxy definition
  * X-USER-NAME and others: Can be activated by adding the <a href="#mashroomadduserheaderhttpproxyinterceptor">http-proxy-add-user-headers</a> plugin
- * X-USER-ID-TOKEN: The ID token if the OpenID-Connect is used a security provider;
-   can be activated by adding the <a href="#mashroomaddidtokenhttpproxyinterceptor">mashroom-http-proxy-add-id-token</a> plugin
+ * X-USER-ACCESS-TOKEN: The access token if the OpenID-Connect is used a security provider;
+   can be activated by adding the <a href="#mashroomaddaccesstokenhttpproxyinterceptor">mashroom-http-proxy-add-access-token</a> plugin
 
 #### Site and Page Security
 

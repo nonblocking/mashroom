@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * BREAKING CHANGE: Renamed the plugin *mashroom-http-proxy-add-id-token* to *mashroom-http-proxy-add-access-token* because
+   the access token is intended for authenticating against APIs and such.
  * Core: Failing ready and health probes log now the causes. This is helpful on K8S when the Admin UI is not available
    if the ready probe fails.
  * Added a [SolidJS](https://www.solidjs.com) demo Portal App (Microfrontend)
