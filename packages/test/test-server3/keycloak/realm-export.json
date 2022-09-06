@@ -480,7 +480,8 @@
             "disableableCredentialTypes": [],
             "requiredActions": [],
             "realmRoles": [
-                "default-roles-test"
+                "default-roles-test",
+                "mashroom-admin"
             ],
             "notBefore": 0,
             "groups": []

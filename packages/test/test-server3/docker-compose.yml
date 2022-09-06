@@ -34,7 +34,8 @@ services:
             - mashroom_testserver3_keycloak_mariadb_data:/var/lib/mysql
     keycloak:
         container_name: mashroom_testserver3_keycloak
-        image: jboss/keycloak:15.0.2
+        image: quay.io/keycloak/keycloak:19.0.1
+        command: start-dev --import-realm
         depends_on:
             - mariadb
         environment:
@@ -42,11 +43,12 @@ services:
             - DB_ADDR=mariadb
             - DB_USER=keycloak
             - DB_PASSWORD=keycloak
-            - KEYCLOAK_USER=admin
+            - KEYCLOAK_ADMIN=admin
+            - KEYCLOAK_ADMIN_PASSWORD=admin
+            - KEYCLOAK_USER=test
             - KEYCLOAK_PASSWORD=test
-            - KEYCLOAK_IMPORT=/tmp/keycloak/realm-export.json
             - JDBC_PARAMS=?useSSL=false
         volumes:
-            - ./keycloak:/tmp/keycloak/
+            - ./keycloak/realm-export.json:/opt/keycloak/data/import/test-realm.json
         ports:
             - "8080:8080"

@@ -2,7 +2,7 @@ version: "3"
 
 services:
     openam:
-        container_name: openam_test
+        container_name: oidc_test_openam_test
         image: openidentityplatform/openam
         ports:
             - "8080:8080"

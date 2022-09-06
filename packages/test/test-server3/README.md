@@ -22,16 +22,6 @@ Predefined users: john/john, admin/admin
     <CTRL+C
     docker-compose down
 
-## On a Mac with M1 chip
-
-You have to rebuild the keyloak image manually like so:
-
-    git clone https://github.com/keycloak/keycloak-containers.git
-    cd keycloak-containers
-    git checkout 15.0.2
-    cd server
-    docker build -t jboss/keycloak:15.0.2 .
-
 ## Administration
 
 ### Keycloak
@@ -39,16 +29,13 @@ You have to rebuild the keyloak image manually like so:
 To add some additional users and manage roles:
 
   * Open: http://localhost:8080/auth/admin/
-  * Login with admin/test
+  * Login with admin/admin
   * Switch to the *Test* realm and add manage users and roles
   * Add the *mashroom-admin* role if the users should be Administrator
 
 *Export the realm with users*
 
-Exec into the container and in /opt/jboss/keycloak/bin execute:
-
-    ./standalone.sh -Dkeycloak.migration.action=export -Dkeycloak.migration.provider=singleFile -Djboss.socket.binding.port-offset=100 -Dkeycloak.migration.realmName=test -Dkeycloak.migration.file=realm-export.json
-    cp realm-export.json /tmp/keycloak/
+See: https://www.keycloak.org/server/importExport
 
 ### Mosquitto
 

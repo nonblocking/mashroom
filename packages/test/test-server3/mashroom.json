@@ -75,7 +75,7 @@
             "authenticationTimeoutSec": 300
         },
         "Mashroom OpenID Connect Security Provider": {
-            "issuerDiscoveryUrl": "http://localhost:8080/auth/realms/test/.well-known/uma2-configuration",
+            "issuerDiscoveryUrl": "http://localhost:8080/realms/test/.well-known/uma2-configuration",
             "scope": "openid email profile",
             "clientId": "mashroom",
             "clientSecret": "126654c2-229b-4c59-921d-fc55a7ba76c6",

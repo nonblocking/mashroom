@@ -51,7 +51,7 @@ describe('create-user', () => {
         });
     });
 
-    it('processes the role claim correctly', () => {
+    it('gets the roles from the IdToken claims', () => {
         const claims: IdTokenClaims = {
             aud: 'x',
             exp: 0,
