@@ -1,4 +1,5 @@
 
+import type {Aggregator} from 'prom-client';
 import type {
     CounterMetricData,
     GaugeMetricData,
@@ -6,27 +7,31 @@ import type {
     MetricsData,
     SummaryMetricData,
 } from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
+import type {InternalPromClientMetricInterface} from '../type-definitions';
 
-export default class PromClientMashroomMetricsAdapter {
+export default class PromClientMashroomMetricsAdapter implements InternalPromClientMetricInterface {
 
     _promClientData: any;
+    _aggregator: Aggregator = 'sum';
 
     constructor(private _metricName: string) {
     }
 
     setMetrics(metrics: MetricsData): void {
-        const {name, help, type} = metrics;
+        const {name, help, type, aggregationHint} = metrics;
+        this._aggregator = aggregationHint;
         this._promClientData = {
-            aggregator: 'sum',
             name,
             help,
             type,
+            aggregator: aggregationHint,
         };
 
         switch (type) {
             case 'counter':
                 const counterMetrics = metrics as CounterMetricData;
                 this._promClientData.values = counterMetrics.data.map(({labels, value}) => ({labels, value}));
+                break;
             case 'gauge':
                 const gaugeMetrics = metrics as GaugeMetricData;
                 this._promClientData.values = gaugeMetrics.data.map(({labels, value}) => ({labels, value}));
@@ -37,7 +42,7 @@ export default class PromClientMashroomMetricsAdapter {
                 break;
             case 'summary':
                 const summaryData = metrics as SummaryMetricData;
-                this._promClientData.values = this.calcSummaryValues(summaryData);
+                this._promClientData.values = this._calcSummaryValues(summaryData);
                 break;
             default:
                 break;
@@ -86,7 +91,7 @@ export default class PromClientMashroomMetricsAdapter {
         return values;
     }
 
-    private calcSummaryValues(metrics: SummaryMetricData): Array<any> {
+    private _calcSummaryValues(metrics: SummaryMetricData): Array<any> {
         const values: Array<any> = [];
 
         metrics.data.forEach((data) => {

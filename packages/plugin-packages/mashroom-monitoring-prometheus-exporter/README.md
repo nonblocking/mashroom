@@ -135,13 +135,145 @@ MQTT messaging system connected:
 
     mashroom_messaging_mqtt_connected{service="Mashroom"}
 
-### Node.js Cluster Mode Hints
+### Node.js Cluster Hints
 
-When you run Node.js in cluster mode (e.g. with pm2) there is no way to scrape the metrics from each node separately.
-So, you need to implemented a route that gives you the aggregated metrics of the workers.
+If you run a Node.js cluster you have to launch a separate server in the master process and gather the
+metrics like this:
 
-Please check out the *Usage with Node.js's cluster module* section of the [PromClient documentation](https://github.com/siimon/prom-client)
-how to do this.
+```typescript
+import {AggregatorRegistry} from 'prom-client';
+const aggregatorRegistry = new AggregatorRegistry();
+metricsServer.get('/metrics', async (req, res) => {
+    const metrics = await aggregatorRegistry.clusterMetrics();
+    res.set('Content-Type', aggregatorRegistry.contentType);
+    res.send(metrics);
+});
+```
+
+If you use **PM2** this won't work because it occupies the master process. There you need to launch a separate *app*
+which communicates with the other workers to gather the metrics. Like this:
+
+Create a script metrics.js:
+
+```javascript
+const pm2 = require('pm2');
+const promClient = require('prom-client');
+const Express = require('express');
+
+const metricsServer = Express();
+
+const dummyRegistry = new promClient.Registry();
+const metrics = {};
+const metricsServerPort = 15050;
+
+metricsServer.get('/metrics/:id', async (req, res) => {
+    const id = req.params.id;
+    const slice = metrics[id];
+    if (!slice) {
+        console.error(`No metrics found for pid ${id}. Known nodes:`, Object.keys(metrics));
+        res.sendStatus(404);
+        return;
+    }
+    const response = promClient.AggregatorRegistry.aggregate([slice]);
+    res.set('Content-Type', dummyRegistry.contentType);
+    res.send(await response.metrics());
+});
+metricsServer.get('/metrics', async (req, res) => {
+    const response = promClient.AggregatorRegistry.aggregate(
+        Object.values(metrics).map((o) => o),
+    );
+    res.set('Content-Type', dummyRegistry.contentType);
+    res.send(await response.metrics());
+});
+
+metricsServer.listen(metricsServerPort, '0.0.0.0', () => {
+    console.debug(`Prometheus cluster metrics are available on http://localhost:${metricsServerPort}/metrics`);
+});
+
+setInterval(() => {
+    pm2.connect(() => {
+        pm2.describe('mashroom', (err, processInfo) => {
+            processInfo.forEach((processData) => {
+                console.debug(`Asking process ${processData.pm_id} for metrics`);
+                pm2.sendDataToProcessId(
+                    processData.pm_id,
+                    {
+                        data: null,
+                        topic: 'getMetrics',
+                        from: process.env.pm_id,
+                    },
+                    (err, res) => {},
+                );
+            });
+        });
+    });
+}, 10000);
+
+process.on('message', (msg) => {
+    if (msg.from !== process.env.pm_id && msg.topic === 'returnMetrics') {
+        metrics[msg.from] = msg.data;
+    }
+});
+```
+
+And a pm2 config like this:
+
+```json
+{
+    "apps": [
+        {
+            "name": "mashroom",
+            "instances": 4,
+            "max_restarts": 3,
+            "exec_mode": "cluster",
+            "script": "starter.js",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        },
+        {
+            "name": "metrics_collector",
+            "instances": 1,
+            "exec_mode": "fork",
+            "script": "metrics.js",
+            "env": {
+                "METRICS_COLLECTOR": true
+            }
+        }
+    ]
+}
+```
+
+Now the cluster metrics will be available under http:/localhost:15050/metrics.
+
+<span class="panel-info">
+**NOTE**: In a real world application it might not be ideal to rely on *prom-client* aggregation.
+Instead you should expose the metrics for each worker node separately and aggregate in your monitoring tool.
+In this example metrics for a single node will be available at http:/localhost:15050/metrics/<pm2_pid>.
+</span>
+
+In case you want to get the metrics separately, the Prometheus scrape config could look like this:
+```yaml
+    - job_name: 'mashroom'
+      static_configs:
+        - targets:
+          - localhost:15050/metrics/0
+          - localhost:15050/metrics/2
+          - localhost:15050/metrics/3
+          - localhost:15050/metrics/4
+          labels:
+            service: 'Mashroom'
+      relabel_configs:
+        - source_labels: [__address__]
+          regex:  '[^/]+(/.*)'
+          target_label: __metrics_path__
+        - source_labels: [__address__]
+          regex:  '[^/]+/[^/]+/(.*)'
+          target_label: node
+        - source_labels: [__address__]
+          regex:  '([^/]+)/.*'
+          target_label: __address__
+```
 
 ### Kubernetes Hints
 

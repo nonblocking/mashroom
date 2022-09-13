@@ -9,7 +9,8 @@
         "dist/**"
     ],
     "dependencies": {
-        "prom-client": "^14.0.1"
+        "prom-client": "^14.0.1",
+        "pm2": "^5.2.0"
     },
     "optionalDependencies": {
         "prometheus-gc-stats": "^0.6.3"

@@ -25,6 +25,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             name: 'metric_name',
             help: 'metric_help',
             type: 'counter',
+            aggregationHint: 'sum',
             data: [
                 {
                     value: 10,
@@ -62,6 +63,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             name: 'metric2_name',
             help: 'metric2_help',
             type: 'gauge',
+            aggregationHint: 'sum',
             data: [
                 {
                     value: 10,
@@ -101,6 +103,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             name: 'metric3_name',
             help: 'metric3_help',
             type: 'histogram',
+            aggregationHint: 'sum',
             data: [
                 {
                     buckets: [
@@ -197,6 +200,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             name: 'metric4_name',
             help: 'metric4_help',
             type: 'summary',
+            aggregationHint: 'sum',
             data: [
                 {
                     buckets: [
@@ -282,6 +286,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
             name: 'metric_name',
             help: 'metric_help',
             type: 'counter',
+            aggregationHint: 'sum',
             data: [
                 {
                     value: 10,

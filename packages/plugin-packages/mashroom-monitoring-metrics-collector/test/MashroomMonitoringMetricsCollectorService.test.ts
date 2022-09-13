@@ -23,7 +23,7 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
     it('stores counter data correctly', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
-        const counter = service.counter( 'metric_name', 'metric_help');
+        const counter = service.counter( 'metric_name', 'metric_help', 'average');
         counter.inc(10);
         counter.inc(22, { foo: 2 });
         counter.set(2, { foo: 3 });
@@ -33,6 +33,7 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
             name: 'metric_name',
             help: 'metric_help',
             type: 'counter',
+            aggregationHint: 'average',
             data: [
                 {
                     value: 10,
@@ -66,6 +67,7 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
             name: 'metric_name',
             help: 'metric_help',
             type: 'gauge',
+            aggregationHint: 'sum',
             data: [
                 {
                     value: 10,
@@ -97,6 +99,7 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
             name: 'metric_name',
             help: 'metric_help',
             type: 'histogram',
+            aggregationHint: 'sum',
             data: [
                 {
                     buckets: [
@@ -184,6 +187,7 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
             name: 'metric_name',
             help: 'metric_help',
             type: 'summary',
+            aggregationHint: 'sum',
             data: [
                 {
                     buckets: [

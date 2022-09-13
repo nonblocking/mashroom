@@ -1,8 +1,7 @@
 
 import type {RequestHandler} from 'express';
-import type {MetricLabels} from './api';
-
 import type {TDigest} from 'tdigest';
+import type {MetricLabels, AggregationHint} from './api';
 
 export interface MashroomMonitoringRequestMetricsMiddleware {
     middleware(): RequestHandler;
@@ -27,6 +26,7 @@ type InternalMetricDataBase = {
 
 export type InternalCounterMetricData = InternalMetricDataBase & {
     type: 'counter';
+    aggregationHint: AggregationHint;
     data: {
         [hash: string]: {
             value: number;
@@ -37,6 +37,7 @@ export type InternalCounterMetricData = InternalMetricDataBase & {
 
 export type InternalGaugeMetricData = InternalMetricDataBase & {
     type: 'gauge';
+    aggregationHint: AggregationHint;
     data: {
         [hash: string]: {
             value: number;
@@ -48,6 +49,7 @@ export type InternalGaugeMetricData = InternalMetricDataBase & {
 export type InternalHistogramMetricData = InternalMetricDataBase & {
     type: 'histogram';
     buckets: number[];
+    aggregationHint: AggregationHint;
     data: {
         [hash: string]: {
             count: number;
@@ -64,6 +66,7 @@ export type InternalHistogramMetricData = InternalMetricDataBase & {
 export type InternalSummaryMetricData = InternalMetricDataBase & {
     type: 'summary';
     quantiles: number[];
+    aggregationHint: AggregationHint;
     data: {
         [hash: string]: {
             count: number;

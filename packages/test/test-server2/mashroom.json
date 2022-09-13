@@ -74,6 +74,41 @@
         "Mashroom Http Proxy Services": {
             "rejectUnauthorized": false,
             "poolMaxSockets": 10
+        },
+        "Mashroom Monitoring PM2 Exporter": {
+            "pmxMetrics": {
+                "v8": true,
+                "runtime": true,
+                "network": {
+                    "upload": true,
+                    "download": true
+                },
+                "http": true,
+                "eventLoop": true
+            },
+            "mashroomMetrics": [
+                "mashroom_plugins_total",
+                "mashroom_plugins_loaded_total",
+                "mashroom_plugins_error_total",
+                "mashroom_remote_apps_total",
+                "mashroom_remote_apps_error_total",
+                "mashroom_remote_apps_connection_timeout_total",
+                "mashroom_sessions_total",
+                "mashroom_websocket_connections_total",
+                "mashroom_https_proxy_active_connections_total",
+                "mashroom_https_proxy_idle_connections_total",
+                "mashroom_https_proxy_waiting_requests_total",
+                "mashroom_sessions_mongodb_connected",
+                "mashroom_sessions_redis_nodes_connected",
+                "mashroom_storage_mongodb_connected",
+                "mashroom_memory_cache_entries_added_total",
+                "mashroom_memory_cache_hit_ratio",
+                "mashroom_memory_cache_redis_nodes_connected",
+                "mashroom_messaging_amqp_connected",
+                "mashroom_messaging_mqtt_connected"
+            ]
+        },
+        "Mashroom Monitoring Prometheus Exporter Webapp": {
         }
     }
 }

@@ -3,20 +3,24 @@ import counter from './counter';
 import gauge from './gauge';
 import histogram from './histogram';
 import summary from './summary';
-
-import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     Counter,
     Gauge,
     Histogram,
     Summary,
     MetricDataMap,
+    AggregationHint,
     MashroomMonitoringMetricsCollectorService as MashroomMonitoringMetricsCollectorServiceType,
 } from '../../type-definitions';
+
+import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
-    InternalCounterMetricData, InternalGaugeMetricData, InternalHistogramMetricData,
-    InternalMetricsData, InternalSummaryMetricData,
-    MashroomMonitoringMetricsCollectorConfig
+    InternalCounterMetricData,
+    InternalGaugeMetricData,
+    InternalHistogramMetricData,
+    InternalMetricsData,
+    InternalSummaryMetricData,
+    MashroomMonitoringMetricsCollectorConfig,
 } from '../../type-definitions/internal';
 
 export default class MashroomMonitoringMetricsCollectorService implements MashroomMonitoringMetricsCollectorServiceType {
@@ -31,7 +35,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         this._logger = loggerFactory('mashroom.montoring.collector');
     }
 
-    counter(name: string, help: string): Counter {
+    counter(name: string, help: string, aggregationHint: AggregationHint = 'sum'): Counter {
         name = this._fixMetricName(name);
         if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
             this._logger.debug(`Metric ${name} disabled by configuration`);
@@ -42,6 +46,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             metric = {
                 name,
                 help,
+                aggregationHint,
                 type: 'counter',
                 data: {},
             };
@@ -53,7 +58,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         return counter(metric);
     }
 
-    gauge(name: string, help: string): Gauge {
+    gauge(name: string, help: string, aggregationHint: AggregationHint = 'sum'): Gauge {
         name = this._fixMetricName(name);
         if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
             this._logger.debug(`Metric ${name} disabled by configuration`);
@@ -64,6 +69,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             metric = {
                 name,
                 help,
+                aggregationHint,
                 type: 'gauge',
                 data: {},
             };
@@ -75,7 +81,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         return gauge(metric);
     }
 
-    histogram(name: string, help: string, buckets?: number[]): Histogram {
+    histogram(name: string, help: string, buckets?: number[], aggregationHint: AggregationHint = 'sum'): Histogram {
         name = this._fixMetricName(name);
         if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
             this._logger.debug(`Metric ${name} disabled by configuration`);
@@ -86,6 +92,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             metrics = {
                 name,
                 help,
+                aggregationHint,
                 type: 'histogram',
                 buckets: [...(this._config.customHistogramBucketConfig && this._config.customHistogramBucketConfig[name]) || buckets || this._config.defaultHistogramBuckets],
                 data: {},
@@ -98,7 +105,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         return histogram(metrics);
     }
 
-    summary(name: string, help: string, quantiles?: number[]): Summary {
+    summary(name: string, help: string, quantiles?: number[], aggregationHint: AggregationHint = 'sum'): Summary {
         name = this._fixMetricName(name);
         if (this._config.disableMetrics && this._config.disableMetrics.includes(name)) {
             this._logger.debug(`Metric ${name} disabled by configuration`);
@@ -109,6 +116,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             metrics = {
                 name,
                 help,
+                aggregationHint,
                 type: 'summary',
                 quantiles: [...(this._config.customSummaryQuantileConfig && this._config.customSummaryQuantileConfig[name]) || quantiles || this._config.defaultSummaryQuantiles],
                 data: {},
@@ -125,11 +133,12 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         const metrics: MetricDataMap = {};
         Object.keys(this._metrics).forEach((metricName) => {
             const metricsData = this._metrics[metricName];
-            const {name, help, type, data} = metricsData;
+            const {name, help, type, aggregationHint, data} = metricsData;
             metrics[metricName] = {
                 name,
                 help,
                 type,
+                aggregationHint,
                 data: [],
             };
             switch (type) {

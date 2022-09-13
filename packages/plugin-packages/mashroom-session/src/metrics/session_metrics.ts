@@ -25,7 +25,7 @@ export const startExportSessionMetrics = (pluginContextHolder: MashroomPluginCon
             } catch (e) {
                 // Ignore
             }
-            collectorService.gauge('mashroom_sessions_total', `Mashroom Express Sessions Total (-1 means the store doesn't support the length() operation)`).set(sessionsTotal);
+            collectorService.gauge('mashroom_sessions_total', `Mashroom Express Sessions Total (-1 means the store doesn't support the length() operation)`, 'max').set(sessionsTotal);
         }
 
     }, EXPORT_INTERVAL_MS);

@@ -1,0 +1,23 @@
+{
+    "apps": [
+        {
+            "name": "mashroom",
+            "instances": 4,
+            "max_restarts": 3,
+            "exec_mode": "cluster",
+            "script": "starter.js",
+            "env": {
+                "NODE_ENV": "production"
+            }
+        },
+        {
+            "name": "metrics_collector",
+            "instances": 1,
+            "exec_mode": "fork",
+            "script": "metrics.js",
+            "env": {
+                "METRICS_COLLECTOR": true
+            }
+        }
+    ]
+}

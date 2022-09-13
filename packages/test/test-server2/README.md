@@ -15,6 +15,8 @@ Open http://localhost:5050 for the Portal and http://localhost:5050/mashroom for
 
 Predefined users: john/john, admin/admin
 
+Also starts a Prometheus Metrics Server on port 15050 (http://localhost:15050/metrics)
+
 ## Stop
 
     npm run stop-cluster

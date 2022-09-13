@@ -17,9 +17,9 @@ export const startExportMemoryCacheMetrics = (memoryCacheService: MashroomMemory
 
             collectorService.counter('mashroom_memory_cache_regions_total', 'Memory Cache Total Cache Regions').set(stats.regionCount);
             collectorService.counter('mashroom_memory_cache_entries_added_total', 'Memory Cache Total Entries Added to Cache').set(stats.entriesAdded);
-            collectorService.gauge('mashroom_memory_cache_hit_ratio', 'Memory Cache Hit Ratio').set(stats.cacheHitRatio);
+            collectorService.gauge('mashroom_memory_cache_hit_ratio', 'Memory Cache Hit Ratio', 'average').set(stats.cacheHitRatio);
         }
-        
+
     }, EXPORT_INTERVAL_MS);
 };
 

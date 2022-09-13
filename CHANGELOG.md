@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Prometheus Exporter: Added support for Node.js clusters. It is now possible to use *prom-client*'s
+   *AggregatorRegistry* to gather the metrics in the master process and also to get the worker metrics
+   within [PM2](https://pm2.keymetrics.io) cluster. Check out the README in the *mashroom-monitoring-prometheus-exporter*
+   module for details.
  * BREAKING CHANGE: Renamed the plugin *mashroom-http-proxy-add-id-token* to *mashroom-http-proxy-add-access-token* because
    the access token is intended for authenticating against APIs and such.
  * Core: Failing ready and health probes log now the causes. This is helpful on K8S when the Admin UI is not available
