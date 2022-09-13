@@ -248,8 +248,8 @@ Now the cluster metrics will be available under http:/localhost:15050/metrics.
 
 <span class="panel-info">
 **NOTE**: In a real world application it might not be ideal to rely on *prom-client* aggregation.
-Instead you should expose the metrics for each worker node separately and aggregate in your monitoring tool.
-In this example metrics for a single node will be available at http:/localhost:15050/metrics/<pm2_pid>.
+Instead you should expose the metrics for each worker node separately and do the aggregation in your monitoring tool.
+In this example metrics for a single node will be available at http:/localhost:15050/metrics/&lt;pm2_pid&gt;.
 </span>
 
 In case you want to get the metrics separately, the Prometheus scrape config could look like this:
