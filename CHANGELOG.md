@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Core: Removed the forcefully stopping of the server after 5sec because may interrupt running requests
+   (it also makes in impossible to increase the shutdown period with *terminationGracePeriodSeconds* on Kubernetes)
  * Prometheus Exporter: Added support for Node.js clusters. It is now possible to use *prom-client*'s
    *AggregatorRegistry* to gather the metrics in the master process and also to get the worker metrics
    within [PM2](https://pm2.keymetrics.io) cluster. Check out the README in the *mashroom-monitoring-prometheus-exporter*

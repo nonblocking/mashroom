@@ -14,7 +14,6 @@ import type {MashroomLogger} from '../type-definitions';
 import type {MashroomServer} from '../type-definitions/internal';
 
 const WAIT_BEFORE_SERVER_CLOSE = process.env.WAIT_BEFORE_SERVER_CLOSE && parseInt(process.env.WAIT_BEFORE_SERVER_CLOSE);
-const SERVER_STOP_TIMEOUT = 5 * 1000; // 5 sec
 
 const argv = minimist(process.argv.slice(2));
 let serverRootPath = process.cwd();
@@ -65,10 +64,6 @@ async function startServer() {
 async function stopServer(server: MashroomServer, log: MashroomLogger) {
     if (!stopping) {
         stopping = true;
-        setTimeout(() => {
-            log.info(`Server didn't stop within ${SERVER_STOP_TIMEOUT} ms. Exiting now.`);
-            process.exit(0);
-        }, SERVER_STOP_TIMEOUT);
         await server.stop();
         process.exit(0);
     }
