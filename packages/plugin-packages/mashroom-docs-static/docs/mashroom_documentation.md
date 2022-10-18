@@ -1310,7 +1310,7 @@ After that you can start to add additional pages.
 
 [mashroom-http-proxy-add-user-headers](../../mashroom-http-proxy-add-user-headers/README.md) [inc]
 
-[mashroom-http-proxy-add-id-token](../../mashroom-http-proxy-add-id-token/README.md) [inc]
+[mashroom-http-proxy-add-access-token](../../mashroom-http-proxy-add-access-token/README.md) [inc]
 
 [mashroom-websocket](../../mashroom-websocket/README.md) [inc]
 
