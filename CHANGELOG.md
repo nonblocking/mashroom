@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Remote App Registry: Don't fail for the whole endpoint if just a single Portal App definition is invalid
  * Core: Removed the forcefully stopping of the server after 5sec because may interrupt running requests
    (it also makes in impossible to increase the shutdown period with *terminationGracePeriodSeconds* on Kubernetes)
  * Prometheus Exporter: Added support for Node.js clusters. It is now possible to use *prom-client*'s

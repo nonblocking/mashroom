@@ -210,7 +210,6 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('scans a remote service', async () => {
-
         const endpoints: Array<RemotePortalAppEndpoint> = [{
             url: 'http://my-remote-app.io:6066',
             sessionOnly: false,
@@ -218,6 +217,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             retries: 0,
             registrationTimestamp: null,
             portalApps: [],
+            invalidPortalApps: [],
         }];
         mockFindAll.mockReturnValue(endpoints);
 
@@ -242,15 +242,60 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         expect(context.registry.portalApps.length).toBe(0);
     });
 
+    it('processes duplicate Portal Apps correctly', async () => {
+        const endpoints: Array<RemotePortalAppEndpoint> = [{
+            url: 'http://my-remote-app.io:6066',
+            sessionOnly: false,
+            lastError: null,
+            retries: 0,
+            registrationTimestamp: null,
+            portalApps: [],
+            invalidPortalApps: [],
+        }, {
+            url: 'http://my-remote-app.com:6066',
+            sessionOnly: false,
+            lastError: null,
+            retries: 0,
+            registrationTimestamp: null,
+            portalApps: [],
+            invalidPortalApps: [],
+        }];
+        mockFindAll.mockReturnValue(endpoints);
+
+        const updatedEndpoints: Array<RemotePortalAppEndpoint> = [];
+        mockUpdateRemotePortalAppEndpoint.mockImplementation((e) => updatedEndpoints.push(e));
+
+        nock('http://my-remote-app.io:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+        nock('http://my-remote-app.com:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+
+        await backgroundJob._processInBackground();
+
+        expect(updatedEndpoints.length).toBe(2);
+        expect(updatedEndpoints[0].portalApps.length).toBe(1);
+        expect(updatedEndpoints[1].portalApps.length).toBe(0);
+        expect(updatedEndpoints[1].invalidPortalApps.length).toBe(1);
+        expect(updatedEndpoints[1].invalidPortalApps[0].error).toBe('Duplicate Portal App \'Test App\': The name is already defined on endpoint http://my-remote-app.io:6066/public');
+
+        expect(context.registry.portalApps.length).toBe(1);
+
+        context.registry.unregisterRemotePortalApp('Test App');
+    });
+
     it('processes package.json correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson, null, remotePortalAppEndpoint);
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson, null, remotePortalAppEndpoint);
 
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(1);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(1);
 
-        const portalApp = portalApps[0];
+        const portalApp = foundPortalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
         expect(portalApp).toMatchObject({
             name: 'Test App',
@@ -308,12 +353,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     it('processes an external plugin package definition correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, remotePortalAppEndpoint);
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, remotePortalAppEndpoint);
 
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(2);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(2);
 
-        const portalApp1 = portalApps[0];
+        const portalApp1 = foundPortalApps[0];
         expect(portalApp1.lastReloadTs).toBeTruthy();
         expect(portalApp1).toMatchObject({
             name: 'Test App',
@@ -364,7 +409,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             }
         });
 
-        const portalApp2 = portalApps[1];
+        const portalApp2 = foundPortalApps[1];
         expect(portalApp2.lastReloadTs).toBeTruthy();
         expect(portalApp2).toMatchObject({
             name: 'Test App No SSR',
@@ -386,12 +431,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     it('processes a portal-app config v2 correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, remotePortalAppEndpoint);
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, remotePortalAppEndpoint);
 
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(1);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(1);
 
-        const portalApp = portalApps[0];
+        const portalApp = foundPortalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
         expect(portalApp).toMatchObject({
             name: 'Test App',
@@ -446,12 +491,12 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     it('processes a portal-app config v1 correctly', () => {
         const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, remotePortalAppEndpoint);
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, remotePortalAppEndpoint);
 
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(1);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(1);
 
-        const portalApp = portalApps[0];
+        const portalApp = foundPortalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
         expect(portalApp).toMatchObject({
             name: 'Test App',

@@ -12,8 +12,13 @@ import type {
     MashroomPluginPackageDefinition
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
-import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../type-definitions';
+import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint, InvalidRemotePortalApp} from '../../../type-definitions';
 import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,} from '../../../type-definitions/internal';
+
+type ServicePortalApps = {
+    readonly foundPortalApps: Array<MashroomPortalApp>;
+    readonly invalidPortalApps: Array<InvalidRemotePortalApp>;
+}
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
@@ -39,7 +44,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const updatedEndpoint = await this.fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint);
 
-        if (!updatedEndpoint.lastError) {
+        if (!updatedEndpoint.lastError || (updatedEndpoint.invalidPortalApps && updatedEndpoint.invalidPortalApps.length > 0)) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
                 this._logger.info('Registering remote Portal App:', {portalApp});
                 context.registry.registerRemotePortalApp(portalApp);
@@ -62,12 +67,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             const externalPluginDefinition = await this._loadExternalPluginDefinition(remotePortalAppEndpoint);
             const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
 
-            const portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, remotePortalAppEndpoint);
+            const {foundPortalApps, invalidPortalApps} = this.processPluginDefinition(packageJson, externalPluginDefinition, remotePortalAppEndpoint);
             return {
                 ...remotePortalAppEndpoint, lastError: null,
                 retries: 0,
                 registrationTimestamp: Date.now(),
-                portalApps
+                portalApps: foundPortalApps,
+                invalidPortalApps,
             };
 
         } catch (error: any) {
@@ -96,7 +102,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
     }
 
-    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): Array<MashroomPortalApp> {
+    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): ServicePortalApps {
         this._logger.debug(`Processing plugin definition of remote Portal App endpoint: ${remotePortalAppEndpoint.url}`, packageJson, definition);
 
         if (!definition) {
@@ -112,9 +118,20 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             throw new Error(`No plugin of type portal-app or portal-app2 found in remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
 
-        const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
+        const portalApps: Array<MashroomPortalApp> = [];
+        const invalidPortalApps: Array<InvalidRemotePortalApp> = [];
+        portalAppDefinitions.forEach((definition) => {
+            try {
+                portalApps.push(this._mapPluginDefinition(packageJson, definition, remotePortalAppEndpoint));
+            } catch (e: any) {
+                invalidPortalApps.push({
+                    name: definition.name,
+                    error: e.message,
+                });
+            }
+        });
 
-        return portalApps.map((portalApp) => {
+        const foundPortalApps = portalApps.map((portalApp) => {
             const existingApp = remotePortalAppEndpoint.portalApps?.find((existingApp) => existingApp.name === portalApp.name);
             if (existingApp && existingApp.version === portalApp.version) {
                 // Keep reload timestamp for browser caching
@@ -123,6 +140,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
             return portalApp;
         });
+
+        return {
+            foundPortalApps,
+            invalidPortalApps,
+        };
     }
 
     private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
@@ -138,7 +160,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
         const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && a.resourcesRootUri.indexOf(remotePortalAppEndpoint.url) !== 0);
         if (existingPortalApp) {
-            throw new Error(`Invalid Portal App '${name}': The name is already defined on endpoint ${existingPortalApp.resourcesRootUri}`);
+            throw new Error(`Duplicate Portal App '${name}': The name is already defined on endpoint ${existingPortalApp.resourcesRootUri}`);
         }
 
         const clientBootstrap = version === 2 ? definition.clientBootstrap : definition.bootstrap;

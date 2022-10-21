@@ -33,7 +33,8 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
                 lastError: null,
                 retries: 0,
                 registrationTimestamp: null,
-                portalApps: []
+                portalApps: [],
+                invalidPortalApps: [],
             });
 
             context.backgroundJob.run();
@@ -56,7 +57,8 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
             lastError: null,
             retries: 0,
             registrationTimestamp: null,
-            portalApps: []
+            portalApps: [],
+            invalidPortalApps: [],
         };
 
         const updatedEndpoint = await context.backgroundJob.fetchPortalAppDataAndUpdateEndpoint(portalAppEndpoint);

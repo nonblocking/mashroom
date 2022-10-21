@@ -2,6 +2,11 @@
 import type {Request} from 'express';
 import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
+export type InvalidRemotePortalApp = {
+    readonly name: string;
+    readonly error: string;
+}
+
 export type RemotePortalAppEndpoint = {
     readonly url: string;
     readonly sessionOnly: boolean;
@@ -9,6 +14,7 @@ export type RemotePortalAppEndpoint = {
     readonly retries: number;
     readonly registrationTimestamp: number | null | undefined;
     readonly portalApps: Array<MashroomPortalApp>;
+    readonly invalidPortalApps: Array<InvalidRemotePortalApp>;
 };
 
 export interface MashroomPortalRemoteAppEndpointService {

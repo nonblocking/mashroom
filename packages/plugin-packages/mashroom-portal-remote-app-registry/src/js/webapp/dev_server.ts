@@ -15,21 +15,27 @@ let testEndpoints: Array<RemotePortalAppEndpoint> = [{
     lastError: null,
     retries: 0,
     registrationTimestamp: Date.now(),
-    portalApps: [portalApp1, portalApp2]
+    portalApps: [portalApp1, portalApp2],
+    invalidPortalApps: [{
+        name: 'Some other App',
+        error: 'Invalid configuration'
+    }],
 }, {
     url: 'http://localhost:8080/test2',
     sessionOnly: true,
     lastError: 'Connection timeout',
     retries: 3,
     registrationTimestamp: null,
-    portalApps: []
+    portalApps: [],
+    invalidPortalApps: [],
 }, {
     url: 'http://localhost:8080/test3',
     sessionOnly: false,
     lastError: null,
     retries: 0,
     registrationTimestamp: null,
-    portalApps: []
+    portalApps: [],
+    invalidPortalApps: [],
 }];
 
 // Dummy services
@@ -49,7 +55,8 @@ wrapperApp.use((req: Request, res: Response, next) => {
                             lastError: null,
                             retries: 0,
                             registrationTimestamp: null,
-                            portalApps: []
+                            portalApps: [],
+                            invalidPortalApps: [],
                         });
                     },
                     async unregisterRemoteAppUrl(url: string) {
@@ -64,7 +71,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
             }
         },
     };
-    
+
     req.pluginContext = pluginContext;
 
     next();

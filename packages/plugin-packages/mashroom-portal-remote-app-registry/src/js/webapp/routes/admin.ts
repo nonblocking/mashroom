@@ -44,7 +44,8 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
                 name: app.name,
                 version: app.version,
                 pluginDef: jsonToHtml(app),
-            }))
+            })),
+            invalidPortalApps: endpoint.invalidPortalApps ?? [],
         }));
 
     res.render('admin', {

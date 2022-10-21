@@ -67,24 +67,24 @@
         <h2>Add a new Remote Portal App</h2>
 
         <form method="POST" action="?csrfToken={{csrfToken}}">
-        <input type="hidden" name="_action" value="add"/>
-        <div class="form-row">
-            <div class="form-label">
-                <label for="url">URL</label>
+            <input type="hidden" name="_action" value="add"/>
+            <div class="form-row">
+                <div class="form-label">
+                    <label for="url">URL</label>
+                </div>
+                <div class="form-input">
+                    <input type="text" name="_url" id="url"/>
+                </div>
             </div>
-            <div class="form-input">
-                <input type="text" name="_url" id="url"/>
+            <div class="form-row">
+                <div>
+                    <input type="checkbox" name="_sessionOnly" id="sessionOnly">
+                    <label for="sessionOnly">Only for the current session</label>
+                </div>
             </div>
-        </div>
-        <div class="form-row">
-            <div>
-                <input type="checkbox" name="_sessionOnly" id="sessionOnly">
-                <label for="sessionOnly">Only for the current session</label>
+            <div class="form-row form-actions">
+                <input type="submit" value="Add"/>
             </div>
-        </div>
-        <div class="form-row form-actions">
-            <input type="submit" value="Add"/>
-        </div>
         </form>
 
         <div class="error-message">
@@ -110,12 +110,19 @@
                 <td>{{this.sessionOnly}}</td>
                 <td class="{{this.statusClass}}">{{this.status}}</td>
                 <td>
-                    {{#each this.portalApps}}
-                        {{this.name}}&nbsp;({{this.version}})
-                        <a href="javascript:void(0)"
-                           onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
-                        <br/>
-                    {{/each}}
+                    <ul class="portal-apps">
+                        {{#each this.portalApps}}
+                            <li class="portal-app">
+                                {{this.name}}&nbsp;({{this.version}})
+                                <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
+                            </li>
+                        {{/each}}
+                        {{#each this.invalidPortalApps}}
+                            <li class="invalid-portal-app">
+                                {{this.name}}&nbsp;<span class="error">({{this.error}})</span>
+                            </li>
+                        {{/each}}
+                    </ul>
                 </td>
                 <td>
                     {{#unless this.sessionOnly}}

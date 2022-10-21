@@ -3,13 +3,19 @@
 import type {ExpressRequest} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
+export type InvalidRemotePortalApp = {
+    +name: string;
+    +error: string;
+}
+
 export type RemotePortalAppEndpoint = {
     +url: string,
     +sessionOnly: boolean,
     +lastError: ?string,
     +retries: number,
     +registrationTimestamp: ?number,
-    +portalApps: Array<MashroomPortalApp>
+    +portalApps: Array<MashroomPortalApp>;
+    +invalidPortalApps?: Array<InvalidRemotePortalApp>;
 }
 
 export interface MashroomPortalRemoteAppEndpointService {
