@@ -1,7 +1,9 @@
 {
     "name": "mashroom-parent",
     "private": true,
-    "dependencies": {},
+    "dependencies": {
+        "lerna": "^5.1.6"
+    },
     "devDependencies": {
         "@babel/core": "^7.18.2",
         "@babel/cli": "^7.17.10",
@@ -38,7 +40,6 @@
         "flow-bin": "^0.179.0",
         "jest": "^28.1.0",
         "nock": "^13.2.6",
-        "lerna": "^5.1.6",
         "cpy-cli": "^4.1.0",
         "del-cli": "^4.0.1",
         "rimraf": "^3.0.2",
