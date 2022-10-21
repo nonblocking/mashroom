@@ -7,23 +7,23 @@ import type {ActiveApp} from './types';
 
 const DIALOG = [
     {
-        name: 'Mashroom Portal Demo Angular App',
+        name: 'Mashroom Portal Demo Vue App',
         appConfig: {
-            message: 'This simple Angular SPA forms the first page',
+            message: 'This simple Vue SPA that acts as the first page',
             pingButtonLabel: 'Next'
         }
     },
     {
-        name: 'Mashroom Portal Demo Vue App',
+        name: 'Mashroom Portal Demo Angular App',
         appConfig: {
-            message: 'This simple Vue SPA forms the second page',
+            message: 'This simple Angular SPA that acts as the second page',
             pingButtonLabel: 'Next'
         }
     },
     {
         name: 'Mashroom Portal Demo Svelte App',
         appConfig: {
-            message: 'This simple Svelte SPA forms the third and last page',
+            message: 'This simple Svelte SPA that acts as the third and last page',
             pingButtonLabel: 'Start over'
         }
     }

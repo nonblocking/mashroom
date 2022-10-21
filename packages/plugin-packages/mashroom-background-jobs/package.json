@@ -12,6 +12,7 @@
         "type-definitions/*"
     ],
     "dependencies": {
+        "express": "^4.18.1",
         "express-handlebars": "^6.0.6",
         "handlebars": "^4.7.7",
         "node-schedule": "^2.1.0"

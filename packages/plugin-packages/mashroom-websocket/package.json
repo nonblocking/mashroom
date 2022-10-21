@@ -11,6 +11,7 @@
         "type-definitions/*"
     ],
     "dependencies": {
+        "express": "^4.18.1",
         "express-handlebars": "^6.0.6",
         "fs-extra": "^10.1.0",
         "handlebars": "^4.7.7",
@@ -26,8 +27,7 @@
         "@types/express-handlebars": "^6.0.0",
         "@types/fs-extra": "^9.0.13",
         "@types/uuid": "^8.3.4",
-        "@types/ws": "^8.5.3",
-        "express": "^4.18.1"
+        "@types/ws": "^8.5.3"
     },
     "jest": {
         "verbose": true,
