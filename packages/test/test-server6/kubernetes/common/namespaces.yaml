@@ -1,0 +1,20 @@
+kind: Namespace
+apiVersion: v1
+metadata:
+    name: portal
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+    name: test1
+    labels:
+        test: 'true'
+        env: test1
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+    name: test2
+    labels:
+        test: 'true'
+        env: test2

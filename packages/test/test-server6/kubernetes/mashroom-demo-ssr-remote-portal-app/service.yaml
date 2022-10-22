@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+    name: mashroom-demo-ssr-remote-portal-app
+    namespace: test1
+    labels:
+        app: mashroom-demo-ssr-remote-portal-app
+        microfrontend: 'true'
+spec:
+    selector:
+        app: mashroom-demo-ssr-remote-portal-app
+    ports:
+        -   port: 6089
+            targetPort: 6089

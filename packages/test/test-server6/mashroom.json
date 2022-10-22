@@ -1,0 +1,93 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-server-config.json",
+    "name": "Mashroom Test Server 6",
+    "port": 5050,
+    "pluginPackageFolders": [
+        {
+            "path": "../../plugin-packages"
+        }
+    ],
+    "indexPage": "/",
+    "ignorePlugins": [
+        "Mashroom Storage MongoDB Provider",
+        "Mashroom Memory Cache Services",
+        "Mashroom LDAP Security Provider",
+        "Mashroom OpenID Connect Security Provider",
+        "Mashroom Messaging External Provider MQTT",
+        "Mashroom Messaging External Provider AMQP",
+        "Mashroom Session MongoDB Provider",
+        "Mashroom Session Redis Provider",
+        "Mashroom Memory Cache Redis Provider",
+        "Mashroom Monitoring PM2 Exporter",
+        "Mashroom Http Proxy Add User Headers Interceptor",
+        "Mashroom Http Proxy Add Access Token Interceptor",
+        "Mashroom CDN Services"
+    ],
+    "plugins": {
+        "Mashroom Session Filestore Provider": {
+            "path": "/mashroom-portal-sessions"
+        },
+        "Mashroom Session Middleware": {
+            "provider": "Mashroom Session Filestore Provider",
+            "session": {
+                "cookie": {
+                    "maxAge": 3600000
+                }
+            }
+        },
+        "Mashroom Security Services": {
+            "provider": "Mashroom Security Simple Provider",
+            "acl": "./acl.json"
+        },
+        "Mashroom Security Simple Provider": {
+            "users": "./users.json",
+            "loginPage": "/login",
+            "authenticationTimeoutSec": 300
+        },
+        "Mashroom Security Default Login Webapp": {
+            "pageTitle": "Mashroom Test Server",
+            "styleFile": "./login_style.css"
+        },
+        "Mashroom Storage Services": {
+            "provider": "Mashroom Storage Filestore Provider"
+        },
+        "Mashroom Storage Filestore Provider": {
+            "dataFolder": "./data/storage",
+            "checkExternalChangePeriodMs": 2000,
+            "prettyPrintJson": true
+        },
+        "Mashroom Portal WebApp": {
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "warnBeforeAuthenticationExpiresSec": 60,
+            "autoExtendAuthentication": false,
+            "ignoreMissingAppsOnPages": false,
+            "ssrConfig": {
+                "ssrEnable": true,
+                "renderTimoutMs": 2000,
+                "cacheEnable": true,
+                "cacheTTLSec": 300
+            }
+        },
+        "Mashroom Portal Default Theme": {
+            "showEnvAndVersions": true,
+            "spaMode": true
+        },
+        "Mashroom Portal Remote App Registry": {
+            "remotePortalAppUrls": "./remotePortalApps.json"
+        },
+        "Mashroom Portal Remote App Registry Admin Webapp": {
+            "showAddRemoteAppForm": true
+        },
+        "Mashroom Portal Remote App Kubernetes Background Job": {
+            "cronSchedule": "0/1 * * * *",
+            "k8sNamespacesLabelSelector": ["test=true,env=test2", "test=true,env=test1"],
+            "k8sNamespaces": null,
+            "k8sServiceLabelSelector": "microfrontend=true",
+            "serviceNameFilter": ".*",
+            "socketTimeoutSec": 3,
+            "refreshIntervalSec": 600,
+            "accessViaClusterIP": false
+        }
+    }
+}

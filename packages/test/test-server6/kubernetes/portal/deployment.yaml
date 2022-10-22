@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: mashroom-portal
+    namespace: portal
+spec:
+    replicas: 2
+    selector:
+        matchLabels:
+            app: mashroom-portal
+    template:
+        metadata:
+            labels:
+                app: mashroom-portal
+        spec:
+            serviceAccountName: mashroom-portal
+            containers:
+                -   name: mashroom-portal
+                    image: ${LOCAL_REGISTRY_NAME}:${LOCAL_REGISTRY_PORT}/mashroom-portal:$VERSION
+                    imagePullPolicy: Always
+                    env:
+                        -   name: NODE_ENV
+                            value: production
+                        -   name: SHOW_ENV_AND_VERSIONS
+                            value: "true"
+                        -   name: WAIT_BEFORE_SERVER_CLOSE
+                            value: '10'
+                    resources:
+                        requests:
+                            cpu: 100m
+                            memory: 120Mi
+                    volumeMounts:
+                        - name: mashroom-portal-sessions
+                          mountPath: /mashroom-portal-sessions
+                    ports:
+                        -   containerPort: 5050
+                    readinessProbe:
+                        httpGet:
+                            path: /mashroom/health/ready
+                            port: 5050
+                        initialDelaySeconds: 5
+                        periodSeconds: 5
+            volumes:
+                - name: mashroom-portal-sessions
+                  persistentVolumeClaim:
+                      claimName: mashroom-portal-sessions-pvc

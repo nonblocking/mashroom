@@ -1,5 +1,5 @@
 
-# Test Server
+# Test Server 3
 
 A test server which runs in dev mode and requires a bunch of external services:
 

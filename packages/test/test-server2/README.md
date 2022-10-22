@@ -1,5 +1,5 @@
 
-# Test Server
+# Test Server 2
 
 A test server which runs in cluster mode. Doesn't require any external services.
 
