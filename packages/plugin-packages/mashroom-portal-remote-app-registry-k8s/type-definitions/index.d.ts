@@ -1,6 +1,6 @@
 
-import {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
-import {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
+import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
+import type {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
 
 export interface ScanBackgroundJob {
     run(): void;
@@ -13,9 +13,15 @@ export interface KubernetesConnector {
 
 export type KubernetesServiceStatus = 'Checking' | 'Valid' | 'Headless Service' | 'No Descriptor' | 'Error';
 
+export type KubernetesServiceInvalidPortalApp = {
+    readonly name: string;
+    readonly error: string;
+}
+
 export type KubernetesService = {
     readonly name: string;
     readonly namespace: string;
+    readonly priority: number;
     readonly ip: string | undefined;
     readonly port: number | undefined;
     readonly url: string;
@@ -24,12 +30,13 @@ export type KubernetesService = {
     status: KubernetesServiceStatus;
     error: string | null;
     foundPortalApps: Array<MashroomPortalApp>;
+    invalidPortalApps: Array<KubernetesServiceInvalidPortalApp>;
 }
 
 export interface KubernetesServiceRegistry extends MashroomRemotePortalAppRegistry {
-    getService(name: string): KubernetesService | undefined;
+    getService(namespace: string, name: string): KubernetesService | undefined;
     addOrUpdateService(service: KubernetesService): void;
-    removeService(name: string): void;
+    removeService(namespace: string, name: string): void;
     readonly services: readonly KubernetesService[];
 }
 

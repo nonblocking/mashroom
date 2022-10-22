@@ -3,7 +3,14 @@
 
 ## [unreleased]
 
- * Remote App Registry: Don't fail for the whole endpoint if just a single Portal App definition is invalid
+ * Kubernetes Remote App Registry:
+   * Support for multiple Namespace and Service label selectors
+   * For duplicate Portal Apps the active one is now more deterministic and depends on the namespace lookup
+     (check the README in the *mashroom-portal-remote-app-registry-k8s* package)
+   * For multiple Portal Apps per service: if one definition is invalid the other ones will be activated nevertheless
+   * Support for duplicate service names in different namespaces
+   * If a service gets removed all Portal Apps are unregistered immediately (without delay)
+ * Remote App Registry: For multiple Portal Apps per endpoint: if one definition is invalid the other ones will be activated nevertheless
  * Core: Removed the forcefully stopping of the server after 5sec because may interrupt running requests
    (it also makes in impossible to increase the shutdown period with *terminationGracePeriodSeconds* on Kubernetes)
  * Prometheus Exporter: Added support for Node.js clusters. It is now possible to use *prom-client*'s

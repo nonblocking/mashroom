@@ -193,12 +193,13 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         const service = context.registry.services[0];
         expect(service.name).toBe('my-remote-app');
+        expect(service.priority).toBe(1000);
         expect(service.status).toBe('Valid');
 
         expect(service.foundPortalApps.length).toBe(1);
         expect(service.foundPortalApps[0].name).toBe('Test App');
 
-        context.registry.removeService('my-remote-app');
+        context.registry.removeService(service.namespace, service.name);
         expect(context.registry.services.length).toBe(0);
     });
 
@@ -207,7 +208,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             .get('/package.json')
             .reply(200, packageJson);
 
-        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('environment=development', null, undefined, '.*', 3,
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['environment=development'], null, undefined, '.*', 3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
@@ -221,7 +222,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.foundPortalApps.length).toBe(1);
         expect(service.foundPortalApps[0].name).toBe('Test App');
 
-        context.registry.removeService('my-remote-app');
+        context.registry.removeService(service.namespace, service.name);
         expect(context.registry.services.length).toBe(0);
     });
 
@@ -230,7 +231,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             .get('/package.json')
             .reply(200, packageJson);
 
-        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('foo=bar', null, 'environment=dev', undefined, 3,
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('foo=bar', null, ['environment=dev'], undefined, 3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
@@ -244,22 +245,81 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.foundPortalApps.length).toBe(1);
         expect(service.foundPortalApps[0].name).toBe('Test App');
 
-        context.registry.removeService('my-remote-app');
+        context.registry.removeService(service.namespace, service.name);
         expect(context.registry.services.length).toBe(0);
+    });
+
+    it('removes services that no longer exist', async () => {
+        nock('http://my-remote-app.dev-namespace2:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        context.registry.addOrUpdateService({
+            name: 'existing-service',
+            namespace: 'dev-namespace2',
+            url: 'foo',
+            foundPortalApps: [],
+            invalidPortalApps: [],
+            error: null,
+            status: 'Valid',
+        } as any);
+
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
+            300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(1);
+        const service = context.registry.services[0];
+        context.registry.removeService(service.namespace, service.name);
+    });
+
+    it('processes duplicate Portal Apps correctly', async () => {
+        nock('http://my-remote-app.dev-namespace3:6066')
+            .get('/package.json')
+            .reply(200, {
+                ...packageJson,
+                version: '6.0.0',
+            });
+        nock('http://my-remote-app.dev-namespace2:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['environment=development2', 'environment=development'], null, null, undefined, 3,
+            300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(2);
+
+        const service1 = context.registry.services[0];
+        expect(service1.name).toBe('my-remote-app');
+        expect(service1.status).toBe('Valid');
+
+        expect(service1.foundPortalApps.length).toBe(1);
+        expect(service1.foundPortalApps[0].name).toBe('Test App');
+
+        const service2 = context.registry.services[1];
+        expect(service2.name).toBe('my-remote-app');
+        expect(service2.status).toBe('Valid');
+
+        expect(service2.foundPortalApps.length).toBe(0);
+        expect(service2.invalidPortalApps.length).toBe(1);
+        expect(service2.invalidPortalApps[0].error).toBe('Duplicate Portal App \'Test App\': The name is already used by http://my-remote-app.dev-namespace3:6066 which has higher priority');
     });
 
     it('processes package.json correctly', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*', 3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson, null, {
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson, null, {
             url: 'http://my-service.default:6789',
             name: 'my-service'
         } as any);
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(1);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(1);
 
-        const portalApp = portalApps[0];
+        const portalApp = foundPortalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
         expect(portalApp).toMatchObject({
             name: 'Test App',
@@ -318,14 +378,14 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*',  3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, {
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, {
             url: 'http://my-service.default:6789',
             name: 'my-service'
         } as any);
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(2);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(2);
 
-        const portalApp = portalApps[0];
+        const portalApp = foundPortalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
         expect(portalApp).toMatchObject({
             name: 'Test App',
@@ -376,7 +436,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             }
         });
 
-        const portalApp2 = portalApps[1];
+        const portalApp2 = foundPortalApps[1];
         expect(portalApp2.lastReloadTs).toBeTruthy();
         expect(portalApp2).toMatchObject({
             name: 'Test App No SSR',
@@ -399,14 +459,14 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*',  3,
             300, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
 
-        const portalApps = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, {
+        const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, {
             url: 'http://my-service.default:6789',
             name: 'my-service'
         } as any);
-        expect(portalApps).toBeTruthy();
-        expect(portalApps.length).toBe(1);
+        expect(foundPortalApps).toBeTruthy();
+        expect(foundPortalApps.length).toBe(1);
 
-        const portalApp = portalApps[0];
+        const portalApp = foundPortalApps[0];
         expect(portalApp.lastReloadTs).toBeTruthy();
         expect(portalApp).toMatchObject({
             name: 'Test App',

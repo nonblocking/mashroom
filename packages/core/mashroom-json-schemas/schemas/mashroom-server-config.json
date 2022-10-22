@@ -701,19 +701,39 @@
                             "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
                         },
                         "k8sNamespacesLabelSelector": {
-                            "type": "string",
-                            "description": "Search in all namespaces matching the label selector (e.g. environment=development,tier=frontend) (Default: null)"
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            ],
+                            "description": "Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)"
                         },
                         "k8sNamespaces": {
                             "type": "array",
                             "items": {
                                 "type": "string"
                             },
-                            "description": "The Kubernetes namespaces to scan (Default: [\"default\"])"
+                            "description": "A distinct list of Kubernetes namespaces to scan; can be null if k8sNamespacesLabelSelector is set (Default: [\"default\"])"
                         },
                         "k8sServiceLabelSelector": {
-                            "type": "string",
-                            "description": "Search for services in the selected namespaces with given labels (e.g. microfrontend=true) (Default: null)"
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            ],
+                            "description": "Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (e.g. microfrontend=true) (Default: null)"
                         },
                         "serviceNameFilter": {
                             "type": "string",

@@ -73,7 +73,8 @@ export default (request: Request, response: Response) => {
                     name: app.name,
                     version: app.version,
                     pluginDef: jsonToHtml(app),
-                }))
+                })),
+                invalidPortalApps: service.invalidPortalApps,
             }))
     };
 

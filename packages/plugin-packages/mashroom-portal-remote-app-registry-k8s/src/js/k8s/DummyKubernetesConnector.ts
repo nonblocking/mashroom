@@ -26,6 +26,19 @@ export default class KubernetesConnector implements KubernetesConnectorType {
                     },
                 ]
             };
+        } else if (labelSelector === 'environment=development2') {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'dev-namespace3',
+                            labels: {
+                                environment: 'dev2'
+                            },
+                        },
+                    },
+                ]
+            };
         }
         return {
             items: [
@@ -48,6 +61,25 @@ export default class KubernetesConnector implements KubernetesConnectorType {
                         metadata: {
                             name: 'my-remote-app',
                             namespace: 'dev-namespace2',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6066
+                                }
+                            ]
+                        }
+                    },
+                ]
+            };
+        } else if (namespace === 'dev-namespace3') {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace3',
                         },
                         spec: {
                             clusterIP: '127.0.0.1',

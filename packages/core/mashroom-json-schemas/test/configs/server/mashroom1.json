@@ -156,9 +156,11 @@
         },
         "Mashroom Portal Remote App Kubernetes Background Job": {
             "cronSchedule": "0/1 * * * *",
+            "k8sNamespacesLabelSelector": ["environment=development"],
             "k8sNamespaces": ["default"],
             "socketTimeoutSec": 3,
             "refreshIntervalSec": 300,
+            "k8sServiceLabelSelector": "microfrontend=true,channel!=alpha",
             "serviceNameFilter": "(microfrontend-|widget-)",
             "accessViaClusterIP": false
         },

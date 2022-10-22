@@ -12,15 +12,20 @@ import type {
     MashroomPluginPackageDefinition
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
-import type {KubernetesConnector, KubernetesService, ScanBackgroundJob} from '../../../type-definitions';
+import type {KubernetesConnector, KubernetesService, ScanBackgroundJob, KubernetesServiceInvalidPortalApp} from '../../../type-definitions';
+
+type ServicePortalApps = {
+    readonly foundPortalApps: Array<MashroomPortalApp>;
+    readonly invalidPortalApps: Array<KubernetesServiceInvalidPortalApp>;
+}
 
 export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgroundJob {
 
     private _serviceNameFilter: RegExp;
     private _logger: MashroomLogger;
 
-    constructor(private _k8sNamespacesLabelSelector: string | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
-                private _k8sServiceLabelSelector: string | null | undefined, serviceNameFilterStr: string | null | undefined,
+    constructor(private _k8sNamespacesLabelSelector: string | Array<string> | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
+                private _k8sServiceLabelSelector: string | Array<string> | null | undefined, serviceNameFilterStr: string | null | undefined,
                 private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
                 private _externalPluginConfigFileNames: Array<string>,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
@@ -42,91 +47,128 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
         const namespaces = await this._determineNamespaces();
         context.namespaces = namespaces;
+        const namespaceScanFailures = context.errors.length > 0;
+        const namespaceServiceScanFailures: Array<string> = [];
+
+        const foundServices: Array<{ name: string, namespace: string }> = [];
+
         this._logger.info('Starting scan of k8s namespaces: ', namespaces);
 
-        for (let i = 0; i < namespaces.length; i++) {
-            const namespace = namespaces[i];
+        for (let nsIdx = 0; nsIdx < namespaces.length; nsIdx++) {
+            const namespace = namespaces[nsIdx];
+            let labelSelectors: Array<string | undefined> = [undefined];
+            if (this._k8sServiceLabelSelector) {
+                labelSelectors = Array.isArray(this._k8sServiceLabelSelector) ? this._k8sServiceLabelSelector : [this._k8sServiceLabelSelector];
+            }
 
-            try {
-                const res = await this._kubernetesConnector.getNamespaceServices(namespace, this._k8sServiceLabelSelector);
-                const serviceItems = res.items;
+            for (let serviceSelectorIdx = 0; serviceSelectorIdx < labelSelectors.length; serviceSelectorIdx++) {
+                const labelSelector = labelSelectors[serviceSelectorIdx];
+                try {
+                    const res = await this._kubernetesConnector.getNamespaceServices(namespace, labelSelector);
+                    const serviceItems = res.items;
+                    const priority = (nsIdx + 1000) * (serviceSelectorIdx + 1);
 
-                for (let j = 0; j < serviceItems.length; j++) {
-                    const serviceItem = serviceItems[j];
+                    for (let j = 0; j < serviceItems.length; j++) {
+                        const serviceItem = serviceItems[j];
 
-                    const name = serviceItem?.metadata?.name;
-                    if (name && name.match(this._serviceNameFilter)) {
-                        const existingService = context.registry.getService(name);
-                        const ip = serviceItem?.spec?.clusterIP;
-                        const ports = serviceItem?.spec?.ports;
-                        const port = ports && ports.length > 0 ? ports[0].port : undefined;
-                        const headlessService = !port || !ip || ip.toLowerCase() === 'none';
-                        let service: KubernetesService | undefined;
+                        const name = serviceItem?.metadata?.name;
+                        if (name && name.match(this._serviceNameFilter)) {
+                            foundServices.push({ name, namespace });
+                            const existingService = context.registry.getService(namespace, name);
+                            const ip = serviceItem?.spec?.clusterIP;
+                            const ports = serviceItem?.spec?.ports;
+                            const port = ports && ports.length > 0 ? ports[0].port : undefined;
+                            const headlessService = !port || !ip || ip.toLowerCase() === 'none';
+                            let service: KubernetesService | undefined;
 
-                        if (existingService) {
-                            if (existingService.status === 'Error' || existingService.lastCheck < Date.now() - this._refreshIntervalSec * 1000) {
+                            if (existingService) {
+                                if (existingService.status === 'Error' || existingService.invalidPortalApps.length > 0 || existingService.lastCheck < Date.now() - this._refreshIntervalSec * 1000) {
+                                    service = {
+                                        ...existingService,
+                                        priority,
+                                        status: 'Checking',
+                                        lastCheck: Date.now(),
+                                        error: null,
+                                    };
+                                }
+                            } else {
+                                const url = this._accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
+                                this._logger.info(`Adding new Kubernetes service: ${name} (${url})`);
+
                                 service = {
-                                    ...existingService, status: 'Checking',
+                                    name,
+                                    namespace,
+                                    priority,
+                                    ip,
+                                    port,
+                                    url,
+                                    firstSeen: Date.now(),
+                                    status: 'Checking',
                                     lastCheck: Date.now(),
                                     error: null,
+                                    foundPortalApps: [],
+                                    invalidPortalApps: [],
                                 };
                             }
-                        } else {
-                            const url = this._accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
-                            this._logger.info(`Adding new Kubernetes service: ${name} (${url})`);
 
-                            service = {
-                                name,
-                                namespace,
-                                ip,
-                                port,
-                                url,
-                                firstSeen: Date.now(),
-                                status: 'Checking',
-                                lastCheck: Date.now(),
-                                error: null,
-                                foundPortalApps: []
-                            };
-                        }
-
-                        if (service) {
-                            if (this._accessViaClusterIP && headlessService) {
-                                service = {
-                                    ...service, status: 'Headless Service',
-                                    foundPortalApps: []
-                                };
-                                context.registry.addOrUpdateService(service);
-                            } else {
-                                context.registry.addOrUpdateService(service);
-                                await this._checkServiceForRemotePortalApps(service);
-                                context.registry.addOrUpdateService(service);
+                            if (service) {
+                                if (this._accessViaClusterIP && headlessService) {
+                                    service = {
+                                        ...service, status: 'Headless Service',
+                                        foundPortalApps: []
+                                    };
+                                    context.registry.addOrUpdateService(service);
+                                } else {
+                                    context.registry.addOrUpdateService(service);
+                                    await this._checkServiceForRemotePortalApps(service);
+                                    context.registry.addOrUpdateService(service);
+                                }
                             }
                         }
                     }
+                } catch (error: any) {
+                    namespaceServiceScanFailures.push(namespace);
+                    context.errors.push(`Error scanning services in namespace ${namespace} with label selector ${labelSelector}: ${error.message}`);
+                    this._logger.error(`Error scanning services in namespace ${namespace} with label selector ${labelSelector}`, error);
                 }
-            } catch (error: any) {
-                context.errors.push(`Error scanning services in namespace ${namespace}: ${error.message}`);
-                this._logger.error(`Error scanning services in namespace ${namespace}`, error);
             }
         }
 
-        this._removeAppsNotSeenForALongTime();
+        // Remove services that no longer exist, but only if the K8S API calls didn't fail
+        const missingServices = context.registry.services.filter(({name, namespace}) => !foundServices.find((s) => s.namespace === namespace && s.name === name));
+        missingServices.forEach(({name, namespace}) => {
+            const serviceNamespaceRemoved = !namespaceScanFailures && namespaces.indexOf(namespace) === -1;
+            const serviceRemoved = namespaceServiceScanFailures.indexOf(namespace) === -1;
+            if (serviceNamespaceRemoved || serviceRemoved) {
+                context.registry.removeService(namespace, name);
+            }
+        });
     }
 
     private async _determineNamespaces(): Promise<Array<string>> {
-        const namespaces = [...this._k8sNamespaces || []];
+        const namespaces: Array<string> = [];
         if (this._k8sNamespacesLabelSelector) {
             try {
-                const additionalNamespaces = await this._kubernetesConnector.getNamespacesByLabel(this._k8sNamespacesLabelSelector);
-                additionalNamespaces.items.forEach((ns) => {
-                    if (ns.metadata?.name) {
-                        namespaces.push(ns.metadata.name);
-                    }
-                });
+                const labelSelectors: Array<string> = Array.isArray(this._k8sNamespacesLabelSelector) ? this._k8sNamespacesLabelSelector : [this._k8sNamespacesLabelSelector];
+                for (const labelSelector of labelSelectors) {
+                    const additionalNamespaces = await this._kubernetesConnector.getNamespacesByLabel(labelSelector);
+                    additionalNamespaces.items.forEach((ns) => {
+                        if (ns.metadata?.name && namespaces.indexOf(ns.metadata.name) === -1) {
+                            namespaces.push(ns.metadata.name);
+                        }
+                    });
+                }
             } catch (e: any) {
                 context.errors.push(`Error scanning namespaces in cluster: ${e.message}`);
-                this._logger.error(`Error scanning namespaces with labelSelector: ${this._k8sNamespacesLabelSelector}`, e);
+                this._logger.error(`Error scanning namespaces with label selector: ${this._k8sNamespacesLabelSelector}`, e);
             }
+        }
+        if (Array.isArray(this._k8sNamespaces)) {
+            this._k8sNamespaces.forEach((ns) => {
+                if (namespaces.indexOf(ns) == -1) {
+                    namespaces.push(ns);
+                }
+            });
         }
         this._logger.debug('Determined namespaces to scan:', namespaces.join(', '));
         return namespaces;
@@ -135,23 +177,23 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     private async _checkServiceForRemotePortalApps(service: KubernetesService): Promise<void> {
         this._logger.debug('Checking service:', service);
 
-        let portalApps = [];
         try {
             const externalPluginDefinition = await this._loadExternalPluginDefinition(service.url);
             const packageJson = await this._loadPackageJson(service.url);
 
-            portalApps = this.processPluginDefinition(packageJson, externalPluginDefinition, service);
-            this._logger.info(`Registered Portal Apps for Kubernetes service: ${service.name}:`, portalApps);
+            const {foundPortalApps, invalidPortalApps} = this.processPluginDefinition(packageJson, externalPluginDefinition, service);
+            service.status = 'Valid';
+            service.foundPortalApps = foundPortalApps;
+            service.invalidPortalApps = invalidPortalApps;
+
+            this._logger.info(`Registered Portal Apps for Kubernetes service: ${service.name}:`, foundPortalApps);
         } catch (error: any) {
             service.status = 'Error';
             service.error = error.message;
             service.foundPortalApps = [];
+            service.invalidPortalApps = [];
             this._logger.error(`Processing remote Portal App info for Kubernetes service ${service.name} failed!`, error);
-            return;
         }
-
-        service.status = 'Valid';
-        service.foundPortalApps = portalApps;
     }
 
     private async _loadPackageJson(serviceUrl: string): Promise<any | null> {
@@ -202,7 +244,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         return configs.find((c) => !!c) as MashroomPluginPackageDefinition || null;
     }
 
-    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, service: KubernetesService): Array<MashroomPortalApp> {
+    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, service: KubernetesService): ServicePortalApps {
         this._logger.debug(`Processing plugin definition of Kubernetes service: ${service.name}`, packageJson, definition);
 
         if (!definition) {
@@ -218,9 +260,20 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             throw new Error('No plugin of type portal-app found in remote Portal App');
         }
 
-        const portalApps = portalAppDefinitions.map((definition) => this._mapPluginDefinition(packageJson, definition, service.url));
+        const portalApps: Array<MashroomPortalApp> = [];
+        const invalidPortalApps: Array<KubernetesServiceInvalidPortalApp> = [];
+        portalAppDefinitions.forEach((definition) => {
+            try {
+                portalApps.push(this._mapPluginDefinition(packageJson, definition, service));
+            } catch (e: any) {
+                invalidPortalApps.push({
+                    name: definition.name,
+                    error: e.message,
+                });
+            }
+        });
 
-        return portalApps.map((portalApp) => {
+        const foundPortalApps = portalApps.map((portalApp) => {
             const existingApp = service.foundPortalApps?.find((existingApp) => existingApp.name === portalApp.name);
             if (existingApp && existingApp.version === portalApp.version) {
                 // Keep reload timestamp for browser caching
@@ -229,9 +282,14 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
             return portalApp;
         });
+
+        return {
+            foundPortalApps,
+            invalidPortalApps,
+        };
     }
 
-    private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, serviceUrl: string): MashroomPortalApp {
+    private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, service: KubernetesService): MashroomPortalApp {
         const version = definition.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${definition.name}: ${version}`);
 
@@ -242,9 +300,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
             throw new Error(`Invalid Portal App definition ${name}: The name contains invalid characters (/,?).`);
         }
-        const existingPortalApp = context.registry.portalApps.find((a) => a.name === name && a.resourcesRootUri.indexOf(serviceUrl) !== 0);
-        if (existingPortalApp) {
-            throw new Error(`Invalid Portal App '${name}': The name is already defined on service ${existingPortalApp.resourcesRootUri}`);
+        const serviceWithSameApp = context.registry.services.find((s) => s.url !== service.url && s.foundPortalApps.find((p) => p.name === name));
+        if (serviceWithSameApp && service.priority >= serviceWithSameApp.priority) {
+            throw new Error(`Duplicate Portal App '${name}': The name is already used by ${serviceWithSameApp.url} which has higher priority`);
         }
 
         const clientBootstrap = version === 2 ? definition.clientBootstrap : definition.bootstrap;
@@ -282,12 +340,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
         let resourcesRootUri;
         if (version === 2) {
-            resourcesRootUri = `${serviceUrl}${definition.remote?.resourcesRoot || ''}`;
+            resourcesRootUri = `${service.url}${definition.remote?.resourcesRoot || ''}`;
             if (resourcesRootUri.endsWith('/')) {
                 resourcesRootUri = resourcesRootUri.slice(0, -1);
             }
         } else {
-            resourcesRootUri = serviceUrl;
+            resourcesRootUri = service.url;
         }
 
         const config = definition.defaultConfig || {};
@@ -316,12 +374,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                         throw new Error(`Invalid configuration of plugin ${name}: No targetUri defined for proxy ${proxyName}.`);
                     }
                     if (targetUri.startsWith('/')) {
-                        targetUri = serviceUrl + targetUri;
+                        targetUri = service.url + targetUri;
                     }
                     try {
                         const parsedUri = new URL(targetUri);
                         if (parsedUri.hostname === 'localhost') {
-                            targetUri = serviceUrl + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                            targetUri = service.url + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
                         }
                     } catch (e) {
                         // Ignore
@@ -336,7 +394,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         let editorConfig;
         if (version === 2) {
             if (definition.remote?.ssrInitialHtmlPath) {
-                ssrInitialHtmlUri = `${serviceUrl}${definition.remote.ssrInitialHtmlPath}`;
+                ssrInitialHtmlUri = `${service.url}${definition.remote.ssrInitialHtmlPath}`;
                 if (ssrInitialHtmlUri.endsWith('/')) {
                     ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
                 }
@@ -345,45 +403,33 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             editorConfig = config.editor;
         }
 
-        const portalApp: MashroomPortalApp = {
-            name,
-            title,
-            description,
-            tags,
-            version: packageJson?.version || new Date().toISOString(),
-            homepage: definition.homepage || packageJson?.homepage,
-            author: definition.author || packageJson?.author,
-            license: packageJson?.license,
-            category,
-            metaInfo: config.metaInfo,
-            lastReloadTs: Date.now(),
-            clientBootstrap,
-            resourcesRootUri,
-            remoteApp: true,
-            ssrBootstrap: undefined,
-            ssrInitialHtmlUri,
-            sharedResources,
-            resources,
-            cachingConfig,
-            editorConfig,
-            screenshots,
-            defaultRestrictViewToRoles,
-            rolePermissions: config.rolePermissions,
-            proxies,
-            defaultAppConfig: config.appConfig
-        };
-
-        return portalApp;
-    }
-
-    private _removeAppsNotSeenForALongTime(): void {
-        context.registry.services.forEach((service) => {
-            if (service.lastCheck < Date.now() - this._refreshIntervalSec * 1000 * 2.5) {
-                // Not seen for 2.5 check intervals
-                this._logger.info(`Removing portal apps because Kubernetes service ${service.name} is no longer available:`, service.foundPortalApps);
-                context.registry.removeService(service.name);
-            }
-        });
+       return {
+           name,
+           title,
+           description,
+           tags,
+           version: packageJson?.version || new Date().toISOString(),
+           homepage: definition.homepage || packageJson?.homepage,
+           author: definition.author || packageJson?.author,
+           license: packageJson?.license,
+           category,
+           metaInfo: config.metaInfo,
+           lastReloadTs: Date.now(),
+           clientBootstrap,
+           resourcesRootUri,
+           remoteApp: true,
+           ssrBootstrap: undefined,
+           ssrInitialHtmlUri,
+           sharedResources,
+           resources,
+           cachingConfig,
+           editorConfig,
+           screenshots,
+           defaultRestrictViewToRoles,
+           rolePermissions: config.rolePermissions,
+           proxies,
+           defaultAppConfig: config.appConfig
+       };
     }
 
 }

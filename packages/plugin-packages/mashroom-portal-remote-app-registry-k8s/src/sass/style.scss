@@ -36,6 +36,7 @@ body {
     color: $COLOR_BLACK;
     font-size: 16px;
     font-family: $FONT_DEFAULT;
+    min-height: 800px;
 }
 
 h1, h2, h3 {
@@ -97,7 +98,7 @@ th {
     vertical-align: top;
     white-space: nowrap;
     font-weight: normal;
-    font-family: Georgia, serif;
+    font-family: $FONT_HEADER;
     font-size: 1.05em;
 }
 
@@ -105,6 +106,7 @@ td {
     padding: 8px 10px;
     vertical-align: top;
 }
+
 
 tr.row-error {
   background-color: #FFDDDD;
@@ -120,6 +122,25 @@ td.error {
 
 td.checking {
   color: $COLOR_SECONDARY;
+}
+
+.services {
+    .portal-apps {
+        min-width: 250px;
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+            padding: 2px 0;
+        }
+
+        .invalid-portal-app {
+            color: $COLOR_GREY;
+            .error {
+                color: $COLOR_ERROR;
+            }
+        }
+    }
 }
 
 #modal {

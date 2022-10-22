@@ -49,27 +49,37 @@
         </div>
     {{/if}}
 
-    <table border="1" cellspacing="0" cellpadding="10">
-        <tr>
-            <th>Name</th><th>Namespace</th><th>URL</th><th>Last Check</th><th>Status</th><th>Portal Apps</th>
-        </tr>
-        {{#each services}}
-            <tr class="{{this.rowClass}}">
-                <td>{{this.name}}</td>
-                <td>{{this.namespace}}</td>
-                <td>{{this.url}}</td>
-                <td>{{this.lastCheck}}</td>
-                <td class="{{this.statusClass}}">{{this.status}}</td>
-                <td>
-                   {{#each this.portalApps}}
-                       {{this.name}}&nbsp;({{this.version}})
-                       <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
-                       <br/>
-                   {{/each}}
-                </td>
+    <div class="services">
+        <table border="1" cellspacing="0" cellpadding="10">
+            <tr>
+                <th>Name</th><th>Namespace</th><th>URL</th><th>Last Check</th><th>Status</th><th>Portal Apps</th>
             </tr>
-        {{/each}}
-    </table>
+            {{#each services}}
+                <tr class="{{this.rowClass}}">
+                    <td>{{this.name}}</td>
+                    <td>{{this.namespace}}</td>
+                    <td>{{this.url}}</td>
+                    <td>{{this.lastCheck}}</td>
+                    <td class="{{this.statusClass}}">{{this.status}}</td>
+                    <td>
+                        <ul class="portal-apps">
+                            {{#each this.portalApps}}
+                                <li class="portal-app">
+                                    {{this.name}}&nbsp;({{this.version}})
+                                    <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
+                                </li>
+                            {{/each}}
+                            {{#each this.invalidPortalApps}}
+                                <li class="invalid-portal-app">
+                                    {{this.name}}&nbsp;<span class="error">({{this.error}})</span>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
 
     <div class="footnotes">
         <strong>Scanned namespaces:</strong> {{namespaces}}

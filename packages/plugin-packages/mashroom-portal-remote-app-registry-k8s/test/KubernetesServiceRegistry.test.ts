@@ -11,6 +11,7 @@ describe('KubernetesServiceRegistry', () => {
     const service1: KubernetesService = {
         name: 'my-service1',
         namespace: 'default',
+        priority: 10,
         ip: '10.1.2.3',
         port: 4444,
         url: 'http://my-service1.default:4444',
@@ -20,12 +21,14 @@ describe('KubernetesServiceRegistry', () => {
         error: null,
         foundPortalApps: [
             portalApp1,
-        ]
+        ],
+        invalidPortalApps: [],
     };
 
     const service2: KubernetesService = {
         name: 'my-service2',
         namespace: 'default',
+        priority: 20,
         ip: '10.1.2.4',
         port: 5555,
         url: 'http://my-service2.default:5555',
@@ -36,7 +39,8 @@ describe('KubernetesServiceRegistry', () => {
         foundPortalApps: [
             portalApp2,
             portalApp3,
-        ]
+        ],
+        invalidPortalApps: [],
     };
 
     it('registers new services', () => {
@@ -46,7 +50,7 @@ describe('KubernetesServiceRegistry', () => {
         registry.addOrUpdateService(service1);
 
         expect(registry.services.length).toBe(1);
-        expect(registry.getService('my-service1')).toBeTruthy();
+        expect(registry.getService('default', 'my-service1')).toBeTruthy();
         expect(registry.portalApps.length).toBe(1);
     });
 
@@ -55,10 +59,10 @@ describe('KubernetesServiceRegistry', () => {
 
         registry.addOrUpdateService(service1);
         registry.addOrUpdateService(service2);
-        registry.removeService('my-service1');
+        registry.removeService('default', 'my-service1');
 
         expect(registry.services.length).toBe(1);
-        expect(registry.getService('my-service1')).toBeFalsy();
+        expect(registry.getService('default', 'my-service1')).toBeFalsy();
         expect(registry.portalApps.length).toBe(2);
     });
 

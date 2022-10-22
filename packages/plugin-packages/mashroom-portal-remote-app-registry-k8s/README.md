@@ -45,9 +45,9 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _cronSchedule_: The cron schedule for the background job that scans for new apps (Default: every minute)
- * _k8sNamespacesLabelSelector_: Search in all namespaces matching the label selector (e.g. environment=development,tier=frontend) (Default: null)
- * _k8sNamespaces_: A distinct list of Kubernetes namespaces to scan, should be null if _k8sNamespacesLabelSelector_ is set (Default: ["default"])
- * _k8sServiceLabelSelector_: Search for services in the selected namespaces with given labels (e.g. microfrontend=true) (Default: null)
+ * _k8sNamespacesLabelSelector_: Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)
+ * _k8sNamespaces_: A distinct list of Kubernetes namespaces to scan; can be null if _k8sNamespacesLabelSelector_ is set (Default: ["default"])
+ * _k8sServiceLabelSelector_: Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (Default: null)
  * _serviceNameFilter_: A regular expression for services that should be checked (case insensitive). (Default: ".*")
  * _socketTimeoutSec_: Socket timeout when trying to the Kubernetes service (Default: 3)
  * _checkIntervalSec_: The time in seconds after that a registered services show be re-checked (Default: 600)
@@ -63,13 +63,28 @@ Select all services with label microfrontend=true and not label channel=alpha in
 {
   "plugins": {
       "Mashroom Portal Remote App Kubernetes Background Job": {
-          "k8sNamespacesLabelSelector": "environment=development,tier=frontend",
+          "k8sNamespacesLabelSelector": ["environment=development,tier=frontend"],
           "k8sNamespaces": null,
-          "k8sServiceLabelSelector": "microfrontend=true,channel!=alpha"
+          "k8sServiceLabelSelector": ["microfrontend=true,channel!=alpha"]
         }
     }
 }
 ```
+### Priority
+
+In case of duplicate Portal Apps the one that appears first in the list of namespaces is taken.
+For a configuration like this:
+
+```json
+{
+  "k8sNamespacesLabelSelector": ["environment=hotfix", "environment=prod"],
+  "k8sNamespaces": ["namespace2"]
+}
+```
+the order is:
+ * Namespaces that match *environment=hotfix*
+ * Namespaces that match *environment=prod*
+ * Namespace *namespace2*
 
 ## Setup Kubernetes access
 

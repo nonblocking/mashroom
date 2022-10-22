@@ -10,17 +10,17 @@ export default class KubernetesServiceRegistry implements KubernetesServiceRegis
         this._services = [];
     }
 
-    getService(name: string): KubernetesService | undefined {
-        return this._services.find((service) => service.name === name);
+    getService(namespace: string, name: string): KubernetesService | undefined {
+        return this._services.find((service) => service.namespace === namespace && service.name === name);
     }
 
     addOrUpdateService(service: KubernetesService): void {
-        this.removeService(service.name);
+        this.removeService(service.namespace, service.name);
         this._services.push(service);
     }
 
-    removeService(name: string): void {
-        const idx = this._services.findIndex((service) => service.name === name);
+    removeService(namespace: string, name: string): void {
+        const idx = this._services.findIndex((service) => service.namespace === namespace && service.name === name);
         if (idx !== -1) {
             this._services.splice(idx, 1);
         }
