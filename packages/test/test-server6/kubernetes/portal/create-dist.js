@@ -25,6 +25,7 @@ const distFolder = resolve(__dirname, 'tmp');
         '!**/node_modules',
         '!**/test-data',
         '!**/log',
+        '!**/type-definitions/**',
         '!**/test-server1',
         '!**/test-server2',
         '!**/test-server3',
