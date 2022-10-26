@@ -44,7 +44,7 @@ export default class PortalHttpProxyController {
             const restApiId = pathParts[1];
             const portalApp = this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
             if (!portalApp) {
-                logger.warn('Portal app not found: ', pluginName);
+                logger.warn('Portal App not found: ', pluginName);
                 res.sendStatus(404);
                 return;
             }

@@ -297,7 +297,7 @@ export default class PortalPageController {
 
             const portalApp = this._getAppData(data.pluginName);
             if (!portalApp) {
-                logger.warn(`Portal app ${data.pluginName} not found`);
+                logger.warn(`Portal App ${data.pluginName} not found`);
                 res.sendStatus(400);
                 return;
             }
@@ -310,7 +310,7 @@ export default class PortalPageController {
                 instanceId
             };
             const position = this._insertAppInstance(page, instance, data.areaId, data.position);
-            logger.info(`Inserting new app instance of ${data.pluginName} on page ${pageId} in area ${data.areaId} at position: ${position}`);
+            logger.info(`Inserting new Portal App instance of ${data.pluginName} on page ${pageId} in area ${data.areaId} at position: ${position}`);
 
             await portalService.updatePage(page);
 
@@ -374,7 +374,7 @@ export default class PortalPageController {
             const portalApps = page.portalApps;
             const existingInstData = findPortalAppInstanceOnPage(page, pluginName, portalAppInstanceId);
             if (!portalApps || !existingInstData) {
-                logger.warn(`No portal app instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
+                logger.warn(`No portal App instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
                 res.sendStatus(404);
                 return;
             }
@@ -383,10 +383,10 @@ export default class PortalPageController {
                 const areaId = data.areaId || existingInstData.areaId;
                 portalApps[existingInstData.areaId].splice(existingInstData.position, 1);
                 const position = this._insertAppInstance(page, existingInstData.instance, areaId, data.position);
-                logger.info(`Moving app instance ${pluginName}:${portalAppInstanceId} on page ${pageId} and area ${areaId} to position: ${position}`);
+                logger.info(`Moving Portal App instance ${pluginName}:${portalAppInstanceId} on page ${pageId} and area ${areaId} to position: ${position}`);
             }
             if (data.appConfig) {
-                logger.info(`Updating app config of app instance ${pluginName}:${portalAppInstanceId} on page ${pageId} to: `, data.appConfig);
+                logger.info(`Updating Portal App config of instance ${pluginName}:${portalAppInstanceId} on page ${pageId} to: `, data.appConfig);
                 const existingAppInstance = await portalService.getPortalAppInstance(pluginName, portalAppInstanceId);
                 if (existingAppInstance) {
                     const updatedAppInstance = {...existingAppInstance, appConfig: data.appConfig,};
@@ -429,12 +429,12 @@ export default class PortalPageController {
             const portalApps = page.portalApps;
             const existingInstData = findPortalAppInstanceOnPage(page, pluginName, portalAppInstanceId);
             if (!portalApps || !existingInstData) {
-                logger.warn(`No portal app instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
+                logger.warn(`No Portal App instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
                 res.sendStatus(404);
                 return;
             }
 
-            logger.info(`Removing app instance ${pluginName}:${portalAppInstanceId} on page ${pageId}`);
+            logger.info(`Removing Portal App instance ${pluginName}:${portalAppInstanceId} on page ${pageId}`);
             portalApps[existingInstData.areaId].splice(existingInstData.position, 1);
 
             await portalService.updatePage(page);
@@ -465,7 +465,7 @@ export default class PortalPageController {
             const pluginName = req.params.pluginName;
             const portalAppInstanceId = req.params.portalAppInstanceId;
 
-            logger.info(`Updating permitted roles for app ${pluginName} instance ${portalAppInstanceId} on page ${pageId}`);
+            logger.info(`Updating permitted roles for Portal App ${pluginName} instance ${portalAppInstanceId} on page ${pageId}`);
 
             const page = await portalService.getPage(pageId);
             if (!page) {
@@ -477,7 +477,7 @@ export default class PortalPageController {
             const portalApps = page.portalApps;
             const existingInstData = findPortalAppInstanceOnPage(page, pluginName, portalAppInstanceId);
             if (!portalApps || !existingInstData) {
-                logger.warn(`No portal app instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
+                logger.warn(`No Portal App instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
                 res.sendStatus(404);
                 return;
             }
@@ -513,7 +513,7 @@ export default class PortalPageController {
             const portalAppInstanceId: string = req.params.portalAppInstanceId;
             const roles: Array<string> | undefined | null = req.body;
 
-            logger.info(`Updating permitted roles for app ${pluginName} instance ${portalAppInstanceId} on page ${pageId}`);
+            logger.info(`Updating permitted roles for Portal App ${pluginName} instance ${portalAppInstanceId} on page ${pageId}`);
 
             const page = await portalService.getPage(pageId);
             if (!page) {
@@ -525,7 +525,7 @@ export default class PortalPageController {
             const portalApps = page.portalApps;
             const existingInstData = findPortalAppInstanceOnPage(page, pluginName, portalAppInstanceId);
             if (!portalApps || !existingInstData) {
-                logger.warn(`No portal app instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
+                logger.warn(`No Portal App instance ${pluginName}:${portalAppInstanceId} found on page with id ${pageId}`);
                 res.sendStatus(404);
                 return;
             }

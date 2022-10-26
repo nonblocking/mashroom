@@ -73,7 +73,7 @@ export default class PortalRestProxyController {
             const pluginName = decodeURIComponent(encodedPluginName);
             const portalApp = this._pluginRegistry.portalApps.find((pa) => pa.name === pluginName);
             if (!portalApp) {
-                logger.warn('Portal app not found: ', pluginName);
+                logger.warn('Portal App not found: ', pluginName);
                 sendStatus(404);
                 return;
             }

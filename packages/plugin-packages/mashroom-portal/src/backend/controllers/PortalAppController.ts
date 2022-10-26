@@ -69,7 +69,7 @@ export default class PortalAppController {
             }
 
             if (!await isAppPermitted(req, pluginName, portalAppInstanceId, portalApp)) {
-                logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access app: ${pluginName}:${portalAppInstanceId}`);
+                logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access Portal App: ${pluginName}:${portalAppInstanceId}`);
                 res.sendStatus(403);
                 return;
             }
@@ -83,14 +83,14 @@ export default class PortalAppController {
                 portalAppInstance = await this._getDynamicallyLoadedPortalAppInstance(portalApp, req);
             }
             if (!portalAppInstance) {
-                logger.warn(`Portal app instance not found: ${portalAppInstanceId}`);
+                logger.warn(`Portal App instance not found: ${portalAppInstanceId}`);
                 res.sendStatus(404);
                 return;
             }
 
             const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
 
-            logger.debug(`Sending portal app setup for: ${portalApp.name}`, portalAppSetup);
+            logger.debug(`Sending Portal App setup for: ${portalApp.name}`, portalAppSetup);
 
             if (cacheControlService) {
                 // Never cache dynamically loaded apps because they need a different appId per instance
@@ -113,7 +113,7 @@ export default class PortalAppController {
 
         const portalApp = this._getPortalApp(pluginName);
         if (!portalApp) {
-            logger.warn(`Portal app not found: ${pluginName}`);
+            logger.warn(`Portal App not found: ${pluginName}`);
             res.sendStatus(404);
             return;
         }
@@ -145,7 +145,7 @@ export default class PortalAppController {
         while (portalApps.length > 0 && !sent) {
             const portalApp = portalApps.pop();
             if (portalApp) {
-                logger.debug(`Taking the shared resource ${resourcePath} from portal app: ${portalApp.name}`);
+                logger.debug(`Taking the shared resource ${resourcePath} from Portal App: ${portalApp.name}`);
                 sent = await this._sendResource(resourcePath, portalApp, req, res);
             }
         }
@@ -258,7 +258,7 @@ export default class PortalAppController {
             return false;
         }
 
-        logger.debug(`Sending portal app resource: ${resourceUri}`);
+        logger.debug(`Sending Portal App resource: ${resourceUri}`);
 
         try {
             const fileName = resourcePath.split('/').pop() as string;
@@ -270,7 +270,7 @@ export default class PortalAppController {
             return true;
 
         } catch (err: any) {
-            logger.error(`Cannot load portal app resource: ${resourceUri}`, err);
+            logger.error(`Cannot load Portal App resource: ${resourceUri}`, err);
             if (cacheControlService) {
                 cacheControlService.removeCacheControlHeader(res);
             }
