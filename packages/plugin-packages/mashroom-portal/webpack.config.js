@@ -10,7 +10,6 @@ module.exports = {
         filename: '[name].js',
         publicPath: '',
     },
-    target: ['web', 'es3'],
     module: {
         rules: [
             {
