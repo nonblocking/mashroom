@@ -260,13 +260,11 @@ input[type="text"], input[type="number"], input[type="password"], input[type="te
     @include focus-animation();
 
     &:focus {
-        padding: 5px 10px;
-        border: 2px solid $COLOR_SECONDARY;
+        border: 1px solid $COLOR_SECONDARY;
     }
 
     &:invalid {
-        padding: 5px 10px;
-        border: 2px solid $COLOR_ERROR;
+        border: 1px solid $COLOR_ERROR;
     }
 
     &:disabled {
@@ -284,8 +282,7 @@ select {
     font-family: $FONT_DEFAULT;
     font-size: 1em;
     width: 100%;
-    height: 34px;
-    padding-left: 10px;
+    padding: 6px 11px;
     background-color: white;
     border: 1px solid $COLOR_PRIMARY;
     border-radius: 0;
@@ -296,7 +293,7 @@ select {
     }
 
     &:focus {
-        border: 2px solid $COLOR_SECONDARY;
+        border: 1px solid $COLOR_SECONDARY;
 
         &::-ms-value {
             background-color: transparent;
@@ -304,7 +301,7 @@ select {
     }
 
     &:invalid {
-        border: 2px solid $COLOR_ERROR;
+        border: 1px solid $COLOR_ERROR;
     }
 
     &::-ms-expand {
@@ -823,12 +820,11 @@ footer {
 .mashroom-portal-ui-source-code-editor-field {
     .cm-editor {
         border: 1px solid $COLOR_PRIMARY;
-        padding: 1px;
+        padding: 5px;
         @include focus-animation();
 
         &.cm-focused {
-            padding: 0;
-            border: 2px solid $COLOR_SECONDARY;
+            border: 1px solid $COLOR_SECONDARY;
         }
     }
 }

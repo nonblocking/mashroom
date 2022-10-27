@@ -49,13 +49,13 @@
 
     .dropdown-menu-button {
         &:hover {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
         }
     }
 
     .portal-apps-control-toggle {
         &:hover {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
         }
     }
 
@@ -129,7 +129,7 @@
     }
 
     input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"], textarea {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
+        background-color: $ADMIN_APP_COLOR_INPUT_BACKGROUND;
         border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
         color: $ADMIN_APP_COLOR_TEXT;
 
@@ -139,13 +139,13 @@
     }
 
     select {
-        background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
+        background-color: $ADMIN_APP_COLOR_INPUT_BACKGROUND;
         border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
         color: $ADMIN_APP_COLOR_TEXT;
 
         option {
             color: $ADMIN_APP_COLOR_TEXT;
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
+            background-color: $ADMIN_APP_COLOR_INPUT_BACKGROUND;
         }
 
         &:focus {
@@ -194,15 +194,15 @@
     }
 
     .mashroom-portal-ui-field-label {
-        color: $COLOR_GREY;
+        color: $ADMIN_APP_COLOR_TEXT_DARK;
 
     }
 
     .mashroom-portal-ui-source-code-editor-field {
-        .CodeMirror {
+        .cm-editor {
             border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
 
-            &.CodeMirror-focused {
+            &.cm-focused {
                 border-color: $COLOR_SECONDARY;
             }
         }
@@ -227,7 +227,7 @@
 
     .mashroom-portal-ui-modal {
         .mashroom-portal-ui-modal-header {
-            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
         }
 
         .mashroom-portal-ui-modal-content {
@@ -255,7 +255,7 @@
     .tool-button {
         color: $ADMIN_APP_COLOR_TEXT;
         background-color: $ADMIN_APP_COLOR_BACKGROUND;
-        opacity: 0.6;
+        opacity: 0.7;
 
         &:hover {
             opacity: 1;
@@ -267,3 +267,20 @@
     color: $COLOR_WHITE;
     background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
 }
+
+.mashroom-portal-ui-tab-dialog {
+    .tab-dialog-header {
+        .tab-dialog-button {
+            background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER;
+
+            &:hover {
+                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
+            }
+
+            &.active {
+                background-color: $COLOR_PRIMARY;
+            }
+        }
+    }
+}
+

@@ -68,6 +68,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
                                 syntaxHighlighting: true,
                                 autocompletion: true,
                                 closeBrackets: true,
+                                highlightActiveLine: false,
                             }}
                             extensions={extensions}
                             onBlur={field.onBlur}
