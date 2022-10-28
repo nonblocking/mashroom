@@ -114,6 +114,7 @@ export type MashroomPortalContext = {
 export type MashroomPortalPageContentRenderResult = {
     readonly pageContent: string;
     readonly serverSideRenderedApps: Array<string>;
+    readonly embeddedPortalApps: MashroomPortalPageApps;
 }
 
 export type MashroomPortalIncludeStyleServerSideRenderedAppsResult = {

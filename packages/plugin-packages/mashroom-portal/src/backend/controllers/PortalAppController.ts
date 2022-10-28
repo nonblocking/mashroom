@@ -88,7 +88,7 @@ export default class PortalAppController {
                 return;
             }
 
-            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
+            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, null, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
 
             logger.debug(`Sending Portal App setup for: ${portalApp.name}`, portalAppSetup);
 

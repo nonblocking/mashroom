@@ -3,6 +3,30 @@
 
 ## [unreleased]
 
+ * Portal: Added support for server-side rendering of *Composite Apps*, which use other Portal Apps as their building blocks.
+   Works as follows:
+   * In the SSR bootstrap of the *Composite App* use the new **portalAppService.serverSideRenderApp()** to generate the HTML of an arbitrary (registered) App
+   * Incorporate that HTML into the SSR HTML of your *Composite App*
+   * Make sure you don't call *portalAppService.loadApp()* on the client-side for those pre-rendered Apps
+   * Make sure the *embedded* Apps aren't removed by the render framework during hydration, in *React* you have to add
+     ```dangerouslySetInnerHTML={{ __html: '' }}``` to a node which children should be ignored during hydration
+
+   Example:
+   ```typescript
+   const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup, clientServices) => {
+     const {appConfig} = portalAppSetup;
+     const {portalAppService, messageBus} = clientServices;
+
+     let ssrHTML = renderToString(<MyCompositeApp />);
+     const {appId: embeddedAppId, appSSRHtml: embeddedAppSSRHtml} = await portalAppService.serverSideRenderApp('my-embedded-app-host', 'My Other App', {});
+     ssrHTML = ssrHTML.replace(/(id="my-embedded-app-host">)(<)/, `$1${embeddedAppSSRHtml}$2`);
+
+     // ...
+
+     return ssrHTML;
+   }
+   ```
+ * Portal: **BREAKING CHANGE**: The second argument of *MashroomPortalAppPluginSSRBootstrapFunction* is now *clientServices* (was *request* before)
  * Kubernetes Remote App Registry:
    * Support for multiple Namespace and Service label selectors
    * For duplicate Portal Apps the active one is now more deterministic and depends on the namespace lookup
@@ -17,7 +41,7 @@
    *AggregatorRegistry* to gather the metrics in the master process and also to get the worker metrics
    within [PM2](https://pm2.keymetrics.io) cluster. Check out the README in the *mashroom-monitoring-prometheus-exporter*
    module for details.
- * BREAKING CHANGE: Renamed the plugin *mashroom-http-proxy-add-id-token* to *mashroom-http-proxy-add-access-token* because
+ * **BREAKING CHANGE**: Renamed the plugin *mashroom-http-proxy-add-id-token* to *mashroom-http-proxy-add-access-token* because
    the access token is intended for authenticating against APIs and such.
  * Core: Failing ready and health probes log now the causes. This is helpful on K8S when the Admin UI is not available
    if the ready probe fails.

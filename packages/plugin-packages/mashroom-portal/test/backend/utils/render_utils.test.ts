@@ -44,6 +44,7 @@ describe('path_utils', () => {
                     instanceId: '1',
                     appSetup: {
                         appId: 'app1',
+                        pluginName: 'App 1',
                         title: 'App 1',
                     } as any
                 },
@@ -52,6 +53,7 @@ describe('path_utils', () => {
                     instanceId: '3',
                     appSetup: {
                         appId: 'app3',
+                        pluginName: 'App 3',
                         title: 'App 3',
                     } as any
                 }
@@ -62,6 +64,7 @@ describe('path_utils', () => {
                     instanceId: '2',
                     appSetup: {
                         appId: 'app2',
+                        pluginName: 'App 2',
                         title: 'App 2',
                     } as any
                 }

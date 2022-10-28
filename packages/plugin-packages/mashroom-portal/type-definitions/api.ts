@@ -175,6 +175,14 @@ export type MashroomPortalAppSetup = {
     readonly editorConfig: MashroomPortalAppConfigEditor | null | undefined;
 };
 
+export type MashroomPortalServerSideRenderResult = {
+    readonly appId: string;
+    readonly pluginName: string;
+    readonly title: string | null | undefined;
+    readonly version: string;
+    readonly appSSRHtml: string;
+}
+
 export type UserAgent = {
     readonly browser: {
         readonly name:
@@ -777,6 +785,13 @@ export interface MashroomPortalAppService {
     ): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
+     * Only available in an SSR bootstrap: Render another App with given config to HTML.
+     * This can be used in Composite Apps to server-side render the initial state.
+     * If the target App does not support SSR, or if called on the client-side, this method will throw an Error.
+     */
+    serverSideRenderApp(appAreaId: string, pluginName: string, appConfig?: any | null | undefined): Promise<MashroomPortalServerSideRenderResult>;
+
+    /**
      * Reload given portal app
      *
      * The returned promise will always resolve!
@@ -1248,7 +1263,7 @@ export type MashroomRemotePortalAppRegistryBootstrapFunction = (
 export type MashroomPortalAppLifecycleHooks = {
     /**
      * Will be called before the host element will be removed from the DOM.
-     * Can be used to cleanup (e.g. to unmount a React App).
+     * Can be used to clean up (e.g. to unmount a React App).
      */
     readonly willBeRemoved?: () => void | Promise<void>;
     /**
@@ -1267,7 +1282,11 @@ export type MashroomPortalAppPluginBootstrapFunction = (
     | MashroomPortalAppLifecycleHooks
     | Promise<void | MashroomPortalAppLifecycleHooks>;
 
-export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup, req: Request) => Promise<string>;
+export type MashroomPortalAppPluginSSRBootstrapFunction = (
+    portalAppSetup: MashroomPortalAppSetup,
+    clientServices: Pick<MashroomPortalClientServices, 'messageBus' | 'portalAppService'>,
+    req: Request,
+) => Promise<string>;
 
 // portal-theme
 

@@ -8,11 +8,10 @@ import {
     WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
     WINDOW_VAR_PORTAL_SERVICES,
     WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
-    WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
+    WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE, SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
 } from '../../../backend/constants';
-import type ResourceManager from './ResourceManager';
-
 import type {
+    MashroomPortalServerSideRenderResult,
     MashroomAvailablePortalApp,
     MashroomPortalAppLifecycleHooks,
     MashroomPortalAppLoadListener,
@@ -31,6 +30,7 @@ import type {
     MashroomPortalAppConfigEditor,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType, MashroomRestService} from '../../../../type-definitions/internal';
+import type ResourceManager from './ResourceManager';
 
 export type LoadedPortalAppInternal = {
     readonly id: string;
@@ -121,6 +121,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 return this._toLoadedApp(loadedApp);
             }
         );
+    }
+
+    serverSideRenderApp(appAreaId: string, pluginName: string, appConfig?: any | null | undefined): Promise<MashroomPortalServerSideRenderResult> {
+        throw new Error('Method not available on the client-side!');
     }
 
     reloadApp(id: string, overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
@@ -553,7 +557,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const loadedAppInternal: LoadedPortalAppInternal = {
             id: appId,
             pluginName,
-            instanceId,
+            instanceId: instanceId?.indexOf(SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX) === -1 ? instanceId : undefined,
             title,
             loadedTs: Date.now(),
             appSetup,

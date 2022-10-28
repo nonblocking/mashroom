@@ -166,6 +166,10 @@ export default class PortalPageRenderController {
                 const setupTheme = () => this._setupTheme(theme, devMode, logger);
                 const result = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
                 pageContent = result.pageContent;
+                Object.keys(result.embeddedPortalApps).forEach((appAreaId) => {
+                    portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
+                    portalPageApps[appAreaId].push(...result.embeddedPortalApps[appAreaId]);
+                });
 
                 evalScript = `
                     // Update page metadata
@@ -302,7 +306,12 @@ export default class PortalPageRenderController {
         const setupTheme = () => this._setupTheme(theme, devMode, logger);
         const appWrapperTemplateHtml = await renderAppWrapperToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
         const appErrorTemplateHtml = await renderAppErrorToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
-        const {pageContent, serverSideRenderedApps} = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+
+        const {pageContent, serverSideRenderedApps, embeddedPortalApps} = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+        Object.keys(embeddedPortalApps).forEach((appAreaId) => {
+            portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
+            portalPageApps[appAreaId].push(...embeddedPortalApps[appAreaId]);
+        });
 
         const {inlineStyles} = context.portalPluginConfig.ssrConfig;
         const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
@@ -450,14 +459,12 @@ export default class PortalPageRenderController {
         const siteTraverser = new SitePagesTraverser(site.pages);
         const pages = await siteTraverser.filterAndTranslate(req) || [];
 
-        const localizedSite: MashroomPortalSiteLocalized = {
+        return {
             siteId: site.siteId,
             title: i18nService.translate(req, site.title),
             path: site.path,
             pages,
         };
-
-        return localizedSite;
     }
 
     private async _resourcesHeader(req: Request, siteId: string, sitePath: string, pageId: string, pageFriendlyUrl: string, lang: string,
@@ -579,7 +586,7 @@ export default class PortalPageRenderController {
                         if (portalApp) {
                             const instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
                             if (instanceData) {
-                                appSetup = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
+                                appSetup = await createPortalAppSetup(portalApp, instanceData, null, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
                             }
                         }
                         if (!appSetup) {

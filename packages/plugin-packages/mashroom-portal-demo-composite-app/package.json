@@ -19,8 +19,8 @@
     "scripts": {
         "lint": "eslint src --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",
-        "dev": "webpack serve --hot --mode development",
-        "build": "webpack --mode production"
+        "dev": "webpack serve --hot --mode development --config ./webpack.config.client.js",
+        "build": "webpack --mode production --config ./webpack.config.client.js && webpack --mode production --config ./webpack.config.server.js"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -35,12 +35,15 @@
                     "Mashroom Portal Demo Svelte App"
                 ],
                 "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
+                    "js": ["bundle.js"],
+                    "css": ["bundle.css"]
                 },
                 "local": {
-                    "resourcesRoot": "./dist"
+                    "resourcesRoot": "./dist",
+                    "ssrBootstrap": "./dist/app-ssr.js"
+                },
+                "caching": {
+                    "ssrHtml": "same-config"
                 },
                 "defaultConfig": {
                     "title": "Demo Composite App",

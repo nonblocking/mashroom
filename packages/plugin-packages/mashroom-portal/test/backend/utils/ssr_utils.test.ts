@@ -79,13 +79,15 @@ describe('ssr_utils', () => {
         }
     };
 
+    const noopWrapper = async () => { throw new Error('Not implemented'); };
+
     it('returns null if the App has no SSR bootstrap', async () => {
         const portalAppSetup: any = {};
         const req: any  = {
             pluginContext,
         };
         const logger = dummyLoggerFactory();
-        const html = await renderServerSide('Test App 2', portalAppSetup, req, logger);
+        const html = await renderServerSide('Test App 2', portalAppSetup, noopWrapper, req, logger);
         expect(html).toBeFalsy();
     });
 
@@ -96,7 +98,7 @@ describe('ssr_utils', () => {
         };
         const logger = dummyLoggerFactory();
 
-        const html = await renderServerSide('Test App 1', portalAppSetup, req, logger);
+        const html = await renderServerSide('Test App 1', portalAppSetup, noopWrapper, req, logger);
 
         expect(html).toBeTruthy();
         expect(html).toEqual('this is a test');
@@ -113,7 +115,7 @@ describe('ssr_utils', () => {
         };
         const logger = dummyLoggerFactory();
 
-        const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
+        const html = await renderServerSide('Test App 3', portalAppSetup, noopWrapper, req, logger);
 
         expect(html).toBeTruthy();
         expect(html).toEqual('this is a remote test');
@@ -130,7 +132,7 @@ describe('ssr_utils', () => {
             pluginContext,
         };
         const logger = dummyLoggerFactory();
-        const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
+        const html = await renderServerSide('Test App 3', portalAppSetup, noopWrapper, req, logger);
         expect(html).toBeFalsy();
     });
 
@@ -144,7 +146,7 @@ describe('ssr_utils', () => {
             pluginContext,
         };
         const logger = dummyLoggerFactory();
-        const html = await renderServerSide('Test App 3', portalAppSetup, req, logger);
+        const html = await renderServerSide('Test App 3', portalAppSetup, noopWrapper, req, logger);
         expect(html).toBeTruthy();
         expect(html).toEqual('content from cache');
     });
