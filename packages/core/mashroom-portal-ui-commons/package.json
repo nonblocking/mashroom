@@ -8,23 +8,23 @@
     "main": "dist",
     "dependencies": {
         "formik": "^2.2.9",
-        "react": "^18.1.0",
+        "react": "^18.2.0",
         "react-autosuggest": "^10.1.0",
         "react-click-outside": "^3.0.1",
-        "react-dom": "^18.1.0",
-        "react-intl": "^6.0.4",
-        "react-redux": "8.0.2",
+        "react-dom": "^18.2.0",
+        "react-intl": "^6.2.1",
+        "react-redux": "8.0.4",
         "redux": "^4.2.0",
-        "@uiw/react-codemirror": "^4.11.4",
-        "@uiw/codemirror-theme-github": "^4.11.4",
-        "@codemirror/lang-css": "^6.0.0",
-        "@codemirror/lang-json": "^6.0.0"
+        "@uiw/react-codemirror": "^4.12.4",
+        "@uiw/codemirror-theme-github": "^4.12.4",
+        "@codemirror/lang-css": "^6.0.1",
+        "@codemirror/lang-json": "^6.0.1"
     },
     "devDependencies": {
-        "@types/react": "^18.0.12",
+        "@types/react": "^18.0.24",
         "@types/react-autosuggest": "^10.1.5",
         "@types/react-click-outside": "^3.0.3",
-        "@types/react-dom": "^18.0.5",
+        "@types/react-dom": "^18.0.8",
         "@types/react-redux": "^7.1.24"
     },
     "jest": {

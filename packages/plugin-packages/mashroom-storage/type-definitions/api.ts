@@ -45,7 +45,7 @@ export type MashroomStorageSort<T extends MashroomStorageRecord> = {
     [P in keyof Partial<T>]: 'asc' | 'desc';
 }
 
-export type MashroomStorageSearchResult<T> = {
+export type MashroomStorageSearchResult<T extends MashroomStorageRecord> = {
     readonly result: Array<MashroomStorageObject<T>>;
     readonly totalCount: number;
 }

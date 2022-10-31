@@ -1,7 +1,7 @@
 
 import mongoDB from '../mongodb';
 
-import type {Collection, OptionalUnlessRequiredId} from 'mongodb';
+import type {Collection, OptionalUnlessRequiredId, Document, MatchKeysAndValues} from 'mongodb';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomStorageCollection,
@@ -68,7 +68,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         };
         delete cleanProperties._id;
         const result = await collection.updateOne(filter, {
-            $set: cleanProperties,
+            $set: cleanProperties as MatchKeysAndValues<T>,
         });
         return {
             modifiedCount: result.modifiedCount,
@@ -82,7 +82,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         };
         delete cleanProperties._id;
         const result = await collection.updateMany(filter, {
-            $set: cleanProperties,
+            $set: cleanProperties as MatchKeysAndValues<T>,
         });
         return {
             modifiedCount: result.modifiedCount,
@@ -113,7 +113,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
         };
     }
 
-    private async _getCollection<T>(): Promise<Collection<T>> {
+    private async _getCollection<T extends Document = Document>(): Promise<Collection<T>> {
         const db = await mongoDB(this._logger);
         return db.collection(this._collectionName);
     }

@@ -9,10 +9,10 @@
         "public/**"
     ],
     "devDependencies": {
-        "cheerio": "^1.0.0-rc.11",
-        "puppeteer": "^14.2.1",
+        "cheerio": "^1.0.0-rc.12",
+        "puppeteer": "^19.2.0",
         "showdown": "^2.1.0",
-        "showdown-highlight": "^3.0.0"
+        "showdown-highlight": "^3.1.0"
     },
     "scripts": {
         "build": "cpy \"docs/*.png\" public/docs/html && node ./src/convert-markdown"

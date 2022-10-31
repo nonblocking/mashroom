@@ -1,4 +1,4 @@
-FROM node:16.18.0-slim
+FROM node:16.18.0
 WORKDIR /opt/app
 COPY tmp ./
 RUN npm ci --production

@@ -13,11 +13,11 @@
         "find-process": "^1.4.7",
         "ip-filter": "^3.0.5",
         "kind-of": "^6.0.3",
-        "request-ip": "^2.2.0",
-        "ua-parser-js": "^1.0.2"
+        "request-ip": "^3.3.0",
+        "ua-parser-js": "^1.0.32"
     },
     "devDependencies": {
-        "@types/express": "^4.17.13",
+        "@types/express": "^4.17.14",
         "@types/request-ip": "^0.0.37",
         "@types/ua-parser-js": "^0.7.36"
     },

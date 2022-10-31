@@ -10,7 +10,7 @@
         "type-definitions/*"
     ],
     "dependencies": {
-        "express": "^4.18.1",
+        "express": "^4.18.2",
         "node-cache": "^5.1.2"
     },
     "devDependencies": {

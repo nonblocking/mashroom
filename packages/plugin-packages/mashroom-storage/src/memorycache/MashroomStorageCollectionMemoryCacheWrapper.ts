@@ -86,7 +86,7 @@ export default class MashroomStorageCollectionMemoryCacheWrapper<T extends Mashr
                 this._logger.debug(`Cache hit in collection cache ${this._name} for key: ${readableKey}`);
                 return hit;
             }
-            const result = await cb();
+            const result: any = await cb();
             this._logger.debug(`Adding key to collection cache ${this._name}: ${readableKey}`);
             await memoryCacheService.set(this._getCacheRegion(), key, result, this._ttlSec);
             return result;

@@ -25,7 +25,7 @@ Predefined users: john/john, admin/admin
 
 Alternatively install [K3D](https://k3d.io) and run
 
-    ce kubernetes/common
+    cd kubernetes/common
     ./setup-k3d-cluster.sh
 
 to setup and configure a new cluster locally.

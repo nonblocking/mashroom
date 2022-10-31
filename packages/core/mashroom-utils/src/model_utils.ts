@@ -27,7 +27,7 @@ export const deepAssign = (targetObj: any, ...sourceObjs: any[]): any => {
     return targetObj;
 };
 
-const mergeObjects = <T>(targetObj: T, sourceObj: T): void => {
+const mergeObjects = <T extends object>(targetObj: T, sourceObj: T): void => {
     if (isObject(targetObj) && isObject(sourceObj)) {
         for (const key in sourceObj) {
             if (Object.prototype.hasOwnProperty.call(sourceObj, key)) {
