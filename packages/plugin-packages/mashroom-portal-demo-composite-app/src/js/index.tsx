@@ -2,31 +2,17 @@
 import '../sass/style.scss';
 
 import React from 'react';
-import {createRoot, hydrateRoot, type Root} from 'react-dom/client';
+import {createRoot} from 'react-dom/client';
 import App from './App';
 
-import type {SSRPreloadedState} from './types';
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
-    const {appId} = portalAppSetup;
+    const {appConfig, user} = portalAppSetup;
     const {messageBus, portalAppService} = clientServices;
 
-    const ssrHost = portalAppHostElement.querySelector('[data-ssr-host="true"]');
-
-    let root: Root;
-    if (ssrHost) {
-        // SSR
-        console.info('Hydrating Demo Composite App');
-        const preloadedStateStr = (global as any)[`__PRELOADED_STATE_${appId}__`];
-        const preloadedState: SSRPreloadedState = JSON.parse(preloadedStateStr);
-        root = hydrateRoot(ssrHost, <App appId={appId} activeApp={preloadedState.activeApp} messageBus={messageBus} portalAppService={portalAppService}/>);
-    } else {
-        // CSR
-        console.info('Starting Demo Composite App');
-        root = createRoot(portalAppHostElement);
-        root.render(<App appId={appId} messageBus={messageBus} portalAppService={portalAppService}/>);
-    }
+    const root = createRoot(portalAppHostElement);
+    root.render(<App messageBus={messageBus} portalAppService={portalAppService}/>);
 
     return {
         willBeRemoved: () => {

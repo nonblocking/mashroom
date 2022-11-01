@@ -1,10 +1,5 @@
 
-import {
-    PORTAL_PAGE_TEMPLATE_NAME,
-    PORTAL_APP_WRAPPER_TEMPLATE_NAME,
-    PORTAL_APP_ERROR_TEMPLATE_NAME,
-    SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX
-} from '../constants';
+import {PORTAL_PAGE_TEMPLATE_NAME, PORTAL_APP_WRAPPER_TEMPLATE_NAME, PORTAL_APP_ERROR_TEMPLATE_NAME} from '../constants';
 import minimalTemplatePortal from '../theme/minimal_template_portal';
 import defaultTemplateAppWrapper from '../theme/default_template_app_wrapper';
 import defaultTemplateAppError from '../theme/default_template_app_error';
@@ -12,7 +7,7 @@ import {renderServerSide} from './ssr_utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalAppSetup,MashroomPortalPageRenderModel, MashroomPortalAppErrorRenderModel, MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
+import type {MashroomPortalPageRenderModel, MashroomPortalAppErrorRenderModel, MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
 import type {MashroomPortalPageApps, MashroomPortalPageContentRenderResult} from '../../../type-definitions/internal';
 
 export const renderPage = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
@@ -74,42 +69,27 @@ export const renderPageContent = async (portalLayout: string, portalPageApps: Ma
     const appAreas = Object.keys(portalPageApps);
     const promises: Array<Promise<Array<string>>> = [];
 
-    const embeddedPortalApps: MashroomPortalPageApps = {};
-
-    const wrapPortalApp = async (appSetup: MashroomPortalAppSetup, appAreaId: string | null, appSSRHtml: string | null) => {
-        const {appId, pluginName, title} = appSetup;
-
-        if (appSSRHtml && serverSideRenderedApps.indexOf(pluginName) === -1) {
-            serverSideRenderedApps.push(pluginName);
-        }
-        if (appAreaId && appSSRHtml && !appSetup.instanceId) {
-            // An App without an instanceId has to be server-side embedded via MashroomPortalAppService.serverSideRenderApp()
-            embeddedPortalApps[appAreaId] = embeddedPortalApps[appAreaId] || [];
-            embeddedPortalApps[appAreaId].push({
-                pluginName: appSetup.pluginName,
-                instanceId: `${SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX}${ appSetup.appId  }__` ,
-                appSetup,
-            });
-        }
-
-        const model: MashroomPortalAppWrapperRenderModel = {
-            appId,
-            pluginName,
-            safePluginName: getSafePluginName(pluginName),
-            title: title || pluginName,
-            messages,
-            appSSRHtml,
-        };
-        return renderAppWrapper(themeExists, setupTheme, model, req, res, logger);
-    };
-
     let pageContent = portalLayout;
     for (const appAreaId of appAreas) {
         promises.push(
             Promise.all(
                 portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
-                    const appSSRHtml = await renderServerSide(pluginName, appSetup, wrapPortalApp, req, logger);
-                    return wrapPortalApp(appSetup, null, appSSRHtml);
+                    const {appId, title} = appSetup;
+
+                    const appSSRHtml = await renderServerSide(pluginName, appSetup, req, logger);
+                    if (appSSRHtml && serverSideRenderedApps.indexOf(pluginName) === -1) {
+                        serverSideRenderedApps.push(pluginName);
+                    }
+
+                    const model: MashroomPortalAppWrapperRenderModel = {
+                        appId,
+                        pluginName,
+                        safePluginName: getSafePluginName(pluginName),
+                        title: title || pluginName,
+                        messages,
+                        appSSRHtml,
+                    };
+                    return renderAppWrapper(themeExists, setupTheme, model, req, res, logger);
                 })
             ).then(
                 (result) => result,
@@ -135,7 +115,6 @@ export const renderPageContent = async (portalLayout: string, portalPageApps: Ma
     return {
         pageContent,
         serverSideRenderedApps,
-        embeddedPortalApps,
     };
 };
 

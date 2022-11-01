@@ -10,7 +10,6 @@ import {createAppId} from './id_utils';
 import {getVersionHash} from './cache_utils';
 
 import type {Request} from 'express';
-import type {MashroomPluginConfig} from '@mashroom/mashroom/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
@@ -56,13 +55,8 @@ const enhancePortalAppSetup = async (portalAppSetup: MashroomPortalAppSetup, por
     return enhancedAppSetup;
 };
 
-export const createPortalAppSetup = async (portalApp: MashroomPortalApp,
-                                           portalAppInstance: MashroomPortalAppInstance | undefined | null,
-                                           overrideAppConfig: MashroomPluginConfig | undefined | null,
-                                           mashroomSecurityUser: MashroomSecurityUser | undefined | null,
-                                           cdnService: MashroomCDNService | undefined | null,
-                                           pluginRegistry: MashroomPortalPluginRegistry,
-                                           req: Request) => {
+export const createPortalAppSetup = async (portalApp: MashroomPortalApp, portalAppInstance: MashroomPortalAppInstance, mashroomSecurityUser: MashroomSecurityUser | undefined | null,
+                      cdnService: MashroomCDNService | undefined | null, pluginRegistry: MashroomPortalPluginRegistry, req: Request) => {
     const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
     const devMode = req.pluginContext.serverInfo.devMode;
 
@@ -84,14 +78,14 @@ export const createPortalAppSetup = async (portalApp: MashroomPortalApp,
     const lang = i18nService.getLanguage(req);
     const user = toPortalAppUser(mashroomSecurityUser, portalApp);
 
-    const appConfig = {...portalApp.defaultAppConfig, ...portalAppInstance?.appConfig ?? {}, ...overrideAppConfig ?? {}};
+    const appConfig = {...portalApp.defaultAppConfig, ...portalAppInstance.appConfig};
 
     const portalAppSetup: MashroomPortalAppSetup = {
-        appId: portalAppInstance?.instanceId || createAppId(),
+        appId: portalAppInstance.instanceId || createAppId(),
         pluginName: portalApp.name,
         title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
         version: portalApp.version,
-        instanceId: portalAppInstance?.instanceId,
+        instanceId: portalAppInstance.instanceId,
         lastReloadTs: portalApp.lastReloadTs,
         versionHash: getVersionHash(portalApp.version, portalApp.lastReloadTs, devMode),
         proxyPaths,
@@ -140,3 +134,4 @@ export const createPortalAppSetupForMissingPlugin = async (pluginName: string, i
 
     return portalAppSetup;
 };
+

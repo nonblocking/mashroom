@@ -5,12 +5,12 @@ import App from './App';
 
 import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
-const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup, clientServices) => {
+const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup) => {
     const {appConfig: {markdownMessage, pingButtonLabel}} = portalAppSetup;
-    const {messageBus} = clientServices;
+    const fakeMessageBus: any = {};
     return renderToString(
         <div data-ssr-host="true">
-            <App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={messageBus}/>
+            <App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={fakeMessageBus}/>
         </div>
     );
 };

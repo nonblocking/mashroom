@@ -1,16 +1,35 @@
 
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useMemo, useRef} from 'react';
 import PrivateMessageBus from './PrivateMessageBus';
-import DIALOG from './dialog';
-import {getDialogElementId} from './utils';
-
 import type {MutableRefObject} from 'react';
 import type {MashroomPortalMessageBus, MashroomPortalAppService} from '@mashroom/mashroom-portal/type-definitions';
 import type {ActiveApp} from './types';
 
+const DIALOG = [
+    {
+        name: 'Mashroom Portal Demo Vue App',
+        appConfig: {
+            message: 'This simple Vue SPA that acts as the first page',
+            pingButtonLabel: 'Next'
+        }
+    },
+    {
+        name: 'Mashroom Portal Demo Angular App',
+        appConfig: {
+            message: 'This simple Angular SPA that acts as the second page',
+            pingButtonLabel: 'Next'
+        }
+    },
+    {
+        name: 'Mashroom Portal Demo Svelte App',
+        appConfig: {
+            message: 'This simple Svelte SPA that acts as the third and last page',
+            pingButtonLabel: 'Start over'
+        }
+    }
+];
+
 type Props = {
-    appId: string;
-    activeApp?: ActiveApp | undefined | null;
     messageBus: MashroomPortalMessageBus;
     portalAppService: MashroomPortalAppService;
 }
@@ -48,18 +67,13 @@ const onPing = (activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogEle
     loadDialogPage(nextIdx, activeAppRef, dialogElementId, portalAppService);
 };
 
-export default ({appId, activeApp, messageBus, portalAppService}: Props) => {
-    const dialogElementId = getDialogElementId(appId);
+export default ({messageBus, portalAppService}: Props) => {
+    const dialogElementId = useMemo(() => `_${Math.floor(Math.random() * 100000)}`, []);
     const activeAppRef = useRef<ActiveApp | undefined>();
 
     useEffect(() => {
-        if (activeApp) {
-            // SSR rendered App
-            activeAppRef.current = activeApp;
-        } else {
-            // Load first page
-            loadDialogPage(0, activeAppRef, dialogElementId, portalAppService);
-        }
+        // Load first page
+        loadDialogPage(0, activeAppRef, dialogElementId, portalAppService);
         // Install a private message bus
         const privateMessageBus = new PrivateMessageBus(messageBus, activeAppRef,
             () => onPing(activeAppRef, dialogElementId, portalAppService));
@@ -72,13 +86,10 @@ export default ({appId, activeApp, messageBus, portalAppService}: Props) => {
         <div className='mashroom-demo-composite-app'>
             <div className="info">
                 <span className="info-icon" />
-                This <strong>Composite App</strong> uses a Vue, an Angular and a Svelte App to create a dialog.
+                This composite App uses an Angular, a Vue and a Svelte App to create a dialog.
                 While the App itself is written in React.
-                <br/><br/>
-                This App is also capable of server-side rendering itself and the first <em>embedded</em> App.
             </div>
-            { /* dangerouslySetInnerHTML is necessary here to prevent the server-side content of this div to be removed during hydration! */ }
-            <div id={dialogElementId} className="dialog" dangerouslySetInnerHTML={{ __html: '' }} />
+            <div id={dialogElementId} className="dialog" />
         </div>
     );
 };

@@ -629,13 +629,6 @@ export interface MashroomPortalAppService {
     ): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Only available in an SSR bootstrap: Render another App with given config to HTML.
-     * This can be used in Composite Apps to server-side render the initial state.
-     * If the target App does not support SSR, or if called on the client-side, this method will throw an Error.
-     */
-    serverSideRenderApp(pluginName: string, appConfig?: any | null | undefined): Promise<string>;
-
-    /**
      * Reload given portal app
      *
      * The returned promise will always resolve!

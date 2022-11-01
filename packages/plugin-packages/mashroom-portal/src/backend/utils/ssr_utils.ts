@@ -2,12 +2,10 @@
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
 import context from '../context/global_portal_context';
-import {getUser, isAppPermitted} from './security_utils';
+import {getUser} from './security_utils';
 import {getResourceAsString} from './resource_utils';
-import {createPortalAppSetup} from './create_portal_app_setup';
 
 import type {Request} from 'express';
-import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMemoryCacheService} from '@mashroom/mashroom-memory-cache/type-definitions';
 import type {
@@ -15,68 +13,11 @@ import type {
     MashroomPortalService,
     MashroomPortalAppCaching,
     MashroomPortalAppPluginSSRBootstrapFunction,
-    MashroomPortalApp,
-    MashroomPortalAppService, MashroomPortalMessageBus,
+    MashroomPortalApp
 } from '../../../type-definitions';
 import type {MashroomPortalIncludeStyleServerSideRenderedAppsResult} from '../../../type-definitions/internal';
 
-type WrapEmbeddedAppFn = (appSetup: MashroomPortalAppSetup, appAreaId: string, appSSRHtml: string) => Promise<string>;
-
 const CACHE_REGION = 'mashroom-portal-ssr';
-
-const serverSideRenderEmbeddedApp = (req: Request, wrapEmbeddedApp: WrapEmbeddedAppFn): MashroomPortalAppService['serverSideRenderApp'] =>
-    async (appAreaId, pluginName, appConfig) => {
-
-    const logger = req.pluginContext.loggerFactory('mashroom.portal');
-    const pluginRegistry = context.pluginRegistry;
-    const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
-    const mashroomSecurityUser = await getUser(req);
-
-    const portalApp = pluginRegistry.portalApps.find((app) => app.name === pluginName);
-    if (!portalApp) {
-        throw new Error(`Portal App not found: ${pluginName}`);
-    }
-
-    if (!await isAppPermitted(req, pluginName, null, portalApp)) {
-        throw new Error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access Portal App: ${pluginName}`);
-    }
-
-    const appSetup = await createPortalAppSetup(portalApp, null, appConfig, mashroomSecurityUser, cdnService, pluginRegistry, req);
-
-    const html = await renderServerSide(pluginName, appSetup, wrapEmbeddedApp, req, logger, true);
-
-    if (!html) {
-        throw new Error(`Rendering ${pluginName} server-side failed!`);
-    }
-
-    const appSSRHtml = await wrapEmbeddedApp(appSetup, appAreaId, html);
-
-    return {
-        appId: appSetup.appId,
-        pluginName,
-        version: appSetup.version,
-        title: appSetup.title,
-        appSSRHtml,
-    };
-};
-
-const serverSideClientServices = (req: Request, wrapEmbeddedApp: WrapEmbeddedAppFn) => {
-    return {
-        messageBus: new Proxy({}, {
-            get(target, prop) {
-                throw new Error('Not implemented on server-side!');
-            }
-        }) as MashroomPortalMessageBus,
-        portalAppService: new Proxy({}, {
-            get(target, prop) {
-                if (prop === 'serverSideRenderApp') {
-                    return serverSideRenderEmbeddedApp(req, wrapEmbeddedApp);
-                }
-                throw new Error('Not implemented on server-side!');
-            }
-        }) as MashroomPortalAppService,
-    };
-};
 
 const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, cachingConfig: MashroomPortalAppCaching | null | undefined, req: Request): Promise<string | null> => {
     const cachePolicy = cachingConfig?.ssrHtml || 'same-config-and-user';
@@ -92,7 +33,7 @@ const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalApp
     return data ? createHash('sha256').update(data).digest('hex') : null;
 };
 
-const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, wrapEmbeddedApp: WrapEmbeddedAppFn, req: Request, logger: MashroomLogger): Promise<string | null> => {
+const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
     const {cacheEnable, cacheTTLSec} = context.portalPluginConfig.ssrConfig;
     const cacheService: MashroomMemoryCacheService = req.pluginContext.services.memorycache?.service;
     const {ssrBootstrap: ssrBootstrapPath, ssrInitialHtmlUri, cachingConfig} = portalApp;
@@ -119,7 +60,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
             } else {
                 ssrBootstrap = bootstrap.default;
             }
-            html = await ssrBootstrap(portalAppSetup, serverSideClientServices(req, wrapEmbeddedApp), req);
+            html = await ssrBootstrap(portalAppSetup, req);
         } catch (e) {
             logger.error(`Loading or executing local SSR bootstrap '${ssrBootstrapPath}' for app '${pluginName}' failed!`, e);
         }
@@ -151,8 +92,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     return html;
 };
 
-export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, wrapEmbeddedApp: WrapEmbeddedAppFn,
-                                       req: Request, logger: MashroomLogger, ignoreTimeout = false): Promise<string | null> => {
+export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, req: Request, logger: MashroomLogger): Promise<string | null> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
     if (!ssrConfig.ssrEnable) {
         return null;
@@ -164,13 +104,9 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
         return null;
     }
 
-    if (ignoreTimeout) {
-        return renderServerSideWithCache(pluginName, portalApp, portalAppSetup, wrapEmbeddedApp, req, logger);
-    }
-
     let timeout: any;
     return Promise.race([
-        renderServerSideWithCache(pluginName, portalApp, portalAppSetup, wrapEmbeddedApp, req, logger),
+        renderServerSideWithCache(pluginName, portalApp, portalAppSetup, req, logger),
         new Promise<null>((resolve) => timeout = setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
     ]).then((result) => {
         clearTimeout(timeout);

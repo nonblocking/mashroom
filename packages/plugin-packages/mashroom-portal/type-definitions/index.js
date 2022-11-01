@@ -171,14 +171,6 @@ export type MashroomPortalAppSetup = {
     +editorConfig: ?MashroomPortalAppConfigEditor,
 }
 
-export type MashroomPortalServerSideRenderResult = {
-    +appId: string,
-    +pluginName: string,
-    +title: ?string,
-    +version: string,
-    +appSSRHtml: string,
-}
-
 export type UserAgent = {
     +browser: {
         +name: ? 'Android Browser' | 'Chrome' | 'Chromium' | 'Edge' | 'Firefox' | 'IE' | 'IEMobile' | 'Konqueror' | 'Mobile Safari' | 'Opera Mini' | 'Opera' | 'Safari' | 'Samsung Browser' | 'Tizen Browser' | string,
@@ -725,13 +717,6 @@ export interface MashroomPortalAppService {
     loadAppModal(pluginName: string, title?: ?string, overrideAppConfig?: ?Object, onClose?: ?ModalAppCloseCallback): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Only available in an SSR bootstrap: Render another App with given config to HTML.
-     * This can be used in Composite Apps to server-side render the initial state.
-     * If the target App does not support SSR, or if called on the client-side, this method will throw an Error.
-     */
-    serverSideRenderApp(appAreaId: string, pluginName: string, appConfig?: ?any): Promise<MashroomPortalServerSideRenderResult>;
-
-    /**
      * Reload given portal app
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
@@ -1150,7 +1135,7 @@ export type MashroomRemotePortalAppRegistryBootstrapFunction = (pluginName: stri
 export type MashroomPortalAppLifecycleHooks = {
     /**
      * Will be called before the host element will be removed from the DOM.
-     * Can be used to clean up (e.g. to unmount a React App).
+     * Can be used to cleanup (e.g. to unmount a React App).
      */
     +willBeRemoved?: () => void | Promise<void>;
     /**
@@ -1163,14 +1148,7 @@ export type MashroomPortalAppLifecycleHooks = {
 export type MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement: HTMLElement, portalAppSetup: MashroomPortalAppSetup, clientServices: MashroomPortalClientServices)
     => void | MashroomPortalAppLifecycleHooks | Promise<void> | Promise<MashroomPortalAppLifecycleHooks>;
 
-export type MashroomPortalAppPluginSSRBootstrapFunction = (
-    portalAppSetup: MashroomPortalAppSetup,
-    clientServices: {
-        +messageBus: MashroomPortalMessageBus,
-        +portalAppService: MashroomPortalAppService,
-    },
-    req: ExpressRequest
-) => Promise<string>;
+export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup, req: ExpressRequest) => Promise<string>;
 
 // portal-theme
 

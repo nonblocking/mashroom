@@ -42,5 +42,3 @@ export const WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC = 'MashroomPortalRem
 export const HTTP_HEADER_REST_PROXY_PERMISSIONS = 'X-USER-PERMISSIONS';
 
 export const SESSION_STORAGE_WS_CLIENT_ID = 'MashroomPortalWebSocketClientId';
-
-export const SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX = '__ssr_embedded__';

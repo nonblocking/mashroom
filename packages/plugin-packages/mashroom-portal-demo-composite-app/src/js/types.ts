@@ -1,10 +1,7 @@
 
 
 export type ActiveApp = {
-    readonly dialogIdx: number;
-    readonly appId: string;
+    dialogIdx: number;
+    appId: string;
 }
 
-export type SSRPreloadedState = {
-    readonly activeApp: ActiveApp;
-}
