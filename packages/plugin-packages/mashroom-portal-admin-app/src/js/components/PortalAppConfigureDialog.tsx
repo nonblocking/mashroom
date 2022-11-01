@@ -237,7 +237,6 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
                 name={DIALOG_NAME_PORTAL_APP_CONFIGURE}
                 titleId='configureApp'
                 width={550}
-                minHeight={300}
                 closeRef={this.onCloseRef.bind(this)}>
                 {this.renderContent()}
             </Modal>
