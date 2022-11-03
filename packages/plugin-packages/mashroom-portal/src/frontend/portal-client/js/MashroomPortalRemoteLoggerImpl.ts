@@ -1,5 +1,5 @@
 
-import {WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
+import {PORTAL_APP_API_PATH, PORTAL_INTERNAL_PATH, WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
 import {serializeError} from './serialization_utils';
 
 import type {LogLevel} from '@mashroom/mashroom/type-definitions';
@@ -73,7 +73,11 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
     private _send() {
         this._timeout = null;
 
-        const messages = [...this._unsentLogMessages];
+        let messages = [...this._unsentLogMessages];
+
+        // Filter errors that occurred when sending previous logs failed
+        messages = messages.filter(({ message }) => message?.indexOf(`${PORTAL_INTERNAL_PATH}${PORTAL_APP_API_PATH}/log`) === -1);
+
         if (messages.length === 0) {
             return;
         }
