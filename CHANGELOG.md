@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Fixed the problem that users were kicked out of the Portal when requests to /api/users/authenticated/authExpiration
+   failed (see issue #99)
  * Portal: Added support for server-side rendering of *Composite Apps*, which use other Portal Apps as their building blocks.
    It is now possible to define *embedded Portal Apps* in the SSR bootstrap like so:
    ```tsx

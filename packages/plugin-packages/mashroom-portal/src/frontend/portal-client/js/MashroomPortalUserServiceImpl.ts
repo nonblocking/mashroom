@@ -4,6 +4,7 @@ import {
     WINDOW_VAR_PORTAL_LANGUAGE
 } from '../../../backend/constants';
 
+import type {RestError} from './RestError';
 import type {MashroomPortalUserService} from '../../../../type-definitions';
 import type {MashroomRestService} from '../../../../type-definitions/internal';
 
@@ -16,19 +17,24 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         this._restService = restService.withBasePath(apiPath);
     }
 
-    getAuthenticationExpiration(): Promise<number | null | undefined> {
+    getAuthenticationExpiration(): Promise<number | null> {
         const path = '/users/authenticated/authExpiration';
         return this._restService.get(path, {
             'x-mashroom-does-not-extend-auth': '1'
         }).then(
             (data) => {
-                if (data && data.expirationTime) {
-                    return Promise.resolve(data.expirationTime);
+                if (data?.expirationTime) {
+                    return data.expirationTime;
                 }
-                return Promise.resolve(null);
+                console.error('Expiration check failed because the received data is invalid:', data);
+                return null;
             },
-            () => {
-                return Promise.resolve(null);
+            (error: RestError) => {
+                console.error('Expiration check failed:', error);
+                if (error.getStatusCode() === 403) {
+                    return 0;
+                }
+                return null;
             }
         );
     }
@@ -44,13 +50,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         return this._restService.get(path).then(
             () => {
                 this._reloadPage();
-                return Promise.resolve();
             },
             (error) => {
                 console.error('Logout failed', error);
                 // Try to reload anyway
                 this._reloadPage();
-                return Promise.resolve();
             }
         );
     }
@@ -67,7 +71,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         return this._restService.put(path, data).then(
             () => {
                 this._reloadPage();
-                return Promise.resolve();
             }
         );
     }

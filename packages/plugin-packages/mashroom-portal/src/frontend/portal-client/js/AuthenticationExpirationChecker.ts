@@ -19,7 +19,7 @@ let extendAuthenticationLinkAttached = false;
 
 export default class MashroomPortalUserInactivityHandler {
 
-    private _authenticationExpirationTime: number | undefined | null;
+    private _authenticationExpirationTime: number | null;
     private _warningPanelVisible: boolean;
 
     constructor(private _portalUserService: MashroomPortalUserService) {
@@ -50,7 +50,12 @@ export default class MashroomPortalUserInactivityHandler {
 
         this._portalUserService.getAuthenticationExpiration().then(
             (expirationTime) => {
-                this._authenticationExpirationTime = expirationTime;
+                if (expirationTime !== null) {
+                    this._authenticationExpirationTime = expirationTime;
+                } else {
+                    // Just assume the user have a couple of minutes left and check again in 60sec (in _handleExpirationTimeUpdate())
+                    this._authenticationExpirationTime = Date.now() + (warnBeforeAuthenticationExpiresSec + 300) * 1000;
+                }
                 this._handleExpirationTimeUpdate();
             }
         );

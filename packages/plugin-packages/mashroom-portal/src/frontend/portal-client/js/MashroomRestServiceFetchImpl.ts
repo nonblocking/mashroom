@@ -1,4 +1,6 @@
 
+import {RestError} from './RestError';
+
 import type {CreatedResponse} from '../../../../type-definitions';
 import type {MashroomRestService} from '../../../../type-definitions/internal';
 
@@ -12,10 +14,7 @@ const CSRF_TOKEN = CSRF_TOKEN_META && CSRF_TOKEN_META.getAttribute('content');
  */
 export default class RestServiceFetchImpl implements MashroomRestService {
 
-    private _apiBasePath: string;
-
-    constructor(apiBasePath?: string) {
-        this._apiBasePath = apiBasePath || '';
+    constructor(private apiBasePath = '') {
     }
 
     get(path: string, extraHeaders?: Record<string, string>): Promise<any> {
@@ -61,44 +60,46 @@ export default class RestServiceFetchImpl implements MashroomRestService {
                 config['body'] = JSON.stringify(jsonData);
             }
 
-            fetch(`${this._apiBasePath}${path}`, config).then((response: Response) => {
-                response.text()
-                    .then((responseText) => {
-                        let responseBody = null;
+            const fetchUrl = `${this.apiBasePath}${path}`;
+            fetch(fetchUrl, config)
+                .then((response: Response) => {
+                    response.text()
+                        .then((responseText) => {
+                            let responseBody = null;
 
-                        try {
-                            responseBody = JSON.parse(responseText);
-                        } catch (e) {
-                            // JSON response is optional
-                            responseBody = responseText;
-                        }
+                            try {
+                                responseBody = JSON.parse(responseText);
+                            } catch (e) {
+                                // JSON response is optional
+                                responseBody = responseText;
+                            }
 
-                        const locationHeader = response.headers.get('Location');
+                            const locationHeader = response.headers.get('Location');
 
-                        if (response.status === 201 && locationHeader) {
-                            const createdResponse: CreatedResponse = {
-                                location: locationHeader,
-                            };
-                            resolve(createdResponse);
-                        } else if (response.ok) {
-                            resolve(responseBody);
-                        } else {
-                            reject(this._createError(response.status, response.statusText));
-                        }
-                    })
-                    .catch((error) => {
-                        reject(error);
-                    });
-            })
+                            if (response.status === 201 && locationHeader) {
+                                const createdResponse: CreatedResponse = {
+                                    location: locationHeader,
+                                };
+                                resolve(createdResponse);
+                            } else if (response.ok) {
+                                resolve(responseBody);
+                            } else {
+                                reject(this._createError(response.status, response.statusText));
+                            }
+                        })
+                        .catch((error) => {
+                            reject(this._createError(400, error.message, error.stack));
+                        });
+                })
                 .catch((error) => {
-                    console.error('Processing response failed:', error);
-                    reject(error);
+                    console.error(`Fetching ${fetchUrl} failed!`, error);
+                    reject(this._createError(0, error.message, error.stack));
                 });
         });
     }
 
-    _createError(status: number, message: string): Error {
-        return new Error(`HTTP ${status}: ${message}`);
+    _createError(status: number, message: string, stack?: string): Error {
+        return new RestError(status, message, stack);
     }
 
 }

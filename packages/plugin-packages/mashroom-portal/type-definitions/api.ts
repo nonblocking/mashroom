@@ -878,9 +878,10 @@ export interface MashroomPortalPageService {
 
 export interface MashroomPortalUserService {
     /**
-     * Get the authentication expiration time in unix time ms
+     * Get the authentication expiration time in unix time ms.
+     * Returns null if the check fails and "0" if the check returns 403.
      */
-    getAuthenticationExpiration(): Promise<number | null | undefined>;
+    getAuthenticationExpiration(): Promise<number | null>;
 
     /**
      * Extend the authentication.
