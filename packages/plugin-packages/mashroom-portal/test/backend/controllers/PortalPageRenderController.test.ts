@@ -418,14 +418,14 @@ describe('PortalPageRenderController', () => {
                     expect(model.siteBasePath).toBe('/portal/web');
                     expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
                     expect(model.apiBasePath).toBe('/portal/web/___/api');
-                    expect(model.pageContent).toContain('<div class="row"><div /><div /><div /><div id="app-area1"></div><div id="app-area2"></div></div>');
+                    expect(model.pageContent).toContain('<div class="row"><div id="app-area1"><div class="wrapper" /></div><div id="app-area2"><div class="wrapper" /><div class="wrapper" /></div></div>');
 
                 }
 
-                cb(null, '<div />');
+                cb(null, '<div class="wrapper" />');
             },
             send: (body: string) => {
-                expect(body).toBe('<div />');
+                expect(body).toBe('<div class="wrapper" />');
                 done();
             }
         };

@@ -7,8 +7,12 @@ import {renderServerSide} from './ssr_utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalPageRenderModel, MashroomPortalAppErrorRenderModel, MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
-import type {MashroomPortalPageApps, MashroomPortalPageContentRenderResult} from '../../../type-definitions/internal';
+import type {
+    MashroomPortalPageRenderModel,
+    MashroomPortalAppErrorRenderModel,
+    MashroomPortalAppWrapperRenderModel,
+} from '../../../type-definitions';
+import type {MashroomPortalPageApps, MashroomPortalContentRenderResult} from '../../../type-definitions/internal';
 
 export const renderPage = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalPageRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
     const fallback = () => minimalTemplatePortal(model);
@@ -64,28 +68,58 @@ export const renderAppErrorToClientTemplate = async (themeExists: boolean, setup
     return renderAppError(themeExists, setupTheme, model, req, res, logger);
 };
 
-export const renderPageContent = async (portalLayout: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalPageContentRenderResult> => {
+export const insertHtmlIntoPageArea = (hostHtml: string, appAreaId: string, htmlToInsert: string) => {
+    const startIdxArea = hostHtml.search(`<[a-zA-Z]+[^>]*id=["']${appAreaId}["']`);
+    if (startIdxArea === -1) {
+        throw new Error(`No appAreaId ${appAreaId} found`);
+    }
+    const beginAreaContent = hostHtml.indexOf('>', startIdxArea) + 1;
+    return [hostHtml.slice(0, beginAreaContent), htmlToInsert, hostHtml.slice(beginAreaContent)].join('');
+};
+
+// Render the Portal Apps into given HTML content
+export const renderContent = async (hostHtml: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalContentRenderResult> => {
     const serverSideRenderedApps: Array<string> = [];
     const appAreas = Object.keys(portalPageApps);
     const promises: Array<Promise<Array<string>>> = [];
 
-    let pageContent = portalLayout;
+    const renderEmbeddedPortalAppsFn = async  (hostHtml: string, portalPageApps: MashroomPortalPageApps) => {
+        return renderContent(hostHtml, portalPageApps, themeExists, setupTheme, messages, req, res, logger);
+    };
+
+    let resultHtml = hostHtml;
+    const embeddedPortalPageApps: MashroomPortalPageApps = {};
     for (const appAreaId of appAreas) {
         promises.push(
             Promise.all(
                 portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
-                    const {appId, title} = appSetup;
-
-                    const appSSRHtml = await renderServerSide(pluginName, appSetup, req, logger);
-                    if (appSSRHtml && serverSideRenderedApps.indexOf(pluginName) === -1) {
+                    const ssrRenderResult = await renderServerSide(pluginName, appSetup, renderEmbeddedPortalAppsFn, req, logger);
+                    if (ssrRenderResult && serverSideRenderedApps.indexOf(pluginName) === -1) {
                         serverSideRenderedApps.push(pluginName);
                     }
 
+                    let appSSRHtml = null;
+                    if (ssrRenderResult) {
+                        appSSRHtml = ssrRenderResult.html;
+                        Object.keys(ssrRenderResult.embeddedPortalPageApps).forEach((areaId) => {
+                            ssrRenderResult.embeddedPortalPageApps[areaId].forEach((embeddedApp) => {
+                                if (serverSideRenderedApps.indexOf(embeddedApp.pluginName) === -1) {
+                                    serverSideRenderedApps.push(embeddedApp.pluginName);
+                                }
+                                embeddedPortalPageApps[areaId] = embeddedPortalPageApps[areaId] || [];
+                                embeddedPortalPageApps[areaId].push({
+                                    ...embeddedApp,
+                                    priority: 10,
+                                });
+                            });
+                        });
+                    }
+
                     const model: MashroomPortalAppWrapperRenderModel = {
-                        appId,
+                        appId: appSetup.appId,
                         pluginName,
                         safePluginName: getSafePluginName(pluginName),
-                        title: title || pluginName,
+                        title: appSetup.title || pluginName,
                         messages,
                         appSSRHtml,
                     };
@@ -94,7 +128,7 @@ export const renderPageContent = async (portalLayout: string, portalPageApps: Ma
             ).then(
                 (result) => result,
                 (error) => {
-                    logger.error(`Rendering apps in appArea '${appAreaId}' failed`, error);
+                    logger.error(`Rendering Portal Apps in appArea '${appAreaId}' failed`, error);
                     return [];
                 }
             )
@@ -106,15 +140,18 @@ export const renderPageContent = async (portalLayout: string, portalPageApps: Ma
        const appHtmls = appAreasAppHtmls[idx];
        if (appHtmls.length > 0) {
            const appHtml = appHtmls.join('');
-           const startIdxArea = pageContent.search(`<[a-zA-Z]+.*id=["']${appAreaId}["']`);
-           const beginAreaContent = pageContent.indexOf('>', startIdxArea) + 1;
-           pageContent = [pageContent.slice(0, beginAreaContent), appHtml, pageContent.slice(beginAreaContent)].join('');
+           try {
+               resultHtml = insertHtmlIntoPageArea(resultHtml, appAreaId, appHtml);
+           } catch (e: any) {
+               logger.error(`Unable to insert Portal App HTML into areaId: ${appAreaId}`, e);
+           }
        }
     });
 
     return {
-        pageContent,
+        resultHtml,
         serverSideRenderedApps,
+        embeddedPortalPageApps,
     };
 };
 

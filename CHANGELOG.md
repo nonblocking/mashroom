@@ -3,6 +3,40 @@
 
 ## [unreleased]
 
+ * Portal: Added support for server-side rendering of *Composite Apps*, which use other Portal Apps as their building blocks.
+   It is now possible to define *embedded Portal Apps* in the SSR bootstrap like so:
+   ```tsx
+    const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup, req) => {
+      // Generate server-side HTML that contains a <div id="host-element-id"></div>
+      const html = renderToString(<App/>);
+
+      return {
+         html,
+         embeddedApps: [
+            {
+                pluginName: 'The other App',
+                appConfig: {},
+                appAreaId: 'host-element-id',
+            }
+         ]
+      };
+    };
+   ```
+   In the Composite App make sure you don't call ```portalAppService.loadApp()``` for that already integrated App,
+   instead you can get the *appId* of the server-side embedded App like this to unload/reload it later:
+   ```ts
+     const ssrPreloadedApp = portalAppService.loadedPortalApps.find(({ pluginName, portalAppAreaId }) => pluginName === 'The other App' && portalAppAreaId === 'host-element-id');
+     let appId;
+     if (!ssrPreloadedApp) {
+      // SSR failed, load client-side
+      const result = await portalAppService.loadApp('host-element-id', 'The other App', null, null, {});
+      if (!result.error) {
+        appId = result.id;
+      }
+     } else {
+        appId = ssrPreloadedApp.id;
+     }
+   ```
  * Kubernetes Remote App Registry:
    * Support for multiple Namespace and Service label selectors
    * For duplicate Portal Apps the active one is now more deterministic and depends on the namespace lookup

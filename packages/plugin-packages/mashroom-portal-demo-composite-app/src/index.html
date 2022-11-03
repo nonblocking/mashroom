@@ -29,6 +29,7 @@
                         registerMessageInterceptor: function() {},
                     },
                     portalAppService: {
+                        loadedPortalApps: [],
                         loadApp: function(hostElementId, name) {
                             document.getElementById(hostElementId).innerHTML = '<div>App loaded: ' + name + '</div>';
                             return Promise.resolve({

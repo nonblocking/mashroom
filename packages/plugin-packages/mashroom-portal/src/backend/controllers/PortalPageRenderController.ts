@@ -49,7 +49,7 @@ import {
     renderPage,
     renderAppWrapperToClientTemplate,
     renderAppErrorToClientTemplate,
-    renderPageContent,
+    renderContent,
 } from '../utils/render_utils';
 import {renderInlineStyleForServerSideRenderedApps} from '../utils/ssr_utils';
 import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create_portal_app_setup';
@@ -164,8 +164,12 @@ export default class PortalPageRenderController {
 
                 const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
                 const setupTheme = () => this._setupTheme(theme, devMode, logger);
-                const result = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
-                pageContent = result.pageContent;
+                const result = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+                pageContent = result.resultHtml;
+                Object.keys(result.embeddedPortalPageApps).forEach((appAreaId) => {
+                    portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
+                    portalPageApps[appAreaId].push(...result.embeddedPortalPageApps[appAreaId]);
+                });
 
                 evalScript = `
                     // Update page metadata
@@ -302,7 +306,12 @@ export default class PortalPageRenderController {
         const setupTheme = () => this._setupTheme(theme, devMode, logger);
         const appWrapperTemplateHtml = await renderAppWrapperToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
         const appErrorTemplateHtml = await renderAppErrorToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
-        const {pageContent, serverSideRenderedApps} = await renderPageContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+
+        const {resultHtml: pageContent, serverSideRenderedApps, embeddedPortalPageApps} = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+        Object.keys(embeddedPortalPageApps).forEach((appAreaId) => {
+            portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
+            portalPageApps[appAreaId].push(...embeddedPortalPageApps[appAreaId]);
+        });
 
         const {inlineStyles} = context.portalPluginConfig.ssrConfig;
         const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
@@ -510,14 +519,15 @@ export default class PortalPageRenderController {
     }
 
     private async _getStaticAppStartupScript(portalPageApps: MashroomPortalPageApps, adminPluginName: string | undefined | null) {
-        const loadStatements = [];
+        const loadStatementsWithPriority: Array<{priority: number, statement: string}> = [];
         const preloadedPortalAppSetup: Record<string, MashroomPortalAppSetup> = {};
 
         Object.keys(portalPageApps).forEach((areaId) => {
             portalPageApps[areaId].forEach((portalPageApp) => {
-               loadStatements.push(
-                   `portalAppService.loadApp('${areaId}', '${portalPageApp.pluginName}', '${portalPageApp.instanceId}', null, null);`
-               );
+                loadStatementsWithPriority.push({
+                    priority: portalPageApp.priority ?? 0,
+                    statement: `portalAppService.loadApp('${areaId}', '${portalPageApp.pluginName}', '${portalPageApp.instanceId}', null, null);`,
+                });
                if (portalPageApp.appSetup) {
                    preloadedPortalAppSetup[portalPageApp.instanceId] = portalPageApp.appSetup;
                }
@@ -525,14 +535,21 @@ export default class PortalPageRenderController {
         });
 
         if (adminPluginName) {
-            loadStatements.push(
-                `portalAppService.loadApp('mashroom-portal-admin-app-container', '${adminPluginName}', null, null, null);`
-            );
+            loadStatementsWithPriority.push({
+                priority: -1000,
+                statement: `portalAppService.loadApp('mashroom-portal-admin-app-container', '${adminPluginName}', null, null, null);`,
+            });
         }
+
+        // Load Apps with higher priority first
+        const loadStatementsStr = loadStatementsWithPriority
+            .sort((s1, s2) => s2.priority - s1.priority)
+            .map(({statement}) => statement)
+            .join('\n');
 
         return `
             window['${WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP}'] = ${JSON.stringify(preloadedPortalAppSetup)};
-            ${loadStatements.join('\n')};
+            ${loadStatementsStr};
         `;
     }
 
@@ -579,7 +596,7 @@ export default class PortalPageRenderController {
                         if (portalApp) {
                             const instanceData = await this._getPortalAppInstance(page, portalApp, instanceId, req);
                             if (instanceData) {
-                                appSetup = await createPortalAppSetup(portalApp, instanceData, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
+                                appSetup = await createPortalAppSetup(portalApp, instanceData, null, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
                             }
                         }
                         if (!appSetup) {

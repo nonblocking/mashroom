@@ -9,6 +9,7 @@ import {
     WINDOW_VAR_PORTAL_SERVICES,
     WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
     WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
+    SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
 } from '../../../backend/constants';
 import type ResourceManager from './ResourceManager';
 
@@ -553,7 +554,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         const loadedAppInternal: LoadedPortalAppInternal = {
             id: appId,
             pluginName,
-            instanceId,
+            instanceId: instanceId?.indexOf(SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX) === -1 ? instanceId : undefined,
             title,
             loadedTs: Date.now(),
             appSetup,

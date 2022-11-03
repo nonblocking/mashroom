@@ -99,9 +99,10 @@ export type MashroomPortalPluginConfig = {
 
 export type MashroomPortalPageApps = {
     [areaId: string]: Array<{
-        pluginName: string;
-        instanceId: string;
-        appSetup: MashroomPortalAppSetup;
+        readonly pluginName: string;
+        readonly instanceId: string;
+        readonly priority?: number;
+        readonly appSetup: MashroomPortalAppSetup;
     }>
 }
 
@@ -111,9 +112,10 @@ export type MashroomPortalContext = {
     readonly portalPluginConfig: MashroomPortalPluginConfig;
 }
 
-export type MashroomPortalPageContentRenderResult = {
-    readonly pageContent: string;
+export type MashroomPortalContentRenderResult = {
+    readonly resultHtml: string;
     readonly serverSideRenderedApps: Array<string>;
+    readonly embeddedPortalPageApps: MashroomPortalPageApps;
 }
 
 export type MashroomPortalIncludeStyleServerSideRenderedAppsResult = {
@@ -122,8 +124,13 @@ export type MashroomPortalIncludeStyleServerSideRenderedAppsResult = {
 }
 
 export type ClientLogMessage = {
-    level: LogLevel;
-    portalAppName?: string | undefined | null;
-    path: string;
-    message: string;
+    readonly level: LogLevel;
+    readonly portalAppName?: string | undefined | null;
+    readonly path: string;
+    readonly message: string;
+}
+
+export type SSRRenderResult = {
+    readonly html: string;
+    readonly embeddedPortalPageApps: MashroomPortalPageApps;
 }

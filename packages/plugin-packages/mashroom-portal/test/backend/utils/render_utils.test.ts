@@ -1,9 +1,7 @@
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
-import {
-    renderPageContent
-} from '../../../src/backend/utils/render_utils';
+import {renderContent} from '../../../src/backend/utils/render_utils';
 import type {MashroomPortalPageApps} from '../../../type-definitions/internal';
 
 setPortalPluginConfig({
@@ -44,6 +42,7 @@ describe('path_utils', () => {
                     instanceId: '1',
                     appSetup: {
                         appId: 'app1',
+                        pluginName: 'App 1',
                         title: 'App 1',
                     } as any
                 },
@@ -52,6 +51,7 @@ describe('path_utils', () => {
                     instanceId: '3',
                     appSetup: {
                         appId: 'app3',
+                        pluginName: 'App 3',
                         title: 'App 3',
                     } as any
                 }
@@ -62,6 +62,7 @@ describe('path_utils', () => {
                     instanceId: '2',
                     appSetup: {
                         appId: 'app2',
+                        pluginName: 'App 2',
                         title: 'App 2',
                     } as any
                 }
@@ -90,17 +91,17 @@ describe('path_utils', () => {
         const res: any = {};
         const logger = dummyLoggerFactory();
 
-        const result = await renderPageContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
+        const result = await renderContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
 
         // console.info('!!!', content);
 
         expect(result).toBeTruthy();
-        expect(result.pageContent).toContain('data-mr-app-id="app1"');
-        expect(result.pageContent).toContain('data-mr-app-id="app2"');
-        expect(result.pageContent).toContain('data-mr-app-id="app3"');
+        expect(result.resultHtml).toContain('data-mr-app-id="app1"');
+        expect(result.resultHtml).toContain('data-mr-app-id="app2"');
+        expect(result.resultHtml).toContain('data-mr-app-id="app3"');
 
-        expect(result.pageContent.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app1"/) > 0).toBeTruthy();
-        expect(result.pageContent.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
+        expect(result.resultHtml.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app1"/) > 0).toBeTruthy();
+        expect(result.resultHtml.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
 
         expect(result.serverSideRenderedApps).toEqual(['App 1']);
     });

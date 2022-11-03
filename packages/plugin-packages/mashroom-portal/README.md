@@ -76,10 +76,7 @@ The plugin allows the following configuration properties:
 
 ## Browser support
 
-The Browser support depends on the portal apps and the ES version they require to work. But the latest two versions of all current Browsers should work.
-
-To support older Browsers such as IE the Theme plugin should deliver the required polyfills. The *Mashroom Portal Default Theme* for example delivers
-all necessary polyfills for IE11.
+The Portal supports only modern Browsers and requires ES6.
 
 ## Services
 
@@ -341,7 +338,9 @@ A full config with all optional properties would look like this:
    * _ssrBootstrap_: An optional local SSR bootstrap that returns an initial HTML for the App, relative within the package (see below for an example)
  * _remote_: Optional configuration if the App is accessed remotely
    * _resourcesRoot_: The root path for App resources such as JavaScript files and images
-   * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML
+   * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML.
+     The Portal will send a POST to this route with the structure ```{ "portalAppSetup": {} }``` and expects a plain *text/html* response or
+     an *application/json* response that satisfies *MashroomPortalAppSSRResult*.
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
     * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
     * _category_: An optional category to group the Apps in the Admin App
@@ -442,7 +441,16 @@ import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashro
 const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup, req) => {
     const {appConfig, restProxyPaths, lang} = portalAppSetup;
     const dummyMessageBus: any = {};
-    return renderToString(<App appConfig={appConfig} messageBus={dummyMessageBus}/>);
+    const html = renderToString(<App appConfig={appConfig} messageBus={dummyMessageBus}/>);
+
+    return html;
+    // Alternatively (supports Composite Apps)
+    /*
+    return {
+        html,
+        embeddedApps: [],
+    }
+    */
 };
 
 export default bootstrap;

@@ -1145,10 +1145,32 @@ export type MashroomPortalAppLifecycleHooks = {
     +updateAppConfig?: (appConfig: MashroomPluginConfig) => void;
 }
 
+export type MashroomPortalAppSSRResultEmbeddedApp = {
+    /**
+     * The area Id (host ID) the embedded Portal App should be integrated into
+     */
+    +appAreaId: string,
+    /**
+     * The Portal App name
+     */
+    +pluginName: string,
+    /**
+     * The Portal App config
+     */
+    +appConfig?: ?MashroomPluginConfig,
+}
+
+export type MashroomPortalAppSSRResultEmbeddedApps = Array<MashroomPortalAppSSRResultEmbeddedApp>;
+
+export type MashroomPortalAppSSRResult = {
+    +html: string;
+    +embeddedApps?: MashroomPortalAppSSRResultEmbeddedApps;
+}
+
 export type MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement: HTMLElement, portalAppSetup: MashroomPortalAppSetup, clientServices: MashroomPortalClientServices)
     => void | MashroomPortalAppLifecycleHooks | Promise<void> | Promise<MashroomPortalAppLifecycleHooks>;
 
-export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup, req: ExpressRequest) => Promise<string>;
+export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: MashroomPortalAppSetup, req: ExpressRequest) => Promise<string | MashroomPortalAppSSRResult>;
 
 // portal-theme
 
