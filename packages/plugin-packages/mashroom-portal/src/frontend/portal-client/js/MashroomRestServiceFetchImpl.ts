@@ -92,7 +92,6 @@ export default class RestServiceFetchImpl implements MashroomRestService {
                         });
                 })
                 .catch((error) => {
-                    console.error(`Fetching ${fetchUrl} failed!`, error);
                     reject(this._createError(0, error.message, error.stack));
                 });
         });
