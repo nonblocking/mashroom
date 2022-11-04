@@ -81,7 +81,8 @@ export default ({appId, messageBus, portalAppService}: Props) => {
                 <br/><br/>
                 This App is also capable of server-side rendering itself and the first <em>embedded</em> App.
             </div>
-            { /* dangerouslySetInnerHTML is necessary here to prevent the server-side content of this div to be removed during hydration! */ }
+            { /* dangerouslySetInnerHTML is necessary here to prevent the server-side content of this div
+                 to be removed during hydration! */ }
             <div id={dialogHostElementId} className="dialog" dangerouslySetInnerHTML={{ __html: '' }} />
         </div>
     );

@@ -150,6 +150,8 @@ metricsServer.get('/metrics', async (req, res) => {
 });
 ```
 
+### PM2 Cluster Hints
+
 If you use **PM2** this won't work because it occupies the master process. There you need to launch a separate *app*
 which communicates with the other workers to gather the metrics. Like this:
 
