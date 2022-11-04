@@ -49,7 +49,7 @@ async function startServer() {
         stopServer(server, logger);
     });
     process.on('SIGTERM', async () => {
-        // Allow graceful shutdown
+        // Graceful shutdown on Kubernetes
         if (WAIT_BEFORE_SERVER_CLOSE) {
             logger.info(`Graceful shutdown, waiting for ${WAIT_BEFORE_SERVER_CLOSE}sec`);
             setTimeout(() => {
@@ -65,6 +65,5 @@ async function stopServer(server: MashroomServer, log: MashroomLogger) {
     if (!stopping) {
         stopping = true;
         await server.stop();
-        process.exit(0);
     }
 }
