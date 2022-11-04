@@ -1,14 +1,14 @@
 {
     "name": "@mashroom/mashroom-test-server2",
-    "version": "2.2.0",
+    "version": "2.2.1",
     "private": true,
     "dependencies": {
-        "@mashroom/mashroom": "2.2.0",
+        "@mashroom/mashroom": "2.2.1",
         "pm2": "^5.2.2",
         "prom-client": "^14.1.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.2.0"
+        "@mashroom/mashroom-json-schemas": "2.2.1"
     },
     "scripts": {
         "start": "mashroom",
