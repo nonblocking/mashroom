@@ -227,13 +227,17 @@
     }
 
     .mashroom-portal-ui-modal {
+        .mashroom-portal-ui-modal-wrapper {
+            background-color: $ADMIN_APP_COLOR_BACKGROUND;
+            color: $ADMIN_APP_COLOR_TEXT;
+        }
+
         .mashroom-portal-ui-modal-header {
             background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
         }
 
         .mashroom-portal-ui-modal-content {
             background-color: $ADMIN_APP_COLOR_BACKGROUND;
-            color: $ADMIN_APP_COLOR_TEXT;
         }
     }
 

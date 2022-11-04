@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+ * Admin Toolbar: Minor style fixes
+
 ## 2.2.0 (November 4, 2022)
 
  * Portal: Fixed the problem that users were kicked out of the Portal when requests to /api/users/authenticated/authExpiration

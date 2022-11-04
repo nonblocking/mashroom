@@ -17,6 +17,7 @@
         min-height: 100px;
         box-shadow: 4px 4px 8px #444;
         transition: opacity 0.2s ease;
+        background-color: white;
         opacity: 0;
 
         &.fade-in {
