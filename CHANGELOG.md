@@ -3,9 +3,12 @@
 
 ## [unreleased]
 
+
+## 2.2.1 (November 4, 2022)
+
  * Portal: Fixed the *MashroomPortalMessageBusInterceptor* signature and behaviour:
-   It should be possible to change the event data by returning a different value,
-   but if the interceptor function returns nothing the data should not be touched (was set to undefined until yet)
+   It should be possible to change the event data by just returning a different value;
+   but if the interceptor function returns nothing the data should stay untouched (was set to undefined before)
  * Admin Toolbar: Minor style fixes
 
 ## 2.2.0 (November 4, 2022)
