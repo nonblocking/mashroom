@@ -150,6 +150,49 @@ describe('MashroomPortalMessageBusImpl', () => {
         setTimeout(() => done(), 500);
     });
 
+    it('does not change the message if the interceptor returns nothing', (done) => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        const messageBusApp1 = messageBus.getAppInstance('app1');
+        const messageBusApp2 = messageBus.getAppInstance('app2');
+
+        messageBus.registerMessageInterceptor((data, topic, senderAppId, receiverAppId, cancelMessage) => {
+        });
+
+        messageBusApp1.subscribe('foo3', (data, topic) => {
+            expect(data).toEqual({
+                'Hello': 'World',
+            });
+            done();
+        });
+
+        messageBusApp2.publish('foo3', {
+            'Hello': 'World',
+        });
+    });
+
+    it('changes the message if the interceptor returns a different value', (done) => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        const messageBusApp1 = messageBus.getAppInstance('app1');
+        const messageBusApp2 = messageBus.getAppInstance('app2');
+
+        messageBus.registerMessageInterceptor((data, topic, senderAppId, receiverAppId, cancelMessage) => {
+            return {
+                foo: 2,
+            };
+        });
+
+        messageBusApp1.subscribe('foo3', (data, topic) => {
+            expect(data).toEqual({
+                foo: 2,
+            });
+            done();
+        });
+
+        messageBusApp2.publish('foo3', {
+            'Hello': 'World',
+        });
+    });
+
     it('returns the remote prefix', () => {
         const messageBus = new MashroomPortalMessageBusImpl();
         expect(messageBus.getRemotePrefix()).toBe('remote:');
