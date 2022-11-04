@@ -3,13 +3,15 @@
 
 ## [unreleased]
 
+## 2.2.0 (November 4, 2022)
+
  * Portal: Fixed the problem that users were kicked out of the Portal when requests to /api/users/authenticated/authExpiration
    failed (see issue #99)
  * Portal: Added support for server-side rendering of *Composite Apps*, which use other Portal Apps as their building blocks.
    It is now possible to define *embedded Portal Apps* in the SSR bootstrap like so:
    ```tsx
     const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup, req) => {
-      // Generate server-side HTML that contains a <div id="host-element-id"></div>
+      // Generate server-side HTML that contains a <div id="unique-host-element-id"></div>
       const html = renderToString(<App/>);
 
       return {
@@ -18,7 +20,7 @@
             {
                 pluginName: 'The other App',
                 appConfig: {},
-                appAreaId: 'host-element-id',
+                appAreaId: 'unique-host-element-id',
             }
          ]
       };
@@ -27,7 +29,7 @@
    In the Composite App make sure you don't call ```portalAppService.loadApp()``` for that already integrated App,
    instead you can get the *appId* of the server-side embedded App like this to unload/reload it later:
    ```ts
-     const ssrPreloadedApp = portalAppService.loadedPortalApps.find(({ pluginName, portalAppAreaId }) => pluginName === 'The other App' && portalAppAreaId === 'host-element-id');
+     const ssrPreloadedApp = portalAppService.loadedPortalApps.find(({ pluginName, portalAppAreaId }) => pluginName === 'The other App' && portalAppAreaId === 'unique-host-element-id');
      let appId;
      if (!ssrPreloadedApp) {
       // SSR failed, load client-side
@@ -39,6 +41,10 @@
         appId = ssrPreloadedApp.id;
      }
    ```
+   Checkout the *mashroom-portal-demo-composite-app* package for a working example.
+
+   **NOTE**: You have to make sure the *embedded* Apps aren't removed by the render framework during hydration,
+   in *React* you have to add ```dangerouslySetInnerHTML={{ __html: '' }}``` to nodes whose children shall be ignored during hydration
  * Kubernetes Remote App Registry:
    * Support for multiple Namespace and Service label selectors
    * For duplicate Portal Apps the active one is now more deterministic and depends on the namespace lookup
@@ -46,17 +52,17 @@
    * For multiple Portal Apps per service: if one definition is invalid the other ones will be activated nevertheless
    * Support for duplicate service names in different namespaces
    * If a service gets removed all Portal Apps are unregistered immediately (without delay)
- * Remote App Registry: For multiple Portal Apps per endpoint: if one definition is invalid the other ones will be activated nevertheless
- * Core: Removed the forcefully stopping of the server after 5sec because may interrupt running requests
-   (it also makes in impossible to increase the shutdown period with *terminationGracePeriodSeconds* on Kubernetes)
+ * Remote App Registry: For multiple Portal Apps per endpoint, if one definition is invalid the other ones will be activated nevertheless
+ * Core: Removed the forcefully stopping of the server after 5sec because this may interrupt pending requests.
+   It also makes in impossible to increase the shutdown period via *terminationGracePeriodSeconds* on Kubernetes
  * Prometheus Exporter: Added support for Node.js clusters. It is now possible to use *prom-client*'s
    *AggregatorRegistry* to gather the metrics in the master process and also to get the worker metrics
-   within [PM2](https://pm2.keymetrics.io) cluster. Check out the README in the *mashroom-monitoring-prometheus-exporter*
-   module for details.
+   within a [PM2](https://pm2.keymetrics.io) cluster. Check out the README in the *mashroom-monitoring-prometheus-exporter*
+   module for details
  * BREAKING CHANGE: Renamed the plugin *mashroom-http-proxy-add-id-token* to *mashroom-http-proxy-add-access-token* because
-   the access token is intended for authenticating against APIs and such.
- * Core: Failing ready and health probes log now the causes. This is helpful on K8S when the Admin UI is not available
-   if the ready probe fails.
+   access tokens should be used to make API requests on behalf of a user
+ * Core: Failing ready and health probes log now the causes. This is helpful on Kubernetes when the Admin UI is not available
+   if the ready probe fails
  * Added a [SolidJS](https://www.solidjs.com) demo Portal App (Microfrontend)
  * Portal: **BREAKING CHANGE**: Themes must set now a CSS variable with the (fontawsome compatible) icon font, like so:
    ```css
