@@ -972,7 +972,7 @@ export interface MashroomPortalAdminService {
 }
 
 export type MashroomPortalMessageBusSubscriberCallback = (data: any, topic: string, senderAppId: ?string) => void;
-export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string, cancelMessage: () => void) => void;
+export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: ?string, receiverAppId: ?string, cancelMessage: () => void) => ?any;
 
 export interface MashroomPortalMessageBus {
     /**
@@ -1014,8 +1014,9 @@ export interface MashroomPortalMessageBus {
 
     /**
      * Register a message interceptor.
-     * A interceptor can be useful for debugging or to manipulate the messages.
-     * It is also possible to block messages calling cancelMessage() from the interceptor arguments.
+     * An interceptor can be useful for debugging or to manipulate the messages.
+     * It can change the data of an event by return a different value or block messages
+     * by calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
 
