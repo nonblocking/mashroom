@@ -156,6 +156,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         const messageBusApp2 = messageBus.getAppInstance('app2');
 
         messageBus.registerMessageInterceptor((data, topic, senderAppId, receiverAppId, cancelMessage) => {
+            // Do nothing here
         });
 
         messageBusApp1.subscribe('foo3', (data, topic) => {
