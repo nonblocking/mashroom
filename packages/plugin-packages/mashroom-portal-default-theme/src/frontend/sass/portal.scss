@@ -73,6 +73,7 @@
 
     /* CSS variables */
     --mashroom-portal-font-icon: #{meta.inspect($FONT_ICON)};
+    --mashroom-portal-font-icon-brands: #{meta.inspect($FONT_ICON_BRANDS)};
     --mashroom-portal-font-default: #{meta.inspect($FONT_DEFAULT)};
     --mashroom-portal-font-header: #{meta.inspect($FONT_HEADER)};
     --mashroom-portal-color-black: #{$COLOR_BLACK};
