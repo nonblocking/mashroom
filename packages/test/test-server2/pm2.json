@@ -16,7 +16,7 @@
             "exec_mode": "fork",
             "script": "metrics.js",
             "env": {
-                "METRICS_COLLECTOR": true
+                "NODE_ENV": "production"
             }
         }
     ]

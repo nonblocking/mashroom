@@ -237,10 +237,7 @@ And a pm2 config like this:
             "name": "metrics_collector",
             "instances": 1,
             "exec_mode": "fork",
-            "script": "metrics.js",
-            "env": {
-                "METRICS_COLLECTOR": true
-            }
+            "script": "metrics.js"
         }
     ]
 }

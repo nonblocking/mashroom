@@ -12,7 +12,7 @@ metricsServer.get('/metrics/:id', async (req, res) => {
     const id = req.params.id;
     const slice = metrics[id];
     if (!slice) {
-        console.error(`No metrics found for pid ${id}. Known nodes:`, Object.keys(metrics));
+        console.error(`No metrics found for ID ${id}. Known node IDs:`, Object.keys(metrics));
         res.sendStatus(404);
         return;
     }
@@ -29,7 +29,7 @@ metricsServer.get('/metrics', async (req, res) => {
 });
 
 metricsServer.listen(metricsServerPort, '0.0.0.0', () => {
-    console.debug(`Prometheus cluster metrics are available on http://localhost:${metricsServerPort}/metrics`);
+    console.debug(`Prometheus cluster metrics are available at http://localhost:${metricsServerPort}/metrics`);
 });
 
 setInterval(() => {
