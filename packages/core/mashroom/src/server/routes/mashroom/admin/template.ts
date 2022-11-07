@@ -184,7 +184,7 @@ export default (content: string, req: Request) => {
                 #modal .modal-wrapper {
                     position: relative;
                     display: table;
-                    margin: 15% auto;
+                    margin: 10% auto;
                     min-width: 250px;
                     max-width: 90%;
                     box-shadow: 2px 4px 4px #444;
