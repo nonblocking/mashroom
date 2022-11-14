@@ -2,16 +2,16 @@
 
 ## About ##
 
-*Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* webapps on the
+*Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* web-apps on the
 server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as
 security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and supports custom middleware and services via plugins.
 
-Mashroom Server allows it to implemented SPAs (and express webapps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
+Mashroom Server allows it to implemented SPAs (and express web-apps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
 with different configurations and even multiple times on the same page. It also allows it to restrict the access to resources (Pages, Apps) based on user roles.
 
 From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages for
 plugin definitions (package.json, mashroom.json) and loads them at runtime.
-Such a plugin could be an *Express* webapp or a *SPA* or more generally all kind of code it knows how to load,
+Such a plugin could be an *Express* web-app or a *SPA* or more generally all kind of code it knows how to load,
 which is determined by the available plugin loaders.
 Plugin loaders itself are also just plugins, so it is possible to add any type of custom plugin type.
 
@@ -52,7 +52,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
   * Shared middlewares and services
   * **Service abstractions** for security, internationalization, messaging, HTTP proxying, memory cache and storage
   * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
-  * Integration of (existing) _Express_ webapps
+  * Integration of (existing) _Express_ web-apps
   * Integration of (existing) _Express_ (REST) APIs
   * Role and IP based **access control** for URLs
   * Definition of access restrictions for arbitrary resources (such as Sites, Pages, App instances)
