@@ -3,15 +3,21 @@
 ## About ##
 
 *Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* web-apps on the
-server side and composing pages from multiple *Single Page Applications* on the client side (Browser). It also provides common infrastructure such as
-security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and supports custom middleware and services via plugins.
+server side and composing pages from multiple *Single Page Applications* on the client side. It also provides common infrastructure such as
+role based security, communication (publish/subscribe), theming, i18n, storage, and logging out of the box and
+supports custom middleware and services via plugins.
 
-Mashroom Server allows it to implemented SPAs (and express web-apps) completely independent and without a vendor lock-in, and to use it on arbitrary pages
-with different configurations and even multiple times on the same page. It also allows it to restrict the access to resources (Pages, Apps) based on user roles.
+It allows it to implement SPAs completely independent and without a vendor lock-in, and to use it on arbitrary pages
+with different configurations and even multiple times on the same page. Registered SPAs (Portal Apps) can also be loaded and unloaded dynamically,
+hence they can be used as building blocks for *Composite Apps* or as part of a *dynamic Cockpit*.
+
+The *Mashroom Portal* plugin which is responsible for rendering SPAs is fully capable of *Hybrid Rendering*.
+It renders the initial page requested by the user completely on the server-side (if all Portal Apps on the page also support SSR)
+and exchanges dynamically the content on the client-side for subsequent pages.
 
 From a technical point of view the core of *Mashroom Server* is a plugin loader that scans npm packages for
 plugin definitions (package.json, mashroom.json) and loads them at runtime.
-Such a plugin could be an *Express* web-app or a *SPA* or more generally all kind of code it knows how to load,
+Such a plugin could be an *Express* web-app or an *SPA* or more generally all kind of code it knows how to load,
 which is determined by the available plugin loaders.
 Plugin loaders itself are also just plugins, so it is possible to add any type of custom plugin type.
 
@@ -25,16 +31,16 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
     (basically you just need to implement a startup function and provide some metadata)
   * Automatic registration of SPAs (**Remote Apps**) on remote servers or Kubernetes clusters
     (this allows independent life cycles and teams per SPA)
-  * Create static pages with registered SPAs (Apps) as building blocks
-  * Support for **dynamic cockpits** where Apps are loaded (and unloaded) based on some user interaction or search results
-  * Support for **composite Apps** which can use any registered SPA as building blocks
+  * Create static pages with registered SPAs (Portal Apps) as building blocks
+  * Support for **dynamic cockpits** where Portal Apps are loaded (and unloaded) based on some user interaction or search results
+  * Support for **Composite Apps** which can use any registered SPA as building blocks
     (which again can serve as building blocks for other composite Apps)
   * Each App receives a config object which can be different per instance and a number of JavaScript services
     (e.g. to connect to the message bus or to load other Apps)
-  * Support for **hybrid rendering** for both the Portal pages and SPAs
+  * Support for **Hybrid Rendering** for both the Portal pages and SPAs
     (If an SPA supports server-side rendering the initial HTML can be incorporated
     into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering)
-  * The App config can be edited via Admin Toolbar or a custom Editor App which again is just a plain SPA
+  * The Portal App config can be edited via Admin Toolbar or a custom Editor App which again is just a plain SPA
   * Client-side message bus for inter-app communication which can be extended to server-side messaging
     (to communicate with Apps in other browsers or even in 3rd party systems)
   * Arbitrary (custom) layouts for pages
