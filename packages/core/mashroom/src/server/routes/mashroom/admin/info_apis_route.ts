@@ -12,7 +12,7 @@ const apisRoute = (req: Request, res: Response) => {
 export default apisRoute;
 
 const apis = (pluginContext: MashroomPluginContext) => `
-    <h2>Loaded API Plugins</h2>
+    <h2>Loaded Express API Plugins</h2>
     ${apisList(pluginContext)}
 `;
 

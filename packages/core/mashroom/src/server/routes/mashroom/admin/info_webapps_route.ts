@@ -12,7 +12,7 @@ const webappsRoute = (req: Request, res: Response) => {
 export default webappsRoute;
 
 const webapps = (pluginContext: MashroomPluginContext) => `
-    <h2>Loaded Webapp Plugins</h2>
+    <h2>Loaded Express Web-App Plugins</h2>
     ${webappsList(pluginContext)}
 `;
 

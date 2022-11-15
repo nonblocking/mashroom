@@ -13,7 +13,7 @@ const middlewareStack = (req: Request, res: Response) => {
 export default middlewareStack;
 
 const middlewares = (pluginContext: MashroomPluginContext) => `
-    <h2>Middleware Stack</h2>
+    <h2>Loaded Express Middleware Plugins Stack</h2>
     <p>
         (The middleware on top of the list is executed first)
     </p>

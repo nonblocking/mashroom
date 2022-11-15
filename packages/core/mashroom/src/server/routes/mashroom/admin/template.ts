@@ -257,7 +257,7 @@ export default (content: string, req: Request) => {
                         <li class="menu-item ${req.path === '/plugin-loaders' ? 'active' : ''}"><a href="/mashroom/admin/plugin-loaders">Plugin Loaders</a></li>
                         <li class="menu-item ${req.path === '/middleware' ? 'active' : ''}"><a href="/mashroom/admin/middleware">Middleware</a></li>
                         <li class="menu-item ${req.path === '/services' ? 'active' : ''}"><a href="/mashroom/admin/services">Services</a></li>
-                        <li class="menu-item ${req.path === '/webapps' ? 'active' : ''}"><a href="/mashroom/admin/webapps">Webapps</a></li>
+                        <li class="menu-item ${req.path === '/webapps' ? 'active' : ''}"><a href="/mashroom/admin/webapps">Web-Apps</a></li>
                         <li class="menu-item ${req.path === '/apis' ? 'active' : ''}"><a href="/mashroom/admin/apis">APIs</a></li>
                         <li class="menu-item ${req.path === '/server-info' ? 'active' : ''}"><a href="/mashroom/admin/server-info">Server Info</a></li>
                         ${extraMenuEntry.map(({menuTitle, path}) => `
