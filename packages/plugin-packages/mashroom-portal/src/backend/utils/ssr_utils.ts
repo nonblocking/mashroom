@@ -17,6 +17,7 @@ import type {
     MashroomPortalAppCaching,
     MashroomPortalAppPluginSSRBootstrapFunction,
     MashroomPortalApp,
+    MashroomPortalAppSSRRemoteRequest,
     MashroomPortalAppSSRResult,
     MashroomPortalAppSSRResultEmbeddedApps,
 } from '../../../type-definitions';
@@ -124,11 +125,16 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     } else if (ssrInitialHtmlUri) {
         // Remote App
         try {
+            const request: MashroomPortalAppSSRRemoteRequest = {
+                originalRequest: {
+                    path: req.path,
+                    queryParameters: req.query,
+                },
+                portalAppSetup
+            };
             const result = await fetch(ssrInitialHtmlUri, {
                 method: 'POST',
-                body: JSON.stringify({
-                    portalAppSetup,
-                }),
+                body: JSON.stringify(request),
                 headers: {'Content-Type': 'application/json'}
             });
             if (result.ok) {

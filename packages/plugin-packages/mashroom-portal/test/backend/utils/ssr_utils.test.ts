@@ -121,18 +121,37 @@ describe('ssr_utils', () => {
     });
 
     it('returns the HTML from a remote SSR route', async () => {
+        let body;
+
         nock('http://localhost:1234')
-            .post('/ssr-test')
+            .post('/ssr-test', (b) => { body = b; return true; })
             .reply(200, 'this is a remote test');
 
-        const portalAppSetup: any = {};
+        const portalAppSetup: any = {
+            theSetup: 1,
+        };
         const req: any  = {
+            path: '/the-path',
+            query: {
+                q: 'foo'
+            },
             pluginContext,
         };
         const logger = dummyLoggerFactory();
 
         const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
 
+        expect(body).toEqual({
+            originalRequest: {
+                path: '/the-path',
+                queryParameters: {
+                    q: 'foo'
+                }
+            },
+            portalAppSetup: {
+                theSetup: 1,
+            }
+        });
         expect(html).toBeTruthy();
         expect(html).toEqual({'embeddedPortalPageApps': {}, 'html': 'this is a remote test'});
     });

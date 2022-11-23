@@ -3,6 +3,17 @@
 
 ## [unreleased]
 
+ * Portal: The SSR route of Remote Apps will receive now also the path and the query parameters of the original request (fixes #102).
+   The body of the POST request looks like this now:
+   ```ts
+   export type MashroomPortalAppSSRRemoteRequest = {
+      readonly originalRequest: {
+       readonly path: string;
+       readonly queryParameters: Record<string, any>;
+     };
+     readonly portalAppSetup: MashroomPortalAppSetup;
+   }
+   ```
 
 ## 2.2.1 (November 4, 2022)
 

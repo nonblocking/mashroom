@@ -339,8 +339,8 @@ A full config with all optional properties would look like this:
  * _remote_: Optional configuration if the App is accessed remotely
    * _resourcesRoot_: The root path for App resources such as JavaScript files and images
    * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML.
-     The Portal will send a POST to this route with the structure ```{ "portalAppSetup": {} }``` and expects a plain *text/html* response or
-     an *application/json* response that satisfies *MashroomPortalAppSSRResult*.
+     The Portal will send a POST to this route with a JSON body of type *MashroomPortalAppSSRRemoteRequest*
+     and expects a plain *text/html* response or an *application/json* response that satisfies *MashroomPortalAppSSRResult*.
  * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
     * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
     * _category_: An optional category to group the Apps in the Admin App
@@ -479,7 +479,7 @@ export type MashroomPortalAppSetup = {
    In the example below the base path to the _spaceXApi_ would be in _portalAppSetup.restProxyPaths.spaceXApi._
  * _resourceBasePath_: Base path to access assets in _resourceRoot_ such as images
  * _lang_: The current user language (e.g.: en)
- * _user_: User information such as user name, user display name and roles. It has the following structure:
+ * _user_: User information such as username, user display name and roles. It has the following structure:
    ```ts
     export type MashroomPortalAppUser = {
         readonly guest: boolean;
@@ -1131,7 +1131,7 @@ Important is the class **mashroom-portal-app-area** and a unique id element.
 
 ### remote-portal-app-registry
 
-This plugin type adds an additional registry for remote portal-apps to the Portal.
+This plugin type adds a registry for remote portal-apps to the Portal.
 
 To register a new remote-portal-app-registry plugin add this to _package.json_:
 

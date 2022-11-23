@@ -1250,7 +1250,7 @@ export type MashroomRemotePortalAppRegistryBootstrapFunction = (
 export type MashroomPortalAppLifecycleHooks = {
     /**
      * Will be called before the host element will be removed from the DOM.
-     * Can be used to cleanup (e.g. to unmount a React App).
+     * Can be used to clean up (e.g. to unmount a React App).
      */
     readonly willBeRemoved?: () => void | Promise<void>;
     /**
@@ -1259,6 +1259,14 @@ export type MashroomPortalAppLifecycleHooks = {
      */
     readonly updateAppConfig?: (appConfig: MashroomPluginConfig) => void;
 };
+
+export type MashroomPortalAppSSRRemoteRequest = {
+    readonly originalRequest: {
+        readonly path: string;
+        readonly queryParameters: Record<string, any>;
+    };
+    readonly portalAppSetup: MashroomPortalAppSetup;
+}
 
 export type MashroomPortalAppSSRResultEmbeddedApp = {
     /**

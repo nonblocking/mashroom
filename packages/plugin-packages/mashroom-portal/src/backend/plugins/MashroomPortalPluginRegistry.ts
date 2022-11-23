@@ -137,6 +137,8 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
             }
         }
 
+        console.info(apps);
+
         return Object.freeze(apps);
     }
 
