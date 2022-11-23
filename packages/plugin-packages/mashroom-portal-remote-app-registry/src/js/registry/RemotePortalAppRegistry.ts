@@ -29,6 +29,12 @@ export default class RemotePortalAppRegistry implements RemotePortalAppRegistryT
         this._removeApp(this._portalApps, name);
     }
 
+    unregisterRemotePortalAppForSession(name: string, request: Request): void {
+        const sessionApps: Array<MashroomPortalApp> = request.session[SESSION_KEY_PORTAL_REMOTE_APPS] || [];
+        const newSessionApps = sessionApps.filter((portalApp) => portalApp.name !== name);
+        request.session[SESSION_KEY_PORTAL_REMOTE_APPS] = newSessionApps;
+    }
+
     get portalApps(): Readonly<Array<MashroomPortalApp>> {
         let apps: Array<MashroomPortalApp> = [];
         const request = this._requestHolder.request;

@@ -20,6 +20,7 @@ export interface RemotePortalAppRegistry extends MashroomRemotePortalAppRegistry
     registerRemotePortalApp(portalApp: MashroomPortalApp): void;
     registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: Request): void;
     unregisterRemotePortalApp(name: string): void;
+    unregisterRemotePortalAppForSession(name: string, request: Request): void;
 }
 
 export type Context = {

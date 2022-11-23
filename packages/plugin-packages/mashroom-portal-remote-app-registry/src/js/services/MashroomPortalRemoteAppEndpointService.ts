@@ -74,9 +74,12 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         const request = globalRequestHolder.request;
         if (request) {
             const sessionEndpoints: Array<RemotePortalAppEndpoint> = request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] || [];
-            const newSessionEndpoints = sessionEndpoints.filter((endpoint) => endpoint.url !== url);
-            if (sessionEndpoints.length !== newSessionEndpoints.length) {
-                request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] = newSessionEndpoints;
+            const sessionEndpointToRemove = sessionEndpoints.find((endpoint) => endpoint.url === url);
+            if (sessionEndpointToRemove) {
+                sessionEndpointToRemove.portalApps.forEach(({name}) => {
+                    context.registry.unregisterRemotePortalAppForSession(name, request);
+                });
+                request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] = sessionEndpoints.filter((e) => e !== sessionEndpointToRemove);
                 return;
             }
         }
