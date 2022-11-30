@@ -42,7 +42,7 @@ export default class BrowserErrorHandler {
 }
 
 const getAppNameFromScript = (source: string): string | undefined => {
-    const match = source.match(`.*${PORTAL_INTERNAL_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/(.*)/.*`);
+    const match = source.match(`.*${PORTAL_INTERNAL_PATH}${PORTAL_APP_RESOURCES_BASE_PATH}/(.*?)/.*`);
     if (match) {
         return decodeURIComponent(match[1]);
     }
