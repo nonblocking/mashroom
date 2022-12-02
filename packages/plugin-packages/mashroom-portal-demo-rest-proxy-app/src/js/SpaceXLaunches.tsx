@@ -86,25 +86,29 @@ export default class SpaceXLaunches extends PureComponent<Props, State> {
         ));
 
         return (
-            <table>
-                <tr>
-                    <th>
-                        <FormattedMessage id='flightNumber'/>
-                    </th>
-                    <th>
-                        <FormattedMessage id='missionName'/>
-                    </th>
-                    <th>
-                        <FormattedMessage id='rocketName'/>
-                    </th>
-                    <th>
-                        <FormattedMessage id='launchPad'/>
-                    </th>
-                    <th>
-                        <FormattedMessage id='launchDate'/>
-                    </th>
-                </tr>
-                {rows}
+            <table className='table-striped'>
+                <thead>
+                    <tr>
+                        <th>
+                            <FormattedMessage id='flightNumber'/>
+                        </th>
+                        <th>
+                            <FormattedMessage id='missionName'/>
+                        </th>
+                        <th>
+                            <FormattedMessage id='rocketName'/>
+                        </th>
+                        <th>
+                            <FormattedMessage id='launchPad'/>
+                        </th>
+                        <th>
+                            <FormattedMessage id='launchDate'/>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows}
+                </tbody>
             </table>
         );
     }

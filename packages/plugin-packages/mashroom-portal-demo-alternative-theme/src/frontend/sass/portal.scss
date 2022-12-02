@@ -295,10 +295,6 @@ table {
     tr {
         border-bottom: 1px solid $COLOR_PRIMARY;
 
-        &:nth-child(odd) {
-            background-color: #EEE;
-        }
-
         &:last-child {
             border-bottom: none;
         }
@@ -322,6 +318,12 @@ table {
 
         &:last-child {
             border-right: none;
+        }
+    }
+
+    &.table-striped {
+        tr:nth-child(even) {
+            background-color: #EEE;
         }
     }
 }

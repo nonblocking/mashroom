@@ -105,7 +105,7 @@ app.get('/', (req: Request, res: Response) => {
                         <div class="mashroom-portal-app-host">
                             <div style="padding: 10px">
                                 <p>App 1</p>
-                                <table>
+                                <table class="table-striped">
                                     <tr>
                                         <th>Name</th>
                                         <th>Age</th>

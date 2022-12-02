@@ -22,7 +22,7 @@ export default class MessageBusHistory extends PureComponent<Props> {
         }
 
         return (
-            <table id={id}>
+            <table className='table-striped' id={id}>
                 <thead>
                     <tr>
                         <th>
