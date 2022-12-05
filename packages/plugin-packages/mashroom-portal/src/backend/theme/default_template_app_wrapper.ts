@@ -1,7 +1,7 @@
 import type {MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
 
 export default ({appId, pluginName, safePluginName, title, appSSRHtml}: MashroomPortalAppWrapperRenderModel) => (`
-    <div data-mr-app-id="${appId}" class="mashroom-portal-app-wrapper portal-app-${safePluginName}">
+    <div data-mr-app-id="${appId}" data-mr-app-name="${pluginName}" class="mashroom-portal-app-wrapper portal-app-${safePluginName}">
         <div class="mashroom-portal-app-header">
             <div data-mr-app-content="title" class="mashroom-portal-app-header-title">${title}</div>
         </div>

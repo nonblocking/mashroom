@@ -4,8 +4,8 @@
 import React from 'react';
 import type {MashroomPortalAppWrapperRenderModel} from '@mashroom/mashroom-portal/type-definitions';
 
-export default ({ appId, safePluginName, appSSRHtml, title }: MashroomPortalAppWrapperRenderModel) => (
-    <div data-mr-app-id={appId} className={`mashroom-portal-app-wrapper portal-app-${safePluginName}`}>
+export default ({ appId, pluginName, safePluginName, appSSRHtml, title }: MashroomPortalAppWrapperRenderModel) => (
+    <div data-mr-app-id={appId} data-mr-app-name={pluginName} className={`mashroom-portal-app-wrapper portal-app-${safePluginName}`}>
         <div className="mashroom-portal-app-header">
             <div data-mr-app-content="title" className="mashroom-portal-app-header-title">{title}</div>
         </div>
