@@ -516,7 +516,7 @@ describe('PortalPageRenderController', () => {
             json: (content: any) => {
                 expect(content).toBeTruthy();
                 expect(content.pageContent).toContain('<div id="app-area1">');
-                expect(content.pageContent).toContain('<div data-mr-app-id="ABCDEF" class="mashroom-portal-app-wrapper portal-app-mashroom-welcome-portal-app">');
+                expect(content.pageContent).toContain('<div data-mr-app-id="ABCDEF" data-mr-app-name="Mashroom Welcome Portal App" class="mashroom-portal-app-wrapper portal-app-mashroom-welcome-portal-app">');
                 done();
             }
         };
