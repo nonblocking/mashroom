@@ -38,13 +38,11 @@ export default class MashroomServer implements MashroomServerType {
     async start(): Promise<void> {
         this._logger.info(`
 Starting
-   __  ___         __                         ____
-  /  |/  /__ ____ / /  _______  ___  __ _    / __/__ _____  _____ ____
- / /|_/ / _ \`(_-</ _ \\/ __/ _ \\/ _ \\/  ' \\  _\\ \\/ -_) __/ |/ / -_) __/
-/_/  /_/\\_,_/___/_//_/_/  \\___/\\___/_/_/_/ /___/\\__/_/  |___/\\__/_/
-
-Version ${this._serverInfo.version}
-Pid ${process.pid}
+\x1b[35m╔╦╗┌─┐┌─┐┬ ┬┬─┐┌─┐┌─┐┌┬┐  ╔═╗┌─┐┬─┐┬  ┬┌─┐┬─┐\x1b[m
+\x1b[35m║║║├─┤└─┐├─┤├┬┘│ ││ ││││  ╚═╗├┤ ├┬┘└┐┌┘├┤ ├┬┘\x1b[m
+\x1b[35m╩ ╩┴ ┴└─┘┴ ┴┴└─└─┘└─┘┴ ┴  ╚═╝└─┘┴└─ └┘ └─┘┴└─\x1b[m
+\x1b[35m${this._serverInfo.version}\x1b[m
+(Pid ${process.pid})
 `);
         return Promise.all([
             this._startHttpServer(),
