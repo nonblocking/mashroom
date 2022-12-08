@@ -1,5 +1,6 @@
 import openIDConnectClient from '../openid-connect-client';
 import createUser from '../create-user';
+import saveSession from '../save-session';
 import {OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_AUTH_DATA_SESSION_KEY, OICD_USER_SESSION_KEY} from '../constants';
 import type {OpenIDCallbackChecks,TokenSet} from 'openid-client';
 
@@ -91,8 +92,8 @@ export default (defaultBackUrl: string) => {
                 logger.error(`Configuration error detected: The auth token expiration time (${new Date(authData.tokenSet.expires_at * 1000)}) is after the session expiration time (${new Date(Date.now() + request.session.cookie.maxAge)}). Since the token is stored in the session this might lead to unexpected behaviour.`);
             }
 
-            // Make sure the user is in the session before we redirect (file session store is async)
-            await new Promise<void>((resolve) => request.session.save(() => resolve()));
+            // Make sure the session is in the store before the redirect because it could hit another instance
+            await saveSession(request, logger);
 
             backToStartPage(response, defaultBackUrl, backUrl);
 

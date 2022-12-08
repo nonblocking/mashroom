@@ -2,6 +2,7 @@
 import fetch from 'node-fetch';
 import { generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
+import saveSession from '../save-session';
 import {OICD_AUTH_DATA_SESSION_KEY, OICD_REQUEST_DATA_SESSION_KEY_PREFIX, OICD_USER_SESSION_KEY} from '../constants';
 import type {AuthorizationParameters} from 'openid-client';
 
@@ -73,6 +74,9 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             ...authenticationHints,
         };
 
+        // Make sure the session is in the store because the IDP could redirect back very quickly
+        await saveSession(request, logger);
+
         const authorizationUrl = client.authorizationUrl(authorizationParameters);
         logger.debug('Redirecting to:', authorizationUrl);
 
@@ -117,12 +121,8 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
             }
             request.session[OICD_AUTH_DATA_SESSION_KEY] = authData;
 
-            try {
-                const userInfo = await client.userinfo(newTokenSet);
-                logger.info('NEW USER INFO', userInfo);
-            } catch (error) {
-                logger.error('Test', error);
-            }
+            // Make sure the session so subsequent request don't trigger a new refresh
+            await saveSession(request, logger);
 
             user = this.getUser(request);
             logger.debug(`Token refreshed for user ${user?.username}. Valid until: ${new Date((newTokenSet.expires_at || 0) * 1000)}. Claims:`);
