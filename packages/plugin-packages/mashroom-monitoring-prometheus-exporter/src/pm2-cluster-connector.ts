@@ -16,10 +16,10 @@ export const startPM2Connector = (pluginContext: MashroomPluginContext) => {
         logger.info('Starting PM2 cluster connector');
         const listener = (msg: any) => {
             if (msg.from !== PM2_WORKER_ID && msg.topic === 'getMetrics') {
-                pm2.connect((error) => {
-                    if (!error) {
-                        registry.getMetricsAsJSON()
-                            .then((data) => {
+                registry.getMetricsAsJSON()
+                    .then((data) => {
+                        pm2.connect((error) => {
+                            if (!error) {
                                 pm2.sendDataToProcessId(
                                     msg.from,
                                     {
@@ -31,16 +31,17 @@ export const startPM2Connector = (pluginContext: MashroomPluginContext) => {
                                         if (error) {
                                             logger.error('Failed to send metrics via PM2 messaging', error);
                                         }
+                                        pm2.disconnect();
                                     },
                                 );
-                            })
-                            .catch((error) => {
-                                logger.error('Unable to get metrics in JSON', error);
-                            });
-                    } else {
-                        logger.error('Connecting to PM2 failed', error);
-                    }
-                });
+                            } else {
+                                logger.error('Connecting to PM2 failed', error);
+                            }
+                        });
+                    })
+                    .catch((error) => {
+                        logger.error('Unable to get metrics in JSON', error);
+                    });
             }
         };
         process.on('message', listener);

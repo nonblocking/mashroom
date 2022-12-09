@@ -34,25 +34,39 @@ metricsServer.listen(metricsServerPort, '0.0.0.0', () => {
 
 setInterval(() => {
     pm2.connect(() => {
-        pm2.describe('mashroom', (err, processInfo) => {
-            processInfo.forEach((processData) => {
-                console.debug(`Asking process ${processData.pm_id} for metrics`);
-                pm2.sendDataToProcessId(
-                    processData.pm_id,
-                    {
-                        data: null,
-                        topic: 'getMetrics',
-                        from: process.env.pm_id,
-                    },
-                    (err, res) => {},
-                );
-            });
+        pm2.describe('mashroom', (describeError, processInfo) => {
+            if (!describeError) {
+                Promise.all(processInfo.map((processData) => {
+                    console.debug(`Asking process ${processData.pm_id} for metrics`);
+                    return new Promise((resolve) => {
+                        pm2.sendDataToProcessId(
+                            processData.pm_id,
+                            {
+                                data: null,
+                                topic: 'getMetrics',
+                                from: process.env.pm_id,
+                            },
+                            (err, res) => {
+                                if (err) {
+                                    console.error('Error sending data via PM2 intercom', err);
+                                }
+                                resolve();
+                            },
+                        );
+                    });
+                })).finally(() => {
+                    pm2.disconnect();
+                });
+            } else {
+                pm2.disconnect();
+            }
         });
     });
 }, 10000);
 
 process.on('message', (msg) => {
     if (msg.from !== process.env.pm_id && msg.topic === 'returnMetrics') {
+        console.debug(`Received metrics from process ${msg.from}`);
         metrics[msg.from] = msg.data;
     }
 });
