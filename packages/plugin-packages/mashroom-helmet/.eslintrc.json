@@ -21,6 +21,7 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "prefer-destructuring": ["warn", { "array": true, "object": true }],
+        "import/no-duplicates": "error",
         "import/order": ["error", {"groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"]}],
         "import/namespace": "off",
         "@typescript-eslint/consistent-type-imports": "error",

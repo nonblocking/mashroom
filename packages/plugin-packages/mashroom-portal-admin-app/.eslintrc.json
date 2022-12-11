@@ -31,6 +31,7 @@
         "no-unused-vars": "warn",
         "react/display-name": "off",
         "import/order": ["error", {"groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"]}],
+        "import/no-duplicates": "error",
         "import/namespace": "off",
         "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/ban-ts-comment": "warn",
