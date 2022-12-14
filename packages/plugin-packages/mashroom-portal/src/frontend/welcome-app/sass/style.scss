@@ -1,4 +1,22 @@
 
+@keyframes translateFromLeft {
+    from {
+        transform: translate(-20px, -20px);
+    }
+    to {
+        transform: translate(0);
+    }
+}
+
+@keyframes translateFromRight {
+    from {
+        transform: translate(20px, 20px);
+    }
+    to {
+        transform: translate(0);
+    }
+}
+
 .mashroom-welcome-portal-app {
     padding: 10px;
 
@@ -10,10 +28,20 @@
         .logo {
             margin-left: 20px;
             margin-right: 5px;
+            overflow: visible;
 
             svg {
                 width: 80px;
                 height: 61px;
+                overflow: visible;
+
+                .w1 {
+                    animation: translateFromLeft 1s ease-in;
+                }
+
+                .w3 {
+                    animation: translateFromRight 1s ease-in;
+                }
             }
         }
 
