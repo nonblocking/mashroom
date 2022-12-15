@@ -26,6 +26,8 @@ type Props = {
 
 export default class MessageBusSendForm extends PureComponent<Props> {
 
+    sbAutoTest = Number(new URLSearchParams(window.location.search).get('sbAutoTest'));
+
     getInitialValues(): FormData {
         return {
             topic: '',
@@ -54,7 +56,11 @@ export default class MessageBusSendForm extends PureComponent<Props> {
     onSubmit(values: FormData, context: FormContext): void {
         const { messageBus, addMessagePublishedBySandbox } = this.props;
         const { topic, message } = values;
-        const data = JSON.parse(message);
+
+        const inputFieldValue : string = (document.querySelector('#mashroom-sandbox-publish-message-message') as HTMLInputElement)?.value;
+
+        const data = JSON.parse(this.sbAutoTest === 1 ? inputFieldValue : message);
+        
         messageBus.publish(topic, data);
         addMessagePublishedBySandbox({
             topic,
@@ -81,7 +87,8 @@ export default class MessageBusSendForm extends PureComponent<Props> {
                         <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
                     </div>
                     <div className='mashroom-sandbox-app-form-row'>
-                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} />
+                        { this.sbAutoTest === 0 && <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} /> }
+                        { this.sbAutoTest === 1 && <input type="text" name="message" id='mashroom-sandbox-publish-message-message' /> }
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
                         <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage'/>
