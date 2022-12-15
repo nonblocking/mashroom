@@ -32,7 +32,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     constructor(private _config: MashroomMonitoringMetricsCollectorConfig, loggerFactory: MashroomLoggerFactory) {
         this._metrics = {};
-        this._logger = loggerFactory('mashroom.montoring.collector');
+        this._logger = loggerFactory('mashroom.monitoring.collector');
     }
 
     counter(name: string, help: string, aggregationHint: AggregationHint = 'sum'): Counter {
