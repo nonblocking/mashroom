@@ -6,6 +6,7 @@ import {promisify} from 'util';
 import chokidar from 'chokidar';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {getExternalPluginDefinitionFilePath} from '../../utils/plugin_utils';
+import type {FSWatcher} from 'chokidar';
 import type {MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder} from '../../../type-definitions';
 import type {MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName} from '../../../type-definitions/internal';
 
@@ -34,9 +35,9 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     private _pluginPackageFolders: Array<PluginPackageFolder>;
     private _foldersToWatch: Array<string>;
     private _pluginPackagePaths: Array<MashroomPluginPackagePath>;
-    private _watcher: any;
+    private _watcher: FSWatcher | undefined;
     private _deferredUpdatesTimestamps: DeferredUpdatesTimestamps;
-    private _deferredUpdatesTimer: any;
+    private _deferredUpdatesTimer: NodeJS.Timer | undefined;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.scanner');
@@ -92,12 +93,12 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         if (this._foldersToWatch.length > 0) {
             this._logger.info('Stopping plugin package scanner');
             if (this._watcher) {
-                this._watcher.close();
-                this._watcher = null;
+                await this._watcher.close();
+                this._watcher = undefined;
             }
             if (this._deferredUpdatesTimer) {
                 clearInterval(this._deferredUpdatesTimer);
-                this._deferredUpdatesTimer = null;
+                this._deferredUpdatesTimer = undefined;
             }
         }
     }
@@ -173,7 +174,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         }
     }
 
-    private _processWatchEvent(event: string, changePath: string) {
+    private _processWatchEvent(event: string, changePath: unknown) {
         if (typeof(changePath) !== 'string') {
             return;
         }
