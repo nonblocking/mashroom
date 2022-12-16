@@ -23,6 +23,7 @@ export const getQueryParams = (portalStateService: MashroomPortalStateService): 
         lang: portalStateService.getStateProperty('sbLang'),
         permissions: objParam('sbPermissions'),
         appConfig: objParam('sbAppConfig'),
+        autoTest: objParam('sbAutoTest'),
     };
 };
 

@@ -15,7 +15,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
         const res: any = {
-            redirect: (url: string) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = decodeURIComponent(url)
         };
 
         const userStorePath = path.resolve(__dirname, './test_users.json');
@@ -62,7 +62,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
         const res: any = {
-            redirect: (url: string) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = decodeURIComponent(url)
         };
 
         const simpleSecurityProvider = new MashroomSimpleSecurityProvider('/tmp', '/login', '', 1800, loggerFactory);

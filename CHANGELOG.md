@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Sandbox App: Introduce text input that displays if sbAutoTest url param exists. Fixes e2e tests for the MessageBus sending message data.
+ * LDAP and Simple security: Fixed encoding to keep url parameters.
  * Core: Fixed shutdown of fs watcher in development mode (hung sometimes)
  * Metrics Collector: Reduced the number generated labels for *mashroom_http_request_* metrics.
    This reduces the Prometheus load, because every label generates a new time series. Fixes #105.

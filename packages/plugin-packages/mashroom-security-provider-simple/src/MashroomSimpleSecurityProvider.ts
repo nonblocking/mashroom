@@ -50,7 +50,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
             };
         }
 
-        const encodedRedirectUrl = encodeURIComponent(request.originalUrl);
+        const encodedRedirectUrl = encodeURIComponent(encodeURIComponent(request.originalUrl));
         const authenticationHintsQuery = querystring.stringify(authenticationHints);
         response.redirect(`${this._loginPage}?redirectUrl=${encodedRedirectUrl}${authenticationHintsQuery ? `&${authenticationHintsQuery}` : ''}`);
         return {
