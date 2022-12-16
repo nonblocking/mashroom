@@ -12,6 +12,7 @@ import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 
+import { getQueryParams } from '../utils';
 import type {ReactNode} from 'react';
 import type {
     MashroomPortalAppService,
@@ -31,6 +32,7 @@ export default class SandboxApp extends PureComponent<Props> {
 
     hostElementId: string;
     messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest;
+    sbAutoTest: boolean;
 
     constructor(props: Props) {
         super(props);
@@ -45,6 +47,7 @@ export default class SandboxApp extends PureComponent<Props> {
         this.messageBusPortalAppUnderTest.onTopicsChanged((topics) => {
             store.dispatch(setTopicsSubscribedByApp(topics));
         });
+        this.sbAutoTest = !!getQueryParams(props.portalStateService).autoTest;
     }
 
     render(): ReactNode {
@@ -62,6 +65,7 @@ export default class SandboxApp extends PureComponent<Props> {
                         <MessageBusSendFormContainer 
                             messageBus={messageBus}
                             portalStateService={portalStateService}
+                            sbAutoTest={this.sbAutoTest}
                         />
                         <MessageBusHistoryContainer />
                         <PortalAppContainer

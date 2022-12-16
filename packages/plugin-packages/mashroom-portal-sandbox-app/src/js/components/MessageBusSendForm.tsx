@@ -4,10 +4,10 @@ import {
     Form,
     SelectField,
     SourceCodeEditorField,
-    Button
+    Button,
+    TextareaField
 } from '@mashroom/mashroom-portal-ui-commons';
 
-import { getQueryParams } from '../utils';
 import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus, MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
 import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
@@ -24,11 +24,10 @@ type Props = {
     activePortalApp: ActivePortalApp | undefined | null;
     topicsSubscribedByApp: Array<string>;
     addMessagePublishedBySandbox: (messageBus: MessageBusMessage) => void;
+    sbAutoTest: boolean;
 }
 
 export default class MessageBusSendForm extends PureComponent<Props> {
-
-    sbAutoTest = getQueryParams(this.props.portalStateService).autoTest;
 
     getInitialValues(): FormData {
         return {
@@ -59,9 +58,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         const { messageBus, addMessagePublishedBySandbox } = this.props;
         const { topic, message } = values;
 
-        const inputFieldValue : string = (document.querySelector('#mashroom-sandbox-publish-message-message') as HTMLInputElement)?.value;
-
-        const data = JSON.parse(this.sbAutoTest ? inputFieldValue : message);
+        const data = JSON.parse(message);
         
         messageBus.publish(topic, data);
         addMessagePublishedBySandbox({
@@ -89,7 +86,9 @@ export default class MessageBusSendForm extends PureComponent<Props> {
                         <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
                     </div>
                     <div className='mashroom-sandbox-app-form-row'>
-                        { !this.sbAutoTest ? (<SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} />) : (<input type="text" name="message" id='mashroom-sandbox-publish-message-message' />) }
+                        { !this.props.sbAutoTest ?
+                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} /> : 
+                        <TextareaField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' /> }
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
                         <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage'/>

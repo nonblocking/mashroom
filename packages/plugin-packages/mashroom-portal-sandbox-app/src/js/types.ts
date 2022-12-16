@@ -66,5 +66,5 @@ export type PortalAppQueryParams = {
     lang: string | undefined | null;
     permissions: any | undefined | null;
     appConfig: any | undefined | null;
-    autoTest: string | undefined | null;
+    autoTest: boolean;
 }
