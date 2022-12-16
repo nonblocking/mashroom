@@ -59,7 +59,10 @@ export default class SandboxApp extends PureComponent<Props> {
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
                     <div className='mashroom-sandbox-app'>
                         <PortalAppHostContainer hostElementId={this.hostElementId} />
-                        <MessageBusSendFormContainer messageBus={messageBus} />
+                        <MessageBusSendFormContainer 
+                            messageBus={messageBus}
+                            portalStateService={portalStateService}
+                        />
                         <MessageBusHistoryContainer />
                         <PortalAppContainer
                             hostElementId={this.hostElementId}

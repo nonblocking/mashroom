@@ -12,7 +12,7 @@ describe('MashroomLdapSecurityProvider', () => {
             originalUrl: '/foo/bar'
         };
         const res: any = {
-            redirect: (url: string) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = decodeURIComponent(url)
         };
 
         const ldapClient: any = {};
@@ -53,7 +53,7 @@ describe('MashroomLdapSecurityProvider', () => {
             originalUrl: '/foo/bar'
         };
         const res: any = {
-            redirect: (url: string) => redirectUrl = url
+            redirect: (url: string) => redirectUrl = decodeURIComponent(url)
         };
 
         const ldapClient: any = {};
