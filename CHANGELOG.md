@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.2.2 (December 17, 2022)
+
  * LDAP Security Provider and Simple Security Provider: Fixed the problem that some URL query parameters got lost after login.
    E.g. an URL like http://localhost:5050/portal/web/test1/sub1?a=1&b=2&c=3 was reduced to http://localhost:5050/portal/web/test1/sub1?a=1 after login.
  * Sandbox App: Introduced a query flag *sbAutoTest* that replaces all code inputs by simple text areas,
