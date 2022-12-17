@@ -3,16 +3,18 @@
 
 ## [unreleased]
 
- * Sandbox App: Introduce text input that displays if sbAutoTest url param exists. Fixes e2e tests for the MessageBus sending message data.
- * LDAP and Simple security: Fixed encoding to keep url parameters.
+ * LDAP Security Provider and Simple Security Provider: Fixed the problem that some URL query parameters got lost after login.
+   E.g. an URL like http://localhost:5050/portal/web/test1/sub1?a=1&b=2&c=3 was reduced to http://localhost:5050/portal/web/test1/sub1?a=1 after login.
+ * Sandbox App: Introduced a query flag *sbAutoTest* that replaces all code inputs by simple text areas,
+   which makes it possible to fill them with automated test tools
  * Core: Fixed shutdown of fs watcher in development mode (hung sometimes)
  * Metrics Collector: Reduced the number generated labels for *mashroom_http_request_* metrics.
-   This reduces the Prometheus load, because every label generates a new time series. Fixes #105.
+   This reduces the Prometheus load, because every label generates a new time series
  * Prometheus Exporter: Fixed a memory leak when the metrics were obtained via PM2 intercom
  * OpenID Connect Security Provider: Fixed the problem that authentication attempts could fail if the IDP redirected back
    very quickly, but the session was not persisted in the store yet
  * Portal: Added the attribute *data-mr-app-name* to the default App wrapper to simplify end-2-end testing
- * Portal: The SSR route of Remote Apps will receive now also the path and the query parameters of the original request (fixes #102).
+ * Portal: The SSR route of Remote Apps will receive now also the path and the query parameters of the original request
    The body of the POST request looks like this now:
    ```ts
    export type MashroomPortalAppSSRRemoteRequest = {
