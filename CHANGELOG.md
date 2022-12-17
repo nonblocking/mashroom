@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Core: Properly exit after HTTP server shutdown
 
 ## 2.2.2 (December 17, 2022)
 

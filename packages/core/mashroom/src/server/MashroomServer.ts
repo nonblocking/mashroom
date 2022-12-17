@@ -56,10 +56,12 @@ Starting
         this._errorHandler.uninstall();
         await this._scanner.stop();
 
-        return Promise.all([
+        await Promise.all([
             this._stopHttpServer(),
             this._stopHttpsServer(),
         ]).then(() => { return; });
+
+        process.exit(0);
     }
 
     private _addServerRoutes() {
