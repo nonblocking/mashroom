@@ -1389,3 +1389,8 @@ After that you can start to add additional pages.
 [mashroom-portal-demo-load-dynamically-app](../../mashroom-portal-demo-load-dynamically-app/README.md) [inc]
 
 [mashroom-portal-demo-composite-app](../../mashroom-portal-demo-composite-app/README.md) [inc]
+
+## 3rd Party Plugins
+
+ * [Mashroom GraphQL Plugin Loader](https://github.com/mheimschild/mashroom-graphql-plugin)
+ * [Mashroom Portal Zipkin Page Enhancement](https://github.com/mheimschild/mashroom-zipkin-page-enhancement)
