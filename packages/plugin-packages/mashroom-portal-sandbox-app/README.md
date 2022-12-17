@@ -14,6 +14,7 @@ It can also be used for end-2-end testing with tools such as Selenium.
 
 The app supports the following query parameters:
 
+ * *sbAutoTest*: This is an automated tests ann all JSON inputs should be replaced by simple textareas
  * *sbPreselectAppName*: The name of the app that should be preselected (without starting it)
  * *sbAppName*: The name of the app that should be started in the sandbox.
    If this parameter is given the app will be started automatically, otherwise all other query parameters are ignored.

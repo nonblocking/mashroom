@@ -4,7 +4,7 @@ import {FormattedMessage} from 'react-intl';
 import PortalAppConfigContainer from'../containers/PortalAppConfigContainer';
 import PortalAppSelectionContainer from'../containers/PortalAppSelectionContainer';
 import loadPortalApp from '../load_portal_app';
-import {getQueryParams, mergeAppConfig} from '../utils';
+import {mergeAppConfig} from '../utils';
 
 import type {PortalAppQueryParams,ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
 import type {ReactNode} from 'react';
@@ -12,13 +12,12 @@ import type {
     MashroomAvailablePortalApp,
     MashroomPortalAppService,
     MashroomPortalMessageBus,
-    MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
     hostElementId: string;
+    queryParams: PortalAppQueryParams;
     portalAppService: MashroomPortalAppService;
-    portalStateService: MashroomPortalStateService;
     messageBus: MashroomPortalMessageBus;
     messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest;
     activePortalApp: ActivePortalApp | undefined | null;
@@ -32,11 +31,10 @@ type Props = {
 export default class PortalApp extends PureComponent<Props> {
 
     componentDidMount(): void {
-        const { portalAppService, setAvailablePortalApps } = this.props;
+        const { queryParams, portalAppService, setAvailablePortalApps } = this.props;
         portalAppService.getAvailableApps().then(
             (apps) => {
                 setAvailablePortalApps((apps || []).sort((app1, app2) => app1.name.localeCompare(app2.name)));
-                const queryParams = this.getQueryParams();
                 if (queryParams.appName || queryParams.preselectAppName) {
                     // Auto select
                     this.selectionChanged(queryParams.appName|| queryParams.preselectAppName);
@@ -48,13 +46,8 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
-    getQueryParams(): PortalAppQueryParams {
-        const { portalStateService } = this.props;
-        return getQueryParams(portalStateService);
-    }
-
     selectionChanged(appName: string | undefined | null): void {
-        const { messageBus, portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
+        const { queryParams, messageBus, portalAppService, setSelectedPortalApp, setAppLoadingError } = this.props;
 
         setTimeout(() => {
             messageBus.publish('mashroom-portal-sandbox-app-selection-change', {
@@ -75,10 +68,9 @@ export default class PortalApp extends PureComponent<Props> {
                     setup
                 };
 
-                const queryParams = this.getQueryParams() as any;
                 if (queryParams.appName) {
                     // Auto load
-                    this.loadPortalApp(mergeAppConfig(selectedPortalApp, queryParams), queryParams.width);
+                    this.loadPortalApp(mergeAppConfig(selectedPortalApp, queryParams as any), queryParams.width);
                 } else {
                     setSelectedPortalApp(selectedPortalApp);
                 }
@@ -112,12 +104,12 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     renderNoActivePortalApp(): ReactNode {
-        const { preselectAppName } = this.getQueryParams();
+        const { queryParams } = this.props;
 
         return (
             <>
-                <PortalAppSelectionContainer preselectAppName={preselectAppName} onSelectionChanged={(appName) => this.selectionChanged(appName)} />
-                <PortalAppConfigContainer onConfigSubmit={(app, hostWidth) => this.loadPortalApp(app, hostWidth)} />
+                <PortalAppSelectionContainer preselectAppName={queryParams.preselectAppName} onSelectionChanged={(appName) => this.selectionChanged(appName)} />
+                <PortalAppConfigContainer sbAutoTest={queryParams.autoTest} onConfigSubmit={(app, hostWidth) => this.loadPortalApp(app, hostWidth)} />
             </>
         );
     }

@@ -4,7 +4,8 @@ import {
     Form,
     TextField,
     SourceCodeEditorField,
-    Button
+    Button,
+    TextareaField,
 } from '@mashroom/mashroom-portal-ui-commons';
 import {mergeAppConfig} from '../utils';
 
@@ -19,6 +20,7 @@ type FormData = {
 }
 
 type Props = {
+    sbAutoTest: boolean;
     hostWidth: string;
     selectedPortalApp: SelectedPortalApp | undefined | null;
     appLoadingError: boolean;
@@ -81,7 +83,7 @@ export default class PortalAppConfig extends PureComponent<Props> {
     }
 
     render(): ReactNode {
-        const { selectedPortalApp, appLoadingError } = this.props;
+        const { sbAutoTest, selectedPortalApp, appLoadingError } = this.props;
         if (!selectedPortalApp || appLoadingError) {
             return null;
         }
@@ -95,10 +97,12 @@ export default class PortalAppConfig extends PureComponent<Props> {
                     <TextField id='mashroom-sandbox-app-config-lang' name='lang' labelId='lang' maxLength={2} />
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions'  name='permissions' labelId='permissions' language='json' theme='light' height={120} />
+                    {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions'  name='permissions' labelId='permissions' language='json' theme='light' height={120} />}
+                    {sbAutoTest && <TextareaField id='mashroom-sandbox-app-config-permissions' name="permissions" labelId='permissions' />}
                 </div>
                 <div className='mashroom-sandbox-app-form-row'>
-                    <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config'  name='appConfig' labelId='appConfig' language='json' theme='light' height={120} />
+                    {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config'  name='appConfig' labelId='appConfig' language='json' theme='light' height={120} />}
+                    {sbAutoTest && <TextareaField id='mashroom-sandbox-app-config-app-config' name="appConfig" labelId='appConfig' />}
                 </div>
                 <div>
                     <Button id='mashroom-sandbox-app-load' type='submit' labelId='load'/>

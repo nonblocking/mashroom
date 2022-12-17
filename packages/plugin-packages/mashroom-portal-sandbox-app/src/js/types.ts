@@ -52,19 +52,19 @@ export type PortalAppHost = {
 }
 
 export type PortalAppParams = {
-    appName: string;
-    width: string | undefined | null;
-    lang: string | undefined | null;
-    permissions: any | undefined | null;
-    appConfig: any | undefined | null;
+    readonly appName: string;
+    readonly width: string | undefined | null;
+    readonly lang: string | undefined | null;
+    readonly permissions: any | undefined | null;
+    readonly appConfig: any | undefined | null;
 }
 
 export type PortalAppQueryParams = {
-    appName: string | undefined | null;
-    preselectAppName: string | undefined | null;
-    width: string | undefined | null;
-    lang: string | undefined | null;
-    permissions: any | undefined | null;
-    appConfig: any | undefined | null;
-    autoTest: boolean;
+    readonly appName: string | undefined | null;
+    readonly preselectAppName: string | undefined | null;
+    readonly width: string | undefined | null;
+    readonly lang: string | undefined | null;
+    readonly permissions: any | undefined | null;
+    readonly appConfig: any | undefined | null;
+    readonly autoTest: boolean;
 }

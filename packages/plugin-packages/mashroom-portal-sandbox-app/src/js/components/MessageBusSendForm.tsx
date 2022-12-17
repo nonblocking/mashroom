@@ -59,7 +59,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
         const { topic, message } = values;
 
         const data = JSON.parse(message);
-        
+
         messageBus.publish(topic, data);
         addMessagePublishedBySandbox({
             topic,
@@ -69,7 +69,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
     }
 
     render(): ReactNode {
-        const {activePortalApp, topicsSubscribedByApp} = this.props;
+        const {sbAutoTest, activePortalApp, topicsSubscribedByApp} = this.props;
         if (!activePortalApp) {
             return null;
         }
@@ -86,9 +86,8 @@ export default class MessageBusSendForm extends PureComponent<Props> {
                         <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
                     </div>
                     <div className='mashroom-sandbox-app-form-row'>
-                        { !this.props.sbAutoTest ?
-                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} /> : 
-                        <TextareaField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' /> }
+                        {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} />}
+                        {sbAutoTest && <TextareaField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' />}
                     </div>
                     <div className='mashroom-sandbox-app-form-button-row'>
                         <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage'/>

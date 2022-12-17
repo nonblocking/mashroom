@@ -19,7 +19,7 @@ import type {
     MashroomPortalMessageBus,
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
-import type { MessageBusPortalAppUnderTest } from '../types';
+import type { MessageBusPortalAppUnderTest, PortalAppQueryParams } from '../types';
 
 type Props = {
     lang: string,
@@ -32,7 +32,7 @@ export default class SandboxApp extends PureComponent<Props> {
 
     hostElementId: string;
     messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest;
-    sbAutoTest: boolean;
+    queryParams: PortalAppQueryParams;
 
     constructor(props: Props) {
         super(props);
@@ -47,7 +47,7 @@ export default class SandboxApp extends PureComponent<Props> {
         this.messageBusPortalAppUnderTest.onTopicsChanged((topics) => {
             store.dispatch(setTopicsSubscribedByApp(topics));
         });
-        this.sbAutoTest = !!getQueryParams(props.portalStateService).autoTest;
+        this.queryParams = getQueryParams(props.portalStateService);
     }
 
     render(): ReactNode {
@@ -62,18 +62,18 @@ export default class SandboxApp extends PureComponent<Props> {
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
                     <div className='mashroom-sandbox-app'>
                         <PortalAppHostContainer hostElementId={this.hostElementId} />
-                        <MessageBusSendFormContainer 
+                        <MessageBusSendFormContainer
                             messageBus={messageBus}
                             portalStateService={portalStateService}
-                            sbAutoTest={this.sbAutoTest}
+                            sbAutoTest={this.queryParams.autoTest}
                         />
                         <MessageBusHistoryContainer />
                         <PortalAppContainer
                             hostElementId={this.hostElementId}
+                            queryParams={this.queryParams}
                             messageBus={messageBus}
                             messageBusPortalAppUnderTest={this.messageBusPortalAppUnderTest}
                             portalAppService={portalAppService}
-                            portalStateService={portalStateService}
                         />
                     </div>
                 </IntlProvider>

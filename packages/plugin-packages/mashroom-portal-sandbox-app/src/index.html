@@ -95,6 +95,9 @@
                     },
                     stateService: {
                         getStateProperty: function(key) {
+                            if (key === 'sbAutoTest') {
+                                // return true;
+                            }
                             if (key === 'sbPreselectAppName') {
                                 //return 'Portal App 2';
                             }
