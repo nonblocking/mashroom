@@ -1,7 +1,7 @@
 
-import MashroomMonitoringMetricsCollectorService from '../src/services/MashroomMonitoringMetricsCollectorService';
+import MashroomMonitoringMetricsCollectorService from '../../src/services/MashroomMonitoringMetricsCollectorService';
 
-import type {MashroomMonitoringMetricsCollectorConfig} from '../type-definitions/internal';
+import type {MashroomMonitoringMetricsCollectorConfig} from '../../type-definitions/internal';
 
 describe('MashroomMonitoringMetricsCollectorService', () => {
 
