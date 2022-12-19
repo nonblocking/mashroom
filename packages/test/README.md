@@ -1,5 +1,5 @@
 
-# Mashroom Test Server
+# Mashroom Test Servers
 
  * Test Server 1: Dev Server without any external service dependencies
  * Test Server 2: Server to test cluster capabilities with PM2
