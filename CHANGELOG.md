@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.2.3 (December 19, 2022)
+
  * Metrics Collector: Replace values in route labels (/my-api/customers/123456 -> /my-api/customers/#val)
  * Core: Properly exit after HTTP server shutdown
 
