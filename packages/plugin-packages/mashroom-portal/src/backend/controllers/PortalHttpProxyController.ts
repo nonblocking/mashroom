@@ -22,7 +22,7 @@ export default class PortalHttpProxyController {
         const {defaultProxyConfig} = context.portalPluginConfig;
 
         try {
-            const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
+            const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy!.service;
             const user = getUser(req);
 
             const sitePath = getSitePath(req);

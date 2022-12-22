@@ -10,7 +10,7 @@ let interval: ReturnType<typeof setInterval> | undefined;
 export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
     interval = setInterval(async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = pluginContext.services.remotePortalAppEndpoint.service;
+        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = pluginContext.services.remotePortalAppEndpoint!.service;
         const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
 
         if (collectorService) {

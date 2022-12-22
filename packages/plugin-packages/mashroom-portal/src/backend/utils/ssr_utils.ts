@@ -192,7 +192,7 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
         return null;
     }
 
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
     const portalApp = portalService.getPortalApps().find(({name}) => name === pluginName);
     if (!portalApp || (!portalApp.ssrBootstrap && !portalApp.ssrInitialHtmlUri)) {
         return null;
@@ -222,7 +222,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
     }
 
     const includedAppStyles: Array<string> = [];
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
     const styleResources: Array<Array<string>> = await Promise.all(serverSideRenderedApps.map(async (pluginName) => {
         try {

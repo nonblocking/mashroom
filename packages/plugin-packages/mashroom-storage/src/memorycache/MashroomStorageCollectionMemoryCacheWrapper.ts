@@ -112,7 +112,7 @@ export default class MashroomStorageCollectionMemoryCacheWrapper<T extends Mashr
 
     private _getMemoryCacheService(): MashroomMemoryCacheService | undefined {
         if (this._pluginContextHolder.getPluginContext().services.memorycache) {
-            return this._pluginContextHolder.getPluginContext().services.memorycache.service;
+            return this._pluginContextHolder.getPluginContext().services.memorycache!.service;
         }
         if (lastNoCacheServiceWarning < Date.now() - WARN_NO_CACHE_SERVICE_PERIOD_MS) {
             this._logger.warn(`Caching for collection '${this._name}' enabled but MashroomMemoryCacheService not (yet) available!`);

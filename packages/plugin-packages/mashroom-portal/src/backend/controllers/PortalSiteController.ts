@@ -22,10 +22,10 @@ export default class PortalSiteController {
 
     async getSites(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             const fullSites = await portalService.getSites(100);
             const sites: Array<MashroomPortalSiteLinkLocalized> = [];
@@ -53,7 +53,7 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -80,7 +80,7 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -130,7 +130,7 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -170,7 +170,7 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -201,8 +201,8 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -235,8 +235,8 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -284,7 +284,7 @@ export default class PortalSiteController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             const siteId = req.params.siteId;
             const site: MashroomPortalSite | undefined | null = await portalService.getSite(siteId);

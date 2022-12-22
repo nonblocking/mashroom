@@ -129,7 +129,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
     }
 
     private _getStorageService(): MashroomStorageService {
-        return this._pluginContextHolder.getPluginContext().services.storage.service;
+        return this._pluginContextHolder.getPluginContext().services.storage!.service;
     }
 
     private _fixUrl(url: string): string {

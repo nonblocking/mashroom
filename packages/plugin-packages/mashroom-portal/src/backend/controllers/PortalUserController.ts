@@ -17,7 +17,7 @@ export default class PortalUserController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
             const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
             const expirationTime = await securityService.getAuthenticationExpiration(req);
@@ -44,7 +44,7 @@ export default class PortalUserController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+            const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
             const body = req.body;
             const newLanguage: NewLanguage = body;
@@ -69,7 +69,7 @@ export default class PortalUserController {
         logger.debug('Logout called');
 
         try {
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
             const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
             if (securityService.getUser(req)) {

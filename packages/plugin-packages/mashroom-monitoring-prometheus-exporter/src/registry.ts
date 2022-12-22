@@ -16,7 +16,7 @@ const existingAdapters: {
 export const startSyncRegistry = (pluginContext: MashroomPluginContext) => {
     const logger = pluginContext.loggerFactory('mashroom.monitoring.prometheus');
     interval = setInterval(() => {
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics!.service;
         const metrics = collectorService.getMetrics();
         Object.keys(metrics).forEach((metricName) => {
             try {

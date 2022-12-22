@@ -156,7 +156,7 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
     }
 
     private _getStorageService(): MashroomStorageService {
-        return this._pluginContextHolder.getPluginContext().services.storage.service;
+        return this._pluginContextHolder.getPluginContext().services.storage!.service;
     }
 
 }

@@ -13,7 +13,7 @@ const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (plugi
     const { remotePortalAppUrls } = pluginConfig;
     const {loggerFactory, services, serverConfig} = pluginContextHolder.getPluginContext();
 
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = services.remotePortalAppEndpoint.service;
+    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = services.remotePortalAppEndpoint!.service;
 
     await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, serverConfig.serverRootFolder, portalRemoteAppEndpointService, loggerFactory);
 

@@ -63,7 +63,7 @@ export const createPortalAppSetup = async (portalApp: MashroomPortalApp,
                                            cdnService: MashroomCDNService | undefined | null,
                                            pluginRegistry: MashroomPortalPluginRegistry,
                                            req: Request) => {
-    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
     const devMode = req.pluginContext.serverInfo.devMode;
 
     const encodedPortalAppName = encodeURIComponent(portalApp.name);
@@ -111,7 +111,7 @@ export const createPortalAppSetup = async (portalApp: MashroomPortalApp,
 };
 
 export const createPortalAppSetupForMissingPlugin = async (pluginName: string, instanceId: string | undefined, mashroomSecurityUser: MashroomSecurityUser | undefined | null, req: Request) => {
-    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
     const lang = i18nService.getLanguage(req);
     const user = toPortalAppUser(mashroomSecurityUser);

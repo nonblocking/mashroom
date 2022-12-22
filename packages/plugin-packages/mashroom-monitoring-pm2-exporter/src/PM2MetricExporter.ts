@@ -34,7 +34,7 @@ export default class PM2MetricExporter implements PM2MetricExporterType {
 
     private _exportMashroomMetrics(): void {
         const logger = this._contextHolder.getPluginContext().loggerFactory('mashroom.monitoring.pm2');
-        const collectorService: MashroomMonitoringMetricsCollectorService = this._contextHolder.getPluginContext().services.metrics.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = this._contextHolder.getPluginContext().services.metrics!.service;
 
         const mashroomMetrics = collectorService.getMetrics();
         Object.keys(mashroomMetrics).forEach((metricName) => {

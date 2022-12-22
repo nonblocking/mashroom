@@ -16,7 +16,7 @@ const formatDate = (date: Date | undefined): string => {
 };
 
 export const adminIndex = async (req: Request, res: Response) => {
-    const backgroundJobsService: MashroomBackgroundJobService = req.pluginContext.services.backgroundJobs.service;
+    const backgroundJobsService: MashroomBackgroundJobService = req.pluginContext.services.backgroundJobs!.service;
 
     const jobs: Array<JobModel> = backgroundJobsService.jobs.map(({name, lastInvocation, nextInvocation}) => ({
         name,

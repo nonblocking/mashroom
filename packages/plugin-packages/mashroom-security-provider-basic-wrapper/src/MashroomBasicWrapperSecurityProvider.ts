@@ -103,7 +103,7 @@ export default class MashroomBasicWrapperSecurityProvider implements MashroomSec
     }
 
     private _getTargetSecurityProvider(request: Request): MashroomSecurityProvider | null {
-        const securityService: MashroomSecurityService = request.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService = request.pluginContext.services.security!.service;
         const provider = securityService.getSecurityProvider(this._targetSecurityProvider);
         if (!provider) {
             const logger = request.pluginContext.loggerFactory('mashroom.security.provider.basic');

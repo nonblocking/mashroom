@@ -30,8 +30,8 @@ app.set('views', path.resolve(__dirname, '../views'));
 
 app.get('/', async (req: Request, res: Response) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-    const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
+    const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
     try {
         const lang = i18nService.getLanguage(req);
@@ -58,8 +58,8 @@ app.post('/', async (req: Request, res: Response) => {
     const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.login.webapp');
 
     try {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
         const lang = i18nService.getLanguage(req);
         const user = await securityService.getUser(req);
@@ -95,7 +95,7 @@ app.post('/', async (req: Request, res: Response) => {
 const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NService, lang: string, error?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
     const pathMapperService: MashroomVHostPathMapperService = req.pluginContext.services.vhostPathMapper?.service;
-    const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache.cacheControl;
+    const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache!.cacheControl;
     const vhostMappingInfo = pathMapperService?.getMappingInfo(req);
 
     const queryParams: Array<string> = [];

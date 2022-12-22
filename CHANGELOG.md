@@ -3,6 +3,22 @@
 
 ## [unreleased]
 
+ * Core: Fixed the type of pluginContext.service.<service_ns>: it can now be undefined because the plugin might not be loaded.
+   This can be a **BREAKING CHANGE**, and you have to following options to fix TypeScript errors:
+   ```ts
+    // If the services is added as "required" in the plugin definition
+    const requiredService: MashroomSecurityService = pluginContext.services.security!.service;
+    // Otherwise
+    const optionalService: MashroomSecurityService | unknown = pluginContext.services.security?.service;
+
+    // Alternatively extend MashroomServicePluginNamespaces in a type declaration file
+    declare module '@mashroom/mashroom/type-definitions' {
+        export interface MashroomServicePluginNamespaces {
+            security: { service: MashroomSecurityService; } | /* might not be loaded yet */ undefined;
+            // Orther service plugins
+        }
+    }
+   ```
 
 ## 2.2.3 (December 19, 2022)
 

@@ -10,7 +10,7 @@ export default class PortalRolesController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);

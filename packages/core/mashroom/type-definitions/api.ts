@@ -348,8 +348,12 @@ export type MashroomServerConfig = {
     [key: string]: any;
 };
 
-export type MashroomServices = {
-    readonly [key: string]: any | undefined | null;
+export interface MashroomServicePluginNamespaces {
+    readonly [key: string]: MashroomServicePluginServices | undefined;
+}
+
+export type MashroomServicePluginServices = {
+    readonly [key: string]: any;
 };
 
 export type MashroomCoreServices = {
@@ -470,8 +474,7 @@ export type MashroomPluginContext = {
     readonly loggerFactory: MashroomLoggerFactory;
     readonly services: {
         readonly core: MashroomCoreServices;
-        readonly [key: string]: MashroomServices;
-    };
+    } & MashroomServicePluginNamespaces;
 };
 
 export interface MashroomPluginContextHolder {
@@ -535,4 +538,4 @@ export type MashroomServicesPluginBootstrapFunction = (
     pluginName: string,
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
-) => Promise<MashroomServices>;
+) => Promise<MashroomServicePluginServices>;

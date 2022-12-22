@@ -10,7 +10,7 @@ export default class PortalLanguageController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
-            const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+            const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
             if (cacheControlService) {
                 cacheControlService.addCacheControlHeader('SHARED', req, res);
@@ -29,7 +29,7 @@ export default class PortalLanguageController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         try {
-            const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+            const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
             if (cacheControlService) {
                 cacheControlService.addCacheControlHeader('SHARED', req, res);

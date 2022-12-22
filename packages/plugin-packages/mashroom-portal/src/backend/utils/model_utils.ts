@@ -43,18 +43,18 @@ export const findPortalAppInstanceOnPage = (page: MashroomPortalPage, pluginName
 };
 
 export const findSiteByPath = async (req: Request, sitePath: string): Promise<MashroomPortalSite | undefined | null> => {
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
     return portalService.findSiteByPath(sitePath);
 };
 
 export const findPageRefByPageId = async (req: Request, site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | undefined | null> => {
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
     return portalService.findPageRefByPageId(site, pageId);
 };
 
 export const getPageData = async (sitePath: string, friendlyUrl: string | undefined | null, req: Request, logger: MashroomLogger):
     Promise<{ site?: MashroomPortalSite, pageRef?: MashroomPortalPageRef, page?: MashroomPortalPage }> => {
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
     const site = await portalService.findSiteByPath(sitePath);
     if (!site) {
@@ -84,12 +84,12 @@ export const getPageData = async (sitePath: string, friendlyUrl: string | undefi
 };
 
 export const getPage = async (req: Request, pageId: string): Promise<MashroomPortalPage | undefined | null> => {
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
     return await portalService.getPage(pageId);
 };
 
 export const getDefaultSite = async (req: Request, logger: MashroomLogger): Promise<MashroomPortalSite | undefined | null> => {
-    const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+    const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
     const defaultSite = await portalService.getSite(DEFAULT_SITE_ID);
     if (defaultSite) {

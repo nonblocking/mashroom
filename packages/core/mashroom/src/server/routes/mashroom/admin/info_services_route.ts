@@ -42,7 +42,7 @@ const serviceNames = (pluginContext: MashroomPluginContext) => {
     for (const namespace in pluginContext.services) {
         if (pluginContext.services.hasOwnProperty(namespace)) {
             for (const serviceName in pluginContext.services[namespace]) {
-                if (pluginContext.services[namespace].hasOwnProperty(serviceName)) {
+                if (pluginContext.services[namespace]?.hasOwnProperty(serviceName)) {
                     services.push({namespace, serviceName});
                 }
             }
@@ -64,8 +64,8 @@ const serviceNames = (pluginContext: MashroomPluginContext) => {
 
 const methods = (namespace: string, serviceName: string, pluginContext: MashroomPluginContext) => {
     const ms = [];
-    for (const methodName of Object.getOwnPropertyNames(Object.getPrototypeOf(pluginContext.services[namespace][serviceName]))) {
-        if (methodName !== 'constructor' && !methodName.startsWith('_') && typeof (pluginContext.services[namespace][serviceName][methodName] === 'function')) {
+    for (const methodName of Object.getOwnPropertyNames(Object.getPrototypeOf(pluginContext.services[namespace]?.[serviceName]))) {
+        if (methodName !== 'constructor' && !methodName.startsWith('_') && typeof (pluginContext.services[namespace]?.[serviceName][methodName] === 'function')) {
             ms.push(methodName);
         }
     }

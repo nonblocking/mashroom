@@ -1,7 +1,7 @@
 
 import {cloneAndFreezeObject} from '@mashroom/mashroom-utils/lib/readonly_utils';
 
-import type {MashroomServices} from '../../type-definitions';
+import type {MashroomServicePluginServices} from '../../type-definitions';
 import type {MashroomServiceRegistry as MashroomServiceRegistryType} from '../../type-definitions/internal';
 
 export default class MashroomServiceRegistry implements MashroomServiceRegistryType {
@@ -12,7 +12,7 @@ export default class MashroomServiceRegistry implements MashroomServiceRegistryT
         this._namespaces = {};
     }
 
-    registerServices(namespace: string, services: MashroomServices) {
+    registerServices(namespace: string, services: MashroomServicePluginServices) {
         this._namespaces[namespace] = services;
     }
 

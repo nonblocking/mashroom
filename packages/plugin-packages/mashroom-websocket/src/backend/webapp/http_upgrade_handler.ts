@@ -68,7 +68,7 @@ const getUser = async (message: IncomingMessageWithContext, logger: MashroomLogg
     const dummyResponse: any = new ServerResponse(req);
     await middlewareStackService.apply('Mashroom Session Middleware', req, dummyResponse);
 
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     return securityService.getUser(req);
 };
 

@@ -12,7 +12,7 @@ export default class AddUserHeadersHttpProxyInterceptor implements MashroomHttpP
     async interceptRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, existingQueryParams: Readonly<QueryParams>,
                             clientRequest: Request, clientResponse: Response): Promise<MashroomHttpProxyRequestInterceptorResult | undefined | null> {
         const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy.addUserHeader');
-        const securityService: MashroomSecurityService = clientRequest.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService = clientRequest.pluginContext.services.security!.service;
         const user = securityService.getUser(clientRequest);
         const addHeaders = this.addHeaders(targetUri, user, logger);
         if (!addHeaders) {
@@ -25,7 +25,7 @@ export default class AddUserHeadersHttpProxyInterceptor implements MashroomHttpP
 
     async interceptWsRequest(targetUri: string, existingHeaders: Readonly<HttpHeaders>, clientRequest: IncomingMessageWithContext): Promise<MashroomWsProxyRequestInterceptorResult | undefined | null> {
         const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy.addUserHeader');
-        const securityService: MashroomSecurityService = clientRequest.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService = clientRequest.pluginContext.services.security!.service;
         const user = securityService.getUser(clientRequest as any);
         const addHeaders = this.addHeaders(targetUri, user, logger);
         if (!addHeaders) {

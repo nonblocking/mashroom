@@ -40,7 +40,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {
-        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
+        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint!.service;
 
         const updatedEndpoint = await this.fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint);
 
@@ -90,7 +90,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
     async _processInBackground(): Promise<void> {
         this._logger.info('Start processing remote Portal App endpoints');
-        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint.service;
+        const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint!.service;
         const endpoints = await portalRemoteAppEndpointService.findAll();
 
         for (const remotePortalAppEndpoint of endpoints) {

@@ -22,7 +22,7 @@ export default class MashroomCSRFMiddleware implements MashroomCSRFMiddlewareTyp
             const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.csrf.middleware');
 
             try {
-                const csrfService: MashroomCSRFService = req.pluginContext.services.csrf.service;
+                const csrfService: MashroomCSRFService = req.pluginContext.services.csrf!.service;
 
                 let token = req.query && req.query[CSRF_QUERY_PARM_NAME] as string | undefined;
                 if (!token) {

@@ -5,7 +5,7 @@ import type {MashroomMonitoringMetricsCollectorService} from '../../type-definit
 
 export const addRequestMetric = (req: Request, res: Response, timeSec: number) => {
     const logger = req.pluginContext.loggerFactory('mashroom.monitoring.collector');
-    const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics.service;
+    const collectorService: MashroomMonitoringMetricsCollectorService = req.pluginContext.services.metrics!.service;
     const { originalUrl, method } = req;
     const { statusCode } = res;
 

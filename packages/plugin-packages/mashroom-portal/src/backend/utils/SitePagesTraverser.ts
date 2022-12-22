@@ -62,7 +62,7 @@ export default class SitePagesTraverser {
     }
 
     private async _internalFilterAndTranslate(pages: Array<MashroomPortalPageRef>, req: Request): Promise<Array<MashroomPortalPageRefLocalized> | undefined | null> {
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
         const result = [];
 

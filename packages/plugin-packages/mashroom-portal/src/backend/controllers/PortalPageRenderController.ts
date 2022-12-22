@@ -94,7 +94,7 @@ export default class PortalPageRenderController {
      */
     async getPortalPageContent(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
         const devMode = req.pluginContext.serverInfo.devMode;
@@ -270,8 +270,8 @@ export default class PortalPageRenderController {
                                          site: MashroomPortalSite, pageRef: MashroomPortalPageRef, page: MashroomPortalPage,
                                          theme: MashroomPortalTheme | undefined | null, layoutName: string | undefined | null,
                                          logger: MashroomLogger): Promise<MashroomPortalPageRenderModel> {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
         const csrfService: MashroomCSRFService | undefined = req.pluginContext.services.csrf?.service;
         const messagingService: MashroomMessagingService | undefined = req.pluginContext.services.messaging?.service;
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
@@ -293,7 +293,7 @@ export default class PortalPageRenderController {
         }
         const warnBeforeAuthenticationExpiresSec = context.portalPluginConfig.warnBeforeAuthenticationExpiresSec;
         const autoExtendAuthentication = context.portalPluginConfig.autoExtendAuthentication;
-        const messagingConnectPath = webSocketSupport && messagingService && messagingService.getWebSocketConnectPath(req);
+        const messagingConnectPath = (webSocketSupport && messagingService && messagingService.getWebSocketConnectPath(req)) || null;
         const privateUserTopic = user && messagingService && messagingService.getUserPrivateTopic(req);
         const userAgent = determineUserAgent(req);
 
@@ -442,7 +442,7 @@ export default class PortalPageRenderController {
     }
 
     private _localizePageRef(req: Request, pageRef: MashroomPortalPageRef): MashroomPortalPageRefLocalized {
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
         return {
             pageId: pageRef.pageId,
@@ -454,7 +454,7 @@ export default class PortalPageRenderController {
     }
 
     private async _localizeSiteAndFilterPages(req: Request, site: MashroomPortalSite): Promise<MashroomPortalSiteLocalized> {
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
 
         const siteTraverser = new SitePagesTraverser(site.pages);
         const pages = await siteTraverser.filterAndTranslate(req) || [];
@@ -656,7 +656,7 @@ export default class PortalPageRenderController {
     }
 
     private async _getPortalAppInstance(page: MashroomPortalPage, portalApp: MashroomPortalApp, instanceId: string, req: Request) {
-        const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+        const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
         return portalService.getPortalAppInstance(portalApp.name, instanceId);
     }
 }

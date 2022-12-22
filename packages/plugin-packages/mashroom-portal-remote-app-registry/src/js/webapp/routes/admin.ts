@@ -22,7 +22,7 @@ const getStatusWeight = (e: RemotePortalAppEndpoint): number => {
 
 const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
+    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint!.service;
     const remoteAppEndpoints = await portalRemoteAppEndpointService.findAll();
 
     const endpoints = [...remoteAppEndpoints]
@@ -73,7 +73,7 @@ export const adminIndex = async (req: Request, res: Response) => {
 
 export const adminUpdate = async (req: Request, res: Response) => {
     const logger = req.pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint.service;
+    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint!.service;
 
     const action = req.body._action || 'add';
     const url = req.body._url;

@@ -13,13 +13,12 @@ import type {
     MashroomPluginType,
     MashroomPluginLoader,
     MashroomPluginLoaderMap,
-    MashroomServices,
     MashroomServerInfo,
     MashroomLoggerFactory,
     MashroomPluginContextHolder,
     MashroomCoreServices,
     MashroomHttpUpgradeService,
-    MashroomHealthProbe,
+    MashroomServicePluginServices,
 } from './api';
 
 export interface GlobalNodeErrorHandler {
@@ -177,11 +176,11 @@ export interface MashroomServer {
 
 export type MashroomServiceNamespaces = {
     readonly core: MashroomCoreServices;
-    readonly [namespace: string]: MashroomServices
+    readonly [namespace: string]: MashroomServicePluginServices
 }
 
 export interface MashroomServiceRegistry {
-    registerServices(namespace: string, services: MashroomServices): void;
+    registerServices(namespace: string, services: MashroomServicePluginServices): void;
     unregisterServices(namespace: string): void;
     getServiceNamespaces(): Readonly<MashroomServiceNamespaces>;
 }

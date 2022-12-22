@@ -70,7 +70,7 @@ export default class MashroomMessagingService implements MashroomMessagingServic
             return null;
         }
 
-        const webSocketService: MashroomWebSocketService = req.pluginContext.services.websocket.service;
+        const webSocketService: MashroomWebSocketService = req.pluginContext.services.websocket!.service;
         if (!webSocketService) {
             return null;
         }
@@ -79,7 +79,7 @@ export default class MashroomMessagingService implements MashroomMessagingServic
     }
 
     private _getUser(req: Request): MashroomSecurityUser | undefined | null {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
         return securityService.getUser(req);
     }
 

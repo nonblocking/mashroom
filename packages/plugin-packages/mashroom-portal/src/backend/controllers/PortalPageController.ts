@@ -28,7 +28,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -55,7 +55,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -91,7 +91,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -130,7 +130,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -161,8 +161,8 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -194,8 +194,8 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -242,7 +242,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             const pageId = req.params.pageId;
             const page = await portalService.getPage(pageId);
@@ -277,8 +277,8 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -352,7 +352,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -408,7 +408,7 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -453,8 +453,8 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);
@@ -500,8 +500,8 @@ export default class PortalPageController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
-            const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
-            const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+            const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
             if (!isAdmin(req)) {
                 res.sendStatus(403);

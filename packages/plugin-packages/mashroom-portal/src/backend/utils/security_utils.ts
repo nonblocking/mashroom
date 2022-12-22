@@ -14,22 +14,22 @@ import type {
 import type {Writable} from '../../../type-definitions/internal';
 
 export const getUser = (req: Request): MashroomSecurityUser | null | undefined => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     return securityService.getUser(req);
 };
 
 export const isAdmin = (req: Request): boolean => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     return securityService.isAdmin(req);
 };
 
 export const isSignedIn = (req: Request): boolean => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     return securityService.isAuthenticated(req);
 };
 
 export const forceAuthentication = async (path: string, req: Request, res: Response, logger: MashroomLogger): Promise<void> => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     const result = await securityService.authenticate(req, res);
     switch (result.status) {
         case 'authenticated': {
@@ -57,7 +57,7 @@ export const isSitePathPermitted = async (req: Request, sitePath: string): Promi
 };
 
 export const isSitePermitted = async (req: Request, siteId: string): Promise<boolean> => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
     logger.debug(`Checking permission for site ${siteId}`);
@@ -65,7 +65,7 @@ export const isSitePermitted = async (req: Request, siteId: string): Promise<boo
 };
 
 export const isPagePermitted = async (req: Request, pageId: string): Promise<boolean> => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
     logger.debug(`Checking permission for page ${pageId}`);
@@ -78,7 +78,7 @@ export const getPortalAppResourceKey = (pluginName: string, instanceId: string |
 
 export const isAppPermitted = async (req: Request, pluginName: string, portalAppInstanceId: string | undefined | null,
                                      existingPortalApp: MashroomPortalApp | undefined | null): Promise<boolean> => {
-    const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+    const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
     const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
     logger.debug(`Checking permission for app ${pluginName} and instance: ${pluginName || 'global'}`);

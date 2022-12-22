@@ -304,7 +304,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     private async _getResourcePermissionsCollection(request: Request): Promise<MashroomStorageCollection<MashroomSecurityProtectedResource>> {
-        const storageService = request.pluginContext.services.storage.service;
+        const storageService = request.pluginContext.services.storage!.service;
         return storageService.getCollection(RESOURCE_PERMISSIONS_COLLECTION_NAME);
     }
 
@@ -313,7 +313,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
     }
 
     private async _getRoleDefinitionsCollection(request: Request): Promise<MashroomStorageCollection<MashroomSecurityRoleDefinition>> {
-        const storageService = request.pluginContext.services.storage.service;
+        const storageService = request.pluginContext.services.storage!.service;
         return storageService.getCollection(ROLE_DEFINITIONS_COLLECTION_NAME);
     }
 

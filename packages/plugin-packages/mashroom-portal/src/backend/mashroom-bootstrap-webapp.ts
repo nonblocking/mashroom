@@ -11,7 +11,7 @@ import type {MashroomWebAppPluginBootstrapFunction, MashroomHttpUpgradeHandler} 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();
     const httpUpgradeService = pluginContext.services.core.httpUpgradeService;
-    const storageService = pluginContext.services.storage.service;
+    const storageService = pluginContext.services.storage!.service;
     const loggerFactory = pluginContext.loggerFactory;
     const logger = loggerFactory('mashroom.portal');
 

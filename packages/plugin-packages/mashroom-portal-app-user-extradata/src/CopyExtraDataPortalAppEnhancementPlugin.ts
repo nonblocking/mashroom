@@ -12,7 +12,7 @@ export default class CopyExtraDataPortalAppEnhancementPlugin implements Mashroom
     async enhancePortalAppSetup(portalAppSetup: MashroomPortalAppSetup,
                           portalApp: MashroomPortalApp,
                           req: Request): Promise<MashroomPortalAppSetup> {
-        const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
         const user = securityService.getUser(req);
         if (!user) {

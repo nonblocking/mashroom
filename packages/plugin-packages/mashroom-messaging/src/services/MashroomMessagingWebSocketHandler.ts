@@ -249,7 +249,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
     }
 
     private _onWebSocketProviderLoad(): void {
-        this._webSocketService = this._pluginContextHolder.getPluginContext().services.websocket.service;
+        this._webSocketService = this._pluginContextHolder.getPluginContext().services.websocket!.service;
         if (this._started) {
             this._addWebSocketListeners();
         }

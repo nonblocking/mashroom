@@ -27,7 +27,7 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
             let allowed = false;
 
             try {
-                const securityService: MashroomSecurityService = req.pluginContext.services.security.service;
+                const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
 
                 await this._checkAuthentication(securityService, req);
 

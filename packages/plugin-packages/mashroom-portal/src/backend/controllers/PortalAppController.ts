@@ -159,7 +159,7 @@ export default class PortalAppController {
     async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
-        const i18nService: MashroomI18NService = req.pluginContext.services.i18n.service;
+        const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
         const mashroomSecurityUser = await getUser(req);
         const admin = isAdmin(req);
         const {q, updatedSince} = req.query;
@@ -210,7 +210,7 @@ export default class PortalAppController {
     }
 
     private async _getPortalAppInstance(page: MashroomPortalPage, portalApp: MashroomPortalApp, instanceId: string, req: Request) {
-        const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+        const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
         const instData = findPortalAppInstanceOnPage(page, portalApp.name, instanceId);
 
@@ -222,7 +222,7 @@ export default class PortalAppController {
     }
 
     private async _getDynamicallyLoadedPortalAppInstance(portalApp: MashroomPortalApp, req: Request) {
-        const portalService: MashroomPortalService = req.pluginContext.services.portal.service;
+        const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
         // Maybe there was created a instance in the storage
         const appInstance = await portalService.getPortalAppInstance(portalApp.name, null);

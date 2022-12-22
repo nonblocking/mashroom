@@ -10,7 +10,7 @@ export const startExportPluginMetrics = (pluginContextHolder: MashroomPluginCont
     interval = setInterval(() => {
         const pluginContext = pluginContextHolder.getPluginContext();
         const pluginService: MashroomPluginService = pluginContext.services.core.pluginService;
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics!.service;
 
         const pluginsTotal = pluginService.getPlugins().length;
         const pluginsLoaded = pluginService.getPlugins().filter((p) => p.status === 'loaded').length;

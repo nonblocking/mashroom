@@ -37,13 +37,13 @@ export default class MashroomBackgroundJobPluginLoader implements MashroomPlugin
         this._registry.register(plugin.name, cronSchedule, jobCallback);
 
         // Start job
-        const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs.service;
+        const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs!.service;
         backgroundJobsService.scheduleJob(plugin.name, cronSchedule, jobCallback);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void>  {
         // Stop job
-        const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs.service;
+        const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs!.service;
         backgroundJobsService.unscheduleJob(plugin.name);
 
         this._logger.info(`Unregistering background job plugin: ${plugin.name}`);

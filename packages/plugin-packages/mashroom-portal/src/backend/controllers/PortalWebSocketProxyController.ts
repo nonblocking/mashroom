@@ -24,7 +24,7 @@ export default class PortalRestProxyController {
     async forward(message: IncomingMessageWithContext, socket: Socket, head: Buffer): Promise<void> {
         const req = message as Request;
         const logger = message.pluginContext.loggerFactory('mashroom.portal');
-        const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy.service;
+        const httpProxyService: MashroomHttpProxyService = req.pluginContext.services.proxy!.service;
         const {defaultProxyConfig} = context.portalPluginConfig;
 
         const sendStatus = (status: number) => {
