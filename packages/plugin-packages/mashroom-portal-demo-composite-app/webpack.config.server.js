@@ -1,6 +1,7 @@
 
 const {merge} = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports ={
     entry: __dirname + '/src/js/indexAppSSR',
@@ -26,6 +27,9 @@ module.exports ={
     },
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
+    },
+    optimization: {
+        minimize: false,
     },
     externals: [nodeExternals()],
     target: 'node',

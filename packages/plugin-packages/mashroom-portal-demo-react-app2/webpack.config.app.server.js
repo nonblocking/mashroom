@@ -14,5 +14,8 @@ module.exports = merge(common,  {
     },
     externals: [nodeExternals()],
     target: 'node',
-    mode: 'none'
+    mode: 'none',
+    optimization: {
+        minimize: false,
+    }
 });

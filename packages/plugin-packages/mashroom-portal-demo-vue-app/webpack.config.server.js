@@ -16,5 +16,8 @@ module.exports = merge(common,  {
         allowlist: [/\.vue/]
     })],
     target: 'node',
-    mode: 'none'
+    mode: 'none',
+    optimization: {
+        minimize: false,
+    },
 });

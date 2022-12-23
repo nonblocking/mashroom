@@ -47,7 +47,6 @@ module.exports = {
             }
         ]
     },
-    externals: [],
     resolve: {
         extensions: ['.js', '.ts'],
     },

@@ -1,5 +1,6 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: __dirname + '/src/js',
@@ -41,9 +42,21 @@ module.exports = {
             }
         ],
     },
-    externals: [],
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
+    },
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false,
+                    },
+                },
+            }),
+        ],
     },
     plugins: [
         new MiniCssExtractPlugin({

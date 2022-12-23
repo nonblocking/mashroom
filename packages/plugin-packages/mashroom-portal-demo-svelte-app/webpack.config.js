@@ -1,5 +1,6 @@
 const path = require('path');
 const sveltePreprocess = require("svelte-preprocess");
+const TerserPlugin = require('terser-webpack-plugin');
 
 const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
@@ -54,6 +55,19 @@ module.exports = {
     },
     mode,
     devtool: prod ? false : 'source-map',
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false,
+                    },
+                },
+            }),
+        ],
+    },
     devServer: {
         host: '0.0.0.0',
         allowedHosts: 'all',

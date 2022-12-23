@@ -1,4 +1,5 @@
 const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
     entry: __dirname + '/src/js',
@@ -34,7 +35,6 @@ module.exports = {
             }
         ],
     },
-    externals: [],
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
         mainFields: ['browser', 'main', 'module'],
@@ -45,6 +45,19 @@ module.exports = {
             fix: true,
         })
     ],
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                extractComments: false,
+                terserOptions: {
+                    format: {
+                        comments: false,
+                    },
+                },
+            }),
+        ],
+    },
     devServer: {
         host: '0.0.0.0',
         allowedHosts: 'all',
