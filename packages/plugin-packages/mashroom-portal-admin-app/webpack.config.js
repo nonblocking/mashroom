@@ -7,16 +7,12 @@ module.exports = (env, argv) => {
 
     let entry = [path.resolve(__dirname, 'src/js')];
 
-    let externals = {};
     if (argv.mode === 'development') {
         // Add portal theme
         entry = [
             path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css'),
             path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/admin.css')
         ].concat(entry);
-    } else {
-        // We use @mashroom/mashroom-portal-ui-commons to avoid duplicate code in the browser
-        externals = require('@mashroom/mashroom-portal-ui-commons/shared_lib_externals');
     }
 
     return {
@@ -72,7 +68,6 @@ module.exports = (env, argv) => {
                 __dirname + '/../../../node_modules',
             ]
         },
-        externals,
         plugins: [
             new ESLintPlugin({
                 extensions: ['.js', '.ts', '.tsx'],

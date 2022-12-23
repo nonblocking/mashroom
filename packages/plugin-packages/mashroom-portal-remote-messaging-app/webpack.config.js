@@ -5,24 +5,19 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
 
-    const entry = {
-        'bundle': [path.resolve(__dirname, 'src/js')]
-    };
+    let entry = [path.resolve(__dirname, 'src/js')];
 
-    let externals = {};
     if (argv.mode === 'development') {
         // Add portal theme
-        entry.bundle = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry.bundle);
-    } else {
-        // We use @mashroom/mashroom-portal-ui-commons to avoid duplicate code in the browser
-        externals = require('@mashroom/mashroom-portal-ui-commons/shared_lib_externals');
+        entry = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry);
     }
 
     return {
         entry,
         output: {
             path: __dirname + '/dist',
-            filename: '[name].js',
+            filename: 'remote-messaging.js',
+            chunkFilename: 'remote-messaging.[contenthash].js',
         },
         module: {
             rules: [
@@ -62,7 +57,6 @@ module.exports = (env, argv) => {
                 },
             ],
         },
-        externals,
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
             modules: [

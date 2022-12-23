@@ -36,7 +36,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen && webpack",
+        "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen",
         "lint": "eslint js --ext .ts --ext .tsx --fix",
         "type-check": "tsc --noEmit",
         "type-gen": "tsc --emitDeclarationOnly && cpy --cwd= \"dist/declarations/js/**/*.d.ts\" \"dist\" && del-cli dist/declarations"

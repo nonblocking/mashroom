@@ -6,7 +6,7 @@
 
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.css">
 
-    <script src="bundle.js"></script>
+    <script src="sandbox.js"></script>
 </head>
 <body>
 
@@ -30,6 +30,7 @@
                         subscribe(topic, cb) {
                             console.info('App under test subscribed to:', topic);
                             this._subscriptionMap[topic] = cb;
+                            return Promise.resolve();
                         }
                     }
                 },

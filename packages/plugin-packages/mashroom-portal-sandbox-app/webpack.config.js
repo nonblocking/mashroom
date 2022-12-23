@@ -6,17 +6,14 @@ const TerserPlugin = require('terser-webpack-plugin');
 module.exports = (env, argv) => {
 
     const entry = {
-        'bundle': [path.resolve(__dirname, 'src/js')]
+        'sandbox': [path.resolve(__dirname, 'src/js')]
     };
 
-    let externals = {};
     if (argv.mode === 'development') {
         // Add portal theme
-        entry.bundle = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry.bundle);
+        entry.sandbox = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry.sandbox);
         // Add dummy portal app
         entry.dummyAppBundle = [path.resolve(__dirname, 'src/js/dummy_app')];
-    } else {
-        externals = require('@mashroom/mashroom-portal-ui-commons/shared_lib_externals');
     }
 
     return {
@@ -24,6 +21,7 @@ module.exports = (env, argv) => {
         output: {
             path: __dirname + '/dist',
             filename: '[name].js',
+            chunkFilename: 'sandbox.[contenthash].js',
         },
         module: {
             rules: [
@@ -63,7 +61,6 @@ module.exports = (env, argv) => {
                 },
             ],
         },
-        externals,
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
             modules: [
