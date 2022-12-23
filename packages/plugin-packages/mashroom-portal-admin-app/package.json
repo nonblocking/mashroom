@@ -40,7 +40,7 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "dev": "webpack serve --hot --mode development",
-        "build": "webpack --mode production"
+        "build": "webpack --mode production && cpy --flat node_modules/@mashroom/mashroom-portal-ui-commons/dist/bundle dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -49,9 +49,14 @@
                 "name": "Mashroom Portal Admin App",
                 "type": "portal-app2",
                 "clientBootstrap": "startPortalAdminApp",
+                "sharedResources": {
+                    "js": [
+                        "mashroom_portal_ui_common.js"
+                    ]
+                },
                 "resources": {
                     "js": [
-                        "bundle.js"
+                        "admin-toolbar.js"
                     ]
                 },
                 "local": {

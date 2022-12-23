@@ -35,7 +35,7 @@
         "lint": "eslint src --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development",
-        "build": "webpack --mode production"
+        "build": "webpack --mode production && cpy --flat node_modules/@mashroom/mashroom-portal-ui-commons/dist/bundle dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -44,6 +44,11 @@
                 "name": "Mashroom Sandbox App",
                 "type": "portal-app2",
                 "clientBootstrap": "startSandboxApp",
+                "sharedResources": {
+                    "js": [
+                        "mashroom_portal_ui_common.js"
+                    ]
+                },
                 "resources": {
                     "js": [
                         "bundle.js"

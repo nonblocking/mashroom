@@ -1,6 +1,7 @@
 
 const path = require('path');
 const ESLintPlugin = require('eslint-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
 
@@ -8,11 +9,14 @@ module.exports = (env, argv) => {
         'bundle': [path.resolve(__dirname, 'src/js')]
     };
 
+    let externals = {};
     if (argv.mode === 'development') {
         // Add portal theme
         entry.bundle = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry.bundle);
         // Add dummy portal app
         entry.dummyAppBundle = [path.resolve(__dirname, 'src/js/dummy_app')];
+    } else {
+        externals = require('@mashroom/mashroom-portal-ui-commons/shared_lib_externals');
     }
 
     return {
@@ -20,7 +24,6 @@ module.exports = (env, argv) => {
         output: {
             path: __dirname + '/dist',
             filename: '[name].js',
-            chunkFilename: 'sandbox.[contenthash].js',
         },
         module: {
             rules: [
@@ -60,7 +63,7 @@ module.exports = (env, argv) => {
                 },
             ],
         },
-        externals: [],
+        externals,
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
             modules: [
@@ -75,6 +78,19 @@ module.exports = (env, argv) => {
                 fix: true,
             })
         ],
+        optimization: {
+            minimize: true,
+            minimizer: [
+                new TerserPlugin({
+                    extractComments: false,
+                    terserOptions: {
+                        format: {
+                            comments: false,
+                        },
+                    },
+                }),
+            ],
+        },
         devServer: {
             host: '0.0.0.0',
             allowedHosts: 'all',
