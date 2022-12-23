@@ -3,6 +3,16 @@
 
 ## [unreleased]
 
+ * Portal: Added support for code-splitting in shared libraries.
+   The only precondition is that the name of the chunks needs to be <shared_lib_base_name>.<chunk_name>.js;
+   you would configure that in webpack like this:
+   ```js
+     output: {
+       path: __dirname + '/dist',
+       filename: 'my_shared_library.js',
+       chunkFilename: 'my_shared_library.[contenthash].js'
+     }
+   ```
  * Core: Fixed the type of pluginContext.service.<service_ns>: it can now be undefined because the plugin might not be loaded.
    This can be a **BREAKING CHANGE**, and you have to following options to fix TypeScript errors:
    ```ts
