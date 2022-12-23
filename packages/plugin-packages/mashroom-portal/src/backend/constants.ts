@@ -13,7 +13,7 @@ export const PORTAL_THEME_RESOURCES_BASE_PATH = '/theme';
 export const PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH = '/page-enhancements';
 export const PORTAL_APP_API_PATH = '/api';
 export const PORTAL_APP_RESOURCES_BASE_PATH = '/apps';
-export const PORTAL_APP_RESOURCES_SHARED_PATH = '/_shared_';
+export const PORTAL_APP_RESOURCES_SHARED_PATH = '/___shared___';
 export const PORTAL_APP_REST_PROXY_BASE_PATH = '/proxy';
 
 export const PORTAL_JS_FILE = 'client.js';

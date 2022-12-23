@@ -137,9 +137,25 @@ export default class PortalAppController {
         const resourceType = parts[0] as 'css' | 'js';
         const resourcePath = parts.slice(1).join('/');
 
-        // Find portal apps that provide the shared resource
-        const portalApps = this._pluginRegistry.portalApps.filter((portalApp) =>
-            portalApp.sharedResources?.[resourceType]?.find((res) => res === resourcePath));
+        // Find Portal Apps that provide the shared resource
+        const portalApps = this._pluginRegistry.portalApps.filter((portalApp) => {
+            return portalApp.sharedResources?.[resourceType]?.find((res) => {
+                if (res === resourcePath) {
+                    return true;
+                }
+                if (resourceType === 'js') {
+                    // The resourcePath could be a chunk in the form of <base-resource-name>.<chunk-id>.js
+                    const parts = resourcePath.split('.');
+                    if (parts.length > 2) {
+                        const baseResourcePath = [parts.slice(0, parts.length - 2), 'js'].join('.');
+                        if (res === baseResourcePath) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            });
+        });
 
         let sent = false;
         while (portalApps.length > 0 && !sent) {
