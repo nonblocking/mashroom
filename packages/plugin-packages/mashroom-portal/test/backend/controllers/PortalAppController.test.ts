@@ -303,7 +303,7 @@ describe('PortalAppController', () => {
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
-            sharedResourcesBasePath: '/portal/web/___/apps/_shared_',
+            sharedResourcesBasePath: '/portal/web/___/apps/___shared___',
             sharedResources: {
                 js: [],
                 css: [],
@@ -375,7 +375,7 @@ describe('PortalAppController', () => {
                 '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
-            sharedResourcesBasePath: '/portal/web/___/apps/_shared_',
+            sharedResourcesBasePath: '/portal/web/___/apps/___shared___',
             sharedResources: {
                 js: [],
                 css: [],
