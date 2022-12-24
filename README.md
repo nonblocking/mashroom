@@ -86,6 +86,10 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 [https://medium.com/mashroom-server](https://medium.com/mashroom-server)
 
+## Youtube Channel
+
+[https://www.youtube.com/@mashroomserver](https://www.youtube.com/@mashroomserver)
+
 ## Development
 
 For development Node.js >= 16 is required.
