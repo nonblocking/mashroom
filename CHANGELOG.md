@@ -3,6 +3,17 @@
 
 ## [unreleased]
 
+ * Core: Improved support for [ts-node](https://github.com/TypeStrong/ts-node). If Mashroom runs with ts-node all config files can be written in TypeScript.
+   This includes plugin config files. Example server config file mashroom.ts:
+  ```ts
+    import type {MashroomServerConfig} from '@mashroom/mashroom-json-schemas/type-definitions';
+    const serverConfig: MashroomServerConfig = {
+        name: 'Mashroom Test Server 7',
+        port: 5050,
+        // ...
+    ];
+    export default serverConfig;
+  ```
  * Portal: Disabled caching of Portal App chunks (from code splitting) that do not include a content hash in the file name.
    Because in that case the Browser would cache the chunk forever even if the content changes.
    If you use webpack you can add the content hash like this to chunk names:

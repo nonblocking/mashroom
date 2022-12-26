@@ -103,7 +103,8 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         if (fs.existsSync(this._aclPath)) {
             const pathRuleList = [];
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            const acl = require(this._aclPath);
+            const aclModule = require(this._aclPath);
+            const acl = aclModule.default ?? aclModule;
             for (const pathPattern in acl) {
                 if (acl.hasOwnProperty(pathPattern) && !pathPattern.startsWith('$')) {
                     const pathRule = acl[pathPattern];

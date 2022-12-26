@@ -277,8 +277,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
 
         if (fs.existsSync(this._groupToRoleMappingPath)) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            this._groupToRoleMapping = require(this._groupToRoleMappingPath) as GroupToRoleMapping;
-            this._createRoleDefinitions(this._groupToRoleMapping, request, logger);
+            const groupToRoleMappingModule = require(this._groupToRoleMappingPath);
+            this._groupToRoleMapping = groupToRoleMappingModule.default ?? groupToRoleMappingModule;
+            this._createRoleDefinitions(this._groupToRoleMapping as GroupToRoleMapping, request, logger);
         } else {
             logger.warn(`No group to roles definition found: ${this._groupToRoleMappingPath || '-'}.`);
             this._groupToRoleMapping = null;
@@ -297,8 +298,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
 
         if (fs.existsSync(this._userToRoleMappingPath)) {
             // eslint-disable-next-line @typescript-eslint/no-var-requires
-            this._userToRoleMapping = require(this._userToRoleMappingPath) as UserToRoleMapping;
-            this._createRoleDefinitions(this._userToRoleMapping, request, logger);
+            const userToRoleMappingModule = require(this._userToRoleMappingPath);
+            this._userToRoleMapping = userToRoleMappingModule.default ?? userToRoleMappingModule;
+            this._createRoleDefinitions(this._userToRoleMapping as UserToRoleMapping, request, logger);
         } else {
             logger.warn(`No user to roles definition found: ${this._userToRoleMappingPath || '-'}.`);
             this._userToRoleMapping = null;

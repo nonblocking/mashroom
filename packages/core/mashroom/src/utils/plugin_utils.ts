@@ -2,6 +2,7 @@
 import {resolve} from 'path';
 import {existsSync} from 'fs';
 import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
+import {withinTsNode} from '@mashroom/mashroom-utils/lib/ts_node_utils';
 
 import type {MashroomPlugin, MashroomPluginLoader, MashroomPluginContext} from '../../type-definitions';
 
@@ -16,6 +17,9 @@ export const getExternalPluginDefinitionFilePath = (pluginPackagePath: string, e
     externalPluginConfigFileNames.forEach((name) => {
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.json`));
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.js`));
+        if (withinTsNode()) {
+            possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.ts`));
+        }
     });
     const existingPluginConfigFiles = possiblePluginConfigFiles.filter((path) => existsSync(path));
     if (existingPluginConfigFiles.length === 0) {

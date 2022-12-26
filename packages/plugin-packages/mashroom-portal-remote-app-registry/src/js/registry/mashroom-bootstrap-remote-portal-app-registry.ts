@@ -44,7 +44,8 @@ async function registerRemotePortalAppsFromConfigFile(configFilePath: string, se
     if (fs.existsSync(configFilePath)) {
         logger.info(`Loading remote portal app URLs from: ${configFilePath}`);
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const remotePortalAppData = require(configFilePath);
+        const remotePortalAppModule = require(configFilePath);
+        const remotePortalAppData = remotePortalAppModule.default ?? remotePortalAppModule;
         const remotePortalAppURLs: Array<string> = Array.isArray(remotePortalAppData) ? remotePortalAppData : (remotePortalAppData.remotePortalApps || []);
 
         if (Array.isArray(remotePortalAppURLs)) {

@@ -165,7 +165,9 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         // Reload
         delete require.cache[externalPluginConfigFile];
         try {
-            return require(externalPluginConfigFile);
+            // eslint-disable-next-line @typescript-eslint/no-var-requires
+            const pluginConfigModule = require(externalPluginConfigFile);
+            return pluginConfigModule.default ?? pluginConfigModule;
         } catch (e) {
             this._logger.error(`Error processing plugin definition in: ${externalPluginConfigFile}: File exists but is not readable!`);
         }

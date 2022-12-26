@@ -6,7 +6,6 @@
     "type": "object",
     "properties": {
         "$schema": {
-            "type": "string"
         }
     },
     "patternProperties": {

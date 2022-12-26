@@ -1324,7 +1324,6 @@
             "$ref": "#/definitions/Plugins"
         },
         "$schema": {
-            "type": "string"
         }
     },
     "required": [

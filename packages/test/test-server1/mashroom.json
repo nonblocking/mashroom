@@ -148,7 +148,7 @@
             ],
             "userPrivateBaseTopic": "user",
             "enableWebSockets": true,
-            "topicACL": "./topic_acl.json"
+            "topicACL": "./topicACL.json"
         },
         "Mashroom Messaging External Provider AMQP": {
             "brokerUsername": "admin",

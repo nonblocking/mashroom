@@ -5,6 +5,7 @@ import {existsSync} from 'fs';
 import {createReadonlyProxy} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
 import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
+import {withinTsNode} from '@mashroom/mashroom-utils/lib/ts_node_utils';
 import ServerConfigurationError from '../errors/ServerConfigurationError';
 import defaultConfig from './mashroom_default_config';
 
@@ -20,12 +21,16 @@ const HOSTNAME = os.hostname() || 'localhost';
 const CONFIG_FILES = [
     'mashroom.json',
     'mashroom.js',
+    'mashroom.ts',
     `mashroom.${ENVIRONMENT}.json`,
     `mashroom.${ENVIRONMENT}.js`,
+    `mashroom.${ENVIRONMENT}.ts`,
     `mashroom.${HOSTNAME}.json`,
     `mashroom.${HOSTNAME}.js`,
+    `mashroom.${HOSTNAME}.ts`,
     `mashroom.${HOSTNAME}.${ENVIRONMENT}.json`,
-    `mashroom.${HOSTNAME}.${ENVIRONMENT}.js`
+    `mashroom.${HOSTNAME}.${ENVIRONMENT}.js`,
+    `mashroom.${HOSTNAME}.${ENVIRONMENT}.ts`
 ];
 
 export default class MashroomServerConfigLoader implements MashroomServerConfigLoaderType {
@@ -42,17 +47,22 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             serverRootPath = path.resolve(serverRootPath);
         }
 
-        this._logger.info('Considering config files:', CONFIG_FILES);
-        const configFiles = CONFIG_FILES.map((name) => `${serverRootPath}/${name}`);
+        let possibleConfigFiles = CONFIG_FILES;
+        if (!withinTsNode()) {
+            possibleConfigFiles = possibleConfigFiles.filter((p) => !p.endsWith('.ts'));
+        }
+        this._logger.info('Considering config files (multiple possible):', possibleConfigFiles);
+        const configFiles = possibleConfigFiles.map((name) => `${serverRootPath}/${name}`);
         const existingConfigFiles = configFiles.filter((file) => existsSync(file));
 
         let config = defaultConfig;
         if (existingConfigFiles.length > 0) {
             for (const configFile of existingConfigFiles) {
-                this._logger.info(`Loading config file: ${configFile}`);
+                this._logger.info(`Using config file: ${configFile}`);
                 try {
                     // eslint-disable-next-line @typescript-eslint/no-var-requires
-                    const externalConfig = require(configFile);
+                    const externalConfigModule = require(configFile);
+                    const externalConfig = externalConfigModule.default ?? externalConfigModule;
                     config = deepAssign({}, config, externalConfig);
                 } catch (e) {
                     this._logger.error(`Loading config file failed: ${configFile}`, e);

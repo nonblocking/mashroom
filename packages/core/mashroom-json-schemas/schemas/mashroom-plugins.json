@@ -1519,7 +1519,6 @@
             }
         },
         "$schema": {
-            "type": "string"
         }
     },
     "required": [
