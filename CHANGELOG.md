@@ -3,6 +3,15 @@
 
 ## [unreleased]
 
+ * Portal: Disabled caching of Portal App chunks (from code splitting) that do not include a content hash in the file name.
+   Because in that case the Browser would cache the chunk forever even if the content changes.
+   If you use webpack you can add the content hash like this to chunk names:
+   ```json
+    output: {
+        // ...
+        chunkFilename: 'my-app.[contenthash].js',
+    }
+   ```
  * Portal: Added support for ES6 modules in Apps. It will automatically be turned on if the bootstrap file name ends with .mjs.
    Checkout the example here: https://github.com/nonblocking/mashroom-plugin-demos/tree/master/packages/mashroom-demo-plain-es6-portal-app
    That is just a neat tech demo, in the real world you should always use a bundler, because loading dozens of uncompressed small

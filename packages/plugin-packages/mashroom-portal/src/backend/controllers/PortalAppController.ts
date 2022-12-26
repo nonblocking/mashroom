@@ -1,4 +1,5 @@
 
+import {isChunkWithHash} from '@mashroom/mashroom-utils/lib/file_type_utils';
 import {portalAppContext} from '../utils/logging_utils';
 import {getResourceAsStream} from '../utils/resource_utils';
 import {getFrontendResourcesBasePath, getSitePath} from '../utils/path_utils';
@@ -260,7 +261,12 @@ export default class PortalAppController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         if (cacheControlService) {
-            cacheControlService.addCacheControlHeader('SHARED', req, res);
+            // Cache any resource with query parameters (e.g. ?v=xxx) or a hash in the name
+            if (Object.keys(req.query).length > 0 || isChunkWithHash(resourcePath)) {
+                cacheControlService.addCacheControlHeader('SHARED', req, res);
+            } else {
+                cacheControlService.addCacheControlHeader('NEVER', req, res);
+            }
         }
 
         const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
