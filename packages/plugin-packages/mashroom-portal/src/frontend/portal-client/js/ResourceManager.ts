@@ -1,4 +1,5 @@
 
+import {isES6Module} from '@mashroom/mashroom-utils/lib/file_type_utils';
 import {WINDOW_VAR_PORTAL_INLINED_STYLE_APPS} from '../../../backend/constants';
 
 import type {LoadedPortalAppInternal} from './MashroomPortalAppServiceImpl';
@@ -56,6 +57,9 @@ export default class ResourceManager {
             };
 
             scriptElem.src = path;
+            if (isES6Module(path)) {
+                scriptElem.type = 'module';
+            }
             scriptElem.addEventListener('error', (error: any) => {
                 console.error('Error loading JS resource: ', path, error);
                 this._remoteLogger.error(`Error loading JS resource: ${path}`, error, loadedPortalApp.pluginName);

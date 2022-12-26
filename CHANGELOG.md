@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Portal: Added support for ES6 modules in Apps. It will automatically be turned on if the bootstrap file name ends with .mjs.
+   Checkout the example here: https://github.com/nonblocking/mashroom-plugin-demos/tree/master/packages/mashroom-demo-plain-es6-portal-app
+   That is just a neat tech demo, in the real world you should always use a bundler, because loading dozens of uncompressed small
+   files is very inefficient, and it is also not possible to load libraries from node_modules.
  * Portal: Added support for code-splitting in shared libraries.
    The only precondition is that the name of the chunks needs to be <shared_lib_base_name>.<chunk_name>.js;
    you would configure that in webpack like this:
