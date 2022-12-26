@@ -17,7 +17,7 @@
  * Portal: Disabled caching of Portal App chunks (from code splitting) that do not include a content hash in the file name.
    Because in that case the Browser would cache the chunk forever even if the content changes.
    If you use webpack you can add the content hash like this to chunk names:
-   ```json
+   ```js
     output: {
         // ...
         chunkFilename: 'my-app.[contenthash].js',
