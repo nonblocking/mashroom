@@ -6,7 +6,8 @@
     "license": "MIT",
     "version": "2.2.3",
     "files": [
-        "schemas/**"
+        "schemas/**",
+        "type-definitions/**"
     ],
     "devDependencies": {
         "ajv": "^8.11.0",
