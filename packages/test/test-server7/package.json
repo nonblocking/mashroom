@@ -10,6 +10,6 @@
     },
     "scripts": {
         "type-check": "tsc --noEmit",
-        "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"npm run --prefix ../../core/mashroom build && ts-node ../../core/mashroom/dist/server.js\""
+        "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && ts-node ../../core/mashroom/dist/server.js\""
     }
 }
