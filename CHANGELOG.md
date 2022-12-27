@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Core: Use [nx](https://nx.dev) for building in dev mode if available. This has a number of advantages over npm, especially for a monorepo with a big
+   number of plugins:
+   * Faster build and therefore a faster startup, in particular when using a shared cloud cache
+   * nx not only builds the module itself but also all changed modules it depends on
  * Core: Improved support for [ts-node](https://github.com/TypeStrong/ts-node). If Mashroom runs with ts-node all config files can be written in TypeScript.
    This includes plugin config files. Example server config file mashroom.ts:
   ```ts

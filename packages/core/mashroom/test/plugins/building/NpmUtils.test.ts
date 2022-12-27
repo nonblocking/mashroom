@@ -1,7 +1,7 @@
 
-import fs from 'fs';
-import path from 'path';
-import fsExtra from 'fs-extra';
+import {existsSync} from 'fs';
+import {resolve} from 'path';
+import {emptyDirSync, writeJsonSync} from 'fs-extra';
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import NpmUtils from '../../../src/plugins/building/NpmUtils';
@@ -9,9 +9,9 @@ import NpmUtils from '../../../src/plugins/building/NpmUtils';
 jest.setTimeout(60000);
 
 const getTestPackageFolder = () => {
-    const packageFolder = path.resolve(__dirname, '../../../test-data/test-package1');
-    fsExtra.emptyDirSync(packageFolder);
-    fsExtra.writeJsonSync(path.resolve(packageFolder, 'package.json'), {
+    const packageFolder = resolve(__dirname, '../../../test-data/test-package1');
+    emptyDirSync(packageFolder);
+    writeJsonSync(resolve(packageFolder, 'package.json'), {
         name: 'test1',
         version: '1.0.0',
         dependencies: {
@@ -33,7 +33,7 @@ describe('NpmUtils', () => {
 
         await npmUtils.install(packageFolder);
 
-        expect(fs.existsSync(path.resolve(packageFolder, 'node_modules'))).toBeTruthy();
+        expect(existsSync(resolve(packageFolder, 'node_modules'))).toBeTruthy();
     });
 
     it('installs the prod and dev dependencies in package.json and runs the build script', async () => {
@@ -43,7 +43,7 @@ describe('NpmUtils', () => {
         await npmUtils.install(packageFolder);
         await npmUtils.runScript(packageFolder, 'build');
 
-        expect(fs.existsSync(path.resolve(packageFolder, 'package-copy.json'))).toBeTruthy();
+        expect(existsSync(resolve(packageFolder, 'package-copy.json'))).toBeTruthy();
     });
 
 });

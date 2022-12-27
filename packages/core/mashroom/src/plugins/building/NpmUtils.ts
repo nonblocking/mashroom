@@ -2,12 +2,12 @@
 import {exec} from 'child_process';
 import type {MashroomLogger, MashroomLoggerFactory} from '../../../type-definitions';
 
-type NpmCommand = 'install' | 'update' | 'run';
+type NpmCommand = 'install' | 'run';
 
 const DEFAULT_NPM_EXECUTION_TIMEOUT_SEC = 3 * 60; // 3min
 
-/**
- * Encapsulate npm access
+/*
+ * npm execution utils
  */
 export default class NpmUtils {
 
@@ -17,39 +17,22 @@ export default class NpmUtils {
         this._logger = loggerFactory('mashroom.plugins.build');
     }
 
-    /**
+    /*
      * Run install in given package path
-     *
-     * @param {string} packagePath
-     * @return {Promise<void>}
      */
-    install(packagePath: string): Promise<void> {
+    async install(packagePath: string) {
         return this._npmExecute(packagePath, 'install');
     }
 
-    /**
-     * Run update in given package path
-     *
-     * @param {string }packagePath
-     * @return {Promise<void>}
-     */
-    update(packagePath: string): Promise<void> {
-        return this._npmExecute(packagePath, 'update');
-    }
-
-    /**
+    /*
      * Run a script in given package path
-     *
-     * @param {string} packagePath
-     * @param {string} script
-     * @return {Promise<void>}
      */
-    runScript(packagePath: string, script: string): Promise<void> {
+    async runScript(packagePath: string, script: string) {
         return this._npmExecute(packagePath, 'run', script);
     }
 
-    private _npmExecute(packagePath: string, command: NpmCommand, ...args: Array<string>): Promise<void> {
-        return new Promise((resolve, reject) => {
+    private async _npmExecute(packagePath: string, command: NpmCommand, ...args: Array<string>) {
+        return new Promise<void>((resolve, reject) => {
             const commandString = `npm ${command} ${args.join(' ')}`;
 
             const execOptions = {
