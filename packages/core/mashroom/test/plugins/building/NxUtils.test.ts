@@ -4,6 +4,8 @@ import {resolve} from 'path';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import NxUtils from '../../../src/plugins/building/NxUtils';
 
+jest.setTimeout(60000);
+
 describe('NxUtils', () => {
 
     it('finds nx if available', async () => {
