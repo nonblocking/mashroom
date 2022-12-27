@@ -25,8 +25,9 @@ export const ready = async (request: Request): Promise<CheckResult> => {
     const errors = [];
 
     // All plugins loaded and ready
+    const allPluginPackagesBuild = pluginService.getPluginPackages().every((pluginPackage) => pluginPackage.status === 'ready');
     const allPluginsLoaded = pluginService.getPlugins().every((plugin) => plugin.status === 'loaded');
-    if (!allPluginsLoaded) {
+    if (!allPluginPackagesBuild || !allPluginsLoaded) {
         ok = false;
         errors.push('Not all plugins loaded');
     }
