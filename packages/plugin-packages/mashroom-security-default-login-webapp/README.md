@@ -15,7 +15,7 @@ You can override the default config in your Mashroom config file like this:
 {
   "plugins": {
         "Mashroom Security Default Login Webapp": {
-            "path": "/my-login-page",
+            "path": "/login",
             "pageTitle": "My fancy website",
             "loginFormTitle": "Login",
             "styleFile": "./login_style.css"
