@@ -37,6 +37,7 @@
                     "session": {
                         "secret": "pS2tZRCp5e3uU7RM",
                         "resave": false,
+                        "rolling": true,
                         "saveUninitialized": false,
                         "cookie": {
                             "maxAge": 1200000,

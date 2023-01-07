@@ -20,6 +20,7 @@ You can override the default config in your Mashroom config file like this:
             "session": {
                 "secret": "EWhQ5hvETGkqvPDA",
                 "resave": false,
+                "rolling": true,
                 "saveUninitialized": false,
                 "cookie": {
                     "maxAge": 1200000,
