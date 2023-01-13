@@ -39,7 +39,7 @@
                         "resave": false,
                         "saveUninitialized": false,
                         "cookie": {
-                            "maxAge": 1200000,
+                            "maxAge": 7200000,
                             "httpOnly": true,
                             "secure": false,
                             "sameSite": false
