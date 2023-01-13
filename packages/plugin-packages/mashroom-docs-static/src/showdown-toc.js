@@ -12,7 +12,7 @@ showdown.extension('toc', () => {
 
     function getHeaderEntriesInNodeJs(sourceHtml) {
         var $ = cheerio.load(sourceHtml);
-        var headers = $('h2, h3, h4');
+        var headers = $('h2, h3, h4, h5');
 
         var headerList = [];
         for (var i = 0; i < headers.length; i++) {

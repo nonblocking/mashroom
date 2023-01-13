@@ -60,7 +60,18 @@ ul {
 }
 
 li {
+    padding: 20px 0 10px 0;
+    font-size: 1.2rem;
+}
+
+li > ul > li {
+    padding: 3px 0;
+    font-size: 1rem;
+}
+
+li > ul > li > ul > li {
     padding: 2px 0;
+    font-size: 0.9rem;
 }
 
 a {
@@ -156,11 +167,6 @@ table td:last-child {
     left: 0;
     overflow-y: scroll;
     height: 100%;
-}
-
-a[href="#coredocumentation"] {
-    display: block;
-    margin-top: 50px;
 }
 
 .panel-info {

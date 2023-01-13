@@ -1095,6 +1095,32 @@ A typical *portal* view with *Handlebars* might look like this:
 
 The _pageContent_ variable contains the actual content with the Portal layout (see below) and the Apps.
 
+Here all available variables:
+
+```ts
+export type MashroomPortalPageRenderModel = {
+    readonly portalName: string;
+    readonly siteBasePath: string;
+    readonly apiBasePath: string;
+    readonly resourcesBasePath: string | null | undefined;
+    readonly site: MashroomPortalSiteLocalized;
+    readonly page: MashroomPortalPage & MashroomPortalPageRefLocalized;
+    readonly portalResourcesHeader: string;
+    readonly portalResourcesFooter: string;
+    readonly pageContent: string;
+    // @Deprecated, use pageContent; will be removed in 3.0
+    readonly portalLayout: string;
+    readonly lang: string;
+    readonly availableLanguages: Readonly<Array<string>>;
+    readonly messages: (key: string) => string;
+    readonly user: MashroomPortalUser;
+    readonly csrfToken: string | null | undefined;
+    readonly userAgent: UserAgent;
+    readonly lastThemeReloadTs: number;
+    readonly themeVersionHash: string;
+}
+```
+
 ### portal-layouts
 
 This plugin type adds portal layouts to the portal. A layout defines a areas where portal-apps can be placed.
