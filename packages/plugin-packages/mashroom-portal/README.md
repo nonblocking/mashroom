@@ -1008,6 +1008,13 @@ export default bootstrap;
 
 ```
 
+<span class="panel-info">
+**NOTE**: Even if Express.js could automatically load the template engine (like for Pug) you have to provide the *engineFactory* here, otherwise plugin local
+modules can not be loaded. In that case define the engineFactory like this:
+<br/>
+*engineFactory: () => require('pug').__express*
+</span>
+
 The theme can contain the following views:
 
  * *portal*: The portal page (required)

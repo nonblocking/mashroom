@@ -76,11 +76,12 @@ import type {
     UserAgent,
     MashroomPortalAppSetup,
     MashroomPortalPageContent,
+    ExpressTemplateEngine,
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry, MashroomPortalPageApps} from '../../../type-definitions/internal';
 
 const readFile = promisify(fs.readFile);
-const VIEW_ENGINE_CACHE = new Map<string, any>();
+const VIEW_ENGINE_CACHE = new Map<string, ExpressTemplateEngine>();
 const VIEW_CACHE = new Map<string, any>();
 
 export default class PortalPageRenderController {
@@ -391,7 +392,7 @@ export default class PortalPageRenderController {
             try {
                 let engine;
                 if (VIEW_ENGINE_CACHE.has(theme.name)) {
-                    engine = VIEW_ENGINE_CACHE.get(theme.name);
+                    engine = VIEW_ENGINE_CACHE.get(theme.name)!;
                 } else {
                     engine = theme.requireEngine();
                     VIEW_ENGINE_CACHE.set(theme.name, engine);

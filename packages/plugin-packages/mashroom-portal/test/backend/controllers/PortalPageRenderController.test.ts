@@ -29,7 +29,7 @@ const theme: MashroomPortalTheme = {
     lastReloadTs: Date.now(),
     version: '1.0.0',
     engineName: 'fooEngine',
-    requireEngine: () => { /* nothing to do */ },
+    requireEngine: () => { return {} as any; },
     resourcesRootPath: './public',
     viewsPath: './views',
 };

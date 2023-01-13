@@ -239,6 +239,8 @@ export type MashroomPortalAppErrorRenderModel = {
 
 /* Plugins */
 
+export type ExpressTemplateEngine = (path: string, options: {}, callback: (e: any, rendered?: string) => void) => void;
+
 export interface MashroomPortalTheme {
     /**
      * Name of the theme
@@ -257,14 +259,14 @@ export interface MashroomPortalTheme {
      */
     +lastReloadTs: number;
     /**
-     * Engine name (e.g. 'handlebars')
+     * Engine name, basically the template extension (e.g. 'handlebars')
      */
     +engineName: string;
 
     /**
-     * The express template engine instance
+     * The express template engine instance if not handled automatically (like pug)
      */
-    requireEngine(): any;
+    requireEngine(): ExpressTemplateEngine;
 
     /**
      * Resources root path (css and other resources)
@@ -1186,7 +1188,7 @@ export type MashroomPortalAppPluginSSRBootstrapFunction = (portalAppSetup: Mashr
 
 export type MashroomPortalThemePluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<{
     +engineName: string,
-    +engineFactory: () => any
+    +engineFactory: () => ExpressTemplateEngine
 }>;
 
 // portal-page-enhancer
