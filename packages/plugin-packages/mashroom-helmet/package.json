@@ -32,7 +32,7 @@
                         "contentSecurityPolicy": false,
                         "crossOriginEmbedderPolicy": false,
                         "crossOriginOpenerPolicy": {
-                            "policy": "same-origin-allow-popups"
+                            "policy": "same-origin"
                         },
                         "crossOriginResourcePolicy": {
                             "policy": "same-site"
@@ -47,11 +47,12 @@
                         "dnsPrefetchControl": {
                             "allow": false
                         },
-                        "ieNoOpen": false,
                         "frameguard": {
                             "action": "sameorigin"
                         },
-                        "permittedCrossDomainPolicies": false,
+                        "permittedCrossDomainPolicies": {
+                            "permittedPolicies": "none"
+                        },
                         "hidePoweredBy": false,
                         "xssFilter": true
                     }

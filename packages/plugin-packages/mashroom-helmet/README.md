@@ -17,25 +17,31 @@ You can override the default config in your Mashroom config file like this:
         "Mashroom Helmet Middleware": {
             "helmet": {
                 "contentSecurityPolicy": false,
-                "dnsPrefetchControl ": {
-                    "allow": false
+                "crossOriginEmbedderPolicy": false,
+                "crossOriginOpenerPolicy": {
+                    "policy": "same-origin"
+                },
+                "crossOriginResourcePolicy": {
+                    "policy": "same-site"
                 },
                 "expectCt": false,
-                "featurePolicy": false,
-                "frameguard": {
-                    "action": "deny"
-                },
-                "hidePoweredBy": false,
+                "referrerPolicy": false,
                 "hsts": {
                     "maxAge": 31536000
                 },
-                "ieNoOpen": false,
-                "noSniff": {},
-                "permittedCrossDomainPolicies": false,
-                "referrerPolicy": false,
-                "xssFilter": {
-                    "mode": null
-                }
+                "noSniff": true,
+                "originAgentCluster": false,
+                "dnsPrefetchControl": {
+                    "allow": false
+                },
+                "frameguard": {
+                    "action": "sameorigin"
+                },
+                "permittedCrossDomainPolicies": {
+                    "permittedPolicies": "none"
+                },
+                "hidePoweredBy": false,
+                "xssFilter": true
             }
         }
     }
