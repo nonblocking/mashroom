@@ -13,6 +13,8 @@ export default {
     load: 'Load',
     sendMessage: 'Send Message',
     loading: 'Loading...',
+    loadedResources: 'Loaded resources',
+    pageMemoryUsage: 'Page Memory Usage',
     errorLoadingApp: 'Could not load App (not found or no permission)',
     errorTopicMandatory: 'Please select topic',
     errorInvalidJSON: 'Error: Invalid JSON'

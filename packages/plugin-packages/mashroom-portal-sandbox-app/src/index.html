@@ -37,7 +37,7 @@
                 publish(topic, data) {
                     console.info('Sandbox published:', topic, data);
                 },
-            }
+            };
 
             window.MashroomPortalServices = {
                 messageBus: masterMessageBus,
@@ -92,7 +92,14 @@
                                     name: 'Peter'
                                 },
                             })
-                        }
+                        },
+                        getAppStats() {
+                            return {
+                                resources: 2,
+                                totalSize: 1231323232,
+                                totalSizeHumanReadable: '123 kB',
+                            };
+                        },
                     },
                     stateService: {
                         getStateProperty: function(key) {

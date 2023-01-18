@@ -13,6 +13,8 @@ export default {
     load: 'Laden',
     sendMessage: 'Message Senden',
     loading: 'Laden...',
+    loadedResources: 'Geladene Ressourcen',
+    pageMemoryUsage: 'Speicherverbrauch der Seite',
     errorLoadingApp: 'App konnte nicht geladen werden (nicht gefunden oder keine Berechtigung)',
     errorTopicMandatory: 'Bitte Topic wählen',
     errorInvalidJSON: 'Error: Ungültiges JSON'

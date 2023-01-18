@@ -10,6 +10,7 @@ import PortalAppHostContainer from '../containers/PortalAppHostContainer';
 import PortalAppContainer from '../containers/PortalAppContainer';
 import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer';
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
+import PortalAppStats from '../containers/PortalAppStats';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 
 import { getQueryParams } from '../utils';
@@ -21,11 +22,12 @@ import type {
 } from '@mashroom/mashroom-portal/type-definitions';
 import type { MessageBusPortalAppUnderTest, PortalAppQueryParams } from '../types';
 
+
 type Props = {
-    lang: string,
-    messageBus: MashroomPortalMessageBus,
-    portalAppService: MashroomPortalAppService,
-    portalStateService: MashroomPortalStateService,
+    lang: string;
+    messageBus: MashroomPortalMessageBus;
+    portalAppService: MashroomPortalAppService;
+    portalStateService: MashroomPortalStateService;
 }
 
 export default class SandboxApp extends PureComponent<Props> {
@@ -62,6 +64,7 @@ export default class SandboxApp extends PureComponent<Props> {
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
                     <div className='mashroom-sandbox-app'>
                         <PortalAppHostContainer hostElementId={this.hostElementId} />
+                        <PortalAppStats portalAppService={portalAppService} />
                         <MessageBusSendFormContainer
                             messageBus={messageBus}
                             portalStateService={portalStateService}

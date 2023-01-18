@@ -7,8 +7,6 @@ $LABEL_ROW_WIDTH: 240px;
     padding: 10px;
 
     .portal-app-suggestion {
-
-
         .portal-app-suggestion-name {
             display: flex;
         }
@@ -64,7 +62,7 @@ $LABEL_ROW_WIDTH: 240px;
 
     .mashroom-sandbox-app-host-wrapper {
         box-shadow: 2px 2px 8px #AAA;
-        margin-bottom: 30px;
+        margin-bottom: 10px;
         min-height: 60px;
         display: flex;
         position: relative;
@@ -100,6 +98,18 @@ $LABEL_ROW_WIDTH: 240px;
         .mashroom-sandbox-app-host-elem {
             flex-grow: 2;
             overflow: hidden;
+        }
+    }
+
+    .mashroom-sandbox-app-stats {
+        margin-top: 5px;
+        margin-bottom: 30px;
+        font-family: monospace;
+        font-size: 0.8em;
+
+        .spacer {
+            display: inline-block;
+            width: 30px;
         }
     }
 

@@ -10,7 +10,7 @@ type Props = {
     preselectAppName: string | undefined | null;
     availablePortalApps: Array<MashroomAvailablePortalApp>;
     appLoadingError: boolean;
-    onSelectionChanged: (portalApp: string | undefined | null) => void,
+    onSelectionChanged: (portalApp: string | undefined | null) => void;
 }
 
 export default class PortalAppSelection extends PureComponent<Props> {
