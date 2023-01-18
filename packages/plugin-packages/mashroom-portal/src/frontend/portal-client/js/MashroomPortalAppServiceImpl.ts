@@ -11,9 +11,9 @@ import {
     WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
     SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
 } from '../../../backend/constants';
-import type ResourceManager from './ResourceManager';
 
 import type {
+    MashroomPortalLoadedPortalAppStats,
     MashroomAvailablePortalApp,
     MashroomPortalAppLifecycleHooks,
     MashroomPortalAppLoadListener,
@@ -32,6 +32,7 @@ import type {
     MashroomPortalAppConfigEditor,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType, MashroomRestService} from '../../../../type-definitions/internal';
+import type ResourceManager from './ResourceManager';
 
 export type LoadedPortalAppInternal = {
     readonly id: string;
@@ -231,21 +232,31 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     showAppInfos(customize?: (portalApp: MashroomPortalLoadedPortalApp, overlay: HTMLDivElement) => void): void {
         const showInfo = (portalApp: MashroomPortalLoadedPortalApp) => {
+            const stats = this.getAppStats(portalApp.pluginName);
+            let statsString = '';
+            if (stats) {
+                statsString = `(${stats.resources} ${stats.resources > 1 ? 'files' : 'file'}${stats.totalSizeHumanReadable ? `, ${stats.totalSizeHumanReadable}` : ''})`;
+            }
+
             portalApp.portalAppWrapperElement.style.position = 'relative';
             const appInfoElem = document.createElement('div');
             appInfoElem.className = APP_INFO_CLASS_NAME;
             appInfoElem.style.position = 'absolute';
             appInfoElem.innerHTML = `
                 <div class="portal-app-name">${portalApp.pluginName}</div>
-                <div class="portal-app-version">${portalApp.version || '<unknown>'}</div>
+                <div class="portal-app-version">v${portalApp.version || '?.?.?'} ${statsString}</div>
             `;
+
             if (customize) {
                 customize(portalApp, appInfoElem);
             }
+
             portalApp.portalAppWrapperElement.appendChild(appInfoElem);
         };
 
         this.loadedPortalApps.forEach((portalApp) => showInfo(portalApp));
+
+        this._fixAppInfoOverlaps();
     }
 
     hideAppInfos(): void {
@@ -275,6 +286,47 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     loadAppSetup(pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
         const pageId = this._getPageId();
         return this._internalLoadAppSetup(pageId, pluginName, instanceId);
+    }
+
+    getAppStats(pluginName: string): MashroomPortalLoadedPortalAppStats | null {
+        if (!global.performance) {
+            return null;
+        }
+        const timings: Array<PerformanceResourceTiming> = [];
+        global.performance.getEntriesByType('resource')
+            .forEach((r) => {
+                if (decodeURI(r.name).indexOf(`/apps/${pluginName}/`) !== -1 && !timings.find((r2) => r.name.split('?')[0] === r2.name.split('?')[0])) {
+                    timings.push(r as PerformanceResourceTiming);
+                }
+            });
+
+        if (timings.length === 0) {
+            return null;
+        }
+
+        let totalSize;
+        let totalSizeHumanReadable;
+        // Safari doesn't provide encodedBodySize
+        if (timings[0].decodedBodySize) {
+            totalSize = timings.reduce((sum, r) => sum + r.decodedBodySize, 0);
+            let totalSizeUnit = 'B';
+            let size = totalSize;
+            if (size > 1024) {
+                size = Math.round(size / 1024);
+                totalSizeUnit = 'kB';
+            }
+            if (size > 1024) {
+                size = Math.round(size / 10.24) / 100;
+                totalSizeUnit = 'MB';
+            }
+            totalSizeHumanReadable = `${size} ${totalSizeUnit}`;
+        }
+
+        return {
+            resources: timings.length,
+            totalSize,
+            totalSizeHumanReadable,
+        };
     }
 
     prefetchResources(pluginName: string): Promise<void> {
@@ -600,8 +652,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     private _showLoadingError(portalApp: LoadedPortalAppInternal): void {
         const appErrorTemplate = (global as any)[WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE];
-        const appErrorHtml = this._processTemplate(appErrorTemplate, portalApp.id, portalApp.pluginName, portalApp.title);
-        portalApp.portalAppHostElement.innerHTML = appErrorHtml;
+        portalApp.portalAppHostElement.innerHTML = this._processTemplate(appErrorTemplate, portalApp.id, portalApp.pluginName, portalApp.title);
     }
 
     private _processTemplate(template: string, id: string, pluginName: string, title: string | undefined | null) {
@@ -826,5 +877,40 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         prefetchLink.rel = 'prefetch';
         prefetchLink.href = url;
         document.head.appendChild(prefetchLink);
+    }
+
+    private _fixAppInfoOverlaps(tries?: number) {
+        const overlaps: Array<{ left: number, right: number, overlapY: number }> = [];
+        const overlays = document.querySelectorAll(`.${APP_INFO_CLASS_NAME}`);
+        for (let i = 0; i < overlays.length; ++i) {
+            const overlay = overlays[i];
+            for (let j = 0; j < overlays.length; ++j) {
+                if (j !== i && !overlaps.find((o) => o.left === i && o.right === j || o.left === j && o.right === i)) {
+                    const boundingRect1 = overlay.getBoundingClientRect();
+                    const boundingRect2 = overlays[j].getBoundingClientRect();
+                    if (boundingRect1.bottom > boundingRect2.top
+                        && boundingRect1.right > boundingRect2.left
+                        && boundingRect1.top < boundingRect2.bottom
+                        && boundingRect1.left < boundingRect2.right) {
+                        if (boundingRect1.left < boundingRect2.left) {
+                            overlaps.push({ left: i, right: j, overlapY: boundingRect1.width - (boundingRect2.left - boundingRect1.left) });
+                        } else {
+                            overlaps.push({ left: j, right: i, overlapY: boundingRect2.width - (boundingRect1.left - boundingRect2.left) });
+                        }
+                    }
+                }
+            }
+        }
+
+        if (overlaps.length > 0) {
+            console.debug('App info overlaps found:', overlaps);
+            overlaps.forEach(({ right, overlapY}) => {
+                // Move the right one further right
+                (overlays[right] as HTMLDivElement).style.left = `${overlapY}px`;
+            });
+            if (!tries || tries < 2) {
+                this._fixAppInfoOverlaps((tries ?? 0) + 1);
+            }
+        }
     }
 }

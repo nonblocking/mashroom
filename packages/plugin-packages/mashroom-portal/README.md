@@ -691,6 +691,11 @@ export interface MashroomPortalAppService {
     loadAppSetup(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppSetup>;
 
     /**
+     * Get some stats about a loaded App
+     */
+    getAppStats(pluginName: string): MashroomPortalLoadedPortalAppStats | null;
+
+    /**
      * Prefetch resources of given app/plugin. This is useful if you know which apps you will have to load
      * in the future and want to minimize the loading time.
      */

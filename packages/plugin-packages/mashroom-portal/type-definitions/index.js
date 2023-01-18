@@ -119,6 +119,12 @@ export type MashroomPortalLoadedPortalApp = {
     +errorPluginMissing: boolean,
 }
 
+export type MashroomPortalLoadedPortalAppStats = {
+    +resources: number;
+    +totalSize?: number;
+    +totalSizeHumanReadable?: string;
+}
+
 export type MashroomPortalProxyPaths = {
     __baseUrl: string;
     [id: string]: string;
@@ -769,6 +775,11 @@ export interface MashroomPortalAppService {
      * Load the setup for given app/plugin name on the current page
      */
     loadAppSetup(pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup>;
+
+    /**
+     * Get some stats about a loaded App
+     */
+    getAppStats(pluginName: string): ?MashroomPortalLoadedPortalAppStats;
 
     /**
      * Prefetch resources of given app/plugin. This is useful if you know which apps you will have to load

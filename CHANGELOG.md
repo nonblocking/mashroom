@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Mashroom Portal: The App Info shows now also the number of the loaded resources for an App and the decoded size of those resources
  * Core: Use [nx](https://nx.dev) for building in dev mode if available. This should lead to a much faster startup in dev mode,
    especially if the distributed cloud cache is used.
  * Core: Improved support for [ts-node](https://github.com/TypeStrong/ts-node). If Mashroom runs with ts-node all config files can be written in TypeScript.
