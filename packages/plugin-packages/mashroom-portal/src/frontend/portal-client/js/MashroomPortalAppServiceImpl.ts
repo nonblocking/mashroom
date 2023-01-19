@@ -880,22 +880,22 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _fixAppInfoOverlaps(tries?: number) {
-        const overlaps: Array<{ left: number, right: number, overlapY: number }> = [];
+        const overlaps: Array<{ top: number, bottom: number, overlapX: number }> = [];
         const overlays = document.querySelectorAll(`.${APP_INFO_CLASS_NAME}`);
         for (let i = 0; i < overlays.length; ++i) {
             const overlay = overlays[i];
             for (let j = 0; j < overlays.length; ++j) {
-                if (j !== i && !overlaps.find((o) => o.left === i && o.right === j || o.left === j && o.right === i)) {
+                if (j !== i && !overlaps.find((o) => o.top === i && o.bottom === j || o.top === j && o.bottom === i)) {
                     const boundingRect1 = overlay.getBoundingClientRect();
                     const boundingRect2 = overlays[j].getBoundingClientRect();
                     if (boundingRect1.bottom > boundingRect2.top
                         && boundingRect1.right > boundingRect2.left
                         && boundingRect1.top < boundingRect2.bottom
                         && boundingRect1.left < boundingRect2.right) {
-                        if (boundingRect1.left < boundingRect2.left) {
-                            overlaps.push({ left: i, right: j, overlapY: boundingRect1.width - (boundingRect2.left - boundingRect1.left) });
+                        if (boundingRect1.top > boundingRect2.top) {
+                            overlaps.push({ top: i, bottom: j, overlapX: boundingRect1.height - (boundingRect1.top - boundingRect2.top) });
                         } else {
-                            overlaps.push({ left: j, right: i, overlapY: boundingRect2.width - (boundingRect1.left - boundingRect2.left) });
+                            overlaps.push({ top: j, bottom: i, overlapX: boundingRect2.height - (boundingRect2.top - boundingRect1.top) });
                         }
                     }
                 }
@@ -904,9 +904,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         if (overlaps.length > 0) {
             console.debug('App info overlaps found:', overlaps);
-            overlaps.forEach(({ right, overlapY}) => {
+            overlaps.forEach(({ top, overlapX}) => {
                 // Move the right one further right
-                (overlays[right] as HTMLDivElement).style.left = `${overlapY}px`;
+                (overlays[top] as HTMLDivElement).style.top = `${overlapX + 2}px`;
             });
             if (!tries || tries < 2) {
                 this._fixAppInfoOverlaps((tries ?? 0) + 1);
