@@ -523,9 +523,7 @@ export type MashroomAvailablePortalApp = {
     readonly lastReloadTs: number;
 };
 
-export type MashroomPortalAppLoadListener = (
-    arg0: MashroomPortalLoadedPortalApp,
-) => void;
+export type MashroomPortalAppLoadListener = (loadedApp: MashroomPortalLoadedPortalApp) => void;
 
 export type MashroomPortalPageEnhancement = {
     /**
