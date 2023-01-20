@@ -841,6 +841,14 @@ export interface MashroomPortalAppService {
     getAppStats(pluginName: string): MashroomPortalLoadedPortalAppStats | null;
 
     /**
+     * Check if some loaded Portal Apps have been update (and have a different version on the server).
+     * This can be used to check if the user should refresh the current page.
+     *
+     * Returns the list of upgraded Apps.
+     */
+    checkLoadedPortalAppsUpdated(): Promise<Array<string>>;
+
+    /**
      * Prefetch resources of given app/plugin. This is useful if you know which apps you will have to load
      * in the future and want to minimize the loading time.
      */

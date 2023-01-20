@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Mashroom Portal: Added a method *checkLoadedPortalAppsUpdated()* to the *portalAppService* that allows it to check if Portal Apps
+   loaded in the Browser have been redeployed. This could be used in a (long-running) dynamic cockpit to inform the user
+   that some Apps might not work as expected anymore and a reload of the page is necessary.
  * Sandbox Apps: Shows now the number of loaded resources, the resources size and (if available) the memory usage of the page
  * Mashroom Portal: The App Info shows now also the number of the loaded resources for an App and the decoded size of those resources
  * Core: Use [nx](https://nx.dev) for building in dev mode if available. This should lead to a much faster startup in dev mode,

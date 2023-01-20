@@ -58,7 +58,7 @@ const MODAL_OVERLAY_CLOSE_BUTTON_ID = 'mashroom-portal-modal-overlay-close';
 const MODAL_OVERLAY_TITLE_ID = 'mashroom-portal-modal-overlay-title';
 const APP_INFO_CLASS_NAME = 'mashroom-portal-app-info';
 
-const APP_UPDATE_CHECK_INTERVAL = 3000;
+const DEV_MODE_APP_UPDATE_CHECK_INTERVAL = 3000;
 
 export const loadedPortalAppsInternal: Array<LoadedPortalAppInternal> = [];
 
@@ -101,7 +101,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return this._internalLoadApp(hostElementId, pluginName, instanceId, false, position, overrideAppConfig).then(
             (loadedApp) => {
                 if (this._watch) {
-                    this._startCheckForAppUpdates(loadedApp);
+                    this._devModeStartCheckForAppUpdates(loadedApp);
                 }
                 return this._toLoadedApp(loadedApp);
             }
@@ -117,7 +117,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 this._showModalOverlay(loadedApp, title, onClose);
 
                 if (this._watch) {
-                    this._startCheckForAppUpdates(loadedApp);
+                    this._devModeStartCheckForAppUpdates(loadedApp);
                 }
 
                 return this._toLoadedApp(loadedApp);
@@ -203,7 +203,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             }
 
             this._unsubscribeFromMessageBus(loadedAppInternal);
-            this._stopCheckForAppUpdates(loadedAppInternal);
+            this._devModeStopCheckForAppUpdates(loadedAppInternal);
             this._resourceManager.unloadAppResources(loadedAppInternal);
 
             const idx = loadedPortalAppsInternal.indexOf(loadedAppInternal);
@@ -327,6 +327,20 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             totalSize,
             totalSizeHumanReadable,
         };
+    }
+
+    checkLoadedPortalAppsUpdated(): Promise<Array<string>> {
+        /* if we are not in dev mode _lastUpdatedCheckTs is the page load time */
+        return this._getUpdatedAppsSince(this._lastUpdatedCheckTs)
+            .then((updatedApps) => {
+                return loadedPortalAppsInternal
+                    .filter(({ pluginName }) => updatedApps.find((ua) => ua.name === pluginName))
+                    .map(({ pluginName }) => pluginName);
+            })
+            .catch((e) => {
+                console.warn('Checking for updated Apps failed!', e);
+                return [];
+            });
     }
 
     prefetchResources(pluginName: string): Promise<void> {
@@ -743,15 +757,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return Promise.all(promises);
     }
 
-    private _pluginUpdateEventReceived(type: MashroomPortalPluginType, plugin: any) {
-        if (type === 'app') {
-            return this._updateApp(plugin);
-        } else {
-            console.info('Theme or Layout changed - reloading browser window');
-            location.reload();
-        }
-    }
-
     private _executeWillBeRemovedCallback(loadedAppInternal: LoadedPortalAppInternal): Promise<void> {
         const handleError = (error: Error) => {
             console.warn(`Calling willBeRemoved callback of App '${loadedAppInternal.pluginName}' failed`, error);
@@ -774,68 +779,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
 
         return Promise.resolve();
-    }
-
-    private _checkForAppUpdates() {
-        // console.info('Checking for App updates since: ', this._lastUpdatedCheckTs);
-
-        this._restService.get(`/portal-apps?updatedSince=${this._lastUpdatedCheckTs}`, {
-            'x-mashroom-does-not-extend-auth': '1'
-        }).then(
-            (updatedApps: Array<MashroomAvailablePortalApp>) => {
-                if (Array.isArray(updatedApps) && updatedApps.length > 0) {
-                    console.info('Updated apps found:', updatedApps);
-                    let promise = Promise.resolve();
-                    updatedApps
-                        .filter((app) => this._watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
-                        .forEach((app) => {
-                            promise = promise.then(() => this._updateApp(app));
-                        });
-                    if (promise) {
-                        promise.then(
-                            () => {
-                                // Nothing to do
-                            },
-                            (error) => {
-                                console.warn('Failed to update some apps', error);
-                            }
-                        );
-                    }
-                }
-            }
-        );
-
-        this._lastUpdatedCheckTs = Date.now();
-    }
-
-    private _startCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
-        // Remove existing
-        this._stopCheckForAppUpdates(loadedAppInternal);
-
-        this._watchedApps.push(loadedAppInternal);
-        if (!window.EventSource) {
-            if (!this._watchTimer) {
-                this._watchTimer = setInterval(this._checkForAppUpdates.bind(this), APP_UPDATE_CHECK_INTERVAL);
-            }
-        } else if (!this._appsUpdateEventSource) {
-            this._appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-push-plugin-updates');
-            this._appsUpdateEventSource.onmessage = (msg: any) => {
-                const event = JSON.parse(msg.data);
-                this._pluginUpdateEventReceived(event.type, event.event);
-            };
-        }
-    }
-
-    private _stopCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
-        this._watchedApps = this._watchedApps.filter((app) => app.id !== loadedAppInternal.id);
-        if (this._watchedApps.length === 0 && this._watchTimer) {
-            clearInterval(this._watchTimer);
-            this._watchTimer = null;
-        }
-
-        if (this._watchedApps.length === 0 && this._appsUpdateEventSource) {
-            this._appsUpdateEventSource.close();
-        }
     }
 
     private _fireLoadEvent(loadedAppInternal: LoadedPortalAppInternal) {
@@ -912,5 +855,80 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 this._fixAppInfoOverlaps((tries ?? 0) + 1);
             }
         }
+    }
+
+    private _devModelAppUpdateEventReceived(type: MashroomPortalPluginType, plugin: any) {
+        if (type === 'app') {
+            return this._updateApp(plugin);
+        } else {
+            console.info('Theme or Layout changed - reloading browser window');
+            location.reload();
+        }
+    }
+
+    private _devModeCheckForAppUpdates() {
+        // console.info('Checking for App updates since: ', this._lastUpdatedCheckTs);
+
+        this._getUpdatedAppsSince(this._lastUpdatedCheckTs).then(
+            (updatedApps: Array<MashroomAvailablePortalApp>) => {
+                if (Array.isArray(updatedApps) && updatedApps.length > 0) {
+                    console.info('Updated apps found:', updatedApps);
+                    let promise = Promise.resolve();
+                    updatedApps
+                        .filter((app) => this._watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
+                        .forEach((app) => {
+                            promise = promise.then(() => this._updateApp(app));
+                        });
+                    if (promise) {
+                        promise.then(
+                            () => {
+                                // Nothing to do
+                            },
+                            (error) => {
+                                console.warn('Failed to update some apps', error);
+                            }
+                        );
+                    }
+                }
+            }
+        );
+
+        this._lastUpdatedCheckTs = Date.now();
+    }
+
+    private _devModeStartCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
+        // Remove existing
+        this._devModeStopCheckForAppUpdates(loadedAppInternal);
+
+        this._watchedApps.push(loadedAppInternal);
+        if (!window.EventSource) {
+            if (!this._watchTimer) {
+                this._watchTimer = setInterval(this._devModeCheckForAppUpdates.bind(this), DEV_MODE_APP_UPDATE_CHECK_INTERVAL);
+            }
+        } else if (!this._appsUpdateEventSource) {
+            this._appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-push-plugin-updates');
+            this._appsUpdateEventSource.onmessage = (msg: any) => {
+                const event = JSON.parse(msg.data);
+                this._devModelAppUpdateEventReceived(event.type, event.event);
+            };
+        }
+    }
+
+    private _devModeStopCheckForAppUpdates(loadedAppInternal: LoadedPortalAppInternal): void {
+        this._watchedApps = this._watchedApps.filter((app) => app.id !== loadedAppInternal.id);
+        if (this._watchedApps.length === 0 && this._watchTimer) {
+            clearInterval(this._watchTimer);
+            this._watchTimer = null;
+        }
+
+        if (this._watchedApps.length === 0 && this._appsUpdateEventSource) {
+            this._appsUpdateEventSource.close();
+        }
+    }
+
+    private _getUpdatedAppsSince(ts: number): Promise<Array<MashroomAvailablePortalApp>> {
+        return this._restService.get(`/portal-apps?updatedSince=${ts}`, {
+            'x-mashroom-does-not-extend-auth': '1'
+        });
     }
 }
