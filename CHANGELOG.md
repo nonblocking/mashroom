@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Admin Toolbar: Don't allow to remote the last Site
  * Mashroom Portal: Made sure that all related resources are removed from the storage if a Site or Page is deleted (Permissions, App Instances, ...)
  * Mashroom Portal: Added a method *checkLoadedPortalAppsUpdated()* to the *portalAppService* that allows it to check if Portal Apps
    loaded in the Browser have been redeployed. This could be used in a (long-running) dynamic cockpit to inform the user

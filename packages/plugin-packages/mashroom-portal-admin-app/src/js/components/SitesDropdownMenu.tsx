@@ -71,7 +71,7 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
             <div key={site.siteId} className='site'>
                 <a className='site-link' href='javascript:void(0)' onClick={this.onGoto.bind(this, site)}>{site.title}</a>
                 <div className='configure' onClick={this.onConfigure.bind(this, site)}>&nbsp;</div>
-                <div className='delete' onClick={this.onDelete.bind(this, site)}>&nbsp;</div>
+                {sites.sites.length > 1 && <div className='delete' onClick={this.onDelete.bind(this, site)}>&nbsp;</div>}
             </div>
         ));
 
