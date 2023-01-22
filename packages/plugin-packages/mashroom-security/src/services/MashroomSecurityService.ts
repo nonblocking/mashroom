@@ -127,7 +127,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
             } else {
                 await resourcePermissionCollection.deleteOne({type: resource.type, key: resource.key});
             }
-        } else {
+        } else if (resource.permissions) {
             await resourcePermissionCollection.insertOne(resource);
         }
 

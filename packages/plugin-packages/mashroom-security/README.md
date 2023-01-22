@@ -178,46 +178,30 @@ export interface MashroomSecurityService {
      * Check if given abstract "resource" is permitted for currently authenticated user.
      * The permission has to be defined with updateResourcePermission() first, otherwise the allowIfNoResourceDefinitionFound flag defines the outcome.
      */
-    checkResourcePermission(
-        request: Request,
-        resourceType: MashroomSecurityResourceType,
-        resourceKey: string,
-        permission: MashroomSecurityPermission,
-        allowIfNoResourceDefinitionFound?: boolean,
-    ): Promise<boolean>;
+    checkResourcePermission(request: Request, resourceType: MashroomSecurityResourceType, resourceKey: string, permission: MashroomSecurityPermission, allowIfNoResourceDefinitionFound?: boolean): Promise<boolean>;
 
     /**
      * Set a resource permission for given abstract resource.
      * A resource could be: {type: 'Page', key: 'home', permissions: [{ roles: ['User'], permissions: ['VIEW'] }]}
+     *
+     * If you pass a permission with an empty roles array it actually gets removed from the storage.
      */
-    updateResourcePermission(
-        request: Request,
-        resource: MashroomSecurityProtectedResource,
-    ): Promise<void>;
+    updateResourcePermission(request: Request, resource: MashroomSecurityProtectedResource): Promise<void>;
 
     /**
      * Get the permission definition for given resource, if any.
      */
-    getResourcePermissions(
-        request: Request,
-        resourceType: MashroomSecurityResourceType,
-        resourceKey: string,
-    ): Promise<MashroomSecurityProtectedResource | null | undefined>;
+    getResourcePermissions(request: Request, resourceType: MashroomSecurityResourceType, resourceKey: string): Promise<MashroomSecurityProtectedResource | null | undefined>;
 
     /**
      * Add a role definition
      */
-    addRoleDefinition(
-        request: Request,
-        roleDefinition: MashroomSecurityRoleDefinition,
-    ): Promise<void>;
+    addRoleDefinition(request: Request, roleDefinition: MashroomSecurityRoleDefinition): Promise<void>;
 
     /**
      * Get all known roles. Returns all roles added with addRoleDefinition() or implicitly added bei updateResourcePermission().
      */
-    getExistingRoles(
-        request: Request,
-    ): Promise<Array<MashroomSecurityRoleDefinition>>;
+    getExistingRoles(request: Request): Promise<Array<MashroomSecurityRoleDefinition>>;
 
     /**
      * Check if an auto login would be possible.
@@ -227,10 +211,7 @@ export interface MashroomSecurityService {
     /**
      * Start authentication process
      */
-    authenticate(
-        request: Request,
-        response: Response,
-    ): Promise<MashroomSecurityAuthenticationResult>;
+    authenticate(request: Request, response: Response): Promise<MashroomSecurityAuthenticationResult>;
 
     /**
      * Check the existing authentication (if any)
@@ -240,9 +221,7 @@ export interface MashroomSecurityService {
     /**
      * Get the authentication expiration time in unix time ms
      */
-    getAuthenticationExpiration(
-        request: Request,
-    ): number | null | undefined;
+    getAuthenticationExpiration(request: Request): number | null | undefined;
 
     /**
      * Revoke the current authentication
@@ -252,11 +231,7 @@ export interface MashroomSecurityService {
     /**
      * Login user with given credentials (for form login).
      */
-    login(
-        request: Request,
-        username: string,
-        password: string,
-    ): Promise<MashroomSecurityLoginResult>;
+    login(request: Request, username: string, password: string): Promise<MashroomSecurityLoginResult>;
 
     /**
      * Find a security provider by name.
@@ -319,26 +294,20 @@ export interface MashroomSecurityProvider {
      * This typically means to redirect to the login page, then you should return status: 'deferred'.
      * This method could also automatically login the user, then you should return status: 'authenticated'.
      */
-    authenticate(
-        request: Request,
-        response: Response,
-        authenticationHints?: any,
-    ): Promise<MashroomSecurityAuthenticationResult>;
+    authenticate(request: Request, response: Response, authenticationHints?: any): Promise<MashroomSecurityAuthenticationResult>;
 
     /**
      * Check the existing authentication (if any).
      * Use this to extend the authentication expiration or to periodically refresh the access token.
      *
-     * This methods gets called for almost every requests, so do nothing expensive here.
+     * This method gets called for almost every request, so do nothing expensive here.
      */
     checkAuthentication(request: Request): Promise<void>;
 
     /**
      * Get the authentication expiration time in unix time ms. Return null/undefined if there is no authentication.
      */
-    getAuthenticationExpiration(
-        request: Request,
-    ): number | null | undefined;
+    getAuthenticationExpiration(request: Request): number | null | undefined;
 
     /**
      * Revoke the current authentication.
@@ -349,11 +318,7 @@ export interface MashroomSecurityProvider {
     /**
      * Programmatically login user with given credentials (optional, but necessary if you use the default login page)
      */
-    login(
-        request: Request,
-        username: string,
-        password: string,
-    ): Promise<MashroomSecurityLoginResult>;
+    login(request: Request, username: string, password: string): Promise<MashroomSecurityLoginResult>;
 
     /**
      * Get the current user or null if the user is not authenticated

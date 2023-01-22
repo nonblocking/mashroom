@@ -91,6 +91,8 @@ export interface MashroomSecurityService {
     /**
      * Set a resource permission for given abstract resource.
      * A resource could be: {type: 'Page', key: 'home', permissions: [{ roles: ['User'], permissions: ['VIEW'] }]}
+     *
+     * If you pass a permission with an empty roles array it actually gets removed from the storage.
      */
     updateResourcePermission(request: ExpressRequest, resource: MashroomSecurityProtectedResource): Promise<void>;
     /**
@@ -153,7 +155,7 @@ export interface MashroomSecurityProvider {
      * Check the existing authentication (if any).
      * Use this to extend the authentication expiration or to periodically refresh the access token.
      *
-     * This methods gets called for almost every requests, so do nothing expensive here.
+     * This method gets called for almost every request, so do nothing expensive here.
      */
     checkAuthentication(request: ExpressRequest): Promise<void>;
     /**
