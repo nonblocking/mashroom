@@ -32,7 +32,13 @@
                         "en": "Test Subpage 2",
                         "de": "Test Unterseite 2"
                     },
-                    "friendlyUrl": "/test1/sub2"
+                    "friendlyUrl": "/test1/sub2",
+                    "subPages": [
+                        {
+                            "pageId": "subpage22",
+                            "friendlyUrl": "/test1/sub22"
+                        }
+                    ]
                 }
             ]
         },

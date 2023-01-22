@@ -74,7 +74,7 @@ export const getPagePosition = (pageId: string, pagesFlattened: Array<FlatPage>,
     };
 };
 
-export const removePageFromTree = (pageId: string, parentPageId: string | undefined | null, pages: Array<MashroomPortalPageRef>) => {
+export const removePageFromTree = (pageId: string, parentPageId: string | undefined | null, pages: Array<MashroomPortalPageRef>, moveSubPagesUp = false) => {
     const parent = parentPageId ? searchPageRef(parentPageId, pages) : null;
     const subPages = parent ? parent.subPages : pages;
     if (subPages) {
@@ -82,6 +82,9 @@ export const removePageFromTree = (pageId: string, parentPageId: string | undefi
         if (existing) {
             const index = subPages.findIndex((p) => p.pageId === pageId);
             subPages.splice(index, 1);
+            if (moveSubPagesUp) {
+                subPages.splice(index, 0, ...existing.subPages ?? []);
+            }
         }
     }
 };

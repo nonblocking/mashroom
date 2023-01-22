@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Admin Toolbar: If a page gets deleted all subpages are moved up the parent level (until now they just disappeared)
  * Admin Toolbar: Don't allow to remote the last Site
  * Mashroom Portal: Made sure that all related resources are removed from the storage if a Site or Page is deleted (Permissions, App Instances, ...)
  * Mashroom Portal: Added a method *checkLoadedPortalAppsUpdated()* to the *portalAppService* that allows it to check if Portal Apps

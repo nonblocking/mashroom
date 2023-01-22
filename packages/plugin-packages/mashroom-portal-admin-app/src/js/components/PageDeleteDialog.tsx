@@ -38,7 +38,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
         if (!selectedPage || !selectedPage.pageId) {
             return;
         }
-        const pageId = selectedPage.pageId;
+        const { pageId  } = selectedPage;
 
         const promise = portalAdminService.getSite(portalAdminService.getCurrentSiteId()).then(
             (site) => {
@@ -46,7 +46,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
 
                 const parentPage = getParentPage(pageId, pages.pagesFlattened);
                 const parentPageId = parentPage ? parentPage.pageId : null;
-                removePageFromTree(pageId, parentPageId, siteClone.pages);
+                removePageFromTree(pageId, parentPageId, siteClone.pages, true);
 
                 return Promise.all([
                     portalAdminService.deletePage(pageId),

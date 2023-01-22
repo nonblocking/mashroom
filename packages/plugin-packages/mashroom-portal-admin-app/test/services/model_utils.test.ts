@@ -17,7 +17,7 @@ describe('model_utils.flattenPageTree', () => {
         const flattened = flattenPageTree(site.pages);
 
         expect(flattened).toBeTruthy();
-        expect(flattened.length).toBe(5);
+        expect(flattened.length).toBe(6);
     });
 
 });
@@ -85,6 +85,20 @@ describe('model_utils.removePageFromTree', () => {
         removePageFromTree('subpage2', 'test1', site.pages);
 
         expect(searchPageRef('subpage2', site.pages)).toBeFalsy();
+
+        expect(searchPageRef('subpage22', site.pages)).toBeFalsy();
+    });
+
+    it('it retains subpages of the removed page', () => {
+        const site: MashroomPortalSite = loadSite();
+
+        expect(searchPageRef('subpage2', site.pages)).toBeTruthy();
+
+        removePageFromTree('subpage2', 'test1', site.pages, true);
+
+        expect(searchPageRef('subpage2', site.pages)).toBeFalsy();
+
+        expect(searchPageRef('subpage22', site.pages)).toBeTruthy();
     });
 
 });
