@@ -580,11 +580,7 @@ export interface MashroomPortalAppEnhancementPlugin {
     /**
      * Enhance the portalAppSetup object passed as the first argument (if necessary)
      */
-    enhancePortalAppSetup: (
-        portalAppSetup: MashroomPortalAppSetup,
-        portalApp: MashroomPortalApp,
-        request: ExpressRequest
-    ) => Promise<MashroomPortalAppSetup>;
+    enhancePortalAppSetup: (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, request: ExpressRequest) => Promise<MashroomPortalAppSetup>;
 }
 
 /* Backend services */
@@ -643,7 +639,7 @@ export interface MashroomPortalService {
     /**
      * Delete site
      */
-    deleteSite(siteId: string): Promise<void>;
+    deleteSite(req: ExpressRequest, siteId: string): Promise<void>;
 
     /**
      * Get page with given id
@@ -673,27 +669,27 @@ export interface MashroomPortalService {
     /**
      * Insert new page
      */
-    deletePage(pageId: string): Promise<void>;
+    deletePage(req: ExpressRequest, pageId: string): Promise<void>;
 
     /**
-     * Get portal app instance
+     * Get Portal App instance
      */
     getPortalAppInstance(pluginName: string, instanceId: ?string): Promise<?MashroomPortalAppInstance>;
 
     /**
-     * Insert a new portal app instance
+     * Insert a new Portal App instance
      */
     insertPortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void>;
 
     /**
-     * Update given portal app instance
+     * Update given Portal App instance
      */
     updatePortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void>;
 
     /**
-     * Delete given portal app instance
+     * Delete given Portal App instance
      */
-    deletePortalAppInstance(pluginName: string, instanceId: ?string): Promise<void>;
+    deletePortalAppInstance(req: ExpressRequest, pluginName: string, instanceId: ?string): Promise<void>;
 }
 
 /* Frontend services */
@@ -831,7 +827,7 @@ export interface MashroomPortalPageService {
     /**
      * Get the content for given pageId.
      * It also calculates if the correct theme and all necessary page enhancements for the requested page
-     * are already loaded. Otherwise fullPageLoadRequired is going to be true and no content returned.
+     * are already loaded. Otherwise, fullPageLoadRequired is going to be true and no content returned.
      */
     getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
 }

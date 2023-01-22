@@ -147,7 +147,7 @@ export default class PortalPageController {
 
             logger.info('Deleting page: ', existingPage);
 
-            await portalService.deletePage(pageId);
+            await portalService.deletePage(req, pageId);
 
             res.end();
 
@@ -439,7 +439,7 @@ export default class PortalPageController {
 
             await portalService.updatePage(page);
 
-            await portalService.deletePortalAppInstance(pluginName, portalAppInstanceId);
+            await portalService.deletePortalAppInstance(req, pluginName, portalAppInstanceId);
 
             res.end();
 

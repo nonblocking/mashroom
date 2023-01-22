@@ -187,7 +187,7 @@ export default class PortalSiteController {
 
             logger.info('Deleting site: ', existingSite);
 
-            await portalService.deleteSite(siteId);
+            await portalService.deleteSite(req, siteId);
 
             res.end();
 

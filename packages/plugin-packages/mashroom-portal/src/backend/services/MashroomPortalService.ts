@@ -1,7 +1,10 @@
 
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 import {PAGES_COLLECTION, SITES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} from '../constants';
+import {getPortalAppResourceKey} from '../utils/security_utils';
 
+import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
+import type {Request} from 'express';
 import type {MashroomLogger, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';
 import type {
@@ -78,12 +81,13 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         await sitesCollection.updateOne({siteId}, site);
     }
 
-    async deleteSite(siteId: string): Promise<void> {
+    async deleteSite(req: Request, siteId: string): Promise<void> {
         if (!siteId) {
             throw new Error('Cannot delete the site because siteId is undefined!');
         }
         const sitesCollection = await this._getSitesCollections();
         await sitesCollection.deleteOne({siteId});
+        await this._deleteSitePermissionsAndUnreferencedPages(req, siteId);
     }
 
     async getPage(pageId: string): Promise<MashroomPortalPage | null | undefined> {
@@ -113,15 +117,19 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         await pagesCollection.updateOne({pageId}, page);
     }
 
-    async deletePage(pageId: string): Promise<void> {
+    async deletePage(req: Request, pageId: string): Promise<void> {
         if (!pageId) {
             throw new Error('Cannot delete the page because pageId is undefined!');
         }
-        const pagesCollection = await this._getPagesCollection();
-        pagesCollection.deleteOne({pageId});
+        const page = await this.getPage(pageId);
+        if (page) {
+            const pagesCollection = await this._getPagesCollection();
+            await pagesCollection.deleteOne({pageId});
+            await this._deletePagePermissionsAndAppInstances(req, page);
+        }
     }
 
-    async getPortalAppInstance(pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppInstance | null | undefined> {
+    async getPortalAppInstance(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppInstance | null | undefined> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
         return await portalAppInstancesCollection.findOne({pluginName, instanceId});
     }
@@ -138,9 +146,59 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         await portalAppInstancesCollection.updateOne({pluginName, instanceId}, portalAppInstance);
     }
 
-    async deletePortalAppInstance(pluginName: string, instanceId: string | undefined | null): Promise<void> {
+    async deletePortalAppInstance(req: Request, pluginName: string, instanceId: string | null | undefined): Promise<void> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
         await portalAppInstancesCollection.deleteOne({pluginName, instanceId});
+        await this._deletePortalAppInstancePermissions(req, pluginName, instanceId);
+    }
+
+    private async _deleteSitePermissionsAndUnreferencedPages(req: Request, siteId: string) {
+        await this._getSecurityService().updateResourcePermission(req, {
+            type: 'Site',
+            key: siteId,
+            permissions: null,
+        });
+        const remainingSites = await this.getSites();
+        const pagesCollection = await this._getPagesCollection();
+        const pages = await pagesCollection.find();
+        const existingPageIds = pages.result.map(({pageId}) => pageId);
+        const referencedPageIds: Array<string> = [];
+        const addReferencedPageIds = (pageRefs: Array<MashroomPortalPageRef>) => {
+            for (const pageRef of pageRefs) {
+                referencedPageIds.push(pageRef.pageId);
+                if (pageRef.subPages) {
+                    addReferencedPageIds(pageRef.subPages);
+                }
+            }
+        };
+        for (const site of remainingSites) {
+            addReferencedPageIds(site.pages);
+        }
+        const unreferencedPageIds = existingPageIds.filter((pageId) => referencedPageIds.indexOf(pageId) === -1);
+        this._logger.info('Removing unreferenced pages:', unreferencedPageIds);
+        for (const pageId of unreferencedPageIds) {
+            await this.deletePage(req, pageId);
+        }
+    }
+
+    private async _deletePagePermissionsAndAppInstances(req: Request, page: MashroomPortalPage) {
+        await this._getSecurityService().updateResourcePermission(req, {
+            type: 'Page',
+            key: page.pageId,
+            permissions: null,
+        });
+        const portalAppReferences = Object.values(page.portalApps ?? {}).flatMap((portalAppReferences) => portalAppReferences);
+        for (const {pluginName, instanceId} of portalAppReferences) {
+            await this.deletePortalAppInstance(req, pluginName, instanceId);
+        }
+    }
+
+    private async _deletePortalAppInstancePermissions(req: Request, pluginName: string, instanceId: string | null | undefined) {
+        await this._getSecurityService().updateResourcePermission(req, {
+            type: 'Portal-App',
+            key: getPortalAppResourceKey(pluginName, instanceId),
+            permissions: null,
+        });
     }
 
     private async _getSitesCollections(): Promise<MashroomStorageCollection<MashroomPortalSite>> {
@@ -159,5 +217,8 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
         return this._pluginContextHolder.getPluginContext().services.storage!.service;
     }
 
+    private _getSecurityService(): MashroomSecurityService {
+        return this._pluginContextHolder.getPluginContext().services.security!.service;
+    }
 }
 

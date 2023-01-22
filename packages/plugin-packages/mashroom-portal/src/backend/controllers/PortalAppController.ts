@@ -241,7 +241,7 @@ export default class PortalAppController {
     private async _getDynamicallyLoadedPortalAppInstance(portalApp: MashroomPortalApp, req: Request) {
         const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
 
-        // Maybe there was created a instance in the storage
+        // Maybe there was created an instance in the storage
         const appInstance = await portalService.getPortalAppInstance(portalApp.name, null);
         if (appInstance) {
             return appInstance;

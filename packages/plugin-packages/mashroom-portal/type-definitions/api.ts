@@ -653,9 +653,7 @@ export interface MashroomPortalService {
     /**
      * Find the site with given path
      */
-    findSiteByPath(
-        path: string,
-    ): Promise<MashroomPortalSite | null | undefined>;
+    findSiteByPath(path: string): Promise<MashroomPortalSite | null | undefined>;
 
     /**
      * Insert new site
@@ -670,7 +668,7 @@ export interface MashroomPortalService {
     /**
      * Delete site
      */
-    deleteSite(siteId: string): Promise<void>;
+    deleteSite(req: Request, siteId: string): Promise<void>;
 
     /**
      * Get page with given id
@@ -680,18 +678,12 @@ export interface MashroomPortalService {
     /**
      * Find the page ref within a site with given friendly URL
      */
-    findPageRefByFriendlyUrl(
-        site: MashroomPortalSite,
-        friendlyUrl: string,
-    ): Promise<MashroomPortalPageRef | null | undefined>;
+    findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**
      * Find the page ref within a site by the given pageId
      */
-    findPageRefByPageId(
-        site: MashroomPortalSite,
-        pageId: string,
-    ): Promise<MashroomPortalPageRef | null | undefined>;
+    findPageRefByPageId(site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**
      * Insert new page
@@ -706,37 +698,27 @@ export interface MashroomPortalService {
     /**
      * Insert new page
      */
-    deletePage(pageId: string): Promise<void>;
+    deletePage(req: Request, pageId: string): Promise<void>;
 
     /**
-     * Get portal app instance
+     * GetPortal App instance
      */
-    getPortalAppInstance(
-        pluginName: string,
-        instanceId: string | null | undefined,
-    ): Promise<MashroomPortalAppInstance | null | undefined>;
+    getPortalAppInstance(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppInstance | null | undefined>;
 
     /**
-     * Insert a new portal app instance
+     * Insert a new Portal App instance
      */
-    insertPortalAppInstance(
-        portalAppInstance: MashroomPortalAppInstance,
-    ): Promise<void>;
+    insertPortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void>;
 
     /**
-     * Update given portal app instance
+     * Update given Portal App instance
      */
-    updatePortalAppInstance(
-        portalAppInstance: MashroomPortalAppInstance,
-    ): Promise<void>;
+    updatePortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void>;
 
     /**
-     * Delete given portal app instance
+     * Delete given portal Portal App instance
      */
-    deletePortalAppInstance(
-        pluginName: string,
-        instanceId: string | null | undefined,
-    ): Promise<void>;
+    deletePortalAppInstance(req: Request, pluginName: string, instanceId: string | null | undefined): Promise<void>;
 }
 
 /* Frontend services */
@@ -745,11 +727,7 @@ export type CreatedResponse = {
     readonly location: string;
 };
 
-export type ModalAppCloseCallback = (
-    modalOverlayElem: HTMLElement,
-    hideDialog: () => void,
-    unloadApp: () => void,
-) => void;
+export type ModalAppCloseCallback = (modalOverlayElem: HTMLElement, hideDialog: () => void, unloadApp: () => void) => void;
 
 export interface MashroomPortalAppService {
     /**
@@ -762,25 +740,14 @@ export interface MashroomPortalAppService {
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
-    loadApp(
-        appAreaId: string,
-        pluginName: string,
-        instanceId: string | null | undefined,
-        position?: number | null | undefined,
-        overrideAppConfig?: any | null | undefined,
-    ): Promise<MashroomPortalLoadedPortalApp>;
+    loadApp(appAreaId: string, pluginName: string, instanceId: string | null | undefined, position?: number | null | undefined, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
      * Load portal app into a modal overlay.
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
-    loadAppModal(
-        pluginName: string,
-        title?: string | null | undefined,
-        overrideAppConfig?: any | null | undefined,
-        onClose?: ModalAppCloseCallback | null | undefined,
-    ): Promise<MashroomPortalLoadedPortalApp>;
+    loadAppModal(pluginName: string, title?: string | null | undefined, overrideAppConfig?: any | null | undefined, onClose?: ModalAppCloseCallback | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
      * Reload given portal app
@@ -890,7 +857,7 @@ export interface MashroomPortalPageService {
     /**
      * Get the content for given pageId.
      * It also calculates if the correct theme and all necessary page enhancements for the requested page
-     * are already loaded. Otherwise fullPageLoadRequired is going to be true and no content returned.
+     * are already loaded. Otherwise, fullPageLoadRequired is going to be true and no content returned.
      */
     getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
 }
@@ -958,23 +925,12 @@ export interface MashroomPortalAdminService {
     /**
      * Add an app to the current page.
      */
-    addAppInstance(
-        pluginName: string,
-        areaId: string,
-        position?: number,
-        appConfig?: any,
-    ): Promise<MashroomPagePortalAppInstance>;
+    addAppInstance(pluginName: string, areaId: string, position?: number, appConfig?: any): Promise<MashroomPagePortalAppInstance>;
 
     /**
      * Update given app instance config or position
      */
-    updateAppInstance(
-        pluginName: string,
-        instanceId: string,
-        areaId: string | null | undefined,
-        position: number | null | undefined,
-        appConfig: any | null | undefined,
-    ): Promise<void>;
+    updateAppInstance(pluginName: string, instanceId: string, areaId: string | null | undefined, position: number | null | undefined, appConfig: any | null | undefined): Promise<void>;
 
     /**
      * Remove given app instance from page
@@ -984,19 +940,12 @@ export interface MashroomPortalAdminService {
     /**
      * Get roles that are permitted to view the app (no roles means everyone is permitted)
      */
-    getAppInstancePermittedRoles(
-        pluginName: string,
-        instanceId: string,
-    ): Promise<string[] | null | undefined>;
+    getAppInstancePermittedRoles(pluginName: string, instanceId: string): Promise<string[] | null | undefined>;
 
     /**
      * Update roles that are permitted to view the app (undefined or null means everyone is permitted)
      */
-    updateAppInstancePermittedRoles(
-        pluginName: string,
-        instanceId: string,
-        roles: string[] | null | undefined,
-    ): Promise<void>;
+    updateAppInstancePermittedRoles(pluginName: string, instanceId: string, roles: string[] | null | undefined): Promise<void>;
 
     /**
      * Get current pageId
@@ -1031,10 +980,7 @@ export interface MashroomPortalAdminService {
     /**
      * Update roles that are permitted to view the page (undefined or null means everyone is permitted)
      */
-    updatePagePermittedRoles(
-        pageId: string,
-        roles: string[] | null | undefined,
-    ): Promise<void>;
+    updatePagePermittedRoles(pageId: string, roles: string[] | null | undefined): Promise<void>;
 
     /**
      * Get current siteId
@@ -1069,25 +1015,12 @@ export interface MashroomPortalAdminService {
     /**
      * Update roles that are permitted to view the site (undefined or null means everyone is permitted)
      */
-    updateSitePermittedRoles(
-        siteId: string,
-        roles: string[] | null | undefined,
-    ): Promise<void>;
+    updateSitePermittedRoles(siteId: string, roles: string[] | null | undefined): Promise<void>;
 }
 
-export type MashroomPortalMessageBusSubscriberCallback = (
-    data: any,
-    topic: string,
-    senderAppId: string | null | undefined,
-) => void;
+export type MashroomPortalMessageBusSubscriberCallback = (data: any, topic: string, senderAppId: string | null | undefined) => void;
 
-export type MashroomPortalMessageBusInterceptor = (
-    data: any,
-    topic: string,
-    senderAppId: string | null | undefined,
-    receiverAppId: string | null | undefined,
-    cancelMessage: () => void,
-) => any | null | undefined;
+export type MashroomPortalMessageBusInterceptor = (data: any, topic: string, senderAppId: string | null | undefined, receiverAppId: string | null | undefined, cancelMessage: () => void) => any | null | undefined;
 
 export interface MashroomPortalMessageBus {
     /**
@@ -1096,28 +1029,19 @@ export interface MashroomPortalMessageBus {
      * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
      * (e.g. remote:/foo/+/bar)
      */
-    subscribe(
-        topic: string,
-        callback: MashroomPortalMessageBusSubscriberCallback,
-    ): Promise<void>;
+    subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
      * Subscribe once to given topic. The handler will be removed after the first message has been received.
      * Remote topics are accepted.
      */
-    subscribeOnce(
-        topic: string,
-        callback: MashroomPortalMessageBusSubscriberCallback,
-    ): Promise<void>;
+    subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
      * Unsubscribe from given topic.
      * Remote topics are accepted.
      */
-    unsubscribe(
-        topic: string,
-        callback: MashroomPortalMessageBusSubscriberCallback,
-    ): Promise<void>;
+    unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
      * Publish to given topic.
@@ -1142,16 +1066,12 @@ export interface MashroomPortalMessageBus {
      * It can change the data of an event by return a different value or block messages
      * by calling cancelMessage() from the interceptor arguments.
      */
-    registerMessageInterceptor(
-        interceptor: MashroomPortalMessageBusInterceptor,
-    ): void;
+    registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
 
     /**
      * Unregister a message interceptor.
      */
-    unregisterMessageInterceptor(
-        interceptor: MashroomPortalMessageBusInterceptor,
-    ): void;
+    unregisterMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
 }
 
 export interface MashroomPortalMasterMessageBus
