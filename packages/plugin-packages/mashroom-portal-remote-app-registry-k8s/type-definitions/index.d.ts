@@ -29,6 +29,7 @@ export type KubernetesService = {
     lastCheck: number;
     status: KubernetesServiceStatus;
     error: string | null;
+    retries: number;
     foundPortalApps: Array<MashroomPortalApp>;
     invalidPortalApps: Array<KubernetesServiceInvalidPortalApp>;
 }

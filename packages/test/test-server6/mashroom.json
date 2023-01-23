@@ -73,12 +73,6 @@
             "showEnvAndVersions": true,
             "spaMode": true
         },
-        "Mashroom Portal Remote App Registry": {
-            "remotePortalAppUrls": "./remotePortalApps.json"
-        },
-        "Mashroom Portal Remote App Registry Admin Webapp": {
-            "showAddRemoteAppForm": true
-        },
         "Mashroom Portal Remote App Kubernetes Background Job": {
             "cronSchedule": "0/1 * * * *",
             "k8sNamespacesLabelSelector": ["test=true,env=test2", "test=true,env=test1"],
@@ -87,6 +81,7 @@
             "serviceNameFilter": ".*",
             "socketTimeoutSec": 3,
             "refreshIntervalSec": 600,
+            "unregisterAppsAfterScanErrors": 3,
             "accessViaClusterIP": false
         }
     }

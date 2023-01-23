@@ -63,6 +63,7 @@
                     "serviceNameFilter": ".*",
                     "socketTimeoutSec": 3,
                     "refreshIntervalSec": 600,
+                    "unregisterAppsAfterScanErrors": -1,
                     "accessViaClusterIP": false
                 }
             },

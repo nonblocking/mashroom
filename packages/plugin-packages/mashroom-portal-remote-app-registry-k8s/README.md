@@ -38,6 +38,7 @@ You can override the default config in your Mashroom config file like this:
           "serviceNameFilter": "(microfrontend-|widget-)",
           "socketTimeoutSec": 3,
           "refreshIntervalSec": 600,
+          "unregisterAppsAfterScanErrors": -1,
           "accessViaClusterIP": false
         }
     }
@@ -51,6 +52,7 @@ You can override the default config in your Mashroom config file like this:
  * _serviceNameFilter_: A regular expression for services that should be checked (case insensitive). (Default: ".*")
  * _socketTimeoutSec_: Socket timeout when trying to the Kubernetes service (Default: 3)
  * _checkIntervalSec_: The time in seconds after that a registered services show be re-checked (Default: 600)
+ * _unregisterAppsAfterScanErrors_: Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
  * _accessViaClusterIP_: Access services via IP address and not via &lt;name&gt;.&lt;namespace&gt; (Default: false)
 
 The list of successful registered services will be available on **http://&lt;host&gt;:&lt;port&gt;/portal-remote-app-registry-kubernetes**

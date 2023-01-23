@@ -19,6 +19,7 @@ describe('KubernetesServiceRegistry', () => {
         lastCheck: Date.now(),
         status: 'Valid',
         error: null,
+        retries: 0,
         foundPortalApps: [
             portalApp1,
         ],
@@ -36,6 +37,7 @@ describe('KubernetesServiceRegistry', () => {
         lastCheck: Date.now(),
         status: 'Valid',
         error: null,
+        retries: 0,
         foundPortalApps: [
             portalApp2,
             portalApp3,

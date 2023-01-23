@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if a
+   service cannot be reached anymore.
  * Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if an
    endpoint cannot be reached anymore. This fixes the problem that Apps got unregistered if the endpoint was down during the
    endpoint refresh. Default is -1 which means Apps are never unregistered automatically. A value of 3 would mean that

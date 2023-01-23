@@ -26,7 +26,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     constructor(private _k8sNamespacesLabelSelector: string | Array<string> | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
                 private _k8sServiceLabelSelector: string | Array<string> | null | undefined, serviceNameFilterStr: string | null | undefined,
-                private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _accessViaClusterIP: boolean,
+                private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _unregisterAppsAfterScanErrors: number, private _accessViaClusterIP: boolean,
                 private _externalPluginConfigFileNames: Array<string>,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
         this._serviceNameFilter = new RegExp(serviceNameFilterStr || '.*', 'i');
@@ -106,6 +106,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                     status: 'Checking',
                                     lastCheck: Date.now(),
                                     error: null,
+                                    retries: 0,
                                     foundPortalApps: [],
                                     invalidPortalApps: [],
                                 };
@@ -182,17 +183,23 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             const packageJson = await this._loadPackageJson(service.url);
 
             const {foundPortalApps, invalidPortalApps} = this.processPluginDefinition(packageJson, externalPluginDefinition, service);
+            this._logger.info(`Registering Portal Apps for Kubernetes service: ${service.name}:`, foundPortalApps);
             service.status = 'Valid';
+            service.error = null;
+            service.retries = 0;
             service.foundPortalApps = foundPortalApps;
             service.invalidPortalApps = invalidPortalApps;
-
-            this._logger.info(`Registered Portal Apps for Kubernetes service: ${service.name}:`, foundPortalApps);
         } catch (error: any) {
+            this._logger.error(`Processing remote Portal App info for Kubernetes service ${service.name} failed! Retry: ${service.retries}`, error);
+
+            const removeRegisteredApps = this._unregisterAppsAfterScanErrors > -1 && service.retries >= this._unregisterAppsAfterScanErrors;
             service.status = 'Error';
             service.error = error.message;
-            service.foundPortalApps = [];
-            service.invalidPortalApps = [];
-            this._logger.error(`Processing remote Portal App info for Kubernetes service ${service.name} failed!`, error);
+            service.retries ++;
+            if (removeRegisteredApps) {
+                service.foundPortalApps = [];
+                service.invalidPortalApps = [];
+            }
         }
     }
 

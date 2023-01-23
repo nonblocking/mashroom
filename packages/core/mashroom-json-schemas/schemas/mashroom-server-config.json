@@ -751,6 +751,10 @@
                             "type": "integer",
                             "description": "The time in seconds after that a registered services show be re-checked (Default: 600)"
                         },
+                        "unregisterAppsAfterScanErrors": {
+                            "type": "integer",
+                            "description": "Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)"
+                        },
                         "accessViaClusterIP": {
                             "type": "boolean",
                             "description": "Access services via IP address and not via <name>.<namespace> (Default: false)"

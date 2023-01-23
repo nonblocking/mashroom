@@ -478,6 +478,10 @@ export interface Plugins {
      * Interval for refreshing known endpoints (Default: 600)
      */
     registrationRefreshIntervalSec?: number;
+    /**
+     * Remove registered Apps of an endpoint if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
+     */
+    unregisterAppsAfterScanErrors?: number;
   };
   "Mashroom Portal Remote App Registry"?: {
     /**
@@ -522,6 +526,10 @@ export interface Plugins {
      * The time in seconds after that a registered services show be re-checked (Default: 600)
      */
     refreshIntervalSec?: number;
+    /**
+     * Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
+     */
+    unregisterAppsAfterScanErrors?: number;
     /**
      * Access services via IP address and not via <name>.<namespace> (Default: false)
      */

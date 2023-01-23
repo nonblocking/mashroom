@@ -7,7 +7,10 @@ import type {MashroomBackgroundJobPluginBootstrapFunction} from '@mashroom/mashr
 
 const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();
-    const {k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter, socketTimeoutSec, refreshIntervalSec, accessViaClusterIP} = pluginConfig;
+    const {
+        k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter, socketTimeoutSec,
+        refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP
+    } = pluginConfig;
 
     context.namespaces = [...k8sNamespaces || []];
     context.serviceLabelSelector = k8sServiceLabelSelector;
@@ -18,7 +21,7 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
     const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(
         k8sNamespacesLabelSelector, k8sNamespaces,
         k8sServiceLabelSelector,serviceNameFilter,
-        socketTimeoutSec, refreshIntervalSec, accessViaClusterIP,
+        socketTimeoutSec, refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP,
         pluginContext.serverConfig.externalPluginConfigFileNames,
         kubernetesConnector, pluginContext.loggerFactory);
 
