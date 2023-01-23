@@ -93,10 +93,11 @@ const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: 
 
 const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
     const {cacheEnable, cacheTTLSec} = context.portalPluginConfig.ssrConfig;
+    const devMode = req.pluginContext.serverInfo.devMode;
     const cacheService: MashroomMemoryCacheService = req.pluginContext.services.memorycache?.service;
     const {ssrBootstrap: ssrBootstrapPath, ssrInitialHtmlUri, cachingConfig} = portalApp;
 
-    const cacheKey = cacheEnable && cacheService ? await getCacheKey(pluginName, portalAppSetup, cachingConfig, req) : null;
+    const cacheKey = !devMode && cacheEnable && cacheService ? await getCacheKey(pluginName, portalAppSetup, cachingConfig, req) : null;
 
     if (cacheKey) {
        const cachedHtml = await cacheService.get(CACHE_REGION, cacheKey);
