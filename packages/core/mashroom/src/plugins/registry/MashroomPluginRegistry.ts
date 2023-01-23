@@ -167,8 +167,6 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         this._plugins.set(plugin, connector);
 
         await this._load(plugin, connector);
-
-        await this._checkPluginsMissingRequirements();
     }
 
     private async _updatePlugin(plugin: MashroomPluginType, updatedPluginDefinition: MashroomPluginDefinition) {
@@ -250,6 +248,10 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
             this._eventEmitter.emit('loaded', {
                 pluginName: plugin.name,
             });
+
+            // After loading this plugin we might be able to load other Plugins with missing requirements
+            await this._checkPluginsMissingRequirements();
+
         } catch (error: any) {
             this._logger.error(`Loading plugin: ${plugin.name}, type: ${plugin.type} failed!`, error);
             pluginConnector.emitError({
@@ -315,7 +317,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
 
             const connector = this._plugins.get(unloadedPlugin);
             if (connector) {
-                this._logger.info(`Re-try to load plugin with no loader: ${unloadedPlugin.name}`);
+                this._logger.info(`Retry to load plugin with no loader: ${unloadedPlugin.name}`);
                 await this._load(unloadedPlugin, connector);
             }
         }
@@ -325,7 +327,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
         const unloadedPlugins = [...this._pluginsMissingRequirements];
         for (const unloadedPlugin of unloadedPlugins) {
             if (this._pluginsMissingRequirements.indexOf(unloadedPlugin) === -1) {
-                // If the re-load of a plugin takes a long time another call of
+                // If the reload of a plugin takes a long time another call of
                 // __checkPluginsMissingRequirements() could have loaded this already
                 continue;
             }
@@ -333,7 +335,7 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
 
             const connector = this._plugins.get(unloadedPlugin);
             if (connector) {
-                this._logger.info(`Re-try to load plugin with missing requirements: ${unloadedPlugin.name}`);
+                this._logger.info(`Retry to load plugin with missing requirements: ${unloadedPlugin.name}`);
                 await this._load(unloadedPlugin, connector);
             }
         }
