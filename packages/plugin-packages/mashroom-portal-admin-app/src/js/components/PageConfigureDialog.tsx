@@ -210,7 +210,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     }
 
     getInitialValues(): FormValues | null {
-        const {pages} = this.props;
+        const {pages, portalAdminService} = this.props;
         const {selectedPage} = this.props;
         if (!selectedPage) {
             return null;
@@ -226,7 +226,8 @@ export default class PageConfigureDialog extends PureComponent<Props> {
         } else {
             position = {
                 parentPageId: null,
-                insertAfterPageId: null
+                // Default: insert after the current page
+                insertAfterPageId: portalAdminService.getCurrentPageId(),
             };
         }
 
