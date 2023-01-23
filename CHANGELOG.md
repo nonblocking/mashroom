@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+ * Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if an
+   endpoint cannot be reached anymore. This fixes the problem that Apps got unregistered if the endpoint was down during the
+   endpoint refresh. Default is -1 which means Apps are never unregistered automatically. A value of 3 would mean that
+   Apps would be unregistered after 3 retries or 3 minutes if the scan interval is 1 minute.
+ * Remote App Registry: Unregister Apps properly if they disappear from a endpoint with multiple Apps
  * Admin Toolbar: If a page gets deleted all subpages are moved up the parent level (until now they just disappeared)
  * Admin Toolbar: Don't allow to remote the last Site
  * Mashroom Portal: Made sure that all related resources are removed from the storage if a Site or Page is deleted (Permissions, App Instances, ...)

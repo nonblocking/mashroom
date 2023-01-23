@@ -25,7 +25,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     private _externalPluginConfigFileNames: Array<string>;
     private _logger: MashroomLogger;
 
-    constructor(private _socketTimeoutSec: number , private _registrationRefreshIntervalSec: number, private _pluginContextHolder: MashroomPluginContextHolder) {
+    constructor(private _socketTimeoutSec: number , private _registrationRefreshIntervalSec: number, private _unregisterAppsAfterScanErrors: number, private _pluginContextHolder: MashroomPluginContextHolder) {
         const pluginContext = _pluginContextHolder.getPluginContext();
         this._externalPluginConfigFileNames = pluginContext.serverConfig.externalPluginConfigFileNames;
         this._logger = pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
@@ -44,18 +44,19 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
         const updatedEndpoint = await this.fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint);
 
-        if (!updatedEndpoint.lastError || (updatedEndpoint.invalidPortalApps && updatedEndpoint.invalidPortalApps.length > 0)) {
+        if (updatedEndpoint.portalApps.length > 0) {
             updatedEndpoint.portalApps.forEach((portalApp) => {
-                this._logger.info('Registering remote Portal App:', {portalApp});
+                this._logger.debug('Registering remote Portal App:', {portalApp});
                 context.registry.registerRemotePortalApp(portalApp);
             });
-        } else {
-            this._logger.error(`Registering apps for remote Portal Apps failed: ${remotePortalAppEndpoint.url}. # retries: ${remotePortalAppEndpoint.retries}`);
-            remotePortalAppEndpoint.portalApps.forEach((portalApp) => {
-                this._logger.info('Unregister remote Portal App:', {portalApp});
-                context.registry.unregisterRemotePortalApp(portalApp.name);
-            });
         }
+
+        const removedPortalApps = [...remotePortalAppEndpoint.portalApps]
+            .filter((existingApp) => !updatedEndpoint.portalApps.find((foundApp) => foundApp.name === existingApp.name));
+        removedPortalApps.forEach((portalApp) => {
+            this._logger.debug('Unregister remote Portal App:', {portalApp});
+            context.registry.unregisterRemotePortalApp(portalApp.name);
+        });
 
         await portalRemoteAppEndpointService.updateRemotePortalAppEndpoint(updatedEndpoint);
     }
@@ -68,6 +69,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
 
             const {foundPortalApps, invalidPortalApps} = this.processPluginDefinition(packageJson, externalPluginDefinition, remotePortalAppEndpoint);
+            this._logger.info(`Registering Portal Apps for endpoint: ${remotePortalAppEndpoint.url}:`, foundPortalApps);
             return {
                 ...remotePortalAppEndpoint, lastError: null,
                 retries: 0,
@@ -77,13 +79,15 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             };
 
         } catch (error: any) {
-            this._logger.error('Processing remote Portal App endpoint failed!', error);
+            this._logger.error(`Processing remote Portal App endpoint ${remotePortalAppEndpoint.url} failed! Retry: ${remotePortalAppEndpoint.retries}`, error);
 
+            const removeRegisteredApps = this._unregisterAppsAfterScanErrors > -1 && remotePortalAppEndpoint.retries >= this._unregisterAppsAfterScanErrors;
             return {
                 ...remotePortalAppEndpoint, lastError: error.message,
                 retries: remotePortalAppEndpoint.retries + 1,
                 registrationTimestamp: null,
-                portalApps: []
+                portalApps: removeRegisteredApps ? [] : remotePortalAppEndpoint.portalApps,
+                invalidPortalApps: removeRegisteredApps ? [] : remotePortalAppEndpoint.invalidPortalApps,
             };
         }
     }

@@ -671,6 +671,10 @@
                         "registrationRefreshIntervalSec": {
                             "type": "integer",
                             "description": "Interval for refreshing known endpoints (Default: 600)"
+                        },
+                        "unregisterAppsAfterScanErrors": {
+                            "type": "integer",
+                            "description": "Remove registered Apps of an endpoint if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)"
                         }
                     },
                     "additionalProperties": false

@@ -34,7 +34,8 @@ You can override the default config in your Mashroom config file like this:
       "Mashroom Portal Remote App Background Job": {
           "cronSchedule": "0/1 * * * *",
           "socketTimeoutSec": 3,
-          "registrationRefreshIntervalSec": 600
+          "registrationRefreshIntervalSec": 600,
+          "unregisterAppsAfterScanErrors": -1
       },
       "Mashroom Portal Remote App Registry": {
           "remotePortalAppUrls": "./remotePortalApps.json"
@@ -49,6 +50,7 @@ You can override the default config in your Mashroom config file like this:
  * _cronSchedule_: The cron schedule for the background job that scans for new apps (Default: every minute)
  * _socketTimeoutSec_: Socket timeout when trying to reach the remote app (Default: 3)
  * _registrationRefreshIntervalSec_: Interval for refreshing known endpoints (Default: 600)
+ * _unregisterAppsAfterScanErrors_: Remove registered Apps of an endpoint if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
  * _remotePortalAppUrls_: Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)
  * _showAddRemoteAppForm_: Show the *Add a new Remote Portal App Endpoint* form in the Admin UI
 

@@ -171,6 +171,9 @@
             "showEnvAndVersions": true,
             "spaMode": true
         },
+        "Mashroom Portal Remote App Background Job": {
+            "unregisterAppsAfterScanErrors": 3
+        },
         "Mashroom Portal Remote App Registry": {
             "remotePortalAppUrls": "./remotePortalApps.json"
         },

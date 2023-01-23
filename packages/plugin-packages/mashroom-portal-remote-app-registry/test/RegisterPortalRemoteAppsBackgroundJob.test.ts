@@ -228,7 +228,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             .get('/package.json')
             .reply(200, packageJson);
 
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, -1, pluginContextHolder);
 
         await backgroundJob._processInBackground();
 
@@ -272,7 +272,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             .get('/package.json')
             .reply(200, packageJson);
 
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, -1, pluginContextHolder);
 
         await backgroundJob._processInBackground();
 
@@ -288,7 +288,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('processes package.json correctly', () => {
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, -1, pluginContextHolder);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson, null, remotePortalAppEndpoint);
 
@@ -351,7 +351,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('processes an external plugin package definition correctly', () => {
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, -1, pluginContextHolder);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, remotePortalAppEndpoint);
 
@@ -429,7 +429,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('processes a portal-app config v2 correctly', () => {
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, -1, pluginContextHolder);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition, remotePortalAppEndpoint);
 
@@ -489,7 +489,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('processes a portal-app config v1 correctly', () => {
-        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, pluginContextHolder);
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(3, 10, -1, pluginContextHolder);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, remotePortalAppEndpoint);
 
