@@ -17,7 +17,7 @@
         "express": "^4.18.2",
         "express-handlebars": "^6.0.6",
         "handlebars": "^4.7.7",
-        "node-fetch": "^2.6.7"
+        "node-fetch": "^2.6.8"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.2.3",
@@ -28,7 +28,7 @@
         "@mashroom/mashroom-storage": "2.2.3",
         "@mashroom/mashroom-utils": "2.2.3",
         "@types/body-parser": "^1.19.2",
-        "@types/express": "^4.17.14",
+        "@types/express": "^4.17.15",
         "@types/express-handlebars": "^6.0.0",
         "@types/node-fetch": "^2.6.2"
     },

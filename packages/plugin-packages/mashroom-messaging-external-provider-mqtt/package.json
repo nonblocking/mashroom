@@ -16,7 +16,7 @@
         "@mashroom/mashroom": "2.2.3",
         "@mashroom/mashroom-messaging": "2.2.3",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.2.3",
-        "@types/ws": "^8.5.3"
+        "@types/ws": "^8.5.4"
     },
     "jest": {
         "verbose": true,

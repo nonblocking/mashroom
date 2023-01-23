@@ -20,8 +20,8 @@
         "@mashroom/mashroom-json-schemas": "2.2.3",
         "@mashroom/mashroom-portal": "2.2.3",
         "@types/markdown-it": "^12.2.3",
-        "@types/react": "^18.0.24",
-        "@types/react-dom": "^18.0.8"
+        "@types/react": "^18.0.27",
+        "@types/react-dom": "^18.0.10"
     },
     "scripts": {
         "lint": "eslint src --ext .ts,.tsx --fix",

@@ -16,7 +16,7 @@
         "@mashroom/mashroom": "2.2.3",
         "@mashroom/mashroom-i18n": "2.2.3",
         "@mashroom/mashroom-utils": "2.2.3",
-        "@types/express": "^4.17.14"
+        "@types/express": "^4.17.15"
     },
     "jest": {
         "verbose": true,

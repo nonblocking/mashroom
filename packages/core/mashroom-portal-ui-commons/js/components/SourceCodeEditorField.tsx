@@ -1,5 +1,5 @@
 
-import React, {PureComponent, createRef, type RefObject} from 'react';
+import React, {PureComponent, createRef, type RefObject, type ReactNode} from 'react';
 import CodeMirror, {type ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import {githubDark, githubLight} from '@uiw/codemirror-theme-github';
 import {json} from '@codemirror/lang-json';
@@ -7,7 +7,6 @@ import {css} from '@codemirror/lang-css';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
-import type {ReactNode} from 'react';
 import type {FieldProps} from 'formik';
 
 type Props = {

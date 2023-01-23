@@ -5,7 +5,7 @@
     "dependencies": {
         "@mashroom/mashroom": "2.2.3",
         "pm2": "^5.2.2",
-        "prom-client": "^14.1.0"
+        "prom-client": "^14.1.1"
     },
     "devDependencies": {
         "@mashroom/mashroom-json-schemas": "2.2.3"
