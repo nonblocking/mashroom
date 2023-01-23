@@ -64,6 +64,7 @@ export const loadedPortalAppsInternal: Array<LoadedPortalAppInternal> = [];
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalAppService {
 
+    private _apiPath: string;
     private _restService: MashroomRestService;
     private _loadListeners: Array<MashroomPortalAppLoadListener>;
     private _aboutToUnloadListeners: Array<MashroomPortalAppLoadListener>;
@@ -74,9 +75,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     private _appsUpdateEventSource: EventSource | undefined;
 
     constructor(restService: MashroomRestService, private _resourceManager: ResourceManager) {
-        const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
-        console.debug('Using portal api path:', apiPath);
-        this._restService = restService.withBasePath(apiPath);
+        this._apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
+        console.debug('Using portal api path:', this._apiPath);
+        this._restService = restService.withBasePath(this._apiPath);
         this._loadListeners = [];
         this._aboutToUnloadListeners = [];
         this._watch = !!(global as any)[WINDOW_VAR_PORTAL_DEV_MODE];
@@ -906,7 +907,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 this._watchTimer = setInterval(this._devModeCheckForAppUpdates.bind(this), DEV_MODE_APP_UPDATE_CHECK_INTERVAL);
             }
         } else if (!this._appsUpdateEventSource) {
-            this._appsUpdateEventSource = new EventSource('/portal/web/___/api/portal-push-plugin-updates');
+            const updateSourcePath = `${this._apiPath}/portal-push-plugin-updates`;
+            console.debug('Registering for plugin updates:', updateSourcePath);
+            this._appsUpdateEventSource = new EventSource(updateSourcePath);
             this._appsUpdateEventSource.onmessage = (msg: any) => {
                 const event = JSON.parse(msg.data);
                 this._devModelAppUpdateEventReceived(event.type, event.event);
