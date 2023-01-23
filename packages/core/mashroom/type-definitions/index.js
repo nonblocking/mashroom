@@ -2,7 +2,7 @@
 
 import type {Router, $Request, $Response, $Application, NextFunction} from 'express';
 
-export type ExpressRequestWithContext = $Subtype<$Request> & {
+export type ExpressRequestWithContext = $Request & {
     pluginContext: MashroomPluginContext,
     session?: any;
 };
