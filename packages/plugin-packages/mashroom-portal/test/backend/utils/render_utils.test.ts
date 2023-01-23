@@ -83,7 +83,10 @@ describe('path_utils', () => {
                         }
                     },
                 }
-            }
+            },
+            serverInfo: {
+                devMode: false,
+            },
         };
         const req: any = {
             pluginContext,
