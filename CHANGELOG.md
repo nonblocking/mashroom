@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Mashroom Portal: Hot reload of Apps works now in all sites and on virtual host
  * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if a
    service cannot be reached anymore.
  * Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if an
