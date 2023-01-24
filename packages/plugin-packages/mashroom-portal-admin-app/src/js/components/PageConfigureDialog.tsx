@@ -224,10 +224,11 @@ export default class PageConfigureDialog extends PureComponent<Props> {
             page = {...selectedPage.page, ...selectedPage.pageRef};
             position = getPagePosition(pageId, pages.pagesFlattened, pages.pages);
         } else {
+            const currentPageId = portalAdminService.getCurrentPageId();
             position = {
-                parentPageId: null,
                 // Default: insert after the current page
-                insertAfterPageId: portalAdminService.getCurrentPageId(),
+                parentPageId: pages.pagesFlattened.find((p) => p.subPages?.find((sp) => sp.pageId === currentPageId))?.pageId,
+                insertAfterPageId: currentPageId,
             };
         }
 
@@ -333,7 +334,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
                         <CheckboxField id='hidden' name='page.hidden' labelId='hideInNavigation'/>
                     </FormCell>
                 </FormRow>
-                <PagePositionSelection pageId={selectedPage.pageId} pages={pages.pagesFlattened}/>
+                <PagePositionSelection selectedPageId={selectedPage.pageId} pages={pages.pagesFlattened}/>
             </DialogContent>
         );
     }

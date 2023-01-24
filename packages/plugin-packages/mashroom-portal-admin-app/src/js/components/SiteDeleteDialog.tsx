@@ -1,5 +1,5 @@
 
-import React, {PureComponent, Fragment} from 'react';
+import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {
     Button,
@@ -72,7 +72,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
         const siteTitle = site && site.title || '???';
 
         return (
-            <Fragment>
+            <>
                 <DialogContent>
                    <FormattedMessage id='confirmDeleteSite' values={{ siteTitle }}/>
                 </DialogContent>
@@ -80,7 +80,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
                     <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                     <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
                 </DialogButtons>
-            </Fragment>
+            </>
         );
     }
 

@@ -1,5 +1,5 @@
 
-import React, {PureComponent, Fragment} from 'react';
+import React, {PureComponent} from 'react';
 import PortalAppConfigureDialog from '../containers/PortalAppConfigureDialog';
 import PageConfigureDialog from '../containers/PageConfigureDialog';
 import PageDeleteDialog from '../containers/PageDeleteDialog';
@@ -14,13 +14,13 @@ export default class Modals extends PureComponent<Props> {
 
     render(): ReactNode {
         return (
-            <Fragment>
+            <>
                 <PortalAppConfigureDialog/>
                 <PageConfigureDialog/>
                 <PageDeleteDialog/>
                 <SiteConfigureDialog/>
                 <SiteDeleteDialog/>
-            </Fragment>
+            </>
         );
     }
 }
