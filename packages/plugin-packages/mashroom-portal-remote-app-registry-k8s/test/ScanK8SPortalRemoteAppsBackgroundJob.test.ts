@@ -505,4 +505,45 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             }
         });
     });
+
+    it('replaces service when its port changes', async () => {
+        nock('http://my-remote-app.dev-namespace2:6066')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const dummyNamespaceConnector = new DummyKubernetesConnector();
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
+            300, -1,false, [], dummyNamespaceConnector, dummyLoggerFactory);
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(1);
+        expect(context.registry.services[0].port).toBe(6066);
+
+        nock('http://my-remote-app.dev-namespace2:6067')
+            .get('/package.json')
+            .reply(200, packageJson);
+
+        const origServiceInfo = await dummyNamespaceConnector.getNamespaceServices('dev-namespace2');
+        const patchedServiceInfo = {
+            items: [
+                {
+                    ...origServiceInfo.items[0],
+                    spec: {
+                        ...origServiceInfo.items[0].spec,
+                        ports: [{
+                            port: 6067,
+                        }]
+                    },
+                },
+            ]
+        };
+
+        dummyNamespaceConnector.getNamespaceServices = jest.fn(() => Promise.resolve(patchedServiceInfo));
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(1);
+        expect(context.registry.services[0].port).toBe(6067);
+    });
 });

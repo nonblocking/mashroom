@@ -89,6 +89,16 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                         status: 'Checking',
                                         lastCheck: Date.now(),
                                         error: null,
+                                        port,
+                                    };
+                                } else if (existingService.port !== port) {
+                                    service = {
+                                        ...existingService,
+                                        priority,
+                                        status: 'Checking',
+                                        lastCheck: Date.now(),
+                                        error: null,
+                                        port,
                                     };
                                 }
                             } else {
