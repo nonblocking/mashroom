@@ -28,7 +28,7 @@ Predefined users: john/john, admin/admin
 
 To add some additional users and manage roles:
 
-  * Open: http://localhost:8080/auth/admin/
+  * Open: http://localhost:8080/admin
   * Login with admin/admin
   * Switch to the *Test* realm and add manage users and roles
   * Add the *mashroom-admin* role if the users should be Administrator
