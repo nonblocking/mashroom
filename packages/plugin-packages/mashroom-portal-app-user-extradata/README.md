@@ -8,5 +8,5 @@ This is useful if the security provider adds some extra information (such as the
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-enhancement-legacy-browser** as *dependency*.
+If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-app-user-extradata** as *dependency*.
 
