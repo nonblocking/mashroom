@@ -2,7 +2,7 @@
     "name": "mashroom-parent",
     "private": true,
     "dependencies": {
-        "lerna": "^6.0.1"
+        "lerna": "^6.4.1"
     },
     "devDependencies": {
         "@babel/core": "^7.20.12",
