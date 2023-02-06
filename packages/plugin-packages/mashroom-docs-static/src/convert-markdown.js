@@ -108,7 +108,8 @@ async function main() {
             top: '20px',
             right: '10px',
             bottom: '50px'
-        }
+        },
+        timeout: 0,
     });
     fs.writeFileSync(path.resolve(__dirname, '../public/docs/mashroom_documentation.pdf'), pdf);
 
