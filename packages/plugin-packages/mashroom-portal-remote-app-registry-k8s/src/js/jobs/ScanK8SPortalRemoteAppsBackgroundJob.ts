@@ -82,16 +82,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                             let service: KubernetesService | undefined;
 
                             if (existingService) {
-                                if (existingService.status === 'Error' || existingService.invalidPortalApps.length > 0 || existingService.lastCheck < Date.now() - this._refreshIntervalSec * 1000) {
-                                    service = {
-                                        ...existingService,
-                                        priority,
-                                        status: 'Checking',
-                                        lastCheck: Date.now(),
-                                        error: null,
-                                        port,
-                                    };
-                                } else if (existingService.port !== port) {
+                                if (existingService.status === 'Error' || existingService.invalidPortalApps.length > 0 || existingService.lastCheck < Date.now() - this._refreshIntervalSec * 1000 || existingService.port !== port) {
                                     service = {
                                         ...existingService,
                                         priority,

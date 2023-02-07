@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
- * K8S Remote App Scan should notice when service port changes and load app definition from the new URL.
+ * Kubernetes Remote App Registry: If the service port changes the App definition gets reloaded with the next scan
  * Mashroom Portal: Hot reload of Apps works now in all sites and on virtual host
  * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if a
    service cannot be reached anymore.
