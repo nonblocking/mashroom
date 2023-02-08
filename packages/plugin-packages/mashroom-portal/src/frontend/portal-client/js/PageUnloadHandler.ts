@@ -3,7 +3,7 @@ import { loadedPortalAppsInternal } from './MashroomPortalAppServiceImpl';
 
 /*
  * On page unload we call all willBeRemoved lifecycle hooks to give the apps the chance
- * to cleanup or persist their state properly
+ * to clean up or persist their state properly
  */
 export default class PageUnloadHandler {
 

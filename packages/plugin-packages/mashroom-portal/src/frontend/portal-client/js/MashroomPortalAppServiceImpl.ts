@@ -11,6 +11,7 @@ import {
     WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
     SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
 } from '../../../backend/constants';
+import {HEADER_DO_NOT_EXTEND_SESSION} from './headers';
 
 import type {
     MashroomPortalLoadedPortalAppStats,
@@ -931,7 +932,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     private _getUpdatedAppsSince(ts: number): Promise<Array<MashroomAvailablePortalApp>> {
         return this._restService.get(`/portal-apps?updatedSince=${ts}`, {
-            'x-mashroom-does-not-extend-auth': '1'
+            [HEADER_DO_NOT_EXTEND_SESSION]: '1'
         });
     }
 }

@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Mashroom Portal: Made sure that the session is not touched for resource requests (images, JS, CSS) and the
+   set-cookie header not set. Otherwise, the resources will not be cached by proxy servers.
  * Kubernetes Remote App Registry: If the service port changes the App definition gets reloaded with the next scan
  * Mashroom Portal: Hot reload of Apps works now in all sites and on virtual host
  * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if a

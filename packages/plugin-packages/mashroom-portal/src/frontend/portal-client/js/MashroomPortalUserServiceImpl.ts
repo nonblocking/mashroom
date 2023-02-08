@@ -3,6 +3,7 @@ import {
     WINDOW_VAR_PORTAL_API_PATH,
     WINDOW_VAR_PORTAL_LANGUAGE
 } from '../../../backend/constants';
+import {HEADER_DO_NOT_EXTEND_SESSION} from './headers';
 
 import type {RestError} from './RestError';
 import type {MashroomPortalUserService} from '../../../../type-definitions';
@@ -20,7 +21,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
     getAuthenticationExpiration(): Promise<number | null> {
         const path = '/users/authenticated/authExpiration';
         return this._restService.get(path, {
-            'x-mashroom-does-not-extend-auth': '1'
+            [HEADER_DO_NOT_EXTEND_SESSION]: '1'
         }).then(
             (data) => {
                 if (data?.expirationTime) {
@@ -40,7 +41,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
     }
 
     extendAuthentication(): void {
-        // For the moment: Just request the authentication expiration without the x-mashroom-does-not-extend-auth header
+        // For the moment: Just request the authentication expiration without the x-mashroom-no-extend-session header
         const path = '/users/authenticated/authExpiration';
         this._restService.get(path);
     }

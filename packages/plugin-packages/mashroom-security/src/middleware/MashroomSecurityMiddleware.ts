@@ -1,5 +1,6 @@
 
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {isStaticResourceRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 
 import type {Request, Response, NextFunction} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -11,7 +12,7 @@ import type {
     MashroomSecurityMiddleware as MashroomSecurityMiddlewareType,
 } from '../../type-definitions/internal';
 
-const HEADER_DOES_NOT_EXTEND_AUTHENTICATION = 'x-mashroom-does-not-extend-auth';
+const HEADER_DO_NOT_EXTEND_SESSION = 'x-mashroom-no-extend-session';
 
 const addUserToLogContext = (user: MashroomSecurityUser | undefined | null, logger: MashroomLogger) => {
     if (user) {
@@ -65,7 +66,11 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
     }
 
     private async _checkAuthentication(securityService: MashroomSecurityService, req: Request): Promise<void> {
-        if (securityService.isAuthenticated(req) && !req.headers[HEADER_DOES_NOT_EXTEND_AUTHENTICATION]) {
+        // We only want to (re-)check the authentication if this is "real" user request and not a resource
+        //  or a request that contains the header x-mashroom-no-extend-session (because checkAuthentication typically also extends the session).
+        // The main reason is performance but also caching, since updating the session always adds the set-cookie header to the response
+        //  and proxies refuse to cache responses which contain that header.
+        if (securityService.isAuthenticated(req) && !isStaticResourceRequest(req) && !req.headers[HEADER_DO_NOT_EXTEND_SESSION]) {
             await securityService.checkAuthentication(req);
         }
     }

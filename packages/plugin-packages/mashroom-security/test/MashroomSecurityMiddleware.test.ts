@@ -112,52 +112,6 @@ describe('MashroomSecurityMiddleware', () => {
         expect(() => responsePassedToAuthenticate.redirect()).toThrow('Using res.redirect() is not allowed when canAuthenticateWithoutUserInteraction() returned true');
     });
 
-    it('doesnt call refreshAuthentication if the x-mashroom-does-not-extend-auth header is set', async () => {
-        let checkAuthenticationCalled = false;
-
-        const req: any = {
-            headers: {
-                ['x-mashroom-does-not-extend-auth']: 1
-            },
-            pluginContext: {
-                loggerFactory,
-                services: {
-                    security: {
-                        service: {
-                            async checkACL() {
-                                return true;
-                            },
-                            isAuthenticated() {
-                                return true;
-                            },
-                            async checkAuthentication() {
-                                checkAuthenticationCalled = true;
-                            },
-                            async canAuthenticateWithoutUserInteraction() {
-                                return false;
-                            },
-                            getUser() {
-                                return null;
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        const res: any = {
-
-        };
-
-        const next = () => { /* nothing to do */ };
-
-        const securityMiddleware = new MashroomSecurityMiddleware();
-
-        await securityMiddleware.middleware()(req, res, next);
-
-        expect(checkAuthenticationCalled).toBeFalsy();
-    });
-
     it('starts authentication if access is not permitted for anonymous', async () => {
         const req: any = {
             pluginContext: {
@@ -243,5 +197,68 @@ describe('MashroomSecurityMiddleware', () => {
         expect(sendStatus.mock.calls.length).toBe(1);
     });
 
+    it('re-checks authentication for user requests', async () => {
+        let checkAuthenticationCalled = false;
+        const pluginContext = {
+            loggerFactory,
+            services: {
+                security: {
+                    service: {
+                        async checkACL() {
+                            return false;
+                        },
+                        isAuthenticated() {
+                            return true;
+                        },
+                        checkAuthentication() {
+                            checkAuthenticationCalled = true;
+                            return false;
+                        },
+                        getUser() {
+                            // anonymous
+                            return {};
+                        }
+                    }
+                }
+            }
+        };
+
+        const req1: any = {
+            pluginContext,
+            method: 'GET',
+            path: '/foo/bar.js',
+            headers: {}
+        };
+        const req2: any = {
+            pluginContext,
+            method: 'GET',
+            path: '/foo/bar',
+            headers: {
+                'x-mashroom-no-extend-session': '1',
+            },
+        };
+        const req3: any = {
+            pluginContext,
+            method: 'GET',
+            path: '/foo/bar',
+            headers: {}
+        };
+
+        const res: any = {
+            sendStatus: () => { /* ignore */ },
+        };
+        const next = jest.fn();
+
+        const securityMiddleware = new MashroomSecurityMiddleware();
+
+        await securityMiddleware.middleware()(req1, res, next);
+        expect(checkAuthenticationCalled).toBeFalsy();
+
+        await securityMiddleware.middleware()(req2, res, next);
+        expect(checkAuthenticationCalled).toBeFalsy();
+
+        await securityMiddleware.middleware()(req3, res, next);
+        expect(checkAuthenticationCalled).toBeTruthy();
+    });
 
 });

@@ -1,6 +1,7 @@
 
 import {PORTAL_APP_API_PATH, PORTAL_INTERNAL_PATH, WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
 import {serializeError} from './serialization_utils';
+import {HEADER_DO_NOT_EXTEND_SESSION} from './headers';
 
 import type {LogLevel} from '@mashroom/mashroom/type-definitions';
 import type {MasterMashroomPortalRemoteLogger, MashroomPortalRemoteLogger} from '../../../../type-definitions';
@@ -83,7 +84,9 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         }
 
         try {
-            this._restService.post('/log', messages).catch(() => {
+            this._restService.post('/log', messages, {
+                [HEADER_DO_NOT_EXTEND_SESSION]: '1'
+            }).catch(() => {
                // Catch and ignore all errors,
                // otherwise this will generate new log messages which will most probably fail again
             });
