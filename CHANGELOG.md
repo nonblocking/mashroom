@@ -3,29 +3,33 @@
 
 ## [unreleased]
 
- * Mashroom Portal: Made sure that the session is not touched for resource requests (images, JS, CSS) and the
+
+## 2.3.0 (February 10, 2023)
+
+ * Portal: Made sure that the session is not touched for resource requests (images, JS, CSS) and the
    set-cookie header not set. Otherwise, the resources will not be cached by proxy servers.
  * Kubernetes Remote App Registry: If the service port changes the App definition gets reloaded with the next scan
- * Mashroom Portal: Hot reload of Apps works now in all sites and on virtual host
- * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if a
-   service cannot be reached anymore.
- * Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control when Apps are unregistered if an
-   endpoint cannot be reached anymore. This fixes the problem that Apps got unregistered if the endpoint was down during the
-   endpoint refresh. Default is -1 which means Apps are never unregistered automatically. A value of 3 would mean that
-   Apps would be unregistered after 3 retries or 3 minutes if the scan interval is 1 minute.
+ * Portal: Hot reload of Apps works now in all sites and when *mashroom-vhost-path-mapper* is being used
+ * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control if Apps
+   should be unregistered if a service cannot be reached anymore
+ * Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to  if Apps
+   should be unregistered if an endpoint cannot be reached anymore. This fixes the problem that Apps got unregistered
+   if the endpoint was down during the refresh. Default is -1 which means Apps are never unregistered automatically.
+   A value of 3 would mean that Apps would be unregistered after 3 retries or 3 minutes if the scan interval is 1 minute.
  * Remote App Registry: Unregister Apps properly if they disappear from a endpoint with multiple Apps
  * Admin Toolbar: If a page gets deleted all subpages are moved up the parent level (until now they just disappeared)
- * Admin Toolbar: Don't allow to remote the last Site
- * Mashroom Portal: Made sure that all related resources are removed from the storage if a Site or Page is deleted (Permissions, App Instances, ...)
- * Mashroom Portal: Added a method *checkLoadedPortalAppsUpdated()* to the *portalAppService* that allows it to check if Portal Apps
+ * Admin Toolbar: Doesn't allow to remove the last Site anymore
+ * Portal: Made sure that all related resources are removed from the storage if a Site or Page is deleted (Permissions, App Instances, ...)
+ * Portal: Added a method *checkLoadedPortalAppsUpdated()* to the *portalAppService* which allows it to check if the Portal Apps
    loaded in the Browser have been redeployed. This could be used in a (long-running) dynamic cockpit to inform the user
-   that some Apps might not work as expected anymore and a reload of the page is necessary.
+   that some Apps might not work as expected anymore and a reload of the page would be recommended.
  * Sandbox Apps: Shows now the number of loaded resources, the resources size and (if available) the memory usage of the page
- * Mashroom Portal: The App Info shows now also the number of the loaded resources for an App and the decoded size of those resources
- * Core: Use [nx](https://nx.dev) for building in dev mode if available. This should lead to a much faster startup in dev mode,
+ * Portal: The App Info shows now also the number of the loaded resources for an App and the decoded size of those resources
+ * Core: Uses [nx](https://nx.dev) for building in dev mode if it is available. This should lead to a much faster startup in dev mode,
    especially if the distributed cloud cache is used.
- * Core: Improved support for [ts-node](https://github.com/TypeStrong/ts-node). If Mashroom runs with ts-node all config files can be written in TypeScript.
-   This includes plugin config files. Example server config file mashroom.ts:
+ * Core: Improved support for [ts-node](https://github.com/TypeStrong/ts-node). If Mashroom runs with ts-node
+   all config files can be written in TypeScript. This includes plugin config files.
+   Example server config file mashroom.ts:
   ```ts
     import type {MashroomServerConfig} from '@mashroom/mashroom-json-schemas/type-definitions';
     const serverConfig: MashroomServerConfig = {
