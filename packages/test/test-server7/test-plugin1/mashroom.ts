@@ -1,7 +1,7 @@
 
 import type {MashroomPlugins} from '@mashroom/mashroom-json-schemas/type-definitions';
 
-const plugins: MashroomPlugins = {
+const pluginDefinition: MashroomPlugins = {
     plugins: [
         {
             name: 'Test Webapp Plugin with TS config',
@@ -15,4 +15,4 @@ const plugins: MashroomPlugins = {
     ]
 }
 
-export default plugins;
+export default pluginDefinition;

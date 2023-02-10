@@ -9,14 +9,14 @@
  * Portal: Made sure that the session is not touched for resource requests (images, JS, CSS) and the
    set-cookie header not set. Otherwise, the resources will not be cached by proxy servers.
  * Kubernetes Remote App Registry: If the service port changes the App definition gets reloaded with the next scan
- * Portal: Hot reload of Apps works now in all sites and when *mashroom-vhost-path-mapper* is being used
+ * Portal: Hot reload of Apps works now on all sites and when *mashroom-vhost-path-mapper* is being used
  * Kubernetes Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to control if Apps
    should be unregistered if a service cannot be reached anymore
  * Remote App Registry: Added a config property *unregisterAppsAfterScanErrors* to  if Apps
    should be unregistered if an endpoint cannot be reached anymore. This fixes the problem that Apps got unregistered
    if the endpoint was down during the refresh. Default is -1 which means Apps are never unregistered automatically.
    A value of 3 would mean that Apps would be unregistered after 3 retries or 3 minutes if the scan interval is 1 minute.
- * Remote App Registry: Unregister Apps properly if they disappear from a endpoint with multiple Apps
+ * Remote App Registry: Unregister Apps properly if they disappear from an endpoint with multiple Apps
  * Admin Toolbar: If a page gets deleted all subpages are moved up the parent level (until now they just disappeared)
  * Admin Toolbar: Doesn't allow to remove the last Site anymore
  * Portal: Made sure that all related resources are removed from the storage if a Site or Page is deleted (Permissions, App Instances, ...)
