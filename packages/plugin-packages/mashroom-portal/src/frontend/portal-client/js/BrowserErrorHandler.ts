@@ -53,7 +53,7 @@ const tapIntoConsoleLog = (logType: 'error' | 'warn' | 'info', fn: (portalAppNam
     console[logType] = function (...args: Array<any>) {
         // Try to detect the App which writes this error
         let portalAppName = undefined;
-        const stack = new Error().stack?.split('/n');
+        const stack = new Error().stack?.split('\n').reverse();
         if (stack) {
             for (let i = 0; i < stack.length; i++) {
                 portalAppName = getAppNameFromScript(stack[i]);
