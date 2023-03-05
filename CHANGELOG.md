@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: The client side log now determines correctly which App caused an error, even within Composite Apps
 
 ## 2.3.0 (February 10, 2023)
 
