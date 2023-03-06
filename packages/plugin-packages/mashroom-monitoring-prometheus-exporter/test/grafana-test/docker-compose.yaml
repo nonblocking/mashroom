@@ -25,7 +25,6 @@ services:
         ports:
             - 3000:3000
         volumes:
-
             - ./grafana/provisioning/:/etc/grafana/provisioning/
         env_file:
             - ./grafana/config.monitoring
