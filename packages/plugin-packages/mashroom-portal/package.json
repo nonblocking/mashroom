@@ -76,6 +76,7 @@
                     "warnBeforeAuthenticationExpiresSec": 60,
                     "autoExtendAuthentication": false,
                     "ignoreMissingAppsOnPages": false,
+                    "versionHashSalt": null,
                     "defaultProxyConfig": {
                         "sendPermissionsHeader": false,
                         "restrictToRoles": null

@@ -5,7 +5,7 @@ import type {MashroomPortalContext, MashroomPortalPluginConfig} from '../../../t
 
 const pluginRegistry = new MashroomPortalPluginRegistry();
 
-let portalPluginConfig: any = {};
+let portalPluginConfig: MashroomPortalPluginConfig = {} as any;
 
 const globalPortalContext: MashroomPortalContext = {
     startTs: Date.now(),
