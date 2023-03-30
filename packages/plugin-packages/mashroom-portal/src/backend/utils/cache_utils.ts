@@ -1,5 +1,6 @@
 
 import {createHash} from 'crypto';
+import context from '../context/global_portal_context';
 
 const LOAD_TS = Date.now();
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -9,7 +10,12 @@ let portalVersionHash: string | undefined;
 
 export const getVersionHash = (version: string, lastReloadTs: number | null, devMode: boolean) => {
     const fullVersion = `${version}${devMode ? `-${lastReloadTs || Date.now()}` : ''}`;
-    return createHash('md5').update(fullVersion).digest('hex').substring(0, 10);
+    const hash = createHash('md5');
+    const {versionHashSalt} = context.portalPluginConfig;
+    if (versionHashSalt) {
+        hash.update(versionHashSalt);
+    }
+    return hash.update(fullVersion).digest('hex').substring(0, 10);
 };
 
 export const getPortalVersionHash = (devMode: boolean) => {

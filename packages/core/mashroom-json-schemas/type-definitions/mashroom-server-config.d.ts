@@ -409,6 +409,10 @@ export interface Plugins {
      */
     ignoreMissingAppsOnPages?: boolean;
     /**
+     * If you need unique resource version hashes per server instance provide here a string (Default: null)
+     */
+    versionHashSalt?: string;
+    /**
      * Optional default http proxy config for portal apps
      */
     defaultProxyConfig?: {

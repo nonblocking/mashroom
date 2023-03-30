@@ -38,6 +38,7 @@ The plugin allows the following configuration properties:
             "warnBeforeAuthenticationExpiresSec": 60,
             "autoExtendAuthentication": false,
             "ignoreMissingAppsOnPages": false,
+            "versionHashSalt": null,
             "defaultProxyConfig": {
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
@@ -63,6 +64,7 @@ The plugin allows the following configuration properties:
     A value of 0 or lower than 0 disables the warning. (Default: 60)
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
  * _ignoreMissingAppsOnPages_: If an App on a page can't be found just show nothing instead of an error message (Default: false)
+ * _versionHashSalt_: If you need unique resource version hashes per server instance provide here a string (Default: null)
  * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app2* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
  * _ssrConfig_: Optional config for server side rendering

@@ -13,6 +13,7 @@ setPortalPluginConfig({
     warnBeforeAuthenticationExpiresSec: 120,
     autoExtendAuthentication: false,
     ignoreMissingAppsOnPages: false,
+    versionHashSalt: null,
     defaultProxyConfig: {},
     ssrConfig: {
         ssrEnable: false,

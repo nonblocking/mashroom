@@ -587,6 +587,10 @@
                             "type": "boolean",
                             "description": "If an App on a page can't be found just show nothing instead of an error message (Default: false)"
                         },
+                        "versionHashSalt": {
+                            "type": "string",
+                            "description": "If you need unique resource version hashes per server instance provide here a string (Default: null)"
+                        },
                         "defaultProxyConfig": {
                             "type": "object",
                             "properties": {
