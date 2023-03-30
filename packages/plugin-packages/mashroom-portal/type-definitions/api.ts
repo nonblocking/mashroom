@@ -228,6 +228,7 @@ export type MashroomPortalPageRenderModel = {
     readonly siteBasePath: string;
     readonly apiBasePath: string;
     readonly resourcesBasePath: string | null | undefined;
+    readonly adminApp: string | null | undefined;
     readonly site: MashroomPortalSiteLocalized;
     readonly page: MashroomPortalPage & MashroomPortalPageRefLocalized;
     readonly portalResourcesHeader: string;

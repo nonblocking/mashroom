@@ -30,7 +30,7 @@ const inlineSVG = (assetFile: string): string => {
 };
 
 export default ({
-                    user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
+                    adminApp, user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
                     portalResourcesHeader, portalResourcesFooter, pageContent, messages, themeVersionHash
                 }: MashroomPortalPageRenderModel) => (
     <html lang={lang}>
@@ -62,7 +62,7 @@ export default ({
             <script type="application/javascript" src="${resourcesBasePath}/main.js?v={{${themeVersionHash}"></script>
         `}} />
         <body>
-            {user.admin && (
+            {user.admin && adminApp && (
                 <div id="mashroom-portal-admin-app-container">
                     {/* Admin app goes here */}
                 </div>

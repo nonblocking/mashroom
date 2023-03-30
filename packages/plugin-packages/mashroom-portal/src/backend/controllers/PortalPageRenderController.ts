@@ -343,6 +343,7 @@ export default class PortalPageRenderController {
         return {
             portalName,
             siteBasePath,
+            adminApp: adminPluginName,
             site: localizedSite,
             page: mergedPageData,
             portalResourcesHeader,

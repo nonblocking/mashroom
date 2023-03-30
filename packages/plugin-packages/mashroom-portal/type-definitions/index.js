@@ -209,6 +209,7 @@ export type MashroomPortalPageRenderModel = {
     +siteBasePath: string,
     +apiBasePath: string,
     +resourcesBasePath: ?string,
+    +adminApp: ?string;
     +site: MashroomPortalSiteLocalized,
     +page: MashroomPortalPage & MashroomPortalPageRefLocalized,
     +portalResourcesHeader: string,

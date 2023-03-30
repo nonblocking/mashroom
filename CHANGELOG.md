@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Added to property *adminApp* to the page render model, so the Admin panel can be removed if no Admin App has been set.
+   Fixes the problem that an empty black panel remained at top in this case.
  * Portal: The client side log now determines correctly which App caused an error, even within Composite Apps
 
 ## 2.3.0 (February 10, 2023)

@@ -52,9 +52,11 @@
 </head>
 <body>
     {{#if user.admin}}
-        <div id="mashroom-portal-admin-app-container">
-            <!-- Admin app goes here -->
-        </div>
+        {{#if adminApp}}
+            <div id="mashroom-portal-admin-app-container">
+                <!-- Admin app goes here -->
+            </div>
+        {{/if}}
     {{/if}}
     <header>
         <div class="logo">
