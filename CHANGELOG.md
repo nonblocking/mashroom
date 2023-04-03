@@ -3,8 +3,11 @@
 
 ## [unreleased]
 
+
+## 2.3.1 (April 3, 2023)
+
  * Portal: Added a config property *versionHashSalt* that allows it to generate different resource version hashes per server instance.
-   Can be used if you want to make sure future version hashes cannot be predicted or if you want to switch between different
+   Can be used to make sure future hashes cannot be predicted or if you want to switch between different
    server versions on the same domain without polluting the reverse proxy cache.
  * Portal: Added to property *adminApp* to the page render model, so the Admin panel can be removed if no Admin App has been set.
    Fixes the problem that an empty black panel remained at top in this case.
