@@ -1,8 +1,8 @@
 
-import path from 'path';
-import fs from 'fs';
+import {resolve, sep} from 'path';
+import {readFileSync, existsSync} from 'fs';
+import {readdir} from 'fs/promises';
 import {EventEmitter} from 'events';
-import {promisify} from 'util';
 import chokidar from 'chokidar';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {getExternalPluginDefinitionFilePath} from '../../utils/plugin_utils';
@@ -13,8 +13,6 @@ import type {MashroomPluginPackageScanner as MashroomPluginPackageScannerType, M
 type DeferredUpdatesTimestamps = {
     [path: string]: number;
 };
-
-const readdir = promisify(fs.readdir);
 
 // Anymatch patterns
 export const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
@@ -44,7 +42,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         this._serverRootFolder = config.serverRootFolder;
         this._externalPluginConfigFileNames = config.externalPluginConfigFileNames;
         this._pluginPackageFolders = config.pluginPackageFolders.filter((folder) => {
-           if (!fs.existsSync(folder.path)) {
+           if (!existsSync(folder.path)) {
                 this._logger.error(`Ignoring plugin package folder because it doesn't exist: ${folder.path}`);
                 return false;
            }
@@ -182,13 +180,13 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         const rootFolder = this._pluginPackageFolders.find((f) => changePath.startsWith(f.path));
         if (rootFolder) {
             const pathWithinRootFolder = changePath.substr(rootFolder.path.length + 1);
-            if (fs.existsSync(path.resolve(rootFolder.path, 'package.json'))) {
+            if (existsSync(resolve(rootFolder.path, 'package.json'))) {
                 // This package folder contains a single package
                 this._processChange(rootFolder.path);
             } else {
                 // Resolve the actual package that contains the changed file
-                const pluginPackageName = pathWithinRootFolder.split(path.sep)[0];
-                const pluginPackagePath = path.resolve(rootFolder.path, pluginPackageName);
+                const pluginPackageName = pathWithinRootFolder.split(sep)[0];
+                const pluginPackagePath = resolve(rootFolder.path, pluginPackageName);
                 this._processChange(pluginPackagePath);
             }
         }
@@ -196,13 +194,13 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
 
     private async _initialScan() {
         this._pluginPackageFolders.forEach(async (pluginPackagesFolder) => {
-            if (fs.existsSync(path.resolve(pluginPackagesFolder.path, 'package.json'))) {
+            if (existsSync(resolve(pluginPackagesFolder.path, 'package.json'))) {
                 // This package folder contains a single package
                 this._processChange(pluginPackagesFolder.path);
             } else {
                 const folders = await readdir(pluginPackagesFolder.path);
                 folders.forEach((folder) => {
-                    const pluginPackagePath = path.resolve(pluginPackagesFolder.path, folder);
+                    const pluginPackagePath = resolve(pluginPackagesFolder.path, folder);
                     this._processChange(pluginPackagePath);
                 });
             }
@@ -215,10 +213,10 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
             return true;
         }
 
-        const packageFile = path.resolve(pluginPackagePath, 'package.json');
-        if (fs.existsSync(packageFile)) {
+        const packageFile = resolve(pluginPackagePath, 'package.json');
+        if (existsSync(packageFile)) {
             try {
-                const packageJson = JSON.parse(fs.readFileSync(packageFile).toString());
+                const packageJson = JSON.parse(readFileSync(packageFile).toString());
                 return packageJson.hasOwnProperty('mashroom');
             } catch (e) {
                 this._logger.error('Error loading package.json', e);

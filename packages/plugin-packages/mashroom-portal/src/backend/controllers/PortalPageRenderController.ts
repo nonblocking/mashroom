@@ -1,6 +1,5 @@
 
-import {promisify} from 'util';
-import fs from 'fs';
+import {readFile} from 'fs/promises';
 import {determineUserAgent} from '@mashroom/mashroom-utils/lib/user_agent_utils';
 import context from '../context/global_portal_context';
 import minimalLayout from '../layouts/minimal_layout';
@@ -80,7 +79,6 @@ import type {
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry, MashroomPortalPageApps} from '../../../type-definitions/internal';
 
-const readFile = promisify(fs.readFile);
 const VIEW_ENGINE_CACHE = new Map<string, ExpressTemplateEngine>();
 const VIEW_CACHE = new Map<string, any>();
 

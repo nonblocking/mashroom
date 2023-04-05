@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import {promisify} from 'util';
+import {statSync, existsSync} from 'fs';
+import {readFile, writeFile} from 'fs/promises';
 import {lock as lockFile} from 'proper-lockfile';
 import {nanoid} from 'nanoid';
 import {Query} from 'mingo';
@@ -18,9 +18,6 @@ import type {
     MashroomStorageSort,
 } from '@mashroom/mashroom-storage/type-definitions';
 import type {JsonDB} from '../../type-definitions';
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 
 const LOCK_STALE_MS = 3000;
 const LOCK_RETRIES = 5;
@@ -234,7 +231,7 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
     private async _getDb(forceExternalChangeCheck = false): Promise<JsonDB<T>> {
         try {
             if (this._dbCache) {
-                const mTime = fs.statSync(this._source).mtime;
+                const mTime = statSync(this._source).mtime;
                 const mTimeMs = mTime.getTime();
                 const reload = (mTimeMs > this._lastExternalChangeCheck && (forceExternalChangeCheck || this._lastExternalChangeCheck + this._checkExternalChangePeriodMs < Date.now()));
                 if (!reload) {
@@ -250,7 +247,7 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
             this._lastExternalChangeCheck = Date.now();
             return db;
         } catch (e) {
-            if (fs.existsSync(this._source)) {
+            if (existsSync(this._source)) {
                 this._logger.error(`Error loading db file: ${this._source}`, e);
             }
         }

@@ -1,7 +1,6 @@
 
-import {readFile as readFileCb} from 'fs';
+import {readFile} from 'fs/promises';
 import {resolve} from 'path';
-import {promisify} from 'util';
 import {EventEmitter} from 'events';
 import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
@@ -23,8 +22,6 @@ import type {
     MashroomPluginPackageBuilder,
     MashroomPluginPackageBuilderEvent,
 } from '../../type-definitions/internal';
-
-const readFile = promisify(readFileCb);
 
 export default class MashroomPackagePlugin implements MashroomPluginPackageType {
 

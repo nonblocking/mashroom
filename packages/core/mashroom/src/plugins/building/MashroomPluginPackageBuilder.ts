@@ -1,8 +1,8 @@
 
-import path from 'path';
-import fs from 'fs';
+import {resolve} from 'path';
+import {existsSync, unlinkSync, statSync} from 'fs';
+import {readFile, writeFile} from 'fs/promises';
 import {EventEmitter} from 'events';
-import {promisify} from 'util';
 import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
@@ -21,9 +21,6 @@ import type {
     MashroomPluginPackageBuilderEventName,
     MashroomPluginPackageBuilderEvent,
 } from '../../../type-definitions/internal';
-
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
 
 const MAX_PARALLEL_BUILDS = 5;
 const RETRY_RUNNING_BUILD_AFTER_MS = 10 * 1000;
@@ -61,7 +58,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     private _processingAllowed: boolean;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
-        this._buildDataFolder = path.resolve(config.tmpFolder, config.name, 'build-data');
+        this._buildDataFolder = resolve(config.tmpFolder, config.name, 'build-data');
         this._logger = loggerFactory('mashroom.plugins.build');
         this._npmUtils = new NpmUtils(loggerFactory, config.devModeNpmExecutionTimeoutSec || undefined);
         this._nxUtils = new NxUtils(loggerFactory, config.devModeNpmExecutionTimeoutSec || undefined);
@@ -263,7 +260,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     private async _loadBuildInfo(pluginPackageName: string): Promise<BuildInfo | undefined | null> {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
-        if (!fs.existsSync(buildInfoFile)) {
+        if (!existsSync(buildInfoFile)) {
             return null;
         }
 
@@ -278,7 +275,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     async _updateBuildInfo(pluginPackageName: string, buildInfo: BuildInfo) {
         const buildInfoFile = this._getBuildInfoFile(pluginPackageName);
-        ensureDirSync(path.resolve(buildInfoFile, '..'));
+        ensureDirSync(resolve(buildInfoFile, '..'));
 
         try {
             return writeFile(buildInfoFile, JSON.stringify(buildInfo), 'utf8');
@@ -286,7 +283,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
             this._logger.error(`Error updating build info file for plugin package: ${pluginPackageName}`, e);
             // Something is wrong, remove the build file
             try {
-                fs.unlinkSync(buildInfoFile);
+                unlinkSync(buildInfoFile);
             } catch (e2) {
                 // Ignore
             }
@@ -294,15 +291,15 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     private _getBuildInfoFile(pluginPackageName: string) {
-        return path.resolve(this._buildDataFolder, `${pluginPackageName}.build.json`);
+        return resolve(this._buildDataFolder, `${pluginPackageName}.build.json`);
     }
 
     private _getBuildInfoLastUpdateTst(pluginPackageName: string) {
         const buildInfo = this._getBuildInfoFile(pluginPackageName);
-        if (!fs.existsSync(buildInfo)) {
+        if (!existsSync(buildInfo)) {
             return Date.now();
         }
-        return fs.statSync(buildInfo).mtimeMs;
+        return statSync(buildInfo).mtimeMs;
     }
 }
 

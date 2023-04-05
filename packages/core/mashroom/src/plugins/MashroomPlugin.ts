@@ -1,5 +1,5 @@
 
-import path from 'path';
+import {resolve} from 'path';
 import {cloneAndFreezeObject} from '@mashroom/mashroom-utils/lib/readonly_utils';
 import PluginBootstrapError from '@mashroom/mashroom-utils/lib/PluginBootstrapError';
 
@@ -57,7 +57,7 @@ export default class MashroomPlugin implements MashroomPluginType {
         if (!this._pluginDefinition.bootstrap) {
             return null;
         }
-        return path.resolve(this.pluginPackage.pluginPackagePath, this._pluginDefinition.bootstrap);
+        return resolve(this.pluginPackage.pluginPackagePath, this._pluginDefinition.bootstrap);
     }
 
     _loaded(event: MashroomPluginRegistryConnectorEvent) {
