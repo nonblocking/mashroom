@@ -245,7 +245,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     }
 
     private async _build(queueEntry: BuildQueueEntry) {
-        if (!this._nodeModulesExists(queueEntry.pluginPackagePath)) {
+        if (this._npmUtils.isRootPackage(queueEntry.pluginPackagePath) && !this._npmUtils.nodeModulesExists(queueEntry.pluginPackagePath)) {
             this._logger.debug(`No node_modules folder found. Running npm install: ${queueEntry.pluginPackageName}`);
             await this._npmUtils.install(queueEntry.pluginPackagePath);
         }
@@ -295,11 +295,6 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
 
     private _getBuildInfoFile(pluginPackageName: string) {
         return path.resolve(this._buildDataFolder, `${pluginPackageName}.build.json`);
-    }
-
-    private _nodeModulesExists(pluginPackagePath: string): boolean {
-        const nodeModules = path.resolve(pluginPackagePath, 'node_modules');
-        return fs.existsSync(nodeModules);
     }
 
     private _getBuildInfoLastUpdateTst(pluginPackageName: string) {

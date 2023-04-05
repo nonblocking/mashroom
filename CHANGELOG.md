@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Core: Never run *npm install* in dev mode if a given package is not a root module and part of a mono-repo.
+   Because in that case running *npm install* might break the lock file; and it is also not possible to detect if running
+   it is necessary, because there could just be no node_modules folder because of hoisting.
 
 ## 2.3.1 (April 3, 2023)
 

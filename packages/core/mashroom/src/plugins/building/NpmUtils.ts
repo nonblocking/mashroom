@@ -1,4 +1,6 @@
 
+import {dirname, resolve} from 'path';
+import {existsSync} from 'fs';
 import {exec} from 'child_process';
 import type {MashroomLogger, MashroomLoggerFactory} from '../../../type-definitions';
 
@@ -12,9 +14,35 @@ const DEFAULT_NPM_EXECUTION_TIMEOUT_SEC = 3 * 60; // 3min
 export default class NpmUtils {
 
     private _logger: MashroomLogger;
+    private _npmIsRootCache: Record<string, boolean>;
 
     constructor(loggerFactory: MashroomLoggerFactory, private _npmExecutionTimeoutSec = DEFAULT_NPM_EXECUTION_TIMEOUT_SEC) {
         this._logger = loggerFactory('mashroom.plugins.build');
+        this._npmIsRootCache = {};
+    }
+
+    /*
+     * Package is a root module and not part of a mono-repo
+     */
+    isRootPackage(packagePath: string) {
+        if (typeof (this._npmIsRootCache[packagePath]) !== 'undefined') {
+            return this._npmIsRootCache[packagePath];
+        }
+        let isRoot = true;
+        let parentDir = dirname(packagePath);
+        while (parentDir !== dirname(parentDir)) {
+            if (existsSync(resolve(parentDir, 'package.json'))) {
+                isRoot = false;
+                break;
+            }
+            parentDir = dirname(parentDir);
+        }
+        this._npmIsRootCache[packagePath] = isRoot;
+        return isRoot;
+    }
+
+    nodeModulesExists(pluginPackagePath: string): boolean {
+        return existsSync(resolve(pluginPackagePath, 'node_modules'));
     }
 
     /*

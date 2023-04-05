@@ -27,6 +27,17 @@ const getTestPackageFolder = () => {
 
 describe('NpmUtils', () => {
 
+    it('detects correctly if a given package is root (and not part of a mono-repo)', async () => {
+        const mashroomCorePackageFolder = resolve(__dirname, '../../..');
+        const mashroomPackageFolder = resolve(mashroomCorePackageFolder, '../../..');
+
+        const npmUtils = new NpmUtils(dummyLoggerFactory);
+
+        expect(npmUtils.isRootPackage(mashroomCorePackageFolder)).toBeFalsy();
+        expect(npmUtils.isRootPackage(mashroomPackageFolder)).toBeTruthy();
+    });
+
+
     it('installs the prod and dev dependencies in package.json', async () => {
         const packageFolder = getTestPackageFolder();
         const npmUtils = new NpmUtils(dummyLoggerFactory);
