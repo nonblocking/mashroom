@@ -1,5 +1,5 @@
 
-import {createEngine} from 'express-react-views';
+import engine from './react_engine';
 import themeParams from './theme_params';
 
 import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
@@ -13,9 +13,7 @@ const bootstrap: MashroomPortalThemePluginBootstrapFunction = async (pluginName,
     return {
         engineName: 'js',
         engineFactory: () => {
-            return createEngine({
-                transformViews: false,
-            });
+            return engine;
         },
     };
 };

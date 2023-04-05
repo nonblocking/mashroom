@@ -266,7 +266,7 @@ export type MashroomPortalAppErrorRenderModel = {
 
 /* Plugins */
 
-export type ExpressTemplateEngine = (path: string, options: object, callback: (e: any, rendered?: string) => void) => void;
+export type ExpressTemplateEngine = (path: string, options: any, callback: (e: any, rendered?: string) => void) => void;
 
 export interface MashroomPortalTheme {
     /**

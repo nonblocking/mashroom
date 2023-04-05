@@ -1,7 +1,8 @@
 /* eslint no-console: off */
 
+import {resolve} from 'path';
 import express from 'express';
-import {createEngine} from 'express-react-views';
+import engine from './react_engine';
 import themeParams from './theme_params';
 import type {Request, Response} from 'express';
 import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions';
@@ -14,13 +15,9 @@ const app = express();
 
 app.use('/resources', express.static('dist/public'));
 
-const engine = createEngine({
-    transformViews: false
-});
-
 app.engine('js', engine);
 app.set('view engine', 'js');
-app.set('views', `${__dirname}/../views`);
+app.set('views', resolve(__dirname, '../views'));
 
 app.get('/', (req: Request, res: Response) => {
 
