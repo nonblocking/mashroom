@@ -52,6 +52,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
     private _buildDataFolder: string;
     private _npmUtils: NpmUtils;
     private _nxUtils: NxUtils;
+    private _devModePreferredBuildTool: string | undefined | null;
     private _buildQueue: Array<BuildQueueEntry>;
     private _buildSlots: Array<Promise<void>>;
     private _eventEmitter: EventEmitter;
@@ -62,6 +63,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._logger = loggerFactory('mashroom.plugins.build');
         this._npmUtils = new NpmUtils(loggerFactory, config.devModeNpmExecutionTimeoutSec || undefined);
         this._nxUtils = new NxUtils(loggerFactory, config.devModeNpmExecutionTimeoutSec || undefined);
+        this._devModePreferredBuildTool = config.devModePreferredBuildTool;
         this._eventEmitter = new EventEmitter();
         this._eventEmitter.setMaxListeners(0);
 
@@ -250,7 +252,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         const buildScript = queueEntry.buildScript;
         if (buildScript) {
             this._logger.debug(`Running build script '${buildScript}': ${queueEntry.pluginPackageName}`);
-            if (await this._nxUtils.isNxAvailable(queueEntry.pluginPackagePath)) {
+            if (this._devModePreferredBuildTool === 'nx' && await this._nxUtils.isNxAvailable(queueEntry.pluginPackagePath)) {
                 await this._nxUtils.runScript(queueEntry.pluginPackagePath, buildScript);
             } else {
                 await this._npmUtils.runScript(queueEntry.pluginPackagePath, buildScript);

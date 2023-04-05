@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Core: Added the possibility to set the preferred build tool in the server config (*devModePreferredBuildTool*).
+   This can be used to enforce *npm* if you experience troubles with *nx*.
  * Core: Never run *npm install* in dev mode if a given package is not a root module and part of a mono-repo.
    Because in that case running *npm install* might break the lock file; and it is also not possible to detect if running
    it is necessary, because there could just be no node_modules folder because of hoisting.
