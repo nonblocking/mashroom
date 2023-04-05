@@ -1,11 +1,10 @@
 
 import React, {useState} from 'react';
-import Markdown from 'markdown-it';
-import ReactMde from 'react-mde';
+import CodeMirror from '@uiw/react-codemirror';
+import {githubLight} from '@uiw/codemirror-theme-github';
+import {markdown as markdownEditor} from '@codemirror/lang-markdown';
 
 import type {MashroomPortalConfigEditorTarget} from '@mashroom/mashroom-portal/type-definitions';
-
-const markdown = new Markdown();
 
 type Props = {
     editorTarget: MashroomPortalConfigEditorTarget;
@@ -22,20 +21,25 @@ const saveAndClose = (markdownMessage: string, pingButtonLabel: string, updateAp
 export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
     const [markdownMessage, setMarkdownMessage] = useState(appConfig.markdownMessage || '');
     const [pingButtonLabel, setPingButtonLabel] = useState(appConfig.pingButtonLabel || '');
-    const [selectedTab, setSelectedTab] = useState<'write' | 'preview'>('write');
 
     return (
         <div className='mashroom-demo-react-app-2-config-editor'>
             <div className='form-row'>
                 <label htmlFor="message">Message</label>
-                <ReactMde
-                    toolbarCommands={[['bold', 'italic', 'strikethrough'], ['link', 'image'], ['unordered-list', 'ordered-list']]}
-                    getIcon={(iconName) => <span className={`icon-${iconName}`}/>}
-                    generateMarkdownPreview={(md) => Promise.resolve(markdown.render(md))}
+                <CodeMirror
                     value={markdownMessage}
+                    height="150px"
+                    theme={githubLight}
+                    basicSetup={{
+                        lineNumbers: false,
+                        foldGutter: false,
+                        syntaxHighlighting: true,
+                        autocompletion: true,
+                        closeBrackets: true,
+                        highlightActiveLine: false,
+                    }}
+                    extensions={[markdownEditor()]}
                     onChange={setMarkdownMessage}
-                    selectedTab={selectedTab}
-                    onTabChange={setSelectedTab}
                 />
             </div>
             <div className='form-row'>

@@ -37,39 +37,17 @@ $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
         }
     }
 
-    @import "../../node_modules/react-mde/lib/styles/scss/react-mde-all";
+    .cm-editor {
+        padding: 10px;
+        border: 1px solid var(--mashroom-portal-color-black, black);
 
-    .react-mde {
-        .icon-bold {
-            @include toolbarIcon('\f032');
+        &.cm-focused {
+            outline: none;
+            border-color: var(--mashroom-portal-color-secondary, blue)
         }
 
-        .icon-italic {
-            @include toolbarIcon('\f033');
-        }
-
-        .icon-strikethrough {
-            @include toolbarIcon('\f0cc');
-        }
-
-        .icon-link {
-            @include toolbarIcon('\f0c1');
-        }
-
-        .icon-image {
-            @include toolbarIcon('\f03e');
-        }
-
-        .icon-ordered-list {
-            @include toolbarIcon('\f0cb');
-        }
-
-        .icon-unordered-list {
-            @include toolbarIcon('\f0ca');
-        }
-
-        button {
-            color: black;
+        .cm-line {
+            white-space: pre-wrap;
         }
     }
 }
