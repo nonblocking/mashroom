@@ -2,7 +2,8 @@
 import React, {useState} from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import {githubLight} from '@uiw/codemirror-theme-github';
-import {markdown as markdownEditor} from '@codemirror/lang-markdown';
+import {markdown} from '@codemirror/lang-markdown';
+import {EditorView} from '@codemirror/view';
 
 import type {MashroomPortalConfigEditorTarget} from '@mashroom/mashroom-portal/type-definitions';
 
@@ -25,7 +26,7 @@ export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
     return (
         <div className='mashroom-demo-react-app-2-config-editor'>
             <div className='form-row'>
-                <label htmlFor="message">Message</label>
+                <label htmlFor="message">Message (Markdown)</label>
                 <CodeMirror
                     value={markdownMessage}
                     height="150px"
@@ -38,7 +39,10 @@ export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
                         closeBrackets: true,
                         highlightActiveLine: false,
                     }}
-                    extensions={[markdownEditor()]}
+                    extensions={[
+                        markdown(),
+                        EditorView.lineWrapping,
+                    ]}
                     onChange={setMarkdownMessage}
                 />
             </div>
