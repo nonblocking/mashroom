@@ -4,23 +4,23 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.3.1",
+    "version": "2.3.2",
     "sideEffects": false,
     "files": [
         "dist/**",
         "mashroom.json"
     ],
     "dependencies": {
-        "markdown-it": "^13.0.1",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0",
         "@codemirror/lang-markdown": "^6.0.1",
         "@uiw/codemirror-theme-github": "^4.19.7",
-        "@uiw/react-codemirror": "^4.19.7"
+        "@uiw/react-codemirror": "^4.19.7",
+        "markdown-it": "^13.0.1",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.3.1",
-        "@mashroom/mashroom-portal": "2.3.1",
+        "@mashroom/mashroom-json-schemas": "2.3.2",
+        "@mashroom/mashroom-portal": "2.3.2",
         "@types/markdown-it": "^12.2.3",
         "@types/react": "^18.0.27",
         "@types/react-dom": "^18.0.10"
