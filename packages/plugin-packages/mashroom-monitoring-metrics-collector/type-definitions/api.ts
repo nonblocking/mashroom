@@ -2,11 +2,13 @@
 export type MetricLabels = Record<string, string | number>;
 
 export interface Counter {
+    reset(): void;
     inc(by?: number, labels?: MetricLabels): void;
     set(value: number, labels?: MetricLabels): void;
 }
 
 export interface Gauge {
+    reset(): void;
     set(value: number, labels?: MetricLabels): void;
 }
 

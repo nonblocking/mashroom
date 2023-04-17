@@ -10,10 +10,12 @@ export interface Counter {
 }
 
 export interface Gauge {
+    reset(): void;
     set(value: number, labels?: MetricLabels): void;
 }
 
 export interface Histogram {
+    reset(): void;
     observe(value: number, labels?: MetricLabels): void;
 }
 

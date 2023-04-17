@@ -17,6 +17,9 @@ export default (metricData: InternalGaugeMetricData): Gauge => {
     };
 
     return {
+        reset() {
+            metricData.data = {};
+        },
         set(value: number, labels: MetricLabels = {}): void {
             if (typeof (value) === 'number') {
                 getData(labels).value = value;

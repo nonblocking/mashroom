@@ -171,6 +171,9 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
 
     private _createNoOpMetric(): Counter & Gauge & Histogram & Summary {
         return {
+            reset() {
+                // Ignore
+            },
             inc(): void {
                 // Ignore
             },

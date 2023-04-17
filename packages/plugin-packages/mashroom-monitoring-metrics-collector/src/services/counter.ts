@@ -17,6 +17,9 @@ export default (metricData: InternalCounterMetricData): Counter => {
     };
 
     return {
+        reset() {
+            metricData.data = {};
+        },
         inc(by = 1, labels: MetricLabels = {}): void {
             if (typeof (by) === 'number') {
                 const data = getData(labels);
