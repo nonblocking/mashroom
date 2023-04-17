@@ -1,7 +1,7 @@
 
 import {Registry} from 'prom-client';
 import PromClientMashroomMetricsAdapter from './PromClientMashroomMetricsAdapter';
-import type {MashroomPluginContext} from '@mashroom/mashroom/type-definitions';
+import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomMonitoringMetricsCollectorService
 } from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
@@ -13,10 +13,10 @@ const existingAdapters: {
     [metricName: string]: PromClientMashroomMetricsAdapter;
 } = {};
 
-export const startSyncRegistry = (pluginContext: MashroomPluginContext) => {
-    const logger = pluginContext.loggerFactory('mashroom.monitoring.prometheus');
+export const startSyncRegistry = (contextHolder: MashroomPluginContextHolder) => {
+    const logger = contextHolder.getPluginContext().loggerFactory('mashroom.monitoring.prometheus');
     interval = setInterval(() => {
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics!.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService = contextHolder.getPluginContext().services.metrics!.service;
         const metrics = collectorService.getMetrics();
         Object.keys(metrics).forEach((metricName) => {
             try {

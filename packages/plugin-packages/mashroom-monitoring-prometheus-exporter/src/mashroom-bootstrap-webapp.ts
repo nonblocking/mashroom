@@ -13,7 +13,7 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
 
     setupDefaultMetrics(enableGcStats, loggerFactory);
 
-    startSyncRegistry(pluginContext);
+    startSyncRegistry(contextHolder);
     startPM2Connector(pluginContext);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         stopSyncRegistry();
