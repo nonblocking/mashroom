@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Metrics Collector: Added the possibility to reset Gauges, this is useful if some label dynamically "disappear" and need to be removed
 
 ## 2.3.2 (April 14, 2023)
 

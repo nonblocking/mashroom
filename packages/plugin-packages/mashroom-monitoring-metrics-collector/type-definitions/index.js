@@ -15,7 +15,6 @@ export interface Gauge {
 }
 
 export interface Histogram {
-    reset(): void;
     observe(value: number, labels?: MetricLabels): void;
 }
 
