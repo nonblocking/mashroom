@@ -18,8 +18,10 @@ export type PoolConfig = {
 
 export type PoolMetrics = {
     activeConnections: number;
+    activeConnectionsTargetCount: Record<string, number>;
     idleConnections: number;
     waitingRequests: number;
+    waitingRequestsTargetCount: Record<string, number>;
 }
 
 export type RequestMetrics = {

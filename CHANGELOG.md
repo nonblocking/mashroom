@@ -3,6 +3,11 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Added 4 new metrics for active and waiting requests per target URL, fixes #111
+   * mashroom_http_proxy_active_connections
+   * mashroom_http_proxy_waiting_requests
+   * mashroom_https_proxy_active_connections
+   * mashroom_https_proxy_waiting_requests
  * Metrics Collector: Added the possibility to reset Gauges, this is useful if some label dynamically "disappear" and need to be removed
 
 ## 2.3.2 (April 14, 2023)
