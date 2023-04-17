@@ -1,8 +1,12 @@
 {
     "parser": "vue-eslint-parser",
+    "plugins": [
+        "@typescript-eslint/eslint-plugin"
+    ],
     "extends": [
         "eslint:recommended",
-        "plugin:vue/essential"
+        "plugin:vue/vue3-essential",
+        "@vue/eslint-config-typescript"
     ],
     "env": {
         "node": true,

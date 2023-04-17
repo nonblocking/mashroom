@@ -1,17 +1,17 @@
 
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
-import App from './App';
+import App from './App.vue';
 
-const bootstrap = async (portalAppSetup) => {
+import type {MashroomPortalAppPluginSSRBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup) => {
     const { resourcesBasePath, appConfig: { message, pingButtonLabel }} = portalAppSetup;
-    const dummyMessageBus = {};
 
     const app = createSSRApp(App, {
         resourcesBasePath,
         message,
         pingButtonLabel,
-        messageBus: dummyMessageBus,
     });
 
     const appHtml = await renderToString(app);

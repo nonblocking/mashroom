@@ -10,19 +10,21 @@
         "dist/**"
     ],
     "dependencies": {
-        "vue": "^3.2.45"
+        "vue": "^3.2.47"
     },
     "devDependencies": {
-        "@vue/cli-plugin-eslint": "^5.0.8",
+        "@mashroom/mashroom-portal": "2.3.2",
+        "@vue/eslint-config-typescript": "^11.0.2",
         "eslint-plugin-vue": "^9.9.0",
         "vue-eslint-parser": "^9.1.0",
         "vue-loader": "^17.0.1",
-        "vue-template-compiler": "^2.7.14"
+        "vue-tsc": "^1.2.0"
     },
     "scripts": {
-        "lint": "eslint src --fix",
+        "lint": "eslint src  --ext .ts,.vue --fix",
+        "type-check": "vue-tsc --noEmit",
         "copy-assets": "cpy \"src/assets/*\" dist",
-        "dev": "webpack serve --config ./webpack.config.client.js --hot --mode development",
+        "dev": "webpack serve --config ./webpack.config.client.js --mode development",
         "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production && npm run copy-assets"
     },
     "mashroom": {

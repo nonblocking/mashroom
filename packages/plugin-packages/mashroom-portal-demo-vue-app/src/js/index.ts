@@ -1,14 +1,16 @@
 
-import { createApp, createSSRApp } from 'vue';
+import { createApp, createSSRApp, App as AppType } from 'vue';
 import App from './App.vue';
 
-const bootstrap = (portalAppHostElement, portalAppSetup, clientServices) => {
+import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
     const { resourcesBasePath, appConfig: { message, pingButtonLabel }} = portalAppSetup;
     const { messageBus } = clientServices;
 
     const ssrHost = portalAppHostElement.querySelector('[data-ssr-host="true"]');
 
-    let app;
+    let app: AppType;
     if (ssrHost) {
         // SSR
         console.info('Hydrating Vue Demo App');
@@ -39,4 +41,4 @@ const bootstrap = (portalAppHostElement, portalAppSetup, clientServices) => {
     };
 };
 
-global.startVueDemoApp = bootstrap;
+(global as any).startVueDemoApp = bootstrap;

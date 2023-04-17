@@ -7,12 +7,14 @@ module.exports = {
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                use: 'vue-loader'
             },
             {
-                test: /\.js$/,
+                test: /\.(ts|js)$/,
                 exclude: /node_modules/,
-                loader: 'babel-loader'
+                use: {
+                    loader: 'babel-loader',
+                },
             },
             {
                 test: /\.css$/,
@@ -24,15 +26,19 @@ module.exports = {
                 ],
                 sideEffects: true,
             },
+            {
+                test: /\.(png|jpg|jpeg|gif)$/i,
+                type: 'asset/resource',
+            },
         ],
     },
     resolve: {
-        extensions: ['.js', '.vue'],
+        extensions: ['.ts', '.js', '.vue'],
     },
     plugins: [
         new VueLoaderPlugin(),
         new MiniCssExtractPlugin({
             filename: 'style.css'
         }),
-    ]
+    ],
 };
