@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Add User Headers plugin: Remove all characters not allowed in HTTP headers from the display name
  * HTTP Proxy: Added 4 new metrics for active and waiting requests per target URL, fixes #111
    * mashroom_http_proxy_active_connections
    * mashroom_http_proxy_waiting_requests

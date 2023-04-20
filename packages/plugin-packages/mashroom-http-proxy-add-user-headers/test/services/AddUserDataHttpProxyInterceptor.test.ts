@@ -42,6 +42,46 @@ describe('AddUserDataHttpProxyInterceptor', () => {
         });
     });
 
+    it('escapes display names with unicode characters', async () => {
+        const extraDataMapping = {
+            'X-USER-TEST': 'test',
+        };
+        const interceptor = new AddUserDataHttpProxyInterceptor('X-USER-NAME', 'X-USER-DISPLAY-NAME', 'X-USER-EMAIL', extraDataMapping, ['foo', 'ba.r']);
+
+        const req: any = {
+            pluginContext: {
+                loggerFactory: () => console,
+                services: {
+                    security: {
+                        service: {
+                            getUser: () => ({
+                                username: 'john',
+                                displayName: 'John 😂 Funny',
+                                email: 'john@test.com',
+                                extraData: {
+                                    test: 1,
+                                }
+                            }),
+                        }
+                    }
+                }
+            }
+        };
+        const res: any = {
+        };
+        const result = await interceptor.interceptRequest('http://baar.com', {}, {}, req, res);
+
+        expect(result).toEqual({
+            addHeaders: {
+                'X-USER-DISPLAY-NAME': 'John  Funny',
+                'X-USER-EMAIL': 'john@test.com',
+                'X-USER-NAME': 'john',
+                'X-USER-TEST': 1,
+            }
+        });
+    });
+
+
     it('does not add headers if the uri doesn\' match', async () => {
         const interceptor = new AddUserDataHttpProxyInterceptor('X-USER-NAME', 'X-USER-DISPLAY-NAME', 'X-USER-EMAIL', {}, ['foo', 'ba.r']);
 
