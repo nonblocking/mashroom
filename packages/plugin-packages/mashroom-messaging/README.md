@@ -178,19 +178,12 @@ export interface MashroomMessagingService {
      *
      * Throws an exception if there is no authenticated user
      */
-    subscribe(
-        req: Request,
-        topic: string,
-        callback: MashroomMessagingSubscriberCallback,
-    ): Promise<void>;
+    subscribe(req: Request, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
 
     /**
      * Unsubscribe from topic
      */
-    unsubscribe(
-        topic: string,
-        callback: MashroomMessagingSubscriberCallback,
-    ): Promise<void>;
+    unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
 
     /**
      * Publish to a specific topic

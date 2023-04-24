@@ -56,16 +56,19 @@ export interface MashroomMessagingService {
      * Throws an exception if there is no authenticated user
      */
     subscribe(req: ExpressRequest, topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+
     /**
      * Unsubscribe from topic
      */
     unsubscribe(topic: string, callback: MashroomMessagingSubscriberCallback): Promise<void>;
+
     /**
      * Publish to a specific topic
      *
      * Throws an exception if there is no authenticated user
      */
     publish(req: ExpressRequest, topic: string, data: any): Promise<void>;
+
     /**
      * The private topic only the current user can access.
      * E.g. if the value is user/john the user john can access to user/john/whatever
@@ -74,6 +77,7 @@ export interface MashroomMessagingService {
      * Throws an exception if there is no authenticated user
      */
     getUserPrivateTopic(req: ExpressRequest): string;
+
     /**
      * The connect path to send publish or subscribe via WebSocket.
      * Only available if enableWebSockets is true and mashroom-websocket is preset.
@@ -97,12 +101,16 @@ export interface MashroomMessagingExternalProvider {
      * The message must be a JSON object.
      */
     addMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
      * Remove an existing listener
      */
     removeMessageListener(listener: MashroomExternalMessageListener): void;
+
     /**
-     * Send a message to given external topic.
+     * Send a message to given internal topic.
+     * Used to broadcast message between Mashroom instances.
+     *
      * The passed topic must be prefixed with the topic the provider is listening to.
      * E.g. if the passed topic is foo/bar and the provider is listening to mashroom/# the message must be
      * sent to mashroom/foo/bars.
@@ -110,8 +118,11 @@ export interface MashroomMessagingExternalProvider {
      * The message will be a JSON object.
      */
     sendInternalMessage(topic: string, message: any): Promise<void>;
+
     /**
      * Send a message to given external topic.
+     * Used to send messages to 3rd party systems.
+     *
      * The message will be a JSON object.
      */
     sendExternalMessage(topic: string, message: any): Promise<void>;
