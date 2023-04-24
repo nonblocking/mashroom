@@ -120,7 +120,9 @@ export interface MashroomMessagingExternalProvider {
     removeMessageListener(listener: MashroomExternalMessageListener): void;
 
     /**
-     * Send a message to given external topic.
+     * Send a message to given internal topic.
+     * Used to broadcast message between Mashroom instances.
+     *
      * The passed topic must be prefixed with the topic the provider is listening to.
      * E.g. if the passed topic is foo/bar and the provider is listening to mashroom/# the message must be
      * sent to mashroom/foo/bars.
@@ -131,6 +133,8 @@ export interface MashroomMessagingExternalProvider {
 
     /**
      * Send a message to given external topic.
+     * Used to send messages to 3rd party systems.
+     *
      * The message will be a JSON object.
      */
     sendExternalMessage(topic: string, message: any): Promise<void>;
