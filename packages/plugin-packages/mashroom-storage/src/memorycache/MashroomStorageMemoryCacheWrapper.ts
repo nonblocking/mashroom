@@ -49,7 +49,7 @@ export default class MashroomStorageMemoryCacheWrapper implements MashroomStorag
     }
 
     private _ttlSecForCollection(name: string): number {
-        return this._getCollectionProperties(name).ttlSec || this._config.ttlSec || DEFAULT_TTL_SEC;
+        return this._getCollectionProperties(name).ttlSec || this._config.ttlSec || DEFAULT_TTL_SEC;
     }
 
     private _invalidateOnUpdateForCollection(name: string): boolean {

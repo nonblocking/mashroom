@@ -96,7 +96,7 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
         return this._client;
     }
 
-    private _processReceivedMessage(topic: string, data: Buffer | string | any): void {
+    private _processReceivedMessage(topic: string, data: Buffer | string | any): void {
         if (topic.startsWith(`${this._internalTopic}/`)) {
             const internalTopic = topic.substr(this._internalTopic.length + 1);
             let jsonMessage: any = null;

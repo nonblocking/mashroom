@@ -33,7 +33,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
         if (this._internalRoutingKey.indexOf('/') !== -1) {
             throw new Error('Internal routing key must not contain slashes, please use dots to separate the words!');
         }
-        if (this._internalRoutingKey.indexOf(SINGLE_WORD_WILDCARD) !== -1 || this._internalRoutingKey.indexOf(this._brokerTopicMatchAny) !== -1) {
+        if (this._internalRoutingKey.indexOf(SINGLE_WORD_WILDCARD) !== -1 || this._internalRoutingKey.indexOf(this._brokerTopicMatchAny) !== -1) {
             throw new Error('Internal routing key must not contain wildcards!');
         }
     }

@@ -5,5 +5,5 @@ import type {MashroomMessagingExternalProvider} from '@mashroom/mashroom-messagi
 export interface MashroomMessagingExternalProviderMQTT extends MashroomMessagingExternalProvider {
     subscribeToInternalTopic(): void;
     unsubscribeFromInternalTopic(): void;
-    getClient(): MqttClient | undefined;
+    getClient(): MqttClient | undefined;
 }
