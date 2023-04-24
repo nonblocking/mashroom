@@ -1,7 +1,8 @@
 
 import {setPoolConfig} from '../connection_pool';
 import context from '../context/global_context';
-import {startExportPoolMetrics, stopExportPoolMetrics} from '../metrics/connection_pool_metrics';
+import {startExportHttpPoolMetrics, stopExportHttpPoolMetrics} from '../metrics/http_pool_metrics';
+import {startExportWsConnectionMetrics, stopExportWsConnectionMetrics} from '../metrics/ws_connection_metrics';
 import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request_metrics';
 import HttpHeaderFilter from './HttpHeaderFilter';
 import InterceptorHandler from './InterceptorHandler';
@@ -16,7 +17,8 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const {
         proxyImpl, forwardMethods = [], forwardHeaders = [], rejectUnauthorized,
         /* deprecated */ poolMaxSockets, poolMaxTotalSockets, poolMaxSocketsPerHost, poolMaxWaitingRequestsPerHost,
-        socketTimeoutMs, keepAlive, retryOnReset
+        socketTimeoutMs, keepAlive, retryOnReset,
+        wsMaxConnectionsPerHost, wsMaxConnectionsTotal,
     } = pluginConfig;
     const pluginContext = pluginContextHolder.getPluginContext();
     const logger = pluginContext.loggerFactory('mashroom.httpProxy');
@@ -36,15 +38,19 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
         proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, pluginContext.loggerFactory);
     } else {
         logger.info('Using http-proxy impl based on "node-http-proxy"');
-        proxy = new ProxyImplNodeHttpProxy(socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset, pluginContext.loggerFactory);
+        proxy = new ProxyImplNodeHttpProxy(
+            socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,
+            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, pluginContext.loggerFactory);
     }
     const service = new MashroomHttpProxyService(forwardMethods, proxy, poolMaxWaitingRequestsPerHost);
 
-    startExportPoolMetrics(pluginContextHolder);
+    startExportHttpPoolMetrics(pluginContextHolder);
+    startExportWsConnectionMetrics(proxy, pluginContextHolder);
     startExportRequestMetrics(proxy, pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         proxy.shutdown();
-        stopExportPoolMetrics();
+        stopExportHttpPoolMetrics();
+        stopExportWsConnectionMetrics();
         stopExportRequestMetrics();
     });
 

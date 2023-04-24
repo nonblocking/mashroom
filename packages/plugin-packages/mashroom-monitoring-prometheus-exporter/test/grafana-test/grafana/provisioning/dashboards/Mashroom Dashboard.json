@@ -4,29 +4,41 @@
             {
                 "$$hashKey": "object:33",
                 "builtIn": 1,
-                "datasource": "-- Grafana --",
+                "datasource": {
+                    "type": "datasource",
+                    "uid": "grafana"
+                },
                 "enable": true,
                 "hide": true,
                 "iconColor": "rgba(0, 211, 255, 1)",
                 "name": "Annotations & Alerts",
+                "target": {
+                    "limit": 100,
+                    "matchAny": false,
+                    "tags": [],
+                    "type": "dashboard"
+                },
                 "type": "dashboard"
             }
         ]
     },
     "editable": true,
-    "gnetId": null,
+    "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
     "links": [],
+    "liveNow": false,
     "panels": [
         {
             "aliasColors": {},
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -57,7 +69,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -74,9 +86,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "95% of Requests Served Within",
             "tooltip": {
                 "shared": true,
@@ -85,9 +95,7 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
@@ -97,23 +105,17 @@
                     "format": "short",
                     "label": "ms",
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "$$hashKey": "object:109",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -121,10 +123,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -155,7 +159,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -172,9 +176,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "Request Rate",
             "tooltip": {
                 "shared": true,
@@ -183,33 +185,24 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -217,10 +210,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": "Prometheus",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -251,7 +246,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -274,9 +269,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "Request Error Rate",
             "tooltip": {
                 "shared": true,
@@ -285,33 +278,24 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -319,10 +303,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": "Prometheus",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -353,7 +339,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -376,9 +362,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "Memory Usage",
             "tooltip": {
                 "shared": true,
@@ -387,9 +371,7 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
@@ -399,23 +381,17 @@
                     "format": "short",
                     "label": "MB",
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "$$hashKey": "object:180",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -423,10 +399,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": "Prometheus",
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -457,7 +435,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -474,9 +452,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "CPU Usage",
             "tooltip": {
                 "shared": true,
@@ -485,36 +461,27 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "$$hashKey": "object:641",
-                    "decimals": null,
                     "format": "short",
                     "label": "%",
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "$$hashKey": "object:642",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -522,17 +489,9 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
-            "fieldConfig": {
-                "defaults": {
-                    "color": {},
-                    "custom": {},
-                    "thresholds": {
-                        "mode": "absolute",
-                        "steps": []
-                    }
-                },
-                "overrides": []
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
             },
             "fill": 1,
             "fillGradient": 0,
@@ -560,7 +519,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -591,9 +550,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "V8 Garbage Collector",
             "tooltip": {
                 "shared": true,
@@ -602,9 +559,7 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
@@ -614,23 +569,17 @@
                     "format": "short",
                     "label": "Sec",
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "$$hashKey": "object:348",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -638,10 +587,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -672,7 +623,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -689,9 +640,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "User Sessions",
             "tooltip": {
                 "shared": true,
@@ -700,33 +649,24 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -734,10 +674,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -768,7 +710,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -778,50 +720,63 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "mashroom_http_proxy_active_connections_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_http_proxy_http_pool_connections_active_total{service=\"Mashroom\"}",
                     "interval": "",
-                    "legendFormat": "HTTP Active",
+                    "legendFormat": "HTTP Pool Active",
                     "refId": "A"
                 },
                 {
-                    "expr": "mashroom_http_proxy_idle_connections_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_http_proxy_http_pool_connections_idle_total{service=\"Mashroom\"}",
                     "interval": "",
-                    "legendFormat": "HTTP Idle",
+                    "legendFormat": "HTTP Pool Idle",
                     "refId": "B"
                 },
                 {
-                    "expr": "mashroom_https_proxy_active_connections_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_http_proxy_https_pool_connections_active_total{service=\"Mashroom\"}",
                     "hide": false,
                     "interval": "",
-                    "legendFormat": "HTTPS Active",
+                    "legendFormat": "HTTPS Pool Active",
                     "refId": "D"
                 },
                 {
-                    "expr": "mashroom_https_proxy_idle_connections_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_http_proxy_https_pool_connections_idle_total{service=\"Mashroom\"}",
                     "hide": false,
                     "interval": "",
-                    "legendFormat": "HTTPS Idle",
+                    "legendFormat": "HTTPS Pool Idle",
                     "refId": "C"
                 },
                 {
-                    "expr": "mashroom_http_proxy_max_connections{service=\"Mashroom\"}",
-                    "interval": "",
-                    "legendFormat": "HTTP Max",
-                    "refId": "E"
-                },
-                {
-                    "expr": "mashroom_https_proxy_max_connections{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "expr": "mashroom_http_proxy_ws_connections_active_total{service=\"Mashroom\"}",
                     "hide": false,
-                    "interval": "",
-                    "legendFormat": "HTTPS Max",
-                    "refId": "F"
+                    "legendFormat": "WS Connections",
+                    "range": true,
+                    "refId": "E"
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
-            "title": "HTTP/S Proxy Connections",
+            "title": "Portal HTTP Proxy",
             "tooltip": {
                 "shared": true,
                 "sort": 0,
@@ -829,9 +784,7 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
@@ -839,25 +792,18 @@
                 {
                     "$$hashKey": "object:256",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "$$hashKey": "object:257",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -865,10 +811,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -899,7 +847,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -916,9 +864,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "WebSocket Connections",
             "tooltip": {
                 "shared": true,
@@ -927,33 +873,24 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -961,10 +898,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -995,7 +934,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -1018,9 +957,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "Plugins",
             "tooltip": {
                 "shared": true,
@@ -1029,33 +966,24 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -1063,10 +991,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -1097,7 +1027,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -1126,9 +1056,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "Remote Portal Apps",
             "tooltip": {
                 "shared": true,
@@ -1137,9 +1065,7 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
@@ -1147,25 +1073,18 @@
                 {
                     "$$hashKey": "object:173",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "$$hashKey": "object:174",
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
@@ -1173,10 +1092,12 @@
             "bars": false,
             "dashLength": 10,
             "dashes": false,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "links": []
                 },
                 "overrides": []
@@ -1207,7 +1128,7 @@
                 "alertThreshold": true
             },
             "percentage": false,
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "pointradius": 2,
             "points": false,
             "renderer": "flot",
@@ -1224,9 +1145,7 @@
                 }
             ],
             "thresholds": [],
-            "timeFrom": null,
             "timeRegions": [],
-            "timeShift": null,
             "title": "Memory Cache",
             "tooltip": {
                 "shared": true,
@@ -1235,49 +1154,42 @@
             },
             "type": "graph",
             "xaxis": {
-                "buckets": null,
                 "mode": "time",
-                "name": null,
                 "show": true,
                 "values": []
             },
             "yaxes": [
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 },
                 {
                     "format": "short",
-                    "label": null,
                     "logBase": 1,
-                    "max": null,
-                    "min": null,
                     "show": true
                 }
             ],
             "yaxis": {
-                "align": false,
-                "alignLevel": null
+                "align": false
             }
         },
         {
-            "cacheTimeout": null,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "mappings": [
                         {
-                            "$$hashKey": "object:403",
-                            "id": 0,
-                            "op": "=",
-                            "text": "N/A",
-                            "type": 1,
-                            "value": "null"
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
                         }
                     ],
                     "max": 1,
@@ -1320,7 +1232,7 @@
                 "showThresholdMarkers": false,
                 "text": {}
             },
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "targets": [
                 {
                     "expr": "mashroom_sessions_mongodb_connected{service=\"Mashroom\"}",
@@ -1329,25 +1241,25 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
-            "timeShift": null,
             "title": "MongoDB Store Connected ",
             "type": "gauge"
         },
         {
-            "cacheTimeout": null,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "mappings": [
                         {
-                            "$$hashKey": "object:403",
-                            "id": 0,
-                            "op": "=",
-                            "text": "N/A",
-                            "type": 1,
-                            "value": "null"
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
                         }
                     ],
                     "max": 1,
@@ -1390,7 +1302,7 @@
                 "showThresholdMarkers": false,
                 "text": {}
             },
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "targets": [
                 {
                     "expr": "mashroom_storage_mongodb_connected{service=\"Mashroom\"}",
@@ -1399,25 +1311,25 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
-            "timeShift": null,
             "title": "MongoDB Storage Connected ",
             "type": "gauge"
         },
         {
-            "cacheTimeout": null,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "mappings": [
                         {
-                            "$$hashKey": "object:403",
-                            "id": 0,
-                            "op": "=",
-                            "text": "N/A",
-                            "type": 1,
-                            "value": "null"
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
                         }
                     ],
                     "max": 1,
@@ -1460,7 +1372,7 @@
                 "showThresholdMarkers": false,
                 "text": {}
             },
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "targets": [
                 {
                     "expr": "mashroom_sessions_redis_nodes_connected{service=\"Mashroom\"}",
@@ -1469,25 +1381,25 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
-            "timeShift": null,
             "title": "Redis Session Connected ",
             "type": "gauge"
         },
         {
-            "cacheTimeout": null,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "mappings": [
                         {
-                            "$$hashKey": "object:403",
-                            "id": 0,
-                            "op": "=",
-                            "text": "N/A",
-                            "type": 1,
-                            "value": "null"
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
                         }
                     ],
                     "max": 1,
@@ -1530,7 +1442,7 @@
                 "showThresholdMarkers": false,
                 "text": {}
             },
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "targets": [
                 {
                     "expr": "mashroom_memory_cache_redis_nodes_connected{service=\"Mashroom\"}",
@@ -1539,25 +1451,25 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
-            "timeShift": null,
             "title": "Redis Memory Cache Connected ",
             "type": "gauge"
         },
         {
-            "cacheTimeout": null,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "mappings": [
                         {
-                            "$$hashKey": "object:403",
-                            "id": 0,
-                            "op": "=",
-                            "text": "N/A",
-                            "type": 1,
-                            "value": "null"
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
                         }
                     ],
                     "max": 1,
@@ -1600,7 +1512,7 @@
                 "showThresholdMarkers": false,
                 "text": {}
             },
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "targets": [
                 {
                     "expr": "mashroom_messaging_mqtt_connected{service=\"Mashroom\"}",
@@ -1609,25 +1521,25 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
-            "timeShift": null,
             "title": "MQTT Broker Connected ",
             "type": "gauge"
         },
         {
-            "cacheTimeout": null,
-            "datasource": null,
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
             "fieldConfig": {
                 "defaults": {
-                    "custom": {},
                     "mappings": [
                         {
-                            "$$hashKey": "object:403",
-                            "id": 0,
-                            "op": "=",
-                            "text": "N/A",
-                            "type": 1,
-                            "value": "null"
+                            "options": {
+                                "match": "null",
+                                "result": {
+                                    "text": "N/A"
+                                }
+                            },
+                            "type": "special"
                         }
                     ],
                     "max": 1,
@@ -1670,7 +1582,7 @@
                 "showThresholdMarkers": false,
                 "text": {}
             },
-            "pluginVersion": "7.4.2",
+            "pluginVersion": "8.5.5",
             "targets": [
                 {
                     "expr": "mashroom_messaging_amqp_connected{service=\"Mashroom\"}",
@@ -1679,14 +1591,12 @@
                     "refId": "A"
                 }
             ],
-            "timeFrom": null,
-            "timeShift": null,
             "title": "AMQP Broker Connected ",
             "type": "gauge"
         }
     ],
     "refresh": "10s",
-    "schemaVersion": 27,
+    "schemaVersion": 36,
     "style": "dark",
     "tags": [],
     "templating": {
@@ -1713,5 +1623,6 @@
     "timezone": "",
     "title": "Mashroom",
     "uid": "Du04HfgMz",
-    "version": 1
+    "version": 2,
+    "weekStart": ""
 }

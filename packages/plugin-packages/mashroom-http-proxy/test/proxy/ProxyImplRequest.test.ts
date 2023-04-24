@@ -81,12 +81,12 @@ describe('ProxyImplRequest', () => {
             .get('/foo')
             .reply(200, 'test response');
 
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo', {
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo', {
             'foo': 'bar',
         });
 
@@ -102,12 +102,12 @@ describe('ProxyImplRequest', () => {
             .post('/login')
             .reply(200, 'test post response');
 
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('POST', '{ "user": "test }');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/login', {
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/login', {
             'foo': 'bar',
         });
 
@@ -119,7 +119,7 @@ describe('ProxyImplRequest', () => {
             .get('/foo?q=javascript%205')
             .reply(200, 'test response');
 
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
@@ -128,7 +128,7 @@ describe('ProxyImplRequest', () => {
 
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.body).toBe('test response');
     });
@@ -138,7 +138,7 @@ describe('ProxyImplRequest', () => {
             .get('/foo?bar=2&q=javascript%205')
             .reply(200, 'test response');
 
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
@@ -147,18 +147,18 @@ describe('ProxyImplRequest', () => {
 
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo?bar=2');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo?bar=2');
 
         expect(res.body).toBe('test response');
     });
 
     it('sets the correct status code if the target is not available', async () => {
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://localhost:22334/foo');
+        await httpProxy.forward(req, res, 'https://localhost:22334/foo');
 
         // Expect 503 Service Unavailable
         expect(res.statusCode).toBe(503);
@@ -170,12 +170,12 @@ describe('ProxyImplRequest', () => {
             .delay(3000)
             .reply(200, 'test response');
 
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.yyyyyyyyyyy.at');
+        await httpProxy.forward(req, res, 'https://www.yyyyyyyyyyy.at');
 
         // Expect 504 Gateway Timeout
         expect(res.statusCode).toBe(504);
@@ -189,12 +189,12 @@ describe('ProxyImplRequest', () => {
             .get('/foo')
             .reply(201, 'resource created');
 
-        const httpProxyService = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.statusCode).toBe(201);
     });
@@ -248,12 +248,12 @@ describe('ProxyImplRequest', () => {
         };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.body).toBe('test response');
     });
@@ -287,12 +287,12 @@ describe('ProxyImplRequest', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.body).toBe('test response');
     });
@@ -328,12 +328,12 @@ describe('ProxyImplRequest', () => {
         };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, removeAllHeaderFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, removeAllHeaderFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.body).toBe('test response');
     });
@@ -367,13 +367,13 @@ describe('ProxyImplRequest', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         req.query.foo = 'bar';
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.at/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.at/foo');
 
         expect(res.body).toBe('test response');
     });
@@ -405,12 +405,12 @@ describe('ProxyImplRequest', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, '__MASHROOM_SERVER__');
+        await httpProxy.forward(req, res, '__MASHROOM_SERVER__');
 
         expect(res.body).toBe('test response');
     });
@@ -445,12 +445,12 @@ describe('ProxyImplRequest', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo');
 
         expect(res.statusCode).toBe(403);
     });
@@ -486,12 +486,12 @@ describe('ProxyImplRequest', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['x-whatever', 'some-new-header']);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo2');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo2');
 
         expect(res.headers).toEqual({
             'x-whatever': '123',
@@ -531,12 +531,12 @@ describe('ProxyImplRequest', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['x-whatever', 'foo']);
 
-        const httpProxyService = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
+        const httpProxy = new ProxyImplRequest(2000, interceptorHandler, headerFilter, false, loggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
-        await httpProxyService.forward(req, res, 'https://www.mashroom-server.com/foo3');
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo3');
 
         expect(res.headers).toEqual({
             'x-whatever': '123'

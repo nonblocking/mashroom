@@ -3,18 +3,31 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Added new metrics for WebSocket connections:
+   * mashroom_http_proxy_ws_connections_active_total
+   * mashroom_http_proxy_ws_connections_active
+ * HTTP Proxy: Added the possibility to limit WebSocket connections through the proxy. New config properties:
+   * *wsMaxConnectionsTotal* (setting this to 0 disables proxying WS connections)
+   * *wsMaxConnectionsPerHost*
+ * HTTP Proxy: **BREAKING_CHANGE** Renamed pool metrics
+   * mashroom_http_proxy_active_connections_total -> mashroom_http_proxy_http_pool_connections_active_total
+   * mashroom_http_proxy_idle_connections_total -> mashroom_http_proxy_http_pool_connections_idle_total
+   * mashroom_http_proxy_waiting_requests_total -> mashroom_http_proxy_http_pool_waiting_requests
+   * mashroom_https_proxy_active_connections_total -> mashroom_http_proxy_https_pool_connections_active_total
+   * mashroom_https_proxy_idle_connections_total -> mashroom_http_proxy_https_pool_connections_idle_total
+   * mashroom_https_proxy_waiting_requests_total -> mashroom_http_proxy_https_pool_waiting_requests_total
  * HTTP Proxy: Added additional config properties to fine tune the HTTP connection pool:
    * *poolMaxTotalSockets*
    * *poolMaxSocketsPerHost* (should be used instead of *poolMaxSockets* which is now deprecated)
    * *poolMaxWaitingRequestsPerHost* - limit the number of waiting requests if all connections for a host are already occupied.
-     Helps to avoid the problem that a single unresponsive API/backend fills up the reverse proxy connection pools
-     and render the whole server unreachable - see [#112](https://github.com/nonblocking/mashroom/issues/112)
+     Helps to avoid the problem that a single unresponsive API/backend can fill up the reverse proxy connection pools
+     and might render the whole server unreachable - see [#112](https://github.com/nonblocking/mashroom/issues/112)
  * Add User Headers plugin: Remove all characters not allowed in HTTP headers from the display name
  * HTTP Proxy: Added 4 new metrics for active and waiting requests per target URL, see [#111](https://github.com/nonblocking/mashroom/issues/111)
-   * mashroom_http_proxy_active_connections
-   * mashroom_http_proxy_waiting_requests
-   * mashroom_https_proxy_active_connections
-   * mashroom_https_proxy_waiting_requests
+   * mashroom_http_proxy_http_pool_connections_active
+   * mashroom_http_proxy_http_pool_waiting_requests
+   * mashroom_http_proxy_https_pool_connections_active
+   * mashroom_http_proxy_https_pool_waiting_requests
  * Metrics Collector: Added the possibility to reset Gauges, this is useful if some label dynamically "disappear" and need to be removed
 
 ## 2.3.2 (April 14, 2023)

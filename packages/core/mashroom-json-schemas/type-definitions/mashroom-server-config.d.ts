@@ -147,7 +147,7 @@ export interface Plugins {
      */
     rejectUnauthorized?: boolean;
     /**
-     * Max sockets total (Default: null - no limit)
+     * Max HTTP pool sockets total (Default: null - no limit)
      */
     poolMaxTotalSockets?: number | null;
     /**
@@ -155,25 +155,33 @@ export interface Plugins {
      */
     poolMaxSockets?: number;
     /**
-     * Max sockets per host (Default: 10)
+     * Max HTTP pool sockets per target host (Default: 10)
      */
     poolMaxSocketsPerHost?: number;
     /**
-     * Max waiting requests per host, needs to be > 0 if set (Default: null - no limit)
+     * Max waiting HTTP requests per target host, needs to be > 0 if set (Default: null - no limit)
      */
     poolMaxWaitingRequestsPerHost?: number | null;
     /**
-     * Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
+     * HTTP socket timeout, 0 means no timeout (Default: 30000 - 30sec)
      */
     socketTimeoutMs?: number;
     /**
-     * Enable/disable connection keep-alive (Default: true)
+     * HTTP connection keep-alive (Default: true)
      */
     keepAlive?: boolean;
     /**
-     * If the target resets the connection (because a keep-alive connection is broken) retry once (Default: true)
+     * If the target resets the HTTP connection (because a keep-alive connection is broken) retry once (Default: true)
      */
     retryOnReset?: boolean;
+    /**
+     * Max WebSocket connections per target host (Default: 0 - no limit)
+     */
+    wsMaxConnectionsPerHost?: number | null;
+    /**
+     * Max WebSocket connections total (Default: 0 - no limit)
+     */
+    wsMaxConnectionsTotal?: number | null;
     /**
      * Switch the proxy implementation. Currently available are  'nodeHttpProxy' (based on https://github.com/http-party/node-http-proxy), which is the default, or 'request' (based https://github.com/request/request)
      */

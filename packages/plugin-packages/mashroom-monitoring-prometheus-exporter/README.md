@@ -73,11 +73,14 @@ User sessions:
 
 Active HTTP proxy connections (e.g. Portal App REST calls):
 
-    mashroom_http_proxy_active_connections_total{service="Mashroom"}
+    mashroom_http_proxy_http_pool_connections_active_total{service="Mashroom"}
+    mashroom_http_proxy_https_pool_connections_active_total{service="Mashroom"}
+    mashroom_http_proxy_ws_connections_active_total{service="Mashroom"}
 
 Idle HTTP proxy connections:
 
-    mashroom_http_proxy_idle_connections_total{service="Mashroom"}
+    mashroom_http_proxy_http_pool_connections_idle_total{service="Mashroom"}
+    mashroom_http_proxy_https_pool_connections_idle_total{service="Mashroom"}
 
 Plugins total:
 

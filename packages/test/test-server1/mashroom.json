@@ -131,6 +131,7 @@
             "poolMaxSocketsPerHost": 10,
             "poolMaxWaitingRequestsPerHost": 2,
             "socketTimeoutMs": 30000,
+            "wsMaxConnectionsPerHost": 10,
             "proxyImpl": "default"
         },
         "Mashroom WebSocket Webapp": {

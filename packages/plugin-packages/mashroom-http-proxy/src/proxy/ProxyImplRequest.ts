@@ -12,17 +12,17 @@ import type {Proxy, HttpHeaderFilter, InterceptorHandler, RequestMetrics} from '
  */
 export default class ProxyImplRequest implements Proxy {
 
-    private _metrics: RequestMetrics;
+    private _requestMetrics: RequestMetrics;
 
     constructor(private _socketTimeoutMs: number, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean, loggerFactory: MashroomLoggerFactory) {
         const logger: MashroomLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
-        this._metrics = {
-            httpRequests: 0,
-            wsRequests: 0,
-            targetConnectionErrors: 0,
-            targetTimeouts: 0
+        this._requestMetrics = {
+            httpRequestCount: 0,
+            httpTargetConnectionErrorCount: 0,
+            httpTargetTimeoutCount: 0,
+            wsRequestCount: 0,
         };
         logger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${this._socketTimeoutMs}ms`);
         if (this._retryOnReset) {
@@ -32,7 +32,7 @@ export default class ProxyImplRequest implements Proxy {
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        this._metrics.httpRequests ++;
+        this._requestMetrics.httpRequestCount ++;
 
         const method = req.method;
 
@@ -149,13 +149,13 @@ export default class ProxyImplRequest implements Proxy {
                 .on('error', (error: NodeJS.ErrnoException) => {
                     if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
                         logger.error(`Target endpoint '${targetUri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
-                        this._metrics.targetTimeouts ++;
+                        this._requestMetrics.httpTargetTimeoutCount ++;
                         if (!res.headersSent) {
                             res.sendStatus(504);
                         }
                     } else {
                         logger.error(`Forwarding to '${targetUri}' failed!`, error);
-                        this._metrics.targetConnectionErrors ++;
+                        this._requestMetrics.httpTargetConnectionErrorCount ++;
                         if (!res.headersSent) {
                             res.sendStatus(503);
                         }
@@ -174,6 +174,10 @@ export default class ProxyImplRequest implements Proxy {
     }
 
     getRequestMetrics(): RequestMetrics {
-        return this._metrics;
+        return this._requestMetrics;
+    }
+
+    getWSConnectionMetrics() {
+        return null;
     }
 }

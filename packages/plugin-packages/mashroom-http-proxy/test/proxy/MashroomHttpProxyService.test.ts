@@ -34,7 +34,7 @@ describe('MashroomHttpProxyService', () => {
         expect(mockRes.status).toBe(405);
     });
 
-    it('it rejects requests with invalid protocols', async () => {
+    it('it rejects requests with invalid HTTP protocols', async () => {
         const dummyProxy: any = {};
         const mockReq: any = {
             method: 'GET',
@@ -50,9 +50,22 @@ describe('MashroomHttpProxyService', () => {
         };
 
         const service = new MashroomHttpProxyService(['GET', 'POST'], dummyProxy);
-        await service.forward(mockReq, mockRes, 'file://what-ever.exe');
+        await expect(service.forward(mockReq, mockRes, 'file://what-ever.exe')).rejects.toThrowError('Cannot forward to file://what-ever.exe because the protocol is not supported (only HTTP and HTTPS is)');
+    });
 
-        expect(mockRes.status).toBe(400);
+    it('it rejects requests with invalid WS protocols', async () => {
+        const dummyProxy: any = {};
+        const mockReq: any = {
+            method: 'GET',
+            pluginContext: {
+                loggerFactory,
+            }
+        };
+        const socket: any = {};
+        const buffer: any = {};
+
+        const service = new MashroomHttpProxyService(['GET', 'POST'], dummyProxy);
+        await expect(service.forwardWs(mockReq, socket, buffer, 'file://what-ever.exe')).rejects.toThrowError('Cannot forward to file://what-ever.exe because the protocol is not supported (only WS and WSS is)');
     });
 
     it('it rejects requests if too many are already waiting', async () => {

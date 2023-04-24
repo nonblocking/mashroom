@@ -1,10 +1,16 @@
-import {URLSearchParams} from 'url';
+import {URLSearchParams, URL} from 'url';
 
 import {createProxyServer} from 'http-proxy';
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {getHttpPool, getHttpsPool, getPoolConfig} from '../connection_pool';
 
-import type {RequestMetrics, Proxy, HttpHeaderFilter, InterceptorHandler} from '../../type-definitions/internal';
+import type {
+    RequestMetrics,
+    Proxy,
+    HttpHeaderFilter,
+    InterceptorHandler,
+    WSConnectionMetrics
+} from '../../type-definitions/internal';
 import type {IncomingMessage, ServerResponse, ClientRequest} from 'http';
 import type {Socket} from 'net';
 import type {ParsedQs} from 'qs';
@@ -58,10 +64,13 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     private _globalLogger: MashroomLogger;
     private _httpProxy: ProxyServer;
     private _httpsProxy: ProxyServer;
-    private _metrics: RequestMetrics;
+    private _requestMetrics: RequestMetrics;
+    private _wsConnectionMetrics: WSConnectionMetrics;
 
     constructor(private _socketTimeoutMs: number, rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
-                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean, loggerFactory: MashroomLoggerFactory) {
+                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
+                private _wsMaxConnectionsPerHost: number | null, private _wsMaxConnectionsTotal: number | null,
+                loggerFactory: MashroomLoggerFactory) {
         this._globalLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._globalLogger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
@@ -80,11 +89,15 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             ignorePath: true, // do not append req.url path
             xfwd: true,
         });
-        this._metrics = {
-            httpRequests: 0,
-            wsRequests: 0,
-            targetConnectionErrors: 0,
-            targetTimeouts: 0
+        this._requestMetrics = {
+            httpRequestCount: 0,
+            httpTargetConnectionErrorCount: 0,
+            httpTargetTimeoutCount: 0,
+            wsRequestCount: 0,
+        };
+        this._wsConnectionMetrics = {
+            activeConnections: 0,
+            activeConnectionsTargetCount: {},
         };
 
         this._httpProxy.on('proxyReq', this.onProxyRequest.bind(this));
@@ -105,7 +118,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        this._metrics.httpRequests++;
+        this._requestMetrics.httpRequestCount ++;
 
         let effectiveTargetUri = encodeURI(targetUri);
         let effectiveAdditionalHeaders = {
@@ -186,7 +199,19 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
-        this._metrics.wsRequests++;
+
+        if (typeof this._wsMaxConnectionsTotal === 'number' && this._wsConnectionMetrics.activeConnections >= this._wsMaxConnectionsTotal) {
+            logger.error(`Cannot forward to ${targetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
+            socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
+            return;
+        }
+        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveConnectionsToHost(targetUri) >= this._wsMaxConnectionsPerHost) {
+            logger.error(`Cannot forward to ${targetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
+            socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
+            return;
+        }
+
+        this._requestMetrics.wsRequestCount ++;
 
         if (req.headers.upgrade !== 'websocket') {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
@@ -291,7 +316,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         // Proper timeout handling
         proxyReq.setTimeout(this._socketTimeoutMs, () => {
             logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`);
-            this._metrics.targetTimeouts++;
+            this._requestMetrics.httpTargetTimeoutCount ++;
             requestMeta.end();
             proxyReq.destroy();
             if (!clientResponse.headersSent) {
@@ -365,7 +390,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         // node-http-proxy throws an error if the client has aborted, we don't want to log it
         if (!req.aborted) {
-            this._metrics.targetConnectionErrors++;
+            this._requestMetrics.httpTargetConnectionErrorCount ++;
 
             if (requestMeta.type === 'HTTP') {
                 if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
@@ -385,7 +410,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                 }
             } else if (requestMeta.type === 'WS') {
                 logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
-                (res as Socket).end(`HTTP/1.1 503 Service Unavailable\r\n\r\n`, 'ascii');
+                (res as Socket).end('HTTP/1.1 503 Service Unavailable\r\n\r\n', 'ascii');
             }
         }
 
@@ -420,6 +445,13 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             return;
         }
 
+        this._wsConnectionMetrics.activeConnections ++;
+        const target = this.getProtocolAndHost(requestMeta.uri);
+        if (!this._wsConnectionMetrics.activeConnectionsTargetCount[target]) {
+            this._wsConnectionMetrics.activeConnectionsTargetCount[target] = 0;
+        }
+        this._wsConnectionMetrics.activeConnectionsTargetCount[target] ++;
+
         const logger = this._globalLogger.withContext(userContext(requestMeta.user));
         logger.info(`WebSocket connection for ${requestMeta.uri} established:`, proxySocket.address());
     }
@@ -430,13 +462,45 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             return;
         }
 
+        this._wsConnectionMetrics.activeConnections --;
+        const target = this.getProtocolAndHost(requestMeta.uri);
+        if (this._wsConnectionMetrics.activeConnectionsTargetCount[target]) {
+            this._wsConnectionMetrics.activeConnectionsTargetCount[target] --;
+            if (this._wsConnectionMetrics.activeConnectionsTargetCount[target] === 0) {
+                delete this._wsConnectionMetrics.activeConnectionsTargetCount[target];
+            }
+        }
+
         const logger = this._globalLogger.withContext(userContext(requestMeta.user));
         logger.info(`WebSocket connection for ${requestMeta.uri} closed`);
         requestMeta.end();
     }
 
+    private getActiveConnectionsToHost(uri: string) {
+        const {host} = new URL(uri);
+        const wsTarget = `ws://${host}`;
+        const wssTarget = `wss://${host}`;
+        let count = 0;
+        if (this._wsConnectionMetrics.activeConnectionsTargetCount[wsTarget]) {
+            count += this._wsConnectionMetrics.activeConnectionsTargetCount[wsTarget];
+        }
+        if (this._wsConnectionMetrics.activeConnectionsTargetCount[wssTarget]) {
+            count += this._wsConnectionMetrics.activeConnectionsTargetCount[wssTarget];
+        }
+        return count;
+    }
+
+    private getProtocolAndHost(uri: string) {
+        const {protocol, host} = new URL(uri);
+        return `${protocol}//${host}`;
+    }
+
     getRequestMetrics(): RequestMetrics {
-        return this._metrics;
+        return this._requestMetrics;
+    }
+
+    getWSConnectionMetrics(): WSConnectionMetrics | null {
+        return this._wsConnectionMetrics;
     }
 }
 

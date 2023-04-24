@@ -229,7 +229,7 @@
                         },
                         "poolMaxTotalSockets": {
                             "type": ["integer", "null"],
-                            "description": "Max sockets total (Default: null - no limit)"
+                            "description": "Max HTTP pool sockets total (Default: null - no limit)"
                         },
                         "poolMaxSockets": {
                             "type": "integer",
@@ -238,23 +238,31 @@
                         },
                         "poolMaxSocketsPerHost": {
                             "type": "integer",
-                            "description": "Max sockets per host (Default: 10)"
+                            "description": "Max HTTP pool sockets per target host (Default: 10)"
                         },
                         "poolMaxWaitingRequestsPerHost": {
                             "type": ["integer", "null"],
-                            "description": "Max waiting requests per host, needs to be > 0 if set (Default: null - no limit)"
+                            "description": "Max waiting HTTP requests per target host, needs to be > 0 if set (Default: null - no limit)"
                         },
                         "socketTimeoutMs": {
                             "type": "integer",
-                            "description": "Socket timeout, 0 means no timeout (Default: 30000 - 30sec)"
+                            "description": "HTTP socket timeout, 0 means no timeout (Default: 30000 - 30sec)"
                         },
                         "keepAlive": {
                             "type": "boolean",
-                            "description": "Enable/disable connection keep-alive (Default: true)"
+                            "description": "HTTP connection keep-alive (Default: true)"
                         },
                         "retryOnReset": {
                             "type": "boolean",
-                            "description": "If the target resets the connection (because a keep-alive connection is broken) retry once (Default: true)"
+                            "description": "If the target resets the HTTP connection (because a keep-alive connection is broken) retry once (Default: true)"
+                        },
+                        "wsMaxConnectionsPerHost": {
+                            "type": ["integer", "null"],
+                            "description": "Max WebSocket connections per target host (Default: 0 - no limit)"
+                        },
+                        "wsMaxConnectionsTotal": {
+                            "type": ["integer", "null"],
+                            "description": "Max WebSocket connections total (Default: 0 - no limit)"
                         },
                         "proxyImpl": {
                             "type": "string",

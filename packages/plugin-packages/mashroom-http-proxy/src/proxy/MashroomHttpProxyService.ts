@@ -14,6 +14,11 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
     async forward(req: Request, res: Response, uri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
+        const {protocol, host} = new URL(uri);
+        if (protocol !== 'http:' && protocol !== 'https:') {
+            throw new Error(`Cannot forward to ${uri} because the protocol is not supported (only HTTP and HTTPS is)`);
+        }
+
         const method = req.method;
         if (!this._forwardMethods.find((m) => m === method)) {
             logger.debug('Method not allowed:', method);
@@ -21,16 +26,9 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
             return;
         }
 
-        const {protocol, host} = new URL(uri);
-        if (protocol !== 'http:' && protocol !== 'https:') {
-            logger.error(`Cannot forward to ${uri} because the protocol is not supported`);
-            res.sendStatus(400);
-            return;
-        }
-
         if (typeof this._poolMaxWaitingRequestsPerHost === 'number' && this._poolMaxWaitingRequestsPerHost > 0) {
             if (getWaitingRequestsForHostHeader(protocol, host) >= this._poolMaxWaitingRequestsPerHost) {
-                logger.error(`Cannot forward to ${uri} because there are already to many waiting requests`);
+                logger.error(`Cannot forward to ${uri} because max waiting requests per host reached (${this._poolMaxWaitingRequestsPerHost})`);
                 res.sendStatus(429);
                 return;
             }
@@ -40,6 +38,14 @@ export default class MashroomHttpProxyService implements MashroomHttpProxyServic
     }
 
     async forwardWs(req: Request, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void> {
+        const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
+
+        const {protocol} = new URL(targetUri);
+        if (protocol !== 'ws:' && protocol !== 'wss:') {
+            throw new Error(`Cannot forward to ${targetUri} because the protocol is not supported (only WS and WSS is)`);
+            return;
+        }
+
         return this._proxy.forwardWs(req, socket, head, targetUri, additionalHeaders);
     }
 }

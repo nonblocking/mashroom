@@ -11,25 +11,30 @@ export interface HttpHeaderFilter {
 }
 
 export type PoolConfig = {
-    keepAlive: boolean;
-    rejectUnauthorized: boolean;
-    maxSocketsPerHost: number;
-    maxTotalSockets: number | null;
+    readonly keepAlive: boolean;
+    readonly rejectUnauthorized: boolean;
+    readonly maxSocketsPerHost: number;
+    readonly maxTotalSockets: number | null;
 }
 
 export type PoolMetrics = {
-    activeConnections: number;
-    activeConnectionsTargetCount: Record<string, number>;
-    idleConnections: number;
-    waitingRequests: number;
-    waitingRequestsTargetCount: Record<string, number>;
+    readonly activeConnections: number;
+    readonly activeConnectionsTargetCount: Record<string, number>;
+    readonly idleConnections: number;
+    readonly waitingRequests: number;
+    readonly waitingRequestsTargetCount: Record<string, number>;
 }
 
 export type RequestMetrics = {
-    httpRequests: number;
-    wsRequests: number;
-    targetConnectionErrors: number;
-    targetTimeouts: number;
+    httpRequestCount: number;
+    httpTargetConnectionErrorCount: number;
+    httpTargetTimeoutCount: number;
+    wsRequestCount: number;
+}
+
+export type WSConnectionMetrics = {
+    activeConnections: number;
+    activeConnectionsTargetCount: Record<string, number>;
 }
 
 export type MashroomHttpProxyInterceptorHolder = {
@@ -59,5 +64,6 @@ export interface Proxy {
     forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders): Promise<void>;
     forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
     shutdown(): void;
-    getRequestMetrics():  RequestMetrics;
+    getRequestMetrics(): RequestMetrics;
+    getWSConnectionMetrics(): WSConnectionMetrics | null;
 }
