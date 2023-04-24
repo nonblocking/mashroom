@@ -1,4 +1,4 @@
-import {escapeHeaderValue} from '@mashroom/mashroom-utils/lib/header_utils'
+import {escapeHeaderValue} from '@mashroom/mashroom-utils/lib/header_utils';
 import type {Request, Response} from 'express';
 import type {IncomingMessageWithContext, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
