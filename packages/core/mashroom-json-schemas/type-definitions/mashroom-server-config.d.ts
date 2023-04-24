@@ -147,9 +147,21 @@ export interface Plugins {
      */
     rejectUnauthorized?: boolean;
     /**
-     * Max sockets per host (Default: 10)
+     * Max sockets total (Default: null - no limit)
+     */
+    poolMaxTotalSockets?: number | null;
+    /**
+     * @deprecated, use poolMaxSocketsPerHost
      */
     poolMaxSockets?: number;
+    /**
+     * Max sockets per host (Default: 10)
+     */
+    poolMaxSocketsPerHost?: number;
+    /**
+     * Max waiting requests per host, needs to be > 0 if set (Default: null - no limit)
+     */
+    poolMaxWaitingRequestsPerHost?: number | null;
     /**
      * Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
      */

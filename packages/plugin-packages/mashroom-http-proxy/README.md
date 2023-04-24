@@ -50,7 +50,9 @@ You can override the default config in your Mashroom config file like this:
               "trace*"
             ],
             "rejectUnauthorized": true,
-            "poolMaxSockets": 10,
+            "poolMaxTotalSockets": null,
+            "poolMaxSocketsPerHost": 10,
+            "poolMaxWaitingRequestsPerHost": null,
             "socketTimeoutMs": 60000,
             "keepAlive": true,
             "proxyImpl": "default"
@@ -61,13 +63,15 @@ You can override the default config in your Mashroom config file like this:
  * _forwardMethods_: The HTTP methods that should be forwarded
  * _forwardHeaders_: The HTTP headers that should be forwarded. May contain a _*_ as wildcard.
  * _rejectUnauthorized_: Reject self-signed certificates (Default: true)
- * _poolMaxSockets_: Max sockets per host (Default: 10)
+ * _poolMaxTotalSockets_: Max sockets total (Default: null - no limit)
+ * _poolMaxSocketsPerHost_: Max sockets per host (Default: 10)
+ * _poolMaxWaitingRequestsPerHost_: Max waiting requests per host, needs to be > 0 if set (Default: null - no limit)
  * _socketTimeoutMs_: Socket timeout, 0 means no timeout (Default: 30000 - 30sec)
  * _keepAlive_: Enable/disable connection keep-alive. Set this to *false* if you experience random ECONNRESET with the *nodeHttpProxy* implementation,
     see: [https://github.com/nonblocking/mashroom/issues/77](https://github.com/nonblocking/mashroom/issues/77)
  * _retryOnReset_: If the target resets the connection (because a keep-alive connection is broken) retry once (Default: true)
  * _proxyImpl_: Switch the proxy implementation. Currently available are *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy)),
-   *request* (based on [request](https://github.com/request/request)) and *default* (which is *nodeHttpProxy* at the moment)
+   *request* (based on [request](https://github.com/request/request)) and *default* (which is *nodeHttpProxy*)
 
 ## Services
 

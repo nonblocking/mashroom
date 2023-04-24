@@ -227,9 +227,22 @@
                             "type": "boolean",
                             "description": "Reject self-signed certificates (Default: true)"
                         },
+                        "poolMaxTotalSockets": {
+                            "type": ["integer", "null"],
+                            "description": "Max sockets total (Default: null - no limit)"
+                        },
                         "poolMaxSockets": {
                             "type": "integer",
+                            "description": "@deprecated, use poolMaxSocketsPerHost",
+                            "deprecationMessage": "use poolMaxSocketsPerHost"
+                        },
+                        "poolMaxSocketsPerHost": {
+                            "type": "integer",
                             "description": "Max sockets per host (Default: 10)"
+                        },
+                        "poolMaxWaitingRequestsPerHost": {
+                            "type": ["integer", "null"],
+                            "description": "Max waiting requests per host, needs to be > 0 if set (Default: null - no limit)"
                         },
                         "socketTimeoutMs": {
                             "type": "integer",

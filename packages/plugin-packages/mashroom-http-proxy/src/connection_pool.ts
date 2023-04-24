@@ -10,7 +10,8 @@ import type {PoolConfig, PoolMetrics} from '../type-definitions/internal';
 
 let _config: PoolConfig = {
     keepAlive: true,
-    maxSockets: 10,
+    maxTotalSockets: null,
+    maxSocketsPerHost: 10,
     rejectUnauthorized: false,
 };
 let _httpPool: HttpAgent | undefined;
@@ -28,7 +29,8 @@ export const getHttpPool = () => {
     if (!_httpPool) {
         _httpPool = new http.Agent({
             keepAlive: _config.keepAlive,
-            maxSockets: _config.maxSockets,
+            maxSockets: _config.maxSocketsPerHost,
+            maxTotalSockets: _config.maxTotalSockets ?? undefined,
         });
     }
     return _httpPool;
@@ -38,11 +40,28 @@ export const getHttpsPool = () => {
     if (!_httpsPool) {
         _httpsPool = new https.Agent({
             keepAlive: _config.keepAlive,
-            maxSockets: _config.maxSockets,
+            maxSockets: _config.maxSocketsPerHost,
+            maxTotalSockets: _config.maxTotalSockets ?? undefined,
             rejectUnauthorized: _config.rejectUnauthorized,
         });
     }
     return _httpsPool;
+};
+
+export const getWaitingRequestsForHostHeader = (protocol: 'http:' | 'https:', host: string) => {
+    let waiting = 0;
+    const agent = protocol === 'https:' ? getHttpsPool() : getHttpPool();
+    Object.values(agent.requests).forEach((waitingRequests) => {
+        if (waitingRequests) {
+            waitingRequests.forEach((waitingRequest) => {
+                const clientRequest = waitingRequest as unknown as ClientRequest;
+                if (clientRequest.getHeader('host') === host) {
+                    waiting ++;
+                }
+            });
+        }
+    });
+    return waiting;
 };
 
 const addTargetCount = (clientRequest: ClientRequest, hostCount: Record<string, number>, logger: MashroomLogger) => {

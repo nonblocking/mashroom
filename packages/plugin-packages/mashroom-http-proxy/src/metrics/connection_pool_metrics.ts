@@ -29,7 +29,7 @@ export const startExportPoolMetrics = (contextHolder: MashroomPluginContextHolde
                     activeConnectionsPerTargetGauge.set(activeConnectionsTargetCount[target], { target });
                 });
                 collectorService.gauge('mashroom_http_proxy_idle_connections_total', 'Mashroom HTTP Proxy Idle (Free) Connections Total').set(idleConnections);
-                collectorService.gauge('mashroom_http_proxy_max_connections', 'Mashroom HTTP Proxy Max Connections Per Host').set(config.maxSockets);
+                collectorService.gauge('mashroom_http_proxy_max_connections', 'Mashroom HTTP Proxy Max Connections Per Host').set(config.maxSocketsPerHost);
                 collectorService.gauge('mashroom_http_proxy_waiting_requests_total', 'Mashroom HTTP Proxy Waiting Requests (in Queue)').set(waitingRequests);
                 const waitingRequestPerTargetGauge = collectorService.gauge('mashroom_http_proxy_waiting_requests', 'Mashroom HTTP Proxy Waiting Requests per Target');
                 waitingRequestPerTargetGauge.reset();
@@ -48,7 +48,7 @@ export const startExportPoolMetrics = (contextHolder: MashroomPluginContextHolde
                     activeConnectionsPerTargetGauge.set(activeConnectionsTargetCount[target], { target });
                 });
                 collectorService.gauge('mashroom_https_proxy_idle_connections_total', 'Mashroom HTTPS Proxy Idle (Free) Connections Total').set(idleConnections);
-                collectorService.gauge('mashroom_https_proxy_max_connections', 'Mashroom HTTPS Proxy Max Connections Per Host').set(config.maxSockets);
+                collectorService.gauge('mashroom_https_proxy_max_connections', 'Mashroom HTTPS Proxy Max Connections Per Host').set(config.maxSocketsPerHost);
                 collectorService.gauge('mashroom_https_proxy_waiting_requests_total', 'Mashroom HTTPS Proxy Waiting Requests (in Queue)').set(waitingRequests);
                 const waitingRequestPerTargetGauge = collectorService.gauge('mashroom_https_proxy_waiting_requests', 'Mashroom HTTPS Proxy Waiting Requests per Target');
                 waitingRequestPerTargetGauge.reset();

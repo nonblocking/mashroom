@@ -24,7 +24,7 @@ export default class ProxyImplRequest implements Proxy {
             targetConnectionErrors: 0,
             targetTimeouts: 0
         };
-        logger.info(`Initializing http proxy with maxSockets: ${poolConfig.maxSockets} and socket timeout: ${this._socketTimeoutMs}ms`);
+        logger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${this._socketTimeoutMs}ms`);
         if (this._retryOnReset) {
             logger.warn('Option retryOnReset not supported by this proxy implementation!');
         }

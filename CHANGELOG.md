@@ -3,8 +3,14 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Added additional config properties to fine tune the HTTP connection pool:
+   * *poolMaxTotalSockets*
+   * *poolMaxSocketsPerHost* (should be used instead of *poolMaxSockets* which is now deprecated)
+   * *poolMaxWaitingRequestsPerHost* - limit the number of waiting requests if all connections for a host are already occupied.
+     Helps to avoid the problem that a single unresponsive API/backend fills up the reverse proxy connection pools
+     and render the whole server unreachable - see [#112](https://github.com/nonblocking/mashroom/issues/112)
  * Add User Headers plugin: Remove all characters not allowed in HTTP headers from the display name
- * HTTP Proxy: Added 4 new metrics for active and waiting requests per target URL, fixes #111
+ * HTTP Proxy: Added 4 new metrics for active and waiting requests per target URL, see [#111](https://github.com/nonblocking/mashroom/issues/111)
    * mashroom_http_proxy_active_connections
    * mashroom_http_proxy_waiting_requests
    * mashroom_https_proxy_active_connections

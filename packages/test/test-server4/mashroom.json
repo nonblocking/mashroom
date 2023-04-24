@@ -85,8 +85,7 @@
             "defaultLanguage": "en"
         },
         "Mashroom Http Proxy Services": {
-            "rejectUnauthorized": false,
-            "poolMaxSockets": 10,
+            "poolMaxSocketsPerHost": 10,
             "socketTimeoutMs": 3000
         },
         "Mashroom WebSocket Webapp": {

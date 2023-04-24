@@ -6,6 +6,7 @@ import AJV from 'ajv';
 const ajv = new AJV({
     strict: true
 });
+ajv.addKeyword('deprecationMessage');
 
 const schema = JSON.parse(readFileSync(resolve(__dirname, '..', 'schemas', 'mashroom-server-config.json')).toString("utf-8"));
 

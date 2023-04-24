@@ -72,8 +72,7 @@
             "defaultLanguage": "en"
         },
         "Mashroom Http Proxy Services": {
-            "rejectUnauthorized": false,
-            "poolMaxSockets": 10
+            "poolMaxSocketsPerHost": 10
         },
         "Mashroom Monitoring PM2 Exporter": {
             "pmxMetrics": {
