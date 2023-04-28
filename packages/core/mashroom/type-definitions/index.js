@@ -284,7 +284,7 @@ export type MashroomServerConfig = {
     +pluginPackageFolders: Array<PluginPackageFolder>,
     +ignorePlugins: Array<string>,
     +indexPage: string,
-    +devModePreferredBuildTool: ? 'npm' | 'nx',
+    +devModeDisableNxSupport: ?boolean;
     +devModeNpmExecutionTimeoutSec: ?number,
     [key: string]: any
 }

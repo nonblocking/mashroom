@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Core: **BREAKING CHANGE** Renamed the server config property *devModePreferredBuildTool* to *devModeDisableNxSupport*
+   which makes more sense, because that was the idea behind the property
  * HTTP Proxy: Added new metrics for WebSocket connections:
    * mashroom_http_proxy_ws_connections_active_total
    * mashroom_http_proxy_ws_connections_active

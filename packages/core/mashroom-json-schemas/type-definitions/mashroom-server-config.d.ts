@@ -53,9 +53,9 @@ export interface MashroomServerConfig {
    */
   pluginPackageFolders: PluginPackageFolder[];
   /**
-   * Optional definitions of the build tool to use; currently 'npm' and 'nx' are supported (Default: nx)
+   * Disable nx support in case it makes troubles (Default: false)
    */
-  devModePreferredBuildTool?: string;
+  devModeDisableNxSupport?: boolean;
   /**
    * Optional timeout for npm execution in dev mode (default 180)
    */

@@ -18,7 +18,7 @@ const config: MashroomServerConfig = {
     }],
     ignorePlugins: [],
     indexPage: '/',
-    devModePreferredBuildTool: 'nx',
+    devModeDisableNxSupport: false,
     devModeNpmExecutionTimeoutSec: undefined,
 };
 
