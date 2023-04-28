@@ -179,7 +179,7 @@ export interface Plugins {
      */
     wsMaxConnectionsPerHost?: number | null;
     /**
-     * Max WebSocket connections total (Default: 0 - no limit)
+     * Max WebSocket connections total (Default: 2000)
      */
     wsMaxConnectionsTotal?: number | null;
     /**

@@ -56,7 +56,7 @@ You can override the default config in your Mashroom config file like this:
             "socketTimeoutMs": 60000,
             "keepAlive": true,
             "retryOnReset": true,
-            "wsMaxConnectionsTotal": null,
+            "wsMaxConnectionsTotal": 2000,
             "wsMaxConnectionsPerHost": null,
             "proxyImpl": "default"
         }
@@ -73,7 +73,7 @@ You can override the default config in your Mashroom config file like this:
  * _keepAlive_: HTTP connection keep-alive. Set this to *false* if you experience random ECONNRESET with the *nodeHttpProxy* implementation,
     see: [https://github.com/nonblocking/mashroom/issues/77](https://github.com/nonblocking/mashroom/issues/77) (Default: true)
  * _retryOnReset_: If the target resets the HTTP connection (because a keep-alive connection is broken) retry once (Default: true)
- * _wsMaxConnectionsTotal_: Max WebSocket connections total. Set this to 0 if you want to disable the WS proxy (Default: 0 - no limit)
+ * _wsMaxConnectionsTotal_: Max WebSocket connections total. Set this to 0 if you want to disable the WS proxy (Default: 2000)
  * _wsMaxConnectionsPerHost_: Max WebSocket connections per target host (Default: 0 - no limit)
  * _proxyImpl_: Switch the proxy implementation. Currently available are *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy)),
    *request* (based on [request](https://github.com/request/request)) and *default* (which is *nodeHttpProxy*)

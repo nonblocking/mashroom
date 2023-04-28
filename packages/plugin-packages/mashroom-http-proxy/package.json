@@ -74,7 +74,7 @@
                     "socketTimeoutMs": 30000,
                     "keepAlive": true,
                     "retryOnReset": true,
-                    "wsMaxConnectionsTotal": null,
+                    "wsMaxConnectionsTotal": 2000,
                     "wsMaxConnectionsPerHost": null,
                     "proxyImpl": "default"
                 }

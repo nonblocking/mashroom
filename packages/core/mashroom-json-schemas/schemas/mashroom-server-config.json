@@ -262,7 +262,7 @@
                         },
                         "wsMaxConnectionsTotal": {
                             "type": ["integer", "null"],
-                            "description": "Max WebSocket connections total (Default: 0 - no limit)"
+                            "description": "Max WebSocket connections total (Default: 2000)"
                         },
                         "proxyImpl": {
                             "type": "string",
