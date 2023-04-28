@@ -865,7 +865,7 @@
             ],
             "thresholds": [],
             "timeRegions": [],
-            "title": "WebSocket Connections",
+            "title": "WebSocket Connections (Messaging)",
             "tooltip": {
                 "shared": true,
                 "sort": 0,
