@@ -29,7 +29,7 @@ describe('ssr_utils', () => {
         {
             name: 'Test App 1',
             ssrBootstrap: `${__dirname}/ssr_bootstrap.js`,
-            resourcesRootUri: `file:/${__dirname}`,
+            resourcesRootUri: `file://${__dirname}`,
             resources: {
                 js: ['bundle.js'],
                 css: ['style.css'],

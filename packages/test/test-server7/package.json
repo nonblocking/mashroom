@@ -5,7 +5,7 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.3.2",
         "@mashroom/mashroom-json-schemas": "2.3.2",
-        "log4js": "^6.7.1",
+        "log4js": "^6.9.1",
         "ts-node": "^10.9.1"
     },
     "scripts": {

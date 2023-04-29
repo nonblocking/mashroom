@@ -44,5 +44,5 @@ Send a message from an external system to the Portal:
 
  * In the Mashroom Portal add the *Demo Remote Messaging App*
  * In the RabbitMQ Admin UI go to *Exchange* -> *amq.topic*
- * Go to *Publish message* and enter *mashroom.user.<portal-user>.test* and routing key and payload that is valid JSON
+ * Go to *Publish message* and enter *mashroom.user.<portal-user>.test* as routing key and payload that is valid JSON
  * You should see the message in the *Demo Remote Messaging App*

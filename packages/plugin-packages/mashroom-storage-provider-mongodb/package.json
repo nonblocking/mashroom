@@ -9,14 +9,14 @@
         "dist/**"
     ],
     "dependencies": {
-        "mongodb": "^4.14.0"
+        "mongodb": "^5.3.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.3.2",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.3.2",
         "@mashroom/mashroom-storage": "2.3.2",
         "@mashroom/mashroom-utils": "2.3.2",
-        "@shelf/jest-mongodb": "^4.1.6"
+        "@shelf/jest-mongodb": "^4.1.7"
     },
     "jest": {
         "verbose": true,

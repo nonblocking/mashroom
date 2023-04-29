@@ -1,5 +1,5 @@
 
-import { MongoClient, Logger} from 'mongodb';
+import {MongoClient} from 'mongodb';
 
 import type {MongoClientOptions, TopologyDescription,Db} from 'mongodb';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -95,16 +95,6 @@ export default async (logger: MashroomLogger): Promise<Db> => {
     });
 
     await _client.connect();
-
-    // Redirect MongoDB logger
-    Logger.setLevel('info');
-    Logger.setCurrentLogger((msg, context) => {
-        if (context && context.type === 'info') {
-            logger.info('MongoDB:', msg);
-        } else {
-            logger.error('MongoDB:', msg);
-        }
-    });
 
     _db = _client.db();
 

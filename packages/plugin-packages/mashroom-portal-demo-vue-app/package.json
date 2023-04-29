@@ -14,11 +14,11 @@
     },
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.3.2",
-        "@vue/eslint-config-typescript": "^11.0.2",
-        "eslint-plugin-vue": "^9.9.0",
-        "vue-eslint-parser": "^9.1.0",
-        "vue-loader": "^17.0.1",
-        "vue-tsc": "^1.2.0"
+        "@vue/eslint-config-typescript": "^11.0.3",
+        "eslint-plugin-vue": "^9.11.0",
+        "vue-eslint-parser": "^9.1.1",
+        "vue-loader": "^17.1.0",
+        "vue-tsc": "^1.6.1"
     },
     "scripts": {
         "lint": "eslint src  --ext .ts,.vue --fix",

@@ -46,7 +46,7 @@ const portalApp1: MashroomPortalApp = {
     metaInfo: null,
     lastReloadTs: 222222222,
     clientBootstrap: 'foo',
-    resourcesRootUri: `file:/${__dirname}`,
+    resourcesRootUri: `file://${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
     ssrInitialHtmlUri: undefined,

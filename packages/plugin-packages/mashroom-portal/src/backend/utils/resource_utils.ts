@@ -1,5 +1,5 @@
 
-import getUri from 'get-uri';
+import {getUri} from 'get-uri';
 import type {Readable} from 'stream';
 
 export const getResourceAsStream = async (resourceUri: string): Promise<Readable> => {

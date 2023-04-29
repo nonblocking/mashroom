@@ -235,7 +235,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
             if (portalApp.sharedResources?.css) {
                 portalApp.sharedResources.css.forEach((resource) => portalAppStyleResources.push(resource));
             }
-            if (portalApp.resources.css) {
+            if (portalApp.resources?.css) {
                 portalApp.resources.css.forEach((resource) => portalAppStyleResources.push(resource));
             }
 
