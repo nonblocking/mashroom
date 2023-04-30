@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Core: Added Support for Node.js 20
+ * Core: **BREAKING CHANGE** Dropped support for Node.js 14 which reached EOL
  * Core: **BREAKING CHANGE** Renamed the server config property *devModePreferredBuildTool* to *devModeDisableNxSupport*
    which makes more sense, because that was the idea behind the property
  * HTTP Proxy: Added new metrics for WebSocket connections:

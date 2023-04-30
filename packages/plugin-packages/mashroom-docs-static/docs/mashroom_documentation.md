@@ -76,24 +76,24 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 
 ### Feature/Compatibility Matrix
 
-|                     | Supported                                                                                                                     |
-| ------------------- |-------------------------------------------------------------------------------------------------------------------------------|
-| Operating Systems   | Linux, MacOS, Windows                                                                                                         |
-| Node.js             | 14.x, 16.x, 18.x                                                                                                              |
-| HTTP                | 1.0, 1.1, 2 + TLS 1.1, 1.2, 1.3                                                                                               |
-| Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                               |
+|                     | Supported                                                                                                                      |
+| ------------------- |--------------------------------------------------------------------------------------------------------------------------------|
+| Operating Systems   | Linux, MacOS, Windows                                                                                                          |
+| Node.js             | 16.x, 18.x, 20.x                                                                                                               |
+| HTTP                | 1.0, 1.1, 2 + TLS 1.1, 1.2, 1.3                                                                                                |
+| Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |
-| Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                            |
-| Storage             | MongoDB, Plain JSON Files                                                                                                     |
-| Memory Cache        | Local Memory, Redis                                                                                                           |
-| Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                        |
-| Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                          |
-| API Proxy           | HTTP, HTTPS, SSE, WebSocket                                                                                                   |
-| CDN                 | Any that can be configured as caching proxy                                                                                   |
-| Clustering          | yes (tested with PM2)                                                                                                         |
-| Monitoring          | CPU, Heap, Requests + Plugin Metrics; Exporter for Prometheus                                                                 |
-| Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest)                                                             |
-| Mobile Browsers     | Chrome (latest), Safari (latest)                                                                                              |
+| Security            | CSRF protection, [Helmet](https://helmetjs.github.io/) integration                                                             |
+| Storage             | MongoDB, Plain JSON Files                                                                                                      |
+| Memory Cache        | Local Memory, Redis                                                                                                            |
+| Messaging           | MQTT (3.1, 3.1.1/4.0, 5.0), AMQP (1.0)                                                                                         |
+| Session Storage     | Local Memory (no Cluster support), shared Filesystem, Redis, MongoDB                                                           |
+| API Proxy           | HTTP, HTTPS, SSE, WebSocket                                                                                                    |
+| CDN                 | Any that can be configured as caching proxy                                                                                    |
+| Clustering          | yes (tested with PM2)                                                                                                          |
+| Monitoring          | CPU, Heap, Requests + Plugin Metrics; Exporter for Prometheus                                                                  |
+| Desktop Browsers    | Chrome (latest), Firefox (latest), Safari (latest), Edge (latest)                                                              |
+| Mobile Browsers     | Chrome (latest), Safari (latest)                                                                                               |
 
 ## Architecture
 

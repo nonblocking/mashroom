@@ -1,7 +1,6 @@
 
 import {URL} from 'url';
 import fetch from 'node-fetch';
-import AbortController from 'abort-controller';
 import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
 import context from '../context';
 

@@ -3,7 +3,7 @@
         [
             "@babel/preset-env", {
                 "targets": {
-                    "node": "14",
+                    "node": "16",
                     "browsers": [
                         "last 3 major versions",
                         "not ie > 0"
