@@ -37,6 +37,7 @@
                         "redisOptions": {
                             "host": "localhost",
                             "port": "6379",
+                            "keyPrefix": "mashroom:",
                             "maxRetriesPerRequest": 3,
                             "enableOfflineQueue": false
                         },
@@ -44,7 +45,7 @@
                         "clusterNodes": null,
                         "clusterOptions": null
                     },
-                    "prefix": "mashroom:sess:",
+                    "prefix": "sess:",
                     "ttl": 86400
                 }
             }

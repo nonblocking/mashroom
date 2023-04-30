@@ -1097,7 +1097,7 @@
                         },
                         "prefix": {
                             "type": "string",
-                            "description": "The key prefix (Default: mashroom:sess:)"
+                            "description": "The key prefix. Appends to whatever prefix you may have set on the client itself. (Default: sess:)"
                         },
                         "ttl": {
                             "type": "number",

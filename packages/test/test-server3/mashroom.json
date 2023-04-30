@@ -52,12 +52,13 @@
                 "redisOptions": {
                     "host": "localhost",
                     "port": "6379",
+                    "keyPrefix": "mashroom:",
                     "maxRetriesPerRequest": 3,
                     "enableOfflineQueue": false,
                     "lazyConnect": true
                 }
             },
-            "prefix": "mashroom:sess:"
+            "prefix": "sess:"
         },
         "Mashroom Session MongoDB Provider": {
             "client": {

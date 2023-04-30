@@ -32,9 +32,15 @@ And to change the default config of this plugin add:
               "redisOptions": {
                   "host": "localhost",
                   "port": "6379",
-              }
+                  "keyPrefix": "mashroom:",
+                  "maxRetriesPerRequest": 3,
+                  "enableOfflineQueue": false
+              },
+              "cluster": false,
+              "clusterNodes": null,
+              "clusterOptions": null
           },
-          "prefix": "mashroom:sess:",
+          "prefix": "sess:",
           "ttl": 86400
       }
   }
@@ -43,7 +49,7 @@ And to change the default config of this plugin add:
 
  * *client*: Options for the Redis client. *redisOptions* are just to the *Redis* constructor of [ioredis](https://github.com/luin/ioredis
    Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
- * *prefix*: The key prefix (Default: mashroom:sess:)
+ * *prefix*: The key prefix. Appends to whatever prefix you may have set on the client itself. (Default: sess:)
  * *ttl*: TTL in seconds (Default: 86400 - one day)
 
 <span class="panel-info">
