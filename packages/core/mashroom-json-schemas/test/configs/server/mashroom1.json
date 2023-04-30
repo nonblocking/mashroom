@@ -119,8 +119,7 @@
             ]
         },
         "Mashroom Monitoring Prometheus Exporter Webapp": {
-            "path": "/myMetricsPath",
-            "enableGcStats": true
+            "path": "/myMetricsPath"
         },
         "Mashroom Portal WebApp": {
             "path": "/portal",
