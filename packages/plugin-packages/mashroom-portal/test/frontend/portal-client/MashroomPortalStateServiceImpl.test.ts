@@ -1,12 +1,6 @@
 
 import MashroomPortalStateServiceImpl from '../../../src/frontend/portal-client/js/MashroomPortalStateServiceImpl';
 
-// Node doesn't provide btoa() and atob() like browsers
-const btoa = (s: string) => Buffer.from(s).toString('base64');
-const atob = (s: string) => Buffer.from(s, 'base64').toString();
-global.btoa = btoa;
-global.atob = atob;
-
 describe('MashroomPortalStateServiceImpl', () => {
 
     it('extracts the state from the URL', () => {
