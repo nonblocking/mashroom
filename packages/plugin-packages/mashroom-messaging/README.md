@@ -55,7 +55,7 @@ You can override the default config in your Mashroom config file like this:
  * _externalProvider_: A plugin that connects to an external messaging system. Allows to receive messages from other systems
     and to send messages "out" (Default: null)
  * _externalTopics_: A list of topic roots that should be considered as external. E.g. if the list contains _other-system_
-    topics published to _other-system/foo_ or _other-system/bar_ would be send via _externalProvider_. (Default: [])
+    topics published to _other-system/foo_ or _other-system/bar_ would be sent via _externalProvider_. (Default: [])
  * _userPrivateBaseTopic_: The base for private user topics. If the prefix is _something/user_ the user _john_ would only be able
     to subscribe to _user/john/something_ and not to _something/user/thomas/weather-update_ (Default: user).
  * _enableWebSockets_: Enable WebSocket support when _mashroom-websocket_ is present (Default: true)
