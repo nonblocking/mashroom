@@ -831,7 +831,7 @@ export interface Plugins {
   "Mashroom Session Redis Provider"?: {
     client?: IORedisConfig;
     /**
-     * The key prefix. Appends to whatever prefix you may have set on the client itself. (Default: sess:)
+     * The key prefix. Appends to whatever prefix you may have set on the client itself. (Default: mashroom:sess:)
      */
     prefix?: string;
     /**
