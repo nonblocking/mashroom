@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Helmet Middleware: Fixed default order to avoid ERR_HTTP_HEADERS_SENT errors
  * Core: Added Support for Node.js 20
  * Core: **BREAKING CHANGE** Dropped support for Node.js 14 which reached EOL
  * Core: **BREAKING CHANGE** Renamed the server config property *devModePreferredBuildTool* to *devModeDisableNxSupport*

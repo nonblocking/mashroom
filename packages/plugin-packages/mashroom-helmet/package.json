@@ -27,7 +27,7 @@
                 "type": "middleware",
                 "bootstrap": "./dist/mashroom-bootstrap-middleware.js",
                 "defaultConfig": {
-                    "order": 200,
+                    "order": -50,
                     "helmet": {
                         "contentSecurityPolicy": false,
                         "crossOriginEmbedderPolicy": false,
