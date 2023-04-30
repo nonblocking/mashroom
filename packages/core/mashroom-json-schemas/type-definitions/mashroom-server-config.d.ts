@@ -397,10 +397,6 @@ export interface Plugins {
      * The path where the metrics will be exported (Default: /metrics)
      */
     path?: string;
-    /**
-     * Enable additional GC stats like 'runs total' and 'pause seconds total' (Default: true)
-     */
-    enableGcStats?: boolean;
   };
   "Mashroom Portal WebApp"?: {
     /**

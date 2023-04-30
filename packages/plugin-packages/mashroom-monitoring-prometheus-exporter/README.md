@@ -21,15 +21,13 @@ You can change the default configuration in your Mashroom config file like this:
 {
   "plugins": {
         "Mashroom Monitoring Prometheus Exporter Webapp": {
-            "path": "/myMetricsPath",
-            "enableGcStats": true
+            "path": "/myMetricsPath"
         }
     }
 }
 ```
 
  * _path_: The path where the metrics will be exported (Default: /metrics)
- * _enableGcStats_: Enable additional GC stats like _runs total_ and _pause seconds total_ (Default: true)
 
 ### Example Queries
 
@@ -58,10 +56,6 @@ Heap used in MB:
 CPU usage total in %:
 
     avg(irate(process_cpu_seconds_total{service="Mashroom"}[5m])) * 100
-
-GC pauses rate:
-
-    sum(rate(nodejs_gc_pause_seconds_total{service="Mashroom"}[5m]))
 
 GC pauses 95% quantile
 

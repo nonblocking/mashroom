@@ -13,9 +13,6 @@
         "pm2": "^5.3.0",
         "prom-client": "^14.2.0"
     },
-    "optionalDependencies": {
-        "prometheus-gc-stats": "^0.6.4"
-    },
     "devDependencies": {
         "@mashroom/mashroom": "2.3.2",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.3.2",
@@ -46,8 +43,7 @@
                     "Mashroom Monitoring Metrics Collector Services"
                 ],
                 "defaultConfig": {
-                    "path": "/metrics",
-                    "enableGcStats": true
+                    "path": "/metrics"
                 }
             }
         ]

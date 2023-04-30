@@ -9,9 +9,8 @@ import type { MashroomWebAppPluginBootstrapFunction} from '@mashroom/mashroom/ty
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, contextHolder) => {
     const pluginContext = contextHolder.getPluginContext();
     const loggerFactory = pluginContext.loggerFactory;
-    const { enableGcStats } = pluginConfig;
 
-    setupDefaultMetrics(enableGcStats, loggerFactory);
+    setupDefaultMetrics(loggerFactory);
 
     startSyncRegistry(contextHolder);
     startPM2Connector(pluginContext);
