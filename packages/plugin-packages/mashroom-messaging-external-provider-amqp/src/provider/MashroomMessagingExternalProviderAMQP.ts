@@ -118,7 +118,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
         const { message: { subject: routingKey = null, body = null } = {}, delivery } = context;
 
         if (!routingKey) {
-            console.error('Ignoring message without a subject property (should contain routing key): ', context.message);
+            this._logger.error('Ignoring message without a subject property (should contain routing key): ', context.message);
             return;
         }
 
@@ -131,7 +131,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
                         try {
                             jsonMessage = JSON.parse(body);
                         } catch (error) {
-                            // Ignore parse error
+                            this._logger.error(`Processing of the received message failed: Topic: ${routingKey}, Message:`, body, error);
                         }
                     } else if (typeof (body) === 'object') {
                         jsonMessage = body;
@@ -141,13 +141,13 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
                     try {
                         jsonMessage = JSON.parse(body.content.toString());
                     } catch (error) {
-                        // Ignore parse error
+                        this._logger.error(`Processing of the received message failed: Topic: ${routingKey}, Message:`, body, error);
                     }
                 }
             }
 
             if (!jsonMessage) {
-                console.error('Ignoring unsupported message type (expecting JSON): ', context.message);
+                this._logger.error('Ignoring unsupported message type (expecting JSON): ', context.message);
                 return;
             }
 

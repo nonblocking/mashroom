@@ -111,7 +111,7 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
                 }
                 jsonMessage = JSON.parse(message);
             } catch (e) {
-                this._logger.error(`Processing of the received message failed: Topic: ${topic}, Message:`, data);
+                this._logger.error(`Processing of the received message failed: Topic: ${topic}, Message:`, data, e);
                 return;
             }
 
