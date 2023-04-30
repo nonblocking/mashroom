@@ -5,8 +5,12 @@ import reducers from './reducers';
 import type {State, Store} from '../types';
 
 const initialState: State = {
-    subscription: {
-        topic: '',
+    privateUserTopicsSubscription: {
+        topic: '(remote user topics)',
+        status: 'Pending'
+    },
+    globalNotificationsSubscription: {
+        topic: '(remote global notifications topic)',
         status: 'Pending'
     },
     publishedMessages: [],

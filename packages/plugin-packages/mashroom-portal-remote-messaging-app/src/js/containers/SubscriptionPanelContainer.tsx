@@ -1,6 +1,6 @@
 
 import {connect} from 'react-redux';
-import {setSubscription, addReceivedMessage} from '../store/actions';
+import {setPrivateUserTopicsSubscription, setGlobalNotificationsSubscription, addReceivedMessage} from '../store/actions';
 import SubscriptionPanel from '../components/SubscriptionPanel';
 
 import type {
@@ -12,12 +12,14 @@ import type {
 
 const mapStateToProps = (state: State) => {
     return {
-        subscription: state.subscription,
+        privateUserTopicsSubscription: state.privateUserTopicsSubscription,
+        globalNotificationsSubscription: state.globalNotificationsSubscription,
     };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    setSubscription: (subscription: Subscription) => { dispatch(setSubscription(subscription)); },
+    setPrivateUserTopicsSubscription: (subscription: Subscription) => { dispatch(setPrivateUserTopicsSubscription(subscription)); },
+    setGlobalNotificationsSubscription: (subscription: Subscription) => { dispatch(setGlobalNotificationsSubscription(subscription)); },
     addReceivedMessage: (message: ReceivedMessage) => { dispatch(addReceivedMessage(message)); },
 });
 

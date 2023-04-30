@@ -3,14 +3,15 @@ import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui
 import {
     ADD_PUBLISHED_MESSAGE,
     ADD_RECEIVED_MESSAGE,
-    SET_SUBSCRIPTION,
+    SET_PRIVATE_USER_TOPICS_SUBSCRIPTION,
+    SET_GLOBAL_NOTIFICATIONS_SUBSCRIPTION,
     UPDATE_PUBLISHED_MESSAGE_STATUS
 } from './actions';
 
 import type {Reducer} from 'redux';
 import type {State, PublishedMessages, ReceivedMessages, Subscription,} from '../types';
 
-const subscription: Reducer<Subscription> = (state , action) => {
+const privateUserTopicsSubscription: Reducer<Subscription> = (state , action) => {
     if (typeof (state) === 'undefined') {
         return {
             topic: '',
@@ -19,7 +20,24 @@ const subscription: Reducer<Subscription> = (state , action) => {
     }
 
     switch (action.type) {
-        case SET_SUBSCRIPTION: {
+        case SET_PRIVATE_USER_TOPICS_SUBSCRIPTION: {
+            return action.subscription;
+        }
+        default:
+            return state;
+    }
+};
+
+const globalNotificationsSubscription: Reducer<Subscription> = (state , action) => {
+    if (typeof (state) === 'undefined') {
+        return {
+            topic: '',
+            status: 'Pending'
+        };
+    }
+
+    switch (action.type) {
+        case SET_GLOBAL_NOTIFICATIONS_SUBSCRIPTION: {
             return action.subscription;
         }
         default:
@@ -67,7 +85,8 @@ const receivedMessages: Reducer<ReceivedMessages> = (state, action): ReceivedMes
 };
 
 export default mashroomPortalCommonsCombineReducers<State>({
-    subscription,
+    privateUserTopicsSubscription,
+    globalNotificationsSubscription,
     publishedMessages,
     receivedMessages
 });

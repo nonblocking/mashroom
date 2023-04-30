@@ -52,4 +52,5 @@ Send a message from an external system to the Portal:
 
  * In the Mashroom Portal add the *Demo Remote Messaging App*
  * In the MQTT client send a message to: mashroom/user/<portal-user>/test
+   or to mashroom/global-notifications (to all users)
  * You should see the message in the *Demo Remote Messaging App*

@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Remote Messaging Demo App: Also subscribe to topic *global-notifications* that allows it to broadcast a message
+   to all users
  * Helmet Middleware: Fixed default order to avoid ERR_HTTP_HEADERS_SENT errors
  * Core: Added Support for Node.js 20
  * Core: **BREAKING CHANGE** Dropped support for Node.js 14 which reached EOL

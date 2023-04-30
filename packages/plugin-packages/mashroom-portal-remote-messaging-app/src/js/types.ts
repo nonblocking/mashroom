@@ -2,7 +2,8 @@
 import type {Store as ReduxStore, Dispatch as ReduxDispatch, AnyAction} from 'redux';
 
 export type State = {
-    readonly subscription: Subscription;
+    readonly privateUserTopicsSubscription: Subscription;
+    readonly globalNotificationsSubscription: Subscription;
     readonly publishedMessages: PublishedMessages;
     readonly receivedMessages: ReceivedMessages;
 }
