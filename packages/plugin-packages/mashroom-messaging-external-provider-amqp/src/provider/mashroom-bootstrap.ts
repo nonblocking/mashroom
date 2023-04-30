@@ -12,13 +12,13 @@ const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = asyn
     const provider = new MashroomMessagingExternalProviderAMQP(internalRoutingKey, brokerTopicExchangePrefix, brokerTopicMatchAny,
         brokerHost, brokerPort, brokerUsername, brokerPassword, loggerFactory);
 
-    provider.subscribeToInternalTopic();
+    provider.start();
 
     healthProbeService.registerProbe(pluginName, healthProbe(provider));
     startExportProviderMetrics(provider, pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
-        provider.unsubscribeFromInternalTopic();
+        provider.shutdown();
         healthProbeService.unregisterProbe(pluginName);
         stopExportProviderMetrics();
     });

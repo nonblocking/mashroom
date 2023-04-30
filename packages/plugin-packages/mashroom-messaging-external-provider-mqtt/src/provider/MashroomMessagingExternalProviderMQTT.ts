@@ -34,7 +34,7 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
         this._logger = loggerFactory('mashroom.messaging.provider.mqtt');
     }
 
-    subscribeToInternalTopic(): void {
+    start(): void {
         this._createClient();
         const client = this._client;
         if (client) {
@@ -50,7 +50,7 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
         }
     }
 
-    unsubscribeFromInternalTopic(): void {
+    shutdown(): void {
         if (this._client) {
             this._client.end();
             this._client = undefined;

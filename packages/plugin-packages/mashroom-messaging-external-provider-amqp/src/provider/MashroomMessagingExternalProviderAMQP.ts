@@ -38,7 +38,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
         }
     }
 
-    subscribeToInternalTopic(): void {
+    start(): void {
         this._createClient();
         if (this._client) {
             const address = `${this._brokerTopicExchangePrefix}${this._internalRoutingKey}.${this._brokerTopicMatchAny}`;
@@ -57,7 +57,7 @@ export default class MashroomMessagingExternalProviderAMQP implements MashroomMe
         }
     }
 
-    unsubscribeFromInternalTopic(): void {
+    shutdown(): void {
         if (this._client) {
             this._client.close();
         }
