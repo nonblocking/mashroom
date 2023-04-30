@@ -1,8 +1,8 @@
-FROM node:16.18.0
+FROM node:18.16.0
 WORKDIR /opt/app
 COPY tmp ./
-RUN npm ci --production
-RUN node_modules/.bin/lerna bootstrap -- --production --force
+RUN npm ci --omit=dev
+RUN node_modules/.bin/lerna bootstrap -- --omit=dev
 WORKDIR /opt/app/packages/test/test-server6
 EXPOSE 5050
 CMD ["node", "../../core/mashroom/dist/server.js"]
