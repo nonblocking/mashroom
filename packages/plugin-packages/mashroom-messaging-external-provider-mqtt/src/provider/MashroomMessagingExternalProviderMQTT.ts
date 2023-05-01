@@ -107,7 +107,8 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
                 } else if (typeof (data) === 'string') {
                     message = data;
                 } else {
-                    throw new Error(`Unexpected payload type: ${typeof (data)}`);
+                    // Just try to serialize it
+                    message = String(data);
                 }
                 jsonMessage = JSON.parse(message);
             } catch (e) {
@@ -121,7 +122,6 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
                 setTimeout(() => {
                     try {
                         listener(internalTopic, jsonMessage);
-
                     } catch (e) {
                         this._logger.error('Message listener threw error', e);
                     }
