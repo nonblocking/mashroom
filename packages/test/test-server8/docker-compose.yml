@@ -1,0 +1,17 @@
+version: "3"
+
+volumes:
+    mashroom_testserver3_keycloak_mariadb_data:
+
+services:
+    redis:
+        container_name: mashroom_testserver8_redis
+        image: redis
+        ports:
+            - "6379:6379"
+    mongodb:
+        container_name: mashroom_testserver8_mongo
+        image: mongo
+        ports:
+            - "27017:27017"
+

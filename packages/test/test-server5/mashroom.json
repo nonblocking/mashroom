@@ -19,6 +19,7 @@
         "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider MQTT",
         "Mashroom Messaging External Provider AMQP",
+        "Mashroom Messaging External Provider Redis",
         "Mashroom Session MongoDB Provider",
         "Mashroom Session Redis Provider",
         "Mashroom Session Filestore Provider",

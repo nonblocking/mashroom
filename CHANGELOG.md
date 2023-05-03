@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Added an external messaging provider plugin that uses Redis PubSub (plugin name: *mashroom-messaging-external-provider-redis*).
+   This allows it to use Redis for messaging between Mashroom clusters (client-side and server-side) and for
+   communication with 3rd party system.
+   See [#35](https://github.com/nonblocking/mashroom/issues/35)
  * Remote Messaging Demo App: Also subscribe to topic *global-notifications* that allows it to broadcast a message
    to all users
  * Helmet Middleware: Fixed default order to avoid ERR_HTTP_HEADERS_SENT errors

@@ -1,0 +1,17 @@
+{
+    "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-security-acl.json",
+    "/portal/**": {
+        "*": {
+            "allow": {
+                "roles": ["Authenticated"]
+            }
+        }
+    },
+    "/websocket/test/**": {
+        "*": {
+            "allow": {
+                "roles": ["Authenticated"]
+            }
+        }
+    }
+}

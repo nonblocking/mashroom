@@ -26,7 +26,7 @@ Predefined users: john/john, admin/admin
 
 To add some additional users open the LDAP Admin UI: https://localhost:4433 - login with: cn=admin,dc=nonblocking,dc=at/admin
 
-### RabbitMQ
+### Test External Messaging with RabbitMQ
 
 To publish and subscribe messages you can use the RabbitMQ Admin Ui: http://localhost:15672 - login with guest/guest
 

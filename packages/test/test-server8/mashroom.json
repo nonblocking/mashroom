@@ -1,6 +1,6 @@
 {
     "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-server-config.json",
-    "name": "Mashroom Test Server 3",
+    "name": "Mashroom Test Server 8",
     "port": 5050,
     "pluginPackageFolders": [{
         "path": "../../plugin-packages",
@@ -9,10 +9,13 @@
     "indexPage": "/portal",
     "ignorePlugins": [
         "Mashroom VHost Path Mapper Middleware",
-        "Mashroom Storage Filestore Provider",
+        "Mashroom Storage MongoDB Provider",
+        "Mashroom Memory Cache Services",
+        "Mashroom Memory Cache Redis Provider",
         "Mashroom LDAP Security Provider",
+        "Mashroom OpenID Connect Security Provider",
         "Mashroom Messaging External Provider AMQP",
-        "Mashroom Messaging External Provider Redis",
+        "Mashroom Messaging External Provider MQTT",
         "Mashroom Session Filestore Provider",
         "Mashroom Portal Remote App Kubernetes Background Job",
         "Mashroom Portal Remote App Kubernetes Registry",
@@ -41,24 +44,12 @@
             "showEnvAndVersions": true
         },
         "Mashroom Session Middleware": {
-            "provider": "Mashroom Session Redis Provider",
+            "provider": "Mashroom Session MongoDB Provider",
             "session": {
                 "cookie": {
                     "maxAge": 3600000
                 }
             }
-        },
-        "Mashroom Session Redis Provider": {
-            "client": {
-                "redisOptions": {
-                    "host": "localhost",
-                    "port": "6379",
-                    "maxRetriesPerRequest": 3,
-                    "enableOfflineQueue": false,
-                    "lazyConnect": true
-                }
-            },
-            "prefix": "mashroom:sess:"
         },
         "Mashroom Session MongoDB Provider": {
             "client": {
@@ -67,59 +58,20 @@
             "collectionName": "mashroom-sessions"
         },
         "Mashroom Security Services": {
-            "provider": "Mashroom OpenID Connect Security Provider",
-            "forwardQueryHintsToProvider": ["kc_idp_hint"],
+            "provider": "Mashroom Security Simple Provider",
             "acl": "./acl.json"
         },
         "Mashroom Security Simple Provider": {
             "users": "./users.json",
             "authenticationTimeoutSec": 300
         },
-        "Mashroom OpenID Connect Security Provider": {
-            "issuerDiscoveryUrl": "http://localhost:8080/realms/test/.well-known/uma2-configuration",
-            "scope": "openid email profile",
-            "clientId": "mashroom",
-            "clientSecret": "126654c2-229b-4c59-921d-fc55a7ba76c6",
-            "redirectUrl": "http://localhost:5050/openid-connect-cb",
-            "rolesClaimName": "roles",
-            "adminRoles": [
-                "mashroom-admin"
-            ],
-            "extraDataMapping": {
-                "preferredUsername": "preferred_username"
-            },
-            "httpRequestRejectUnauthorized": false,
-            "httpRequestTimeoutMs": 5000,
-            "httpRequestRetry": 0
-        },
-        "Mashroom Security Default Login Webapp": {
-        },
-        "Mashroom Helmet Middleware": {
-
-        },
         "Mashroom Storage Services": {
-            "provider": "Mashroom Storage MongoDB Provider",
-            "memoryCache": {
-                "enabled": true,
-                "ttlSec": 120,
-                "invalidateOnUpdate": true
-            }
+            "provider": "Mashroom Storage Filestore Provider"
         },
-        "Mashroom Storage MongoDB Provider": {
-            "uri": "mongodb://localhost:27017/mashroom_storage_db",
-            "connectionOptions": {
-                "minPoolSize": 2
-            }
-        },
-        "Mashroom Memory Cache Services": {
-            "provider": "Mashroom Memory Cache Redis Provider",
-            "defaultTTLSec": 10
-        },
-        "Mashroom Memory Cache Redis Provider": {
-            "host": "localhost",
-            "port": "6379",
-            "keyPrefix": "mashroom:cache:",
-            "maxRetriesPerRequest": 3
+        "Mashroom Storage Filestore Provider": {
+            "dataFolder": "./data/storage",
+            "checkExternalChangePeriodMs": 2000,
+            "prettyPrintJson": true
         },
         "Mashroom Internationalization Services": {
             "availableLanguages": ["en", "de"],
@@ -137,26 +89,21 @@
             "reconnectTimeoutSec": 5
         },
         "Mashroom Messaging Services": {
-            "externalProvider": "Mashroom Messaging External Provider MQTT",
+            "externalProvider": "Mashroom Messaging External Provider Redis",
             "externalTopics": ["external1", "external2"],
             "userPrivateBaseTopic": "user",
             "enableWebSockets": true,
             "topicACL": "./topicACL.json"
         },
-        "Mashroom Messaging External Provider MQTT": {
+        "Mashroom Messaging External Provider Redis": {
             "internalTopic": "mashroom",
-            "mqttConnectUrl": "mqtt://localhost:1883",
-            "mqttProtocolVersion": 4,
-            "mqttQoS": 1
-        },
-        "Mashroom Messaging External Provider AMQP": {
-            "internalRoutingKey": "mashroom",
-            "brokerTopicExchangePrefix": "/topic/",
-            "brokerTopicMatchAny": "#",
-            "brokerHost": "localhost",
-            "brokerPort": 5672,
-            "brokerUsername": "admin",
-            "brokerPassword": "admin"
+            "client": {
+                "redisOptions": {
+                    "host": "localhost",
+                    "port": "6379",
+                    "maxRetriesPerRequest": 3
+                }
+            }
         },
         "Mashroom Portal Remote App Registry Webapp": {
             "showAddRemoteAppForm": true

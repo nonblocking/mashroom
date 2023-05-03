@@ -90,8 +90,7 @@
                             "type": "string"
                         },
                         "keyPrefix": {
-                            "type": "string",
-                            "description": "Cache key prefix (Default: mashroom:cache:)"
+                            "type": "string"
                         },
                         "name":{
                             "type": "string",
@@ -137,7 +136,8 @@
                     "type": "object",
                     "description": "Passed as second argument of the Redis.Cluster constructor of ioredis"
                 }
-            }
+            },
+            "additionalProperties" : false
         },
         "Plugins": {
             "type": "object",
@@ -465,6 +465,23 @@
                         "rejectUnauthorized": {
                             "type": "boolean",
                             "description": "If you use mqtts or wss with a self signed certificate set it to false (Default: true)"
+                        }
+                    },
+                    "additionalProperties": false
+                },
+                "Mashroom Messaging External Provider Redis": {
+                    "type": "object",
+                    "properties": {
+                        "internalTopic": {
+                            "type": "string",
+                            "description": "The base topic the server should use for internal messages.\nE.g. if the value is mashroom/test all messages published internally are prefixed with mashroom/test before published to MQTT and at the same time this provider listens to mashroom/test/# for messages (Default: mashroom)"
+                        },
+                        "client": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/IORedisConfig"
+                                }
+                            ]
                         }
                     },
                     "additionalProperties": false

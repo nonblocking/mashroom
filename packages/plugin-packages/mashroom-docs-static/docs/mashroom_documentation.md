@@ -1316,9 +1316,11 @@ After that you can start to add additional pages.
 
 [mashroom-messaging](../../mashroom-messaging/README.md) [inc]
 
+[mashroom-messaging-external-provider-amqp](../../mashroom-messaging-external-provider-amqp/README.md) [inc]
+
 [mashroom-messaging-external-provider-mqtt](../../mashroom-messaging-external-provider-mqtt/README.md) [inc]
 
-[mashroom-messaging-external-provider-amqp](../../mashroom-messaging-external-provider-amqp/README.md) [inc]
+[mashroom-messaging-external-provider-redis](../../mashroom-messaging-external-provider-redis/README.md) [inc]
 
 [mashroom-memory-cache](../../mashroom-memory-cache/README.md) [inc]
 

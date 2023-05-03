@@ -37,7 +37,7 @@ To add some additional users and manage roles:
 
 See: https://www.keycloak.org/server/importExport
 
-### Mosquitto
+### Test External Messaging with Mosquitto
 
 To test the communication with Mashroom you can connect to Mosquitto on localhost:1883 (e.g. with http://mqtt-explorer.com)
 or via Websocket on localhost:9001 (e.g. with a web client like http://www.hivemq.com/demos/websocket-client)

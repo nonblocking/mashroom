@@ -338,6 +338,14 @@ export interface Plugins {
      */
     rejectUnauthorized?: boolean;
   };
+  "Mashroom Messaging External Provider Redis"?: {
+    /**
+     * The base topic the server should use for internal messages.
+     * E.g. if the value is mashroom/test all messages published internally are prefixed with mashroom/test before published to MQTT and at the same time this provider listens to mashroom/test/# for messages (Default: mashroom)
+     */
+    internalTopic?: string;
+    client?: IORedisConfig;
+  };
   "Mashroom Monitoring Metrics Collector Services"?: {
     /**
      * A list of metrics that should be disabled

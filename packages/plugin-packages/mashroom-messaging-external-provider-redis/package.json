@@ -1,0 +1,61 @@
+{
+    "name": "@mashroom/mashroom-messaging-external-provider-redis",
+    "description": "Mashroom plugin that can use a Redis server as external messaging provider for service side messaging",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": "github:nonblocking/mashroom",
+    "license": "MIT",
+    "version": "1.0.0",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+        "@mashroom/mashroom-utils": "2.3.2",
+        "ioredis": "^5.3.2"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.3.2",
+        "@mashroom/mashroom-messaging": "2.3.2",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.3.2"
+    },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts"
+    },
+    "scripts": {
+        "lint": "eslint src test --ext \".ts\" --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest --passWithNoTests",
+        "build": "babel src -d dist --extensions \".ts\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Messaging External Provider Redis",
+                "type": "external-messaging-provider",
+                "bootstrap": "./dist/provider/mashroom-bootstrap.js",
+                "requires": [
+                    "Mashroom Messaging Services"
+                ],
+                "defaultConfig": {
+                    "internalTopic": "mashroom",
+                    "client": {
+                        "redisOptions": {
+                            "host": "localhost",
+                            "port": "6379",
+                            "maxRetriesPerRequest": 3,
+                            "enableOfflineQueue": false
+                        },
+                        "cluster": false,
+                        "clusterNodes": null,
+                        "clusterOptions": null
+                    }
+                }
+            }
+        ]
+    }
+}
