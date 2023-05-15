@@ -12,6 +12,8 @@ const getPluginPackagesFolder = () => {
     fsExtra.ensureDirSync(plugin1Folder);
     const plugin2Folder = path.resolve(pluginsFolder, 'test2');
     fsExtra.ensureDirSync(plugin2Folder);
+    const plugin3Folder = path.resolve(pluginsFolder, '.test3');
+    fsExtra.ensureDirSync(plugin3Folder);
     fsExtra.writeJsonSync(path.resolve(plugin1Folder, 'package.json'), {
         name: 'test1',
         mashroom: {},
@@ -20,13 +22,16 @@ const getPluginPackagesFolder = () => {
         name: 'test2',
         mashroom: {},
     });
+    fsExtra.writeJsonSync(path.resolve(plugin3Folder, 'package.json'), {
+        name: 'test3',
+        mashroom: {},
+    });
     return pluginsFolder;
 };
 
 describe('MashroomPluginPackageScanner', () => {
 
-    it('scans all subfolders on start', (done) => {
-
+    it('scans all subfolders on start', async () => {
         const config = { ...defaultConfig, pluginPackageFolders: [{path: getPluginPackagesFolder(), watch: true}],};
 
         const foundPaths = [];
@@ -34,17 +39,18 @@ describe('MashroomPluginPackageScanner', () => {
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
         pluginPackageScanner.on('packageAdded', (path) => {
             foundPaths.push(path);
-            if (foundPaths.length === 2) {
-                pluginPackageScanner.stop();
-                done();
-            }
         });
 
-        pluginPackageScanner.start();
+        await pluginPackageScanner.start();
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        await pluginPackageScanner.stop();
+
+        expect(foundPaths.length).toBe(2);
     });
 
     it('fires an update event if a file changes', (done) => {
-
         const pluginPackagesFolder = getPluginPackagesFolder();
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
@@ -53,24 +59,24 @@ describe('MashroomPluginPackageScanner', () => {
         // @ts-ignore
         pluginPackageScanner._deferUpdateMillis = 500;
 
-        pluginPackageScanner.on('packageUpdated', (packagePath) => {
-            pluginPackageScanner.stop();
-            if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
-                done();
-            } else {
-                throw new Error(`Invalid path: ${packagePath}`);
-            }
-        });
-
         pluginPackageScanner.start().then(() => {
+            pluginPackageScanner.on('packageUpdated', (packagePath) => {
+                pluginPackageScanner.stop();
+                if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
+                    done();
+                } else {
+                    throw new Error(`Invalid path: ${packagePath}`);
+                }
+            });
+
             setTimeout(() => {
-                fsExtra.writeJsonSync(`${pluginPackagesFolder}/test2/foo.json`, {'foo': 2});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/.test3/foo.json`, {'foo': 2});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/test2/bar.json`, {'bar': 1});
             }, 1000);
         });
     });
 
     it('fires a remove event if package.json has no longer a "mashroom" property', (done) => {
-
         const pluginPackagesFolder = getPluginPackagesFolder();
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
@@ -94,7 +100,6 @@ describe('MashroomPluginPackageScanner', () => {
     });
 
     it('doesnt scan subfolders if the package folder contains a package.json itself', (done) => {
-
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}],};
@@ -114,7 +119,6 @@ describe('MashroomPluginPackageScanner', () => {
     });
 
     it('fires an update event if a file changes in a package folder that contains a package.json itself', (done) => {
-
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};

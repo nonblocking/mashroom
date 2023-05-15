@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Core: Ignore dot folders during initial plugin scan
  * Added an external messaging provider plugin that uses Redis PubSub (plugin name: *mashroom-messaging-external-provider-redis*).
    This allows it to use Redis for messaging between Mashroom clusters (client-side and server-side) and for
    communication with 3rd party system.

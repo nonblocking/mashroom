@@ -193,18 +193,20 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     }
 
     private async _initialScan() {
-        this._pluginPackageFolders.forEach(async (pluginPackagesFolder) => {
+        await Promise.all(this._pluginPackageFolders.map(async (pluginPackagesFolder) => {
             if (existsSync(resolve(pluginPackagesFolder.path, 'package.json'))) {
                 // This package folder contains a single package
                 this._processChange(pluginPackagesFolder.path);
             } else {
                 const folders = await readdir(pluginPackagesFolder.path);
                 folders.forEach((folder) => {
-                    const pluginPackagePath = resolve(pluginPackagesFolder.path, folder);
-                    this._processChange(pluginPackagePath);
+                    if (!folder.startsWith('.')) {
+                        const pluginPackagePath = resolve(pluginPackagesFolder.path, folder);
+                        this._processChange(pluginPackagePath);
+                    }
                 });
             }
-        });
+        }));
     }
 
     private _isMashroomPluginPackage(pluginPackagePath: string): boolean {
