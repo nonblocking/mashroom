@@ -27,7 +27,7 @@ jobs:
     - run: npm run build
     - uses: dorny/test-reporter@v1
       with:
-        artifact: /packages\/.*\/(.*)\/test-reports/
-        name: Test Report $1
-        path: 'junit.xml'
+        name: Test Results
+        path: '**/test-reports/junit.xml'
         reporter: jest-junit
+        fail-on-error: false
