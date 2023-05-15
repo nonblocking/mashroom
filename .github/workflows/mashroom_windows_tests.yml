@@ -23,10 +23,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm run setup
     - run: npm run test
-    - uses: dorny/test-reporter@v1
+    - uses: test-summary/action@v2
       if: always()
       with:
-          name: Test Results
-          path: packages/**/test-reports/junit.xml
-          reporter: jest-junit
-
+        paths: |
+          packages/core/*/test-reports/junit.xml
+          packages/plugin-packages/*/test-reports/junit.xml
