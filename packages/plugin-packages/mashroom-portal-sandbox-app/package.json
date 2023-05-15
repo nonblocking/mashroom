@@ -24,14 +24,6 @@
         "redux": "^4.2.1",
         "shallow-equal": "^3.1.0"
     },
-    "jest": {
-        "verbose": true,
-        "testEnvironment": "node",
-        "roots": [
-            "<rootDir>/test"
-        ],
-        "testRegex": "(\\.(test|spec))\\.js$"
-    },
     "scripts": {
         "lint": "eslint src --ext .ts,.tsx --fix",
         "type-check": "tsc --noEmit",

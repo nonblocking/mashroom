@@ -974,9 +974,6 @@ export interface IORedisConfig {
   redisOptions?: {
     host?: string;
     port?: string;
-    /**
-     * Cache key prefix (Default: mashroom:cache:)
-     */
     keyPrefix?: string;
     /**
      * Identifies a group of Redis instances composed of a master and one or more slaves
@@ -1007,7 +1004,6 @@ export interface IORedisConfig {
   clusterOptions?: {
     [k: string]: any;
   };
-  [k: string]: any;
 }
 export interface MongoDbConfig {
   /**

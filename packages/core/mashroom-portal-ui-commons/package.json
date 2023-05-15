@@ -27,14 +27,6 @@
         "@types/react-dom": "^18.2.1",
         "@types/react-redux": "^7.1.25"
     },
-    "jest": {
-        "verbose": true,
-        "testEnvironment": "node",
-        "roots": [
-            "<rootDir>/test"
-        ],
-        "testRegex": "(\\.(test|spec))\\.js$"
-    },
     "scripts": {
         "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen",
         "lint": "eslint js --ext .ts --ext .tsx --fix",

@@ -25,3 +25,9 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm run setup
     - run: npm run build
+    - uses: dorny/test-reporter@v1
+      with:
+        artifact: /packages\/.*\/(.*)\/test-reports/
+        name: Test Report $1
+        path: 'junit.xml'
+        reporter: jest-junit

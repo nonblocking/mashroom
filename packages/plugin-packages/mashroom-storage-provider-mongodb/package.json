@@ -25,7 +25,14 @@
             "<rootDir>/test"
         ],
         "testRegex": "(\\.(test|spec))\\.ts",
-        "preset": "@shelf/jest-mongodb"
+        "preset": "@shelf/jest-mongodb",
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
     },
     "scripts": {
         "lint": "eslint src test --ext \".ts\" --fix",

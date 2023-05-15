@@ -24,12 +24,19 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.ts"
+        "testRegex": "(\\.(test|spec))\\.ts",
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
     },
     "scripts": {
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
-        "test": "jest --passWithNoTests",
+        "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
     },
     "mashroom": {

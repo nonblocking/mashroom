@@ -3,6 +3,7 @@ node_modules/
 dist/
 lib/
 test-data/
+test-reports/
 tmp/
 log/
 

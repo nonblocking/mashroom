@@ -35,7 +35,14 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test))\\.ts"
+        "testRegex": "(\\.(test))\\.ts",
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
     },
     "scripts": {
         "lint": "eslint src test --ext \".ts\" --fix",

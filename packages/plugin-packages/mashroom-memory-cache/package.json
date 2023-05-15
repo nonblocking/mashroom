@@ -17,6 +17,21 @@
         "@mashroom/mashroom": "2.3.2",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.3.2"
     },
+    "jest": {
+        "verbose": true,
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts",
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
+    },
     "scripts": {
         "lint": "eslint src test --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
