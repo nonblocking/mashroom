@@ -23,6 +23,7 @@
         },
         "test": {
             "outputs": [
+                "{projectRoot}/test-reports",
                 "{projectRoot}/test-data",
                 "{projectRoot}/tmp",
                 "{projectRoot}/log"
