@@ -25,5 +25,7 @@ jobs:
     - run: npm run test
     - uses: test-summary/action@v2
       with:
-        paths: "packages/**/junit.xml"
+        paths: |
+            packages/core/*/test-reports/junit.xml
+            packages/plugin-packages/*/test-reports/junit.xml
       if: always()
