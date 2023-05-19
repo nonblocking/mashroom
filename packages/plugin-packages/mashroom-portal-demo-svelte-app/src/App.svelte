@@ -2,8 +2,11 @@
   import { onDestroy } from 'svelte';
   import logo from './assets/svelte-logo.svg';
 
+  // Exported props
   export let messageBus: any;
   export let appConfig: { message?: string, pingButtonLabel?: string } = {};
+
+  // State
   let pings = 0;
 
   const incrementPing = (): number => pings += 1;
