@@ -2,7 +2,7 @@ const path = require('path');
 const sveltePreprocess = require("svelte-preprocess");
 const TerserPlugin = require('terser-webpack-plugin');
 
-const mode = 'development';
+const mode = process.env.NODE_ENV || 'development';
 const prod = mode === 'production';
 
 module.exports = {
