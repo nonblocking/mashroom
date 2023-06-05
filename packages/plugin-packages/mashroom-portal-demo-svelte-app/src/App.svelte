@@ -9,12 +9,10 @@
   // State
   let pings = 0;
 
-  const incrementPing = (): number => pings += 1;
+  const incrementPing = () => pings += 1;
+  const sendPing = () => messageBus.publish('ping', {});
 
   messageBus.subscribe('ping', incrementPing);
-
-  const sendPing = (): void => messageBus.publish('ping', {});
-
   onDestroy(() => {
       messageBus.unsubscribe('ping', incrementPing);
   });
