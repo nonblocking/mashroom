@@ -129,8 +129,8 @@
             "defaultLanguage": "en"
         },
         "Mashroom Http Proxy Services": {
-            "poolMaxSocketsPerHost": 10,
-            "poolMaxWaitingRequestsPerHost": 2,
+            "poolMaxSocketsPerHost": 4,
+            "poolMaxWaitingRequestsPerHost": 20,
             "socketTimeoutMs": 30000,
             "wsMaxConnectionsPerHost": 10,
             "proxyImpl": "default"
