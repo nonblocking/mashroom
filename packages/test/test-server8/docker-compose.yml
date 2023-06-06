@@ -1,8 +1,5 @@
 version: "3"
 
-volumes:
-    mashroom_testserver3_keycloak_mariadb_data:
-
 services:
     redis:
         container_name: mashroom_testserver8_redis
