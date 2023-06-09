@@ -1,9 +1,9 @@
 {
     "name": "@mashroom/mashroom-test-server6",
-    "version": "2.3.2",
+    "version": "2.4.0",
     "private": true,
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.3.2",
+        "@mashroom/mashroom-json-schemas": "2.4.0",
         "cpy": "^8.1.2",
         "del": "^6.1.1"
     },
