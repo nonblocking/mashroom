@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.4.0 (June 9, 2023)
+
  * Core: Ignore dot folders during initial plugin scan
  * Added an external messaging provider plugin that uses Redis PubSub (plugin name: *mashroom-messaging-external-provider-redis*).
    This allows it to use Redis for messaging between Mashroom clusters (client-side and server-side) and for
@@ -40,7 +42,7 @@
    * mashroom_http_proxy_http_pool_waiting_requests
    * mashroom_http_proxy_https_pool_connections_active
    * mashroom_http_proxy_https_pool_waiting_requests
- * Metrics Collector: Added the possibility to reset Gauges, this is useful if some label dynamically "disappear" and need to be removed
+ * Metrics Collector: Added the possibility to reset Gauges, this is useful if some label dynamically "disappear" and needs to be removed
 
 ## 2.3.2 (April 14, 2023)
 
