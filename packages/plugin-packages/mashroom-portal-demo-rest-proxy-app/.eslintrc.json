@@ -27,6 +27,7 @@
         "prefer-template": "error",
         "prefer-object-spread": "error",
         "no-console": "off",
+        "react/display-name": "off",
         "import/order": ["error", {"groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"]}],
         "import/no-duplicates": "error",
         "import/namespace": "off",

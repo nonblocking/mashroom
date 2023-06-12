@@ -47,8 +47,8 @@
                     "category": "Demo",
                     "defaultRestrictViewToRoles": [],
                     "proxies": {
-                        "spaceXApi": {
-                            "targetUri": "https://api.spacexdata.com/v4",
+                        "rocketLaunchApi": {
+                            "targetUri": "https://fdo.rocketlaunch.live/json",
                             "restrictToRoles": []
                         }
                     }

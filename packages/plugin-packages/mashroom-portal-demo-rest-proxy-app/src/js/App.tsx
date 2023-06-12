@@ -1,29 +1,24 @@
 
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {IntlProvider} from 'react-intl';
 import messages from '../messages/messages';
-import SpaceXLaunches from './SpaceXLaunches';
+import RocketLaunches from './RocketLaunches';
 
 type Props = {
     lang: string;
-    spaceXApiPath: string;
+    rocketLaunchApi: string;
 }
 
-export default class App extends PureComponent<Props> {
-
-    render() {
-        let lang = this.props.lang;
-        if (!messages[lang]) {
-            lang = 'en';
-        }
-
-        return (
-            <IntlProvider messages={messages[lang]} locale={lang}>
-                <div className='mashroom-demo-rest-proxy-app'>
-                    <SpaceXLaunches spaceXApiPath={this.props.spaceXApiPath}/>
-                </div>
-            </IntlProvider>
-        );
+export default ({lang, rocketLaunchApi}: Props) => {
+    if (!messages[lang]) {
+        lang = 'en';
     }
 
-}
+    return (
+        <IntlProvider messages={messages[lang]} locale={lang}>
+            <div className='mashroom-demo-rest-proxy-app'>
+                <RocketLaunches rocketLaunchApi={rocketLaunchApi}/>
+            </div>
+        </IntlProvider>
+    );
+};

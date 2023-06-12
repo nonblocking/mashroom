@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Rest Proxy Demo App: Replaced legacy *spacexdata.com* API
+
 ## 2.4.0 (June 9, 2023)
 
  * Core: Ignore dot folders during initial plugin scan

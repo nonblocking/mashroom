@@ -1,9 +1,5 @@
-import type {Launches, Launchpads, Rockets} from './types';
+import type {RocketLaunchDotLiveResponse} from './types';
 
-export default (spaceXApiPath: string): Promise<[Launches, Launchpads, Rockets]> => {
-    return Promise.all([
-        fetch(`${spaceXApiPath}/launches/upcoming`, { credentials: 'same-origin' }).then((resp) => resp.json()),
-        fetch(`${spaceXApiPath}/launchpads`, { credentials: 'same-origin' }).then((resp) => resp.json()),
-        fetch(`${spaceXApiPath}/rockets`, { credentials: 'same-origin' }).then((resp) => resp.json()),
-    ]);
+export default (rocketLaunchApiPath: string): Promise<RocketLaunchDotLiveResponse> => {
+    return fetch(`${rocketLaunchApiPath}/launches/next/5`).then((resp) => resp.json());
 };

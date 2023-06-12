@@ -1,10 +1,10 @@
 
 export default {
-    rocketLaunches: 'SpaceX Raketenstarts',
-    info: 'Diese App verbindet sich via Mashroom HTTP Proxy zur SpaceX Data API',
+    rocketLaunches: 'Nächste Raketenstarts',
+    info: 'Diese App verbindet sich via Portal Proxy zur API von rocketlaunch.live',
     loading: 'Laden...',
     errorLoading: 'Fehler beim Laden!',
-    flightNumber: 'Flugnummer',
+    provider: 'Unternehmen',
     missionName: 'Mission Name',
     rocketName: 'Rakete',
     launchPad: 'Start Ort',

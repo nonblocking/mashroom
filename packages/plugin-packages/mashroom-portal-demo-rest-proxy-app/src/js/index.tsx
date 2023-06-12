@@ -11,7 +11,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
     const {lang, proxyPaths} = portalAppSetup;
 
     const root = createRoot(portalAppHostElement);
-    root.render(<App lang={lang} spaceXApiPath={proxyPaths.spaceXApi}/>);
+    root.render(<App lang={lang} rocketLaunchApi={proxyPaths.rocketLaunchApi}/>);
 
     return {
         willBeRemoved: () => {

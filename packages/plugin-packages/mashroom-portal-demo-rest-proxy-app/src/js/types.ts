@@ -1,27 +1,27 @@
 
-export type Launch = {
-    flight_number: string;
-    name: string;
-    id: string;
-    rocket: string;
-    launchpad: string;
-    upcoming: boolean;
-    date_utc: string;
-    date_unix: number;
+export type RocketLaunchDotLiveResponse = {
+    result: RocketLaunchDotLiveLaunches,
 }
 
-export type Launches = Array<Launch>;
-
-export type Launchpad = {
-    id: string;
-    full_name: string;
-}
-
-export type Launchpads = Array<Launchpad>;
-
-export type Rocket = {
+export type RocketLaunchDotLiveLaunch = {
     id: string;
     name: string;
+    t0: string;
+    provider: {
+        name: string;
+    };
+    vehicle: {
+        name: string;
+    };
+    pad: {
+        name: string;
+        location: {
+            name: string;
+        }
+    };
+    missions: Array<{
+        name: string;
+    }>;
 }
 
-export type Rockets = Array<Rocket>;
+export type RocketLaunchDotLiveLaunches = Array<RocketLaunchDotLiveLaunch>;
