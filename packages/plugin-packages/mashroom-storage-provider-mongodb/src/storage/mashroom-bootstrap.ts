@@ -1,5 +1,5 @@
 
-import {setConnectionUriAndOptions, close} from '../mongodb';
+import {setConnectionUriAndOptions, close, getDb} from '../mongodb';
 import healthProbe from '../health/health_probe';
 import {startExportStoreMetrics, stopExportStoreMetrics} from '../metrics/store_metrics';
 import MashroomStorageMongoDB from './MashroomStorageMongoDB';
@@ -10,7 +10,14 @@ const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, plu
     const {loggerFactory, services: {core: {pluginService, healthProbeService}}} = pluginContextHolder.getPluginContext();
     const {uri, connectionOptions} = pluginConfig;
 
+    // Set config and establish connection
     await setConnectionUriAndOptions(uri, connectionOptions);
+    const logger = loggerFactory('mashroom.storage.mongodb');
+    try {
+        await getDb(logger);
+    } catch {
+        // Ignore
+    }
 
     healthProbeService.registerProbe(pluginName, healthProbe);
     startExportStoreMetrics(pluginContextHolder);

@@ -1,5 +1,5 @@
 
-import mongoDB from '../mongodb';
+import {getDb} from '../mongodb';
 
 import type {Collection, OptionalUnlessRequiredId, Document, MatchKeysAndValues} from 'mongodb';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -114,7 +114,7 @@ export default class MashroomStorageCollectionMongoDB<T extends MashroomStorageR
     }
 
     private async _getCollection<T extends Document = Document>(): Promise<Collection<T>> {
-        const db = await mongoDB(this._logger);
+        const db = await getDb(this._logger);
         return db.collection(this._collectionName);
     }
 }

@@ -57,7 +57,7 @@ export const isConnected = () => {
     return availableNodes > 0;
 };
 
-export default async (logger: MashroomLogger): Promise<Db> => {
+export const getDb = async (logger: MashroomLogger): Promise<Db> => {
     if (_db) {
         return _db;
     }
@@ -97,6 +97,9 @@ export default async (logger: MashroomLogger): Promise<Db> => {
     await _client.connect();
 
     _db = _client.db();
+
+    // Validate connection
+    await _db.command({ ping: 1 });
 
     return _db;
 };
