@@ -5,27 +5,35 @@ import type {Redis as RedisType, Cluster} from 'ioredis';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {IORedisClient, IORedisConfig} from '../type-definitions';
 
+// A Redis client cannot publish and subscribe at the same time
+type Clients = {
+    subscriberClient: IORedisClient | null;
+    publisherClient: IORedisClient | null;
+}
+
 let _redisConfig: IORedisConfig | null = null;
-let _subscriberClient: IORedisClient | null = null;
-let _publisherClient: IORedisClient | null = null;
+const _clients: Clients = {
+    subscriberClient: null,
+    publisherClient: null,
+};
 
 export const close = async (): Promise<void> => {
-    if (_subscriberClient) {
+    if (_clients.subscriberClient) {
         try {
-            await _subscriberClient.disconnect();
+            await _clients.subscriberClient.disconnect();
         } catch (e) {
             //ignore
         }
     }
-    _subscriberClient = null;
-    if (_publisherClient) {
+    _clients.subscriberClient = null;
+    if (_clients.publisherClient) {
         try {
-            await _publisherClient.disconnect();
+            await _clients.publisherClient.disconnect();
         } catch (e) {
             //ignore
         }
     }
-    _publisherClient = null;
+    _clients.publisherClient = null;
 };
 
 export const setConfig = async (redisConfig: IORedisConfig): Promise<void> => {
@@ -34,13 +42,13 @@ export const setConfig = async (redisConfig: IORedisConfig): Promise<void> => {
 };
 
 export const getAvailableNodes = () => {
-    if (!_subscriberClient) {
+    if (!_clients.subscriberClient) {
         return 0;
     }
-    if (_subscriberClient.hasOwnProperty('status')) {
-        return (_subscriberClient as RedisType).status === 'ready' ? 1 : 0;
+    if (_clients.subscriberClient.hasOwnProperty('status')) {
+        return (_clients.subscriberClient as RedisType).status === 'ready' ? 1 : 0;
     }
-    const nodes = (_subscriberClient as Cluster).nodes();
+    const nodes = (_clients.subscriberClient as Cluster).nodes();
     return nodes.filter((redis) => redis.status === 'ready').length;
 };
 
@@ -49,22 +57,23 @@ export const isConnected = () => {
 };
 
 export const getSubscriberClient = async (logger: MashroomLogger): Promise<IORedisClient> => {
-    return getClient(_subscriberClient, logger);
+    return getClient('subscriberClient', logger);
 };
 
 export const getPublisherClient = async (logger: MashroomLogger): Promise<IORedisClient> => {
-    return getClient(_subscriberClient, logger);
+    return getClient('publisherClient', logger);
 };
 
-const getClient = async (client: IORedisClient | null ,logger: MashroomLogger): Promise<IORedisClient> => {
-    if (client) {
-        return client;
+const getClient = async (clientKey: keyof Clients, logger: MashroomLogger): Promise<IORedisClient> => {
+    if (_clients[clientKey]) {
+        return _clients[clientKey]!;
     }
     if (!_redisConfig) {
         throw new Error('No connection Redis config set!');
     }
 
     const {cluster, redisOptions, clusterNodes, clusterOptions} = _redisConfig;
+    let client: IORedisClient;
     if (!cluster) {
         client = new Redis(redisOptions);
     } else {
@@ -99,6 +108,8 @@ const getClient = async (client: IORedisClient | null ,logger: MashroomLogger): 
             !resolved && resolve();
         }, 2000);
     });
+
+    _clients[clientKey] = client;
 
     return client;
 };

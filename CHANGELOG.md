@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * External Redis Messaging Provider: Fixed a bug in the health probe which led to the situation that the server never reach ready state
  * Rest Proxy Demo App: Replaced legacy *spacexdata.com* API
 
 ## 2.4.0 (June 9, 2023)
