@@ -519,6 +519,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         expect(context.registry.services.length).toBe(1);
         expect(context.registry.services[0].port).toBe(6066);
+        expect(context.registry.services[0].url).toBe('http://my-remote-app.dev-namespace2:6066');
 
         nock('http://my-remote-app.dev-namespace2:6067')
             .get('/package.json')
@@ -545,5 +546,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         expect(context.registry.services.length).toBe(1);
         expect(context.registry.services[0].port).toBe(6067);
+        expect(context.registry.services[0].url).toBe('http://my-remote-app.dev-namespace2:6067');
     });
 });

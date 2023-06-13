@@ -82,6 +82,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
                             if (existingService) {
                                 if (existingService.status === 'Error' || existingService.invalidPortalApps.length > 0 || existingService.lastCheck < Date.now() - this._refreshIntervalSec * 1000 || existingService.port !== port) {
+                                    const url = this._accessViaClusterIP ? `http://${ip}:${port}` : `http://${name}.${namespace}:${port}`;
                                     service = {
                                         ...existingService,
                                         priority,
@@ -89,6 +90,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                         lastCheck: Date.now(),
                                         error: null,
                                         port,
+                                        url,
                                     };
                                 }
                             } else {
