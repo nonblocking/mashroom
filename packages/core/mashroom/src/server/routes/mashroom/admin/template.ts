@@ -54,10 +54,24 @@ export default (content: string, req: Request) => {
                     color: white;
                     font-weight: normal;
                     margin: auto 0;
+                    flex-grow: 2;
                 }
 
                 header .logo {
                     padding: 10px 25px 8px 25px;
+                }
+
+                header .auto-refresh-toggle {
+                    padding: 18px 25px;
+                }
+
+                header .auto-refresh-toggle a {
+                    font-size: 0.8em;
+                    color: white;
+                }
+
+                header .auto-refresh-toggle a:hover {
+                    color: #f4f3f8;
                 }
 
                 #content-wrapper {
@@ -212,16 +226,26 @@ export default (content: string, req: Request) => {
             </style>
 
             <script type="application/javascript">
-                var refreshTimer = setTimeout(function() {
-                    window.location.reload();
-                }, 30000);
+                var refreshEnabled = document.cookie.split('; ').find(function(keyValue) {
+                    return keyValue === 'mashroomAdminUIAutoRefresh=1';
+                });
 
-                function cancelRefresh() {
-                    clearTimeout(refreshTimer);
+                function startAutoRefresh() {
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 5000);
+                }
+
+                function toggleAutoRefresh() {
+                    if (refreshEnabled) {
+                        document.cookie = 'mashroomAdminUIAutoRefresh=1; path=/; max-age=-1;';
+                    } else {
+                        document.cookie = 'mashroomAdminUIAutoRefresh=1; path=/; max-age=2592000;';
+                    }
+                    window.location.reload();
                 }
 
                 function openModal(content) {
-                    cancelRefresh();
                     document.getElementById('modal-content').innerHTML = content;
                     document.getElementById('modal').style.display = 'block';
                 }
@@ -233,6 +257,13 @@ export default (content: string, req: Request) => {
                 document.addEventListener('keydown', function (e) {
                     if (e.key === 'Escape'|| e.key === 'Esc') {
                         closeModal();
+                    }
+                });
+
+                document.addEventListener('DOMContentLoaded', function () {
+                    if (refreshEnabled) {
+                        document.getElementById('autoRefreshToggle').innerText = 'Disable Auto Refresh';
+                        startAutoRefresh();
                     }
                 });
             </script>
@@ -247,6 +278,9 @@ export default (content: string, req: Request) => {
                     </svg>
                 </div>
                 <h1>Mashroom Server Admin UI</h1>
+                <div class="auto-refresh-toggle">
+                    <a id="autoRefreshToggle" href="javascript:toggleAutoRefresh()">Enable Auto Refresh</a>
+                </div>
             </header>
             <div id="content-wrapper">
                 <nav>
