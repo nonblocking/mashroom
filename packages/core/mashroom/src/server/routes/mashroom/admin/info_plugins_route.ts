@@ -50,9 +50,9 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
                 <td>
                    <script type="application/javascript">
                        window['pluginCfg${pluginIndex}'] = document.createElement('div');
-                       window['pluginCfg${pluginIndex}'].innerHTML = '<div class="json">${config}</div>';
+                       window['pluginCfg${pluginIndex}'].innerHTML = '<div class="json">${config.replace(/'/g, '\\\'')}</div>';
                        window['pluginDef${pluginIndex}'] = document.createElement('div');
-                       window['pluginDef${pluginIndex}'].innerHTML = '<div class="json">${def}</div>';
+                       window['pluginDef${pluginIndex}'].innerHTML = '<div class="json">${def.replace(/'/g, '\\\'')}</div>';
                     </script>
                     <a href="javascript:void(0)" onclick="openModal(window['pluginCfg${pluginIndex}'].innerHTML)">Configuration</a>
                     <br/>
