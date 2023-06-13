@@ -6,6 +6,7 @@
  * MongoDB Storage Provider: Fixed a potential problem in the health probe which could lead to the situation that the server never reaches ready state
  * External Redis Messaging Provider: Fixed a bug in the health probe which could lead to the situation that the server never reaches ready state
  * Rest Proxy Demo App: Replaced legacy *spacexdata.com* API
+ * Kubernetes Remote App Registry: If the service port changes also service url should change where the config if obtained from
 
 ## 2.4.0 (June 9, 2023)
 
