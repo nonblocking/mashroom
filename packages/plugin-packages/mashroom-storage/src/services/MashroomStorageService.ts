@@ -36,8 +36,7 @@ export default class MashroomStorageService implements MashroomStorageServiceTyp
                 this._currentWrappedStorage = new MashroomStorageMemoryCacheWrapper(storage, memoryCacheConfig, pluginContextHolder);
             }
 
-            // @ts-ignore
-            return this._currentWrappedStorage;
+            return this._currentWrappedStorage!;
         };
     }
 
