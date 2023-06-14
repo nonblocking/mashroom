@@ -1,10 +1,10 @@
 {
     "name": "@mashroom/mashroom-test-server7",
-    "version": "2.4.0",
+    "version": "2.4.1",
     "private": true,
     "devDependencies": {
-        "@mashroom/mashroom": "2.4.0",
-        "@mashroom/mashroom-json-schemas": "2.4.0",
+        "@mashroom/mashroom": "2.4.1",
+        "@mashroom/mashroom-json-schemas": "2.4.1",
         "log4js": "^6.9.1",
         "ts-node": "^10.9.1"
     },
