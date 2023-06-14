@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.4.1 (June 14, 2023)
+
  * Admin UI: The auto refresh of Admin UI pages is now disabled by default; can be enabled via link in the top right corner
  * Kubernetes Remote App Registry: If the service port changes also service url should change where the config if obtained from
  * MongoDB Storage Provider: Fixed a potential problem in the health probe which could lead to the situation that the server never reaches ready state
