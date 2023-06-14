@@ -113,10 +113,11 @@ Setup:
 
  * Create a new client in your realm (e.g. *mashroom*)
  * In the *Settings* tab set Access Type *confidential*
- * Make sure the *Valid Redirect URIs* contains your redirect URL (e.g. http://localhost:5050/*)
+ * Make sure the *Valid Redirect URIs* contain your redirect URL (e.g. http://localhost:5050/*)
  * In the *Credentials* tab you'll find the client secret
  * To map the roles to a scope/claim goto *Mappers*, click *Add Builtin* and add a *realm roles* mapper.
    In the field *Token Claim Name* enter *roles*. Also check *Add to ID token*.
+ * You should create a role (e.g. *mashroom-admin*) for users with Administrator rights
 
 You'll find more details about the configuration here: [https://www.keycloak.org/documentation.html](https://www.keycloak.org/documentation.html)
 
