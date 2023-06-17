@@ -61,6 +61,7 @@
                 "type": "background-job",
                 "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
                 "requires": [
+                    "Mashroom Background Jobs Services",
                     "Mashroom Portal Remote App Endpoint Services"
                 ],
                 "defaultConfig": {

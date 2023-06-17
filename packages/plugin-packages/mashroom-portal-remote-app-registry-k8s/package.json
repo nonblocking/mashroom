@@ -58,6 +58,9 @@
                 "name": "Mashroom Portal Remote App Kubernetes Background Job",
                 "type": "background-job",
                 "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
+                "requires": [
+                    "Mashroom Background Jobs Services"
+                ],
                 "defaultConfig": {
                     "cronSchedule": "0/1 * * * *",
                     "k8sNamespacesLabelSelector": null,
