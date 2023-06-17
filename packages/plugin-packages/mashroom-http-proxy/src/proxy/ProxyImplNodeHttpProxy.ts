@@ -91,9 +91,12 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             xfwd: true,
         });
         this._requestMetrics = {
-            httpRequestCount: 0,
-            httpTargetConnectionErrorCount: 0,
-            httpTargetTimeoutCount: 0,
+            httpRequestCountTotal: 0,
+            httpRequestTargetCount: {},
+            httpConnectionErrorCountTotal: 0,
+            httpConnectionErrorTargetCount: {},
+            httpTimeoutCountTotal: 0,
+            httpTimeoutTargetCount: {},
             wsRequestCount: 0,
         };
         this._wsConnectionMetrics = {
@@ -119,7 +122,6 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        this._requestMetrics.httpRequestCount ++;
 
         // Process interceptors
         const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
@@ -141,6 +143,14 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                 return;
             }
         }
+
+        // Metrics
+        this._requestMetrics.httpRequestCountTotal ++;
+        const target = `${protocol}://${host}`;
+        if (!this._requestMetrics.httpRequestTargetCount[target]) {
+            this._requestMetrics.httpRequestTargetCount[target] = 0;
+        }
+        this._requestMetrics.httpRequestTargetCount[target] ++;
 
         // Filter the forwarded headers from the incoming request
         this._headerFilter.filter(req.headers);
@@ -285,7 +295,13 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         // Proper timeout handling
         proxyReq.setTimeout(this._socketTimeoutMs, () => {
             logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`);
-            this._requestMetrics.httpTargetTimeoutCount ++;
+            const {protocol, host} = new URL(requestMeta.uri);
+            const target = `${protocol}://${host}`;
+            this._requestMetrics.httpTimeoutCountTotal ++;
+            if (!this._requestMetrics.httpTimeoutTargetCount[target]) {
+                this._requestMetrics.httpTimeoutTargetCount[target] = 0;
+            }
+            this._requestMetrics.httpTimeoutTargetCount[target] ++;
             requestMeta.end();
             proxyReq.destroy();
             if (!clientResponse.headersSent) {
@@ -349,7 +365,13 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         // node-http-proxy throws an error if the client has aborted, we don't want to log it
         if (!req.aborted) {
-            this._requestMetrics.httpTargetConnectionErrorCount ++;
+            const {protocol, host} = new URL(requestMeta.uri);
+            const target = `${protocol}://${host}`;
+            this._requestMetrics.httpConnectionErrorCountTotal ++;
+            if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
+                this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
+            }
+            this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
 
             if (requestMeta.type === 'HTTP') {
                 if (!clientResponse.headersSent && error.code === 'ECONNRESET') {

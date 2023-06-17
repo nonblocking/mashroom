@@ -25,9 +25,12 @@ export type PoolMetrics = {
 }
 
 export type RequestMetrics = {
-    httpRequestCount: number;
-    httpTargetConnectionErrorCount: number;
-    httpTargetTimeoutCount: number;
+    httpRequestCountTotal: number;
+    httpRequestTargetCount: Record<string, number>;
+    httpConnectionErrorCountTotal: number;
+    httpConnectionErrorTargetCount: Record<string, number>;
+    httpTimeoutCountTotal: number;
+    httpTimeoutTargetCount: Record<string, number>;
     wsRequestCount: number;
 }
 

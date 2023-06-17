@@ -20,9 +20,12 @@ export default class ProxyImplRequest implements Proxy {
         const logger: MashroomLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._requestMetrics = {
-            httpRequestCount: 0,
-            httpTargetConnectionErrorCount: 0,
-            httpTargetTimeoutCount: 0,
+            httpRequestCountTotal: 0,
+            httpRequestTargetCount: {},
+            httpConnectionErrorCountTotal: 0,
+            httpConnectionErrorTargetCount: {},
+            httpTimeoutCountTotal: 0,
+            httpTimeoutTargetCount: {},
             wsRequestCount: 0,
         };
         logger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${this._socketTimeoutMs}ms`);
@@ -33,7 +36,6 @@ export default class ProxyImplRequest implements Proxy {
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger: MashroomLogger = req.pluginContext.loggerFactory('mashroom.httpProxy');
-        this._requestMetrics.httpRequestCount ++;
 
         const method = req.method;
 
@@ -63,6 +65,14 @@ export default class ProxyImplRequest implements Proxy {
                 return;
             }
         }
+
+        // Metrics
+        this._requestMetrics.httpRequestCountTotal ++;
+        const target = `${protocol}://${host}`;
+        if (!this._requestMetrics.httpRequestTargetCount[target]) {
+            this._requestMetrics.httpRequestTargetCount[target] = 0;
+        }
+        this._requestMetrics.httpRequestTargetCount[target] ++;
 
         // Filter the forwarded headers from the incoming request
         this._headerFilter.filter(req.headers);
@@ -119,15 +129,25 @@ export default class ProxyImplRequest implements Proxy {
 
                 })
                 .on('error', (error: NodeJS.ErrnoException) => {
+                    const {protocol, host} = new URL(targetUri);
+                    const target = `${protocol}://${host}`;
                     if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
                         logger.error(`Target endpoint '${targetUri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
-                        this._requestMetrics.httpTargetTimeoutCount ++;
+                        this._requestMetrics.httpTimeoutCountTotal ++;
+                        if (!this._requestMetrics.httpTimeoutTargetCount[target]) {
+                            this._requestMetrics.httpTimeoutTargetCount[target] = 0;
+                        }
+                        this._requestMetrics.httpTimeoutTargetCount[target] ++;
                         if (!res.headersSent) {
                             res.sendStatus(504);
                         }
                     } else {
                         logger.error(`Forwarding to '${targetUri}' failed!`, error);
-                        this._requestMetrics.httpTargetConnectionErrorCount ++;
+                        this._requestMetrics.httpConnectionErrorCountTotal ++;
+                        if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
+                            this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
+                        }
+                        this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
                         if (!res.headersSent) {
                             res.sendStatus(503);
                         }
