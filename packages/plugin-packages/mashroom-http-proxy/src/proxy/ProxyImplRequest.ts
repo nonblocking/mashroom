@@ -50,14 +50,12 @@ export default class ProxyImplRequest implements Proxy {
         }
 
         // Extra checks
-
         const {protocol, host} = new URL(effectiveTargetUri);
         if (protocol !== 'http:' && protocol !== 'https:') {
             logger.error(`Cannot forward to ${effectiveTargetUri} because the protocol is not supported (only HTTP and HTTPS)`);
             res.sendStatus(502);
             return;
         }
-
         if (typeof this._poolMaxWaitingRequestsPerHost === 'number' && this._poolMaxWaitingRequestsPerHost > 0) {
             if (getWaitingRequestsForHostHeader(protocol, host) >= this._poolMaxWaitingRequestsPerHost) {
                 logger.error(`Cannot forward to ${effectiveTargetUri} because max waiting requests per host reached (${this._poolMaxWaitingRequestsPerHost})`);
