@@ -35,14 +35,14 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     let proxy: Proxy;
     if (proxyImpl === 'request') {
         logger.info('Using http-proxy impl based on "request"');
-        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, pluginContext.loggerFactory);
+        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
     } else {
         logger.info('Using http-proxy impl based on "node-http-proxy"');
         proxy = new ProxyImplNodeHttpProxy(
             socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,
-            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, pluginContext.loggerFactory);
+            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
     }
-    const service = new MashroomHttpProxyService(forwardMethods, proxy, poolMaxWaitingRequestsPerHost);
+    const service = new MashroomHttpProxyService(forwardMethods, proxy);
 
     startExportHttpPoolMetrics(pluginContextHolder);
     startExportWsConnectionMetrics(proxy, pluginContextHolder);

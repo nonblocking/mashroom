@@ -1,8 +1,8 @@
 import {URLSearchParams, URL} from 'url';
-
 import {createProxyServer} from 'http-proxy';
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
-import {getHttpPool, getHttpsPool, getPoolConfig} from '../connection_pool';
+import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
+import {processHttpResponse, processRequestInterceptors, processWsRequest} from './utils';
 
 import type {
     RequestMetrics,
@@ -23,6 +23,7 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser, MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
+
 
 type ProxyServer = ReturnType<typeof createProxyServer>;
 
@@ -70,7 +71,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     constructor(private _socketTimeoutMs: number, rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
                 private _wsMaxConnectionsPerHost: number | null, private _wsMaxConnectionsTotal: number | null,
-                loggerFactory: MashroomLoggerFactory) {
+                private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
         this._globalLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._globalLogger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
@@ -120,44 +121,26 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         this._requestMetrics.httpRequestCount ++;
 
-        let effectiveTargetUri = encodeURI(targetUri);
-        let effectiveAdditionalHeaders = {
-            ...additionalHeaders,
-        };
-        let effectiveQueryParams = {
-            ...req.query
-        };
+        // Process interceptors
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        if (responseHandled) {
+            return;
+        }
 
-        // Process request interceptors
-        const interceptorResult = await this._interceptorHandler.processHttpRequest(req, res, targetUri, additionalHeaders, logger);
-        if (interceptorResult.responseHandled) {
-            return Promise.resolve();
+        // Extra checks
+        const {protocol, host} = new URL(effectiveTargetUri);
+        if (protocol !== 'http:' && protocol !== 'https:') {
+            logger.error(`Cannot forward to ${effectiveTargetUri} because the protocol is not supported (only HTTP and HTTPS)`);
+            res.sendStatus(502);
+            return;
         }
-        if (interceptorResult.rewrittenTargetUri) {
-            effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
-        }
-        if (interceptorResult.addHeaders) {
-            effectiveAdditionalHeaders = {
-                ...effectiveAdditionalHeaders,
-                ...interceptorResult.addHeaders,
-            };
-        }
-        if (interceptorResult.removeHeaders) {
-            interceptorResult.removeHeaders.forEach((headerKey) => {
-                delete effectiveAdditionalHeaders[headerKey];
-                delete req.headers[headerKey];
-            });
-        }
-        if (interceptorResult.addQueryParams) {
-            effectiveQueryParams = {
-                ...effectiveQueryParams,
-                ...interceptorResult.addQueryParams,
-            };
-        }
-        if (interceptorResult.removeQueryParams) {
-            interceptorResult.removeQueryParams.forEach((paramKey) => {
-                delete effectiveQueryParams[paramKey];
-            });
+
+        if (typeof this._poolMaxWaitingRequestsPerHost === 'number' && this._poolMaxWaitingRequestsPerHost > 0) {
+            if (getWaitingRequestsForHostHeader(protocol, host) >= this._poolMaxWaitingRequestsPerHost) {
+                logger.error(`Cannot forward to ${effectiveTargetUri} because max waiting requests per host reached (${this._poolMaxWaitingRequestsPerHost})`);
+                res.sendStatus(429);
+                return;
+            }
         }
 
         // Filter the forwarded headers from the incoming request
@@ -200,6 +183,13 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
 
+        const {protocol} = new URL(targetUri);
+        if (protocol !== 'ws:' && protocol !== 'wss:') {
+            logger.error(`Cannot forward to ${targetUri} because the protocol is not supported`);
+            socket.end('HTTP/1.1 502 Bad Gateway\r\n\r\n', 'ascii');
+            return;
+        }
+
         if (typeof this._wsMaxConnectionsTotal === 'number' && this._wsConnectionMetrics.activeConnections >= this._wsMaxConnectionsTotal) {
             logger.error(`Cannot forward to ${targetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
@@ -217,28 +207,8 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
         }
 
-        let effectiveTargetUri = encodeURI(targetUri);
-        let effectiveAdditionalHeaders = {
-            ...additionalHeaders,
-        };
-
-        // Process request interceptors
-        const interceptorResult = await this._interceptorHandler.processWsRequest(req, targetUri, additionalHeaders, logger);
-        if (interceptorResult.rewrittenTargetUri) {
-            effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
-        }
-        if (interceptorResult.addHeaders) {
-            effectiveAdditionalHeaders = {
-                ...effectiveAdditionalHeaders,
-                ...interceptorResult.addHeaders,
-            };
-        }
-        if (interceptorResult.removeHeaders) {
-            interceptorResult.removeHeaders.forEach((headerKey) => {
-                delete effectiveAdditionalHeaders[headerKey];
-                delete req.headers[headerKey];
-            });
-        }
+        // Process interceptors
+        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
         const proxyServer = effectiveTargetUri.startsWith('wss') || effectiveTargetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
 
@@ -334,24 +304,14 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             return;
         }
 
-        // Execute response interceptors
-        const interceptorResult = await this._interceptorHandler.processHttpResponse(clientRequest, clientResponse, requestMeta.uri, proxyRes, logger);
-
-        if (interceptorResult.responseHandled) {
+        // Process interceptors
+        const {responseHandled} = await processHttpResponse(clientRequest, clientResponse, requestMeta.uri, proxyRes, this._interceptorHandler, logger);
+        if (responseHandled) {
             return;
         }
-        // First filter the headers from the target response
+
+        // Filter the headers from the target response
         this._headerFilter.filter(proxyRes.headers);
-        if (interceptorResult.addHeaders) {
-            Object.keys(interceptorResult.addHeaders).forEach((headerKey) => {
-                proxyRes.headers[headerKey] = interceptorResult.addHeaders?.[headerKey];
-            });
-        }
-        if (interceptorResult.removeHeaders) {
-            interceptorResult.removeHeaders.forEach((headerKey) => {
-                delete proxyRes.headers[headerKey];
-            });
-        }
 
         // Send response
         clientResponse.status(proxyRes.statusCode || 0);

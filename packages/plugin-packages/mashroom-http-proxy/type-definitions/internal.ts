@@ -3,8 +3,7 @@ import type {IncomingHttpHeaders, IncomingMessage} from 'http';
 import type {Socket} from 'net';
 import type {Request, Response} from 'express';
 import type {MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
-import type {MashroomHttpProxyInterceptor, MashroomHttpProxyResponseInterceptorResult, HttpHeaders, MashroomHttpProxyRequestInterceptorResult} from './api';
-import {MashroomWsProxyRequestInterceptorResult} from './api';
+import type {MashroomHttpProxyInterceptor, MashroomHttpProxyResponseInterceptorResult, HttpHeaders, MashroomHttpProxyRequestInterceptorResult, MashroomWsProxyRequestInterceptorResult} from './api';
 
 export interface HttpHeaderFilter {
     filter(headers: IncomingHttpHeaders): void;

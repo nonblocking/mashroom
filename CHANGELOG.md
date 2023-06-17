@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Fixed *poolMaxWaitingRequestsPerHost* handling if an HTTP interceptor rewrites the target URL
+
 ## 2.4.1 (June 14, 2023)
 
  * Admin UI: The auto refresh of Admin UI pages is now disabled by default; can be enabled via link in the top right corner

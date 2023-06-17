@@ -1,9 +1,9 @@
 import request from 'request';
-import {getHttpPool, getHttpsPool, getPoolConfig} from '../connection_pool';
+import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
+import {processHttpResponse, processRequestInterceptors} from './utils';
 
-import type {Socket} from 'net';
 import type {Request, Response} from 'express';
-import type {MashroomLoggerFactory, MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
+import type {MashroomLoggerFactory, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 import type {Proxy, HttpHeaderFilter, InterceptorHandler, RequestMetrics} from '../../type-definitions/internal';
 
@@ -15,7 +15,8 @@ export default class ProxyImplRequest implements Proxy {
     private _requestMetrics: RequestMetrics;
 
     constructor(private _socketTimeoutMs: number, private _interceptorHandler: InterceptorHandler,
-                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean, loggerFactory: MashroomLoggerFactory) {
+                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
+                private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
         const logger: MashroomLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._requestMetrics = {
@@ -42,44 +43,27 @@ export default class ProxyImplRequest implements Proxy {
             return Promise.resolve();
         }
 
-        let effectiveTargetUri = encodeURI(targetUri);
-        let effectiveAdditionalHeaders = {
-            ...additionalHeaders,
-        };
-        let effectiveQueryParams = {
-            ...req.query
-        };
+        // Process interceptors
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        if (responseHandled) {
+            return;
+        }
 
-        // Process request interceptors
-        const interceptorResult = await this._interceptorHandler.processHttpRequest(req, res, targetUri, additionalHeaders, logger);
-        if (interceptorResult.responseHandled) {
-            return Promise.resolve();
+        // Extra checks
+
+        const {protocol, host} = new URL(effectiveTargetUri);
+        if (protocol !== 'http:' && protocol !== 'https:') {
+            logger.error(`Cannot forward to ${effectiveTargetUri} because the protocol is not supported (only HTTP and HTTPS)`);
+            res.sendStatus(502);
+            return;
         }
-        if (interceptorResult.rewrittenTargetUri) {
-            effectiveTargetUri = encodeURI(interceptorResult.rewrittenTargetUri);
-        }
-        if (interceptorResult.addHeaders) {
-            effectiveAdditionalHeaders = {
-                ...effectiveAdditionalHeaders,
-                ...interceptorResult.addHeaders,
-            };
-        }
-        if (interceptorResult.removeHeaders) {
-            interceptorResult.removeHeaders.forEach((headerKey) => {
-                delete effectiveAdditionalHeaders[headerKey];
-                delete req.headers[headerKey];
-            });
-        }
-        if (interceptorResult.addQueryParams) {
-            effectiveQueryParams = {
-                ...effectiveQueryParams,
-                ...interceptorResult.addQueryParams,
-            };
-        }
-        if (interceptorResult.removeQueryParams) {
-            interceptorResult.removeQueryParams.forEach((paramKey) => {
-                delete effectiveQueryParams[paramKey];
-            });
+
+        if (typeof this._poolMaxWaitingRequestsPerHost === 'number' && this._poolMaxWaitingRequestsPerHost > 0) {
+            if (getWaitingRequestsForHostHeader(protocol, host) >= this._poolMaxWaitingRequestsPerHost) {
+                logger.error(`Cannot forward to ${effectiveTargetUri} because max waiting requests per host reached (${this._poolMaxWaitingRequestsPerHost})`);
+                res.sendStatus(429);
+                return;
+            }
         }
 
         // Filter the forwarded headers from the incoming request
@@ -104,28 +88,18 @@ export default class ProxyImplRequest implements Proxy {
                     const endTime = process.hrtime(startTime);
                     logger.info(`Response headers received from ${options.uri} received in ${endTime[0]}s ${endTime[1] / 1000000}ms with status ${targetResponse.statusCode}`);
 
-                    // Execute response interceptors
+                    // Process interceptors
                     // Pause the stream flow until the async op is finished
                     targetResponse.pause();
-                    const interceptorResult = await this._interceptorHandler.processHttpResponse(req, res, targetUri, targetResponse, logger);
+                    const {responseHandled} = await processHttpResponse(req, res, targetUri, targetResponse, this._interceptorHandler, logger);
                     targetResponse.resume();
 
-                    if (interceptorResult.responseHandled) {
-                        resolve();
+                    if (responseHandled) {
                         return;
                     }
-                    // First filter the headers from the target response
+
+                    // Filter the headers from the target response
                     this._headerFilter.filter(targetResponse.headers);
-                    if (interceptorResult.addHeaders) {
-                        Object.keys(interceptorResult.addHeaders).forEach((headerKey) => {
-                            targetResponse.headers[headerKey] = interceptorResult.addHeaders?.[headerKey];
-                        });
-                    }
-                    if (interceptorResult.removeHeaders) {
-                        interceptorResult.removeHeaders.forEach((headerKey) => {
-                            delete targetResponse.headers[headerKey];
-                        });
-                    }
 
                     // Send response
                     res.status(targetResponse.statusCode);
@@ -165,7 +139,7 @@ export default class ProxyImplRequest implements Proxy {
         });
     }
 
-    async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void> {
+    async forwardWs(): Promise<void> {
         throw new Error('WebSockets are not supported by this HTTP proxy implementation (request)');
     }
 
