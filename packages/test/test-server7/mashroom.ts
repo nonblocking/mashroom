@@ -1,4 +1,3 @@
-
 import type {MashroomServerConfig} from '@mashroom/mashroom-json-schemas/type-definitions';
 
 const serverConfig: MashroomServerConfig = {

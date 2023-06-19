@@ -1,4 +1,3 @@
-
 import type {MashroomSecurityAcl} from '@mashroom/mashroom-json-schemas/type-definitions';
 
 const acl: MashroomSecurityAcl = {

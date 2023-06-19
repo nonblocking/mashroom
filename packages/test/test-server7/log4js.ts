@@ -1,4 +1,3 @@
-
 import type {Configuration} from 'log4js';
 
 const config: Configuration = {

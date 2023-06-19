@@ -1,4 +1,3 @@
-
 import type {MashroomSecuritySimpleProviderUsers} from '@mashroom/mashroom-json-schemas/type-definitions';
 
 const users: MashroomSecuritySimpleProviderUsers = {

@@ -1,4 +1,3 @@
-
 import type {MashroomPortalRemoteApps} from '@mashroom/mashroom-json-schemas/type-definitions';
 
 const remotePortalApps: MashroomPortalRemoteApps = {
