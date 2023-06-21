@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.4.2 (June 21, 2023)
+
  * HTTP Proxy: Provides now also metrics for total requests, errors and timeouts per target host
  * HTTP Proxy: Fixed *poolMaxWaitingRequestsPerHost* handling if an HTTP interceptor rewrites the target URL
 
