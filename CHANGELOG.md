@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Improved again the detection which App caused a browser error (for unhandled promise rejections)
+
 ## 2.4.2 (June 21, 2023)
 
  * HTTP Proxy: Provides now also metrics for total requests, errors and timeouts per target host
