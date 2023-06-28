@@ -29,8 +29,13 @@ export default class BrowserErrorHandler {
 
         // Handle unhandled promise rejections
         global.onunhandledrejection = (event: PromiseRejectionEvent) => {
+            let portalAppName = undefined;
+            if ('stack' in event.reason) {
+                portalAppName = getAppNameFromScript(event.reason.stack);
+            }
+
             const message = serializeObject(event.reason);
-            this._remoteLogger.error(`Client error: Unhandled promise rejection: ${message}`);
+            this._remoteLogger.error(`Client error: Unhandled promise rejection: ${message}`, undefined, portalAppName);
         };
 
         // Handle console errors
