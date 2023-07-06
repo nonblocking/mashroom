@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: *portalAppService.checkLoadedPortalAppsUpdated()* checks now if the server version is actually different and not
+   just compares the reload timestamps
  * Portal: Improved again the detection which App caused a browser error (for unhandled promise rejections)
 
 ## 2.4.2 (June 21, 2023)

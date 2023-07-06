@@ -335,12 +335,17 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         /* if we are not in dev mode _lastUpdatedCheckTs is the page load time */
         return this._getUpdatedAppsSince(this._lastUpdatedCheckTs)
             .then((updatedApps) => {
-                return loadedPortalAppsInternal
-                    .filter(({ pluginName }) => updatedApps.find((ua) => ua.name === pluginName))
-                    .map(({ pluginName }) => pluginName);
+                const updatedAppsWithNewVersion: Array<string> = [];
+                updatedApps.forEach((ua) => {
+                    const isNewVersion = loadedPortalAppsInternal.find(({ pluginName, appSetup }) => ua.name === pluginName && ua.version !== appSetup?.version);
+                    if (isNewVersion && updatedAppsWithNewVersion.indexOf(ua.name) === -1) {
+                        updatedAppsWithNewVersion.push(ua.name);
+                    }
+                });
+                return updatedAppsWithNewVersion;
             })
             .catch((e) => {
-                console.warn('Checking for updated Apps failed!', e);
+                console.warn('Check for updated Apps failed!', e);
                 return [];
             });
     }
