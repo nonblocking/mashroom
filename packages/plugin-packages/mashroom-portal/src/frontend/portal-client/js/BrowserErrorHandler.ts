@@ -17,18 +17,18 @@ export default class BrowserErrorHandler {
 
     install(): void {
         // Handle errors
-        global.onerror = (event: Event | string, source: string | undefined, fileno: number | undefined, columnNumber: number | undefined, error?: Error) => {
+        global.addEventListener('error', (errorEvent) => {
+            const {message, filename, error} = errorEvent;
             let portalAppName = undefined;
-            if (source) {
-                portalAppName = getAppNameFromScript(source);
+            if (filename) {
+                portalAppName = getAppNameFromScript(filename);
             }
 
-            const message = error ? error.message : event.toString();
             this._remoteLogger.error(`Client error: ${message}`, error, portalAppName);
-        };
+        });
 
         // Handle unhandled promise rejections
-        global.onunhandledrejection = (event: PromiseRejectionEvent) => {
+        global.addEventListener('unhandledrejection', (event) => {
             let portalAppName = undefined;
             if ('stack' in event.reason) {
                 portalAppName = getAppNameFromScript(event.reason.stack);
@@ -36,7 +36,7 @@ export default class BrowserErrorHandler {
 
             const message = serializeObject(event.reason);
             this._remoteLogger.error(`Client error: Unhandled promise rejection: ${message}`, undefined, portalAppName);
-        };
+        });
 
         // Handle console errors
         tapIntoConsoleLog('error', (portalAppName, args) => {
