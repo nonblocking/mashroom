@@ -421,7 +421,7 @@ export type MashroomPortalApp = {
     +screenshots: ?Array<string>,
 
     /**
-     * Defines if the App is locally deployed within Mashroom Server or a only accessible remote.
+     * Defines if the App is locally deployed within Mashroom Server or on a remote server
      */
     +remoteApp: boolean,
 

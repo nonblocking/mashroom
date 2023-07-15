@@ -450,7 +450,7 @@ export type MashroomPortalApp = {
     readonly screenshots: Array<string> | null | undefined;
 
     /**
-     * Defines if the App is locally deployed within Mashroom Server or a only accessible remote.
+     * Defines if the App is locally deployed within Mashroom Server or on a remote server
      */
     readonly remoteApp: boolean;
 
