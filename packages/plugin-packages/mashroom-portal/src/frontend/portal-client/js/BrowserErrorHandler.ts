@@ -31,7 +31,7 @@ export default class BrowserErrorHandler {
         global.addEventListener('unhandledrejection', (event) => {
             let portalAppName = undefined;
             if ('stack' in event.reason) {
-                portalAppName = getAppNameFromScript(event.reason.stack);
+                portalAppName = getAppNameFromStack(event.reason.stack);
             }
 
             const message = serializeObject(event.reason);
@@ -53,21 +53,23 @@ const getAppNameFromScript = (source: string): string | undefined => {
     }
 };
 
+const getAppNameFromStack = (stack: string): string | undefined => {
+    const reverseStackRows = stack.split('\n').reverse();
+    for (let i = 0; i < reverseStackRows.length; i++) {
+        const portalAppName = getAppNameFromScript(reverseStackRows[i]);
+        if (portalAppName) {
+            break;
+        }
+    }
+    return undefined;
+};
+
 const tapIntoConsoleLog = (logType: 'error' | 'warn' | 'info', fn: (portalAppName: string | undefined, args: Array<any>) => void) => {
     const original = console[logType];
     console[logType] = function (...args: Array<any>) {
         // Try to detect the App which writes this error
-        let portalAppName = undefined;
-        const stack = new Error().stack?.split('\n').reverse();
-        if (stack) {
-            for (let i = 0; i < stack.length; i++) {
-                portalAppName = getAppNameFromScript(stack[i]);
-                if (portalAppName) {
-                    break;
-                }
-            }
-        }
-
+        const stack = new Error().stack;
+        const portalAppName = stack && getAppNameFromStack(stack);
         original.apply(console, args);
         fn(portalAppName, args);
     };
