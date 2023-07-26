@@ -98,7 +98,8 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     restApi.get('/layouts', portalLayoutController.getAvailablePortalLayouts.bind(portalLayoutController));
     restApi.get('/roles', portalRolesController.getExistingRoles.bind(portalRolesController));
     restApi.put('/users/authenticated/lang', portalUserController.setAuthenticatedUserLanguage.bind(portalUserController));
-    restApi.get('/users/authenticated/authExpiration', portalUserController.getAuthenticatedUserAuthenticationExpiration.bind(portalUserController));
+    restApi.get('/users/authenticated/authExpiration', portalUserController.getAuthenticatedUserAuthenticationExpirationTime.bind(portalUserController));
+    restApi.get('/users/authenticated/timeToAuthExpiration', portalUserController.getAuthenticatedUserTimeToAuthenticationExpiration.bind(portalUserController));
     restApi.get('/logout', portalUserController.logout.bind(portalUserController));
     restApi.get('/languages', portalLanguageController.getAvailableLanguages.bind(portalLanguageController));
     restApi.get('/languages/default', portalLanguageController.getDefaultLanguage.bind(portalLanguageController));

@@ -841,6 +841,12 @@ export interface MashroomPortalUserService {
     getAuthenticationExpiration(): Promise<?number>;
 
     /**
+     * Get the unix ms left until authentication expiration.
+     * Returns null if the check fails and "0" if the check returns 403.
+     */
+    getTimeToAuthenticationExpiration(): Promise<?number>;
+
+    /**
      * Extend the authentication.
      * Can be used to update the authentication when no server interaction has occurred for a while and the authentication is about to expire.
      */

@@ -53,10 +53,46 @@ describe('PortalUserController', () => {
             json: (json: any) => sentJson = json,
         };
 
-        await controller.getAuthenticatedUserAuthenticationExpiration(req, res);
+        await controller.getAuthenticatedUserAuthenticationExpirationTime(req, res);
 
         expect(sentJson).toEqual({
             expirationTime: 123456789,
+        });
+    });
+
+    it('sends the correct time to auth expiration', async () => {
+        const controller = new PortalUserController();
+
+        let sentJson = null;
+        const req: any = {
+            params: {
+                sitePath: 'web',
+            },
+            headers: {
+                accept: 'text/*',
+            },
+            query: {
+
+            },
+            pluginContext: {
+                loggerFactory: dummyLoggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            getAuthenticationExpiration: () => Date.now() + 10000,
+                        }
+                    }
+                }
+            }
+        };
+        const res: any = {
+            json: (json: any) => sentJson = json,
+        };
+
+        await controller.getAuthenticatedUserTimeToAuthenticationExpiration(req, res);
+
+        expect(sentJson).toEqual({
+            timeToExpiration: 10000,
         });
     });
 

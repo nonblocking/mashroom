@@ -13,7 +13,7 @@ type NewLanguage = {
 
 export default class PortalUserController {
 
-    async getAuthenticatedUserAuthenticationExpiration(req: Request, res: Response): Promise<void> {
+    async getAuthenticatedUserAuthenticationExpirationTime(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         try {
@@ -22,6 +22,7 @@ export default class PortalUserController {
 
             const expirationTime = await securityService.getAuthenticationExpiration(req);
             if (!expirationTime) {
+                // There is no user
                 res.sendStatus(400);
                 return;
             }
@@ -32,6 +33,36 @@ export default class PortalUserController {
 
             res.json({
                 expirationTime,
+            });
+
+        } catch (e: any) {
+            logger.error(e);
+            res.sendStatus(500);
+        }
+    }
+
+    async getAuthenticatedUserTimeToAuthenticationExpiration(req: Request, res: Response): Promise<void> {
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
+
+        try {
+            const securityService: MashroomSecurityService = req.pluginContext.services.security!.service;
+            const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+
+            const expirationTime = await securityService.getAuthenticationExpiration(req);
+            if (!expirationTime) {
+                // There is no user
+                res.sendStatus(400);
+                return;
+            }
+
+            if (cacheControlService) {
+                cacheControlService.addCacheControlHeader('NEVER', req, res);
+            }
+
+            const timeToExpiration = expirationTime - Date.now();
+
+            res.json({
+                timeToExpiration,
             });
 
         } catch (e: any) {

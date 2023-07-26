@@ -19,11 +19,11 @@ let extendAuthenticationLinkAttached = false;
 
 export default class MashroomPortalUserInactivityHandler {
 
-    private _authenticationExpirationTime: number | null;
+    private _timeToAuthenticationExpirationMs: number | null;
     private _warningPanelVisible: boolean;
 
     constructor(private _portalUserService: MashroomPortalUserService) {
-        this._authenticationExpirationTime = null;
+        this._timeToAuthenticationExpirationMs = null;
         this._warningPanelVisible = false;
     }
 
@@ -44,17 +44,18 @@ export default class MashroomPortalUserInactivityHandler {
         const timeLeft = this._getTimeLeftSec();
         if (timeLeft <= warnBeforeAuthenticationExpiresSec && timeLeft > 5 && timeLeft % 5 !== 0) {
             // Limit the server requests to max once per 5sec
+            this._timeToAuthenticationExpirationMs = this._timeToAuthenticationExpirationMs! - 1000;
             this._handleExpirationTimeUpdate();
             return;
         }
 
-        this._portalUserService.getAuthenticationExpiration().then(
-            (expirationTime) => {
-                if (expirationTime !== null) {
-                    this._authenticationExpirationTime = expirationTime;
+        this._portalUserService.getTimeToAuthenticationExpiration().then(
+            (timeToExpiration) => {
+                if (timeToExpiration !== null) {
+                    this._timeToAuthenticationExpirationMs = timeToExpiration;
                 } else {
                     // Just assume the user have a couple of minutes left and check again in 60sec (in _handleExpirationTimeUpdate())
-                    this._authenticationExpirationTime = Date.now() + (warnBeforeAuthenticationExpiresSec + 300) * 1000;
+                    this._timeToAuthenticationExpirationMs = (warnBeforeAuthenticationExpiresSec + 300) * 1000;
                 }
                 this._handleExpirationTimeUpdate();
             }
@@ -63,7 +64,7 @@ export default class MashroomPortalUserInactivityHandler {
 
     private _extendAuthentication() {
         this._portalUserService.extendAuthentication();
-        this._authenticationExpirationTime = warnBeforeAuthenticationExpiresSec + 10;
+        this._timeToAuthenticationExpirationMs = (warnBeforeAuthenticationExpiresSec + 10) * 1000;
     }
 
     private _handleExpirationTimeUpdate() {
@@ -90,8 +91,8 @@ export default class MashroomPortalUserInactivityHandler {
     }
 
     private _getTimeLeftSec() {
-        if (this._authenticationExpirationTime) {
-            return Math.trunc((this._authenticationExpirationTime - Date.now()) / 1000);
+        if (this._timeToAuthenticationExpirationMs) {
+            return Math.trunc((this._timeToAuthenticationExpirationMs) / 1000);
         }
         return -1;
     }

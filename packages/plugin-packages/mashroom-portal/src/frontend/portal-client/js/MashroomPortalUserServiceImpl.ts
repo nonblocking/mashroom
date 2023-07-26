@@ -40,6 +40,28 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
         );
     }
 
+    getTimeToAuthenticationExpiration(): Promise<number | null> {
+        const path = '/users/authenticated/timeToAuthExpiration';
+        return this._restService.get(path, {
+            [HEADER_DO_NOT_EXTEND_SESSION]: '1'
+        }).then(
+            (data) => {
+                if (data?.timeToExpiration) {
+                    return data.timeToExpiration;
+                }
+                console.error('Expiration check failed because the received data is invalid:', data);
+                return null;
+            },
+            (error: RestError) => {
+                console.error('Expiration check failed:', error);
+                if (error.getStatusCode() === 403) {
+                    return 0;
+                }
+                return null;
+            }
+        );
+    }
+
     extendAuthentication(): void {
         // For the moment: Just request the authentication expiration without the x-mashroom-no-extend-session header
         const path = '/users/authenticated/authExpiration';
