@@ -2,7 +2,7 @@
     "name": "mashroom-parent",
     "private": true,
     "dependencies": {
-        "lerna": "^6.6.1",
+        "lerna": "^6.6.2",
         "rimraf": "^5.0.0"
     },
     "devDependencies": {
