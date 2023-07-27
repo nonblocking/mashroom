@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.4.3 (July 27, 2023)
+
  * Portal: The time until session expiration is now calculated on the server-side. This fixes problems with premature logouts due to
    an invalid system time on the client. See [#114](https://github.com/nonblocking/mashroom/issues/114)
  * Portal: *portalAppService.checkLoadedPortalAppsUpdated()* checks now if the server version is actually different and not
