@@ -4,18 +4,18 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.4.2",
+    "version": "2.4.3",
     "files": [
         "dist/**"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "2.4.2",
+        "@mashroom/mashroom-utils": "2.4.3",
         "rhea": "^3.0.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.4.2",
-        "@mashroom/mashroom-messaging": "2.4.2",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.4.2"
+        "@mashroom/mashroom": "2.4.3",
+        "@mashroom/mashroom-messaging": "2.4.3",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.4.3"
     },
     "jest": {
         "verbose": true,
