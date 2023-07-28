@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Header filtering applies now the *forwardHeaders* patterns to the full header
+   (instead of accepting headers that just contain one of the pattern, e.g. *x-my-own-content-type*)
+
 ## 2.4.3 (July 27, 2023)
 
  * Portal: The time until session expiration is now calculated on the server-side. This fixes problems with premature logouts due to

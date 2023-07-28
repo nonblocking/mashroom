@@ -12,6 +12,7 @@ describe('HttpHeaderFilter', () => {
         'last-modified',
         'content-*',
         'x-b3-*',
+        'trace*',
     ];
 
     it('removes the headers that are not listed in forwardHeaders',  async () => {
@@ -27,7 +28,10 @@ describe('HttpHeaderFilter', () => {
             cookie: 'dfdF',
             'content-type': 'application/json',
             'content-size': '42',
-            'x-b3-trace-id': 'sdfdfdfd'
+            'x-b3-trace-id': 'sdfdfdfd',
+            'x-foo-bar': 'test',
+            'x-content-type': 'test',
+            'traceparent': '00-8d21fa8668b3ceb4b531f6f43e5b45d2-e13f9bad2756b4b9-01'
         };
 
         filter.filter(headers);
@@ -39,7 +43,8 @@ describe('HttpHeaderFilter', () => {
             'cache-control': 'no-cache',
             'content-type': 'application/json',
             'content-size': '42',
-            'x-b3-trace-id': 'sdfdfdfd'
+            'x-b3-trace-id': 'sdfdfdfd',
+            'traceparent': '00-8d21fa8668b3ceb4b531f6f43e5b45d2-e13f9bad2756b4b9-01'
         });
     });
 });
