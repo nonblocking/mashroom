@@ -61,9 +61,7 @@ export interface MashroomPluginLoaderPluginDefinition {
    * Script that exports MashroomPluginLoaderPluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomWebAppPluginDefinition {
   name: string;
@@ -83,7 +81,6 @@ export interface MashroomWebAppPluginDefinition {
      * The default path where the WebApp will be available
      */
     path: string;
-    [k: string]: any;
   };
 }
 export interface MashroomApiPluginDefinition {
@@ -104,7 +101,6 @@ export interface MashroomApiPluginDefinition {
      * The default path where the API will be available
      */
     path: string;
-    [k: string]: any;
   };
 }
 export interface MashroomMiddlewarePluginDefinition {
@@ -125,7 +121,6 @@ export interface MashroomMiddlewarePluginDefinition {
      * The weight of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)
      */
     order?: number;
-    [k: string]: any;
   };
 }
 export interface MashroomStaticPluginDefinition {
@@ -146,7 +141,6 @@ export interface MashroomStaticPluginDefinition {
      * The default path where the static documents will be available
      */
     path: string;
-    [k: string]: any;
   };
 }
 export interface MashroomServicesPluginDefinition {
@@ -166,9 +160,7 @@ export interface MashroomServicesPluginDefinition {
    * Script that exports MashroomServicesPluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomAdminUiIntegrationPluginDefinition {
   name: string;
@@ -200,7 +192,6 @@ export interface MashroomAdminUiIntegrationPluginDefinition {
      * The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)
      */
     weight?: number;
-    [k: string]: any;
   };
 }
 export interface MashroomBackgroundJobPluginDefinition {
@@ -221,7 +212,6 @@ export interface MashroomBackgroundJobPluginDefinition {
      * The execution schedule for the job, must be a valid cron expression, see: https://github.com/node-cron/node-cron
      */
     cronSchedule?: string;
-    [k: string]: any;
   };
 }
 export interface MashroomExternalMessagingProviderPluginDefinition {
@@ -237,9 +227,7 @@ export interface MashroomExternalMessagingProviderPluginDefinition {
    * Script that exports MashroomMessagingExternalProvider
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomHttpProxyInterceptorPluginDefinition {
   name: string;
@@ -259,7 +247,6 @@ export interface MashroomHttpProxyInterceptorPluginDefinition {
      * The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
      */
     order?: number;
-    [k: string]: any;
   };
 }
 export interface MashroomMemoryCacheProviderPluginDefinition {
@@ -275,9 +262,7 @@ export interface MashroomMemoryCacheProviderPluginDefinition {
    * Script that exports MashroomMemoryCacheProviderPluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomPortalAppV1PluginDefinition {
   name: string;
@@ -359,15 +344,11 @@ export interface MashroomPortalAppV1PluginDefinition {
     /**
      * Optional meta info that could be used to lookup for Apps with specific features or capabilities
      */
-    metaInfo?: {
-      [k: string]: any;
-    };
+    metaInfo?: {};
     /**
      * The default configuration that will be passed to the App. Can be adapted in the Admin App
      */
-    appConfig?: {
-      [k: string]: any;
-    };
+    appConfig?: {};
   };
 }
 /**
@@ -487,15 +468,11 @@ export interface MashroomPortalAppV2PluginDefinition {
     /**
      * Optional meta info that could be used to lookup for Apps with specific features or capabilities
      */
-    metaInfo?: {
-      [k: string]: any;
-    };
+    metaInfo?: {};
     /**
      * The default configuration that will be passed to the App. Can be adapted in the Admin App
      */
-    appConfig?: {
-      [k: string]: any;
-    };
+    appConfig?: {};
   };
 }
 /**
@@ -574,9 +551,7 @@ export interface PortalAppEditorConfig {
   /**
    * The appConfig the editor App should be launched with (Default: {})
    */
-  appConfig?: {
-    [k: string]: any;
-  };
+  appConfig?: {};
 }
 export interface MashroomPortalThemePluginDefinition {
   name: string;
@@ -599,9 +574,7 @@ export interface MashroomPortalThemePluginDefinition {
    * Script that exports MashroomPortalThemePluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomPortalLayoutsPluginDefinition {
   name: string;
@@ -637,7 +610,6 @@ export interface MashroomRemotePortalAppRegistryPluginDefinition {
      * Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)
      */
     priority?: number;
-    [k: string]: any;
   };
 }
 export interface MashroomPortalPageEnhancementPluginDefinition {
@@ -663,7 +635,6 @@ export interface MashroomPortalPageEnhancementPluginDefinition {
      * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package.
      */
     resourcesRoot: string;
-    [k: string]: any;
   };
 }
 /**
@@ -728,9 +699,7 @@ export interface MashroomPortalAppEnhancementPluginDefinition {
   portalCustomClientServices?: {
     [k: string]: JavaScriptIdentifier;
   };
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomSecurityProviderPluginDefinition {
   name: string;
@@ -745,9 +714,7 @@ export interface MashroomSecurityProviderPluginDefinition {
    * Optional script that exports MashroomSecurityProviderPluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomSessionStoreProviderPluginDefinition {
   name: string;
@@ -762,9 +729,7 @@ export interface MashroomSessionStoreProviderPluginDefinition {
    * Optional script that exports MashroomSessionStoreProviderPluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomStorageProviderPluginDefinition {
   name: string;
@@ -779,9 +744,7 @@ export interface MashroomStorageProviderPluginDefinition {
    * Optional script that exports MashroomStoragePluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
+  defaultConfig?: {};
 }
 export interface MashroomCustomPluginDefinition {
   name: string;
@@ -796,8 +759,5 @@ export interface MashroomCustomPluginDefinition {
    * Script that exports MashroomPluginLoaderPluginBootstrapFunction
    */
   bootstrap: string;
-  defaultConfig?: {
-    [k: string]: any;
-  };
-  [k: string]: any;
+  defaultConfig?: {};
 }

@@ -25,9 +25,7 @@ export interface MashroomServerConfig {
   /**
    * TLS options if you want to enable HTTPS. The options are passed to https://nodejs.org/api/tls.html but the file paths (e.g. for "cert") are resolved relatively to the server config
    */
-  tlsOptions?: {
-    [k: string]: any;
-  } | null;
+  tlsOptions?: {} | null;
   /**
    * Enable HTTP/2 for the HTTPS server. If you enable this WebSockets will no longer work (Default: false)
    */
@@ -80,7 +78,6 @@ export interface PluginPackageFolder {
    * Rebuild plugins after changes and before reloading it (enables watch automatically)
    */
   devMode?: boolean;
-  [k: string]: any;
 }
 /**
  * Plugin specific config
@@ -111,7 +108,6 @@ export interface Plugins {
      * List of HTTP methods that require no CSRF token check (Default: ["GET", "HEAD", "OPTIONS"])
      */
     safeMethods?: string[];
-    [k: string]: any;
   };
   "Mashroom Error Pages Middleware"?: {
     /**
@@ -122,16 +118,12 @@ export interface Plugins {
     mapping?: {
       [k: string]: PackagerRelativeOrSystemPathOrHttp;
     };
-    [k: string]: any;
   };
   "Mashroom Helmet Middleware"?: {
     /**
      * The configuration will directly be passed to Helmet - checkout https://helmetjs.github.io/docs
      */
-    helmet?: {
-      [k: string]: any;
-    };
-    [k: string]: any;
+    helmet?: {};
   };
   "Mashroom Http Proxy Services"?: {
     /**
@@ -204,13 +196,12 @@ export interface Plugins {
      * A mapping of *user.extraData* properties to headers (Default: {})
      */
     extraDataHeaders?: {
-      [k: string]: any;
+      [k: string]: any | undefined;
     };
     /**
      * A list of regular expressions that match URIs that should receive the headers (Default: [.*])
      */
     targetUris?: string[];
-    [k: string]: any;
   };
   "Mashroom Http Proxy Add Access Token Interceptor"?: {
     /**
@@ -225,7 +216,6 @@ export interface Plugins {
      * A list of regular expressions that match URIs that should receive the headers (Default: [.*])
      */
     targetUris?: string[];
-    [k: string]: any;
   };
   "Mashroom Internationalization Services"?: {
     /**
@@ -390,7 +380,6 @@ export interface Plugins {
       network?: {
         upload?: boolean;
         download?: boolean;
-        [k: string]: any;
       };
       http?: boolean;
       eventLoop?: boolean;
@@ -520,14 +509,12 @@ export interface Plugins {
      * Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)
      */
     remotePortalAppUrls?: string;
-    [k: string]: any;
   };
   "Mashroom Portal Remote App Registry Admin Webapp"?: {
     /**
      *  Show the 'Add a new Remote Portal App Endpoint' form in the Admin UI
      */
     showAddRemoteAppForm?: boolean;
-    [k: string]: any;
   };
   "Mashroom Portal Remote App Kubernetes Background Job"?: {
     /**
@@ -634,9 +621,7 @@ export interface Plugins {
     /**
      * TLS options if your LDAP server requires TLS. The options are passed to https://nodejs.org/api/tls.html but the file paths (e.g. for "cert") are resolved relatively to the server config
      */
-    tlsOptions?: {
-      [k: string]: any;
-    } | null;
+    tlsOptions?: {} | null;
     /**
      * The bind user for searching
      */
@@ -702,9 +687,7 @@ export interface Plugins {
     /**
      * The issuer metadata if no issuerDiscoveryUrl is available. Will be passed to the issuer constructor: https://github.com/panva/node-openid-client/blob/master/docs/README.md#issuer (Default: null)
      */
-    issuerMetadata?: {
-      [k: string]: any;
-    } | null;
+    issuerMetadata?: {} | null;
     /**
      * The scope (permissions) to ask for (Default: openid email profile)
      */
@@ -732,15 +715,11 @@ export interface Plugins {
     /**
      * Extra authentication parameters that should be used
      */
-    extraAuthParams?: {
-      [k: string]: any;
-    };
+    extraAuthParams?: {};
     /**
      * Optionally map extra claims to _user.extraData_. The key in the map is the extraData property, the value the claim name (Default: null)
      */
-    extraDataMapping?: {
-      [k: string]: any;
-    };
+    extraDataMapping?: {};
     /**
      * Defines the name of the claim (the property of the claims or userinfo object) that contains the user roles array (Default: roles)
      */
@@ -790,9 +769,7 @@ export interface Plugins {
     /**
      * The properties are just passed to express-session. See https://www.npmjs.com/package/express-session for possible options
      */
-    session?: {
-      [k: string]: any;
-    };
+    session?: {};
   };
   /**
    * The config object will be passed to https://github.com/valery-barysok/session-file-store
@@ -802,7 +779,6 @@ export interface Plugins {
      * The directory where the session files will be stored (Default: ./data/sessions)
      */
     path?: string;
-    [k: string]: any;
   };
   /**
    * All config options are passed to the connect-mongodb-session
@@ -832,9 +808,7 @@ export interface Plugins {
     /**
      * Options regarding session encryption
      */
-    crypto?: {
-      [k: string]: any;
-    };
+    crypto?: {};
   };
   "Mashroom Session Redis Provider"?: {
     client?: IORedisConfig;
@@ -880,7 +854,6 @@ export interface Plugins {
           enabled?: boolean;
           ttlSec?: number;
           invalidateOnUpdate?: boolean;
-          [k: string]: any;
         };
       };
     };
@@ -919,7 +892,6 @@ export interface Plugins {
         };
       };
     };
-    [k: string]: any;
   };
   "Mashroom WebSocket Webapp"?: {
     /**
@@ -951,7 +923,6 @@ export interface Plugins {
      * Max allowed WebSocket connections per node (Default: 2000)
      */
     maxConnections?: number;
-    [k: string]: any;
   };
   "Mashroom Robots Middleware"?: {
     /**
@@ -965,7 +936,6 @@ export interface Plugins {
      */
     cdnHosts?: string[];
   };
-  [k: string]: any;
 }
 export interface IORedisConfig {
   /**
@@ -985,9 +955,7 @@ export interface IORedisConfig {
     sentinels?: {
       host?: string;
       port?: string;
-      [k: string]: any;
     }[];
-    [k: string]: any;
   };
   /**
    * Enables cluster support
@@ -996,14 +964,11 @@ export interface IORedisConfig {
   clusterNodes?: {
     host?: string;
     port?: string;
-    [k: string]: any;
   }[];
   /**
    * Passed as second argument of the Redis.Cluster constructor of ioredis
    */
-  clusterOptions?: {
-    [k: string]: any;
-  };
+  clusterOptions?: {};
 }
 export interface MongoDbConfig {
   /**
@@ -1013,7 +978,5 @@ export interface MongoDbConfig {
   /**
    * The MongoDB connection options (see https://mongodb.github.io/node-mongodb-native/2.2/reference/connecting/connection-settings)
    */
-  connectionOptions?: {
-    [k: string]: any;
-  };
+  connectionOptions?: {};
 }

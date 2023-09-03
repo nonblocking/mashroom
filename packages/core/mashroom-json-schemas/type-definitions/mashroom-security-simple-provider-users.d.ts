@@ -20,15 +20,11 @@ export interface MashroomSecuritySimpleProviderUsers {
     /**
      * Will be mapped to user.extraData
      */
-    extraData?: {
-      [k: string]: any;
-    };
+    extraData?: {};
     /**
      * Will be mapped to user.secrets
      */
-    secrets?: {
-      [k: string]: any;
-    };
-    [k: string]: any;
+    secrets?: {};
+    [k: string]: any | undefined;
   }[];
 }
