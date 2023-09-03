@@ -31,6 +31,6 @@
     "scripts": {
         "test": "jest",
         "type-check": "tsc --noEmit",
-        "build": "json2ts --cwd schemas/ --no-unknownAny --strictIndexSignatures --no-additionalProperties -i schemas/ -o type-definitions/ && del type-definitions/mashroom-packagejson-extension.d.ts"
+        "build": "json2ts --cwd schemas/ --no-unknownAny --strictIndexSignatures --no-additionalProperties -i schemas/ -o type-definitions/ && del-cli type-definitions/mashroom-packagejson-extension.d.ts"
     }
 }
