@@ -97,7 +97,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     async login(request: Request, username: string, password: string): Promise<MashroomSecurityLoginResult> {
         const logger: MashroomLogger = request.pluginContext.loggerFactory('mashroom.security.provider.ldap');
 
-        // Because LDAP accepts logins with empty passwords (simple login) we need to be extra careful for
+        // Because LDAP accepts logins with empty passwords (simple login) we need to be extra careful here
         if (!password?.trim()) {
             return {
                 success: false,
