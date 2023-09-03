@@ -43,6 +43,7 @@ You can override the default config in your Mashroom config file like this:
               "cache-control",
               "last-modified",
               "content-*",
+              "x-forwarded-*",
               "uber-trace-id",
               "uberctx-",
               "b3",

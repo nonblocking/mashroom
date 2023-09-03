@@ -68,6 +68,7 @@
                         "cache-control",
                         "last-modified",
                         "content-*",
+                        "x-forwarded-*",
                         "jaeger-*",
                         "uber-trace-id",
                         "uberctx-*",

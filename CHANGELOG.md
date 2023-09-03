@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Pass the x-forwarded- headers to backends by default to allow them to get the actual client IP
  * HTTP Proxy: Header filtering applies now the *forwardHeaders* patterns to the full header
    (instead of accepting headers that just contain one of the pattern, e.g. *x-my-own-content-type*)
 
