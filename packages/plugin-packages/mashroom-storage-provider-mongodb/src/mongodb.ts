@@ -8,7 +8,7 @@ let _connectionUri: string | null = null;
 let _connectionOptions: MongoClientOptions | null = null;
 let _client: MongoClient | null = null;
 let _db: Db | null = null;
-let _lastHeartbeatSucceeded = false;
+let _topologyDescription: TopologyDescription | undefined;
 
 export const close = async (): Promise<void> => {
     if (_client) {
@@ -32,29 +32,21 @@ export const getClient = (): MongoClient | null => {
     return _client;
 };
 
-const getTopology = (): TopologyDescription | undefined => {
-    // @ts-ignore Accessing the private property topology
-    return _client?.topology?.description;
-};
-
 export const getAvailableNodes = () => {
-    const topology = getTopology();
-    if (!topology) {
-        // Fallback
-        return _lastHeartbeatSucceeded ? 1 : 0;
+    if (!_topologyDescription) {
+        return 0;
     }
-    let servers = 0;
-    topology.servers.forEach((server) => {
-        if (!server.error) {
-            servers ++;
+    let availableNodes = 0;
+    _topologyDescription.servers.forEach((server) => {
+        if (server.type !== 'Unknown' && !server.error) {
+            availableNodes ++;
         }
     });
-    return servers;
+    return availableNodes;
 };
 
 export const isConnected = () => {
-    const availableNodes = getAvailableNodes();
-    return availableNodes > 0;
+    return getAvailableNodes() > 0;
 };
 
 export const getDb = async (logger: MashroomLogger): Promise<Db> => {
@@ -79,28 +71,14 @@ export const getDb = async (logger: MashroomLogger): Promise<Db> => {
 
     _client.on('topologyDescriptionChanged', (event) => {
         logger.info('MongoDB: New topology description:', event.newDescription);
-    });
-
-    _client.on('serverDescriptionChanged', (event) => {
-        logger.info('MongoDB: New server description:', event.newDescription);
-    });
-
-    _client.on('serverHeartbeatSucceeded', (event) => {
-        _lastHeartbeatSucceeded = true;
-        logger.debug('MongoDB: Heartbeat succeeded:', event);
-    });
-    _client.on('serverHeartbeatFailed', (event) => {
-        _lastHeartbeatSucceeded = false;
-        logger.error('MongoDB: Heartbeat failed:', event);
+        _topologyDescription = event.newDescription;
     });
 
     await _client.connect();
 
     _db = _client.db();
 
-    // Validate connection
-    await _db.command({ ping: 1 });
-
     return _db;
 };
+
 

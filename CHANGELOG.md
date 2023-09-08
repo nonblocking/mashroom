@@ -3,9 +3,11 @@
 
 ## [unreleased]
 
+ * MongoDB Storage Provider: Fixed readiness probe, didn't work properly under same circumstances
+ * MongoDB Session Provider: Fixed readiness probe, didn't work properly under same circumstances
  * HTTP Proxy: Pass the x-forwarded- headers to backends by default to allow them to get the actual client IP
  * HTTP Proxy: Header filtering applies now the *forwardHeaders* patterns to the full header
-   (instead of accepting headers that just contain one of the pattern, e.g. *x-my-own-content-type*)
+   (instead of accepting headers that just contain a part of the pattern, e.g. *x-my-own-content-type* was accepted because of *content-type*)
 
 ## 2.4.3 (July 27, 2023)
 
