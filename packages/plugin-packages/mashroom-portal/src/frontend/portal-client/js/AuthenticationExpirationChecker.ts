@@ -72,8 +72,7 @@ export default class MashroomPortalUserInactivityHandler {
         console.debug(`Authentication expires in ${timeLeft}sec`);
 
         if (timeLeft <= 0) {
-            this._logout();
-            this._hideWarningPanel();
+            this._handleSessionExpired();
         } else if (timeLeft <= warnBeforeAuthenticationExpiresSec) {
             if (autoExtendAuthentication) {
                 console.info('Auto extending authentication');
@@ -144,7 +143,8 @@ export default class MashroomPortalUserInactivityHandler {
         }
     }
 
-    private _logout() {
+    private _handleSessionExpired() {
+        // We just call logout which will also reload the current page
         this._portalUserService.logout();
     }
 
