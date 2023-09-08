@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.4.4 (September 8, 2023)
+
  * MongoDB Storage Provider: Fixed readiness probe, didn't work properly under same circumstances
  * MongoDB Session Provider: Fixed readiness probe, didn't work properly under same circumstances
  * HTTP Proxy: Pass the x-forwarded- headers to backends by default to allow them to get the actual client IP
