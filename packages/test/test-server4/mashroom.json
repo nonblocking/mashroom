@@ -62,7 +62,8 @@
                 "mobile": "mobile",
                 "address": "postalAddress"
             },
-            "groupToRoleMapping": "./groupToRoleMapping.json"
+            "groupToRoleMapping": "./groupToRoleMapping.json",
+            "authenticationTimeoutSec": 300
         },
         "Mashroom Security Default Login Webapp": {
         },
