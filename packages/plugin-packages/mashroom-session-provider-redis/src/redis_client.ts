@@ -69,6 +69,14 @@ export default async (logger: MashroomLogger): Promise<IORedisClient> => {
         logger.error('Redis cluster node error:', address, err);
     });
 
+    // Lazy connect is no good idea,
+    // because the plugin would stay unready until the client is actually used
+    try {
+        await _client.connect();
+    } catch {
+        // Ignore
+    }
+
     return _client;
 };
 
