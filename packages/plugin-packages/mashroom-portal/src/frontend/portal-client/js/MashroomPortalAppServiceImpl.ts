@@ -130,7 +130,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     reloadApp(id: string, overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
         const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
-            return Promise.reject(`No App found with id: ${id}`);
+            return Promise.reject(`Cannot reload App because id not found: ${id}`);
         }
 
         console.info(`Reloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
@@ -191,7 +191,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     unloadApp(id: string): void {
         const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
-            console.error(`No App found with id: ${id}`);
+            console.error(`Cannot unload App because id not found: ${id}`);
             return;
         }
 
@@ -223,7 +223,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void {
         const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
-            console.error(`No App found with id: ${id}`);
+            console.error(`Cannot move App because id not found: ${id}`);
             return;
         }
 

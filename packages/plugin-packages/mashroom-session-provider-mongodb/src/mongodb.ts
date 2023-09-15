@@ -40,8 +40,7 @@ export const getAvailableNodes = () => {
 };
 
 export const isConnected = () => {
-    const availableNodes = getAvailableNodes();
-    return availableNodes > 0;
+    return getAvailableNodes() > 0;
 };
 
 export default async (logger: MashroomLogger): Promise<MongoClient> => {
