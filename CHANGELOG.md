@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Core: Fixed deprecation warnings from the spdy module. It is now loaded lazy, but since it is no longer maintained 
+   and only works with Node.js <= 14 HTTP/2 support is de-facto broken. 
+   Shouldn't be a big deal because usual a reverse proxy provides HTTP/2 and TLS.
+
 ## 2.4.4 (September 8, 2023)
 
  * MongoDB Storage Provider: Fixed readiness probe, didn't work properly under same circumstances

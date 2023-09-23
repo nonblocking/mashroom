@@ -25,11 +25,19 @@
         "fs-extra": "^11.1.1",
         "log4js": "^6.9.1",
         "lucy-dirsum": "^0.1.1",
-        "minimist": "^1.2.8",
+        "minimist": "^1.2.8"
+    },
+    "peerDependencies": {
         "spdy": "^4.0.2"
+    },
+    "peerDependenciesMeta": {
+        "spdy": {
+            "optional": true
+        }
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.1",
+        "spdy": "^4.0.2",
         "@types/spdy": "^3.4.5"
     },
     "jest": {

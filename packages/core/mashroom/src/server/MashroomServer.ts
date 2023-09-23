@@ -1,7 +1,6 @@
 
 import http from 'http';
 import https from 'https';
-import spdy from 'spdy';
 import {fixTlsOptions} from '@mashroom/mashroom-utils/lib/tls_utils';
 import indexRoute from './routes/index_route';
 import mashroomRouter from './routes/mashroom';
@@ -102,6 +101,15 @@ Starting
         return new Promise<void>((resolve, reject) => {
             let httpsServer: HttpsServer;
             if (this._config.enableHttp2) {
+                // FIXME: spdy is no longer maintained and stopped working with Node.js 15
+                this._logger.warn('HTTP/2 support only works properly with Node.js <= 14 at the moment!');
+                let spdy;
+                try {
+                    spdy = require('spdy');
+                } catch (e) {
+                    this._logger.error('For HTTP/2 you need to install spdy as peer dependency!', e);
+                    process.exit(1);
+                }
                 httpsServer = spdy.createServer({
                     ...fixedTlsOptions,
                     spdy: {
