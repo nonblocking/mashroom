@@ -30,15 +30,15 @@ import type {
 
 export default class MashroomPluginRegistry implements MashroomPluginRegistryType {
 
-    private _pluginPackages: Map<MashroomPluginPackage, MashroomPluginPackageRegistryConnectorType>;
-    private _plugins: Map<MashroomPluginType, MashroomPluginRegistryConnectorType>;
-    private _pluginLoaders: MashroomPluginLoaderMap;
-    private _pluginsNoLoader: Array<MashroomPluginType>;
-    private _pluginsMissingRequirements: Array<MashroomPluginType>;
-    private _eventEmitter: EventEmitter;
-    private _boundOnPackageReady: (event: MashroomPluginPackageEvent) => void;
-    private _boundOnPackageError: (event: MashroomPluginPackageEvent) => void;
-    private _logger: MashroomLogger;
+    private readonly _pluginPackages: Map<MashroomPluginPackage, MashroomPluginPackageRegistryConnectorType>;
+    private readonly _plugins: Map<MashroomPluginType, MashroomPluginRegistryConnectorType>;
+    private readonly _pluginLoaders: MashroomPluginLoaderMap;
+    private readonly _pluginsNoLoader: Array<MashroomPluginType>;
+    private readonly _pluginsMissingRequirements: Array<MashroomPluginType>;
+    private readonly _eventEmitter: EventEmitter;
+    private readonly _boundOnPackageReady: (event: MashroomPluginPackageEvent) => void;
+    private readonly _boundOnPackageError: (event: MashroomPluginPackageEvent) => void;
+    private readonly _logger: MashroomLogger;
 
     constructor(private _scanner: MashroomPluginPackageScanner, private _pluginPackageFactory: MashroomPluginPackageFactory, private _pluginFactory: MashroomPluginFactory,
                 private _pluginContextHolder: MashroomPluginContextHolder, loggerFactory: MashroomLoggerFactory) {

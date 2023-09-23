@@ -11,9 +11,9 @@ import type {
 
 export default class MashroomLogger implements MashroomLoggerType {
 
-    private _category: string;
-    private _context: MashroomLoggerContext | undefined | null;
-    private _delegate: MashroomLoggerDelegate;
+    private readonly _category: string;
+    private readonly _context: MashroomLoggerContext | undefined | null;
+    private readonly _delegate: MashroomLoggerDelegate;
 
     constructor(category: string, context: MashroomLoggerContext | undefined | null, delegate: MashroomLoggerDelegate) {
         this._category = category;

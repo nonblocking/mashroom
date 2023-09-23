@@ -8,7 +8,7 @@ const PLUGIN_CONTEXT_PROPERTY_NAME = 'pluginContext';
 
 export default class ExposePluginContextMiddleware {
 
-    _pluginContextHolder: MashroomPluginContextHolder;
+    private readonly _pluginContextHolder: MashroomPluginContextHolder;
 
     constructor(pluginContextHolder: MashroomPluginContextHolder) {
         this._pluginContextHolder = pluginContextHolder;

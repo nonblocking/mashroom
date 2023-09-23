@@ -35,7 +35,7 @@ const CONFIG_FILES = [
 
 export default class MashroomServerConfigLoader implements MashroomServerConfigLoaderType {
 
-    private _logger: MashroomLogger;
+    private readonly _logger: MashroomLogger;
 
     constructor(loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.config');

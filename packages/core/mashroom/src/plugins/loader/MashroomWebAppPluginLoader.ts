@@ -15,10 +15,10 @@ import type {RequestHandler, Application} from 'express';
 
 export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 
-    private _logger2: MashroomLogger;
+    private readonly _logger2: MashroomLogger;
     private _upgradeHandlers: Array<{
-        pluginName: string,
-        upgradeHandler: MashroomHttpUpgradeHandler
+        readonly pluginName: string,
+        readonly upgradeHandler: MashroomHttpUpgradeHandler
     }>;
 
     constructor(expressApplication: Application, loggerFactory: MashroomLoggerFactory, private _pluginContextHolder: MashroomPluginContextHolder) {

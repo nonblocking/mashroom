@@ -6,7 +6,7 @@ import type {
 
 export default class MashroomHealthProbeService implements MashroomHealthProbeServiceType {
 
-    private _probes: Record<string, MashroomHealthProbe>;
+    private readonly _probes: Record<string, MashroomHealthProbe>;
 
     constructor() {
         this._probes = {};

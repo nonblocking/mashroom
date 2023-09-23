@@ -16,7 +16,7 @@ import type {
 
 export default class MashroomServicesLoader implements MashroomPluginLoader {
 
-    private _logger: MashroomLogger;
+    private readonly _logger: MashroomLogger;
 
     constructor(private _serviceRegistry: MashroomServiceRegistry, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.loader');

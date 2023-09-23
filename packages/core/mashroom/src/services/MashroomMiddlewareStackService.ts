@@ -9,12 +9,12 @@ import type {
 } from '../../type-definitions/internal';
 
 const privatePropsMap: WeakMap<MashroomMiddlewareStackService, {
-    middlewarePluginDelegate: MiddlewarePluginDelegate;
+    readonly middlewarePluginDelegate: MiddlewarePluginDelegate;
 }> = new WeakMap();
 
 export default class MashroomMiddlewareStackService implements MashroomMiddlewareStackServiceType {
 
-    private _loggger: MashroomLogger;
+    private readonly _loggger: MashroomLogger;
 
     constructor(middlewarePluginDelegate: MiddlewarePluginDelegate, loggerFactory: MashroomLoggerFactory) {
         privatePropsMap.set(this, {

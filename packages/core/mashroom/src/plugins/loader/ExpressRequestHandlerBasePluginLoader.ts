@@ -13,14 +13,14 @@ import type {
 } from '../../../type-definitions';
 
 type LoadedPlugin = {
-    path: string,
-    requestHandlerWrapper: ExpressRequestHandlerWrapper
+    readonly path: string,
+    readonly requestHandlerWrapper: ExpressRequestHandlerWrapper
 }
 
 export default abstract class ExpressRequestHandlerBasePluginLoader implements MashroomPluginLoader {
 
-    private _logger: MashroomLogger;
-    private _loadedPlugins: Map<string, LoadedPlugin>;
+    private readonly _logger: MashroomLogger;
+    private readonly _loadedPlugins: Map<string, LoadedPlugin>;
 
     constructor(private _expressApplication: Application, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.loader');

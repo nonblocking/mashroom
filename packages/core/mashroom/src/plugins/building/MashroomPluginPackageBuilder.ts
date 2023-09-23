@@ -26,10 +26,10 @@ const MAX_PARALLEL_BUILDS = 5;
 const RETRY_RUNNING_BUILD_AFTER_MS = 10 * 1000;
 
 type BuildQueueEntry = {
-    pluginPackageName: string;
-    pluginPackagePath: string;
-    buildScript: string | undefined | null;
-    lastSourceUpdateTimestamp: number;
+    readonly pluginPackageName: string;
+    readonly pluginPackagePath: string;
+    readonly buildScript: string | undefined | null;
+    readonly lastSourceUpdateTimestamp: number;
 }
 
 type BuildStatus = 'running' | 'success' | 'error';
@@ -48,14 +48,14 @@ type BuildInfo = {
  */
 export default class MashroomPluginPackageBuilder implements MashroomPluginPackageBuilderType {
 
-    private _logger: MashroomLogger;
-    private _buildDataFolder: string;
-    private _npmUtils: NpmUtils;
-    private _nxUtils: NxUtils;
-    private _devModeDisableNxSupport: boolean;
-    private _buildQueue: Array<BuildQueueEntry>;
-    private _buildSlots: Array<Promise<void>>;
-    private _eventEmitter: EventEmitter;
+    private readonly _logger: MashroomLogger;
+    private readonly _buildDataFolder: string;
+    private readonly _npmUtils: NpmUtils;
+    private readonly _nxUtils: NxUtils;
+    private readonly _devModeDisableNxSupport: boolean;
+    private readonly _buildQueue: Array<BuildQueueEntry>;
+    private readonly _buildSlots: Array<Promise<void>>;
+    private readonly _eventEmitter: EventEmitter;
     private _processingAllowed: boolean;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {

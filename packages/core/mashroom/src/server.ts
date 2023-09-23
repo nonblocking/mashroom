@@ -31,7 +31,7 @@ async function startServer() {
     const {server, loggerFactory} = await mashroomServerContextFactory(serverRootPath);
     const logger: MashroomLogger = loggerFactory('server');
 
-    server.start();
+    await server.start();
 
     if (process.platform === 'win32') {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -56,7 +56,7 @@ async function startServer() {
                 stopServer(server, logger);
             }, WAIT_BEFORE_SERVER_CLOSE * 1000);
         } else {
-            stopServer(server, logger);
+            await stopServer(server, logger);
         }
     });
 }

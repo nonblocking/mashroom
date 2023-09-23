@@ -11,9 +11,9 @@ const DEFAULT_NX_EXECUTION_TIMEOUT_SEC = 3 * 60; // 3min
  */
 export default class NxUtils {
 
-    private _logger: MashroomLogger;
-    private _nxExecutableCache: Record<string, string | null>;
-    private _nxWorkingExecutables: Array<string>;
+    private readonly _logger: MashroomLogger;
+    private readonly _nxExecutableCache: Record<string, string | null>;
+    private readonly _nxWorkingExecutables: Array<string>;
 
     constructor(loggerFactory: MashroomLoggerFactory, private _npmExecutionTimeoutSec = DEFAULT_NX_EXECUTION_TIMEOUT_SEC) {
         this._logger = loggerFactory('mashroom.plugins.build');

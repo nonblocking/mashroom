@@ -24,9 +24,9 @@ import type {
 
 export default class MashroomServer implements MashroomServerType {
 
-    _httpServer: HttpServer | undefined;
-    _httpsServer: HttpsServer | undefined;
-    _logger: MashroomLogger;
+    private _httpServer: HttpServer | undefined;
+    private _httpsServer: HttpsServer | undefined;
+    private readonly _logger: MashroomLogger;
 
     constructor(private _expressApp: Application, private _serverInfo: MashroomServerInfo, private _config: MashroomServerConfig,
                 private _scanner: MashroomPluginPackageScanner, private _errorHandler: GlobalNodeErrorHandler,
@@ -44,10 +44,10 @@ Starting
 \x1b[35m${this._serverInfo.version}\x1b[m
 (Pid ${process.pid})
 `);
-        return Promise.all([
+        await Promise.all([
             this._startHttpServer(),
             this._startHttpsServer(),
-        ]).then(() => { return; });
+        ]);
     }
 
     async stop(): Promise<void> {

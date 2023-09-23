@@ -11,7 +11,7 @@ const DEFAULT_ORDER = 1000;
 
 export default class MashroomMiddlewarePluginLoader implements MashroomPluginLoader {
 
-    private _logger: MashroomLogger;
+    private readonly _logger: MashroomLogger;
 
     constructor(private _middlewarePluginDelegate: MiddlewarePluginDelegate, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.loader');

@@ -4,7 +4,7 @@ import type {MashroomPluginContextHolder} from '../../type-definitions';
 
 export default class XPoweredByHeaderMiddleware {
 
-    _pluginContextHolder: MashroomPluginContextHolder;
+   private readonly _pluginContextHolder: MashroomPluginContextHolder;
 
     constructor(pluginContextHolder: MashroomPluginContextHolder) {
         this._pluginContextHolder = pluginContextHolder;

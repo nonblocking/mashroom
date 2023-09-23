@@ -6,7 +6,7 @@ import type {MashroomServiceRegistry as MashroomServiceRegistryType} from '../..
 
 export default class MashroomServiceRegistry implements MashroomServiceRegistryType {
 
-    _namespaces: any;
+    private readonly _namespaces: any;
 
     constructor() {
         this._namespaces = {};

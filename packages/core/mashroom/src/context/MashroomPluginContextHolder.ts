@@ -9,7 +9,7 @@ import type {
 
 export default class MashroomPluginContextHolder implements MashroomPluginContextHolderType {
 
-    _createFromServerContext: () => MashroomPluginContext;
+    private readonly _createFromServerContext: () => MashroomPluginContext;
 
     constructor(serverContextHolder: MashroomServerContextHolder) {
         this._createFromServerContext = () => {

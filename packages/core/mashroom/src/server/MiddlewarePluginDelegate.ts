@@ -7,7 +7,7 @@ import type {
 
 export default class MiddlewarePluginDelegate implements MiddlewarePluginDelegateType {
 
-    _middlewareStack: Array<MiddlewareStackEntry>;
+    private _middlewareStack: Array<MiddlewareStackEntry>;
 
     constructor() {
         this._middlewareStack = [];

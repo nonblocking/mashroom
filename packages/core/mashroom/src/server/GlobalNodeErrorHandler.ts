@@ -15,7 +15,7 @@ export const hasUncaughtExceptions = () => uncaughtExceptions;
 
 export default class GlobalNodeErrorHandler implements GlobalNodeErrorHandlerType {
 
-    _logger: MashroomLogger;
+   private readonly _logger: MashroomLogger;
 
     constructor(loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.server');

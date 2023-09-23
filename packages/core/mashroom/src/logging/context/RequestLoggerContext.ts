@@ -8,7 +8,7 @@ const MASHROOM_LOGGER_CONTEXT_KEY = 'mashroomLoggerContext';
 
 export default class RequestLoggerContext implements MashroomLoggerContext {
 
-    private _request: any;
+    private readonly _request: any;
 
     constructor(req: IncomingMessage) {
         this._request = req;

@@ -7,7 +7,7 @@ import type {
 
 export default class MashroomPluginPackageRegistryConnector implements MashroomPluginPackageRegistryConnectorType {
 
-    _eventEmitter: EventEmitter;
+    private readonly _eventEmitter: EventEmitter;
 
     constructor() {
         this._eventEmitter = new EventEmitter();

@@ -8,10 +8,10 @@ import type {
 
 export default class MashroomAdminUIIntegrationLoader implements MashroomPluginLoader {
 
-    private logger: MashroomLogger;
+    private readonly _logger: MashroomLogger;
 
     constructor(loggerFactory: MashroomLoggerFactory) {
-        this.logger = loggerFactory('mashroom.plugins.loader');
+        this._logger = loggerFactory('mashroom.plugins.loader');
     }
 
     generateMinimumConfig(plugin: MashroomPlugin) {
@@ -33,11 +33,11 @@ export default class MashroomAdminUIIntegrationLoader implements MashroomPluginL
         if (!path) {
             throw new PluginConfigurationError(`Cannot register Admin UI integration ${plugin.name} because the 'path' config attribute is missing!`);
         }
-        this.logger.info('Registering Admin UI integration:', plugin.name);
+        this._logger.info('Registering Admin UI integration:', plugin.name);
     }
 
     async unload(plugin: MashroomPlugin) {
-        this.logger.info('Unregistering Admin UI integration:', plugin.name);
+        this._logger.info('Unregistering Admin UI integration:', plugin.name);
     }
 
     get name(): string {

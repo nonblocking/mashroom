@@ -13,14 +13,14 @@ type Listeners = {
 }
 
 const privatePropsMap: WeakMap<MashroomPluginService, {
-    pluginRegistry: MashroomPluginRegistry;
+    readonly pluginRegistry: MashroomPluginRegistry;
 }> = new WeakMap();
 
 export default class MashroomPluginService implements MashroomPluginServiceType {
 
-    private _loadedListeners: Listeners;
-    private  _unloadListeners: Listeners;
-    private _logger: MashroomLogger;
+    private readonly _loadedListeners: Listeners;
+    private readonly _unloadListeners: Listeners;
+    private readonly _logger: MashroomLogger;
 
     constructor(pluginRegistry: MashroomPluginRegistry, loggerFactory: MashroomLoggerFactory) {
         privatePropsMap.set(this, {

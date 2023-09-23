@@ -4,8 +4,8 @@ import {hasUncaughtExceptions} from '../../../GlobalNodeErrorHandler';
 import type {Request} from 'express';
 
 type CheckResult = {
-    ok: boolean;
-    errors?: Array<string>;
+    readonly ok: boolean;
+    readonly errors?: Array<string>;
 };
 
 export const up = (request: Request): boolean => {

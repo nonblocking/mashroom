@@ -25,8 +25,8 @@ import type {
 
 export default class MashroomPackagePlugin implements MashroomPluginPackageType {
 
-    private _logger: MashroomLogger;
-    private _eventEmitter: EventEmitter;
+    private readonly _logger: MashroomLogger;
+    private readonly _eventEmitter: EventEmitter;
     private _name: string;
     private _description: string;
     private _version: string;
@@ -37,9 +37,9 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
     private _pluginPackageDefinition: MashroomPluginPackageDefinition;
     private _status: MashroomPluginPackageStatus;
     private _errorMessage: string | undefined | null;
-    private _boundOnUpdated: () => void;
-    private _boundOnRemoved: () => void;
-    private _boundOnBuildFinished: (event: MashroomPluginPackageBuilderEvent) => void;
+    private readonly _boundOnUpdated: () => void;
+    private readonly _boundOnRemoved: () => void;
+    private readonly _boundOnBuildFinished: (event: MashroomPluginPackageBuilderEvent) => void;
 
 
     constructor(private _pluginPackagePath: string, private _ignorePlugins: Array<string>, private _externalPluginConfigFileNames: Array<string>,

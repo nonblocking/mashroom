@@ -13,8 +13,8 @@ const DEFAULT_NPM_EXECUTION_TIMEOUT_SEC = 3 * 60; // 3min
  */
 export default class NpmUtils {
 
-    private _logger: MashroomLogger;
-    private _npmIsRootCache: Record<string, boolean>;
+    private readonly _logger: MashroomLogger;
+    private readonly _npmIsRootCache: Record<string, boolean>;
 
     constructor(loggerFactory: MashroomLoggerFactory, private _npmExecutionTimeoutSec = DEFAULT_NPM_EXECUTION_TIMEOUT_SEC) {
         this._logger = loggerFactory('mashroom.plugins.build');

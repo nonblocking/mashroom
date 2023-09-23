@@ -13,7 +13,7 @@ import type {
 
 export default class MashroomPlugin implements MashroomPluginType {
 
-    private _logger: MashroomLogger;
+    private readonly _logger: MashroomLogger;
     private _config: MashroomPluginConfig | undefined | null;
     private _lastReloadTs: number | undefined | null;
     private _errorMessage: string | undefined | null;

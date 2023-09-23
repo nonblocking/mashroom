@@ -25,21 +25,19 @@ export const DEFAULT_DEFER_UPDATE_MS = 2000;
  */
 export default class MashroomPluginPackageScanner implements MashroomPluginPackageScannerType {
 
-    private _logger: MashroomLogger;
-    private _eventEmitter: EventEmitter;
-    private _deferUpdateMillis: number;
-    private _serverRootFolder: string;
-    private _externalPluginConfigFileNames: Array<string>;
-    private _pluginPackageFolders: Array<PluginPackageFolder>;
-    private _foldersToWatch: Array<string>;
-    private _pluginPackagePaths: Array<MashroomPluginPackagePath>;
+    private readonly _logger: MashroomLogger;
+    private readonly _eventEmitter: EventEmitter;
+    private readonly _deferUpdateMillis: number;
+    private readonly _externalPluginConfigFileNames: Array<string>;
+    private readonly _pluginPackageFolders: Array<PluginPackageFolder>;
+    private readonly _foldersToWatch: Array<string>;
+    private readonly _pluginPackagePaths: Array<MashroomPluginPackagePath>;
     private _watcher: FSWatcher | undefined;
     private _deferredUpdatesTimestamps: DeferredUpdatesTimestamps;
     private _deferredUpdatesTimer: NodeJS.Timer | undefined;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.scanner');
-        this._serverRootFolder = config.serverRootFolder;
         this._externalPluginConfigFileNames = config.externalPluginConfigFileNames;
         this._pluginPackageFolders = config.pluginPackageFolders.filter((folder) => {
            if (!existsSync(folder.path)) {
