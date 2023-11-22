@@ -37,7 +37,7 @@ export default class Form extends PureComponent<Props> {
         return errors;
     }
 
-    render(): ReactNode {
+    render() {
         const {initialValues, formId, onChange, children} = this.props;
         return (
             <div className='mashroom-portal-ui-form'>

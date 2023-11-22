@@ -1,5 +1,5 @@
 
-import React, {PureComponent, createRef, type RefObject, type ReactNode} from 'react';
+import React, {PureComponent, createRef, type RefObject} from 'react';
 import CodeMirror, {type ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import {githubDark, githubLight} from '@uiw/codemirror-theme-github';
 import {json} from '@codemirror/lang-json';
@@ -37,7 +37,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
         }
     }
 
-    render(): ReactNode {
+    render() {
         const {id, fieldProps: {field, meta}, labelId, height, language, theme} = this.props;
         const error = meta.touched && !!meta.error;
 

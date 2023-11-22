@@ -3,7 +3,6 @@ import React, {PureComponent} from 'react';
 import {Field} from 'formik';
 import SourceCodeEditorFieldComp from '../components/SourceCodeEditorField';
 
-import type {ReactNode} from 'react';
 import type {FieldProps} from 'formik';
 
 type Props = {
@@ -17,7 +16,7 @@ type Props = {
 
 export default class SourceCodeEditorField extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {name} = this.props;
         return (
             <Field name={name} >

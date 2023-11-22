@@ -1,7 +1,6 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
-import type {ReactNode} from 'react';
 
 type Props = {
     id: string;
@@ -14,7 +13,7 @@ type Props = {
 
 export default class Button extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {id, labelId, type, secondary, disabled, onClick} = this.props;
         return (
             <button id={id}

@@ -31,12 +31,12 @@ export default class TabDialog extends PureComponent<Props> {
         return null;
     }
 
-    onChangeActiveTab(name: string): void {
+    onChangeActiveTab(name: string) {
         const {setActiveTab} = this.props;
         setActiveTab(name);
     }
 
-    renderHeader(): ReactNode {
+    renderHeader() {
         const {tabs} = this.props;
         const activeTabIndex = this.getActiveTabIndex();
         if (activeTabIndex === null) {
@@ -56,7 +56,7 @@ export default class TabDialog extends PureComponent<Props> {
         );
     }
 
-    listenErroneousFieldEvents(name: string, element: HTMLDivElement | null): void {
+    listenErroneousFieldEvents(name: string, element: HTMLDivElement | null) {
         const {activeTab, setActiveTab} = this.props;
         if (element) {
             element.addEventListener('erroneous-field-focused', () => {
@@ -68,7 +68,7 @@ export default class TabDialog extends PureComponent<Props> {
         }
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {tabs} = this.props;
         const activeTabIndex = this.getActiveTabIndex();
         if (activeTabIndex === null) {
@@ -82,7 +82,7 @@ export default class TabDialog extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <div className='mashroom-portal-ui-tab-dialog'>
                 {this.renderHeader()}

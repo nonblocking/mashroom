@@ -3,7 +3,6 @@ import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
-import type {ReactNode} from 'react';
 import type {FieldProps} from 'formik';
 import type {IntlShape} from 'react-intl';
 
@@ -21,7 +20,7 @@ type Props = {
 
 export default class TextField extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {id, labelId, fieldProps: {field, meta}, type, autoComplete, maxLength, pattern, placeholder: placeholderId, intl} = this.props;
         const error = meta.touched && !!meta.error;
         const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;

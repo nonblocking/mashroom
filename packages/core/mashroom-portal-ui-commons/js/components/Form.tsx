@@ -27,7 +27,7 @@ export default class Form extends PureComponent<Props> {
         this.formRef = React.createRef();
     }
 
-    componentDidUpdate(prevProps: Readonly<Props>): void {
+    componentDidUpdate(prevProps: Readonly<Props>) {
         const {values, initialValues, resetForm, setFieldValue, onChange} = this.props;
         if (prevProps.values !== values) {
             if (onChange) {
@@ -40,7 +40,7 @@ export default class Form extends PureComponent<Props> {
         }
     }
 
-    focusFirstErroneousField(): void {
+    focusFirstErroneousField() {
         const {errors} = this.props;
         if (Object.keys(errors).length === 0) {
             return;
@@ -105,7 +105,7 @@ export default class Form extends PureComponent<Props> {
         handleSubmit(e);
     }
 
-    render(): ReactNode {
+    render() {
         const {id, children} = this.props;
         return (
             <div className='mashroom-portal-ui-form'>

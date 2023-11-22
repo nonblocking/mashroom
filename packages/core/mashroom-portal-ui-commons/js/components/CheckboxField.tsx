@@ -2,7 +2,6 @@
 import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
-import type {ReactNode} from 'react';
 import type {FieldProps} from 'formik';
 
 type Props = {
@@ -13,7 +12,7 @@ type Props = {
 
 export default class CheckboxField extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {id, labelId, fieldProps: {field, meta}} = this.props;
         const error = meta.touched && !!meta.error;
 

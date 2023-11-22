@@ -2,7 +2,6 @@
 import React from 'react';
 import {escapeForRegExp} from '../utils/escape_utils';
 
-import type {ReactNode} from 'react';
 import type {SuggestionHandler} from '../../type-definitions';
 
 export default class AutocompleteStringArraySuggestionHandler implements SuggestionHandler<string> {
@@ -10,7 +9,7 @@ export default class AutocompleteStringArraySuggestionHandler implements Suggest
     constructor(private _data: Array<string>, private _searchEverywhere = true, private _maxMatches?: number) {
     }
 
-    getSuggestions(query: string): Promise<Array<string>> {
+    getSuggestions(query: string) {
         if (!query) {
             return Promise.resolve([]);
         }
@@ -27,7 +26,7 @@ export default class AutocompleteStringArraySuggestionHandler implements Suggest
         return Promise.resolve(suggestions);
     }
 
-    renderSuggestion(suggestion: string, isHighlighted: boolean, query: string): ReactNode {
+    renderSuggestion(suggestion: string, isHighlighted: boolean, query: string) {
         if (query) {
             const regexp = this._getQueryRexExp(query);
             suggestion = suggestion.replace(regexp, '<span class="filter-match">$1</span>');
@@ -38,11 +37,11 @@ export default class AutocompleteStringArraySuggestionHandler implements Suggest
         );
     }
 
-    getSuggestionValue(suggestion: string): string {
+    getSuggestionValue(suggestion: string) {
         return suggestion;
     }
 
-    _getQueryRexExp(query: string): RegExp {
+    _getQueryRexExp(query: string) {
         const escaped = escapeForRegExp(query);
         return new RegExp(`(${escaped})`, 'ig');
     }

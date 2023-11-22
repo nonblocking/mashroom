@@ -46,7 +46,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         };
     }
 
-    componentDidUpdate(prevProps: Readonly<Props>): void {
+    componentDidUpdate(prevProps: Readonly<Props>) {
         const {fieldProps: {field}} = this.props;
         if (field.value !== prevProps.fieldProps.field.value) {
             this.setState({
@@ -55,7 +55,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    onSuggestionsFetchRequested({ value }: { value: string }): void {
+    onSuggestionsFetchRequested({ value }: { value: string }) {
         const {suggestionHandler} = this.props;
         suggestionHandler.getSuggestions(value).then(
             (suggestions) => {
@@ -68,13 +68,13 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         );
     }
 
-    onSuggestionsClearRequested(): void {
+    onSuggestionsClearRequested() {
         this.setState({
             suggestions: []
         });
     }
 
-    onSuggestionSelected(event: any, { suggestion }: any): void {
+    onSuggestionSelected(event: any, { suggestion }: any) {
         const {onSuggestionSelect, onValueChange, suggestionHandler} = this.props;
         if (onSuggestionSelect) {
             onSuggestionSelect(suggestion);
@@ -87,7 +87,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    onValueChange(e: ChangeEvent<HTMLInputElement>): void {
+    onValueChange(e: ChangeEvent<HTMLInputElement>) {
         const {mustSelectSuggestion, onValueChange} = this.props;
         const value = e.target.value;
         this.setState({
@@ -102,7 +102,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    onBlur(): void {
+    onBlur() {
         const {mustSelectSuggestion, fieldProps: {field}} = this.props;
         if (mustSelectSuggestion) {
             setTimeout(() => {
@@ -124,7 +124,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         field.onChange(syntheticEvent);
     }
 
-    reset(): void {
+    reset() {
         const {onValueChange} = this.props;
         this.setState({
             value: '',
@@ -135,7 +135,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    shouldRenderSuggestions(value: string, reason: ShouldRenderReasons): boolean {
+    shouldRenderSuggestions(value: string, reason: ShouldRenderReasons) {
         const {minCharactersForSuggestions = 3} = this.props;
         switch (reason) {
             case 'input-focused':
@@ -151,7 +151,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         }
     }
 
-    renderSuggestionsContainer({ containerProps, children }: { containerProps: any, children: ReactNode }): ReactNode {
+    renderSuggestionsContainer({ containerProps, children }: { containerProps: any, children: ReactNode }) {
         const width = this.inputRef ? this.inputRef.clientWidth : 'auto';
 
         return (
@@ -161,7 +161,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         );
     }
 
-    renderInputComponent(inputProps: RenderInputComponentProps): ReactNode {
+    renderInputComponent(inputProps: RenderInputComponentProps) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const outerThis = this;
         const mergedInputProps = {
@@ -189,7 +189,7 @@ export default class AutocompleteField extends PureComponent<Props, State> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         const {id, labelId, fieldProps: {field, meta}, maxLength, placeholder: placeholderId, intl, suggestionHandler} = this.props;
         const {value} = this.state;
         const error = meta.touched && !!meta.error;

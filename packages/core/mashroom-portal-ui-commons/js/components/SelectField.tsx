@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
-import type {ReactNode, ChangeEvent} from 'react';
+import type {ChangeEvent} from 'react';
 import type {FieldProps} from 'formik';
 import type {IntlShape} from 'react-intl';
 import type {SelectFieldOptions} from '../../type-definitions';
@@ -23,7 +23,7 @@ export const NULL_VALUE = '__null__';
 
 export default class SelectField extends PureComponent<Props> {
 
-    onChange(e: ChangeEvent<HTMLSelectElement>): void {
+    onChange(e: ChangeEvent<HTMLSelectElement>) {
         const {fieldProps: {field}, onValueChange} = this.props;
         let value: string | null = e.target.value;
         if (value === NULL_VALUE) {
@@ -41,7 +41,7 @@ export default class SelectField extends PureComponent<Props> {
         }
     }
 
-    renderOptions(): ReactNode {
+    renderOptions() {
         const {emptyOption, options} = this.props;
         const optionComps = [];
 
@@ -55,7 +55,7 @@ export default class SelectField extends PureComponent<Props> {
         return optionComps;
     }
 
-    render(): ReactNode {
+    render() {
         const {id, labelId, fieldProps: {field, meta}, placeholder: placeholderId, intl} = this.props;
         const error = meta.touched && !!meta.error;
         const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;

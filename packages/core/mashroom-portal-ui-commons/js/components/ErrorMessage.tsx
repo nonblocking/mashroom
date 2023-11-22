@@ -1,7 +1,6 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
-import type {ReactNode} from 'react';
 
 type Props = {
     messageId: string;
@@ -9,7 +8,7 @@ type Props = {
 
 export default class ErrorMessage extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {messageId} = this.props;
         // The messageId can contain placeholder values after ::
         const [id, ...values] = messageId.split('::');

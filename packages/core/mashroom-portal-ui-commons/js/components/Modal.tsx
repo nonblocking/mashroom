@@ -57,7 +57,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         this.boundOnResize = this.onResize.bind(this);
     }
 
-    componentDidMount(): void {
+    componentDidMount() {
         const {closeRef} = this.props;
         if (typeof(closeRef) === 'function') {
             closeRef(this.close.bind(this));
@@ -68,7 +68,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
 
     }
 
-    componentDidUpdate(prevProps: Props): void {
+    componentDidUpdate(prevProps: Props) {
         const {show} = this.props;
         if (show !== prevProps.show) {
             if (show) {
@@ -97,7 +97,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         }
     }
 
-    handleEscapeKeyPress(event: KeyboardEvent): void {
+    handleEscapeKeyPress(event: KeyboardEvent) {
         if (event.target) {
             const target = event.target as HTMLElement;
             const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) !== -1;
@@ -107,13 +107,13 @@ export default class ModalDialog extends PureComponent<Props, State> {
         }
     }
 
-    onResize(): void {
+    onResize() {
         this.setState({
             marginTop: this.calcMarginTop(),
         });
     }
 
-    close(): void {
+    close() {
         const {onClose} = this.props;
         if (onClose) {
             onClose();
@@ -128,7 +128,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         return `${Math.max(10, (window.innerHeight - this.modalWrapperEl.offsetHeight) / 2)}px`;
     }
 
-    renderDefaultHeader(): ReactNode {
+    renderDefaultHeader() {
         const {titleId, title} = this.props;
         return (
             <div className='mashroom-portal-ui-modal-header'>
@@ -140,7 +140,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         const {show, customHeader, className, minHeight, width, children} = this.props;
         const {fadeOut, fadeIn, marginTop} = this.state;
         if (!this.modalsRoot || (!show && !fadeOut)) {

@@ -3,7 +3,6 @@ import React, {PureComponent} from 'react';
 import {Field} from 'formik';
 import CheckboxFieldComp from '../components/CheckboxField';
 
-import type {ReactNode} from 'react';
 import type {FieldProps} from 'formik';
 
 type Props = {
@@ -14,7 +13,7 @@ type Props = {
 
 export default class CheckboxField extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {name} = this.props;
         return (
             <Field name={name}>

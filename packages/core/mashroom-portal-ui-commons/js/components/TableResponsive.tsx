@@ -10,7 +10,7 @@ type Props = {
 
 export default class TableResponsive extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {striped, children} = this.props;
         return (
             <div className={`mashroom-portal-ui-table-responsive ${striped ? 'table-striped' : ''}`}>

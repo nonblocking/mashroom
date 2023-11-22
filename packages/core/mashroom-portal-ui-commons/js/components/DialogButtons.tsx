@@ -8,7 +8,7 @@ type Props = {
 
 export default class DialogButtons extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         const {children} = this.props;
         return (
             <div className='mashroom-portal-ui-dialog-buttons'>
