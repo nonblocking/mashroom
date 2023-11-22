@@ -1,5 +1,5 @@
 
-import {PORTAL_APP_API_PATH, PORTAL_INTERNAL_PATH, WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
+import {WINDOW_VAR_PORTAL_API_PATH} from '../../../backend/constants';
 import {serializeError} from './serialization_utils';
 import {HEADER_DO_NOT_EXTEND_SESSION} from './headers';
 
@@ -7,19 +7,26 @@ import type {LogLevel} from '@mashroom/mashroom/type-definitions';
 import type {MasterMashroomPortalRemoteLogger, MashroomPortalRemoteLogger} from '../../../../type-definitions';
 import type {ClientLogMessage, MashroomRestService} from '../../../../type-definitions/internal';
 
-const SEND_INTERVAL = 2000;
+const CSRF_TOKEN_META = document.querySelector('meta[name="csrf-token"]');
+const CSRF_TOKEN = CSRF_TOKEN_META && CSRF_TOKEN_META.getAttribute('content');
+const SEND_INTERVAL = 3000;
 
 export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPortalRemoteLogger {
 
+    private readonly _apiBasePath;
     private _restService: MashroomRestService;
     private _unsentLogMessages: Array<ClientLogMessage>;
-    private _timeout: ReturnType<typeof setTimeout> | null;
 
     constructor(restService: MashroomRestService) {
-        const apiPath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
-        this._restService = restService.withBasePath(apiPath);
+        this._apiBasePath = (global as any)[WINDOW_VAR_PORTAL_API_PATH];
+        this._restService = restService.withBasePath(this._apiBasePath);
         this._unsentLogMessages = [];
-        this._timeout = null;
+
+        setInterval(() => this._send(), SEND_INTERVAL);
+        // Make sure no logs get lost during unload
+        global.addEventListener('beforeunload', () => {
+            this._send(true);
+        });
     }
 
     error(msg: string, error?: Error, portalAppName?: string | null | undefined): void {
@@ -64,32 +71,30 @@ export default class MashroomPortalRemoteLoggerImpl implements MasterMashroomPor
         };
 
         this._unsentLogMessages.push(logMessage);
-
-        if (this._timeout) {
-            clearTimeout(this._timeout);
-        }
-        this._timeout = setTimeout(this._send.bind(this), SEND_INTERVAL);
     }
 
-    private _send() {
-        this._timeout = null;
-
+    private _send(unloadingPage = false) {
         let messages = [...this._unsentLogMessages];
-
         // Filter errors that occurred when sending previous logs failed
-        messages = messages.filter(({ message }) => message?.indexOf(`${PORTAL_INTERNAL_PATH}${PORTAL_APP_API_PATH}/log`) === -1);
-
+        messages = messages.filter(({ message }) => message?.indexOf(`${this._apiBasePath}/log`) === -1);
         if (messages.length === 0) {
             return;
         }
 
         try {
-            this._restService.post('/log', messages, {
-                [HEADER_DO_NOT_EXTEND_SESSION]: '1'
-            }).catch(() => {
-               // Catch and ignore all errors,
-               // otherwise this will generate new log messages which will most probably fail again
-            });
+            if (!unloadingPage) {
+                this._restService.post('/log', messages, {
+                    [HEADER_DO_NOT_EXTEND_SESSION]: '1'
+                }).catch(() => {
+                    // Catch and ignore all errors,
+                    // otherwise this will generate new log messages which will most probably fail again
+                });
+            } else {
+                // In case the page is about to being unloaded we must use sendBean,
+                // see https://developer.mozilla.org/en-US/docs/Web/API/Navigator/sendBeacon?retiredLocale=de#description
+                const data = new Blob([JSON.stringify(messages)], { type: 'application/json' });
+                navigator.sendBeacon(`${this._apiBasePath}/log${CSRF_TOKEN ? `?csrfToken=${CSRF_TOKEN}` : ''}`, data);
+            }
             this._unsentLogMessages = [];
         } catch (e) {
             console.error('Unable to send error message to server', e);
