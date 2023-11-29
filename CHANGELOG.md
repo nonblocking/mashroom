@@ -3,11 +3,13 @@
 
 ## [unreleased]
 
+## 2.4.5 (November 29, 2023)
+
  * Portal: It is now guaranteed that all client-side (browser) errors are actually sent to the server and logged there, 
    even if there is a huge amount of errors and also on the browser unload event. 
  * Core: Fixed deprecation warnings from the spdy module. It is now loaded lazy, but since it is no longer maintained 
    and only works with Node.js <= 14 HTTP/2 support is de-facto broken. 
-   Shouldn't be a big deal because usual a reverse proxy provides HTTP/2 and TLS.
+   Shouldn't be a big deal because usual a reverse proxy handles HTTP/2 and TLS.
 
 ## 2.4.4 (September 8, 2023)
 
