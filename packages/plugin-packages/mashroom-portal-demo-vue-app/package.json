@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.4.4",
+    "version": "2.4.5",
     "sideEffects": false,
     "files": [
         "dist/**"
@@ -13,7 +13,7 @@
         "vue": "^3.2.47"
     },
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.4.4",
+        "@mashroom/mashroom-portal": "2.4.5",
         "@vue/eslint-config-typescript": "^11.0.3",
         "eslint-plugin-vue": "^9.11.0",
         "vue-eslint-parser": "^9.1.1",
