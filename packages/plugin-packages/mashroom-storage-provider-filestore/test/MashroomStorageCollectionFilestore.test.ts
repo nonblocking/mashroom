@@ -235,6 +235,9 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         await storage.insertOne({a: 1, b: 1, c: 1});
 
+        // For Windows wait here a few ms since fs stats has no nanoseconds resolution
+        await new Promise((resolve) => setTimeout(resolve, 2));
+
         // Manipulate store externally
         const db = JSON.parse(readFileSync(dbFile).toString('utf-8'));
         db.d[0].a = 2;
@@ -254,6 +257,9 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         await storage.insertOne({a: 1, b: 1});
 
+        // For Windows wait here a few ms since fs stats has no nanoseconds resolution
+        await new Promise((resolve) => setTimeout(resolve, 2));
+
         // Manipulate store externally
         const db = JSON.parse(readFileSync(dbFile).toString('utf-8'));
         db.d[0].a = 2;
@@ -262,7 +268,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         const attempt1 = await storage.findOne({b: 1});
         expect(attempt1?.a).toBe(1); // Old value
 
-        await new Promise((resolve) => setTimeout(resolve, checkExternalChangePeriodMs + 200));
+        await new Promise((resolve) => setTimeout(resolve, checkExternalChangePeriodMs));
 
         const attempt2 = await storage.findOne({b: 1});
         expect(attempt2?.a).toBe(2); // New value
