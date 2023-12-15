@@ -2,7 +2,7 @@ import {URLSearchParams, URL} from 'url';
 import {createProxyServer} from 'http-proxy';
 import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
-import {processHttpResponse, processRequestInterceptors, processWsRequest} from './utils';
+import {processHttpResponse, processRequest, processWsRequest} from './utils';
 
 import type {
     RequestMetrics,
@@ -23,7 +23,6 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityUser, MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
-
 
 type ProxyServer = ReturnType<typeof createProxyServer>;
 
@@ -124,7 +123,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
         // Process interceptors
-        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequest(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
         if (responseHandled) {
             return;
         }
@@ -284,12 +283,15 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             }
         }
 
-        // Handle client close event to prevent a memory leak, see https://github.com/http-party/node-http-proxy/issues/1586
         res.on('close', () => {
-            logger.info(`Connection closed by client for request '${requestMeta.uri}'`);
             requestMeta.end();
-            clientResponse.destroy();
-            proxyReq.destroy();
+            const aborted = !res.writableFinished;
+            if (aborted) {
+                logger.info(`Request aborted by client: '${requestMeta.uri}'`);
+                // Make sure to also abort the proxy request to prevent a memory leak
+                // See https://github.com/http-party/node-http-proxy/issues/1586
+                proxyReq.destroy();
+            }
         });
 
         // Proper timeout handling
@@ -303,6 +305,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             }
             this._requestMetrics.httpTimeoutTargetCount[target] ++;
             requestMeta.end();
+            // Abort proxy request
             proxyReq.destroy();
             if (!clientResponse.headersSent) {
                 clientResponse.sendStatus(504);
@@ -363,36 +366,33 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             return;
         }
 
-        // node-http-proxy throws an error if the client has aborted, we don't want to log it
-        if (!req.aborted) {
-            const {protocol, host} = new URL(requestMeta.uri);
-            const target = `${protocol}://${host}`;
-            this._requestMetrics.httpConnectionErrorCountTotal ++;
-            if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
-                this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
-            }
-            this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
+        const {protocol, host} = new URL(requestMeta.uri);
+        const target = `${protocol}://${host}`;
+        this._requestMetrics.httpConnectionErrorCountTotal ++;
+        if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
+            this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
+        }
+        this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
 
-            if (requestMeta.type === 'HTTP') {
-                if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
-                    if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
-                        logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept or drop the connection (retry #${requestMeta.retries + 1})`);
-                        requestMeta.retry();
-                        return;
-                    } else {
-                        logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection after ${requestMeta.retries + 1} attempt(s)`, error);
-                        clientResponse.sendStatus(503);
-                    }
+        if (requestMeta.type === 'HTTP') {
+            if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
+                if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
+                    logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept or drop the connection (retry #${requestMeta.retries + 1})`);
+                    requestMeta.retry();
+                    return;
                 } else {
-                    logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
-                    if (!clientResponse.headersSent) {
-                        clientResponse.sendStatus(503);
-                    }
+                    logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection after ${requestMeta.retries + 1} attempt(s)`, error);
+                    clientResponse.sendStatus(503);
                 }
-            } else if (requestMeta.type === 'WS') {
-                logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
-                (res as Socket).end('HTTP/1.1 503 Service Unavailable\r\n\r\n', 'ascii');
+            } else {
+                logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
+                if (!clientResponse.headersSent) {
+                    clientResponse.sendStatus(503);
+                }
             }
+        } else if (requestMeta.type === 'WS') {
+            logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
+            (res as Socket).end('HTTP/1.1 503 Service Unavailable\r\n\r\n', 'ascii');
         }
 
         requestMeta.end();

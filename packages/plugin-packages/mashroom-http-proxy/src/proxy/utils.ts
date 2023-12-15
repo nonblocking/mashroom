@@ -16,7 +16,7 @@ type ProcessRequestInterceptorsResult = {
     effectiveQueryParams: QueryParams;
 };
 
-export const processRequestInterceptors = async (req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessRequestInterceptorsResult> => {
+export const processRequest = async (req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessRequestInterceptorsResult> => {
     let effectiveTargetUri = encodeURI(targetUri);
     let effectiveAdditionalHeaders = {
         ...additionalHeaders,

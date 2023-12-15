@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: fixed deprecated API usages
+
 ## 2.4.5 (November 29, 2023)
 
  * Portal: It is now guaranteed that all client-side (browser) errors are actually sent to the server and logged there, 

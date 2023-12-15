@@ -1,6 +1,6 @@
 import request from 'request';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
-import {processHttpResponse, processRequestInterceptors} from './utils';
+import {processHttpResponse, processRequest} from './utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomLoggerFactory, MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -46,7 +46,7 @@ export default class ProxyImplRequest implements Proxy {
         }
 
         // Process interceptors
-        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequest(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
         if (responseHandled) {
             return;
         }
