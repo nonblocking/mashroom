@@ -25,13 +25,15 @@ const LOCK_RETRY_MIN_WAIT = 100;
 
 export default class MashroomStorageCollectionFilestore<T extends MashroomStorageRecord> implements MashroomStorageCollection<T> {
 
-    private _lastExternalChangeCheck: number;
+    private _lastModifiedTimestamp: bigint;
+    private _lastExternalChangeCheckTimestamp: number;
     private _dbCache: JsonDB<T> | null;
     private _logger: MashroomLogger;
 
     constructor(private _source: string, private _checkExternalChangePeriodMs: number,
                 private _prettyPrintJson: boolean, private _loggerFactory: MashroomLoggerFactory) {
-        this._lastExternalChangeCheck = -1;
+        this._lastModifiedTimestamp = BigInt(-1);
+        this._lastExternalChangeCheckTimestamp = -1;
         this._dbCache = null;
         this._logger = _loggerFactory('mashroom.storage.filestore');
     }
@@ -214,8 +216,9 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
             const result = await op(collection);
             this._logger.debug(`Updating db source: ${this._source}`);
             await writeFile(this._source, this._serialize(db));
+            this._lastModifiedTimestamp = statSync(this._source, { bigint: true }).mtimeNs;
+            this._lastExternalChangeCheckTimestamp = Date.now();
             this._dbCache = db;
-            this._lastExternalChangeCheck = Date.now();
             return result;
         } finally {
             if (release) {
@@ -230,21 +233,29 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
 
     private async _getDb(forceExternalChangeCheck = false): Promise<JsonDB<T>> {
         try {
+            let mtimeNs: bigint | undefined;
             if (this._dbCache) {
-                const mTime = statSync(this._source).mtime;
-                const mTimeMs = mTime.getTime();
-                const reload = (mTimeMs > this._lastExternalChangeCheck && (forceExternalChangeCheck || this._lastExternalChangeCheck + this._checkExternalChangePeriodMs < Date.now()));
-                if (!reload) {
-                    // this.logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this.source}`);
+                if (forceExternalChangeCheck || this._lastExternalChangeCheckTimestamp + this._checkExternalChangePeriodMs < Date.now()) {
+                    mtimeNs = statSync(this._source, { bigint: true }).mtimeNs;
+                    if (mtimeNs <= this._lastModifiedTimestamp) {
+                        // this._logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this._source}`);
+                        this._lastExternalChangeCheckTimestamp = Date.now();
+                        return this._dbCache;
+                    }
+                } else {
                     return this._dbCache;
                 }
             }
 
-            this._logger.debug(`Reloading db source: ${this._source}`);
+            if  (!mtimeNs) {
+                mtimeNs = statSync(this._source, { bigint: true }).mtimeNs;
+            }
+            this._logger.info(`Reloading db source: ${this._source}`);
             const json = await readFile(this._source);
             const db = this._deserialize(json.toString());
             this._dbCache = db;
-            this._lastExternalChangeCheck = Date.now();
+            this._lastModifiedTimestamp = mtimeNs;
+            this._lastExternalChangeCheckTimestamp = Date.now();
             return db;
         } catch (e) {
             if (existsSync(this._source)) {

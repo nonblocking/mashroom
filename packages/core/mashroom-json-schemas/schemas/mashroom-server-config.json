@@ -1181,7 +1181,7 @@
                         },
                         "checkExternalChangePeriodMs": {
                             "type": "integer",
-                            "description": "Check JSON files for external changes after this period.\nIf you set this to a value <= 0 the file timestamp will be checked on every access which will cause (Default: 2000)"
+                            "description": "Check JSON files for external changes after this period.\nOnly set a value > 0 if you either run a single server, the config is readonly or performance is more important than consistency (Default: -1)"
                         },
                         "prettyPrintJson": {
                             "type": "boolean",

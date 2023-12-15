@@ -865,7 +865,7 @@ export interface Plugins {
     dataFolder?: string;
     /**
      * Check JSON files for external changes after this period.
-     * If you set this to a value <= 0 the file timestamp will be checked on every access which will cause (Default: 2000)
+     * Only set a value > 0 if you either run a single server, the config is readonly or performance is more important than consistency (Default: -1)
      */
     checkExternalChangePeriodMs?: number;
     /**

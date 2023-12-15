@@ -1,6 +1,6 @@
 
 import path from 'path';
-import fs from 'fs';
+import fs, {readFileSync, writeFileSync} from 'fs';
 import fsExtra from 'fs-extra';
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import MashroomStorageCollectionFilestore from '../src/storage/MashroomStorageCollectionFilestore';
@@ -228,6 +228,45 @@ describe('MashroomStorageCollectionFilestore', () => {
         expect(result2.result.length).toBe(0);
     });
 
+    it('checks the db file for updates before every change', async () => {
+        const dbFile = getDbFile();
+        const checkExternalChangePeriodMs = 2000;
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(dbFile, checkExternalChangePeriodMs, true, dummyLoggerFactory);
+
+        await storage.insertOne({a: 1, b: 1, c: 1});
+
+        // Manipulate store externally
+        const db = JSON.parse(readFileSync(dbFile).toString('utf-8'));
+        db.d[0].a = 2;
+        writeFileSync(dbFile, JSON.stringify(db, null, 2));
+
+        await storage.updateOne({b: 1}, {c: 5});
+
+        const item = await storage.findOne({b: 1});
+        expect(item?.c).toBe(5);
+        expect(item?.a).toBe(2);
+    });
+
+    it('waits checkExternalChangePeriodMs until it reloads a changed db file', async () => {
+        const dbFile = getDbFile();
+        const checkExternalChangePeriodMs = 2000;
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(dbFile, checkExternalChangePeriodMs, true, dummyLoggerFactory);
+
+        await storage.insertOne({a: 1, b: 1});
+
+        // Manipulate store externally
+        const db = JSON.parse(readFileSync(dbFile).toString('utf-8'));
+        db.d[0].a = 2;
+        writeFileSync(dbFile, JSON.stringify(db, null, 2));
+
+        const attempt1 = await storage.findOne({b: 1});
+        expect(attempt1?.a).toBe(1); // Old value
+
+        await new Promise((resolve) => setTimeout(resolve, checkExternalChangePeriodMs));
+
+        const attempt2 = await storage.findOne({b: 1});
+        expect(attempt2?.a).toBe(2); // New value
+    });
 });
 
 
