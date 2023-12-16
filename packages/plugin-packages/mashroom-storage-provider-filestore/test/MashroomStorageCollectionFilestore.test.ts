@@ -237,14 +237,14 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         // Manipulate store externally
         const db = JSON.parse(readFileSync(dbFile).toString('utf-8'));
-        db.d[0].a = 2;
+        db.d[0].a = 22;
         writeFileSync(dbFile, JSON.stringify(db, null, 2));
 
         await storage.updateOne({b: 1}, {c: 5});
 
         const item = await storage.findOne({b: 1});
         expect(item?.c).toBe(5);
-        expect(item?.a).toBe(2);
+        expect(item?.a).toBe(22);
     });
 
     it('waits checkExternalChangePeriodMs until it reloads a changed db file', async () => {
@@ -256,7 +256,7 @@ describe('MashroomStorageCollectionFilestore', () => {
 
         // Manipulate store externally
         const db = JSON.parse(readFileSync(dbFile).toString('utf-8'));
-        db.d[0].a = 2;
+        db.d[0].a = 22;
         writeFileSync(dbFile, JSON.stringify(db, null, 2));
 
         const attempt1 = await storage.findOne({b: 1});
@@ -265,7 +265,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         await new Promise((resolve) => setTimeout(resolve, checkExternalChangePeriodMs));
 
         const attempt2 = await storage.findOne({b: 1});
-        expect(attempt2?.a).toBe(2); // New value
+        expect(attempt2?.a).toBe(22); // New value
     });
 });
 
