@@ -262,7 +262,7 @@ describe('MashroomStorageCollectionFilestore', () => {
         const attempt1 = await storage.findOne({b: 1});
         expect(attempt1?.a).toBe(1); // Old value
 
-        await new Promise((resolve) => setTimeout(resolve, checkExternalChangePeriodMs));
+        await new Promise((resolve) => setTimeout(resolve, checkExternalChangePeriodMs + 10));
 
         const attempt2 = await storage.findOne({b: 1});
         expect(attempt2?.a).toBe(22); // New value
