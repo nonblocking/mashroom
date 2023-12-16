@@ -1,5 +1,5 @@
 
-import {statSync, existsSync} from 'fs';
+import {statSync, existsSync, type BigIntStats} from 'fs';
 import {readFile, writeFile} from 'fs/promises';
 import {lock as lockFile} from 'proper-lockfile';
 import {nanoid} from 'nanoid';
@@ -25,14 +25,13 @@ const LOCK_RETRY_MIN_WAIT = 100;
 
 export default class MashroomStorageCollectionFilestore<T extends MashroomStorageRecord> implements MashroomStorageCollection<T> {
 
-    private _lastModifiedTimestamp: bigint;
-    private _lastExternalChangeCheckTimestamp: number;
     private _dbCache: JsonDB<T> | null;
+    private _lastExternalChangeCheckTimestamp: number;
+    private _lastFileStats: BigIntStats | undefined;
     private _logger: MashroomLogger;
 
     constructor(private _source: string, private _checkExternalChangePeriodMs: number,
                 private _prettyPrintJson: boolean, private _loggerFactory: MashroomLoggerFactory) {
-        this._lastModifiedTimestamp = BigInt(-1);
         this._lastExternalChangeCheckTimestamp = -1;
         this._dbCache = null;
         this._logger = _loggerFactory('mashroom.storage.filestore');
@@ -216,7 +215,7 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
             const result = await op(collection);
             this._logger.debug(`Updating db source: ${this._source}`);
             await writeFile(this._source, this._serialize(db));
-            this._lastModifiedTimestamp = statSync(this._source, { bigint: true }).mtimeNs;
+            this._lastFileStats = statSync(this._source, { bigint: true });
             this._lastExternalChangeCheckTimestamp = Date.now();
             this._dbCache = db;
             return result;
@@ -231,31 +230,15 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         return db.d;
     }
 
-    private async _getDb(forceExternalChangeCheck = false): Promise<JsonDB<T>> {
+    private async _getDb(forceCheck = false): Promise<JsonDB<T>> {
         try {
-            let mtimeNs: bigint | undefined;
-            if (this._dbCache) {
-                if (forceExternalChangeCheck || this._lastExternalChangeCheckTimestamp + this._checkExternalChangePeriodMs < Date.now()) {
-                    mtimeNs = statSync(this._source, { bigint: true }).mtimeNs;
-                    if (mtimeNs <= this._lastModifiedTimestamp) {
-                        // this._logger.debug(`Using data from cache since file didn't change since ${mTime.toISOString()}: ${this._source}`);
-                        this._lastExternalChangeCheckTimestamp = Date.now();
-                        return this._dbCache;
-                    }
-                } else {
-                    return this._dbCache;
-                }
-            }
-
-            if  (!mtimeNs) {
-                mtimeNs = statSync(this._source, { bigint: true }).mtimeNs;
+            if (this._dbCache && !this._externalChange(forceCheck)) {
+                return this._dbCache;
             }
             this._logger.info(`Reloading db source: ${this._source}`);
             const json = await readFile(this._source);
             const db = this._deserialize(json.toString());
             this._dbCache = db;
-            this._lastModifiedTimestamp = mtimeNs;
-            this._lastExternalChangeCheckTimestamp = Date.now();
             return db;
         } catch (e) {
             if (existsSync(this._source)) {
@@ -266,6 +249,28 @@ export default class MashroomStorageCollectionFilestore<T extends MashroomStorag
         return {
             d: [],
         };
+    }
+
+    /*
+     * This basically works like fs.fileWatch() and periodically checks the modified timestamp.
+     * fs.watch() would be better performance wise but does not support NFS which will most likely be used
+     * for a shared store.
+     */
+    private _externalChange(forceCheck = false) {
+        if (!this._lastFileStats) {
+            this._lastFileStats = statSync(this._source, { bigint: true });
+            this._lastExternalChangeCheckTimestamp = Date.now();
+            return true;
+        }
+        if (forceCheck || this._lastExternalChangeCheckTimestamp + this._checkExternalChangePeriodMs < Date.now()) {
+            this._lastExternalChangeCheckTimestamp = Date.now();
+            const newFileStats = statSync(this._source, { bigint: true });
+            if (newFileStats.mtimeNs > this._lastFileStats.mtimeNs || newFileStats.size !== this._lastFileStats.size) {
+                this._lastFileStats = newFileStats;
+                return true;
+            }
+        }
+        return false;
     }
 
     private _lock(): Promise<() => Promise<void>> {

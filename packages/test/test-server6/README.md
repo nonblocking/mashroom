@@ -2,6 +2,7 @@
 # Test Server 6
 
 A test server similar to Test Server 1 but supposed to run in a Kubernetes cluster.
+It uses a local file store per Pod which means the configuration is readonly. The Admin UI has therefore be disabled.
 
 **NOTE**: The server does not run in dev mode, so changes in plugin packages are not automatically applied (locally).
 
@@ -28,7 +29,7 @@ Alternatively install [K3D](https://k3d.io) and run
     cd kubernetes/common
     ./setup-k3d-cluster.sh
 
-to setup and configure a new cluster locally.
+to set up and configure a new cluster locally.
 
 ## Build and deploy the Portal
 

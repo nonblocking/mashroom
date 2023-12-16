@@ -54,11 +54,11 @@
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage",
-            "checkExternalChangePeriodMs": 2000,
+            "checkExternalChangePeriodMs": 30000,
             "prettyPrintJson": true
         },
         "Mashroom Portal WebApp": {
-            "adminApp": "Mashroom Portal Admin App",
+            "adminApp": null,
             "defaultTheme": "Mashroom Portal Default Theme",
             "warnBeforeAuthenticationExpiresSec": 60,
             "autoExtendAuthentication": false,

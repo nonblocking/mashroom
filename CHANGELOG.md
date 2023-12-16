@@ -4,10 +4,10 @@
 ## [unreleased]
 
  * File Storage: Performance improvements:
-   * The config property **checkExternalChangePeriodMs** now actually has an effect. 
-     If you set it to a value > 0 it will take up that given timespan until external changes (by other nodes) get loaded. 
-     Only use it if your configuration is readonly or performance is more important than consistency.
-   * The DB file will no longer be reloaded periodically, but only if the modified timestamp changes
+   * It polls for external changes to the DB file every **checkExternalChangePeriodMs** instead with every access.
+     This will reduce the CPU load slightly. Default value of checkExternalChangePeriodMs is now 100, but you can increase it further
+     if you run a single server, the config is readonly or performance is more important than consistency
+   * The DB file will no longer be reloaded periodically, but only if the modified timestamp of the DB file changes
  * HTTP Proxy: fixed deprecated API usages
 
 ## 2.4.5 (November 29, 2023)

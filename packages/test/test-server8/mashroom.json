@@ -70,7 +70,6 @@
         },
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "./data/storage",
-            "checkExternalChangePeriodMs": 2000,
             "prettyPrintJson": true
         },
         "Mashroom Internationalization Services": {

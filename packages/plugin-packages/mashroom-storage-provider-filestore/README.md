@@ -28,7 +28,7 @@ And configure this plugin like this in the Mashroom config file:
   "plugins": {
         "Mashroom Storage Filestore Provider": {
             "dataFolder": "/var/mashroom/data/storage",
-            "checkExternalChangePeriodMs": -1,
+            "checkExternalChangePeriodMs": 100,
             "prettyPrintJson": true
         }
     }
@@ -36,7 +36,6 @@ And configure this plugin like this in the Mashroom config file:
 ```
 
  * _dataFolder_: The **shared folder** to store the data files. The base for relative paths is the Mashroom config file (Default: ./data/storage)
- * _checkExternalChangePeriodMs_: Check JSON files for external changes after this period.
-   Only set a value > 0 if you either run a single server, the config is readonly or performance is more important
-   than consistency (Default: -1)
+ * _checkExternalChangePeriodMs_: Poll interval for external file changes (by other servers in the cluster).
+   You can increase the default if you run a single server, the config is readonly or performance is more important than consistency (Default: 100)
  * _prettyPrintJson_: Pretty print the JSON files to make it human-readable (Default: true)

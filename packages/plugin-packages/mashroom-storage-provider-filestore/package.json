@@ -51,7 +51,7 @@
                 "bootstrap": "./dist/storage/mashroom-bootstrap.js",
                 "defaultConfig": {
                     "dataFolder": "./data/storage",
-                    "checkExternalChangePeriodMs": -1,
+                    "checkExternalChangePeriodMs": 100,
                     "prettyPrintJson": true
                 }
             }

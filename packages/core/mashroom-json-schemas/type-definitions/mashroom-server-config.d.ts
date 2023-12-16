@@ -864,8 +864,8 @@ export interface Plugins {
      */
     dataFolder?: string;
     /**
-     * Check JSON files for external changes after this period.
-     * Only set a value > 0 if you either run a single server, the config is readonly or performance is more important than consistency (Default: -1)
+     * Poll interval for external file changes (by other servers in the cluster).
+     * You can increase the default if you run a single server, the config is readonly or performance is more important than consistency (Default: 100)
      */
     checkExternalChangePeriodMs?: number;
     /**

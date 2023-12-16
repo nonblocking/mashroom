@@ -73,7 +73,6 @@ const serverConfig: MashroomServerConfig = {
         },
         'Mashroom Storage Filestore Provider': {
             dataFolder: './data/storage',
-            checkExternalChangePeriodMs: 2000,
         },
         'Mashroom Internationalization Services': {
             availableLanguages: [
