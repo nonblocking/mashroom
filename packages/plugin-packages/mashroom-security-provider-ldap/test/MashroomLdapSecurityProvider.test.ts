@@ -1,6 +1,6 @@
 
 import path from 'path';
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomLdapSecurityProvider from '../src/MashroomLdapSecurityProvider';
 
 describe('MashroomLdapSecurityProvider', () => {
@@ -17,7 +17,7 @@ describe('MashroomLdapSecurityProvider', () => {
 
         const ldapClient: any = {};
         const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
-            null, null, ldapClient, '', 1800, loggerFactory);
+            null, null, ldapClient, '', 1800, loggingUtils.dummyLoggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -38,7 +38,7 @@ describe('MashroomLdapSecurityProvider', () => {
 
         const ldapClient: any = {};
         const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
-            null, null, ldapClient, '', 1800, loggerFactory);
+            null, null, ldapClient, '', 1800, loggingUtils.dummyLoggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res);
 
@@ -58,7 +58,7 @@ describe('MashroomLdapSecurityProvider', () => {
 
         const ldapClient: any = {};
         const simpleSecurityProvider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
-            null , null, ldapClient, '', 1800, loggerFactory);
+            null , null, ldapClient, '', 1800, loggingUtils.dummyLoggerFactory);
 
         const result = await simpleSecurityProvider.authenticate(req, res, {
             hint1: 'foo',
@@ -119,7 +119,7 @@ describe('MashroomLdapSecurityProvider', () => {
                 },
             },
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -139,7 +139,7 @@ describe('MashroomLdapSecurityProvider', () => {
             'internalUserId': 'uid'
         };
         const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping,
-            secretsMapping, groupToRoleMappingPath, userToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggerFactory);
+            secretsMapping, groupToRoleMappingPath, userToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggingUtils.dummyLoggerFactory);
 
         const result = await provider.login(req, 'user1', 'passwd');
 
@@ -205,7 +205,7 @@ describe('MashroomLdapSecurityProvider', () => {
                 },
             },
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -219,7 +219,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, undefined,
-            undefined, groupToRoleMappingPath, undefined, ldapClient, serverRootFolder, 1800, loggerFactory);
+            undefined, groupToRoleMappingPath, undefined, ldapClient, serverRootFolder, 1800, loggingUtils.dummyLoggerFactory);
 
         const result = await provider.login(req, 'test', 'passwd');
 
@@ -251,7 +251,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const provider = new MashroomLdapSecurityProvider('/login', '', '', null,  null,
-            null, null, ldapClient, '', 1800, loggerFactory);
+            null, null, ldapClient, '', 1800, loggingUtils.dummyLoggerFactory);
 
         const user1 = provider.getUser(req);
         expect(user1).toBeTruthy();
@@ -272,7 +272,7 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const provider = new MashroomLdapSecurityProvider('/login', '', '', null, null,
-            null, null, ldapClient, '', 1800, loggerFactory);
+            null, null, ldapClient, '', 1800, loggingUtils.dummyLoggerFactory);
 
         const authExpiration = provider.getAuthenticationExpiration(req);
 

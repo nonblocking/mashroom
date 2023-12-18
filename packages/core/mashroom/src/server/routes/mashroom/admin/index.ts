@@ -1,15 +1,15 @@
 
 import {Router} from 'express';
-import infoOverviewRoute from './info_overview_route';
-import infoPluginsRoute from './info_plugins_route';
-import infoPluginPackagesRoute from './info_plugin_packages_route';
-import infoPluginLoadersRoute from './info_plugin_loaders_route';
-import infoWebAppsRoute from './info_webapps_route';
-import infoApisRoute from './info_apis_route';
-import infoServicesRoute from './info_services_route';
-import infoMiddlewareStack from './info_middleware_stack';
-import infoServer from './info_server_route';
-import infoExternalAdminApp from './info_ext_admin_webapp';
+import infoOverviewRoute from './info-overview-route';
+import infoPluginsRoute from './info-plugins-route';
+import infoPluginPackagesRoute from './info-plugin-packages-route';
+import infoPluginLoadersRoute from './info-plugin-loaders-route';
+import infoWebAppsRoute from './info-webapps-route';
+import infoApisRoute from './info-apis-route';
+import infoServicesRoute from './info-services-route';
+import infoMiddlewareStack from './info-middleware-stack';
+import infoServer from './info-server-route';
+import infoExternalAdminApp from './info-ext-admin-webapp';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
 
-import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
+import {readonlyUtils} from '@mashroom/mashroom-utils';
 
 import type {
     MashroomPortalApp,
@@ -141,20 +141,19 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     }
 
     get themes(): Readonly<Array<MashroomPortalTheme>> {
-        return cloneAndFreezeArray(this._themes);
+        return readonlyUtils.cloneAndFreezeArray(this._themes);
     }
 
     get layouts(): Readonly<Array<MashroomPortalLayout>> {
-        return cloneAndFreezeArray(this._layouts);
+        return readonlyUtils.cloneAndFreezeArray(this._layouts);
     }
 
     get portalPageEnhancements(): Readonly<Array<MashroomPortalPageEnhancement>> {
-        return cloneAndFreezeArray(this._portalPageEnhancements);
+        return readonlyUtils.cloneAndFreezeArray(this._portalPageEnhancements);
     }
 
     get portalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>> {
-        return cloneAndFreezeArray(this._portalAppEnhancements);
+        return readonlyUtils.cloneAndFreezeArray(this._portalAppEnhancements);
     }
-
 
 }

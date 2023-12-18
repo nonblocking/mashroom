@@ -2,8 +2,8 @@
 import os from 'os';
 import {existsSync} from 'fs';
 import log4js from 'log4js';
-import {withinTsNode} from '@mashroom/mashroom-utils/lib/ts_node_utils';
-import defaultConfig from './log4js_default_config';
+import {tsNodeUtils} from '@mashroom/mashroom-utils';
+import defaultConfig from './log4js-default-config';
 
 import type {LogLevel} from '../../../../type-definitions';
 import type {MashroomLoggerDelegate} from '../../../../type-definitions/internal';
@@ -34,7 +34,7 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
     async init(serverRootPath: string) {
         try {
             let possibleConfigFiles = CONFIG_FILES;
-            if (!withinTsNode()) {
+            if (!tsNodeUtils.withinTsNode()) {
                 possibleConfigFiles = possibleConfigFiles.filter((p) => !p.endsWith('.ts'));
             }
             const configFiles = possibleConfigFiles.map((name) => `${serverRootPath}/${name}`);

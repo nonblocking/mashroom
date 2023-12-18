@@ -1,6 +1,5 @@
 
-import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
-import {isStaticResourceRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {requestUtils, loggingUtils} from '@mashroom/mashroom-utils';
 
 import type {Request, Response, NextFunction} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -16,7 +15,7 @@ const HEADER_DO_NOT_EXTEND_SESSION = 'x-mashroom-no-extend-session';
 
 const addUserToLogContext = (user: MashroomSecurityUser | undefined | null, logger: MashroomLogger) => {
     if (user) {
-        logger.addContext(userContext(user));
+        logger.addContext(loggingUtils.userContext(user));
     }
 };
 
@@ -70,7 +69,7 @@ export default class MashroomSecurityMiddleware implements MashroomSecurityMiddl
         //  or a request that contains the header x-mashroom-no-extend-session (because checkAuthentication typically also extends the session).
         // The main reason is performance but also caching, since updating the session always adds the set-cookie header to the response
         //  and proxies refuse to cache responses which contain that header.
-        if (securityService.isAuthenticated(req) && !isStaticResourceRequest(req) && !req.headers[HEADER_DO_NOT_EXTEND_SESSION]) {
+        if (securityService.isAuthenticated(req) && !requestUtils.isStaticResourceRequest(req) && !req.headers[HEADER_DO_NOT_EXTEND_SESSION]) {
             await securityService.checkAuthentication(req);
         }
     }

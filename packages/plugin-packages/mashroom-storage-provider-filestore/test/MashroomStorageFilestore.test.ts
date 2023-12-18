@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 
 import MashroomStorageFilestore from '../src/storage/MashroomStorageFilestore';
 
@@ -11,7 +11,7 @@ describe('MashroomStorageFilestore', () => {
         const dataFolder = path.resolve(__dirname, './test-data');
         const dbFile = path.resolve(dataFolder, 'users.json');
         if (fs.existsSync(dbFile)) fs.unlinkSync(dbFile);
-        const storage = new MashroomStorageFilestore(dataFolder, '.', -1, true, dummyLoggerFactory);
+        const storage = new MashroomStorageFilestore(dataFolder, '.', -1, true, loggingUtils.dummyLoggerFactory);
 
         const usersCollection = storage.getCollection('users');
 

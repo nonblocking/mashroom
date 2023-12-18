@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalHttpProxyController from '../../../src/backend/controllers/PortalHttpProxyController';
 import type {MashroomPortalApp} from '../../../type-definitions';
@@ -153,7 +153,7 @@ const pluginRegistry: any = {
 };
 
 const pluginContext: any = {
-    loggerFactory: dummyLoggerFactory,
+    loggerFactory: loggingUtils.dummyLoggerFactory,
     services: {
         storage: {
         },

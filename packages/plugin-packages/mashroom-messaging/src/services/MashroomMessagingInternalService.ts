@@ -1,6 +1,5 @@
 
-import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
-import {topicMatcher, containsWildcard, startsWithWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
+import {loggingUtils, messagingUtils} from '@mashroom/mashroom-utils';
 
 import type {MashroomLogger, MashroomLoggerFactory, MashroomPluginService} from '@mashroom/mashroom/type-definitions';
 
@@ -75,7 +74,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
             throw new Error(`User is not permitted to subscribe to ${topic}`);
         }
 
-        const contextLogger = this._logger.withContext(userContext(user));
+        const contextLogger = this._logger.withContext(loggingUtils.userContext(user));
 
         contextLogger.debug(`User ${user.username} subscribes to topic: ${topic}`);
 
@@ -103,7 +102,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
             throw new Error(`User is not permitted to publish to ${topic}`);
         }
 
-        const contextLogger = this._logger.withContext(userContext(user));
+        const contextLogger = this._logger.withContext(loggingUtils.userContext(user));
 
         contextLogger.debug(`User ${user.username} publishes message to topic ${topic}:`, message);
 
@@ -134,7 +133,7 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
         this._logger.debug(`Received message for topic ${topic}:`, message);
 
         this._subscriptions.forEach((wrapper) => {
-            if (topicMatcher(wrapper.topic, topic)) {
+            if (messagingUtils.topicMatcher(wrapper.topic, topic)) {
                 if (this._isTopicOfDifferentUser(topic, wrapper.user) || !this._isTopicPermitted(topic, wrapper.user)) {
                     return;
                 }
@@ -145,11 +144,11 @@ export default class MashroomMessagingInternalService implements MashroomMessagi
     }
 
     private _isValidTopic(topic: string, allowWildcards: boolean): boolean {
-        if (!allowWildcards && containsWildcard(topic)) {
+        if (!allowWildcards && messagingUtils.containsWildcard(topic)) {
             this._logger.error(`Wildcards are not allowed`);
             return false;
         }
-        if (startsWithWildcard(topic)) {
+        if (messagingUtils.startsWithWildcard(topic)) {
             this._logger.error(`Topics cannot start with a wildcard`);
             return false;
         }

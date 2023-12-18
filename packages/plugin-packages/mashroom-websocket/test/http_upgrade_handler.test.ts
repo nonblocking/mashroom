@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import httpUpgradeHandlerFn from '../src/backend/webapp/http_upgrade_handler';
 import context from '../src/backend/context';
 
@@ -16,7 +16,7 @@ describe('http_upgrade_handler', () => {
         const req: any = {
             url: '/websocket/demo2',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     core: {
                         middlewareStackService: {
@@ -53,7 +53,7 @@ describe('http_upgrade_handler', () => {
         const req: any = {
             url: '/websocket/demo2',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     core: {
                         middlewareStackService: {
@@ -101,7 +101,7 @@ describe('http_upgrade_handler', () => {
         const req: any = {
             url: '/websocket/demo2',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     core: {
                         middlewareStackService: {

@@ -1,7 +1,7 @@
 import {existsSync} from 'fs';
 import {resolve, isAbsolute} from 'path';
 import {getUri} from 'get-uri';
-import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {requestUtils} from '@mashroom/mashroom-utils';
 import {PLACEHOLDER_REQUEST_URL, PLACEHOLDER_STATUS_CODE, PLACEHOLDER_MASHROOM_VERSION, PLACEHOLDER_I18N_MESSAGE} from './constants';
 import type {Request, Response, NextFunction, RequestHandler} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -33,7 +33,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             let writeBuffer: Array<() => void> = [];
 
             const doWrite = (args: Array<any>, exec: () => void) => {
-                if (res.statusCode >= 400 && !errorChecked && isHtmlRequest(req) && !isNotJsonResponse(res)) {
+                if (res.statusCode >= 400 && !errorChecked && requestUtils.isHtmlRequest(req) && !isNotJsonResponse(res)) {
                     errorChecked = true;
                     errorPageSendPending = true;
 

@@ -1,5 +1,5 @@
 
-import defaultRequestContext from './default_request_context';
+import defaultRequestContext from './default-request-context';
 
 import type {IncomingMessage} from 'http';
 import type {MashroomLoggerContext} from '../../../type-definitions';

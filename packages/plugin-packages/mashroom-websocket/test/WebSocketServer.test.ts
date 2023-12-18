@@ -5,17 +5,17 @@ jest.mock('uuid', () => ({
 }));
 
 import os from 'os';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import WebSocketServer from '../src/backend/WebSocketServer';
 import ReconnectMessageBufferStore from '../src/backend/webapp/ReconnectMessageBufferStore';
 
 jest.useFakeTimers();
-const reconnectMessageBufferStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', dummyLoggerFactory);
+const reconnectMessageBufferStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', loggingUtils.dummyLoggerFactory);
 
 describe('WebSocketServer', () => {
 
     it('creates a client', () => {
-        const webSocketServer = new WebSocketServer(dummyLoggerFactory, reconnectMessageBufferStore);
+        const webSocketServer = new WebSocketServer(loggingUtils.dummyLoggerFactory, reconnectMessageBufferStore);
 
         const webSocket: any = {
             on() { /* nothing to do */ },
@@ -42,7 +42,7 @@ describe('WebSocketServer', () => {
     });
 
     it('handles messages correctly', (done) => {
-        const webSocketServer = new WebSocketServer(dummyLoggerFactory, reconnectMessageBufferStore);
+        const webSocketServer = new WebSocketServer(loggingUtils.dummyLoggerFactory, reconnectMessageBufferStore);
 
         let onMessageHandler: any = null;
         const wsSend = jest.fn();
@@ -73,7 +73,7 @@ describe('WebSocketServer', () => {
     });
 
     it('handles client disconnect correctly', (done) => {
-        const webSocketServer = new WebSocketServer(dummyLoggerFactory, reconnectMessageBufferStore);
+        const webSocketServer = new WebSocketServer(loggingUtils.dummyLoggerFactory, reconnectMessageBufferStore);
 
         let onCloseHandler: any = null;
         const wsSend = jest.fn();

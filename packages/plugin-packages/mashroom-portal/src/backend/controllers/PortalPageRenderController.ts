@@ -1,6 +1,6 @@
 
 import {readFile} from 'fs/promises';
-import {determineUserAgent} from '@mashroom/mashroom-utils/lib/user_agent_utils';
+import {userAgentUtils} from '@mashroom/mashroom-utils';
 import context from '../context/global_portal_context';
 import minimalLayout from '../layouts/minimal_layout';
 import {
@@ -143,7 +143,7 @@ export default class PortalPageRenderController {
                     logger.info(`Requesting full page reload because original route ${originalPageRef.friendlyUrl} and requested route ${pageRef.friendlyUrl} have different themes`);
                     fullPageLoadRequired = true;
                 } else {
-                    const userAgent = determineUserAgent(req);
+                    const userAgent = userAgentUtils.determineUserAgent(req);
                     const allEnhancementsLoaded = await allEnhancementsExistOnOriginalPage(
                         this._pluginRegistry, sitePath, pageRef.friendlyUrl, originalPageRef.friendlyUrl, lang, userAgent, req);
                     if (!allEnhancementsLoaded) {
@@ -294,7 +294,7 @@ export default class PortalPageRenderController {
         const autoExtendAuthentication = context.portalPluginConfig.autoExtendAuthentication;
         const messagingConnectPath = (webSocketSupport && messagingService && messagingService.getWebSocketConnectPath(req)) || null;
         const privateUserTopic = user && messagingService && messagingService.getUserPrivateTopic(req);
-        const userAgent = determineUserAgent(req);
+        const userAgent = userAgentUtils.determineUserAgent(req);
 
         const appLoadingFailedMsg = i18nService.getMessage('portalAppLoadingFailed', lang);
         const messages = (key: string) => i18nService.getMessage(key, lang);

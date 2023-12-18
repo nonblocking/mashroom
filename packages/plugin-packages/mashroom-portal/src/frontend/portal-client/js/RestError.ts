@@ -1,5 +1,5 @@
 
-import {mergeStackTrace} from '@mashroom/mashroom-utils/lib/error_utils';
+import {errorUtils} from '@mashroom/mashroom-utils';
 
 export class RestError extends Error {
     constructor(private statusCode: number, message: string, rootCauseStack?: string) {
@@ -7,7 +7,7 @@ export class RestError extends Error {
         // Because we are extending a built-in class
         Object.setPrototypeOf(this, RestError.prototype);
         this.name = 'RestError';
-        this.stack = mergeStackTrace(this.stack ?? '', rootCauseStack);
+        this.stack = errorUtils.mergeStackTrace(this.stack ?? '', rootCauseStack);
     }
 
     getStatusCode(): number {

@@ -1,15 +1,14 @@
 
 import {resolve} from 'path';
 import {existsSync} from 'fs';
-import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
-import {withinTsNode} from '@mashroom/mashroom-utils/lib/ts_node_utils';
+import {modelUtils, tsNodeUtils} from '@mashroom/mashroom-utils';
 
 import type {MashroomPlugin, MashroomPluginLoader, MashroomPluginContext} from '../../type-definitions';
 
 export const createPluginConfig = (plugin: MashroomPlugin, loader: MashroomPluginLoader, context: MashroomPluginContext) => {
     const minimumPluginConfig = loader.generateMinimumConfig(plugin);
     const configFromServerConfig = context.serverConfig.plugins && context.serverConfig.plugins[plugin.name] || {};
-    return deepAssign({}, minimumPluginConfig, plugin.pluginDefinition.defaultConfig || {}, configFromServerConfig);
+    return modelUtils.deepAssign({}, minimumPluginConfig, plugin.pluginDefinition.defaultConfig || {}, configFromServerConfig);
 };
 
 export const getExternalPluginDefinitionFilePath = (pluginPackagePath: string, externalPluginConfigFileNames: Array<string>): string | undefined => {
@@ -17,7 +16,7 @@ export const getExternalPluginDefinitionFilePath = (pluginPackagePath: string, e
     externalPluginConfigFileNames.forEach((name) => {
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.json`));
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.js`));
-        if (withinTsNode()) {
+        if (tsNodeUtils.withinTsNode()) {
             possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.ts`));
         }
     });

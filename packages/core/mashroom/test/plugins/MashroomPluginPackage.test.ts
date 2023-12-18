@@ -1,7 +1,7 @@
 
 import path from 'path';
 import fsExtra from 'fs-extra';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginPackage from '../../src/plugins/MashroomPluginPackage';
 
 const getPluginPackageFolder = () => {
@@ -227,7 +227,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), loggingUtils.dummyLoggerFactory);
 
         // Set existing plugins
         // @ts-ignore
@@ -278,7 +278,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), loggingUtils.dummyLoggerFactory);
         expect(pluginPackage.status).toBe('building');
 
         pluginPackage.on('error', (event) => {
@@ -310,7 +310,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), loggingUtils.dummyLoggerFactory);
 
         expect(pluginPackage.status).toBe('building');
 
@@ -343,7 +343,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], [], new RegistryConnectorMock(), new BuilderMock(), loggingUtils.dummyLoggerFactory);
 
         expect(pluginPackage.status).toBe('building');
 
@@ -376,7 +376,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], ['mashroom'], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], ['mashroom'], new RegistryConnectorMock(), new BuilderMock(), loggingUtils.dummyLoggerFactory);
 
         expect(pluginPackage.status).toBe('building');
 
@@ -409,7 +409,7 @@ describe('MashroomPluginPackage', () => {
             }, 200);
         });
 
-        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], ['mashroom'], new RegistryConnectorMock(), new BuilderMock(), dummyLoggerFactory);
+        const pluginPackage = new MashroomPluginPackage(pluginPackagePath, [], ['mashroom'], new RegistryConnectorMock(), new BuilderMock(), loggingUtils.dummyLoggerFactory);
 
         expect(pluginPackage.status).toBe('building');
 

@@ -1,12 +1,12 @@
 
 import path from 'path';
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomI18NService from '../src/MashroomI18NService';
 
 describe('MashroomI18NService', () => {
 
     it('determines the browser locale correctly', () => {
-        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', '', '', loggerFactory);
+        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', '', '', loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             headers: {
@@ -15,7 +15,7 @@ describe('MashroomI18NService', () => {
             session: {
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 
@@ -26,7 +26,7 @@ describe('MashroomI18NService', () => {
     });
 
     it('sets the locale in the session object', () => {
-        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', '', '', loggerFactory);
+        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', '', '', loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             session: {
@@ -42,7 +42,7 @@ describe('MashroomI18NService', () => {
     it('determines the message correctly', () => {
 
         const translationsFolder = path.resolve(__dirname, './test-messages');
-        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', translationsFolder, '', loggerFactory);
+        const i18nService = new MashroomI18NService(['fr', 'en', 'de'], 'de', translationsFolder, '', loggingUtils.dummyLoggerFactory);
 
         const messsageUsernameEn = i18nService.getMessage('username', 'en');
         const messsageUsernameDe = i18nService.getMessage('username', 'de');

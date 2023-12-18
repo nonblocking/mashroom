@@ -1,7 +1,7 @@
 
 import {URL} from 'url';
 import fetch from 'node-fetch';
-import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
+import {configUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
 import type {
@@ -158,7 +158,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         if (!name) {
             throw new Error(`Invalid Portal App definition: No 'name' attribute! Remote Portal App endpoint: ${remotePortalAppEndpoint.url}`);
         }
-        if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
+        if (name.match(configUtils.INVALID_PLUGIN_NAME_CHARACTERS)) {
             throw new Error(`Invalid Portal App '${name}': The name contains invalid characters (/,?).`);
         }
 
@@ -214,7 +214,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
 
         const config = definition.defaultConfig || {};
-        evaluateTemplatesInConfigObject(config, this._logger);
+        configUtils.evaluateTemplatesInConfigObject(config, this._logger);
 
         const title = version === 2 ? config.title : definition.title;
         const category = version === 2 ? config.category : definition.category;

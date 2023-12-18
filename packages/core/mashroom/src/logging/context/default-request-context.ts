@@ -1,14 +1,13 @@
 
-import {determineUserAgent} from '@mashroom/mashroom-utils/lib/user_agent_utils';
-import {getClientIP} from '@mashroom/mashroom-utils/lib/ip_utils';
+import {userAgentUtils, ipUtils} from '@mashroom/mashroom-utils';
 
 import type {IncomingMessage} from 'http';
 import type {Request} from 'express';
 
 export default (req: Request | IncomingMessage) => {
-    const clientIP = getClientIP(req);
+    const clientIP = ipUtils.getClientIP(req);
 
-    const ua = determineUserAgent(req);
+    const ua = userAgentUtils.determineUserAgent(req);
 
     return {
         clientIP,

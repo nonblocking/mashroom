@@ -1,5 +1,5 @@
 
-import {determineUserAgent} from '../src/user_agent_utils';
+import {determineUserAgent} from '../src/user-agent-utils';
 
 describe('user_agent_utils.determineUserAgent', () => {
 

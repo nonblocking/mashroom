@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomSecurityService from '../src/services/MashroomSecurityService';
 
 describe('MashroomSecurityService', () => {
@@ -7,7 +7,7 @@ describe('MashroomSecurityService', () => {
     it('returns the user from the provider', () => {
         const req: any = {
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
         const aclChecker: any = {};
@@ -39,7 +39,7 @@ describe('MashroomSecurityService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
             url: 'http://localhost?hint1=foo&foo=bar&xxx=1',
             originalUrl: 'http://localhost?hint1=foo&foo=bar&xxx=1',
@@ -85,7 +85,7 @@ describe('MashroomSecurityService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
             url: 'http://localhost?hint1=foo&foo=bar&xxx=1',
             originalUrl: 'http://localhost?hint1=foo&foo=bar&xxx=1',
@@ -152,7 +152,7 @@ describe('MashroomSecurityService', () => {
 
         const request: any = {
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     storage: {
                         service: {
@@ -201,7 +201,7 @@ describe('MashroomSecurityService', () => {
     it('delegates to the acl checker', async () => {
         const req: any = {
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
             path: '/test',
             method: 'GET'
@@ -236,7 +236,7 @@ describe('MashroomSecurityService', () => {
     it('don\'t allow login with empty username or password', async () => {
         const req: any = {
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 

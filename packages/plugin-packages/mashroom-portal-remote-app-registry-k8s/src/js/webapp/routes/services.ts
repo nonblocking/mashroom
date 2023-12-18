@@ -1,5 +1,5 @@
 
-import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import context from '../../context';
 
 import type {Request, Response} from 'express';
@@ -72,7 +72,7 @@ export default (request: Request, response: Response) => {
                 portalApps: service.foundPortalApps.map((app) => ({
                     name: app.name,
                     version: app.version,
-                    pluginDef: jsonToHtml(app),
+                    pluginDef: htmlUtils.jsonToHtml(app),
                 })),
                 invalidPortalApps: service.invalidPortalApps,
             }))

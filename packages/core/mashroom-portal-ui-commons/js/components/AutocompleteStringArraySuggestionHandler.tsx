@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {escapeForRegExp} from '../utils/escape_utils';
+import {escapeForRegExp} from '../utils/escape-utils';
 
 import type {SuggestionHandler} from '../../type-definitions';
 

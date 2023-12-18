@@ -3,7 +3,7 @@ import {existsSync} from 'fs';
 import {resolve} from 'path';
 import {emptyDirSync, writeJsonSync} from 'fs-extra';
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import NpmUtils from '../../../src/plugins/building/NpmUtils';
 
 jest.setTimeout(60000);
@@ -31,7 +31,7 @@ describe('NpmUtils', () => {
         const mashroomCorePackageFolder = resolve(__dirname, '../../..');
         const mashroomPackageFolder = resolve(mashroomCorePackageFolder, '../../..');
 
-        const npmUtils = new NpmUtils(dummyLoggerFactory);
+        const npmUtils = new NpmUtils(loggingUtils.dummyLoggerFactory);
 
         expect(npmUtils.isRootPackage(mashroomCorePackageFolder)).toBeFalsy();
         expect(npmUtils.isRootPackage(mashroomPackageFolder)).toBeTruthy();
@@ -40,7 +40,7 @@ describe('NpmUtils', () => {
 
     it('installs the prod and dev dependencies in package.json', async () => {
         const packageFolder = getTestPackageFolder();
-        const npmUtils = new NpmUtils(dummyLoggerFactory);
+        const npmUtils = new NpmUtils(loggingUtils.dummyLoggerFactory);
 
         await npmUtils.install(packageFolder);
 
@@ -49,7 +49,7 @@ describe('NpmUtils', () => {
 
     it('installs the prod and dev dependencies in package.json and runs the build script', async () => {
         const packageFolder = getTestPackageFolder();
-        const npmUtils = new NpmUtils(dummyLoggerFactory);
+        const npmUtils = new NpmUtils(loggingUtils.dummyLoggerFactory);
 
         await npmUtils.install(packageFolder);
         await npmUtils.runScript(packageFolder, 'build');

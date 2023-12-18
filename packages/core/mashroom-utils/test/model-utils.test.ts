@@ -1,5 +1,5 @@
 
-import {deepAssign} from '../src/model_utils';
+import {deepAssign} from '../src/model-utils';
 
 describe('model_utils.deepAssign', () => {
 

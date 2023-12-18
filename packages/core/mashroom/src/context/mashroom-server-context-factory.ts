@@ -3,8 +3,8 @@ import path from 'path';
 import cluster from 'cluster';
 import express from 'express';
 
-import createLoggerDelegate from '../logging/delegates/create_logger_delegate';
-import createLoggerFactory from '../logging/create_logger_factory';
+import createLoggerDelegate from '../logging/delegates/create-logger-delegate';
+import createLoggerFactory from '../logging/create-logger-factory';
 import MashroomServerConfigLoader from '../config/MashroomServerConfigLoader';
 import MashroomPluginPackage from '../plugins/MashroomPluginPackage';
 import MashroomPlugin from '../plugins/MashroomPlugin';

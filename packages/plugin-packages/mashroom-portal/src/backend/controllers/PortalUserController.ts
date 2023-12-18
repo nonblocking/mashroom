@@ -1,5 +1,5 @@
 
-import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {requestUtils} from '@mashroom/mashroom-utils';
 import {getFrontendSiteBasePath} from '../utils/path_utils';
 
 import type {Request, Response} from 'express';
@@ -107,7 +107,7 @@ export default class PortalUserController {
                 await securityService.revokeAuthentication(req);
             }
 
-            if (isHtmlRequest(req)) {
+            if (requestUtils.isHtmlRequest(req)) {
                 let redirectUrl = null;
                 if (req.query.redirectUrl) {
                     // Use the redirect query param if any

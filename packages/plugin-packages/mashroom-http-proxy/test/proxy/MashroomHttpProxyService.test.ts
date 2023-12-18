@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomHttpProxyService from '../../src/proxy/MashroomHttpProxyService';
 
 describe('MashroomHttpProxyService', () => {
@@ -9,7 +9,7 @@ describe('MashroomHttpProxyService', () => {
         const mockReq: any = {
             method: 'DELETE',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
         const mockRes: any = {
@@ -32,7 +32,7 @@ describe('MashroomHttpProxyService', () => {
         const mockReq: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
         const mockRes: any = {

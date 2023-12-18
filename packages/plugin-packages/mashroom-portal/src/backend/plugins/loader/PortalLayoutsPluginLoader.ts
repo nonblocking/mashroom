@@ -1,6 +1,6 @@
 
 import path from 'path';
-import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
+import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalLayout} from '../../../../type-definitions';

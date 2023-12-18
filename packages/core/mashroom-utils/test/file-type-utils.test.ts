@@ -1,5 +1,5 @@
 
-import {isES6Module, isChunkWithHash, isTypescript} from '../src/file_type_utils';
+import {isES6Module, isChunkWithHash, isTypescript} from '../src/file-type-utils';
 
 describe('file_type_utils.isES6Module', () => {
 

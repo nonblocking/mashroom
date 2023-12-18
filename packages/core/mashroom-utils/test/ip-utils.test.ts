@@ -1,5 +1,5 @@
 
-import {getClientIP, clientIPMatch} from '../src/ip_utils';
+import {getClientIP, clientIPMatch} from '../src/ip-utils';
 
 describe('ip_utils.getClientIP', () => {
 

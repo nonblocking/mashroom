@@ -1,3 +1,3 @@
 
-export {default as mashroomServerContextFactory} from './context/mashroom_server_context_factory';
+export {default as mashroomServerContextFactory} from './context/mashroom-server-context-factory';
 

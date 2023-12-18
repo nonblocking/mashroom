@@ -1,6 +1,6 @@
 
 
-import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
+import {messagingUtils} from '@mashroom/mashroom-utils';
 import {getSubscriberClient, getPublisherClient, close} from '../redis_client';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -19,7 +19,7 @@ export default class MashroomMessagingExternalProviderRedis implements MashroomM
         if (_internalTopic.startsWith('/') || _internalTopic.endsWith('/')) {
             throw new Error('Internal topic must not start or end with a slash!');
         }
-        if (containsWildcard(_internalTopic)) {
+        if (messagingUtils.containsWildcard(_internalTopic)) {
             throw new Error('Internal topic must not contain wildcards!');
         }
 

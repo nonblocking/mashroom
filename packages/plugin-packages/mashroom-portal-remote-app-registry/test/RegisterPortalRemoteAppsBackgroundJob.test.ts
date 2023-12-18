@@ -1,6 +1,6 @@
 
 import nock from 'nock';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import RegisterPortalRemoteAppsBackgroundJob from '../src/js/jobs/RegisterPortalRemoteAppsBackgroundJob';
 import context from '../src/js/context';
 
@@ -15,7 +15,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
     const pluginContextHolder: any = {
         getPluginContext: () => {
             return {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 serverConfig: {
                     externalPluginConfigFileNames: []
                 },

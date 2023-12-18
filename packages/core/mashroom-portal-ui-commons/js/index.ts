@@ -30,4 +30,4 @@ export {mashroomPortalCommonsCombineReducers} from './store/reducers';
 
 export {setShowModal, setActiveTab} from './store/actions';
 
-export {escapeForHtml, escapeForRegExp} from './utils/escape_utils';
+export {escapeForHtml, escapeForRegExp} from './utils/escape-utils';

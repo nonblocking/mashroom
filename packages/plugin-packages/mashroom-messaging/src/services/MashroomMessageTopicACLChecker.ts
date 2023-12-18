@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging_utils';
+import {messagingUtils} from '@mashroom/mashroom-utils';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityRoles, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
@@ -32,7 +32,7 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
 
     allowed(topic: string, user: MashroomSecurityUser | null | undefined): boolean {
         const rules = this._getRuleList();
-        const matchingRule = rules.find((r) => topicMatcher(r.topic, topic));
+        const matchingRule = rules.find((r) => messagingUtils.topicMatcher(r.topic, topic));
         if (matchingRule) {
             const allowMatch = this._checkRulesMatch(user, matchingRule.allow);
             const denyMatch = this._checkRulesMatch(user, matchingRule.deny);

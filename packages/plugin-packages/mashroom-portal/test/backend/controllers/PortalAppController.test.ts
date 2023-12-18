@@ -1,6 +1,6 @@
 
 import {Writable} from 'stream';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalAppController from '../../../src/backend/controllers/PortalAppController';
 
@@ -206,7 +206,7 @@ const pluginRegistry: any = {
 };
 
 const pluginContext: any = {
-    loggerFactory: dummyLoggerFactory,
+    loggerFactory: loggingUtils.dummyLoggerFactory,
     serverInfo: {
       devMode: false,
     },

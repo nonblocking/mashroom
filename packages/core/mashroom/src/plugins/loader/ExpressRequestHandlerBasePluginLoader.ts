@@ -1,5 +1,5 @@
 
-import {removeFromExpressStack} from '../../utils/reload_utils';
+import {removeFromExpressStack} from '../../utils/reload-utils';
 import ExpressRequestHandlerWrapper from './ExpressRequestHandlerWrapper';
 
 import type {RequestHandler, Application} from 'express';

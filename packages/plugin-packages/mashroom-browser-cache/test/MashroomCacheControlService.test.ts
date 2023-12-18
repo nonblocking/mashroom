@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomCacheControlService from '../src/MashroomCacheControlService';
 
 describe('MashroomCacheControlService', () => {
@@ -8,7 +8,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -23,7 +23,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('SHARED', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
@@ -34,7 +34,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -56,7 +56,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('SHARED', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
@@ -67,7 +67,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -89,7 +89,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('PRIVATE_IF_AUTHENTICATED', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
@@ -100,7 +100,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'POST',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -113,7 +113,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('SHARED', req, res);
 
         expect(cacheControlHeader).toBeFalsy();
@@ -124,7 +124,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -137,7 +137,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, true, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, true, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('SHARED', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
@@ -148,7 +148,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -161,7 +161,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(true, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(true, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('SHARED', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
@@ -172,7 +172,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -194,7 +194,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('ONLY_FOR_ANONYMOUS_USERS', req, res);
 
         expect(cacheControlHeader).toBeTruthy();
@@ -205,7 +205,7 @@ describe('MashroomCacheControlService', () => {
         const req: any = {
             method: 'GET',
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 
@@ -218,7 +218,7 @@ describe('MashroomCacheControlService', () => {
             }
         };
 
-        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggerFactory);
+        const cacheControlService = new MashroomCacheControlService(false, false, 1800, loggingUtils.dummyLoggerFactory);
         cacheControlService.addCacheControlHeader('NEVER', req, res);
 
         expect(cacheControlHeader).toBeTruthy();

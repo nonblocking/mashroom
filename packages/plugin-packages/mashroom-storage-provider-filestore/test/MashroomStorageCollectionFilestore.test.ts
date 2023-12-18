@@ -1,8 +1,8 @@
 
 import path from 'path';
-import fs, {readFileSync, statSync, writeFileSync} from 'fs';
+import fs, {readFileSync, writeFileSync} from 'fs';
 import fsExtra from 'fs-extra';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomStorageCollectionFilestore from '../src/storage/MashroomStorageCollectionFilestore';
 
 import type {MashroomStorageCollection} from '@mashroom/mashroom-storage/type-definitions';
@@ -30,7 +30,7 @@ type Test = {
 describe('MashroomStorageCollectionFilestore', () => {
 
     it('writes new item and assigns an id', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 'a'});
         const insertedItem = await storage.insertOne({foo: 'bar'});
@@ -40,7 +40,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('inserts a bunch of new items correctly', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         for (let i = 0; i < 100; i++) {
             await storage.insertOne({a: i});
@@ -52,7 +52,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('returns first match with findOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 'a'});
         await storage.insertOne({b: 'b'});
@@ -70,7 +70,7 @@ describe('MashroomStorageCollectionFilestore', () => {
 
 
     it('supports simple filtering', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1});
         await storage.insertOne({b: 1});
@@ -89,7 +89,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('supports filter operators', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, x: {}});
         await storage.insertOne({b: 1, x: {}});
@@ -121,7 +121,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('supports regex search', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({foo: 'this is a test'});
         await storage.insertOne({foo: 'this is something else'});
@@ -138,7 +138,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('supports the not operator', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({foo: 'this is a test'});
         await storage.insertOne({foo: 'this is something else'});
@@ -150,7 +150,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('updates an existing item with updateOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1});
         const result = await storage.updateOne({a: 1}, {a: 2, x: {}});
@@ -166,7 +166,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('updates multiple existing items with updateMany', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({a: 1, b: 2});
@@ -180,7 +180,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('replaces the existing item with replaceOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1, b: 2});
         const result = await storage.replaceOne({a: 1}, {a: 2, x: {}});
@@ -197,7 +197,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('deletes the existing item with deleteOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({c: 1, d: 1});
@@ -212,7 +212,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     });
 
     it('deletes all existing items with deleteMany', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(getDbFile(), -1, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({c: 1, d: 1});
@@ -231,7 +231,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     it('checks the db file for updates before every change', async () => {
         const dbFile = getDbFile();
         const checkExternalChangePeriodMs = 2000;
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(dbFile, checkExternalChangePeriodMs, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(dbFile, checkExternalChangePeriodMs, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1, c: 1});
 
@@ -250,7 +250,7 @@ describe('MashroomStorageCollectionFilestore', () => {
     it('waits checkExternalChangePeriodMs until it reloads a changed db file', async () => {
         const dbFile = getDbFile();
         const checkExternalChangePeriodMs = 2000;
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(dbFile, checkExternalChangePeriodMs, true, dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionFilestore(dbFile, checkExternalChangePeriodMs, true, loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
 

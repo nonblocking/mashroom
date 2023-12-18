@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import {renderContent} from '../../../src/backend/utils/render_utils';
 import type {MashroomPortalPageApps} from '../../../type-definitions/internal';
@@ -70,7 +70,7 @@ describe('path_utils', () => {
             ]
         };
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 portal: {
                     service: {
@@ -93,7 +93,7 @@ describe('path_utils', () => {
             pluginContext,
         };
         const res: any = {};
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
 
         const result = await renderContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
 

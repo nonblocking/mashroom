@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {isSitePermitted, isSitePathPermitted, isPagePermitted, isAppPermitted, isProxyAccessPermitted} from '../../../src/backend/utils/security_utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 
@@ -13,7 +13,7 @@ describe('security_utils', () => {
     it('checks site resource permission', async () => {
         const checkResourcePermission = jest.fn();
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -42,7 +42,7 @@ describe('security_utils', () => {
     it('checks site resource permission by path', async () => {
         const checkResourcePermission = jest.fn();
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -83,7 +83,7 @@ describe('security_utils', () => {
     it('checks page resource permission', async () => {
         const checkResourcePermission = jest.fn();
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -112,7 +112,7 @@ describe('security_utils', () => {
     it('checks portal app instance resource permission', async () => {
         const checkResourcePermission = jest.fn();
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -140,7 +140,7 @@ describe('security_utils', () => {
 
     it('checks the defaultRestrictViewToRoles property for dynamically loaded portal apps', async () => {
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -180,7 +180,7 @@ describe('security_utils', () => {
 
     it('allows the Administrator role to access all portal apps', async () => {
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -205,7 +205,7 @@ describe('security_utils', () => {
 
     it('checks the restrictToRoles property for proxy accesses', async () => {
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -226,12 +226,12 @@ describe('security_utils', () => {
             restrictToRoles: ['Role1'],
         };
 
-        expect(await isProxyAccessPermitted(req, restProxyDef, dummyLoggerFactory())).toBe(false);
+        expect(await isProxyAccessPermitted(req, restProxyDef, loggingUtils.dummyLoggerFactory())).toBe(false);
     });
 
     it('does not even allow Administrator role access to a proxy if restrictToRoles is set', async () => {
         const pluginContext: any = {
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {
@@ -255,7 +255,7 @@ describe('security_utils', () => {
         };
 
 
-        expect(await isProxyAccessPermitted(req, restProxyDef, dummyLoggerFactory())).toBe(false);
+        expect(await isProxyAccessPermitted(req, restProxyDef, loggingUtils.dummyLoggerFactory())).toBe(false);
     });
 
 });

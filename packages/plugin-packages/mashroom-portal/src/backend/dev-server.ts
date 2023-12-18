@@ -1,7 +1,7 @@
 
 import path from 'path';
 import express from 'express';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import context, {setPortalPluginConfig} from './context/global_portal_context';
 import setupWebapp from './setup-webapp';
 import {SITES_COLLECTION, PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} from './constants';
@@ -201,7 +201,7 @@ app.use((req, res, next) => {
             devMode: true,
         },
         serverConfig,
-        loggerFactory: dummyLoggerFactory,
+        loggerFactory: loggingUtils.dummyLoggerFactory,
         services: {
             core: {
                 pluginService,

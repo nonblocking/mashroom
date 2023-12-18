@@ -1,5 +1,5 @@
 
-import {isNodeCluster, getAllWorkerPids} from '../src/cluster_utils';
+import {isNodeCluster, getAllWorkerPids} from '../src/cluster-utils';
 
 describe('cluster_utils.isNodeCluster', () => {
 

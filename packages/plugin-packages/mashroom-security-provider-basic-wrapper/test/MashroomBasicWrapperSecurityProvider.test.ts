@@ -1,6 +1,6 @@
 
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 
 import MashroomBasicWrapperSecurityProvider from '../src/MashroomBasicWrapperSecurityProvider';
 
@@ -35,7 +35,7 @@ describe('MashroomBasicWrapperSecurityProvider', () => {
                 authorization: 'Basic am9objpqb2huMTIz',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -71,7 +71,7 @@ describe('MashroomBasicWrapperSecurityProvider', () => {
             headers: {
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -102,7 +102,7 @@ describe('MashroomBasicWrapperSecurityProvider', () => {
             headers: {
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {

@@ -1,6 +1,5 @@
 
-import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
-import {isNodeCluster, getWorkerId, getAllWorkerPids} from '@mashroom/mashroom-utils/lib/cluster_utils';
+import {htmlUtils, clusterUtils} from '@mashroom/mashroom-utils';
 import {ready} from '../health/checks';
 import infoTemplate from './template';
 
@@ -8,7 +7,7 @@ import type {Request, Response} from 'express';
 
 const overviewRoute = async (req: Request, res: Response) => {
     let clusterDetailsHtml = '';
-    if (isNodeCluster()) {
+    if (clusterUtils.isNodeCluster()) {
         clusterDetailsHtml = await clusterDetails();
     }
 
@@ -25,12 +24,12 @@ const getUptime = () => {
 };
 
 const clusterDetails = async () => {
-    const workerPids = await getAllWorkerPids();
+    const workerPids = await clusterUtils.getAllWorkerPids();
 
     return `
         <tr>
             <th>Node Worker ID</th>
-            <td>${getWorkerId()}</td>
+            <td>${clusterUtils.getWorkerId()}</td>
         </tr>
         <tr>
             <th>Node Worker PIDs</th>
@@ -75,16 +74,16 @@ const overview = async (req: Request, clusterDetails: string) => {
             </tr>
             <tr>
                 <th>Node Cluster</th>
-                <td>${isNodeCluster() ? 'Yes' : 'No'}</td>
+                <td>${clusterUtils.isNodeCluster() ? 'Yes' : 'No'}</td>
             </tr>
             ${clusterDetails}
             <tr>
                 <th>Server Configuration</th>
-                <td><div class="json">${jsonToHtml(serverConfig)}</div></td>
+                <td><div class="json">${htmlUtils.jsonToHtml(serverConfig)}</div></td>
             </tr>
             <tr>
                 <th>Environment</th>
-                <td><div class="json">${jsonToHtml(process.env)}</div></td>
+                <td><div class="json">${htmlUtils.jsonToHtml(process.env)}</div></td>
             </tr>
         </table>
     `;

@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-empty-function: off */
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomErrorPagesMiddleware from '../src/MashroomErrorPagesMiddleware';
 import type {ErrorMapping} from '../type-definitions';
 
@@ -13,7 +13,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -49,7 +49,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -85,7 +85,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -120,7 +120,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -158,7 +158,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     i18n: {
                         service: {
@@ -206,7 +206,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -243,7 +243,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'application/json',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }
@@ -276,7 +276,7 @@ describe('MashroomErrorPagesMiddleware', () => {
                 accept: 'text/html',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                 }
             }

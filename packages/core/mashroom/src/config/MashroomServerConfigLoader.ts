@@ -2,12 +2,9 @@
 import os from 'os';
 import path from 'path';
 import {existsSync} from 'fs';
-import {createReadonlyProxy} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import {evaluateTemplatesInConfigObject} from '@mashroom/mashroom-utils/lib/config_utils';
-import {deepAssign} from '@mashroom/mashroom-utils/lib/model_utils';
-import {withinTsNode} from '@mashroom/mashroom-utils/lib/ts_node_utils';
+import {readonlyUtils, configUtils, modelUtils, tsNodeUtils} from '@mashroom/mashroom-utils';
 import ServerConfigurationError from '../errors/ServerConfigurationError';
-import defaultConfig from './mashroom_default_config';
+import defaultConfig from './mashroom-default-config';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '../../type-definitions';
 import type {
@@ -48,7 +45,7 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
         }
 
         let possibleConfigFiles = CONFIG_FILES;
-        if (!withinTsNode()) {
+        if (!tsNodeUtils.withinTsNode()) {
             possibleConfigFiles = possibleConfigFiles.filter((p) => !p.endsWith('.ts'));
         }
         this._logger.info('Considering config files (multiple possible):', possibleConfigFiles);
@@ -63,7 +60,7 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
                     // eslint-disable-next-line @typescript-eslint/no-var-requires
                     const externalConfigModule = require(configFile);
                     const externalConfig = externalConfigModule.default ?? externalConfigModule;
-                    config = deepAssign({}, config, externalConfig);
+                    config = modelUtils.deepAssign({}, config, externalConfig);
                 } catch (e) {
                     this._logger.error(`Loading config file failed: ${configFile}`, e);
                     throw new ServerConfigurationError(`Loading config file failed: ${configFile}`);
@@ -94,10 +91,10 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             pluginPackageFolders
         };
 
-        evaluateTemplatesInConfigObject(config, this._logger);
+        configUtils.evaluateTemplatesInConfigObject(config, this._logger);
 
         return {
-            getConfig: () => createReadonlyProxy(config),
+            getConfig: () => readonlyUtils.createReadonlyProxy(config),
         };
     }
 }

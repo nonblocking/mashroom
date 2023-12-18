@@ -4,8 +4,8 @@ import {readFileSync, existsSync} from 'fs';
 import {readdir} from 'fs/promises';
 import {EventEmitter} from 'events';
 import chokidar from 'chokidar';
-import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import {getExternalPluginDefinitionFilePath} from '../../utils/plugin_utils';
+import {readonlyUtils} from '@mashroom/mashroom-utils';
+import {getExternalPluginDefinitionFilePath} from '../../utils/plugin-utils';
 import type {FSWatcher} from 'chokidar';
 import type {MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder} from '../../../type-definitions';
 import type {MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName} from '../../../type-definitions/internal';
@@ -108,11 +108,11 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     }
 
     get pluginPackageFolders(): Readonly<Array<string>> {
-        return cloneAndFreezeArray(this._pluginPackageFolders.map((f) => f.path));
+        return readonlyUtils.cloneAndFreezeArray(this._pluginPackageFolders.map((f) => f.path));
     }
 
     get pluginPackagePaths(): Readonly<Array<MashroomPluginPackagePath>> {
-        return cloneAndFreezeArray(this._pluginPackagePaths);
+        return readonlyUtils.cloneAndFreezeArray(this._pluginPackagePaths);
     }
 
     private _processChange(pluginPackagePath: string) {

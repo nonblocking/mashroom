@@ -1,6 +1,6 @@
 
 import querystring from 'querystring';
-import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
+import {requestUtils} from '@mashroom/mashroom-utils';
 
 import type {
     MashroomSecurityAuthenticationResult,
@@ -200,7 +200,7 @@ export default class MashroomSecurityService implements MashroomSecurityServiceT
         if (securityProvider) {
             try {
                 // Only authenticate regular requests if user interaction is required
-                if (isHtmlRequest(request) || await securityProvider.canAuthenticateWithoutUserInteraction(request)) {
+                if (requestUtils.isHtmlRequest(request) || await securityProvider.canAuthenticateWithoutUserInteraction(request)) {
                     // Create a new session to prevent session fixation attacks
                     // See https://owasp.org/www-community/attacks/Session_fixation
                     await this._createNewSessionIfAny(request);

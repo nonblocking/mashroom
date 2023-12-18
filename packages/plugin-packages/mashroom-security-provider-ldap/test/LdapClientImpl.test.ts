@@ -1,4 +1,4 @@
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import LdapClientImpl from '../src/LdapClientImpl';
 import {startMockLdapServer, stopMockLdapServer} from './mockLdapServer';
 import type {LdapEntryUser} from '../type-definitions';
@@ -15,7 +15,7 @@ describe('LdapClientImpl', () => {
 
     it('binds correctly', async () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
-            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
+            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, loggingUtils.dummyLoggerFactory);
 
         const user: LdapEntryUser = {
             dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
@@ -32,7 +32,7 @@ describe('LdapClientImpl', () => {
 
     it('binds fails with invalid credentials', async () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
-            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
+            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, loggingUtils.dummyLoggerFactory);
 
         const user: LdapEntryUser = {
             dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
@@ -57,7 +57,7 @@ describe('LdapClientImpl', () => {
 
     it('executes the search correctly', async () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
-            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
+            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, loggingUtils.dummyLoggerFactory);
 
         const result = await ldapClient.searchUser('(&(objectClass=person)(uid=john))', ['extraAttr']);
         ldapClient.shutdown();

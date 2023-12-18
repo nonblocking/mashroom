@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPlugin from '../../src/plugins/MashroomPlugin';
 
 import type {MashroomPluginDefinition} from '../../type-definitions';
@@ -24,7 +24,7 @@ describe('MashroomPlugin', () => {
             }
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
 
         expect(plugin.name).toBe('Plugin 1');
         expect(plugin.type).toBe('web-app');

@@ -1,6 +1,6 @@
 
 import {parse} from 'path';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import PortalLayoutsPluginLoader from '../../../../src/backend/plugins/loader/PortalLayoutsPluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
 
@@ -39,7 +39,7 @@ describe('PortalLayoutsPluginLoader', () => {
         };
 
         const registry = new MashroomPortalPluginRegistry();
-        const loader = new PortalLayoutsPluginLoader(registry, dummyLoggerFactory);
+        const loader = new PortalLayoutsPluginLoader(registry, loggingUtils.dummyLoggerFactory);
 
         const context: any = {};
         loader.load(layoutsPlugin, {}, context);
@@ -94,7 +94,7 @@ describe('PortalLayoutsPluginLoader', () => {
         };
 
         const registry = new MashroomPortalPluginRegistry();
-        const loader = new PortalLayoutsPluginLoader(registry, dummyLoggerFactory);
+        const loader = new PortalLayoutsPluginLoader(registry, loggingUtils.dummyLoggerFactory);
 
         const context: any = {};
         loader.load(layoutsPlugin, {}, context);

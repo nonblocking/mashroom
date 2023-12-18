@@ -1,9 +1,9 @@
 
 import {Router} from 'express';
 import {up, ready, healthy} from './checks';
-import upRoute from './up_route';
-import readyRoute from './ready_route';
-import healthyRoute from './healthy_route';
+import upRoute from './up-route';
+import readyRoute from './ready-route';
+import healthyRoute from './healthy-route';
 
 import type {Request, Response} from 'express';
 

@@ -6,7 +6,7 @@ import {EventEmitter} from 'events';
 import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
-import {stripAnsiColors} from '../../utils/log_utils';
+import {stripAnsiColors} from '../../utils/log-utils';
 import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
 import NpmUtils from './NpmUtils';
 import NxUtils from './NxUtils';

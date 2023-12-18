@@ -1,5 +1,5 @@
 
-import {safeEvaluateStringTemplate, evaluateTemplatesInConfigObject} from '../src/config_utils';
+import {safeEvaluateStringTemplate, evaluateTemplatesInConfigObject} from '../src/config-utils';
 
 describe('config_utils.safeEvaluateStringTemplate', () => {
 

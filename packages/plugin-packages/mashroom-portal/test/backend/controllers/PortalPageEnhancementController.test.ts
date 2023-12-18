@@ -1,6 +1,6 @@
 
 import {Writable} from 'stream';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalPageEnhancementController from '../../../src/backend/controllers/PortalPageEnhancementController';
 import type {MashroomPortalPageEnhancement} from '../../../type-definitions';
@@ -53,7 +53,7 @@ const pluginRegistry: any = {
 };
 
 const pluginContext: any = {
-    loggerFactory: dummyLoggerFactory,
+    loggerFactory: loggingUtils.dummyLoggerFactory,
     services: {
     },
 };

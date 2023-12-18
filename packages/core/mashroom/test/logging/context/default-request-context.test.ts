@@ -1,5 +1,5 @@
 
-import defaultRequestContext from '../../../src/logging/context/default_request_context';
+import defaultRequestContext from '../../../src/logging/context/default-request-context';
 
 describe('default_request_context', () => {
 

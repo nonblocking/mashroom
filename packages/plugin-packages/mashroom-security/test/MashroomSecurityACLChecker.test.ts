@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomSecurityACLChecker from '../src/acl/MashroomSecurityACLChecker';
 import type {MashroomSecurityUser} from '../type-definitions';
 
@@ -7,14 +7,14 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows no anonymous access to a protected path', async () => {
         const aclPath = './test_acl.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
         const user: MashroomSecurityUser | null = null;
 
         const req: any = {
             path: '/portal',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req, user)).toBeFalsy();
@@ -23,7 +23,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/portal/foo/bar',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req2, user)).toBeFalsy();
@@ -32,7 +32,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/portal2',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req3, user)).toBeFalsy();
@@ -41,7 +41,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/portal2/',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req4, user)).toBeFalsy();
@@ -50,7 +50,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/a/b/bit/more/complicated',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req5, user)).toBeFalsy();
@@ -58,13 +58,13 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows anonymous access when allowed for all', async () => {
         const aclPath = './test_acl.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             path: '/portal/public-site/foo',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -73,14 +73,14 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows anonymous access to an unprotected path', async () => {
         const aclPath = './test_acl.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
         const user: MashroomSecurityUser | null = null;
 
         const req: any = {
             path: '/help/foo/bar',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -90,7 +90,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/a/bit/more/complicated',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req2, user)).toBeTruthy();
@@ -99,7 +99,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/portal2/foo',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req3, user)).toBeTruthy();
@@ -109,7 +109,7 @@ describe('MashroomSecurityACLChecker', () => {
             path: '/portal3',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req4, user)).toBeTruthy();
@@ -117,13 +117,13 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows a user with the required role access to a protected path', async () => {
         const aclPath = './test_acl.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             path: '/portal/foo/bar',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 
@@ -144,13 +144,13 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows no http method when denied for all', async () => {
         const aclPath = './test_acl.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             path: '/portal/foo/bar',
             method: 'DELETE',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -171,13 +171,13 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allow no access with a denied role even if the user has an allowed role', async () => {
         const aclPath = './test_acl.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             path: '/foo/x/bar',
             method: 'GET',
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -198,7 +198,7 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('works with a complex rules', async () => {
         const aclPath = './test_acl_new.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
         const user: MashroomSecurityUser | null = null;
 
 
@@ -209,7 +209,7 @@ describe('MashroomSecurityACLChecker', () => {
                 'x-forwarded-for': '5.5.5.5',
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req, user)).toBeFalsy();
@@ -221,7 +221,7 @@ describe('MashroomSecurityACLChecker', () => {
                 'x-forwarded-for': '5.5.5.5',
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
         expect(await aclChecker.allowed(req2, user)).toBeFalsy();
@@ -229,7 +229,7 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows anonymous users if the IP address is permitted', async () => {
         const aclPath = './test_acl_new.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
             path: '/portal/foo/bar',
@@ -238,7 +238,7 @@ describe('MashroomSecurityACLChecker', () => {
                 'x-forwarded-for': '10.5.5.5',
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 
@@ -247,7 +247,7 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows access when no roles but IP address matches', async () => {
         const aclPath = './test_acl_new.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
             username: 'test',
@@ -265,7 +265,7 @@ describe('MashroomSecurityACLChecker', () => {
                 'x-forwarded-for': '10.3.3.4',
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             },
         };
 
@@ -275,7 +275,7 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('allows access when a role matches but IP address doesnt', async () => {
         const aclPath = './test_acl_new.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
             username: 'test',
@@ -293,7 +293,7 @@ describe('MashroomSecurityACLChecker', () => {
                 'x-forwarded-for': '5.5.5.5',
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 
@@ -302,7 +302,7 @@ describe('MashroomSecurityACLChecker', () => {
 
     it('denies access when a roles matches but IP address is denied', async () => {
         const aclPath = './test_acl_new.json';
-        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggerFactory);
+        const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
             username: 'test',
@@ -320,7 +320,7 @@ describe('MashroomSecurityACLChecker', () => {
                 'x-forwarded-for': '1.2.3.4',
             },
             pluginContext: {
-                loggerFactory
+                loggerFactory: loggingUtils.dummyLoggerFactory,
             }
         };
 

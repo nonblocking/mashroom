@@ -1,8 +1,8 @@
 
 import path from 'path';
 import fsExtra from 'fs-extra';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
-import defaultConfig from '../../../src/config/mashroom_default_config';
+import {loggingUtils} from '@mashroom/mashroom-utils';
+import defaultConfig from '../../../src/config/mashroom-default-config';
 import MashroomPluginPackageScanner from '../../../src/plugins/scanner/MashroomPluginPackageScanner';
 
 const getPluginPackagesFolder = () => {
@@ -36,7 +36,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const foundPaths = [];
 
-        const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
+        const pluginPackageScanner = new MashroomPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
         pluginPackageScanner.on('packageAdded', (path) => {
             foundPaths.push(path);
         });
@@ -55,7 +55,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
-        const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
+        const pluginPackageScanner = new MashroomPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
 
         // @ts-ignore
         pluginPackageScanner._deferUpdateMillis = 100;
@@ -82,7 +82,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
-        const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
+        const pluginPackageScanner = new MashroomPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
 
         pluginPackageScanner.on('packageRemoved', (packagePath) => {
             pluginPackageScanner.stop();
@@ -107,7 +107,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const foundPaths = [];
 
-        const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
+        const pluginPackageScanner = new MashroomPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
         pluginPackageScanner.on('packageAdded', (path) => {
             foundPaths.push(path);
             if (foundPaths.length === 1) {
@@ -124,7 +124,7 @@ describe('MashroomPluginPackageScanner', () => {
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
-        const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
+        const pluginPackageScanner = new MashroomPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         pluginPackageScanner._deferUpdateMillis = 500;
 

@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {clientIPMatch, getClientIP} from '@mashroom/mashroom-utils/lib/ip_utils';
+import {ipUtils} from '@mashroom/mashroom-utils';
 
 import type {Request} from 'express';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -42,7 +42,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         const effectivePath = path.endsWith('/') ? path.substr(0, path.length - 1) : path;
         const method = req.method as HttpMethod;
         const username = user ? user.username : 'anonymous';
-        const clientIP = getClientIP(req);
+        const clientIP = ipUtils.getClientIP(req);
 
         logger.debug(`ACL check: url: ${path}, method: ${method}, clientIP: ${clientIP},  user: ${username}`);
 
@@ -89,7 +89,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         if (rules.hasOwnProperty('roles') || rules.hasOwnProperty('ips')) {
             const complexRules = rules as MashroomSecurityACLPermissionRuleComplex;
             const roleMatch = user && complexRules.roles && Array.isArray(complexRules.roles) && complexRules.roles.some((r) => user.roles.find((ur) => ur === r));
-            const ipMatch = complexRules.ips && Array.isArray(complexRules.ips) && clientIPMatch(req, complexRules.ips);
+            const ipMatch = complexRules.ips && Array.isArray(complexRules.ips) && ipUtils.clientIPMatch(req, complexRules.ips);
             return !!(roleMatch || ipMatch);
         }
         return false;

@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalUserController from '../../../src/backend/controllers/PortalUserController';
 
@@ -39,7 +39,7 @@ describe('PortalUserController', () => {
 
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -75,7 +75,7 @@ describe('PortalUserController', () => {
 
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -105,7 +105,7 @@ describe('PortalUserController', () => {
                 lang: 'fr',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     i18n: {
                         service: {
@@ -135,7 +135,7 @@ describe('PortalUserController', () => {
                 lang: 'zh',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     i18n: {
                         service: {
@@ -172,7 +172,7 @@ describe('PortalUserController', () => {
 
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -210,7 +210,7 @@ describe('PortalUserController', () => {
                 redirectUrl: '/foo/bar',
             },
             pluginContext: {
-                loggerFactory: dummyLoggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {

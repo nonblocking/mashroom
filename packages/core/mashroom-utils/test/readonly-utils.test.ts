@@ -1,5 +1,5 @@
 
-import {cloneAndFreezeObject, cloneAndFreezeArray, createReadonlyProxy} from '../src/readonly_utils';
+import {cloneAndFreezeObject, cloneAndFreezeArray, createReadonlyProxy} from '../src/readonly-utils';
 import ReadOnlyError from '../src/ReadOnlyError';
 
 describe('readonly_utils.cloneAndFreezeObject', () => {

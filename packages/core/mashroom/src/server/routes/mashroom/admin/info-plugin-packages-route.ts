@@ -1,5 +1,5 @@
 
-import {escapeHtml} from '@mashroom/mashroom-utils/lib/html_utils';
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -38,13 +38,13 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         }
         pluginPackagesRows.push(`
             <tr style="${rowBackgroundStyle}">
-                <td>${escapeHtml(pp.name)}</td>
+                <td>${htmlUtils.escapeHtml(pp.name)}</td>
                 <td>${homepageLink}</td>
-                <td>${escapeHtml(pp.author || '')}</td>
+                <td>${htmlUtils.escapeHtml(pp.author || '')}</td>
                 <td>${pp.license || ''}</td>
                 <td>${pp.version}</td>
                 <td style="${statusStyle}">${capitalize(pp.status)}</td>
-                <td>${escapeHtml(pp.errorMessage || '')}</td>
+                <td>${htmlUtils.escapeHtml(pp.errorMessage || '')}</td>
             </tr>`);
     });
 

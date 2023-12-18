@@ -1,7 +1,7 @@
 
 import {URL} from 'url';
 import fetch from 'node-fetch';
-import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
+import {configUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
 import type {
@@ -306,7 +306,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         if (!name) {
             throw new Error('Invalid Portal App definition: No "name" attribute!');
         }
-        if (name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
+        if (name.match(configUtils.INVALID_PLUGIN_NAME_CHARACTERS)) {
             throw new Error(`Invalid Portal App definition ${name}: The name contains invalid characters (/,?).`);
         }
         const serviceWithSameApp = context.registry.services.find((s) => s.url !== service.url && s.foundPortalApps.find((p) => p.name === name));
@@ -358,7 +358,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         }
 
         const config = definition.defaultConfig || {};
-        evaluateTemplatesInConfigObject(config, this._logger);
+        configUtils.evaluateTemplatesInConfigObject(config, this._logger);
 
         const title = version === 2 ? config.title : definition.title;
         const category = version === 2 ? config.category : definition.category;

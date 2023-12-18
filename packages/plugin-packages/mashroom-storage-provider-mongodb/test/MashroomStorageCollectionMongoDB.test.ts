@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setConnectionUriAndOptions, close} from '../src/mongodb';
 import MashroomStorageCollectionMongoDB from '../src/storage/MashroomStorageCollectionMongoDB';
 
@@ -28,7 +28,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('writes new item and assigns an id', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test1', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test1', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 'a'});
         const insertedItem = await storage.insertOne({foo: 'bar'});
@@ -38,7 +38,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('returns first match with findOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test2', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test2', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 'a'});
         await storage.insertOne({b: 'b'});
@@ -55,7 +55,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('supports simple filtering', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test3', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test3', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1});
         await storage.insertOne({b: 1});
@@ -74,7 +74,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('supports filter operators', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test4', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test4', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, x: {}});
         await storage.insertOne({b: 1, x: {}});
@@ -106,7 +106,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('supports regex search', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test5', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test5', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({foo: 'this is a test'});
         await storage.insertOne({foo: 'this is something else'});
@@ -123,7 +123,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('supports the not operator', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test6', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test6', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({foo: 'this is a test'});
         await storage.insertOne({foo: 'this is something else'});
@@ -135,7 +135,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('updates all properties of an existing property with updateOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test7', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test7', loggingUtils.dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1});
         const result = await storage.updateOne({a: 1}, {a: 2, x: {}});
@@ -151,7 +151,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('updates all properties of an existing property with updateMany', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test8', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test8', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({a: 1, b: 2});
@@ -165,7 +165,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('replaces the existing item with replaceOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test9', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test9', loggingUtils.dummyLoggerFactory);
 
         const insertedItem = await storage.insertOne({a: 1, b: 2});
         const result = await storage.replaceOne({a: 1}, {a: 2, x: {}});
@@ -182,7 +182,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('deletes the existing item with deleteOne', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test10', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test10', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({c: 1, d: 1});
@@ -197,7 +197,7 @@ describe('MashroomStorageCollectionMongoDB', () => {
     });
 
     it('deletes all existing items with deleteMany', async () => {
-        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test11', dummyLoggerFactory);
+        const storage: MashroomStorageCollection<Test> = new MashroomStorageCollectionMongoDB('test11', loggingUtils.dummyLoggerFactory);
 
         await storage.insertOne({a: 1, b: 1});
         await storage.insertOne({c: 1, d: 1});

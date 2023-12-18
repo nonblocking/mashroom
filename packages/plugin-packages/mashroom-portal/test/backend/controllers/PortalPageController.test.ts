@@ -1,6 +1,6 @@
 
 import path from 'path';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import PortalPageController from '../../../src/backend/controllers/PortalPageController';
 import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
@@ -105,7 +105,7 @@ const pluginContext: any = {
             adminApp: 'admin-portal-app',
         },
     },
-    loggerFactory: dummyLoggerFactory,
+    loggerFactory: loggingUtils.dummyLoggerFactory,
     services: {
         portal: {
             service: {

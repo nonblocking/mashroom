@@ -1,4 +1,4 @@
-import {escapeHeaderValue} from '@mashroom/mashroom-utils/lib/header_utils';
+import {headerUtils} from '@mashroom/mashroom-utils';
 import type {Request, Response} from 'express';
 import type {IncomingMessageWithContext, MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityService, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
@@ -65,7 +65,7 @@ export default class AddUserHeadersHttpProxyInterceptor implements MashroomHttpP
             [this.userNameHeader]: user.username,
         };
         if (user.displayName) {
-            headers[this.displayNameHeader] = escapeHeaderValue(user.displayName);
+            headers[this.displayNameHeader] = headerUtils.escapeHeaderValue(user.displayName);
         }
         if (user.email) {
             headers[this.emailHeader] = user.email;

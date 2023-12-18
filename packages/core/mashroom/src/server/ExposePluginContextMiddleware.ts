@@ -1,5 +1,5 @@
 
-import requestPluginContext from '../context/request_plugin_context';
+import requestPluginContext from '../context/request-plugin-context';
 
 import type {RequestHandler} from 'express';
 import type {MashroomPluginContextHolder} from '../../type-definitions';

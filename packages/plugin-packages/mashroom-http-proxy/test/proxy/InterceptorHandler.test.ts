@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import type {MashroomHttpProxyInterceptor} from '../../type-definitions';
 
@@ -130,7 +130,7 @@ describe('InterceptorHandler', () => {
 
         };
         const handler = new InterceptorHandler(pluginRegistry1);
-        const result = await handler.processHttpRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
+        const result = await handler.processHttpRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggingUtils.dummyLoggerFactory());
 
         expect(result).toEqual({
             addHeaders: {
@@ -160,7 +160,7 @@ describe('InterceptorHandler', () => {
             },
         };
         const handler = new InterceptorHandler(pluginRegistry1);
-        const result = await handler.processWsRequest(clientRequest, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
+        const result = await handler.processWsRequest(clientRequest, 'https://www.mashroom.com', { 'extra-header': '2' }, loggingUtils.dummyLoggerFactory());
 
         expect(result).toEqual({
             addHeaders: {
@@ -179,7 +179,7 @@ describe('InterceptorHandler', () => {
         const clientResponse: any = {
         };
         const handler = new InterceptorHandler(pluginRegistry2);
-        const result = await handler.processHttpRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggerFactory());
+        const result = await handler.processHttpRequest(clientRequest, clientResponse, 'https://www.mashroom.com', { 'extra-header': '2' }, loggingUtils.dummyLoggerFactory());
 
         expect(result).toEqual({
             responseHandled: true,
@@ -198,7 +198,7 @@ describe('InterceptorHandler', () => {
         const clientResponse: any = {
         };
         const handler = new InterceptorHandler(pluginRegistry1);
-        const result = await handler.processHttpResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggerFactory());
+        const result = await handler.processHttpResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggingUtils.dummyLoggerFactory());
 
         expect(result).toEqual({
             addHeaders: {
@@ -219,7 +219,7 @@ describe('InterceptorHandler', () => {
         const clientResponse: any = {
         };
         const handler = new InterceptorHandler(pluginRegistry3);
-        const result = await handler.processHttpResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggerFactory());
+        const result = await handler.processHttpResponse(clientRequest, clientResponse, 'https://www.mashroom.com', targetResponse, loggingUtils.dummyLoggerFactory());
 
         expect(result).toEqual({
             responseHandled: true,

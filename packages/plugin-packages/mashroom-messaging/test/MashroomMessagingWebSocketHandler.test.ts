@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomMessagingWebSocketHandler from '../src/services/MashroomMessagingWebSocketHandler';
 
 import type {
@@ -26,7 +26,7 @@ describe('MashroomMessagingWebSocketHandler', () => {
 
     const mockPluginContextHolder: any = {
         getPluginContext: () => ({
-            loggerFactory: dummyLoggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 core: {
                     pluginService: {

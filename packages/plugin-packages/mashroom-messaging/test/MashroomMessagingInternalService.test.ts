@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomMessagingInternalService from '../src/services/MashroomMessagingInternalService';
 
 describe('MashroomMessagingInternalService', () => {
@@ -39,7 +39,7 @@ describe('MashroomMessagingInternalService', () => {
 
     it('does not allow to subscribe to all messages', async () => {
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         const user: any = {};
         const dummyHandler = () => {
@@ -69,7 +69,7 @@ describe('MashroomMessagingInternalService', () => {
 
     it('does not allow to subscribe to invalid topics', async () => {
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         const user: any = {};
         const dummyHandler = () => {
@@ -90,7 +90,7 @@ describe('MashroomMessagingInternalService', () => {
 
     it('does not allow to subscribe to external topics', async () => {
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            ['external', 'what/ever'], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            ['external', 'what/ever'], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         const user: any = {};
         const dummyHandler = () => {
@@ -114,7 +114,7 @@ describe('MashroomMessagingInternalService', () => {
 
     it('calculates the private topic prefix correctly', () => {
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user2', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user2', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         const user: any = {
             username: 'mel'
@@ -132,7 +132,7 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         service.subscribe(user1, 'foo/#', (message, topic) => {
             expect(topic).toBe('foo/bar/1');
@@ -156,7 +156,7 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         service.subscribe(user1, 'user/mel/notification', (message, topic) => {
             expect(topic).toBe('user/mel/notification');
@@ -177,7 +177,7 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         await expect(service.subscribe(user1, 'user/maria/notification', () => {  /* Nothing to do */ })).rejects.toThrow('User is not permitted to subscribe to user/maria/notification');
     });
@@ -191,7 +191,7 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'my/user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'my/user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         service.subscribe(user1, 'my/#', (message) => {
             expect(message).toBeFalsy();
@@ -215,7 +215,7 @@ describe('MashroomMessagingInternalService', () => {
         aclAllowedMock.mockReturnValue(false);
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         await expect(service.subscribe(user1, 'protected/topic', () => { /* Nothing to do */ })).rejects.toThrow('User is not permitted to subscribe to protected/topic');
     });
@@ -231,7 +231,7 @@ describe('MashroomMessagingInternalService', () => {
 
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         service.subscribe(user1, 'protected/#', (message) => {
             expect(message).toBeFalsy();
@@ -260,7 +260,7 @@ describe('MashroomMessagingInternalService', () => {
         aclAllowedMock.mockReturnValue(false);
 
         const service = new MashroomMessagingInternalService(null, mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         await expect(service.publish(user1, 'protected/topic', {})).rejects.toThrow('User is not permitted to publish to protected/topic');
     });
@@ -272,7 +272,7 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         const service = new MashroomMessagingInternalService('mock', mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         await service.publish(user1, 'foo/bar', {});
 
@@ -286,7 +286,7 @@ describe('MashroomMessagingInternalService', () => {
         };
 
         const service = new MashroomMessagingInternalService('mock', mockRegistry,
-            [], 'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            [], 'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
         service.startListeners();
 
         service.subscribe(user1, 'foo/#', (message, topic) => {
@@ -311,7 +311,7 @@ describe('MashroomMessagingInternalService', () => {
 
         const service = new MashroomMessagingInternalService('mock', mockRegistry,
             ['external1', 'external2/foo'],
-            'user', false, mockAclChecker, mockPluginService, dummyLoggerFactory);
+            'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
         service.publish(user1, 'external2/foo/bar', {
             test2: true

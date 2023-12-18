@@ -1,7 +1,7 @@
 
 import path from 'path';
 import express from 'express';
-import PluginConfigurationError from '@mashroom/mashroom-utils/lib/PluginConfigurationError';
+import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
 
 import type {RequestHandler, Application} from 'express';

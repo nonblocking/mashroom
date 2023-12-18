@@ -1,6 +1,6 @@
 
 import nock from 'nock';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import context, {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
 import {renderServerSide, renderInlineStyleForServerSideRenderedApps} from '../../../src/backend/utils/ssr_utils';
 
@@ -48,7 +48,7 @@ describe('ssr_utils', () => {
     portalApps.forEach((app) => context.pluginRegistry.registerPortalApp(app as any));
 
     const pluginContext: any = {
-        loggerFactory: dummyLoggerFactory,
+        loggerFactory: loggingUtils.dummyLoggerFactory,
         serverInfo: {
             devMode: false,
         },
@@ -103,7 +103,7 @@ describe('ssr_utils', () => {
         const req: any  = {
             pluginContext,
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
         const html = await renderServerSide('Test App 2', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
         expect(html).toBeFalsy();
     });
@@ -113,7 +113,7 @@ describe('ssr_utils', () => {
         const req: any  = {
             pluginContext,
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
 
         const html = await renderServerSide('Test App 1', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
 
@@ -138,7 +138,7 @@ describe('ssr_utils', () => {
             },
             pluginContext,
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
 
         const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
 
@@ -178,7 +178,7 @@ describe('ssr_utils', () => {
                 sitePath: 'foo',
             }
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
 
         let hostHtml;
         let portalPageApps;
@@ -213,7 +213,7 @@ describe('ssr_utils', () => {
         const req: any  = {
             pluginContext,
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
         const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
         expect(html).toBeFalsy();
     });
@@ -227,7 +227,7 @@ describe('ssr_utils', () => {
         const req: any  = {
             pluginContext,
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
         const html = await renderServerSide('Test App 3', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
         expect(html).toBeTruthy();
         expect(html).toEqual('content from cache');
@@ -237,7 +237,7 @@ describe('ssr_utils', () => {
         const req: any  = {
             pluginContext,
         };
-        const logger = dummyLoggerFactory();
+        const logger = loggingUtils.dummyLoggerFactory();
         const result = await renderInlineStyleForServerSideRenderedApps(['Test App 1', 'Test App 3'], req, logger);
         expect(result).toBeTruthy();
         expect(result.headerContent).toBeTruthy();

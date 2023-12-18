@@ -1,7 +1,6 @@
 
 import {resolve} from 'path';
-import {cloneAndFreezeObject} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import PluginBootstrapError from '@mashroom/mashroom-utils/lib/PluginBootstrapError';
+import {readonlyUtils, PluginBootstrapError} from '@mashroom/mashroom-utils';
 
 import type {
     MashroomPlugin as MashroomPluginType, MashroomPluginType as MashroomPluginTypeType, MashroomPluginDefinition, MashroomPluginConfig,
@@ -109,7 +108,7 @@ export default class MashroomPlugin implements MashroomPluginType {
     }
 
     get pluginDefinition(): MashroomPluginDefinition {
-        return cloneAndFreezeObject(this._pluginDefinition);
+        return readonlyUtils.cloneAndFreezeObject(this._pluginDefinition);
     }
 
     get config(): MashroomPluginConfig | undefined | null {

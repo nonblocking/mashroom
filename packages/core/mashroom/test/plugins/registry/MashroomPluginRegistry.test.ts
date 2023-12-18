@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginRegistry from '../../../src/plugins/registry/MashroomPluginRegistry';
 
 const scannerOnMock = jest.fn();
@@ -43,7 +43,7 @@ describe('MashroomPluginRegistry', () => {
            }
         });
 
-        new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
 
         expect(pluginPackageFactoryMock.mock.calls.length).toBe(1);
         expect(pluginPackageFactoryMock.mock.calls[0][0]).toBe('/packages/plugin1');
@@ -93,7 +93,7 @@ describe('MashroomPluginRegistry', () => {
         const contextHolder = new PluginContextHolderMock();
         const onLoadedMock = jest.fn();
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, contextHolder, dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, contextHolder, loggingUtils.dummyLoggerFactory);
         registry.on('loaded', onLoadedMock);
         registry.registerPluginLoader('foo', new PluginLoaderMock());
 
@@ -146,7 +146,7 @@ describe('MashroomPluginRegistry', () => {
             getPluginContext: () => context,
         }));
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
 
         packageAddedCallback('/packages/plugin2');
 
@@ -172,7 +172,7 @@ describe('MashroomPluginRegistry', () => {
             }
         });
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
 
@@ -201,7 +201,7 @@ describe('MashroomPluginRegistry', () => {
             }
         });
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(new PluginPackageMock(), new ConnectorMock());
 
@@ -258,7 +258,7 @@ describe('MashroomPluginRegistry', () => {
         const onLoadedMock = jest.fn();
         const onUnloadMock = jest.fn();
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
 
@@ -314,7 +314,7 @@ describe('MashroomPluginRegistry', () => {
             emitLoaded: connectorEmitLoadedMock,
         }));
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
         // @ts-ignore
@@ -363,7 +363,7 @@ describe('MashroomPluginRegistry', () => {
             emitLoaded: connectorEmitLoadedMock,
         }));
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
         // @ts-ignore
@@ -397,7 +397,7 @@ describe('MashroomPluginRegistry', () => {
             return plugin;
         });
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         registry.registerPluginLoader('foo', new PluginLoaderMock());
 
         // @ts-ignore
@@ -457,7 +457,7 @@ describe('MashroomPluginRegistry', () => {
             return requiredPlugin;
         });
 
-        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), dummyLoggerFactory);
+        const registry = new MashroomPluginRegistry(new ScannerMock(), pluginPackageFactoryMock, pluginFactoryMock, new PluginContextHolderMock(), loggingUtils.dummyLoggerFactory);
         // @ts-ignore
         registry._pluginPackages.set(pluginPackage, new ConnectorMock());
         // @ts-ignore

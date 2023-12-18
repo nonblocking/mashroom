@@ -1,6 +1,6 @@
 
 import GlobalLoggerContext from '../../src/logging/context/GlobalLoggerContext';
-import createLoggerFactory from '../../src/logging/create_logger_factory';
+import createLoggerFactory from '../../src/logging/create-logger-factory';
 
 import type {LogLevel} from '../../type-definitions';
 import type {MashroomLoggerDelegate} from '../../type-definitions/internal';

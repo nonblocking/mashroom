@@ -1,6 +1,6 @@
 
 import nock from 'nock';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
 import DummyKubernetesConnector from '../src/js/k8s/DummyKubernetesConnector';
 import context from '../src/js/context';
@@ -185,7 +185,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             .reply(200, packageJson);
 
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
-            300, -1,false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1,false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -209,7 +209,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             .reply(200, packageJson);
 
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['environment=development'], null, undefined, '.*', 3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -232,7 +232,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             .reply(200, packageJson);
 
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('foo=bar', null, ['environment=dev'], undefined, 3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -265,7 +265,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         } as any);
 
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -286,7 +286,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
             .reply(200, packageJson);
 
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['environment=development2', 'environment=development'], null, null, undefined, 3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -310,7 +310,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     it('processes package.json correctly', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*', 3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson, null, {
             url: 'http://my-service.default:6789',
@@ -376,7 +376,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     it('processes a portal-app config v2 correctly', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*',  3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinition2, {
             url: 'http://my-service.default:6789',
@@ -457,7 +457,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     it('processes a portal-app config v1 correctly', () => {
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['default'], undefined, '.*',  3,
-            300, -1, false, [], new DummyKubernetesConnector(), dummyLoggerFactory);
+            300, -1, false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
 
         const {foundPortalApps} = backgroundJob.processPluginDefinition(packageJson2, pluginPackageDefinitionV1, {
             url: 'http://my-service.default:6789',
@@ -513,7 +513,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
         const dummyNamespaceConnector = new DummyKubernetesConnector();
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
-            300, -1,false, [], dummyNamespaceConnector, dummyLoggerFactory);
+            300, -1,false, [], dummyNamespaceConnector, loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 

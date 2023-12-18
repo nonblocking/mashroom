@@ -1,8 +1,8 @@
 
 import http from 'http';
 import https from 'https';
-import {fixTlsOptions} from '@mashroom/mashroom-utils/lib/tls_utils';
-import indexRoute from './routes/index_route';
+import {tlsUtils} from '@mashroom/mashroom-utils';
+import indexRoute from './routes/index-route';
 import mashroomRouter from './routes/mashroom';
 
 import type {Server as HttpServer} from 'http';
@@ -95,7 +95,7 @@ Starting
             return;
         }
 
-        const fixedTlsOptions = fixTlsOptions(this._config.tlsOptions, this._config.serverRootFolder, this._logger);
+        const fixedTlsOptions = tlsUtils.fixTlsOptions(this._config.tlsOptions, this._config.serverRootFolder, this._logger);
         this._logger.debug('Using TLS options: ', fixedTlsOptions);
 
         return new Promise<void>((resolve, reject) => {

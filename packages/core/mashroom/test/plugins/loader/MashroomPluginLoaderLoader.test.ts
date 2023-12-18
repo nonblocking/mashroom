@@ -2,7 +2,7 @@
 import path from 'path';
 import fs from 'fs';
 import fsExtra from 'fs-extra';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginLoaderLoader from '../../../src/plugins/loader/MashroomPluginLoaderLoader';
 import MashroomPlugin from '../../../src/plugins/MashroomPlugin';
 
@@ -61,7 +61,7 @@ describe('MashroomPluginLoaderLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             let loadCalled = false;
@@ -78,7 +78,7 @@ describe('MashroomPluginLoaderLoader', () => {
             getPluginContext: () => context
         }));
 
-        const loaderLoader = new MashroomPluginLoaderLoader(new PluginRegistryMock(), dummyLoggerFactory);
+        const loaderLoader = new MashroomPluginLoaderLoader(new PluginRegistryMock(), loggingUtils.dummyLoggerFactory);
 
         await loaderLoader.load(plugin, {}, new PluginContextHolderMock());
 
@@ -106,9 +106,9 @@ describe('MashroomPluginLoaderLoader', () => {
 
         const pluginPackage: any = {};
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
 
-        const loader = new MashroomPluginLoaderLoader(new PluginRegistryMock(), dummyLoggerFactory);
+        const loader = new MashroomPluginLoaderLoader(new PluginRegistryMock(), loggingUtils.dummyLoggerFactory);
         const loadedPlugin: any = {};
         // @ts-ignore
         loader._loadedPlugins.set('custom-plugin', loadedPlugin);

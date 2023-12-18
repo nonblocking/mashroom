@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomCDNService from '../src/MashroomCDNService';
 
 describe('MashroomCDNService', () => {
@@ -10,7 +10,7 @@ describe('MashroomCDNService', () => {
             '//localhost:8888'
         ];
 
-        const cdnService = new MashroomCDNService(cdnHosts, loggerFactory);
+        const cdnService = new MashroomCDNService(cdnHosts, loggingUtils.dummyLoggerFactory);
         const cdnHost = cdnService.getCDNHost();
         const cdnHost2 = cdnService.getCDNHost();
         const cdnHost3 = cdnService.getCDNHost();

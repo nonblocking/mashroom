@@ -1,5 +1,5 @@
 
-import {jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import context from '../../context';
 
 import type {Request, Response} from 'express';
@@ -43,7 +43,7 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
             portalApps: endpoint.portalApps.map((app) => ({
                 name: app.name,
                 version: app.version,
-                pluginDef: jsonToHtml(app),
+                pluginDef: htmlUtils.jsonToHtml(app),
             })),
             invalidPortalApps: endpoint.invalidPortalApps ?? [],
         }));

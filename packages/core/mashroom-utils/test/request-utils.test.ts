@@ -1,5 +1,5 @@
 
-import {isHtmlRequest, isAjaxRequest, isStaticResourceRequest} from '../src/request_utils';
+import {isHtmlRequest, isAjaxRequest, isStaticResourceRequest} from '../src/request-utils';
 
 describe('request_utils.isHtmlRequest', () => {
 

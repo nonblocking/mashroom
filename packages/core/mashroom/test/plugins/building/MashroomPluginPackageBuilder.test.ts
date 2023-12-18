@@ -4,7 +4,7 @@ jest.setTimeout(60000);
 import path from 'path';
 import fs from 'fs';
 import fsExtra from 'fs-extra';
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginPackageBuilder from '../../../src/plugins/building/MashroomPluginPackageBuilder';
 
 const getTmpFolder = () => {
@@ -64,7 +64,7 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
 
     it('builds a module for the first time correctly and write a build info', (done) => {
         const pluginPackagePath = getPluginPackageFolder();
-        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), dummyLoggerFactory);
+        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), loggingUtils.dummyLoggerFactory);
 
         builder.on('build-finished', (event) => {
             expect(event.success).toBeTruthy();
@@ -85,7 +85,7 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
 
     it('emits an error when a build error occurs', (done) => {
         const pluginPackagePath = getErroneousPluginPackageFolder();
-        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), dummyLoggerFactory);
+        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), loggingUtils.dummyLoggerFactory);
 
         builder.on('build-finished', (event) => {
             expect(event.success).toBeFalsy();
@@ -104,7 +104,7 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
 
     it('doesnt build if the buildStatus is already running', (done) => {
         const pluginPackagePath = getPluginPackageFolder();
-        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), dummyLoggerFactory);
+        const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), loggingUtils.dummyLoggerFactory);
 
         const buildInfoFile = path.resolve(__dirname, '../../../test-data/building1/tmp/build-data/test2.build.json');
         fsExtra.writeJsonSync(buildInfoFile, {
@@ -129,7 +129,7 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
     it('doesnt build if there were no changes since the last run', (done) => {
         (async () => {
             const pluginPackagePath = getPluginPackageFolder2();
-            const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), dummyLoggerFactory);
+            const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), loggingUtils.dummyLoggerFactory);
 
             const buildInfoFile = path.resolve(__dirname, '../../../test-data/building1/tmp/build-data/test3.build.json');
             fsExtra.writeJsonSync(buildInfoFile, {

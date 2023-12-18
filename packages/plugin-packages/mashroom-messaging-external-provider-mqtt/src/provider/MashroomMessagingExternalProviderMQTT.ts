@@ -1,7 +1,7 @@
 
 import {connect} from 'mqtt';
 
-import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
+import {messagingUtils} from '@mashroom/mashroom-utils';
 
 import type {MqttClient} from 'mqtt';
 import type {QoS} from 'mqtt-packet';
@@ -29,7 +29,7 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
         if (_internalTopic.startsWith('/') || _internalTopic.endsWith('/')) {
             throw new Error('Internal topic must not start or end with a slash!');
         }
-        if (containsWildcard(_internalTopic)) {
+        if (messagingUtils.containsWildcard(_internalTopic)) {
             throw new Error('Internal topic must not contain wildcards!');
         }
 

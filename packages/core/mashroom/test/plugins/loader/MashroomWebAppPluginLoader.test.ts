@@ -2,7 +2,7 @@
 import path from 'path';
 import fs from 'fs';
 import fsExtra from 'fs-extra';
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomWebAppPluginLoader from '../../../src/plugins/loader/MashroomWebAppPluginLoader';
 import MashroomPlugin from '../../../src/plugins/MashroomPlugin';
 
@@ -25,7 +25,7 @@ const ExpressApplicationMock: any = jest.fn(() => ({
 const pluginContextHolderMock = {
     getPluginContext() {
         const context: any = {
-            loggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 core: {
                     httpUpgradeService: {
@@ -71,7 +71,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => (req, res, next) => req.test = 1;
@@ -79,7 +79,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggingUtils.dummyLoggerFactory, pluginContextHolderMock);
         await loader.load(plugin, {path: '/foo'}, context);
 
         // @ts-ignore
@@ -110,7 +110,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => (req, res, next) => req.test = 3;
@@ -124,7 +124,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggingUtils.dummyLoggerFactory, pluginContextHolderMock);
         // @ts-ignore
         loader._loadedPlugins.set('Test2', {
             path: '/foo',
@@ -160,7 +160,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
         const requestHandlerWrapper: any = {};
 
         expressStack = [
@@ -169,7 +169,7 @@ describe('MashroomWebAppPluginLoader', () => {
             {name: 'bar'},
         ];
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggingUtils.dummyLoggerFactory, pluginContextHolderMock);
         // @ts-ignore
         loader._loadedPlugins.set('Test3', {
             path: '/foo',
@@ -200,7 +200,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => ({
@@ -211,7 +211,7 @@ describe('MashroomWebAppPluginLoader', () => {
 
         const context: any = {};
 
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggerFactory, pluginContextHolderMock);
+        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggingUtils.dummyLoggerFactory, pluginContextHolderMock);
         await loader.load(plugin, {path: '/websocket'}, context);
 
         // @ts-ignore

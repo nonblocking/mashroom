@@ -1,5 +1,5 @@
 
-import {topicMatcher} from '../src/messaging_utils';
+import {topicMatcher} from '../src/messaging-utils';
 
 describe('messaging_utils.topicMatcher', () => {
 

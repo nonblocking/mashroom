@@ -1,5 +1,5 @@
 
-import {isES6Module} from '@mashroom/mashroom-utils/lib/file_type_utils';
+import {fileTypeUtils} from '@mashroom/mashroom-utils';
 import getClientServices from './client_services';
 
 import type {
@@ -17,7 +17,7 @@ const loadJs = (path: string): Promise<void> => {
     return new Promise((resolve, reject) => {
         console.info('Loading JS resource: ', path);
         const scriptElem = document.createElement('script');
-        if (isES6Module(path)) {
+        if (fileTypeUtils.isES6Module(path)) {
             scriptElem.type = 'module';
         }
         scriptElem.src = path;

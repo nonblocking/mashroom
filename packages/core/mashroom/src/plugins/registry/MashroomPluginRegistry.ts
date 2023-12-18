@@ -1,7 +1,7 @@
 
 import {EventEmitter} from 'events';
-import {cloneAndFreezeObject, cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import {createPluginConfig} from '../../utils/plugin_utils';
+import {readonlyUtils} from '@mashroom/mashroom-utils';
+import {createPluginConfig} from '../../utils/plugin-utils';
 import MashroomPluginPackageRegistryConnector from './MashroomPluginPackageRegistryConnector';
 import MashroomPluginRegistryConnector from './MashroomPluginRegistryConnector';
 
@@ -388,15 +388,15 @@ export default class MashroomPluginRegistry implements MashroomPluginRegistryTyp
     }
 
     get plugins(): Readonly<Array<MashroomPluginType>> {
-        return cloneAndFreezeArray([...this._plugins.keys()]);
+        return readonlyUtils.cloneAndFreezeArray([...this._plugins.keys()]);
     }
 
     get pluginLoaders(): Readonly<MashroomPluginLoaderMap> {
-        return cloneAndFreezeObject(this._pluginLoaders);
+        return readonlyUtils.cloneAndFreezeObject(this._pluginLoaders);
     }
 
     get pluginPackages(): Readonly<Array<MashroomPluginPackage>> {
-        return cloneAndFreezeArray([...this._pluginPackages.keys()]);
+        return readonlyUtils.cloneAndFreezeArray([...this._pluginPackages.keys()]);
     }
 
 }

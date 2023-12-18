@@ -1,6 +1,6 @@
 
 import {ServerResponse} from 'http';
-import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
 import type {Socket} from 'net';
@@ -50,7 +50,7 @@ const handle = async (message: IncomingMessageWithContext, socket: Socket, head:
 
     context.server.getServer().handleUpgrade(message, socket, head, (ws) => {
         if (user) {
-            const loggerContext = {...logger.getContext(), ...userContext(user)};
+            const loggerContext = {...logger.getContext(), ...loggingUtils.userContext(user)};
             context.server.createClient(ws, connectPath, user, loggerContext);
         }
     });

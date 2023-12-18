@@ -1,5 +1,5 @@
 
-import {cloneAndFreezeObject} from '@mashroom/mashroom-utils/lib/readonly_utils';
+import {readonlyUtils} from '@mashroom/mashroom-utils';
 
 import type {MashroomServicePluginServices} from '../../type-definitions';
 import type {MashroomServiceRegistry as MashroomServiceRegistryType} from '../../type-definitions/internal';
@@ -21,6 +21,6 @@ export default class MashroomServiceRegistry implements MashroomServiceRegistryT
     }
 
     getServiceNamespaces() {
-        return cloneAndFreezeObject(this._namespaces);
+        return readonlyUtils.cloneAndFreezeObject(this._namespaces);
     }
 }

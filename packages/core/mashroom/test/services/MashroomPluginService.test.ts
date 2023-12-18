@@ -1,5 +1,5 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginService from '../../src/services/MashroomPluginService';
 
 describe('MashroomPluginService', () => {
@@ -15,7 +15,7 @@ describe('MashroomPluginService', () => {
             }
         };
 
-        const pluginService = new MashroomPluginService(pluginRegistry, dummyLoggerFactory);
+        const pluginService = new MashroomPluginService(pluginRegistry, loggingUtils.dummyLoggerFactory);
 
         pluginService.onLoadedOnce('test-plugin', () => {
             setTimeout(() => {
@@ -43,7 +43,7 @@ describe('MashroomPluginService', () => {
             }
         };
 
-        const pluginService = new MashroomPluginService(pluginRegistry, dummyLoggerFactory);
+        const pluginService = new MashroomPluginService(pluginRegistry, loggingUtils.dummyLoggerFactory);
 
         pluginService.onUnloadOnce('test-plugin', () => {
             setTimeout(() => {

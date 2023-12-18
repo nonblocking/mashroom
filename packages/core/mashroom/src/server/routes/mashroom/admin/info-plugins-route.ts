@@ -1,5 +1,5 @@
 
-import {escapeHtml, jsonToHtml} from '@mashroom/mashroom-utils/lib/html_utils';
+import {htmlUtils} from '@mashroom/mashroom-utils';
 import infoTemplate from './template';
 
 import type {Request, Response} from 'express';
@@ -26,8 +26,8 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
     plugins.sort((p1, p2) => p1.name.localeCompare(p2.name));
 
     plugins.forEach((plugin, pluginIndex) => {
-        const config = plugin.config ? jsonToHtml(plugin.config) : '&nbsp;';
-        const def = jsonToHtml(plugin.pluginDefinition);
+        const config = plugin.config ? htmlUtils.jsonToHtml(plugin.config) : '&nbsp;';
+        const def = htmlUtils.jsonToHtml(plugin.pluginDefinition);
         const lastReload = plugin.lastReloadTs ? new Date(plugin.lastReloadTs).toLocaleString() : '';
         let statusStyle = '';
         let rowBackgroundStyle = '';
@@ -40,12 +40,12 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
         }
         pluginRows.push(`
             <tr style="${rowBackgroundStyle}">
-                <td>${escapeHtml(plugin.name)}</td>
-                <td>${escapeHtml(plugin.description || '')}</td>
+                <td>${htmlUtils.escapeHtml(plugin.name)}</td>
+                <td>${htmlUtils.escapeHtml(plugin.description || '')}</td>
                 <td>${plugin.type}</td>
-                <td>${escapeHtml(plugin.pluginPackage.name)}</td>
+                <td>${htmlUtils.escapeHtml(plugin.pluginPackage.name)}</td>
                 <td style="${statusStyle}">${capitalize(plugin.status)}</td>
-                <td>${escapeHtml(plugin.errorMessage || '')}</td>
+                <td>${htmlUtils.escapeHtml(plugin.errorMessage || '')}</td>
                 <td>${lastReload}</td>
                 <td>
                    <script type="application/javascript">

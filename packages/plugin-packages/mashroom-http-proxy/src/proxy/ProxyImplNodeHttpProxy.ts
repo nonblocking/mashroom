@@ -1,6 +1,6 @@
 import {URLSearchParams, URL} from 'url';
 import {createProxyServer} from 'http-proxy';
-import {userContext} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
 import {processHttpResponse, processRequest, processWsRequest} from './utils';
 
@@ -423,7 +423,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         }
         this._wsConnectionMetrics.activeConnectionsTargetCount[target] ++;
 
-        const logger = this._globalLogger.withContext(userContext(requestMeta.user));
+        const logger = this._globalLogger.withContext(loggingUtils.userContext(requestMeta.user));
         logger.info(`WebSocket connection for ${requestMeta.uri} established:`, proxySocket.address());
     }
 
@@ -442,7 +442,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             }
         }
 
-        const logger = this._globalLogger.withContext(userContext(requestMeta.user));
+        const logger = this._globalLogger.withContext(loggingUtils.userContext(requestMeta.user));
         logger.info(`WebSocket connection for ${requestMeta.uri} closed`);
         requestMeta.end();
     }

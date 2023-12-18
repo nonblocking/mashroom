@@ -1,8 +1,6 @@
 
-import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomSecurityMiddleware from '../src/middleware/MashroomSecurityMiddleware';
-
-const loggerFactory: any = dummyLoggerFactory;
 
 describe('MashroomSecurityMiddleware', () => {
 
@@ -13,7 +11,7 @@ describe('MashroomSecurityMiddleware', () => {
         const req: any = {
             headers: {},
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -63,7 +61,7 @@ describe('MashroomSecurityMiddleware', () => {
         const req: any = {
             headers: {},
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -115,7 +113,7 @@ describe('MashroomSecurityMiddleware', () => {
     it('starts authentication if access is not permitted for anonymous', async () => {
         const req: any = {
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -158,7 +156,7 @@ describe('MashroomSecurityMiddleware', () => {
 
         const req: any = {
             pluginContext: {
-                loggerFactory,
+                loggerFactory: loggingUtils.dummyLoggerFactory,
                 services: {
                     security: {
                         service: {
@@ -200,7 +198,7 @@ describe('MashroomSecurityMiddleware', () => {
     it('re-checks authentication for user requests', async () => {
         let checkAuthenticationCalled = false;
         const pluginContext = {
-            loggerFactory,
+            loggerFactory: loggingUtils.dummyLoggerFactory,
             services: {
                 security: {
                     service: {

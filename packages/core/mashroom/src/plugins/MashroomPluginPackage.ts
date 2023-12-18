@@ -2,10 +2,9 @@
 import {readFile} from 'fs/promises';
 import {resolve} from 'path';
 import {EventEmitter} from 'events';
-import {cloneAndFreezeArray} from '@mashroom/mashroom-utils/lib/readonly_utils';
-import {evaluateTemplatesInConfigObject, INVALID_PLUGIN_NAME_CHARACTERS} from '@mashroom/mashroom-utils/lib/config_utils';
-import {removePackageModulesFromNodeCache} from '../utils/reload_utils';
-import {getExternalPluginDefinitionFilePath} from '../utils/plugin_utils';
+import {readonlyUtils, configUtils} from '@mashroom/mashroom-utils';
+import {removePackageModulesFromNodeCache} from '../utils/reload-utils';
+import {getExternalPluginDefinitionFilePath} from '../utils/plugin-utils';
 
 import type {
     MashroomPluginPackage as MashroomPluginPackageType,
@@ -239,7 +238,7 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
                 this._logger.error(`Ignoring plugin in package ${this._name} because it has no name property.`);
                 return false;
             }
-            if (p.name.match(INVALID_PLUGIN_NAME_CHARACTERS)) {
+            if (p.name.match(configUtils.INVALID_PLUGIN_NAME_CHARACTERS)) {
                 this._logger.error(`Ignoring plugin ${p.name} in package ${this._name} because its name has invalid characters (/,?).`);
                 return false;
             }
@@ -262,7 +261,7 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         // Evaluate templates in the config object
         fixedPluginDefinitions.forEach((p) => {
             if (p.defaultConfig) {
-                evaluateTemplatesInConfigObject(p.defaultConfig, this._logger);
+                configUtils.evaluateTemplatesInConfigObject(p.defaultConfig, this._logger);
             }
         });
 
@@ -308,7 +307,7 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
     }
 
     get pluginDefinitions(): Readonly<Array<MashroomPluginDefinition>> {
-        return cloneAndFreezeArray(this._pluginDefinitions);
+        return readonlyUtils.cloneAndFreezeArray(this._pluginDefinitions);
     }
 
     get status(): MashroomPluginPackageStatus {

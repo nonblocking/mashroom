@@ -2,7 +2,7 @@
 import os from 'os';
 import http from 'http';
 import express from 'express';
-import {dummyLoggerFactory as loggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
+import {loggingUtils} from '@mashroom/mashroom-utils';
 import WebSocketServer from '../WebSocketServer';
 import context from '../context';
 import app from './webapp';
@@ -12,8 +12,8 @@ import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 import type {Socket} from 'net';
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
-const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', loggerFactory);
-context.server = new WebSocketServer(loggerFactory, tmpFileStore);
+const tmpFileStore = new ReconnectMessageBufferStore(os.tmpdir(), '.', loggingUtils.dummyLoggerFactory);
+context.server = new WebSocketServer(loggingUtils.dummyLoggerFactory, tmpFileStore);
 context.restrictToRoles = ['Role1'];
 context.basePath = '/websocket';
 
@@ -22,7 +22,7 @@ const httpServer = http.createServer(wrapperApp);
 
 // Dummy context
 const pluginContext: any = {
-    loggerFactory,
+    loggerFactory: loggingUtils.dummyLoggerFactory,
     services: {
         core: {
             middlewareStackService: {

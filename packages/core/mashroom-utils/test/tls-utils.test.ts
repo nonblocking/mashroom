@@ -1,5 +1,5 @@
 
-import {fixTlsOptions} from '../src/tls_utils';
+import {fixTlsOptions} from '../src/tls-utils';
 
 describe('tls_utils.fixTlsOptions', () => {
 
