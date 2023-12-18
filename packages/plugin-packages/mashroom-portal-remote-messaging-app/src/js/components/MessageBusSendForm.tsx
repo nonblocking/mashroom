@@ -7,7 +7,7 @@ import {
     SourceCodeEditorField,
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
-import {messagingUtils} from '@mashroom/mashroom-utils';
+import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging-utils';
 
 import type {ReactNode} from 'react';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
@@ -42,7 +42,7 @@ export default class MessageBusSendForm extends PureComponent<Props> {
 
         if (!topic || !topic.trim()) {
             errors.topic = 'errorTopicMandatory';
-        } else if (messagingUtils.containsWildcard(topic)) {
+        } else if (containsWildcard(topic)) {
             errors.topic = 'errorTopicWildcards';
         } else if (topic.indexOf('/') === 0 || topic.lastIndexOf('/') === topic.length - 1) {
             errors.topic = 'errorTopicSlash';
