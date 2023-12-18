@@ -1,4 +1,3 @@
-const path = require('path');
 const sveltePreprocess = require("svelte-preprocess");
 const TerserPlugin = require('terser-webpack-plugin');
 
@@ -10,9 +9,6 @@ module.exports = {
         bundle: ['./src/main.ts']
     },
     resolve: {
-        alias: {
-            svelte: path.resolve('node_modules', 'svelte'),
-        },
         extensions: ['.mjs', '.js', '.ts', '.svelte'],
         mainFields: ['svelte', 'browser', 'module', 'main'],
         conditionNames: ['svelte', 'browser'],

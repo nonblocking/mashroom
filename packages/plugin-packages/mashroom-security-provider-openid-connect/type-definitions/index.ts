@@ -1,5 +1,15 @@
 
 import type {IssuerMetadata, ResponseType, TokenSet} from 'openid-client';
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
+
+// Session data
+declare module 'express-session' {
+    interface SessionData {
+        __MASHROOM_SECURITY_OICD_USER?: MashroomSecurityUser;
+        __MASHROOM_SECURITY_OICD_AUTH_DATA?: OpenIDConnectAuthData;
+        [key: string]: any;
+    }
+}
 
 export type Mode = 'OIDC' | 'OAuth2';
 

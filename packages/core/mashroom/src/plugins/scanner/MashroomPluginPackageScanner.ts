@@ -34,7 +34,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
     private readonly _pluginPackagePaths: Array<MashroomPluginPackagePath>;
     private _watcher: FSWatcher | undefined;
     private _deferredUpdatesTimestamps: DeferredUpdatesTimestamps;
-    private _deferredUpdatesTimer: NodeJS.Timer | undefined;
+    private _deferredUpdatesTimer: NodeJS.Timeout | undefined;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.scanner');

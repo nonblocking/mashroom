@@ -4,14 +4,11 @@ import type {IncomingMessage} from 'http';
 import type {Socket} from 'net';
 import type {TlsOptions} from 'tls';
 
-// Extends Express Request
+// Extend Express Request
 declare global {
     namespace Express {
         interface Request {
             pluginContext: MashroomPluginContext;
-            // The only way so far I found to allow to have the session optional
-            //  without colliding with the declarations in express-session
-            [key: string]: any;
         }
     }
 }

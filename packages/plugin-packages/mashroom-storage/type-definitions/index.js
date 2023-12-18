@@ -46,11 +46,11 @@ export interface MashroomStorageCollection<T: MashroomStorageRecord> {
     /**
      * Update the first item that matches the given filter.
      */
-    updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: $Shape<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
+    updateOne(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
     /**
     * Update multiple entries
     */
-    updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: $Shape<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
+    updateMany(filter: MashroomStorageObjectFilter<T>, propertiesToUpdate: Partial<MashroomStorageObject<T>>): Promise<MashroomStorageUpdateResult>;
     /**
      * Replace the first item that matches the given filter.
      */

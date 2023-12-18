@@ -32,7 +32,7 @@ To publish and subscribe messages you can use the RabbitMQ Admin Ui: http://loca
 
 Send a message from the Portal to an external system:
 
- * In the Rabbit MQ Admin UI got to *Queues*
+ * In the Rabbit MQ Admin UI got to *Queues and Streams*
  * Create a new Queue with an arbitrary name
  * Click on the new queue and go to *Add binding to this queue*
  * Enter *From Exchange*: *amq.topic* and *Routing key*: *external1.#* and click *Bind*

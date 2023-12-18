@@ -1,7 +1,7 @@
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging_utils';
 import LdapClientImpl from '../src/LdapClientImpl';
 import {startMockLdapServer, stopMockLdapServer} from './mockLdapServer';
-import type {LdapEntry} from '../type-definitions';
+import type {LdapEntryUser} from '../type-definitions';
 
 describe('LdapClientImpl', () => {
 
@@ -17,8 +17,8 @@ describe('LdapClientImpl', () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
             'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
 
-        const user: LdapEntry = {
-            dn: 'cn=john,OU=test,OU=users,DC=at,DC=nonblocking',
+        const user: LdapEntryUser = {
+            dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
             cn: 'john',
             sn: 'Do',
             givenName: 'John',
@@ -34,8 +34,8 @@ describe('LdapClientImpl', () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
             'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
 
-        const user: LdapEntry = {
-            dn: 'cn=john,OU=test,OU=users,DC=at,DC=nonblocking',
+        const user: LdapEntryUser = {
+            dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
             cn: 'john',
             sn: 'Do',
             givenName: 'John',
@@ -59,7 +59,7 @@ describe('LdapClientImpl', () => {
         const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
             'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, dummyLoggerFactory);
 
-        const result = await ldapClient.search('(&(objectClass=person)(uid=john))', ['extraAttr']);
+        const result = await ldapClient.searchUser('(&(objectClass=person)(uid=john))', ['extraAttr']);
         ldapClient.shutdown();
 
         expect(result).toBeTruthy();

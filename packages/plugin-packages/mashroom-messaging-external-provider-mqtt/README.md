@@ -44,8 +44,8 @@ And configure this plugin like this in the Mashroom config file:
     all messages published internally are prefixed with *mashroom/test* before published to MQTT and at the same time
     this provider listens to *mashroom/test/#* for messages (Default: mashroom)
  * _mqttConnectUrl_: MQTT connect URL (Default: mqtt://localhost:1883)
- * _mqttProtocolVersion_: MQTT protocol version (Default: 4)
+ * _mqttProtocolVersion_: MQTT protocol version (3, 4 or 5) (Default: 4)
  * _mqttQoS_: Quality of service level (0, 1, or 2) (Default: 1)
  * _mqttUser_: Optional MQTT username (Default: null)
  * _mqttPassword_: Optional MQTT password (Default: null)
- * _rejectUnauthorized_: If you use mqtts or wss with a self signed certificate set it to false (Default: true)
+ * _rejectUnauthorized_: If you use mqtts or wss with a self-signed certificate set it to false (Default: true)

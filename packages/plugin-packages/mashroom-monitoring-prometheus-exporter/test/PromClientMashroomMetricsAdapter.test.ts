@@ -181,7 +181,7 @@ describe('PromClientMashroomMetricsAdapter', () => {
         adapter.setMetrics(mashroomHistogramData);
 
         // @ts-ignore
-        expect(await promClientHistogram.get()).toEqual(await adapter.get());
+        expect(await promClientHistogram.get()).toMatchObject(await adapter.get());
     });
 
     it('transforms summary metrics correctly', async () => {

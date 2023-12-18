@@ -14,6 +14,7 @@ log/
 globalConfig.json
 lerna-debug.log
 .angular
+.nx
 
 /packages/plugin-packages/mashroom-background-jobs/public/
 /packages/plugin-packages/mashroom-docs-static/public/docs/

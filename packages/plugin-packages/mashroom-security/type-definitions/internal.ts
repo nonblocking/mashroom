@@ -6,6 +6,13 @@ import type {
     MashroomSecurityUser,
 } from './api';
 
+// Session data
+declare module 'express-session' {
+    interface SessionData {
+      [key: string]: unknown;
+    }
+}
+
 export interface MashroomSecurityMiddleware {
     middleware(): RequestHandler;
 }

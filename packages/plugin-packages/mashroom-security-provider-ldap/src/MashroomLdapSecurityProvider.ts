@@ -2,7 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import querystring from 'querystring';
-import loginFailureReason from './login_failure_reason';
+import loginFailureReason from './login-failure-reason';
 
 import type {MashroomSecurityService,
     MashroomSecurityProvider,
@@ -15,10 +15,11 @@ import type {
     MashroomLogger,
     MashroomLoggerFactory,
 } from '@mashroom/mashroom/type-definitions';
-import type {GroupToRoleMapping, UserToRoleMapping, LdapClient, LdapEntry} from '../type-definitions';
+import type {GroupToRoleMapping, UserToRoleMapping, LdapClient, LdapEntryUser, BaseLdapEntry} from '../type-definitions';
 
 const LDAP_AUTH_USER_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_USER';
 const LDAP_AUTH_EXPIRES_SESSION_KEY = '__MASHROOM_SECURITY_LDAP_AUTH_EXPIRES';
+const LDAP_SPECIAL_CHARACTERS = [',', '=', '+', '<', '>', '#', ';'];
 
 export default class MashroomLdapSecurityProvider implements MashroomSecurityProvider {
 
@@ -105,14 +106,14 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             };
         }
 
-        let user: LdapEntry | null = null;
+        let user: LdapEntryUser | null = null;
         const userSearchFilter = this._userSearchFilter.replace('@username@', username);
         logger.debug(`Search for users: ${userSearchFilter}`);
         const extraAttributes = [
             ...(this._secretsMapping ? Object.values(this._secretsMapping) : []),
             ...(this._extraDataMapping ? Object.values(this._extraDataMapping) : []),
         ];
-        const users = await this._ldapClient.search(userSearchFilter, extraAttributes);
+        const users = await this._ldapClient.searchUser(userSearchFilter, extraAttributes);
         if (users.length > 0) {
             if (users.length === 1) {
                 user = users[0];
@@ -220,7 +221,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         return request.session[LDAP_AUTH_USER_SESSION_KEY];
     }
 
-    private async getUserGroups(user: LdapEntry, logger: MashroomLogger): Promise<Array<string>> {
+    private async getUserGroups(user: BaseLdapEntry, logger: MashroomLogger): Promise<Array<string>> {
         if (!this._groupSearchFilter || !this._groupSearchFilter.trim()) {
             return [];
         }
@@ -228,7 +229,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         const distinguishedName = this._escapeSpecialCharactersInDistinguishedName(user.dn);
         const groupSearchFilter = `(&${this._groupSearchFilter}(member=${distinguishedName}))`;
         logger.debug(`Search for user groups: ${groupSearchFilter}`);
-        const groupEntries = await this._ldapClient.search(groupSearchFilter);
+        const groupEntries = await this._ldapClient.searchGroups(groupSearchFilter);
         return groupEntries.map((e) => e.cn);
     }
 
@@ -335,10 +336,15 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     // Escape special characters in the distinguished name.
     // See RFC 2253: https://datatracker.ietf.org/doc/html/rfc2253
     private _escapeSpecialCharactersInDistinguishedName(dn: string): string {
-        let escapedDn = dn;
-        [',', '=', '+', '<', '>', '#', ';'].forEach((specialChar) => {
-            escapedDn = escapedDn.replace(specialChar, `\\${specialChar}`);
-        });
-        return escapedDn;
+        return dn
+            .split(',').map((rdn) => {
+                const [attribute, value] = rdn.split('=');
+                let escapedValue = value;
+                LDAP_SPECIAL_CHARACTERS.forEach((specialChar) => {
+                    escapedValue = escapedValue.replaceAll(specialChar, `\\${specialChar}`);
+                });
+                return `${attribute}=${escapedValue}`;
+            })
+            .join(',');
     }
 }

@@ -2,6 +2,17 @@
 import type {RequestHandler} from 'express';
 import type {RequestVHostMappingInfo} from './index';
 
+// Extend Express Request
+declare global {
+    namespace Express {
+        interface Request {
+            __vhostMappingInfo?: RequestVHostMappingInfo;
+        }
+    }
+}
+
+
+
 export interface MashroomVHostPathMapperMiddleware {
     middleware(): RequestHandler;
 }

@@ -6,17 +6,17 @@ volumes:
 services:
     redis:
         container_name: mashroom_testserver3_redis
-        image: redis
+        image: redis:7.2.3
         ports:
             - "6379:6379"
     mongodb:
         container_name: mashroom_testserver3_mongo
-        image: mongo
+        image: mongo:7.0.4
         ports:
             - "27017:27017"
     mosquitto:
         container_name: mashroom_testserver3_mosquitto
-        image: eclipse-mosquitto
+        image: eclipse-mosquitto:2.0.18
         ports:
             - "1883:1883"
             - "9001:9001"

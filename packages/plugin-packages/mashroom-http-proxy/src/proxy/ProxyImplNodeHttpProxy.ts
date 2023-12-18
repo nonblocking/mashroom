@@ -9,7 +9,8 @@ import type {
     Proxy,
     HttpHeaderFilter,
     InterceptorHandler,
-    WSConnectionMetrics
+    WSConnectionMetrics,
+    ProxyRequestMeta,
 } from '../../type-definitions/internal';
 import type {IncomingMessage, ServerResponse, ClientRequest} from 'http';
 import type {Socket} from 'net';
@@ -21,21 +22,10 @@ import type {
     MashroomLoggerFactory,
     IncomingMessageWithContext
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomSecurityUser, MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
+import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 
 type ProxyServer = ReturnType<typeof createProxyServer>;
-
-type ProxyRequestMeta = {
-    readonly startTime: [number, number];
-    readonly uri: string;
-    readonly additionalQueryParams: ParsedQs;
-    readonly type: 'HTTP' | 'WS';
-    readonly user: MashroomSecurityUser | undefined | null;
-    retries: number;
-    readonly retry: () => void;
-    readonly end: () => void;
-}
 
 const REQUEST_META_PROP = 'mashroomRequestMeta';
 const MAX_RETRIES = 2;

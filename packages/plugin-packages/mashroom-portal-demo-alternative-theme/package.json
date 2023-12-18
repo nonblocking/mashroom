@@ -14,13 +14,13 @@
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^6.4.0",
+        "@fortawesome/fontawesome-free": "^6.5.1",
         "@mashroom/mashroom": "2.4.5",
         "@mashroom/mashroom-portal": "2.4.5",
-        "@types/express": "^4.17.17",
-        "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.1",
-        "bootstrap": "^5.2.3"
+        "@types/express": "^4.17.21",
+        "@types/react": "^18.2.45",
+        "@types/react-dom": "^18.2.18",
+        "bootstrap": "^5.3.2"
     },
     "scripts": {
         "lint": "eslint src --ext .ts --ext .tsx --fix",
@@ -29,7 +29,7 @@
         "build:backend": "babel src/backend -d dist --extensions .ts,.tsx",
         "build:frontend": "webpack --mode production",
         "build:style": "sass --style compressed --no-source-map --load-path=. src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
-        "build:copy-assets": "cpy \"assets/*\" dist/public/assets && cpy . ../../../dist/public/fontawesome --cwd=node_modules/@fortawesome/fontawesome-free --parents",
+        "build:copy-assets": "cpy \"assets/*\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome",
         "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
     },
     "mashroom": {

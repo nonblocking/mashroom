@@ -33,6 +33,7 @@
         "@typescript-eslint/consistent-type-imports": "error",
         "@typescript-eslint/no-explicit-any": "off",
         "solid/no-destructure": "off",
-        "solid/no-innerhtml": "warn"
+        "solid/no-innerhtml": "warn",
+        "@typescript-eslint/no-unused-vars": "warn"
     }
 }

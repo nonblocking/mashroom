@@ -4,6 +4,7 @@ import {MashroomPortalAppSetup, MashroomPortalClientServices, MashroomPortalMess
 
 @Component({
     selector: 'app-mashroom-portal-angular-demo',
+    standalone: true,
     templateUrl: './app.component.html',
     providers: []
 })
@@ -23,7 +24,7 @@ export class AppComponent {
         this.messageBus = _clientServices.messageBus;
         this.messageBus.subscribe('ping', () => {
             this.pings++;
-            // Zone.js cannot detect this change
+            // Angular cannot detect this change automatically
             cdRef.detectChanges();
         });
     }

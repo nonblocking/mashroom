@@ -3,6 +3,17 @@
 
 ## [unreleased]
 
+ * LDAP Security Provider: Fixed escaping of special characters in the DN. Didn't work if the same special character occurred multiple times.
+ * Dropped support for Node.js 16 - required is now 18 or 20
+ * All 3rd party libraries upgrades and switched to npm workspaces for dependency management
+   **BREAKING CHANGE**: The *request.session* type no longer accept any property, you have to declare your session properties like this now:
+   ```typescript
+     declare module 'express-session' {
+       interface SessionData {
+         foo?: string;
+       }
+     }
+   ```
  * File Storage: Performance improvements:
    * It polls for external changes to the DB file every **checkExternalChangePeriodMs** instead with every access.
      This will reduce the CPU load slightly. Default value of checkExternalChangePeriodMs is now 100, but you can increase it further

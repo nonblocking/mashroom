@@ -5,6 +5,14 @@ import type {
     RemotePortalAppEndpoint,
 } from './api';
 
+// Session data
+declare module 'express-session' {
+    interface SessionData {
+        __MASHROOM_PORTAL_REMOTE_APPS?: Array<MashroomPortalApp>;
+        __MASHROOM_PORTAL_REMOTE_APP_ENDPOINTS?: Array<RemotePortalAppEndpoint>;
+    }
+}
+
 export type RemotePortalAppEndpointAddRequest = {
     readonly url: string,
     readonly sessionOnly?: boolean

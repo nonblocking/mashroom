@@ -3,7 +3,7 @@ version: "3"
 services:
     openLdap:
         container_name: mashroom_testserver4_openldap
-        image: osixia/openldap
+        image: osixia/openldap:1.5.0
         ports:
             - "1389:389"
             - "1636:636"

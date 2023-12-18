@@ -3,7 +3,8 @@ import {connect} from 'mqtt';
 
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging_utils';
 
-import type {MqttClient, QoS} from 'mqtt';
+import type {MqttClient} from 'mqtt';
+import type {QoS} from 'mqtt-packet';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomExternalMessageListener} from '@mashroom/mashroom-messaging/type-definitions';
 import type {MashroomMessagingExternalProviderMQTT as MashroomMessagingExternalProviderMQTTType} from '../../type-definitions';
@@ -11,13 +12,15 @@ import type {MashroomMessagingExternalProviderMQTT as MashroomMessagingExternalP
 const CONNECT_TIMEOUT = 20000;
 const RECONNECT_PERIOD = 5000;
 
+type ProtocolVersion = 3 | 4 | 5 | undefined;
+
 export default class MashroomMessagingExternalProviderMQTT implements MashroomMessagingExternalProviderMQTTType {
 
     private _logger: MashroomLogger;
     private _client: MqttClient | undefined;
     private _listeners: Array<MashroomExternalMessageListener>;
 
-    constructor(private _internalTopic: string, private _mqttConnectUrl: string, private _mqttProtocolVersion: number, private _mqttQoS: QoS,
+    constructor(private _internalTopic: string, private _mqttConnectUrl: string, private _mqttProtocolVersion: ProtocolVersion, private _mqttQoS: QoS,
                 private _mqttUser: string | undefined, private _mqttPassword: string | undefined,
                 private _rejectUnauthorized: boolean, loggerFactory: MashroomLoggerFactory) {
         if (!_internalTopic) {
@@ -151,8 +154,8 @@ export default class MashroomMessagingExternalProviderMQTT implements MashroomMe
         client.on('error', (err) => {
             this._logger.error('Error', err);
         });
-        client.on('close', (err: any) => {
-            this._logger.warn('Connection to MQTT server lost', err || '');
+        client.on('close', () => {
+            this._logger.warn('Connection to MQTT server lost');
         });
 
         this._client = client;

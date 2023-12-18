@@ -10,13 +10,13 @@
         "pages/**"
     ],
     "dependencies": {
-        "get-uri": "^4.0.0"
+        "get-uri": "^6.0.2"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.4.5",
         "@mashroom/mashroom-i18n": "2.4.5",
         "@mashroom/mashroom-utils": "2.4.5",
-        "@types/express": "^4.17.17"
+        "@types/express": "^4.17.21"
     },
     "jest": {
         "verbose": true,

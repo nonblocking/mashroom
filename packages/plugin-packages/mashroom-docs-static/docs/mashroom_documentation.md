@@ -79,7 +79,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 |                     | Supported                                                                                                                      |
 | ------------------- |--------------------------------------------------------------------------------------------------------------------------------|
 | Operating Systems   | Linux, MacOS, Windows                                                                                                          |
-| Node.js             | 16.x, 18.x, 20.x                                                                                                               |
+| Node.js             | 18.x, 20.x                                                                                                                     |
 | HTTP                | 1.0, 1.1, 2 + TLS 1.1, 1.2, 1.3                                                                                                |
 | Authentication      | LDAP (Active Directory), OpenID Connect/OAuth2, local user database (JSON file)                                                |
 | Authorization       | Role based; ACL (URL and HTTP method, based on roles and/or IP address); Resource permissions (Page, App instance, Topic, ...) |

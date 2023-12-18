@@ -1,5 +1,5 @@
 
-import loginFailureReason from '../src/login_failure_reason';
+import loginFailureReason from '../src/login-failure-reason';
 
 describe('login_failure_reason', () => {
 

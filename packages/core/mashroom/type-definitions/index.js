@@ -4,11 +4,9 @@ import type {Router, $Request, $Response, $Application, NextFunction} from 'expr
 
 export type ExpressRequestWithContext = $Request & {
     pluginContext: MashroomPluginContext,
-    session?: any;
 };
 export type IncomingMessageWithContext = http$IncomingMessage<> & {
     pluginContext: MashroomPluginContext;
-    session?: any;
 }
 
 export type ExpressRequest = ExpressRequestWithContext;

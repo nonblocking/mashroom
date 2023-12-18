@@ -1,6 +1,6 @@
 import {existsSync} from 'fs';
 import {resolve, isAbsolute} from 'path';
-import getUri from 'get-uri';
+import {getUri} from 'get-uri';
 import {isHtmlRequest} from '@mashroom/mashroom-utils/lib/request_utils';
 import {PLACEHOLDER_REQUEST_URL, PLACEHOLDER_STATUS_CODE, PLACEHOLDER_MASHROOM_VERSION, PLACEHOLDER_I18N_MESSAGE} from './constants';
 import type {Request, Response, NextFunction, RequestHandler} from 'express';

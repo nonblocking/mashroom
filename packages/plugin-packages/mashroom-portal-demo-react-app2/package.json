@@ -11,10 +11,10 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "@codemirror/lang-markdown": "^6.1.1",
-        "@uiw/codemirror-theme-github": "^4.19.16",
-        "@uiw/react-codemirror": "^4.19.16",
-        "markdown-it": "^13.0.1",
+        "@codemirror/lang-markdown": "^6.2.3",
+        "@uiw/codemirror-theme-github": "^4.21.21",
+        "@uiw/react-codemirror": "^4.21.21",
+        "markdown-it": "^13.0.2",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },

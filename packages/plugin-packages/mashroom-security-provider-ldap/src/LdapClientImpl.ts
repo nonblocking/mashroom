@@ -1,12 +1,16 @@
 
 import { createClient} from 'ldapjs';
-import type {Client as LdapJsClient, SearchOptions, Error as LdapError,ClientOptions} from 'ldapjs';
+import type {Client as LdapJsClient, SearchOptions, Error as LdapError,ClientOptions,Attribute} from 'ldapjs';
 
 import type {TlsOptions} from 'tls';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
-import type {LdapEntry, LdapClient} from '../type-definitions';
+import type {BaseLdapEntry, LdapEntryUser, LdapClient} from '../type-definitions';
 
 const DEFAULT_ATTRIBUTES = ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid', 'mail'];
+
+const getAttributeValue = (name: string, attributes: Array<Attribute>): string | undefined => {
+    return attributes.find(({ type }) => type === name)?.values?.[0];
+};
 
 export default class LdapClientImpl implements LdapClient {
 
@@ -20,10 +24,12 @@ export default class LdapClientImpl implements LdapClient {
         this._searchClient = null;
     }
 
-    async search(filter: string, extraAttributes?: Array<string>): Promise<Array<LdapEntry>> {
+    async searchUser(filter: string, extraAttributes?: Array<string>): Promise<Array<LdapEntryUser>> {
         const searchClient = await this.getSearchClient();
 
-        const attributes = DEFAULT_ATTRIBUTES;
+        let attributes = [
+            ...DEFAULT_ATTRIBUTES,
+        ];
         if (extraAttributes) {
             extraAttributes.forEach((extraAttribute) => {
                if (!attributes.includes(extraAttribute)) {
@@ -32,6 +38,9 @@ export default class LdapClientImpl implements LdapClient {
             });
         }
 
+        // For some reason in LdapJS 3 the attribute names need now to be lower case
+        attributes = attributes.map((a) => a.toLowerCase());
+
         const searchOpts: SearchOptions = {
             filter,
             scope: 'sub',
@@ -39,41 +48,51 @@ export default class LdapClientImpl implements LdapClient {
         };
 
         return new Promise((resolve, reject) => {
-            const entries: Array<LdapEntry> = [];
+            const entries: Array<LdapEntryUser> = [];
             searchClient.search(this._baseDN, searchOpts, (err, res) => {
                 if (err) {
                     reject(err);
                     return;
                 }
 
-                res.on('searchEntry', ({ object: entry }) => {
+                res.on('searchEntry', ({ objectName, attributes }) => {
+                    const dn = objectName?.toString();
+                    const cns = attributes.find(({ type }) => type === 'cn')?.values;
+                    const sn = getAttributeValue('sn', attributes);
+                    const givenName = getAttributeValue('givenName', attributes);
+                    const displayName = getAttributeValue('displayName', attributes);
+                    const uid = getAttributeValue('uid', attributes);
+                    const mail = getAttributeValue('mail', attributes);
+
                     let cn: string | undefined;
-                    if (Array.isArray(entry.cn)) {
+                    if (cns) {
                         // Take the last one, which is in OpenLDAP the actual group cn
-                        cn = [...entry.cn].pop();
-                    } else if (entry.cn) {
-                        cn = entry.cn;
-                    } else {
+                        cn = [...cns].pop();
+                    } else if (dn) {
                         // Fallback, cn should always be present
-                        cn = entry.dn.split(',')[0].split('=').pop();
+                        cn = dn.split(',')[0].split('=').pop();
                     }
 
-                    const ldapEntry: LdapEntry = {
-                        dn: entry.dn,
-                        cn: cn as string,
-                        sn: entry.sn as string,
-                        givenName: entry.givenName as string,
-                        displayName: entry.displayName as string,
-                        uid: entry.uid as string,
-                        mail: entry.mail as string,
-                    };
-                    if (extraAttributes) {
-                        extraAttributes.forEach((extraAttr) => {
-                            ldapEntry[extraAttr] = entry[extraAttr];
-                        });
-                    }
+                    if (dn && cn && mail) {
+                        const ldapEntry: LdapEntryUser = {
+                            dn,
+                            cn,
+                            sn,
+                            uid,
+                            mail,
+                            givenName,
+                            displayName,
+                        };
+                        if (extraAttributes) {
+                            extraAttributes.forEach((extraAttr) => {
+                                ldapEntry[extraAttr] = getAttributeValue(extraAttr, attributes);
+                            });
+                        }
 
-                    entries.push(ldapEntry);
+                        entries.push(ldapEntry);
+                    } else {
+                        this._logger.warn('Incomplete LDAP entry, dn, cn, and mail is required. Present attributes: ', attributes.map((a) => `${a.type}:${a.values}`));
+                    }
                 });
                 res.on('error', (error) => {
                     this._logger.error('LDAP search error', error);
@@ -90,16 +109,71 @@ export default class LdapClientImpl implements LdapClient {
         });
     }
 
-    async login(ldapEntry: LdapEntry, password: string): Promise<void> {
+    async searchGroups(filter: string): Promise<Array<BaseLdapEntry>> {
+        const searchClient = await this.getSearchClient();
+
+        const searchOpts: SearchOptions = {
+            filter,
+            scope: 'sub',
+        };
+
+        return new Promise((resolve, reject) => {
+            const entries: Array<BaseLdapEntry> = [];
+            searchClient.search(this._baseDN, searchOpts, (err, res) => {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+
+                res.on('searchEntry', ({ objectName, attributes }) => {
+                    const dn = objectName?.toString();
+                    const cns = attributes.find(({ type }) => type === 'cn')?.values;
+
+                    let cn: string | undefined;
+                    if (cns) {
+                        // Take the last one, which is in OpenLDAP the actual group cn
+                        cn = [...cns].pop();
+                    } else if (dn) {
+                        // Fallback, cn should always be present
+                        cn = dn.split(',')[0].split('=').pop();
+                    }
+
+                    if (dn && cn) {
+                        const ldapEntry: BaseLdapEntry = {
+                            dn,
+                            cn,
+                        };
+
+                        entries.push(ldapEntry);
+                    } else {
+                        this._logger.warn('Incomplete LDAP entry, dn and cs is required. Present attributes: ', attributes.map((a) => `${a.type}:${a.values}`));
+                    }
+                });
+                res.on('error', (error) => {
+                    this._logger.error('LDAP search error', error);
+                    reject(error);
+                });
+                res.on('end', (result) => {
+                    if (result?.status === 0) {
+                        resolve(entries);
+                    } else {
+                        reject(new Error(`Search failed: ${result?.errorMessage}`));
+                    }
+                });
+            });
+        });
+    }
+
+    async login(ldapEntry: BaseLdapEntry, password: string): Promise<void> {
         let client;
         try {
             client = await this._createLdapJsClient();
             await this._bind(ldapEntry.dn, password, client);
-            await this._disconnect(client);
+            this._disconnect(client);
         } catch (error) {
             this._logger.warn(`Binding with user ${ldapEntry.dn} failed`, error);
             if (client) {
-                await this._disconnect(client);
+                this._disconnect(client);
             }
             throw error;
         }
@@ -124,7 +198,7 @@ export default class LdapClientImpl implements LdapClient {
                     await this._bind(this._bindDN, this._bindCredentials, searchClient);
                 } catch (error) {
                     this._logger.error(`Binding with user ${this._bindDN} failed`, error);
-                    await this._disconnect(searchClient);
+                    this._disconnect(searchClient);
                     this._searchClient = null;
                 }
             };

@@ -107,7 +107,8 @@ describe('MashroomLdapSecurityProvider', () => {
 
         const ldapClient: any = {
             login: mockLogin,
-            search: mockSearch,
+            searchUser: mockSearch,
+            searchGroups: mockSearch,
         };
 
         const req: any = {
@@ -165,7 +166,7 @@ describe('MashroomLdapSecurityProvider', () => {
         });
     });
 
-    it('processes a dn with sepcial characters correctly', async () => {
+    it('processes a dn with special characters correctly', async () => {
         const userSearchFilter = '(&(objectClass=person)(uid=@username@))';
         const groupSearchFilter = '(objectClass=group)';
         const groupToRoleMappingPath = path.resolve(__dirname, './groupToRoleMapping.json');
@@ -192,7 +193,8 @@ describe('MashroomLdapSecurityProvider', () => {
 
         const ldapClient: any = {
             login: mockLogin,
-            search: mockSearch,
+            searchUser: mockSearch,
+            searchGroups: mockSearch,
         };
 
         const req: any = {

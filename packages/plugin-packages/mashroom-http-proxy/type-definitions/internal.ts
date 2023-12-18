@@ -2,8 +2,19 @@
 import type {IncomingHttpHeaders, IncomingMessage} from 'http';
 import type {Socket} from 'net';
 import type {Request, Response} from 'express';
+import type {ParsedQs} from 'qs';
 import type {MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 import type {MashroomHttpProxyInterceptor, MashroomHttpProxyResponseInterceptorResult, HttpHeaders, MashroomHttpProxyRequestInterceptorResult, MashroomWsProxyRequestInterceptorResult} from './api';
+
+// Extend Express Request
+declare global {
+    namespace Express {
+        interface Request {
+            mashroomRequestMeta?: ProxyRequestMeta;
+        }
+    }
+}
 
 export interface HttpHeaderFilter {
     filter(headers: IncomingHttpHeaders): void;
@@ -43,6 +54,17 @@ export type MashroomHttpProxyInterceptorHolder = {
     readonly order: number;
     readonly pluginName: string;
     readonly interceptor: MashroomHttpProxyInterceptor;
+}
+
+export type ProxyRequestMeta = {
+    readonly startTime: [number, number];
+    readonly uri: string;
+    readonly additionalQueryParams: ParsedQs;
+    readonly type: 'HTTP' | 'WS';
+    readonly user: MashroomSecurityUser | undefined | null;
+    retries: number;
+    readonly retry: () => void;
+    readonly end: () => void;
 }
 
 export interface MashroomHttpProxyInterceptorRegistry {

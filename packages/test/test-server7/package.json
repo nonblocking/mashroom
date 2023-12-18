@@ -6,7 +6,7 @@
         "@mashroom/mashroom": "2.4.5",
         "@mashroom/mashroom-json-schemas": "2.4.5",
         "log4js": "^6.9.1",
-        "ts-node": "^10.9.1"
+        "ts-node": "^10.9.2"
     },
     "scripts": {
         "type-check": "tsc --noEmit",

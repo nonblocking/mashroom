@@ -1,8 +1,4 @@
 {
-  "packages": [
-    "packages/core/*",
-    "packages/plugin-packages/*",
-    "packages/test/*"
-  ],
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "version": "2.4.5"
 }

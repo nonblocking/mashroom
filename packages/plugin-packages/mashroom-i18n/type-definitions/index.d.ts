@@ -2,6 +2,13 @@
 import type {Request} from 'express';
 import type {I18NString} from '@mashroom/mashroom/type-definitions';
 
+// Session data
+declare module 'express-session' {
+    interface SessionData {
+        lang?: string;
+    }
+}
+
 export interface MashroomI18NService {
     /**
      * Get the currently set language (for current session)

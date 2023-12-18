@@ -32,7 +32,7 @@ const getPluginPackagesFolder = () => {
 describe('MashroomPluginPackageScanner', () => {
 
     it('scans all subfolders on start', async () => {
-        const config = { ...defaultConfig, pluginPackageFolders: [{path: getPluginPackagesFolder(), watch: true}],};
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: getPluginPackagesFolder(), watch: true}] };
 
         const foundPaths = [];
 
@@ -53,11 +53,12 @@ describe('MashroomPluginPackageScanner', () => {
     it('fires an update event if a file changes', (done) => {
         const pluginPackagesFolder = getPluginPackagesFolder();
 
-        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
+
         // @ts-ignore
-        pluginPackageScanner._deferUpdateMillis = 500;
+        pluginPackageScanner._deferUpdateMillis = 100;
 
         pluginPackageScanner.start().then(() => {
             pluginPackageScanner.on('packageUpdated', (packagePath) => {
@@ -65,7 +66,7 @@ describe('MashroomPluginPackageScanner', () => {
                 if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
                     done();
                 } else {
-                    throw new Error(`Invalid path: ${packagePath}`);
+                   fail(`Invalid path: ${packagePath}`);
                 }
             });
 
@@ -79,16 +80,16 @@ describe('MashroomPluginPackageScanner', () => {
     it('fires a remove event if package.json has no longer a "mashroom" property', (done) => {
         const pluginPackagesFolder = getPluginPackagesFolder();
 
-        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
 
         pluginPackageScanner.on('packageRemoved', (packagePath) => {
             pluginPackageScanner.stop();
-            if (packagePath === `${pluginPackagesFolder + path.sep  }test2`) {
+            if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
                 done();
             } else {
-                throw new Error(`Invalid path: ${packagePath}`);
+                fail(`Invalid path: ${packagePath}`);
             }
         });
 
@@ -102,7 +103,7 @@ describe('MashroomPluginPackageScanner', () => {
     it('doesnt scan subfolders if the package folder contains a package.json itself', (done) => {
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
-        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}],};
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}] };
 
         const foundPaths = [];
 
@@ -121,7 +122,7 @@ describe('MashroomPluginPackageScanner', () => {
     it('fires an update event if a file changes in a package folder that contains a package.json itself', (done) => {
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
-        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}],};
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
         const pluginPackageScanner = new MashroomPluginPackageScanner(config, dummyLoggerFactory);
         // @ts-ignore
@@ -132,7 +133,7 @@ describe('MashroomPluginPackageScanner', () => {
             if (packagePath === pluginPackagesFolder) {
                 done();
             } else {
-                throw new Error(`Invalid path: ${packagePath}`);
+                fail(`Invalid path: ${packagePath}`);
             }
         });
 

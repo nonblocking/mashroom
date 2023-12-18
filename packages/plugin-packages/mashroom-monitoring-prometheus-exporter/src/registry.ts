@@ -8,7 +8,7 @@ import type {
 
 const registry = new Registry();
 
-let interval: NodeJS.Timer;
+let interval: NodeJS.Timeout;
 const existingAdapters: {
     [metricName: string]: PromClientMashroomMetricsAdapter;
 } = {};
