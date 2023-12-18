@@ -1,5 +1,5 @@
 
-import {fileTypeUtils} from '@mashroom/mashroom-utils';
+import {isES6Module} from '@mashroom/mashroom-utils/lib/file-type-utils';
 import {WINDOW_VAR_PORTAL_INLINED_STYLE_APPS} from '../../../backend/constants';
 
 import type {LoadedPortalAppInternal} from './MashroomPortalAppServiceImpl';
@@ -57,7 +57,7 @@ export default class ResourceManager {
             };
 
             scriptElem.src = path;
-            if (fileTypeUtils.isES6Module(path)) {
+            if (isES6Module(path)) {
                 scriptElem.type = 'module';
             }
             scriptElem.addEventListener('error', (error: any) => {

@@ -1,5 +1,5 @@
 
-import {messagingUtils} from '@mashroom/mashroom-utils';
+import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging-utils';
 import {
     WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
@@ -250,7 +250,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
 
         let subscriptions: Array<Subscription> = [];
         Object.keys(this._subscriptionMap)
-            .filter((t) => messagingUtils.topicMatcher(t, topic))
+            .filter((t) => topicMatcher(t, topic))
             .forEach((t) => {
                 subscriptions = subscriptions.concat(this._subscriptionMap[t]);
             });
