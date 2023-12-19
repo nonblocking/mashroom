@@ -33,7 +33,7 @@ export default ({
                     adminApp, user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
                     portalResourcesHeader, portalResourcesFooter, pageContent, messages, themeVersionHash
                 }: MashroomPortalPageRenderModel) => (
-    <html lang={lang}>
+    <html lang={lang} data-bs-theme="light">
         <head dangerouslySetInnerHTML={{ __html: `
             <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
             <meta charSet="utf-8"/>
