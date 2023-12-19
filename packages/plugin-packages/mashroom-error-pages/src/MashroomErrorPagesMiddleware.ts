@@ -17,10 +17,10 @@ const isNotJsonResponse = (res: Response) => (/json/i).test(res.getHeader('conte
 
 export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesMiddlewareType {
 
-    private _pluginRooterFolder: string;
+    private _pluginRootFolder: string;
 
     constructor(private _serverRootFolder: string, private _serverVersion: string, private _mapping: ErrorMapping) {
-        this._pluginRooterFolder = resolve(__dirname, '..');
+        this._pluginRootFolder = resolve(__dirname, '..');
     }
 
     middleware(): RequestHandler {
@@ -112,8 +112,8 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
                     if (!isAbsolute(errorPageUri)) {
                         if (existsSync(resolve(this._serverRootFolder, errorPageUri))) {
                             htmlFile = resolve(this._serverRootFolder, errorPageUri);
-                        } else if (existsSync(resolve(this._pluginRooterFolder, errorPageUri))) {
-                            htmlFile = resolve(this._pluginRooterFolder, errorPageUri);
+                        } else if (existsSync(resolve(this._pluginRootFolder, errorPageUri))) {
+                            htmlFile = resolve(this._pluginRootFolder, errorPageUri);
                         } else {
                             logger.warn(`Error page not found: ${errorPageUri}`);
                             return null;

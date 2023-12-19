@@ -446,7 +446,7 @@ export type MashroomPortalApp = {
     +ssrInitialHtmlPath: ?string,
 
     /**
-     * Resources root URI (local path if remoteApp false, otherwise a HTTP, HTTPS or FTP url)
+     * Resources root URI (local path if remoteApp false, otherwise an HTTP or HTTPS url)
      */
     +resourcesRootUri: string,
 
@@ -759,7 +759,7 @@ export interface MashroomPortalAppService {
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Add listener for unload events (fired before an app will been detached from the page)
+     * Add listener for unload events (fired before an app will be detached from the page)
      */
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 

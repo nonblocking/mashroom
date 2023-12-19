@@ -475,7 +475,7 @@ export type MashroomPortalApp = {
     readonly ssrInitialHtmlUri: string | null | undefined;
 
     /**
-     * Resources root URI (local path if remoteApp false, otherwise a HTTP, HTTPS or FTP url)
+     * Resources root URI (local path if remoteApp false, otherwise an HTTP or HTTPS url)
      */
     readonly resourcesRootUri: string;
 
@@ -769,7 +769,7 @@ export interface MashroomPortalAppService {
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void;
 
     /**
-     * Show the name and version for all currently loaded apps in a overlay (for debug purposes)
+     * Show the name and version for all currently loaded apps in an overlay (for debug purposes)
      */
     showAppInfos(customize?: (portalApp: MashroomPortalLoadedPortalApp, overlay: HTMLDivElement) => void): void;
 
@@ -789,14 +789,14 @@ export interface MashroomPortalAppService {
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Add listener for unload events (fired before an app will been detached from the page)
+     * Add listener for unload events (fired before an app will be detached from the page)
      */
-    registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener,): void;
+    registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
      * Remove listener for unload events
      */
-    unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener,): void;
+    unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
      * Load the setup for given app/plugin name on the current page
