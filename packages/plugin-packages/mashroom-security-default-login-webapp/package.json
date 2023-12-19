@@ -31,7 +31,7 @@
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
-        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev_server.js\"",
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev-server.js\"",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed --no-source-map src/sass/style.scss dist/style.css"
     },
     "mashroom": {

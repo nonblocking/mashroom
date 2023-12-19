@@ -1,5 +1,5 @@
 
-import context from '../context/global_portal_context';
+import context from '../context/global-portal-context';
 import {PORTAL_INTERNAL_PATH} from '../constants';
 
 import type {Request} from 'express';

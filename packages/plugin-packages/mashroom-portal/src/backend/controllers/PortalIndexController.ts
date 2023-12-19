@@ -1,7 +1,7 @@
 
 import querystring from 'querystring';
-import {getDefaultSite} from '../utils/model_utils';
-import {getPortalPath} from '../utils/path_utils';
+import {getDefaultSite} from '../utils/model-utils';
+import {getPortalPath} from '../utils/path-utils';
 
 import type {Request, Response} from 'express';
 

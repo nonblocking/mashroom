@@ -1,6 +1,6 @@
 
 import {TDigest} from 'tdigest';
-import createLabelHash from './create_label_hash';
+import createLabelHash from './create-label-hash';
 
 import type {MetricLabels, Summary} from '../../type-definitions';
 import type {InternalSummaryMetricData} from '../../type-definitions/internal';

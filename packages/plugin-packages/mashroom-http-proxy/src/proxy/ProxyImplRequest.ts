@@ -1,5 +1,5 @@
 import request from 'request';
-import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
+import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
 import {processHttpResponse, processRequest} from './utils';
 
 import type {Request, Response} from 'express';

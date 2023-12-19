@@ -20,7 +20,7 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 import I18NStringField from '../containers/I18NStringField';
 import {DIALOG_NAME_PAGE_CONFIGURE} from '../constants';
-import {getPagePosition, getParentPage, insertOrUpdatePageAtPosition, searchPageRef} from '../services/model_utils';
+import {getPagePosition, getParentPage, insertOrUpdatePageAtPosition, searchPageRef} from '../services/model-utils';
 import PagePositionSelection from './PagePositionSelection';
 import Permissions from './Permissions';
 

@@ -1,9 +1,9 @@
 
 import context from '../context';
 import {VHOST_MAPPING_INFO_REQUEST_PROP_NAME} from '../constants';
-import determineHost from '../utils/determine_host';
-import find_host_definition from '../utils/find_host_definition';
-import mapPath from '../utils/map_path';
+import determineHost from '../utils/determine-host';
+import find_host_definition from '../utils/find-host-definition';
+import mapPath from '../utils/map-path';
 
 import type {Request} from 'express';
 import type {

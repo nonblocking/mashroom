@@ -1,7 +1,7 @@
 import {PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH} from '../constants';
-import {getFrontendResourcesBasePath} from './path_utils';
-import {getResourceAsString} from './resource_utils';
-import {getVersionHash} from './cache_utils';
+import {getFrontendResourcesBasePath} from './path-utils';
+import {getResourceAsString} from './resource-utils';
+import {getVersionHash} from './cache-utils';
 
 import type {Request} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';

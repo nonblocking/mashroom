@@ -1,8 +1,8 @@
 
 import MongoDbStore from 'connect-mongo';
 import createClient, {setConnectionUriAndOptions} from './mongodb';
-import healthProbe from './health/health_probe';
-import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store_metrics';
+import healthProbe from './health/health-probe';
+import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store-metrics';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 

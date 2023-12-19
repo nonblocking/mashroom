@@ -1,6 +1,6 @@
 
-import healthProbe from '../health/health_probe';
-import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider_metrics';
+import healthProbe from '../health/health-probe';
+import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider-metrics';
 import MashroomMessagingExternalProviderAMQP from './MashroomMessagingExternalProviderAMQP';
 
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';

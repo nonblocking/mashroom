@@ -1,8 +1,8 @@
 
 import path from 'path';
 import {engine} from 'express-handlebars';
-import helpers from './handlebar_helpers';
-import themeParams from './theme_params';
+import helpers from './handlebar-helpers';
+import themeParams from './theme-params';
 
 import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 

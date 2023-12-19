@@ -3,7 +3,7 @@ import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
 import PortalAppConfigContainer from'../containers/PortalAppConfigContainer';
 import PortalAppSelectionContainer from'../containers/PortalAppSelectionContainer';
-import loadPortalApp from '../load_portal_app';
+import loadPortalApp from '../load-portal-app';
 import {mergeAppConfig} from '../utils';
 
 import type {PortalAppQueryParams,ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';

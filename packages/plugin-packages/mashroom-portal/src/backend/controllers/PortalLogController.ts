@@ -1,5 +1,5 @@
 
-import {portalAppContext} from '../utils/logging_utils';
+import {portalAppContext} from '../utils/logging-utils';
 
 import type {Request, Response} from 'express';
 

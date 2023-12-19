@@ -1,7 +1,7 @@
 
 import {Writable} from 'stream';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalPageEnhancementController from '../../../src/backend/controllers/PortalPageEnhancementController';
 import type {MashroomPortalPageEnhancement} from '../../../type-definitions';
 
@@ -33,7 +33,7 @@ const portalPageEnhancement: MashroomPortalPageEnhancement = {
     resourcesRootUri: `file:///${__dirname}`,
     pageResources: {
         js: [{
-            path: 'test_script1.js',
+            path: 'test-script1.js',
             rule: 'yes',
             location: 'header',
             inline: false,
@@ -67,7 +67,7 @@ describe('PortalPageEnhancementController', () => {
             },
             params: {
                 'pluginName': 'Test Page Enhancement',
-                '0': 'test_script1.js',
+                '0': 'test-script1.js',
             },
             pluginContext,
             query: {},
@@ -96,7 +96,7 @@ describe('PortalPageEnhancementController', () => {
             },
             params: {
                 'pluginName': 'Test Page Enhancement',
-                '0': 'test_script2.js',
+                '0': 'test-script2.js',
             },
             pluginContext,
             query: {},
@@ -123,7 +123,7 @@ describe('PortalPageEnhancementController', () => {
             },
             params: {
                 'pluginName': 'Test Page Enhancement XXX',
-                '0': 'test_script1.js',
+                '0': 'test-script1.js',
             },
             pluginContext,
             query: {},

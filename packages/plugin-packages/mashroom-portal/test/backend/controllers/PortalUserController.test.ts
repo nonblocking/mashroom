@@ -1,6 +1,6 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalUserController from '../../../src/backend/controllers/PortalUserController';
 
 setPortalPluginConfig({

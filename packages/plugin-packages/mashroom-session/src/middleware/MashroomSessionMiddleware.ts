@@ -1,7 +1,7 @@
 
 import {promisify} from 'util';
 import session, {MemoryStore} from 'express-session';
-import context from '../context/global_context';
+import context from '../context/global-context';
 import type {SessionOptions, Store} from 'express-session';
 
 import type {RequestHandler, Request, Response, NextFunction} from 'express';

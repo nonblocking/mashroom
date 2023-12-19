@@ -1,6 +1,6 @@
 
 import {PORTAL_APP_REST_PROXY_BASE_PATH, PORTAL_INTERNAL_SEPARATOR} from './constants';
-import context, {setPortalPluginConfig} from './context/global_portal_context';
+import context, {setPortalPluginConfig} from './context/global-portal-context';
 import storageFixture from './storage-fixture';
 import setupWebapp from './setup-webapp';
 import PortalWebSocketProxyController from './controllers/PortalWebSocketProxyController';

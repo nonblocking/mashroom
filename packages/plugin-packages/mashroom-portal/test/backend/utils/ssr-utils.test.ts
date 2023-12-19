@@ -1,8 +1,8 @@
 
 import nock from 'nock';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import context, {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
-import {renderServerSide, renderInlineStyleForServerSideRenderedApps} from '../../../src/backend/utils/ssr_utils';
+import context, {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
+import {renderServerSide, renderInlineStyleForServerSideRenderedApps} from '../../../src/backend/utils/ssr-utils';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -23,12 +23,12 @@ setPortalPluginConfig({
     }
 });
 
-describe('ssr_utils', () => {
+describe('ssr-utils', () => {
 
     const portalApps = [
         {
             name: 'Test App 1',
-            ssrBootstrap: `${__dirname}/ssr_bootstrap.js`,
+            ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
             resourcesRootUri: `file://${__dirname}`,
             resources: {
                 js: ['bundle.js'],

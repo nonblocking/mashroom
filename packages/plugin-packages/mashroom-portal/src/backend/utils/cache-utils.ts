@@ -1,6 +1,6 @@
 
 import {createHash} from 'crypto';
-import context from '../context/global_portal_context';
+import context from '../context/global-portal-context';
 
 const LOAD_TS = Date.now();
 // eslint-disable-next-line @typescript-eslint/no-var-requires

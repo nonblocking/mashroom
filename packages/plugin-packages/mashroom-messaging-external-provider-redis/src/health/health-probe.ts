@@ -1,14 +1,13 @@
 
-import {isConnected} from '../redis_client';
-
+import {isConnected} from '../redis-client';
 import type {MashroomHealthProbeStatus} from '@mashroom/mashroom/type-definitions';
 
-export default {
+export default () => ({
     async check(): Promise<MashroomHealthProbeStatus> {
         if (!isConnected()) {
             return {
                 ready: false,
-                error: 'Redis for memory cache not available',
+                error: 'Redis broker for messaging not available',
             };
         }
 
@@ -16,4 +15,4 @@ export default {
             ready: true,
         };
     }
-};
+});

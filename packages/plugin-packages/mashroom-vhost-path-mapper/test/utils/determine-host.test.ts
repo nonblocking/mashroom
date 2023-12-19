@@ -1,7 +1,7 @@
 
-import determineHost from '../../src/utils/determine_host';
+import determineHost from '../../src/utils/determine-host';
 
-describe('determine_host', () => {
+describe('determine-host', () => {
 
     it('determines a host without port and forwarding header',  () => {
         const req: any = {

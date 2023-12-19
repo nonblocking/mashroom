@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import {FormattedMessage} from 'react-intl';
-import fetchData from './fetch_data';
+import fetchData from './fetch-data';
 import type {RocketLaunchDotLiveLaunches} from './types';
 
 type Props = {

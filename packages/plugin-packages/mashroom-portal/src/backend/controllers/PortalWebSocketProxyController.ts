@@ -5,9 +5,9 @@ import {
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_INTERNAL_PATH,
 } from '../constants';
-import context from '../context/global_portal_context';
-import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security_utils';
-import {portalAppContext} from '../utils/logging_utils';
+import context from '../context/global-portal-context';
+import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security-utils';
+import {portalAppContext} from '../utils/logging-utils';
 import type {MashroomMiddlewareStackService,IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 
 import type {Socket} from 'net';

@@ -1,7 +1,7 @@
 
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 import {PAGES_COLLECTION, SITES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} from '../constants';
-import {getPortalAppResourceKey} from '../utils/security_utils';
+import {getPortalAppResourceKey} from '../utils/security-utils';
 
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {Request} from 'express';

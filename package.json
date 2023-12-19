@@ -60,6 +60,6 @@
         "build:core": "nx build @mashroom/mashroom-utils && nx build @mashroom/mashroom && nx build @mashroom/mashroom-json-schemas && nx build @mashroom/mashroom-portal-ui-commons",
         "build:plugins": "lerna run build",
         "build": "npm run build:core && npm run type-check && npm run lint && npm run test && npm run build:plugins",
-        "clean": "rimraf node_modules/ packages/core/*/dist/ packages/core/*/lib/ packages/core/*/node_modules/ packages/plugin-packages/*/dist/ packages/plugin-packages/*/node_modules/ packages/test/*/node_modules/ packages/test/*/data/ packages/test/*/log/"
+        "clean": "rimraf node_modules/ packages/core/*/dist/ packages/core/*/lib/ packages/core/*/test-reports/ packages/core/*/test-data/ packages/core/*/node_modules/ packages/plugin-packages/*/dist/ packages/plugin-packages/*/node_modules/ packages/plugin-packages/*/test-reports/ packages/plugin-packages/*/node_modules/ packages/plugin-packages/*/test-data/ packages/test/*/node_modules/ packages/test/*/data/ packages/test/*/log/ .nx/ lerna-debug.log"
     }
 }

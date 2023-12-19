@@ -2,8 +2,8 @@
 import fs from 'fs';
 import path from 'path';
 import context from '../context';
-import healthProbe from '../health/health_probe';
-import {startExportRemoteAppMetrics, stopExportRemoteAppMetrics} from '../metrics/remote_app_metrics';
+import healthProbe from '../health/health-probe';
+import {startExportRemoteAppMetrics, stopExportRemoteAppMetrics} from '../metrics/remote-app-metrics';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';

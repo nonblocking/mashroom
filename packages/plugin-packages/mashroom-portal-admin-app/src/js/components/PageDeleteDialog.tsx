@@ -8,7 +8,7 @@ import {
     Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_PAGE_DELETE} from '../constants';
-import {getParentPage, removePageFromTree} from '../services/model_utils';
+import {getParentPage, removePageFromTree} from '../services/model-utils';
 
 import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';

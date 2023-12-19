@@ -1,8 +1,8 @@
-import mapPath from '../../src/utils/map_path';
+import mapPath from '../../src/utils/map-path';
 
 import type {VHostDefinition} from '../../type-definitions/internal';
 
-describe('map_path', () => {
+describe('map-path', () => {
 
     it('does nothing for empty mapping rules', () => {
         const hostDefinition: VHostDefinition = {

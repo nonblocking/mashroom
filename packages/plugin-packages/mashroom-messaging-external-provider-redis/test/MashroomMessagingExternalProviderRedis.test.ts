@@ -4,7 +4,7 @@ const mockPSubscribe = jest.fn();
 const mockPublish = jest.fn();
 const mockOn = jest.fn();
 
-jest.mock('../src/redis_client', () => ({
+jest.mock('../src/redis-client', () => ({
     getSubscriberClient: () => ({
         psubscribe: mockPSubscribe,
         on: mockOn,

@@ -5,7 +5,7 @@ const mockSet = jest.fn();
 const mockDel = jest.fn();
 const mockKeys = jest.fn();
 
-jest.mock('../src/redis_client', () => ({
+jest.mock('../src/redis-client', () => ({
     __esModule: true,
     default: () => ({
         get: mockGet,

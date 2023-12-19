@@ -1,29 +1,23 @@
 /* eslint no-console: off */
 
+import {resolve} from 'path';
 import express from 'express';
-import {engine} from 'express-handlebars';
-import helpers from './handlebar_helpers';
-import themeParams from './theme_params';
-
+import engine from './react-engine';
+import themeParams from './theme-params';
 import type {Request, Response} from 'express';
 import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type-definitions';
 
 themeParams.setParams({
-    spaMode: false,
-    showPortalAppHeaders: true,
-    showEnvAndVersions: true,
-    mashroomVersion: '1.0.0'
+    mashroomVersion: '1.0.0',
 });
 
 const app = express();
 
 app.use('/resources', express.static('dist/public'));
 
-app.engine('handlebars', engine({
-    helpers,
-    defaultLayout: '',
-}));
-app.set('view engine', 'handlebars');
+app.engine('js', engine);
+app.set('view engine', 'js');
+app.set('views', resolve(__dirname, '../views'));
 
 app.get('/', (req: Request, res: Response) => {
 
@@ -152,22 +146,6 @@ app.get('/', (req: Request, res: Response) => {
                             <div class="mashroom-portal-app-loading"><span/></div>
                         </div>
                     </div>
-                    <div class="mashroom-portal-app-wrapper">
-                        <div class="mashroom-portal-app-header">
-                            <div class="mashroom-portal-app-header-title">App 5</div>
-                            <div class="mashroom-portal-app-header-close"></div>
-                        </div>
-                        <div class="mashroom-portal-app-host">
-                            <div style="padding: 10px">
-                                <p>Here some text with a ruler</p>
-                                <hr/>
-                                <p>and a blockquote</p>
-                                <blockquote>
-                                    The quote
-                                </blockquote>
-                            </div>
-                        </div>
-                    </div>
                 </div>
                 <div class="mashroom-portal-app-area col-md-6" id="app-area2">
                     <div class="mashroom-portal-app-wrapper">
@@ -255,8 +233,8 @@ app.get('/', (req: Request, res: Response) => {
     res.render('portal', model);
 });
 
-app.listen(5055, () => {
-    console.info('Server started at port 5055');
+app.listen(5066, () => {
+    console.info('Server started at port 5066');
 });
 app.once('error', (error) => {
     console.error('Failed to start server!', error);

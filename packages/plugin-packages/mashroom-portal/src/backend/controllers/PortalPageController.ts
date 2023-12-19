@@ -1,7 +1,7 @@
 
-import {findPortalAppInstanceOnPage} from '../utils/model_utils';
-import {getPortalAppResourceKey, isAdmin} from '../utils/security_utils';
-import {createPageId, createAppInstanceId} from '../utils/id_utils';
+import {findPortalAppInstanceOnPage} from '../utils/model-utils';
+import {getPortalAppResourceKey, isAdmin} from '../utils/security-utils';
+import {createPageId, createAppInstanceId} from '../utils/id-utils';
 
 import type {Request, Response} from 'express';
 import type {

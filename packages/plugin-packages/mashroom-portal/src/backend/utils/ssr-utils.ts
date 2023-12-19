@@ -1,11 +1,11 @@
 
 import {createHash} from 'crypto';
 import fetch from 'node-fetch';
-import context from '../context/global_portal_context';
+import context from '../context/global-portal-context';
 import {SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX} from '../constants';
-import {getUser, isAppPermitted} from './security_utils';
-import {getResourceAsString} from './resource_utils';
-import {createPortalAppSetup} from './create_portal_app_setup';
+import {getUser, isAppPermitted} from './security-utils';
+import {getResourceAsString} from './resource-utils';
+import {createPortalAppSetup} from './create-portal-app-setup';
 
 import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';

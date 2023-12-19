@@ -16,7 +16,7 @@
                 "layouts": {
                     "1 Column": "./layouts/1column.html",
                     "2 Columns": "./layouts/2columns.html",
-                    "2 Columns 70/30": "./layouts/2columns_70_30.html",
+                    "2 Columns 70/30": "./layouts/2columns-70-30.html",
                     "2 Columns with 1 Column Header": "./layouts/2columnsWith1columnHeader.html"
                 }
             }

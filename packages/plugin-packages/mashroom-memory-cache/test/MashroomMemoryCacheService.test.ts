@@ -1,5 +1,5 @@
 
-import context from '../src/context/global_context';
+import context from '../src/context/global-context';
 
 import MashroomMemoryCacheService from '../src/services/MashroomMemoryCacheService';
 

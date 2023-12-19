@@ -1,8 +1,8 @@
 
 import {readFile} from 'fs/promises';
 import {userAgentUtils} from '@mashroom/mashroom-utils';
-import context from '../context/global_portal_context';
-import minimalLayout from '../layouts/minimal_layout';
+import context from '../context/global-portal-context';
+import minimalLayout from '../layouts/minimal-layout';
 import {
     PORTAL_APP_API_PATH,
     PORTAL_JS_FILE,
@@ -27,14 +27,14 @@ import {
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
 } from '../constants';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
-import {getPageEnhancementResources, allEnhancementsExistOnOriginalPage} from '../utils/page_enhancement_utils';
+import {getPageEnhancementResources, allEnhancementsExistOnOriginalPage} from '../utils/page-enhancement-utils';
 import {
     getFrontendResourcesBasePath,
     getFrontendApiBasePath,
     getFrontendSiteBasePath,
     getSitePath
-} from '../utils/path_utils';
-import {findSiteByPath, findPageRefByPageId, getPage, getPageData} from '../utils/model_utils';
+} from '../utils/path-utils';
+import {findSiteByPath, findPageRefByPageId, getPage, getPageData} from '../utils/model-utils';
 import {
     forceAuthentication,
     getUser,
@@ -43,16 +43,16 @@ import {
     isPagePermitted,
     isSignedIn,
     isSitePermitted
-} from '../utils/security_utils';
+} from '../utils/security-utils';
 import {
     renderPage,
     renderAppWrapperToClientTemplate,
     renderAppErrorToClientTemplate,
     renderContent,
-} from '../utils/render_utils';
-import {renderInlineStyleForServerSideRenderedApps} from '../utils/ssr_utils';
-import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create_portal_app_setup';
-import {getVersionHash, getPortalVersionHash} from '../utils/cache_utils';
+} from '../utils/render-utils';
+import {renderInlineStyleForServerSideRenderedApps} from '../utils/ssr-utils';
+import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create-portal-app-setup';
+import {getVersionHash, getPortalVersionHash} from '../utils/cache-utils';
 
 import type {Request, Response, Application} from 'express';
 import type { MashroomLogger} from '@mashroom/mashroom/type-definitions';

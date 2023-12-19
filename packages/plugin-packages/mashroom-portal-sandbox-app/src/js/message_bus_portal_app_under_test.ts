@@ -1,5 +1,5 @@
 
-import getClientServices from './client_services';
+import getClientServices from './client-services';
 import type {
     MashroomPortalMessageBusInterceptor,
     MashroomPortalMessageBusSubscriberCallback,

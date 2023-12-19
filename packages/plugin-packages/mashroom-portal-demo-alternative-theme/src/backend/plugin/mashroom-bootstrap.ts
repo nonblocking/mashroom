@@ -1,6 +1,6 @@
 
-import engine from './react_engine';
-import themeParams from './theme_params';
+import engine from './react-engine';
+import themeParams from './theme-params';
 
 import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 

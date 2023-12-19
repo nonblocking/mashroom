@@ -1,6 +1,6 @@
 
 import {connect} from 'rhea';
-import {topicToRoutingKey, routingKeyToTopic} from './topic_converter';
+import {topicToRoutingKey, routingKeyToTopic} from './topic-converter';
 
 import type {Connection, EventContext} from 'rhea';
 import type {

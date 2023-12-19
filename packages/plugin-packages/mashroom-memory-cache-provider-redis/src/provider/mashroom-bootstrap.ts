@@ -1,7 +1,7 @@
 
-import {setConfig, close} from '../redis_client';
-import healthProbe from '../health/health_probe';
-import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider_metrics';
+import {setConfig, close} from '../redis-client';
+import healthProbe from '../health/health-probe';
+import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider-metrics';
 import MashroomMemoryCacheProviderRedis from './MashroomMemoryCacheProviderRedis';
 
 import type {MashroomMemoryCacheProviderPluginBootstrapFunction} from '@mashroom/mashroom-memory-cache/type-definitions';

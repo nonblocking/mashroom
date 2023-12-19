@@ -18,7 +18,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             redirect: (url: string) => redirectUrl = decodeURIComponent(url)
         };
 
-        const userStorePath = path.resolve(__dirname, './test_users.json');
+        const userStorePath = path.resolve(__dirname, './test-users.json');
 
         const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggingUtils.dummyLoggerFactory);
 
@@ -42,7 +42,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             redirect: (url: string) => redirectUrl = url
         };
 
-        const userStorePath = path.resolve(__dirname, './test_users.json');
+        const userStorePath = path.resolve(__dirname, './test-users.json');
 
         const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggingUtils.dummyLoggerFactory);
 
@@ -98,7 +98,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
 
-        const userStorePath = path.resolve(__dirname, './test_users.json');
+        const userStorePath = path.resolve(__dirname, './test-users.json');
 
         const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggingUtils.dummyLoggerFactory);
 
@@ -141,7 +141,7 @@ describe('MashroomSimpleSecurityProvider', () => {
             }
         };
 
-        const userStorePath = path.resolve(__dirname, './test_users.json');
+        const userStorePath = path.resolve(__dirname, './test-users.json');
 
         const simpleSecurityProvider = new MashroomSimpleSecurityProvider(userStorePath, '/login', '', 1800, loggingUtils.dummyLoggerFactory);
 

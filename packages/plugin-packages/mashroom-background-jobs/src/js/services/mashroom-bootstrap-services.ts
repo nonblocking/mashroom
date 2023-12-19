@@ -2,7 +2,7 @@
 import {
     startExportBackgroundJobMetrics,
     stopExportBackgroundJobMetrics
-} from '../metrics/background_jobs_metrics';
+} from '../metrics/background-jobs-metrics';
 import MashroomBackgroundJobService from './MashroomBackgroundJobService';
 import type {
     MashroomBackgroundJobService as MashroomBackgroundJobServiceType

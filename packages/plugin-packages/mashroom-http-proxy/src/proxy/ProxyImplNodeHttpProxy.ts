@@ -1,7 +1,7 @@
 import {URLSearchParams, URL} from 'url';
 import {createProxyServer} from 'http-proxy';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection_pool';
+import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
 import {processHttpResponse, processRequest, processWsRequest} from './utils';
 
 import type {

@@ -1,5 +1,5 @@
 
-import context from '../../context/global_portal_context';
+import context from '../../context/global-portal-context';
 import PortalPageEnhancementPluginLoader from './PortalPageEnhancementPluginLoader';
 
 import type {MashroomPluginLoaderPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';

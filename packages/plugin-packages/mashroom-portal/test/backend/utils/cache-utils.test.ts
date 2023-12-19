@@ -1,7 +1,7 @@
 
-import {getVersionHash, getPortalVersionHash} from '../../../src/backend/utils/cache_utils';
+import {getVersionHash, getPortalVersionHash} from '../../../src/backend/utils/cache-utils';
 
-describe('cache_utils', () => {
+describe('cache-utils', () => {
 
     it('creates a hash from version if not dev mode', () => {
         const hash = getVersionHash('1.0.1', 1654167672489, false);

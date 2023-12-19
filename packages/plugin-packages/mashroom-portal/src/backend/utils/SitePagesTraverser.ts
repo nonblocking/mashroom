@@ -1,5 +1,5 @@
 
-import {isPagePermitted} from './security_utils';
+import {isPagePermitted} from './security-utils';
 
 import type {Request} from 'express';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';

@@ -1,5 +1,5 @@
 
-import {startExportMemoryCacheMetrics, stopExportMemoryCacheMetrics} from '../metrics/memory_cache_metrics';
+import {startExportMemoryCacheMetrics, stopExportMemoryCacheMetrics} from '../metrics/memory-cache-metrics';
 import MashroomMemoryCacheService from './MashroomMemoryCacheService';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';

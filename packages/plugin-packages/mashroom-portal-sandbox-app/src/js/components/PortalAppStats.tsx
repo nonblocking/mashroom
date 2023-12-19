@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
-import memoryUsage from '../memory_usage';
+import memoryUsage from '../memory-usage';
 import type {MashroomPortalAppService} from '@mashroom/mashroom-portal/type-definitions';
 import type {ActivePortalApp} from '../types';
 

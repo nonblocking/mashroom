@@ -1,5 +1,5 @@
 
-import {isAdmin} from '../utils/security_utils';
+import {isAdmin} from '../utils/security-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomAvailablePortalLayout} from '../../../type-definitions';

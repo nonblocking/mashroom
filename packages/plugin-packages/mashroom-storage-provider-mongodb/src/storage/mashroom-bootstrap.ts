@@ -1,7 +1,7 @@
 
 import {setConnectionUriAndOptions, close, getDb} from '../mongodb';
-import healthProbe from '../health/health_probe';
-import {startExportStoreMetrics, stopExportStoreMetrics} from '../metrics/store_metrics';
+import healthProbe from '../health/health-probe';
+import {startExportStoreMetrics, stopExportStoreMetrics} from '../metrics/store-metrics';
 import MashroomStorageMongoDB from './MashroomStorageMongoDB';
 
 import type {MashroomStoragePluginBootstrapFunction} from '@mashroom/mashroom-storage/type-definitions';

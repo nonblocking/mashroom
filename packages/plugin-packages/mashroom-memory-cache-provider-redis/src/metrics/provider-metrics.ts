@@ -1,5 +1,5 @@
 
-import {getAvailableNodes} from '../redis_client';
+import {getAvailableNodes} from '../redis-client';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';

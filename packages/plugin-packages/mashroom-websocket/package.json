@@ -51,7 +51,7 @@
         "build:backend": "babel src/backend --extensions \".ts\" -d dist",
         "build:frontend": "webpack --mode production",
         "build": "npm run build:backend && npm run build:frontend",
-        "dev": "nodemon --watch src -e ts --exec \"npm run build && node dist/webapp/dev_server.js\""
+        "dev": "nodemon --watch src -e ts --exec \"npm run build && node dist/webapp/dev-server.js\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

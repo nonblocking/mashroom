@@ -51,7 +51,7 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",
-        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev_server.js\""
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev-server.js\""
     },
     "mashroom": {
         "devModeBuildScript": "build",

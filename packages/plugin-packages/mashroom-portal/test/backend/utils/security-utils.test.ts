@@ -1,14 +1,14 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {isSitePermitted, isSitePathPermitted, isPagePermitted, isAppPermitted, isProxyAccessPermitted} from '../../../src/backend/utils/security_utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {isSitePermitted, isSitePathPermitted, isPagePermitted, isAppPermitted, isProxyAccessPermitted} from '../../../src/backend/utils/security-utils';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 
 const portalConfig: any = {
     path: '/portal',
 };
 setPortalPluginConfig(portalConfig);
 
-describe('security_utils', () => {
+describe('security-utils', () => {
 
     it('checks site resource permission', async () => {
         const checkResourcePermission = jest.fn();

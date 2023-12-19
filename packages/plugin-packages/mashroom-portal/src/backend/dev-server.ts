@@ -2,7 +2,7 @@
 import path from 'path';
 import express from 'express';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import context, {setPortalPluginConfig} from './context/global_portal_context';
+import context, {setPortalPluginConfig} from './context/global-portal-context';
 import setupWebapp from './setup-webapp';
 import {SITES_COLLECTION, PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION} from './constants';
 import MashroomPortalService from './services/MashroomPortalService';

@@ -1,7 +1,7 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
-import {renderContent} from '../../../src/backend/utils/render_utils';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
+import {renderContent} from '../../../src/backend/utils/render-utils';
 import type {MashroomPortalPageApps} from '../../../type-definitions/internal';
 
 setPortalPluginConfig({
@@ -23,7 +23,7 @@ setPortalPluginConfig({
     }
 });
 
-describe('path_utils', () => {
+describe('path-utils', () => {
 
     it('renders the page content', async () => {
         const layout = `
@@ -78,7 +78,7 @@ describe('path_utils', () => {
                             return [
                                 {
                                     name: 'App 1',
-                                    ssrBootstrap: `${__dirname}/ssr_bootstrap.js`,
+                                    ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
                                 },
                             ];
                         }

@@ -1,7 +1,7 @@
 
 
 import {messagingUtils} from '@mashroom/mashroom-utils';
-import {getSubscriberClient, getPublisherClient, close} from '../redis_client';
+import {getSubscriberClient, getPublisherClient, close} from '../redis-client';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomExternalMessageListener} from '@mashroom/mashroom-messaging/type-definitions';

@@ -1,17 +1,17 @@
 
 import {fileTypeUtils} from '@mashroom/mashroom-utils';
-import {portalAppContext} from '../utils/logging_utils';
-import {getResourceAsStream} from '../utils/resource_utils';
-import {getFrontendResourcesBasePath, getSitePath} from '../utils/path_utils';
-import {findPortalAppInstanceOnPage, getPage} from '../utils/model_utils';
+import {portalAppContext} from '../utils/logging-utils';
+import {getResourceAsStream} from '../utils/resource-utils';
+import {getFrontendResourcesBasePath, getSitePath} from '../utils/path-utils';
+import {findPortalAppInstanceOnPage, getPage} from '../utils/model-utils';
 import {
     getUser,
     isAdmin,
     isAppPermitted,
     isPagePermitted,
     isSitePathPermitted
-} from '../utils/security_utils';
-import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create_portal_app_setup';
+} from '../utils/security-utils';
+import {createPortalAppSetup, createPortalAppSetupForMissingPlugin} from '../utils/create-portal-app-setup';
 import {PORTAL_APP_RESOURCES_BASE_PATH} from '../constants';
 
 import type {Request, Response} from 'express';

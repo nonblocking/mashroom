@@ -97,7 +97,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 
 ## Architecture
 
-![Mashroom Server Architecture](mashroom_server.png "Mashroom Server Architecture")
+![Mashroom Server Architecture](mashroom-server.png "Mashroom Server Architecture")
 
 ## Key concepts
 
@@ -702,7 +702,7 @@ The Prometheus metrics will be available at **/metrics**. An example [Grafana](h
 
 Here how it looks:
 
-![Mashroom Monitoring Dashboard](mashroom_monitoring.png "Mashroom Monitoring Dashboard")
+![Mashroom Monitoring Dashboard](mashroom-monitoring.png "Mashroom Monitoring Dashboard")
 
 ### Health checks
 
@@ -714,7 +714,7 @@ An overview of the health checks is available under http://&lt;host&gt;:&lt;port
 
 The _Mashroom Server_ Admin UI is available under http://&lt;host&gt;:&lt;port&gt;/mashroom/admin
 
-![Mashroom Admin UI](mashroom_admin_ui.png "Mashroom Admin UI")
+![Mashroom Admin UI](mashroom-admin-ui.png "Mashroom Admin UI")
 
 It contains:
 
@@ -729,7 +729,7 @@ It contains:
 
 ### Architecture
 
-![Mashroom Portal Architecture](mashroom_portal.png "Mashroom Portal Architecture")
+![Mashroom Portal Architecture](mashroom-portal.png "Mashroom Portal Architecture")
 
 #### How does it work?
 
@@ -786,7 +786,7 @@ registries that can also be combined:
 
 Here, how it works:
 
-![Remote app resources](mashroom_portal_remote_app.png)
+![Remote app resources](mashroom-portal-remote-app.png)
 
 #### Ad hoc register a remote app
 
@@ -794,7 +794,7 @@ Here for example with <a href="#mashroomportalremoteappregistry">mashroom-portal
 
 Open _/mashroom/admin/ext/remote-portal-apps_, paste the URL into the input and lick _Add_:
 
-![Register Remote Portal App](mashroom_portal_register_remote_app.png)
+![Register Remote Portal App](mashroom-portal-register-remote-app.png)
 
 After that you can add the new Portal App via Drag'n'Drop where ever you want:
 
@@ -868,7 +868,7 @@ with the *portalAppSetup* in the content. Checkout the [Mashroom Demo SSR Portal
 
 All put together rendering a page works like this:
 
-![SSR Rendering](mashroom_portal_ssr.png)
+![SSR Rendering](mashroom-portal-ssr.png)
 
 <span class="panel-warning">
 **NOTE**: Every App should support client-side rendering, because they can be added dynamically to a page.
@@ -889,7 +889,7 @@ SSR improves page performance and SEO heavily. To improve it further we recommen
    (e.g. by always defining height and width for media)
  * Use the [Google Lighthouse](https://developers.google.com/web/tools/lighthouse) to check your site:
 
-![SSR Performance](mashroom_portal_ssr_performance.png)
+![SSR Performance](mashroom-portal-ssr-performance.png)
 
 ### "SPA Mode"
 
@@ -984,7 +984,7 @@ because like that the resources are not properly removed from the browser.
 
 Here for example the <a href="#mashroomportaldemocompositeapp">mashroom-portal-demo-composite-app</a>:
 
-![Mashroom Portal Composite App](mashroom_portal_composite_app.png)
+![Mashroom Portal Composite App](mashroom-portal-composite_app.png)
 
 <span class="panel-warning">
 **NOTE**: A Composite App only runs in *Mashroom Portal* and leads to a vendor lock-in. At very least other integration hosts
@@ -1078,7 +1078,7 @@ If server-side messaging (_mashroom-messaging_) and Websocket support (_mashroom
 automatically connected to the server-side messaging facility and like this Portal Apps can communicate with Apps in other
 browsers and even with 3rd party systems (when a external messaging system such as MQTT is connected).
 
-![Messaging](mashroom_messaging.png)
+![Messaging](mashroom-messaging.png)
 
 ### Page Enhancements
 
@@ -1181,26 +1181,26 @@ Both approaches can be combined.
 
 #### Page layout
 
-![Mashroom Portal Layout](mashroom_portal_layout.png)
+![Mashroom Portal Layout](mashroom-portal-layout.png)
 
 The *theme* is responsible for rendering the page. It defines where the main content is.
 The portal adds the selected layout to the main content and the configured Portal Apps within the app areas of this layout.
 
 #### Default start page with demo apps
 
-![Mashroom Portal](mashroom_portal_ui.png)
+![Mashroom Portal](mashroom-portal-ui.png)
 
 #### Add a new Portal App
 
 As an *Administrator* you can add Portal Apps via Admin Toolbar: *Add Apps*
 
-![Mashroom Portal Add App](mashroom_portal_ui_add_app.png)
+![Mashroom Portal Add App](mashroom-portal-ui-add-app.png)
 
 #### Portal App configuration
 
 After adding an App you can click on the *Configure* icon to edit the *appConfig* and the permissions:
 
-![Mashroom Portal App Settings](mashroom_portal_ui_app_settings.png)
+![Mashroom Portal App Settings](mashroom-portal-ui-app-settings.png)
 
 #### Custom App Config Editor
 
@@ -1230,7 +1230,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 
 Here for example the <a href="#mashroomportaldemoreactapp2">mashroom-portal-demo-react-app2</a> plugin which has a custom editor:
 
-![Mashroom Portal Custom App Config Editor](mashroom_portal_custom_app_config_editor.png)
+![Mashroom Portal Custom App Config Editor](mashroom-portal-custom-app-config-editor.png)
 
 #### Show Portal App versions
 
@@ -1247,13 +1247,13 @@ this in the _Mashroom_ config file:
 }
 ```
 
-![Mashroom Portal show versions](mashroom_portal_show_versions.png)
+![Mashroom Portal show versions](mashroom-portal-show-versions.png)
 
 #### Adding a new page
 
 As an *Administrator* you can add a new Page from the Admin Toolbar: *Create* -> *Create New Page*:
 
-![Mashroom Portal Page Settings](mashroom_portal_ui_page_settings.png)
+![Mashroom Portal Page Settings](mashroom-portal-ui-page-settings.png)
 
 After that you can start to place Portal Apps via *Add Apps*.
 
@@ -1261,7 +1261,7 @@ After that you can start to place Portal Apps via *Add Apps*.
 
 As an *Administrator* you can add a new Site from the Admin Toolbar: *Create* -> *Create New Page*:
 
-![Mashroom Portal Site Settings](mashroom_portal_ui_site_settings.png)
+![Mashroom Portal Site Settings](mashroom-portal-ui-site-settings.png)
 
 After that you can start to add additional pages.
 

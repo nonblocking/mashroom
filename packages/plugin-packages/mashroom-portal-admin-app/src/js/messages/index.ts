@@ -4,9 +4,9 @@ export let currentMessages: any = {};
 export default (lang: string): Promise<any> => {
     let promise;
     if (lang === 'de') {
-        promise = import('./messages_de');
+        promise = import('./messages-de');
     } else {
-        promise = import('./messages_en');
+        promise = import('./messages-en');
     }
 
     return promise.then(

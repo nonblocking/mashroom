@@ -1,17 +1,17 @@
 
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import {
     getSitePath,
     getFrontendApiBasePath,
     getFrontendSiteBasePath, getFrontendResourcesBasePath
-} from '../../../src/backend/utils/path_utils';
+} from '../../../src/backend/utils/path-utils';
 
 const portalConfig: any = {
     path: '/portal',
 };
 setPortalPluginConfig(portalConfig);
 
-describe('path_utils', () => {
+describe('path-utils', () => {
 
     it('resolves the site path', () => {
         const req: any = {

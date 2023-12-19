@@ -15,8 +15,8 @@ import type {IncomingMessageWithContext} from '@mashroom/mashroom/type-definitio
 import type {HttpHeaders, QueryParams} from '../../type-definitions';
 import type {MashroomHttpProxyInterceptorHolder} from '../../type-definitions/internal';
 
-jest.mock('../../src/connection_pool', () => {
-    const originalModule = jest.requireActual('../../src/connection_pool');
+jest.mock('../../src/connection-pool', () => {
+    const originalModule = jest.requireActual('../../src/connection-pool');
     return {
         __esModule: true, // Use it when dealing with esModules
         ...originalModule,

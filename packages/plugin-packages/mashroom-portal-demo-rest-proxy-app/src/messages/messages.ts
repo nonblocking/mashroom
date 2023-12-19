@@ -1,6 +1,6 @@
 
-import en from './messages_en';
-import de from './messages_de';
+import en from './messages-en';
+import de from './messages-de';
 
 export default {
     en,

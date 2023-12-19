@@ -1,6 +1,6 @@
 
 import {requestUtils} from '@mashroom/mashroom-utils';
-import {getFrontendSiteBasePath} from '../utils/path_utils';
+import {getFrontendSiteBasePath} from '../utils/path-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';

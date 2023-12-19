@@ -1,9 +1,9 @@
 
 import {PORTAL_PAGE_TEMPLATE_NAME, PORTAL_APP_WRAPPER_TEMPLATE_NAME, PORTAL_APP_ERROR_TEMPLATE_NAME} from '../constants';
-import minimalTemplatePortal from '../theme/minimal_template_portal';
-import defaultTemplateAppWrapper from '../theme/default_template_app_wrapper';
-import defaultTemplateAppError from '../theme/default_template_app_error';
-import {renderServerSide} from './ssr_utils';
+import minimalTemplatePortal from '../theme/minimal-template-portal';
+import defaultTemplateAppWrapper from '../theme/default-template-app-wrapper';
+import defaultTemplateAppError from '../theme/default-template-app-error';
+import {renderServerSide} from './ssr-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';

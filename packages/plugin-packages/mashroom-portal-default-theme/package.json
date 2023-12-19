@@ -25,7 +25,7 @@
     "scripts": {
         "lint": "eslint src --ext .ts --fix",
         "type-check": "tsc --noEmit",
-        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev_server.js\"",
+        "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev-server.js\"",
         "build:backend": "babel src/backend -d dist --extensions .ts",
         "build:frontend": "webpack --mode production",
         "build:style": "sass --style compressed --no-source-map --load-path=. src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",

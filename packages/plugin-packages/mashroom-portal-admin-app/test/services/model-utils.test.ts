@@ -2,7 +2,7 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 
-import {flattenPageTree, searchPageRef, getPagePosition, removePageFromTree, insertOrUpdatePageAtPosition} from '../../src/js/services/model_utils';
+import {flattenPageTree, searchPageRef, getPagePosition, removePageFromTree, insertOrUpdatePageAtPosition} from '../../src/js/services/model-utils';
 
 import type {MashroomPortalPageRef, MashroomPortalSite} from '@mashroom/mashroom-portal/type-definitions';
 
@@ -10,7 +10,7 @@ const loadSite = () => {
     return JSON.parse(readFileSync(resolve(__dirname, 'site.json')).toString());
 };
 
-describe('model_utils.flattenPageTree', () => {
+describe('model-utils.flattenPageTree', () => {
 
     it('flattens a hierarchical page tree', () => {
         const site: any = loadSite();
@@ -22,7 +22,7 @@ describe('model_utils.flattenPageTree', () => {
 
 });
 
-describe('model_utils.searchPageRef', () => {
+describe('model-utils.searchPageRef', () => {
 
     it('finds an existing page in the hierarchical tree', () => {
         const site: MashroomPortalSite = loadSite();
@@ -45,7 +45,7 @@ describe('model_utils.searchPageRef', () => {
 
 });
 
-describe('model_utils.getPagePosition', () => {
+describe('model-utils.getPagePosition', () => {
 
     it('returns the correct position for an existing page in the hierarchical tree', () => {
         const site: any = loadSite();
@@ -75,7 +75,7 @@ describe('model_utils.getPagePosition', () => {
 
 });
 
-describe('model_utils.removePageFromTree', () => {
+describe('model-utils.removePageFromTree', () => {
 
     it('removes an existing page from the tree', () => {
         const site: MashroomPortalSite = loadSite();
@@ -103,7 +103,7 @@ describe('model_utils.removePageFromTree', () => {
 
 });
 
-describe('model_utils.insertOrUpdatePageAtPosition', () => {
+describe('model-utils.insertOrUpdatePageAtPosition', () => {
 
     it('inserts a new page below a given parent node', () => {
         const site: any = loadSite();

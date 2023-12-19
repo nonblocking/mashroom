@@ -1,5 +1,5 @@
 
-import {getResourceAsStream} from '../utils/resource_utils';
+import {getResourceAsStream} from '../utils/resource-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';

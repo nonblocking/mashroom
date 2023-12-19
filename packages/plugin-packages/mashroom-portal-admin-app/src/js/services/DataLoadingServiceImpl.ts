@@ -14,7 +14,7 @@ import {
     setAvailableAppsLoading, setAvailableAppsError, setAvailableApps
 } from '../store/actions';
 import store from '../store/store';
-import {flattenPageTree} from './model_utils';
+import {flattenPageTree} from './model-utils';
 
 import type {
     MashroomPortalAdminService,

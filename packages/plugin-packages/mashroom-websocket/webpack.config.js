@@ -1,9 +1,9 @@
 
 module.exports = {
-    entry:  __dirname + '/src/frontend/test_client',
+    entry:  __dirname + '/src/frontend/test-client',
     output: {
         path: __dirname + '/dist/public',
-        filename: 'test_client.js'
+        filename: 'test-client.js'
     },
     module: {
         rules: [

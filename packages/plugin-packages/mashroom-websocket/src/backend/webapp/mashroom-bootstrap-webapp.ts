@@ -4,9 +4,9 @@ import WebSocketServer from '../WebSocketServer';
 import {
     startExportConnectionMetrics,
     stopExportConnectionMetrics
-} from '../metrics/connection_metrics';
+} from '../metrics/connection-metrics';
 import expressApp from './webapp';
-import httpUpgradeHandlerFn from './http_upgrade_handler';
+import httpUpgradeHandlerFn from './http-upgrade-handler';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 import type {

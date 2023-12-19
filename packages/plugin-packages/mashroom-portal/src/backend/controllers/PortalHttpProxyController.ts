@@ -2,10 +2,10 @@
 import {
     HTTP_HEADER_REST_PROXY_PERMISSIONS,
 } from '../constants';
-import context from '../context/global_portal_context';
-import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security_utils';
-import {portalAppContext} from '../utils/logging_utils';
-import {getSitePath} from '../utils/path_utils';
+import context from '../context/global-portal-context';
+import {calculatePermissions, getUser, isProxyAccessPermitted, isSitePathPermitted,} from '../utils/security-utils';
+import {portalAppContext} from '../utils/logging-utils';
+import {getSitePath} from '../utils/path-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomHttpProxyService} from '@mashroom/mashroom-http-proxy/type-definitions';

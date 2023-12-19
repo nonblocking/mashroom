@@ -1,7 +1,7 @@
 
 import path from 'path';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalPageRenderController from '../../../src/backend/controllers/PortalPageRenderController';
 import type {MashroomPortalTheme, MashroomPortalLayout,MashroomPortalPageRenderModel} from '../../../type-definitions';
 
@@ -40,7 +40,7 @@ const layout: MashroomPortalLayout = {
     description: null,
     lastReloadTs: Date.now(),
     layoutId: 'test',
-    layoutPath: path.resolve(__dirname, './test_layout.html'),
+    layoutPath: path.resolve(__dirname, './test-layout.html'),
 };
 
 const pluginRegistry1: any = {
@@ -108,16 +108,16 @@ const pluginRegistry3: any = {
         lastReloadTs: 2000,
         pageResources: {
             js: [{
-                path: 'test_script1.js',
+                path: 'test-script1.js',
                 rule: 'yes',
                 location: 'header',
                 inline: false,
             }, {
-                path: 'test_script2.js',
+                path: 'test-script2.js',
                 location: 'footer',
                 inline: true,
             }, {
-                path: 'test_script3.js',
+                path: 'test-script3.js',
                 rule: 'onlyOnPage4',
                 location: 'footer',
                 inline: false,
@@ -127,11 +127,11 @@ const pluginRegistry3: any = {
                 location: 'header',
             }],
             css: [{
-                path: 'test_style1.css',
+                path: 'test-style1.css',
                 location: 'footer',
                 inline: false,
             }, {
-                path: 'test_style2.css',
+                path: 'test-style2.css',
                 location: 'header',
                 inline: true,
             }]
@@ -465,15 +465,15 @@ describe('PortalPageRenderController', () => {
                     // console.info(model.portalResourcesFooter);
 
                     expect(model.portalResourcesHeader).toContain('window[\'MashroomPortalCustomClientServices\'] = {"customService":"foo"};');
-                    expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_script1.js?v=5e543256c4"></script>');
+                    expect(model.portalResourcesHeader).toContain('<script src="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test-script1.js?v=5e543256c4"></script>');
                     expect(model.portalResourcesHeader).toContain(' .bar {');
                     expect(model.portalResourcesHeader).toContain('console.info("I am generated!");');
 
                     expect(model.portalResourcesFooter).toContain('console.info(\'Script2\');');
-                    expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test_style1.css?v=5e543256c4" />');
-                    expect(model.portalResourcesFooter).not.toContain('test_script3.js');
+                    expect(model.portalResourcesFooter).toContain('<link rel="stylesheet" href="/portal/web/___/page-enhancements/Test%20Page%20Enhancement/test-style1.css?v=5e543256c4" />');
+                    expect(model.portalResourcesFooter).not.toContain('test-script3.js');
 
-                    const posScript1 = model.portalResourcesHeader.indexOf('/test_script1.js');
+                    const posScript1 = model.portalResourcesHeader.indexOf('/test-script1.js');
                     const posVeryImportantScript = model.portalResourcesHeader.indexOf('/very_important_stuff.js');
                     expect(posVeryImportantScript < posScript1).toBeTruthy();
                 }

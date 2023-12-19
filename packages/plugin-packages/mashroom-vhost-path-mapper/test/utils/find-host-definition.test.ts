@@ -1,9 +1,9 @@
 
-import findHostDefinition from '../../src/utils/find_host_definition';
+import findHostDefinition from '../../src/utils/find-host-definition';
 
 import type {DeterminedHost, VHostDefinitions} from '../../type-definitions/internal';
 
-describe('find_host_definition', () => {
+describe('find-host-definition', () => {
 
     it('returns undefined for empty definitions', () => {
         const host: DeterminedHost = {

@@ -1,12 +1,13 @@
 
 import os from 'os';
+import path from 'path';
 import http from 'http';
 import express from 'express';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import WebSocketServer from '../WebSocketServer';
 import context from '../context';
 import app from './webapp';
-import httpUpgradeHandlerFn from './http_upgrade_handler';
+import httpUpgradeHandlerFn from './http-upgrade-handler';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
 
 import type {Socket} from 'net';
@@ -79,11 +80,14 @@ context.server.addMessageListener((path) => path.startsWith('/test'), (message, 
 
 const upgradeHandler = httpUpgradeHandlerFn();
 httpServer.on('upgrade', (req, socket: Socket, head) => {
-    const reqWithContext: any = {...req, pluginContext};
+    const reqWithContext: any = req;
+    reqWithContext.pluginContext = pluginContext;
     upgradeHandler(reqWithContext, socket, head);
 });
 
 wrapperApp.use('/websocket', app);
+
+wrapperApp.use('/public', express.static(path.resolve(__dirname, '../public')));
 
 httpServer.listen(8066, () => {
     console.log('Listening on 8066');

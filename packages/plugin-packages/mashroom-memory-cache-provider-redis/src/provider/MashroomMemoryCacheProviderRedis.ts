@@ -1,5 +1,5 @@
 
-import getClient, {getKeyPrefix} from '../redis_client';
+import getClient, {getKeyPrefix} from '../redis-client';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMemoryCacheProvider, CacheValue, CacheKey} from '@mashroom/mashroom-memory-cache/type-definitions';

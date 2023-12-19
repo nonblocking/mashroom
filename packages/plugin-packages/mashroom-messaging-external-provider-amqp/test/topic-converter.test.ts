@@ -1,7 +1,7 @@
 
-import {topicToRoutingKey, routingKeyToTopic} from '../src/provider/topic_converter';
+import {topicToRoutingKey, routingKeyToTopic} from '../src/provider/topic-converter';
 
-describe('topic_converter', () => {
+describe('topic-converter', () => {
 
     it('converts a topic to a routing key', () => {
         expect(topicToRoutingKey('foo')).toBe('foo');

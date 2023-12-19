@@ -1,7 +1,7 @@
 
-import {isAdmin, isSitePermitted} from '../utils/security_utils';
-import {getPortalPath} from '../utils/path_utils';
-import {createPageId, createSiteId} from '../utils/id_utils';
+import {isAdmin, isSitePermitted} from '../utils/security-utils';
+import {getPortalPath} from '../utils/path-utils';
+import {createPageId, createSiteId} from '../utils/id-utils';
 import SitePagesTraverser from '../utils/SitePagesTraverser';
 
 import type {Request, Response} from 'express';

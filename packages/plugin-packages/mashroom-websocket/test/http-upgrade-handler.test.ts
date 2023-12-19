@@ -1,11 +1,11 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import httpUpgradeHandlerFn from '../src/backend/webapp/http_upgrade_handler';
+import httpUpgradeHandlerFn from '../src/backend/webapp/http-upgrade-handler';
 import context from '../src/backend/context';
 
 import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
-describe('http_upgrade_handler', () => {
+describe('http-upgrade-handler', () => {
 
     context.basePath = '/websocket';
     context.restrictToRoles = ['Role1'];

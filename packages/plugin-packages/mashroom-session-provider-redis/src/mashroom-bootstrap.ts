@@ -1,8 +1,8 @@
 
 import RedisStore from 'connect-redis';
-import createClient, {setConfig, close} from './redis_client';
-import healthProbe from './health/health_probe';
-import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store_metrics';
+import createClient, {setConfig, close} from './redis-client';
+import healthProbe from './health/health-probe';
+import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store-metrics';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 

@@ -1,5 +1,5 @@
 
-import context from '../../context/global_portal_context';
+import context from '../../context/global-portal-context';
 import PortalRemotePortalAppRegistryPluginLoader from './PortalRemotePortalAppRegistryPluginLoader';
 
 import type {MashroomPluginLoaderPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';

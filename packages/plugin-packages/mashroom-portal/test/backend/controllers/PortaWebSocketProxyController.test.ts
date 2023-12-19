@@ -1,6 +1,6 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalWebSocketpProxyController from '../../../src/backend/controllers/PortalWebSocketProxyController';
 import type {MashroomPortalApp} from '../../../type-definitions';
 

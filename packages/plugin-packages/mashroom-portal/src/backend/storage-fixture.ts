@@ -1,6 +1,6 @@
 
 import {PAGES_COLLECTION, PORTAL_APP_INSTANCES_COLLECTION, SITES_COLLECTION} from './constants';
-import {createAppInstanceId} from './utils/id_utils';
+import {createAppInstanceId} from './utils/id-utils';
 
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomStorageCollection, MashroomStorageService} from '@mashroom/mashroom-storage/type-definitions';

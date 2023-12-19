@@ -1,7 +1,7 @@
 
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
-import themeParams from './theme_params';
+import themeParams from './theme-params';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json');

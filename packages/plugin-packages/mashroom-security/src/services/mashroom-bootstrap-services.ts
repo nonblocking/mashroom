@@ -1,5 +1,5 @@
 
-import context from '../context/global_context';
+import context from '../context/global-context';
 import MashroomSecurityACLChecker from '../acl/MashroomSecurityACLChecker';
 import MashroomSecurityService from './MashroomSecurityService';
 

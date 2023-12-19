@@ -1,5 +1,5 @@
 
-import {startExportPluginMetrics, stopExportPluginMetrics} from '../metrics/plugin_metrics';
+import {startExportPluginMetrics, stopExportPluginMetrics} from '../metrics/plugin-metrics';
 import MashroomMonitoringRequestMetricsMiddleware from './MashroomMonitoringRequestMetricsMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';

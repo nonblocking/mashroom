@@ -1,5 +1,5 @@
 
-import createLabelHash from './create_label_hash';
+import createLabelHash from './create-label-hash';
 
 import type {Counter, MetricLabels} from '../../type-definitions';
 import type {InternalCounterMetricData} from '../../type-definitions/internal';

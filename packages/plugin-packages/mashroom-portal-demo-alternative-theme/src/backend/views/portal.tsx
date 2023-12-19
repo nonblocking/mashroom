@@ -2,7 +2,7 @@
 import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import React from 'react';
-import themeParams from '../plugin/theme_params';
+import themeParams from '../plugin/theme-params';
 // eslint-disable-next-line import/no-unresolved
 import packageJson from '../../package.json';
 import Navigation from './navigation';

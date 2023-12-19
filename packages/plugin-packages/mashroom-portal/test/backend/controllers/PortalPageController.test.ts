@@ -1,7 +1,7 @@
 
 import path from 'path';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {setPortalPluginConfig} from '../../../src/backend/context/global_portal_context';
+import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalPageController from '../../../src/backend/controllers/PortalPageController';
 import type {MashroomPortalTheme, MashroomPortalLayout} from '../../../type-definitions';
 
@@ -40,7 +40,7 @@ const layout: MashroomPortalLayout = {
     description: null,
     lastReloadTs: Date.now(),
     layoutId: 'test',
-    layoutPath: path.resolve(__dirname, './test_layout.html'),
+    layoutPath: path.resolve(__dirname, './test-layout.html'),
 };
 
 const pluginRegistry2: any = {

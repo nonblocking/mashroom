@@ -1,5 +1,5 @@
 
-import {startExportSessionMetrics, stopExportSessionMetrics} from '../metrics/session_metrics';
+import {startExportSessionMetrics, stopExportSessionMetrics} from '../metrics/session-metrics';
 import MashroomSessionMiddleware from './MashroomSessionMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';

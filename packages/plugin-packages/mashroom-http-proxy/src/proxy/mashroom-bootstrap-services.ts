@@ -1,9 +1,9 @@
 
-import {setPoolConfig} from '../connection_pool';
-import context from '../context/global_context';
-import {startExportHttpPoolMetrics, stopExportHttpPoolMetrics} from '../metrics/http_pool_metrics';
-import {startExportWsConnectionMetrics, stopExportWsConnectionMetrics} from '../metrics/ws_connection_metrics';
-import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request_metrics';
+import {setPoolConfig} from '../connection-pool';
+import context from '../context/global-context';
+import {startExportHttpPoolMetrics, stopExportHttpPoolMetrics} from '../metrics/http-pool-metrics';
+import {startExportWsConnectionMetrics, stopExportWsConnectionMetrics} from '../metrics/ws-connection-metrics';
+import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request-metrics';
 import HttpHeaderFilter from './HttpHeaderFilter';
 import InterceptorHandler from './InterceptorHandler';
 import ProxyImplRequest from './ProxyImplRequest';

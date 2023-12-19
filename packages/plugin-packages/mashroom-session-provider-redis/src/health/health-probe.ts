@@ -1,5 +1,5 @@
 
-import {isConnected} from '../redis_client';
+import {isConnected} from '../redis-client';
 
 import type {MashroomHealthProbeStatus} from '@mashroom/mashroom/type-definitions';
 

@@ -6,7 +6,7 @@ import type {MashroomSecurityUser} from '../type-definitions';
 describe('MashroomSecurityACLChecker', () => {
 
     it('allows no anonymous access to a protected path', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './test-acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
         const user: MashroomSecurityUser | null = null;
 
@@ -57,7 +57,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows anonymous access when allowed for all', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './test-acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
@@ -72,7 +72,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows anonymous access to an unprotected path', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './test-acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
         const user: MashroomSecurityUser | null = null;
 
@@ -116,7 +116,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows a user with the required role access to a protected path', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './test-acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
@@ -143,7 +143,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows no http method when denied for all', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './test-acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
@@ -170,7 +170,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allow no access with a denied role even if the user has an allowed role', async () => {
-        const aclPath = './test_acl.json';
+        const aclPath = './test-acl.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
@@ -197,7 +197,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('works with a complex rules', async () => {
-        const aclPath = './test_acl_new.json';
+        const aclPath = './test-acl-new.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
         const user: MashroomSecurityUser | null = null;
 
@@ -228,7 +228,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows anonymous users if the IP address is permitted', async () => {
-        const aclPath = './test_acl_new.json';
+        const aclPath = './test-acl-new.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const req: any = {
@@ -246,7 +246,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows access when no roles but IP address matches', async () => {
-        const aclPath = './test_acl_new.json';
+        const aclPath = './test-acl-new.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -274,7 +274,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('allows access when a role matches but IP address doesnt', async () => {
-        const aclPath = './test_acl_new.json';
+        const aclPath = './test-acl-new.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
@@ -301,7 +301,7 @@ describe('MashroomSecurityACLChecker', () => {
     });
 
     it('denies access when a roles matches but IP address is denied', async () => {
-        const aclPath = './test_acl_new.json';
+        const aclPath = './test-acl-new.json';
         const aclChecker = new MashroomSecurityACLChecker(aclPath, __dirname, loggingUtils.dummyLoggerFactory);
 
         const user: MashroomSecurityUser = {
