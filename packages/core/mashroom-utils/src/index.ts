@@ -1,7 +1,6 @@
 
 export * as clusterUtils from './cluster-utils';
 export * as configUtils from './config-utils';
-export * as errorUtils from './error-utils';
 export * as fileTypeUtils from './file-type-utils';
 export * as headerUtils from './header-utils';
 export * as htmlUtils from './html-utils';

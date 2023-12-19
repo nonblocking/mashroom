@@ -1,5 +1,3 @@
-
-import {topicMatcher} from '@mashroom/mashroom-utils/lib/messaging-utils';
 import {
     WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH,
     WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC,
@@ -15,6 +13,8 @@ import type {
 } from '../../../../type-definitions';
 
 const REMOTE_MESSAGING_TOPIC_PREFIX = 'remote:';
+const REMOTE_MESSAGING_WILDCARDS_MULTI = ['#'];
+const REMOTE_MESSAGING_WILDCARDS_SINGLE = ['+', '*'];
 const REMOTE_MESSAGING_CONNECT_PATH: string | undefined = (global as any)[WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH];
 const REMOTE_MESSAGING_PRIVATE_USER_TOPIC: string | undefined = (global as any)[WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC];
 
@@ -250,9 +250,14 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
 
         let subscriptions: Array<Subscription> = [];
         Object.keys(this._subscriptionMap)
-            .filter((t) => topicMatcher(t, topic))
-            .forEach((t) => {
-                subscriptions = subscriptions.concat(this._subscriptionMap[t]);
+            .filter((pattern) => {
+                let regex = `^${pattern}$`;
+                REMOTE_MESSAGING_WILDCARDS_SINGLE.forEach((w) => regex = regex.replace(w, '[^/]+'));
+                REMOTE_MESSAGING_WILDCARDS_MULTI.forEach((w) => regex = regex.replace(w, '.*'));
+                return !!topic.match(new RegExp(regex));
+            })
+            .forEach((pattern) => {
+                subscriptions = subscriptions.concat(this._subscriptionMap[pattern]);
             });
         console.debug(`Subscriptions for remote topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
 

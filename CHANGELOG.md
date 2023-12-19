@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * mashroom-utils refactoring: Added an index file that should be used exclusively to import utils
+   **BREAKING CHANGE**: If you have used mashroom-utils in your custom plugins you have to change the imports
  * LDAP Security Provider: Fixed escaping of special characters in the DN. Didn't work if the same special character occurred multiple times.
  * Dropped support for Node.js 16 - required is now 18 or 20
  * All 3rd party libraries upgrades and switched to npm workspaces for dependency management

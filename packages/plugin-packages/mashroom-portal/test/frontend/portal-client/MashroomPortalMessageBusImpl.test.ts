@@ -203,7 +203,6 @@ describe('MashroomPortalMessageBusImpl', () => {
         const messageBus = new MashroomPortalMessageBusImpl();
         // @ts-ignore
         messageBus._remoteMessageClient = {};
-
         expect(messageBus.getRemoteUserPrivateTopic()).toBe('user/testuser');
     });
 
@@ -211,8 +210,61 @@ describe('MashroomPortalMessageBusImpl', () => {
         const messageBus = new MashroomPortalMessageBusImpl();
         // @ts-ignore
         messageBus._remoteMessageClient = {};
-
         expect(messageBus.getRemoteUserPrivateTopic('foo@test.com')).toBe('user/foo@test.com');
+    });
+
+    it('processes single level wildcards in remote topics correctly', async () => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        // @ts-ignore
+        messageBus._remoteMessageClient = {
+            subscribe() {
+                return Promise.resolve();
+            }
+        };
+
+        let match = false;
+        messageBus.subscribe(`${messageBus.getRemotePrefix()}foo/*/bar/+/xx`, () => {
+            match = true;
+        });
+
+        // @ts-ignore
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/3/xx');
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        expect(match).toBeFalsy();
+
+        // @ts-ignore
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xx');
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        expect(match).toBeTruthy();
+    });
+
+    it('processes multi level wildcards in remote topics correctly', async () => {
+        const messageBus = new MashroomPortalMessageBusImpl();
+        // @ts-ignore
+        messageBus._remoteMessageClient = {
+            subscribe() {
+                return Promise.resolve();
+            }
+        };
+
+        let match = false;
+        messageBus.subscribe(`${messageBus.getRemotePrefix()}foo/#/xx`, () => {
+            match = true;
+        });
+
+        // @ts-ignore
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xy');
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        expect(match).toBeFalsy();
+
+        // @ts-ignore
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xx');
+        await new Promise((resolve) => setTimeout(resolve, 100));
+
+        expect(match).toBeTruthy();
     });
 
     it('should unsubscribe after app unload', () => {
