@@ -8,6 +8,11 @@
             }
         }
     },
+    "/portal/*/___/api/logout": {
+        "GET": {
+            "allow": "any"
+        }
+    },
     "/portal/public-site/**": {
         "*": {
             "allow": "any"
