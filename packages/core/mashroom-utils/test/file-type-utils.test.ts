@@ -1,7 +1,7 @@
 
 import {isES6Module, isChunkWithHash, isTypescript} from '../src/file-type-utils';
 
-describe('file_type_utils.isES6Module', () => {
+describe('file-type-utils.isES6Module', () => {
 
     it('detects ES6 modules based on the extension', () => {
         expect(isES6Module('foo/bar/index.js')).toBeFalsy();
@@ -11,7 +11,7 @@ describe('file_type_utils.isES6Module', () => {
 
 });
 
-describe('file_type_utils.isTypescript', () => {
+describe('file-type-utils.isTypescript', () => {
 
     it('detects typescript files based on the extension', () => {
         expect(isTypescript('foo/bar/index.js')).toBeFalsy();
@@ -21,7 +21,7 @@ describe('file_type_utils.isTypescript', () => {
 
 });
 
-describe('file_type_utils.isChunkWithHash', () => {
+describe('file-type-utils.isChunkWithHash', () => {
 
     it('detects chunks with hashes based on the file name', () => {
         expect(isChunkWithHash('foo/bar/index.js')).toBeFalsy();

@@ -1,7 +1,7 @@
 
 import {topicMatcher} from '../src/messaging-utils';
 
-describe('messaging_utils.topicMatcher', () => {
+describe('messaging-utils.topicMatcher', () => {
 
     it('matches simple topics correctly', () => {
         expect(topicMatcher('foo/bar', 'foo/bar')).toBeTruthy();

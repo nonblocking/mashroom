@@ -1,7 +1,7 @@
 
 import {deepAssign} from '../src/model-utils';
 
-describe('model_utils.deepAssign', () => {
+describe('model-utils.deepAssign', () => {
 
     it('should merge nested objects correctly', () => {
         const obj1: any = {

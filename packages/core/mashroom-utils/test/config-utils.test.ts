@@ -1,7 +1,7 @@
 
 import {safeEvaluateStringTemplate, evaluateTemplatesInConfigObject} from '../src/config-utils';
 
-describe('config_utils.safeEvaluateStringTemplate', () => {
+describe('config-utils.safeEvaluateStringTemplate', () => {
 
     it('evaluates a dynamic string template', () => {
         const template = 'Hello ${name ? name.toString() : "??"}!';
@@ -38,7 +38,7 @@ describe('config_utils.safeEvaluateStringTemplate', () => {
 
 });
 
-describe('config_utils.evaluateTemplatesInConfigObject', () => {
+describe('config-utils.evaluateTemplatesInConfigObject', () => {
 
     it('evaluates templates recursively in a config object', () => {
 

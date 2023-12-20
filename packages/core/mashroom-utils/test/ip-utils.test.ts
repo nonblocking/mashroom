@@ -1,7 +1,7 @@
 
 import {getClientIP, clientIPMatch} from '../src/ip-utils';
 
-describe('ip_utils.getClientIP', () => {
+describe('ip-utils.getClientIP', () => {
 
     it('resolves the IP address', () => {
         const req: any = {
@@ -18,7 +18,7 @@ describe('ip_utils.getClientIP', () => {
 
 });
 
-describe('ip_utils.clientIPMatch', () => {
+describe('ip-utils.clientIPMatch', () => {
 
     it('matches ipv4 addresses', () => {
         const req: any = {

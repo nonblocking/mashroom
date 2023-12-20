@@ -1,7 +1,7 @@
 
 import {determineUserAgent} from '../src/user-agent-utils';
 
-describe('user_agent_utils.determineUserAgent', () => {
+describe('user-agent-utils.determineUserAgent', () => {
 
     it('determines browser version and os', () => {
         const req1: any = {

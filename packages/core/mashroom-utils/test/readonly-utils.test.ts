@@ -2,7 +2,7 @@
 import {cloneAndFreezeObject, cloneAndFreezeArray, createReadonlyProxy} from '../src/readonly-utils';
 import ReadOnlyError from '../src/ReadOnlyError';
 
-describe('readonly_utils.cloneAndFreezeObject', () => {
+describe('readonly-utils.cloneAndFreezeObject', () => {
 
     it('creates a frozen clone of the object', () => {
         const obj: any = {
@@ -26,7 +26,7 @@ describe('readonly_utils.cloneAndFreezeObject', () => {
 
 });
 
-describe('readonly_utils.cloneAndFreezeArray', () => {
+describe('readonly-utils.cloneAndFreezeArray', () => {
 
     it('creates a frozen clone of the array', () => {
         const arr = [1, 2, 3];
@@ -40,7 +40,7 @@ describe('readonly_utils.cloneAndFreezeArray', () => {
 
 });
 
-describe('readonly_utils.createReadonlyProxy', () => {
+describe('readonly-utils.createReadonlyProxy', () => {
 
     it('makes all properties of an object readonly', () => {
 

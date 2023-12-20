@@ -1,7 +1,7 @@
 
 import {isNodeCluster, getAllWorkerPids} from '../src/cluster-utils';
 
-describe('cluster_utils.isNodeCluster', () => {
+describe('cluster-utils.isNodeCluster', () => {
 
     it('returns false when no worker exists', () => {
         expect(isNodeCluster()).toBeFalsy();
@@ -10,7 +10,7 @@ describe('cluster_utils.isNodeCluster', () => {
 });
 
 
-describe('cluster_utils.getAllWorkerPids', () => {
+describe('cluster-utils.getAllWorkerPids', () => {
 
     it('returns a single pid when no cluster active', async () => {
         if (process.env.GITHUB_WORKFLOW === 'Mashroom Run Tests Windows') {

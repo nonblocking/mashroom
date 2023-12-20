@@ -1,7 +1,7 @@
 
 import {isHtmlRequest, isAjaxRequest, isStaticResourceRequest} from '../src/request-utils';
 
-describe('request_utils.isHtmlRequest', () => {
+describe('request-utils.isHtmlRequest', () => {
 
     it('checks the accept header', () => {
         const req1: any = {
@@ -21,7 +21,7 @@ describe('request_utils.isHtmlRequest', () => {
     });
 });
 
-describe('request_utils.isAjaxRequest', () => {
+describe('request-utils.isAjaxRequest', () => {
 
     it('checks the accept header', () => {
         const req1: any = {
@@ -41,7 +41,7 @@ describe('request_utils.isAjaxRequest', () => {
     });
 });
 
-describe('request_utils.isStaticResourceRequest', () => {
+describe('request-utils.isStaticResourceRequest', () => {
 
     it('checks the extension', () => {
         const req1: any = {

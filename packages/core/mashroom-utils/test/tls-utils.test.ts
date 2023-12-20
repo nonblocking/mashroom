@@ -1,7 +1,7 @@
 
 import {fixTlsOptions} from '../src/tls-utils';
 
-describe('tls_utils.fixTlsOptions', () => {
+describe('tls-utils.fixTlsOptions', () => {
 
     it('processes certificate paths correctly', () => {
 
