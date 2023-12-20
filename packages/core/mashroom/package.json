@@ -11,7 +11,7 @@
         "type-definitions/*"
     ],
     "engines": {
-        "node": ">=16"
+        "node": ">=18"
     },
     "bin": {
         "mashroom": "./dist/server.js"
