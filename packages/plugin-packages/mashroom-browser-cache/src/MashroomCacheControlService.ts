@@ -37,7 +37,7 @@ export default class MashroomCacheControlService implements MashroomCacheControl
 
         let publicResource = true;
         let authenticated = false;
-        const securityService: MashroomSecurityService | undefined = request.pluginContext.services.security && request.pluginContext.services.security.service;
+        const securityService: MashroomSecurityService | undefined = request.pluginContext.services.security?.service;
         if (securityService) {
             const user = securityService.getUser(request);
             authenticated = !!user;
@@ -51,17 +51,23 @@ export default class MashroomCacheControlService implements MashroomCacheControl
             return;
         }
 
-        response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this.maxAgeSec}`);
+        if (!response.headersSent) {
+            response.set(CACHE_CONTROL_HEADER_NAME, `${publicResource ? 'public' : 'private'}, max-age=${this.maxAgeSec}`);
+        }
     }
 
     removeCacheControlHeader(response: Response): void {
-        response.removeHeader(CACHE_CONTROL_HEADER_NAME);
+        if (!response.headersSent) {
+            response.removeHeader(CACHE_CONTROL_HEADER_NAME);
+        }
     }
 
-    private _disableCache(res: Response) {
-        res.set(CACHE_CONTROL_HEADER_NAME, 'no-cache, no-store, max-age=0');
-        // Older clients
-        res.set('Pragma', 'no');
+    private _disableCache(response: Response) {
+        if (!response.headersSent) {
+            response.set(CACHE_CONTROL_HEADER_NAME, 'no-cache, no-store, max-age=0');
+            // Older clients
+            response.set('Pragma', 'no');
+        }
     }
 
 }
