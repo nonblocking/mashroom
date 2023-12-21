@@ -225,7 +225,7 @@ export default (content: string, req: Request) => {
                 }
             </style>
 
-            <script type="application/javascript">
+            <script type="text/javascript">
                 var refreshEnabled = document.cookie.split('; ').find(function(keyValue) {
                     return keyValue === 'mashroomAdminUIAutoRefresh=1';
                 });

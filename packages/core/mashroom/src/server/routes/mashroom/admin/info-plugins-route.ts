@@ -48,7 +48,7 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
                 <td>${htmlUtils.escapeHtml(plugin.errorMessage || '')}</td>
                 <td>${lastReload}</td>
                 <td>
-                   <script type="application/javascript">
+                   <script type="text/javascript">
                        window['pluginCfg${pluginIndex}'] = document.createElement('div');
                        window['pluginCfg${pluginIndex}'].innerHTML = '<div class="json">${config.replace(/'/g, '\\\'')}</div>';
                        window['pluginDef${pluginIndex}'] = document.createElement('div');

@@ -10,7 +10,7 @@ export default class PortalResourcesController {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
         const portalClientBundle = path.resolve(__dirname, '../../frontend/portal-client.js');
-        res.type('application/javascript');
+        res.type('text/javascript');
 
         if (cacheControlService) {
             cacheControlService.addCacheControlHeader('SHARED', req, res);
