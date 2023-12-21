@@ -206,22 +206,23 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
     }
 
     private async _loadPackageJson(serviceUrl: string): Promise<any | null> {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => {
+            controller.abort();
+        },  this._socketTimeoutSec * 1000);
         try {
-            const controller = new AbortController();
-            const timeout = setTimeout(() => {
-                controller.abort();
-            },  this._socketTimeoutSec * 1000);
             const result = await fetch(`${serviceUrl}/package.json`, {
                 signal: controller.signal,
             });
-            clearTimeout(timeout);
             if (result.ok) {
-                return result.json();
+                return await result.json();
             } else {
                 this._logger.warn(`Fetching package.json from ${serviceUrl} failed with status code ${result.status}`);
             }
         } catch (e) {
             this._logger.warn(`Fetching package.json from ${serviceUrl} failed`, e);
+        } finally {
+            clearTimeout(timeout);
         }
         return null;
     }
