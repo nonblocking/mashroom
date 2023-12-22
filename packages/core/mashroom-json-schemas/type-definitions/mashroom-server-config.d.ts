@@ -430,6 +430,23 @@ export interface Plugins {
      */
     versionHashSalt?: string;
     /**
+     * Optional config for resource fetching (App and plugin resources like js/css files)
+     */
+    resourceFetchConfig?: {
+      /**
+       * Timeout for fetching (Default: 3000)
+       */
+      fetchTimeoutMs?: number;
+      /**
+       * Max sockets per host for fetching resources from Remote Apps (Default: 10)
+       */
+      httpMaxSocketsPerHost?: number;
+      /**
+       * Reject resources from servers with invalid certificates (Default: true)
+       */
+      httpRejectUnauthorized?: boolean;
+    };
+    /**
      * Optional default http proxy config for portal apps
      */
     defaultProxyConfig?: {

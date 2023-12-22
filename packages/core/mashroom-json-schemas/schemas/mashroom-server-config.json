@@ -625,6 +625,25 @@
                             "type": "string",
                             "description": "If you need unique resource version hashes per server instance provide here a string (Default: null)"
                         },
+                        "resourceFetchConfig": {
+                            "type": "object",
+                            "properties": {
+                                "fetchTimeoutMs": {
+                                    "type": "number",
+                                    "description": "Timeout for fetching (Default: 3000)"
+                                },
+                                "httpMaxSocketsPerHost": {
+                                    "type": "number",
+                                    "description": "Max sockets per host for fetching resources from Remote Apps (Default: 10)"
+                                },
+                                "httpRejectUnauthorized": {
+                                    "type": "boolean",
+                                    "description": "Reject resources from servers with invalid certificates (Default: true)"
+                                }
+                            },
+                            "additionalProperties": false,
+                            "description": "Optional config for resource fetching (App and plugin resources like js/css files)"
+                        },
                         "defaultProxyConfig": {
                             "type": "object",
                             "properties": {

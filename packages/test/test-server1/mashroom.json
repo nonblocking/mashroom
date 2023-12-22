@@ -162,6 +162,11 @@
             "autoExtendAuthentication": false,
             "ignoreMissingAppsOnPages": false,
             "versionHashSalt": "abcdefghijk",
+            "resourceFetchConfig": {
+                "fetchTimeoutMs": 3000,
+                "httpMaxSocketsPerHost": 10,
+                "httpRejectUnauthorized": true,
+            },
             "ssrConfig": {
                 "ssrEnable": true,
                 "renderTimoutMs": 2000,

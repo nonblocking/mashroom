@@ -3,6 +3,20 @@
 
 ## [unreleased]
 
+ * Portal: Fetching and delivering App resources (js/css) improved
+   * Fetching resources from remote servers and slow network devices has now a proper timeout set, 
+     because non-responding servers could potentially lead to a memory leak due to an increasing number of socket/file handles
+   * The content-length header is now always correctly set
+   * Properties like timeout and max sockets can now be set like this in the server config:
+     ```json
+      "Mashroom Portal WebApp": {
+        "resourceFetchConfig": {
+          "fetchTimeoutMs": 3000,
+          "httpMaxSocketsPerHost": 10,
+          "httpRejectUnauthorized": true
+        }
+      }
+     ```
  * mashroom-utils refactoring: Added an index file that should be used exclusively to import utils
    **BREAKING CHANGE**: If you have used mashroom-utils in your custom plugins you have to change the imports
  * LDAP Security Provider: Fixed escaping of special characters in the DN. Didn't work if the same special character occurred multiple times.

@@ -1,5 +1,4 @@
-
-import {getResourceAsStream} from '../utils/resource-utils';
+import {streamResource} from '../utils/resource-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
@@ -32,10 +31,10 @@ export default class PortalPageEnhancementController {
             return;
         }
 
-        await this._sendResource(resourceJs ? 'js' : 'css', resourceJs || resourceCss, plugin, req, res);
+        await this._sendResource(resourceJs || resourceCss, plugin, req, res);
     }
 
-    private async _sendResource(type: 'js' | 'css', resource: MashroomPortalPageEnhancementResource | undefined,
+    private async _sendResource(resource: MashroomPortalPageEnhancementResource | undefined,
                                plugin: MashroomPortalPageEnhancement, req: Request, res: Response) {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
@@ -53,12 +52,8 @@ export default class PortalPageEnhancementController {
         logger.debug(`Sending page enhancement resource: ${resourceUri}`);
 
         try {
-            const rs = await getResourceAsStream(resourceUri);
-            res.type(type === 'js' ? 'text/javascript' : 'text/css');
-            rs.pipe(res);
-
+            await streamResource(resourceUri, res, logger);
             return true;
-
         } catch (err: any) {
             logger.error(`Cannot load page enhancement resource: ${resourceUri}`, err);
             if (cacheControlService) {

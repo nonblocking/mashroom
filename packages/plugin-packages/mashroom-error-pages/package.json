@@ -9,9 +9,6 @@
         "dist/**",
         "pages/**"
     ],
-    "dependencies": {
-        "get-uri": "^6.0.2"
-    },
     "devDependencies": {
         "@mashroom/mashroom": "2.4.5",
         "@mashroom/mashroom-i18n": "2.4.5",

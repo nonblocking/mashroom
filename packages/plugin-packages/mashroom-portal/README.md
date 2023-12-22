@@ -39,6 +39,11 @@ The plugin allows the following configuration properties:
             "autoExtendAuthentication": false,
             "ignoreMissingAppsOnPages": false,
             "versionHashSalt": null,
+            "resourceFetchConfig": {
+                "fetchTimeoutMs": 3000,
+                "httpMaxSocketsPerHost": 10,
+                "httpRejectUnauthorized": true
+            },
             "defaultProxyConfig": {
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]
@@ -65,6 +70,10 @@ The plugin allows the following configuration properties:
  * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
  * _ignoreMissingAppsOnPages_: If an App on a page can't be found just show nothing instead of an error message (Default: false)
  * _versionHashSalt_: If you need unique resource version hashes per server instance provide here a string (Default: null)
+ * _resourceFetchConfig_: Optional config for resource fetching (App and plugin resources like js/css files)
+     * _fetchTimeoutMs_: Timeout for fetching (Default: 3000)
+     * _httpMaxSocketsPerHost_: Max sockets per host for fetching resources from Remote Apps (Default: 10)
+     * _httpRejectUnauthorized_: Reject resources from servers with invalid certificates (Default: true)
  * _defaultProxyConfig_: Optional default http proxy config for portal apps (see below the documentation of *portal-app2* plugins).
    The *restrictToRoles* here cannot be removed per app, but apps can define other roles that are also allowed to access a proxy.
  * _ssrConfig_: Optional config for server side rendering

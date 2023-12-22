@@ -85,6 +85,11 @@ export type MashroomPortalPluginConfig = {
     readonly autoExtendAuthentication: boolean;
     readonly ignoreMissingAppsOnPages: boolean;
     readonly versionHashSalt: string | null | undefined;
+    readonly resourceFetchConfig: {
+        readonly fetchTimeoutMs: number;
+        readonly httpMaxSocketsPerHost: number;
+        readonly httpRejectUnauthorized: boolean;
+    },
     readonly defaultProxyConfig: {
         readonly sendPermissionsHeader?: boolean;
         readonly restrictToRoles?: Array<string>;

@@ -14,6 +14,11 @@ setPortalPluginConfig({
     autoExtendAuthentication: false,
     ignoreMissingAppsOnPages: false,
     versionHashSalt: null,
+    resourceFetchConfig: {
+        fetchTimeoutMs: 3000,
+        httpMaxSocketsPerHost: 10,
+        httpRejectUnauthorized: true,
+    },
     defaultProxyConfig: {},
     ssrConfig: {
         ssrEnable: false,
@@ -76,12 +81,12 @@ describe('PortalPageEnhancementController', () => {
         let type: string | undefined;
         const res: any = new Writable({
             write: (chunk) => {
-                expect(type).toBe('text/javascript');
+                expect(type).toBe('test-script1.js');
                 expect(chunk).toBeTruthy();
                 done();
             },
         });
-
+        res.setHeader = () => { /* nothing to do */ };
         res.type = (_type: string) => { type = _type; };
         res.set = () => { /* nothing to do */ };
 

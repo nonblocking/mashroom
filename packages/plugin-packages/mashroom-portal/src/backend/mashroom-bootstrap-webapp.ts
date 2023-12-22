@@ -4,6 +4,7 @@ import context, {setPortalPluginConfig} from './context/global-portal-context';
 import storageFixture from './storage-fixture';
 import setupWebapp from './setup-webapp';
 import PortalWebSocketProxyController from './controllers/PortalWebSocketProxyController';
+import {setupResourceFetchHttpAgents} from './utils/resource-utils';
 import {startPushPluginUpdates, stopPushPluginUpdates} from './push-plugin-updates';
 
 import type {MashroomWebAppPluginBootstrapFunction, MashroomHttpUpgradeHandler} from '@mashroom/mashroom/type-definitions';
@@ -19,6 +20,8 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
     storageFixture(pluginContext.serverConfig.name, pluginConfig.addDemoPages, storageService, loggerFactory);
 
     setPortalPluginConfig(pluginConfig as any);
+
+    setupResourceFetchHttpAgents(logger);
 
     // Listen for WebSocket upgrades
     const proxyController = new PortalWebSocketProxyController(pluginConfig.path, context.pluginRegistry);

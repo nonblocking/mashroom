@@ -1,7 +1,6 @@
-
 import {fileTypeUtils} from '@mashroom/mashroom-utils';
 import {portalAppContext} from '../utils/logging-utils';
-import {getResourceAsStream} from '../utils/resource-utils';
+import {streamResource} from '../utils/resource-utils';
 import {getFrontendResourcesBasePath, getSitePath} from '../utils/path-utils';
 import {findPortalAppInstanceOnPage, getPage} from '../utils/model-utils';
 import {
@@ -283,14 +282,8 @@ export default class PortalAppController {
         logger.debug(`Sending Portal App resource: ${resourceUri}`);
 
         try {
-            const fileName = resourcePath.split('/').pop() as string;
-
-            const rs = await getResourceAsStream(resourceUri);
-            res.type(fileName);
-            rs.pipe(res);
-
+            await streamResource(resourceUri, res, logger);
             return true;
-
         } catch (err: any) {
             logger.error(`Cannot load Portal App resource: ${resourceUri}`, err);
             if (cacheControlService) {

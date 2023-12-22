@@ -1,6 +1,6 @@
 import {PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH} from '../constants';
-import {getFrontendResourcesBasePath} from './path-utils';
 import {getResourceAsString} from './resource-utils';
+import {getFrontendResourcesBasePath} from './path-utils';
 import {getVersionHash} from './cache-utils';
 
 import type {Request} from 'express';
@@ -122,7 +122,7 @@ const getPageEnhancementResource = async (type: 'js' | 'css', enhancement: Mashr
         if (resourcePath) {
             const resourceUri = `${enhancement.resourcesRootUri}/${resourcePath}`;
             try {
-                resourceAsString = await getResourceAsString(resourceUri);
+                resourceAsString = await getResourceAsString(resourceUri, logger);
             } catch (e) {
                 logger.error(`Error loading page resource: ${resourceUri}`, e);
             }

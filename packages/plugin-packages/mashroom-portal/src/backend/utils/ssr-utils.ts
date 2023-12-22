@@ -245,7 +245,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
 
             const portalAppStyleResourcePromises = portalAppStyleResources.map((resourcePath) => {
                 const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
-                return getResourceAsString(resourceUri)
+                return getResourceAsString(resourceUri, logger)
                     .catch((e) => {
                         logger.error(`Could not inline style '${resourceUri}'`, e);
                         return null;

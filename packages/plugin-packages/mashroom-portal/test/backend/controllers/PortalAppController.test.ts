@@ -20,6 +20,11 @@ setPortalPluginConfig({
     autoExtendAuthentication: false,
     ignoreMissingAppsOnPages: false,
     versionHashSalt: null,
+    resourceFetchConfig: {
+        fetchTimeoutMs: 3000,
+        httpMaxSocketsPerHost: 10,
+        httpRejectUnauthorized: true,
+    },
     defaultProxyConfig: {},
     ssrConfig: {
         ssrEnable: false,
@@ -449,7 +454,7 @@ describe('PortalAppController', () => {
                 done();
             },
         });
-
+        res.setHeader = () => { /* nothing to do */ };
         res.type = () => { /* nothing to do */ };
         res.set = () => { /* nothing to do */ };
 

@@ -10,6 +10,7 @@ export * as messagingUtils from './messaging-utils';
 export * as modelUtils from './model-utils';
 export * as readonlyUtils from './readonly-utils';
 export * as requestUtils from './request-utils';
+export * as resourceUtils from './resource-utils';
 export * as tlsUtils from './tls-utils';
 export * as tsNodeUtils from './ts-node-utils';
 export * as userAgentUtils from './user-agent-utils';

@@ -1,7 +1,6 @@
 import {existsSync} from 'fs';
 import {resolve, isAbsolute} from 'path';
-import {getUri} from 'get-uri';
-import {requestUtils} from '@mashroom/mashroom-utils';
+import {requestUtils, resourceUtils} from '@mashroom/mashroom-utils';
 import {PLACEHOLDER_REQUEST_URL, PLACEHOLDER_STATUS_CODE, PLACEHOLDER_MASHROOM_VERSION, PLACEHOLDER_I18N_MESSAGE} from './constants';
 import type {Request, Response, NextFunction, RequestHandler} from 'express';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -12,6 +11,7 @@ import type {
 } from '../type-definitions';
 
 const FILE_MAPPING: Record<string, string> = {};
+const DEFAULT_FETCH_TIMEOUT_MS = 3000;
 
 const isNotJsonResponse = (res: Response) => (/json/i).test(res.getHeader('content-type') as string || '');
 
@@ -135,12 +135,19 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             fixedErrorPageUri = errorPageUri;
         }
 
+        const abortController = new AbortController();
+        // Fetching the error page should not take longer than a few seconds
+        const abortTimeout = setTimeout(() => abortController.abort(), DEFAULT_FETCH_TIMEOUT_MS);
         try {
             logger.debug(`Loading error page ${fixedErrorPageUri} for HTTP status ${res.statusCode}`);
-            const html = await this._getResourceAsString(fixedErrorPageUri);
+            const html = await resourceUtils.getResourceAsString(fixedErrorPageUri, {
+                abortSignal: abortController.signal,
+            });
             return this._replacePlaceholders(html, req, res);
         } catch (e) {
             logger.error(`Loading error page ${errorPageUri} failed`, e);
+        } finally {
+            clearTimeout(abortTimeout);
         }
 
         return null;
@@ -162,16 +169,6 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
                 }
                 return message;
             });
-    }
-
-    private async _getResourceAsString(errorPageUri: string): Promise<string> {
-        const stream = await getUri(errorPageUri);
-        return new Promise((resolve, reject) => {
-            const chunks: Array<Uint8Array> = [];
-            stream.on('data', (chunk) => chunks.push(chunk));
-            stream.on('error', (error) => reject(error));
-            stream.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
-        });
     }
 
 }
