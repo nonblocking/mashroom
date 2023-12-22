@@ -24,7 +24,7 @@ describe('request-utils.getResourceAsStream', () => {
 
         expect(result).toBeTruthy();
         expect(result.stream).toBeTruthy();
-        expect(result.size).toBe(13);
+        expect(result.size).toBe(12);
         expect(result.lastModified).toBeTruthy();
     });
 
@@ -35,7 +35,7 @@ describe('request-utils.getResourceAsStream', () => {
 
         expect(result).toBeTruthy();
         expect(result.stream).toBeTruthy();
-        expect(result.size).toBe(13);
+        expect(result.size).toBe(12);
         expect(result.lastModified).toBeTruthy();
     });
 
@@ -116,7 +116,6 @@ describe('request-utils.getResourceAsStream', () => {
             await pipeline(stream, new PassThrough());
             fail('Should have been aborted!');
         } catch (e: any) {
-            console.info('!!!!', e);
             expect(e.message).toBe('Aborted (timeout): https://www.mashroom-server.com/foo/index.js');
         }
     });
@@ -153,7 +152,7 @@ describe('request-utils.getResourceAsString', () => {
             abortSignal: null,
         });
 
-        expect(result).toBe('Hello World!\n');
+        expect(result).toBe('Hello World!');
     });
 
     it('reads an http resource', async () => {
