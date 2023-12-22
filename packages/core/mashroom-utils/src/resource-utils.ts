@@ -8,6 +8,7 @@ import https from 'https';
 import ResourceFetchError from './ResourceFetchError';
 import ResourceTypeNotSupportedError from './ResourceTypeNotSupportedError';
 import ResourceNotFoundError from './ResourceNotFoundError';
+import ResourceFetchAbortedError from './ResourceFetchAbortedError';
 
 import type {IncomingMessage, RequestOptions, Agent as HttpAgent} from 'http';
 import type {Agent as HttpsAgent} from 'https';
@@ -68,7 +69,7 @@ const createHttpStream = async (url: string, options: GetResourceOptions): Promi
             });
             options?.abortSignal?.addEventListener('abort', () => {
                 if (response) {
-                    response.destroy(new ResourceFetchError(`Aborted (timeout): ${url}`));
+                    response.destroy(new ResourceFetchAbortedError(`Fetching aborted: ${url}`));
                 } else {
                     request.destroy();
                 }
@@ -76,7 +77,7 @@ const createHttpStream = async (url: string, options: GetResourceOptions): Promi
         });
     } catch (e: any) {
         if (options?.abortSignal?.aborted) {
-           throw new ResourceFetchError(`Aborted (timeout): ${url}`);
+           throw new ResourceFetchAbortedError(`Fetching aborted: ${url}`);
         }
         throw new ResourceFetchError(`Error fetching ${url}`, e);
     }

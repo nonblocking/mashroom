@@ -39,6 +39,25 @@ describe('request-utils.getResourceAsStream', () => {
         expect(result.lastModified).toBeTruthy();
     });
 
+    it('allows to abort slow file reading', async () => {
+        const abortController = new AbortController();
+        setTimeout(() => {
+            abortController.abort();
+        }, 1000);
+
+        const result = await getResourceAsStream(resolve(__dirname, 'data/test.txt'), {
+            abortSignal: abortController.signal,
+        });
+
+        try {
+            for await (const chunk of result.stream) {
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+            }
+        } catch (e: any) {
+            expect(e.name).toBe('AbortError');
+        }
+    });
+
     it('creates a stream from a data url', async () => {
         const result1 = await getResourceAsStream('data:text/javascript,console.log("Foo");', {
             abortSignal: null,
@@ -77,7 +96,7 @@ describe('request-utils.getResourceAsStream', () => {
         expect(result.lastModified).toBeTruthy();
     });
 
-    it('aborts correctly if the http server does not respond', async () => {
+    it('aborts correctly if the http server does not connect in time', async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo/index.js')
             .delayConnection(3000)
@@ -94,7 +113,7 @@ describe('request-utils.getResourceAsStream', () => {
             });
             fail('Should have been aborted!');
         } catch (e: any) {
-            expect(e.message).toBe('Aborted (timeout): https://www.mashroom-server.com/foo/index.js');
+            expect(e.message).toBe('Fetching aborted: https://www.mashroom-server.com/foo/index.js');
         }
     });
 
@@ -116,7 +135,7 @@ describe('request-utils.getResourceAsStream', () => {
             await pipeline(stream, new PassThrough());
             fail('Should have been aborted!');
         } catch (e: any) {
-            expect(e.message).toBe('Aborted (timeout): https://www.mashroom-server.com/foo/index.js');
+            expect(e.message).toBe('Fetching aborted: https://www.mashroom-server.com/foo/index.js');
         }
     });
 

@@ -16,4 +16,6 @@ export * as tsNodeUtils from './ts-node-utils';
 export * as userAgentUtils from './user-agent-utils';
 export {default as PluginBootstrapError} from './PluginBootstrapError';
 export {default as PluginConfigurationError} from './PluginConfigurationError';
-
+export {default as ResourceFetchError} from './ResourceFetchError';
+export {default as ResourceNotFoundError} from './ResourceNotFoundError';
+export {default as ResourceFetchAbortedError} from './ResourceFetchAbortedError';

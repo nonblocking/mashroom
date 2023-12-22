@@ -37,7 +37,7 @@ const CACHE_REGION = 'mashroom-portal-ssr';
 
 const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, cachingConfig: MashroomPortalAppCaching | null | undefined, req: Request): Promise<string | null> => {
     const cachePolicy = cachingConfig?.ssrHtml || 'same-config-and-user';
-    const mashroomSecurityUser = await getUser(req);
+    const mashroomSecurityUser = getUser(req);
 
     let data = null;
     if (cachePolicy === 'same-config') {
@@ -52,7 +52,7 @@ const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalApp
 const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: MashroomPortalAppSSRResultEmbeddedApps, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<RenderEmbeddedPortalAppsResult> => {
     const pluginRegistry = context.pluginRegistry;
     const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
-    const mashroomSecurityUser = await getUser(req);
+    const mashroomSecurityUser = getUser(req);
 
     const embeddedPortalPageApps: MashroomPortalPageApps = {};
     for (const {pluginName, appAreaId, appConfig} of embeddedApps) {

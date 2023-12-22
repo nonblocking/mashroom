@@ -1,6 +1,6 @@
 import {fileTypeUtils} from '@mashroom/mashroom-utils';
 import {portalAppContext} from '../utils/logging-utils';
-import {streamResource} from '../utils/resource-utils';
+import {streamResource, isNotFoundError, isAbortedError} from '../utils/resource-utils';
 import {getFrontendResourcesBasePath, getSitePath} from '../utils/path-utils';
 import {findPortalAppInstanceOnPage, getPage} from '../utils/model-utils';
 import {
@@ -41,7 +41,7 @@ export default class PortalAppController {
             const pageId = req.params.pageId as string;
             const pluginName = req.params.pluginName;
             const portalAppInstanceId = req.params.portalAppInstanceId;
-            const mashroomSecurityUser = await getUser(req);
+            const mashroomSecurityUser = getUser(req);
 
             if (!await isSitePathPermitted(req, sitePath)) {
                 logger.error(`User '${mashroomSecurityUser ? mashroomSecurityUser.username : 'anonymous'}' is not allowed to access site: ${sitePath}`);
@@ -176,7 +176,7 @@ export default class PortalAppController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
-        const mashroomSecurityUser = await getUser(req);
+        const mashroomSecurityUser = getUser(req);
         const admin = isAdmin(req);
         const {q, updatedSince} = req.query;
 
@@ -286,13 +286,17 @@ export default class PortalAppController {
             return true;
         } catch (err: any) {
             logger.error(`Cannot load Portal App resource: ${resourceUri}`, err);
-            if (cacheControlService) {
-                cacheControlService.removeCacheControlHeader(res);
-            }
-            if (err.code === 'ENOTFOUND') {
-                res.sendStatus(404);
-            } else {
-                res.sendStatus(500);
+            if (!res.headersSent) {
+                if (cacheControlService) {
+                    cacheControlService.removeCacheControlHeader(res);
+                }
+                if (isNotFoundError(err)) {
+                    res.sendStatus(404);
+                } else if (isAbortedError(err)) {
+                    res.sendStatus(504); // Gateway Timeout
+                } else {
+                    res.sendStatus(502); // Bad Gateway
+                }
             }
         }
 

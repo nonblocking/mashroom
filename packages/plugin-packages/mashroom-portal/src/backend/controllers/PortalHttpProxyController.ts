@@ -89,7 +89,9 @@ export default class PortalHttpProxyController {
 
         } catch (e: any) {
             logger.error(e);
-            res.sendStatus(500);
+            if (!res.headersSent) {
+                res.sendStatus(500);
+            }
         }
     }
 

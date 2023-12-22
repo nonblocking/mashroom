@@ -2,7 +2,7 @@
 import http from 'http';
 import https from 'https';
 import {pipeline} from 'stream/promises';
-import {resourceUtils} from '@mashroom/mashroom-utils';
+import {resourceUtils, ResourceNotFoundError, ResourceFetchAbortedError} from '@mashroom/mashroom-utils';
 import context from '../context/global-portal-context';
 
 import type {Agent as HttpAgent} from 'http';
@@ -12,6 +12,14 @@ import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 
 let httpAgent: HttpAgent | undefined;
 let httpsAgent: HttpsAgent | undefined;
+
+export const isNotFoundError = (error: Error) => {
+  return error instanceof ResourceNotFoundError;
+};
+
+export const isAbortedError = (error: Error) => {
+    return error instanceof ResourceFetchAbortedError;
+};
 
 export const setupResourceFetchHttpAgents = (logger: MashroomLogger) => {
     logger.info('Setting up resource fetch agents with config:', context.portalPluginConfig.resourceFetchConfig);

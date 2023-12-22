@@ -165,7 +165,7 @@
             "resourceFetchConfig": {
                 "fetchTimeoutMs": 3000,
                 "httpMaxSocketsPerHost": 10,
-                "httpRejectUnauthorized": true,
+                "httpRejectUnauthorized": true
             },
             "ssrConfig": {
                 "ssrEnable": true,
