@@ -7,6 +7,7 @@
    * Fetching resources from remote servers and slow network devices has now a proper timeout set, 
      because non-responding servers could potentially lead to a memory leak due to an increasing number of socket/file handles
    * The content-length header is now always correctly set
+   * For remote resource 502 (Bad Gateway) or 504 (Gateway Timeout) is returned instead of just 500 if something goes wrong
    * Properties like timeout and max sockets can now be set like this in the server config:
      ```json
       "Mashroom Portal WebApp": {
