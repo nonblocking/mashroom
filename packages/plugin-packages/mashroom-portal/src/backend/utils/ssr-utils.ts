@@ -91,7 +91,7 @@ const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: 
     };
 };
 
-const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
+const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, renderTimeoutMs: number, req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
     const {cacheEnable, cacheTTLSec} = context.portalPluginConfig.ssrConfig;
     const devMode = req.pluginContext.serverInfo.devMode;
     const cacheService: MashroomMemoryCacheService = req.pluginContext.services.memorycache?.service;
@@ -125,6 +125,8 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
         }
     } else if (ssrInitialHtmlUri) {
         // Remote App
+        const abortController = new AbortController();
+        const abortTimeout = setTimeout(() => abortController.abort(), renderTimeoutMs);
         try {
             const request: MashroomPortalAppSSRRemoteRequest = {
                 originalRequest: {
@@ -150,6 +152,8 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
             }
         } catch (e) {
             logger.error(`Fetching HTML from remote SSR route '${ssrInitialHtmlUri}' for app '${pluginName}' failed!`, e);
+        } finally {
+            clearTimeout(abortTimeout);
         }
     }
 
@@ -187,7 +191,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     return ssrRenderResult;
 };
 
-export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger, ignoreTimeout = false): Promise<SSRRenderResult | null> => {
+export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
     if (!ssrConfig.ssrEnable) {
         return null;
@@ -199,13 +203,9 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
         return null;
     }
 
-    if (ignoreTimeout) {
-        return renderServerSideWithCache(pluginName, portalApp, portalAppSetup, renderEmbeddedPortalAppsFn, req, logger);
-    }
-
     let timeout: any;
     return Promise.race([
-        renderServerSideWithCache(pluginName, portalApp, portalAppSetup, renderEmbeddedPortalAppsFn, req, logger),
+        renderServerSideWithCache(pluginName, portalApp, portalAppSetup, renderEmbeddedPortalAppsFn, ssrConfig.renderTimoutMs, req, logger),
         new Promise<null>((resolve) => timeout = setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
     ]).then((result) => {
         clearTimeout(timeout);

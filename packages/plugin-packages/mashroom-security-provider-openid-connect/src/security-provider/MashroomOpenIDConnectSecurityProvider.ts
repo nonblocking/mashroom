@@ -154,15 +154,20 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
         delete request.session[OICD_USER_SESSION_KEY];
         delete request.session[OICD_AUTH_DATA_SESSION_KEY];
 
+        const abortController = new AbortController();
+        const abortTimeout = setTimeout(() => abortController.abort(), 2000);
         try {
             logger.debug('Revoking identity provider session');
             const endSessionUrl = client.endSessionUrl({
                 id_token_hint: authData.tokenSet.id_token,
             });
-
-            await fetch(endSessionUrl);
+            await fetch(endSessionUrl, {
+                signal: abortController.signal,
+            });
         } catch (e) {
             logger.error('Revoking identity provider session failed!', e);
+        } finally {
+            clearTimeout(abortTimeout);
         }
     }
 
