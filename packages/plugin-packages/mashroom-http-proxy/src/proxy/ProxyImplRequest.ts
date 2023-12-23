@@ -68,7 +68,7 @@ export default class ProxyImplRequest implements Proxy {
 
         // Metrics
         this._requestMetrics.httpRequestCountTotal ++;
-        const target = `${protocol}://${host}`;
+        const target = `${protocol}//${host}`;
         if (!this._requestMetrics.httpRequestTargetCount[target]) {
             this._requestMetrics.httpRequestTargetCount[target] = 0;
         }
@@ -130,7 +130,7 @@ export default class ProxyImplRequest implements Proxy {
                 })
                 .on('error', (error: NodeJS.ErrnoException) => {
                     const {protocol, host} = new URL(targetUri);
-                    const target = `${protocol}://${host}`;
+                    const target = `${protocol}//${host}`;
                     if (error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
                         logger.error(`Target endpoint '${targetUri}' did not send a response within ${this._socketTimeoutMs}ms!`, error);
                         this._requestMetrics.httpTimeoutCountTotal ++;

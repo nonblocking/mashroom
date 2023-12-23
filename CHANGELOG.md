@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Fixed target URL in metrics (protocol part contained two colons)
  * Portal: Fetching and delivering App resources (js/css) improved
    * Fetching resources from remote servers and slow network devices has now a proper timeout set, 
      because non-responding servers could potentially lead to a memory leak due to an increasing number of socket/file handles

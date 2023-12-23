@@ -135,7 +135,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
 
         // Metrics
         this._requestMetrics.httpRequestCountTotal ++;
-        const target = `${protocol}://${host}`;
+        const target = `${protocol}//${host}`;
         if (!this._requestMetrics.httpRequestTargetCount[target]) {
             this._requestMetrics.httpRequestTargetCount[target] = 0;
         }
@@ -287,8 +287,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         // Proper timeout handling
         proxyReq.setTimeout(this._socketTimeoutMs, () => {
             logger.error(`Target endpoint '${requestMeta.uri}' did not send a response within ${this._socketTimeoutMs}ms!`);
-            const {protocol, host} = new URL(requestMeta.uri);
-            const target = `${protocol}://${host}`;
+            const target = this.getProtocolAndHost(requestMeta.uri);
             this._requestMetrics.httpTimeoutCountTotal ++;
             if (!this._requestMetrics.httpTimeoutTargetCount[target]) {
                 this._requestMetrics.httpTimeoutTargetCount[target] = 0;
@@ -356,8 +355,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             return;
         }
 
-        const {protocol, host} = new URL(requestMeta.uri);
-        const target = `${protocol}://${host}`;
+        const target = this.getProtocolAndHost(requestMeta.uri);
         this._requestMetrics.httpConnectionErrorCountTotal ++;
         if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
             this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
