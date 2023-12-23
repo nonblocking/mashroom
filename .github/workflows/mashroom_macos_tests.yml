@@ -1,0 +1,31 @@
+
+name: Mashroom Run Tests MacOS
+
+on:
+  push:
+    branches: [ master, release/* ]
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    strategy:
+      matrix:
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [18.x, 20.x]
+    steps:
+    - uses: actions/checkout@v3
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+    - run: npm run setup
+    - run: npm run test
+    - uses: test-summary/action@v2
+      if: always()
+      with:
+        paths: |
+          packages/core/*/test-reports/junit.xml
+          packages/plugin-packages/*/test-reports/junit.xml
