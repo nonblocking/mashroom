@@ -207,9 +207,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     private async _loadPackageJson(serviceUrl: string): Promise<any | null> {
         const controller = new AbortController();
-        const timeout = setTimeout(() => {
-            controller.abort();
-        },  this._socketTimeoutSec * 1000);
+        const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
             const result = await fetch(`${serviceUrl}/package.json`, {
                 signal: controller.signal,
@@ -231,9 +229,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const promises = this._externalPluginConfigFileNames.map(async (name) => {
             try {
                 const controller = new AbortController();
-                const timeout = setTimeout(() => {
-                    controller.abort();
-                },  this._socketTimeoutSec * 1000);
+                const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
                 const result = await fetch(`${serviceUrl}/${name}.json`, {
                     signal: controller.signal,
                 });

@@ -41,9 +41,7 @@ describe('request-utils.getResourceAsStream', () => {
 
     it('allows to abort slow file reading', async () => {
         const abortController = new AbortController();
-        setTimeout(() => {
-            abortController.abort();
-        }, 1000);
+        setTimeout(() => abortController.abort(), 1000);
 
         const result = await getResourceAsStream(resolve(__dirname, 'data/test.txt'), {
             abortSignal: abortController.signal,
@@ -103,9 +101,7 @@ describe('request-utils.getResourceAsStream', () => {
             .reply(200);
 
         const abortController = new AbortController();
-        setTimeout(() => {
-            abortController.abort();
-        }, 1000);
+        setTimeout(() => abortController.abort(), 1000);
 
         try {
             await getResourceAsStream('https://www.mashroom-server.com/foo/index.js', {
@@ -124,9 +120,7 @@ describe('request-utils.getResourceAsStream', () => {
             .reply(200);
 
         const abortController = new AbortController();
-        setTimeout(() => {
-            abortController.abort();
-        }, 1000);
+        setTimeout(() => abortController.abort(), 1000);
 
         try {
             const {stream} = await getResourceAsStream('https://www.mashroom-server.com/foo/index.js', {

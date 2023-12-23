@@ -301,9 +301,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
     private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any | null> {
         const controller = new AbortController();
-        const timeout = setTimeout(() => {
-            controller.abort();
-        },  this._socketTimeoutSec * 1000);
+        const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
             const result = await fetch(`${remotePortalAppEndpoint.url}/package.json`, {
                 signal: controller.signal,
@@ -325,9 +323,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const promises = this._externalPluginConfigFileNames.map(async (name) => {
             try {
                 const controller = new AbortController();
-                const timeout = setTimeout(() => {
-                    controller.abort();
-                },  this._socketTimeoutSec * 1000);
+                const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
                 const result = await fetch(`${remotePortalAppEndpoint.url}/${name}.json`, {
                     signal: controller.signal,
                 });
