@@ -34,7 +34,7 @@ export interface MashroomMonitoringMetricsCollectorService {
     /**
      * A counter is a cumulative metric that represents a single monotonically increasing counter
      * whose value can only increase.
-     * If though the returned Counter has a set() method, the new value must always be higher then the current.
+     * If though the returned Counter has a set() method, the new value must always be higher than the current.
      */
     counter(name: string, help: string): Counter;
     /**
@@ -48,7 +48,7 @@ export interface MashroomMonitoringMetricsCollectorService {
     histogram(name: string, help: string, buckets?: number[]): Histogram;
     /**
      * Similar to a histogram, a summary samples observations. While it also provides a total count of
-     * observations and a sum of all observed values, it calculates configurable quantiles..
+     * observations and a sum of all observed values, it calculates configurable quantiles.
      */
     summary(name: string, help: string, quantiles?: number[]): Summary;
     /**
