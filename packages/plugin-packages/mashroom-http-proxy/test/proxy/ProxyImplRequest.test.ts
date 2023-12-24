@@ -99,12 +99,14 @@ describe('ProxyImplRequest', () => {
                 'foo': 'bar',
             },
         })
-            .post('/login')
+            .post('/login', (body) => {
+                return body.user === 'test';
+            })
             .reply(200, 'test post response');
 
         const httpProxy = new ProxyImplRequest(2000, noopInterceptorHandler, removeAllHeaderFilter, false, null, loggingUtils.dummyLoggerFactory);
 
-        const req = createDummyRequest('POST', '{ "user": "test }');
+        const req = createDummyRequest('POST', '{ "user": "test" }');
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/login', {
@@ -160,8 +162,8 @@ describe('ProxyImplRequest', () => {
 
         await httpProxy.forward(req, res, 'https://localhost:22334/foo');
 
-        // Expect 503 Service Unavailable
-        expect(res.statusCode).toBe(503);
+        // Expect 502 Bad Gateway
+        expect(res.statusCode).toBe(502);
     });
 
     it('sets the correct status code if the connection times out', async () => {

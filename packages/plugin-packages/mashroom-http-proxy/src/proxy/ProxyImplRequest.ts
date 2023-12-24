@@ -149,7 +149,7 @@ export default class ProxyImplRequest implements Proxy {
                         }
                         this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
                         if (!res.headersSent) {
-                            res.sendStatus(503);
+                            res.sendStatus(502);
                         }
                     }
                     resolve();

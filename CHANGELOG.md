@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Return HTTP 502 (Bad Gateway) instead of 503 if the target does not respond 
  * HTTP Proxy: Fixed target URL in metrics (protocol part contained two colons)
  * Portal: Fetching and delivering App resources (js/css) improved
    * Fetching resources from remote servers and slow network devices has now a proper timeout set, 

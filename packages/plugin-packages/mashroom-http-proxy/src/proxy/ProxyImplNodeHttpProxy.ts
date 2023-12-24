@@ -370,17 +370,17 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
                     return;
                 } else {
                     logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection after ${requestMeta.retries + 1} attempt(s)`, error);
-                    clientResponse.sendStatus(503);
+                    clientResponse.sendStatus(502);
                 }
             } else {
                 logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
                 if (!clientResponse.headersSent) {
-                    clientResponse.sendStatus(503);
+                    clientResponse.sendStatus(502);
                 }
             }
         } else if (requestMeta.type === 'WS') {
             logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
-            (res as Socket).end('HTTP/1.1 503 Service Unavailable\r\n\r\n', 'ascii');
+            (res as Socket).end('HTTP/1.1 502 Service Unavailable\r\n\r\n', 'ascii');
         }
 
         requestMeta.end();

@@ -121,12 +121,14 @@ describe('ProxyImplNodeHttpProxy', () => {
                 'foo': 'bar',
             },
         })
-            .post('/login')
+            .post('/login', (body) => {
+                return body.user === 'test';
+            })
             .reply(200, 'test post response');
 
         const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
-        const req = createDummyRequest('POST', '{ "user": "test }');
+        const req = createDummyRequest('POST', '{ "user": "test" }');
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/login', {
@@ -182,14 +184,14 @@ describe('ProxyImplNodeHttpProxy', () => {
 
         await httpProxy.forward(req, res, 'https://localhost:22334/foo');
 
-        // Expect 503 Service Unavailable
-        expect(res.statusCode).toBe(503);
+        // Expect 502 Bad Gateway
+        expect(res.statusCode).toBe(502);
     });
 
     it('sets the correct status code if the connection times out', async () => {
         nock('https://www.yyyyyyyyyyy.at')
             .get('/')
-            .delay(3000)
+            .delayConnection(3000)
             .reply(200, 'test response');
 
         const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
@@ -204,6 +206,30 @@ describe('ProxyImplNodeHttpProxy', () => {
 
         // Wait until the nock responses, otherwise we would have an open handle
         await new Promise((resolve) => setTimeout(resolve, 3000));
+    });
+
+    it('cancels the proxy request if the client closes the connection', async () => {
+        const consoleInfo = console.info = jest.fn();
+
+        nock('https://www.fooooo.com')
+            .get('/')
+            .delay(2000)
+            .reply(200, {});
+
+        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        const promise = httpProxy.forward(req, res, 'https://www.fooooo.com');
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        res.destroy();
+
+        await promise;
+
+        expect(consoleInfo.mock.calls[2][0]).toBe('Request aborted by client: \'https://www.fooooo.com\'');
     });
 
     it('passes the response from the target endpoint',  async () => {
@@ -726,7 +752,7 @@ describe('ProxyImplNodeHttpProxy', () => {
 
             const client = new WebSocket('ws://localhost:30033');
             client.on('error', (error) => {
-                expect(error.message).toBe('Unexpected server response: 503');
+                expect(error.message).toBe('Unexpected server response: 502');
                 proxyServer.close();
                 done();
             });
