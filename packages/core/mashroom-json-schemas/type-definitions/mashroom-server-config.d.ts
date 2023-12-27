@@ -179,7 +179,7 @@ export interface Plugins {
      *  * streamAPI (based on the Node.js stream API)
      *  * nodeHttpProxy (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))
      *  * request (based on the deprecated (!) [request](https://github.com/request/request))
-     *  * default (which is currently nodeHttpProxy)
+     *  * default (which is streamAPI)
      */
     proxyImpl?: "default" | "streamAPI" | "nodeHttpProxy" | "request";
   };

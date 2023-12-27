@@ -2,7 +2,6 @@ import {URLSearchParams, URL} from 'url';
 import http from 'http';
 import https from 'https';
 import {pipeline} from 'stream/promises';
-import {loggingUtils} from '@mashroom/mashroom-utils';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
 import {processHttpResponse, processRequest, processWsRequest} from './utils';
 
@@ -22,7 +21,6 @@ import type {
     MashroomLoggerFactory,
     IncomingMessageWithContext
 } from '@mashroom/mashroom/type-definitions';
-import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
 import type {HttpHeaders} from '../../type-definitions';
 
 const MAX_RETRIES = 2;
@@ -32,7 +30,6 @@ const MAX_RETRIES = 2;
  */
 export default class ProxyImplNodeStreamAPI implements Proxy {
 
-    private readonly _globalLogger: MashroomLogger;
     private readonly _requestMetrics: RequestMetrics;
     private readonly _wsConnectionMetrics: WSConnectionMetrics;
 
@@ -40,9 +37,9 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
                 private _wsMaxConnectionsPerHost: number | null, private _wsMaxConnectionsTotal: number | null,
                 private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
-        this._globalLogger = loggerFactory('mashroom.httpProxy');
+        const logger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
-        this._globalLogger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
+        logger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
         this._requestMetrics = {
             httpRequestCountTotal: 0,
             httpRequestTargetCount: {},
@@ -139,9 +136,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
     }
 
     async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
-        const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
-        const user = securityService?.getUser(req as Request);
-        const logger = req.pluginContext.loggerFactory('mashroom.httpProxy').withContext(loggingUtils.userContext(user));
+        const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
         const {protocol, host} = new URL(targetUri);
         if (protocol !== 'ws:' && protocol !== 'wss:') {
