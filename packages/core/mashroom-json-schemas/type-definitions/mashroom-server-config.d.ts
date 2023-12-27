@@ -175,9 +175,13 @@ export interface Plugins {
      */
     wsMaxConnectionsTotal?: number | null;
     /**
-     * Switch the proxy implementation. Currently available are  'nodeHttpProxy' (based on https://github.com/http-party/node-http-proxy), which is the default, or 'request' (based https://github.com/request/request)
+     * Switch the proxy implementation. Currently available are:
+     *  * streamAPI (based on the Node.js stream API)
+     *  * nodeHttpProxy (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))
+     *  * request (based on the deprecated (!) [request](https://github.com/request/request))
+     *  * default (which is currently nodeHttpProxy)
      */
-    proxyImpl?: "default" | "nodeHttpProxy" | "request";
+    proxyImpl?: "default" | "streamAPI" | "nodeHttpProxy" | "request";
   };
   "Mashroom Http Proxy Add User Headers Interceptor"?: {
     /**

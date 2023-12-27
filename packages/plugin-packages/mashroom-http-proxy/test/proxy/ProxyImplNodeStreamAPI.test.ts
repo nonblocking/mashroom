@@ -4,7 +4,7 @@ import {createServer as createHttpServer} from 'http';
 import WebSocket from 'ws';
 import nock from 'nock';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import ProxyImplNodeHttpProxy from '../../src/proxy/ProxyImplNodeHttpProxy';
+import ProxyImplNodeStreamAPI from '../../src/proxy/ProxyImplNodeStreamAPI';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
 
@@ -88,7 +88,7 @@ const emptyPluginRegistry: any = {
 const noopInterceptorHandler = new InterceptorHandler(emptyPluginRegistry);
 const removeAllHeaderFilter = new HttpHeaderFilter([]);
 
-describe('ProxyImplNodeHttpProxy', () => {
+describe('ProxyImplNodeNative', () => {
 
     beforeEach(() => {
         nock.cleanAll();
@@ -103,7 +103,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .get('/foo')
             .reply(200, 'test response');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -126,9 +126,9 @@ describe('ProxyImplNodeHttpProxy', () => {
             })
             .reply(200, 'test post response');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
-        const req = createDummyRequest('POST', '{ "user": "test" }');
+        const req = createDummyRequest('POST', JSON.stringify({ user: 'test' }));
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/login', {
@@ -143,7 +143,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .get('/foo?q=javascript%205')
             .reply(200, 'test response');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
@@ -162,7 +162,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .get('/foo?bar=2&q=javascript%205')
             .reply(200, 'test response');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         req.query = {
@@ -177,24 +177,24 @@ describe('ProxyImplNodeHttpProxy', () => {
     });
 
     it('sets the correct status code if the target is not available', async () => {
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://localhost:22334/foo');
 
-        // Expect 502 Bad Gateway
+        // Expect 503 Service Unavailable
         expect(res.statusCode).toBe(502);
     });
 
     it('sets the correct status code if the connection times out', async () => {
         nock('https://www.yyyyyyyyyyy.at')
             .get('/')
-            .delayConnection(3000)
+            .delay(3000)
             .reply(200, 'test response');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -216,7 +216,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .delay(2000)
             .reply(200, {});
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -229,7 +229,7 @@ describe('ProxyImplNodeHttpProxy', () => {
 
         await promise;
 
-        expect(consoleInfo.mock.calls[2][0]).toBe('Request aborted by client: \'https://www.fooooo.com\'');
+        expect(consoleInfo.mock.calls[3][0]).toBe('Request aborted by client: \'https://www.fooooo.com\'');
     });
 
     it('passes the response from the target endpoint',  async () => {
@@ -237,7 +237,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .get('/foo')
             .reply(201, 'resource created');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -255,7 +255,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .get('/foo')
             .reply(201, 'resource created');
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, true, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, true, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -276,7 +276,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             .get('/foo')
             .replyWithError({ code: 'ECONNRESET' });
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, removeAllHeaderFilter, true, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, true, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -335,7 +335,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false,interceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false,interceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -374,7 +374,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -415,7 +415,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, removeAllHeaderFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -454,7 +454,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         req.query.foo = 'bar';
@@ -492,7 +492,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -532,7 +532,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['another-header']);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -573,7 +573,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['x-whatever', 'some-new-header']);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -618,7 +618,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter(['x-whatever', 'foo']);
 
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -634,7 +634,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const headerFilter = new HttpHeaderFilter([]);
 
         // We configure max 2 waiting but the getWaitingRequestsForHostHeader() mock returns 10
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, 2, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, 2, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -646,7 +646,7 @@ describe('ProxyImplNodeHttpProxy', () => {
 
     it('it rejects requests with invalid HTTP protocols', async () => {
         const headerFilter = new HttpHeaderFilter([]);
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
 
         const req = createDummyRequest('GET');
         const res = createDummyResponse();
@@ -661,7 +661,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             const headerFilter = new HttpHeaderFilter([
                 'sec-websocket-*',
             ]);
-            const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
+            const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
 
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
@@ -715,7 +715,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             const headerFilter = new HttpHeaderFilter([
                'sec-websocket-*',
             ]);
-            const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
+            const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
 
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
@@ -759,7 +759,7 @@ describe('ProxyImplNodeHttpProxy', () => {
             const headerFilter = new HttpHeaderFilter([
                 'sec-websocket-*',
             ]);
-            const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
+            const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
 
             const proxyServer = await new Promise<Server>((resolve, reject) => {
                 const server = createHttpServer();
@@ -797,7 +797,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const pluginRegistry: any = {};
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter([]);
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, loggingUtils.dummyLoggerFactory);
 
         await expect(httpProxy.forwardWs(req, req.socket, head, 'ws://www.mashroom-server.com/ws')).rejects.toThrowError('Upgrade not supported: whatever');
     });
@@ -812,8 +812,8 @@ describe('ProxyImplNodeHttpProxy', () => {
         const head = Buffer.from('');
 
         const headerFilter = new HttpHeaderFilter([]);
-        const httpProxy1 = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 0, 10, null, loggingUtils.dummyLoggerFactory);
-        const httpProxy2 = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 0, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy1 = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 0, 10, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy2 = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 0, null, loggingUtils.dummyLoggerFactory);
 
         await httpProxy1.forwardWs(req, socket, head, 'ws://www.mashroom-server.com/ws');
 
@@ -838,7 +838,7 @@ describe('ProxyImplNodeHttpProxy', () => {
         const head = Buffer.from('');
 
         const headerFilter = new HttpHeaderFilter([]);
-        const httpProxy = new ProxyImplNodeHttpProxy(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, loggingUtils.dummyLoggerFactory);
 
         await httpProxy.forwardWs(req, socket, head, 'foo://test.a1');
 

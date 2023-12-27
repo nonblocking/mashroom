@@ -17,7 +17,8 @@ declare global {
 }
 
 export interface HttpHeaderFilter {
-    filter(headers: IncomingHttpHeaders): void;
+    removeUnwantedHeaders(headers: IncomingHttpHeaders): void;
+    filter(headers: IncomingHttpHeaders): HttpHeaders;
 }
 
 export type PoolConfig = {
@@ -42,7 +43,10 @@ export type RequestMetrics = {
     httpConnectionErrorTargetCount: Record<string, number>;
     httpTimeoutCountTotal: number;
     httpTimeoutTargetCount: Record<string, number>;
-    wsRequestCount: number;
+    wsRequestCountTotal: number;
+    wsRequestTargetCount: Record<string, number>;
+    wsConnectionErrorCountTotal: number;
+    wsConnectionErrorTargetCount: Record<string, number>;
 }
 
 export type WSConnectionMetrics = {

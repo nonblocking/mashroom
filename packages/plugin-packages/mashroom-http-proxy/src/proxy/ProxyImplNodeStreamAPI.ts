@@ -1,0 +1,450 @@
+import {URLSearchParams, URL} from 'url';
+import http from 'http';
+import https from 'https';
+import {pipeline} from 'stream/promises';
+import {loggingUtils} from '@mashroom/mashroom-utils';
+import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
+import {processHttpResponse, processRequest, processWsRequest} from './utils';
+
+import type {
+    RequestMetrics,
+    Proxy,
+    HttpHeaderFilter,
+    InterceptorHandler,
+    WSConnectionMetrics,
+} from '../../type-definitions/internal';
+import type {IncomingMessage, ClientRequest} from 'http';
+import type {Socket} from 'net';
+import type {ParsedQs} from 'qs';
+import type {Request, Response} from 'express';
+import type {
+    MashroomLogger,
+    MashroomLoggerFactory,
+    IncomingMessageWithContext
+} from '@mashroom/mashroom/type-definitions';
+import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
+import type {HttpHeaders} from '../../type-definitions';
+
+const MAX_RETRIES = 2;
+
+/**
+ * A Proxy implementation based on the Node.js Stream API
+ */
+export default class ProxyImplNodeStreamAPI implements Proxy {
+
+    private readonly _globalLogger: MashroomLogger;
+    private readonly _requestMetrics: RequestMetrics;
+    private readonly _wsConnectionMetrics: WSConnectionMetrics;
+
+    constructor(private _socketTimeoutMs: number, private _rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
+                private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
+                private _wsMaxConnectionsPerHost: number | null, private _wsMaxConnectionsTotal: number | null,
+                private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
+        this._globalLogger = loggerFactory('mashroom.httpProxy');
+        const poolConfig = getPoolConfig();
+        this._globalLogger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
+        this._requestMetrics = {
+            httpRequestCountTotal: 0,
+            httpRequestTargetCount: {},
+            httpConnectionErrorCountTotal: 0,
+            httpConnectionErrorTargetCount: {},
+            httpTimeoutCountTotal: 0,
+            httpTimeoutTargetCount: {},
+            wsRequestCountTotal: 0,
+            wsRequestTargetCount: {},
+            wsConnectionErrorCountTotal: 0,
+            wsConnectionErrorTargetCount: {},
+        };
+        this._wsConnectionMetrics = {
+            activeConnections: 0,
+            activeConnectionsTargetCount: {},
+        };
+    }
+
+    async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
+        const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
+
+        // Process interceptors
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequest(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        if (responseHandled) {
+            return;
+        }
+
+        // Extra checks
+        const {protocol, host} = new URL(effectiveTargetUri);
+        if (protocol !== 'http:' && protocol !== 'https:') {
+            logger.error(`Cannot forward to ${effectiveTargetUri} because the protocol is not supported (only HTTP and HTTPS)`);
+            res.sendStatus(502);
+            return;
+        }
+        if (typeof this._poolMaxWaitingRequestsPerHost === 'number' && this._poolMaxWaitingRequestsPerHost > 0) {
+            if (getWaitingRequestsForHostHeader(protocol, host) >= this._poolMaxWaitingRequestsPerHost) {
+                logger.error(`Cannot forward to ${effectiveTargetUri} because max waiting requests per host reached (${this._poolMaxWaitingRequestsPerHost})`);
+                res.sendStatus(429);
+                return;
+            }
+        }
+
+        // Metrics
+        this._requestMetrics.httpRequestCountTotal ++;
+        const target = `${protocol}//${host}`;
+        if (!this._requestMetrics.httpRequestTargetCount[target]) {
+            this._requestMetrics.httpRequestTargetCount[target] = 0;
+        }
+        this._requestMetrics.httpRequestTargetCount[target] ++;
+
+        // Filter the forwarded headers from the incoming request
+        const filteredClientRequestHeaders = this._headerFilter.filter(req.headers);
+        const proxyRequestHttpHeaders = {
+            ...filteredClientRequestHeaders,
+            ...effectiveAdditionalHeaders,
+            // TODO: add forwarded-for headers
+        };
+
+        // Add query params
+        const query = new URLSearchParams();
+        Object.keys(effectiveQueryParams).forEach((queryParamName) => {
+            const value = effectiveQueryParams[queryParamName];
+            if (Array.isArray(value)) {
+                value.forEach((val: string | ParsedQs) => query.append(queryParamName, val.toString()));
+            } else if (value) {
+                query.append(queryParamName, value.toString());
+            }
+        });
+
+        // Calculate full URI
+        let fullTargetUri = effectiveTargetUri;
+        const queryStr = query.toString();
+        if (queryStr) {
+            if (fullTargetUri.indexOf('?') === -1) {
+                fullTargetUri = `${fullTargetUri}?${queryStr}`;
+            } else {
+                fullTargetUri = `${fullTargetUri}&${queryStr}`;
+            }
+        }
+
+        const startTime = process.hrtime();
+        logger.info(`Forwarding ${req.method} request to: ${targetUri}`);
+
+        await this._repeatableForwardHttpRequest({
+            startTime,
+            req,
+            res,
+            logger,
+            targetUri,
+            fullTargetUri,
+            proxyRequestHttpHeaders,
+            retry: 0,
+        });
+    }
+
+    async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
+        const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
+        const user = securityService?.getUser(req as Request);
+        const logger = req.pluginContext.loggerFactory('mashroom.httpProxy').withContext(loggingUtils.userContext(user));
+
+        const {protocol, host} = new URL(targetUri);
+        if (protocol !== 'ws:' && protocol !== 'wss:') {
+            logger.error(`Cannot forward to ${targetUri} because the protocol is not supported`);
+            socket.end('HTTP/1.1 400 Bad Request\r\n\r\n', 'ascii');
+            return;
+        }
+
+        if (typeof this._wsMaxConnectionsTotal === 'number' && this._wsConnectionMetrics.activeConnections >= this._wsMaxConnectionsTotal) {
+            logger.error(`Cannot forward to ${targetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
+            socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
+            return;
+        }
+        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveWSConnectionsToHost(targetUri) >= this._wsMaxConnectionsPerHost) {
+            logger.error(`Cannot forward to ${targetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
+            socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
+            return;
+        }
+
+        // Metrics
+        this._requestMetrics.wsRequestCountTotal ++;
+        const target = `${protocol}//${host}`;
+        if (!this._requestMetrics.wsRequestTargetCount[target]) {
+            this._requestMetrics.wsRequestTargetCount[target] = 0;
+        }
+        this._requestMetrics.wsRequestTargetCount[target] ++;
+
+        if (req.headers.upgrade !== 'websocket') {
+            throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
+        }
+
+        // Process interceptors
+        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
+
+        // Filter the forwarded headers from the incoming request
+        const filteredClientRequestHeaders = this._headerFilter.filter(req.headers);
+        const proxyRequestHttpHeaders = {
+            ...filteredClientRequestHeaders,
+            ...effectiveAdditionalHeaders,
+            connection: 'Upgrade',
+            upgrade: 'websocket',
+            // TODO: add forwarded-for headers
+        };
+
+        logger.info(`Forwarding WebSocket request to: ${targetUri}`);
+
+        const fullTargetUri = effectiveTargetUri;
+        let aborted = false;
+
+        try {
+            // Send upgrade request to target
+            const proxyRequest = this._createProxyRequest(fullTargetUri, 'GET', proxyRequestHttpHeaders);
+            proxyRequest.setTimeout(this._socketTimeoutMs, () => {
+                // Abort proxy request
+                aborted = true;
+                proxyRequest.destroy();
+            });
+            proxyRequest.end();
+
+            const [proxyResponse, proxySocket] = await this._createProxyWebsocketSocket(proxyRequest, logger);
+
+            // Respond to the client upgrade request
+            socket.write(this._createRawHttpHeaders('HTTP/1.1 101 Switching Protocols', proxyResponse.headers));
+
+            socket.setKeepAlive(true);
+            proxySocket.setKeepAlive(true);
+
+            logger.info(`WebSocket connection for ${targetUri} established:`, proxySocket.address());
+            this._wsConnectionMetrics.activeConnections ++;
+            if (!this._wsConnectionMetrics.activeConnectionsTargetCount[target]) {
+                this._wsConnectionMetrics.activeConnectionsTargetCount[target] = 0;
+            }
+            this._wsConnectionMetrics.activeConnectionsTargetCount[target] ++;
+
+            // Connect sockets
+            await pipeline(
+                proxySocket,
+                socket,
+                proxySocket,
+            );
+
+            logger.info(`WebSocket connection for ${targetUri} closed`);
+
+        } catch (error: any) {
+            if (error.code === 'ERR_STREAM_PREMATURE_CLOSE') {
+                // "Normal" close by the client
+                logger.info(`WebSocket connection for ${targetUri} closed`);
+            } else {
+                logger.error(`Forwarding WebSocket request to '${targetUri}' failed!`, error);
+                if (aborted) {
+                    socket.end('HTTP/1.1 504 Gateway Timeout\r\n\r\n', 'ascii');
+                } else {
+                    socket.end('HTTP/1.1 502 Bad Gateway\r\n\r\n', 'ascii');
+                }
+                this._requestMetrics.wsConnectionErrorCountTotal++;
+                if (!this._requestMetrics.wsConnectionErrorTargetCount[target]) {
+                    this._requestMetrics.wsConnectionErrorTargetCount[target] = 0;
+                }
+                this._requestMetrics.wsConnectionErrorTargetCount[target]++;
+            }
+        }
+
+        this._wsConnectionMetrics.activeConnections --;
+        if (this._wsConnectionMetrics.activeConnectionsTargetCount[target]) {
+            this._wsConnectionMetrics.activeConnectionsTargetCount[target] --;
+            if (this._wsConnectionMetrics.activeConnectionsTargetCount[target] === 0) {
+                delete this._wsConnectionMetrics.activeConnectionsTargetCount[target];
+            }
+        }
+    }
+
+    shutdown(): void {
+        // Nothing to do
+    }
+
+    getRequestMetrics(): RequestMetrics {
+        return this._requestMetrics;
+    }
+
+    getWSConnectionMetrics(): WSConnectionMetrics | null {
+        return this._wsConnectionMetrics;
+    }
+
+    private _createRawHttpHeaders(statusLine: string, headers: HttpHeaders): string {
+        // eslint-disable-next-line prefer-template
+        return Object.keys(headers).reduce(function (head, key) {
+            const value = headers[key];
+            if (!Array.isArray(value)) {
+                head.push(`${key  }: ${value}`);
+                return head;
+            }
+            for (let i = 0; i < value.length; i++) {
+                head.push(`${key}: ${value[i]}`);
+            }
+            return head;
+        }, [statusLine])
+            .join('\r\n') + '\r\n\r\n';
+    }
+
+    private _createProxyRequest(uri: string, method: string, headers: HttpHeaders): ClientRequest {
+        const isWebsocket = uri.startsWith('ws');
+        const [mod, agent] = uri.startsWith('https://') ? [https, !isWebsocket && getHttpsPool()] : [http, !isWebsocket && getHttpPool()];
+        const httpUri = isWebsocket ? `http${uri.substring(2)}` : uri;
+        return mod.request(httpUri, {
+            method,
+            headers,
+            agent,
+            rejectUnauthorized: this._rejectUnauthorized,
+        });
+    }
+
+    private async _createProxyResponse(request: ClientRequest): Promise<IncomingMessage> {
+        return new Promise((resolve, reject) => {
+            request.on('response', (response) => {
+                resolve(response);
+            });
+            request.on('error', (err) => {
+                reject(err);
+            });
+        });
+    }
+
+    private async _createProxyWebsocketSocket(request: ClientRequest, logger: MashroomLogger): Promise<[IncomingMessage, Socket]> {
+        return new Promise((resolve, reject) => {
+            request.on('response', async (response) => {
+                if (!response.headers.upgrade) {
+                    // Upgrade went wrong
+                    const content = [];
+                    for await (const data of response) {
+                        content.push(data);
+                    }
+                    logger.error(`Target did not upgrade to WebSocket but returned: HTTP: ${response.statusCode} ${Buffer.from(content).toString()}`);
+                    response.destroy();
+                    reject(new Error('Target did not upgrade'));
+                }
+            });
+            request.on('upgrade', (response, socket, head) => {
+                // Also send the upgrade response content to the client
+                socket.unshift(head);
+                resolve([response, socket]);
+            });
+            request.on('error', (err) => {
+                reject(err);
+            });
+        });
+    }
+
+    private async _repeatableForwardHttpRequest(config: {
+        startTime: [number, number];
+        req: Request;
+        res: Response;
+        logger: MashroomLogger;
+        targetUri: string;
+        fullTargetUri: string;
+        proxyRequestHttpHeaders: HttpHeaders;
+        retry: number;
+    }): Promise<void> {
+        const {startTime, req, res, logger, targetUri, fullTargetUri, proxyRequestHttpHeaders, retry} = config;
+        let aborted = false;
+        try {
+            const proxyRequest = this._createProxyRequest(fullTargetUri, req.method, proxyRequestHttpHeaders);
+            proxyRequest.setTimeout(this._socketTimeoutMs, () => {
+                aborted = true;
+                // Abort proxy request
+                proxyRequest.destroy();
+            });
+
+            // Stream the client request
+            await pipeline(req, proxyRequest);
+
+            // Wait for response headers
+            const proxyResponse = await this._createProxyResponse(proxyRequest);
+
+            const headersEndTime = process.hrtime(startTime);
+            logger.info(`Response headers received from ${targetUri} received in ${headersEndTime[0]}s ${headersEndTime[1] / 1000000}ms with status ${proxyResponse.statusCode}`);
+
+            // Process interceptors
+            // Pause the stream flow until the async op is finished
+            proxyResponse.pause();
+            const {responseHandled} = await processHttpResponse(req, res, targetUri, proxyResponse, this._interceptorHandler, logger);
+            proxyResponse.resume();
+
+            if (responseHandled) {
+                return;
+            }
+
+            // Filter the headers from the target response
+            const filteredProxyResponseHeaders  =this._headerFilter.filter(proxyResponse.headers);
+
+            // Copy headers to the client response
+            res.status(proxyResponse.statusCode ?? 500);
+            Object.keys(filteredProxyResponseHeaders).forEach((headerKey) => {
+                res.setHeader(headerKey, filteredProxyResponseHeaders[headerKey] as string | Array<string>);
+            });
+
+            // Stream back the proxy response
+            await pipeline(proxyResponse, res);
+
+            const responseEndTime = process.hrtime(startTime);
+            logger.info(`Response from ${targetUri} sent to client in ${responseEndTime[0]}s ${responseEndTime[1] / 1000000}ms`);
+
+        } catch (error: any) {
+            const target = this._getProtocolAndHost(targetUri);
+            let trackConnectionError = false;
+            if (aborted || error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
+                logger.error(`Target endpoint '${targetUri}' did not send a response within ${this._socketTimeoutMs}ms!`);
+                this._requestMetrics.httpTimeoutCountTotal++;
+                if (!this._requestMetrics.httpTimeoutTargetCount[target]) {
+                    this._requestMetrics.httpTimeoutTargetCount[target] = 0;
+                }
+                this._requestMetrics.httpTimeoutTargetCount[target]++;
+                if (!res.headersSent) {
+                    res.sendStatus(504);
+                }
+            } else if (!res.headersSent && error.code === 'ECONNRESET') {
+                if (this._retryOnReset && retry < MAX_RETRIES) {
+                    logger.warn(`Retrying HTTP request to '${targetUri}' because target did not accept or drop the connection (retry #${retry + 1})`);
+                    return this._repeatableForwardHttpRequest({
+                        ...config,
+                        retry: retry + 1,
+                    });
+                } else {
+                    logger.error(`Forwarding HTTP request to '${targetUri}' failed! Target did not accept the connection after ${retry + 1} attempt(s)`, error);
+                    trackConnectionError = true;
+                    if (!res.headersSent) {
+                        res.sendStatus(502);
+                    }
+                }
+            } else if (error.code === 'ERR_STREAM_PREMATURE_CLOSE') {
+                logger.info(`Request aborted by client: '${targetUri}'`);
+            } else {
+                logger.error(`Forwarding to '${targetUri}' failed!`, error);
+                trackConnectionError = true;
+                if (!res.headersSent) {
+                    res.sendStatus(502);
+                }
+            }
+            if (trackConnectionError) {
+                this._requestMetrics.httpConnectionErrorCountTotal ++;
+                if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
+                    this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
+                }
+                this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
+            }
+        }
+    }
+
+    private getActiveWSConnectionsToHost(uri: string) {
+        const {host} = new URL(uri);
+        const wsTarget = `ws://${host}`;
+        const wssTarget = `wss://${host}`;
+        let count = 0;
+        if (this._wsConnectionMetrics.activeConnectionsTargetCount[wsTarget]) {
+            count += this._wsConnectionMetrics.activeConnectionsTargetCount[wsTarget];
+        }
+        if (this._wsConnectionMetrics.activeConnectionsTargetCount[wssTarget]) {
+            count += this._wsConnectionMetrics.activeConnectionsTargetCount[wssTarget];
+        }
+        return count;
+    }
+
+    private _getProtocolAndHost(uri: string) {
+        const {protocol, host} = new URL(uri);
+        return `${protocol}//${host}`;
+    }
+}

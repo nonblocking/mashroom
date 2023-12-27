@@ -3,7 +3,28 @@
 
 ## [unreleased]
 
- * HTTP Proxy: Return HTTP 502 (Bad Gateway) instead of 503 if the target does not respond 
+ * HTTP Proxy: Improved metrics. Added metrics:
+   * mashroom_http_proxy_requests_ws_connection_errors
+ 
+   **BREAKING CHANGE** Renamed metrics: 
+   * mashroom_http_proxy_requests_connection_errors -> mashroom_http_proxy_requests_http_connection_errors
+   * mashroom_http_proxy_requests_timeouts -> mashroom_http_proxy_requests_http_timeouts
+ * HTTP Proxy: The pool properties like *poolMaxSocketsPerHost* are now only for HTTP requests, WebSockets are handled separately
+   and can be limited by *wsMaxConnectionsPerHost*
+ * HTTP Proxy: Added a new implementation based on the Node.js Stream API, which is also the default now.  
+   It deliberately does not use any 3rd party libraries, because those available (like request and node-http-server) are either deprecated
+   or unmaintained. 
+   It uses the *Stream.pipeline* API introduced in Node.js 10 which has an improved error handling and
+   cleanup mechanisms compared to the old *Readable.pipe* used by most libraries. 
+   The performance and resource usage characteristics are very similar to the *node-http-proxy* based implementation. 
+   According to our tests you can even expect slightly improved throughput. 
+   If you run into to troubles here you can switch back to the previous implementation like this:
+   ```json
+    "Mashroom Http Proxy Services": {
+      "proxyImpl": "nodeHttpProxy"
+    }
+   ```
+ * HTTP Proxy: Return HTTP 502 (Bad Gateway) instead of 503 if the target does not respond or is not available 
  * HTTP Proxy: Fixed target URL in metrics (protocol part contained two colons)
  * Portal: Fetching and delivering App resources (js/css) improved
    * Fetching resources from remote servers and slow network devices has now a proper timeout set, 

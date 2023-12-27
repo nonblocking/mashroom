@@ -1,4 +1,5 @@
 
+import type {IncomingHttpHeaders} from 'http';
 import type {HttpHeaders} from '../../type-definitions';
 import type {HttpHeaderFilter as HttpHeaderFilterType} from '../../type-definitions/internal';
 
@@ -12,9 +13,9 @@ export default class HttpHeaderFilter implements HttpHeaderFilterType {
         });
     }
 
-    filter(headers: HttpHeaders): void {
+    removeUnwantedHeaders(headers: IncomingHttpHeaders): void {
         for (const headerName in headers) {
-            if (headers.hasOwnProperty(headerName) && !this._forwardHeadersRegexs.find((r) => {
+            if (!this._forwardHeadersRegexs.find((r) => {
                 r.lastIndex = 0;
                 return r.test(headerName);
             })) {
@@ -23,4 +24,16 @@ export default class HttpHeaderFilter implements HttpHeaderFilterType {
         }
     }
 
+    filter(headers: IncomingHttpHeaders): HttpHeaders {
+        const filteredHeaders: HttpHeaders = {};
+        for (const headerName in headers) {
+            if (this._forwardHeadersRegexs.find((r) => {
+                r.lastIndex = 0;
+                return r.test(headerName);
+            })) {
+                filteredHeaders[headerName] = headers[headerName];
+            }
+        }
+        return filteredHeaders;
+    }
 }

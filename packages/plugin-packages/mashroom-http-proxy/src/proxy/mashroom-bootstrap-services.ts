@@ -7,6 +7,7 @@ import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/re
 import HttpHeaderFilter from './HttpHeaderFilter';
 import InterceptorHandler from './InterceptorHandler';
 import ProxyImplRequest from './ProxyImplRequest';
+import ProxyImplNodeStreamAPI from './ProxyImplNodeStreamAPI';
 import ProxyImplNodeHttpProxy from './ProxyImplNodeHttpProxy';
 import MashroomHttpProxyService from './MashroomHttpProxyService';
 
@@ -34,11 +35,16 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const interceptorHandler = new InterceptorHandler(context.pluginRegistry);
     let proxy: Proxy;
     if (proxyImpl === 'request') {
-        logger.info('Using http-proxy impl based on "request"');
+        logger.warn('Using deprecated http-proxy impl based on "request"');
         proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
-    } else {
+    } else if (proxyImpl === 'nodeHttpProxy') {
         logger.info('Using http-proxy impl based on "node-http-proxy"');
         proxy = new ProxyImplNodeHttpProxy(
+            socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,
+            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
+    } else {
+        logger.info('Using (default) proxy impl based on the Node.js Stream API');
+        proxy = new ProxyImplNodeStreamAPI(
             socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,
             wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
     }

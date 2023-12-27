@@ -9,10 +9,12 @@ import type {Proxy, HttpHeaderFilter, InterceptorHandler, RequestMetrics} from '
 
 /**
  * A Proxy implementation based on the request library
+ *
+ * @deprecated, since request is depcreated for a long time now
  */
 export default class ProxyImplRequest implements Proxy {
 
-    private _requestMetrics: RequestMetrics;
+    private readonly  _requestMetrics: RequestMetrics;
 
     constructor(private _socketTimeoutMs: number, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
@@ -26,7 +28,10 @@ export default class ProxyImplRequest implements Proxy {
             httpConnectionErrorTargetCount: {},
             httpTimeoutCountTotal: 0,
             httpTimeoutTargetCount: {},
-            wsRequestCount: 0,
+            wsRequestCountTotal: 0,
+            wsRequestTargetCount: {},
+            wsConnectionErrorCountTotal: 0,
+            wsConnectionErrorTargetCount: {},
         };
         logger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${this._socketTimeoutMs}ms`);
         if (this._retryOnReset) {
@@ -75,7 +80,7 @@ export default class ProxyImplRequest implements Proxy {
         this._requestMetrics.httpRequestTargetCount[target] ++;
 
         // Filter the forwarded headers from the incoming request
-        this._headerFilter.filter(req.headers);
+        this._headerFilter.removeUnwantedHeaders(req.headers);
 
         const options = {
             agent: targetUri.startsWith('https') ? getHttpsPool() : getHttpPool(),
@@ -107,7 +112,7 @@ export default class ProxyImplRequest implements Proxy {
                     }
 
                     // Filter the headers from the target response
-                    this._headerFilter.filter(targetResponse.headers);
+                    this._headerFilter.removeUnwantedHeaders(targetResponse.headers);
 
                     // Send response
                     res.status(targetResponse.statusCode);

@@ -51,11 +51,12 @@ const toSimpleHeaders = (httpHeaders: HttpHeaders): Record<string, string> => {
  */
 export default class ProxyImplNodeHttpProxy implements Proxy {
 
-    private _globalLogger: MashroomLogger;
-    private _httpProxy: ProxyServer;
-    private _httpsProxy: ProxyServer;
-    private _requestMetrics: RequestMetrics;
-    private _wsConnectionMetrics: WSConnectionMetrics;
+    private readonly _globalLogger: MashroomLogger;
+    private readonly _httpProxy: ProxyServer;
+    private readonly _httpsProxy: ProxyServer;
+    private readonly _wsProxy: ProxyServer;
+    private readonly _requestMetrics: RequestMetrics;
+    private readonly _wsConnectionMetrics: WSConnectionMetrics;
 
     constructor(private _socketTimeoutMs: number, rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
@@ -79,6 +80,13 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             ignorePath: true, // do not append req.url path
             xfwd: true,
         });
+        this._wsProxy = createProxyServer({
+            changeOrigin: true,
+            secure: rejectUnauthorized,
+            followRedirects: false,
+            ignorePath: true, // do not append req.url path
+            xfwd: true,
+        });
         this._requestMetrics = {
             httpRequestCountTotal: 0,
             httpRequestTargetCount: {},
@@ -86,7 +94,10 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             httpConnectionErrorTargetCount: {},
             httpTimeoutCountTotal: 0,
             httpTimeoutTargetCount: {},
-            wsRequestCount: 0,
+            wsRequestCountTotal: 0,
+            wsRequestTargetCount: {},
+            wsConnectionErrorCountTotal: 0,
+            wsConnectionErrorTargetCount: {},
         };
         this._wsConnectionMetrics = {
             activeConnections: 0,
@@ -101,12 +112,10 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         this._httpsProxy.on('end', this.onEnd.bind(this));
         this._httpProxy.on('error', this.onError.bind(this));
         this._httpsProxy.on('error', this.onError.bind(this));
-        this._httpProxy.on('proxyReqWs', this.onWsProxyRequest.bind(this));
-        this._httpsProxy.on('proxyReqWs', this.onWsProxyRequest.bind(this));
-        this._httpProxy.on('open', this.onWsOpen.bind(this));
-        this._httpsProxy.on('open', this.onWsOpen.bind(this));
-        this._httpProxy.on('close', this.onWsClose.bind(this));
-        this._httpsProxy.on('close', this.onWsClose.bind(this));
+        this._wsProxy.on('proxyReqWs', this.onWsProxyRequest.bind(this));
+        this._wsProxy.on('open', this.onWsOpen.bind(this));
+        this._wsProxy.on('close', this.onWsClose.bind(this));
+        this._wsProxy.on('error', this.onWsError.bind(this));
     }
 
     async forward(req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
@@ -142,7 +151,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         this._requestMetrics.httpRequestTargetCount[target] ++;
 
         // Filter the forwarded headers from the incoming request
-        this._headerFilter.filter(req.headers);
+        this._headerFilter.removeUnwantedHeaders(req.headers);
 
         const startTime = process.hrtime();
         logger.info(`Forwarding ${req.method} request to: ${targetUri}`);
@@ -181,10 +190,10 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
 
-        const {protocol} = new URL(targetUri);
+        const {protocol, host} = new URL(targetUri);
         if (protocol !== 'ws:' && protocol !== 'wss:') {
             logger.error(`Cannot forward to ${targetUri} because the protocol is not supported`);
-            socket.end('HTTP/1.1 502 Bad Gateway\r\n\r\n', 'ascii');
+            socket.end('HTTP/1.1 400 Bad Request\r\n\r\n', 'ascii');
             return;
         }
 
@@ -193,22 +202,26 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
             return;
         }
-        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveConnectionsToHost(targetUri) >= this._wsMaxConnectionsPerHost) {
+        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveWSConnectionsToHost(targetUri) >= this._wsMaxConnectionsPerHost) {
             logger.error(`Cannot forward to ${targetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
             return;
         }
 
-        this._requestMetrics.wsRequestCount ++;
-
         if (req.headers.upgrade !== 'websocket') {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
         }
 
+        // Metrics
+        this._requestMetrics.wsRequestCountTotal ++;
+        const target = `${protocol}//${host}`;
+        if (!this._requestMetrics.wsRequestTargetCount[target]) {
+            this._requestMetrics.wsRequestTargetCount[target] = 0;
+        }
+        this._requestMetrics.wsRequestTargetCount[target] ++;
+
         // Process interceptors
         const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
-
-        const proxyServer = effectiveTargetUri.startsWith('wss') || effectiveTargetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
 
         const startTime = process.hrtime();
         logger.info(`Forwarding WebSocket request to: ${effectiveTargetUri}`);
@@ -226,20 +239,21 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         };
         (req as any)[REQUEST_META_PROP] = requestMeta;
 
-        proxyServer.ws(req, socket, head, {
+        this._wsProxy.ws(req, socket, head, {
             target: effectiveTargetUri,
-            headers: toSimpleHeaders({
-                ...effectiveAdditionalHeaders
-            }),
-            autoRewrite: true,
+            headers: {
+                ...toSimpleHeaders(effectiveAdditionalHeaders),
+            },
         });
     }
 
     shutdown(): void {
         this._httpProxy.removeAllListeners();
         this._httpsProxy.removeAllListeners();
+        this._wsProxy.removeAllListeners();
         this._httpProxy.close();
         this._httpsProxy.close();
+        this._wsProxy.close();
     }
 
     private async onProxyRequest(proxyReq: ClientRequest, req: IncomingMessage, res: ServerResponse, options: ServerOptions): Promise<void> {
@@ -318,7 +332,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         }
 
         // Filter the headers from the target response
-        this._headerFilter.filter(proxyRes.headers);
+        this._headerFilter.removeUnwantedHeaders(proxyRes.headers);
 
         // Send response
         clientResponse.status(proxyRes.statusCode || 0);
@@ -351,37 +365,34 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy');
         const requestMeta = clientRequest[REQUEST_META_PROP];
 
-        if (!requestMeta) {
+        if (requestMeta?.type !== 'HTTP') {
             return;
         }
 
         const target = this.getProtocolAndHost(requestMeta.uri);
+
+        if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
+            if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
+                logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept or drop the connection (retry #${requestMeta.retries + 1})`);
+                requestMeta.retry();
+                return;
+            } else {
+                logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection after ${requestMeta.retries + 1} attempt(s)`, error);
+                if (!clientResponse.headersSent) {
+                    clientResponse.sendStatus(502);
+                }
+            }
+        } else {
+            logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
+            if (!clientResponse.headersSent) {
+                clientResponse.sendStatus(502);
+            }
+        }
         this._requestMetrics.httpConnectionErrorCountTotal ++;
         if (!this._requestMetrics.httpConnectionErrorTargetCount[target]) {
             this._requestMetrics.httpConnectionErrorTargetCount[target] = 0;
         }
         this._requestMetrics.httpConnectionErrorTargetCount[target] ++;
-
-        if (requestMeta.type === 'HTTP') {
-            if (!clientResponse.headersSent && error.code === 'ECONNRESET') {
-                if (this._retryOnReset && requestMeta.retries < MAX_RETRIES) {
-                    logger.warn(`Retrying HTTP request to '${requestMeta.uri}' because target did not accept or drop the connection (retry #${requestMeta.retries + 1})`);
-                    requestMeta.retry();
-                    return;
-                } else {
-                    logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed! Target did not accept the connection after ${requestMeta.retries + 1} attempt(s)`, error);
-                    clientResponse.sendStatus(502);
-                }
-            } else {
-                logger.error(`Forwarding HTTP request to '${requestMeta.uri}' failed!`, error);
-                if (!clientResponse.headersSent) {
-                    clientResponse.sendStatus(502);
-                }
-            }
-        } else if (requestMeta.type === 'WS') {
-            logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
-            (res as Socket).end('HTTP/1.1 502 Service Unavailable\r\n\r\n', 'ascii');
-        }
 
         requestMeta.end();
     }
@@ -445,7 +456,30 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         requestMeta.end();
     }
 
-    private getActiveConnectionsToHost(uri: string) {
+    private async onWsError(error: NodeJS.ErrnoException, req: IncomingMessage, res: ServerResponse | Socket): Promise<void> {
+        const clientRequest = req as Request;
+        const logger = clientRequest.pluginContext.loggerFactory('mashroom.httpProxy');
+        const requestMeta = clientRequest[REQUEST_META_PROP];
+
+        if (requestMeta?.type !== 'WS') {
+            return;
+        }
+
+        const target = this.getProtocolAndHost(requestMeta.uri);
+
+        logger.error(`Forwarding WebSocket request to '${requestMeta.uri}' failed!`, error);
+        (res as Socket).end('HTTP/1.1 502 Bad Gateway\r\n\r\n', 'ascii');
+        this._requestMetrics.wsConnectionErrorCountTotal ++;
+        if (!this._requestMetrics.wsConnectionErrorTargetCount[target]) {
+            this._requestMetrics.wsConnectionErrorTargetCount[target] = 0;
+        }
+        this._requestMetrics.wsConnectionErrorTargetCount[target] ++;
+
+        requestMeta.end();
+    }
+
+
+    private getActiveWSConnectionsToHost(uri: string) {
         const {host} = new URL(uri);
         const wsTarget = `ws://${host}`;
         const wssTarget = `wss://${host}`;

@@ -48,7 +48,8 @@ You can override the default config in your Mashroom config file like this:
               "uberctx-",
               "b3",
               "x-b3-*",
-              "trace*"
+              "trace*",
+              "sec-websocket-*"
             ],
             "rejectUnauthorized": true,
             "poolMaxTotalSockets": null,
@@ -76,8 +77,11 @@ You can override the default config in your Mashroom config file like this:
  * _retryOnReset_: If the target resets the HTTP connection (because a keep-alive connection is broken) retry once (Default: true)
  * _wsMaxConnectionsTotal_: Max WebSocket connections total. Set this to 0 if you want to disable the WS proxy (Default: 2000)
  * _wsMaxConnectionsPerHost_: Max WebSocket connections per target host (Default: 0 - no limit)
- * _proxyImpl_: Switch the proxy implementation. Currently available are *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy)),
-   *request* (based on [request](https://github.com/request/request)) and *default* (which is *nodeHttpProxy*)
+ * _proxyImpl_: Switch the proxy implementation. Currently available are:
+   * *streamAPI* (based on the Node.js stream API)
+   * *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))
+   * *request* (based on the deprecated (!) [request](https://github.com/request/request))
+   * *default* (which is *streamAPI*)
 
 ## Services
 

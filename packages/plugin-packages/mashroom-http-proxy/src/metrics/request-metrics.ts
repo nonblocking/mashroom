@@ -20,25 +20,38 @@ export const startExportRequestMetrics = (proxy: Proxy, pluginContextHolder: Mas
                 httpConnectionErrorTargetCount,
                 httpTimeoutCountTotal,
                 httpTimeoutTargetCount,
-                wsRequestCount,
+                wsRequestCountTotal,
+                wsRequestTargetCount,
+                wsConnectionErrorCountTotal,
+                wsConnectionErrorTargetCount,
             } = proxy.getRequestMetrics();
 
-            const requestCounter = collectorService.counter('mashroom_http_proxy_requests_http_total', 'Mashroom HTTP Proxy Requests HTTP Total');
-            requestCounter.set(httpRequestCountTotal);
+            const httpRequestCounter = collectorService.counter('mashroom_http_proxy_requests_http_total', 'Mashroom HTTP Proxy Requests HTTP Total');
+            httpRequestCounter.set(httpRequestCountTotal);
             Object.keys((httpRequestTargetCount)).forEach((target) => {
-                requestCounter.set(httpRequestTargetCount[target], { target });
+                httpRequestCounter.set(httpRequestTargetCount[target], { target });
             });
-            const connectionErrorCounter = collectorService.counter('mashroom_http_proxy_requests_connection_errors', 'Mashroom HTTP Proxy Requests Connection Errors');
-            connectionErrorCounter.set(httpConnectionErrorCountTotal);
+            const httpConnectionErrorCounter = collectorService.counter('mashroom_http_proxy_requests_http_connection_errors', 'Mashroom HTTP Proxy Requests HTTP Connection Errors');
+            httpConnectionErrorCounter.set(httpConnectionErrorCountTotal);
             Object.keys((httpConnectionErrorTargetCount)).forEach((target) => {
-                connectionErrorCounter.set(httpConnectionErrorTargetCount[target], { target });
+                httpConnectionErrorCounter.set(httpConnectionErrorTargetCount[target], { target });
             });
-            const timeoutCounter = collectorService.counter('mashroom_http_proxy_requests_timeouts', 'Mashroom HTTP Proxy Requests Timeouts');
-            timeoutCounter.set(httpTimeoutCountTotal);
+            const httpTimeoutCounter = collectorService.counter('mashroom_http_proxy_requests_http_timeouts', 'Mashroom HTTP Proxy Requests HTTP Timeouts');
+            httpTimeoutCounter.set(httpTimeoutCountTotal);
             Object.keys((httpTimeoutTargetCount)).forEach((target) => {
-                timeoutCounter.set(httpTimeoutTargetCount[target], { target });
+                httpTimeoutCounter.set(httpTimeoutTargetCount[target], { target });
             });
-            collectorService.counter('mashroom_http_proxy_requests_ws_total', 'Mashroom HTTP Proxy Requests WebSocket Total').set(wsRequestCount);
+
+            const wsRequestCounter = collectorService.counter('mashroom_http_proxy_requests_ws_total', 'Mashroom HTTP Proxy Requests WebSocket Total');
+            wsRequestCounter.set(wsRequestCountTotal);
+            Object.keys((wsRequestTargetCount)).forEach((target) => {
+                wsRequestCounter.set(wsRequestTargetCount[target], { target });
+            });
+            const wsConnectionErrorCounter = collectorService.counter('mashroom_http_proxy_requests_ws_connection_errors', 'Mashroom HTTP Proxy Requests WebSocket Connection Errors');
+            wsConnectionErrorCounter.set(wsConnectionErrorCountTotal);
+            Object.keys((wsConnectionErrorTargetCount)).forEach((target) => {
+                wsConnectionErrorCounter.set(wsConnectionErrorTargetCount[target], {target});
+            });
         }
 
     }, EXPORT_INTERVAL_MS);
