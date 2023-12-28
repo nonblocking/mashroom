@@ -28,13 +28,6 @@ export type PoolConfig = {
     readonly maxTotalSockets: number | null;
 }
 
-export type PoolMetrics = {
-    readonly activeConnections: number;
-    readonly activeConnectionsTargetCount: Record<string, number>;
-    readonly idleConnections: number;
-    readonly waitingRequests: number;
-    readonly waitingRequestsTargetCount: Record<string, number>;
-}
 
 export type RequestMetrics = {
     httpRequestCountTotal: number;

@@ -1,4 +1,4 @@
-import {isAbortedError, isNotFoundError, streamResource} from '../utils/resource-utils';
+import {isTimeoutError, isNotFoundError, streamResource} from '../utils/resource-utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache/type-definitions';
@@ -62,7 +62,7 @@ export default class PortalPageEnhancementController {
                 }
                 if (isNotFoundError(err)) {
                     res.sendStatus(404);
-                } else if (isAbortedError(err)) {
+                } else if (isTimeoutError(err)) {
                     res.sendStatus(504); // Gateway Timeout
                 } else {
                     res.sendStatus(502); // Bad Gateway

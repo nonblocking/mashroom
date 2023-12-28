@@ -6,6 +6,7 @@ import setupWebapp from './setup-webapp';
 import PortalWebSocketProxyController from './controllers/PortalWebSocketProxyController';
 import {setupResourceFetchHttpAgents} from './utils/resource-utils';
 import {startPushPluginUpdates, stopPushPluginUpdates} from './push-plugin-updates';
+import {startExportRemoteResourcesMetrics, stopExportHttpResourcesMetrics} from './metrics/remote-resources-metrics';
 
 import type {MashroomWebAppPluginBootstrapFunction, MashroomHttpUpgradeHandler} from '@mashroom/mashroom/type-definitions';
 
@@ -29,9 +30,11 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
         proxyController.forward(request, socket, head);
     };
 
+    startExportRemoteResourcesMetrics(pluginContextHolder);
     httpUpgradeService.registerUpgradeHandler(proxyUpgradeHandler, PORTAL_INTERNAL_SEPARATOR + PORTAL_APP_REST_PROXY_BASE_PATH);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         httpUpgradeService.unregisterUpgradeHandler(proxyUpgradeHandler);
+        stopExportHttpResourcesMetrics();
     });
 
     // Push plugin changes in dev mode

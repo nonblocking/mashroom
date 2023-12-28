@@ -14,6 +14,7 @@ export * as resourceUtils from './resource-utils';
 export * as tlsUtils from './tls-utils';
 export * as tsNodeUtils from './ts-node-utils';
 export * as userAgentUtils from './user-agent-utils';
+export * as httpAgentStatsUtils from './http-agent-stats-utils';
 export {default as PluginBootstrapError} from './PluginBootstrapError';
 export {default as PluginConfigurationError} from './PluginConfigurationError';
 export {default as ResourceFetchError} from './ResourceFetchError';

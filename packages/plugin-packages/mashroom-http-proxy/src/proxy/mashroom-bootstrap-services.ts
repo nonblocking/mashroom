@@ -1,7 +1,7 @@
 
 import {setPoolConfig} from '../connection-pool';
 import context from '../context/global-context';
-import {startExportHttpPoolMetrics, stopExportHttpPoolMetrics} from '../metrics/http-pool-metrics';
+import {startExportHttpAgentMetrics, stopExportHttpAgentMetrics} from '../metrics/http-agent-metrics';
 import {startExportWsConnectionMetrics, stopExportWsConnectionMetrics} from '../metrics/ws-connection-metrics';
 import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request-metrics';
 import HttpHeaderFilter from './HttpHeaderFilter';
@@ -51,12 +51,12 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     }
     const service = new MashroomHttpProxyService(forwardMethods, proxy);
 
-    startExportHttpPoolMetrics(pluginContextHolder);
+    startExportHttpAgentMetrics(pluginContextHolder);
     startExportWsConnectionMetrics(proxy, pluginContextHolder);
     startExportRequestMetrics(proxy, pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         proxy.shutdown();
-        stopExportHttpPoolMetrics();
+        stopExportHttpAgentMetrics();
         stopExportWsConnectionMetrics();
         stopExportRequestMetrics();
     });

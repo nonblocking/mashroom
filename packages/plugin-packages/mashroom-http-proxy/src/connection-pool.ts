@@ -1,12 +1,12 @@
 
 import http from 'http';
 import https from 'https';
+import {httpAgentStatsUtils} from '@mashroom/mashroom-utils';
 
 import type {Agent as HttpAgent,ClientRequest} from 'http';
 import type {Agent as HttpsAgent} from 'https';
-
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
-import type {PoolConfig, PoolMetrics} from '../type-definitions/internal';
+import type {PoolConfig} from '../type-definitions/internal';
 
 let _config: PoolConfig = {
     keepAlive: true,
@@ -64,62 +64,18 @@ export const getWaitingRequestsForHostHeader = (protocol: 'http:' | 'https:', ho
     return waiting;
 };
 
-const addTargetCount = (clientRequest: ClientRequest, hostCount: Record<string, number>, logger: MashroomLogger) => {
-    try {
-        const target = `${clientRequest.protocol}//${clientRequest.getHeader('host')}`;
-        if (hostCount[target]) {
-            hostCount[target] ++;
-        } else {
-            hostCount[target] = 1;
-        }
-    } catch (e) {
-        logger.error('Determining URL for ClientRequest failed', e);
-    }
-};
 
-const getPoolStats = (agent: HttpAgent | HttpsAgent, logger: MashroomLogger): PoolMetrics => {
-    const countArrayEntries = (obj: NodeJS.ReadOnlyDict<any>) => Object.values(obj).reduce((acc, arr) => acc + arr.length, 0);
 
-    const activeConnectionsTargetCount: Record<string, number> = {};
-    Object.values(agent.sockets).forEach((activeSockets) => {
-        if (activeSockets) {
-            activeSockets.forEach((activeSocket) => {
-                // @ts-ignore
-                const clientRequest = activeSocket._httpMessage as ClientRequest;
-                addTargetCount(clientRequest, activeConnectionsTargetCount, logger);
-            });
-        }
-    });
-
-    const waitingRequestsTargetCount: Record<string, number> = {};
-    Object.values(agent.requests).forEach((waitingRequests) => {
-        if (waitingRequests) {
-            waitingRequests.forEach((waitingRequest) => {
-                const clientRequest = waitingRequest as unknown as ClientRequest;
-                addTargetCount(clientRequest, waitingRequestsTargetCount, logger);
-            });
-        }
-    });
-
-    return {
-        activeConnections: countArrayEntries(agent.sockets),
-        activeConnectionsTargetCount,
-        idleConnections: countArrayEntries(agent.freeSockets),
-        waitingRequests: countArrayEntries(agent.requests),
-        waitingRequestsTargetCount,
-    };
-};
-
-export const getHttpPoolMetrics = (logger: MashroomLogger): PoolMetrics | null => {
+export const getHttpAgentMetrics = (logger: MashroomLogger) => {
     if (_httpPool) {
-        return getPoolStats(_httpPool, logger);
+        return httpAgentStatsUtils.getAgentStats(_httpPool, logger);
     }
     return null;
 };
 
-export const getHttpsPoolMetrics = (logger: MashroomLogger): PoolMetrics | null => {
+export const getHttpsAgentMetrics = (logger: MashroomLogger) => {
     if (_httpsPool) {
-        return getPoolStats(_httpsPool, logger);
+        return httpAgentStatsUtils.getAgentStats(_httpsPool, logger);
     }
     return null;
 };

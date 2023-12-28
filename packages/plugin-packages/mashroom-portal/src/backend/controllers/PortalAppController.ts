@@ -1,6 +1,6 @@
 import {fileTypeUtils} from '@mashroom/mashroom-utils';
 import {portalAppContext} from '../utils/logging-utils';
-import {streamResource, isNotFoundError, isAbortedError} from '../utils/resource-utils';
+import {streamResource, isNotFoundError, isTimeoutError} from '../utils/resource-utils';
 import {getFrontendResourcesBasePath, getSitePath} from '../utils/path-utils';
 import {findPortalAppInstanceOnPage, getPage} from '../utils/model-utils';
 import {
@@ -292,7 +292,7 @@ export default class PortalAppController {
                 }
                 if (isNotFoundError(err)) {
                     res.sendStatus(404);
-                } else if (isAbortedError(err)) {
+                } else if (isTimeoutError(err)) {
                     res.sendStatus(504); // Gateway Timeout
                 } else {
                     res.sendStatus(502); // Bad Gateway

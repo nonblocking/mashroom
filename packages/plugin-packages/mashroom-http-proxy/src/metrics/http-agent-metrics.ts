@@ -1,5 +1,5 @@
 
-import {getHttpPoolMetrics, getHttpsPoolMetrics} from '../connection-pool';
+import {getHttpAgentMetrics, getHttpsAgentMetrics} from '../connection-pool';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
@@ -8,18 +8,18 @@ const EXPORT_INTERVAL_MS = 5000;
 
 let interval: NodeJS.Timeout;
 
-export const startExportHttpPoolMetrics = (contextHolder: MashroomPluginContextHolder) => {
+export const startExportHttpAgentMetrics = (contextHolder: MashroomPluginContextHolder) => {
     interval = setInterval(async () => {
         const pluginContext = contextHolder.getPluginContext();
         const logger = pluginContext.loggerFactory('mashroom.httpProxy');
         const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
 
         if (collectorService) {
-            const httpPoolStats = getHttpPoolMetrics(logger);
-            const httpsPoolStats = getHttpsPoolMetrics(logger);
+            const httpAgentStats = getHttpAgentMetrics(logger);
+            const httpsAgentStats = getHttpsAgentMetrics(logger);
 
-            if (httpPoolStats) {
-                const {activeConnections, activeConnectionsTargetCount, idleConnections, waitingRequests, waitingRequestsTargetCount} = httpPoolStats;
+            if (httpAgentStats) {
+                const {activeConnections, activeConnectionsTargetCount, idleConnections, waitingRequests, waitingRequestsTargetCount} = httpAgentStats;
 
                 collectorService.gauge('mashroom_http_proxy_http_pool_connections_active_total', 'Mashroom HTTP Proxy HTTP Pool Active Connections Total').set(activeConnections);
                 const activeConnectionsPerTargetGauge = collectorService.gauge('mashroom_http_proxy_http_pool_connections_active', 'Mashroom HTTP Proxy HTTP Pool Active Connections per Target');
@@ -36,8 +36,8 @@ export const startExportHttpPoolMetrics = (contextHolder: MashroomPluginContextH
                 });
             }
 
-            if (httpsPoolStats) {
-                const {activeConnections, activeConnectionsTargetCount, idleConnections, waitingRequests, waitingRequestsTargetCount} = httpsPoolStats;
+            if (httpsAgentStats) {
+                const {activeConnections, activeConnectionsTargetCount, idleConnections, waitingRequests, waitingRequestsTargetCount} = httpsAgentStats;
 
                 collectorService.gauge('mashroom_http_proxy_https_pool_connections_active_total', 'Mashroom HTTP Proxy HTTPS Pool Active Connections Total').set(activeConnections);
                 const activeConnectionsPerTargetGauge = collectorService.gauge('mashroom_http_proxy_https_pool_connections_active', 'Mashroom HTTP Proxy HTTPS Pool Active Connections per Target');
@@ -58,6 +58,6 @@ export const startExportHttpPoolMetrics = (contextHolder: MashroomPluginContextH
     }, EXPORT_INTERVAL_MS);
 };
 
-export const stopExportHttpPoolMetrics = () => {
+export const stopExportHttpAgentMetrics = () => {
     clearInterval(interval);
 };
