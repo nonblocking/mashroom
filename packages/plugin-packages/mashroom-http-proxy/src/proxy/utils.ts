@@ -16,6 +16,10 @@ type ProcessRequestInterceptorsResult = {
     effectiveQueryParams: QueryParams;
 };
 
+const HEADER_X_FORWARDED_FOR = 'x-forwarded-for';
+const HEADER_X_FORWARDED_PROTO = 'x-forwarded-proto';
+const HEADER_X_FORWARDED_HOST = 'x-forwarded-host';
+
 export const processRequest = async (req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessRequestInterceptorsResult> => {
     let effectiveTargetUri = encodeURI(targetUri);
     let effectiveAdditionalHeaders = {
@@ -91,7 +95,7 @@ export const processHttpResponse = async (clientRequest: Request, clientResponse
     };
 };
 
-export const processWsRequest = async(clientRequest: IncomingMessageWithContext, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger) => {
+export const processWsRequest = async (clientRequest: IncomingMessageWithContext, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger) => {
     let effectiveTargetUri = encodeURI(targetUri);
     let effectiveAdditionalHeaders = {
         ...additionalHeaders,
@@ -118,4 +122,40 @@ export const processWsRequest = async(clientRequest: IncomingMessageWithContext,
         effectiveTargetUri,
         effectiveAdditionalHeaders,
     };
+};
+
+/*
+ * We keep the incoming x-forwarded-* headers and just add what is necessary
+ * (and add Mashroom host as extra forwarded for element)
+ */
+export const createForwardedForHeaders = (clientRequest: IncomingMessage, isWebsocket = false): Record<string, string> => {
+    let forwardedForHeader = clientRequest.headers[HEADER_X_FORWARDED_FOR] as string | undefined;
+    let forwardedProtoHeader = clientRequest.headers[HEADER_X_FORWARDED_PROTO] as string | undefined;
+    const forwardedHostHeader = clientRequest.headers[HEADER_X_FORWARDED_HOST] as string | undefined;
+
+    const remoteAddress = clientRequest.socket.remoteAddress;
+    if (!forwardedForHeader) {
+        forwardedForHeader = remoteAddress;
+    } else {
+        forwardedForHeader = `${forwardedForHeader }, ${remoteAddress}`;
+    }
+    if (!forwardedProtoHeader) {
+        const encrypted = 'encrypted' in clientRequest.socket;
+        forwardedProtoHeader = isWebsocket ?
+            (encrypted ? 'wss' : 'ws') :
+            (encrypted ? 'https' : 'http');
+    }
+
+    const headers: Record<string, string> = {};
+    if (forwardedForHeader) {
+        headers[HEADER_X_FORWARDED_FOR] = forwardedForHeader;
+    }
+    if (forwardedProtoHeader) {
+        headers[HEADER_X_FORWARDED_PROTO] = forwardedProtoHeader;
+    }
+    if (forwardedHostHeader) {
+        headers[HEADER_X_FORWARDED_HOST] = forwardedHostHeader;
+    }
+
+    return headers;
 };

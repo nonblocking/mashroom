@@ -68,7 +68,6 @@
                         "cache-control",
                         "last-modified",
                         "content-*",
-                        "x-forwarded-*",
                         "jaeger-*",
                         "uber-trace-id",
                         "uberctx-*",
@@ -86,6 +85,7 @@
                     "retryOnReset": true,
                     "wsMaxConnectionsTotal": 2000,
                     "wsMaxConnectionsPerHost": null,
+                    "createForwardedForHeaders": false,
                     "proxyImpl": "default"
                 }
             },

@@ -1,6 +1,6 @@
 import request from 'request';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
-import {processHttpResponse, processRequest} from './utils';
+import {createForwardedForHeaders, processHttpResponse, processRequest} from './utils';
 
 import type {Request, Response} from 'express';
 import type {MashroomLoggerFactory, MashroomLogger} from '@mashroom/mashroom/type-definitions';
@@ -18,7 +18,8 @@ export default class ProxyImplRequest implements Proxy {
 
     constructor(private _socketTimeoutMs: number, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
-                private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
+                private _poolMaxWaitingRequestsPerHost: number | null, private _createForwardedForHeaders: boolean,
+                loggerFactory: MashroomLoggerFactory) {
         const logger: MashroomLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._requestMetrics = {
@@ -79,7 +80,12 @@ export default class ProxyImplRequest implements Proxy {
         }
         this._requestMetrics.httpRequestTargetCount[target] ++;
 
-        // Filter the forwarded headers from the incoming request
+        let forwardedForHeaders = {};
+        if (this._createForwardedForHeaders) {
+            forwardedForHeaders = createForwardedForHeaders(req);
+        }
+
+        // Filter the headers from the incoming request
         this._headerFilter.removeUnwantedHeaders(req.headers);
 
         const options = {
@@ -87,7 +93,10 @@ export default class ProxyImplRequest implements Proxy {
             method,
             uri: effectiveTargetUri,
             qs: effectiveQueryParams,
-            headers: effectiveAdditionalHeaders,
+            headers: {
+                ...effectiveAdditionalHeaders,
+                ...forwardedForHeaders,
+            },
             encoding: null,
             timeout: this._socketTimeoutMs,
         };

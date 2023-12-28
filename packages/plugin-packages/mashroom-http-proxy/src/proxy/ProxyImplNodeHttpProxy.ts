@@ -2,7 +2,7 @@ import {URLSearchParams, URL} from 'url';
 import {createProxyServer} from 'http-proxy';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
-import {processHttpResponse, processRequest, processWsRequest} from './utils';
+import {createForwardedForHeaders, processHttpResponse, processRequest, processWsRequest} from './utils';
 
 import type {
     RequestMetrics,
@@ -61,7 +61,8 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
     constructor(private _socketTimeoutMs: number, rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
                 private _wsMaxConnectionsPerHost: number | null, private _wsMaxConnectionsTotal: number | null,
-                private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
+                private _poolMaxWaitingRequestsPerHost: number | null, private _createForwardedForHeaders: boolean,
+                loggerFactory: MashroomLoggerFactory) {
         this._globalLogger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         this._globalLogger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
@@ -70,7 +71,6 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             changeOrigin: true,
             followRedirects: false,
             ignorePath: true, // do not append req.url path
-            xfwd: true,
         });
         this._httpsProxy = createProxyServer({
             agent: getHttpsPool(),
@@ -78,14 +78,12 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             secure: rejectUnauthorized,
             followRedirects: false,
             ignorePath: true, // do not append req.url path
-            xfwd: true,
         });
         this._wsProxy = createProxyServer({
             changeOrigin: true,
             secure: rejectUnauthorized,
             followRedirects: false,
             ignorePath: true, // do not append req.url path
-            xfwd: true,
         });
         this._requestMetrics = {
             httpRequestCountTotal: 0,
@@ -150,7 +148,12 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         }
         this._requestMetrics.httpRequestTargetCount[target] ++;
 
-        // Filter the forwarded headers from the incoming request
+        let forwardedForHeaders = {};
+        if (this._createForwardedForHeaders) {
+            forwardedForHeaders = createForwardedForHeaders(req);
+        }
+
+        // Filter the headers from the incoming request
         this._headerFilter.removeUnwantedHeaders(req.headers);
 
         const startTime = process.hrtime();
@@ -161,7 +164,10 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             const forward = () => {
                 proxyServer.web(req, res, {
                     target: effectiveTargetUri,
-                    headers: toSimpleHeaders(effectiveAdditionalHeaders),
+                    headers: {
+                        ...toSimpleHeaders(effectiveAdditionalHeaders),
+                        ...forwardedForHeaders,
+                    },
                     selfHandleResponse: true,
                 });
             };
@@ -223,6 +229,11 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         // Process interceptors
         const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
+        let forwardedForHeaders = {};
+        if (this._createForwardedForHeaders) {
+            forwardedForHeaders = createForwardedForHeaders(req);
+        }
+
         const startTime = process.hrtime();
         logger.info(`Forwarding WebSocket request to: ${effectiveTargetUri}`);
         const requestMeta: ProxyRequestMeta = {
@@ -243,6 +254,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             target: effectiveTargetUri,
             headers: {
                 ...toSimpleHeaders(effectiveAdditionalHeaders),
+                ...forwardedForHeaders,
             },
         });
     }

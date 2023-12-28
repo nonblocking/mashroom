@@ -3,7 +3,7 @@ import http from 'http';
 import https from 'https';
 import {pipeline} from 'stream/promises';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
-import {processHttpResponse, processRequest, processWsRequest} from './utils';
+import {createForwardedForHeaders, processHttpResponse, processRequest, processWsRequest} from './utils';
 
 import type {
     RequestMetrics,
@@ -36,7 +36,8 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
     constructor(private _socketTimeoutMs: number, private _rejectUnauthorized: boolean, private _interceptorHandler: InterceptorHandler,
                 private _headerFilter: HttpHeaderFilter, private _retryOnReset: boolean,
                 private _wsMaxConnectionsPerHost: number | null, private _wsMaxConnectionsTotal: number | null,
-                private _poolMaxWaitingRequestsPerHost: number | null, loggerFactory: MashroomLoggerFactory) {
+                private _poolMaxWaitingRequestsPerHost: number | null, private _createForwardedForHeaders: boolean,
+                loggerFactory: MashroomLoggerFactory) {
         const logger = loggerFactory('mashroom.httpProxy');
         const poolConfig = getPoolConfig();
         logger.info(`Initializing http proxy with pool config: ${JSON.stringify(poolConfig, null, 2)} and socket timeout: ${_socketTimeoutMs}ms`);
@@ -90,12 +91,18 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         }
         this._requestMetrics.httpRequestTargetCount[target] ++;
 
+        let forwardedForHeaders = {};
+        if (this._createForwardedForHeaders) {
+            forwardedForHeaders = createForwardedForHeaders(req);
+        }
+
         // Filter the forwarded headers from the incoming request
         const filteredClientRequestHeaders = this._headerFilter.filter(req.headers);
+
         const proxyRequestHttpHeaders = {
             ...filteredClientRequestHeaders,
             ...effectiveAdditionalHeaders,
-            // TODO: add forwarded-for headers
+            ...forwardedForHeaders,
         };
 
         // Add query params
@@ -171,14 +178,20 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         // Process interceptors
         const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
+        let forwardedForHeaders = {};
+        if (this._createForwardedForHeaders) {
+            forwardedForHeaders = createForwardedForHeaders(req);
+        }
+
         // Filter the forwarded headers from the incoming request
         const filteredClientRequestHeaders = this._headerFilter.filter(req.headers);
+
         const proxyRequestHttpHeaders = {
             ...filteredClientRequestHeaders,
             ...effectiveAdditionalHeaders,
+            ...forwardedForHeaders,
             connection: 'Upgrade',
             upgrade: 'websocket',
-            // TODO: add forwarded-for headers
         };
 
         logger.info(`Forwarding WebSocket request to: ${targetUri}`);
@@ -314,8 +327,8 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                 }
             });
             request.on('upgrade', (response, socket, head) => {
-                // Also send the upgrade response content to the client
-                socket.unshift(head);
+                // It should be ok to just ignore head (the body of the upgrade response), this is typically just some greeting
+                // otherwise we would have to do a socket.unshift(head) to send it to the client
                 resolve([response, socket]);
             });
             request.on('error', (err) => {

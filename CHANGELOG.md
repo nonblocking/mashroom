@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: The proxies do no longer automatically add *x-forwarded-* headers, because if you are using public APIs you might not want
+   to disclose details of your internal network. Added a new config property *createForwardedForHeaders* to explicitly turn this feature on again. 
+   Also fixed the implementation, it takes now existing headers from reverse proxies into consideration and keeps them or
+   extends them (which means *x-forwarded-for* contains now the IP address of the original client as well if there are reverse proxies).
  * HTTP Proxy: Improved metrics. Added metrics:
    * mashroom_http_proxy_requests_ws_connection_errors
  

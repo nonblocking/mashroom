@@ -20,6 +20,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
         /* deprecated */ poolMaxSockets, poolMaxTotalSockets, poolMaxSocketsPerHost, poolMaxWaitingRequestsPerHost,
         socketTimeoutMs, keepAlive, retryOnReset,
         wsMaxConnectionsPerHost, wsMaxConnectionsTotal,
+        createForwardedForHeaders,
     } = pluginConfig;
     const pluginContext = pluginContextHolder.getPluginContext();
     const logger = pluginContext.loggerFactory('mashroom.httpProxy');
@@ -36,17 +37,17 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     let proxy: Proxy;
     if (proxyImpl === 'request') {
         logger.warn('Using deprecated http-proxy impl based on "request"');
-        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
+        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, poolMaxWaitingRequestsPerHost, createForwardedForHeaders, pluginContext.loggerFactory);
     } else if (proxyImpl === 'nodeHttpProxy') {
         logger.info('Using http-proxy impl based on "node-http-proxy"');
         proxy = new ProxyImplNodeHttpProxy(
             socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,
-            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
+            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, createForwardedForHeaders, pluginContext.loggerFactory);
     } else {
         logger.info('Using (default) proxy impl based on the Node.js Stream API');
         proxy = new ProxyImplNodeStreamAPI(
             socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,
-            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, pluginContext.loggerFactory);
+            wsMaxConnectionsPerHost, wsMaxConnectionsTotal, poolMaxWaitingRequestsPerHost, createForwardedForHeaders, pluginContext.loggerFactory);
     }
     const service = new MashroomHttpProxyService(forwardMethods, proxy);
 
