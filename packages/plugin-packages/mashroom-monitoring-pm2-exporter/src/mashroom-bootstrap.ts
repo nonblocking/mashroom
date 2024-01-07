@@ -1,13 +1,16 @@
 
-import PM2MetricExporter from './PM2MetricExporter';
+import {startExport, stopExport} from './pm2-metric-exporter';
+import {startPM2Connector, stopPM2Connector} from './pm2-cluster-connector';
+
 import type { MashroomServicesPluginBootstrapFunction } from '@mashroom/mashroom/type-definitions';
 import type {Config} from '../type-definitions';
 
 const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const exporter = new PM2MetricExporter(pluginConfig as Config, pluginContextHolder);
-    exporter.start();
+    startExport(pluginConfig as Config, pluginContextHolder);
+    startPM2Connector(pluginContextHolder.getPluginContext());
     pluginContextHolder.getPluginContext().services.core.pluginService.onUnloadOnce(pluginName, () => {
-        exporter.stop();
+        stopExport();
+        stopPM2Connector();
     });
     return {};
 };

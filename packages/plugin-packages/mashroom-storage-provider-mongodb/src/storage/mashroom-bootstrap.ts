@@ -1,7 +1,7 @@
 
 import {setConnectionUriAndOptions, close, getDb} from '../mongodb';
 import healthProbe from '../health/health-probe';
-import {startExportStoreMetrics, stopExportStoreMetrics} from '../metrics/store-metrics';
+import {registerStoreMetrics, unregisterStoreMetrics} from '../metrics/store-metrics';
 import MashroomStorageMongoDB from './MashroomStorageMongoDB';
 
 import type {MashroomStoragePluginBootstrapFunction} from '@mashroom/mashroom-storage/type-definitions';
@@ -20,13 +20,13 @@ const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, plu
     }
 
     healthProbeService.registerProbe(pluginName, healthProbe);
-    startExportStoreMetrics(pluginContextHolder);
+    registerStoreMetrics(pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads
         close();
         healthProbeService.unregisterProbe(pluginName);
-        stopExportStoreMetrics();
+        unregisterStoreMetrics();
     });
 
     return new MashroomStorageMongoDB(loggerFactory);

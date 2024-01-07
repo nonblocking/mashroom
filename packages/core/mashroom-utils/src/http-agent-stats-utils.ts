@@ -7,10 +7,8 @@ type Logger = {
 
 export type HttpAgentMetrics = {
     readonly activeConnections: number;
-    readonly activeConnectionsTargetCount: Record<string, number>;
     readonly idleConnections: number;
     readonly waitingRequests: number;
-    readonly waitingRequestsTargetCount: Record<string, number>;
 }
 
 const addTargetCount = (clientRequest: ClientRequest, hostCount: Record<string, number>, logger: Logger) => {
@@ -28,33 +26,9 @@ const addTargetCount = (clientRequest: ClientRequest, hostCount: Record<string, 
 
 export const getAgentStats = (agent: HttpAgent | HttpsAgent, logger: Logger): HttpAgentMetrics => {
     const countArrayEntries = (obj: NodeJS.ReadOnlyDict<any>) => Object.values(obj).reduce((acc, arr) => acc + arr.length, 0);
-
-    const activeConnectionsTargetCount: Record<string, number> = {};
-    Object.values(agent.sockets).forEach((activeSockets) => {
-        if (activeSockets) {
-            activeSockets.forEach((activeSocket) => {
-                // @ts-ignore
-                const clientRequest = activeSocket._httpMessage as ClientRequest;
-                addTargetCount(clientRequest, activeConnectionsTargetCount, logger);
-            });
-        }
-    });
-
-    const waitingRequestsTargetCount: Record<string, number> = {};
-    Object.values(agent.requests).forEach((waitingRequests) => {
-        if (waitingRequests) {
-            waitingRequests.forEach((waitingRequest) => {
-                const clientRequest = waitingRequest as unknown as ClientRequest;
-                addTargetCount(clientRequest, waitingRequestsTargetCount, logger);
-            });
-        }
-    });
-
     return {
         activeConnections: countArrayEntries(agent.sockets),
-        activeConnectionsTargetCount,
         idleConnections: countArrayEntries(agent.freeSockets),
         waitingRequests: countArrayEntries(agent.requests),
-        waitingRequestsTargetCount,
     };
 };

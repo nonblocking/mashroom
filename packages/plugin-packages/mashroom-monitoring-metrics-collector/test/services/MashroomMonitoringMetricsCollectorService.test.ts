@@ -14,249 +14,248 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
         customHistogramBucketConfig: {
             'histogram1': [1, 2],
         },
-        defaultSummaryQuantiles: [0.01, 0.05, 0.5, 0.9, 0.95, 0.99, 0.999],
-        customSummaryQuantileConfig: {
-            'summary1': [0.1, 0.2],
-        }
     };
 
-    it('stores counter data correctly', async () => {
+    it('exports counter data correctly', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
-        const counter = service.counter( 'metric_name', 'metric_help', 'average');
+        const counter = service.counter( 'metric_name', 'metric_help');
         counter.inc(10);
         counter.inc(22, { foo: 2 });
-        counter.set(2, { foo: 3 });
+        counter.inc(22, { foo: 2 });
+        counter.inc(2, { foo: 3 });
         counter.inc(33, { foo: 2, bar: 'Test' });
 
-        expect(service.getMetrics()['metric_name']).toEqual({
-            name: 'metric_name',
-            help: 'metric_help',
-            type: 'counter',
-            aggregationHint: 'average',
-            data: [
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'metric_name',
+                description: 'metric_help',
+                type: 'COUNTER',
+            },
+            dataPoints: [
                 {
                     value: 10,
-                    labels: {},
+                    attributes: {},
                 },
                 {
-                    value: 22,
-                    labels: { foo: 2 },
+                    value: 44,
+                    attributes: { foo: 2 },
                 },
                 {
                     value: 2,
-                    labels: { foo: 3 },
+                    attributes: { foo: 3 },
                 },
                 {
                     value: 33,
-                    labels: { foo: 2, bar: 'Test' },
+                    attributes: { foo: 2, bar: 'Test' },
                 },
             ]
         });
     });
 
-    it('stores gauge data correctly', async () => {
-        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
-
-        const gauge = service.gauge( 'metric_name', 'metric_help');
-        gauge.set(10);
-        gauge.set(22, { foo: 2 });
-        gauge.set(33, { foo: 2, bar: 'Test' });
-
-        expect(service.getMetrics()['metric_name']).toEqual({
-            name: 'metric_name',
-            help: 'metric_help',
-            type: 'gauge',
-            aggregationHint: 'sum',
-            data: [
-                {
-                    value: 10,
-                    labels: {},
-                },
-                {
-                    value: 22,
-                    labels: { foo: 2 },
-                },
-                {
-                    value: 33,
-                    labels: { foo: 2, bar: 'Test' },
-                },
-            ]
-        });
-    });
-
-    it('stores histogram data correctly', async () => {
+    it('exports histogram data correctly', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
         const histogram = service.histogram( 'metric_name', 'metric_help', [1, 10, 100, 1000]);
-        histogram.observe(5);
-        histogram.observe(50);
-        histogram.observe(222,{ foo: 2 } );
-        histogram.observe(3333, { foo: 2, bar: 'Test' });
+        histogram.record(5);
+        histogram.record(50);
+        histogram.record(222,{ foo: 2 } );
+        histogram.record(3333, { foo: 2, bar: 'Test' });
 
-
-        expect(service.getMetrics()['metric_name']).toEqual({
-            name: 'metric_name',
-            help: 'metric_help',
-            type: 'histogram',
-            aggregationHint: 'sum',
-            data: [
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'metric_name',
+                description: 'metric_help',
+                type: 'HISTOGRAM',
+                advice: {
+                    explicitBucketBoundaries: [
+                        1,
+                        10,
+                        100,
+                        1000
+                    ]
+                }
+            },
+            dataPoints: [
                 {
-                    buckets: [
-                        {
-                            le: 1,
-                            value: 0,
+
+                    attributes: {},
+                    value: {
+                        min: 5,
+                        max: 50,
+                        sum: 55,
+                        buckets: {
+                            boundaries: [
+                                1,
+                                10,
+                                100,
+                                1000
+                            ],
+                            counts: [
+                                0,
+                                1,
+                                1,
+                                0,
+                                0
+                            ]
                         },
-                        {
-                            le: 10,
-                            value: 1,
-                        },
-                        {
-                            le: 100,
-                            value: 2,
-                        },
-                        {
-                            le: 1000,
-                            value: 2,
-                        }
-                    ],
-                    sum: 55,
-                    count: 2,
-                    labels: {},
+                        count: 2
+                    },
                 },
                 {
-                    buckets: [
-                        {
-                            le: 1,
-                            value: 0,
+
+                    attributes: { foo: 2 },
+                    value: {
+                        min: 222,
+                        max: 222,
+                        sum: 222,
+                        buckets: {
+                            boundaries: [
+                                1,
+                                10,
+                                100,
+                                1000
+                            ],
+                            counts: [
+                                0,
+                                0,
+                                0,
+                                1,
+                                0
+                            ]
                         },
-                        {
-                            le: 10,
-                            value: 0,
-                        },
-                        {
-                            le: 100,
-                            value: 0,
-                        },
-                        {
-                            le: 1000,
-                            value: 1,
-                        }
-                    ],
-                    sum: 222,
-                    count: 1,
-                    labels: { foo: 2 },
+                        count: 1
+                    },
                 },
                 {
-                    buckets: [
-                        {
-                            le: 1,
-                            value: 0,
+
+                    attributes: { foo: 2, bar: 'Test' },
+                    value: {
+                        min: 3333,
+                        max: 3333,
+                        sum: 3333,
+                        buckets: {
+                            boundaries: [
+                                1,
+                                10,
+                                100,
+                                1000
+                            ],
+                            counts: [
+                                0,
+                                0,
+                                0,
+                                0,
+                                1
+                            ]
                         },
-                        {
-                            le: 10,
-                            value: 0,
-                        },
-                        {
-                            le: 100,
-                            value: 0,
-                        },
-                        {
-                            le: 1000,
-                            value: 0,
-                        }
-                    ],
-                    sum: 3333,
-                    count: 1,
-                    labels: { foo: 2, bar: 'Test' },
+                        count: 1
+                    }
                 },
             ]
         });
     });
 
-    it('stores summary data correctly', async () => {
+    it('exports observable counter data correctly', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
-        const summary = service.summary( 'metric_name', 'metric_help', [0.001, 0.01, 0.1, 0.5]);
-        summary.observe(5);
-        summary.observe(50);
-        summary.observe(222,{ foo: 2 } );
-        summary.observe(3333, { foo: 2, bar: 'Test' });
+        await service.addObservableCallback((asyncCollectorService) => {
+            const counter = asyncCollectorService.counter( 'metric_name', 'metric_help');
+            counter.set(10);
+            counter.set(22, { foo: 2 });
+            counter.set(2, { foo: 3 });
+            counter.set(33, { foo: 2, bar: 'Test' });
+        });
 
-        expect(service.getMetrics()['metric_name']).toEqual({
-            name: 'metric_name',
-            help: 'metric_help',
-            type: 'summary',
-            aggregationHint: 'sum',
-            data: [
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'metric_name',
+                description: 'metric_help',
+                type: 'OBSERVABLE_COUNTER',
+            },
+            dataPoints: [
                 {
-                    buckets: [
-                        {
-                            quantile: 0.001,
-                            value: 5,
-                        },
-                        {
-                            quantile: 0.01,
-                            value: 5,
-                        },
-                        {
-                            quantile: 0.1,
-                            value: 5,
-                        },
-                        {
-                            quantile: 0.5,
-                            value: 27.5,
-                        }
-                    ],
-                    sum: 55,
-                    count: 2,
-                    labels: {},
+                    value: 10,
+                    attributes: {},
                 },
                 {
-                    buckets: [
-                        {
-                            quantile: 0.001,
-                            value: 222,
-                        },
-                        {
-                            quantile: 0.01,
-                            value: 222,
-                        },
-                        {
-                            quantile: 0.1,
-                            value: 222,
-                        },
-                        {
-                            quantile: 0.5,
-                            value: 222,
-                        }
-                    ],
-                    sum: 222,
-                    count: 1,
-                    labels: { foo: 2 },
+                    value: 22,
+                    attributes: { foo: 2 },
                 },
                 {
-                    buckets: [
-                        {
-                            quantile: 0.001,
-                            value: 3333,
-                        },
-                        {
-                            quantile: 0.01,
-                            value: 3333,
-                        },
-                        {
-                            quantile: 0.1,
-                            value: 3333,
-                        },
-                        {
-                            quantile: 0.5,
-                            value: 3333,
-                        }
-                    ],
-                    sum: 3333,
-                    count: 1,
-                    labels: { foo: 2, bar: 'Test' },
+                    value: 2,
+                    attributes: { foo: 3 },
+                },
+                {
+                    value: 33,
+                    attributes: { foo: 2, bar: 'Test' },
+                },
+            ]
+        });
+    });
+
+    it('exports observable gauge data correctly', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        await service.addObservableCallback((asyncCollectorService) => {
+            const gauge = asyncCollectorService.gauge( 'metric_name', 'metric_help');
+            gauge.set(10);
+            gauge.set(-22, { foo: 2 });
+            gauge.set(33, { foo: 2, bar: 'Test' });
+        });
+
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'metric_name',
+                description: 'metric_help',
+                type: 'OBSERVABLE_GAUGE',
+            },
+            dataPoints: [
+                {
+                    value: 10,
+                    attributes: {},
+                },
+                {
+                    value: -22,
+                    attributes: { foo: 2 },
+                },
+                {
+                    value: 33,
+                    attributes: { foo: 2, bar: 'Test' },
+                },
+            ]
+        });
+    });
+
+    it('handles async callbacks correctly', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        await service.addObservableCallback(async (asyncCollectorService) => {
+            await new Promise((resolve) => setTimeout(resolve, 500));
+            const counter = asyncCollectorService.counter( 'metric_name', 'metric_help');
+            counter.set(10);
+            counter.set(22, { foo: 2 });
+        });
+
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'metric_name',
+                description: 'metric_help',
+                type: 'OBSERVABLE_COUNTER',
+            },
+            dataPoints: [
+                {
+                    value: 10,
+                    attributes: {},
+                },
+                {
+                    value: 22,
+                    attributes: { foo: 2 },
                 },
             ]
         });
@@ -268,52 +267,96 @@ describe('MashroomMonitoringMetricsCollectorService', () => {
         const counter = service.counter( 'ignore_me_metric', 'test');
         counter.inc(10);
 
-        expect(service.getMetrics()).toEqual({});
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics.length).toBe(0);
     });
 
     it('overrides histogram buckets if configured', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
         const histogram = service.histogram( 'histogram1', 'test', [1, 10, 100, 1000]);
-        histogram.observe(5);
+        histogram.record(5);
 
-        expect(service.getMetrics()['histogram1'].data[0]).toEqual({
-            'buckets': [
-                {
-                    'le': 1,
-                    'value': 0
-                },
-                {
-                    'le': 2,
-                    'value': 0
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'histogram1',
+                description: 'test',
+                type: 'HISTOGRAM',
+                advice: {
+                    explicitBucketBoundaries: [1, 2],
                 }
-            ],
-            'count': 1,
-            'labels': {},
-            'sum': 5
+            },
         });
     });
 
-    it('overrides summary quantiles if configured', async () => {
+    it('exports counter when plain OpenTelemetry API is being used', async () => {
         const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
 
-        const summary = service.summary( 'summary1', 'test', [0.001, 0.01, 0.1, 0.5]);
-        summary.observe(5);
+        const meterProvider = service.getOpenTelemetryMeterProvider();
+        const meter = meterProvider.getMeter('my_meter');
+        const counter = meter.createCounter('metric_name', {
+            description: 'metric_help',
+        });
 
-        expect(service.getMetrics()['summary1'].data[0]).toEqual({
-            'buckets': [
+        counter.add(10);
+        counter.add(22, { foo: 2 });
+
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            descriptor: {
+                name: 'metric_name',
+                description: 'metric_help',
+                type: 'COUNTER',
+            },
+            dataPoints: [
                 {
-                    'quantile': 0.1,
-                    'value': 5
+                    value: 10,
+                    attributes: {},
                 },
                 {
-                    'quantile': 0.2,
-                    'value': 5
+                    value: 22,
+                    attributes: { foo: 2 },
                 }
-            ],
-            'count': 1,
-            'labels': {},
-            'sum': 5
+            ]
+        });
+    });
+
+    it('handles errors in callbacks', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        await service.addObservableCallback(() => {
+            throw new Error('boooom');
+        });
+
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics();
+
+        expect(resourceMetrics).toBeTruthy();
+    });
+
+    it('removes all callbacks on reload', async () => {
+        const service = new MashroomMonitoringMetricsCollectorService(config, loggerFactory);
+
+        let count = 1;
+        await service.addObservableCallback((asyncCollectorService) => {
+            const counter = asyncCollectorService.counter( 'metric_name', 'metric_help');
+            counter.set(count ++);
+        });
+
+        await service.getOpenTelemetryResourceMetrics(); // Counter: 2
+        await service.getOpenTelemetryResourceMetrics(); // Counter: 3
+
+        service.shutdown();
+
+        const resourceMetrics = await service.getOpenTelemetryResourceMetrics(); // Counter should not be increased
+
+        expect(resourceMetrics.scopeMetrics[0].metrics[0]).toMatchObject({
+            dataPoints: [
+                {
+                    value: 3,
+                    attributes: {},
+                }
+            ]
         });
     });
 

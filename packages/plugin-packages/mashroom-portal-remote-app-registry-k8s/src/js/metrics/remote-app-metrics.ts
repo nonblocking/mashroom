@@ -2,31 +2,34 @@
 import context from '../context';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
+import type {MashroomMonitoringMetricsCollectorService, MashroomMonitoringMetricsObservableCallbackRef} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 
-const EXPORT_INTERVAL_MS = 10000;
+let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 
-let interval: NodeJS.Timeout;
-
-export const startExportRemoteAppMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
-    interval = setInterval(async () => {
+export const registerRemoteAppMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
+    const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
-
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
         if (collectorService) {
-            const services = context.registry.services;
-            const servicesTotal = services.length;
-            const servicesWithError = services.filter((s) => !!s.error).length;
-            const servicesWithTimeouts = services.filter((s) => s.error && s.error.indexOf('ETIMEDOUT') !== -1).length;
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                const services = context.registry.services;
+                const servicesTotal = services.length;
+                const servicesWithError = services.filter((s) => !!s.error).length;
+                const servicesWithTimeouts = services.filter((s) => s.error && s.error.indexOf('ETIMEDOUT') !== -1).length;
 
-            collectorService.gauge('mashroom_remote_apps_k8s_total', 'Mashroom Kubernetes Remote Apps Total').set(servicesTotal);
-            collectorService.gauge('mashroom_remote_apps_k8s_error_total', 'Mashroom Kubernetes Remote Apps With Error').set(servicesWithError);
-            collectorService.gauge('mashroom_remote_apps_k8s_connection_timeout_total', 'Mashroom Kubernetes Remote Apps With Connection Timeout').set(servicesWithTimeouts);
+                asyncCollectorService.gauge('mashroom_remote_apps_k8s_total', 'Mashroom Kubernetes Remote Apps Total').set(servicesTotal);
+                asyncCollectorService.gauge('mashroom_remote_apps_k8s_error_total', 'Mashroom Kubernetes Remote Apps With Error').set(servicesWithError);
+                asyncCollectorService.gauge('mashroom_remote_apps_k8s_connection_timeout_total', 'Mashroom Kubernetes Remote Apps With Connection Timeout').set(servicesWithTimeouts);
+            });
         }
-
-    }, EXPORT_INTERVAL_MS);
+    };
+    // Wait a few seconds until collectorService is available
+    setTimeout(register, 5000);
 };
 
-export const stopExportRemoteAppMetrics = () => {
-    clearInterval(interval);
+export const unregisterRemoteAppMetrics = () => {
+    if (callbackRef) {
+        callbackRef.removeCallback();
+        callbackRef = undefined;
+    }
 };

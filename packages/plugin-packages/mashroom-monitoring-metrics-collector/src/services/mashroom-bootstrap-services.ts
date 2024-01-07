@@ -1,4 +1,6 @@
 
+import {registerNodeMetrics} from '../metrics/node-metrics';
+import {registerPluginMetrics} from '../metrics/plugin-metrics';
 import MashroomMonitoringMetricsCollectorService from './MashroomMonitoringMetricsCollectorService';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
@@ -9,6 +11,13 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const pluginContext = pluginContextHolder.getPluginContext();
 
     const service = new MashroomMonitoringMetricsCollectorService(config, pluginContext.loggerFactory);
+
+    registerNodeMetrics(service);
+    registerPluginMetrics(service, pluginContextHolder);
+
+    pluginContextHolder.getPluginContext().services.core.pluginService.onUnloadOnce(pluginName, () => {
+        service.shutdown();
+    });
 
     return {
         service,

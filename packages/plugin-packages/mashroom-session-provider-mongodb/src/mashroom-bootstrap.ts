@@ -2,7 +2,7 @@
 import MongoDbStore from 'connect-mongo';
 import createClient, {setConnectionUriAndOptions} from './mongodb';
 import healthProbe from './health/health-probe';
-import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store-metrics';
+import {registerStoreMetrics, unregisterStoreMetrics} from './metrics/store-metrics';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 
@@ -22,13 +22,13 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     });
 
     healthProbeService.registerProbe(pluginName, healthProbe);
-    startExportStoreMetrics(pluginContextHolder);
+    registerStoreMetrics(pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads
         store.close();
         healthProbeService.unregisterProbe(pluginName);
-        stopExportStoreMetrics();
+        unregisterStoreMetrics();
     });
 
     return store;

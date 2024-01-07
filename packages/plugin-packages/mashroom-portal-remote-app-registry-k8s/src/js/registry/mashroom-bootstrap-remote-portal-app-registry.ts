@@ -1,7 +1,7 @@
 
 import context from '../context';
 import healthProbe from '../health/health-probe';
-import {startExportRemoteAppMetrics, stopExportRemoteAppMetrics} from '../metrics/remote-app-metrics';
+import {registerRemoteAppMetrics, unregisterRemoteAppMetrics} from '../metrics/remote-app-metrics';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
@@ -9,11 +9,11 @@ const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (plugi
     const {services: {core: {pluginService, healthProbeService}}} = pluginContextHolder.getPluginContext();
 
     healthProbeService.registerProbe(pluginName, healthProbe);
-    startExportRemoteAppMetrics(pluginContextHolder);
+    registerRemoteAppMetrics(pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         healthProbeService.unregisterProbe(pluginName);
-        stopExportRemoteAppMetrics();
+        unregisterRemoteAppMetrics();
     });
 
     return context.registry;

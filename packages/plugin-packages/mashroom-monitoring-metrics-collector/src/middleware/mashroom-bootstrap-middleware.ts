@@ -1,16 +1,10 @@
 
-import {startExportPluginMetrics, stopExportPluginMetrics} from '../metrics/plugin-metrics';
 import MashroomMonitoringRequestMetricsMiddleware from './MashroomMonitoringRequestMetricsMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
 
-const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig) => {
     const { path } = pluginConfig;
-
-    startExportPluginMetrics(pluginContextHolder);
-    pluginContextHolder.getPluginContext().services.core.pluginService.onUnloadOnce(pluginName, () => {
-        stopExportPluginMetrics();
-    });
 
     const middleware = new MashroomMonitoringRequestMetricsMiddleware(path);
     return middleware.middleware();

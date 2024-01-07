@@ -1,5 +1,5 @@
 
-import {startExportSessionMetrics, stopExportSessionMetrics} from '../metrics/session-metrics';
+import {registerSessionMetrics, unregisterSessionMetrics} from '../metrics/session-metrics';
 import MashroomSessionMiddleware from './MashroomSessionMiddleware';
 
 import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
@@ -8,9 +8,9 @@ const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, 
     const storeProvider = pluginConfig.provider;
     const options = {...pluginConfig.session};
 
-    startExportSessionMetrics(pluginContextHolder);
+    registerSessionMetrics(pluginContextHolder);
     pluginContextHolder.getPluginContext().services.core.pluginService.onUnloadOnce(pluginName, () => {
-        stopExportSessionMetrics();
+        unregisterSessionMetrics();
     });
 
     const middleware = new MashroomSessionMiddleware(storeProvider, options);

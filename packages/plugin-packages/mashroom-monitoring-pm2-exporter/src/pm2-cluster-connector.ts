@@ -1,22 +1,25 @@
 
 import pm2 from 'pm2';
-import registry from './registry';
+import serializableResourceMetrics from './serializable-resource-metrics';
+
+import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 import type {MashroomPluginContext} from '@mashroom/mashroom/type-definitions';
 
-// Within PM2 AggregatorRegistry cannot be used directly, because the master is occupied by PM2 the usual
-//  cluster communication with worker.send() cannot be used
-// Check https://shogo.eu/blog/2021/01/06/How-to-collect-Prometheus-metrics-from-Node-js-cluster-mode how you could use this
+// This connector allows it to grab OpenTelemetry metrics from a worker node
+// Checkout the README how to use this
 
 const PM2_WORKER_ID = process.env.pm_id;
 let listener: any;
 
 export const startPM2Connector = (pluginContext: MashroomPluginContext) => {
     if (PM2_WORKER_ID) {
-        const logger = pluginContext.loggerFactory('mashroom.monitoring.prometheus');
+        const logger = pluginContext.loggerFactory('mashroom.monitoring.pm2.exporter');
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics!.service;
+
         logger.info('Starting PM2 cluster connector');
         const listener = (msg: any) => {
             if (msg.from !== PM2_WORKER_ID && msg.topic === 'getMetrics') {
-                registry.getMetricsAsJSON()
+                collectorService.getOpenTelemetryResourceMetrics()
                     .then((data) => {
                         pm2.connect((error) => {
                             if (!error) {
@@ -24,7 +27,7 @@ export const startPM2Connector = (pluginContext: MashroomPluginContext) => {
                                     msg.from,
                                     {
                                         from: PM2_WORKER_ID,
-                                        data: data,
+                                        data: serializableResourceMetrics(data),
                                         topic: 'returnMetrics',
                                     },
                                     (error) => {

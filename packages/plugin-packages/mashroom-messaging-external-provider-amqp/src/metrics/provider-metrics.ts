@@ -1,27 +1,31 @@
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
+import type {MashroomMonitoringMetricsCollectorService, MashroomMonitoringMetricsObservableCallbackRef} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 import type {MashroomMessagingExternalProviderAMQP} from '../../type-definitions';
 
-const EXPORT_INTERVAL_MS = 5000;
+let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 
-let interval: NodeJS.Timeout;
-
-export const startExportProviderMetrics = (provider: MashroomMessagingExternalProviderAMQP, pluginContextHolder: MashroomPluginContextHolder) => {
-    interval = setInterval(async () => {
+export const registerProviderMetrics = (provider: MashroomMessagingExternalProviderAMQP, pluginContextHolder: MashroomPluginContextHolder) => {
+    const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
-
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
         if (collectorService) {
-            const client = provider.getClient();
-            const connected = client && !client.error && client.is_open() ? 1 : 0;
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                const client = provider.getClient();
+                const connected = client && !client.error && client.is_open() ? 1 : 0;
 
-            collectorService.gauge('mashroom_messaging_amqp_connected', 'Mashroom Messaging AMQP Connected').set(connected);
+                asyncCollectorService.gauge('mashroom_messaging_amqp_connected', 'Mashroom Messaging AMQP Connected').set(connected);
+            });
         }
-
-    }, EXPORT_INTERVAL_MS);
+    };
+    // Wait a few seconds until collectorService is available
+    setTimeout(register, 5000);
 };
 
-export const stopExportProviderMetrics = () => {
-    clearInterval(interval);
+export const unregisterProviderMetrics = () => {
+    if (callbackRef) {
+        callbackRef.removeCallback();
+        callbackRef = undefined;
+    }
 };
+

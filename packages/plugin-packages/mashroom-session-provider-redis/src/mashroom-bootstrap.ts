@@ -2,7 +2,7 @@
 import RedisStore from 'connect-redis';
 import createClient, {setConfig, close} from './redis-client';
 import healthProbe from './health/health-probe';
-import {startExportStoreMetrics, stopExportStoreMetrics} from './metrics/store-metrics';
+import {registerStoreMetrics, unregisterStoreMetrics} from './metrics/store-metrics';
 
 import type {MashroomSessionStoreProviderPluginBootstrapFunction} from '@mashroom/mashroom-session/type-definitions';
 
@@ -17,13 +17,13 @@ const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = async (pl
     const client = await createClient(logger);
 
     healthProbeService.registerProbe(pluginName, healthProbe);
-    startExportStoreMetrics(pluginContextHolder);
+    registerStoreMetrics(pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads
         close();
         healthProbeService.unregisterProbe(pluginName);
-        stopExportStoreMetrics();
+        unregisterStoreMetrics();
     });
 
     return new RedisStore({

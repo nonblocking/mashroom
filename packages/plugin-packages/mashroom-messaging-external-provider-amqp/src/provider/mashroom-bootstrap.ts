@@ -1,6 +1,6 @@
 
 import healthProbe from '../health/health-probe';
-import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider-metrics';
+import {registerProviderMetrics, unregisterProviderMetrics} from '../metrics/provider-metrics';
 import MashroomMessagingExternalProviderAMQP from './MashroomMessagingExternalProviderAMQP';
 
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
@@ -15,12 +15,12 @@ const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = asyn
     provider.start();
 
     healthProbeService.registerProbe(pluginName, healthProbe(provider));
-    startExportProviderMetrics(provider, pluginContextHolder);
+    registerProviderMetrics(provider, pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         provider.shutdown();
         healthProbeService.unregisterProbe(pluginName);
-        stopExportProviderMetrics();
+        unregisterProviderMetrics();
     });
 
     return provider;

@@ -3,12 +3,35 @@
 
 ## [unreleased]
 
+ * PM2 Metric Exporter: Allows it now to grab the OpenTelemetry metrics from PM2 workers via inter-process communication.
+   Works similar to the approach previously in the *Prometheus Metric Exporter*, only the serialization to Prometheus format is not done automatically
+ * Prometheus Metric Exporter: **BREAKING CHANGE** Removed the possibility to fetch prometheus metrics via inter-process communication within a PM2 cluster
+ * Metrics Collector: Uses now [OpenTelemetry](https://opentelemetry.io/docs/specs/otel/metrics/) to gather and export metrics. Changes:
+     * The collector service supports now asynchronous metric gathering via callback 
+     * It is possible now to directly use the OpenTelemetry API 
+     * The metrics are more accurate since the get measured during export
+
+   Due to the API structure of OpenTelemetry there are also **BREAKING CHANGES** if you use the metrics collector service in your custom plugins:
+     * Summary metrics are no longer available (use Prometheus histogram_quantile()) 
+     * Aggregation is no longer integrated (use Prometheus aggregations)
+     * Histograms: *observe()* has been renamed to *record()*
+     * Counters exist now as synchronous version with only an *inc()* method and as an asynchronous version with a *set()* method
+     * Gauges only exists synchronous version with a *set()* method now
+     * Asynchronous metrics can be used in the service.addObservableCallback() callback, like so:
+      ```typescript
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics.service;
+
+        collectorService.addObservableCallback((asyncCollectorService) => {
+            // ... somehow get the value to measure
+            asyncCollectorService.gauge('http_pool_active_connections', 'HTTP Pool Active Connections').set(theValue);
+        });
+      ```
  * HTTP Portal: Added metrics for remote resource requests (*mashroom_portal_remote_resources_*), like request count, error count and pool stats
  * HTTP Proxy: The proxies do no longer automatically add *x-forwarded-* headers, because if you are using public APIs you might not want
    to disclose details of your internal network. Added a new config property *createForwardedForHeaders* to explicitly turn this feature on again. 
    Also fixed the implementation, it takes now existing headers from reverse proxies into consideration and keeps them or
    extends them (which means *x-forwarded-for* contains now the IP address of the original client as well if there are reverse proxies).
- * HTTP Proxy: Improved metrics. Added metrics:
+ * HTTP Proxy: Added metrics:
    * mashroom_http_proxy_requests_ws_connection_errors
  
    **BREAKING CHANGE** Renamed metrics: 

@@ -1,5 +1,5 @@
 
-import {startExportMemoryCacheMetrics, stopExportMemoryCacheMetrics} from '../metrics/memory-cache-metrics';
+import {registerMemoryCacheMetrics, unregisterMemoryCacheMetrics} from '../metrics/memory-cache-metrics';
 import MashroomMemoryCacheService from './MashroomMemoryCacheService';
 
 import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
@@ -10,9 +10,9 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
 
     const service = new MashroomMemoryCacheService(provider, defaultTTLSec, pluginContext.loggerFactory);
 
-    startExportMemoryCacheMetrics(service, pluginContextHolder);
+    registerMemoryCacheMetrics(service, pluginContextHolder);
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
-        stopExportMemoryCacheMetrics();
+        unregisterMemoryCacheMetrics();
     });
 
     return {

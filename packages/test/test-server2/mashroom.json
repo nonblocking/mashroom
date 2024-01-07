@@ -26,7 +26,8 @@
         "Mashroom Http Proxy Add User Headers Interceptor",
         "Mashroom Http Proxy Add Access Token Interceptor",
         "Mashroom CDN Services",
-        "Mashroom Robots Middleware"
+        "Mashroom Robots Middleware",
+        "Mashroom Monitoring Prometheus Exporter Webapp"
     ],
     "plugins": {
         "Mashroom Portal WebApp": {
@@ -107,8 +108,6 @@
                 "mashroom_messaging_amqp_connected",
                 "mashroom_messaging_mqtt_connected"
             ]
-        },
-        "Mashroom Monitoring Prometheus Exporter Webapp": {
         }
     }
 }

@@ -10,11 +10,8 @@ import type {
 
 export type Server = WebSocket.Server;
 
-export type IntervalID = ReturnType<typeof setInterval>;
-export type TimeoutID = ReturnType<typeof setTimeout>;
-
 export type InternalMashroomWebSocketClient = MashroomWebSocketClient & {
-    reconnecting?: TimeoutID;
+    reconnecting?: NodeJS.Timeout;
 };
 
 export interface MashroomWebSocketServer {

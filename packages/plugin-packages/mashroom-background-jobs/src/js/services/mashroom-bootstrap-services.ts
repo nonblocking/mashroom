@@ -1,8 +1,5 @@
 
-import {
-    startExportBackgroundJobMetrics,
-    stopExportBackgroundJobMetrics
-} from '../metrics/background-jobs-metrics';
+import {registerBackgroundJobMetrics, unregisterBackgroundJobMetrics} from '../metrics/background-jobs-metrics';
 import MashroomBackgroundJobService from './MashroomBackgroundJobService';
 import type {
     MashroomBackgroundJobService as MashroomBackgroundJobServiceType
@@ -18,11 +15,11 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const pluginContext = pluginContextHolder.getPluginContext();
     const service = new MashroomBackgroundJobService(pluginContextHolder);
 
-    startExportBackgroundJobMetrics(service, pluginContextHolder);
+    registerBackgroundJobMetrics(service, pluginContextHolder);
 
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         cancelAllJobs(service);
-        stopExportBackgroundJobMetrics();
+        unregisterBackgroundJobMetrics();
     });
 
     return {

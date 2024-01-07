@@ -1,9 +1,9 @@
 
 import {setPoolConfig} from '../connection-pool';
 import context from '../context/global-context';
-import {startExportHttpAgentMetrics, stopExportHttpAgentMetrics} from '../metrics/http-agent-metrics';
-import {startExportWsConnectionMetrics, stopExportWsConnectionMetrics} from '../metrics/ws-connection-metrics';
-import {startExportRequestMetrics, stopExportRequestMetrics} from '../metrics/request-metrics';
+import {registerHttpAgentMetrics, unregisterHttpAgentMetrics} from '../metrics/http-agent-metrics';
+import {registerWsConnectionMetrics, unregisterWsConnectionMetrics} from '../metrics/ws-connection-metrics';
+import {registerRequestMetrics, unregisterRequestMetrics} from '../metrics/request-metrics';
 import HttpHeaderFilter from './HttpHeaderFilter';
 import InterceptorHandler from './InterceptorHandler';
 import ProxyImplRequest from './ProxyImplRequest';
@@ -51,14 +51,15 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     }
     const service = new MashroomHttpProxyService(forwardMethods, proxy);
 
-    startExportHttpAgentMetrics(pluginContextHolder);
-    startExportWsConnectionMetrics(proxy, pluginContextHolder);
-    startExportRequestMetrics(proxy, pluginContextHolder);
+    registerHttpAgentMetrics(pluginContextHolder);
+    registerWsConnectionMetrics(proxy, pluginContextHolder);
+    registerRequestMetrics(proxy, pluginContextHolder);
+
     pluginContext.services.core.pluginService.onUnloadOnce(pluginName, () => {
         proxy.shutdown();
-        stopExportHttpAgentMetrics();
-        stopExportWsConnectionMetrics();
-        stopExportRequestMetrics();
+        unregisterHttpAgentMetrics();
+        unregisterWsConnectionMetrics();
+        unregisterRequestMetrics();
     });
 
     return {

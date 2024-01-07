@@ -1,12 +1,11 @@
 const pm2 = require('pm2');
-const promClient = require('prom-client');
+const { PrometheusSerializer } = require('@opentelemetry/exporter-prometheus');
 const Express = require('express');
-
 const metricsServer = Express();
 
-const dummyRegistry = new promClient.Registry();
-const metrics = {};
+const metrics = {}; // <pid> -> OpenTelemetry ResourceMetrics
 const metricsServerPort = 15050;
+const prometheusSerializer = new PrometheusSerializer();
 
 metricsServer.get('/metrics/:id', async (req, res) => {
     const id = req.params.id;
@@ -16,16 +15,8 @@ metricsServer.get('/metrics/:id', async (req, res) => {
         res.sendStatus(404);
         return;
     }
-    const response = promClient.AggregatorRegistry.aggregate([slice]);
-    res.set('Content-Type', dummyRegistry.contentType);
-    res.send(await response.metrics());
-});
-metricsServer.get('/metrics', async (req, res) => {
-    const response = promClient.AggregatorRegistry.aggregate(
-        Object.values(metrics).map((o) => o),
-    );
-    res.set('Content-Type', dummyRegistry.contentType);
-    res.send(await response.metrics());
+    res.set('Content-Type', 'text/plain');
+    res.end(prometheusSerializer.serialize(slice));
 });
 
 metricsServer.listen(metricsServerPort, '0.0.0.0', () => {

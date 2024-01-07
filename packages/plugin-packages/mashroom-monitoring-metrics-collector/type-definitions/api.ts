@@ -1,116 +1,99 @@
+import type {Counter, Histogram, ObservableCounter, ObservableGauge} from '@opentelemetry/api';
+import type {ResourceMetrics, MeterProvider} from '@opentelemetry/sdk-metrics';
 
-export type MetricLabels = Record<string, string | number>;
+export type MashroomMonitoringMetricsLabels = Record<string, string | number>;
 
-export interface Counter {
-    inc(by?: number, labels?: MetricLabels): void;
-    set(value: number, labels?: MetricLabels): void;
+export type MashroomMonitoringMetricsCounter = {
+    /*
+     * The underlying OpenTelemetry metric, will be undefined if the metric has been disabled via config
+     */
+    readonly openTelemetryMetric?: Counter;
+    /*
+     * Increment by 1 or given value
+     */
+    inc(by?: number, labels?: MashroomMonitoringMetricsLabels): void;
 }
 
-export interface Gauge {
-    reset(): void;
-    set(value: number, labels?: MetricLabels): void;
+export type MashroomMonitoringMetricsHistogram = {
+    /*
+     * The underlying OpenTelemetry metric, will be undefined if the metric has been disabled via config
+     */
+    readonly openTelemetryMetric?: Histogram;
+    /*
+     * Record the given value
+     */
+    record(value: number, labels?: MashroomMonitoringMetricsLabels): void;
 }
 
-export interface Histogram {
-    observe(value: number, labels?: MetricLabels): void;
+export type MashroomMonitoringMetricsObservableCounter = {
+    /*
+     * The underlying OpenTelemetry metric, will be undefined if the metric has been disabled via config
+     */
+    readonly openTelemetryMetric?: ObservableCounter;
+    /*
+     * Set the counter value (must be higher than the previous one!)
+     */
+    set(value: number, labels?: MashroomMonitoringMetricsLabels): void;
 }
 
-export interface Summary {
-    observe(value: number, labels?: MetricLabels): void;
+export type MashroomMonitoringMetricsObservableGauge = {
+    /*
+     * The underlying OpenTelemetry metric, will be undefined if the metric has been disabled via config
+     */
+    readonly openTelemetryMetric?: ObservableGauge;
+    /*
+     * Set the gauge value
+     */
+    set(value: number, labels?: MashroomMonitoringMetricsLabels): void;
 }
 
-export type AggregationHint = 'omit' | 'sum' | 'first' | 'min' | 'max' | 'average';
+export interface MashroomMonitoringMetricsCollectorAsyncService {
+    /**
+     * A counter for am observable value.
+     */
+    counter(name: string, help: string): MashroomMonitoringMetricsObservableCounter;
+    /**
+     * A gauge for am observable value.
+     * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
+     */
+    gauge(name: string, help: string): MashroomMonitoringMetricsObservableGauge;
+}
+
+export type MashroomMonitoringMetricsObservableCallback = (asyncCollectorService: MashroomMonitoringMetricsCollectorAsyncService) => void | Promise<void>;
+
+export type MashroomMonitoringMetricsObservableCallbackRef = {
+    removeCallback(): void;
+}
 
 /**
  * Mashroom Monitoring Metrics Collector Service
  *
- * It uses the metric types defined here: https://prometheus.io/docs/concepts/metric_types
- * and supports also *labels* which can be used to differentiate the characteristics of the thing that is being measured;
- * e.g. to group requests total by the HTTP error code.
- *
- * The AggregationHint can be used if you need to aggregate metrics, e.g. in a Node.js cluster.
+ * An abstraction that uses currently OpenTelemetry Metrics under the hood, see https://opentelemetry.io/docs/specs/otel/metrics/
  */
 export interface MashroomMonitoringMetricsCollectorService {
     /**
      * A counter is a cumulative metric that represents a single monotonically increasing counter
      * whose value can only increase.
-     * If though the returned Counter has a set() method, the new value must always be higher than the current.
+     * Even though the returned Counter has a set() method, the new value must always be higher than the current.
      */
-    counter(name: string, help: string, aggregationHint?: AggregationHint): Counter;
-    /**
-     * A gauge is a metric that represents a single numerical value that can arbitrarily go up and down.
-     */
-    gauge(name: string, help: string, aggregationHint?: AggregationHint): Gauge;
+    counter(name: string, help: string): MashroomMonitoringMetricsCounter;
     /**
      * A histogram samples observations (usually things like request durations or response sizes)
      * and counts them in configurable buckets.It also provides a sum of all observed values.
      */
-    histogram(name: string, help: string, buckets?: number[], aggregationHint?: AggregationHint): Histogram;
+    histogram(name: string, help: string, buckets?: number[]): MashroomMonitoringMetricsHistogram;
     /**
-     * Similar to a histogram, a summary samples observations. While it also provides a total count of
-     * observations and a sum of all observed values, it calculates configurable quantiles.
+     * Add a callback for asynchronous measuring of values.
+     * Gauges and counters where you can set the value directly are only available like this!
      */
-    summary(name: string, help: string, quantiles?: number[], aggregationHint?: AggregationHint): Summary;
+    addObservableCallback(cb: MashroomMonitoringMetricsObservableCallback): Promise<MashroomMonitoringMetricsObservableCallbackRef>;
     /**
-     * Get the collected metrics
+     * Get OpenTelemetry resource metrics for export
      */
-    getMetrics(): MetricDataMap;
+    getOpenTelemetryResourceMetrics(): Promise<ResourceMetrics>;
+    /**
+     * The underlying MeterProvider which can be used if you prefer directly using the OpenTelemetry API instead.
+     * All metrics created will be automatically exported as well.
+     */
+    getOpenTelemetryMeterProvider(): MeterProvider;
 }
-
-export type MetricDataMap = {
-    [name: string]: MetricsData;
-}
-
-type MetricDataBase = {
-    name: string;
-    help: string;
-}
-
-export type CounterMetricData = MetricDataBase & {
-    type: 'counter';
-    aggregationHint: AggregationHint;
-    data: Array<{
-        value: number;
-        labels: MetricLabels;
-    }>;
-}
-
-export type GaugeMetricData = MetricDataBase & {
-    type: 'gauge';
-    aggregationHint: AggregationHint;
-    data: Array<{
-        value: number;
-        labels: MetricLabels;
-    }>;
-}
-
-export type HistogramMetricData = MetricDataBase & {
-    type: 'histogram';
-    aggregationHint: AggregationHint;
-    data: Array<{
-        count: number;
-        sum: number;
-        buckets: Array<{
-            le: number;
-            value: number;
-        }>;
-        labels: MetricLabels;
-    }>;
-}
-
-export type SummaryMetricData = MetricDataBase & {
-    type: 'summary';
-    aggregationHint: AggregationHint;
-    data: Array<{
-        count: number;
-        sum: number;
-        buckets: Array<{
-            quantile: number;
-            value: number;
-        }>;
-        labels: MetricLabels;
-    }>;
-}
-
-export type MetricsData = CounterMetricData | GaugeMetricData | HistogramMetricData | SummaryMetricData;
-

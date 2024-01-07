@@ -515,25 +515,6 @@
                                 }
                             },
                             "description": "Override the bucket configuration for histogram metrics"
-                        },
-                        "defaultSummaryQuantiles": {
-                            "type": "array",
-                            "items": {
-                                "type": "number"
-                            },
-                            "description": "Default quantiles for summary metrics"
-                        },
-                        "customSummaryQuantileConfig": {
-                            "type": "object",
-                            "patternProperties": {
-                                "^.*$": {
-                                    "type": "array",
-                                    "items": {
-                                        "type": "number"
-                                    }
-                                }
-                            },
-                            "description": "Override the quantiles configuration for summary metrics"
                         }
                     },
                     "additionalProperties": false

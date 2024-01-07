@@ -1,7 +1,7 @@
 
 import {setConfig, close} from '../redis-client';
 import healthProbe from '../health/health-probe';
-import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider-metrics';
+import {registerProviderMetrics, unregisterProviderMetrics} from '../metrics/provider-metrics';
 import MashroomMemoryCacheProviderRedis from './MashroomMemoryCacheProviderRedis';
 
 import type {MashroomMemoryCacheProviderPluginBootstrapFunction} from '@mashroom/mashroom-memory-cache/type-definitions';
@@ -13,13 +13,13 @@ const bootstrap: MashroomMemoryCacheProviderPluginBootstrapFunction = async (plu
     await setConfig(pluginConfig as IORedisConfig);
 
     healthProbeService.registerProbe(pluginName, healthProbe);
-    startExportProviderMetrics(pluginContextHolder);
+    registerProviderMetrics(pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         // Close the connection when the plugin reloads
         close();
         healthProbeService.unregisterProbe(pluginName);
-        stopExportProviderMetrics();
+        unregisterProviderMetrics();
     });
 
     return new MashroomMemoryCacheProviderRedis(loggerFactory);

@@ -17,8 +17,7 @@ Predefined users: john/john, admin/admin
 
 Also starts a second server that exposes Prometheus metrics on port 15050:
 
- * Aggregated metrics: http://localhost:15050/metrics
- * Metrics of a single node http://localhost:15050/metrics/<id> (ID can be 0, 2, 3, 4 for this setup)
+ * Metrics of a single node http://localhost:15050/metrics/<id> (ID can e.g. be 2, 3, 4)
 
 ## Stop
 

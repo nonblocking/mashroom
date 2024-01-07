@@ -359,20 +359,6 @@ export interface Plugins {
        */
       [k: string]: number[];
     };
-    /**
-     * Default quantiles for summary metrics
-     */
-    defaultSummaryQuantiles?: number[];
-    /**
-     * Override the quantiles configuration for summary metrics
-     */
-    customSummaryQuantileConfig?: {
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` "^.*$".
-       */
-      [k: string]: number[];
-    };
   };
   "Mashroom Monitoring PM2 Exporter"?: {
     /**

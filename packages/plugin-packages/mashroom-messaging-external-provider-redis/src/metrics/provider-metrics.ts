@@ -2,25 +2,28 @@
 import {getAvailableNodes} from '../redis-client';
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
+import type {MashroomMonitoringMetricsCollectorService, MashroomMonitoringMetricsObservableCallbackRef} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 
-const EXPORT_INTERVAL_MS = 5000;
+let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 
-let interval: NodeJS.Timeout;
-
-export const startExportProviderMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
-    interval = setInterval(async () => {
+export const registerProviderMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
+    const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
-
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
         if (collectorService) {
-            const availableNodes = getAvailableNodes();
-            collectorService.gauge('mashroom_messaging_redis_connected', 'Mashroom Messaging Redis Connected').set(availableNodes);
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                const availableNodes = getAvailableNodes();
+                asyncCollectorService.gauge('mashroom_messaging_redis_connected', 'Mashroom Messaging Redis Connected').set(availableNodes);
+            });
         }
-
-    }, EXPORT_INTERVAL_MS);
+    };
+    // Wait a few seconds until collectorService is available
+    setTimeout(register, 5000);
 };
 
-export const stopExportProviderMetrics = () => {
-    clearInterval(interval);
+export const unregisterProviderMetrics = () => {
+    if (callbackRef) {
+        callbackRef.removeCallback();
+        callbackRef = undefined;
+    }
 };

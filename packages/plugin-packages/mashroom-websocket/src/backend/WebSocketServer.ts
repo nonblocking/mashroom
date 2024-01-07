@@ -13,11 +13,7 @@ import type {
     MashroomWebSocketMessageListener,
     MashroomWebSocketDisconnectListener,
 } from '../../type-definitions';
-import type {
-    InternalMashroomWebSocketClient,
-    IntervalID,
-    MashroomWebSocketServer,
-} from '../../type-definitions/internal';
+import type {InternalMashroomWebSocketClient, MashroomWebSocketServer} from '../../type-definitions/internal';
 
 const CHECK_CONNECTIONS_INTERVAL_MS = 30 * 1000;
 const KEEP_ALIVE_MESSAGE = 'keepalive';
@@ -35,8 +31,8 @@ export default class WebSocketServer implements MashroomWebSocketServer {
         listener: MashroomWebSocketMessageListener
     }>;
     private _disconnectListeners: Array<MashroomWebSocketDisconnectListener>;
-    private _checkConnectionInterval: IntervalID;
-    private _keepAliveInterval: IntervalID | undefined;
+    private _checkConnectionInterval: NodeJS.Timeout;
+    private _keepAliveInterval: NodeJS.Timeout | undefined;
 
     constructor(loggerFactory: MashroomLoggerFactory, private _reconnectMessageBufferStore: ReconnectMessageBufferStore) {
         this._logger = loggerFactory('mashroom.websocket.server');

@@ -1,82 +1,47 @@
 
+import type {MeterProvider} from '@opentelemetry/sdk-metrics';
 import type {RequestHandler} from 'express';
-import type {TDigest} from 'tdigest';
-import type {MetricLabels, AggregationHint} from './api';
+import type {Counter, Histogram, ObservableCounter, ObservableGauge} from '@opentelemetry/api';
+
+export type OpenTelemetryMeter = ReturnType<MeterProvider['getMeter']>;
 
 export interface MashroomMonitoringRequestMetricsMiddleware {
     middleware(): RequestHandler;
 }
 
 export type MashroomMonitoringMetricsCollectorConfig = {
-    disableMetrics?: Array<string>;
-    defaultHistogramBuckets: number[];
-    customHistogramBucketConfig: {
-        [metric: string]: number[];
-    };
-    defaultSummaryQuantiles: number[];
-    customSummaryQuantileConfig: {
-        [metric: string]: number[];
+    readonly disableMetrics?: Array<string>;
+    readonly defaultHistogramBuckets: number[];
+    readonly customHistogramBucketConfig: {
+        readonly [metric: string]: number[];
     };
 }
 
 type InternalMetricDataBase = {
-    name: string;
-    help: string;
+    readonly name: string;
+    readonly help: string;
 }
 
-export type InternalCounterMetricData = InternalMetricDataBase & {
-    type: 'counter';
-    aggregationHint: AggregationHint;
-    data: {
-        [hash: string]: {
-            value: number;
-            labels: MetricLabels;
-        };
-    };
+export type InternalCounterMetric = InternalMetricDataBase & {
+    readonly type: 'counter';
+    readonly openTelemetryMetric: Counter;
 }
 
-export type InternalGaugeMetricData = InternalMetricDataBase & {
-    type: 'gauge';
-    aggregationHint: AggregationHint;
-    data: {
-        [hash: string]: {
-            value: number;
-            labels: MetricLabels;
-        };
-    };
+export type InternalHistogramMetric = InternalMetricDataBase & {
+    readonly type: 'histogram';
+    readonly openTelemetryMetric: Histogram;
 }
 
-export type InternalHistogramMetricData = InternalMetricDataBase & {
-    type: 'histogram';
-    buckets: number[];
-    aggregationHint: AggregationHint;
-    data: {
-        [hash: string]: {
-            count: number;
-            sum: number;
-            buckets: Array<{
-                le: number;
-                value: number;
-            }>;
-            labels: MetricLabels;
-        };
-    };
+export type InternalObservableCounterMetric = InternalMetricDataBase & {
+    readonly type: 'observable-counter';
+    readonly openTelemetryMetric: ObservableCounter;
 }
 
-export type InternalSummaryMetricData = InternalMetricDataBase & {
-    type: 'summary';
-    quantiles: number[];
-    aggregationHint: AggregationHint;
-    data: {
-        [hash: string]: {
-            count: number;
-            sum: number;
-            tDigest: TDigest;
-            labels: MetricLabels;
-        };
-    };
+export type InternalObservableGaugeMetric = InternalMetricDataBase & {
+    readonly type: 'observable-gauge';
+    readonly openTelemetryMetric: ObservableGauge;
 }
 
-export type InternalMetricsData = InternalCounterMetricData | InternalGaugeMetricData | InternalHistogramMetricData | InternalSummaryMetricData;
+export type InternalMetric = InternalCounterMetric | InternalHistogramMetric | InternalObservableCounterMetric | InternalObservableGaugeMetric;
 
-
+export type InternalMetricsMap = Record<string, InternalMetric>;

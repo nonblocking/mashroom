@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import context from '../context';
 import healthProbe from '../health/health-probe';
-import {startExportRemoteAppMetrics, stopExportRemoteAppMetrics} from '../metrics/remote-app-metrics';
+import {registerRemoteAppMetrics, unregisterRemoteAppMetrics} from '../metrics/remote-app-metrics';
 
 import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 import type {MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -18,11 +18,11 @@ const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (plugi
     await registerRemotePortalAppsFromConfigFile(remotePortalAppUrls, serverConfig.serverRootFolder, portalRemoteAppEndpointService, loggerFactory);
 
     services.core.healthProbeService.registerProbe(pluginName, healthProbe);
-    startExportRemoteAppMetrics(pluginContextHolder);
+    registerRemoteAppMetrics(pluginContextHolder);
 
     services.core.pluginService.onUnloadOnce(pluginName, () => {
         services.core.healthProbeService.unregisterProbe(pluginName);
-        stopExportRemoteAppMetrics();
+        unregisterRemoteAppMetrics();
     });
 
     return context.registry;

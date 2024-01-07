@@ -1,28 +1,34 @@
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
+import type {
+    MashroomMonitoringMetricsCollectorService,
+    MashroomMonitoringMetricsObservableCallbackRef
+} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 import type {MashroomBackgroundJobService} from '../../../type-definitions';
 
-const EXPORT_INTERVAL_MS = 5000;
+let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 
-let interval: NodeJS.Timeout;
-
-export const startExportBackgroundJobMetrics = (backgroundJobService: MashroomBackgroundJobService, pluginContextHolder: MashroomPluginContextHolder) => {
-    interval = setInterval(async () => {
+export const registerBackgroundJobMetrics = (backgroundJobService: MashroomBackgroundJobService, pluginContextHolder: MashroomPluginContextHolder) => {
+    const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
-
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
         if (collectorService) {
-            const jobsTotal = backgroundJobService.jobs.length;
-            const jobsFailed = backgroundJobService.jobs.filter((j) => j.lastInvocation && !j.lastInvocation.success).length;
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                const jobsTotal = backgroundJobService.jobs.length;
+                const jobsFailed = backgroundJobService.jobs.filter((j) => j.lastInvocation && !j.lastInvocation.success).length;
 
-            collectorService.gauge('mashroom_background_jobs_total', 'Mashroom Background Jobs Total').set(jobsTotal);
-            collectorService.gauge('mashroom_background_jobs_failed', 'Mashroom Background Jobs In Failed State').set(jobsFailed);
+                asyncCollectorService.gauge('mashroom_background_jobs_total', 'Mashroom Background Jobs Total').set(jobsTotal);
+                asyncCollectorService.gauge('mashroom_background_jobs_failed', 'Mashroom Background Jobs In Failed State').set(jobsFailed);
+            });
         }
-
-    }, EXPORT_INTERVAL_MS);
+    };
+    // Wait a few seconds until collectorService is available
+    setTimeout(register, 5000);
 };
 
-export const stopExportBackgroundJobMetrics = () => {
-    clearInterval(interval);
+export const unregisterBackgroundJobMetrics = () => {
+    if (callbackRef) {
+        callbackRef.removeCallback();
+        callbackRef = undefined;
+    }
 };

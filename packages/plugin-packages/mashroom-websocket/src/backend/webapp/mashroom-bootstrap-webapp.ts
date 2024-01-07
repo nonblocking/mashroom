@@ -1,10 +1,7 @@
 
 import context from '../context';
 import WebSocketServer from '../WebSocketServer';
-import {
-    startExportConnectionMetrics,
-    stopExportConnectionMetrics
-} from '../metrics/connection-metrics';
+import {registerConnectionMetrics, unregisterConnectionMetrics} from '../metrics/connection-metrics';
 import expressApp from './webapp';
 import httpUpgradeHandlerFn from './http-upgrade-handler';
 import ReconnectMessageBufferStore from './ReconnectMessageBufferStore';
@@ -30,12 +27,12 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
 
     const upgradeHandler: MashroomHttpUpgradeHandler = httpUpgradeHandlerFn();
 
-    startExportConnectionMetrics(context.server, pluginContextHolder);
+    registerConnectionMetrics(context.server, pluginContextHolder);
 
     services.core.pluginService.onUnloadOnce(pluginName, () => {
         // Close all connections when the plugin reloads
         context.server.closeAll();
-        stopExportConnectionMetrics();
+        unregisterConnectionMetrics();
     });
 
     return {

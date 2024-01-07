@@ -1,26 +1,27 @@
 
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
-import type {MashroomMonitoringMetricsCollectorService} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
-import type {IntervalID, MashroomWebSocketServer} from '../../../type-definitions/internal';
+import type {MashroomMonitoringMetricsCollectorService, MashroomMonitoringMetricsObservableCallbackRef} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
+import type {MashroomWebSocketServer} from '../../../type-definitions/internal';
 
-const EXPORT_INTERVAL_MS = 5000;
+let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 
-let interval: IntervalID | undefined;
-
-export const startExportConnectionMetrics = (server: MashroomWebSocketServer, pluginContextHolder: MashroomPluginContextHolder): void => {
-    interval = setInterval(async () => {
+export const registerConnectionMetrics = (server: MashroomWebSocketServer, pluginContextHolder: MashroomPluginContextHolder) => {
+    const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics && pluginContext.services.metrics.service;
-
+        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
         if (collectorService) {
-            collectorService.gauge('mashroom_websocket_connections_total', 'Mashroom WebSocket Connections Total').set(server.getClientCount());
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                asyncCollectorService.gauge('mashroom_websocket_connections_total', 'Mashroom WebSocket Connections Total').set(server.getClientCount());
+            });
         }
-
-    }, EXPORT_INTERVAL_MS);
+    };
+    // Wait a few seconds until collectorService is available
+    setTimeout(register, 5000);
 };
 
-export const stopExportConnectionMetrics = (): void => {
-    if (interval) {
-        clearInterval(interval);
+export const unregisterConnectionMetrics = (): void => {
+    if (callbackRef) {
+        callbackRef.removeCallback();
+        callbackRef = undefined;
     }
 };

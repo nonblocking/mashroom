@@ -1,7 +1,7 @@
 
 import {setConfig} from '../redis-client';
 import healthProbe from '../health/health-probe';
-import {startExportProviderMetrics, stopExportProviderMetrics} from '../metrics/provider-metrics';
+import {registerProviderMetrics, unregisterProviderMetrics} from '../metrics/provider-metrics';
 import MashroomMessagingExternalProviderRedis from './MashroomMessagingExternalProviderRedis';
 
 import type {MashroomExternalMessagingProviderPluginBootstrapFunction} from '@mashroom/mashroom-messaging/type-definitions';
@@ -18,12 +18,12 @@ const bootstrap: MashroomExternalMessagingProviderPluginBootstrapFunction = asyn
     await provider.start();
 
     healthProbeService.registerProbe(pluginName, healthProbe());
-    startExportProviderMetrics(pluginContextHolder);
+    registerProviderMetrics(pluginContextHolder);
 
     pluginService.onUnloadOnce(pluginName, () => {
         provider.shutdown();
         healthProbeService.unregisterProbe(pluginName);
-        stopExportProviderMetrics();
+        unregisterProviderMetrics();
     });
 
     return provider;
