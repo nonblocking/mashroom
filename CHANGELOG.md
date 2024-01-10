@@ -3,8 +3,11 @@
 
 ## [unreleased]
 
+
+## 2.5.0 (January 10, 2024)
+
  * PM2 Metric Exporter: Allows it now to grab the OpenTelemetry metrics from PM2 workers via inter-process communication.
-   Works similar to the approach previously in the *Prometheus Metric Exporter*, only the serialization to Prometheus format is not done automatically
+   Works similar to the approach previously implemented in the *Prometheus Metric Exporter*, only the serialization to Prometheus format is not done automatically
  * Prometheus Metric Exporter: **BREAKING CHANGE** Removed the possibility to fetch prometheus metrics via inter-process communication within a PM2 cluster
  * Metrics Collector: Uses now [OpenTelemetry](https://opentelemetry.io/docs/specs/otel/metrics/) to gather and export metrics. Changes:
      * The collector service supports now asynchronous metric gathering via callback 
@@ -72,7 +75,7 @@
  * mashroom-utils refactoring: Added an index file that should be used exclusively to import utils
    **BREAKING CHANGE**: If you have used mashroom-utils in your custom plugins you have to change the imports
  * LDAP Security Provider: Fixed escaping of special characters in the DN. Didn't work if the same special character occurred multiple times.
- * Dropped support for Node.js 16 - required is now 18 or 20
+ * Dropped support for Node.js 16 - required is now >= 18
  * All 3rd party libraries upgrades and switched to npm workspaces for dependency management
    **BREAKING CHANGE**: The *request.session* type no longer accept any property, you have to declare your session properties like this now:
    ```typescript
@@ -84,7 +87,7 @@
    ```
  * File Storage: Performance improvements:
    * It polls for external changes to the DB file every **checkExternalChangePeriodMs** instead with every access.
-     This will reduce the CPU load slightly. Default value of checkExternalChangePeriodMs is now 100, but you can increase it further
+     This will reduce the CPU load slightly. Default value of *checkExternalChangePeriodMs* is now 100, but you can increase it further
      if you run a single server, the config is readonly or performance is more important than consistency
    * The DB file will no longer be reloaded periodically, but only if the modified timestamp of the DB file changes
  * HTTP Proxy: fixed deprecated API usages
