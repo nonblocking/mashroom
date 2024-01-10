@@ -3,10 +3,10 @@
 @use "variables" as *;
 
 // Reset styles
-@use "../../../../../../node_modules/bootstrap/scss/bootstrap-reboot";
+@use "bootstrap/scss/bootstrap-reboot";
 
 // Bootstrap grid
-@use "../../../../../../node_modules/bootstrap/scss/bootstrap-grid";
+@use "bootstrap/scss/bootstrap-grid";
 
 @keyframes spin {
     0% {

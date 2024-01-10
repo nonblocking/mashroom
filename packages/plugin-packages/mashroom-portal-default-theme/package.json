@@ -28,7 +28,7 @@
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev-server.js\"",
         "build:backend": "babel src/backend -d dist --extensions .ts",
         "build:frontend": "webpack --mode production",
-        "build:style": "sass --style compressed --no-source-map --load-path=. src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
+        "build:style": "sass --style compressed --no-source-map --load-path=./node_modules --load-path=../../../node_modules src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
         "build:copy-assets": "cpy \"src/assets/*\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome",
         "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
     },
