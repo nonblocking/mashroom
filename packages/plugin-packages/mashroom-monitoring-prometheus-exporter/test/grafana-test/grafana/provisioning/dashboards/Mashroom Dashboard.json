@@ -381,16 +381,36 @@
             "pluginVersion": "8.5.5",
             "targets": [
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
                     "expr": "nodejs_heap_size_total_bytes{service=\"Mashroom\"} / 1024 / 1024",
                     "interval": "",
                     "legendFormat": "Heap Total",
                     "refId": "A"
                 },
                 {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
                     "expr": "nodejs_heap_size_used_bytes{service=\"Mashroom\"} / 1024 / 1024",
                     "interval": "",
                     "legendFormat": "Heap Used",
                     "refId": "B"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "editorMode": "code",
+                    "expr": "process_resident_memory_bytes{service=\"Mashroom\"} / 1024 / 1024",
+                    "hide": false,
+                    "legendFormat": "Total (RSS)",
+                    "range": true,
+                    "refId": "C"
                 }
             ],
             "title": "Memory Usage",
@@ -560,27 +580,39 @@
             "pluginVersion": "8.5.5",
             "targets": [
                 {
-                    "expr": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{kind=\"major\"}[5m])) by (le))",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "sum(rate(nodejs_gc_duration_seconds_sum{kind=\"major\"}[5m])) * 300",
                     "interval": "",
                     "legendFormat": "GC Duration Major",
                     "refId": "A"
                 },
                 {
-                    "expr": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{kind=\"minor\"}[5m])) by (le))",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "sum(rate(nodejs_gc_duration_seconds_sum{kind=\"minor\"}[5m])) * 300",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "GC Duration Minor",
                     "refId": "B"
                 },
                 {
-                    "expr": "histogram_quantile(0.95, sum(rate(nodejs_gc_duration_seconds_bucket{kind=\"incremental\"}[5m])) by (le))",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "sum(rate(nodejs_gc_duration_seconds_sum{kind=\"incremental\"}[5m])) * 300",
                     "hide": false,
                     "interval": "",
                     "legendFormat": "GC Duration Incr",
                     "refId": "C"
                 }
             ],
-            "title": "V8 Garbage Collector",
+            "title": "GC Duration last 5min",
             "type": "timeseries"
         },
         {
@@ -646,7 +678,7 @@
                 "x": 0,
                 "y": 10
             },
-            "id": 16,
+            "id": 32,
             "options": {
                 "legend": {
                     "calcs": [],
@@ -868,7 +900,7 @@
                 "x": 16,
                 "y": 10
             },
-            "id": 18,
+            "id": 33,
             "options": {
                 "legend": {
                     "calcs": [],
@@ -883,13 +915,17 @@
             "pluginVersion": "8.5.5",
             "targets": [
                 {
-                    "expr": "mashroom_websocket_connections_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "sum(rate(mashroom_http_proxy_requests_http_total{service=\"Mashroom\"}[5m]))",
                     "interval": "",
-                    "legendFormat": "Total",
-                    "refId": "A"
+                    "legendFormat": "Error",
+                    "refId": "B"
                 }
             ],
-            "title": "WebSocket Connections (Messaging)",
+            "title": "HTTP Proxy Request Rate",
             "type": "timeseries"
         },
         {
@@ -955,7 +991,7 @@
                 "x": 0,
                 "y": 15
             },
-            "id": 22,
+            "id": 35,
             "options": {
                 "legend": {
                     "calcs": [],
@@ -970,19 +1006,37 @@
             "pluginVersion": "8.5.5",
             "targets": [
                 {
-                    "expr": "mashroom_plugins_loaded_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_remote_apps_k8s_total{service=\"Mashroom\"}",
                     "interval": "",
-                    "legendFormat": "Loaded",
+                    "legendFormat": "Total",
+                    "refId": "A"
+                },
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_remote_apps_k8s_error_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Error",
                     "refId": "B"
                 },
                 {
-                    "expr": "mashroom_plugins_error_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_remote_apps_k8s_connection_timeout_total{service=\"Mashroom\"}",
                     "interval": "",
-                    "legendFormat": "Error",
+                    "legendFormat": "Connection Timeout",
                     "refId": "C"
                 }
             ],
-            "title": "Plugins",
+            "title": "Remote Portal Apps K8S",
             "type": "timeseries"
         },
         {
@@ -1147,6 +1201,277 @@
                 "x": 16,
                 "y": 15
             },
+            "id": 34,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "8.5.5",
+            "targets": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "sum(rate(mashroom_portal_remote_resources_requests_total{service=\"Mashroom\"}[5m]))",
+                    "interval": "",
+                    "legendFormat": "Error",
+                    "refId": "B"
+                }
+            ],
+            "title": "Remote App Resource Fetch Rate",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "links": [],
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 0,
+                "y": 20
+            },
+            "id": 22,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "8.5.5",
+            "targets": [
+                {
+                    "expr": "mashroom_plugins_loaded_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Loaded",
+                    "refId": "B"
+                },
+                {
+                    "expr": "mashroom_plugins_error_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Error",
+                    "refId": "C"
+                }
+            ],
+            "title": "Plugins",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "links": [],
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 8,
+                "y": 20
+            },
+            "id": 18,
+            "options": {
+                "legend": {
+                    "calcs": [],
+                    "displayMode": "list",
+                    "placement": "bottom"
+                },
+                "tooltip": {
+                    "mode": "multi",
+                    "sort": "none"
+                }
+            },
+            "pluginVersion": "8.5.5",
+            "targets": [
+                {
+                    "expr": "mashroom_websocket_connections_total{service=\"Mashroom\"}",
+                    "interval": "",
+                    "legendFormat": "Total",
+                    "refId": "A"
+                }
+            ],
+            "title": "WebSocket Connections Messaging",
+            "type": "timeseries"
+        },
+        {
+            "datasource": {
+                "type": "prometheus",
+                "uid": "PBFA97CFB590B2093"
+            },
+            "fieldConfig": {
+                "defaults": {
+                    "color": {
+                        "mode": "palette-classic"
+                    },
+                    "custom": {
+                        "axisLabel": "",
+                        "axisPlacement": "auto",
+                        "barAlignment": 0,
+                        "drawStyle": "line",
+                        "fillOpacity": 10,
+                        "gradientMode": "none",
+                        "hideFrom": {
+                            "legend": false,
+                            "tooltip": false,
+                            "viz": false
+                        },
+                        "lineInterpolation": "linear",
+                        "lineWidth": 1,
+                        "pointSize": 5,
+                        "scaleDistribution": {
+                            "type": "linear"
+                        },
+                        "showPoints": "never",
+                        "spanNulls": false,
+                        "stacking": {
+                            "group": "A",
+                            "mode": "none"
+                        },
+                        "thresholdsStyle": {
+                            "mode": "off"
+                        }
+                    },
+                    "links": [],
+                    "mappings": [],
+                    "thresholds": {
+                        "mode": "absolute",
+                        "steps": [
+                            {
+                                "color": "green",
+                                "value": null
+                            },
+                            {
+                                "color": "red",
+                                "value": 80
+                            }
+                        ]
+                    },
+                    "unit": "short"
+                },
+                "overrides": []
+            },
+            "gridPos": {
+                "h": 5,
+                "w": 8,
+                "x": 16,
+                "y": 20
+            },
             "id": 24,
             "options": {
                 "legend": {
@@ -1212,7 +1537,7 @@
                 "h": 3,
                 "w": 4,
                 "x": 0,
-                "y": 20
+                "y": 25
             },
             "id": 26,
             "links": [],
@@ -1282,7 +1607,7 @@
                 "h": 3,
                 "w": 4,
                 "x": 4,
-                "y": 20
+                "y": 25
             },
             "id": 27,
             "links": [],
@@ -1352,7 +1677,7 @@
                 "h": 3,
                 "w": 4,
                 "x": 8,
-                "y": 20
+                "y": 25
             },
             "id": 28,
             "links": [],
@@ -1422,7 +1747,7 @@
                 "h": 3,
                 "w": 4,
                 "x": 12,
-                "y": 20
+                "y": 25
             },
             "id": 29,
             "links": [],
@@ -1492,7 +1817,7 @@
                 "h": 3,
                 "w": 4,
                 "x": 16,
-                "y": 20
+                "y": 25
             },
             "id": 30,
             "links": [],
@@ -1562,7 +1887,7 @@
                 "h": 3,
                 "w": 4,
                 "x": 20,
-                "y": 20
+                "y": 25
             },
             "id": 31,
             "links": [],
@@ -1620,6 +1945,6 @@
     "timezone": "",
     "title": "Mashroom",
     "uid": "Du04HfgMz",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
 }
