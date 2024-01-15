@@ -41,7 +41,7 @@ The plugin allows the following configuration properties:
             "versionHashSalt": null,
             "resourceFetchConfig": {
                 "fetchTimeoutMs": 3000,
-                "httpMaxSocketsPerHost": 10,
+                "httpMaxSocketsPerHost": 3,
                 "httpRejectUnauthorized": true
             },
             "defaultProxyConfig": {

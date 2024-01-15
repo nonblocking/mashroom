@@ -616,7 +616,7 @@
                                 },
                                 "httpMaxSocketsPerHost": {
                                     "type": "number",
-                                    "description": "Max sockets per host for fetching resources from Remote Apps (Default: 10)"
+                                    "description": "Max sockets per host for fetching resources from Remote Apps (Default: 3)"
                                 },
                                 "httpRejectUnauthorized": {
                                     "type": "boolean",

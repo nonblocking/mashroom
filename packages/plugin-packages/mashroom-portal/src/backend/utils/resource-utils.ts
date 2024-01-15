@@ -82,7 +82,7 @@ export const streamResource = async (resourceUri: string, res: Response, logger:
         await pipeline(stream, res);
     } catch (e: any) {
         if (isTimeoutError(e)) {
-             countRemoteResourceTimeout(resourceUri);
+            countRemoteResourceTimeout(resourceUri);
         } else {
             countRemoteResourceConnectionError(resourceUri);
         }
