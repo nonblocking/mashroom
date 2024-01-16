@@ -39,6 +39,10 @@ export const isTimeoutError = (error: Error) => {
     return error instanceof ResourceFetchAbortedError;
 };
 
+export const isAbortedByClientError = (res: Response, error: Error) => {
+    return res.headersSent && 'code' in error && (error as NodeJS.ErrnoException).code === 'ERR_STREAM_PREMATURE_CLOSE';
+};
+
 export const setupResourceFetchHttpAgents = (logger: MashroomLogger) => {
     logger.info('Setting up resource fetch agents with config:', context.portalPluginConfig.resourceFetchConfig);
     const {httpMaxSocketsPerHost, httpRejectUnauthorized} = context.portalPluginConfig.resourceFetchConfig;
@@ -81,6 +85,10 @@ export const streamResource = async (resourceUri: string, res: Response, logger:
         }
         await pipeline(stream, res);
     } catch (e: any) {
+        if (isAbortedByClientError(res, e)) {
+            logger.info('Resource fetching aborted by client:', resourceUri);
+            return;
+        }
         if (isTimeoutError(e)) {
             countRemoteResourceTimeout(resourceUri);
         } else {

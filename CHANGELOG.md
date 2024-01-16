@@ -4,6 +4,8 @@
 ## [unreleased]
 
 
+ * Portal: Don't log an error if the client aborted the connection (ERR_STREAM_PREMATURE_CLOSE)
+
 ## 2.5.0 (January 10, 2024)
 
  * PM2 Metric Exporter: Allows it now to grab the OpenTelemetry metrics from PM2 workers via inter-process communication.
@@ -29,7 +31,7 @@
             asyncCollectorService.gauge('http_pool_active_connections', 'HTTP Pool Active Connections').set(theValue);
         });
       ```
- * HTTP Portal: Added metrics for remote resource requests (*mashroom_portal_remote_resources_*), like request count, error count and pool stats
+ * Portal: Added metrics for remote resource requests (*mashroom_portal_remote_resources_*), like request count, error count and pool stats
  * HTTP Proxy: The proxies do no longer automatically add *x-forwarded-* headers, because if you are using public APIs you might not want
    to disclose details of your internal network. Added a new config property *createForwardedForHeaders* to explicitly turn this feature on again. 
    Also fixed the implementation, it takes now existing headers from reverse proxies into consideration and keeps them or
