@@ -4,7 +4,9 @@
 ## [unreleased]
 
 
- * Portal: Don't log an error if the client aborted the connection (ERR_STREAM_PREMATURE_CLOSE)
+## 2.5.1 (January 17, 2024)
+
+ * Portal: Doesn't log an error anymore if the client just aborted the connection (ERR_STREAM_PREMATURE_CLOSE)
 
 ## 2.5.0 (January 10, 2024)
 
