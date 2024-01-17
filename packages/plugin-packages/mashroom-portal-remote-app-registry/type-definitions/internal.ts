@@ -1,4 +1,5 @@
 
+import type {MashroomPluginPackageDefinition} from '@mashroom/mashroom/type-definitions';
 import type {Request, RequestHandler} from 'express';
 import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
 import type {
@@ -11,6 +12,16 @@ declare module 'express-session' {
         __MASHROOM_PORTAL_REMOTE_APPS?: Array<MashroomPortalApp>;
         __MASHROOM_PORTAL_REMOTE_APP_ENDPOINTS?: Array<RemotePortalAppEndpoint>;
     }
+}
+
+export type RemoteAppPackageJson = {
+    readonly name: string;
+    readonly version: string;
+    readonly description?: string;
+    readonly author?: string;
+    readonly homepage?: string;
+    readonly license?: string;
+    readonly mashroom?: MashroomPluginPackageDefinition;
 }
 
 export type RemotePortalAppEndpointAddRequest = {

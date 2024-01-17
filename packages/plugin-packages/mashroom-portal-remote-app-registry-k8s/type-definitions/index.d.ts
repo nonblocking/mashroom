@@ -1,6 +1,17 @@
 
+import type {MashroomPluginPackageDefinition} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
 import type {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
+
+export type RemoteAppPackageJson = {
+    readonly name: string;
+    readonly version: string;
+    readonly description?: string;
+    readonly author?: string;
+    readonly homepage?: string;
+    readonly license?: string;
+    readonly mashroom?: MashroomPluginPackageDefinition;
+}
 
 export interface ScanBackgroundJob {
     run(): void;

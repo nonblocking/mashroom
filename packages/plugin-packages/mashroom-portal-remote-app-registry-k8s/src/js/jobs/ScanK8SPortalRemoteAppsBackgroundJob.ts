@@ -11,7 +11,7 @@ import type {
     MashroomPluginPackageDefinition
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
-import type {KubernetesConnector, KubernetesService, ScanBackgroundJob, KubernetesServiceInvalidPortalApp} from '../../../type-definitions';
+import type {KubernetesConnector, KubernetesService, ScanBackgroundJob, KubernetesServiceInvalidPortalApp, RemoteAppPackageJson} from '../../../type-definitions';
 
 type ServicePortalApps = {
     readonly foundPortalApps: Array<MashroomPortalApp>;
@@ -117,7 +117,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                             if (service) {
                                 if (this._accessViaClusterIP && headlessService) {
                                     service = {
-                                        ...service, status: 'Headless Service',
+                                        ...service,
+                                        status: 'Headless Service',
                                         foundPortalApps: []
                                     };
                                     context.registry.addOrUpdateService(service);
@@ -205,7 +206,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         }
     }
 
-    private async _loadPackageJson(serviceUrl: string): Promise<any | null> {
+    private async _loadPackageJson(serviceUrl: string): Promise<RemoteAppPackageJson | null> {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
@@ -250,11 +251,11 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         return configs.find((c) => !!c) as MashroomPluginPackageDefinition || null;
     }
 
-    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, service: KubernetesService): ServicePortalApps {
+    processPluginDefinition(packageJson: RemoteAppPackageJson | null, definition: MashroomPluginPackageDefinition | null, service: KubernetesService): ServicePortalApps {
         this._logger.debug(`Processing plugin definition of Kubernetes service: ${service.name}`, packageJson, definition);
 
-        if (!definition) {
-            definition = packageJson?.mashroom;
+        if (!definition && packageJson?.mashroom) {
+            definition = packageJson.mashroom;
         }
         if (!definition || !Array.isArray(definition.plugins)) {
             throw new Error(`No plugin definition found for Kubernetes service ${service.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
@@ -295,7 +296,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         };
     }
 
-    private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, service: KubernetesService): MashroomPortalApp {
+    private _mapPluginDefinition(packageJson: RemoteAppPackageJson | null, definition: MashroomPluginDefinition, service: KubernetesService): MashroomPortalApp {
         const version = definition.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${definition.name}: ${version}`);
 

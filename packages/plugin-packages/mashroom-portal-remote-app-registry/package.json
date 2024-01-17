@@ -47,7 +47,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint src test type-definitions --ext \".ts\" --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",

@@ -12,7 +12,7 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
 import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint, InvalidRemotePortalApp} from '../../../type-definitions';
-import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,} from '../../../type-definitions/internal';
+import type {RegisterPortalRemoteAppsBackgroundJob as RegisterPortalRemoteAppsBackgroundJobType,RemoteAppPackageJson} from '../../../type-definitions/internal';
 
 type ServicePortalApps = {
     readonly foundPortalApps: Array<MashroomPortalApp>;
@@ -105,11 +105,11 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         }
     }
 
-    processPluginDefinition(packageJson: any | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): ServicePortalApps {
+    processPluginDefinition(packageJson: RemoteAppPackageJson | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): ServicePortalApps {
         this._logger.debug(`Processing plugin definition of remote Portal App endpoint: ${remotePortalAppEndpoint.url}`, packageJson, definition);
 
-        if (!definition) {
-            definition = packageJson?.mashroom;
+        if (!definition && packageJson?.mashroom) {
+            definition = packageJson.mashroom;
         }
         if (!definition || !Array.isArray(definition.plugins)) {
             throw new Error(`No plugin definition found for remote Portal App endpoint: ${remotePortalAppEndpoint.url}. Neither an external plugin definition file nor a "mashroom" property in package.json has been found.`);
@@ -150,7 +150,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         };
     }
 
-    private _mapPluginDefinition(packageJson: any | null, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
+    private _mapPluginDefinition(packageJson: RemoteAppPackageJson | null, definition: MashroomPluginDefinition, remotePortalAppEndpoint: RemotePortalAppEndpoint): MashroomPortalApp {
         const version = definition.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${definition.name}: ${version}`);
 
@@ -299,7 +299,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         return portalApp;
     }
 
-    private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<any | null> {
+    private async _loadPackageJson(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<RemoteAppPackageJson | null> {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
