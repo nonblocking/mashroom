@@ -80,8 +80,9 @@ To register your custom background-job plugin add this to _package.json_:
                 "type": "background-job",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
                 "defaultConfig": {
-                    "cronSchedule": "0/1 * * * *",
-                    "yourConfigProp": "whatever"
+                   "cronSchedule": "0/1 * * * *",
+                   "invokeImmediately": false,
+                   "yourConfigProp": "whatever"
                 }
             }
         ]
@@ -91,6 +92,7 @@ To register your custom background-job plugin add this to _package.json_:
 
  * _cronSchedule_: The execution schedule for the job, must be a valid cron expression, see [node-cron](https://github.com/node-cron/node-cron);
    if this is null or undefined the job is executed exactly one during startup.
+ * _invokeImmediately_: Optional hint that the job should additionally be invoked immediately (Default: false)
 
 The bootstrap returns the job callback:
 

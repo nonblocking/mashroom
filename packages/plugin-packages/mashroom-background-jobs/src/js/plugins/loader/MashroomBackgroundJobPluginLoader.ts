@@ -36,9 +36,15 @@ export default class MashroomBackgroundJobPluginLoader implements MashroomPlugin
         this._logger.info(`Registering background job plugin: ${plugin.name} with schedule: ${cronSchedule}`);
         this._registry.register(plugin.name, cronSchedule, jobCallback);
 
-        // Start job
+        // Schedule job
         const backgroundJobsService: MashroomBackgroundJobService = this._pluginContextHolder.getPluginContext().services.backgroundJobs!.service;
-        backgroundJobsService.scheduleJob(plugin.name, cronSchedule, jobCallback);
+        const job = backgroundJobsService.scheduleJob(plugin.name, cronSchedule, jobCallback);
+
+        // Start now if invokeImmediately is true
+        if (config.invokeImmediately === true) {
+            this._logger.info(`Invoking background job ${plugin.name} immediately`);
+            job.invokeNow();
+        }
     }
 
     async unload(plugin: MashroomPlugin): Promise<void>  {
