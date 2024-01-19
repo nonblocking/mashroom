@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.5.1",
+    "version": "2.5.2",
     "sideEffects": false,
     "files": [
         "dist/**",
@@ -19,8 +19,8 @@
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.5.1",
-        "@mashroom/mashroom-portal": "2.5.1",
+        "@mashroom/mashroom-json-schemas": "2.5.2",
+        "@mashroom/mashroom-portal": "2.5.2",
         "@types/markdown-it": "^12.2.3",
         "@types/react": "^18.2.0",
         "@types/react-dom": "^18.2.1"
