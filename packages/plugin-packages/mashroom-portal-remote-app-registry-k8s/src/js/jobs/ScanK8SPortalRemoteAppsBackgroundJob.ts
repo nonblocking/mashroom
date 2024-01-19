@@ -20,8 +20,8 @@ type ServicePortalApps = {
 
 export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgroundJob {
 
-    private _serviceNameFilter: RegExp;
-    private _logger: MashroomLogger;
+    private readonly _serviceNameFilter: RegExp;
+    private readonly _logger: MashroomLogger;
 
     constructor(private _k8sNamespacesLabelSelector: string | Array<string> | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
                 private _k8sServiceLabelSelector: string | Array<string> | null | undefined, serviceNameFilterStr: string | null | undefined,
@@ -32,36 +32,39 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         this._logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
     }
 
-    run(): void {
-        try {
-            this._scanKubernetesServices();
-        } finally {
-            context.oneFullScanDone = true;
-        }
+    run() {
+        (async () => {
+            try {
+                await this._scanKubernetesServices();
+            } finally {
+                context.oneFullScanDone = true;
+            }
+        })();
     }
 
     async _scanKubernetesServices(): Promise<void> {
         context.lastScan = Date.now();
         context.errors = [];
 
+        // Step 1: Determine K8S namespaces
+        this._logger.info('Start determine relevant namespaces');
         const namespaces = await this._determineNamespaces();
         context.namespaces = namespaces;
         const namespaceScanFailures = context.errors.length > 0;
         const namespaceServiceScanFailures: Array<string> = [];
 
+        // Step 2: Determine K8S services
+        this._logger.info('Starting scanning k8s namespaces: ', namespaces);
         const foundServices: Array<{ name: string, namespace: string }> = [];
+        const servicesToCheckForRemoteApps: Array<KubernetesService> = [];
 
-        this._logger.info('Starting scan of k8s namespaces: ', namespaces);
-
-        for (let nsIdx = 0; nsIdx < namespaces.length; nsIdx++) {
-            const namespace = namespaces[nsIdx];
+        await Promise.allSettled(namespaces.map(async (namespace, nsIdx) => {
             let labelSelectors: Array<string | undefined> = [undefined];
             if (this._k8sServiceLabelSelector) {
                 labelSelectors = Array.isArray(this._k8sServiceLabelSelector) ? this._k8sServiceLabelSelector : [this._k8sServiceLabelSelector];
             }
 
-            for (let serviceSelectorIdx = 0; serviceSelectorIdx < labelSelectors.length; serviceSelectorIdx++) {
-                const labelSelector = labelSelectors[serviceSelectorIdx];
+            await Promise.allSettled(labelSelectors.map(async (labelSelector, serviceSelectorIdx) => {
                 try {
                     const res = await this._kubernetesConnector.getNamespaceServices(namespace, labelSelector);
                     const serviceItems = res.items;
@@ -124,8 +127,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                                     context.registry.addOrUpdateService(service);
                                 } else {
                                     context.registry.addOrUpdateService(service);
-                                    await this._checkServiceForRemotePortalApps(service);
-                                    context.registry.addOrUpdateService(service);
+                                    servicesToCheckForRemoteApps.push(service);
                                 }
                             }
                         }
@@ -135,10 +137,17 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     context.errors.push(`Error scanning services in namespace ${namespace} with label selector ${labelSelector}: ${error.message}`);
                     this._logger.error(`Error scanning services in namespace ${namespace} with label selector ${labelSelector}`, error);
                 }
-            }
-        }
+            }));
+        }));
 
-        // Remove services that no longer exist, but only if the K8S API calls didn't fail
+        // Step 3: Check for Remote Apps (in parallel)
+        this._logger.info('Starting scanning services: ', servicesToCheckForRemoteApps.length);
+        await Promise.allSettled((servicesToCheckForRemoteApps.map(async (service) => {
+            await this._checkServiceForRemotePortalApps(service);
+            context.registry.addOrUpdateService(service);
+        })));
+
+        // Step 4: Remove services that no longer exist, but only if the K8S API calls didn't fail
         const missingServices = context.registry.services.filter(({name, namespace}) => !foundServices.find((s) => s.namespace === namespace && s.name === name));
         missingServices.forEach(({name, namespace}) => {
             const serviceNamespaceRemoved = !namespaceScanFailures && namespaces.indexOf(namespace) === -1;

@@ -21,8 +21,8 @@ type ServicePortalApps = {
 
 export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPortalRemoteAppsBackgroundJobType {
 
-    private _externalPluginConfigFileNames: Array<string>;
-    private _logger: MashroomLogger;
+    private readonly _externalPluginConfigFileNames: Array<string>;
+    private readonly _logger: MashroomLogger;
 
     constructor(private _socketTimeoutSec: number , private _registrationRefreshIntervalSec: number, private _unregisterAppsAfterScanErrors: number, private _pluginContextHolder: MashroomPluginContextHolder) {
         const pluginContext = _pluginContextHolder.getPluginContext();
@@ -30,12 +30,14 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         this._logger = pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
     }
 
-    run(): void {
-        try {
-            this._processInBackground();
-        } finally {
-            context.oneFullScanDone = true;
-        }
+    run() {
+        (async () => {
+            try {
+                await this._processInBackground();
+            } finally {
+                context.oneFullScanDone = true;
+            }
+        })();
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {
@@ -96,13 +98,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint!.service;
         const endpoints = await portalRemoteAppEndpointService.findAll();
 
-        for (const remotePortalAppEndpoint of endpoints) {
+        await Promise.allSettled(endpoints.map(async (remotePortalAppEndpoint) => {
             const {registrationTimestamp, portalApps, lastError} = remotePortalAppEndpoint;
             const unregisteredApps = portalApps.some((remoteApp) => !context.registry.portalApps.find((registeredApp) => registeredApp.name === remoteApp.name));
             if (unregisteredApps || lastError || !registrationTimestamp || Date.now() - registrationTimestamp > this._registrationRefreshIntervalSec * 1000) {
                 await this.refreshEndpointRegistration(remotePortalAppEndpoint);
             }
-        }
+        }));
     }
 
     processPluginDefinition(packageJson: RemoteAppPackageJson | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): ServicePortalApps {
