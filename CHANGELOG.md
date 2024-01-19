@@ -3,8 +3,10 @@
 
 ## [unreleased]
 
+## 2.5.2 (January 19, 2024)
+
  * Background Jobs: Fixed measuring execution time for async jobs
- * Background Jobs: Added a config property *invokeImmediately* which additionally to the cron schedule invokes the job immediately when true
+ * Background Jobs: Added a config property *invokeImmediately* to invoke the job immediately once (in addition to the cron schedule)
  * Remote App Registry and K8S Remote App Registry: Made sure the plugins do not get ready until the first full scan has completed. 
    On Kubernetes this means the Pod only gets ready if all Remote Apps have been registered already. 
 
