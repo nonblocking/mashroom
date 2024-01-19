@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Background Jobs: Fixed measuring execution time for async jobs
+ * Background Jobs: Added a config property *invokeImmediately* which additionally to the cron schedule invokes the job immediately when true
  * Remote App Registry and K8S Remote App Registry: Made sure the plugins do not get ready until the first full scan has completed. 
    On Kubernetes this means the Pod only gets ready if all Remote Apps have been registered already. 
 
@@ -465,7 +467,7 @@
 
 ## 2.0.6 (June 1, 2022)
 
- * Remote App Registry and K8S remote app registry: Fixed registering Apps of type _portal-app2_ without SSR capability
+ * Remote App Registry and K8S Remote App Registry: Fixed registering Apps of type _portal-app2_ without SSR capability
  * HTTP Proxy: Added a retry if the target resets or drops the connection (ECONNRESET) which can happen when:
     * _keepAlive_ is activated and a reused connection is broken already (see https://nodejs.org/api/http.html#requestreusedsocket)
     * a Pod/instance is no longer/not yet available
@@ -501,8 +503,8 @@
 
 ## 2.0.4 (Mai 9, 2022)
 
- * Remote App Registry and K8S remote app registry: Show Apps with errors on top of the list in the Admin UI
- * K8S remote app registry: The Admin UI shows now all successfully registered Apps even if scanning some namespaces fails due to
+ * Remote App Registry and K8S Remote App Registry: Show Apps with errors on top of the list in the Admin UI
+ * K8S Remote App Registry: The Admin UI shows now all successfully registered Apps even if scanning some namespaces fails due to
    missing permissions
 
 ## 2.0.3 (Mai 6, 2022)
@@ -512,7 +514,7 @@
 
 ## 2.0.2 (Mai 2, 2022)
 
- * K8S remote app registry: The admin UI shows now the scanned namespaces
+ * K8S Remote App Registry: The admin UI shows now the scanned namespaces
  * Portal: If an App on a page cannot be found (if it is not registered (yet)), an error message will be displayed now instead of just showing nothing.
    The old behaviour can be restored by setting the *Mashroom Portal WebApp* config property *ignoreMissingAppsOnPages*.
    On the client side you can check if an App is in error state because the plugin does not exist with
@@ -780,14 +782,14 @@
  * Portal: **BREAKING CHANGE**: Removed *portalBasePath* from the page render model because it doesn't make sense in
    combination with the vhost path mapper. Only use *siteBasePath*.
  * Portal: Client log messages contain now the path of the page where they were generated
- * K8S remote app registry: Added the possibility to filter services by [label selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors)
+ * K8S Remote App Registry: Added the possibility to filter services by [label selectors](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors)
    Example:
    ```json
      "k8sNamespacesLabelSelector": "environment=development,tier=frontend",
      "k8sNamespaces": null,
      "k8sServiceLabelSelector": "microfrontend=true,channel!=alpha"
    ```
- * K8S remote app registry: Added the possibility to scan in namespaces identified by a [labelSelector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors).
+ * K8S Remote App Registry: Added the possibility to scan in namespaces identified by a [labelSelector](https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/#label-selectors).
    Example: Scan all services in namespaces with label _environment=development_ and _microfrontend_ in the name:
    ```json
      "k8sNamespacesLabelSelector": "environment=development",
@@ -997,7 +999,7 @@
 ## 1.7.6 (May 10, 2021)
 
  * Portal: Disable the browser caching for all pages if a CSRF token is present, otherwise stale tokens could be used
- * K8S remote app registry: Improved compatibility with Kubernetes 1.20
+ * K8S Remote App Registry: Improved compatibility with Kubernetes 1.20
  * Added the possibility to delay the server shutdown after receiving SIGTERM via environment variable *WAIT_BEFORE_SERVER_CLOSE*,
    which contains the seconds to wait.
    This is required for a non-disruptive rolling deployment on Kubernetes where the kube-proxy takes some time to rewrite iptables.
