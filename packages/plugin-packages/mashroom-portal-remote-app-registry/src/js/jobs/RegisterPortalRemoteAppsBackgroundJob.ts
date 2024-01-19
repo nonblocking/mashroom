@@ -30,14 +30,12 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         this._logger = pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
     }
 
-    run() {
-        (async () => {
-            try {
-                await this._processInBackground();
-            } finally {
-                context.oneFullScanDone = true;
-            }
-        })();
+    async run() {
+        try {
+            await this._processInBackground();
+        } finally {
+            context.oneFullScanDone = true;
+        }
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {
@@ -94,7 +92,9 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
     }
 
     async _processInBackground(): Promise<void> {
+        const startTime = Date.now();
         this._logger.info('Start processing remote Portal App endpoints');
+
         const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint!.service;
         const endpoints = await portalRemoteAppEndpointService.findAll();
 
@@ -105,6 +105,8 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                 await this.refreshEndpointRegistration(remotePortalAppEndpoint);
             }
         }));
+
+        this._logger.info(`Processed ${endpoints.length} endpoints in ${Date.now() - startTime}ms`);
     }
 
     processPluginDefinition(packageJson: RemoteAppPackageJson | null, definition: MashroomPluginPackageDefinition | null, remotePortalAppEndpoint: RemotePortalAppEndpoint): ServicePortalApps {

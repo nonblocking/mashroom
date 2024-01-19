@@ -32,29 +32,29 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         this._logger = loggerFactory('mashroom.portal.remoteAppRegistryK8s');
     }
 
-    run() {
-        (async () => {
-            try {
-                await this._scanKubernetesServices();
-            } finally {
-                context.oneFullScanDone = true;
-            }
-        })();
+    async run() {
+        try {
+            await this._scanKubernetesServices();
+        } finally {
+            context.oneFullScanDone = true;
+        }
     }
 
     async _scanKubernetesServices(): Promise<void> {
-        context.lastScan = Date.now();
+        const startTime = Date.now();
+        this._logger.info('Start processing remote Kubernetes Remote Portal Apps');
+
+        context.lastScan = startTime;
         context.errors = [];
 
         // Step 1: Determine K8S namespaces
-        this._logger.info('Start determine relevant namespaces');
         const namespaces = await this._determineNamespaces();
         context.namespaces = namespaces;
         const namespaceScanFailures = context.errors.length > 0;
         const namespaceServiceScanFailures: Array<string> = [];
 
         // Step 2: Determine K8S services
-        this._logger.info('Starting scanning k8s namespaces: ', namespaces);
+        this._logger.info('Start scanning Kubernetes namespaces: ', namespaces);
         const foundServices: Array<{ name: string, namespace: string }> = [];
         const servicesToCheckForRemoteApps: Array<KubernetesService> = [];
 
@@ -141,7 +141,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         }));
 
         // Step 3: Check for Remote Apps (in parallel)
-        this._logger.info('Starting scanning services: ', servicesToCheckForRemoteApps.length);
+        this._logger.info('Start scanning services: ', servicesToCheckForRemoteApps.length);
         await Promise.allSettled((servicesToCheckForRemoteApps.map(async (service) => {
             await this._checkServiceForRemotePortalApps(service);
             context.registry.addOrUpdateService(service);
@@ -156,6 +156,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                 context.registry.removeService(namespace, name);
             }
         });
+
+        this._logger.info(`Processed ${servicesToCheckForRemoteApps.length} services in ${namespaces.length} namespaces in ${Date.now() - startTime}ms`);
     }
 
     private async _determineNamespaces(): Promise<Array<string>> {

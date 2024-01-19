@@ -9,9 +9,6 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
     const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(socketTimeoutSec, registrationRefreshIntervalSec, unregisterAppsAfterScanErrors, pluginContextHolder);
     context.backgroundJob = registerBackgroundJob;
 
-    // Run immediately
-    registerBackgroundJob.run();
-
     return registerBackgroundJob.run.bind(registerBackgroundJob);
 };
 

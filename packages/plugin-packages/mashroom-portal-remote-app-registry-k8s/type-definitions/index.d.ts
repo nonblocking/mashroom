@@ -14,7 +14,7 @@ export type RemoteAppPackageJson = {
 }
 
 export interface ScanBackgroundJob {
-    run(): void;
+    run(): Promise<void>;
 }
 
 export interface KubernetesConnector {

@@ -63,6 +63,7 @@
                 ],
                 "defaultConfig": {
                     "cronSchedule": "0/1 * * * *",
+                    "invokeImmediately": true,
                     "k8sNamespacesLabelSelector": null,
                     "k8sNamespaces": [
                         "default"

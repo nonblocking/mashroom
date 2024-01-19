@@ -25,9 +25,6 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
         pluginContext.serverConfig.externalPluginConfigFileNames,
         kubernetesConnector, pluginContext.loggerFactory);
 
-    // Run immediately
-    backgroundJob.run();
-
     return backgroundJob.run.bind(backgroundJob);
 };
 

@@ -30,7 +30,7 @@ export type RemotePortalAppEndpointAddRequest = {
 }
 
 export interface RegisterPortalRemoteAppsBackgroundJob {
-    run(): void;
+    run(): Promise<void>;
     fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<RemotePortalAppEndpoint>;
     refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
 }

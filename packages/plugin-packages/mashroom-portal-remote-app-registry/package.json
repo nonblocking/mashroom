@@ -66,6 +66,7 @@
                 ],
                 "defaultConfig": {
                     "cronSchedule": "0/1 * * * *",
+                    "invokeImmediately": true,
                     "socketTimeoutSec": 3,
                     "registrationRefreshIntervalSec": 600,
                     "unregisterAppsAfterScanErrors": -1
