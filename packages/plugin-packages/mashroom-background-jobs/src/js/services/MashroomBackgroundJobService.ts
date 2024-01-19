@@ -21,7 +21,7 @@ type BackgroundJobExt = MashroomBackgroundJob & {
 type CallbackWrapper = {
     lastInvocation: JobInvocation | undefined;
     targetCallback: MashroomBackgroundJobCallback;
-    callback: () => void;
+    callback: () => Promise<void>;
 };
 
 export default class MashroomBackgroundJobService implements MashroomBackgroundJobServiceType {
@@ -87,11 +87,11 @@ export default class MashroomBackgroundJobService implements MashroomBackgroundJ
         const wrapper: CallbackWrapper = {
             targetCallback,
             lastInvocation: undefined,
-            callback: () => {
+            callback: async () => {
                 const timestamp = new Date();
                 this._logger.info(`Executing background job ${name}`);
                 try {
-                    targetCallback(this._pluginContextHolder.getPluginContext());
+                    await targetCallback(this._pluginContextHolder.getPluginContext());
                     const executionTimeMs = Date.now() - timestamp.getTime();
                     this._logger.info(`Background job ${name} completed after ${executionTimeMs}ms`);
                     wrapper.lastInvocation = {

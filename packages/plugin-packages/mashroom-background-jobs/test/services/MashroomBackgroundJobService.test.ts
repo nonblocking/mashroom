@@ -51,22 +51,40 @@ describe('MashroomBackgroundJobService', () => {
         expect(backgroundJobService.jobs.length).toBe(0);
     });
 
-    it('runs a job without a cron expression immediately', () => {
+    it('runs a job without a cron expression immediately', async () => {
         const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
-
-        let job: MashroomBackgroundJob | null = null;
 
         let executed = false;
         const jobCb = (pluginContext: any) => {
            executed = true;
         };
 
-        job = backgroundJobService.scheduleJob('Test Job', undefined, jobCb);
+        const job = backgroundJobService.scheduleJob('Test Job', undefined, jobCb);
+
+        await new Promise((resolve) => setTimeout(resolve, 1));
 
         expect(executed).toBeTruthy();
         expect(job.lastInvocation).toBeTruthy();
         expect(job.lastInvocation?.success).toBeTruthy();
     });
 
+    it('measures the execution time for async jobs correctly', async () => {
+        const backgroundJobService = new MashroomBackgroundJobService(pluginContextHolder);
+
+        let executed = false;
+        const jobCb = async (pluginContext: any) => {
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            executed = true;
+        };
+
+        const job = backgroundJobService.scheduleJob('Test Job', undefined, jobCb);
+
+        expect(executed).toBeFalsy();
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        expect(executed).toBeTruthy();
+        expect(job.lastInvocation?.executionTimeMs).toBeGreaterThan(1000);
+    });
 });
 

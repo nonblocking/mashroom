@@ -2,16 +2,16 @@
 
 import type {MashroomPluginContext, MashroomPluginConfig, MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 
-export type MashroomBackgroundJobCallback = (pluginContext: MashroomPluginContext) => void;
+export type MashroomBackgroundJobCallback = (pluginContext: MashroomPluginContext) => void | Promise<void>;
 
 export type JobInvocation = {
-    timestamp: Date;
-    success: boolean;
-    errorMessage?: ?string;
+    +timestamp: Date;
+    +success: boolean;
+    +errorMessage?: ?string;
 }
 
 export interface MashroomBackgroundJob {
-    name: string;
+    +name: string;
     lastInvocation: ?JobInvocation;
     nextInvocation: ?Date;
     invokeNow(): void;
