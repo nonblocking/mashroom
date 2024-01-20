@@ -209,7 +209,7 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
        mockFindAll.mockReset();
     });
 
-    it('scans a remote service', async () => {
+    it('scans an endpoint for Portal Apps', async () => {
         const endpoints: Array<RemotePortalAppEndpoint> = [{
             url: 'http://my-remote-app.io:6066',
             sessionOnly: false,
@@ -536,4 +536,31 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
         });
     });
 
+    it('handles timeouts correctly', async () => {
+        const endpoints: Array<RemotePortalAppEndpoint> = [{
+            url: 'http://my-remote-app.io:6066',
+            sessionOnly: false,
+            lastError: null,
+            retries: 0,
+            registrationTimestamp: null,
+            portalApps: [],
+            invalidPortalApps: [],
+        }];
+        mockFindAll.mockReturnValue(endpoints);
+
+        let updatedEndpoint: RemotePortalAppEndpoint | undefined;
+        mockUpdateRemotePortalAppEndpoint.mockImplementation((e) => updatedEndpoint = e);
+
+        nock('http://my-remote-app.io:6066')
+            .get('/package.json')
+            .delayConnection(2000)
+            .reply(200, packageJson);
+
+        const backgroundJob = new RegisterPortalRemoteAppsBackgroundJob(1, 10, -1, pluginContextHolder);
+
+        await backgroundJob._processInBackground();
+
+        expect(updatedEndpoint).toBeTruthy();
+        expect(updatedEndpoint?.lastError).toBe('Timeout: Connection to http://my-remote-app.io:6066 timed out after 1sec');
+    });
 });

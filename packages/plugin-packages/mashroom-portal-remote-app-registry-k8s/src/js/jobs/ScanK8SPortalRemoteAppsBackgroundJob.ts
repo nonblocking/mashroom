@@ -1,6 +1,6 @@
 
 import {URL} from 'url';
-import fetch from 'node-fetch';
+import fetch, {AbortError} from 'node-fetch';
 import {configUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
@@ -12,6 +12,8 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
 import type {KubernetesConnector, KubernetesService, ScanBackgroundJob, KubernetesServiceInvalidPortalApp, RemoteAppPackageJson} from '../../../type-definitions';
+
+const CHECK_SERVICE_BATCH_SIZE = 20;
 
 type ServicePortalApps = {
     readonly foundPortalApps: Array<MashroomPortalApp>;
@@ -58,13 +60,13 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const foundServices: Array<{ name: string, namespace: string }> = [];
         const servicesToCheckForRemoteApps: Array<KubernetesService> = [];
 
-        await Promise.allSettled(namespaces.map(async (namespace, nsIdx) => {
+        await Promise.all(namespaces.map(async (namespace, nsIdx) => {
             let labelSelectors: Array<string | undefined> = [undefined];
             if (this._k8sServiceLabelSelector) {
                 labelSelectors = Array.isArray(this._k8sServiceLabelSelector) ? this._k8sServiceLabelSelector : [this._k8sServiceLabelSelector];
             }
 
-            await Promise.allSettled(labelSelectors.map(async (labelSelector, serviceSelectorIdx) => {
+            await Promise.all(labelSelectors.map(async (labelSelector, serviceSelectorIdx) => {
                 try {
                     const res = await this._kubernetesConnector.getNamespaceServices(namespace, labelSelector);
                     const serviceItems = res.items;
@@ -140,12 +142,20 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             }));
         }));
 
-        // Step 3: Check for Remote Apps (in parallel)
+        // Step 3: Check for Remote Apps (always a bunch in parallel)
         this._logger.info('Start scanning services: ', servicesToCheckForRemoteApps.length);
-        await Promise.allSettled((servicesToCheckForRemoteApps.map(async (service) => {
-            await this._checkServiceForRemotePortalApps(service);
-            context.registry.addOrUpdateService(service);
-        })));
+        let promises: Array<Promise<void>> = [];
+        for (const service of servicesToCheckForRemoteApps) {
+            promises.push((async () => {
+                await this._checkServiceForRemotePortalApps(service); // Cannot fail
+                context.registry.addOrUpdateService(service); // Cannot fail
+            })());
+            if (promises.length >= CHECK_SERVICE_BATCH_SIZE) {
+                await Promise.all(promises);
+                promises = [];
+            }
+        }
+        await Promise.all(promises);
 
         // Step 4: Remove services that no longer exist, but only if the K8S API calls didn't fail
         const missingServices = context.registry.services.filter(({name, namespace}) => !foundServices.find((s) => s.namespace === namespace && s.name === name));
@@ -230,7 +240,10 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                 this._logger.warn(`Fetching package.json from ${serviceUrl} failed with status code ${result.status}`);
             }
         } catch (e) {
-            this._logger.warn(`Fetching package.json from ${serviceUrl} failed`, e);
+            if (e instanceof AbortError) {
+                throw new Error(`Timeout: Connection to ${serviceUrl} timed out after ${this._socketTimeoutSec}sec`);
+            }
+            throw e;
         } finally {
             clearTimeout(timeout);
         }
@@ -239,13 +252,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     private async _loadExternalPluginDefinition(serviceUrl: string): Promise<MashroomPluginPackageDefinition | null> {
         const promises = this._externalPluginConfigFileNames.map(async (name) => {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
             try {
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
                 const result = await fetch(`${serviceUrl}/${name}.json`, {
                     signal: controller.signal,
                 });
-                clearTimeout(timeout);
                 if (result.ok) {
                     const json = result.json();
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${serviceUrl}`);
@@ -254,7 +266,12 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                     this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
                 }
             } catch (e) {
-                this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed`, e);
+                if (e instanceof AbortError) {
+                    throw new Error(`Timeout: Connection to ${serviceUrl} timed out after ${this._socketTimeoutSec}sec`);
+                }
+                throw e;
+            } finally {
+                clearTimeout(timeout);
             }
         });
 

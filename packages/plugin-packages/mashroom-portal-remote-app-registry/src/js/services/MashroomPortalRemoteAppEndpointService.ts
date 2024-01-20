@@ -27,7 +27,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         if (!exists) {
             this._logger.info(`Adding remote portal app URL: ${url}`);
             const collection = await this._getRemotePortalAppEndpointsCollection();
-            await collection.insertOne({
+            const endpoint = await collection.insertOne({
                 url,
                 sessionOnly: false,
                 lastError: null,
@@ -37,7 +37,9 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
                 invalidPortalApps: [],
             });
 
-            context.backgroundJob.run();
+            if (context.backgroundJob) {
+                await context.backgroundJob.refreshEndpointRegistration(endpoint);
+            }
         }
     }
 
@@ -46,6 +48,9 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
         const portalAppEndpoints: Array<RemotePortalAppEndpoint> = request.session[SESSION_KEY_PORTAL_REMOTE_APP_ENDPOINTS] || [];
 
         if (portalAppEndpoints.find((endpoint) => endpoint.url === url)) {
+            return;
+        }
+        if (!context.backgroundJob) {
             return;
         }
 
@@ -121,7 +126,7 @@ export default class MashroomPortalRemoteAppEndpointService implements MashroomP
     }
 
     async refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void> {
-        await context.backgroundJob.refreshEndpointRegistration(remotePortalAppEndpoint);
+        await context.backgroundJob?.refreshEndpointRegistration(remotePortalAppEndpoint);
     }
 
     private async _getRemotePortalAppEndpointsCollection(): Promise<MashroomStorageCollection<RemotePortalAppEndpoint>> {

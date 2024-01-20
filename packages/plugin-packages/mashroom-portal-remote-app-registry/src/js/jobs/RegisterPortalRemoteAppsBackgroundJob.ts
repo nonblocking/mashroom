@@ -1,6 +1,6 @@
 
 import {URL} from 'url';
-import fetch from 'node-fetch';
+import fetch, {AbortError} from 'node-fetch';
 import {configUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
@@ -57,20 +57,25 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             context.registry.unregisterRemotePortalApp(portalApp.name);
         });
 
-        await portalRemoteAppEndpointService.updateRemotePortalAppEndpoint(updatedEndpoint);
+        try {
+            await portalRemoteAppEndpointService.updateRemotePortalAppEndpoint(updatedEndpoint);
+        } catch (e) {
+            this._logger.error('Updating/storing remote Portal App endpoint failed!', e);
+        }
     }
 
     async fetchPortalAppDataAndUpdateEndpoint(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<RemotePortalAppEndpoint> {
-        this._logger.info(`Fetching remote endpoint data from URL: ${remotePortalAppEndpoint.url}`);
+        this._logger.info(`Fetching remote Portal App endpoint data from URL: ${remotePortalAppEndpoint.url}`);
 
         try {
             const externalPluginDefinition = await this._loadExternalPluginDefinition(remotePortalAppEndpoint);
             const packageJson = await this._loadPackageJson(remotePortalAppEndpoint);
 
             const {foundPortalApps, invalidPortalApps} = this.processPluginDefinition(packageJson, externalPluginDefinition, remotePortalAppEndpoint);
-            this._logger.info(`Registering Portal Apps for endpoint: ${remotePortalAppEndpoint.url}:`, foundPortalApps);
+            this._logger.info(`Registering remote Portal Apps for endpoint: ${remotePortalAppEndpoint.url}:`, foundPortalApps);
             return {
-                ...remotePortalAppEndpoint, lastError: null,
+                ...remotePortalAppEndpoint,
+                lastError: null,
                 retries: 0,
                 registrationTimestamp: Date.now(),
                 portalApps: foundPortalApps,
@@ -82,7 +87,8 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
             const removeRegisteredApps = this._unregisterAppsAfterScanErrors > -1 && remotePortalAppEndpoint.retries >= this._unregisterAppsAfterScanErrors;
             return {
-                ...remotePortalAppEndpoint, lastError: error.message,
+                ...remotePortalAppEndpoint,
+                lastError: error.message,
                 retries: remotePortalAppEndpoint.retries + 1,
                 registrationTimestamp: null,
                 portalApps: removeRegisteredApps ? [] : remotePortalAppEndpoint.portalApps,
@@ -98,13 +104,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = this._pluginContextHolder.getPluginContext().services.remotePortalAppEndpoint!.service;
         const endpoints = await portalRemoteAppEndpointService.findAll();
 
-        await Promise.allSettled(endpoints.map(async (remotePortalAppEndpoint) => {
+        for (const remotePortalAppEndpoint of endpoints) {
             const {registrationTimestamp, portalApps, lastError} = remotePortalAppEndpoint;
             const unregisteredApps = portalApps.some((remoteApp) => !context.registry.portalApps.find((registeredApp) => registeredApp.name === remoteApp.name));
             if (unregisteredApps || lastError || !registrationTimestamp || Date.now() - registrationTimestamp > this._registrationRefreshIntervalSec * 1000) {
                 await this.refreshEndpointRegistration(remotePortalAppEndpoint);
             }
-        }));
+        }
 
         this._logger.info(`Processed ${endpoints.length} endpoints in ${Date.now() - startTime}ms`);
     }
@@ -316,7 +322,10 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                 this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
             }
         } catch (e) {
-            this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed`, e);
+            if (e instanceof AbortError) {
+                throw new Error(`Timeout: Connection to ${remotePortalAppEndpoint.url} timed out after ${this._socketTimeoutSec}sec`);
+            }
+            throw e;
         } finally {
             clearTimeout(timeout);
         }
@@ -325,13 +334,13 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
 
     private async _loadExternalPluginDefinition(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<MashroomPluginPackageDefinition | null> {
         const promises = this._externalPluginConfigFileNames.map(async (name) => {
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
             try {
-                const controller = new AbortController();
-                const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
                 const result = await fetch(`${remotePortalAppEndpoint.url}/${name}.json`, {
                     signal: controller.signal,
                 });
-                clearTimeout(timeout);
+
                 if (result.ok) {
                     const json = result.json();
                     this._logger.debug(`Fetched plugin definition ${name}.json from ${remotePortalAppEndpoint.url}`);
@@ -340,7 +349,12 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                     this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
                 }
             } catch (e) {
-                this._logger.debug(`Fetching ${name}.json from ${remotePortalAppEndpoint.url} failed`, e);
+                if (e instanceof AbortError) {
+                    throw new Error(`Timeout: Connection to ${remotePortalAppEndpoint.url} timed out after ${this._socketTimeoutSec}sec`);
+                }
+                throw e;
+            } finally {
+                clearTimeout(timeout);
             }
         });
 

@@ -15,7 +15,7 @@ export const registerRemoteAppMetrics = (pluginContextHolder: MashroomPluginCont
                 const services = context.registry.services;
                 const servicesTotal = services.length;
                 const servicesWithError = services.filter((s) => !!s.error).length;
-                const servicesWithTimeouts = services.filter((s) => s.error && s.error.indexOf('ETIMEDOUT') !== -1).length;
+                const servicesWithTimeouts = services.filter((s) => s.error && s.error.indexOf('Timeout') !== -1).length;
 
                 asyncCollectorService.gauge('mashroom_remote_apps_k8s_total', 'Mashroom Kubernetes Remote Apps Total').set(servicesTotal);
                 asyncCollectorService.gauge('mashroom_remote_apps_k8s_error_total', 'Mashroom Kubernetes Remote Apps With Error').set(servicesWithError);

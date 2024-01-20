@@ -16,7 +16,7 @@ export const registerRemoteAppMetrics = (pluginContextHolder: MashroomPluginCont
                 const endpoints = await portalRemoteAppEndpointService.findAll();
                 const endpointsTotal = endpoints.length;
                 const endpointsWithError = endpoints.filter((e) => !!e.lastError).length;
-                const endpointsWithTimeouts = endpoints.filter((e) => e.lastError && e.lastError.indexOf('ETIMEDOUT') !== -1).length;
+                const endpointsWithTimeouts = endpoints.filter((e) => e.lastError && e.lastError.indexOf('Timeout') !== -1).length;
 
                 asyncCollectorService.gauge('mashroom_remote_apps_total', 'Mashroom Remote Apps Total').set(endpointsTotal);
                 asyncCollectorService.gauge('mashroom_remote_apps_error_total', 'Mashroom Remote Apps With Error').set(endpointsWithError);

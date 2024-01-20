@@ -45,7 +45,7 @@ export interface RemotePortalAppRegistry extends MashroomRemotePortalAppRegistry
 export type Context = {
     readonly registry: RemotePortalAppRegistry;
     webUIShowAddRemoteAppForm: boolean;
-    backgroundJob: RegisterPortalRemoteAppsBackgroundJob;
+    backgroundJob: RegisterPortalRemoteAppsBackgroundJob | null;
     oneFullScanDone: boolean;
 }
 

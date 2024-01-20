@@ -548,4 +548,24 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(context.registry.services[0].port).toBe(6067);
         expect(context.registry.services[0].url).toBe('http://my-remote-app.dev-namespace2:6067');
     });
+
+    it('handles timeouts correctly', async () => {
+        nock('http://my-remote-app.dev-namespace2:6066')
+            .get('/package.json')
+            .delayConnection(2000)
+            .reply(200, packageJson);
+
+        const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 1,
+            300, -1,false, [], new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
+
+        await backgroundJob._scanKubernetesServices();
+
+        expect(context.registry.services.length).toBe(1);
+
+        const service = context.registry.services[0];
+        expect(service.name).toBe('my-remote-app');
+        expect(service.priority).toBe(1000);
+        expect(service.status).toBe('Error');
+        expect(service.error).toBe('Timeout: Connection to http://my-remote-app.dev-namespace2:6066 timed out after 1sec');
+    });
 });

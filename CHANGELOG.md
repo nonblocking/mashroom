@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * Remote App Registry: Made sure all endpoint URLs and properly registered before the first scan starts 
+ * Remote App Registry and K8S Remote App Registry: Improved error handling (shows now in the Admin UI which kind of error occurred, e.g. Timeout) 
+
 ## 2.5.2 (January 19, 2024)
 
  * Background Jobs: Fixed measuring execution time for async jobs

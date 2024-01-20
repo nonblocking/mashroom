@@ -5,7 +5,7 @@ import type {Request} from 'express';
 import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob, Context} from '../../type-definitions/internal';
 
 let _currentRequest: Request | undefined | null = null;
-let _registerBackgroundJob: any = null;
+let _registerBackgroundJob: RegisterPortalRemoteAppsBackgroundJob | null = null;
 let _webUIShowAddRemoteAppForm = true;
 let _oneFullScanDone = false;
 
@@ -27,7 +27,7 @@ const context: Context = {
     get registry() {
         return registry;
     },
-    get backgroundJob(): RegisterPortalRemoteAppsBackgroundJob {
+    get backgroundJob(): RegisterPortalRemoteAppsBackgroundJob | null {
         return _registerBackgroundJob;
     },
     set backgroundJob(job: RegisterPortalRemoteAppsBackgroundJob) {
