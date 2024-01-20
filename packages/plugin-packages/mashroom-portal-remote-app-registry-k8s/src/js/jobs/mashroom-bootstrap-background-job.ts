@@ -9,7 +9,7 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
     const pluginContext = pluginContextHolder.getPluginContext();
     const {
         k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter, socketTimeoutSec,
-        refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP
+        refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP, serviceProcessingBatchSize,
     } = pluginConfig;
 
     context.namespaces = [...k8sNamespaces || []];
@@ -21,7 +21,7 @@ const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, plu
     const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(
         k8sNamespacesLabelSelector, k8sNamespaces,
         k8sServiceLabelSelector,serviceNameFilter,
-        socketTimeoutSec, refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP,
+        socketTimeoutSec, refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP, serviceProcessingBatchSize,
         pluginContext.serverConfig.externalPluginConfigFileNames,
         kubernetesConnector, pluginContext.loggerFactory);
 

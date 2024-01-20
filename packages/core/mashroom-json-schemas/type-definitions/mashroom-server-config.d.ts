@@ -428,7 +428,7 @@ export interface Plugins {
        */
       fetchTimeoutMs?: number;
       /**
-       * Max sockets per host for fetching resources from Remote Apps (Default: 10)
+       * Max sockets per host for fetching resources from Remote Apps (Default: 3)
        */
       httpMaxSocketsPerHost?: number;
       /**
@@ -541,7 +541,7 @@ export interface Plugins {
      */
     k8sServiceLabelSelector?: string | string[];
     /**
-     * A regular expression for services that should be checked (case insensitive). (Default: ".*")
+     * A regular expression for services that should be checked (case-insensitive). (Default: ".*")
      */
     serviceNameFilter?: string;
     /**
@@ -560,6 +560,10 @@ export interface Plugins {
      * Access services via IP address and not via <name>.<namespace> (Default: false)
      */
     accessViaClusterIP?: boolean;
+    /**
+     * Number of services that should be processed in parallel at a time (Default: 20)
+     */
+    serviceProcessingBatchSize?: number;
   };
   "Mashroom Security Services"?: {
     /**

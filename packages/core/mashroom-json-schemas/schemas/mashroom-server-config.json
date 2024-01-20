@@ -780,7 +780,7 @@
                         },
                         "serviceNameFilter": {
                             "type": "string",
-                            "description": "A regular expression for services that should be checked (case insensitive). (Default: \".*\")"
+                            "description": "A regular expression for services that should be checked (case-insensitive). (Default: \".*\")"
                         },
                         "socketTimeoutSec": {
                             "type": "integer",
@@ -797,6 +797,10 @@
                         "accessViaClusterIP": {
                             "type": "boolean",
                             "description": "Access services via IP address and not via <name>.<namespace> (Default: false)"
+                        },
+                        "serviceProcessingBatchSize": {
+                            "type": "number",
+                            "description": "Number of services that should be processed in parallel at a time (Default: 20)"
                         }
                     },
                     "additionalProperties": false

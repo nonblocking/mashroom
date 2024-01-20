@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * K8S Remote App Registry: Added a config property *serviceProcessingBatchSize* that defines how many services are processed in parallel.
+   Can be used to optimize the time until the plugin (and therefore the Pod) gets ready on Kubernetes. 
  * Remote App Registry: Made sure all endpoint URLs and properly registered before the first scan starts 
  * Remote App Registry and K8S Remote App Registry: Improved error handling (shows now in the Admin UI which kind of error occurred, e.g. Timeout) 
 

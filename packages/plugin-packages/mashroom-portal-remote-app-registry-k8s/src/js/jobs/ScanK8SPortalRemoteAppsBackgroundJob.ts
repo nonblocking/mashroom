@@ -13,8 +13,6 @@ import type {
 import type {MashroomPortalApp, MashroomPortalProxyDefinitions} from '@mashroom/mashroom-portal/type-definitions';
 import type {KubernetesConnector, KubernetesService, ScanBackgroundJob, KubernetesServiceInvalidPortalApp, RemoteAppPackageJson} from '../../../type-definitions';
 
-const CHECK_SERVICE_BATCH_SIZE = 20;
-
 type ServicePortalApps = {
     readonly foundPortalApps: Array<MashroomPortalApp>;
     readonly invalidPortalApps: Array<KubernetesServiceInvalidPortalApp>;
@@ -27,7 +25,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
 
     constructor(private _k8sNamespacesLabelSelector: string | Array<string> | null | undefined, private _k8sNamespaces: Array<string> | null | undefined,
                 private _k8sServiceLabelSelector: string | Array<string> | null | undefined, serviceNameFilterStr: string | null | undefined,
-                private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _unregisterAppsAfterScanErrors: number, private _accessViaClusterIP: boolean,
+                private _socketTimeoutSec: number, private _refreshIntervalSec: number, private _unregisterAppsAfterScanErrors: number, private _accessViaClusterIP: boolean, private _serviceProcessingBatchSize: number,
                 private _externalPluginConfigFileNames: Array<string>,
                 private _kubernetesConnector: KubernetesConnector, loggerFactory: MashroomLoggerFactory) {
         this._serviceNameFilter = new RegExp(serviceNameFilterStr || '.*', 'i');
@@ -150,7 +148,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                 await this._checkServiceForRemotePortalApps(service); // Cannot fail
                 context.registry.addOrUpdateService(service); // Cannot fail
             })());
-            if (promises.length >= CHECK_SERVICE_BATCH_SIZE) {
+            if (promises.length >= this._serviceProcessingBatchSize) {
                 await Promise.all(promises);
                 promises = [];
             }

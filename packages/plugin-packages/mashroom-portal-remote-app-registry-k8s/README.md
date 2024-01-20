@@ -39,7 +39,8 @@ You can override the default config in your Mashroom config file like this:
           "socketTimeoutSec": 3,
           "refreshIntervalSec": 600,
           "unregisterAppsAfterScanErrors": -1,
-          "accessViaClusterIP": false
+          "accessViaClusterIP": false,
+          "serviceProcessingBatchSize": 20
         }
     }
 }
@@ -49,11 +50,12 @@ You can override the default config in your Mashroom config file like this:
  * _k8sNamespacesLabelSelector_: Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)
  * _k8sNamespaces_: A distinct list of Kubernetes namespaces to scan; can be null if _k8sNamespacesLabelSelector_ is set (Default: ["default"])
  * _k8sServiceLabelSelector_: Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (Default: null)
- * _serviceNameFilter_: A regular expression for services that should be checked (case insensitive). (Default: ".*")
+ * _serviceNameFilter_: A regular expression for services that should be checked (case-insensitive). (Default: ".*")
  * _socketTimeoutSec_: Socket timeout when trying to the Kubernetes service (Default: 3)
  * _checkIntervalSec_: The time in seconds after that a registered services show be re-checked (Default: 600)
  * _unregisterAppsAfterScanErrors_: Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
  * _accessViaClusterIP_: Access services via IP address and not via &lt;name&gt;.&lt;namespace&gt; (Default: false)
+ * _serviceProcessingBatchSize_: Number of services that should be processed in parallel at a time (Default: 20)
 
 The list of successful registered services will be available on **http://&lt;host&gt;:&lt;port&gt;/portal-remote-app-registry-kubernetes**
 
