@@ -1010,7 +1010,7 @@
                         "type": "prometheus",
                         "uid": "PBFA97CFB590B2093"
                     },
-                    "expr": "mashroom_remote_apps_k8s_total{service=\"Mashroom\"}",
+                    "expr": "mashroom_remote_app_k8s_services_total{service=\"Mashroom\"}",
                     "interval": "",
                     "legendFormat": "Total",
                     "refId": "A"
@@ -1020,20 +1020,10 @@
                         "type": "prometheus",
                         "uid": "PBFA97CFB590B2093"
                     },
-                    "expr": "mashroom_remote_apps_k8s_error_total{service=\"Mashroom\"}",
+                    "expr": "mashroom_remote_app_k8s_services_error_total{service=\"Mashroom\"}",
                     "interval": "",
                     "legendFormat": "Error",
                     "refId": "B"
-                },
-                {
-                    "datasource": {
-                        "type": "prometheus",
-                        "uid": "PBFA97CFB590B2093"
-                    },
-                    "expr": "mashroom_remote_apps_k8s_connection_timeout_total{service=\"Mashroom\"}",
-                    "interval": "",
-                    "legendFormat": "Connection Timeout",
-                    "refId": "C"
                 }
             ],
             "title": "Remote Portal Apps K8S",
@@ -1117,22 +1107,24 @@
             "pluginVersion": "8.5.5",
             "targets": [
                 {
-                    "expr": "mashroom_remote_apps_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_remote_app_endpoints_total{service=\"Mashroom\"}",
                     "interval": "",
                     "legendFormat": "Total",
                     "refId": "A"
                 },
                 {
-                    "expr": "mashroom_remote_apps_error_total{service=\"Mashroom\"}",
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "PBFA97CFB590B2093"
+                    },
+                    "expr": "mashroom_remote_app_endpoints_error_total{service=\"Mashroom\"}",
                     "interval": "",
                     "legendFormat": "Error",
                     "refId": "B"
-                },
-                {
-                    "expr": "mashroom_remote_apps_connection_timeout_total{service=\"Mashroom\"}",
-                    "interval": "",
-                    "legendFormat": "Connection Timeout",
-                    "refId": "C"
                 }
             ],
             "title": "Remote Portal Apps",
@@ -1945,6 +1937,6 @@
     "timezone": "",
     "title": "Mashroom",
     "uid": "Du04HfgMz",
-    "version": 2,
+    "version": 4,
     "weekStart": ""
 }

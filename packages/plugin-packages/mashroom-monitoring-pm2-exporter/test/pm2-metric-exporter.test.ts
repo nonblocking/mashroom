@@ -13,8 +13,8 @@ describe('pm2-metric-exporter', () => {
                 'mashroom_plugins_total',
                 'mashroom_plugins_loaded_total',
                 'mashroom_plugins_error_total',
-                'mashroom_remote_apps_total',
-                'mashroom_remote_apps_error_total'
+                'mashroom_remote_app_endpoints_total',
+                'mashroom_remote_app_endpoints_error_total'
             ]
         };
 

@@ -88,29 +88,21 @@ Plugins in error state:
 
     mashroom_plugins_error_total{service="Mashroom"}
 
-Remote portal apps total:
+Remote Portal App endpoints total:
 
-    mashroom_remote_apps_total{service="Mashroom"}
+    mashroom_remote_app_endpoints_total{service="Mashroom"}
 
-Remote portal apps in error state:
+Remote Portal App endpoints in error state:
 
-    mashroom_remote_apps_error_total{service="Mashroom"}
+    mashroom_remote_app_endpoints_error_total{service="Mashroom"}
 
-Remote portal apps with connection timeouts:
+Kubernetes remote Portal App services total:
 
-    mashroom_remote_apps_connection_timeout_total{service="Mashroom"}
+    mashroom_remote_app_k8s_services_total{service="Mashroom"}
 
-Kubernetes remote portal apps total:
+Kubernetes remote Portal App services in error state:
 
-    mashroom_remote_apps_k8s_total{service="Mashroom"}
-
-Kubernetes remote portal apps in error state:
-
-    mashroom_remote_apps_k8s_error_total{service="Mashroom"}
-
-Kubernetes remote portal apps with connection timeouts:
-
-    mashroom_remote_apps_k8s_connection_timeout_total{service="Mashroom"}
+    mashroom_remote_app_k8s_services_error_total{service="Mashroom"}
 
 Memory cache hit ratio:
 

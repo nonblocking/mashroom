@@ -15,12 +15,16 @@ export const registerRemoteAppMetrics = (pluginContextHolder: MashroomPluginCont
                 const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = pluginContext.services.remotePortalAppEndpoint!.service;
                 const endpoints = await portalRemoteAppEndpointService.findAll();
                 const endpointsTotal = endpoints.length;
-                const endpointsWithError = endpoints.filter((e) => !!e.lastError).length;
-                const endpointsWithTimeouts = endpoints.filter((e) => e.lastError && e.lastError.indexOf('Timeout') !== -1).length;
+                const endpointsError = endpoints.filter((e) => !!e.lastError).length;
+                const endpointsNoPluginDefinition = endpoints.filter((e) => e.lastError && e.lastError.indexOf('No plugin definition found') !== -1).length;
+                const endpointsConnectionFailed = endpoints.filter((e) => e.lastError && e.lastError.indexOf('ECONNREFUSED') !== -1).length;
+                const endpointsTimeout = endpoints.filter((e) => e.lastError && e.lastError.indexOf('Timeout') !== -1).length;
 
-                asyncCollectorService.gauge('mashroom_remote_apps_total', 'Mashroom Remote Apps Total').set(endpointsTotal);
-                asyncCollectorService.gauge('mashroom_remote_apps_error_total', 'Mashroom Remote Apps With Error').set(endpointsWithError);
-                asyncCollectorService.gauge('mashroom_remote_apps_connection_timeout_total', 'Mashroom Remote Apps With Connection Timeout').set(endpointsWithTimeouts);
+                asyncCollectorService.gauge('mashroom_remote_app_endpoints_total', 'Mashroom Remote App Endpoints Total').set(endpointsTotal);
+                asyncCollectorService.gauge('mashroom_remote_app_endpoints_error_total', 'Mashroom Remote App Endpoints With Error').set(endpointsError);
+                asyncCollectorService.gauge('mashroom_remote_app_endpoints_no_plugin_definition_total', 'Mashroom Remote App Endpoints With Missing Plugin Definition').set(endpointsNoPluginDefinition);
+                asyncCollectorService.gauge('mashroom_remote_app_endpoints_connection_failed_total', 'Mashroom Remote App Endpoints With Connection Failure').set(endpointsConnectionFailed);
+                asyncCollectorService.gauge('mashroom_remote_app_endpoints_connection_timeout_total', 'Mashroom Remote App Endpoints With Connection Timeout').set(endpointsTimeout);
             });
         }
     };

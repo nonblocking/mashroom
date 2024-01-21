@@ -3,6 +3,18 @@
 
 ## [unreleased]
 
+ * Remote App Registry: Renamed add added metrics:
+     * Renamed: mashroom_remote_apps_total -> mashroom_remote_app_endpoints_total
+     * Renamed: mashroom_remote_apps_error_total -> mashroom_remote_app_endpoints_error_total
+     * Renamed: mashroom_remote_apps_connection_timeout_total -> mashroom_remote_app_endpoints_connection_timeout_total
+     * Added: mashroom_remote_app_endpoints_connection_failed_total
+     * Added: mashroom_remote_app_k8s_services_connection_failed_total
+ * K8S Remote App Registry: Renamed and added metrics:
+     * Renamed: mashroom_remote_apps_k8s_total -> mashroom_remote_app_k8s_services_total
+     * Renamed: mashroom_remote_apps_k8s_error_total -> mashroom_remote_app_k8s_services_error_total
+     * Renamed: mashroom_remote_apps_k8s_connection_timeout_total -> mashroom_remote_app_k8s_services_connection_timeout_total
+     * Added: mashroom_remote_app_k8s_services_no_plugin_definition_total
+     * Added: mashroom_remote_app_k8s_services_connection_failed_total
  * K8S Remote App Registry: Added a config property *serviceProcessingBatchSize* that defines how many services are processed in parallel.
    Can be used to optimize the time until the plugin (and therefore the Pod) gets ready on Kubernetes. 
  * Remote App Registry: Made sure all endpoint URLs and properly registered before the first scan starts 
