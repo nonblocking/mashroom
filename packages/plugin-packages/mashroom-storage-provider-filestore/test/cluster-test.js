@@ -18,7 +18,7 @@ const dummyLogger = {
 };
 
 async function test() {
-    const storage = new MashroomStorageFilestore(dataFolder, () => dummyLogger);
+    const storage = new MashroomStorageFilestore(dataFolder, '', 100, true, () => dummyLogger);
     const collection = await storage.getCollection('cluster-test');
 
     const start = Date.now();
@@ -37,7 +37,7 @@ async function test() {
 
     setTimeout(() => {
         collection.find().then((items) => {
-            const count = items.length;
+            const count = items.result.length;
             console.log(`Worker ${process.pid} got items in collection: ${count}. Expected: ${INSERTS_PER_CLUSTER * WORKER_COUNT}`);
             console.info('RESULT: ' + (count === INSERTS_PER_CLUSTER * WORKER_COUNT ? 'OK' : 'NOK!'));
             process.exit();
