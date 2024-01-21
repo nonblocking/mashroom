@@ -55,7 +55,7 @@ You can override the default config in your Mashroom config file like this:
             "poolMaxTotalSockets": null,
             "poolMaxSocketsPerHost": 10,
             "poolMaxWaitingRequestsPerHost": null,
-            "socketTimeoutMs": 60000,
+            "socketTimeoutMs": 30000,
             "keepAlive": true,
             "retryOnReset": true,
             "wsMaxConnectionsTotal": 2000,
@@ -71,7 +71,7 @@ You can override the default config in your Mashroom config file like this:
  * _poolMaxTotalSockets_: Max HTTP pool sockets total (Default: null - no limit)
  * _poolMaxSocketsPerHost_: Max HTTP pool sockets per target host (Default: 10)
  * _poolMaxWaitingRequestsPerHost_: Max waiting HTTP requests per target host, needs to be > 0 if set (Default: null - no limit)
- * _socketTimeoutMs_: HTTP socket timeout, 0 means no timeout (Default: 30000 - 30sec)
+ * _socketTimeoutMs_: HTTP socket timeout, which is the time the target has to accept the connection and start sending the response (Default: 30000)
  * _keepAlive_: HTTP connection keep-alive. Set this to *false* if you experience random ECONNRESET with the *nodeHttpProxy* implementation,
     see: [https://github.com/nonblocking/mashroom/issues/77](https://github.com/nonblocking/mashroom/issues/77) (Default: true)
  * _retryOnReset_: If the target resets the HTTP connection (because a keep-alive connection is broken) retry once (Default: true)

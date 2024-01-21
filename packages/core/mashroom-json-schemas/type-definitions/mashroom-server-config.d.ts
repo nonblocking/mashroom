@@ -155,7 +155,7 @@ export interface Plugins {
      */
     poolMaxWaitingRequestsPerHost?: number | null;
     /**
-     * HTTP socket timeout, 0 means no timeout (Default: 30000 - 30sec)
+     * HTTP socket timeout, which is the time the target has to accept the connection and start sending the response (Default: 30000)
      */
     socketTimeoutMs?: number;
     /**
