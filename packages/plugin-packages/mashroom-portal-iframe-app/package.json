@@ -4,13 +4,13 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.5.2",
+    "version": "2.5.3",
     "sideEffects": false,
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.5.2"
+        "@mashroom/mashroom-portal": "2.5.3"
     },
     "jest": {
         "verbose": true,

@@ -4,12 +4,12 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.5.2",
+    "version": "2.5.3",
     "files": [
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.5.2",
+        "@mashroom/mashroom-portal": "2.5.3",
         "@types/react": "^18.2.45",
         "@types/react-dom": "^18.2.18",
         "react": "^18.2.0",

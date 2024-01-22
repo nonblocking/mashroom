@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.5.2",
+    "version": "2.5.3",
     "files": [
         "layouts/**"
     ],
