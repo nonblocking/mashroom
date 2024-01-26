@@ -40,7 +40,19 @@ export const isTimeoutError = (error: Error) => {
 };
 
 export const isAbortedByClientError = (res: Response, error: Error) => {
-    return res.headersSent && 'code' in error && (error as NodeJS.ErrnoException).code === 'ERR_STREAM_PREMATURE_CLOSE';
+    // Could be enough to just check res.closed?
+    if (res.closed && 'code' in error) {
+        const errorNrException = error as NodeJS.ErrnoException;
+        // Case 1: Interrupted while already sending the response
+        if (errorNrException.code === 'ERR_STREAM_PREMATURE_CLOSE') {
+            return true;
+        }
+        // Case 2: Client closed connection before sending the response
+        if (errorNrException.code === 'ECONNRESET' && errorNrException.message === 'aborted') {
+            return true;
+        }
+    }
+    return false;
 };
 
 export const setupResourceFetchHttpAgents = (logger: MashroomLogger) => {
