@@ -1,6 +1,6 @@
 
 import {Readable, Writable} from 'stream';
-import {createServer as createHttpServer} from 'http';
+import {createServer as createHttpServer, request} from 'http';
 import WebSocket from 'ws';
 import nock from 'nock';
 import {loggingUtils} from '@mashroom/mashroom-utils';
@@ -259,12 +259,12 @@ describe('ProxyImplNodeNative', () => {
         await new Promise((resolve) => setTimeout(resolve, 3000));
     });
 
-    it('cancels the proxy request if the client closes the connection', async () => {
+    it('aborts correctly if the client closes the connection before the target sent the headers', async () => {
         const consoleInfo = console.info = jest.fn();
 
         nock('https://www.fooooo.com')
             .get('/')
-            .delay(2000)
+            .delayConnection(1000)
             .reply(200, {});
 
         const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
@@ -281,6 +281,65 @@ describe('ProxyImplNodeNative', () => {
         await promise;
 
         expect(consoleInfo.mock.calls[3][0]).toBe('Request aborted by client: \'https://www.fooooo.com\'');
+    });
+
+    it('aborts correctly if the client closes the connection before the target sent the body', async () => {
+        const consoleInfo = console.info = jest.fn();
+
+        nock('https://www.fooooo.com')
+            .get('/')
+            .delayBody(1000)
+            .reply(200, {});
+
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
+
+        const req = createDummyRequest('GET');
+        const res = createDummyResponse();
+
+        const promise = httpProxy.forward(req, res, 'https://www.fooooo.com');
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        res.destroy();
+
+        await promise;
+
+        expect(consoleInfo.mock.calls[3][0]).toBe('Request aborted by client: \'https://www.fooooo.com\'');
+    });
+
+    it('aborts correctly if the client aborts sending the request body', async () => {
+        const consoleInfo = console.info = jest.fn();
+
+        nock('https://www.fooooo.com')
+            .post('/bar')
+            .reply(200, {});
+
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, removeAllHeaderFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
+
+        let promise;
+        const server = createHttpServer((req, res) => {
+            (req as any).pluginContext = {
+                loggerFactory: loggingUtils.dummyLoggerFactory,
+                services: {
+                },
+            };
+            promise = httpProxy.forward(req as any, res as any, 'https://www.fooooo.com/bar');
+        });
+        server.listen(23333);
+
+        const clientRequest = request('http://localhost:23333', {
+            method: 'POST',
+        });
+        clientRequest.on('error', (e) => {});
+        clientRequest.write('here some data');
+        await new Promise((resolve) => setTimeout(resolve, 500));
+        // The client aborts before all data hase been sent
+        clientRequest.destroy();
+
+        server.close();
+        await promise;
+
+        expect(consoleInfo.mock.calls[2][0]).toBe('Request aborted by client: \'https://www.fooooo.com/bar\'');
     });
 
     it('passes the response from the target endpoint',  async () => {

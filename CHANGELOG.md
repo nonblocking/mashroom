@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
-
+ * HTTP Proxy: Don't log an error if the client aborts during sending the request body
  * Portal: Don't log an error if the client aborts before the resource response is being sent (Error: aborted)
 
 ## 2.5.3 (January 22, 2024)

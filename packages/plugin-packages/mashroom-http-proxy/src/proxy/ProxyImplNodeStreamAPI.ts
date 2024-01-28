@@ -349,12 +349,13 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
     }): Promise<void> {
         const {startTime, req, res, logger, targetUri, fullTargetUri, proxyRequestHttpHeaders, retry} = config;
         let aborted = false;
+        let proxyRequest: ClientRequest | undefined;
         try {
-            const proxyRequest = this._createProxyRequest(fullTargetUri, req.method, proxyRequestHttpHeaders);
+            proxyRequest = this._createProxyRequest(fullTargetUri, req.method, proxyRequestHttpHeaders);
             proxyRequest.setTimeout(this._socketTimeoutMs, () => {
                 aborted = true;
                 // Abort proxy request
-                proxyRequest.destroy();
+                proxyRequest?.destroy();
             });
 
             // Stream the client request
@@ -404,6 +405,8 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                 if (!res.headersSent) {
                     res.sendStatus(504);
                 }
+            } else if (req.closed && (error.code === 'ERR_STREAM_PREMATURE_CLOSE' || (!proxyRequest?.closed && error.code === 'ECONNRESET' && error.message === 'aborted'))) {
+                logger.info(`Request aborted by client: '${targetUri}'`);
             } else if (!res.headersSent && error.code === 'ECONNRESET') {
                 if (this._retryOnReset && retry < MAX_RETRIES) {
                     logger.warn(`Retrying HTTP request to '${targetUri}' because target did not accept or drop the connection (retry #${retry + 1})`);
@@ -418,8 +421,6 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                         res.sendStatus(502);
                     }
                 }
-            } else if (error.code === 'ERR_STREAM_PREMATURE_CLOSE') {
-                logger.info(`Request aborted by client: '${targetUri}'`);
             } else {
                 logger.error(`Forwarding to '${targetUri}' failed!`, error);
                 trackConnectionError = true;
