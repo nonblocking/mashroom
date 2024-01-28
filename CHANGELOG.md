@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Ignore empty headers added by HTTP interceptors because it will lead to an error
  * HTTP Proxy: Don't log an error if the client aborts during sending the request body
  * Portal: Don't log an error if the client aborts before the resource response is being sent (Error: aborted)
 

@@ -1,4 +1,3 @@
-
 import type {IncomingMessage} from 'http';
 import type {Request, Response} from 'express';
 import type {MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
@@ -17,7 +16,7 @@ export default class InterceptorHandler implements InterceptorHandlerType {
     }
 
     async processHttpRequest(clientRequest: Request, clientResponse: Response, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomHttpProxyRequestInterceptorResult> {
-        let existingHeaders = { ...clientRequest.headers, ...additionalHeaders };
+        let existingHeaders = {...clientRequest.headers, ...additionalHeaders};
         let existingQueryParams: QueryParams = {};
         Object.keys(clientRequest.query || {}).forEach((queryKey) => {
             const queryValue = clientRequest.query[queryKey];
@@ -49,14 +48,22 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     rewrittenTargetUri = result.rewrittenTargetUri;
                 }
                 if (result?.addHeaders) {
-                    logger.debug(`Interceptor '${pluginName}' added request headers:`, result.addHeaders);
+                    const validHeaders: HttpHeaders = {};
+                    Object.keys(result.addHeaders).forEach((name) => {
+                        if (result.addHeaders![name]) {
+                            validHeaders[name] = result.addHeaders![name];
+                        } else {
+                            logger.warn(`Ignoring undefined request header '${name}' from interceptor '${pluginName}'`);
+                        }
+                    });
+                    logger.debug(`Interceptor '${pluginName}' added request headers:`, validHeaders);
                     addHeaders = {
                         ...addHeaders,
-                        ...result.addHeaders,
+                        ...validHeaders,
                     };
                     existingHeaders = {
                         ...existingHeaders,
-                        ...result.addHeaders,
+                        ...validHeaders,
                     };
                 }
                 if (result?.removeHeaders && Array.isArray(result.removeHeaders)) {
@@ -100,7 +107,7 @@ export default class InterceptorHandler implements InterceptorHandlerType {
 
 
     async processWsRequest(clientRequest: IncomingMessageWithContext, targetUri: string, additionalHeaders: HttpHeaders, logger: MashroomLogger): Promise<MashroomWsProxyRequestInterceptorResult> {
-        let existingHeaders = { ...clientRequest.headers, ...additionalHeaders };
+        let existingHeaders = {...clientRequest.headers, ...additionalHeaders};
 
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
@@ -115,14 +122,22 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     rewrittenTargetUri = result.rewrittenTargetUri;
                 }
                 if (result?.addHeaders) {
-                    logger.debug(`Interceptor '${pluginName}' added request headers:`, result.addHeaders);
+                    const validHeaders: HttpHeaders = {};
+                    Object.keys(result.addHeaders).forEach((name) => {
+                        if (result.addHeaders![name]) {
+                            validHeaders[name] = result.addHeaders![name];
+                        } else {
+                            logger.warn(`Ignoring undefined request header '${name}' from interceptor '${pluginName}'`);
+                        }
+                    });
+                    logger.debug(`Interceptor '${pluginName}' added request headers:`, validHeaders);
                     addHeaders = {
                         ...addHeaders,
-                        ...result.addHeaders,
+                        ...validHeaders,
                     };
                     existingHeaders = {
                         ...existingHeaders,
-                        ...result.addHeaders,
+                        ...validHeaders,
                     };
                 }
                 if (result?.removeHeaders && Array.isArray(result.removeHeaders)) {
@@ -145,7 +160,7 @@ export default class InterceptorHandler implements InterceptorHandlerType {
     }
 
     async processHttpResponse(clientRequest: Request, clientResponse: Response, targetUri: string, targetResponse: IncomingMessage, logger: MashroomLogger): Promise<MashroomHttpProxyResponseInterceptorResult> {
-        let existingHeaders = { ...targetResponse.headers };
+        let existingHeaders = {...targetResponse.headers};
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
         const interceptors = this._interceptorRegistry.interceptors;
@@ -160,14 +175,22 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                     };
                 }
                 if (result?.addHeaders) {
-                    logger.debug(`Interceptor '${pluginName}' added response headers:`, result.addHeaders);
+                    const validHeaders: HttpHeaders = {};
+                    Object.keys(result.addHeaders).forEach((name) => {
+                        if (result.addHeaders![name]) {
+                            validHeaders[name] = result.addHeaders![name];
+                        } else {
+                            logger.warn(`Ignoring undefined response header '${name}' from interceptor '${pluginName}'`);
+                        }
+                    });
+                    logger.debug(`Interceptor '${pluginName}' added response headers:`, validHeaders);
                     addHeaders = {
                         ...addHeaders,
-                        ...result.addHeaders,
+                        ...validHeaders,
                     };
                     existingHeaders = {
                         ...existingHeaders,
-                        ...result.addHeaders,
+                        ...validHeaders,
                     };
                 }
                 if (result?.removeHeaders && Array.isArray(result.removeHeaders)) {

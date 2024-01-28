@@ -9,6 +9,7 @@ const interceptor1: MashroomHttpProxyInterceptor = {
             rewrittenTargetUri: 'https://one.com',
             addHeaders: {
                 'X-Foo': 'bar',
+                'invalid': null as any,  // invalid!
             },
             addQueryParams: {
                 'q': 'x'
