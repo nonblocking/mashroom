@@ -228,13 +228,13 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         // @ts-ignore
-        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/3/xx');
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/3/xx', 'foo/*/bar/2/3/xx');
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         expect(match).toBeFalsy();
 
         // @ts-ignore
-        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xx');
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xx', 'foo/*/bar/+/xx');
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         expect(match).toBeTruthy();
@@ -255,13 +255,13 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         // @ts-ignore
-        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xy');
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xy', 'foo/#/xy');
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         expect(match).toBeFalsy();
 
         // @ts-ignore
-        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xx');
+        messageBus._handleRemoteMessage({}, 'foo/1/bar/2/xx', 'foo/#/xx');
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         expect(match).toBeTruthy();

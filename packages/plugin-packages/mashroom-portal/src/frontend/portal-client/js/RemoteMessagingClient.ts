@@ -29,7 +29,7 @@ export default class RemoteMessagingClient {
 
     private _webSocket: WebSocket | undefined | null;
     private _connected: boolean;
-    private _messageHandler: ((message: any, topic: string) => void) | null;
+    private _messageHandler: ((message: any, topic: string, subscriptionTopic: string) => void) | null;
     private _openPromises: Array<OpenPromise>;
     private _connectRetries: number;
     private _subscribedTopics: Array<string>;
@@ -87,7 +87,7 @@ export default class RemoteMessagingClient {
         return this._webSocketSend(subscribeRequest);
     }
 
-    onMessage(handler: (message: any, topic: string) => void): void {
+    onMessage(handler: (message: any, topic: string, subscriptionPattern: string) => void): void {
         this._messageHandler = handler;
     }
 
@@ -180,7 +180,7 @@ export default class RemoteMessagingClient {
             } else if (message.remoteMessage === true) {
                 const publishMessage: MashroomMessagingWebSocketPublishMessage = message;
                 if (this._messageHandler) {
-                    this._messageHandler(publishMessage.message, publishMessage.topic);
+                    this._messageHandler(publishMessage.message, publishMessage.topic, publishMessage.subscriptionPattern);
                 }
             } else {
                 console.warn(`Don't know how to handle WebSocket message: `, message);

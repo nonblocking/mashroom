@@ -29,6 +29,7 @@ export type MashroomMessagingWebSocketPublishRequest = {
 
 export type MashroomMessagingWebSocketPublishMessage = {
     remoteMessage: true,
+    subscriptionPattern: string,
     topic: string,
     message: any,
 }
