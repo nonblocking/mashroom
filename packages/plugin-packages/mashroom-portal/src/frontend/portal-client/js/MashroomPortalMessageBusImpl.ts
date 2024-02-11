@@ -130,7 +130,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
     }
 
     unsubscribeEverythingFromApp(appId: string): void {
-        console.info('Unregistering all MessageBus handlers from app:', appId);
+        console.debug('Unregistering all MessageBus handlers from app:', appId);
 
         for (const topic in this._subscriptionMap) {
             if (this._subscriptionMap.hasOwnProperty(topic)) {
