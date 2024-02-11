@@ -29,6 +29,7 @@ export type MashroomMessagingWebSocketPublishRequest = {
 
 export type MashroomMessagingWebSocketPublishMessage = {
     remoteMessage: true,
+    subscriptionPattern: string,
     topic: string,
     message: any,
 }
@@ -92,7 +93,7 @@ export type MashroomExternalMessageListener = (topic: string, message: any) => v
  *
  * The implementation typically subscribes to mashroom/# on the external messaging system and calls for all
  * received messages onMessage().
- * It might me necessary to translate the topic when the target system does not use / as level separator.
+ * It might be necessary to translate the topic when the target system does not use / as level separator.
  * E.g. for AMQP it would be necessary to translate my/topic to my.topic (and the other way round when calling onMessage()).
  */
 export interface MashroomMessagingExternalProvider {

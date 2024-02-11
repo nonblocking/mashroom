@@ -91,7 +91,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
 
         const clientData = this._clients.get(client);
         if (!clientData) {
-            // Just to satisfy flow, cannot happen
+            // Cannot happen
             return;
         }
         if (clientData.subscriptions.find((s) => s.topic === request.topic)) {
@@ -102,7 +102,7 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
 
         const callback: MashroomMessagingSubscriberCallback = (data: any, topic: string) => {
             contextLogger.debug(`Sending message for topic ${topic} via WebSocket to user ${client.user.username}`, data);
-            this._sendMessage(topic, data, client);
+            this._sendMessage(request.topic, topic, data, client);
         };
         this._messagingService.subscribe(client.user, request.topic, callback).then(
             () => {
@@ -160,10 +160,11 @@ export default class MashroomMessagingWebSocketHandler implements MashroomMessag
         );
     }
 
-    private _sendMessage(topic: string, message: any, client: MashroomWebSocketClient): void {
+    private _sendMessage(subscriptionPattern: string, topic: string, message: any, client: MashroomWebSocketClient): void {
         if (this._webSocketService) {
             const response: MashroomMessagingWebSocketPublishMessage = {
                 remoteMessage: true,
+                subscriptionPattern,
                 topic,
                 message,
             };

@@ -13,8 +13,6 @@ import type {
 } from '../../../../type-definitions';
 
 const REMOTE_MESSAGING_TOPIC_PREFIX = 'remote:';
-const REMOTE_MESSAGING_WILDCARDS_MULTI = ['#'];
-const REMOTE_MESSAGING_WILDCARDS_SINGLE = ['+', '*'];
 const REMOTE_MESSAGING_CONNECT_PATH: string | undefined = (global as any)[WINDOW_VAR_REMOTE_MESSAGING_CONNECT_PATH];
 const REMOTE_MESSAGING_PRIVATE_USER_TOPIC: string | undefined = (global as any)[WINDOW_VAR_REMOTE_MESSAGING_PRIVATE_USER_TOPIC];
 
@@ -132,7 +130,7 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
     }
 
     unsubscribeEverythingFromApp(appId: string): void {
-        console.info('Unregistering all MessageBus handlers from app:', appId);
+        console.debug('Unregistering all MessageBus handlers from app:', appId);
 
         for (const topic in this._subscriptionMap) {
             if (this._subscriptionMap.hasOwnProperty(topic)) {
@@ -244,22 +242,18 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         }
     }
 
-    private _handleRemoteMessage(data: any, remoteTopic: string) {
+    private _handleRemoteMessage(data: any, remoteTopic: string, remoteSubscriptionPattern: string) {
         const topic = REMOTE_MESSAGING_TOPIC_PREFIX + remoteTopic;
-        console.info('Received remote message for topic: ', topic);
+        const subscriptionPattern = REMOTE_MESSAGING_TOPIC_PREFIX + remoteSubscriptionPattern;
+        console.info('Received remote message for topic', topic, 'and subscription pattern', subscriptionPattern);
 
         let subscriptions: Array<Subscription> = [];
         Object.keys(this._subscriptionMap)
-            .filter((pattern) => {
-                let regex = `^${pattern}$`;
-                REMOTE_MESSAGING_WILDCARDS_SINGLE.forEach((w) => regex = regex.replace(w, '[^/]+'));
-                REMOTE_MESSAGING_WILDCARDS_MULTI.forEach((w) => regex = regex.replace(w, '.*'));
-                return !!topic.match(new RegExp(regex));
-            })
+            .filter((pattern) => pattern === subscriptionPattern)
             .forEach((pattern) => {
                 subscriptions = subscriptions.concat(this._subscriptionMap[pattern]);
             });
-        console.debug(`Subscriptions for remote topic ${topic}: ${subscriptions ? subscriptions.length : 0}`);
+        console.debug(`Subscriptions for subscription pattern ${subscriptionPattern}: ${subscriptions ? subscriptions.length : 0}`);
 
         if (subscriptions) {
             subscriptions.forEach((subscription) => {

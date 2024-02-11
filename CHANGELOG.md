@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+ * HTTP Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if some subscription patterns overlap. 
+   See [#115](https://github.com/nonblocking/mashroom/issues/115)
+
 ## 2.5.4 (January 28, 2024)
 
  * HTTP Proxy: Ignore empty headers added by HTTP interceptors because it will lead to an error

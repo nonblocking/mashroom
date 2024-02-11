@@ -5,45 +5,43 @@ import type {
     MashroomPluginConfig,
 } from '@mashroom/mashroom/type-definitions';
 
-export type MashroomMessagingSubscriberCallback = (
-    data: any,
-    topic: string,
-) => void;
+export type MashroomMessagingSubscriberCallback = (data: any, topic: string) => void;
 
 export type MashroomMessagingWebSocketSubscribeRequest = {
-    messageId: string,
-    command: 'subscribe',
-    topic: string,
+    readonly messageId: string;
+    readonly command: 'subscribe';
+    readonly topic: string;
 }
 
 export type MashroomMessagingWebSocketUnsubscribeRequest = {
-    messageId: string,
-    command: 'unsubscribe',
-    topic: string,
+    readonly messageId: string;
+    readonly command: 'unsubscribe';
+    readonly topic: string;
 }
 
 export type MashroomMessagingWebSocketPublishRequest = {
-    messageId: string,
-    command: 'publish',
-    topic: string,
-    message: any,
+    readonly messageId: string;
+    readonly command: 'publish';
+    readonly topic: string;
+    readonly message: any;
 }
 
 export type MashroomMessagingWebSocketPublishMessage = {
-    remoteMessage: true,
-    topic: string,
-    message: any,
+    readonly remoteMessage: true;
+    readonly subscriptionPattern: string;
+    readonly topic: string;
+    readonly message: any;
 }
 
 export type MashroomMessagingWebSocketSuccessResponse = {
-    messageId: string,
-    success: true,
+    readonly messageId: string;
+    readonly success: true;
 }
 
 export type MashroomMessagingWebSocketErrorResponse = {
-    messageId: string,
-    error: true,
-    message: string,
+    readonly messageId: string;
+    readonly error: true;
+    readonly message: string;
 }
 
 /**
@@ -87,17 +85,14 @@ export interface MashroomMessagingService {
     getWebSocketConnectPath(req: Request): string | null | undefined;
 }
 
-export type MashroomExternalMessageListener = (
-    topic: string,
-    message: any,
-) => void;
+export type MashroomExternalMessageListener = (topic: string, message: any) => void;
 
 /**
  * External messaging provider plugin.
  *
  * The implementation typically subscribes to mashroom/# on the external messaging system and calls for all
  * received messages onMessage().
- * It might me necessary to translate the topic when the target system does not use / as level separator.
+ * It might be necessary to translate the topic when the target system does not use / as level separator.
  * E.g. for AMQP it would be necessary to translate my/topic to my.topic (and the other way round when calling onMessage()).
  */
 export interface MashroomMessagingExternalProvider {
