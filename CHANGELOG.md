@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Supply Chain Safety: Generate npm provenance statements when publishing (via Github Actions workflow)
  * Supply Chain Safety: Disabled all dependency lifecycle scripts by default
  * HTTP Proxy: Added support for transforming the request/response body.
    Proxy interceptors can now return *streamTransformers* (implementing *stream.Transform*) that can be used to compress/encrypt the communication to backend servers. 
