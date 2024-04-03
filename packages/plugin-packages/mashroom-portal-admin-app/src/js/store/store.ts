@@ -1,5 +1,5 @@
 
-import {createStore} from 'redux';
+import {legacy_createStore} from 'redux';
 import {PORTAL_APP_CONTROLS_SETTINGS_KEY} from '../constants';
 import reducers from './reducers';
 
@@ -44,6 +44,6 @@ if (process.env.NODE_ENV !== 'production') {
     storeEnhancer = (global as any).__REDUX_DEVTOOLS_EXTENSION__ && (global as any).__REDUX_DEVTOOLS_EXTENSION__();
 }
 
-const store: Store = createStore(reducers, initialState, storeEnhancer);
+const store: Store = legacy_createStore(reducers, initialState, storeEnhancer);
 
 export default store;

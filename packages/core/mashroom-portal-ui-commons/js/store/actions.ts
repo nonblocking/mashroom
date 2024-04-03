@@ -1,18 +1,27 @@
 
-export const SET_SHOW_MODAL = 'SET_SHOW_MODAL';
-export const SET_ACTIVE_TAB = 'SET_ACTIVE_TAB';
+export type ShowModalAction = {
+    readonly type: 'SET_SHOW_MODAL';
+    readonly dialogName: string;
+    readonly show: boolean;
+}
 
-export const setShowModal = (dialogName: string, show: boolean) => {
+export type SetActiveTabAction = {
+    readonly type: 'SET_ACTIVE_TAB';
+    readonly dialogName: string;
+    readonly active: string;
+}
+
+export const setShowModal = (dialogName: string, show: boolean): ShowModalAction => {
     return {
-        type: SET_SHOW_MODAL,
+        type: 'SET_SHOW_MODAL',
         dialogName,
         show,
     };
 };
 
-export const setActiveTab = (dialogName: string, active: string) => {
+export const setActiveTab = (dialogName: string, active: string): SetActiveTabAction => {
     return {
-        type: SET_ACTIVE_TAB,
+        type: 'SET_ACTIVE_TAB',
         dialogName,
         active,
     };

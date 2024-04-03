@@ -9,7 +9,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "express": "^4.18.2"
+        "express": "^4.19.2"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.5.4",

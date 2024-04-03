@@ -10,17 +10,17 @@
         "views/**"
     ],
     "dependencies": {
-        "express": "^4.18.2",
+        "express": "^4.19.2",
         "express-handlebars": "^7.1.2",
         "handlebars": "^4.7.8"
     },
     "devDependencies": {
-        "@fortawesome/fontawesome-free": "^6.5.1",
         "@mashroom/mashroom": "2.5.4",
         "@mashroom/mashroom-portal": "2.5.4",
+        "@fortawesome/fontawesome-free": "^6.5.1",
         "@types/express": "^4.17.21",
         "@types/express-handlebars": "^6.0.0",
-        "bootstrap": "^5.3.2"
+        "bootstrap": "^5.3.3"
     },
     "scripts": {
         "lint": "eslint src --ext .ts --fix",

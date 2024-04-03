@@ -11,19 +11,19 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "@codemirror/lang-markdown": "^6.2.3",
-        "@uiw/codemirror-theme-github": "^4.21.21",
-        "@uiw/react-codemirror": "^4.21.21",
-        "markdown-it": "^13.0.2",
+        "@codemirror/lang-markdown": "^6.2.4",
+        "@uiw/codemirror-theme-github": "^4.21.25",
+        "@uiw/react-codemirror": "^4.21.25",
+        "markdown-it": "^14.1.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },
     "devDependencies": {
         "@mashroom/mashroom-json-schemas": "2.5.4",
         "@mashroom/mashroom-portal": "2.5.4",
-        "@types/markdown-it": "^12.2.3",
-        "@types/react": "^18.2.0",
-        "@types/react-dom": "^18.2.1"
+        "@types/markdown-it": "^13.0.7",
+        "@types/react": "^18.2.73",
+        "@types/react-dom": "^18.2.23"
     },
     "scripts": {
         "lint": "eslint src --ext .ts,.tsx --fix",

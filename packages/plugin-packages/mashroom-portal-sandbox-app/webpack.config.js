@@ -13,7 +13,7 @@ module.exports = (env, argv) => {
         // Add portal theme
         entry.sandbox = [path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css')].concat(entry.sandbox);
         // Add dummy portal app
-        entry.dummyAppBundle = [path.resolve(__dirname, 'src/js/dummy_app')];
+        entry.dummyAppBundle = [path.resolve(__dirname, 'src/js/dummy-app')];
     }
 
     return {

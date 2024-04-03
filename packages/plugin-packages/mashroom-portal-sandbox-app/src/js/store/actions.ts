@@ -2,67 +2,98 @@
 import type { MashroomAvailablePortalApp } from '@mashroom/mashroom-portal/type-definitions';
 import type {SelectedPortalApp, ActivePortalApp, MessageBusMessage} from '../types';
 
-export const SET_AVAILABLE_PORTAL_APPS = 'SET_AVAILABLE_PORTAL_APPS';
-export const SET_SELECTED_PORTAL_APP = 'SET_SELECTED_PORTAL_APP';
-export const SET_ACTIVE_PORTAL_APP = 'SET_ACTIVE_PORTAL_APP';
-export const SET_APP_LOADING_ERROR = 'SET_APP_LOADING_ERROR';
-export const ADD_MESSAGE_PUBLISHED_BY_APP = 'ADD_MESSAGE_PUBLISHED_BY_APP';
-export const ADD_MESSAGE_PUBLISHED_BY_SANDBOX = 'ADD_MESSAGE_PUBLISHED_BY_SANDBOX';
-export const SET_HOST_WIDTH = 'SET_HOST_WIDTH';
-export const SET_TOPICS_SUBSCRIBED_BY_APP = 'SET_TOPICS_SUBSCRIBED_BY_APP';
+export type SetAvailablePortalAppsAction = {
+    readonly type: 'SET_AVAILABLE_PORTAL_APPS';
+    readonly availablePortalApps: Array<MashroomAvailablePortalApp>;
+}
 
-export const setAvailablePortalApps = (availablePortalApps: Array<MashroomAvailablePortalApp>) => {
+export type SetSelectedPortalAppAction = {
+    readonly type: 'SET_SELECTED_PORTAL_APP';
+    readonly selectedPortalApp: SelectedPortalApp | undefined | null;
+}
+
+export type SetActivePortalAppAction = {
+    readonly type: 'SET_ACTIVE_PORTAL_APP';
+    readonly activePortalApp: ActivePortalApp | undefined | null;
+}
+
+export type SetAppLoadingErrorAction = {
+    readonly type: 'SET_APP_LOADING_ERROR';
+    readonly error: boolean;
+}
+
+export type AddMessagePublishedByAppAction = {
+    readonly type: 'ADD_MESSAGE_PUBLISHED_BY_APP';
+    readonly message: MessageBusMessage;
+}
+
+export type AddMessagePublishedBySandboxAction = {
+    readonly type: 'ADD_MESSAGE_PUBLISHED_BY_SANDBOX';
+    readonly message: MessageBusMessage;
+}
+
+export type SetHostWidthAction = {
+    readonly type: 'SET_HOST_WIDTH';
+    readonly width: string;
+}
+
+export type SetTopicSubscribedByAppAction = {
+    readonly type: 'SET_TOPICS_SUBSCRIBED_BY_APP';
+    readonly topics:  Array<string>;
+}
+
+export const setAvailablePortalApps = (availablePortalApps: Array<MashroomAvailablePortalApp>): SetAvailablePortalAppsAction => {
     return {
-        type: SET_AVAILABLE_PORTAL_APPS,
+        type: 'SET_AVAILABLE_PORTAL_APPS',
         availablePortalApps,
     };
 };
 
-export const setSelectedPortalApp = (selectedPortalApp: SelectedPortalApp | undefined | null) => {
+export const setSelectedPortalApp = (selectedPortalApp: SelectedPortalApp | undefined | null): SetSelectedPortalAppAction => {
     return {
-        type: SET_SELECTED_PORTAL_APP,
+        type: 'SET_SELECTED_PORTAL_APP',
         selectedPortalApp,
     };
 };
 
-export const setActivePortalApp = (activePortalApp: ActivePortalApp | undefined | null) => {
+export const setActivePortalApp = (activePortalApp: ActivePortalApp | undefined | null): SetActivePortalAppAction => {
     return {
-        type: SET_ACTIVE_PORTAL_APP,
+        type: 'SET_ACTIVE_PORTAL_APP',
         activePortalApp,
     };
 };
 
-export const setAppLoadingError = (error: boolean) => {
+export const setAppLoadingError = (error: boolean): SetAppLoadingErrorAction => {
     return {
-        type: SET_APP_LOADING_ERROR,
+        type: 'SET_APP_LOADING_ERROR',
         error,
     };
 };
 
-export const addMessagePublishedByApp = (message: MessageBusMessage) => {
+export const addMessagePublishedByApp = (message: MessageBusMessage): AddMessagePublishedByAppAction => {
     return {
-        type: ADD_MESSAGE_PUBLISHED_BY_APP,
+        type: 'ADD_MESSAGE_PUBLISHED_BY_APP',
         message,
     };
 };
 
-export const addMessagePublishedBySandbox = (message: MessageBusMessage) => {
+export const addMessagePublishedBySandbox = (message: MessageBusMessage): AddMessagePublishedBySandboxAction => {
     return {
-        type: ADD_MESSAGE_PUBLISHED_BY_SANDBOX,
+        type: 'ADD_MESSAGE_PUBLISHED_BY_SANDBOX',
         message,
     };
 };
 
-export const setHostWidth = (width: string) => {
+export const setHostWidth = (width: string): SetHostWidthAction => {
     return {
-        type: SET_HOST_WIDTH,
+        type: 'SET_HOST_WIDTH',
         width,
     };
 };
 
-export const setTopicsSubscribedByApp = (topics: Array<string>) => {
+export const setTopicsSubscribedByApp = (topics: Array<string>): SetTopicSubscribedByAppAction => {
     return {
-        type: SET_TOPICS_SUBSCRIBED_BY_APP,
+        type: 'SET_TOPICS_SUBSCRIBED_BY_APP',
         topics,
     };
 };

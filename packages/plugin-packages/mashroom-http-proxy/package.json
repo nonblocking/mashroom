@@ -22,7 +22,7 @@
         "@types/http-proxy": "1.17.9",
         "@types/request": "^2.48.12",
         "@types/ws": "^8.5.10",
-        "ws": "^8.15.1"
+        "ws": "^8.16.0"
     },
     "jest": {
         "verbose": true,

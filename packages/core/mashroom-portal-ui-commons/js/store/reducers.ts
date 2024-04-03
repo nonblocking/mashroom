@@ -1,17 +1,17 @@
 
 import { combineReducers} from 'redux';
-import {SET_ACTIVE_TAB, SET_SHOW_MODAL} from './actions';
+import type { SetActiveTabAction, ShowModalAction} from './actions';
 
-import type {Reducer, ReducersMapObject,AnyAction} from 'redux';
+import type {Reducer, ReducersMapObject} from 'redux';
 import type {ModalState, TabDialogState} from '../../type-definitions';
 
-const modals: Reducer<ModalState> = (state, action) => {
+const modals: Reducer<ModalState, ShowModalAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return {};
     }
 
     switch (action.type) {
-        case SET_SHOW_MODAL: {
+        case 'SET_SHOW_MODAL': {
             return {
                 ...state,
                 [action.dialogName]: {
@@ -24,13 +24,13 @@ const modals: Reducer<ModalState> = (state, action) => {
     }
 };
 
-const tabDialogs: Reducer<TabDialogState> = (state, action) => {
+const tabDialogs: Reducer<TabDialogState, SetActiveTabAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return {};
     }
 
     switch (action.type) {
-        case SET_ACTIVE_TAB: {
+        case 'SET_ACTIVE_TAB': {
             return {
                 ...state,
                 [action.dialogName]: {
@@ -43,8 +43,8 @@ const tabDialogs: Reducer<TabDialogState> = (state, action) => {
     }
 };
 
-export const mashroomPortalCommonsCombineReducers = <S>(reducers: ReducersMapObject<S, AnyAction>) => {
-    const mergedReducers = {
+export const mashroomPortalCommonsCombineReducers = <S>(reducers: ReducersMapObject<S, any>) => {
+    const mergedReducers: any = {
         ...reducers,
         modals,
         tabDialogs,

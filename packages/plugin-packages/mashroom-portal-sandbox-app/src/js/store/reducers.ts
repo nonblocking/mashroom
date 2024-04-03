@@ -1,14 +1,14 @@
 
 import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
-import {
-    ADD_MESSAGE_PUBLISHED_BY_APP,
-    ADD_MESSAGE_PUBLISHED_BY_SANDBOX,
-    SET_ACTIVE_PORTAL_APP,
-    SET_APP_LOADING_ERROR,
-    SET_AVAILABLE_PORTAL_APPS,
-    SET_HOST_WIDTH,
-    SET_SELECTED_PORTAL_APP,
-    SET_TOPICS_SUBSCRIBED_BY_APP
+import type {
+    AddMessagePublishedByAppAction,
+    AddMessagePublishedBySandboxAction,
+    SetActivePortalAppAction,
+    SetAppLoadingErrorAction,
+    SetAvailablePortalAppsAction,
+    SetHostWidthAction,
+    SetSelectedPortalAppAction,
+    SetTopicSubscribedByAppAction
 } from './actions';
 
 import type {Reducer} from 'redux';
@@ -21,13 +21,13 @@ import type {
     SelectedPortalApp
 } from '../types';
 
-const availablePortalApps: Reducer<Array<MashroomAvailablePortalApp>> = (state, action) => {
+const availablePortalApps: Reducer<Array<MashroomAvailablePortalApp>, SetAvailablePortalAppsAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return [];
     }
 
     switch (action.type) {
-        case SET_AVAILABLE_PORTAL_APPS: {
+        case 'SET_AVAILABLE_PORTAL_APPS': {
             return action.availablePortalApps;
         }
         default:
@@ -35,13 +35,13 @@ const availablePortalApps: Reducer<Array<MashroomAvailablePortalApp>> = (state, 
     }
 };
 
-const appLoadingError: Reducer<boolean> = (state, action) => {
+const appLoadingError: Reducer<boolean, SetAppLoadingErrorAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return false;
     }
 
     switch (action.type) {
-        case SET_APP_LOADING_ERROR: {
+        case 'SET_APP_LOADING_ERROR': {
             return action.error;
         }
         default:
@@ -49,13 +49,13 @@ const appLoadingError: Reducer<boolean> = (state, action) => {
     }
 };
 
-const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null> = (state, action) => {
+const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null, SetSelectedPortalAppAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
 
     switch (action.type) {
-        case SET_SELECTED_PORTAL_APP: {
+        case 'SET_SELECTED_PORTAL_APP': {
             return action.selectedPortalApp;
         }
         default:
@@ -63,13 +63,13 @@ const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null> = (state,
     }
 };
 
-const activePortalApp: Reducer<ActivePortalApp | undefined | null> = (state, action) => {
+const activePortalApp: Reducer<ActivePortalApp | undefined | null, SetActivePortalAppAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
 
     switch (action.type) {
-        case SET_ACTIVE_PORTAL_APP: {
+        case 'SET_ACTIVE_PORTAL_APP': {
             return action.activePortalApp;
         }
         default:
@@ -77,7 +77,7 @@ const activePortalApp: Reducer<ActivePortalApp | undefined | null> = (state, act
     }
 };
 
-const messageBusCom: Reducer<MessageBusCommunication> = (state, action) => {
+const messageBusCom: Reducer<MessageBusCommunication, SetTopicSubscribedByAppAction | AddMessagePublishedByAppAction | AddMessagePublishedBySandboxAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return {
             topicsSubscribedByApp: [],
@@ -87,13 +87,13 @@ const messageBusCom: Reducer<MessageBusCommunication> = (state, action) => {
     }
 
     switch (action.type) {
-        case SET_TOPICS_SUBSCRIBED_BY_APP: {
+        case 'SET_TOPICS_SUBSCRIBED_BY_APP': {
             return {...state, topicsSubscribedByApp: action.topics};
         }
-        case ADD_MESSAGE_PUBLISHED_BY_APP: {
+        case 'ADD_MESSAGE_PUBLISHED_BY_APP': {
             return {...state, publishedByApp: [...state.publishedByApp, action.message]};
         }
-        case ADD_MESSAGE_PUBLISHED_BY_SANDBOX: {
+        case 'ADD_MESSAGE_PUBLISHED_BY_SANDBOX': {
             return {...state, publishedBySandbox: [...state.publishedBySandbox, action.message]};
         }
         default:
@@ -101,7 +101,7 @@ const messageBusCom: Reducer<MessageBusCommunication> = (state, action) => {
     }
 };
 
-const host: Reducer<PortalAppHost> = (state, action) => {
+const host: Reducer<PortalAppHost, SetHostWidthAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return {
             width: '100%'
@@ -109,7 +109,7 @@ const host: Reducer<PortalAppHost> = (state, action) => {
     }
 
     switch (action.type) {
-        case SET_HOST_WIDTH: {
+        case 'SET_HOST_WIDTH': {
             return {...state, width: action.width};
         }
         default:

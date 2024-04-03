@@ -1,5 +1,5 @@
 
-import {createStore} from 'redux';
+import {legacy_createStore} from 'redux';
 import reducers from './reducers';
 
 import type {State, Store} from '../types';
@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
     storeEnhancer = (global as any).__REDUX_DEVTOOLS_EXTENSION__ &&  (global as any).__REDUX_DEVTOOLS_EXTENSION__();
 }
 
-const store: Store = createStore(reducers, initialState, storeEnhancer);
+const store: Store = legacy_createStore(reducers, initialState, storeEnhancer);
 
 export default store;
 

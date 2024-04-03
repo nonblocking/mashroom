@@ -10,7 +10,7 @@
     ],
     "devDependencies": {
         "cheerio": "^1.0.0-rc.12",
-        "puppeteer": "^21.6.1",
+        "puppeteer": "^22.6.1",
         "showdown": "^2.1.0",
         "showdown-highlight": "^3.1.0"
     },

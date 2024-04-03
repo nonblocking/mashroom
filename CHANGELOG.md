@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Upgrade to Express 4.19 + all other libraries upgraded
  * HTTP Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if some subscription patterns overlap. 
    See [#115](https://github.com/nonblocking/mashroom/issues/115)
 

@@ -9,7 +9,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "mongodb": "^6.3.0"
+        "mongodb": "^6.5.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.5.4",

@@ -10,8 +10,8 @@
         "type-definitions/*"
     ],
     "dependencies": {
-        "express": "^4.18.2",
-        "express-session": "^1.17.3"
+        "express": "^4.19.2",
+        "express-session": "^1.18.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.5.4",
