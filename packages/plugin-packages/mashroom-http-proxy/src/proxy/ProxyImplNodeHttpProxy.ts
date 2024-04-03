@@ -2,7 +2,7 @@ import {URLSearchParams, URL} from 'url';
 import {createProxyServer} from 'http-proxy';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
-import {createForwardedForHeaders, processHttpResponse, processRequest, processWsRequest} from './utils';
+import {createForwardedForHeaders, processHttpResponseInterceptors, processHttpRequestInterceptors, processWsRequestInterceptors} from './utils';
 
 import type {
     RequestMetrics,
@@ -120,9 +120,15 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
         // Process interceptors
-        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequest(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams, streamTransformers} =
+            await processHttpRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+
         if (responseHandled) {
             return;
+        }
+
+        if (streamTransformers?.length > 0) {
+            logger.error('Stream transformer added by interceptor, but this proxy does not support transforming the request body');
         }
 
         // Extra checks
@@ -227,7 +233,7 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         this._requestMetrics.wsRequestTargetCount[target] ++;
 
         // Process interceptors
-        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequestInterceptors(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
         let forwardedForHeaders = {};
         if (this._createForwardedForHeaders) {
@@ -338,9 +344,14 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         }
 
         // Process interceptors
-        const {responseHandled} = await processHttpResponse(clientRequest, clientResponse, requestMeta.uri, proxyRes, this._interceptorHandler, logger);
+        const {responseHandled, streamTransformers} = await processHttpResponseInterceptors(clientRequest, clientResponse, requestMeta.uri, proxyRes, this._interceptorHandler, logger);
+
         if (responseHandled) {
             return;
+        }
+
+        if (streamTransformers?.length > 0) {
+            logger.error('Stream transformer added by interceptor, but this proxy does not support transforming the response body');
         }
 
         // Filter the headers from the target response

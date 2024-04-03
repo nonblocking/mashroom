@@ -1,3 +1,4 @@
+import type {Transform} from 'stream';
 import type {IncomingMessage} from 'http';
 import type {Request, Response} from 'express';
 import type {MashroomLogger, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
@@ -6,7 +7,7 @@ import type {
     MashroomHttpProxyRequestInterceptorResult,
     MashroomWsProxyRequestInterceptorResult,
     MashroomHttpProxyResponseInterceptorResult,
-    QueryParams
+    QueryParams,
 } from '../../type-definitions';
 import type {InterceptorHandler as InterceptorHandlerType, MashroomHttpProxyInterceptorRegistry} from '../../type-definitions/internal';
 
@@ -32,6 +33,8 @@ export default class InterceptorHandler implements InterceptorHandlerType {
         let addQueryParams = {};
         let removeQueryParams: Array<string> = [];
         let rewrittenTargetUri = targetUri;
+        let streamTransformers: Array<Transform> | undefined;
+
         const interceptors = this._interceptorRegistry.interceptors;
         for (let i = 0; i < interceptors.length; i++) {
             const {pluginName, interceptor} = interceptors[i];
@@ -91,6 +94,12 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                         ...result.removeQueryParams,
                     ];
                 }
+                if (result?.streamTransformers) {
+                    if (!streamTransformers) {
+                        streamTransformers = [];
+                    }
+                    streamTransformers.push(...result.streamTransformers);
+                }
             } catch (e) {
                 logger.error(`Interceptor ${pluginName} threw an error`, e);
             }
@@ -102,6 +111,7 @@ export default class InterceptorHandler implements InterceptorHandlerType {
             addQueryParams,
             removeQueryParams,
             rewrittenTargetUri,
+            streamTransformers,
         };
     }
 
@@ -163,6 +173,8 @@ export default class InterceptorHandler implements InterceptorHandlerType {
         let existingHeaders = {...targetResponse.headers};
         let addHeaders = {};
         let removeHeaders: Array<string> = [];
+        let streamTransformers: Array<Transform> | undefined;
+
         const interceptors = this._interceptorRegistry.interceptors;
         for (let i = 0; i < interceptors.length; i++) {
             const {pluginName, interceptor} = interceptors[i];
@@ -200,6 +212,12 @@ export default class InterceptorHandler implements InterceptorHandlerType {
                         ...result.removeHeaders,
                     ];
                 }
+                if (result?.streamTransformers) {
+                    if (!streamTransformers) {
+                        streamTransformers = [];
+                    }
+                    streamTransformers.push(...result.streamTransformers);
+                }
             } catch (e) {
                 logger.error(`Interceptor ${pluginName} threw an error`, e);
             }
@@ -207,7 +225,8 @@ export default class InterceptorHandler implements InterceptorHandlerType {
 
         return {
             addHeaders,
-            removeHeaders
+            removeHeaders,
+            streamTransformers,
         };
     }
 

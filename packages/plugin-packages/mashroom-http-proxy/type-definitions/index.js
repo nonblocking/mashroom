@@ -29,24 +29,26 @@ export interface MashroomHttpProxyService {
 }
 
 export type MashroomHttpProxyRequestInterceptorResult = {
-    addHeaders?: HttpHeaders;
-    removeHeaders?: Array<string>;
-    addQueryParams?: QueryParams;
-    removeQueryParams?: Array<string>;
-    rewrittenTargetUri?: string;
-    responseHandled?: boolean;
+    +addHeaders?: HttpHeaders;
+    +removeHeaders?: Array<string>;
+    +addQueryParams?: QueryParams;
+    +removeQueryParams?: Array<string>;
+    +rewrittenTargetUri?: string;
+    +responseHandled?: boolean;
+    +streamTransformers?: Array<any>;
 }
 
 export type MashroomWsProxyRequestInterceptorResult = {
-    addHeaders?: HttpHeaders;
-    removeHeaders?: Array<string>;
-    rewrittenTargetUri?: string;
+    +addHeaders?: HttpHeaders;
+    +removeHeaders?: Array<string>;
+    +rewrittenTargetUri?: string;
 }
 
 export type MashroomHttpProxyResponseInterceptorResult = {
-    addHeaders?: HttpHeaders;
-    removeHeaders?: Array<string>;
-    responseHandled?: boolean;
+    +addHeaders?: HttpHeaders;
+    +removeHeaders?: Array<string>;
+    +responseHandled?: boolean;
+    +streamTransformers?: Array<any>;
 }
 
 export interface MashroomHttpProxyInterceptor {

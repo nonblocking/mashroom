@@ -1,6 +1,7 @@
 
 import type {IncomingMessage} from 'http';
 import type {Socket} from 'net';
+import type {Transform} from 'stream';
 import type {Request, Response} from 'express';
 import type {MashroomPluginConfig, MashroomPluginContextHolder, IncomingMessageWithContext} from '@mashroom/mashroom/type-definitions';
 
@@ -26,28 +27,29 @@ export interface MashroomHttpProxyService {
      * The passed additional headers are only available at the upgrade/handshake request (most WS frameworks allow you to access it).
      */
     forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders?: HttpHeaders): Promise<void>;
-
 }
 
 export type MashroomHttpProxyRequestInterceptorResult = {
-    addHeaders?: HttpHeaders;
-    removeHeaders?: Array<string>;
-    addQueryParams?: QueryParams;
-    removeQueryParams?: Array<string>;
-    rewrittenTargetUri?: string;
-    responseHandled?: boolean;
+    readonly addHeaders?: HttpHeaders;
+    readonly removeHeaders?: Array<string>;
+    readonly addQueryParams?: QueryParams;
+    readonly removeQueryParams?: Array<string>;
+    readonly rewrittenTargetUri?: string;
+    readonly responseHandled?: boolean;
+    readonly streamTransformers?: Array<Transform>;
 }
 
 export type MashroomWsProxyRequestInterceptorResult = {
-    addHeaders?: HttpHeaders;
-    removeHeaders?: Array<string>;
-    rewrittenTargetUri?: string;
+    readonly addHeaders?: HttpHeaders;
+    readonly removeHeaders?: Array<string>;
+    readonly rewrittenTargetUri?: string;
 }
 
 export type MashroomHttpProxyResponseInterceptorResult = {
-    addHeaders?: HttpHeaders;
-    removeHeaders?: Array<string>;
-    responseHandled?: boolean;
+    readonly addHeaders?: HttpHeaders;
+    readonly removeHeaders?: Array<string>;
+    readonly responseHandled?: boolean;
+    readonly streamTransformers?: Array<Transform>;
 }
 
 export interface MashroomHttpProxyInterceptor {

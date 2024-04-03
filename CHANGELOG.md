@@ -3,6 +3,38 @@
 
 ## [unreleased]
 
+* HTTP Proxy: Added support for transforming the request/response body.
+  Proxy interceptors can now return *streamTransformers* (implementing *stream.Transform*) that can be used to compress/encrypt the communication to backend servers. 
+  See [#116](https://github.com/nonblocking/mashroom/issues/116). 
+  Example:
+  ```ts
+  export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+      async interceptRequest(targetUri) {
+          if (targetUri.startsWith('https://my-backend-server.com')) {
+              return {
+                  addHeaders: {
+                      'content-encoding': 'gzip',
+                  },
+                  streamTransformers: [
+                      zlib.createGzip(),
+                  ],
+              };
+          }
+      }
+      async interceptResponse(targetUri, existingHeaders) {
+          if (targetUri.startsWith('https://my-backend-server.com') && existingHeaders['content-encoding'] === 'gzip') {
+              return {
+                  removeHeaders: [
+                      'content-encoding',
+                  ],
+                  streamTransformers: [
+                      zlib.createGunzip(),
+                  ],
+              };
+          }
+      }
+  }
+  ```
  * HTTP Proxy: Removed [request](https://github.com/request/request) based proxy implementation because the module is deprecated for over 4 years now
  * Upgrade to Express 4.19 + all other libraries upgraded
  * HTTP Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if some subscription patterns overlap. 

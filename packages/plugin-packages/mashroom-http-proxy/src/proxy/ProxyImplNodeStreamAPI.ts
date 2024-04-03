@@ -3,7 +3,8 @@ import http from 'http';
 import https from 'https';
 import {pipeline} from 'stream/promises';
 import {getHttpPool, getHttpsPool, getPoolConfig, getWaitingRequestsForHostHeader} from '../connection-pool';
-import {createForwardedForHeaders, processHttpResponse, processRequest, processWsRequest} from './utils';
+import {createForwardedForHeaders, processHttpResponseInterceptors, processHttpRequestInterceptors, processWsRequestInterceptors} from './utils';
+import type {Transform} from 'stream';
 
 import type {
     RequestMetrics,
@@ -63,7 +64,9 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
         // Process interceptors
-        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams} = await processRequest(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        const {responseHandled, effectiveTargetUri, effectiveAdditionalHeaders, effectiveQueryParams, streamTransformers: requestStreamTransformers} =
+            await processHttpRequestInterceptors(req, res, targetUri, additionalHeaders, this._interceptorHandler, logger);
+
         if (responseHandled) {
             return;
         }
@@ -138,6 +141,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             targetUri,
             fullTargetUri,
             proxyRequestHttpHeaders,
+            requestStreamTransformers,
             retry: 0,
         });
     }
@@ -176,7 +180,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         }
 
         // Process interceptors
-        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequest(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
+        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequestInterceptors(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
         let forwardedForHeaders = {};
         if (this._createForwardedForHeaders) {
@@ -345,9 +349,12 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         targetUri: string;
         fullTargetUri: string;
         proxyRequestHttpHeaders: HttpHeaders;
+        requestStreamTransformers: Array<Transform>;
         retry: number;
     }): Promise<void> {
-        const {startTime, req, res, logger, targetUri, fullTargetUri, proxyRequestHttpHeaders, retry} = config;
+        const {startTime, req, res, logger, targetUri,
+            fullTargetUri, proxyRequestHttpHeaders, requestStreamTransformers, retry
+        } = config;
         let aborted = false;
         let proxyRequest: ClientRequest | undefined;
         try {
@@ -359,7 +366,11 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             });
 
             // Stream the client request
-            await pipeline(req, proxyRequest);
+            await pipeline(
+                req,
+                ...requestStreamTransformers /* help Typescript to understand which signature to use */ as  [Transform],
+                proxyRequest
+            );
 
             // Wait for response headers
             const proxyResponse = await this._createProxyResponse(proxyRequest);
@@ -370,7 +381,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             // Process interceptors
             // Pause the stream flow until the async op is finished
             proxyResponse.pause();
-            const {responseHandled} = await processHttpResponse(req, res, targetUri, proxyResponse, this._interceptorHandler, logger);
+            const {responseHandled, streamTransformers: responseStreamTransformers} = await processHttpResponseInterceptors(req, res, targetUri, proxyResponse, this._interceptorHandler, logger);
             proxyResponse.resume();
 
             if (responseHandled) {
@@ -387,7 +398,11 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             });
 
             // Stream back the proxy response
-            await pipeline(proxyResponse, res);
+            await pipeline(
+                proxyResponse,
+                ...responseStreamTransformers /* help Typescript to understand which signature to use */ as  [Transform],
+                res
+            );
 
             const responseEndTime = process.hrtime(startTime);
             logger.info(`Response from ${targetUri} sent to client in ${responseEndTime[0]}s ${responseEndTime[1] / 1000000}ms`);

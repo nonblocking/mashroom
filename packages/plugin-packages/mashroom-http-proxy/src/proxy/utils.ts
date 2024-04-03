@@ -1,26 +1,42 @@
+import type {Transform} from 'stream';
 import type {IncomingMessageWithContext,MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {Request, Response} from 'express';
 import type {IncomingMessage} from 'http';
 import type {HttpHeaders, QueryParams} from '../../type-definitions';
 import type {InterceptorHandler} from '../../type-definitions/internal';
 
-type ProcessRequestInterceptorsResult = {
-    responseHandled: true;
-    effectiveTargetUri?: void;
-    effectiveAdditionalHeaders?: void;
-    effectiveQueryParams?: void;
+type ProcessHttpRequestInterceptorsResult = {
+    readonly responseHandled: true;
+    readonly effectiveTargetUri?: never;
+    readonly effectiveAdditionalHeaders?: never;
+    readonly effectiveQueryParams?: never;
+    readonly streamTransformers?: never;
 } | {
-    responseHandled: false;
-    effectiveTargetUri: string;
-    effectiveAdditionalHeaders: HttpHeaders;
-    effectiveQueryParams: QueryParams;
+    readonly responseHandled: false;
+    readonly effectiveTargetUri: string;
+    readonly effectiveAdditionalHeaders: HttpHeaders;
+    readonly effectiveQueryParams: QueryParams;
+    readonly streamTransformers: Array<Transform>;
 };
+
+type ProcessHttpResponseInterceptorsResult = {
+    readonly responseHandled: true;
+    readonly streamTransformers?: never;
+} | {
+    readonly responseHandled: false;
+    readonly streamTransformers: Array<Transform>;
+};
+
+type ProcessWsRequestInterceptorsResult = {
+    readonly effectiveTargetUri: string;
+    readonly effectiveAdditionalHeaders: HttpHeaders;
+}
 
 const HEADER_X_FORWARDED_FOR = 'x-forwarded-for';
 const HEADER_X_FORWARDED_PROTO = 'x-forwarded-proto';
 const HEADER_X_FORWARDED_HOST = 'x-forwarded-host';
 
-export const processRequest = async (req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessRequestInterceptorsResult> => {
+export const processHttpRequestInterceptors = async (req: Request, res: Response, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessHttpRequestInterceptorsResult> => {
     let effectiveTargetUri = encodeURI(targetUri);
     let effectiveAdditionalHeaders = {
         ...additionalHeaders,
@@ -67,10 +83,11 @@ export const processRequest = async (req: Request, res: Response, targetUri: str
         effectiveTargetUri,
         effectiveAdditionalHeaders,
         effectiveQueryParams,
+        streamTransformers: interceptorResult.streamTransformers ?? [],
     };
 };
 
-export const processHttpResponse = async (clientRequest: Request, clientResponse: Response, targetUri: string, targetResponse: IncomingMessage, interceptorHandler: InterceptorHandler, logger: MashroomLogger)=> {
+export const processHttpResponseInterceptors = async (clientRequest: Request, clientResponse: Response, targetUri: string, targetResponse: IncomingMessage, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessHttpResponseInterceptorsResult> => {
     const interceptorResult = await interceptorHandler.processHttpResponse(clientRequest, clientResponse,targetUri, targetResponse, logger);
 
     if (interceptorResult.responseHandled) {
@@ -92,10 +109,11 @@ export const processHttpResponse = async (clientRequest: Request, clientResponse
 
     return {
         responseHandled: false,
+        streamTransformers: interceptorResult.streamTransformers ?? [],
     };
 };
 
-export const processWsRequest = async (clientRequest: IncomingMessageWithContext, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger) => {
+export const processWsRequestInterceptors = async (clientRequest: IncomingMessageWithContext, targetUri: string, additionalHeaders: HttpHeaders, interceptorHandler: InterceptorHandler, logger: MashroomLogger): Promise<ProcessWsRequestInterceptorsResult> => {
     let effectiveTargetUri = encodeURI(targetUri);
     let effectiveAdditionalHeaders = {
         ...additionalHeaders,

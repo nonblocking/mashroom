@@ -1,12 +1,14 @@
 
-import {Readable, Writable} from 'stream';
+import {Readable, Transform, Writable} from 'stream';
 import {createServer as createHttpServer, request} from 'http';
+import zlib from 'zlib';
 import WebSocket from 'ws';
 import nock from 'nock';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import ProxyImplNodeStreamAPI from '../../src/proxy/ProxyImplNodeStreamAPI';
 import InterceptorHandler from '../../src/proxy/InterceptorHandler';
 import HttpHeaderFilter from '../../src/proxy/HttpHeaderFilter';
+import type { TransformOptions} from 'stream';
 
 import type {Server} from 'http';
 import type {Socket} from 'net';
@@ -738,6 +740,130 @@ describe('ProxyImplNodeNative', () => {
         expect(res.headers).toEqual({
             'x-whatever': '123'
         });
+    });
+
+    it('allows interceptors to transform the request and response stream',  async () => {
+        nock('https://www.mashroom-server.com')
+            .post('/foo4', (b) => b.toString() === 'TEST REQUEST')
+            .reply(200, 'test response');
+
+        const transformToUpperCase: TransformOptions = {
+            transform(chunk, encoding, callback) {
+                this.push(chunk.toString().toUpperCase());
+                callback();
+            }
+        };
+
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                order: 1000,
+                pluginName: 'Interceptor 2',
+                interceptor: {
+                    async interceptRequest() {
+                        return {
+                            streamTransformers: [new Transform(transformToUpperCase)],
+                        };
+                    },
+                    async interceptResponse() {
+                        return {
+                            streamTransformers: [new Transform(transformToUpperCase)],
+                        };
+                    }
+                }
+            }
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
+        const interceptorHandler = new InterceptorHandler(pluginRegistry);
+
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, removeAllHeaderFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
+
+        const req = createDummyRequest('POST', 'test request');
+        const res = createDummyResponse();
+
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo4');
+
+        expect(res.body).toBe('TEST RESPONSE');
+    });
+
+    it('allows multiple stream transformers',  async () => {
+        let reqBody: Buffer | undefined;
+        nock('https://www.mashroom-server.com', {
+            reqheaders: {
+                'content-encoding': 'gzip',
+            },
+        })
+            .post('/foo4')
+            .reply((uri, body, cb) => {
+                reqBody = Buffer.from(body as string, 'hex');
+                cb(null, [200, reqBody, {
+                    'content-encoding': 'gzip',
+                }]);
+            });
+
+        const transformToUpperCase: TransformOptions = {
+            transform(chunk, encoding, callback) {
+                this.push(chunk.toString().toUpperCase());
+                callback();
+            }
+        };
+        const transformToLowerCse: TransformOptions = {
+            transform(chunk, encoding, callback) {
+                this.push(chunk.toString().toLowerCase());
+                callback();
+            }
+        };
+
+        const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
+            {
+                order: 1000,
+                pluginName: 'Interceptor 2',
+                interceptor: {
+                    async interceptRequest(targetUri) {
+                        if (targetUri.startsWith('https://www.mashroom-server.com')) {
+                            return {
+                                addHeaders: {
+                                    'content-encoding': 'gzip',
+                                },
+                                streamTransformers: [
+                                    new Transform(transformToUpperCase),
+                                    zlib.createGzip(), // compress
+                                ],
+                            };
+                        }
+                    },
+                    async interceptResponse(targetUri, existingHeaders) {
+                        if (targetUri.startsWith('https://www.mashroom-server.com') && existingHeaders['content-encoding'] === 'gzip') {
+                            return {
+                                removeHeaders: [
+                                    'content-encoding',
+                                ],
+                                streamTransformers: [
+                                    zlib.createGunzip(), // uncompress
+                                    new Transform(transformToLowerCse)
+                                ],
+                            };
+                        }
+                    }
+                }
+            },
+        ];
+        const pluginRegistry: any = {
+            interceptors,
+        };
+        const interceptorHandler = new InterceptorHandler(pluginRegistry);
+
+        const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, removeAllHeaderFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
+
+        const req = createDummyRequest('POST', 'test request');
+        const res = createDummyResponse();
+
+        await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo4');
+
+        expect(reqBody).toBeTruthy();
+        expect(reqBody!.length).toBe(30);
+        expect(res.body).toBe('test request');
     });
 
     it('it rejects requests if too many are already waiting', async () => {

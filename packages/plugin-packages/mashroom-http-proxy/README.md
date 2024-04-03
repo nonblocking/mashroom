@@ -197,7 +197,9 @@ interface MashroomHttpProxyInterceptor {
 }
 ```
 
-As an example you could add a Bearer token to each request like this (implemented like this in the *mashroom-http-proxy-add-id-token* module):
+#### Examples
+
+Add a Bearer token to each request like this (implemented like this in the *mashroom-http-proxy-add-id-token* module):
 
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
@@ -221,7 +223,8 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 }
 ```
 
-Or return forbidden for some reason:
+Return forbidden for some reason:
+
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
@@ -237,7 +240,8 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 }
 ```
 
-Or even manipulate the response:
+Handle the response instead of the proxy:
+
 ```ts
 export default class MyInterceptor implements MashroomHttpProxyInterceptor {
 
@@ -258,6 +262,70 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
         return {
             responseHandled: true
         };
+    }
+}
+```
+
+Compress request/response body (only supported by the default/*streamAPI* proxy implementation):
+
+```ts
+import zlib from 'zlib';
+
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+    async interceptRequest(targetUri) {
+        if (targetUri.startsWith('https://my-backend-server.com')) {
+            return {
+                addHeaders: {
+                    'content-encoding': 'gzip',
+                },
+                streamTransformers: [
+                    zlib.createGzip(),
+                ],
+            };
+        }
+    }
+    
+    async interceptResponse(targetUri, existingHeaders) {
+        if (targetUri.startsWith('https://my-backend-server.com') && existingHeaders['content-encoding'] === 'gzip') {
+            return {
+                removeHeaders: [
+                    'content-encoding',
+                ],
+                streamTransformers: [
+                    zlib.createGunzip(),
+                ],
+            };
+        }
+    }
+}
+```
+
+Encrypt request/response body (only supported by the default/*streamAPI* proxy implementation):
+
+```ts
+import crypto from 'crypto';
+
+export default class MyInterceptor implements MashroomHttpProxyInterceptor {
+
+    async interceptRequest(targetUri) {
+        if (targetUri.startsWith('https://my-backend-server.com')) {
+            return {
+                streamTransformers: [
+                    crypto.createCipheriv(/* .... */),
+                ],
+            };
+        }
+    }
+    
+    async interceptResponse(targetUri, existingHeaders) {
+        if (targetUri.startsWith('https://my-backend-server.com')) {
+            return {
+                streamTransformers: [
+                    crypto.reateDecipheriv(/* .... */),
+                ],
+            };
+        }
     }
 }
 ```
