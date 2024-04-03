@@ -1,16 +1,11 @@
-
 name: Mashroom Run Tests MacOS
-
 on:
   push:
     branches: [ master, release/* ]
-
 jobs:
   build:
-
     runs-on: macos-latest
     timeout-minutes: 45
-
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/

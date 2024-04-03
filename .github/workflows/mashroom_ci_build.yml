@@ -1,18 +1,13 @@
-
 name: Mashroom CI Build
-
 on:
   push:
     branches: [ master, release/* ]
   pull_request:
     branches: [ master, release/* ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
     timeout-minutes: 45
-
     strategy:
       matrix:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/

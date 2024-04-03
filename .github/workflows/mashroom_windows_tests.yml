@@ -1,13 +1,9 @@
-
 name: Mashroom Run Tests Windows
-
 on:
   push:
     branches: [ master, release/* ]
-
 jobs:
   build:
-
     runs-on: windows-latest
     timeout-minutes: 45
 
