@@ -80,7 +80,6 @@ You can override the default config in your Mashroom config file like this:
  * _proxyImpl_: Switch the proxy implementation. Currently available are:
    * *streamAPI* (based on the Node.js stream API)
    * *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))
-   * *request* (based on the deprecated (!) [request](https://github.com/request/request))
    * *default* (which is *streamAPI*)
 
 ## Services

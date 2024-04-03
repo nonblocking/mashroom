@@ -6,7 +6,6 @@ import {registerWsConnectionMetrics, unregisterWsConnectionMetrics} from '../met
 import {registerRequestMetrics, unregisterRequestMetrics} from '../metrics/request-metrics';
 import HttpHeaderFilter from './HttpHeaderFilter';
 import InterceptorHandler from './InterceptorHandler';
-import ProxyImplRequest from './ProxyImplRequest';
 import ProxyImplNodeStreamAPI from './ProxyImplNodeStreamAPI';
 import ProxyImplNodeHttpProxy from './ProxyImplNodeHttpProxy';
 import MashroomHttpProxyService from './MashroomHttpProxyService';
@@ -35,10 +34,7 @@ const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pl
     const headerFilter = new HttpHeaderFilter(forwardHeaders);
     const interceptorHandler = new InterceptorHandler(context.pluginRegistry);
     let proxy: Proxy;
-    if (proxyImpl === 'request') {
-        logger.warn('Using deprecated http-proxy impl based on "request"');
-        proxy = new ProxyImplRequest(socketTimeoutMs, interceptorHandler, headerFilter, retryOnReset, poolMaxWaitingRequestsPerHost, createForwardedForHeaders, pluginContext.loggerFactory);
-    } else if (proxyImpl === 'nodeHttpProxy') {
+    if (proxyImpl === 'nodeHttpProxy') {
         logger.info('Using http-proxy impl based on "node-http-proxy"');
         proxy = new ProxyImplNodeHttpProxy(
             socketTimeoutMs, rejectUnauthorized, interceptorHandler, headerFilter, retryOnReset,

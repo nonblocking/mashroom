@@ -181,7 +181,7 @@ export interface Plugins {
      *  * request (based on the deprecated (!) [request](https://github.com/request/request))
      *  * default (which is streamAPI)
      */
-    proxyImpl?: "default" | "streamAPI" | "nodeHttpProxy" | "request";
+    proxyImpl?: "default" | "streamAPI" | "nodeHttpProxy";
   };
   "Mashroom Http Proxy Add User Headers Interceptor"?: {
     /**
