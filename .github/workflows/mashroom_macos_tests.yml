@@ -1,4 +1,4 @@
-name: Mashroom Run Tests MacOS
+name: Unit Tests MacOS
 on:
   push:
     branches: [ master, release/* ]

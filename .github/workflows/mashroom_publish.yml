@@ -1,4 +1,4 @@
-name: Mashroom publish to npmjs with provenance attestation
+name: Publish to npmjs with provenance attestation
 on:
   release:
     types: [published]

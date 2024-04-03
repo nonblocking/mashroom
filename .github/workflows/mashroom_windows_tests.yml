@@ -1,4 +1,4 @@
-name: Mashroom Run Tests Windows
+name: Unit Tests Windows
 on:
   push:
     branches: [ master, release/* ]
