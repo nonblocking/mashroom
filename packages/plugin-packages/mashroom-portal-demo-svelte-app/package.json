@@ -1,68 +1,73 @@
 {
-    "name": "@mashroom/mashroom-portal-demo-svelte-app",
-    "version": "2.5.4",
-    "description": "A simple Svelte based SPA that can be used in the Mashroom Portal",
-    "homepage": "https://www.mashroom-server.com",
-    "license": "MIT",
-    "main": "index.js",
-    "sideEffects": false,
-    "files": [
-        "public/**"
-    ],
-    "scripts": {
-        "build": "cross-env NODE_ENV=production webpack",
-        "dev": "webpack serve",
-        "type-check": "svelte-check"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/nonblocking/mashroom.git"
-    },
-    "keywords": [
-        "mashroom",
-        "svelte"
-    ],
-    "author": "Milan Heimschild",
-    "bugs": {
-        "url": "https://github.com/nonblocking/mashroom/issues"
-    },
-    "devDependencies": {
-        "@mashroom/mashroom": "2.5.4",
-        "@mashroom/mashroom-portal": "2.5.4",
-        "@tsconfig/svelte": "^5.0.4",
-        "svelte": "^4.2.12",
-        "svelte-check": "^3.6.8",
-        "svelte-loader": "^3.2.0",
-        "svelte-preprocess": "^5.1.3"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Demo Svelte App",
-                "type": "portal-app2",
-                "clientBootstrap": "startSvelteDemoApp",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
-                },
-                "local": {
-                    "resourcesRoot": "./public"
-                },
-                "defaultConfig": {
-                    "title": "Demo Svelte App",
-                    "description": {
-                        "en": "A simple Svelte SPA",
-                        "de": "Ein einfacher Svelte SPA"
-                    },
-                    "category": "Demo",
-                    "appConfig": {
-                        "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",
-                        "pingButtonLabel": "Send Ping"
-                    }
-                }
-            }
-        ]
+  "name": "@mashroom/mashroom-portal-demo-svelte-app",
+  "version": "2.5.4",
+  "description": "A simple Svelte based SPA that can be used in the Mashroom Portal",
+  "homepage": "https://www.mashroom-server.com",
+  "license": "MIT",
+  "main": "index.js",
+  "sideEffects": false,
+  "files": [
+    "public/**"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_ENV=production webpack",
+    "dev": "webpack serve",
+    "type-check": "svelte-check"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonblocking/mashroom.git"
+  },
+  "keywords": [
+    "mashroom",
+    "svelte"
+  ],
+  "author": "Milan Heimschild",
+  "bugs": {
+    "url": "https://github.com/nonblocking/mashroom/issues"
+  },
+  "devDependencies": {
+    "@mashroom/mashroom": "2.5.4",
+    "@mashroom/mashroom-portal": "2.5.4",
+    "@tsconfig/svelte": "^5.0.4",
+    "svelte": "^4.2.12",
+    "svelte-check": "^3.6.8",
+    "svelte-loader": "^3.2.0",
+    "svelte-preprocess": "^5.1.3"
+  },
+  "mashroom": {
+    "devModeBuildScript": "build",
+    "plugins": [
+      {
+        "name": "Mashroom Portal Demo Svelte App",
+        "type": "portal-app2",
+        "clientBootstrap": "startSvelteDemoApp",
+        "resources": {
+          "js": [
+            "bundle.js"
+          ]
+        },
+        "local": {
+          "resourcesRoot": "./public"
+        },
+        "defaultConfig": {
+          "title": "Demo Svelte App",
+          "description": {
+            "en": "A simple Svelte SPA",
+            "de": "Ein einfacher Svelte SPA"
+          },
+          "category": "Demo",
+          "appConfig": {
+            "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",
+            "pingButtonLabel": "Send Ping"
+          }
+        }
+      }
+    ]
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "svelte-preprocess": false
     }
+  }
 }

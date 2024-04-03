@@ -6,9 +6,6 @@
     "packages/plugin-packages/*",
     "packages/test/*"
   ],
-  "dependencies": {
-    "@lavamoat/preinstall-always-fail": "^2.0.0"
-  },
   "devDependencies": {
     "@babel/cli": "^7.24.1",
     "@babel/core": "^7.24.3",
@@ -65,7 +62,7 @@
   },
   "scripts": {
     "postinstall": "patch-package || true",
-    "setup": "npm install && allow-scripts && npm run build:core",
+    "setup": "npm install && allow-scripts && lerna exec -- allow-scripts && npm run build:core",
     "type-check": "lerna run type-check && flow check",
     "lint": "lerna run lint",
     "test": "lerna run test",
@@ -77,8 +74,7 @@
   "lavamoat": {
     "allowScripts": {
       "$root$": true,
-      "lerna>nx": true,
-      "@lavamoat/preinstall-always-fail": false
+      "lerna>nx": true
     }
   }
 }

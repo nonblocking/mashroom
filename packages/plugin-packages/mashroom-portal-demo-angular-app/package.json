@@ -1,67 +1,75 @@
 {
-    "name": "@mashroom/mashroom-portal-demo-angular-app",
-    "description": "A simple Angular based SPA that can be used in the Mashroom Portal",
-    "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
-    "license": "MIT",
-    "version": "2.5.4",
-    "files": [
-        "dist/**"
-    ],
-    "devDependencies": {
-        "@mashroom/mashroom-portal": "2.5.4",
-        "@angular-devkit/build-angular": "^17.3.2",
-        "@angular-eslint/builder": "^17.3.0",
-        "@angular-eslint/schematics": "^17.3.0",
-        "@angular-eslint/template-parser": "^17.3.0",
-        "@angular/cli": "^17.3.2",
-        "@angular/common": "^17.3.2",
-        "@angular/compiler": "^17.3.2",
-        "@angular/compiler-cli": "^17.3.2",
-        "@angular/core": "^17.3.2",
-        "@angular/forms": "^17.3.2",
-        "@angular/language-service": "^17.3.2",
-        "@angular/platform-browser": "^17.3.2",
-        "@angular/platform-browser-dynamic": "^17.3.2"
-    },
-    "scripts": {
-        "dev": "ng serve",
-        "build": "ng build --configuration production",
-        "lint": "ng lint",
-        "type-check": "tsc --noEmit"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Demo Angular App",
-                "type": "portal-app2",
-                "clientBootstrap": "startAngularDemoApp",
-                "resources": {
-                    "js": [
-                        "runtime.js",
-                        "main.js"
-                    ],
-                    "css": [
-                        "styles.css"
-                    ]
-                },
-                "local": {
-                    "resourcesRoot": "./dist"
-                },
-                "defaultConfig": {
-                    "title": "Demo Angular App",
-                    "description": {
-                        "en": "A simple Angular SPA",
-                        "de": "Ein einfacher Angular SPA"
-                    },
-                    "category": "Demo",
-                    "appConfig": {
-                        "message": "This is simple Angular based SPA that communicates with other Apps on the page via message bus",
-                        "pingButtonLabel": "Send Ping"
-                    }
-                }
-            }
-        ]
+  "name": "@mashroom/mashroom-portal-demo-angular-app",
+  "description": "A simple Angular based SPA that can be used in the Mashroom Portal",
+  "homepage": "https://www.mashroom-server.com",
+  "repository": "github:nonblocking/mashroom",
+  "license": "MIT",
+  "version": "2.5.4",
+  "files": [
+    "dist/**"
+  ],
+  "devDependencies": {
+    "@mashroom/mashroom-portal": "2.5.4",
+    "@angular-devkit/build-angular": "^17.3.2",
+    "@angular-eslint/builder": "^17.3.0",
+    "@angular-eslint/schematics": "^17.3.0",
+    "@angular-eslint/template-parser": "^17.3.0",
+    "@angular/cli": "^17.3.2",
+    "@angular/common": "^17.3.2",
+    "@angular/compiler": "^17.3.2",
+    "@angular/compiler-cli": "^17.3.2",
+    "@angular/core": "^17.3.2",
+    "@angular/forms": "^17.3.2",
+    "@angular/language-service": "^17.3.2",
+    "@angular/platform-browser": "^17.3.2",
+    "@angular/platform-browser-dynamic": "^17.3.2"
+  },
+  "scripts": {
+    "dev": "ng serve",
+    "build": "ng build --configuration production",
+    "lint": "ng lint",
+    "type-check": "tsc --noEmit"
+  },
+  "mashroom": {
+    "devModeBuildScript": "build",
+    "plugins": [
+      {
+        "name": "Mashroom Portal Demo Angular App",
+        "type": "portal-app2",
+        "clientBootstrap": "startAngularDemoApp",
+        "resources": {
+          "js": [
+            "runtime.js",
+            "main.js"
+          ],
+          "css": [
+            "styles.css"
+          ]
+        },
+        "local": {
+          "resourcesRoot": "./dist"
+        },
+        "defaultConfig": {
+          "title": "Demo Angular App",
+          "description": {
+            "en": "A simple Angular SPA",
+            "de": "Ein einfacher Angular SPA"
+          },
+          "category": "Demo",
+          "appConfig": {
+            "message": "This is simple Angular based SPA that communicates with other Apps on the page via message bus",
+            "pingButtonLabel": "Send Ping"
+          }
+        }
+      }
+    ]
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "@angular-devkit/build-angular>esbuild": false,
+      "@angular-devkit/build-angular>piscina>nice-napi": false,
+      "@angular-devkit/build-angular>vite>esbuild": false,
+      "@angular-eslint/builder>nx": false
     }
+  }
 }

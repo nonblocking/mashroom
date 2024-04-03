@@ -1,36 +1,41 @@
 {
-    "name": "@mashroom/mashroom-json-schemas",
-    "description": "JSON schemas for Mashroom config files",
-    "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
-    "license": "MIT",
-    "version": "2.5.4",
-    "files": [
-        "schemas/**",
-        "type-definitions/**"
+  "name": "@mashroom/mashroom-json-schemas",
+  "description": "JSON schemas for Mashroom config files",
+  "homepage": "https://www.mashroom-server.com",
+  "repository": "github:nonblocking/mashroom",
+  "license": "MIT",
+  "version": "2.5.4",
+  "files": [
+    "schemas/**",
+    "type-definitions/**"
+  ],
+  "devDependencies": {
+    "ajv": "^8.12.0",
+    "json-schema-to-typescript": "13.1.2"
+  },
+  "jest": {
+    "verbose": true,
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/test"
     ],
-    "devDependencies": {
-        "ajv": "^8.12.0",
-        "json-schema-to-typescript": "13.1.2"
-    },
-    "jest": {
-        "verbose": true,
-        "testEnvironment": "node",
-        "roots": [
-            "<rootDir>/test"
-        ],
-        "testRegex": "(\\.(test|spec))\\.ts$",
-        "reporters": [
-            "default",
-            "jest-junit"
-        ]
-    },
-    "jest-junit": {
-        "outputDirectory": "./test-reports"
-    },
-    "scripts": {
-        "test": "jest",
-        "type-check": "tsc --noEmit",
-        "build": "node gen-types.js"
+    "testRegex": "(\\.(test|spec))\\.ts$",
+    "reporters": [
+      "default",
+      "jest-junit"
+    ]
+  },
+  "jest-junit": {
+    "outputDirectory": "./test-reports"
+  },
+  "scripts": {
+    "test": "jest",
+    "type-check": "tsc --noEmit",
+    "build": "node gen-types.js"
+  },
+  "lavamoat": {
+    "allowScripts": {
+      "json-schema-to-typescript>cli-color>es5-ext": false
     }
+  }
 }
