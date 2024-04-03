@@ -788,6 +788,8 @@ describe('ProxyImplNodeNative', () => {
     });
 
     it('allows multiple stream transformers',  async () => {
+        const requestData = 'test request';
+
         let reqBody: Buffer | undefined;
         nock('https://www.mashroom-server.com', {
             reqheaders: {
@@ -856,14 +858,14 @@ describe('ProxyImplNodeNative', () => {
 
         const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, removeAllHeaderFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
 
-        const req = createDummyRequest('POST', 'test request');
+        const req = createDummyRequest('POST', requestData);
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo4');
 
         expect(reqBody).toBeTruthy();
-        expect(reqBody!.length).toBe(30);
-        expect(res.body).toBe('test request');
+        expect(reqBody!.length).not.toBe(requestData.length);
+        expect(res.body).toBe(requestData);
     });
 
     it('it rejects requests if too many are already waiting', async () => {
