@@ -77,7 +77,8 @@
   "lavamoat": {
     "allowScripts": {
       "$root$": true,
-      "lerna>nx": true
+      "lerna>nx": true,
+      "@lavamoat/preinstall-always-fail": false
     }
   }
 }
