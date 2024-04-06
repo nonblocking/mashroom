@@ -4,12 +4,11 @@
   "homepage": "https://www.mashroom-server.com",
   "repository": "github:nonblocking/mashroom",
   "license": "MIT",
-  "version": "2.5.4",
+  "version": "2.6.0",
   "files": [
     "dist/**"
   ],
   "devDependencies": {
-    "@mashroom/mashroom-portal": "2.5.4",
     "@angular-devkit/build-angular": "^17.3.2",
     "@angular-eslint/builder": "^17.3.0",
     "@angular-eslint/schematics": "^17.3.0",
@@ -22,7 +21,8 @@
     "@angular/forms": "^17.3.2",
     "@angular/language-service": "^17.3.2",
     "@angular/platform-browser": "^17.3.2",
-    "@angular/platform-browser-dynamic": "^17.3.2"
+    "@angular/platform-browser-dynamic": "^17.3.2",
+    "@mashroom/mashroom-portal": "2.6.0"
   },
   "scripts": {
     "dev": "ng serve",
