@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.6.0 (April 6, 2024)
+
  * Supply Chain Safety: Generate npm provenance statements when publishing (via Github Actions workflow)
  * Supply Chain Safety: Disabled all dependency lifecycle scripts by default
  * HTTP Proxy: Added support for transforming the request/response body.
@@ -39,7 +42,7 @@
    ```
  * HTTP Proxy: Removed [request](https://github.com/request/request) based proxy implementation because the module is deprecated for over 4 years now
  * Upgrade to Express 4.19 + all other libraries upgraded
- * HTTP Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if some subscription patterns overlap. 
+ * HTTP Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if subscription patterns overlap
    See [#115](https://github.com/nonblocking/mashroom/issues/115)
 
 ## 2.5.4 (January 28, 2024)
