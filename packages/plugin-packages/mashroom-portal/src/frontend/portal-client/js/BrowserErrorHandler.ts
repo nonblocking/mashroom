@@ -58,7 +58,7 @@ const getAppNameFromStack = (stack: string): string | undefined => {
     for (let i = 0; i < reverseStackRows.length; i++) {
         const portalAppName = getAppNameFromScript(reverseStackRows[i]);
         if (portalAppName) {
-            break;
+            return portalAppName;
         }
     }
     return undefined;

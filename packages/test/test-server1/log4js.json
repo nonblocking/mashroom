@@ -7,7 +7,7 @@
             "backups": 3,
             "layout": {
                 "type": "pattern",
-                "pattern": "%d %p %X{sessionID} %X{clientIP} %X{browser} %X{browserVersion} %X{username} %c - %m"
+                "pattern": "%d %p %X{sessionID} %X{clientIP} %X{browser} %X{browserVersion} %X{username} %X{portalAppName} %c - %m"
             }
         },
         "console": {

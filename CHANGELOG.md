@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: Fixed detection which App wrote a browser console error 
+   (the portalAppName will now be set properly in the server log)
 
 ## 2.6.0 (April 6, 2024)
 
@@ -42,7 +44,7 @@
    ```
  * HTTP Proxy: Removed [request](https://github.com/request/request) based proxy implementation because the module is deprecated for over 4 years now
  * Upgrade to Express 4.19 + all other libraries upgraded
- * HTTP Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if subscription patterns overlap
+ * Portal: Fixed the problem that remote subscriptions can receive the same message multiple times if subscription patterns overlap
    See [#115](https://github.com/nonblocking/mashroom/issues/115)
 
 ## 2.5.4 (January 28, 2024)
