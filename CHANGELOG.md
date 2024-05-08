@@ -3,7 +3,7 @@
 
 ## [unreleased]
 
- * Portal: Fixed detection which App wrote a browser console error 
+ * Portal: Fixed detection which App wrote a browser console error
    (the portalAppName will now be set properly in the server log)
 
 ## 2.6.0 (April 6, 2024)
@@ -11,8 +11,8 @@
  * Supply Chain Safety: Generate npm provenance statements when publishing (via Github Actions workflow)
  * Supply Chain Safety: Disabled all dependency lifecycle scripts by default
  * HTTP Proxy: Added support for transforming the request/response body.
-   Proxy interceptors can now return *streamTransformers* (implementing *stream.Transform*) that can be used to compress/encrypt the communication to backend servers. 
-   See [#116](https://github.com/nonblocking/mashroom/issues/116). 
+   Proxy interceptors can now return *streamTransformers* (implementing *stream.Transform*) that can be used to compress/encrypt the communication to backend servers.
+   See [#116](https://github.com/nonblocking/mashroom/issues/116).
    Example:
    ```ts
    export default class MyInterceptor implements MashroomHttpProxyInterceptor {
@@ -68,16 +68,16 @@
      * Added: *mashroom_remote_app_k8s_services_no_plugin_definition_total*
      * Added: *mashroom_remote_app_k8s_services_connection_failed_total*
  * K8S Remote App Registry: Added a config property *serviceProcessingBatchSize* that determines how many services are processed in parallel.
-   Can be used to optimize the time until the plugin (and therefore the Pod) gets ready on Kubernetes. 
- * Remote App Registry: Made sure all endpoint URLs and properly registered before the first scan starts 
- * Remote App Registry and K8S Remote App Registry: Improved error handling (shows now in the Admin UI which kind of error occurred, e.g. Timeout) 
+   Can be used to optimize the time until the plugin (and therefore the Pod) gets ready on Kubernetes.
+ * Remote App Registry: Made sure all endpoint URLs and properly registered before the first scan starts
+ * Remote App Registry and K8S Remote App Registry: Improved error handling (shows now in the Admin UI which kind of error occurred, e.g. Timeout)
 
 ## 2.5.2 (January 19, 2024)
 
  * Background Jobs: Fixed measuring execution time for async jobs
  * Background Jobs: Added a config property *invokeImmediately* to invoke the job immediately once (in addition to the cron schedule)
- * Remote App Registry and K8S Remote App Registry: Made sure the plugins do not get ready until the first full scan has completed. 
-   On Kubernetes this means the Pod only gets ready if all Remote Apps have been registered already. 
+ * Remote App Registry and K8S Remote App Registry: Made sure the plugins do not get ready until the first full scan has completed.
+   On Kubernetes this means the Pod only gets ready if all Remote Apps have been registered already.
 
 ## 2.5.1 (January 17, 2024)
 
@@ -89,12 +89,12 @@
    Works similar to the approach previously implemented in the *Prometheus Metric Exporter*, only the serialization to Prometheus format is not done automatically
  * Prometheus Metric Exporter: **BREAKING CHANGE** Removed the possibility to fetch prometheus metrics via inter-process communication within a PM2 cluster
  * Metrics Collector: Uses now [OpenTelemetry](https://opentelemetry.io/docs/specs/otel/metrics/) to gather and export metrics. Changes:
-     * The collector service supports now asynchronous metric gathering via callback 
-     * It is possible now to directly use the OpenTelemetry API 
+     * The collector service supports now asynchronous metric gathering via callback
+     * It is possible now to directly use the OpenTelemetry API
      * The metrics are more accurate since the get measured during export
 
    Due to the API structure of OpenTelemetry there are also **BREAKING CHANGES** if you use the metrics collector service in your custom plugins:
-     * Summary metrics are no longer available (use Prometheus histogram_quantile()) 
+     * Summary metrics are no longer available (use Prometheus histogram_quantile())
      * Aggregation is no longer integrated (use Prometheus aggregations)
      * Histograms: *observe()* has been renamed to *record()*
      * Counters exist now as synchronous version with only an *inc()* method and as an asynchronous version with a *set()* method
@@ -110,34 +110,34 @@
       ```
  * Portal: Added metrics for remote resource requests (*mashroom_portal_remote_resources_*), like request count, error count and pool stats
  * HTTP Proxy: The proxies do no longer automatically add *x-forwarded-* headers, because if you are using public APIs you might not want
-   to disclose details of your internal network. Added a new config property *createForwardedForHeaders* to explicitly turn this feature on again. 
+   to disclose details of your internal network. Added a new config property *createForwardedForHeaders* to explicitly turn this feature on again.
    Also fixed the implementation, it takes now existing headers from reverse proxies into consideration and keeps them or
    extends them (which means *x-forwarded-for* contains now the IP address of the original client as well if there are reverse proxies).
  * HTTP Proxy: Added metrics:
    * mashroom_http_proxy_requests_ws_connection_errors
- 
-   **BREAKING CHANGE** Renamed metrics: 
+
+   **BREAKING CHANGE** Renamed metrics:
    * mashroom_http_proxy_requests_connection_errors -> mashroom_http_proxy_requests_http_connection_errors
    * mashroom_http_proxy_requests_timeouts -> mashroom_http_proxy_requests_http_timeouts
  * HTTP Proxy: The pool properties like *poolMaxSocketsPerHost* are now only for HTTP requests, WebSockets are handled separately
    and can be limited by *wsMaxConnectionsPerHost*
- * HTTP Proxy: Added a new implementation based on the Node.js Stream API, which is also the default now.  
+ * HTTP Proxy: Added a new implementation based on the Node.js Stream API, which is also the default now.
    It deliberately does not use any 3rd party libraries, because those available (like request and node-http-server) are either deprecated
-   or unmaintained. 
+   or unmaintained.
    It uses the *Stream.pipeline* API introduced in Node.js 10 which has an improved error handling and
-   cleanup mechanisms compared to the old *Readable.pipe* used by most libraries. 
-   The performance and resource usage characteristics are very similar to the *node-http-proxy* based implementation. 
-   According to our tests you can even expect slightly improved throughput. 
+   cleanup mechanisms compared to the old *Readable.pipe* used by most libraries.
+   The performance and resource usage characteristics are very similar to the *node-http-proxy* based implementation.
+   According to our tests you can even expect slightly improved throughput.
    If you run into to troubles here you can switch back to the previous implementation like this:
    ```json
     "Mashroom Http Proxy Services": {
       "proxyImpl": "nodeHttpProxy"
     }
    ```
- * HTTP Proxy: Return HTTP 502 (Bad Gateway) instead of 503 if the target does not respond or is not available 
+ * HTTP Proxy: Return HTTP 502 (Bad Gateway) instead of 503 if the target does not respond or is not available
  * HTTP Proxy: Fixed target URL in metrics (protocol part contained two colons)
  * Portal: Fetching and delivering App resources (js/css) improved
-   * Fetching resources from remote servers and slow network devices has now a proper timeout set, 
+   * Fetching resources from remote servers and slow network devices has now a proper timeout set,
      because non-responding servers could potentially lead to a memory leak due to an increasing number of socket/file handles
    * The content-length header is now always correctly set
    * For remote resource 502 (Bad Gateway) or 504 (Gateway Timeout) is returned instead of just 500 if something goes wrong
@@ -173,10 +173,10 @@
 
 ## 2.4.5 (November 29, 2023)
 
- * Portal: It is now guaranteed that all client-side (browser) errors are actually sent to the server and logged there, 
-   even if there is a huge amount of errors and also on the browser unload event. 
- * Core: Fixed deprecation warnings from the spdy module. It is now loaded lazy, but since it is no longer maintained 
-   and only works with Node.js <= 14 HTTP/2 support is de-facto broken. 
+ * Portal: It is now guaranteed that all client-side (browser) errors are actually sent to the server and logged there,
+   even if there is a huge amount of errors and also on the browser unload event.
+ * Core: Fixed deprecation warnings from the spdy module. It is now loaded lazy, but since it is no longer maintained
+   and only works with Node.js <= 14 HTTP/2 support is de-facto broken.
    Shouldn't be a big deal because usual a reverse proxy handles HTTP/2 and TLS.
 
 ## 2.4.4 (September 8, 2023)
@@ -639,7 +639,7 @@
                    "description": {
                        "en": "A simple React SPA with cool features",
                        "de": "Ein einfacher React SPA mit tollen Features"
-                   },
+                   }
                    //...
               }
            }
