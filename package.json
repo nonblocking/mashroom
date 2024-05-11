@@ -60,7 +60,7 @@
     "@typescript-eslint/parser": "^7.4.0"
   },
   "scripts": {
-    "setup": "npm install && allow-scripts && lerna exec -- allow-scripts && npm run build:core",
+    "setup": "npm install --include=optional && allow-scripts && lerna exec -- allow-scripts && npm run build:core",
     "type-check": "lerna run type-check && flow check",
     "lint": "lerna run lint",
     "test": "lerna run test",
