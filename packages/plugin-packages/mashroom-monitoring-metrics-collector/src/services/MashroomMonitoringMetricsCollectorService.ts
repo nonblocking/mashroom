@@ -1,7 +1,7 @@
 import {diag, DiagLogLevel} from '@opentelemetry/api';
 import {MeterProvider} from '@opentelemetry/sdk-metrics';
 import {Resource} from '@opentelemetry/resources';
-import {SemanticResourceAttributes} from '@opentelemetry/semantic-conventions';
+import {SEMRESATTRS_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
 import {OpenTelemetryMetricReader} from './OpenTelemetryMetricReader';
 
 import type {BatchObservableResult, Observable} from '@opentelemetry/api';
@@ -54,7 +54,7 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
         this._meterProvider = new MeterProvider({
             resource: Resource.empty().merge(
                 new Resource({
-                    [SemanticResourceAttributes.SERVICE_NAME]: RESOURCE_NAME,
+                    [SEMRESATTRS_SERVICE_NAME]: RESOURCE_NAME,
                 })
             )
         });

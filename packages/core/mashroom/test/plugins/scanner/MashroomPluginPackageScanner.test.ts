@@ -42,10 +42,10 @@ describe('MashroomPluginPackageScanner', () => {
         });
 
         await pluginPackageScanner.start();
-
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         await pluginPackageScanner.stop();
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(foundPaths.length).toBe(2);
     });

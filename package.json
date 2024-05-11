@@ -40,7 +40,6 @@
     "nock": "^13.5.4",
     "nodemon": "^3.1.0",
     "null-loader": "^4.0.1",
-    "patch-package": "^8.0.0",
     "rimraf": "^5.0.5",
     "sass": "^1.72.0",
     "sass-loader": "^14.1.1",
@@ -61,7 +60,6 @@
     "@typescript-eslint/parser": "^7.4.0"
   },
   "scripts": {
-    "postinstall": "patch-package || true",
     "setup": "npm install && allow-scripts && lerna exec -- allow-scripts && npm run build:core",
     "type-check": "lerna run type-check && flow check",
     "lint": "lerna run lint",
@@ -73,7 +71,6 @@
   },
   "lavamoat": {
     "allowScripts": {
-      "$root$": true,
       "lerna>nx": true
     }
   }

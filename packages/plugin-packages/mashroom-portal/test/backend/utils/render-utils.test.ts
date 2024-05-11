@@ -102,8 +102,6 @@ describe('path-utils', () => {
 
         const result = await renderContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
 
-        // console.info('!!!', content);
-
         expect(result).toBeTruthy();
         expect(result.resultHtml).toContain('data-mr-app-id="app1"');
         expect(result.resultHtml).toContain('data-mr-app-id="app2"');
