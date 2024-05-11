@@ -56,7 +56,6 @@ export default ({rocketLaunchApi}: Props) => {
         fetchData(rocketLaunchApi).then(
             (response) => {
                 setLoading(false);
-                console.info('!!!!', response);
                 setLaunches(response.result);
             },
             (error) => {
