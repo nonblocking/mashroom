@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.6.1 (Nay 12, 2024)
+
  * Portal: Fixed detection which App wrote a browser console error
    (the portalAppName will now be set properly in the server log)
 
