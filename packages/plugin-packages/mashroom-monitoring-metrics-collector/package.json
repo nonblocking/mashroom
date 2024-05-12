@@ -4,22 +4,22 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.6.0",
+    "version": "2.6.1",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
     "dependencies": {
         "@opentelemetry/api": "^1.8.0",
-        "@opentelemetry/sdk-metrics": "^1.24.1",
         "@opentelemetry/resources": "^1.24.1",
+        "@opentelemetry/sdk-metrics": "^1.24.1",
         "@opentelemetry/semantic-conventions": "^1.24.1",
         "opentelemetry-node-metrics": "^3.0.0",
         "response-time": "^2.3.2",
         "url-value-parser": "^2.2.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.6.0",
+        "@mashroom/mashroom": "2.6.1",
         "@types/express": "^4.17.21",
         "@types/response-time": "^2.3.8"
     },

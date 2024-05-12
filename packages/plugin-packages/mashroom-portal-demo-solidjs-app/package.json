@@ -4,15 +4,15 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.6.0",
+    "version": "2.6.1",
     "sideEffects": false,
     "files": [
         "dist/**",
         "mashroom.json"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.6.0",
-        "@mashroom/mashroom-portal": "2.6.0",
+        "@mashroom/mashroom-json-schemas": "2.6.1",
+        "@mashroom/mashroom-portal": "2.6.1",
         "babel-preset-solid": "^1.8.16",
         "eslint-plugin-solid": "^0.13.2",
         "solid-js": "^1.8.16"

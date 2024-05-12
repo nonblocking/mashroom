@@ -4,7 +4,7 @@
   "homepage": "https://www.mashroom-server.com",
   "repository": "github:nonblocking/mashroom",
   "license": "MIT",
-  "version": "2.6.0",
+  "version": "2.6.1",
   "files": [
     "dist/**"
   ],
@@ -22,7 +22,7 @@
     "@angular/language-service": "^17.3.2",
     "@angular/platform-browser": "^17.3.2",
     "@angular/platform-browser-dynamic": "^17.3.2",
-    "@mashroom/mashroom-portal": "2.6.0"
+    "@mashroom/mashroom-portal": "2.6.1"
   },
   "scripts": {
     "dev": "ng serve",
