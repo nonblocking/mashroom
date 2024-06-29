@@ -47,7 +47,6 @@
             "provider": "Mashroom Session MongoDB Provider",
             "session": {
                 "cookie": {
-                    "maxAge": 3600000
                 }
             }
         },

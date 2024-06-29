@@ -115,7 +115,6 @@ describe('MashroomLdapSecurityProvider', () => {
             session: {
                 save: (cb: () => void) => cb(),
                 cookie: {
-                    maxAge: 2000000
                 },
             },
             pluginContext: {
@@ -201,7 +200,6 @@ describe('MashroomLdapSecurityProvider', () => {
             session: {
                 save: (cb: () => void) => cb(),
                 cookie: {
-                    maxAge: 2000000
                 },
             },
             pluginContext: {

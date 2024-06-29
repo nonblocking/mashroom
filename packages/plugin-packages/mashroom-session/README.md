@@ -22,7 +22,6 @@ You can override the default config in your Mashroom config file like this:
                 "resave": false,
                 "saveUninitialized": false,
                 "cookie": {
-                    "maxAge": 7200000,
                     "httpOnly": true,
                     "secure": false,
                     "sameSite": false

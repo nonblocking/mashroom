@@ -44,7 +44,6 @@
             "provider": "Mashroom Session Redis Provider",
             "session": {
                 "cookie": {
-                    "maxAge": 3600000
                 }
             }
         },

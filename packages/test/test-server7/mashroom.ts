@@ -49,7 +49,6 @@ const serverConfig: MashroomServerConfig = {
             provider: 'memory',
             session: {
                 cookie: {
-                   maxAge: 3600000
                 }
             }
         },

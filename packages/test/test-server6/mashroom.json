@@ -32,7 +32,6 @@
             "provider": "Mashroom Session Filestore Provider",
             "session": {
                 "cookie": {
-                    "maxAge": 3600000
                 }
             }
         },

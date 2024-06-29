@@ -82,7 +82,6 @@ describe('MashroomSimpleSecurityProvider', () => {
             session: {
                 save: (cb: () => void) => cb(),
                 cookie: {
-                    maxAge: 2000000
                 },
             },
             pluginContext: {

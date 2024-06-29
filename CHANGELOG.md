@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+ * Session Plugin: Uses now a session cookie (without a *maxAge*) by default 
+
 ## 2.6.1 (Nay 12, 2024)
 
  * Portal: Fixed detection which App wrote a browser console error
