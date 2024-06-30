@@ -11,10 +11,10 @@
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.6.1",
-        "@types/react": "^18.2.73",
-        "@types/react-dom": "^18.2.23",
-        "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "@types/react": "^18.3.3",
+        "@types/react-dom": "^18.3.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
     },
     "scripts": {
         "lint": "eslint src --ext .ts,.tsx --fix",

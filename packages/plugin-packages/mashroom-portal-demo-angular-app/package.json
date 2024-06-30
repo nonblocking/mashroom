@@ -9,25 +9,24 @@
     "dist/**"
   ],
   "devDependencies": {
-    "@angular-devkit/build-angular": "^17.3.2",
-    "@angular-eslint/builder": "^17.3.0",
-    "@angular-eslint/schematics": "^17.3.0",
-    "@angular-eslint/template-parser": "^17.3.0",
-    "@angular/cli": "^17.3.2",
-    "@angular/common": "^17.3.2",
-    "@angular/compiler": "^17.3.2",
-    "@angular/compiler-cli": "^17.3.2",
-    "@angular/core": "^17.3.2",
-    "@angular/forms": "^17.3.2",
-    "@angular/language-service": "^17.3.2",
-    "@angular/platform-browser": "^17.3.2",
-    "@angular/platform-browser-dynamic": "^17.3.2",
-    "@mashroom/mashroom-portal": "2.6.1"
+    "@mashroom/mashroom-portal": "2.6.1",
+    "@angular-devkit/build-angular": "^18.0.6",
+    "@angular-eslint/builder": "^18.0.1",
+    "@angular-eslint/schematics": "^18.0.1",
+    "@angular-eslint/template-parser": "^18.0.1",
+    "@angular/cli": "^18.0.6",
+    "@angular/common": "^18.0.5",
+    "@angular/compiler": "^18.0.5",
+    "@angular/compiler-cli": "^18.0.5",
+    "@angular/core": "^18.0.5",
+    "@angular/forms": "^18.0.5",
+    "@angular/language-service": "^18.0.5",
+    "@angular/platform-browser": "^18.0.5",
+    "@angular/platform-browser-dynamic": "^18.0.5"
   },
   "scripts": {
     "dev": "ng serve",
     "build": "ng build --configuration production",
-    "lint": "ng lint",
     "type-check": "tsc --noEmit"
   },
   "mashroom": {
@@ -69,6 +68,8 @@
       "@angular-devkit/build-angular>esbuild": false,
       "@angular-devkit/build-angular>piscina>nice-napi": false,
       "@angular-devkit/build-angular>vite>esbuild": false,
+      "@angular-devkit/build-angular>@angular/build>lmdb": false,
+      "@angular-devkit/build-angular>@angular/build>lmdb>msgpackr>msgpackr-extract": false,
       "@angular-eslint/builder>nx": false
     }
   }

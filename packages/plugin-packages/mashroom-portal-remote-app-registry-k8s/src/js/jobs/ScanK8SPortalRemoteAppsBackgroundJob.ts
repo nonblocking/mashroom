@@ -230,6 +230,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
             const result = await fetch(`${serviceUrl}/package.json`, {
+                // @ts-ignore
                 signal: controller.signal,
             });
             if (result.ok) {
@@ -254,6 +255,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
             try {
                 const result = await fetch(`${serviceUrl}/${name}.json`, {
+                    // @ts-ignore
                     signal: controller.signal,
                 });
                 if (result.ok) {

@@ -3,7 +3,7 @@
     "compilerOptions": {
         "target": "esnext",
         "moduleResolution": "node",
-        "importsNotUsedAsValues": "error",
+        "verbatimModuleSyntax": true,
         "isolatedModules": true,
         "declaration": true,
         "outDir": "dist",

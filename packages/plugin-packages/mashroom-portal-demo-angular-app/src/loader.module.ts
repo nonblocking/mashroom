@@ -3,7 +3,9 @@ import {
     NgModule,
     Injector,
     ComponentRef,
-    createComponent, ApplicationRef,
+    createComponent,
+    ApplicationRef,
+    DoBootstrap,
 } from '@angular/core';
 import {MashroomPortalAppSetup, MashroomPortalClientServices} from "@mashroom/mashroom-portal/type-definitions";
 import {BrowserModule} from "@angular/platform-browser";
@@ -15,7 +17,7 @@ import {AppComponent} from './app/app.component';
 @NgModule({
     imports: [BrowserModule],
 })
-export class LoaderModule {
+export class LoaderModule implements DoBootstrap {
 
     constructor(private _appRef: ApplicationRef, private _injector: Injector) {
     }

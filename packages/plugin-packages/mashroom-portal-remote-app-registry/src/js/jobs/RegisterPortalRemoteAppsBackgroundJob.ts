@@ -314,6 +314,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
             const result = await fetch(`${remotePortalAppEndpoint.url}/package.json`, {
+                // @ts-ignore
                 signal: controller.signal,
             });
             if (result.ok) {
@@ -338,6 +339,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
             const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
             try {
                 const result = await fetch(`${remotePortalAppEndpoint.url}/${name}.json`, {
+                    // @ts-ignore
                     signal: controller.signal,
                 });
 

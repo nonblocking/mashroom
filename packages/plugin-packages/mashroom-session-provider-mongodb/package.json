@@ -11,7 +11,7 @@
     "dependencies": {
         "connect-mongo": "^5.1.0",
         "express": "^4.19.2",
-        "mongodb": "^6.5.0"
+        "mongodb": "^6.8.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.6.1",

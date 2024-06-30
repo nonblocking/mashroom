@@ -10,15 +10,15 @@
         "dist/**"
     ],
     "dependencies": {
-        "vue": "^3.4.21"
+        "vue": "^3.4.31"
     },
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.6.1",
         "@vue/eslint-config-typescript": "^13.0.0",
-        "eslint-plugin-vue": "^9.24.0",
-        "vue-eslint-parser": "^9.4.2",
+        "eslint-plugin-vue": "^9.26.0",
+        "vue-eslint-parser": "^9.4.3",
         "vue-loader": "^17.4.2",
-        "vue-tsc": "^2.0.7"
+        "vue-tsc": "^2.0.22"
     },
     "scripts": {
         "lint": "eslint src  --ext .ts,.vue --fix",

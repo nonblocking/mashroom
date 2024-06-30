@@ -162,6 +162,7 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
                 id_token_hint: authData.tokenSet.id_token,
             });
             await fetch(endSessionUrl, {
+                // @ts-ignore
                 signal: abortController.signal,
             });
         } catch (e) {
