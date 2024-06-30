@@ -48,7 +48,8 @@ describe('LdapClientImpl', () => {
             await ldapClient.login(user, 'john2');
         } catch (e: any) {
             expect(e.code).toBe(49);
-            expect(e.name).toBe('InvalidCredentialsError');
+            expect(e.constructor.name).toBe('InvalidCredentialsError');
+            expect(e.message).toBe(' Code: 0x31');
             return;
         }
 

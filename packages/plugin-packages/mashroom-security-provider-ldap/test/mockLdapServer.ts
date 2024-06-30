@@ -27,6 +27,7 @@ server.search('ou=test,ou=users,dc=at,dc=nonblocking', (req: SearchRequest, res:
         const entry = {
             dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
             attributes: {
+                cn: 'john',
                 mail: 'test@test.com',
                 sn: 'Do',
                 givenName: 'John',

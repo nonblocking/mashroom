@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a LDAP security provider.
+This plugin adds an LDAP security provider.
 
 ## Usage
 
