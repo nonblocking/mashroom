@@ -7,6 +7,7 @@ import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/typ
 import type {BaseLdapEntry, LdapEntryUser, LdapClient} from '../type-definitions';
 
 const DEFAULT_ATTRIBUTES = ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid', 'mail'];
+const ERROR_NO_SUCH_OBJECT = 0x20;
 
 const getAttributeValue = (name: string, attributes: Record<string, Buffer | Buffer[] | string[] | string>): string | undefined => {
     if (!(name in attributes)) {
@@ -71,7 +72,15 @@ export default class LdapClientImpl implements LdapClient {
             attributes,
         };
 
-        const result = await searchClient.search(this._baseDN, searchOpts);
+        let result;
+        try {
+            result = await searchClient.search(this._baseDN, searchOpts);
+        } catch (e: any) {
+            if (e.code === ERROR_NO_SUCH_OBJECT) {
+                return [];
+            }
+            throw new Error(`LDAP user search failed: ${e.message}`);
+        }
 
         const entries: Array<LdapEntryUser> = [];
         result.searchEntries.forEach(({ dn, ...attributes }) => {
@@ -124,7 +133,15 @@ export default class LdapClientImpl implements LdapClient {
             scope: 'sub',
         };
 
-        const result = await searchClient.search(this._baseDN, searchOpts);
+        let result;
+        try {
+            result = await searchClient.search(this._baseDN, searchOpts);
+        } catch (e: any) {
+            if (e.code === ERROR_NO_SUCH_OBJECT) {
+                return [];
+            }
+            throw new Error(`LDAP group search failed: ${e.message}`);
+        }
 
         const entries: Array<BaseLdapEntry> = [];
         result.searchEntries.forEach(({ dn, ...attributes }) => {

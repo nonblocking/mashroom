@@ -8,7 +8,7 @@ describe('login_failure_reason', () => {
     });
 
     it('processes an unknown error message correctly', async () => {
-        expect(loginFailureReason('Something unexpected happend')).toBeUndefined();
+        expect(loginFailureReason('Something unexpected happened')).toBeUndefined();
     });
 
     it('detects Active Directory error codes correctly', async () => {
