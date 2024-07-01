@@ -1,24 +1,21 @@
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import LdapClientImpl from '../src/LdapClientImpl';
-import {startMockLdapServer, stopMockLdapServer} from './mockLdapServer';
 import type {LdapEntryUser} from '../type-definitions';
 
-describe('LdapClientImpl', () => {
+const LDAP_URL = 'ldap://localhost:1389';
+const LDAP_BASE_DN = 'ou=users,dc=nonblocking,dc=at';
+const LDAP_SEARCH_BIND_DN = 'uid=mashroom,ou=applications,dc=nonblocking,dc=at';
+const LDAP_SEARCH_PASSWORD = 'mashroom';
 
-    beforeAll(async () => {
-        await startMockLdapServer();
-    });
-
-    afterAll(async () => {
-        await stopMockLdapServer();
-    });
+// To execute this remove the .skip here and run docker-compose up in the openldap folder
+describe.skip('LdapClientImpl', () => {
 
     it('binds correctly', async () => {
-        const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
-            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, loggingUtils.dummyLoggerFactory);
+        const ldapClient = new LdapClientImpl(LDAP_URL, 2000, 2000, LDAP_BASE_DN,
+            LDAP_SEARCH_BIND_DN, LDAP_SEARCH_PASSWORD, null, loggingUtils.dummyLoggerFactory);
 
         const user: LdapEntryUser = {
-            dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
+            dn: 'uid=john,ou=users,dc=nonblocking,dc=at',
             cn: 'john',
             sn: 'Do',
             givenName: 'John',
@@ -31,11 +28,11 @@ describe('LdapClientImpl', () => {
     });
 
     it('binds fails with invalid credentials', async () => {
-        const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
-            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, loggingUtils.dummyLoggerFactory);
+        const ldapClient = new LdapClientImpl(LDAP_URL, 2000, 2000, LDAP_BASE_DN,
+            LDAP_SEARCH_BIND_DN, LDAP_SEARCH_PASSWORD, null, loggingUtils.dummyLoggerFactory);
 
         const user: LdapEntryUser = {
-            dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
+            dn: 'uid=john,ou=users,dc=nonblocking,dc=at',
             cn: 'john',
             sn: 'Do',
             givenName: 'John',
@@ -48,7 +45,8 @@ describe('LdapClientImpl', () => {
             await ldapClient.login(user, 'john2');
         } catch (e: any) {
             expect(e.code).toBe(49);
-            expect(e.name).toBe('InvalidCredentialsError');
+            expect(e.constructor.name).toBe('InvalidCredentialsError');
+            expect(e.message).toBe(' Code: 0x31');
             return;
         }
 
@@ -56,21 +54,21 @@ describe('LdapClientImpl', () => {
     });
 
     it('executes the search correctly', async () => {
-        const ldapClient = new LdapClientImpl('ldap://0.0.0.0:1389', 2000, 2000, 'ou=test,ou=users,dc=at,dc=nonblocking',
-            'cn=admin,ou=test,ou=users,dc=at,dc=nonblocking', 'test', null, loggingUtils.dummyLoggerFactory);
+        const ldapClient = new LdapClientImpl(LDAP_URL, 2000, 2000, LDAP_BASE_DN,
+            LDAP_SEARCH_BIND_DN, LDAP_SEARCH_PASSWORD, null, loggingUtils.dummyLoggerFactory);
 
-        const result = await ldapClient.searchUser('(&(objectClass=person)(uid=john))', ['extraAttr']);
+        const result = await ldapClient.searchUser('(&(objectClass=person)(uid=john))', ['mobile']);
         ldapClient.shutdown();
 
         expect(result).toBeTruthy();
         expect(result.length).toBe(1);
         expect(result).toEqual([
             {
-                dn: 'cn=john,ou=test,ou=users,dc=at,dc=nonblocking',
+                dn: 'uid=john,ou=users,dc=nonblocking,dc=at',
                 cn: 'john',
-                extraAttr: 'foo',
+                mobile: '0043123123123',
                 givenName: 'John',
-                mail: 'test@test.com',
+                mail: 'john@nonblocking.at',
                 sn: 'Do',
                 displayName: 'John Do',
                 uid: 'john'
