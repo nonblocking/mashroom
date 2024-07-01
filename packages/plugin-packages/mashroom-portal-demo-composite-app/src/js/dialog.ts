@@ -3,7 +3,7 @@ export default [
     {
         name: 'Mashroom Portal Demo Vue App',
         appConfig: {
-            message: 'A simple Vue SPA that acts as the first page',
+            message: 'A simple Vue.js SPA that acts as the first page',
             pingButtonLabel: 'Next'
         }
     },
