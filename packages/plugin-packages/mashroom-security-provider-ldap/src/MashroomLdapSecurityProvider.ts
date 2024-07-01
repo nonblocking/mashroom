@@ -31,7 +31,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
     constructor(private _loginPage: string, private _userSearchFilter: string, private _groupSearchFilter: string,
                 private _extraDataMapping: Record<string, string> | undefined | null,  private _secretsMapping: Record<string, string> | undefined | null,
                 groupToRoleMappingPath: string | undefined| null, userToRoleMappingPath: string | undefined| null,
-                private _ldapClient: LdapClient, private _serverRootFolder: string,
+                private _ldapClient: LdapClient, _serverRootFolder: string,
                 private _authenticationTimeoutSec: number, loggerFactory: MashroomLoggerFactory) {
         const logger = loggerFactory('mashroom.security.provider.ldap');
         if (groupToRoleMappingPath) {

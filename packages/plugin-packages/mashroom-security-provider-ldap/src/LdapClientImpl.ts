@@ -7,7 +7,9 @@ import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/typ
 import type {BaseLdapEntry, LdapEntryUser, LdapClient} from '../type-definitions';
 
 const DEFAULT_ATTRIBUTES = ['dn', 'cn', 'sn', 'givenName', 'displayName', 'uid', 'mail'];
-const ERROR_NO_SUCH_OBJECT = 0x20;
+
+// See https://ldap.com/ldap-result-code-reference/
+const ERROR_NO_SUCH_OBJECT = 32;
 
 const getAttributeValue = (name: string, attributes: Record<string, Buffer | Buffer[] | string[] | string>): string | undefined => {
     if (!(name in attributes)) {
@@ -20,7 +22,7 @@ const getAttributeValue = (name: string, attributes: Record<string, Buffer | Buf
     if (typeof value === 'string') {
         return value;
     }
-    return value.toString();
+    return value?.toString();
 };
 
 const getAttributeValues = (name: string, attributes: Record<string, Buffer | Buffer[] | string[] | string>): Array<string> | undefined => {
@@ -33,7 +35,7 @@ const getAttributeValues = (name: string, attributes: Record<string, Buffer | Bu
         if (typeof value === 'string') {
             return value;
         }
-        return value.toString();
+        return value?.toString();
     });
 };
 
