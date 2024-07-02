@@ -59,8 +59,6 @@
         "Mashroom Portal WebApp": {
             "adminApp": null,
             "defaultTheme": "Mashroom Portal Default Theme",
-            "warnBeforeAuthenticationExpiresSec": 60,
-            "autoExtendAuthentication": false,
             "ignoreMissingAppsOnPages": false,
             "ssrConfig": {
                 "ssrEnable": true,

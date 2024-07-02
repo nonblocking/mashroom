@@ -590,13 +590,68 @@
                             "type": "string",
                             "description": "The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)"
                         },
-                        "warnBeforeAuthenticationExpiresSec": {
-                            "type": "number",
-                            "description": "The time when the Portal should start to warn that the authentication is about to expire.\nA value of 0 or lower than 0 disables the warning. (Default: 60)"
-                        },
-                        "autoExtendAuthentication": {
-                            "type": "boolean",
-                            "description": "Automatically extend the authentication as long as the portal page is open (Default: false)"
+                        "authenticationExpiration": {
+                            "type": "object",
+                            "properties": {
+                                "warnBeforeExpirationSec": {
+                                    "type": "number",
+                                    "description": "The time when the Portal should start to warn that the authentication is about to expire.\nA value of 0 or lower than 0 disables the warning. (Default: 60)"
+                                },
+                                "autoExtend": {
+                                    "type": "boolean",
+                                    "description": "Automatically extend the authentication as long as the portal page is open (Default: false)"
+                                },
+                                "onExpiration": {
+                                    "type": "object",
+                                    "description": "What to do if the session expires (Default: reload)",
+                                    "oneOf": [{
+                                        "type": "object",
+                                        "properties": {
+                                            "strategy": {
+                                                "type": "string",
+                                                "const": "stayOnPage"
+                                            }
+                                        },
+                                        "required": ["strategy"]
+                                    }, {
+                                        "type": "object",
+                                        "properties": {
+                                            "strategy": {
+                                                "type": "string",
+                                                "const": "reload"
+                                            }
+                                        },
+                                        "required": ["strategy"]
+                                    }, {
+                                        "type": "object",
+                                        "properties": {
+                                            "strategy": {
+                                                "type": "string",
+                                                "const": "redirect"
+                                            },
+                                            "url": {
+                                                "type": "string",
+                                                "description": "The URL to redirect to"
+                                            }
+                                        },
+                                        "required": ["strategy", "url"]
+                                    }, {
+                                        "type": "object",
+                                        "properties": {
+                                            "strategy": {
+                                                "type": "string",
+                                                "const": "displayDomElement"
+                                            },
+                                            "elementId": {
+                                                "type": "string",
+                                                "description": "The ID of the DOM element that should be displayed (by setting CSS property display: block)"
+                                            }
+                                        },
+                                        "required": ["strategy", "elementId"]
+                                    }]
+                                }
+                            },
+                            "additionalProperties": false
                         },
                         "ignoreMissingAppsOnPages": {
                             "type": "boolean",
@@ -757,7 +812,7 @@
                             "description": "Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)"
                         },
                         "k8sNamespaces": {
-                            "type": "array",
+                            "type": ["array", "null"],
                             "items": {
                                 "type": "string"
                             },

@@ -35,8 +35,13 @@ The plugin allows the following configuration properties:
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
-            "warnBeforeAuthenticationExpiresSec": 60,
-            "autoExtendAuthentication": false,
+            "authenticationExpiration": {
+              "warnBeforeExpirationSec": 60,
+              "autoExtend": false,
+              "onExpiration": {
+                "strategy": "reload"
+              }
+            },
             "ignoreMissingAppsOnPages": false,
             "versionHashSalt": null,
             "resourceFetchConfig": {
@@ -65,9 +70,11 @@ The plugin allows the following configuration properties:
  * _adminApp_: The admin to use (Default: Mashroom Portal Admin App)
  * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
- * _warnBeforeAuthenticationExpiresSec_: The time when the Portal should start to warn that the authentication is about to expire.
-    A value of 0 or lower than 0 disables the warning. (Default: 60)
- * _autoExtendAuthentication_: Automatically extend the authentication as long as the portal page is open (Default: false)
+ * _authenticationExpiration_: 
+   * _warnBeforeExpirationSec_: The time when the Portal should start to warn that the authentication is about to expire.
+     A value of 0 or lower than 0 disables the warning. (Default: 60)
+   * _autoExtend_: Automatically extend the authentication as long as the portal page is open (Default: false)
+   * _onExpiration_: What to do if the session expires. Possible strategies are *stayOnPage*, *reload*, *redirect* and *displayDomElement*. (Default: reload)
  * _ignoreMissingAppsOnPages_: If an App on a page can't be found just show nothing instead of an error message (Default: false)
  * _versionHashSalt_: If you need unique resource version hashes per server instance provide here a string (Default: null)
  * _resourceFetchConfig_: Optional config for resource fetching (App and plugin resources like js/css files)

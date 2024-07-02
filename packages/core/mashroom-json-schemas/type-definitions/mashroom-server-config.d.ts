@@ -402,15 +402,41 @@ export interface Plugins {
      * The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
      */
     defaultLayout?: string;
-    /**
-     * The time when the Portal should start to warn that the authentication is about to expire.
-     * A value of 0 or lower than 0 disables the warning. (Default: 60)
-     */
-    warnBeforeAuthenticationExpiresSec?: number;
-    /**
-     * Automatically extend the authentication as long as the portal page is open (Default: false)
-     */
-    autoExtendAuthentication?: boolean;
+    authenticationExpiration?: {
+      /**
+       * The time when the Portal should start to warn that the authentication is about to expire.
+       * A value of 0 or lower than 0 disables the warning. (Default: 60)
+       */
+      warnBeforeExpirationSec?: number;
+      /**
+       * Automatically extend the authentication as long as the portal page is open (Default: false)
+       */
+      autoExtend?: boolean;
+      /**
+       * What to do if the session expires (Default: reload)
+       */
+      onExpiration?:
+        | {
+            strategy: "stayOnPage";
+          }
+        | {
+            strategy: "reload";
+          }
+        | {
+            strategy: "redirect";
+            /**
+             * The URL to redirect to
+             */
+            url: string;
+          }
+        | {
+            strategy: "displayDomElement";
+            /**
+             * The ID of the DOM element that should be displayed (by setting CSS property display: block)
+             */
+            elementId: string;
+          };
+    };
     /**
      * If an App on a page can't be found just show nothing instead of an error message (Default: false)
      */
@@ -535,7 +561,7 @@ export interface Plugins {
     /**
      * A distinct list of Kubernetes namespaces to scan; can be null if k8sNamespacesLabelSelector is set (Default: ["default"])
      */
-    k8sNamespaces?: string[];
+    k8sNamespaces?: string[] | null;
     /**
      * Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (e.g. microfrontend=true) (Default: null)
      */

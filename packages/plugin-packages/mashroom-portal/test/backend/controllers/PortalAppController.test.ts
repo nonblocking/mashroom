@@ -16,8 +16,11 @@ setPortalPluginConfig({
     adminApp: 'admin-portal-app',
     defaultTheme: 'foo',
     defaultLayout: 'foo',
-    warnBeforeAuthenticationExpiresSec: 120,
-    autoExtendAuthentication: false,
+    authenticationExpiration: {
+        warnBeforeExpirationSec: 120,
+        autoExtend: false,
+        onExpiration: { strategy: 'reload' },
+    },
     ignoreMissingAppsOnPages: false,
     versionHashSalt: null,
     resourceFetchConfig: {

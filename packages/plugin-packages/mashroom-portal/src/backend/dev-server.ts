@@ -28,8 +28,11 @@ setPortalPluginConfig({
     defaultTheme: 'Portal Default Theme',
     defaultLayout: 'Portal Default Layout',
     adminApp: '',
-    warnBeforeAuthenticationExpiresSec: 120,
-    autoExtendAuthentication: false,
+    authenticationExpiration: {
+        warnBeforeExpirationSec: 120,
+        autoExtend: false,
+        onExpiration: { strategy: 'reload' },
+    },
     ignoreMissingAppsOnPages: false,
     versionHashSalt: null,
     resourceFetchConfig: {
@@ -180,6 +183,9 @@ app.use((req, res, next) => {
         },
         checkResourcePermission() {
             return true;
+        },
+        getAuthenticationExpiration() {
+            return Date.now() + 3600000;
         }
     };
     const i18nService: any = {

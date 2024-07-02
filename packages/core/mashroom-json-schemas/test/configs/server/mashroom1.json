@@ -122,8 +122,13 @@
             "adminApp": "Mashroom Portal Admin App",
             "defaultTheme": "Mashroom Portal Default Theme",
             "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
-            "warnBeforeAuthenticationExpiresSec": 120,
-            "autoExtendAuthentication": false,
+            "authenticationExpiration": {
+                "warnBeforeExpirationSec": 60,
+                "autoExtend": false,
+                "onExpiration": {
+                    "strategy": "reload"
+                }
+            },
             "defaultProxyConfig": {
                 "sendPermissionsHeader": false,
                 "restrictToRoles": ["ROLE_X"]

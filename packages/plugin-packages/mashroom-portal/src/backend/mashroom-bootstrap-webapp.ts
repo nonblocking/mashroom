@@ -7,6 +7,7 @@ import PortalWebSocketProxyController from './controllers/PortalWebSocketProxyCo
 import {setupResourceFetchHttpAgents} from './utils/resource-utils';
 import {startPushPluginUpdates, stopPushPluginUpdates} from './push-plugin-updates';
 import {registerRemoteResourcesMetrics, unregisterHttpResourcesMetrics} from './metrics/remote-resources-metrics';
+import type {MashroomPortalPluginConfig} from '../../type-definitions/internal';
 
 import type {MashroomWebAppPluginBootstrapFunction, MashroomHttpUpgradeHandler} from '@mashroom/mashroom/type-definitions';
 
@@ -20,7 +21,27 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
     // Run async
     storageFixture(pluginContext.serverConfig.name, pluginConfig.addDemoPages, storageService, loggerFactory);
 
-    setPortalPluginConfig(pluginConfig as any);
+    let portalPluginConfig = pluginConfig as MashroomPortalPluginConfig;
+    // Backward compatibility
+    if ('warnBeforeAuthenticationExpiresSec' in pluginConfig) {
+        portalPluginConfig = {
+            ...portalPluginConfig,
+            authenticationExpiration: {
+                ...portalPluginConfig.authenticationExpiration,
+                warnBeforeExpirationSec: pluginConfig['warnBeforeAuthenticationExpiresSec'],
+            }
+        };
+    }
+    if ('autoExtendAuthentication' in pluginConfig) {
+        portalPluginConfig = {
+            ...portalPluginConfig,
+            authenticationExpiration: {
+                ...portalPluginConfig.authenticationExpiration,
+                autoExtend: pluginConfig['autoExtendAuthentication'],
+            }
+        };
+    }
+    setPortalPluginConfig(portalPluginConfig);
 
     setupResourceFetchHttpAgents(logger);
 

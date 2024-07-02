@@ -4,6 +4,7 @@
     "login": "Anmelden",
     "logout": "Abmelden",
     "authenticationExpiresWarning": "Aufgrund von Inaktivität wird ihre Anmeldung in <span id='mashroom-portal-auth-expires-time'>00:00</span> ablaufen<br/><a id='mashroom-portal-auth-expires-extend' href='javascript:void(0)'>Anmeldung verlängern</a>",
+    "authenticationExpired": "Aufgrund von Inaktivität ist ihre Anmeldung abgelaufen.<br/><a href='javascript:window.location.reload()'>Seite neu laden</a>",
     "loginFailed": "Anmeldung fehlgeschlagen!",
     "portalAppLoadingFailed": "<strong>${name}</strong> steht derzeit nicht zur Verfügung",
     "pageNotFound": "Seite nicht gefunden",

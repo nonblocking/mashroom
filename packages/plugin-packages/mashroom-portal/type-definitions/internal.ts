@@ -1,4 +1,5 @@
 
+import type {Request} from 'express';
 import type {LogLevel} from '@mashroom/mashroom/type-definitions';
 import type {
     MashroomPortalApp,
@@ -8,6 +9,7 @@ import type {
     MashroomPortalTheme,
     MashroomRemotePortalAppRegistry,
     MashroomPortalAppSetup,
+    UserAgent,
 } from './api';
 
 export type Writable<Type> = {
@@ -76,13 +78,28 @@ export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'registry' |
 
 export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginType, listener: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomRemotePortalAppRegistryHolder | MashroomPortalPageEnhancement | MashroomPortalAppEnhancement) => void;
 
+export type MashroomPortalOnAuthenticationExpirationStrategies = {
+    readonly strategy: 'stayOnPage';
+} | {
+    readonly strategy: 'reload';
+} | {
+    readonly strategy: 'redirect';
+    readonly url: string;
+} | {
+    readonly strategy: 'displayDomElement';
+    readonly elementId: string;
+};
+
 export type MashroomPortalPluginConfig = {
     readonly path: string;
     readonly adminApp: string | null | undefined;
     readonly defaultTheme: string;
     readonly defaultLayout: string;
-    readonly warnBeforeAuthenticationExpiresSec: number;
-    readonly autoExtendAuthentication: boolean;
+    readonly authenticationExpiration: {
+        readonly warnBeforeExpirationSec: number;
+        readonly autoExtend: boolean;
+        readonly onExpiration: MashroomPortalOnAuthenticationExpirationStrategies;
+    };
     readonly ignoreMissingAppsOnPages: boolean;
     readonly versionHashSalt: string | null | undefined;
     readonly resourceFetchConfig: {
@@ -128,6 +145,37 @@ export type MashroomPortalIncludeStyleServerSideRenderedAppsResult = {
     readonly headerContent: string;
     readonly includedAppStyles: Array<string>;
 }
+
+export type MashroomPortalHeaderRenderModel = {
+    readonly req: Request;
+    readonly siteId: string;
+    readonly sitePath: string;
+    readonly pageId: string;
+    readonly pageFriendlyUrl: string;
+    readonly lang: string;
+    readonly appWrapperTemplateHtml: string;
+    readonly appErrorTemplateHtml: string;
+    readonly appLoadingFailedMsg: string;
+    readonly checkAuthenticationExpiration: boolean;
+    readonly authenticationExpiration: MashroomPortalPluginConfig['authenticationExpiration'];
+    readonly authenticationExpiredMessage: string;
+    readonly messagingConnectPath: string | undefined | null;
+    readonly privateUserTopic: string | undefined | null;
+    readonly userAgent: UserAgent, cdnHost: string | undefined | null;
+    readonly inlineStyleHeaderContent: string;
+    readonly includedAppStyles: Array<string>;
+    readonly devMode: boolean;
+}
+
+export type MashroomPortalFooterRenderModel = {
+    readonly req: Request;
+    readonly portalPageApps: MashroomPortalPageApps;
+    readonly adminPluginName: string | undefined | null;
+    readonly sitePath: string;
+    readonly pageFriendlyUrl: string;
+    readonly lang: string;
+    readonly userAgent: UserAgent;
+};
 
 export type ClientLogMessage = {
     readonly level: LogLevel;

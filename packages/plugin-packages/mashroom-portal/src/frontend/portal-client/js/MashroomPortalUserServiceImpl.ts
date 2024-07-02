@@ -53,7 +53,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
                 return null;
             },
             (error: RestError) => {
-                console.error('Expiration check failed:', error);
+                console.warn('Expiration check failed:', error);
                 if (error.getStatusCode() === 403) {
                     return 0;
                 }
@@ -75,7 +75,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalUserS
                 this._reloadPage();
             },
             (error) => {
-                console.error('Logout failed', error);
+                console.info('Logout failed', error);
                 // Try to reload anyway
                 this._reloadPage();
             }

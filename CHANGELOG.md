@@ -3,8 +3,25 @@
 
 ## [unreleased]
 
+ * Portal: It is now possible to configure what should happen if the authentication expires. Until now the strategy was to just reload the current page,
+   now you can choose between multiple strategies:
+   * *stayOnPage* 
+   * *reload* (Default, same behaviour as before)
+   * *redirect* (redirect to another page)
+   * *displayDomElement* (set *display: block* on the DOM element with given ID)
+    
+   **BREAKING CHANGE**: *Mashroom Portal WebApp* plugin properties *warnBeforeAuthenticationExpiresSec* and *autoExtendAuthentication* have been removed, instead it expects a configuration like this:
+   ```json 
+     "authenticationExpiration": {
+       "warnBeforeExpirationSec": 60,
+       "autoExtend": false,
+       "onExpiration": {
+         "strategy": "reload"
+       }
+     },
+   ```
  * LDAP Security Provider: Replaced decommissioned *ldapjs* client
- * Session Plugin: Uses now a session cookie (without a *maxAge*) by default 
+ * Session Plugin: Uses now a session cookie (without a *maxAge*) by default
 
 ## 2.6.1 (Nay 12, 2024)
 

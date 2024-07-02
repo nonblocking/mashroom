@@ -30,9 +30,9 @@ const inlineSVG = (assetFile: string): string => {
 };
 
 export default ({
-                    adminApp, user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
-                    portalResourcesHeader, portalResourcesFooter, pageContent, messages, themeVersionHash
-                }: MashroomPortalPageRenderModel) => (
+    adminApp, user, site, siteBasePath, page, lang, csrfToken, resourcesBasePath, apiBasePath,
+    portalResourcesHeader, portalResourcesFooter, pageContent, messages, themeVersionHash
+}: MashroomPortalPageRenderModel) => (
     <html lang={lang} data-bs-theme="light">
         <head dangerouslySetInnerHTML={{ __html: `
             <meta httpEquiv="X-UA-Compatible" content="IE=edge"/>
@@ -108,9 +108,7 @@ export default ({
             </div>
 
             <div id="mashroom-portal-auth-expires-warning">
-                <div className="mashroom-portal-auth-expires-warning-message">
-                    {messages('authenticationExpiresWarning')}
-                </div>
+                <div className="mashroom-portal-auth-expires-warning-message" dangerouslySetInnerHTML={{ __html: messages('authenticationExpiresWarning') }} />
             </div>
 
             <footer>

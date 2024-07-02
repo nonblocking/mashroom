@@ -4,6 +4,7 @@
     "login": "Login",
     "logout": "Logout",
     "authenticationExpiresWarning": "Due to inactivity, the authentication will expire in <span id='mashroom-portal-auth-expires-time'>00:00</span><br/><a id='mashroom-portal-auth-expires-extend' href='javascript:void(0)'>Extend authentication</a>",
+    "authenticationExpired": "Due to inactivity, the authentication has been expired.<br/><a href='javascript:window.location.reload()'>Reload page</a>",
     "loginFailed": "Login failed!",
     "portalAppLoadingFailed": "<strong>${name}</strong> is temporarily not available",
     "pageNotFound": "Page Not Found",
