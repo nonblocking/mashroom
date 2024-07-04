@@ -1,9 +1,10 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import logo from './assets/svelte-logo.svg';
+  import type {MashroomPortalMessageBus} from "@mashroom/mashroom-portal/type-definitions";
 
   // Exported props
-  export let messageBus: any;
+  export let messageBus: MashroomPortalMessageBus;
   export let appConfig: { message?: string, pingButtonLabel?: string } = {};
 
   // State
