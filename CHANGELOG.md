@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Adds now a proper *x-forwarded-host* header (if *createForwardedForHeaders* is set) 
  * HTTP Proxy: Added missing *createForwardedForHeaders* config prop to the JSON schema 
  * Portal: It is now possible to configure what should happen if the authentication expires. Until now the strategy was to just reload the current page,
    now you can choose between multiple strategies:

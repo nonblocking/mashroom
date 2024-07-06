@@ -149,7 +149,7 @@ export const processWsRequestInterceptors = async (clientRequest: IncomingMessag
 export const createForwardedForHeaders = (clientRequest: IncomingMessage, isWebsocket = false): Record<string, string> => {
     let forwardedForHeader = clientRequest.headers[HEADER_X_FORWARDED_FOR] as string | undefined;
     let forwardedProtoHeader = clientRequest.headers[HEADER_X_FORWARDED_PROTO] as string | undefined;
-    const forwardedHostHeader = clientRequest.headers[HEADER_X_FORWARDED_HOST] as string | undefined;
+    let forwardedHostHeader = clientRequest.headers[HEADER_X_FORWARDED_HOST] as string | undefined;
 
     const remoteAddress = clientRequest.socket.remoteAddress;
     if (!forwardedForHeader) {
@@ -162,6 +162,12 @@ export const createForwardedForHeaders = (clientRequest: IncomingMessage, isWebs
         forwardedProtoHeader = isWebsocket ?
             (encrypted ? 'wss' : 'ws') :
             (encrypted ? 'https' : 'http');
+    }
+    if (!forwardedHostHeader) {
+        const host = clientRequest.headers.host;
+        if (host) {
+            forwardedHostHeader = host.split(':')[0];
+        }
     }
 
     const headers: Record<string, string> = {};
