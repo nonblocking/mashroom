@@ -4,7 +4,7 @@ import {URL} from 'url';
 import express from 'express';
 import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
-import helpers, {i18n} from './handlebar_helpers';
+import helpers, {i18n} from './handlebar-helpers';
 import context from './context';
 
 import type {Request, Response} from 'express';
@@ -158,7 +158,7 @@ const redirect = (req: Request, res: Response) => {
 
     // Make sure the session with the new user is saved before redirecting
     req.session.save(() => {
-        res.redirect(redirectUrl!);
+        res.redirect(redirectUrl);
     });
 };
 
