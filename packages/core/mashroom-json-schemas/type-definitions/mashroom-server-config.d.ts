@@ -175,6 +175,10 @@ export interface Plugins {
      */
     wsMaxConnectionsTotal?: number | null;
     /**
+     *  Add x-forwarded-* headers to the outgoing request (Default: false)
+     */
+    createForwardedForHeaders?: boolean;
+    /**
      * Switch the proxy implementation. Currently available are:
      *  * streamAPI (based on the Node.js stream API)
      *  * nodeHttpProxy (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))

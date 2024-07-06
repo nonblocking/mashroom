@@ -77,6 +77,7 @@ You can override the default config in your Mashroom config file like this:
  * _retryOnReset_: If the target resets the HTTP connection (because a keep-alive connection is broken) retry once (Default: true)
  * _wsMaxConnectionsTotal_: Max WebSocket connections total. Set this to 0 if you want to disable the WS proxy (Default: 2000)
  * _wsMaxConnectionsPerHost_: Max WebSocket connections per target host (Default: 0 - no limit)
+ * _createForwardedForHeaders_: Add *x-forwarded-* headers to the outgoing request (Default: false)
  * _proxyImpl_: Switch the proxy implementation. Currently available are:
    * *streamAPI* (based on the Node.js stream API)
    * *nodeHttpProxy* (based on [node-http-proxy](https://github.com/http-party/node-http-proxy))

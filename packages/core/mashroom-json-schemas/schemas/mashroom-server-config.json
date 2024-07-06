@@ -264,6 +264,10 @@
                             "type": ["integer", "null"],
                             "description": "Max WebSocket connections total (Default: 2000)"
                         },
+                        "createForwardedForHeaders": {
+                            "type": "boolean",
+                            "description": " Add x-forwarded-* headers to the outgoing request (Default: false)"
+                        },
                         "proxyImpl": {
                             "type": "string",
                             "enum": [

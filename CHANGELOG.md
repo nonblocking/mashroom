@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Added missing *createForwardedForHeaders* config prop to the JSON schema 
  * Portal: It is now possible to configure what should happen if the authentication expires. Until now the strategy was to just reload the current page,
    now you can choose between multiple strategies:
    * *stayOnPage* 
