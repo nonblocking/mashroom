@@ -25,6 +25,12 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
 
     middleware(): RequestHandler {
         return (req: Request, res: Response, next: NextFunction) => {
+            // Ignore non-html requests
+            if (!requestUtils.isHtmlRequest(req)) {
+                next();
+                return;
+            }
+
             const originalWrite = res.write;
             const originalEnd = res.end;
             let errorChecked = false;
@@ -33,7 +39,7 @@ export default class MashroomErrorPagesMiddleware implements MashroomErrorPagesM
             let writeBuffer: Array<() => void> = [];
 
             const doWrite = (args: Array<any>, exec: () => void) => {
-                if (res.statusCode >= 400 && !errorChecked && requestUtils.isHtmlRequest(req) && !isNotJsonResponse(res)) {
+                if (res.statusCode >= 400 && !errorChecked && !isNotJsonResponse(res)) {
                     errorChecked = true;
                     errorPageSendPending = true;
 
