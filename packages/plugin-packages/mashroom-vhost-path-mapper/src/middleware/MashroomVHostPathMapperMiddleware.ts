@@ -1,4 +1,5 @@
 
+import {URL} from 'url';
 import context from '../context';
 import determineHost from '../utils/determine-host';
 import findHostDefinition from '../utils/find-host-definition';
@@ -34,13 +35,31 @@ export default class MashroomVHostPathMapperMiddleware implements MashroomVHostP
                     if (res.location) {
                         const originalLocationFn = res.location.bind(res);
                         res.location = (redirectUrl: string) => {
-                            let newRedirectUrl = redirectUrl;
-                            const redirectMappingResult = mapPath(redirectUrl, hostDefinition, true);
-                            if (redirectMappingResult) {
-                                newRedirectUrl = redirectMappingResult.url || '/';
-                                logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${newRedirectUrl}`);
+                            let fixedRedirectUrl = redirectUrl;
+                            let redirectPath: string | undefined;
+                            // Absolute URL
+                            if (!redirectUrl.startsWith('/')) {
+                                try {
+                                    const url = new URL(redirectUrl);
+                                    if (url.hostname === host.hostname && ((!host.port && !url.port) || url.port === host.port)) {
+                                        // Remove host and protocol if this is the frontend host (otherwise the protocol might not match)
+                                        fixedRedirectUrl = url.pathname + url.search;
+                                        redirectPath = fixedRedirectUrl;
+                                    }
+                                } catch (e) {
+                                    logger.error('Received invalid location header', e);
+                                }
+                            } else {
+                                redirectPath = fixedRedirectUrl;
                             }
-                            return originalLocationFn(newRedirectUrl);
+                            if (redirectPath) {
+                                const redirectMappingResult = mapPath(redirectPath, hostDefinition, true);
+                                if (redirectMappingResult) {
+                                    fixedRedirectUrl = redirectMappingResult.url || '/';
+                                    logger.debug(`Redirect location has been mapped: ${redirectUrl} -> ${fixedRedirectUrl}`);
+                                }
+                            }
+                            return originalLocationFn(fixedRedirectUrl);
                         };
                     }
                 }

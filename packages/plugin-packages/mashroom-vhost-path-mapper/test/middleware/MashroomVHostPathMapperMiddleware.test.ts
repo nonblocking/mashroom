@@ -55,7 +55,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
         expect(next.mock.calls.length).toBe(1);
     });
 
-    it('maps the redirect if a vhost definitions exists', () => {
+    it('maps redirects if a vhost definitions exists', () => {
         context.considerHttpHeaders = [];
         context.vhostDefinitions = {
             'my-company.com': {
@@ -86,7 +86,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
         expect(location.mock.calls[0][0]).toBe('/x/foo?x=4');
     });
 
-    it('maps the redirect to / if the location is the root path', () => {
+    it('maps redirects to / if the location is the root path', () => {
         context.considerHttpHeaders = [];
         context.vhostDefinitions = {
             'my-company.com': {
@@ -117,7 +117,7 @@ describe('MashroomVHostPathMapperMiddleware', () => {
         expect(location.mock.calls[0][0]).toBe('/');
     });
 
-    it('maps the redirect if a frontendBasePath exists', () => {
+    it('maps redirects if a frontendBasePath exists', () => {
         context.considerHttpHeaders = [];
         context.vhostDefinitions = {
             'my-company.com': {
@@ -149,6 +149,71 @@ describe('MashroomVHostPathMapperMiddleware', () => {
         expect(location.mock.calls[0][0]).toBe('/base/y/foo?x=4');
     });
 
+    it('just keeps redirects to external sites', () => {
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {
+            'my-company.com': {
+                frontendBasePath: '/base',
+                mapping: {
+                    '/': '/portal/web'
+                }
+            }
+        };
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
+
+        const req: any = {
+            hostname: 'my-company.com',
+            url: '/bar?y=1',
+            headers: {},
+            pluginContext,
+        };
+        const location = jest.fn();
+        const res: any = {
+            location,
+        };
+        const next = jest.fn();
+
+        middleware(req, res, next);
+
+        res.location('http://other-componany.com/y/foo?x=4');
+
+        expect(location.mock.calls.length).toBe(1);
+        expect(location.mock.calls[0][0]).toBe('http://other-componany.com/y/foo?x=4');
+    });
+
+    it('replaces absolute redirect urls for the same host with relative ones', () => {
+        context.considerHttpHeaders = [];
+        context.vhostDefinitions = {
+            'my-company.com': {
+                frontendBasePath: '/base',
+                mapping: {
+                    '/': '/portal/web'
+                }
+            }
+        };
+        const middleware = new MashroomVHostPathMapperMiddleware().middleware();
+
+        const req: any = {
+            hostname: 'my-company.com',
+            url: '/bar?y=1',
+            headers: {
+                'x-forwarded-proto': 'https',
+            },
+            pluginContext,
+        };
+        const location = jest.fn();
+        const res: any = {
+            location,
+        };
+        const next = jest.fn();
+
+        middleware(req, res, next);
+
+        res.location('http://my-company.com/y/foo?x=4');
+
+        expect(location.mock.calls.length).toBe(1);
+        expect(location.mock.calls[0][0]).toBe('/base/y/foo?x=4');
+    });
 });
 
 
