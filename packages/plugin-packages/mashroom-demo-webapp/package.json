@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-demo-webapp",
     "description": "Demo express webapp that will be available at /demo/webapp",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [

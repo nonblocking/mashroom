@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-demo-composite-app",
     "description": "A simple SPA that uses other SPAs (which are registered to the Mashroom Portal) as building blocks",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "sideEffects": false,

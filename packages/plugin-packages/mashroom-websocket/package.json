@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-websocket",
     "description": "Adds a WebSocket server with a simple Service that can be used to interact with clients",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [

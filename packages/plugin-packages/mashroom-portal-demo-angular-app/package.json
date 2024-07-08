@@ -2,7 +2,10 @@
   "name": "@mashroom/mashroom-portal-demo-angular-app",
   "description": "A simple Angular based SPA that can be used in the Mashroom Portal",
   "homepage": "https://www.mashroom-server.com",
-  "repository": "github:nonblocking/mashroom",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nonblocking/mashroom.git"
+  },
   "license": "MIT",
   "version": "2.7.0",
   "files": [

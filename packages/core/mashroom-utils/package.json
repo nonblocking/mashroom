@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-utils",
     "description": "Shared utils for Mashroom plugins",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "main": "lib",

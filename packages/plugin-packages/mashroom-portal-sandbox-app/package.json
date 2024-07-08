@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-sandbox-app",
     "description": "A Mashroom Portal App that can be used to load any other Portal App with a specific configuration and to test message bus interaction",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [

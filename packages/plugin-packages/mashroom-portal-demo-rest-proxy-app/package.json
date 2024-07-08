@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-demo-rest-proxy-app",
     "description": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a REST API which cannot be reached directly by the client",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "sideEffects": false,

@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * All package.json fixed to avoid errors during publishing
+
 ## 2.7.0 (July 8, 2024)
 
  * VHost Path Mapper: Replace the location header URL with the relative path if the host matches the frontend host.

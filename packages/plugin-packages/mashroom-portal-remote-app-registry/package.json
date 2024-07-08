@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-remote-app-registry",
     "description": "A Mashroom Portal plugin to dynamically register Mashroom Portal Apps on a remote server",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [

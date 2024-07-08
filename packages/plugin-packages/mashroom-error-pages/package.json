@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-error-pages",
     "description": "Mashroom middleware to show proper HTML pages for arbitrary HTTP status codes (e.g. 404)",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [

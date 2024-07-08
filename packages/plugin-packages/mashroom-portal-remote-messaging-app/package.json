@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-remote-messaging-app",
     "description": "A Mashroom Portal App that can be used to test the remote messaging capabilities of the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [

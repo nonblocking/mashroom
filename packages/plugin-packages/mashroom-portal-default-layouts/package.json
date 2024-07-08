@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-default-layouts",
     "description": "Default Portal layouts",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.6.1",
     "files": [

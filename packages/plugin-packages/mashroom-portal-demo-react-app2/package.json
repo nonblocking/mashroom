@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-portal-demo-react-app2",
     "description": "A simple React based SPA that supports SSR and brings a custom config editor that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "sideEffects": false,

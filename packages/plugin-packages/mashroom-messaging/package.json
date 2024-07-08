@@ -2,7 +2,10 @@
     "name": "@mashroom/mashroom-messaging",
     "description": "Adds a Service plugin for server-side messaging and comes with a WebSocket interface that allows sending messages across clients (and browser tabs)",
     "homepage": "https://www.mashroom-server.com",
-    "repository": "github:nonblocking/mashroom",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
     "license": "MIT",
     "version": "2.7.0",
     "files": [
