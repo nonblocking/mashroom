@@ -28,7 +28,8 @@
      },
    ```
  * LDAP Security Provider: Replaced decommissioned *ldapjs* client
- * Session Plugin: Uses now a session cookie (without a *maxAge*) by default
+ * Session Plugin: Uses now a session cookie (without a *maxAge*) by default, so, the session can only expire on the server side and not because the
+   cookie expires 
 
 ## 2.6.1 (Nay 12, 2024)
 
