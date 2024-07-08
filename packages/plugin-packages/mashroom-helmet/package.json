@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.7.0",
+    "version": "2.7.1",
     "files": [
         "dist/**"
     ],
@@ -15,7 +15,7 @@
         "helmet": "^7.1.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.7.0"
+        "@mashroom/mashroom": "2.7.1"
     },
     "scripts": {
         "lint": "eslint src --ext \".ts\" --fix",

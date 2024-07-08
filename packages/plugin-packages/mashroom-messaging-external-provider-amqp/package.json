@@ -7,18 +7,18 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.7.0",
+    "version": "2.7.1",
     "files": [
         "dist/**"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "2.7.0",
+        "@mashroom/mashroom-utils": "2.7.1",
         "rhea": "^3.0.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.7.0",
-        "@mashroom/mashroom-messaging": "2.7.0",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.7.0"
+        "@mashroom/mashroom": "2.7.1",
+        "@mashroom/mashroom-messaging": "2.7.1",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1"
     },
     "jest": {
         "verbose": true,

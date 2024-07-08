@@ -7,17 +7,17 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.7.0",
+    "version": "2.7.1",
     "files": [
         "dist/**",
         "type-definitions/*"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "2.7.0"
+        "@mashroom/mashroom-utils": "2.7.1"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.7.0",
-        "@mashroom/mashroom-memory-cache": "2.7.0"
+        "@mashroom/mashroom": "2.7.1",
+        "@mashroom/mashroom-memory-cache": "2.7.1"
     },
     "jest": {
         "verbose": true,
