@@ -3,9 +3,11 @@
 
 ## [unreleased]
 
+## 2.7.0 (July 8, 2024)
+
  * VHost Path Mapper: Replace the location header URL with the relative path if the host matches the frontend host.
    This saves an unnecessary round trip if the protocol does not match the frontend protocol (see [#121](https://github.com/nonblocking/mashroom/issues/121))
- * VHost Path Mapper: Fixed reverse mapping of the location header if the url includes protocol and host
+ * VHost Path Mapper: Fixed reverse mapping of the location header if the URL is absolute 
  * HTTP Proxy: Adds now a proper *x-forwarded-host* header (if *createForwardedForHeaders* is set) 
  * HTTP Proxy: Added missing *createForwardedForHeaders* config prop to the JSON schema 
  * Portal: It is now possible to configure what should happen if the authentication expires. Until now the strategy was to just reload the current page,
