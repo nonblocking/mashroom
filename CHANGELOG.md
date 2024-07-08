@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+## 2.7.1 (July 8, 2024)
+
  * All package.json fixed to avoid errors during publishing
 
 ## 2.7.0 (July 8, 2024)
