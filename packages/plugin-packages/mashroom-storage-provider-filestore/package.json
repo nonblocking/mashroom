@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.6.1",
+    "version": "2.7.0",
     "files": [
         "dist/**"
     ],
@@ -15,9 +15,9 @@
         "proper-lockfile": "^4.1.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.6.1",
-        "@mashroom/mashroom-storage": "2.6.1",
-        "@mashroom/mashroom-utils": "2.6.1",
+        "@mashroom/mashroom": "2.7.0",
+        "@mashroom/mashroom-storage": "2.7.0",
+        "@mashroom/mashroom-utils": "2.7.0",
         "@types/fs-extra": "^11.0.4",
         "@types/proper-lockfile": "^4.1.4"
     },

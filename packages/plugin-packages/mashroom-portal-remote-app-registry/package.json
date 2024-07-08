@@ -4,7 +4,7 @@
     "homepage": "https://www.mashroom-server.com",
     "repository": "github:nonblocking/mashroom",
     "license": "MIT",
-    "version": "2.6.1",
+    "version": "2.7.0",
     "files": [
         "dist/**",
         "public/**",
@@ -19,13 +19,13 @@
         "node-fetch": "^2.7.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.6.1",
-        "@mashroom/mashroom-background-jobs": "2.6.1",
-        "@mashroom/mashroom-csrf-protection": "2.6.1",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.6.1",
-        "@mashroom/mashroom-portal": "2.6.1",
-        "@mashroom/mashroom-storage": "2.6.1",
-        "@mashroom/mashroom-utils": "2.6.1",
+        "@mashroom/mashroom": "2.7.0",
+        "@mashroom/mashroom-background-jobs": "2.7.0",
+        "@mashroom/mashroom-csrf-protection": "2.7.0",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.7.0",
+        "@mashroom/mashroom-portal": "2.7.0",
+        "@mashroom/mashroom-storage": "2.7.0",
+        "@mashroom/mashroom-utils": "2.7.0",
         "@types/body-parser": "^1.19.5",
         "@types/express": "^4.17.21",
         "@types/node-fetch": "^2.6.11"
