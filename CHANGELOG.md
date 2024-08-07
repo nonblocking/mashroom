@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Fixed the problem that proxy took the wrong agent if an interceptor plugin changed the target URI protocol from http to https
+
 ## 2.7.1 (July 8, 2024)
 
  * All package.json fixed to avoid errors during publishing

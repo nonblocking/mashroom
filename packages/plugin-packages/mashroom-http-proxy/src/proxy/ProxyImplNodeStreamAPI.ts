@@ -131,7 +131,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         }
 
         const startTime = process.hrtime();
-        logger.info(`Forwarding ${req.method} request to: ${targetUri}`);
+        logger.info(`Forwarding ${req.method} request to: ${fullTargetUri}`);
 
         await this._repeatableForwardHttpRequest({
             startTime,
@@ -200,12 +200,11 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
 
         logger.info(`Forwarding WebSocket request to: ${targetUri}`);
 
-        const fullTargetUri = effectiveTargetUri;
         let aborted = false;
 
         try {
             // Send upgrade request to target
-            const proxyRequest = this._createProxyRequest(fullTargetUri, 'GET', proxyRequestHttpHeaders);
+            const proxyRequest = this._createProxyRequest(effectiveTargetUri, 'GET', proxyRequestHttpHeaders);
             proxyRequest.setTimeout(this._socketTimeoutMs, () => {
                 // Abort proxy request
                 aborted = true;

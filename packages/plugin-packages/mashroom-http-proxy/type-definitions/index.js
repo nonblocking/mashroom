@@ -83,7 +83,7 @@ export interface MashroomHttpProxyInterceptor {
      * Intercept response from given targetUri.
      *
      * The existingHeaders contain the original request header and the ones already added by other interceptors.
-     * targetResponse is the response that shall be forwarded to the client. DO NOT MANIPULATE IT. Just use it to access "statusCode" an such.
+     * targetResponse is the response that shall be forwarded to the client. DO NOT MANIPULATE IT. Just use it to access "statusCode" and such.
      *
      * Return null or undefined if you don't want to interfere with a call.
      */

@@ -163,9 +163,9 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         this._headerFilter.removeUnwantedHeaders(req.headers);
 
         const startTime = process.hrtime();
-        logger.info(`Forwarding ${req.method} request to: ${targetUri}`);
+        logger.info(`Forwarding ${req.method} request to: ${effectiveTargetUri}`);
 
-        const proxyServer = targetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
+        const proxyServer = effectiveTargetUri.startsWith('https') ? this._httpsProxy : this._httpProxy;
         return new Promise((resolve) => {
             const forward = () => {
                 proxyServer.web(req, res, {
