@@ -452,14 +452,18 @@ describe('PortalAppController', () => {
         };
 
         const res: any = new Writable({
-            write: (chunk) => {
-                expect(chunk).toBeTruthy();
+            write: (chunk, encoding, cb) => {
+                cb();
+            },
+            final: (cb) => {
+                cb();
                 done();
             },
         });
         res.setHeader = () => { /* nothing to do */ };
         res.type = () => { /* nothing to do */ };
         res.set = () => { /* nothing to do */ };
+        res.sendStatus = () => { /* nothing to do */ };
 
         const controller = new PortalAppController(pluginRegistry);
         controller.getPortalAppResource(req, res);

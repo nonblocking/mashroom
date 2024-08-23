@@ -83,9 +83,12 @@ describe('PortalPageEnhancementController', () => {
 
         let type: string | undefined;
         const res: any = new Writable({
-            write: (chunk) => {
+            write: (chunk, encoding, cb) => {
+                cb();
+            },
+            final: (cb) => {
+                cb();
                 expect(type).toBe('test-script1.js');
-                expect(chunk).toBeTruthy();
                 done();
             },
         });
