@@ -13,8 +13,8 @@
     ],
     "dependencies": {
         "fs-extra": "^11.2.0",
-        "mingo": "^6.4.15",
-        "nanoid": "^3.3.7",
+        "mingo": "^6.5.1",
+        "nanoid": "^3.3.8",
         "proper-lockfile": "^4.1.2"
     },
     "devDependencies": {
@@ -25,7 +25,6 @@
         "@types/proper-lockfile": "^4.1.4"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -40,7 +39,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""

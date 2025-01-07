@@ -1,10 +1,10 @@
 
 module.exports = {
     entry: {
-        'main': __dirname + '/src/frontend/js/main.ts'
+        main: `${__dirname  }/src/frontend/js/main.ts`
     },
     output: {
-        path: __dirname + '/dist/public',
+        path: `${__dirname  }/dist/public`,
         filename: '[name].js'
     },
     module: {

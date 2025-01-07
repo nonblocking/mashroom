@@ -5,7 +5,7 @@ import type {ExpressTemplateEngine} from '@mashroom/mashroom-portal/type-definit
 const engine: ExpressTemplateEngine = (path, options, cb) => {
     let html;
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
+         
         const component = require(path).default;
         html = `<!DOCTYPE html>${renderToStaticMarkup(createElement(component, options))}`;
     } catch (e) {

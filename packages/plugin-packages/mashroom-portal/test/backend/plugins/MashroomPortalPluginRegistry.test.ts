@@ -117,25 +117,4 @@ describe('MashroomPortalPluginRegistry', () => {
         expect(registry.layouts.length).toBe(1);
     });
 
-    it('replaces a theme', () => {
-        const layout1: any = {name: 'layout', description: '1'};
-        const layout2: any = {name: 'layout', description: '2'};
-
-        const registry = new MashroomPortalPluginRegistry();
-        registry.registerLayout(layout1);
-        registry.registerLayout(layout2);
-
-        expect(registry.layouts.length).toBe(1);
-        expect(registry.layouts[0].description).toBe('2');
-    });
-
-    it('unregisters a theme', () => {
-        const theme: any = {name: 'theme'};
-
-        const registry = new MashroomPortalPluginRegistry();
-        registry.registerLayout(theme);
-        registry.unregisterLayout('theme');
-
-        expect(registry.themes.length).toBe(0);
-    });
 });

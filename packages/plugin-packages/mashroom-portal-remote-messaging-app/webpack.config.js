@@ -1,6 +1,5 @@
 
 const path = require('path');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
@@ -15,7 +14,7 @@ module.exports = (env, argv) => {
     return {
         entry,
         output: {
-            path: __dirname + '/dist',
+            path: `${__dirname  }/dist`,
             filename: 'remote-messaging.js',
             chunkFilename: 'remote-messaging.[contenthash].js',
         },
@@ -60,17 +59,11 @@ module.exports = (env, argv) => {
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
             modules: [
-                __dirname + '/node_modules',
-                __dirname + '/node_modules/@mashroom/mashroom-portal-ui-commons/node_modules',
-                __dirname + '/../../../node_modules',
+                `${__dirname  }/node_modules`,
+                `${__dirname  }/node_modules/@mashroom/mashroom-portal-ui-commons/node_modules`,
+                `${__dirname  }/../../../node_modules`,
             ]
         },
-        plugins: [
-            new ESLintPlugin({
-                extensions: ['.js', '.ts', '.tsx'],
-                fix: true,
-            })
-        ],
         optimization: {
             minimize: true,
             minimizer: [

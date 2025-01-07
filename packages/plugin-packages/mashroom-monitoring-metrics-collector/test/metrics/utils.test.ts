@@ -20,7 +20,7 @@ describe('utils.getRouteLabel', () => {
         expect(getRouteLabel('/portal/web/___/apps/my-app/bundle.js', logger)).toBe('/portal/web/___/apps/my-app');
     });
 
-    it('aggregates theme routes', () => {
+    it('aggregates page enhancement routes', () => {
         expect(getRouteLabel('/portal/web/___/page-enhancements/my-page-enhancement/index.ts', logger)).toBe('/portal/web/___/page-enhancements/my-page-enhancement');
     });
 

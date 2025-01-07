@@ -35,14 +35,14 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
 
     onConfigure(site: MashroomPortalSiteLinkLocalized): void {
         const {initConfigureSite, showModal} = this.props;
-        this.closeDropDownRef && this.closeDropDownRef();
+        this.closeDropDownRef?.();
         initConfigureSite(site.siteId);
         showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
     onDelete(site: MashroomPortalSiteLinkLocalized): void {
         const {initConfigureSite, showModal} = this.props;
-        this.closeDropDownRef && this.closeDropDownRef();
+        this.closeDropDownRef?.();
         initConfigureSite(site.siteId);
         showModal(DIALOG_NAME_SITE_DELETE);
     }

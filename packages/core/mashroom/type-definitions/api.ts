@@ -25,7 +25,8 @@ export type ExpressRequestWithContext = Request & {
 
 export type I18NString =
     | string
-    | { [lang: string]: string; };
+    | { [lang: string]: string;
+};
 
 /**
  * Generic event emitter (under the hood node's EventEmitter will be used)

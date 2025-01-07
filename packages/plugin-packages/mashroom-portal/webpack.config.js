@@ -1,4 +1,3 @@
-const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -18,22 +17,6 @@ module.exports = {
                 use: [
                     {
                         loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [
-                                    '@babel/preset-env',
-                                    {
-                                        'targets': {
-                                            'browsers': [
-                                                'last 2 versions',
-                                                'ie >= 11'
-                                            ]
-                                        }
-                                    }
-                                ],
-                                '@babel/preset-typescript'
-                            ]
-                        }
                     }
                 ]
             },
@@ -49,11 +32,5 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.ts'],
-    },
-    plugins: [
-        new ESLintPlugin({
-            extensions: ['.js', '.ts'],
-            fix: true,
-        })
-    ]
+    }
 };

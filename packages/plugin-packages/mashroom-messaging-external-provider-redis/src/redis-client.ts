@@ -45,7 +45,7 @@ export const getAvailableNodes = () => {
     if (!_clients.subscriberClient) {
         return 0;
     }
-    if (_clients.subscriberClient.hasOwnProperty('status')) {
+    if ('status' in _clients.subscriberClient) {
         return (_clients.subscriberClient as RedisType).status === 'ready' ? 1 : 0;
     }
     const nodes = (_clients.subscriberClient as Cluster).nodes();
@@ -98,14 +98,16 @@ const getClient = async (clientKey: keyof Clients, logger: MashroomLogger): Prom
     // Wait for a connection a few seconds
     await new Promise<void>((resolve) => {
         let resolved = false;
-        client && client.on('connect', () => {
+        client.on('connect', () => {
             setTimeout(() => {
                 resolved = true;
                 resolve();
             }, 0);
         });
         setTimeout(() => {
-            !resolved && resolve();
+            if (!resolved) {
+                resolve();
+            }
         }, 2000);
     });
 

@@ -1,16 +1,15 @@
-const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-    entry: __dirname + '/src/js',
+    entry: `${__dirname  }/src/js`,
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname  }/dist`,
         filename: 'bundle.js',
     },
     module: {
         rules: [
             {
-                test: /\.(ts|tsx)$/,
+                test: /\.ts$/,
                 exclude: /node_modules/,
                 use: [
                     {
@@ -23,12 +22,6 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
     },
-    plugins: [
-        new ESLintPlugin({
-            extensions: ['.js', '.ts', '.tsx'],
-            fix: true,
-        })
-    ],
     optimization: {
         minimize: true,
         minimizer: [

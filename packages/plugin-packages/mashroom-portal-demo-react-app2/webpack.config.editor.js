@@ -1,10 +1,9 @@
-const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-    entry: __dirname + '/src/js/indexEditor',
+    entry: `${__dirname  }/src/js/indexEditor`,
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname  }/dist`,
         filename: 'editor.js',
     },
     module: {
@@ -46,12 +45,6 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
     },
-    plugins: [
-        new ESLintPlugin({
-            extensions: ['.js', '.ts', '.tsx'],
-            fix: true,
-        })
-    ],
     optimization: {
         minimize: true,
         minimizer: [

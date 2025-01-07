@@ -240,11 +240,9 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
             const groupToRoles = this._getGroupToRoleMapping(request, logger);
             if (groupToRoles) {
                 groups.forEach((group) => {
-                    if (groupToRoles.hasOwnProperty(group)) {
-                        const groupRoles = groupToRoles[group];
-                        if (groupRoles && Array.isArray(groupRoles)) {
-                            groupToRoles[group].forEach((role) => roles.push(role));
-                        }
+                    const groupRoles = groupToRoles[group];
+                    if (groupRoles && Array.isArray(groupRoles)) {
+                        groupToRoles[group].forEach((role) => roles.push(role));
                     }
                 });
             } else {
@@ -277,7 +275,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (fs.existsSync(this._groupToRoleMappingPath)) {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+
             const groupToRoleMappingModule = require(this._groupToRoleMappingPath);
             this._groupToRoleMapping = groupToRoleMappingModule.default ?? groupToRoleMappingModule;
             this._createRoleDefinitions(this._groupToRoleMapping as GroupToRoleMapping, request, logger);
@@ -298,7 +296,7 @@ export default class MashroomLdapSecurityProvider implements MashroomSecurityPro
         }
 
         if (fs.existsSync(this._userToRoleMappingPath)) {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+
             const userToRoleMappingModule = require(this._userToRoleMappingPath);
             this._userToRoleMapping = userToRoleMappingModule.default ?? userToRoleMappingModule;
             this._createRoleDefinitions(this._userToRoleMapping as UserToRoleMapping, request, logger);

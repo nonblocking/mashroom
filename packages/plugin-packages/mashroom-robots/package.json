@@ -16,7 +16,6 @@
         "@mashroom/mashroom": "2.7.1"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -31,7 +30,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""

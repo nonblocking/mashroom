@@ -50,7 +50,7 @@ describe.skip('LdapClientImpl', () => {
             return;
         }
 
-        fail('Login should have thrown an error!');
+        throw new Error('Login should have thrown an error!');
     });
 
     it('executes the search correctly', async () => {

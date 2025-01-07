@@ -80,7 +80,7 @@ describe('PortalAppPluginLoader', () => {
                         doSomethingSpecial: ['Role2', 'Role3']
                     },
                     proxies: {
-                        'whatever': {
+                        whatever: {
                             targetUri: 'https://whatever.com/api',
                             sendPermissionsHeader: false,
                             restrictToRoles: ['Role1']
@@ -116,8 +116,8 @@ describe('PortalAppPluginLoader', () => {
         });
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
         expect(registry.portalApps[0].category).toEqual('Test');
-        expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': ['style.css']});
-        expect(registry.portalApps[0].sharedResources).toEqual({'js': ['globalLib.js']});
+        expect(registry.portalApps[0].resources).toEqual({js: ['bundle.js'], css: ['style.css']});
+        expect(registry.portalApps[0].sharedResources).toEqual({js: ['globalLib.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
         if (process.platform !== 'win32') {
             expect(registry.portalApps[0].ssrBootstrap).toEqual('/foo/bar/dist/renderToString.js');
@@ -174,7 +174,7 @@ describe('PortalAppPluginLoader', () => {
                         doSomethingSpecial: ['Role2', 'Role3']
                     },
                     proxies: {
-                        'whatever': {
+                        whatever: {
                             targetUri: 'https://whatever.com/api',
                             sendPermissionsHeader: false,
                             restrictToRoles: ['Role1']
@@ -206,7 +206,7 @@ describe('PortalAppPluginLoader', () => {
         });
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
         expect(registry.portalApps[0].category).toEqual('Test');
-        expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js']});
+        expect(registry.portalApps[0].resources).toEqual({js: ['bundle.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
         expect(registry.portalApps[0].ssrBootstrap).toBeFalsy();
         expect(registry.portalApps[0].proxies).toBeTruthy();
@@ -261,7 +261,7 @@ describe('PortalAppPluginLoader', () => {
                         doSomethingSpecial: ['Role2', 'Role3']
                     },
                     restProxies: {
-                        'whatever': {
+                        whatever: {
                             targetUri: 'https://whatever.com/api',
                             sendPermissionsHeader: false,
                             restrictToRoles: ['Role1']
@@ -294,8 +294,8 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].title).toEqual('Portal App 1');
         expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
         expect(registry.portalApps[0].category).toEqual('Test');
-        expect(registry.portalApps[0].resources).toEqual({'js': ['bundle.js'], 'css': ['style.css']});
-        expect(registry.portalApps[0].sharedResources).toEqual({'js': ['globalLib.js']});
+        expect(registry.portalApps[0].resources).toEqual({js: ['bundle.js'], css: ['style.css']});
+        expect(registry.portalApps[0].sharedResources).toEqual({js: ['globalLib.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
         expect(registry.portalApps[0].screenshots).toEqual(['screenshot1.png']);
         expect(registry.portalApps[0].proxies).toBeTruthy();

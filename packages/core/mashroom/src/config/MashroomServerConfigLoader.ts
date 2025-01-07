@@ -57,7 +57,6 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             for (const configFile of existingConfigFiles) {
                 this._logger.info(`Using config file: ${configFile}`);
                 try {
-                    // eslint-disable-next-line @typescript-eslint/no-var-requires
                     const externalConfigModule = require(configFile);
                     const externalConfig = externalConfigModule.default ?? externalConfigModule;
                     config = modelUtils.deepAssign({}, config, externalConfig);

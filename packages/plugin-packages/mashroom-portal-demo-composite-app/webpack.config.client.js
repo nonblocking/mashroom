@@ -1,11 +1,10 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = {
-    entry: __dirname + '/src/js',
+    entry: `${__dirname  }/src/js`,
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname  }/dist`,
         filename: 'bundle.js',
     },
     module: {
@@ -62,10 +61,6 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: 'bundle.css'
         }),
-        new ESLintPlugin({
-            extensions: ['.js', '.ts', '.tsx'],
-            fix: true,
-        })
     ],
     devServer: {
         host: '0.0.0.0',

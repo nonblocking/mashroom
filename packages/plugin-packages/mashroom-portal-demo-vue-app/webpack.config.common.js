@@ -1,5 +1,5 @@
 
-const { VueLoaderPlugin } = require('vue-loader')
+const { VueLoaderPlugin } = require('vue-loader');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {

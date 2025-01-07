@@ -105,7 +105,7 @@ const pluginRegistry3: any = {
         name: 'Test App Enhancement',
         description: null,
         portalCustomClientServices: {
-            'customService': 'foo'
+            customService: 'foo'
         },
         lastReloadTs: 1000,
     }],
@@ -149,9 +149,9 @@ const pluginRegistry3: any = {
                 generatedScript: () => 'console.info("I am generated!");',
             },
             rules: {
-                'yes': () => true,
-                'no': () => false,
-                'onlyOnPage4': (sitePath: string, pageFriendlyUrl: string) => pageFriendlyUrl === '/same',
+                yes: () => true,
+                no: () => false,
+                onlyOnPage4: (sitePath: string, pageFriendlyUrl: string) => pageFriendlyUrl === '/same',
             }
         }
     }, {

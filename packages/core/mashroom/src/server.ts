@@ -34,7 +34,6 @@ async function startServer() {
     await server.start();
 
     if (process.platform === 'win32') {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const rl = require('readline').createInterface({
             input: process.stdin,
             output: process.stdout

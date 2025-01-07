@@ -105,27 +105,27 @@ describe('MashroomPortalService', () => {
         expect(deleteOneMock.mock.calls).toEqual([
             [
                 {
-                    'siteId': '3'
+                    siteId: '3'
                 }
             ],
             [
                 {
-                    'pageId': 'page0'
+                    pageId: 'page0'
                 }
             ],
             [
                 {
-                    'pageId': 'page3'
+                    pageId: 'page3'
                 }
             ],
             [
                 {
-                    'pageId': 'page4'
+                    pageId: 'page4'
                 }
             ],
             [
                 {
-                    'pageId': 'page6'
+                    pageId: 'page6'
                 }
             ]
         ]);
@@ -135,41 +135,41 @@ describe('MashroomPortalService', () => {
             [
                 {},
                 {
-                    'key': '3',
-                    'permissions': null,
-                    'type': 'Site'
+                    key: '3',
+                    permissions: null,
+                    type: 'Site'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'page0',
-                    'permissions': null,
-                    'type': 'Page'
+                    key: 'page0',
+                    permissions: null,
+                    type: 'Page'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'page3',
-                    'permissions': null,
-                    'type': 'Page'
+                    key: 'page3',
+                    permissions: null,
+                    type: 'Page'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'page4',
-                    'permissions': null,
-                    'type': 'Page'
+                    key: 'page4',
+                    permissions: null,
+                    type: 'Page'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'page6',
-                    'permissions': null,
-                    'type': 'Page'
+                    key: 'page6',
+                    permissions: null,
+                    type: 'Page'
                 }
             ]
         ]);
@@ -220,25 +220,25 @@ describe('MashroomPortalService', () => {
         expect(deleteOneMock.mock.calls).toEqual([
             [
                 {
-                    'pageId': '123'
+                    pageId: '123'
                 }
             ],
             [
                 {
-                    'instanceId': '1',
-                    'pluginName': 'App 1'
+                    instanceId: '1',
+                    pluginName: 'App 1'
                 }
             ],
             [
                 {
-                    'instanceId': '2',
-                    'pluginName': 'App 2'
+                    instanceId: '2',
+                    pluginName: 'App 2'
                 }
             ],
             [
                 {
-                    'instanceId': '3',
-                    'pluginName': 'App 3'
+                    instanceId: '3',
+                    pluginName: 'App 3'
                 }
             ]
         ]);
@@ -248,33 +248,33 @@ describe('MashroomPortalService', () => {
             [
                 {},
                 {
-                    'key': '123',
-                    'permissions': null,
-                    'type': 'Page'
+                    key: '123',
+                    permissions: null,
+                    type: 'Page'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'App 1_1',
-                    'permissions': null,
-                    'type': 'Portal-App'
+                    key: 'App 1_1',
+                    permissions: null,
+                    type: 'Portal-App'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'App 2_2',
-                    'permissions': null,
-                    'type': 'Portal-App'
+                    key: 'App 2_2',
+                    permissions: null,
+                    type: 'Portal-App'
                 }
             ],
             [
                 {},
                 {
-                    'key': 'App 3_3',
-                    'permissions': null,
-                    'type': 'Portal-App'
+                    key: 'App 3_3',
+                    permissions: null,
+                    type: 'Portal-App'
                 }
             ]
         ]);

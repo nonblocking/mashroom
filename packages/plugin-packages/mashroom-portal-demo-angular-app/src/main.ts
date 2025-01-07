@@ -1,9 +1,9 @@
 import {enableProdMode} from '@angular/core';
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 
-import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
-import {LoaderModule} from "./loader.module";
-import {AppComponent} from "./app/app.component";
+import {LoaderModule} from './loader.module';
+import {AppComponent} from './app/app.component';
+import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 if (process.env.NODE_ENV === 'production') {
     enableProdMode();

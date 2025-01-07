@@ -126,7 +126,7 @@ describe('ssr-utils', () => {
         const html = await renderServerSide('Test App 1', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
 
         expect(html).toBeTruthy();
-        expect(html).toEqual({'embeddedPortalPageApps': {}, 'html': 'this is a test'});
+        expect(html).toEqual({embeddedPortalPageApps: {}, html: 'this is a test'});
     });
 
     it('returns the HTML from a remote SSR route', async () => {
@@ -162,7 +162,7 @@ describe('ssr-utils', () => {
             }
         });
         expect(html).toBeTruthy();
-        expect(html).toEqual({'embeddedPortalPageApps': {}, 'html': 'this is a remote test'});
+        expect(html).toEqual({embeddedPortalPageApps: {}, html: 'this is a remote test'});
     });
 
     it('returns the HTML a SSR bootstrap that embeds other Apps', async () => {

@@ -1,5 +1,5 @@
 
-import type {MashroomSecurityUser} from "@mashroom/mashroom-security/type-definitions";
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 export type MashroomWebSocketMatcher = (
     connectPath: string,

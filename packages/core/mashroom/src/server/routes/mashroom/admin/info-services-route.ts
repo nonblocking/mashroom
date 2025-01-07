@@ -40,12 +40,8 @@ const serviceRows = (pluginContext: MashroomPluginContext) => {
 const serviceNames = (pluginContext: MashroomPluginContext) => {
     const services = [];
     for (const namespace in pluginContext.services) {
-        if (pluginContext.services.hasOwnProperty(namespace)) {
-            for (const serviceName in pluginContext.services[namespace]) {
-                if (pluginContext.services[namespace]?.hasOwnProperty(serviceName)) {
-                    services.push({namespace, serviceName});
-                }
-            }
+        for (const serviceName in pluginContext.services[namespace]) {
+            services.push({namespace, serviceName});
         }
     }
 

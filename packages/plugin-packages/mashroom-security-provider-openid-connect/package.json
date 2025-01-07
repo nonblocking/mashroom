@@ -12,19 +12,18 @@
         "dist/**"
     ],
     "dependencies": {
-        "express": "^4.19.2",
+        "express": "^4.21.2",
         "node-fetch": "^2.7.0",
-        "openid-client": "^5.6.5"
+        "openid-client": "^5.7.1"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.7.1",
         "@mashroom/mashroom-security": "2.7.1",
         "@mashroom/mashroom-utils": "2.7.1",
         "@types/express": "^4.17.21",
-        "@types/node-fetch": "^2.6.11"
+        "@types/node-fetch": "^2.6.12"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -39,7 +38,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src --extensions \".ts\" -d dist"

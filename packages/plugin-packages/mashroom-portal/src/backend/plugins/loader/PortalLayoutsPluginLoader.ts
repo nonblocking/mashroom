@@ -31,7 +31,7 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
         }
 
         for (const layoutId in layouts) {
-            if (layouts.hasOwnProperty(layoutId)) {
+            if (layoutId in layouts) {
                 let layoutPath = layouts[layoutId];
                 if (!layoutPath.startsWith('/')) {
                     layoutPath = path.resolve(plugin.pluginPackage.pluginPackagePath, layoutPath);
@@ -65,7 +65,7 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
         if (this._loadedLayouts.has(plugin.name)) {
             const pluginLayouts = this._loadedLayouts.get(plugin.name);
             for (const pluginName in pluginLayouts) {
-                if (pluginLayouts.hasOwnProperty(pluginName)) {
+                if (pluginName in pluginLayouts) {
                     this._logger.info(`Unregistering layout:${pluginName}`);
                     this._registry.unregisterLayout(pluginName);
                 }

@@ -1,5 +1,5 @@
 
-import {Redis, Cluster, ClusterNode, ClusterOptions, RedisOptions} from 'ioredis';
+import type {Redis, Cluster, ClusterNode, ClusterOptions, RedisOptions} from 'ioredis';
 
 export type IORedisClient = Redis | Cluster;
 

@@ -138,7 +138,7 @@ export default class MashroomSimpleSecurityProvider implements MashroomSecurityP
 
         let userStore: UserStore;
         if (fs.existsSync(this._userStorePath)) {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+             
             const userDataModule = require(this._userStorePath);
             const userData = userDataModule.default ?? userDataModule;
             userStore = Array.isArray(userData) ? userData : (userData.users || []);

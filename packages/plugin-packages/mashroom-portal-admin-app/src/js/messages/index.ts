@@ -18,7 +18,7 @@ export default (lang: string): Promise<any> => {
         (error) => {
             console.error('Error loading i8n messages', error);
             return {
-                'error': true
+                error: true
             };
         }
     );

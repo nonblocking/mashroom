@@ -41,7 +41,6 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
             const configFile = configFiles.find((file) => existsSync(file));
 
             if (configFile) {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 const logConfigModule = require(configFile);
                 const logConfig = logConfigModule.default ?? logConfigModule;
                 log4js.configure(logConfig);
@@ -68,7 +67,7 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
 
         if (context) {
             for (const name in context) {
-                if (context.hasOwnProperty(name)) {
+                if (name in context) {
                     logger.addContext(name, context[name]);
                 }
             }
@@ -77,17 +76,17 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
         try {
             switch (level) {
                 case 'error':
-                    args && args.length > 0 ? logger.error(message, ...args) : logger.error(message);
+                    logger.error(message, ...args ?? []);
                     break;
                 case 'warn':
-                    args && args.length > 0 ? logger.warn(message, ...args) : logger.warn(message);
+                    logger.warn(message, ...args ?? []);
                     break;
                 case 'info':
-                    args && args.length > 0 ? logger.info(message, ...args) : logger.info(message);
+                    logger.info(message, ...args ?? []);
                     break;
                 default:
                 case 'debug':
-                    args && args.length > 0 ? logger.debug(message, ...args) : logger.debug(message);
+                    logger.debug(message, ...args ?? []);
                     break;
             }
 

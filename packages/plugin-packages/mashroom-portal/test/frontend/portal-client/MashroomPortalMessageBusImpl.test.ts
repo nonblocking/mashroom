@@ -8,13 +8,13 @@ describe('MashroomPortalMessageBusImpl', () => {
 
         messageBus.subscribe('foo1', (data) => {
            expect(data).toEqual({
-               'Hello': 'World',
+               Hello: 'World',
            });
            done();
         });
 
         messageBus.publish('foo1', {
-           'Hello': 'World',
+           Hello: 'World',
         });
     });
 
@@ -23,7 +23,7 @@ describe('MashroomPortalMessageBusImpl', () => {
 
         messageBus.subscribeOnce('foo1', (data) => {
             expect(data).toEqual({
-                'Hello': 'World',
+                Hello: 'World',
             });
             done();
         });
@@ -32,7 +32,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         expect(messageBus._subscriptionMap['foo1'].length).toBe(1);
 
         messageBus.publish('foo1', {
-            'Hello': 'World',
+            Hello: 'World',
         });
 
         // @ts-ignore
@@ -43,7 +43,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         const messageBus = new MashroomPortalMessageBusImpl();
 
         messageBus.publish('foo111', {
-            'Hello': 'World',
+            Hello: 'World',
         });
     });
 
@@ -80,13 +80,13 @@ describe('MashroomPortalMessageBusImpl', () => {
 
         messageBus.subscribe('foo3', (data) => {
             expect(data).toEqual({
-                'Hello': 'World',
+                Hello: 'World',
             });
             done();
         });
 
         messageBus.publish('foo3', {
-            'Hello': 'World',
+            Hello: 'World',
         });
     });
 
@@ -101,7 +101,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         messageBusApp2.publish('foo3', {
-            'Hello': 'World',
+            Hello: 'World',
         });
     });
 
@@ -115,7 +115,7 @@ describe('MashroomPortalMessageBusImpl', () => {
             expect(receiverAppId).toBe('app1');
             expect(topic).toBe('foo3');
             expect(data).toEqual({
-                'Hello': 'World',
+                Hello: 'World',
             });
             done();
         });
@@ -125,7 +125,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         messageBusApp2.publish('foo3', {
-            'Hello': 'World',
+            Hello: 'World',
         });
     });
 
@@ -144,7 +144,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         messageBusApp2.publish('foo3', {
-            'Hello': 'World',
+            Hello: 'World',
         });
 
         setTimeout(() => done(), 500);
@@ -161,13 +161,13 @@ describe('MashroomPortalMessageBusImpl', () => {
 
         messageBusApp1.subscribe('foo3', (data, topic) => {
             expect(data).toEqual({
-                'Hello': 'World',
+                Hello: 'World',
             });
             done();
         });
 
         messageBusApp2.publish('foo3', {
-            'Hello': 'World',
+            Hello: 'World',
         });
     });
 
@@ -190,7 +190,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         });
 
         messageBusApp2.publish('foo3', {
-            'Hello': 'World',
+            Hello: 'World',
         });
     });
 

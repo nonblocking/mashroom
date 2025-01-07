@@ -75,7 +75,7 @@ export const createPortalAppSetup = async (portalApp: MashroomPortalApp,
     };
     if (portalApp.proxies && Object.keys(portalApp.proxies).length > 0) {
         for (const proxyId in portalApp.proxies) {
-            if (proxyId && portalApp.proxies.hasOwnProperty(proxyId)) {
+            if (proxyId && proxyId in portalApp.proxies) {
                 proxyPaths[proxyId] = `${restProxyBasePath}/${proxyId}`;
             }
         }

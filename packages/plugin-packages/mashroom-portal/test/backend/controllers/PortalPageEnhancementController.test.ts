@@ -50,8 +50,8 @@ const portalPageEnhancement: MashroomPortalPageEnhancement = {
     },
     plugin: {
         rules: {
-            'yes': () => true,
-            'no': () => false,
+            yes: () => true,
+            no: () => false,
         }
     }
 };
@@ -74,8 +74,8 @@ describe('PortalPageEnhancementController', () => {
                 remoteAddress: '127.0.0.1'
             },
             params: {
-                'pluginName': 'Test Page Enhancement',
-                '0': 'test-script1.js',
+                pluginName: 'Test Page Enhancement',
+                0: 'test-script1.js',
             },
             pluginContext,
             query: {},
@@ -106,8 +106,8 @@ describe('PortalPageEnhancementController', () => {
                 remoteAddress: '127.0.0.1'
             },
             params: {
-                'pluginName': 'Test Page Enhancement',
-                '0': 'test-script2.js',
+                pluginName: 'Test Page Enhancement',
+                0: 'test-script2.js',
             },
             pluginContext,
             query: {},
@@ -133,8 +133,8 @@ describe('PortalPageEnhancementController', () => {
                 remoteAddress: '127.0.0.1'
             },
             params: {
-                'pluginName': 'Test Page Enhancement XXX',
-                '0': 'test-script1.js',
+                pluginName: 'Test Page Enhancement XXX',
+                0: 'test-script1.js',
             },
             pluginContext,
             query: {},

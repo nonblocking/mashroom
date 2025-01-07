@@ -32,7 +32,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
 
         const mapping: ErrorMapping = {
-            '404': './html/404.html'
+            404: './html/404.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -68,7 +68,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
 
         const mapping: ErrorMapping = {
-            'default': './html/404.html'
+            default: './html/404.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -102,7 +102,7 @@ describe('MashroomErrorPagesMiddleware', () => {
         };
 
         const mapping: ErrorMapping = {
-            '404': './html/non_existing.html'
+            404: './html/non_existing.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -140,7 +140,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
 
         const mapping: ErrorMapping = {
-            '404': './html/404_2.html'
+            404: './html/404_2.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -188,7 +188,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
 
         const mapping: ErrorMapping = {
-            '404': './html/404_3.html'
+            404: './html/404_3.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -226,7 +226,7 @@ describe('MashroomErrorPagesMiddleware', () => {
 
 
         const mapping: ErrorMapping = {
-            '404': './html/404_2.html'
+            404: './html/404_2.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -259,7 +259,7 @@ describe('MashroomErrorPagesMiddleware', () => {
         };
 
         const mapping: ErrorMapping = {
-            '404': './html/404_2.html'
+            404: './html/404_2.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);
@@ -296,7 +296,7 @@ describe('MashroomErrorPagesMiddleware', () => {
         };
 
         const mapping: ErrorMapping = {
-            '404': './html/404_2.html'
+            404: './html/404_2.html'
         };
 
         const mashroomErrorPagesMiddleware = new MashroomErrorPagesMiddleware(__dirname, '1.0.0', mapping);

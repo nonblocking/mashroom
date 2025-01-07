@@ -32,7 +32,7 @@ export const getAvailableNodes = () => {
     if (!_client) {
         return 0;
     }
-    if (_client.hasOwnProperty('status')) {
+    if ('status' in _client) {
         return (_client as RedisType).status === 'ready' ? 1 : 0;
     }
     const nodes = (_client as Cluster).nodes();

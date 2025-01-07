@@ -161,7 +161,6 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         // Reload
         delete require.cache[externalPluginConfigFile];
         try {
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const pluginConfigModule = require(externalPluginConfigFile);
             return pluginConfigModule.default ?? pluginConfigModule;
         } catch (e) {

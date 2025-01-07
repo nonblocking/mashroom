@@ -86,7 +86,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
             const roles: MashroomSecurityRoles = rules;
             return roles.some((r) => user.roles.find((ur) => ur === r));
         }
-        if (rules.hasOwnProperty('roles') || rules.hasOwnProperty('ips')) {
+        if ('roles' in rules || 'ips' in rules) {
             const complexRules = rules as MashroomSecurityACLPermissionRuleComplex;
             const roleMatch = user && complexRules.roles && Array.isArray(complexRules.roles) && complexRules.roles.some((r) => user.roles.find((ur) => ur === r));
             const ipMatch = complexRules.ips && Array.isArray(complexRules.ips) && ipUtils.clientIPMatch(req, complexRules.ips);
@@ -102,11 +102,11 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
 
         if (fs.existsSync(this._aclPath)) {
             const pathRuleList = [];
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
+
             const aclModule = require(this._aclPath);
             const acl = aclModule.default ?? aclModule;
             for (const pathPattern in acl) {
-                if (acl.hasOwnProperty(pathPattern) && !pathPattern.startsWith('$')) {
+                if (pathPattern in acl && !pathPattern.startsWith('$')) {
                     const pathRule = acl[pathPattern];
                     if (pathPattern.startsWith('/')) {
                         const regexp = this._pathToRegExp(pathPattern);

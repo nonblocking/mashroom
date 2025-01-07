@@ -1,6 +1,6 @@
-import {ChangeDetectorRef, Component, Inject} from '@angular/core';
+import {Component, Inject, ChangeDetectorRef} from '@angular/core';
 
-import {MashroomPortalAppSetup, MashroomPortalClientServices, MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalAppSetup, MashroomPortalClientServices, MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 
 @Component({
     selector: 'app-mashroom-portal-angular-demo',
@@ -16,7 +16,7 @@ export class AppComponent {
     pings: number;
     messageBus: MashroomPortalMessageBus;
 
-    constructor(cdRef: ChangeDetectorRef, @Inject('app.setup') private _appSetup: MashroomPortalAppSetup, @Inject('client.services') private _clientServices: MashroomPortalClientServices) {
+    constructor(cdRef: ChangeDetectorRef, @Inject('app.setup') _appSetup: MashroomPortalAppSetup, @Inject('client.services') private _clientServices: MashroomPortalClientServices) {
         this.resourcesBasePath = _appSetup.resourcesBasePath;
         this.message = _appSetup.appConfig.message;
         this.pingButtonLabel = _appSetup.appConfig.pingButtonLabel;

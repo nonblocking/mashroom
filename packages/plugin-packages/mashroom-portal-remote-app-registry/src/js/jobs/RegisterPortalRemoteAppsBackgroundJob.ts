@@ -243,7 +243,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
         // Rewrite proxy target urls if they refer to localhost
         if (definedRestProxies) {
             for (const proxyName in definedRestProxies) {
-                if (definedRestProxies.hasOwnProperty(proxyName)) {
+                if (proxyName in definedRestProxies) {
                     let targetUri = definedRestProxies[proxyName].targetUri;
                     if (!targetUri) {
                         throw new Error(`Invalid configuration of plugin ${name}: No targetUri defined for proxy ${proxyName}.`);
@@ -318,7 +318,7 @@ export default class RegisterPortalRemoteAppsBackgroundJob implements RegisterPo
                 signal: controller.signal,
             });
             if (result.ok) {
-                return await result.json();
+                return await result.json() as RemoteAppPackageJson;
             } else {
                 this._logger.warn(`Fetching package.json from ${remotePortalAppEndpoint.url} failed with status code ${result.status}`);
             }

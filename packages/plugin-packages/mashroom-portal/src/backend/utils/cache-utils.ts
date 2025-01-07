@@ -3,7 +3,7 @@ import {createHash} from 'crypto';
 import context from '../context/global-portal-context';
 
 const LOAD_TS = Date.now();
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+ 
 const {version: portalVersion} = require('../../../package.json');
 
 let portalVersionHash: string | undefined;

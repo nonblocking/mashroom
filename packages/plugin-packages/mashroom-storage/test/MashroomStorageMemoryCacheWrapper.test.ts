@@ -35,7 +35,7 @@ describe('MashroomStorageMemoryCacheWrapper', () => {
         mockGetCollection.mockReset();
     });
 
-    it('it wraps the collections with MashroomStorageCollectionMemoryCacheWrapper', async () => {
+    it('wraps the collections with MashroomStorageCollectionMemoryCacheWrapper', async () => {
         const wrapper = new MashroomStorageMemoryCacheWrapper(storage, config, pluginContextHolder);
 
         const collection = await wrapper.getCollection('collection1');

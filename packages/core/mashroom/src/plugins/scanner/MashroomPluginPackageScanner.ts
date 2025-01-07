@@ -61,7 +61,11 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
 
         if (this._foldersToWatch.length > 0) {
             this._logger.debug('Start watching: ', this._foldersToWatch);
+
             this._watcher = chokidar.watch(this._foldersToWatch, {
+                usePolling: true,
+                interval: 1000,
+                binaryInterval: 1000,
                 ignored: [/(^|[/\\])\../, ...IGNORE_CHANGES_IN_PATHS],
                 persistent: true,
                 ignoreInitial: true,
@@ -76,7 +80,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
             });
 
             this._watcher.on('all', this._processWatchEvent.bind(this));
-            this._watcher.on('error', (error: Error) => {
+            this._watcher.on('error', (error) => {
                 this._logger.error('Scanner error', error);
             });
 
@@ -160,7 +164,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
 
     private _deferredUpdates() {
         for (const path in this._deferredUpdatesTimestamps) {
-            if (this._deferredUpdatesTimestamps.hasOwnProperty(path)) {
+            if (path in this._deferredUpdatesTimestamps) {
                 const timestamp = this._deferredUpdatesTimestamps[path];
                 if (timestamp < Date.now()) {
                     delete this._deferredUpdatesTimestamps[path];
@@ -217,7 +221,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         if (existsSync(packageFile)) {
             try {
                 const packageJson = JSON.parse(readFileSync(packageFile).toString());
-                return packageJson.hasOwnProperty('mashroom');
+                return 'mashroom' in packageJson;
             } catch (e) {
                 this._logger.error('Error loading package.json', e);
             }

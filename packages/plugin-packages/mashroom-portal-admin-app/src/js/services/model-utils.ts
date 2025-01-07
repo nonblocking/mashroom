@@ -38,8 +38,8 @@ export const searchPageRef = (pageId: string, pages: Array<MashroomPortalPageRef
     let pageRef: MashroomPortalPageRef | null | undefined = null;
     const search = (pages: Array<MashroomPortalPageRef>) => {
         pageRef = pages && pages.find((p) => p.pageId === pageId);
-        if (!pageRef) {
-            pages && pages.forEach((p) => !pageRef && p.subPages && search(p.subPages));
+        if (!pageRef && pages) {
+             pages.forEach((p) => !pageRef && p.subPages && search(p.subPages));
         }
     };
 

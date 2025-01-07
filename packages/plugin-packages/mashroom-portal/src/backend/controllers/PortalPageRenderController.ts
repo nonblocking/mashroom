@@ -565,7 +565,7 @@ export default class PortalPageRenderController {
         const portalPageApps: MashroomPortalPageApps = {};
         if (page.portalApps) {
             for (const areaId in page.portalApps) {
-                if (areaId && page.portalApps.hasOwnProperty(areaId)) {
+                if (areaId && areaId in page.portalApps) {
                     for (const {pluginName, instanceId} of page.portalApps[areaId]) {
                         if (!instanceId) {
                             // Data inconsistency?

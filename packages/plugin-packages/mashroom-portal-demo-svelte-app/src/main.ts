@@ -1,10 +1,10 @@
+import { mount, unmount } from 'svelte';
 import App from './App.svelte';
-import type { SvelteComponent } from 'svelte';
 import type { MashroomPortalAppPluginBootstrapFunction } from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
     portalAppHostElement.innerHTML = '';
-    const app: SvelteComponent = new App({
+    const app = mount(App,{
         target: portalAppHostElement,
         props: {
             messageBus: clientServices.messageBus,
@@ -14,7 +14,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 
     return {
         willBeRemoved: () => {
-            app.$destroy();
+            unmount(app);
         }
     };
 };

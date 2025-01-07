@@ -105,8 +105,8 @@ const portalApp2: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: null,
     rolePermissions: {
-        'edit': ['Role2'],
-        'delete': ['Administrator']
+        edit: ['Role2'],
+        delete: ['Administrator']
     },
     proxies: {
         'my-proxy': {
@@ -206,10 +206,10 @@ const pluginContext: any = {
                 async getPage() {
                     return {
                         portalApps: {
-                            'area1': [{
+                            area1: [{
                                 pluginName: 'Test Portal App 1',
                             }],
-                            'area2': [{
+                            area2: [{
                                 pluginName: 'Test Portal App 2',
                             }]
                         }
@@ -231,7 +231,7 @@ describe('PortalPageController', () => {
         const req: any = {
             originalUrl: '/portal/web/___/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
             params: {
-                '0': 'Test Portal App 1/my-proxy/foo/bar',
+                0: 'Test Portal App 1/my-proxy/foo/bar',
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -261,7 +261,7 @@ describe('PortalPageController', () => {
         const req: any = {
             originalUrl: '/portal/web/___/proxy/Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
             params: {
-                '0': 'Test Portal App 2/my-proxy',
+                0: 'Test Portal App 2/my-proxy',
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -293,7 +293,7 @@ describe('PortalPageController', () => {
 
         const req: any = {
             params: {
-                '0': 'Test Portal App 3/my-proxy/foo',
+                0: 'Test Portal App 3/my-proxy/foo',
             },
             connection: {
                 remoteAddress: '127.0.0.1'

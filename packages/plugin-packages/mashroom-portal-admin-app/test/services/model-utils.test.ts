@@ -89,7 +89,7 @@ describe('model-utils.removePageFromTree', () => {
         expect(searchPageRef('subpage22', site.pages)).toBeFalsy();
     });
 
-    it('it retains subpages of the removed page', () => {
+    it('retains subpages of the removed page', () => {
         const site: MashroomPortalSite = loadSite();
 
         expect(searchPageRef('subpage2', site.pages)).toBeTruthy();
@@ -128,7 +128,7 @@ describe('model-utils.insertOrUpdatePageAtPosition', () => {
         expect(position).toEqual({
             parentPageId: 'test1',
             insertAfterPageId: 'subpage1'
-        })
+        });
     });
 
     it('inserts a new page at the top level', () => {
@@ -154,7 +154,7 @@ describe('model-utils.insertOrUpdatePageAtPosition', () => {
         expect(position).toEqual({
             parentPageId: null,
             insertAfterPageId: 'test2'
-        })
+        });
     });
 
     it('updates an existing page ref', () => {
@@ -180,7 +180,7 @@ describe('model-utils.insertOrUpdatePageAtPosition', () => {
         expect(position).toEqual({
             parentPageId: null,
             insertAfterPageId: 'test1'
-        })
+        });
     });
 
     it('move an existing page to another position', () => {
@@ -206,7 +206,7 @@ describe('model-utils.insertOrUpdatePageAtPosition', () => {
         expect(position).toEqual({
             parentPageId: 'test1',
             insertAfterPageId: 'subpage1'
-        })
+        });
     });
 
 });

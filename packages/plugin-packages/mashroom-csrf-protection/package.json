@@ -21,7 +21,6 @@
         "@types/express": "^4.17.21"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -36,7 +35,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""

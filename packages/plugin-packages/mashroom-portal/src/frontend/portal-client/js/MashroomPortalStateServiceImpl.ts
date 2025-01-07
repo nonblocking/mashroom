@@ -47,7 +47,7 @@ export default class MashroomPortalStateServiceImpl implements MashroomPortalMas
     private _encodeStateIntoUrl(baseUrl: string, state: any, additionalQueryParams?: Record<string, string> | undefined | null, hash?: string | undefined | null): string {
         let additionalQuery = '';
         for (const paramName in additionalQueryParams) {
-            if (additionalQueryParams.hasOwnProperty(paramName)) {
+            if (paramName in additionalQueryParams) {
                 additionalQuery += `&${paramName}=${additionalQueryParams[paramName]}`;
             }
         }

@@ -422,7 +422,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     private _internalLoadAppSetup(pageId: string, pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
         if (instanceId) {
             const preloadedAppSetup = (global as any)[WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP] || {};
-            if (preloadedAppSetup.hasOwnProperty(instanceId)) {
+            if (instanceId in preloadedAppSetup) {
                 console.info('Using preloaded App setup for app: ', pluginName);
                 const appSetup = preloadedAppSetup[instanceId];
                 // Use only once at the start and not on reload
@@ -603,7 +603,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const customServices: Record<string, any> = {};
         for (const customServiceKey in customServiceMapping) {
-            if (customServiceMapping.hasOwnProperty(customServiceKey)) {
+            if (customServiceKey in customServiceMapping) {
                 customServices[customServiceKey] = (global as any)[customServiceMapping[customServiceKey]];
             }
         }

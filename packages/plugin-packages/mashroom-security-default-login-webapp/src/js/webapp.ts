@@ -101,7 +101,7 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
     const queryParams: Array<string> = [];
     if (req.query) {
         for (const name in req.query) {
-            if (req.query.hasOwnProperty(name) && name !== 'csrfToken') {
+            if (name in req.query && name !== 'csrfToken') {
                 const values = req.query[name];
                 if (Array.isArray(values)) {
                     values.forEach((value: any) => queryParams.push(`${name}=${value}`));
@@ -130,7 +130,7 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
         query,
         error,
         helpers: {
-            '__': i18n(i18nService, lang),
+            __: i18n(i18nService, lang),
         },
     });
 };

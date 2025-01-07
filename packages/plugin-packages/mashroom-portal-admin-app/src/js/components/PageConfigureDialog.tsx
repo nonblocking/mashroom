@@ -116,7 +116,7 @@ export default class PageConfigureDialog extends PureComponent<Props> {
     }
 
     onClose(): void {
-        this.close && this.close();
+        this.close?.();
     }
 
     onCloseRef(close: () => void): void {

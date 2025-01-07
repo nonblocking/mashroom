@@ -4,7 +4,7 @@ import MashroomHttpProxyService from '../../src/proxy/MashroomHttpProxyService';
 
 describe('MashroomHttpProxyService', () => {
 
-    it('it rejects requests with non whitelisted HTTP methods', async () => {
+    it('rejects requests with non whitelisted HTTP methods', async () => {
         const dummyProxy: any = {};
         const mockReq: any = {
             method: 'DELETE',

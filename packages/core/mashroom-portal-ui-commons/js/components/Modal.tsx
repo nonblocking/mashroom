@@ -50,7 +50,9 @@ export default class ModalDialog extends PureComponent<Props, State> {
             this.modalsRoot.id = MODALS_ROOT_ID;
             this.modalsRoot.className = props.appWrapperClassName;
             this.modalsRoot.style.height = '0';
-            document.body && document.body.appendChild(this.modalsRoot);
+            if (document.body) {
+                document.body.appendChild(this.modalsRoot);
+            }
         }
         this.modalWrapperEl = null;
         this.boundHandleEscapeKeyPress = this.handleEscapeKeyPress.bind(this);

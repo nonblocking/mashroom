@@ -13,18 +13,18 @@
         "dist/**"
     ],
     "dependencies": {
-        "vue": "^3.4.31"
+        "vue": "^3.5.13"
     },
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.7.1",
-        "@vue/eslint-config-typescript": "^13.0.0",
-        "eslint-plugin-vue": "^9.26.0",
+        "@vue/eslint-config-typescript": "^14.2.0",
+        "eslint-plugin-vue": "^9.32.0",
         "vue-eslint-parser": "^9.4.3",
         "vue-loader": "^17.4.2",
-        "vue-tsc": "^2.0.22"
+        "vue-tsc": "^2.2.0"
     },
     "scripts": {
-        "lint": "eslint src  --ext .ts,.vue --fix",
+        "lint": "eslint --fix",
         "type-check": "vue-tsc --noEmit",
         "copy-assets": "cpy \"src/assets/*\" dist",
         "dev": "webpack serve --config ./webpack.config.client.js --mode development",

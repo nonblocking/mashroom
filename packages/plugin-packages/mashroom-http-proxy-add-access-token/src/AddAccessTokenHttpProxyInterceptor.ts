@@ -67,7 +67,7 @@ export default class AddAccessTokenHttpProxyInterceptor implements MashroomHttpP
 
         if (this.addBearer) {
             return {
-                'Authorization': `Bearer ${accessToken}`,
+                Authorization: `Bearer ${accessToken}`,
             };
         } else {
             return {

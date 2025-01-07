@@ -12,7 +12,7 @@
     "dist/**"
   ],
   "dependencies": {
-    "mongodb": "^6.8.0"
+    "mongodb": "^6.12.0"
   },
   "devDependencies": {
     "@mashroom/mashroom": "2.7.1",
@@ -22,7 +22,6 @@
     "@shelf/jest-mongodb": "^4.3.2"
   },
   "jest": {
-    "verbose": true,
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/test"
@@ -38,7 +37,7 @@
     "outputDirectory": "./test-reports"
   },
   "scripts": {
-    "lint": "eslint src test --ext \".ts\" --fix",
+    "lint": "eslint --fix",
     "type-check": "tsc --noEmit",
     "test": "jest",
     "build": "babel src -d dist --extensions \".ts\""

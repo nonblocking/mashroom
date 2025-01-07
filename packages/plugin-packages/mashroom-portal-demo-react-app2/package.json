@@ -14,9 +14,9 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "@codemirror/lang-markdown": "^6.2.5",
-        "@uiw/codemirror-theme-github": "^4.22.2",
-        "@uiw/react-codemirror": "^4.22.2",
+        "@codemirror/lang-markdown": "^6.3.1",
+        "@uiw/codemirror-theme-github": "^4.23.7",
+        "@uiw/react-codemirror": "^4.23.7",
         "markdown-it": "^14.1.0",
         "react": "^18.3.1",
         "react-dom": "^18.3.1"
@@ -29,7 +29,7 @@
         "@types/react-dom": "^18.3.0"
     },
     "scripts": {
-        "lint": "eslint src --ext .ts,.tsx --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --config ./webpack.config.app.client.js --mode development",
         "dev:editor": "webpack serve --config ./webpack.config.editor.js --mode development",

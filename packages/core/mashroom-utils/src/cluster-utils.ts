@@ -23,7 +23,7 @@ export const getAllWorkerPids = async (): Promise<Array<number>> => {
         return workers
             .filter((worker) => worker.ppid === thisProcess.ppid)
             .map((worker) => worker.pid);
-    } catch (e) {
+    } catch {
         // Ignore error
         return [];
     }

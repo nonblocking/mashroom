@@ -52,7 +52,7 @@ export const evaluateTemplatesInConfigObject = (config: any, logger: Logger): vo
 
     const replaceStringValues = (config: any) => {
         for (const propName in config) {
-            if (config.hasOwnProperty(propName)) {
+            if (propName in config) {
                 const value = config[propName];
                 if (typeof (value) === 'string') {
                     try {

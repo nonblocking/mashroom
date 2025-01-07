@@ -1,6 +1,7 @@
 
-import { createApp, createSSRApp, App as AppType } from 'vue';
+import { createApp, createSSRApp } from 'vue';
 import App from './App.vue';
+import type { App as AppType } from 'vue';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 

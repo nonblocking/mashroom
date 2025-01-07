@@ -19,7 +19,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
     render() {
         const {name} = this.props;
         return (
-            <Field name={name} >
+            <Field name={name}>
                 {(fieldProps: FieldProps) => <SourceCodeEditorFieldComp fieldProps={fieldProps} {...this.props}/>}
             </Field>
         );

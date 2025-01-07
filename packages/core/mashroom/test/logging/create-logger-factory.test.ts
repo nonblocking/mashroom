@@ -22,7 +22,7 @@ describe('logger_factory', () => {
     it('creates by default logger instances without context', () => {
        const logger = loggerFactory('test.test');
 
-       expect(() => logger.addContext({ a: 2 })).toThrowError('No logger context present. Please create a context logger with withContext()');
+       expect(() => logger.addContext({ a: 2 })).toThrow('No logger context present. Please create a context logger with withContext()');
     });
 
     it('creates a context aware logger if bound to a context instance', () => {

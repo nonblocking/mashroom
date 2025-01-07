@@ -2,14 +2,14 @@
 import {
     NgModule,
     Injector,
-    ComponentRef,
     createComponent,
+    ComponentRef,
     ApplicationRef,
     DoBootstrap,
 } from '@angular/core';
-import {MashroomPortalAppSetup, MashroomPortalClientServices} from "@mashroom/mashroom-portal/type-definitions";
-import {BrowserModule} from "@angular/platform-browser";
+import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app/app.component';
+import type {MashroomPortalAppSetup, MashroomPortalClientServices} from '@mashroom/mashroom-portal/type-definitions';
 
 /*
  * A dummy main module that just loads the actual main module with a specific configuration

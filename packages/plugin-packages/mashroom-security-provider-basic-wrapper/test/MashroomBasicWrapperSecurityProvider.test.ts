@@ -23,7 +23,7 @@ describe('MashroomBasicWrapperSecurityProvider', () => {
         expect(await provider.canAuthenticateWithoutUserInteraction(req2)).toBe(true);
     });
 
-    it('it uses the authorization header if present', async () => {
+    it('uses the authorization header if present', async () => {
         const provider = new MashroomBasicWrapperSecurityProvider('Test Provider', true, 'mashroom');
 
         const mockLogin = jest.fn();
@@ -60,7 +60,7 @@ describe('MashroomBasicWrapperSecurityProvider', () => {
         expect(mockLogin.mock.calls[0][2]).toBe('john123');
     });
 
-    it('it call authenticate() on the target provider if onlyPreemptive is true and no authorization header present', async () => {
+    it('call authenticate() on the target provider if onlyPreemptive is true and no authorization header present', async () => {
         const provider = new MashroomBasicWrapperSecurityProvider('Test Provider', true, 'mashroom');
 
         const mockAuthenticate = jest.fn();
@@ -89,7 +89,7 @@ describe('MashroomBasicWrapperSecurityProvider', () => {
         expect(mockAuthenticate.mock.calls.length).toBe(1);
     });
 
-    it('it response with 401 if onlyPreemptive is false and no authorization header present', async () => {
+    it('response with 401 if onlyPreemptive is false and no authorization header present', async () => {
         const provider = new MashroomBasicWrapperSecurityProvider('Test Provider', false, 'foo');
 
         const setHeaderMock = jest.fn();

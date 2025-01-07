@@ -25,7 +25,9 @@ const loadJs = (path: string): Promise<void> => {
             reject(`Error loading JS resource: ${path}`);
         });
         scriptElem.addEventListener('load', () => resolve());
-        document.head ? document.head.appendChild(scriptElem) : null;
+        if (document.head) {
+            document.head.appendChild(scriptElem);
+        }
 
         LOADED_SCRIPTS.push(scriptElem);
     });
@@ -39,7 +41,9 @@ const loadStyle = (path: string) => {
     linkElem.addEventListener('error', (error: any) => {
         console.error('Error loading style sheet: ', path, error);
     });
-    document.head ? document.head.appendChild(linkElem) : null;
+    if (document.head) {
+        document.head.appendChild(linkElem);
+    }
 
     LOADED_STYLES.push(linkElem);
 };
@@ -54,8 +58,8 @@ export default (appName: string, hostElementId: string, setup: MashroomPortalApp
         }
         const jsResources = resources.js.map((jsResource) => loadJs(`${resourcesBasePath}/${jsResource}?v=${lastReloadTs}`));
 
-        sharedResources && sharedResources.css && sharedResources.css.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${lastReloadTs}`));
-        resources.css && resources.css.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${lastReloadTs}`));
+        sharedResources?.css?.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${lastReloadTs}`));
+        resources?.css?.map((cssResource) => loadStyle(`${resourcesBasePath}/${cssResource}?v=${lastReloadTs}`));
 
         return Promise.all(sharedJsResources).then(
             () => {

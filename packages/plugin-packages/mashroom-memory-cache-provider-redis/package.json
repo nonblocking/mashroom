@@ -12,7 +12,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "ioredis": "^5.4.1"
+        "ioredis": "^5.4.2"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.7.1",
@@ -20,7 +20,6 @@
         "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -35,7 +34,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""

@@ -14,10 +14,10 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.7.1",
-        "body-parser": "^1.20.2",
-        "express": "^4.19.2",
+        "express": "^4.21.2",
         "express-sse-ts": "^1.0.2",
-        "nanoid": "^3.3.7",
+        "body-parser": "^1.20.3",
+        "nanoid": "^3.3.8",
         "node-fetch": "^2.7.0"
     },
     "devDependencies": {
@@ -35,10 +35,9 @@
         "@mashroom/mashroom-vhost-path-mapper": "2.7.1",
         "@types/body-parser": "^1.19.5",
         "@types/express": "^4.17.21",
-        "@types/node-fetch": "^2.6.11"
+        "@types/node-fetch": "^2.6.12"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -56,7 +55,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build-backend": "babel src/backend -d dist/backend --extensions \".ts\"",

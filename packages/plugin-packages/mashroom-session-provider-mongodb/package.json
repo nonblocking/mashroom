@@ -13,18 +13,18 @@
     ],
     "dependencies": {
         "connect-mongo": "^5.1.0",
-        "express": "^4.19.2",
-        "mongodb": "^6.8.0"
+        "express": "^4.21.2",
+        "mongodb": "^6.12.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.7.1",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1",
         "@mashroom/mashroom-session": "2.7.1",
         "@types/express": "^4.17.21",
-        "@types/express-session": "^1.18.0"
+        "@types/express-session": "^1.18.1"
     },
     "scripts": {
-        "lint": "eslint src --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
     },

@@ -277,8 +277,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
     }
 
     private _createRawHttpHeaders(statusLine: string, headers: HttpHeaders): string {
-        // eslint-disable-next-line prefer-template
-        return Object.keys(headers).reduce(function (head, key) {
+        return `${Object.keys(headers).reduce(function (head, key) {
             const value = headers[key];
             if (!Array.isArray(value)) {
                 head.push(`${key  }: ${value}`);
@@ -289,7 +288,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             }
             return head;
         }, [statusLine])
-            .join('\r\n') + '\r\n\r\n';
+            .join('\r\n')  }\r\n\r\n`;
     }
 
     private _createProxyRequest(uri: string, method: string, headers: HttpHeaders): ClientRequest {

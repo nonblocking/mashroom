@@ -7,7 +7,6 @@ export const cloneAndFreezeArray = <T>(arr: Array<T>): Readonly<Array<T>> => Obj
 
 export const createReadonlyProxy = createReadonlyProxyImpl;
 
-// eslint-disable-next-line @typescript-eslint/ban-types
 function createReadonlyProxyImpl<T extends object>(target: T, logger?: { warn: (msg: string) => void }): T {
     return new Proxy<T>(target, {
         get: function (target, name) {

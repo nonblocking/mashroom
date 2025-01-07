@@ -19,7 +19,7 @@ export interface ScanBackgroundJob {
 
 export interface KubernetesConnector {
     getNamespacesByLabel(labelSelector: string): Promise<V1NamespaceList>;
-    getNamespaceServices(namespace: string, labelSelector?: string | null | undefined): Promise<V1ServiceList>;
+    getNamespaceServices(namespace: string, labelSelector?: string | undefined): Promise<V1ServiceList>;
 }
 
 export type KubernetesServiceStatus = 'Checking' | 'Valid' | 'Headless Service' | 'No Descriptor' | 'Error';

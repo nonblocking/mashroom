@@ -26,7 +26,7 @@ export default class PageDeleteDialog extends PureComponent<Props> {
     close: (() => void) | undefined;
 
     onClose(): void {
-        this.close && this.close();
+        this.close?.();
     }
 
     onCloseRef(close: () => void): void {

@@ -1,5 +1,5 @@
 
-import RedisStore from 'connect-redis';
+import {RedisStore} from 'connect-redis';
 import createClient, {setConfig, close} from './redis-client';
 import healthProbe from './health/health-probe';
 import {registerStoreMetrics, unregisterStoreMetrics} from './metrics/store-metrics';

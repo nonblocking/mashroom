@@ -42,7 +42,7 @@ export default class RestServiceFetchImpl implements MashroomRestService {
 
             const headers: any = {
                 ...extraHeaders || {},
-                'Accept': 'application/json',
+                Accept: 'application/json',
             };
 
             if (CSRF_TOKEN) {

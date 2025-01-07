@@ -1,6 +1,5 @@
 
 const path = require('path');
-const ESLintPlugin = require('eslint-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
@@ -15,7 +14,7 @@ module.exports = (env, argv) => {
     return {
         entry,
         output: {
-            path: __dirname + '/dist',
+            path: `${__dirname  }/dist`,
             filename: 'bundle.js',
         },
         module: {
@@ -67,12 +66,6 @@ module.exports = (env, argv) => {
                 './assets/random-grey-variations.png': path.resolve(__dirname, '../mashroom-portal-default-theme/src/assets/random-grey-variations.png'),
             }
         },
-        plugins: [
-            new ESLintPlugin({
-                extensions: ['.js', '.ts', '.tsx'],
-                fix: true,
-            })
-        ],
         optimization: {
             minimize: true,
             minimizer: [

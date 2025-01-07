@@ -3,7 +3,7 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import themeParams from './theme-params';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+ 
 const packageJson = require('../package.json');
 
 function equals(this: any, lvalue: any, rvalue: any, options: any): any {
@@ -87,6 +87,6 @@ export default {
     inlineStyle,
     inlineSVG,
     ifShowEnvAndVersions,
-    '__': i18n,
+    __: i18n,
     defaultPluginErrorMessage,
 };

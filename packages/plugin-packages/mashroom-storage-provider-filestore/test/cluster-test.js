@@ -28,18 +28,18 @@ async function test() {
         try {
             await collection.insertOne({w: process.pid, i});
         } catch (e) {
-            console.info('Error after ms: ' + (Date.now() - startInsert), process.pid);
+            console.info(`Error after ms: ${  Date.now() - startInsert}`, process.pid);
             console.error(e);
         }
     }
 
-    console.info('' + INSERTS_PER_CLUSTER + ' inserts after ms: ' + (Date.now() - start), process.pid);
+    console.info(`${  INSERTS_PER_CLUSTER  } inserts after ms: ${  Date.now() - start}`, process.pid);
 
     setTimeout(() => {
         collection.find().then((items) => {
             const count = items.result.length;
             console.log(`Worker ${process.pid} got items in collection: ${count}. Expected: ${INSERTS_PER_CLUSTER * WORKER_COUNT}`);
-            console.info('RESULT: ' + (count === INSERTS_PER_CLUSTER * WORKER_COUNT ? 'OK' : 'NOK!'));
+            console.info(`RESULT: ${  count === INSERTS_PER_CLUSTER * WORKER_COUNT ? 'OK' : 'NOK!'}`);
             process.exit();
         });
     }, 10000);

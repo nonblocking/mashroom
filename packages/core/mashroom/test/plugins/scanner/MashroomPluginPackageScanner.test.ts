@@ -68,13 +68,13 @@ describe('MashroomPluginPackageScanner', () => {
                 if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
                     done();
                 } else {
-                   fail(`Invalid path: ${packagePath}`);
+                   done.fail(`Invalid path: ${packagePath}`);
                 }
             });
 
             setTimeout(() => {
-                fsExtra.writeJsonSync(`${pluginPackagesFolder}/.test3/foo.json`, {'foo': 2});
-                fsExtra.writeJsonSync(`${pluginPackagesFolder}/test2/bar.json`, {'bar': 1});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/.test3/foo.json`, {foo: 2});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/test2/bar.json`, {bar: 1});
             }, 1000);
         });
     });
@@ -91,13 +91,13 @@ describe('MashroomPluginPackageScanner', () => {
             if (packagePath === `${pluginPackagesFolder + path.sep}test2`) {
                 done();
             } else {
-                fail(`Invalid path: ${packagePath}`);
+                done.fail(`Invalid path: ${packagePath}`);
             }
         });
 
         pluginPackageScanner.start().then(() => {
             setTimeout(() => {
-                fsExtra.writeJsonSync(`${pluginPackagesFolder  }/test2/package.json`, {'name': 'test3'});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder  }/test2/package.json`, {name: 'test3'});
             }, 1000);
         });
     });
@@ -135,13 +135,13 @@ describe('MashroomPluginPackageScanner', () => {
             if (packagePath === pluginPackagesFolder) {
                 done();
             } else {
-                fail(`Invalid path: ${packagePath}`);
+                done.fail(`Invalid path: ${packagePath}`);
             }
         });
 
         pluginPackageScanner.start().then(() => {
             setTimeout(() => {
-                fsExtra.writeJsonSync(`${pluginPackagesFolder}/foo.json`, {'foo': 2});
+                fsExtra.writeJsonSync(`${pluginPackagesFolder}/foo.json`, {foo: 2});
             }, 1000);
         });
     });

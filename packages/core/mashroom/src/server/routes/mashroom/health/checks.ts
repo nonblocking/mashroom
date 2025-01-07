@@ -39,7 +39,9 @@ export const ready = async (request: Request): Promise<CheckResult> => {
             const result = await probes[i].check();
             if (!result.ready) {
                 ok = false;
-                result.error && errors.push(result.error);
+                if (result.error) {
+                    errors.push(result.error);
+                }
             }
         } catch (e) {
             const logger = loggerFactory('mashroom.health');

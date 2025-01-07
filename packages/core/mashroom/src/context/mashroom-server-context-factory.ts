@@ -210,7 +210,6 @@ const createServerContextHolder = () => {
 const createServerInfo = (devMode: boolean): MashroomServerInfo => {
     let version = '<unknown>';
     try {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const mashroomJson = require(path.resolve(__dirname, '../../package.json'));
         version = mashroomJson.version;
     } catch (e) {

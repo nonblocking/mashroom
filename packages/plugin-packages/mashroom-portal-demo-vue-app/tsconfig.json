@@ -7,7 +7,6 @@
         "esModuleInterop": true,
         "moduleResolution": "node",
         "experimentalDecorators": true,
-        "allowSyntheticDefaultImports": true,
-        "skipLibCheck": true
+        "allowSyntheticDefaultImports": true
     }
 }

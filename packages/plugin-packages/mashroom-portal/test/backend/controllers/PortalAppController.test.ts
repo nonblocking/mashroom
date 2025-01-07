@@ -41,8 +41,8 @@ setPortalPluginConfig({
 const portalApp1: MashroomPortalApp = {
     name: 'Test Portal App 1',
     title: {
-        'en': 'Test Portal App',
-        'de': 'Test Test Test'
+        en: 'Test Portal App',
+        de: 'Test Test Test'
     },
     description: null,
     tags: [],
@@ -71,11 +71,11 @@ const portalApp1: MashroomPortalApp = {
     screenshots: null,
     defaultRestrictViewToRoles: ['Role1'],
     rolePermissions: {
-        'edit': ['Role1'],
-        'delete': ['Administrator']
+        edit: ['Role1'],
+        delete: ['Administrator']
     },
     proxies: {
-        '1': {
+        1: {
             targetUri: 'https://www.mashroom-server.com/api',
         },
     },
@@ -150,7 +150,7 @@ const portalApp3: MashroomPortalApp = {
     defaultRestrictViewToRoles: ['OtherRole'],
     rolePermissions: {},
     proxies: {
-        'bff': {
+        bff: {
             targetUri: 'http://my.host.com/api',
         },
     },
@@ -161,14 +161,14 @@ const portalAppInstance1: MashroomPortalAppInstance = {
     pluginName: 'Test Portal App 1',
     instanceId: 'ABCD',
     appConfig: {
-        'hello': 'peter',
+        hello: 'peter',
     },
 };
 
 const page1: MashroomPortalPage = {
     pageId: 'foo',
     portalApps: {
-        'area1': [{
+        area1: [{
             pluginName: 'Test Portal App 1',
             instanceId: 'ABCD',
         }],
@@ -304,12 +304,12 @@ describe('PortalAppController', () => {
             lastReloadTs: 222222222,
             versionHash: 'e4c2e8edac',
             proxyPaths: {
-                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
-                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
+                __baseUrl: '/portal/web/___/proxy/Test%20Portal%20App%201',
+                1: '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             restProxyPaths: {
-                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
-                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
+                __baseUrl: '/portal/web/___/proxy/Test%20Portal%20App%201',
+                1: '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
             sharedResourcesBasePath: '/portal/web/___/apps/___shared___',
@@ -376,12 +376,12 @@ describe('PortalAppController', () => {
             lastReloadTs: 222222222,
             versionHash: 'e4c2e8edac',
             proxyPaths: {
-                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
-                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
+                __baseUrl: '/portal/web/___/proxy/Test%20Portal%20App%201',
+                1: '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             restProxyPaths: {
-                '__baseUrl': '/portal/web/___/proxy/Test%20Portal%20App%201',
-                '1': '/portal/web/___/proxy/Test%20Portal%20App%201/1',
+                __baseUrl: '/portal/web/___/proxy/Test%20Portal%20App%201',
+                1: '/portal/web/___/proxy/Test%20Portal%20App%201/1',
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
             sharedResourcesBasePath: '/portal/web/___/apps/___shared___',
@@ -444,8 +444,8 @@ describe('PortalAppController', () => {
                 remoteAddress: '127.0.0.1'
             },
             params: {
-                'pluginName': 'Test Portal App 1',
-                '0': '/PortalAppController.test.ts',
+                pluginName: 'Test Portal App 1',
+                0: '/PortalAppController.test.ts',
             },
             pluginContext,
             query: {},
@@ -472,8 +472,8 @@ describe('PortalAppController', () => {
     it('disallows API access via resource URLs', () => {
         const req: any = {
             params: {
-                'pluginName': 'Test Remote App',
-                '0': 'api/customers',
+                pluginName: 'Test Remote App',
+                0: 'api/customers',
             },
             pluginContext,
             query: {},

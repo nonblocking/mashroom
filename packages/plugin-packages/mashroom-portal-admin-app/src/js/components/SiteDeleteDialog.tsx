@@ -25,7 +25,7 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
     close: (() => void) | undefined;
 
     onClose(): void {
-        this.close && this.close();
+        this.close?.();
     }
 
     onCloseRef(close: () => void): void {

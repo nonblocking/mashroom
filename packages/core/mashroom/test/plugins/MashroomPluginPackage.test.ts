@@ -13,9 +13,9 @@ const getPluginPackageFolder = () => {
         version: '1.1.3',
         license: 'BSD-3-Clause',
         author: {
-            'name': 'Jürgen Kofler',
-            'email': 'juergen.kofler@nonblocking.at',
-            'url': 'http://www.nonblocking.at',
+            name: 'Jürgen Kofler',
+            email: 'juergen.kofler@nonblocking.at',
+            url: 'http://www.nonblocking.at',
         },
         mashroom: {
             devModeBuildScript: 'builddd',
@@ -58,9 +58,9 @@ const getPluginPackageFolder2 = () => {
         version: '1.1.3',
         license: 'BSD-3-Clause',
         author: {
-            'name': 'Jürgen Kofler',
-            'email': 'juergen.kofler@nonblocking.at',
-            'url': 'http://www.nonblocking.at',
+            name: 'Jürgen Kofler',
+            email: 'juergen.kofler@nonblocking.at',
+            url: 'http://www.nonblocking.at',
         },
         mashroom: {
             plugins: [
@@ -88,9 +88,9 @@ const getPluginPackageFolder3 = () => {
         version: '1.1.3',
         license: 'BSD-3-Clause',
         author: {
-            'name': 'Jürgen Kofler',
-            'email': 'juergen.kofler@nonblocking.at',
-            'url': 'http://www.nonblocking.at',
+            name: 'Jürgen Kofler',
+            email: 'juergen.kofler@nonblocking.at',
+            url: 'http://www.nonblocking.at',
         },
         mashroom: {
             plugins: [
@@ -124,9 +124,9 @@ const getPluginPackageFolder4 = () => {
         version: '2.2.2',
         license: 'BSD-3-Clause',
         author: {
-            'name': 'Jürgen Kofler',
-            'email': 'juergen.kofler@nonblocking.at',
-            'url': 'http://www.nonblocking.at',
+            name: 'Jürgen Kofler',
+            email: 'juergen.kofler@nonblocking.at',
+            url: 'http://www.nonblocking.at',
         }
     });
     fsExtra.writeJsonSync(path.resolve(pluginPackageFolder, 'mashroom.json'), {
@@ -151,9 +151,9 @@ const getPluginPackageFolder5 = () => {
         version: '2.2.2',
         license: 'BSD-3-Clause',
         author: {
-            'name': 'Jürgen Kofler',
-            'email': 'juergen.kofler@nonblocking.at',
-            'url': 'http://www.nonblocking.at',
+            name: 'Jürgen Kofler',
+            email: 'juergen.kofler@nonblocking.at',
+            url: 'http://www.nonblocking.at',
         }
     });
     fsExtra.writeFileSync(path.resolve(pluginPackageFolder, 'mashroom.js'), `

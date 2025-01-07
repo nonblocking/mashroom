@@ -28,7 +28,7 @@ describe('config-utils.safeEvaluateStringTemplate', () => {
             name: 'John',
         };
 
-        expect(() => safeEvaluateStringTemplate(template, context)).toThrowError('Template tries to access global objects: Hello ${name}! And now die! ${true && process.exit()}');
+        expect(() => safeEvaluateStringTemplate(template, context)).toThrow('Template tries to access global objects: Hello ${name}! And now die! ${true && process.exit()}');
     });
 
     it('ignores no template strings', () => {

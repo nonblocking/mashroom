@@ -20,13 +20,12 @@
         "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1",
         "@mashroom/mashroom-security": "2.7.1",
         "@mashroom/mashroom-utils": "2.7.1",
+        "ws": "^8.18.0",
         "@types/express": "^4.17.21",
         "@types/http-proxy": "1.17.9",
-        "@types/ws": "^8.5.10",
-        "ws": "^8.17.1"
+        "@types/ws": "^8.5.13"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -41,7 +40,7 @@
         "outputDirectory": "./test-reports"
     },
     "scripts": {
-        "lint": "eslint src test --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""

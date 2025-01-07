@@ -134,10 +134,10 @@ const pluginContext: any = {
                 async getPage() {
                     return {
                         portalApps: {
-                            'area1': [{
+                            area1: [{
                                 pluginName: 'Test Portal App 1',
                             }],
-                            'area2': [{
+                            area2: [{
                                 pluginName: 'Test Portal App 2',
                             }]
                         }

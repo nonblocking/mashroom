@@ -60,7 +60,6 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
 
         for (const messagesPath of existingMessagesPaths) {
             try {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
                 const messages = require(messagesPath);
                 const message = messages[key];
                 if (message) {

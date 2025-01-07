@@ -4,10 +4,10 @@
 @use "variables" as *;
 
 // Reset styles
-@import "bootstrap/scss/bootstrap-reboot";
+@use "bootstrap/scss/bootstrap-reboot";
 
 // Bootstrap grid
-@import "bootstrap/scss/bootstrap-grid";
+@use "bootstrap/scss/bootstrap-grid";
 
 @keyframes show-delayed {
     0% {

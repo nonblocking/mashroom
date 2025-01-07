@@ -112,7 +112,6 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
         // Local App
         try {
             let ssrBootstrap: MashroomPortalAppPluginSSRBootstrapFunction;
-            // eslint-disable-next-line @typescript-eslint/no-var-requires
             const bootstrap = require(ssrBootstrapPath);
             if (typeof (bootstrap) === 'function') {
                 ssrBootstrap = bootstrap;

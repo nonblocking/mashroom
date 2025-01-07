@@ -12,13 +12,13 @@
         "dist/**"
     ],
     "dependencies": {
-        "helmet": "^7.1.0"
+        "helmet": "^8.0.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.7.1"
     },
     "scripts": {
-        "lint": "eslint src --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
     },

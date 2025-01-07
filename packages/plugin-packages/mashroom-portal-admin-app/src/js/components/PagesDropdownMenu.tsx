@@ -43,14 +43,14 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
 
     onConfigure(page: FlatPage): void {
         const {initConfigurePage, showModal} = this.props;
-        this.closeDropDownRef && this.closeDropDownRef();
+        this.closeDropDownRef?.();
         initConfigurePage(page.pageId);
         showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
     onDelete(page: FlatPage): void {
         const {initConfigurePage, showModal} = this.props;
-        this.closeDropDownRef && this.closeDropDownRef();
+        this.closeDropDownRef?.();
         initConfigurePage(page.pageId);
         showModal(DIALOG_NAME_PAGE_DELETE);
     }

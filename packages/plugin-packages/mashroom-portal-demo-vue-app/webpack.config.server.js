@@ -4,9 +4,9 @@ const nodeExternals = require('webpack-node-externals');
 const common = require('./webpack.config.common');
 
 module.exports = merge(common,  {
-    entry: __dirname + '/src/js/indexSSR',
+    entry: `${__dirname  }/src/js/indexSSR`,
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname  }/dist`,
         filename: 'ssr.js',
         library: {
             type: 'commonjs',

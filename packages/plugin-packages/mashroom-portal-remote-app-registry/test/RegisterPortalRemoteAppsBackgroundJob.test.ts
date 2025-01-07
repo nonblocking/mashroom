@@ -80,11 +80,11 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
                 }
             },
             proxies: {
-                'bff': {
+                bff: {
                     targetUri: 'http://localhost:4444/api',
                     sendPermissionsHeader: true
                 },
-                'two': {
+                two: {
                     targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
                 }
             },
@@ -152,11 +152,11 @@ describe('RegisterPortalRemoteAppsBackgroundJob', () => {
             },
             resourcesRoot: './dist/frontend',
             restProxies: {
-                'bff': {
+                bff: {
                     targetUri: 'http://localhost:4444/api',
                     sendPermissionsHeader: true
                 },
-                'two': {
+                two: {
                     targetUri: 'invalid-url-with-{env.PLACEHOLDER}',
                 }
             },

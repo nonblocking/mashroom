@@ -1,12 +1,10 @@
 
-const {merge} = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
-const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports ={
-    entry: __dirname + '/src/js/indexAppSSR',
+    entry: `${__dirname  }/src/js/indexAppSSR`,
     output: {
-        path: __dirname + '/dist',
+        path: `${__dirname  }/dist`,
         filename: 'app-ssr.js',
         library: {
             type: 'commonjs',

@@ -91,7 +91,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
     }
 
     onClose(): void {
-        this.close && this.close();
+        this.close?.();
     }
 
     onCloseRef(close: () => void): void {

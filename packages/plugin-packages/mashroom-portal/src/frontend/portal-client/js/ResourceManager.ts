@@ -69,7 +69,9 @@ export default class ResourceManager {
                 resource.loaded = true;
                 resource.onLoadCallbacks.forEach((cb) => cb());
             });
-            this._htmlDoc.head ? this._htmlDoc.head.appendChild(scriptElem) : null;
+            if (this._htmlDoc.head) {
+                this._htmlDoc.head.appendChild(scriptElem);
+            }
 
             LOADED_JS_RESOURCES[path] = resource;
         });
@@ -97,7 +99,9 @@ export default class ResourceManager {
             this._remoteLogger.error(`Error loading style sheet: ${path}`, error, loadedPortalApp.pluginName);
             delete LOADED_CSS_RESOURCES[path];
         });
-        this._htmlDoc.head ? this._htmlDoc.head.appendChild(linkElem) : null;
+        if (this._htmlDoc.head) {
+            this._htmlDoc.head.appendChild(linkElem);
+        }
 
         LOADED_CSS_RESOURCES[path] = {
             elem: linkElem,
@@ -111,7 +115,7 @@ export default class ResourceManager {
     unloadAppResources(loadedPortalApp: LoadedPortalAppInternal): void {
         const unloadResources = (resources: Resources<any>) => {
             for (const path in resources) {
-                if (resources.hasOwnProperty(path)) {
+                if (path in resources) {
                     const resource = LOADED_JS_RESOURCES[path];
                     if (resource) {
                         const idx = resource.refs.indexOf(loadedPortalApp);
@@ -119,7 +123,9 @@ export default class ResourceManager {
                             resource.refs.splice(idx, 1);
                             if (resource.refs.length === 0) {
                                 console.info('Removing resource because it is no longer referenced: ', path);
-                                resource.elem.parentElement ? resource.elem.parentElement.removeChild(resource.elem) : null;
+                                if (resource.elem.parentElement) {
+                                    resource.elem.parentElement.removeChild(resource.elem);
+                                }
                                 delete resources[path];
                             }
                         }

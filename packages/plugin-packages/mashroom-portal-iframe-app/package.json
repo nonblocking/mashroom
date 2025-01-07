@@ -16,7 +16,6 @@
         "@mashroom/mashroom-portal": "2.7.1"
     },
     "jest": {
-        "verbose": true,
         "testEnvironment": "node",
         "roots": [
             "<rootDir>/test"
@@ -24,7 +23,7 @@
         "testRegex": "(\\.(test|spec))\\.js$"
     },
     "scripts": {
-        "lint": "eslint src --ext .ts,.tsx --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve  --mode development --hot",
         "build": "webpack --mode production"

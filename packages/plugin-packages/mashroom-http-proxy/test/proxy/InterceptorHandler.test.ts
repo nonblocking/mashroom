@@ -9,10 +9,10 @@ const interceptor1: MashroomHttpProxyInterceptor = {
             rewrittenTargetUri: 'https://one.com',
             addHeaders: {
                 'X-Foo': 'bar',
-                'invalid': null as any,  // invalid!
+                invalid: null as any,  // invalid!
             },
             addQueryParams: {
-                'q': 'x'
+                q: 'x'
             },
             removeHeaders: ['accept'],
         };
@@ -24,7 +24,7 @@ const interceptor1: MashroomHttpProxyInterceptor = {
                 'X-Foo': 'bar',
             },
             addQueryParams: {
-                'q': 'x'
+                q: 'x'
             },
             removeHeaders: ['accept'],
         };
@@ -46,7 +46,7 @@ const interceptor2: MashroomHttpProxyInterceptor = {
                 'X-Whatever': '123',
             },
             addQueryParams: {
-                'foo': '1'
+                foo: '1'
             },
         };
     },
@@ -139,8 +139,8 @@ describe('InterceptorHandler', () => {
                 'X-Whatever': '123'
             },
             addQueryParams: {
-                'foo': '1',
-                'q': 'x'
+                foo: '1',
+                q: 'x'
             },
             removeHeaders: [
                 'accept',

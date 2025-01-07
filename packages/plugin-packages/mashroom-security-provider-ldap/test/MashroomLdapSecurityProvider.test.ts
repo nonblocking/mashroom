@@ -132,10 +132,10 @@ describe('MashroomLdapSecurityProvider', () => {
         };
 
         const extraDataMapping = {
-            'mobile': 'mobiletelephonenumber'
+            mobile: 'mobiletelephonenumber'
         };
         const secretsMapping = {
-            'internalUserId': 'uid'
+            internalUserId: 'uid'
         };
         const provider = new MashroomLdapSecurityProvider('/login', userSearchFilter, groupSearchFilter, extraDataMapping,
             secretsMapping, groupToRoleMappingPath, userToRoleMappingPath, ldapClient, serverRootFolder, 1800, loggingUtils.dummyLoggerFactory);

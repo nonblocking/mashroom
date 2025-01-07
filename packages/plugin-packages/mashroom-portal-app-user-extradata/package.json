@@ -18,7 +18,7 @@
         "@types/express": "^4.17.21"
     },
     "scripts": {
-        "lint": "eslint src --ext \".ts\" --fix",
+        "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src --extensions \".ts\" -d dist"
     },

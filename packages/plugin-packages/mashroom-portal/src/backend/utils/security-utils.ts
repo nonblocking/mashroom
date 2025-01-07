@@ -134,11 +134,9 @@ export const calculatePermissions = (rolePermissions: MashroomPortalRolePermissi
     const permissions: Writable<MashroomPortalAppUserPermissions> = {};
     if (rolePermissions) {
         for (const permission in rolePermissions) {
-            if (rolePermissions.hasOwnProperty(permission)) {
-                const roles = rolePermissions[permission];
-                if (roles && Array.isArray(roles) && roles.find((requiredRole) => user?.roles?.find((role) => role === requiredRole))) {
-                    permissions[permission] = true;
-                }
+            const roles = rolePermissions[permission];
+            if (roles && Array.isArray(roles) && roles.find((requiredRole) => user?.roles?.find((role) => role === requiredRole))) {
+                permissions[permission] = true;
             }
         }
     }

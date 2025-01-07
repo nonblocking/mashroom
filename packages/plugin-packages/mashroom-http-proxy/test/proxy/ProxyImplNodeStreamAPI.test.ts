@@ -100,7 +100,7 @@ describe('ProxyImplNodeNative', () => {
     it('forwards HTTP GET request to the target URI',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
-                'foo': 'bar',
+                foo: 'bar',
             },
         })
             .get('/foo')
@@ -112,7 +112,7 @@ describe('ProxyImplNodeNative', () => {
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo', {
-            'foo': 'bar',
+            foo: 'bar',
         });
 
         expect(res.body).toBe('test response');
@@ -121,7 +121,7 @@ describe('ProxyImplNodeNative', () => {
     it('sets the correct forwarded-for headers',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
-                'foo': 'bar',
+                foo: 'bar',
                 'x-forwarded-proto': 'http',
                 'x-forwarded-for': '1.2.3.4',
             },
@@ -135,7 +135,7 @@ describe('ProxyImplNodeNative', () => {
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo', {
-            'foo': 'bar',
+            foo: 'bar',
         });
 
         expect(res.body).toBe('test response');
@@ -144,7 +144,7 @@ describe('ProxyImplNodeNative', () => {
     it('takes existing forwarded-for headers into consideration',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
-                'foo': 'bar',
+                foo: 'bar',
                 'x-forwarded-proto': 'https',
                 'x-forwarded-host': 'test.com',
                 'x-forwarded-for': '10.0.0.3, 1.2.3.4',
@@ -162,7 +162,7 @@ describe('ProxyImplNodeNative', () => {
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/foo', {
-            'foo': 'bar',
+            foo: 'bar',
         });
 
         expect(res.body).toBe('test response');
@@ -171,7 +171,7 @@ describe('ProxyImplNodeNative', () => {
     it('forwards HTTP POST request to the target URI',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
-                'foo': 'bar',
+                foo: 'bar',
             },
         })
             .post('/login', (body) => {
@@ -185,7 +185,7 @@ describe('ProxyImplNodeNative', () => {
         const res = createDummyResponse();
 
         await httpProxy.forward(req, res, 'https://www.mashroom-server.com/login', {
-            'foo': 'bar',
+            foo: 'bar',
         });
 
         expect(res.body).toBe('test post response');
@@ -401,7 +401,7 @@ describe('ProxyImplNodeNative', () => {
     it('adds headers from request interceptors',  async () => {
         nock('https://www.mashroom-server.com', {
             reqheaders: {
-                'authorization': 'Bearer XXXXXXXX',
+                authorization: 'Bearer XXXXXXXX',
                 'x-whatever': '123',
             },
         })
@@ -416,7 +416,7 @@ describe('ProxyImplNodeNative', () => {
                     async interceptRequest() {
                         return {
                             addHeaders: {
-                                'authorization': 'Bearer XXXXXXXX',
+                                authorization: 'Bearer XXXXXXXX',
                             }
                         };
                     },
@@ -512,7 +512,7 @@ describe('ProxyImplNodeNative', () => {
                     async interceptRequest() {
                         return {
                             addQueryParams: {
-                                'foo': 'bar',
+                                foo: 'bar',
                             }
                         };
                     },
@@ -705,7 +705,7 @@ describe('ProxyImplNodeNative', () => {
             .get('/foo3')
             .reply(200, 'test response', {
                 'x-whatever': '123',
-                'foo': 'bar',
+                foo: 'bar',
             });
 
         const interceptors: Array<MashroomHttpProxyInterceptorHolder> = [
@@ -868,7 +868,7 @@ describe('ProxyImplNodeNative', () => {
         expect(res.body).toBe(requestData);
     });
 
-    it('it rejects requests if too many are already waiting', async () => {
+    it('rejects requests if too many are already waiting', async () => {
         const headerFilter = new HttpHeaderFilter([]);
 
         // We configure max 2 waiting but the getWaitingRequestsForHostHeader() mock returns 10
@@ -882,7 +882,7 @@ describe('ProxyImplNodeNative', () => {
         expect(res.statusCode).toBe(429);
     });
 
-    it('it rejects requests with invalid HTTP protocols', async () => {
+    it('rejects requests with invalid HTTP protocols', async () => {
         const headerFilter = new HttpHeaderFilter([]);
         const httpProxy = new ProxyImplNodeStreamAPI(2000, false, noopInterceptorHandler, headerFilter, false, 10, 10, null, false, loggingUtils.dummyLoggerFactory);
 
@@ -1037,7 +1037,7 @@ describe('ProxyImplNodeNative', () => {
         const headerFilter = new HttpHeaderFilter([]);
         const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);
 
-        await expect(httpProxy.forwardWs(req, req.socket, head, 'ws://www.mashroom-server.com/ws')).rejects.toThrowError('Upgrade not supported: whatever');
+        await expect(httpProxy.forwardWs(req, req.socket, head, 'ws://www.mashroom-server.com/ws')).rejects.toThrow('Upgrade not supported: whatever');
     });
 
     it('respects WebSocket connection limits',  async () => {
@@ -1066,7 +1066,7 @@ describe('ProxyImplNodeNative', () => {
         expect(socket.end.mock.calls[0][0]).toBe('HTTP/1.1 429 Too Many Requests\r\n\r\n');
     });
 
-    it('it rejects requests with invalid WS protocols', async () => {
+    it('rejects requests with invalid WS protocols', async () => {
         const req = createDummyRequest('GET');
         req.headers.upgrade = 'websocket';
         const socket: any = {

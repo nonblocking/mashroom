@@ -50,7 +50,7 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
     onAppDragStart(event: DragEvent, name: string): void {
         const {portalAppManagementService} = this.props;
         portalAppManagementService.prepareDrag(event as any, null, name);
-        this.close && this.close();
+        this.close?.();
     }
 
     onAppDragEnd(): void {

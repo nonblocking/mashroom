@@ -22,7 +22,7 @@ export const fixTlsOptions = (tlsOptions: TlsOptions | undefined | null, serverR
     };
 
     CERT_PROPERTIES.forEach((certPropName) => {
-        if (tlsOptions.hasOwnProperty(certPropName)) {
+        if (certPropName in tlsOptions) {
             const certs = tlsOptions[certPropName] as string | Array<string>;
             if (certs) {
                 const certArray = Array.isArray(certs) ? certs : [certs];

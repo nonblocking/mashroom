@@ -1,45 +1,24 @@
-<script lang="ts">
-    import { defineComponent, PropType } from 'vue';
+<script lang="ts" setup>
+    import { onMounted, onUnmounted, ref, defineProps } from 'vue';
     import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 
-    let processPing: (() => void) | undefined;
+    const props = defineProps<{
+        resourcesBasePath: string;
+        message: string;
+        pingButtonLabel: string;
+        messageBus?: MashroomPortalMessageBus;
+    }>();
 
-    export default defineComponent({
-        name: 'MashroomPortalDemoVueApp',
-        props: {
-            resourcesBasePath: {
-                type: String,
-                required: true,
-            },
-            message: {
-                type: String,
-                required: true,
-            },
-            pingButtonLabel: {
-                type: String,
-                required: true,
-            },
-            messageBus: {
-                type: Object as PropType<MashroomPortalMessageBus>,
-            }
-        },
-        data: () => ({
-            pings: 0,
-        }),
-        mounted() {
-            processPing = () => this.pings ++;
-            this.messageBus?.subscribe('ping', processPing);
-        },
-        beforeUnmount() {
-            if (processPing) {
-                this.messageBus?.unsubscribe('ping', processPing);
-            }
-        },
-        methods: {
-            onClick() {
-                this.messageBus?.publish('ping', {});
-            }
-        },
+    let pings = ref(0);
+    const sendPing = () => props.messageBus?.publish('ping', {});
+    const processPing = () => pings.value ++;
+
+    onMounted(() => {
+        props.messageBus?.subscribe('ping', processPing);
+    });
+
+    onUnmounted(() => {
+        props.messageBus?.unsubscribe('ping', processPing);
     });
 </script>
 
@@ -54,7 +33,7 @@
             <h4>Vue Demo App</h4>
             <p>{{message}}</p>
             <div>
-                <button v-on:click="onClick">
+                <button v-on:click="sendPing">
                     {{pingButtonLabel || 'Send Ping'}}
                 </button>
                 <span>Received pings: {{pings}}</span>

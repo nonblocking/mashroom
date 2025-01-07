@@ -77,7 +77,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
 
         Promise.all(promises).then(
             () => {
-                this.close && this.close();
+                this.close?.();
             },
             (error) => {
                 console.error('Saving new app config failed', error);
@@ -87,7 +87,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
     }
 
     onClose(): void {
-        this.close && this.close();
+        this.close?.();
     }
 
     onCloseRef(close: () => void): void {

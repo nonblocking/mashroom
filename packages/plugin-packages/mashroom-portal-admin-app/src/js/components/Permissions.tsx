@@ -48,8 +48,8 @@ export default class Permissions extends PureComponent<Props, State> {
     onAddRole(): void {
         const {enteredRole} = this.state;
         if (enteredRole) {
-            this.addRole && this.addRole(enteredRole);
-            this.inputReset && this.inputReset();
+            this.addRole?.(enteredRole);
+            this.inputReset?.();
         }
     }
 

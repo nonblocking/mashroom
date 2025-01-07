@@ -15,7 +15,7 @@ describe('request-utils.getResourceAsStream', () => {
             abortSignal: null,
         }))
             .rejects
-            .toThrowError(ResourceNotFoundError);
+            .toThrow(ResourceNotFoundError);
 
         // File found
         const result = await getResourceAsStream(resolve(__dirname, 'data/test.txt'), {
@@ -107,13 +107,13 @@ describe('request-utils.getResourceAsStream', () => {
             await getResourceAsStream('https://www.mashroom-server.com/foo/index.js', {
                 abortSignal: abortController.signal,
             });
-            fail('Should have been aborted!');
+            throw new Error('Should have been aborted!');
         } catch (e: any) {
             expect(e.message).toBe('Fetching aborted: https://www.mashroom-server.com/foo/index.js');
         }
     });
 
-    it('aborts correctly if the http response takes too long ', async () => {
+    it('aborts correctly if the http response takes too long', async () => {
         nock('https://www.mashroom-server.com')
             .get('/foo/index.js')
             .delayBody(3000)
@@ -127,7 +127,7 @@ describe('request-utils.getResourceAsStream', () => {
                 abortSignal: abortController.signal,
             });
             await pipeline(stream, new PassThrough());
-            fail('Should have been aborted!');
+            throw new Error('Should have been aborted!');
         } catch (e: any) {
             expect(e.message).toBe('Fetching aborted: https://www.mashroom-server.com/foo/index.js');
         }
@@ -142,7 +142,7 @@ describe('request-utils.getResourceAsStream', () => {
             abortSignal: null,
         }))
             .rejects
-            .toThrowError(ResourceNotFoundError);
+            .toThrow(ResourceNotFoundError);
     });
 
     it('throws the correct error if a http resource return 5xx', async () => {
@@ -154,7 +154,7 @@ describe('request-utils.getResourceAsStream', () => {
             abortSignal: null,
         }))
             .rejects
-            .toThrowError(ResourceFetchError);
+            .toThrow(ResourceFetchError);
     });
 });
 
