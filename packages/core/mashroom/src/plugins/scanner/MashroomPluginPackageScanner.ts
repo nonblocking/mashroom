@@ -63,6 +63,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
             this._logger.debug('Start watching: ', this._foldersToWatch);
 
             this._watcher = chokidar.watch(this._foldersToWatch, {
+                // Always use fs.watchFile to avoid EMFILE: too many open files
                 usePolling: true,
                 interval: 1000,
                 binaryInterval: 1000,
