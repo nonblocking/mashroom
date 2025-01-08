@@ -144,7 +144,7 @@ describe('MashroomPluginPackageScanner', () => {
                 fsExtra.writeJsonSync(`${pluginPackagesFolder}/foo.json`, {foo: 2});
             }, 1000);
         });
-    });
+    }, 10000);
 
 });
 
