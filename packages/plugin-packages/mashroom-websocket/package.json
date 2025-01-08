@@ -37,6 +37,9 @@
             "<rootDir>/test"
         ],
         "testRegex": "(\\.(test))\\.ts",
+        "transform": {
+            "^.+\\.ts$": "ts-jest"
+        },
         "reporters": [
             "default",
             "jest-junit"

@@ -1,43 +1,46 @@
 {
-  "name": "@mashroom/mashroom-json-schemas",
-  "description": "JSON schemas for Mashroom config files",
-  "homepage": "https://www.mashroom-server.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nonblocking/mashroom.git"
-  },
-  "license": "MIT",
-  "version": "2.7.1",
-  "files": [
-    "schemas/**",
-    "type-definitions/**"
-  ],
-  "devDependencies": {
-    "ajv": "^8.17.1",
-    "json-schema-to-typescript": "^15.0.3"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/test"
+    "name": "@mashroom/mashroom-json-schemas",
+    "description": "JSON schemas for Mashroom config files",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "2.7.1",
+    "files": [
+        "schemas/**",
+        "type-definitions/**"
     ],
-    "testRegex": "(\\.(test|spec))\\.ts$",
-    "reporters": [
-      "default",
-      "jest-junit"
-    ]
-  },
-  "jest-junit": {
-    "outputDirectory": "./test-reports"
-  },
-  "scripts": {
-    "test": "jest",
-    "type-check": "tsc --noEmit",
-    "build": "node gen-types.js"
-  },
-  "lavamoat": {
-    "allowScripts": {
-      "json-schema-to-typescript>cli-color>es5-ext": false
+    "devDependencies": {
+        "ajv": "^8.17.1",
+        "json-schema-to-typescript": "^15.0.3"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts$",
+        "transform": {
+            "^.+\\.ts$": "ts-jest"
+        },
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
+    },
+    "scripts": {
+        "test": "jest",
+        "type-check": "tsc --noEmit",
+        "build": "node gen-types.js"
+    },
+    "lavamoat": {
+        "allowScripts": {
+            "json-schema-to-typescript>cli-color>es5-ext": false
+        }
     }
-  }
 }

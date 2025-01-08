@@ -1,67 +1,70 @@
 {
-  "name": "@mashroom/mashroom-storage-provider-mongodb",
-  "description": "Mashroom storage provider backed by MongoDB",
-  "homepage": "https://www.mashroom-server.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nonblocking/mashroom.git"
-  },
-  "license": "MIT",
-  "version": "2.7.1",
-  "files": [
-    "dist/**"
-  ],
-  "dependencies": {
-    "mongodb": "^6.12.0"
-  },
-  "devDependencies": {
-    "@mashroom/mashroom": "2.7.1",
-    "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1",
-    "@mashroom/mashroom-storage": "2.7.1",
-    "@mashroom/mashroom-utils": "2.7.1",
-    "@shelf/jest-mongodb": "^4.3.2"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "roots": [
-      "<rootDir>/test"
+    "name": "@mashroom/mashroom-storage-provider-mongodb",
+    "description": "Mashroom storage provider backed by MongoDB",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "2.7.1",
+    "files": [
+        "dist/**"
     ],
-    "testRegex": "(\\.(test|spec))\\.ts",
-    "preset": "@shelf/jest-mongodb",
-    "reporters": [
-      "default",
-      "jest-junit"
-    ]
-  },
-  "jest-junit": {
-    "outputDirectory": "./test-reports"
-  },
-  "scripts": {
-    "lint": "eslint --fix",
-    "type-check": "tsc --noEmit",
-    "test": "jest",
-    "build": "babel src -d dist --extensions \".ts\""
-  },
-  "mashroom": {
-    "devModeBuildScript": "build",
-    "plugins": [
-      {
-        "name": "Mashroom Storage MongoDB Provider",
-        "type": "storage-provider",
-        "bootstrap": "./dist/storage/mashroom-bootstrap.js",
-        "defaultConfig": {
-          "uri": "mongodb://localhost:27017/mashroom_storage_db",
-          "connectionOptions": {
-            "minPoolSize": 5,
-            "serverSelectionTimeoutMS": 3000
-          }
+    "dependencies": {
+        "mongodb": "^6.12.0"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.7.1",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1",
+        "@mashroom/mashroom-storage": "2.7.1",
+        "@mashroom/mashroom-utils": "2.7.1",
+        "@shelf/jest-mongodb": "^4.3.2"
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "roots": [
+            "<rootDir>/test"
+        ],
+        "testRegex": "(\\.(test|spec))\\.ts",
+        "transform": {
+            "^.+\\.ts$": "ts-jest"
+        },
+        "preset": "@shelf/jest-mongodb",
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
+    },
+    "jest-junit": {
+        "outputDirectory": "./test-reports"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "test": "jest",
+        "build": "babel src -d dist --extensions \".ts\""
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Storage MongoDB Provider",
+                "type": "storage-provider",
+                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
+                "defaultConfig": {
+                    "uri": "mongodb://localhost:27017/mashroom_storage_db",
+                    "connectionOptions": {
+                        "minPoolSize": 5,
+                        "serverSelectionTimeoutMS": 3000
+                    }
+                }
+            }
+        ]
+    },
+    "lavamoat": {
+        "allowScripts": {
+            "@shelf/jest-mongodb>mongodb-memory-server": false
         }
-      }
-    ]
-  },
-  "lavamoat": {
-    "allowScripts": {
-      "@shelf/jest-mongodb>mongodb-memory-server": false
     }
-  }
 }

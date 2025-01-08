@@ -20,7 +20,14 @@
         "roots": [
             "<rootDir>/test"
         ],
-        "testRegex": "(\\.(test|spec))\\.js$"
+        "testRegex": "(\\.(test|spec))\\.js$",
+        "transform": {
+            "^.+\\.ts$": "ts-jest"
+        },
+        "reporters": [
+            "default",
+            "jest-junit"
+        ]
     },
     "scripts": {
         "lint": "eslint --fix",
