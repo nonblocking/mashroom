@@ -4,13 +4,16 @@ export default function (api) {
 
   const presets = [
     [
-      "@babel/preset-env", {
-        "targets": {
-          "node": "18"
-        }
+      '@babel/preset-env', {
+        'targets': {
+          'node': '18'
+        },
+        'exclude': [
+            'transform-dynamic-import'
+        ]
       },
     ],
-    "@babel/preset-typescript"
+    '@babel/preset-typescript'
   ];
 
   return {

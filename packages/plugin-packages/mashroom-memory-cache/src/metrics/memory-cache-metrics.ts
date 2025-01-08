@@ -8,14 +8,16 @@ let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 export const registerMemoryCacheMetrics = (memoryCacheService: MashroomMemoryCacheServiceWithStats, pluginContextHolder: MashroomPluginContextHolder) => {
     const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
-        callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
-            const stats = memoryCacheService.getStats();
+        const collectorService: MashroomMonitoringMetricsCollectorService | undefined = pluginContext.services.metrics?.service;
+        if (collectorService) {
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                const stats = memoryCacheService.getStats();
 
-            asyncCollectorService.counter('mashroom_memory_cache_regions_total', 'Memory Cache Total Cache Regions').set(stats.regionCount);
-            asyncCollectorService.counter('mashroom_memory_cache_entries_added_total', 'Memory Cache Total Entries Added to Cache').set(stats.entriesAdded);
-            asyncCollectorService.gauge('mashroom_memory_cache_hit_ratio', 'Memory Cache Hit Ratio').set(stats.cacheHitRatio);
-        });
+                asyncCollectorService.counter('mashroom_memory_cache_regions_total', 'Memory Cache Total Cache Regions').set(stats.regionCount);
+                asyncCollectorService.counter('mashroom_memory_cache_entries_added_total', 'Memory Cache Total Entries Added to Cache').set(stats.entriesAdded);
+                asyncCollectorService.gauge('mashroom_memory_cache_hit_ratio', 'Memory Cache Hit Ratio').set(stats.cacheHitRatio);
+            });
+        }
     };
     // Wait a few seconds until collectorService is available
     setTimeout(register, 5000);

@@ -1,6 +1,5 @@
 
-import {CoreV1Api, KubeConfig} from '@kubernetes/client-node';
-import type { V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
+import type {V1NamespaceList, V1ServiceList, CoreV1Api} from '@kubernetes/client-node';
 
 import type {KubernetesConnector as KubernetesConnectorType} from '../../../type-definitions';
 
@@ -13,7 +12,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
 
     async getNamespacesByLabel(labelSelector: string): Promise<V1NamespaceList> {
         if (!this._k8sApi) {
-            this.init();
+            await this.#init();
         }
         if (!this._k8sApi) {
             throw new Error('No k8s client found.');
@@ -25,7 +24,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
 
     async getNamespaceServices(namespace: string, labelSelector?: string | undefined): Promise<V1ServiceList> {
         if (!this._k8sApi) {
-            this.init();
+            await this.#init();
         }
         if (!this._k8sApi) {
             throw new Error('No k8s client found.');
@@ -36,7 +35,9 @@ export default class KubernetesConnector implements KubernetesConnectorType {
         });
     }
 
-    private init(): void {
+    async #init() {
+        // '@kubernetes/client-node' is an ESM only module
+        const {KubeConfig, CoreV1Api} = await import('@kubernetes/client-node');
         const k8sClient = new KubeConfig();
         if (!this.test) {
             // This only works if the Portal runs within a Kubernetes Pod with a valid service account attached

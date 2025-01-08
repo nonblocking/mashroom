@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Fixed errors occurring when *mashroom-monitoring-metrics-collector* was not present
+ * Metrics Collector: Fixed forwarding open-telemetry errors to Mashroom log
  * HTTP Proxy: Fixed the problem that proxy took the wrong agent if an interceptor plugin changed the target URI protocol from http to https
 
 ## 2.7.1 (July 8, 2024)
@@ -13,18 +15,18 @@
 
  * VHost Path Mapper: Replace the location header URL with the relative path if the host matches the frontend host.
    This saves an unnecessary round trip if the protocol does not match the frontend protocol (see [#121](https://github.com/nonblocking/mashroom/issues/121))
- * VHost Path Mapper: Fixed reverse mapping of the location header if the URL is absolute 
- * HTTP Proxy: Adds now a proper *x-forwarded-host* header (if *createForwardedForHeaders* is set) 
- * HTTP Proxy: Added missing *createForwardedForHeaders* config prop to the JSON schema 
+ * VHost Path Mapper: Fixed reverse mapping of the location header if the URL is absolute
+ * HTTP Proxy: Adds now a proper *x-forwarded-host* header (if *createForwardedForHeaders* is set)
+ * HTTP Proxy: Added missing *createForwardedForHeaders* config prop to the JSON schema
  * Portal: It is now possible to configure what should happen if the authentication expires. Until now the strategy was to just reload the current page,
    now you can choose between multiple strategies:
-   * *stayOnPage* 
+   * *stayOnPage*
    * *reload* (Default, same behaviour as before)
    * *redirect* (redirect to another page)
    * *displayDomElement* (set *display: block* on the DOM element with given ID)
-    
+
    **BREAKING CHANGE**: *Mashroom Portal WebApp* plugin properties *warnBeforeAuthenticationExpiresSec* and *autoExtendAuthentication* have been removed, instead it expects a configuration like this:
-   ```json 
+   ```json
      "authenticationExpiration": {
        "warnBeforeExpirationSec": 60,
        "autoExtend": false,
@@ -35,7 +37,7 @@
    ```
  * LDAP Security Provider: Replaced decommissioned *ldapjs* client
  * Session Plugin: Uses now a session cookie (without a *maxAge*) by default, so, the session can only expire on the server side and not because the
-   cookie expires 
+   cookie expires
 
 ## 2.6.1 (Nay 12, 2024)
 

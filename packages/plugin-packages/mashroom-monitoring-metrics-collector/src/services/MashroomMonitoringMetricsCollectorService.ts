@@ -1,8 +1,8 @@
 import {diag, DiagLogLevel} from '@opentelemetry/api';
 import {MeterProvider} from '@opentelemetry/sdk-metrics';
 import {Resource} from '@opentelemetry/resources';
-import {SEMRESATTRS_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
-import {OpenTelemetryMetricReader} from './OpenTelemetryMetricReader';
+import {ATTR_SERVICE_NAME} from '@opentelemetry/semantic-conventions';
+import OpenTelemetryMetricReader from './OpenTelemetryMetricReader';
 
 import type {BatchObservableResult, Observable} from '@opentelemetry/api';
 import type {MetricReader, ResourceMetrics} from '@opentelemetry/sdk-metrics';
@@ -47,19 +47,22 @@ export default class MashroomMonitoringMetricsCollectorService implements Mashro
             verbose() {},
             debug() {},
             info() {},
-            warn: this._logger.warn,
-            error: this._logger.error,
+            warn: (message: string, ...args: unknown[]) => this._logger.warn(message, args),
+            error: (message: string, ...args: unknown[]) => this._logger.error(message, args),
         }, DiagLogLevel.WARN);
 
+        this._metricReader = new OpenTelemetryMetricReader();
         this._meterProvider = new MeterProvider({
             resource: Resource.empty().merge(
                 new Resource({
-                    [SEMRESATTRS_SERVICE_NAME]: RESOURCE_NAME,
+                    [ATTR_SERVICE_NAME]: RESOURCE_NAME,
                 })
-            )
+            ),
+            readers: [
+                this._metricReader,
+            ]
         });
-        this._metricReader = new OpenTelemetryMetricReader();
-        this._meterProvider.addMetricReader(this._metricReader);
+
         this._defaultMeter = this._meterProvider.getMeter(DEFAULT_METER_NAME);
         this._defaultMeterRemoveCallbacksFns = [];
         this._metrics = {};

@@ -9,7 +9,7 @@ let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 export const registerHttpAgentMetrics = (contextHolder: MashroomPluginContextHolder) => {
     const register = async () => {
         const pluginContext = contextHolder.getPluginContext();
-        const collectorService: MashroomMonitoringMetricsCollectorService = pluginContext.services.metrics?.service;
+        const collectorService: MashroomMonitoringMetricsCollectorService | undefined = pluginContext.services.metrics?.service;
         if (collectorService) {
             callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
                 const pluginContext = contextHolder.getPluginContext();
