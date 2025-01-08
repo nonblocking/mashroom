@@ -89,7 +89,13 @@ async function main() {
 
     fs.writeFileSync(path.resolve(__dirname, '../public/docs/html/index.html'), doc);
 
-    const browser = await puppeteer.launch({headless: true});
+    const browser = await puppeteer.launch({
+        headless: true,
+        args: [
+            '--no-sandbox',
+            '--disable-setuid-sandbox'
+        ],
+    });
     const page = await browser.newPage();
     await page.goto('file://' + path.resolve(__dirname, '../public/docs/html/index.html'));
 
