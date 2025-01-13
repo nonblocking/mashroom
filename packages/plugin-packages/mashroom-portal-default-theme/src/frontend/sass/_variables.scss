@@ -25,6 +25,7 @@
 
     // Light theme
     --mashroom-portal-light-theme-color-text-default: black;
+    --mashroom-portal-light-theme-color-text-secondary: #333;
     --mashroom-portal-light-theme-color-disabled: #888;
     --mashroom-portal-light-theme-color-input-placeholder: #AAA;
     --mashroom-portal-light-theme-color-input-border: #AAA;
@@ -47,7 +48,8 @@
 
     // Dark theme
     --mashroom-portal-dark-theme-color-text-default: white;
-    --mashroom-portal-dark-theme-color-disabled: #AAA;
+    --mashroom-portal-dark-theme-color-text-secondary: #AAA;
+    --mashroom-portal-dark-theme-color-disabled: #444;
     --mashroom-portal-dark-theme-color-input-placeholder: #666;
     --mashroom-portal-dark-theme-color-input-border: #666;
     --mashroom-portal-dark-theme-color-navigation: #AAA;
@@ -72,10 +74,13 @@
     --mashroom-admin-app-color-drop-zone: var(--mashroom-portal-color-accent);
     --mashroom-admin-app-font-size: 14px;
 
+
+
     // --- Setting the correct theme. Don't set values directly below this point ---
 
     &[data-mashroom-theme='light'] {
         --mashroom-portal-color-text-default: var(--mashroom-portal-light-theme-color-text-default);
+        --mashroom-portal-color-text-secondary: var(--mashroom-portal-light-theme-color-text-secondary);
         --mashroom-portal-color-disabled: var(--mashroom-portal-light-theme-color-disabled);
         --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
         --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
@@ -99,6 +104,7 @@
 
     &[data-mashroom-theme='dark'] {
         --mashroom-portal-color-text-default: var(--mashroom-portal-dark-theme-color-text-default);
+        --mashroom-portal-color-text-secondary: var(--mashroom-portal-dark-theme-color-text-secondary);
         --mashroom-portal-color-disabled: var(--mashroom-portal-dark-theme-color-disabled);
         --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
         --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
@@ -123,6 +129,7 @@
     &[data-mashroom-theme='auto'] {
         @media (prefers-color-scheme: light) {
             --mashroom-portal-color-text-default: var(--mashroom-portal-light-theme-color-text-default);
+            --mashroom-portal-color-text-secondary: var(--mashroom-portal-light-theme-color-text-secondary);
             --mashroom-portal-color-disabled: var(--mashroom-portal-light-theme-color-disabled);
             --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
             --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
@@ -146,6 +153,7 @@
 
         @media (prefers-color-scheme: dark) {
             --mashroom-portal-color-text-default: var(--mashroom-portal-dark-theme-color-text-default);
+            --mashroom-portal-color-text-secondary: var(--mashroom-portal-dark-theme-color-text-secondary);
             --mashroom-portal-color-disabled: var(--mashroom-portal-dark-theme-color-disabled);
             --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
             --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);

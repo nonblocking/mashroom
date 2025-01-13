@@ -53,7 +53,7 @@ export default class RolesList extends PureComponent<Props> {
 
         return (
             <div className='roles-list'>
-                <TableResponsive>
+                <TableResponsive striped>
                     <tbody>
                         {rows}
                     </tbody>

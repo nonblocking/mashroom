@@ -1,6 +1,6 @@
 {{! Portal page template }}
 <!doctype html>
-<html lang="{{lang}}" data-mashroom-theme="light">
+<html lang="{{lang}}" data-mashroom-theme="{{darkMode}}">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8">
@@ -43,6 +43,8 @@
     {{/if}}
 
     {{{portalResourcesHeader}}}
+
+    {{{themeExtraStyle}}}
 
     {{#if page.extraCss}}
         <style type="text/css">

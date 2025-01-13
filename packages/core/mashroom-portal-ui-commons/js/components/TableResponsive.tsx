@@ -13,8 +13,8 @@ export default class TableResponsive extends PureComponent<Props> {
     render() {
         const {striped, children} = this.props;
         return (
-            <div className={`mashroom-portal-ui-table-responsive ${striped ? 'table-striped' : ''}`}>
-                <table>
+            <div className='mashroom-portal-ui-table-responsive'>
+                <table className={`${striped ? 'table-striped' : ''}`}>
                     {children}
                 </table>
             </div>

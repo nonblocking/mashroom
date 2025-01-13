@@ -180,7 +180,10 @@
         },
         "Mashroom Portal Default Theme": {
             "showEnvAndVersions": true,
-            "spaMode": true
+            "showPortalAppHeaders": false,
+            "spaMode": true,
+            "darkMode": false,
+            "styleFile": "./defaultThemeOverrides.css"
         },
         "Mashroom Portal Remote App Background Job": {
             "unregisterAppsAfterScanErrors": 3

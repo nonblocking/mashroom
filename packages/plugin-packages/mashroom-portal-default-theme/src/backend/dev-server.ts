@@ -10,6 +10,8 @@ import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type
 
 themeParams.setParams({
     spaMode: false,
+    darkMode: false,
+    styleFile: null,
     showPortalAppHeaders: true,
     showEnvAndVersions: true,
     mashroomVersion: '1.0.0'

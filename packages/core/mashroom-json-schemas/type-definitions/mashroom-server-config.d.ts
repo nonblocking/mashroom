@@ -515,6 +515,14 @@ export interface Plugins {
      */
     spaMode?: boolean;
     /**
+     * Possible values: true, false, "auto" (Default: false)
+     */
+    darkMode?: boolean | string;
+    /**
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)
+     */
+    styleFile?: string;
+    /**
      * Show or hide Portal App headers (Default: true)
      */
     showPortalAppHeaders?: boolean;

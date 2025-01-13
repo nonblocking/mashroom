@@ -22,6 +22,7 @@
 
 .mashroom-portal-admin-app {
     --mashroom-portal-color-text-default: var(--mashroom-portal-dark-theme-color-text-default);
+    --mashroom-portal-color-text-secondary: var(--mashroom-portal-dark-theme-color-text-secondary);
     --mashroom-portal-color-disabled: var(--mashroom-portal-dark-theme-color-disabled);
     --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
     --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
@@ -29,11 +30,12 @@
     --mashroom-portal-color-error: var(--mashroom-portal-dark-theme-color-error);
     --mashroom-portal-color-button: var(--mashroom-portal-dark-theme-color-button);
     --mashroom-portal-color-button-hover: var(--mashroom-portal-dark-theme-color-button-hover);
-    --mashroom-portal-background-color-default: var(--mashroom-portal-background-color-admin-app);
-    --mashroom-portal-background-color-modal: var(--mashroom-portal-background-color-admin-app);
-    --mashroom-portal-background-color-modal-header: var(--mashroom-portal-background-color-admin-app);
+    --mashroom-portal-background-color-default: var(--mashroom-portal-dark-theme-background-color-default);
+    --mashroom-portal-background-color-modal: var(--mashroom-portal-dark-theme-background-color-modal);
+    --mashroom-portal-background-color-modal-header: var(--mashroom-portal-dark-theme-background-color-modal-header);
     --mashroom-portal-background-color-input: var(--mashroom-portal-dark-theme-background-color-input);
     --mashroom-portal-background-color-alt: var(--mashroom-portal-dark-theme-background-color-alt);
+    --mashroom-portal-background-color-app: var(--mashroom-portal-dark-theme-background-color-app);
     --mashroom-portal-background-color-navigation: var(--mashroom-portal-dark-theme-background-color-navigation);
     --mashroom-portal-background-color-navigation-hover: var(--mashroom-portal-dark-theme-background-color-navigation-hover);
 
@@ -45,7 +47,6 @@
     }
 
     .available-apps-panel {
-
         .available-app {
             margin-bottom: 2px;
 
@@ -55,6 +56,10 @@
 
             .filter-match {
                 color: var(--mashroom-portal-color-accent);
+            }
+
+            .app-description {
+                color: var(--mashroom-portal-color-text-secondary);
             }
         }
     }
@@ -71,6 +76,13 @@
         }
     }
 
+    a {
+        color: var(--mashroom-portal-color-text-secondary);
+
+        &:hover {
+            color: var(--mashroom-portal-color-text-default);
+        }
+    }
 }
 
 .mashroom-portal-admin-app-controls {

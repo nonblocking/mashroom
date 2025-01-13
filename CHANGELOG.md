@@ -3,6 +3,27 @@
 
 ## [unreleased]
 
+ * Portal Default Theme: Overhaul:
+   * Introduced tons of CSS variables
+   * Introduced a dark mode (default: off)
+   * Add the possibility to override CSS variables and style with an external file:
+     ```css
+        :root {
+          --mashroom-portal-color-primary: green;
+        }
+     ```
+     Example plugin config:
+     ```json
+     {
+       "Mashroom Portal Default Theme": {
+         "showEnvAndVersions": false,
+         "showPortalAppHeaders": false,
+         "spaMode": true,
+         "darkMode": "auto",
+         "styleFile": "./defaultThemeOverrides.css"
+       }
+     }
+     ```
  * Fixed errors occurring when *mashroom-monitoring-metrics-collector* was not present
  * Metrics Collector: Fixed forwarding open-telemetry errors to Mashroom log
  * HTTP Proxy: Fixed the problem that proxy took the wrong agent if an interceptor plugin changed the target URI protocol from http to https

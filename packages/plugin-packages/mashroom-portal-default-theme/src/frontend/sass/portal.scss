@@ -130,6 +130,7 @@ button, input[type="submit"] {
 
     &[disabled] {
         cursor: not-allowed;
+        color: var(--mashroom-portal-color-input-placeholder);
         background-color: var(--mashroom-portal-color-disabled);
 
         &:hover, &:active {
@@ -156,11 +157,11 @@ button.secondary {
     &[disabled] {
         background-color: transparent;
         border-color: var(--mashroom-portal-color-disabled);
-        color: var(--mashroom-portal-color-disabled);
+        color: var(--mashroom-portal-color-input-placeholder);
 
         &:hover, &:active {
             border-color: var(--mashroom-portal-color-disabled);
-            color: var(--mashroom-portal-color-disabled);
+            color: var(--mashroom-portal-color-input-placeholder);
         }
     }
 }
@@ -273,7 +274,7 @@ input[type="text"], input[type="number"], input[type="password"], input[type="te
 
     &:disabled {
         cursor: not-allowed;
-        color: #333;
+        color: var(--mashroom-portal-color-input-placeholder);
         border-color: var(--mashroom-portal-color-disabled);
         background-color: var(--mashroom-portal-color-disabled);
     }
@@ -314,7 +315,7 @@ select {
 
     &:disabled {
         cursor: not-allowed;
-        color: #333;
+        color: var(--mashroom-portal-color-input-placeholder);
         border-color: var(--mashroom-portal-color-disabled);
         background-color: var(--mashroom-portal-color-disabled);
     }
@@ -393,7 +394,7 @@ header {
     .site-name {
         h1 {
             display: inline-block;
-            padding:var(--mashroom-portal-spacing-default) var(--mashroom-portal-spacing-default) 0 var(--mashroom-portal-spacing-default);
+            padding: var(--mashroom-portal-spacing-default) var(--mashroom-portal-spacing-default) 0 var(--mashroom-portal-spacing-default);
             font-size: 1.4em;
             font-weight: 400;
         }
@@ -403,11 +404,11 @@ header {
         font-size: 0.8em;
         line-height: 1.3em;
         margin-left: var(--mashroom-portal-spacing-default);
-        color: #AAA;
+        color: #CCC;
         padding: 10px 0;
 
         a {
-            color: #AAA;
+            color: #CCC;
 
             &:hover {
                 color: white;
@@ -441,7 +442,7 @@ header {
 
             a {
                 display: block;
-                color: #AAA;
+                color: #CCC;
                 font-size: 0.8em;
 
                 &:hover {
@@ -623,7 +624,7 @@ header {
 
 .mashroom-portal-ui-field-label {
     display: inline-block;
-    color: var(--mashroom-portal-color-navigation);
+    color: var(--mashroom-portal-color-text-secondary);
 }
 
 main {

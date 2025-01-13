@@ -3,7 +3,6 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import themeParams from './theme-params';
 
- 
 const packageJson = require('../package.json');
 
 function equals(this: any, lvalue: any, rvalue: any, options: any): any {
@@ -36,6 +35,16 @@ function ifSpaMode(this: any, options: any): any {
     return options.fn(this);
 }
 
+function darkMode(this: any): 'light' | 'dark' | 'auto' {
+    if (themeParams.darkMode === true || themeParams.darkMode as any === 'true') {
+        return 'dark';
+    }
+    if (themeParams.darkMode === false || themeParams.darkMode as any === 'false') {
+        return 'light';
+    }
+    return 'auto';
+}
+
 function mashroomVersion(): string {
     return themeParams.mashroomVersion;
 }
@@ -50,6 +59,13 @@ function extraMainClasses(): string {
         classes += 'show-portal-app-headers';
     }
     return classes;
+}
+
+function themeExtraStyle(): string {
+    if (themeParams.styleFile) {
+        return inlineStyle(themeParams.styleFile);
+    }
+    return '';
 }
 
 function inlineStyle(cssFile: string): string {
@@ -80,10 +96,12 @@ function ifShowEnvAndVersions(this: any, options: any): any {
 export default {
     equals,
     ifSpaMode,
+    darkMode,
     env,
     mashroomVersion,
     fontawesomeVersion,
     extraMainClasses,
+    themeExtraStyle,
     inlineStyle,
     inlineSVG,
     ifShowEnvAndVersions,
