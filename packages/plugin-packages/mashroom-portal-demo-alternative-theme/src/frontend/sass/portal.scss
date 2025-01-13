@@ -3,10 +3,10 @@
 @use "variables" as *;
 
 // Reset styles
-@use "bootstrap/scss/bootstrap-reboot";
+@use "normalize.css/normalize.css";
 
-// Bootstrap grid
-@use "bootstrap/scss/bootstrap-grid";
+// From Bootstrap we only use the grid
+@use "bootstrap/dist/css/bootstrap-grid";
 
 @keyframes spin {
     0% {
@@ -17,20 +17,11 @@
     }
 }
 
-/* Remove Chrome's input focus border */
-:focus {
-    outline: none !important;
-}
-
 ::placeholder {
     color: $COLOR_GREY_LIGHT;
 }
 
 :root {
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
-    -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
     color: $COLOR_BLACK;
@@ -56,6 +47,7 @@
     --mashroom-portal-color-secondary-dark: #{$COLOR_SECONDARY_DARK};
     --mashroom-portal-color-secondary-extra-light: #{$COLOR_SECONDARY_EXTRA_LIGHT};
     --mashroom-portal-color-background: #{$COLOR_BACKGROUND};
+    --mashroom-portal-spacing-default: 16px;
 }
 
 h1, h2, h3 {
@@ -87,7 +79,6 @@ button, input[type="submit"] {
     border: none;
     padding: 6px 12px;
     cursor: pointer;
-    outline: none !important;
     font-family: $FONT_DEFAULT;
     font-size: 1em;
     @include hover-animation();
@@ -220,6 +211,7 @@ button.secondary {
 }
 
 input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"], textarea {
+    box-sizing: border-box;
     padding: 6px 11px;
     border: 1px solid $COLOR_PRIMARY;
     width: 100%;
@@ -246,7 +238,6 @@ select {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
     font-family: $FONT_DEFAULT;
     font-size: 1em;
     width: 100%;
