@@ -50,11 +50,6 @@
     }
 }
 
-/* Remove Chrome's input focus border */
-:focus {
-    outline: none !important;
-}
-
 ::placeholder {
     color: var(--mashroom-portal-color-input-placeholder);
 }
@@ -115,7 +110,6 @@ button, input[type="submit"] {
     border: none;
     padding: var(--mashroom-portal-padding-button);
     cursor: pointer;
-    outline: none !important;
     font-family: var(--mashroom-portal-font-default), sans-serif;
     font-size: 1em;
     @include hover-animation();
@@ -181,7 +175,6 @@ button.secondary {
             top: -2px;
             font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-size: 1.1em;
-            font-weight: bold;
             content: "\f0c8";
             color: var(--mashroom-portal-color-button);
             @include focus-animation();
@@ -194,7 +187,7 @@ button.secondary {
 
     &:focus + label {
         &:before {
-            color: var(--mashroom-portal-color-button-hover) !important;
+            color: var(--mashroom-portal-color-button-hover);
         }
     }
 
@@ -203,7 +196,7 @@ button.secondary {
         color: var(--mashroom-portal-color-disabled);
 
         &:before {
-            color: var(--mashroom-portal-color-disabled) !important;
+            color: var(--mashroom-portal-color-disabled);
         }
     }
 }
@@ -223,7 +216,6 @@ button.secondary {
             top: -2px;
             font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-size: 1.1em;
-            font-weight: bold;
             content: "\f111";
             color: var(--mashroom-portal-color-button);
             @include focus-animation();
@@ -245,7 +237,7 @@ button.secondary {
         color: var(--mashroom-portal-color-disabled);
 
         &:before {
-            color: var(--mashroom-portal-color-disabled) !important;
+            color: var(--mashroom-portal-color-disabled);
         }
     }
 }
@@ -254,7 +246,6 @@ input[type="text"], input[type="number"], input[type="password"], input[type="te
     box-sizing: border-box;
     padding: var(--mashroom-portal-padding-input);
     border: 1px solid var(--mashroom-portal-color-input-border);
-    margin: 1px;
     border-radius: 3px;
     width: 100%;
     font-family: var(--mashroom-portal-font-default), sans-serif;
@@ -264,8 +255,7 @@ input[type="text"], input[type="number"], input[type="password"], input[type="te
     @include focus-animation();
 
     &:focus {
-        border-width: 2px;
-        margin: 0;
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 
     &:invalid {
@@ -284,12 +274,10 @@ select {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
     font-family: var(--mashroom-portal-font-default), sans-serif;
     font-size: 1em;
     width: 100%;
     padding: var(--mashroom-portal-padding-input);
-    margin: 1px;
     border: 1px solid var(--mashroom-portal-color-input-border);
     border-radius: 3px;
     color: var(--mashroom-portal-color-text-default);
@@ -301,8 +289,7 @@ select {
     }
 
     &:focus {
-        border-width: 2px;
-        margin: 0;
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 
     &:invalid {
@@ -404,11 +391,11 @@ header {
         font-size: 0.8em;
         line-height: 1.3em;
         margin-left: var(--mashroom-portal-spacing-default);
-        color: #CCC;
+        color: #DDD;
         padding: 10px 0;
 
         a {
-            color: #CCC;
+            color: #DDD;
 
             &:hover {
                 color: white;
@@ -427,7 +414,7 @@ header {
             position: absolute;
             display: inline-block;
             font-family: var(--mashroom-portal-font-icon), sans-serif;
-            font-weight: 900;
+            font-weight: bold;
             content: "\f007";
             color: white;
             left: 0;
@@ -442,7 +429,7 @@ header {
 
             a {
                 display: block;
-                color: #CCC;
+                color: #DDD;
                 font-size: 0.8em;
 
                 &:hover {
@@ -463,7 +450,7 @@ header {
             content: '\f142';
             font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-size: 1.2em;
-            font-weight: 900;
+            font-weight: bold;
         }
     }
 }
@@ -576,7 +563,7 @@ header {
             &:before {
                 content: '\f00d';
                 font-family: var(--mashroom-portal-font-icon), sans-serif;
-                font-weight: 900;
+                font-weight: bold;
                 padding-right: var(--mashroom-portal-spacing-default);
                 color: var(--mashroom-portal-color-button);
             }
@@ -741,7 +728,7 @@ footer {
 
     &:before {
         font-family: var(--mashroom-portal-font-icon), sans-serif;
-        font-weight: 900;
+        font-weight: bold;
         content: '\f12a';
         position: absolute;
         left: 2px;
@@ -861,7 +848,7 @@ footer {
                 &:after {
                     content: '\f00d';
                     font-family: var(--mashroom-portal-font-icon), sans-serif;
-                    font-weight: 900;
+                    font-weight: bold;
                     padding: 2px 15px;
                 }
 
@@ -873,17 +860,14 @@ footer {
     }
 }
 
-.mashroom-portal-ui-source-code-editor-field {
-    .cm-editor {
-        border: 1px solid var(--mashroom-portal-color-input-border);
-        padding: var(--mashroom-portal-padding-input);
-        background-color: var(--mashroom-portal-background-color-input);
-        @include focus-animation();
+.cm-editor {
+    border: 1px solid var(--mashroom-portal-color-input-border);
+    padding: var(--mashroom-portal-padding-input);
+    background-color: var(--mashroom-portal-background-color-input);
+    @include focus-animation();
 
-        &.cm-focused {
-            border-width: 2px;
-            padding: 7px 11px;
-        }
+    &.cm-focused {
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 }
 
@@ -938,7 +922,7 @@ footer {
             &:after {
                 content: '\f00d';
                 font-family: var(--mashroom-portal-font-icon), sans-serif;
-                font-weight: 900;
+                font-weight: bold;
                 color: var(--mashroom-portal-color-button);
             }
 
@@ -989,7 +973,7 @@ footer {
             left: 10px;
             content: '\f017';
             font-family: var(--mashroom-portal-font-icon), sans-serif;
-            font-weight: 900;
+            font-weight: bold;
             padding-right: 5px;
             color: var(--mashroom-portal-color-error);
         }

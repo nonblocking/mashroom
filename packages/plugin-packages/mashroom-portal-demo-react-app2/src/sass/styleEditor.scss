@@ -37,17 +37,4 @@ $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
         }
     }
 
-    .cm-editor {
-        padding: 10px;
-        border: 1px solid var(--mashroom-portal-color-black, black);
-
-        &.cm-focused {
-            outline: none;
-            border-color: var(--mashroom-portal-color-secondary, blue)
-        }
-
-        .cm-line {
-            white-space: pre-wrap;
-        }
-    }
 }

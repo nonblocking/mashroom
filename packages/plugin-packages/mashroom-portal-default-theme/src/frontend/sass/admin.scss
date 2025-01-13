@@ -83,6 +83,22 @@
             color: var(--mashroom-portal-color-text-default);
         }
     }
+
+    .page {
+        .configure, .delete {
+            &:hover {
+                background-color:  var(--mashroom-portal-background-color-alt);
+            }
+        }
+    }
+
+    .site {
+        .configure {
+            &:hover {
+                background-color:  var(--mashroom-portal-background-color-alt);
+            }
+        }
+    }
 }
 
 .mashroom-portal-admin-app-controls {
