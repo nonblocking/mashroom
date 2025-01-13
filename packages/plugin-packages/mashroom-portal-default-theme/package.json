@@ -48,6 +48,7 @@
                     "spaMode": true,
                     "darkMode": false,
                     "styleFile": null,
+                    "logoImageUrl": null,
                     "showPortalAppHeaders": true,
                     "showEnvAndVersions": false
                 }

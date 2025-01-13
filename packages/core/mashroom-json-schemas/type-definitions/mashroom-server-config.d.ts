@@ -523,6 +523,10 @@ export interface Plugins {
      */
     styleFile?: string;
     /**
+     * Optional logo image URL (Default: null)
+     */
+    logoImageUrl?: string;
+    /**
      * Show or hide Portal App headers (Default: true)
      */
     showPortalAppHeaders?: boolean;

@@ -77,13 +77,16 @@ function inlineStyle(cssFile: string): string {
     }
 }
 
-function inlineSVG(assetFile: string): string {
-    try {
-        const file = readFileSync(resolve(__dirname, 'public/assets', assetFile));
+function logoImage(): string {
+    if (!themeParams.logoImageUrl) {
+        // Default logo
+        const file = readFileSync(resolve(__dirname, 'public/assets', 'logo-white.svg'));
         return file.toString('utf-8');
-    } catch (e) {
-        return `<!-- Error: SVG file not found: ${assetFile} -->`;
     }
+
+    return `
+        <img src="${themeParams.logoImageUrl}" alt="Logo"/>
+    `;
 }
 
 function ifShowEnvAndVersions(this: any, options: any): any {
@@ -103,7 +106,7 @@ export default {
     extraMainClasses,
     themeExtraStyle,
     inlineStyle,
-    inlineSVG,
+    logoImage,
     ifShowEnvAndVersions,
     __: i18n,
     defaultPluginErrorMessage,

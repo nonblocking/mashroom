@@ -368,13 +368,18 @@ header {
 
     .logo {
         display: none;
+        width: 40px;
+        height: 30px;
+        margin-left: var(--mashroom-portal-spacing-default);
+
+        img {
+            width: 40px;
+            height: auto;
+        }
 
         svg {
-            display: inline-block;
             width: 40px;
             height: 30px;
-            margin-left: var(--mashroom-portal-spacing-default);
-            margin-top: 6px;
         }
     }
 
@@ -754,14 +759,15 @@ footer {
 .mashroom-portal-ui-dropdown-menu {
 
     .dropdown-menu-content {
-        background-color: var(--mashroom-portal-background-color-default);
+        background-color: var(--mashroom-portal-background-color-dropdown);
+        border: 1px solid var(--mashroom-portal-color-input-border);
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
     }
 
     .mashroom-portal-ui-dropdown-menu-item {
         &:hover {
-            background-color: var(--mashroom-portal-background-color-alt);
+            background-color: var(--mashroom-portal-background-color-dropdown-hover);
         }
 
         &:last-child {
@@ -773,8 +779,14 @@ footer {
 
 .mashroom-portal-autocomplete-field {
     .suggestions-container-open {
+        background-color: var(--mashroom-portal-background-color-dropdown);
+        border: 1px solid var(--mashroom-portal-color-input-border);
         border-bottom-left-radius: 5px;
         border-bottom-right-radius: 5px;
+    }
+
+    .suggestion-highlighted {
+        background-color: var(--mashroom-portal-background-color-dropdown-hover);
     }
 }
 

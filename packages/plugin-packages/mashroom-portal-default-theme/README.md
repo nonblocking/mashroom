@@ -18,6 +18,7 @@ You can override the default config in your Mashroom config file like this:
             "spaMode": true,
             "darkMode": false,
             "styleFile": null,
+            "logoImageUrl": null,
             "showPortalAppHeaders": true,
             "showEnvAndVersions": true
         }
@@ -30,6 +31,7 @@ You can override the default config in your Mashroom config file like this:
    in that case a full page load is triggered (Default: true)
  * _darkMode_: Possible values: *true*, *false*, *"auto"* (Default: false)
  * _styleFile_: Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)
+ * _logoImageUrl_: Optional logo image URL (Default: null)
  * _showPortalAppHeaders_: Show or hide Portal App headers (Default: true)
  * _showEnvAndVersions_: Show the environment (_NODE_ENV_) and version information in the header (Default: false)
 

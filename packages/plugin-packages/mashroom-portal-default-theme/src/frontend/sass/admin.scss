@@ -39,11 +39,10 @@
     --mashroom-portal-background-color-navigation: var(--mashroom-portal-dark-theme-background-color-navigation);
     --mashroom-portal-background-color-navigation-hover: var(--mashroom-portal-dark-theme-background-color-navigation-hover);
 
-    background-color: var(--mashroom-portal-background-color-admin-app);
     color: var(--mashroom-portal-color-text-default);
 
     .menu-bar {
-        background-color: var(--mashroom-portal-background-color-admin-app);
+        background-color: var(--mashroom-portal-background-color-admin-app-bar);
     }
 
     .available-apps-panel {

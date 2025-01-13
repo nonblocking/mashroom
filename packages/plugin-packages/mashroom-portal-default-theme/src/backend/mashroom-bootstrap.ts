@@ -9,7 +9,7 @@ import type {MashroomPortalThemePluginBootstrapFunction} from '@mashroom/mashroo
 
 const bootstrap: MashroomPortalThemePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const {loggerFactory, serverConfig, serverInfo} = pluginContextHolder.getPluginContext();
-    const { spaMode, darkMode, styleFile, showPortalAppHeaders, showEnvAndVersions } = pluginConfig;
+    const { spaMode, darkMode, styleFile, logoImageUrl, showPortalAppHeaders, showEnvAndVersions } = pluginConfig;
     const logger = loggerFactory('mashroom.theme.default');
 
     let fixedStyleFile = styleFile;
@@ -27,6 +27,7 @@ const bootstrap: MashroomPortalThemePluginBootstrapFunction = async (pluginName,
         spaMode,
         darkMode,
         styleFile: fixedStyleFile,
+        logoImageUrl,
         showPortalAppHeaders,
         showEnvAndVersions,
         mashroomVersion: serverInfo.version,

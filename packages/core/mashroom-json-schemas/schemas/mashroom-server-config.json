@@ -748,8 +748,12 @@
                             "description": "Possible values: true, false, \"auto\" (Default: false)"
                         },
                         "styleFile": {
-                            "type": "string",
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
                             "description": "Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)"
+                        },
+                        "logoImageUrl": {
+                            "$ref": "#/definitions/HttpUrl",
+                            "description": "Optional logo image URL (Default: null)"
                         },
                         "showPortalAppHeaders": {
                             "type": "boolean",
