@@ -1,18 +1,18 @@
 
-const path = require('path');
+const {resolve} = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
 
-    let entry = [path.resolve(__dirname, 'src/js')];
+    const entry = [];
 
     if (argv.mode === 'development') {
         // Add portal theme
-        entry = [
-            path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css'),
-            path.resolve(__dirname, '../mashroom-portal-default-theme/dist/public/admin.css')
-        ].concat(entry);
+        entry.push(resolve(__dirname, '../mashroom-portal-default-theme/dist/public/portal.css'));
+        entry.push(resolve(__dirname, '../mashroom-portal-default-theme/dist/public/admin.css'));
     }
+
+    entry.push(resolve(__dirname, 'src/js'));
 
     return {
         entry,

@@ -42,9 +42,9 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .mashroom-demo-vue-app {
-        padding: 10px;
+        padding: var(--mashroom-portal-spacing-default, 10px);
         display: flex;
         align-items: center;
     }

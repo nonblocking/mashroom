@@ -2,7 +2,7 @@
 $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 
 .mashroom-demo-composite-app {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     .info {
         margin: 10px 0 20px 0;
@@ -17,6 +17,8 @@ $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 
     .dialog {
         min-height: 130px;
+        border: 2px solid var(--mashroom-portal-color-input-border, #AAA);
+        border-radius: 5px;
 
         .mashroom-portal-app-wrapper {
             margin-bottom: 0 !important;

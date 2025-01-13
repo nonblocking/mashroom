@@ -1,6 +1,6 @@
 
 .mashroom-demo-react-app-2 {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
     display: flex;
 
     .react-logo {

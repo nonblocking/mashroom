@@ -1,0 +1,40 @@
+
+// Bootstrap grid breakpoints
+$SMALL_DEVICE_MIN: 576px;
+$MEDIUM_DEVICE_MIN: 768px;
+$LARGE_DEVICE_MIN: 992px;
+$X_LARGE_DEVICE_MIN: 1200px;
+
+@mixin small {
+    @media (min-width: #{$SMALL_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin medium {
+    @media (min-width: #{$MEDIUM_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin large {
+    @media (min-width: #{$LARGE_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin xlarge {
+    @media (min-width: #{$X_LARGE_DEVICE_MIN}) {
+        @content;
+    }
+}
+
+@mixin hover-animation() {
+    transition: color 500ms ease-out, background-color 500ms ease-out;
+}
+
+@mixin focus-animation() {
+    transition: color 500ms ease-out, border-color 500ms ease-out;
+}
+
+

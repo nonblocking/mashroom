@@ -10,7 +10,7 @@ $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 }
 
 .mashroom-demo-react-app-2-config-editor {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     .form-row {
         padding-bottom: 5px;

@@ -1,55 +1,56 @@
 {
-  "name": "@mashroom/mashroom-portal-demo-alternative-theme",
-  "description": "Alternative Portal Theme Demo",
-  "homepage": "https://www.mashroom-server.com",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nonblocking/mashroom.git"
-  },
-  "license": "MIT",
-  "version": "2.7.1",
-  "files": [
-    "dist/**"
-  ],
-  "dependencies": {
-    "express": "^4.21.2",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
-  },
-  "devDependencies": {
-    "@mashroom/mashroom": "2.7.1",
-    "@mashroom/mashroom-portal": "2.7.1",
-    "@fortawesome/fontawesome-free": "^6.7.2",
-    "@types/express": "^4.17.21",
-    "@types/react": "^18.3.18",
-    "@types/react-dom": "^18.3.5",
-    "bootstrap": "^5.3.3"
-  },
-  "scripts": {
-    "lint": "eslint --fix",
-    "type-check": "tsc --noEmit",
-    "dev": "nodemon --watch src --watch views -e ts,tsx,scss --exec \"npm run build && node dist/plugin/dev-server.js\"",
-    "build:backend": "babel src/backend -d dist --extensions .ts,.tsx",
-    "build:frontend": "webpack --mode production",
-    "build:style": "sass --style compressed --no-source-map --load-path=./node_modules --load-path=../../../node_modules src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
-    "build:copy-assets": "cpy \"assets/*\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome",
-    "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
-  },
-  "mashroom": {
-    "devModeBuildScript": "build",
-    "plugins": [
-      {
-        "name": "Mashroom Portal Demo Alternative Theme",
-        "type": "portal-theme",
-        "bootstrap": "./dist/plugin/mashroom-bootstrap.js",
-        "resourcesRoot": "./dist/public",
-        "views": "./dist/views"
-      }
-    ]
-  },
-  "lavamoat": {
-    "allowScripts": {
-      "@fortawesome/fontawesome-free": false
+    "name": "@mashroom/mashroom-portal-demo-alternative-theme",
+    "description": "Alternative Portal Theme Demo",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "2.7.1",
+    "files": [
+        "dist/**"
+    ],
+    "dependencies": {
+        "express": "^4.21.2",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.7.1",
+        "@mashroom/mashroom-portal": "2.7.1",
+        "@fortawesome/fontawesome-free": "^6.7.2",
+        "@types/express": "^4.17.21",
+        "@types/react": "^18.3.18",
+        "@types/react-dom": "^18.3.5",
+        "bootstrap": "^5.3.3",
+        "normalize.css": "^8.0.1"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "nodemon --watch src --watch views -e ts,tsx,scss --exec \"npm run build && node dist/plugin/dev-server.js\"",
+        "build:backend": "babel src/backend -d dist --extensions .ts,.tsx",
+        "build:frontend": "webpack --mode production",
+        "build:style": "sass --style compressed --no-source-map --load-path=./node_modules --load-path=../../../node_modules src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
+        "build:copy-assets": "cpy \"assets/*\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome",
+        "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Alternative Theme",
+                "type": "portal-theme",
+                "bootstrap": "./dist/plugin/mashroom-bootstrap.js",
+                "resourcesRoot": "./dist/public",
+                "views": "./dist/views"
+            }
+        ]
+    },
+    "lavamoat": {
+        "allowScripts": {
+            "@fortawesome/fontawesome-free": false
+        }
     }
-  }
 }

@@ -4,7 +4,7 @@ $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 $LABEL_ROW_WIDTH: 170px;
 
 .mashroom-remote-messaging-app {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     .mashroom-remote-messaging-app-form-row {
         margin: 10px 0;

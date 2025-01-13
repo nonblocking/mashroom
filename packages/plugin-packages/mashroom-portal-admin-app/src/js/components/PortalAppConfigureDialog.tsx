@@ -127,7 +127,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         let appConfigEditor;
         if (!selectedPortalApp?.customConfigEditor) {
             appConfigEditor = (
-                <SourceCodeEditorField id='appConfig' labelId='appConfig' name='appConfig' language='json' />
+                <SourceCodeEditorField id='appConfig' labelId='appConfig' name='appConfig' language='json' theme='dark' />
             );
         } else {
             appConfigEditor = (
