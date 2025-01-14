@@ -18,14 +18,6 @@
     "type": "git",
     "url": "git+https://github.com/nonblocking/mashroom.git"
   },
-  "keywords": [
-    "mashroom",
-    "svelte"
-  ],
-  "author": "Milan Heimschild",
-  "bugs": {
-    "url": "https://github.com/nonblocking/mashroom/issues"
-  },
   "devDependencies": {
     "@mashroom/mashroom": "2.7.1",
     "@mashroom/mashroom-portal": "2.7.1",
