@@ -25,6 +25,7 @@ export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
 
     return (
         <div className='mashroom-demo-react-app-2-config-editor'>
+            <h4>React Demo App Custom Content Editor</h4>
             <div className='form-row'>
                 <label htmlFor="message">Message (Markdown)</label>
                 <CodeMirror
