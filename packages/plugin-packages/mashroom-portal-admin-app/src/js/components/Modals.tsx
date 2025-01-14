@@ -6,13 +6,11 @@ import PageDeleteDialog from '../containers/PageDeleteDialog';
 import SiteConfigureDialog from '../containers/SiteConfigureDialog';
 import SiteDeleteDialog from '../containers/SiteDeleteDialog';
 
-import type {ReactNode} from 'react';
-
 type Props = Record<string, never>;
 
 export default class Modals extends PureComponent<Props> {
 
-    render(): ReactNode {
+    render() {
         return (
             <>
                 <PortalAppConfigureDialog/>

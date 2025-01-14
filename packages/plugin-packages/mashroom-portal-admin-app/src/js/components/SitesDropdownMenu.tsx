@@ -3,7 +3,6 @@ import React, {PureComponent} from 'react';
 import {CircularProgress, DropdownMenu, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_SITE_CONFIGURE, DIALOG_NAME_SITE_DELETE} from '../constants';
 
-import type {ReactNode} from 'react';
 import type {
     MashroomPortalAdminService,
     MashroomPortalSiteLinkLocalized
@@ -22,44 +21,44 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
 
     closeDropDownRef: (() => void) | undefined;
 
-    onOpen(): void {
+    onOpen() {
         const {dataLoadingService} = this.props;
         dataLoadingService.loadSites();
     }
 
-    onGoto(site: MashroomPortalSiteLinkLocalized): void {
+    onGoto(site: MashroomPortalSiteLinkLocalized) {
         setTimeout(() => {
             global.location.href = site.url;
         }, 0);
     }
 
-    onConfigure(site: MashroomPortalSiteLinkLocalized): void {
+    onConfigure(site: MashroomPortalSiteLinkLocalized) {
         const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef?.();
         initConfigureSite(site.siteId);
         showModal(DIALOG_NAME_SITE_CONFIGURE);
     }
 
-    onDelete(site: MashroomPortalSiteLinkLocalized): void {
+    onDelete(site: MashroomPortalSiteLinkLocalized) {
         const {initConfigureSite, showModal} = this.props;
         this.closeDropDownRef?.();
         initConfigureSite(site.siteId);
         showModal(DIALOG_NAME_SITE_DELETE);
     }
 
-    renderLoading(): ReactNode {
+    renderLoading() {
         return (
             <CircularProgress/>
         );
     }
 
-    renderError(): ReactNode {
+    renderError() {
         return (
             <ErrorMessage messageId='loadingFailed' />
         );
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {sites} = this.props;
         if (sites.loading) {
             return this.renderLoading();
@@ -82,7 +81,7 @@ export default class SitesDropdownMenu extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <DropdownMenu className='sites-dropdown-menu' labelId='sites' onOpen={this.onOpen.bind(this)} closeRef={(ref) => this.closeDropDownRef = ref}>
                 {this.renderContent()}

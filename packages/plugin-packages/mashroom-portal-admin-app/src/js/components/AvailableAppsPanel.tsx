@@ -30,13 +30,13 @@ const CATEGORY_HIDDEN = 'hidden';
 
 export default class AvailableAppsPanel extends PureComponent<Props> {
 
-    renderLoading(): ReactNode {
+    renderLoading() {
         return (
             <CircularProgress/>
         );
     }
 
-    renderError(): ReactNode {
+    renderError() {
         return (
             <ErrorMessage messageId='loadingFailed' />
         );
@@ -119,7 +119,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         return filteredAndGroupedByCategory;
     }
 
-    renderCategoryApps(apps: Array<MashroomAvailablePortalApp>, tokens: FilterTokens): Array<ReactNode> {
+    renderCategoryApps(apps: Array<MashroomAvailablePortalApp>, tokens: FilterTokens) {
         const filterReplacement = '<span class="filter-match">$1</span>';
 
         return apps.map((app) => {
@@ -140,7 +140,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         });
     }
 
-    renderAvailableApps(): ReactNode {
+    renderAvailableApps() {
         const tokens = this.getFilterTokens();
         const filteredAndGroupedByCategory = this.getAppsFilteredAndGroupedByCategory(tokens);
 
@@ -165,7 +165,7 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         const {availableApps: {loading, error, apps}} = this.props;
         let content;
         if (loading) {
