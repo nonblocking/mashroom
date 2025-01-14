@@ -38,6 +38,8 @@
     --mashroom-portal-background-color-app: var(--mashroom-portal-dark-theme-background-color-app);
     --mashroom-portal-background-color-navigation: var(--mashroom-portal-dark-theme-background-color-navigation);
     --mashroom-portal-background-color-navigation-hover: var(--mashroom-portal-dark-theme-background-color-navigation-hover);
+    --mashroom-portal-background-color-dropdown: var(--mashroom-portal-dark-theme-background-color-dropdown);
+    --mashroom-portal-background-color-dropdown-hover: var(--mashroom-portal-dark-theme-background-color-dropdown-hover);
 
     color: var(--mashroom-portal-color-text-default);
 
@@ -109,6 +111,16 @@
 
         &:hover {
             opacity: 1;
+        }
+    }
+
+    &.edit-tool-active {
+        .edit-button {
+            background-color: var(--mashroom-portal-color-secondary);
+        }
+
+        &>.mashroom-portal-app-wrapper {
+            border: 1px solid var(--mashroom-portal-color-secondary);
         }
     }
 }
