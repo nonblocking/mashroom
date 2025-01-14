@@ -105,6 +105,7 @@
         color: white;
         background-color: #888;
         opacity: 0.8;
+        border-radius: 3px;
 
         &:hover {
             opacity: 1;
@@ -112,7 +113,12 @@
     }
 }
 
+.mashroom-portal-admin-app-drop-zone {
+    border-radius: 5px;
+}
+
 .mashroom-portal-admin-drag-ghost {
     color: var(--mashroom-portal-color-text-default);
     background-color: var(--mashroom-portal-background-color-app);
+    border-radius: 5px;
 }
