@@ -132,8 +132,7 @@ $COLOR_DROP_ZONE: var(--mashroom-admin-app-color-drop-zone, #645e9d);
         width: 0;
         transition: width 0.2s ease-out;
         overflow: hidden;
-        background-color: white;
-        box-shadow: -2px 2px 8px #aaa;
+        background-color: var(--mashroom-portal-background-color-app, white);
 
         .mashroom-portal-app-wrapper {
             margin: 0;
@@ -144,7 +143,8 @@ $COLOR_DROP_ZONE: var(--mashroom-admin-app-color-drop-zone, #645e9d);
         width: 70%;
 
         .mashroom-portal-app-sidebar {
-            width: 41%;
+            width: calc(42% - var(--mashroom-portal-gutter-width, 0));
+            padding-right: var(--mashroom-portal-gutter-width, 0);
         }
     }
 }
