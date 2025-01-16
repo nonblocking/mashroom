@@ -54,11 +54,12 @@
                 };
                 var portalClientServices = {
                     portalAppService: {
-                        getAvailableApps: function() {
+                        searchApps: function() {
                             return Promise.resolve([
-                                { name: 'Portal App 1', description: 'foo' },
-                                { name: 'Portal App 2', description: 'foo' },
-                                { name: 'Portal App 3', description: 'foo' }
+                                { available: true, name: 'Portal App 1', description: 'foo' },
+                                { available: true, name: 'Portal App 2', description: 'foo' },
+                                { available: true, name: 'Portal App 3', description: 'foo' },
+                                { available: false, name: 'Portal App 4', unavailableReason: 'forbidden' }
                             ]);
                         },
                         loadAppSetup: function(pluginName) {

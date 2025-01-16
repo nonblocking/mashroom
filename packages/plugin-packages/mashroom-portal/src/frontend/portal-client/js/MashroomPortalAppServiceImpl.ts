@@ -31,6 +31,8 @@ import type {
     ModalAppCloseCallback,
     MashroomPortalRemoteLogger,
     MashroomPortalAppConfigEditor,
+    MashroomKnownPortalApp,
+    AppSearchFilter,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType, MashroomRestService} from '../../../../type-definitions/internal';
 import type ResourceManager from './ResourceManager';
@@ -89,6 +91,21 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     getAvailableApps(): Promise<Array<MashroomAvailablePortalApp>> {
         const path = `/portal-apps`;
+        return this._restService.get(path);
+    }
+
+    searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>> {
+        let path = `/portal-apps`;
+        const queryParams: Array<string> = [];
+        if (filter?.q) {
+            queryParams.push(`q=${filter.q}`);
+        }
+        if (filter?.includeNotPermitted) {
+            queryParams.push('includeNotPermitted=1');
+        }
+        if (queryParams.length) {
+            path += `?${queryParams.join('&')}`;
+        }
         return this._restService.get(path);
     }
 

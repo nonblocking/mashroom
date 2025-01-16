@@ -1,10 +1,12 @@
 
 import {RestError} from './RestError';
 
-import type {CreatedResponse} from '../../../../type-definitions';
 import type {MashroomRestService} from '../../../../type-definitions/internal';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+type CreatedResponse = {
+    readonly location: string;
+}
 
 const CSRF_TOKEN_META = document.querySelector('meta[name="csrf-token"]');
 const CSRF_TOKEN = CSRF_TOKEN_META && CSRF_TOKEN_META.getAttribute('content');

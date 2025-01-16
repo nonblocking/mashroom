@@ -490,10 +490,24 @@ export type MashroomAvailablePortalApp = {
     +category: ?string;
     +description: ?string;
     +tags: Array<string>,
+    +homepage: ?string;
     +screenshots: Array<string>;
+    +requiredRoles: Array<string>;
     +metaInfo: ?any;
     +lastReloadTs: number;
 }
+
+export type MashroomUnavailablePortalApp = {
+    +available: false;
+    +name: string;
+    +version: string;
+    +title: ?string;
+    +requiredRoles: Array<string>;
+    +lastReloadTs: number;
+    +unavailableReason: 'forbidden';
+}
+
+export type MashroomKnownPortalApp = MashroomAvailablePortalApp | MashroomUnavailablePortalApp;
 
 export type MashroomPortalAppLoadListener = (MashroomPortalLoadedPortalApp) => void;
 
@@ -695,17 +709,24 @@ export interface MashroomPortalService {
 
 /* Frontend services */
 
-export type CreatedResponse = {
-    +location: string
-}
+export type AppSearchFilter = {
+    // Query (searches in name and title)
+    +q?: string;
+    +includeNotPermitted?: boolean;
+};
 
 export type ModalAppCloseCallback = (modalOverlayElem: HTMLElement, hideDialog: () => void, unloadApp: () => void) => void;
 
 export interface MashroomPortalAppService {
     /**
-     * Get all existing apps
+     * Get all Portal Apps available to the user
      */
     getAvailableApps(): Promise<Array<MashroomAvailablePortalApp>>;
+
+    /**
+     * Search for all known Apps.
+     */
+    searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
      * Load portal app to given host element at given position (or at the end if position is not set)

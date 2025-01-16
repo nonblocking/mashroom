@@ -595,9 +595,14 @@ _MashroomPortalAppService_
 ```ts
 export interface MashroomPortalAppService {
     /**
-     * Get all existing apps
+     * Get all Portal Apps available to the user
      */
     getAvailableApps(): Promise<Array<MashroomAvailablePortalApp>>;
+
+    /**
+     * Search for all known Apps.
+     */
+    searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
      * Load portal app to given host element at given position (or at the end if position is not set)

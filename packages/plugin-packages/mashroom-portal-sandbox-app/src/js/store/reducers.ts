@@ -12,7 +12,7 @@ import type {
 } from './actions';
 
 import type {Reducer} from 'redux';
-import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 import type {
     State,
     ActivePortalApp,
@@ -21,14 +21,14 @@ import type {
     SelectedPortalApp
 } from '../types';
 
-const availablePortalApps: Reducer<Array<MashroomAvailablePortalApp>, SetAvailablePortalAppsAction> = (state, action) => {
+const knownPortalApps: Reducer<Array<MashroomKnownPortalApp>, SetAvailablePortalAppsAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return [];
     }
 
     switch (action.type) {
         case 'SET_AVAILABLE_PORTAL_APPS': {
-            return action.availablePortalApps;
+            return action.knownPortalApps;
         }
         default:
             return state;
@@ -118,7 +118,7 @@ const host: Reducer<PortalAppHost, SetHostWidthAction> = (state, action) => {
 };
 
 export default mashroomPortalCommonsCombineReducers<State>({
-    availablePortalApps,
+    knownPortalApps,
     selectedPortalApp,
     appLoadingError,
     activePortalApp,
