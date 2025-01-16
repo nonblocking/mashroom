@@ -181,8 +181,8 @@ describe('plugin config validation', () => {
         expect(valid).toBeTruthy();
     });
 
-    it('succeeds at a valid remote-portal-app-registry config', () => {
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'remote-portal-app-registry.json')).toString("utf-8"));
+    it('succeeds at a valid portal-app-registry config', () => {
+        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-app-registry.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);
 

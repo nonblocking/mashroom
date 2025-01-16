@@ -1148,13 +1148,13 @@ export type MashroomPortalClientServices = {
 
 /* Plugin bootstrap functions */
 
-// remote-portal-app-registry
+// portal-app-registry
 
-export interface MashroomRemotePortalAppRegistry {
+export interface MashroomPortalAppRegistry {
     +portalApps: Array<MashroomPortalApp>;
 }
 
-export type MashroomRemotePortalAppRegistryBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomRemotePortalAppRegistry>;
+export type MashroomPortalAppRegistryBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) => Promise<MashroomPortalAppRegistry>;
 
 // portal-app
 

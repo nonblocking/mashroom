@@ -1,7 +1,7 @@
 
 import type {MashroomPluginPackageDefinition} from '@mashroom/mashroom/type-definitions';
 import type {Request, RequestHandler} from 'express';
-import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalApp, MashroomPortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
 import type {
     RemotePortalAppEndpoint,
 } from './api';
@@ -35,7 +35,7 @@ export interface RegisterPortalRemoteAppsBackgroundJob {
     refreshEndpointRegistration(remotePortalAppEndpoint: RemotePortalAppEndpoint): Promise<void>;
 }
 
-export interface RemotePortalAppRegistry extends MashroomRemotePortalAppRegistry {
+export interface RemotePortalAppRegistry extends MashroomPortalAppRegistry {
     registerRemotePortalApp(portalApp: MashroomPortalApp): void;
     registerRemotePortalAppForSession(portalApp: MashroomPortalApp, request: Request): void;
     unregisterRemotePortalApp(name: string): void;

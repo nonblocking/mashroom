@@ -79,8 +79,8 @@
             },
             {
                 "name": "Mashroom Portal Remote App Registry",
-                "type": "remote-portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
+                "type": "portal-app-registry",
+                "bootstrap": "./dist/registry/mashroom-bootstrap-portal-app-registry.js",
                 "requires": [
                     "Mashroom Portal Remote App Endpoint Services"
                 ],

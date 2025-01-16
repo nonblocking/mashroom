@@ -11,7 +11,7 @@ import type {
 import type {
     MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
     MashroomPortalRegisterListener,
-    MashroomRemotePortalAppRegistryHolder
+    MashroomPortalAppRegistryHolder
 } from '../../../type-definitions/internal';
 
 export default class MashroomPortalPluginRegistry implements MashroomPortalPluginRegistryType {
@@ -19,7 +19,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     private _portalApps: Array<MashroomPortalApp>;
     private _themes: Array<MashroomPortalTheme>;
     private _layouts: Array<MashroomPortalLayout>;
-    private _remotePortalAppRegistries: Array<MashroomRemotePortalAppRegistryHolder>;
+    private _portalAppRegistries: Array<MashroomPortalAppRegistryHolder>;
     private _portalPageEnhancements: Array<MashroomPortalPageEnhancement>;
     private _portalAppEnhancements: Array<MashroomPortalAppEnhancement>;
     private _registerListeners: Array<MashroomPortalRegisterListener>;
@@ -28,7 +28,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         this._portalApps = [];
         this._themes = [];
         this._layouts = [];
-        this._remotePortalAppRegistries = [];
+        this._portalAppRegistries = [];
         this._portalPageEnhancements = [];
         this._portalAppEnhancements = [];
         this._registerListeners = [];
@@ -73,16 +73,16 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         }
     }
 
-    registerRemotePortalAppRegistry(registry: MashroomRemotePortalAppRegistryHolder): void {
-        this.unregisterRemotePortalAppRegistry(registry.name);
-        this._remotePortalAppRegistries.push(registry);
+    registerPortalAppRegistry(registry: MashroomPortalAppRegistryHolder): void {
+        this.unregisterPortalAppRegistry(registry.name);
+        this._portalAppRegistries.push(registry);
         this._registerListeners.forEach(listener => listener('registry', registry));
     }
 
-    unregisterRemotePortalAppRegistry(name: string): void {
-        const idx = this._remotePortalAppRegistries.findIndex((holder) => holder.name === name);
+    unregisterPortalAppRegistry(name: string): void {
+        const idx = this._portalAppRegistries.findIndex((holder) => holder.name === name);
         if (idx !== -1) {
-            this._remotePortalAppRegistries.splice(idx, 1);
+            this._portalAppRegistries.splice(idx, 1);
         }
     }
 
@@ -121,7 +121,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     }
 
     get portalApps(): Readonly<Array<MashroomPortalApp>> {
-        const registryHolders = [...this._remotePortalAppRegistries, { registry: { portalApps: this._portalApps }, priority: 0 }];
+        const registryHolders = [...this._portalAppRegistries, { registry: { portalApps: this._portalApps }, priority: 0 }];
         registryHolders.sort((a, b) => b.priority - a.priority);
         let apps: Array<MashroomPortalApp> = [];
         for (const registryHolder of registryHolders) {

@@ -1115,7 +1115,7 @@
             ],
             "additionalProperties": false
         },
-        "MashroomRemotePortalAppRegistryPluginDefinition": {
+        "MashroomPortalAppRegistryPluginDefinition": {
             "type": "object",
             "properties": {
                 "name": {
@@ -1138,11 +1138,11 @@
                     "description": "Required plugins"
                 },
                 "type": {
-                    "const": "remote-portal-app-registry"
+                    "const": "portal-app-registry"
                 },
                 "bootstrap": {
                     "$ref": "#/definitions/PackageRelativePath",
-                    "description": "Script that exports MashroomRemotePortalAppRegistryBootstrapFunction"
+                    "description": "Script that exports MashroomPortalAppRegistryBootstrapFunction"
                 },
                 "defaultConfig": {
                     "type": "object",
@@ -1186,6 +1186,10 @@
                 "type": {
                     "const": "portal-page-enhancement"
                 },
+                "resourcesRoot": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
+                },
                 "pageResources": {
                     "$ref": "#/definitions/PageEnhancementResources",
                     "description": "A list of JavaScript and CSS resourced that should be added to all portal pages"
@@ -1200,20 +1204,14 @@
                         "priority": {
                             "type": "integer",
                             "description": "The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)"
-                        },
-                        "resourcesRoot": {
-                            "$ref": "#/definitions/PackageRelativePath",
-                            "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
                         }
-                    },
-                    "required": [
-                        "resourcesRoot"
-                    ]
+                    }
                 }
             },
             "required": [
                 "name",
                 "type",
+                "resourcesRoot",
                 "pageResources",
                 "defaultConfig"
             ],
@@ -1393,7 +1391,7 @@
                 "properties": {
                     "type": {
                         "type": "string",
-                        "pattern": "(plugin-loader|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|remote-portal-app-registry|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
+                        "pattern": "(plugin-loader|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|portal-app-registry|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
                     }
                 }
             },
@@ -1431,8 +1429,7 @@
             },
             "required": [
                 "name",
-                "type",
-                "bootstrap"
+                "type"
             ]
         },
         "MashroomPlugins": {
@@ -1484,7 +1481,7 @@
                     "$ref": "#/definitions/MashroomPortalLayoutsPluginDefinition"
                 },
                 {
-                    "$ref": "#/definitions/MashroomRemotePortalAppRegistryPluginDefinition"
+                    "$ref": "#/definitions/MashroomPortalAppRegistryPluginDefinition"
                 },
                 {
                     "$ref": "#/definitions/MashroomPortalPageEnhancementPluginDefinition"

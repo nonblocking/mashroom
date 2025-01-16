@@ -3,6 +3,42 @@
 
 ## [unreleased]
 
+ * Portal: Renamed the plugin type *remote-portal-app-registry* to just *portal-app-registry* because the Portal Apps don't need to be remote.
+   The old type is still supported for the moment.
+ * Portal: The *resourcesRoot* property in *portal-page-enhancement* plugins is no expect to be top level:
+   ```
+   // Before
+   {
+     "name": "My Portal Page Enhancement",
+     "type": "portal-page-enhancement",
+     "pageResources": {
+       "js": [{
+         "path": "test.js",
+         "location": "header"
+        }]
+      },
+     "defaultConfig": {
+       "resourcesRoot": "./dist/backend/page-enhancements",
+       "order": "500"
+     }
+   }
+   // Now
+   {
+     "name": "My Portal Page Enhancement",
+     "type": "portal-page-enhancement",
+     "resourcesRoot": "./dist/backend/page-enhancements",
+     "pageResources": {
+       "js": [{
+         "path": "test.js",
+         "location": "header"
+        }]
+      },
+     "defaultConfig": {
+       "order": "500"
+     }
+   }
+   ```
+   The old way is still supported for the moment.
  * Fixed errors occurring when *mashroom-monitoring-metrics-collector* was not present
  * Metrics Collector: Fixed forwarding open-telemetry errors to Mashroom log
  * HTTP Proxy: Fixed the problem that proxy took the wrong agent if an interceptor plugin changed the target URI protocol from http to https

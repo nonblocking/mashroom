@@ -1,6 +1,6 @@
 
 import type {MashroomPluginPackageDefinition} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalApp, MashroomRemotePortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalApp, MashroomPortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
 import type {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
 
 export type RemoteAppPackageJson = {
@@ -45,7 +45,7 @@ export type KubernetesService = {
     invalidPortalApps: Array<KubernetesServiceInvalidPortalApp>;
 }
 
-export interface KubernetesServiceRegistry extends MashroomRemotePortalAppRegistry {
+export interface KubernetesServiceRegistry extends MashroomPortalAppRegistry {
     getService(namespace: string, name: string): KubernetesService | undefined;
     addOrUpdateService(service: KubernetesService): void;
     removeService(namespace: string, name: string): void;

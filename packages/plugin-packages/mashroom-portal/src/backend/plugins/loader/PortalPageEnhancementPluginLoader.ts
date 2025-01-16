@@ -38,8 +38,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-
-        let resourcesRootUri = config.resourcesRoot;
+        let resourcesRootUri = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
         if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
             // Process relative file path
             resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);

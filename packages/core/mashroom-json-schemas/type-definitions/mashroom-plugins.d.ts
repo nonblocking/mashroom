@@ -21,7 +21,7 @@ export type MashroomPlugins1 =
   | MashroomPortalAppV2PluginDefinition
   | MashroomPortalThemePluginDefinition
   | MashroomPortalLayoutsPluginDefinition
-  | MashroomRemotePortalAppRegistryPluginDefinition
+  | MashroomPortalAppRegistryPluginDefinition
   | MashroomPortalPageEnhancementPluginDefinition
   | MashroomPortalAppEnhancementPluginDefinition
   | MashroomSecurityProviderPluginDefinition
@@ -592,7 +592,7 @@ export interface MashroomPortalLayoutsPluginDefinition {
     [k: string]: PackageRelativeOrSystemPath;
   };
 }
-export interface MashroomRemotePortalAppRegistryPluginDefinition {
+export interface MashroomPortalAppRegistryPluginDefinition {
   name: string;
   description?: string;
   tags?: string[];
@@ -600,9 +600,9 @@ export interface MashroomRemotePortalAppRegistryPluginDefinition {
    * Required plugins
    */
   requires?: string[];
-  type: "remote-portal-app-registry";
+  type: "portal-app-registry";
   /**
-   * Script that exports MashroomRemotePortalAppRegistryBootstrapFunction
+   * Script that exports MashroomPortalAppRegistryBootstrapFunction
    */
   bootstrap: string;
   defaultConfig?: {
@@ -621,6 +621,10 @@ export interface MashroomPortalPageEnhancementPluginDefinition {
    */
   requires?: string[];
   type: "portal-page-enhancement";
+  /**
+   * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package.
+   */
+  resourcesRoot: string;
   pageResources: PageEnhancementResources;
   /**
    * Optional script that exports MashroomPortalPageEnhancementPluginBootstrapFunction
@@ -631,10 +635,6 @@ export interface MashroomPortalPageEnhancementPluginDefinition {
      * The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)
      */
     priority?: number;
-    /**
-     * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package.
-     */
-    resourcesRoot: string;
   };
 }
 /**
@@ -758,6 +758,6 @@ export interface MashroomCustomPluginDefinition {
   /**
    * Script that exports MashroomPluginLoaderPluginBootstrapFunction
    */
-  bootstrap: string;
+  bootstrap?: string;
   defaultConfig?: {};
 }

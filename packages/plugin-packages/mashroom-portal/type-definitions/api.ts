@@ -1179,17 +1179,17 @@ export type MashroomPortalClientServices = {
 
 /* Plugin bootstrap functions */
 
-// remote-portal-app-registry
+// portal-app-registry
 
-export interface MashroomRemotePortalAppRegistry {
+export interface MashroomPortalAppRegistry {
     readonly portalApps: Readonly<Array<MashroomPortalApp>>;
 }
 
-export type MashroomRemotePortalAppRegistryBootstrapFunction = (
+export type MashroomPortalAppRegistryBootstrapFunction = (
     pluginName: string,
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
-) => Promise<MashroomRemotePortalAppRegistry>;
+) => Promise<MashroomPortalAppRegistry>;
 
 // portal-app
 

@@ -182,10 +182,16 @@
                 "loads": "portal-page-enhancement"
             },
             {
-                "name": "Mashroom Remote Portal App Registry Plugin Loader",
+                "name": "(Legacy) Mashroom Portal App Registry Plugin Loader",
                 "type": "plugin-loader",
-                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-remote-portal-app-registry-plugin-loader.js",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-registry-plugin-loader.js",
                 "loads": "remote-portal-app-registry"
+            },
+            {
+                "name": "Mashroom Portal App Registry Plugin Loader",
+                "type": "plugin-loader",
+                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-registry-plugin-loader.js",
+                "loads": "portal-app-registry"
             }
         ]
     }

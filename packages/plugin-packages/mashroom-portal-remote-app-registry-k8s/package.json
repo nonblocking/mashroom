@@ -82,8 +82,8 @@
             },
             {
                 "name": "Mashroom Portal Remote App Kubernetes Registry",
-                "type": "remote-portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
+                "type": "portal-app-registry",
+                "bootstrap": "./dist/registry/mashroom-bootstrap-portal-app-registry.js",
                 "defaultConfig": {
                     "priority": 50
                 }

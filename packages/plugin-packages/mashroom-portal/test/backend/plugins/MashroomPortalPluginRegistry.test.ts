@@ -34,7 +34,7 @@ describe('MashroomPortalPluginRegistry', () => {
         expect(registry.portalApps.length).toBe(0);
     });
 
-    it('merges portal apps from a remote registry correctly', () => {
+    it('merges portal apps from an app registry correctly', () => {
         const portalApp: any = {name: 'app1', source: 'local'};
         const portalApp2: any = {name: 'app2', source: 'local'};
         const remotePortalApp1: any = {name: 'app2', source: 'remote1'};
@@ -46,21 +46,21 @@ describe('MashroomPortalPluginRegistry', () => {
         registry.registerPortalApp(portalApp);
         registry.registerPortalApp(portalApp2);
 
-        registry.registerRemotePortalAppRegistry({
+        registry.registerPortalAppRegistry({
             name: 'remote1',
             priority: 1,
             registry: {
                 portalApps: [remotePortalApp1]
             }
         });
-        registry.registerRemotePortalAppRegistry({
+        registry.registerPortalAppRegistry({
             name: 'remote2',
             priority: 100,
             registry: {
                 portalApps: [remotePortalApp2]
             }
         });
-        registry.registerRemotePortalAppRegistry({
+        registry.registerPortalAppRegistry({
             name: 'remote3',
             priority: -1,
             registry: {
