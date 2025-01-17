@@ -11,6 +11,7 @@ import type {MashroomPortalPageRenderModel} from '@mashroom/mashroom-portal/type
 themeParams.setParams({
     spaMode: false,
     darkMode: false,
+    logoImageUrl: null,
     styleFile: null,
     showPortalAppHeaders: true,
     showEnvAndVersions: true,

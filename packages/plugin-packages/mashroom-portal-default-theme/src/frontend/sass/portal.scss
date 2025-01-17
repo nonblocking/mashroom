@@ -924,6 +924,18 @@ footer {
             padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default) ;
             font-size: 0.8em;
             font-weight: bold;
+
+            .mashroom-portal-modal-overlay-number {
+                background-color: var(--mashroom-portal-color-text-default);
+                color: var(--mashroom-portal-background-color-app-header);
+                border-radius: 3px;
+                padding: 0 5px;
+                margin-right: var(--mashroom-portal-spacing-small);
+
+                &>span {
+                    display: none;
+                }
+            }
         }
 
         #mashroom-portal-modal-overlay-close {

@@ -136,8 +136,7 @@ $LABEL_ROW_WIDTH: 240px;
             font-family: $FONT_ICON;
             font-weight: 900;
             content: '\f0ea';
-            font-size: 1.2em;
-            color: #888;
+            color: var(--mashroom-portal-color-text-secondary, #888);
         }
     }
 
@@ -145,6 +144,6 @@ $LABEL_ROW_WIDTH: 240px;
         display: inline-block;
         margin-left: 5px;
         font-size: 0.8em;
-        color: #888;
+        color: var(--mashroom-portal-color-text-secondary, #888);
     }
 }

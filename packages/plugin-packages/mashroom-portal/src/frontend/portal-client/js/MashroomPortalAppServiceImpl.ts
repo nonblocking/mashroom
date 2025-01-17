@@ -591,7 +591,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             const numberOpenModals = _openModalApps.length;
             let fullTitleHtml = `<span>${currentApp.modalTitle}</span>`;
             if (numberOpenModals > 1) {
-                fullTitleHtml = `<span class="mashroom-portal-modal-overlay-number"><span>(</span>${numberOpenModals}<span>)</span>&nbsp;</span>${fullTitleHtml}`;
+                fullTitleHtml = `<span class="mashroom-portal-modal-overlay-number"><span>(</span>${numberOpenModals}<span>) </span></span>${fullTitleHtml}`;
             }
             modalOverlayTitleElem.innerHTML = fullTitleHtml;
         }
