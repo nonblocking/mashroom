@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Portal: Fixed handling of multiple Modal Apps at the same time: Only the latest is shown at a time and on close the next one will get visible.
  * Sandbox App: Generate a permanent link for an active Sandbox (that can be sent to another user)
  * Sandbox App: Show unavailable (no permitted) Apps in the selection (just no one is wondering why an expected App is not there)
  * Portal: Renamed the plugin type *remote-portal-app-registry* to just *portal-app-registry* because the Portal Apps don't need to be remote.

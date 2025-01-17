@@ -746,7 +746,7 @@ export type AppSearchFilter = {
     readonly includeNotPermitted?: boolean;
 };
 
-export type ModalAppCloseCallback = (modalOverlayElem: HTMLElement, hideDialog: () => void, unloadApp: () => void) => void;
+export type ModalAppCloseCallback = () => void;
 
 export interface MashroomPortalAppService {
     /**

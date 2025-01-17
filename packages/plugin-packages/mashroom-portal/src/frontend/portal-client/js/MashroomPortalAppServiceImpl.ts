@@ -55,6 +55,12 @@ export type LoadedPortalAppInternal = {
     errorPluginMissing: boolean;
 }
 
+type OpenModalApps = {
+    readonly loadedApp: LoadedPortalAppInternal;
+    readonly modalTitle: string;
+    readonly onClose?: ModalAppCloseCallback | undefined | null;
+}
+
 const HOST_ELEMENT_MODAL_OVERLAY = 'mashroom-portal-modal-overlay-app';
 const MODAL_OVERLAY_ID = 'mashroom-portal-modal-overlay';
 const MODAL_OVERLAY_CLOSE_BUTTON_ID = 'mashroom-portal-modal-overlay-close';
@@ -64,6 +70,8 @@ const APP_INFO_CLASS_NAME = 'mashroom-portal-app-info';
 const DEV_MODE_APP_UPDATE_CHECK_INTERVAL = 3000;
 
 export const loadedPortalAppsInternal: Array<LoadedPortalAppInternal> = [];
+let _openModalApps: Array<OpenModalApps> = [];
+let _modalInitialized = false;
 
 export default class MashroomPortalAppServiceImpl implements MashroomPortalAppService {
 
@@ -133,11 +141,18 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         return this._internalLoadApp(HOST_ELEMENT_MODAL_OVERLAY, pluginName, null, true, null, overrideAppConfig).then(
             (loadedApp) => {
-                this._showModalOverlay(loadedApp, title, onClose);
-
                 if (this._watch) {
                     this._devModeStartCheckForAppUpdates(loadedApp);
                 }
+
+                const internalOnClose = () => {
+                    if (this._watch) {
+                        this._devModeStopCheckForAppUpdates(loadedApp);
+                    }
+                    onClose?.();
+                };
+
+                this._showModalOverlay(loadedApp, title, internalOnClose);
 
                 return this._toLoadedApp(loadedApp);
             }
@@ -229,10 +244,8 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             loadedPortalAppsInternal.splice(idx, 1);
 
             if (loadedAppInternal.modal) {
-                const modalOverlayElem = document.getElementById(MODAL_OVERLAY_ID);
-                if (modalOverlayElem) {
-                    modalOverlayElem.classList.remove('show');
-                }
+                _openModalApps = _openModalApps.filter((ma) => ma.loadedApp.id !== loadedAppInternal.id);
+                this._updateModalState();
             }
         });
     }
@@ -536,47 +549,77 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _showModalOverlay(loadedApp: LoadedPortalAppInternal, title?: string | undefined | null, onClose?: ModalAppCloseCallback | undefined | null) {
-        // Show overlay
         const modalOverlayElem = document.getElementById(MODAL_OVERLAY_ID);
-        if (modalOverlayElem) {
-            modalOverlayElem.classList.add('show');
-            const modalOverlayTitleElem = document.getElementById(MODAL_OVERLAY_TITLE_ID);
-            const modalOverlayCloseButtonElem = document.getElementById(MODAL_OVERLAY_CLOSE_BUTTON_ID);
-            if (modalOverlayTitleElem) {
-                modalOverlayTitleElem.innerHTML = title || loadedApp.title || loadedApp.pluginName;
+        if (!modalOverlayElem) {
+            console.error('Cannot show modal overlay because element not found: ', MODAL_OVERLAY_ID);
+            return;
+        }
+
+        const modalTitle= title || loadedApp.title || loadedApp.pluginName;
+
+        // Hide App header
+        loadedApp.portalAppWrapperElement.classList.add('hide-header');
+
+        _openModalApps.push({
+            loadedApp,
+            modalTitle,
+            onClose,
+        });
+
+        this._updateModalState();
+    }
+
+    private _updateModalState() {
+        const modalOverlayElem = document.getElementById(MODAL_OVERLAY_ID);
+        if (!modalOverlayElem) {
+            console.error('Cannot show modal overlay because element not found: ', MODAL_OVERLAY_ID);
+            return;
+        }
+
+        if (_openModalApps.length === 0) {
+            modalOverlayElem.classList.remove('show');
+            return;
+        }
+        modalOverlayElem.classList.add('show');
+
+        const modalOverlayTitleElem = document.getElementById(MODAL_OVERLAY_TITLE_ID);
+        const modalOverlayCloseButtonElem = document.getElementById(MODAL_OVERLAY_CLOSE_BUTTON_ID);
+        const currentApp = _openModalApps[_openModalApps.length - 1];
+
+        // Fix modal title
+        if (modalOverlayTitleElem) {
+            const numberOpenModals = _openModalApps.length;
+            let fullTitleHtml = `<span>${currentApp.modalTitle}</span>`;
+            if (numberOpenModals > 1) {
+                fullTitleHtml = `<span>(${numberOpenModals}) </span>${fullTitleHtml}`;
             }
+            modalOverlayTitleElem.innerHTML = fullTitleHtml;
+        }
 
-            // Hide App header
-            loadedApp.portalAppWrapperElement.classList.add('hide-header');
+        // Only make currentApp visible
+        _openModalApps.forEach((ma) => {
+           ma.loadedApp.portalAppWrapperElement.style.display = ma === currentApp ? 'block' : 'none';
+        });
 
-            const hideDialog = () => modalOverlayElem.classList.remove('show');
-            const unloadApp = () => this.unloadApp(loadedApp.id);
-
-            /* eslint no-use-before-define: off */
-            const keyEventListener = (event: KeyboardEvent) => {
-                if (event.key === 'Escape') {
-                    closeEventListener();
+        if (!_modalInitialized) {
+            _modalInitialized = true;
+            const closeEventListener = () => {
+                const currentApp = _openModalApps.pop();
+                if (currentApp) {
+                    // This will automatically call _updateModalState();
+                    this.unloadApp(currentApp.loadedApp.id);
+                    currentApp.onClose?.();
                 }
             };
-            const closeEventListener = () => {
-                if (onClose) {
-                    onClose(modalOverlayElem, hideDialog, unloadApp);
-                } else {
-                    hideDialog();
-                    unloadApp();
+            const keyEventListener = (event: KeyboardEvent) => {
+                if (_openModalApps.length > 0 && event.key === 'Escape') {
+                    closeEventListener();
                 }
-                if (modalOverlayCloseButtonElem) {
-                    modalOverlayCloseButtonElem.removeEventListener('click', closeEventListener);
-                }
-                document.removeEventListener('keyup', keyEventListener);
             };
             if (modalOverlayCloseButtonElem) {
                 modalOverlayCloseButtonElem.addEventListener('click', closeEventListener);
             }
             document.addEventListener('keyup', keyEventListener);
-
-        } else {
-            console.error('Cannot show modal overlay because element not found: ', MODAL_OVERLAY_ID);
         }
     }
 
