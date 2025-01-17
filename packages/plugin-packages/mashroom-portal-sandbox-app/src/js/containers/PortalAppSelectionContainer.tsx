@@ -6,7 +6,7 @@ import type {State} from '../types';
 
 const mapStateToProps = (state: State) => {
     return {
-        availablePortalApps: state.availablePortalApps,
+        knownPortalApps: state.knownPortalApps,
         appLoadingError: state.appLoadingError
     };
 };

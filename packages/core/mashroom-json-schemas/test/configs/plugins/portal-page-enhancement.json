@@ -6,6 +6,7 @@
             "name": "My Portal Page Enhancement",
             "type": "portal-page-enhancement",
             "bootstrap": "./dist/bootstrap.js",
+            "resourcesRoot": "./dist/public",
             "pageResources": {
                 "js": [{
                     "path": "my-extra-scripts.js",
@@ -21,8 +22,7 @@
                 }]
             },
             "defaultConfig": {
-                "order": 100,
-                "resourcesRoot": "./dist/public"
+                "order": 100
             }
         }
     ]

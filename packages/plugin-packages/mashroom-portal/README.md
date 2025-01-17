@@ -17,7 +17,7 @@ The Portal supports **hybrid rendering** for both the Portal pages and SPAs. So,
 into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering (needs to be supported by the Theme).
 
 The Portal also supports **i18n**, **theming**, **role based security**, a client-side message bus which can be connected to a server-side broker and
-a registry for **Remote Apps** on a separate server or container.
+a registry for **Portal Apps** on a separate server or container.
 
 ## Usage
 
@@ -70,7 +70,7 @@ The plugin allows the following configuration properties:
  * _adminApp_: The admin to use (Default: Mashroom Portal Admin App)
  * _defaultTheme_: The default theme if none is selected in the site or page configuration (Default: Mashroom Portal Default Theme)
  * _defaultLayout_: The default layout if none is selected in the site or page configuration (Default: Mashroom Portal Default Layouts 1 Column)
- * _authenticationExpiration_: 
+ * _authenticationExpiration_:
    * _warnBeforeExpirationSec_: The time when the Portal should start to warn that the authentication is about to expire.
      A value of 0 or lower than 0 disables the warning. (Default: 60)
    * _autoExtend_: Automatically extend the authentication as long as the portal page is open (Default: false)
@@ -595,9 +595,14 @@ _MashroomPortalAppService_
 ```ts
 export interface MashroomPortalAppService {
     /**
-     * Get all existing apps
+     * Get all Portal Apps available to the user
      */
     getAvailableApps(): Promise<Array<MashroomAvailablePortalApp>>;
+
+    /**
+     * Search for all known Apps.
+     */
+    searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
      * Load portal app to given host element at given position (or at the end if position is not set)
@@ -1133,20 +1138,20 @@ A layout looks like this:
 
 Important is the class **mashroom-portal-app-area** and a unique id element.
 
-### remote-portal-app-registry
+### portal-app-registry
 
-This plugin type adds a registry for remote portal-apps to the Portal.
+This plugin type adds a registry for portal-apps to the Portal. Can be used to integrate Portal Apps in some customized way.
 
-To register a new remote-portal-app-registry plugin add this to _package.json_:
+To register a new portal-app-registry plugin add this to _package.json_:
 
 ```json
 {
      "mashroom": {
         "plugins": [
            {
-                "name": "Mashroom Portal Remote App Registry",
-                "type": "remote-portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap-remote-portal-app-registry.js",
+                "name": "My Custom App Registry",
+                "type": "portal-app-registry",
+                "bootstrap": "./dist/registry/mashroom-bootstrap.js",
                 "defaultConfig": {
                     "priority": 100
                 }
@@ -1158,14 +1163,14 @@ To register a new remote-portal-app-registry plugin add this to _package.json_:
 
  * _defaultConfig.priority_: Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)
 
-And the bootstrap must return an implementation of _RemotePortalAppRegistry_:
+And the bootstrap must return an implementation of _MashroomPortalAppRegistry_:
 
  ```ts
 import {MyRegistry} from './MyRegistry';
 
-import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
-const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, pluginContext) => {
+const bootstrap: MashroomPortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, pluginContext) => {
     return new MyRegistry();
 };
 
@@ -1176,7 +1181,7 @@ export default bootstrap;
 The plugin must implement the following interface:
 
 ```ts
-export interface MashroomRemotePortalAppRegistry {
+export interface MashroomPortalAppRegistry {
     readonly portalApps: Readonly<Array<MashroomPortalApp>>;
 }
 ```
@@ -1198,6 +1203,7 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
                 "name": "My Portal Page Enhancement",
                 "type": "portal-page-enhancement",
                 "bootstrap": "./dist/mashroom-bootstrap.js",
+               "resourcesRoot": "./dist/public",
                 "pageResources": {
                     "js": [{
                         "path": "my-extra-scripts.js",
@@ -1211,8 +1217,7 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
                     "css": []
                 },
                 "defaultConfig": {
-                    "order": 100,
-                    "resourcesRoot": "./dist/public"
+                    "order": 100
                 }
             }
         ]
@@ -1221,11 +1226,11 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
 ```
 
  * _bootstrap_: Path to the script that contains the bootstrap for the plugin (optional)
+ * _resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
  * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages.
    They can be static or dynamically generated. And they can be added to the header or footer (location)
    and also be inlined. The (optional) rule property refers to a rule in the instantiated plugin (bootstrap), see below.
- * _defaultConfig.order_: The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)
- * _defaultConfig.resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
+ * _defaultConfig.order_: The weight of the resources - the higher it is the **later** they will be added to the page (Default: 1000)
 
 The bootstrap returns a map of rules and could look like this:
 

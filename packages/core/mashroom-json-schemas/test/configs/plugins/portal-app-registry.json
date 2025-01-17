@@ -4,7 +4,7 @@
     "plugins": [
         {
             "name": "My Remote Portal App Registry",
-            "type": "remote-portal-app-registry",
+            "type": "portal-app-registry",
             "bootstrap": "./dist/bootstrap.js",
             "defaultConfig": {
                 "priority": 100,

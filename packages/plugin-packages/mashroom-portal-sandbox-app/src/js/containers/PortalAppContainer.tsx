@@ -2,14 +2,14 @@
 import {connect} from 'react-redux';
 import PortalApp from '../components/PortalApp';
 import {
-    setAvailablePortalApps,
+    setKnownApps,
     setActivePortalApp,
     setSelectedPortalApp,
     setHostWidth,
     setAppLoadingError
 } from '../store/actions';
 
-import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 import type {
     ActivePortalApp,
     Dispatch,
@@ -20,11 +20,12 @@ import type {
 const mapStateToProps = (state: State) => {
   return {
       activePortalApp: state.activePortalApp,
+      hostWidth: state.host.width,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-    setAvailablePortalApps: (availableApps: Array<MashroomAvailablePortalApp>) => dispatch(setAvailablePortalApps(availableApps)),
+    setKnownApps: (availableApps: Array<MashroomKnownPortalApp>) => dispatch(setKnownApps(availableApps)),
     setSelectedPortalApp: (app: SelectedPortalApp | undefined | null) => dispatch(setSelectedPortalApp(app)),
     setActivePortalApp: (app: ActivePortalApp | undefined | null) => dispatch(setActivePortalApp(app)),
     setHostWidth: (hostWidth: string) => dispatch(setHostWidth(hostWidth)),

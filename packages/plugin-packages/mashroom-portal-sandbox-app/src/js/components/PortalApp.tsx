@@ -5,36 +5,55 @@ import PortalAppConfigContainer from'../containers/PortalAppConfigContainer';
 import PortalAppSelectionContainer from'../containers/PortalAppSelectionContainer';
 import loadPortalApp from '../load-portal-app';
 import {mergeAppConfig} from '../utils';
+import {
+    QUERY_PARAM_APP_NAME,
+    QUERY_PARAM_APP_CONFIG,
+    QUERY_PARAM_PERMISSIONS,
+    QUERY_PARAM_LANG,
+    QUERY_PARAM_WIDTH
+} from '../constants';
 
 import type {PortalAppQueryParams,ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
 import type {ReactNode} from 'react';
 import type {
-    MashroomAvailablePortalApp,
+    MashroomKnownPortalApp,
     MashroomPortalAppService,
     MashroomPortalMessageBus,
 } from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
     hostElementId: string;
+    hostWidth: string;
     queryParams: PortalAppQueryParams;
     portalAppService: MashroomPortalAppService;
     messageBus: MashroomPortalMessageBus;
     messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest;
     activePortalApp: ActivePortalApp | undefined | null;
-    setAvailablePortalApps: (apps: Array<MashroomAvailablePortalApp>) => void;
+    setKnownApps: (apps: Array<MashroomKnownPortalApp>) => void;
     setSelectedPortalApp: (app: SelectedPortalApp | undefined | null) => void;
     setActivePortalApp: (app: ActivePortalApp | undefined | null) => void;
     setAppLoadingError: (error: boolean) => void;
     setHostWidth: (width: string) => void;
 }
 
-export default class PortalApp extends PureComponent<Props> {
+type State = {
+    permalinkCopiedToClipboard: boolean;
+}
+
+export default class PortalApp extends PureComponent<Props, State> {
+
+    constructor(props: Props) {
+        super(props);
+        this.state = {
+            permalinkCopiedToClipboard: false,
+        };
+    }
 
     componentDidMount(): void {
-        const { queryParams, portalAppService, setAvailablePortalApps } = this.props;
-        portalAppService.getAvailableApps().then(
+        const { queryParams, portalAppService, setKnownApps } = this.props;
+        portalAppService.searchApps({ includeNotPermitted: true }).then(
             (apps) => {
-                setAvailablePortalApps((apps || []).sort((app1, app2) => app1.name.localeCompare(app2.name)));
+                setKnownApps((apps || []).sort((app1, app2) => app1.name.localeCompare(app2.name)));
                 if (queryParams.appName || queryParams.preselectAppName) {
                     // Auto select
                     this.selectionChanged(queryParams.appName|| queryParams.preselectAppName);
@@ -103,6 +122,13 @@ export default class PortalApp extends PureComponent<Props> {
         );
     }
 
+    copyToClipboard(text: string) {
+        navigator.clipboard.writeText(text);
+        this.setState({
+            permalinkCopiedToClipboard: true,
+        });
+    }
+
     renderNoActivePortalApp(): ReactNode {
         const { queryParams } = this.props;
 
@@ -115,13 +141,37 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     renderActivePortalApp(): ReactNode {
-        const { activePortalApp } = this.props;
+        const { activePortalApp, hostWidth } = this.props;
         if (!activePortalApp) {
             return null;
         }
 
+        const queryParams: Array<string> = [];
+        queryParams.push(`${QUERY_PARAM_APP_NAME}=${encodeURIComponent(activePortalApp.appName)}`);
+        queryParams.push(`${QUERY_PARAM_APP_CONFIG}=${btoa(JSON.stringify(activePortalApp.setup.appConfig))}`);
+        queryParams.push(`${QUERY_PARAM_PERMISSIONS}=${btoa(JSON.stringify(activePortalApp.setup.user.permissions))}`);
+        queryParams.push(`${QUERY_PARAM_LANG}=${activePortalApp.setup.lang}`);
+        queryParams.push(`${QUERY_PARAM_WIDTH}=${encodeURIComponent(hostWidth)}`);
+        const permalink = `${document.location.origin + document.location.pathname}?${queryParams.join('&')}`;
+
         return (
             <>
+                <div className='mashroom-sandbox-app-output-row'>
+                    <div>
+                        <FormattedMessage id='sandboxPermalink' />
+                    </div>
+                    <div>
+                        <a href={permalink} target='_blank' rel="noreferrer">
+                            <FormattedMessage id='link' />
+                        </a>
+                        <div className='mashroom-sandbox-copy-permalink' onClick={() => this.copyToClipboard(permalink)}></div>
+                        {this.state.permalinkCopiedToClipboard && (
+                            <div className='mashroom-sandbox-permalink-copied'>
+                                <FormattedMessage id='copiedToClipboard' />
+                            </div>
+                        )}
+                    </div>
+                </div>
                 <div className='mashroom-sandbox-app-output-row'>
                     <div>
                         <FormattedMessage id='appName' />
@@ -143,7 +193,7 @@ export default class PortalApp extends PureComponent<Props> {
     }
 
     render(): ReactNode {
-        const { activePortalApp } = this.props;
+        const {activePortalApp} = this.props;
 
         return (
             <div className='mashroom-sandbox-app-selection'>

@@ -24,6 +24,45 @@
        }
      }
      ```
+ * Portal: Fixed handling of multiple Modal Apps at the same time: Only the latest is shown at a time and on close the next one will get visible.
+ * Sandbox App: Generate a permanent link for an active Sandbox (that can be sent to another user)
+ * Sandbox App: Show unavailable (no permitted) Apps in the selection (just no one is wondering why an expected App is not there)
+ * Portal: Renamed the plugin type *remote-portal-app-registry* to just *portal-app-registry* because the Portal Apps don't need to be remote.
+   The old type is still supported for the moment.
+ * Portal: The *resourcesRoot* property in *portal-page-enhancement* plugins is no expect to be top level:
+   ```
+   // Before
+   {
+     "name": "My Portal Page Enhancement",
+     "type": "portal-page-enhancement",
+     "pageResources": {
+       "js": [{
+         "path": "test.js",
+         "location": "header"
+        }]
+      },
+     "defaultConfig": {
+       "resourcesRoot": "./dist/backend/page-enhancements",
+       "order": "500"
+     }
+   }
+   // Now
+   {
+     "name": "My Portal Page Enhancement",
+     "type": "portal-page-enhancement",
+     "resourcesRoot": "./dist/backend/page-enhancements",
+     "pageResources": {
+       "js": [{
+         "path": "test.js",
+         "location": "header"
+        }]
+      },
+     "defaultConfig": {
+       "order": "500"
+     }
+   }
+   ```
+   The old way is still supported for the moment.
  * Fixed errors occurring when *mashroom-monitoring-metrics-collector* was not present
  * Metrics Collector: Fixed forwarding open-telemetry errors to Mashroom log
  * HTTP Proxy: Fixed the problem that proxy took the wrong agent if an interceptor plugin changed the target URI protocol from http to https

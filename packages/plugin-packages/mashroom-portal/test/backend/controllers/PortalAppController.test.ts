@@ -19,7 +19,7 @@ setPortalPluginConfig({
     authenticationExpiration: {
         warnBeforeExpirationSec: 120,
         autoExtend: false,
-        onExpiration: { strategy: 'reload' },
+        onExpiration: {strategy: 'reload'},
     },
     ignoreMissingAppsOnPages: false,
     versionHashSalt: null,
@@ -47,12 +47,12 @@ const portalApp1: MashroomPortalApp = {
     description: null,
     tags: [],
     version: '1.0',
-    homepage: null,
+    homepage: 'https://www.mashroom-server.com',
     author: null,
     license: null,
-    category: null,
+    category: 'demo',
     metaInfo: null,
-    lastReloadTs: 222222222,
+    lastReloadTs: 2222,
     clientBootstrap: 'foo',
     resourcesRootUri: `file://${__dirname}`,
     remoteApp: false,
@@ -68,7 +68,7 @@ const portalApp1: MashroomPortalApp = {
         js: [],
         css: [],
     },
-    screenshots: null,
+    screenshots: ['screenshot.png'],
     defaultRestrictViewToRoles: ['Role1'],
     rolePermissions: {
         edit: ['Role1'],
@@ -87,7 +87,7 @@ const portalApp1: MashroomPortalApp = {
 
 const portalApp2: MashroomPortalApp = {
     name: 'Test Portal App 2',
-    title: {} ,
+    title: {},
     description: null,
     tags: [],
     version: '1.0',
@@ -96,7 +96,7 @@ const portalApp2: MashroomPortalApp = {
     license: null,
     category: null,
     metaInfo: null,
-    lastReloadTs: 222222222,
+    lastReloadTs: 1111,
     clientBootstrap: 'foo',
     resourcesRootUri: `file:/${__dirname}`,
     remoteApp: false,
@@ -121,7 +121,7 @@ const portalApp2: MashroomPortalApp = {
 
 const portalApp3: MashroomPortalApp = {
     name: 'Test Remote App',
-    title: {} ,
+    title: {},
     description: null,
     tags: [],
     version: '1.0',
@@ -130,7 +130,7 @@ const portalApp3: MashroomPortalApp = {
     license: null,
     category: null,
     metaInfo: null,
-    lastReloadTs: 222222222,
+    lastReloadTs: 4444,
     clientBootstrap: 'foo',
     resourcesRootUri: `http://my.host.com`,
     remoteApp: false,
@@ -178,8 +178,7 @@ const page1: MashroomPortalPage = {
 const portalAppEnhancement1: MashroomPortalAppEnhancement = {
     name: 'Test Enhancement 1',
     description: null,
-    portalCustomClientServices: {
-    },
+    portalCustomClientServices: {},
     plugin: {
         enhancePortalAppSetup: (portalAppSetup, portalApp, req) => Promise.resolve({
             ...portalAppSetup,
@@ -194,8 +193,7 @@ const portalAppEnhancement1: MashroomPortalAppEnhancement = {
 const portalAppEnhancement2: MashroomPortalAppEnhancement = {
     name: 'Test Enhancement 2',
     description: null,
-    portalCustomClientServices: {
-    },
+    portalCustomClientServices: {},
     plugin: {
         enhancePortalAppSetup: (portalAppSetup, portalApp, req) => Promise.resolve({
             ...portalAppSetup,
@@ -216,15 +214,13 @@ const pluginRegistry: any = {
 const pluginContext: any = {
     loggerFactory: loggingUtils.dummyLoggerFactory,
     serverInfo: {
-      devMode: false,
+        devMode: false,
     },
     services: {
         portal: {
             service: {
                 async findSiteByPath() {
-                    return {
-
-                    };
+                    return {};
                 },
                 async getPage() {
                     return page1;
@@ -301,7 +297,7 @@ describe('PortalAppController', () => {
             title: 'Translated title',
             version: '1.0',
             instanceId: 'ABCD',
-            lastReloadTs: 222222222,
+            lastReloadTs: 2222,
             versionHash: 'e4c2e8edac',
             proxyPaths: {
                 __baseUrl: '/portal/web/___/proxy/Test%20Portal%20App%201',
@@ -373,7 +369,7 @@ describe('PortalAppController', () => {
             title: 'Translated title',
             version: '1.0',
             instanceId: null,
-            lastReloadTs: 222222222,
+            lastReloadTs: 2222,
             versionHash: 'e4c2e8edac',
             proxyPaths: {
                 __baseUrl: '/portal/web/___/proxy/Test%20Portal%20App%201',
@@ -460,10 +456,14 @@ describe('PortalAppController', () => {
                 done();
             },
         });
-        res.setHeader = () => { /* nothing to do */ };
-        res.type = () => { /* nothing to do */ };
-        res.set = () => { /* nothing to do */ };
-        res.sendStatus = () => { /* nothing to do */ };
+        res.setHeader = () => { /* nothing to do */
+        };
+        res.type = () => { /* nothing to do */
+        };
+        res.set = () => { /* nothing to do */
+        };
+        res.sendStatus = () => { /* nothing to do */
+        };
 
         const controller = new PortalAppController(pluginRegistry);
         controller.getPortalAppResource(req, res);
@@ -492,4 +492,254 @@ describe('PortalAppController', () => {
         expect(status).toBe(401);
     });
 
+    it('returns all known and permitted Portal Apps', async () => {
+        const req: any = {
+            params: {
+                pluginName: 'Test Remote App',
+                0: 'api/customers',
+            },
+            pluginContext,
+            query: {},
+        };
+
+        let json: Array<any> | undefined;
+        const res: any = {
+            json: (_json: any) => {
+                json = _json;
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        await controller.getKnownPortalApps(req, res);
+
+        expect(json).toBeTruthy();
+        expect(json!.length).toBe(1);
+        expect(json).toEqual([{
+            available: true,
+            category: 'demo',
+            description: null,
+            homepage: 'https://www.mashroom-server.com',
+            lastReloadTs: 2222,
+            metaInfo: null,
+            name: 'Test Portal App 1',
+            requiredRoles: [
+                'Role1'
+            ],
+            screenshots: [
+                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+            ],
+            tags: [],
+            title: 'Translated title',
+            version: '1.0'
+        }]);
+    });
+
+    it('returns all known Portal Apps', async () => {
+        const req: any = {
+            params: {
+                pluginName: 'Test Remote App',
+                0: 'api/customers',
+            },
+            pluginContext,
+            query: {
+                includeNotPermitted: '1',
+            },
+        };
+
+        let json: Array<any> | undefined;
+        const res: any = {
+            json: (_json: any) => {
+                json = _json;
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        await controller.getKnownPortalApps(req, res);
+
+        expect(json).toBeTruthy();
+        expect(json!.length).toBe(3);
+        expect(json).toEqual([{
+            available: true,
+            category: 'demo',
+            description: null,
+            homepage: 'https://www.mashroom-server.com',
+            lastReloadTs: 2222,
+            metaInfo: null,
+            name: 'Test Portal App 1',
+            requiredRoles: [
+                'Role1'
+            ],
+            screenshots: [
+                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+            ],
+            tags: [],
+            title: 'Translated title',
+            version: '1.0'
+        },
+        {
+            available: false,
+            category: null,
+            lastReloadTs: 1111,
+            name: 'Test Portal App 2',
+            requiredRoles: [
+                'OtherRole'
+            ],
+            title: 'Translated title',
+            unavailableReason: 'forbidden',
+            version: '1.0'
+        },
+        {
+            available: false,
+            category: null,
+            lastReloadTs: 4444,
+            name: 'Test Remote App',
+            requiredRoles: [
+                'OtherRole'
+            ],
+            title: 'Translated title',
+            unavailableReason: 'forbidden',
+            version: '1.0'
+        }]);
+    });
+
+    it('filters known Portal Apps by name', async () => {
+        const req: any = {
+            params: {
+                pluginName: 'Test Remote App',
+                0: 'api/customers',
+            },
+            pluginContext,
+            query: {
+                includeNotPermitted: '1',
+                q: 'remote'
+            },
+        };
+
+        let json: Array<any> | undefined;
+        const res: any = {
+            json: (_json: any) => {
+                json = _json;
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        await controller.getKnownPortalApps(req, res);
+
+        expect(json).toBeTruthy();
+        expect(json!.length).toBe(1);
+        expect(json).toEqual([{
+            available: false,
+            lastReloadTs: 4444,
+            name: 'Test Remote App',
+            category: null,
+            requiredRoles: [
+                'OtherRole'
+            ],
+            title: 'Translated title',
+            unavailableReason: 'forbidden',
+            version: '1.0'
+        }]);
+    });
+
+    it('filters known Portal Apps by title', async () => {
+        const req: any = {
+            params: {
+                pluginName: 'Test Remote App',
+                0: 'api/customers',
+            },
+            pluginContext,
+            query: {
+                includeNotPermitted: '1',
+                q: 'Test Test Test'
+            },
+        };
+
+        let json: Array<any> | undefined;
+        const res: any = {
+            json: (_json: any) => {
+                json = _json;
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        await controller.getKnownPortalApps(req, res);
+
+        expect(json).toBeTruthy();
+        expect(json!.length).toBe(1);
+        expect(json).toEqual([{
+            available: true,
+            category: 'demo',
+            description: null,
+            homepage: 'https://www.mashroom-server.com',
+            lastReloadTs: 2222,
+            metaInfo: null,
+            name: 'Test Portal App 1',
+            requiredRoles: [
+                'Role1'
+            ],
+            screenshots: [
+                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+            ],
+            tags: [],
+            title: 'Translated title',
+            version: '1.0'
+        }]);
+    });
+
+    it('filters known Portal Apps by last reload timestamp', async () => {
+        const req: any = {
+            params: {
+                pluginName: 'Test Remote App',
+                0: 'api/customers',
+            },
+            pluginContext,
+            query: {
+                includeNotPermitted: '1',
+                updatedSince: '1112',
+            },
+        };
+
+        let json: Array<any> | undefined;
+        const res: any = {
+            json: (_json: any) => {
+                json = _json;
+            }
+        };
+
+        const controller = new PortalAppController(pluginRegistry);
+        await controller.getKnownPortalApps(req, res);
+
+        expect(json).toBeTruthy();
+        expect(json!.length).toBe(2);
+        expect(json).toEqual([{
+            available: true,
+            category: 'demo',
+            description: null,
+            homepage: 'https://www.mashroom-server.com',
+            lastReloadTs: 2222,
+            metaInfo: null,
+            name: 'Test Portal App 1',
+            requiredRoles: [
+                'Role1'
+            ],
+            screenshots: [
+                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+            ],
+            tags: [],
+            title: 'Translated title',
+            version: '1.0'
+        },
+        {
+            available: false,
+            category: null,
+            lastReloadTs: 4444,
+            name: 'Test Remote App',
+            requiredRoles: [
+                'OtherRole'
+            ],
+            title: 'Translated title',
+            unavailableReason: 'forbidden',
+            version: '1.0'
+        }]);
+    });
 });

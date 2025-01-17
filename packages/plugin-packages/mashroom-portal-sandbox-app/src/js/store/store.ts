@@ -5,7 +5,7 @@ import reducers from './reducers';
 import type {State, Store} from '../types';
 
 const initialState: State = {
-    availablePortalApps: [],
+    knownPortalApps: [],
     selectedPortalApp: null,
     appLoadingError: false,
     activePortalApp: null,

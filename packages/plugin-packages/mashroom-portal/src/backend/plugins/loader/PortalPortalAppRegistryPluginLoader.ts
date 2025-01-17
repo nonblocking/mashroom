@@ -1,9 +1,9 @@
 
 import type {MashroomLogger, MashroomLoggerFactory, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomPluginLoader} from '@mashroom/mashroom/type-definitions';
-import type {MashroomRemotePortalAppRegistryBootstrapFunction} from '../../../../type-definitions';
-import type {MashroomPortalPluginRegistry, MashroomRemotePortalAppRegistryHolder} from '../../../../type-definitions/internal';
+import type {MashroomPortalAppRegistryBootstrapFunction} from '../../../../type-definitions';
+import type {MashroomPortalPluginRegistry, MashroomPortalAppRegistryHolder} from '../../../../type-definitions/internal';
 
-export default class PortalRemotePortalAppRegistryPluginLoader implements MashroomPluginLoader {
+export default class PortalPortalAppRegistryPluginLoader implements MashroomPluginLoader {
 
     private _logger: MashroomLogger;
 
@@ -12,7 +12,7 @@ export default class PortalRemotePortalAppRegistryPluginLoader implements Mashro
     }
 
     get name(): string {
-        return 'Portal Remote Portal App Registry Plugin Loader';
+        return 'Portal App Registry Plugin Loader';
     }
 
     generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
@@ -22,23 +22,23 @@ export default class PortalRemotePortalAppRegistryPluginLoader implements Mashro
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        const bootstrap: MashroomRemotePortalAppRegistryBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomPortalAppRegistryBootstrapFunction = plugin.requireBootstrap();
         const registry = await bootstrap(plugin.name, config, contextHolder);
 
         const { priority } = config;
 
-        const registryHolder: MashroomRemotePortalAppRegistryHolder = {
+        const registryHolder: MashroomPortalAppRegistryHolder = {
             name: plugin.name,
             registry,
             priority
         };
 
-        this._logger.info('Registering remote portal app registry:', {registry: registryHolder});
-        this._registry.registerRemotePortalAppRegistry(registryHolder);
+        this._logger.info('Registering portal app registry:', {registry: registryHolder});
+        this._registry.registerPortalAppRegistry(registryHolder);
     }
 
     async unload(plugin: MashroomPlugin): Promise<void> {
-        this._logger.info(`Unregistering remote portal app registry: ${plugin.name}`);
-        this._registry.unregisterRemotePortalAppRegistry(plugin.name);
+        this._logger.info(`Unregistering portal app registry: ${plugin.name}`);
+        this._registry.unregisterPortalAppRegistry(plugin.name);
     }
 }

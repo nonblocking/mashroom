@@ -18,11 +18,11 @@ import type {MashroomCacheControlService} from '@mashroom/mashroom-browser-cache
 import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
 import type {
-    MashroomAvailablePortalApp,
     MashroomPortalApp,
     MashroomPortalAppInstance,
     MashroomPortalService,
     MashroomPortalPage,
+    MashroomKnownPortalApp,
 } from '../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../type-definitions/internal';
 
@@ -172,51 +172,91 @@ export default class PortalAppController {
         }
     }
 
-    async getAvailablePortalApps(req: Request, res: Response): Promise<void> {
+    async getKnownPortalApps(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
         const i18nService: MashroomI18NService = req.pluginContext.services.i18n!.service;
         const mashroomSecurityUser = getUser(req);
         const admin = isAdmin(req);
-        const {q, updatedSince} = req.query;
+        const {q: qRaw, updatedSince: updatedSinceRaw, includeNotPermitted} = req.query;
 
-        let apps: Array<MashroomAvailablePortalApp> = this._pluginRegistry.portalApps
+        const q = typeof qRaw === 'string' ? qRaw : undefined;
+        let updatedSince: number | undefined;
+        if (typeof updatedSinceRaw === 'string') {
+            try {
+                updatedSince = parseInt(updatedSinceRaw);
+            } catch(e) {
+                logger.warn(`Invalid updatedSince timestamp: ${updatedSince}`, e);
+            }
+        }
+
+        let apps: Array<MashroomKnownPortalApp> = this._pluginRegistry.portalApps
             .filter((portalApp) => {
-                // Remove Apps the user could not load anyway
-                if (!admin && Array.isArray(portalApp.defaultRestrictViewToRoles) && portalApp.defaultRestrictViewToRoles.length > 0) {
-                    return portalApp.defaultRestrictViewToRoles.some((r) => mashroomSecurityUser?.roles?.find((ur) => ur === r));
+                if (q) {
+                    let titles = '';
+                    let descriptions = '';
+                    if (portalApp.title) {
+                        if (typeof portalApp.title === 'string') {
+                            titles = portalApp.title;
+                        } else {
+                            titles = Object.values(portalApp.title).join(' ');
+                        }
+                    }
+                    if (portalApp.description) {
+                        if (typeof portalApp.description === 'string') {
+                            descriptions = portalApp.description;
+                        } else {
+                            descriptions = Object.values(portalApp.description).join(' ');
+                        }
+                    }
+                    return portalApp.name.toLowerCase().indexOf(q.toLowerCase()) !== -1 ||
+                        titles.toLowerCase().indexOf(q.toLowerCase()) !== -1 ||
+                        descriptions.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+                }
+                if (updatedSince) {
+                    return portalApp.lastReloadTs > updatedSince;
                 }
                 return true;
             })
-            .map((portalApp) => {
+            .map<MashroomKnownPortalApp | null>((portalApp) => {
+                const permitted = admin || !Array.isArray(portalApp.defaultRestrictViewToRoles) || portalApp.defaultRestrictViewToRoles.length === 0
+                    || portalApp.defaultRestrictViewToRoles.some((r) => mashroomSecurityUser?.roles.find((ur) => ur === r));
+
+                if (!permitted) {
+                    if (includeNotPermitted) {
+                        return {
+                            available: false,
+                            name: portalApp.name,
+                            version: portalApp.version,
+                            title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
+                            category: portalApp.category,
+                            requiredRoles: portalApp.defaultRestrictViewToRoles ?? [],
+                            lastReloadTs: portalApp.lastReloadTs,
+                            unavailableReason: 'forbidden',
+                        };
+                    }
+                    return null;
+                }
+
                 const encodedPortalAppName = encodeURIComponent(portalApp.name);
                 const resourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
                 const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
                 return {
+                    available: true,
                     name: portalApp.name,
                     version: portalApp.version,
                     title: portalApp.title ? i18nService.translate(req, portalApp.title) : null,
                     category: portalApp.category,
                     description: portalApp.description ? i18nService.translate(req, portalApp.description) : null,
                     tags: portalApp.tags,
+                    homepage: portalApp.homepage || undefined,
                     screenshots,
+                    requiredRoles: portalApp.defaultRestrictViewToRoles ?? [],
                     metaInfo: portalApp.metaInfo,
                     lastReloadTs: portalApp.lastReloadTs,
                 };
-            });
-
-        if (typeof (q) === 'string') {
-            apps = apps.filter((app) => app.name.toLowerCase().indexOf(q.toLowerCase()) !== -1 || (app.description && app.description.toLowerCase().indexOf(q.toLowerCase()) !== -1));
-        }
-        if (typeof (updatedSince) === 'string') {
-            try {
-                const updatedSinceTs = parseInt(updatedSince);
-                apps = apps.filter((app) => app.lastReloadTs > updatedSinceTs);
-            } catch (e) {
-                apps = [];
-                logger.error(`Invalid updatedSince timestamp: ${updatedSince}`);
-            }
-        }
+            })
+            .filter((app) => !!app);
 
         res.json(apps);
     }

@@ -67,7 +67,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     restApi.use(bodyParser.json());
     internalRoutes.use(PORTAL_APP_API_PATH, restApi);
 
-    restApi.get('/portal-apps', portalAppController.getAvailablePortalApps.bind(portalAppController));
+    restApi.get('/portal-apps', portalAppController.getKnownPortalApps.bind(portalAppController));
 
     restApi.get('/pages/:pageId/content', portalPageRenderController.getPortalPageContent.bind(portalPageRenderController));
     restApi.get('/pages/:pageId/portal-app-instances', portalPageController.getPortalAppInstances.bind(portalPageController));

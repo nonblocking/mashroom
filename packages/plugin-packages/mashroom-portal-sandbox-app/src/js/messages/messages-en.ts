@@ -15,7 +15,11 @@ export default {
     loading: 'Loading...',
     loadedResources: 'Loaded resources',
     pageMemoryUsage: 'Page Memory Usage',
+    link: 'Link',
+    sandboxPermalink: 'Sandbox Permalink',
+    copiedToClipboard: 'Copied to clipboard',
     errorLoadingApp: 'Could not load App (not found or no permission)',
     errorTopicMandatory: 'Please select topic',
-    errorInvalidJSON: 'Error: Invalid JSON'
+    errorInvalidJSON: 'Error: Invalid JSON',
+    errorAppUnavailable: 'App is not available (not permitted)',
 };

@@ -513,16 +513,32 @@ export type MashroomPortalApp = {
 }
 
 export type MashroomAvailablePortalApp = {
+    readonly available: true;
     readonly name: string;
     readonly version: string;
     readonly title: string | null | undefined;
     readonly category: string | null | undefined;
     readonly description: string | null | undefined;
     readonly tags: Array<string>;
+    readonly homepage: string | undefined;
     readonly screenshots: Array<string>;
-    readonly metaInfo: any | undefined;
+    readonly requiredRoles: Array<string>;
+    readonly metaInfo: Record<string, any> | undefined;
     readonly lastReloadTs: number;
 };
+
+export type MashroomUnavailablePortalApp = {
+    readonly available: false;
+    readonly name: string;
+    readonly version: string;
+    readonly title: string | null | undefined;
+    readonly category: string | null | undefined;
+    readonly requiredRoles: Array<string>;
+    readonly lastReloadTs: number;
+    readonly unavailableReason: 'forbidden';
+}
+
+export type MashroomKnownPortalApp = MashroomAvailablePortalApp | MashroomUnavailablePortalApp;
 
 export type MashroomPortalAppLoadListener = (loadedApp: MashroomPortalLoadedPortalApp) => void;
 
@@ -724,17 +740,24 @@ export interface MashroomPortalService {
 
 /* Frontend services */
 
-export type CreatedResponse = {
-    readonly location: string;
+export type AppSearchFilter = {
+    // Query (searches in name and title)
+    readonly q?: string;
+    readonly includeNotPermitted?: boolean;
 };
 
-export type ModalAppCloseCallback = (modalOverlayElem: HTMLElement, hideDialog: () => void, unloadApp: () => void) => void;
+export type ModalAppCloseCallback = () => void;
 
 export interface MashroomPortalAppService {
     /**
-     * Get all existing apps
+     * Get all Portal Apps available to the user
      */
     getAvailableApps(): Promise<Array<MashroomAvailablePortalApp>>;
+
+    /**
+     * Search for all known Apps.
+     */
+    searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
      * Load portal app to given host element at given position (or at the end if position is not set)
@@ -1179,17 +1202,17 @@ export type MashroomPortalClientServices = {
 
 /* Plugin bootstrap functions */
 
-// remote-portal-app-registry
+// portal-app-registry
 
-export interface MashroomRemotePortalAppRegistry {
+export interface MashroomPortalAppRegistry {
     readonly portalApps: Readonly<Array<MashroomPortalApp>>;
 }
 
-export type MashroomRemotePortalAppRegistryBootstrapFunction = (
+export type MashroomPortalAppRegistryBootstrapFunction = (
     pluginName: string,
     pluginConfig: MashroomPluginConfig,
     contextHolder: MashroomPluginContextHolder,
-) => Promise<MashroomRemotePortalAppRegistry>;
+) => Promise<MashroomPortalAppRegistry>;
 
 // portal-app
 

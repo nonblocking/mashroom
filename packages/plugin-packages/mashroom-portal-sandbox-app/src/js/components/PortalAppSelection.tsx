@@ -4,11 +4,11 @@ import {Form, AutocompleteField, ErrorMessage} from '@mashroom/mashroom-portal-u
 
 import type {ReactNode} from 'react';
 import type {SuggestionHandler} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
-import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
     preselectAppName: string | undefined | null;
-    availablePortalApps: Array<MashroomAvailablePortalApp>;
+    knownPortalApps: Array<MashroomKnownPortalApp>;
     appLoadingError: boolean;
     onSelectionChanged: (portalApp: string | undefined | null) => void;
 }
@@ -22,27 +22,37 @@ export default class PortalAppSelection extends PureComponent<Props> {
         };
     }
 
-    getSuggestionHandler(): SuggestionHandler<MashroomAvailablePortalApp> {
-        const { availablePortalApps } = this.props;
+    getSuggestionHandler(): SuggestionHandler<MashroomKnownPortalApp> {
+        const { knownPortalApps } = this.props;
 
         return {
             getSuggestions(query: string) {
-                return Promise.resolve(availablePortalApps.filter((a) => a.name.toLowerCase().indexOf(query.toLowerCase()) !== -1));
+                return Promise.resolve(knownPortalApps.filter((a) => a.name.toLowerCase().indexOf(query.toLowerCase()) !== -1));
             },
-            renderSuggestion(suggestion: MashroomAvailablePortalApp, isHighlighted: boolean, query: string) {
+            renderSuggestion(suggestion: MashroomKnownPortalApp, isHighlighted: boolean, query: string) {
                 return (
-                    <div className={`portal-app-suggestion suggestion ${isHighlighted ? 'suggestion-highlighted' : ''}`}>
+                    <div
+                        className={`portal-app-suggestion suggestion ${!suggestion.available ? 'not-available': ''} ${isHighlighted ? 'suggestion-highlighted' : ''}`}
+                        onClick={(e) => !suggestion.available ? e.stopPropagation() : undefined}
+                    >
                         <div className="portal-app-suggestion-name">
                             {suggestion.name}
                         </div>
-                        <div className="portal-app-suggestion-desc">
-                            {suggestion.version} {suggestion.description}
-                        </div>
+                        {suggestion.available && (
+                            <div className="portal-app-suggestion-desc">
+                                {suggestion.version} {suggestion.description}
+                            </div>
+                        )}
+                        {!suggestion.available && (
+                            <div className="portal-app-suggestion-error">
+                                <ErrorMessage messageId='errorAppUnavailable' />
+                            </div>
+                        )}
                     </div>
                 );
             },
-            getSuggestionValue(suggestion: MashroomAvailablePortalApp) {
-              return suggestion.name;
+            getSuggestionValue(suggestion: MashroomKnownPortalApp) {
+                return suggestion.name;
             },
         };
     }

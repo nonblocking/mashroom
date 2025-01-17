@@ -1,4 +1,12 @@
 
+import {
+    QUERY_PARAM_APP_CONFIG,
+    QUERY_PARAM_APP_NAME, QUERY_PARAM_E2E_TEST,
+    QUERY_PARAM_LANG,
+    QUERY_PARAM_PERMISSIONS,
+    QUERY_PARAM_PRESELECT_APP_NAME,
+    QUERY_PARAM_WIDTH
+} from './constants';
 import type {MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
 import type {PortalAppParams, PortalAppQueryParams, SelectedPortalApp} from './types';
 
@@ -17,13 +25,13 @@ export const getQueryParams = (portalStateService: MashroomPortalStateService): 
     };
 
     return {
-        appName: portalStateService.getStateProperty('sbAppName'),
-        preselectAppName: portalStateService.getStateProperty('sbPreselectAppName'),
-        width: portalStateService.getStateProperty('sbWidth'),
-        lang: portalStateService.getStateProperty('sbLang'),
-        permissions: objParam('sbPermissions'),
-        appConfig: objParam('sbAppConfig'),
-        autoTest: !!portalStateService.getStateProperty('sbAutoTest'),
+        appName: portalStateService.getStateProperty(QUERY_PARAM_APP_NAME),
+        preselectAppName: portalStateService.getStateProperty(QUERY_PARAM_PRESELECT_APP_NAME),
+        width: portalStateService.getStateProperty(QUERY_PARAM_WIDTH),
+        lang: portalStateService.getStateProperty(QUERY_PARAM_LANG),
+        permissions: objParam(QUERY_PARAM_PERMISSIONS),
+        appConfig: objParam(QUERY_PARAM_APP_CONFIG),
+        autoTest: !!portalStateService.getStateProperty(QUERY_PARAM_E2E_TEST),
     };
 };
 
