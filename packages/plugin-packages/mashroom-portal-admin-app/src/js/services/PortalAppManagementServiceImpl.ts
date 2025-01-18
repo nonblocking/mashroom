@@ -310,6 +310,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
             appId,
             pluginName,
             appConfig,
+            portalAppWrapperElement,
             updateAppConfig: (appConfig) => {
                 return this.portalAdminService.updateAppInstance(pluginName, instanceId!, null, null, appConfig).then(
                     () => {
