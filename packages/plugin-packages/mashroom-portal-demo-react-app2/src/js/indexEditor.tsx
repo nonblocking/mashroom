@@ -10,8 +10,8 @@ import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup) => {
     const {appConfig: {editorTarget}} = portalAppSetup;
 
-    if (!editorTarget || !editorTarget.pluginName) {
-        throw new Error('This app can only be started as App Config Editor!');
+    if (!editorTarget?.pluginName) {
+        throw new Error('This app can only be started as an App Config Editor!');
     }
 
     const root = createRoot(portalAppHostElement);
