@@ -26,6 +26,11 @@ export interface MashroomI18NService {
     getMessage(key: string, language: string): string;
 
     /**
+     * Get the message for given key and language
+     */
+    getMessageIfExists(key: string, language: string): string | null;
+
+    /**
      * Get plain string in the current users language from a I18NString
      */
     translate(req: Request, str: I18NString): string;
