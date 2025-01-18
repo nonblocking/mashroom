@@ -53,7 +53,7 @@ describe('MashroomI18NService', () => {
         expect(messsageUsernameEn).toBe('Username');
         expect(messsageUsernameDe).toBe('Benutzername 2');
         expect(messsageUsernameRu).toBe('Username');
-        expect(messsageFooEn).toBe('foo');
+        expect(messsageFooEn).toBe('??foo??');
         expect(messsageFooDe).toBe('Franz');
     });
 

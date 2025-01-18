@@ -49,6 +49,10 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
     }
 
     getMessage(key: string, language: string): string {
+        return this.getMessageIfExists(key, language) ?? `??${key}??`;
+    }
+
+    getMessageIfExists(key: string, language: string): string | null {
         const messagesPaths = [
             path.resolve(this._messagesFolder, `messages.${language}.json`),
             path.resolve(BUILT_IN_MESSAGES_FOLDER, `messages.${language}.json`),
@@ -71,7 +75,7 @@ export default class MashroomI18NService implements MashroomI18NServiceType {
         }
 
         // No message found
-        return key;
+        return null;
     }
 
     translate(req: Request, str: I18NString): string {

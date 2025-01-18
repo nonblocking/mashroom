@@ -502,8 +502,14 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     }
 
     private _startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<MashroomPortalAppLifecycleHooks | void> {
+        const handleError = (error: Error) => {
+            console.error(`Error in bootstrap of App '${pluginName}'`, error);
+        };
+
         if (appSetup.pluginMissing) {
-            return Promise.reject(new Error(`Plugin does not exist: ${pluginName}`));
+            const error = new Error(`Plugin does not exist: ${pluginName}`);
+            handleError(error);
+            return Promise.reject(error);
         }
 
         const bootstrap: MashroomPortalAppPluginBootstrapFunction = (global as any)[appSetup.globalLaunchFunction];
@@ -512,9 +518,6 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
 
         const clientServices = this._getClientServicesForApp(appId, appSetup, pluginName);
-        const handleError = (error: Error) => {
-            console.error(`Error in bootstrap of App '${pluginName}'`, error);
-        };
 
         let bootstrapRetVal = null;
         try {

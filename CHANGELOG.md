@@ -4,26 +4,28 @@
 ## [unreleased]
 
  * Portal Default Theme: Overhaul:
-   * Introduced tons of CSS variables
-   * Introduced a dark mode (default: off)
-   * Add the possibility to override CSS variables and style with an external file:
-     ```css
-        :root {
-          --mashroom-portal-color-primary: green;
+    * Introduced tons of CSS variables
+    * Introduced a dark mode (default: off)
+    * Add the possibility to override CSS variables and style with an external file:
+      ```css
+         :root {
+           --mashroom-portal-color-primary: green;
+         }
+      ```
+      Example plugin config:
+      ```json
+      {
+        "Mashroom Portal Default Theme": {
+          "showEnvAndVersions": false,
+          "showPortalAppHeaders": false,
+          "spaMode": true,
+          "darkMode": "auto",
+          "styleFile": "./defaultThemeOverrides.css"
         }
-     ```
-     Example plugin config:
-     ```json
-     {
-       "Mashroom Portal Default Theme": {
-         "showEnvAndVersions": false,
-         "showPortalAppHeaders": false,
-         "spaMode": true,
-         "darkMode": "auto",
-         "styleFile": "./defaultThemeOverrides.css"
-       }
-     }
-     ```
+      }
+      ```
+ * I18N Service: Added new method *getMessageIfExists* which will return null if no message with the given key exists.
+   The existing method *getMessage* will now return '??key??' if the key was not found.
  * Portal: Fixed handling of multiple Modal Apps at the same time: Only the latest is shown at a time and on close the next one will get visible.
  * Sandbox App: Generate a permanent link for an active Sandbox (that can be sent to another user)
  * Sandbox App: Show unavailable (no permitted) Apps in the selection (just no one is wondering why an expected App is not there)
@@ -383,7 +385,7 @@
  * Portal: Added a method *checkLoadedPortalAppsUpdated()* to the *portalAppService* which allows it to check if the Portal Apps
    loaded in the Browser have been redeployed. This could be used in a (long-running) dynamic cockpit to inform the user
    that some Apps might not work as expected anymore and a reload of the page would be recommended.
- * Sandbox Apps: Shows now the number of loaded resources, the resources size and (if available) the memory usage of the page
+ * Sandbox App: Shows now the number of loaded resources, the resources size and (if available) the memory usage of the page
  * Portal: The App Info shows now also the number of the loaded resources for an App and the decoded size of those resources
  * Core: Uses [nx](https://nx.dev) for building in dev mode if it is available. This should lead to a much faster startup in dev mode,
    especially if the distributed cloud cache is used.
@@ -695,7 +697,7 @@
  * OpenID Connect Security Provider: Removed the options *httpRequestRejectUnauthorized* and *httpRequestRetry* because they are no
    longer supported by [openid-client](https://github.com/panva/node-openid-client)
  * Vue Demo App: Upgrade to Vue3 and server-side rendering added
- * Sandbox: Show all Apps for the Administrator role, even if *defaultRestrictViewToRoles* is set
+ * Sandbox App: Show all Apps for the Administrator role, even if *defaultRestrictViewToRoles* is set
 
 ## 2.0.1 (April 25, 2022)
 

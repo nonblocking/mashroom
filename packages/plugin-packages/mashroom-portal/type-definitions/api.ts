@@ -154,6 +154,7 @@ export type MashroomPortalConfigEditorTarget = {
     readonly appId: string;
     readonly pluginName: string;
     readonly appConfig: MashroomPluginConfig;
+    readonly portalAppWrapperElement: HTMLElement;
     updateAppConfig: (appConfig: MashroomPluginConfig) => void;
     close: () => void;
 }
