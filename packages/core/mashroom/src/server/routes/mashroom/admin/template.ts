@@ -12,42 +12,47 @@ export default (content: string, req: Request) => {
 
     return `
         <!doctype html>
-f        <html lang="en">
+        <html lang="en">
             <head>
                 <title>Mashroom Administration</title>
                 <style>
                     body {
                         margin: 0;
                         padding: 0;
+                        text-rendering: optimizeLegibility;
+                        font-size: 16px;
+                        line-height: 1.5;
                         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        background-color: #F2F2F2;
                     }
 
                     h1 {
                         font-size: 1.4em;
-                        font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
                     }
 
                     h2 {
                         font-size: 1.2em;
-                        font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
+                        font-weight: normal;
                         margin: 20px 0;
                     }
 
                     pre, .json, .console {
                         font-family:  Consolas, 'Liberation Mono', Courier, monospace;
+                        font-size: 14px;
+                        word-break: break-all;
                     }
 
                     a {
-                        color: #504B88;
+                        color: #4D487F;
                         text-decoration: none;
                     }
 
                     a:hover {
-                        color: #3d3967;
+                        color: #3a365f;
                     }
 
                     header {
-                        background-color: #504B88;
+                        background-color: #4D487F;
                         display: flex;
                     }
 
@@ -81,61 +86,51 @@ f        <html lang="en">
 
                     nav ul {
                         padding: 0;
-                        margin: 20px 0;
-                        background-color: #f4f3f8;
+                        margin: 20px 10px;
+                        border-radius: 10px;
                     }
 
                     .menu-item {
-                        position: relative;
                         list-style-type: none;
-                        padding: 7px 25px;
-                        border-top: 1px solid white;
-                        border-bottom: 1px solid white;
+                        overflow: hidden;
+
+                        &:first-child {
+                            border-top-left-radius: 10px;
+                            border-top-right-radius: 10px;
+                        }
+
+                        &:last-child {
+                            border-bottom-left-radius: 10px;
+                            border-bottom-right-radius: 10px;
+                        }
                     }
 
                     .menu-item a {
+                        display: inline-block;
+                        width: 100%;
                         color: black;
                         text-decoration: none;
                         white-space: nowrap;
+                        padding: 7px 25px;
+                        background-color: #E2E2E2;
+                        margin-bottom: 1px;
+
                     }
 
-                    .menu-item a:hover:before {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 4px;
-                        height: 100%;
-                        content: ' ';
-                        display: block;
-                        background-color: #C49B5E;
-                    }
-
-                    .menu-item.active:before {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 4px;
-                        height: 100%;
-                        content: ' ';
-                        display: block;
-                        background-color: #504B88;
+                    .menu-item a:hover {
+                        background-color: #cfcde3;
                     }
 
                     .menu-item.active a {
-                        color: black;
-                        font-weight: bold;
+                        background-color: #4D487F;
+                        color: white;
                         text-decoration: none;
                         cursor: default;
                     }
 
-                    .menu-item.external a {
-                        text-decoration: underline;
-                    }
-
                     main {
-                        margin: 0;
-                        padding: 5px 30px;
-                        overflow-x: auto;
+                        margin: 5px 20px;
+                        overflow: hidden;
                         width: 100%;
                     }
 
@@ -161,9 +156,7 @@ f        <html lang="en">
                         text-align: left;
                         vertical-align: top;
                         white-space: nowrap;
-                        font-weight: normal;
-                        font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
-                        font-size: 1.05em;
+                        font-weight: 700;
                     }
 
                     td {
@@ -173,7 +166,11 @@ f        <html lang="en">
                     }
 
                     tr:nth-child(even) {
-                        background-color: #f4f3f8;
+                        background-color: #E2E2E2;
+                    }
+
+                    table.overview th {
+                        font-weight: normal;
                     }
 
                     .details-link {

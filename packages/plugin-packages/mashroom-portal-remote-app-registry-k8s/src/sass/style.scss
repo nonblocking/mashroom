@@ -1,20 +1,10 @@
 
-$COLOR_BLACK: black;
-$COLOR_WHITE: white;
-$COLOR_GREY: #888;
-$COLOR_ERROR: #FF0033;
-
-$COLOR_PRIMARY: #504B88;
-$COLOR_PRIMARY_LIGHT: #655fa7;
-$COLOR_PRIMARY_DARK: #3d3967;
-$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8;
-
-$COLOR_SECONDARY: #C49B5E;
-$COLOR_SECONDARY_LIGHT: #d2b283;
-$COLOR_SECONDARY_DARK: #af8240;
+$COLOR_PRIMARY: #4D487F;
+$COLOR_PRIMARY_LIGHT: #706aab;
+$COLOR_PRIMARY_DARK: #3a365f;
+$COLOR_ERROR: red;
 
 $FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
@@ -26,25 +16,16 @@ $FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
 }
 
 body {
-    -webkit-font-smoothing: antialiased;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
-    color: $COLOR_BLACK;
     font-size: 16px;
+    line-height: 1.5;
     font-family: $FONT_DEFAULT;
     min-height: 800px;
 }
 
-h1, h2, h3 {
-    font-family: $FONT_HEADER;
-}
-
 h2 {
     font-size: 1.2em;
+    font-weight: normal;
 }
 
 a, a:visited, a:focus {
@@ -89,7 +70,7 @@ table {
 }
 
 tr:nth-child(even) {
-    background-color: $COLOR_PRIMARY_EXTRA_LIGHT;
+    background-color: #E2E2E2;
 }
 
 th {
@@ -97,9 +78,7 @@ th {
     text-align: left;
     vertical-align: top;
     white-space: nowrap;
-    font-weight: normal;
-    font-family: $FONT_HEADER;
-    font-size: 1.05em;
+    font-weight: 700;
 }
 
 td {
@@ -113,7 +92,7 @@ tr.row-error {
 }
 
 tr.row-ignored {
-  color: $COLOR_GREY;
+  color: #666;
 }
 
 td.error {
@@ -121,7 +100,7 @@ td.error {
 }
 
 td.checking {
-  color: $COLOR_SECONDARY;
+  color: orange;
 }
 
 .services {
@@ -135,7 +114,7 @@ td.checking {
         }
 
         .invalid-portal-app {
-            color: $COLOR_GREY;
+            color: #666;
             .error {
                 color: $COLOR_ERROR;
             }
