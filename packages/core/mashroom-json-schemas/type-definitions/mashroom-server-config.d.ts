@@ -636,6 +636,10 @@ export interface Plugins {
      */
     loginFormTitle?: string;
     /**
+     * Possible values: true, false, "auto" (Default: false)
+     */
+    darkMode?: boolean | string;
+    /**
      * Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)
      */
     styleFile?: string;

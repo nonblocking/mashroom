@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Login Web-App: Introduced a dark mode (default: off)
  * Portal Default Theme: Overhaul:
     * Introduced tons of CSS variables
     * Introduced a dark mode (default: off)

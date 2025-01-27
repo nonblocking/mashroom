@@ -8,7 +8,7 @@ import type {MashroomWebAppPluginBootstrapFunction} from '@mashroom/mashroom/typ
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
     const {loggerFactory, serverConfig} = pluginContextHolder.getPluginContext();
-    const {pageTitle: customPageTitle, loginFormTitle: customLoginFormTitle, styleFile: externalStyleFile} = pluginConfig;
+    const {pageTitle: customPageTitle, loginFormTitle: customLoginFormTitle, darkMode, styleFile: externalStyleFile} = pluginConfig;
     const logger = loggerFactory('mashroom.login.webapp');
 
     let styleFile = resolve(__dirname, './style.css');
@@ -26,13 +26,9 @@ const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, plug
         }
     }
     context.styleFile = styleFile;
-
-    const pageTitle = customPageTitle || serverConfig.name;
-    context.pageTitle = pageTitle;
-
-    const loginFormTitle = customLoginFormTitle || 'login';
-    context.loginFormTitle = loginFormTitle;
-
+    context.darkMode = darkMode;
+    context.pageTitle = customPageTitle || serverConfig.name;
+    context.loginFormTitle = customLoginFormTitle || 'login';
     context.indexPage = serverConfig.indexPage;
 
     return webapp;

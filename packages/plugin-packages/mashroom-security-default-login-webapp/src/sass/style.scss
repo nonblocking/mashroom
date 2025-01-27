@@ -1,106 +1,76 @@
 
+@use "fonts";
+@use "variables";
+
 $SMALL_DEVICE_MIN: 576px;
 $MEDIUM_DEVICE_MIN: 768px;
 $LARGE_DEVICE_MIN: 992px;
 $X_LARGE_DEVICE_MIN: 1200px;
 
-$COLOR_BLACK: #343633;
-$COLOR_WHITE: white;
-$COLOR_ERROR: #FF0033;
-
-$COLOR_PRIMARY: #504B88;
-$COLOR_PRIMARY_LIGHT: #655fa7;
-$COLOR_PRIMARY_DARK: #3d3967;
-$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8;
-
-$COLOR_SECONDARY: #C49B5E;
-$COLOR_SECONDARY_LIGHT: #d2b283;
-$COLOR_SECONDARY_DARK: #af8240;
-$COLOR_SECONDARY_EXTRA_LIGHT: #f4ece1;
-
-$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
-
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
 }
 
-/* Remove Chrome's input focus border */
-:focus {
-    outline: none !important;
-}
-
 body {
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
-    -webkit-text-size-adjust: 100%;
-    -ms-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    color: $COLOR_BLACK;
-    font-size: 16px;
-    font-family: $FONT_DEFAULT;
+    color: var(--mashroom-portal-color-text-default);
+    font-family: var(--mashroom-portal-font-default), sans-serif;
+    font-size: var(--mashroom-portal-line-font-size-default);
+    line-height: var(--mashroom-portal-line-height-default);
     padding: 0;
     margin: 0;
-}
-
-h1, h2, h3 {
-    font-family: $FONT_HEADER;
+    background-color: var(--mashroom-portal-background-color-default);
 }
 
 a, a:visited, a:focus {
-    color: $COLOR_PRIMARY;
+    color: var(--mashroom-portal-color-button);
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: $COLOR_PRIMARY_DARK;
+        color: var(--mashroom-portal-color-button-hover);
     }
 
     &:active {
-        color: $COLOR_PRIMARY_DARK;
+        color: var(--mashroom-portal-color-button);
     }
 }
 
 button, input[type="submit"] {
-    background-color: $COLOR_PRIMARY;
+    background-color: var(--mashroom-portal-color-button);
     color: white;
-    border-radius: 0;
+    border-radius: 5px;
     border: none;
-    padding: 8px 16px;
+    padding: var(--mashroom-portal-padding-button);
     cursor: pointer;
-    outline: none !important;
+    font-family: var(--mashroom-portal-font-default), sans-serif;
     font-size: 1em;
     @include hover-animation();
 
     &:hover {
-        background-color: $COLOR_PRIMARY_DARK;
+        background-color: var(--mashroom-portal-color-button-hover);
     }
 
     &:active {
-        background-color: $COLOR_PRIMARY_DARK;
+        background-color: var(--mashroom-portal-color-button);
     }
 }
 
 input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"] {
-    padding: 6px 11px;
-    border: 1px solid $COLOR_PRIMARY;
-    font-size: 1em;
+    box-sizing: border-box;
+    padding: var(--mashroom-portal-padding-input);
+    border: 1px solid var(--mashroom-portal-color-input-border);
+    border-radius: 3px;
     width: 100%;
+    color: var(--mashroom-portal-color-text-default);
+    background-color: var(--mashroom-portal-background-color-input);
 
     &:focus {
-        padding: 5px 10px;
-        border: 2px solid $COLOR_SECONDARY;
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 
     &:invalid {
-        padding: 5px 10px;
-        border: 2px solid $COLOR_ERROR;
-    }
-
-    &:disabled {
-        cursor: not-allowed;
-        color: gray !important;
+        border: 1px solid var(--mashroom-portal-color-error);
     }
 }
 
@@ -109,12 +79,12 @@ label {
 }
 
 header {
-    background-color: $COLOR_PRIMARY;
+    background-color: var(--mashroom-portal-background-color-header);
     padding-left: 20px;
     display: flex;
     color: white;
     overflow: hidden;
-    border-bottom: 2px solid $COLOR_SECONDARY;
+    // border-bottom: 2px solid $COLOR_SECONDARY;
 
     .logo {
         margin-top: 16px;
@@ -141,23 +111,22 @@ main {
 
     .login {
         max-width: 500px;
-        margin-left: auto;
-        margin-right: auto;
         margin-top: 20%;
-        background-color: rgba(white, 0.9);
-        box-shadow: 0 0 8px #888;
+        margin-left: 20px;
+        margin-right: 20px;
+        background-color: var(--mashroom-portal-background-color-app);
 
         .login-form-title {
             overflow: hidden;
 
             h2 {
-                font-size: 1.4em;
+                font-size: 1.2em;
                 margin: 20px 18px;
             }
         }
 
         .login-error {
-            color: $COLOR_ERROR;
+            color: var(--mashroom-portal-color-error);
             margin-bottom: 20px;
         }
 
@@ -168,7 +137,7 @@ main {
                 margin: 10px 0;
 
                 .login-form-label {
-                    margin-bottom: 10px;
+                    margin-bottom: 5px;
                 }
 
                 .login-form-input {
@@ -195,6 +164,8 @@ main {
     main {
         .login {
             margin-top: max(60px, calc(50vh - 250px));
+            margin-left: auto;
+            margin-right: auto;
 
             .login-form {
                 .login-form-row {
@@ -215,7 +186,3 @@ main {
 
 
 };
-
-@media (min-width: $LARGE_DEVICE_MIN) {
-
-}

@@ -4,7 +4,8 @@ import {URL} from 'url';
 import express from 'express';
 import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
-import helpers, {i18n} from './handlebar-helpers';
+import i18n from './i18n';
+import helpers from './handlebar-helpers';
 import context from './context';
 
 import type {Request, Response} from 'express';

@@ -1,5 +1,5 @@
 
-import type {MashroomI18NService} from '@mashroom/mashroom-i18n/type-definitions';
+import context from './context';
 
 function equals(this: any, lvalue: any, rvalue: any, options: any): any {
     if (arguments.length < 3) {
@@ -16,13 +16,18 @@ function year(): string {
     return `<span>${new Date().getFullYear()}</span>`;
 }
 
-export const i18n = (i18nService: MashroomI18NService, lang: string) => {
-    return function i18n(key: string) {
-        return i18nService.getMessage(key, lang);
-    };
-};
+function darkMode(this: any): 'light' | 'dark' | 'auto' {
+    if (context.darkMode === true || context.darkMode as any === 'true') {
+        return 'dark';
+    }
+    if (context.darkMode === false || context.darkMode as any === 'false') {
+        return 'light';
+    }
+    return 'auto';
+}
 
 export default {
     equals,
     year,
+    darkMode,
 };

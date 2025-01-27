@@ -911,6 +911,10 @@
                             "type": "string",
                             "description": "A custom title for the login form, can be the actual title or a message key (i18n) (Default: login)"
                         },
+                        "darkMode": {
+                            "type": ["boolean", "string"],
+                            "description": "Possible values: true, false, \"auto\" (Default: false)"
+                        },
                         "styleFile":  {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
                             "description": "Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)"
