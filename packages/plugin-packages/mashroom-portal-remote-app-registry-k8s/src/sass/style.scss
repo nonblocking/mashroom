@@ -136,18 +136,25 @@ td.checking {
         max-width: 90%;
         box-shadow: 2px 4px 4px #444;
         background-color: white;
+        border-radius: 10px;
     }
 
     .modal-header {
         position: relative;
         width: 100%;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
 
         .modal-close {
             position: absolute;
             right: 10px;
             top: 10px;
-            color: black;
+            color: #666;
             cursor: pointer;
+
+            &:hover {
+                color: black;
+            }
         }
     }
 
@@ -157,5 +164,7 @@ td.checking {
         padding: 30px;
         font-family:  Consolas, 'Liberation Mono', Courier, monospace;
         font-size: 14px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
     }
 }

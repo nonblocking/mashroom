@@ -53,6 +53,7 @@ export default (content: string, req: Request) => {
 
                     header {
                         background-color: #4D487F;
+                        border-bottom: 2px solid #d3b486;
                         display: flex;
                     }
 
@@ -201,25 +202,34 @@ export default (content: string, req: Request) => {
                         max-width: 90%;
                         box-shadow: 2px 4px 4px #444;
                         background-color: white;
+                        border-radius: 10px;
                     }
 
                     #modal .modal-header {
                         position: relative;
                         width: 100%;
+                        border-top-left-radius: 10px;
+                        border-top-right-radius: 10px;
                     }
 
                     #modal .modal-header .modal-close {
                         position: absolute;
                         right: 10px;
                         top: 10px;
-                        color: black;
+                        color: #666;
                         cursor: pointer;
+                    }
+
+                    #modal .modal-header .modal-close:hover {
+                        color: black;
                     }
 
                     #modal-content {
                         min-width: 250px;
                         min-height: 250px;
                         padding: 30px;
+                        border-bottom-left-radius: 10px;
+                        border-bottom-right-radius: 10px;
                     }
                 </style>
 
@@ -305,7 +315,7 @@ export default (content: string, req: Request) => {
                 <div id="modal" style="display: none">
                     <div class="modal-wrapper">
                         <div class="modal-header">
-                            <div class="modal-close" onclick="closeModal()">x</div>
+                            <div class="modal-close" onclick="closeModal()">&#x2715;</div>
                         </div>
                         <div id="modal-content">
 
