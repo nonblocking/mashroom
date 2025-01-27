@@ -123,9 +123,12 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
 
     const query = queryParams.join(('&'));
 
+    const pageTitle = i18nService.getMessageIfExists(context.pageTitle, lang) ?? context.pageTitle;
+    const loginFormTitle = i18nService.getMessageIfExists(context.loginFormTitle, lang) ?? context.loginFormTitle;
+
     res.render('login', {
-        pageTitle: i18nService.getMessage(context.pageTitle, lang),
-        loginFormTitle: i18nService.getMessage(context.loginFormTitle, lang),
+        pageTitle,
+        loginFormTitle,
         baseUrl: (vhostMappingInfo?.frontendPath) || req.baseUrl,
         query,
         error,
