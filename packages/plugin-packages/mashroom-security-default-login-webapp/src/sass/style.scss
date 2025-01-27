@@ -84,7 +84,7 @@ header {
     display: flex;
     color: white;
     overflow: hidden;
-    // border-bottom: 2px solid $COLOR_SECONDARY;
+    border-bottom: 2px solid var(--mashroom-portal-color-secondary-light);
 
     .logo {
         margin-top: 16px;
