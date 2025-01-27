@@ -9,11 +9,6 @@ $FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     transition: color 500ms ease-out, background-color 500ms ease-out;
 }
 
-/* Remove Chrome's input focus border */
-:focus {
-    outline: none !important;
-}
-
 body {
     text-rendering: optimizeLegibility;
     font-size: 16px;
