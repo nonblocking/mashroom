@@ -246,7 +246,7 @@ describe('ssr-utils', () => {
             pluginContext,
         };
         const logger = loggingUtils.dummyLoggerFactory();
-        const result = await renderInlineStyleForServerSideRenderedApps(new Set(['Test App 1', 'Test App 3']), req, logger);
+        const result = await renderInlineStyleForServerSideRenderedApps(['Test App 1', 'Test App 3'], req, logger);
         expect(result).toBeTruthy();
         expect(result.headerContent).toBeTruthy();
         expect(result.headerContent).toContain('color: red;');

@@ -95,7 +95,7 @@ export const insertHtmlIntoPageArea = (hostHtml: string, appAreaId: string, html
 
 // Render the Portal Apps into given HTML content
 export const renderContent = async (hostHtml: string, portalPageApps: MashroomPortalPageApps, themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<MashroomPortalContentRenderResult> => {
-    const serverSideRenderedApps = new Set<string>();
+    const serverSideRenderedApps: Array<string> = [];
     const appAreas = Object.keys(portalPageApps);
     const promises: Array<Promise<Array<string>>> = [];
 
@@ -112,7 +112,9 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
                     const ssrRenderResult = await renderServerSide(pluginName, appSetup, renderEmbeddedPortalAppsFn, req, logger);
                     if (ssrRenderResult) {
                         (appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
-                        serverSideRenderedApps.add(pluginName);
+                        if (serverSideRenderedApps.indexOf(pluginName) === -1) {
+                            serverSideRenderedApps.push(pluginName);
+                        }
                     }
 
                     let appSSRHtml = null;
@@ -121,7 +123,9 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
                         Object.keys(ssrRenderResult.embeddedPortalPageApps).forEach((areaId) => {
                             ssrRenderResult.embeddedPortalPageApps[areaId].forEach((embeddedApp) => {
                                 (embeddedApp.appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
-                                serverSideRenderedApps.add(embeddedApp.pluginName);
+                                if (serverSideRenderedApps.indexOf(embeddedApp.pluginName) === -1) {
+                                    serverSideRenderedApps.push(embeddedApp.pluginName);
+                                }
                                 embeddedPortalPageApps[areaId] = embeddedPortalPageApps[areaId] || [];
                                 embeddedPortalPageApps[areaId].push({
                                     ...embeddedApp,

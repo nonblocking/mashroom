@@ -3,7 +3,7 @@ import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import {renderContent, renderAppWrapper} from '../../../src/backend/utils/render-utils';
 import type {MashroomPortalPageApps} from '../../../type-definitions/internal';
-import type {MashroomPortalAppWrapperRenderModel} from "../../../type-definitions";
+import type {MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -114,7 +114,7 @@ describe('render-utils', () => {
         expect(result.resultHtml.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app1"/) > 0).toBeTruthy();
         expect(result.resultHtml.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
 
-        expect(result.serverSideRenderedApps.values().toArray()).toEqual(['App 1']);
+        expect(result.serverSideRenderedApps).toEqual(['App 1']);
         expect(portalApps['app-area1'][0].appSetup.serverSideRendered).toBeTruthy();
         expect(portalApps['app-area1'][1].appSetup.serverSideRendered).toBeFalsy();
     });
