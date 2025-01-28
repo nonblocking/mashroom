@@ -12,7 +12,7 @@ export default (content: string, req: Request) => {
 
     return `
         <!doctype html>
-f        <html lang="en">
+        <html lang="en">
             <head>
                 <title>Mashroom Administration</title>
                 <style>
