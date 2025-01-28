@@ -9,9 +9,7 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
     const {appConfig: {markdownMessage, pingButtonLabel}} = portalAppSetup;
     const fakeMessageBus: any = {};
     return renderToString(
-        <div data-ssr-host="true">
-            <App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={fakeMessageBus}/>
-        </div>
+        <App markdownMessage={markdownMessage} pingButtonLabel={pingButtonLabel} messageBus={fakeMessageBus}/>
     );
 };
 

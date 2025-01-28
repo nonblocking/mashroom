@@ -300,7 +300,7 @@ export default class PortalPageRenderController {
         });
 
         const {inlineStyles} = context.portalPluginConfig.ssrConfig;
-        const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.length > 0 ?
+        const {headerContent: inlineStyleHeaderContent = '', includedAppStyles = []} = inlineStyles && serverSideRenderedApps.size > 0 ?
             await renderInlineStyleForServerSideRenderedApps(serverSideRenderedApps, req, logger) : {};
         const portalResourcesHeader = await this._resourcesHeader({
             req, siteId: site.siteId, sitePath, pageId: pageRef.pageId, pageFriendlyUrl: pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
@@ -517,9 +517,7 @@ export default class PortalPageRenderController {
                     priority: portalPageApp.priority ?? 0,
                     statement: `portalAppService.loadApp('${areaId}', '${portalPageApp.pluginName}', '${portalPageApp.instanceId}', null, null);`,
                 });
-               if (portalPageApp.appSetup) {
-                   preloadedPortalAppSetup[portalPageApp.instanceId] = portalPageApp.appSetup;
-               }
+                preloadedPortalAppSetup[portalPageApp.instanceId] = portalPageApp.appSetup;
            });
         });
 

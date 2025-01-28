@@ -137,7 +137,7 @@ export type MashroomPortalContext = {
 
 export type MashroomPortalContentRenderResult = {
     readonly resultHtml: string;
-    readonly serverSideRenderedApps: Array<string>;
+    readonly serverSideRenderedApps: Set<string>;
     readonly embeddedPortalPageApps: MashroomPortalPageApps;
 }
 

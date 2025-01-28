@@ -167,6 +167,7 @@ export type MashroomPortalAppSetup = {
     readonly version: string;
     readonly instanceId: string | null | undefined;
     readonly lastReloadTs: number;
+    readonly serverSideRendered: boolean;
     readonly versionHash: string;
     readonly proxyPaths: MashroomPortalProxyPaths;
     // @deprecated Use proxyPaths (will be removed in Mashroom v3)
