@@ -1,67 +1,70 @@
 {
-  "name": "@mashroom/mashroom-portal-demo-svelte-app",
-  "version": "2.7.1",
-  "description": "A simple Svelte based SPA that can be used in the Mashroom Portal",
-  "homepage": "https://www.mashroom-server.com",
-  "license": "MIT",
-  "main": "index.js",
-  "sideEffects": false,
-  "files": [
-    "public/**"
-  ],
-  "scripts": {
-    "build": "cross-env NODE_ENV=production webpack",
-    "dev": "webpack serve",
-    "type-check": "svelte-check"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/nonblocking/mashroom.git"
-  },
-  "devDependencies": {
-    "@mashroom/mashroom": "2.7.1",
-    "@mashroom/mashroom-portal": "2.7.1",
-    "@tsconfig/svelte": "^5.0.4",
-    "svelte": "^5.16.2",
-    "svelte-check": "^4.1.1",
-    "svelte-loader": "^3.2.4",
-    "svelte-preprocess": "^6.0.3"
-  },
-  "mashroom": {
-    "devModeBuildScript": "build",
-    "plugins": [
-      {
-        "name": "Mashroom Portal Demo Svelte App",
-        "type": "portal-app2",
-        "clientBootstrap": "startSvelteDemoApp",
-        "resources": {
-          "js": [
-            "bundle.js"
-          ]
-        },
-        "local": {
-          "resourcesRoot": "./public"
-        },
-        "defaultConfig": {
-          "title": "Demo Svelte App",
-          "description": {
-            "en": "A simple Svelte SPA",
-            "de": "Ein einfacher Svelte SPA"
-          },
-          "category": "Demo",
-          "appConfig": {
-            "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",
-            "pingButtonLabel": "Send Ping"
-          }
+    "name": "@mashroom/mashroom-portal-demo-svelte-app",
+    "version": "2.7.1",
+    "description": "A simple Svelte based SPA that can be used in the Mashroom Portal",
+    "homepage": "https://www.mashroom-server.com",
+    "license": "MIT",
+    "main": "index.js",
+    "sideEffects": false,
+    "files": [
+        "public/**"
+    ],
+    "scripts": {
+        "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production",
+        "dev": "webpack serve --config ./webpack.config.client.js --mode development",
+        "type-check": "svelte-check"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "devDependencies": {
+        "@mashroom/mashroom": "2.7.1",
+        "@mashroom/mashroom-portal": "2.7.1",
+        "@tsconfig/svelte": "^5.0.4",
+        "svelte": "^5.16.2",
+        "svelte-check": "^4.1.1",
+        "svelte-loader": "^3.2.4"
+    },
+    "mashroom": {
+        "devModeBuildScript": "build",
+        "plugins": [
+            {
+                "name": "Mashroom Portal Demo Svelte App",
+                "type": "portal-app2",
+                "clientBootstrap": "startSvelteDemoApp",
+                "resources": {
+                    "js": [
+                        "bundle.js"
+                    ],
+                    "css": [
+                        "style.css"
+                    ]
+                },
+                "local": {
+                    "resourcesRoot": "./public",
+                    "ssrBootstrap": "./public/ssr.js"
+                },
+                "defaultConfig": {
+                    "title": "Demo Svelte App",
+                    "description": {
+                        "en": "A simple Svelte SPA",
+                        "de": "Ein einfacher Svelte SPA"
+                    },
+                    "category": "Demo",
+                    "appConfig": {
+                        "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",
+                        "pingButtonLabel": "Send Ping"
+                    }
+                }
+            }
+        ]
+    },
+    "lavamoat": {
+        "allowScripts": {
+            "svelte-preprocess": false,
+            "svelte-check>svelte-preprocess": false,
+            "svelte-preprocess>sass>@parcel/watcher": false
         }
-      }
-    ]
-  },
-  "lavamoat": {
-    "allowScripts": {
-      "svelte-preprocess": false,
-      "svelte-check>svelte-preprocess": false,
-      "svelte-preprocess>sass>@parcel/watcher": false
     }
-  }
 }

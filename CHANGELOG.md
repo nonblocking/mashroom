@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Svelte Demo App: SSR support added
  * Portal: Simplified server-side rendering: One the client side you can now check for *portalAppSetup.serverSideRendered* and
    call *hydrate* accordingly. E.g.:
    ```tsx
