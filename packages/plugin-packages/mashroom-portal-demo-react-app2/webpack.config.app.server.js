@@ -12,8 +12,10 @@ module.exports = merge(common,  {
             type: 'commonjs',
         },
     },
-    externals: [nodeExternals()],
-    target: 'node',
+    externals: [nodeExternals({
+        additionalModuleDirs: [`${__dirname }/../../../node_modules`]
+    })],
+    externalsPresets: { node: true },
     mode: 'none',
     optimization: {
         minimize: false,

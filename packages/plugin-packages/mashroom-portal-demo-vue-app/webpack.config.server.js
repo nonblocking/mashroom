@@ -13,9 +13,10 @@ module.exports = merge(common,  {
         },
     },
     externals: [nodeExternals({
+        additionalModuleDirs: [`${__dirname }/../../../node_modules`],
         allowlist: [/\.vue/]
     })],
-    target: 'node',
+    externalsPresets: { node: true },
     mode: 'none',
     optimization: {
         minimize: false,
