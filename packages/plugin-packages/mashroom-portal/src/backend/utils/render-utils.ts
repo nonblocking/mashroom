@@ -183,7 +183,6 @@ const renderToString = (template: string, templateMustExist: boolean, setupTheme
                 }
                 resolve(fallback());
             } else {
-                console.info('!!!!!!!', template, model, html);
                 resolve(html);
             }
         });
