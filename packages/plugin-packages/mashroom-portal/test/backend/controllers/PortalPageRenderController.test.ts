@@ -386,8 +386,6 @@ describe('PortalPageRenderController', () => {
                     expect(webappProps.get('view engine')).toBe('fooEngine');
                     expect(webappProps.get('views')).toBe('./views');
 
-                    console.info(model.site);
-
                     expect(model.site).toEqual({
                         siteId: 'default',
                         title: 'Default Site',

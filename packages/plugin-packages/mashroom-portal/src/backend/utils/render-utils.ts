@@ -37,9 +37,9 @@ export const renderAppWrapper = async (themeExists: boolean, setupTheme: () => v
     const fallback = () => defaultTemplateAppWrapper(model);
     if (themeExists) {
         html = await renderToString(PORTAL_APP_WRAPPER_TEMPLATE_NAME, false, setupTheme, model, fallback, res, logger);
+    } else {
+        html = fallback();
     }
-
-    html = fallback();
 
     if (model.appSSRHtml) {
         html = html
