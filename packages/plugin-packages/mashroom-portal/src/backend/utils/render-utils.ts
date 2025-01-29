@@ -25,13 +25,29 @@ export const renderPage = async (themeExists: boolean, setupTheme: () => void, m
 };
 
 export const renderAppWrapper = async (themeExists: boolean, setupTheme: () => void, model: MashroomPortalAppWrapperRenderModel, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
-    const fallback = () => defaultTemplateAppWrapper(model);
-
-    if (themeExists) {
-        return renderToString(PORTAL_APP_WRAPPER_TEMPLATE_NAME, false, setupTheme, model, fallback, res, logger);
+    // Fix for SSR: we don't want any blanks between host wrapper and SSL content, so remove those introduced by the template
+    if (model.appSSRHtml) {
+        model = {
+            ...model,
+            appSSRHtml: `___SSR_BEGIN___${model.appSSRHtml}___SSR_END___`,
+        };
     }
 
-    return fallback();
+    let html: string;
+    const fallback = () => defaultTemplateAppWrapper(model);
+    if (themeExists) {
+        html = await renderToString(PORTAL_APP_WRAPPER_TEMPLATE_NAME, false, setupTheme, model, fallback, res, logger);
+    } else {
+        html = fallback();
+    }
+
+    if (model.appSSRHtml) {
+        html = html
+            .replace(/\s*___SSR_BEGIN___/, '')
+            .replace(/___SSR_END___\s*/, '');
+    }
+
+    return html;
 };
 
 export const renderAppWrapperToClientTemplate = async (themeExists: boolean, setupTheme: () => void, messages: (key: string) => string, req: Request, res: Response, logger: MashroomLogger): Promise<string> => {
@@ -94,8 +110,11 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
             Promise.all(
                 portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
                     const ssrRenderResult = await renderServerSide(pluginName, appSetup, renderEmbeddedPortalAppsFn, req, logger);
-                    if (ssrRenderResult && serverSideRenderedApps.indexOf(pluginName) === -1) {
-                        serverSideRenderedApps.push(pluginName);
+                    if (ssrRenderResult) {
+                        (appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
+                        if (serverSideRenderedApps.indexOf(pluginName) === -1) {
+                            serverSideRenderedApps.push(pluginName);
+                        }
                     }
 
                     let appSSRHtml = null;
@@ -103,6 +122,7 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
                         appSSRHtml = ssrRenderResult.html;
                         Object.keys(ssrRenderResult.embeddedPortalPageApps).forEach((areaId) => {
                             ssrRenderResult.embeddedPortalPageApps[areaId].forEach((embeddedApp) => {
+                                (embeddedApp.appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
                                 if (serverSideRenderedApps.indexOf(embeddedApp.pluginName) === -1) {
                                     serverSideRenderedApps.push(embeddedApp.pluginName);
                                 }

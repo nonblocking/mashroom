@@ -3,10 +3,10 @@ const {merge} = require('webpack-merge');
 const nodeExternals = require('webpack-node-externals');
 const common = require('./webpack.config.common');
 
-module.exports = merge(common,  {
-    entry: `${__dirname  }/src/js/indexSSR`,
+module.exports = merge(common(true),  {
+    entry: './src/indexSSR',
     output: {
-        path: `${__dirname  }/dist`,
+        path: __dirname + '/public',
         filename: 'ssr.js',
         library: {
             type: 'commonjs',
@@ -14,7 +14,6 @@ module.exports = merge(common,  {
     },
     externals: [nodeExternals({
         additionalModuleDirs: [`${__dirname }/../../../node_modules`],
-        allowlist: [/\.vue/]
     })],
     externalsPresets: { node: true },
     mode: 'none',

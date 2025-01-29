@@ -14,9 +14,7 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
         pingButtonLabel,
     });
 
-    const appHtml = await renderToString(app);
-
-    return `<div data-ssr-host="true">${appHtml}</div>`;
+    return renderToString(app);
 };
 
 export default bootstrap;

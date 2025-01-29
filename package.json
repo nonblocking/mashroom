@@ -2,6 +2,10 @@
     "name": "@mashroom/parent",
     "private": true,
     "version": "",
+    "engines": {
+        "node": ">=18",
+        "npm": ">=10"
+    },
     "workspaces": [
         "packages/core/*",
         "packages/plugin-packages/*",

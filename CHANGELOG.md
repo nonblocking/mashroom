@@ -5,26 +5,42 @@
 
  * Login Web-App: Introduced a dark mode (default: off)
  * Portal Default Theme: Overhaul:
-    * Introduced tons of CSS variables
-    * Introduced a dark mode (default: off)
-    * Add the possibility to override CSS variables and style with an external file:
-      ```css
-         :root {
-           --mashroom-portal-color-primary: green;
-         }
-      ```
-      Example plugin config:
-      ```json
-      {
-        "Mashroom Portal Default Theme": {
-          "showEnvAndVersions": false,
-          "showPortalAppHeaders": false,
-          "spaMode": true,
-          "darkMode": "auto",
-          "styleFile": "./defaultThemeOverrides.css"
+   * Introduced tons of CSS variables
+   * Introduced a dark mode (default: off)
+   * Add the possibility to override CSS variables and style with an external file:
+     ```css
+        :root {
+          --mashroom-portal-color-primary: green;
         }
-      }
-      ```
+     ```
+     Example plugin config:
+     ```json
+     {
+       "Mashroom Portal Default Theme": {
+         "showEnvAndVersions": false,
+         "showPortalAppHeaders": false,
+         "spaMode": true,
+         "darkMode": "auto",
+         "styleFile": "./defaultThemeOverrides.css"
+       }
+     }
+     ```
+ * Svelte Demo App: SSR support added
+ * Portal: Simplified server-side rendering: One the client side you can now check for *portalAppSetup.serverSideRendered* and
+   call *hydrate* accordingly. E.g.:
+   ```tsx
+    if (portalAppSetup.serverSideRendered) {
+        root = hydrateRoot(portalAppHostElement, (
+            <App />
+        ));
+    } else {
+        // Default: render on client side
+        root = createRoot(portalAppHostElement);
+        root.render((
+            <App />
+        ));
+    }
+   ```
  * I18N Service: Added new method *getMessageIfExists* which will return null if no message with the given key exists.
    The existing method *getMessage* will now return '??key??' if the key was not found.
  * Portal: Fixed handling of multiple Modal Apps at the same time: Only the latest is shown at a time and on close the next one will get visible.

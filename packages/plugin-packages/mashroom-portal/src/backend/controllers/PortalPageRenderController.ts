@@ -517,9 +517,7 @@ export default class PortalPageRenderController {
                     priority: portalPageApp.priority ?? 0,
                     statement: `portalAppService.loadApp('${areaId}', '${portalPageApp.pluginName}', '${portalPageApp.instanceId}', null, null);`,
                 });
-               if (portalPageApp.appSetup) {
-                   preloadedPortalAppSetup[portalPageApp.instanceId] = portalPageApp.appSetup;
-               }
+                preloadedPortalAppSetup[portalPageApp.instanceId] = portalPageApp.appSetup;
            });
         });
 

@@ -29,7 +29,9 @@ module.exports ={
     optimization: {
         minimize: false,
     },
-    externals: [nodeExternals()],
+    externals: [nodeExternals({
+        additionalModuleDirs: [`${__dirname }/../../../node_modules`]
+    })],
     target: 'node',
     mode: 'none'
 };

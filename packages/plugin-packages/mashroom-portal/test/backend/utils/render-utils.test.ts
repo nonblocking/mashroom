@@ -1,8 +1,9 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
-import {renderContent} from '../../../src/backend/utils/render-utils';
+import {renderContent, renderAppWrapper} from '../../../src/backend/utils/render-utils';
 import type {MashroomPortalPageApps} from '../../../type-definitions/internal';
+import type {MashroomPortalAppWrapperRenderModel} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -31,7 +32,7 @@ setPortalPluginConfig({
     }
 });
 
-describe('path-utils', () => {
+describe('render-utils', () => {
 
     it('renders the page content', async () => {
         const layout = `
@@ -44,7 +45,7 @@ describe('path-utils', () => {
                 </div>
             </div>
         `;
-        const appInfo: MashroomPortalPageApps = {
+        const portalApps: MashroomPortalPageApps = {
             'app-area1': [
                 {
                     pluginName: 'App 1',
@@ -103,7 +104,7 @@ describe('path-utils', () => {
         const res: any = {};
         const logger = loggingUtils.dummyLoggerFactory();
 
-        const result = await renderContent(layout, appInfo, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
+        const result = await renderContent(layout, portalApps, false, () => { /* nothing to do */ }, (key) => key, req, res, logger);
 
         expect(result).toBeTruthy();
         expect(result.resultHtml).toContain('data-mr-app-id="app1"');
@@ -114,6 +115,34 @@ describe('path-utils', () => {
         expect(result.resultHtml.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
 
         expect(result.serverSideRenderedApps).toEqual(['App 1']);
+        expect(portalApps['app-area1'][0].appSetup.serverSideRendered).toBeTruthy();
+        expect(portalApps['app-area1'][1].appSetup.serverSideRendered).toBeFalsy();
     });
 
+    it('renders the app wrapper', async () => {
+        const req: any = {};
+        const res: any = {};
+
+        const model: MashroomPortalAppWrapperRenderModel = {
+            appId: '1',
+            pluginName: 'Plugin 1',
+            safePluginName: 'Plugin 1',
+            title: 'Test',
+            appSSRHtml: '<div>this is the app content</div>',
+            messages: (key) => key,
+        };
+
+        const html = await renderAppWrapper(false, () => {}, model, req, res, loggingUtils.dummyLoggerFactory());
+
+        expect(html).toBeTruthy();
+
+        expect(html).toBe(`
+    <div data-mr-app-id="1" data-mr-app-name="Plugin 1" class="mashroom-portal-app-wrapper portal-app-Plugin 1">
+        <div class="mashroom-portal-app-header">
+            <div data-mr-app-content="title" class="mashroom-portal-app-header-title">Test</div>
+        </div>
+        <div data-mr-app-content="app" class="mashroom-portal-app-host"><div>this is the app content</div></div>
+    </div>
+`);
+    });
 });

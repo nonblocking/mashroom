@@ -4,18 +4,18 @@
   import type {MashroomPortalMessageBus} from "@mashroom/mashroom-portal/type-definitions";
 
   // Exported props
-  export let messageBus: MashroomPortalMessageBus;
+  export let messageBus: MashroomPortalMessageBus | undefined;
   export let appConfig: { message?: string, pingButtonLabel?: string } = {};
 
   // State
   let pings = 0;
 
   const incrementPing = () => pings += 1;
-  const sendPing = () => messageBus.publish('ping', {});
+  const sendPing = () => messageBus?.publish('ping', {});
 
-  messageBus.subscribe('ping', incrementPing);
+  messageBus?.subscribe('ping', incrementPing);
   onDestroy(() => {
-      messageBus.unsubscribe('ping', incrementPing);
+      messageBus?.unsubscribe('ping', incrementPing);
   });
 </script>
 
