@@ -131,7 +131,7 @@ export default class MashroomPortalService implements MashroomPortalServiceType 
 
     async getPortalAppInstance(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppInstance | null | undefined> {
         const portalAppInstancesCollection = await this._getPortalAppInstancesCollection();
-        return await portalAppInstancesCollection.findOne({pluginName, instanceId});
+        return portalAppInstancesCollection.findOne({pluginName, instanceId});
     }
 
     async insertPortalAppInstance(portalAppInstance: MashroomPortalAppInstance): Promise<void> {
