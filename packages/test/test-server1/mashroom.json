@@ -175,7 +175,7 @@
             "ssrConfig": {
                 "ssrEnable": true,
                 "renderTimoutMs": 2000,
-                "cacheEnable": true,
+                "cacheEnable": false,
                 "cacheTTLSec": 300
             }
         },

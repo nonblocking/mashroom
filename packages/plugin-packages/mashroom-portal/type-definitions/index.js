@@ -802,7 +802,7 @@ export interface MashroomPortalAppService {
     getAppStats(pluginName: string): ?MashroomPortalLoadedPortalAppStats;
 
     /**
-     * Check if some loaded Portal Apps have been update (and have a different version on the server).
+     * Check if some loaded Portal Apps have been updated (and have a different version on the server).
      * This can be used to check if the user should refresh the current page.
      *
      * Returns the list of upgraded Apps.
