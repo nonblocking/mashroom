@@ -50,7 +50,11 @@ describe('ssr-utils', () => {
         {
             name: 'Test App 3',
             ssrInitialHtmlUri: 'http://localhost:1234/ssr-test',
-        }
+        },
+        {
+            name: 'Test App 4',
+            ssrBootstrap: `${__dirname}/ssr-bootstrap2.js`,
+        },
     ];
 
     portalApps.forEach((app) => context.pluginRegistry.registerPortalApp(app as any));
@@ -126,7 +130,28 @@ describe('ssr-utils', () => {
         const html = await renderServerSide('Test App 1', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
 
         expect(html).toBeTruthy();
-        expect(html).toEqual({embeddedPortalPageApps: {}, html: 'this is a test'});
+        expect(html).toEqual({
+            html: 'this is a test',
+            injectHeadScript: [],
+            embeddedPortalPageApps: {},
+        });
+    });
+
+    it('returns a render result from a local SSR bootstrap', async () => {
+        const portalAppSetup: any = {};
+        const req: any  = {
+            pluginContext,
+        };
+        const logger = loggingUtils.dummyLoggerFactory();
+
+        const renderResult = await renderServerSide('Test App 4', portalAppSetup, noopRenderEmbeddedPortalAppsFn, req, logger);
+
+        expect(renderResult).toBeTruthy();
+        expect(renderResult).toEqual({
+            html: '<p>server side rendered html</p>',
+            injectHeadScript: ['alert("foo")'],
+            embeddedPortalPageApps: {},
+        });
     });
 
     it('returns the HTML from a remote SSR route', async () => {
@@ -162,7 +187,11 @@ describe('ssr-utils', () => {
             }
         });
         expect(html).toBeTruthy();
-        expect(html).toEqual({embeddedPortalPageApps: {}, html: 'this is a remote test'});
+        expect(html).toEqual({
+            html: 'this is a remote test',
+            injectHeadScript: [],
+            embeddedPortalPageApps: {},
+        });
     });
 
     it('returns the HTML a SSR bootstrap that embeds other Apps', async () => {
@@ -195,20 +224,20 @@ describe('ssr-utils', () => {
             portalPageApps = apps;
             return {
                 resultHtml: `<div>wooohooo</div>`,
+                serverSideRenderingInjectHeadScript: ['alert("foo")'],
                 serverSideRenderedApps: [],
                 embeddedPortalPageApps: {},
             };
         };
 
-        const html = await renderServerSide('Test App 3', portalAppSetup, embeddedPortalAppsRenderer, req, logger);
+        const ssrRenderResult = await renderServerSide('Test App 3', portalAppSetup, embeddedPortalAppsRenderer, req, logger);
 
-        expect(html).toBeTruthy();
+        expect(ssrRenderResult).toBeTruthy();
+        expect(ssrRenderResult!.injectHeadScript.length).toBe(1);
         expect(hostHtml).toBe('<div><h1>Test Composite App</h1><div id="embedded-app-host"></div></div>');
         expect(portalPageApps).toBeTruthy();
-        // @ts-ignore
-        expect(portalPageApps['embedded-app-host'].length).toBe(1);
-        // @ts-ignore
-        expect(portalPageApps['embedded-app-host'][0].instanceId).toContain('__ssr_embedded___');
+        expect(portalPageApps!['embedded-app-host'].length).toBe(1);
+        expect(portalPageApps!['embedded-app-host'][0].instanceId).toContain('__ssr_embedded___');
     });
 
     it('returns null if the rendering takes too long', async () => {

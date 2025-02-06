@@ -24,14 +24,10 @@ import type {
 import type {
     MashroomPortalIncludeStyleServerSideRenderedAppsResult,
     SSRRenderResult,
-    MashroomPortalPageApps,
+    MashroomPortalPageApps, MashroomPortalContentRenderResult,
 } from '../../../type-definitions/internal';
 
-type RenderEmbeddedPortalAppsResult = {
-    readonly resultHtml: string;
-    readonly embeddedPortalPageApps: MashroomPortalPageApps;
-}
-type RenderEmbeddedPortalAppsFn = (hostHtml: string, portalPageApps: MashroomPortalPageApps) => Promise<RenderEmbeddedPortalAppsResult>;
+type RenderEmbeddedPortalAppsFn = (hostHtml: string, portalPageApps: MashroomPortalPageApps) => Promise<MashroomPortalContentRenderResult>;
 
 const CACHE_REGION = 'mashroom-portal-ssr';
 
@@ -49,7 +45,7 @@ const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalApp
     return data ? createHash('sha256').update(data).digest('hex') : null;
 };
 
-const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: MashroomPortalAppSSRResultEmbeddedApps, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<RenderEmbeddedPortalAppsResult> => {
+const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: MashroomPortalAppSSRResultEmbeddedApps, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<SSRRenderResult> => {
     const pluginRegistry = context.pluginRegistry;
     const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
     const mashroomSecurityUser = getUser(req);
@@ -79,14 +75,15 @@ const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: 
         });
     }
 
-    const {resultHtml, embeddedPortalPageApps: embeddedSubPortalApps} = await renderEmbeddedPortalAppsFn(rootAppHtml, embeddedPortalPageApps);
+    const {resultHtml: html, serverSideRenderingInjectHeadScript: injectHeadScript, embeddedPortalPageApps: embeddedSubPortalApps} = await renderEmbeddedPortalAppsFn(rootAppHtml, embeddedPortalPageApps);
     Object.keys(embeddedSubPortalApps).forEach((appAreaId) => {
         embeddedPortalPageApps[appAreaId] = embeddedPortalPageApps[appAreaId] || [];
         embeddedPortalPageApps[appAreaId].push(...embeddedSubPortalApps[appAreaId]);
     });
 
     return {
-        resultHtml,
+        html,
+        injectHeadScript,
         embeddedPortalPageApps,
     };
 };
@@ -157,6 +154,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     }
 
     let html;
+    let injectHeadScript: Array<string> = [];
     let embeddedApps: MashroomPortalAppSSRResultEmbeddedApps = [];
     let embeddedPortalPageApps: MashroomPortalPageApps ={};
 
@@ -164,6 +162,9 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
         html = htmlOrSSRRenderResult;
     } else if (htmlOrSSRRenderResult && 'html' in htmlOrSSRRenderResult) {
         html = htmlOrSSRRenderResult.html;
+        if (typeof htmlOrSSRRenderResult.injectHeadScript === 'string') {
+            injectHeadScript.push(htmlOrSSRRenderResult.injectHeadScript);
+        }
         embeddedApps = htmlOrSSRRenderResult.embeddedApps ?? [];
     }
 
@@ -173,12 +174,14 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
 
     if (embeddedApps.length > 0) {
         const embeddedAppsRenderResult = await recursivelyRenderEmbeddedApps(html, embeddedApps, renderEmbeddedPortalAppsFn, req, logger);
-        html = embeddedAppsRenderResult.resultHtml;
+        html = embeddedAppsRenderResult.html;
+        injectHeadScript.push(...embeddedAppsRenderResult.injectHeadScript);
         embeddedPortalPageApps = embeddedAppsRenderResult.embeddedPortalPageApps;
     }
 
     const ssrRenderResult: SSRRenderResult = {
         html,
+        injectHeadScript,
         embeddedPortalPageApps,
     };
 

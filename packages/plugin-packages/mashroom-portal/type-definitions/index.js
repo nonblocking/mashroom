@@ -1221,6 +1221,7 @@ export type MashroomPortalAppSSRResultEmbeddedApps = Array<MashroomPortalAppSSRR
 
 export type MashroomPortalAppSSRResult = {
     +html: string;
+    +injectHeadScript?: string;
     +embeddedApps?: MashroomPortalAppSSRResultEmbeddedApps;
 }
 

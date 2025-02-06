@@ -11,7 +11,11 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
         }
     });
 
-    return result.body;
+    return {
+        html: result.body,
+        // It seems result.head is empty in this case. Also, not sure if it would actually contain a script
+        // injectHeadScript: result.head,
+    };
 };
 
 export default bootstrap;

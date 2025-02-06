@@ -138,6 +138,7 @@ export type MashroomPortalContext = {
 export type MashroomPortalContentRenderResult = {
     readonly resultHtml: string;
     readonly serverSideRenderedApps: Array<string>;
+    readonly serverSideRenderingInjectHeadScript: Array<string>;
     readonly embeddedPortalPageApps: MashroomPortalPageApps;
 }
 
@@ -164,6 +165,7 @@ export type MashroomPortalHeaderRenderModel = {
     readonly userAgent: UserAgent, cdnHost: string | undefined | null;
     readonly inlineStyleHeaderContent: string;
     readonly includedAppStyles: Array<string>;
+    readonly serverSideRenderingInjectHeadScript: Array<string>;
     readonly devMode: boolean;
 }
 
@@ -186,5 +188,6 @@ export type ClientLogMessage = {
 
 export type SSRRenderResult = {
     readonly html: string;
+    readonly injectHeadScript: Array<string>;
     readonly embeddedPortalPageApps: MashroomPortalPageApps;
 }

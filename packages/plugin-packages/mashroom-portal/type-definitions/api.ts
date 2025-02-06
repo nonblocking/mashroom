@@ -1258,6 +1258,7 @@ export type MashroomPortalAppSSRResultEmbeddedApps = Array<MashroomPortalAppSSRR
 
 export type MashroomPortalAppSSRResult = {
     readonly html: string;
+    readonly injectHeadScript?: string;
     readonly embeddedApps?: MashroomPortalAppSSRResultEmbeddedApps;
 }
 
