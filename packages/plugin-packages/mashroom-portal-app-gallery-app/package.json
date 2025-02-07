@@ -1,0 +1,28 @@
+{
+    "name": "@mashroom/mashroom-portal-app-gallery-app",
+    "description": "An App that shows all available Portal Apps with screenshots and some basic information",
+    "homepage": "https://www.mashroom-server.com",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/nonblocking/mashroom.git"
+    },
+    "license": "MIT",
+    "version": "1.0.0",
+    "sideEffects": false,
+    "files": [
+        "dist"
+    ],
+    "devDependencies": {
+        "@mashroom/mashroom-portal": "2.7.1",
+        "@types/react": "^18.3.18",
+        "@types/react-dom": "^18.3.5",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "scripts": {
+        "lint": "eslint --fix",
+        "type-check": "tsc --noEmit",
+        "dev": "webpack serve --hot --mode development",
+        "build": "webpack --mode production"
+    }
+}

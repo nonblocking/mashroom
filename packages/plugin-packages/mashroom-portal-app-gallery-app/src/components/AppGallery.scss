@@ -1,0 +1,37 @@
+
+.AppGallery {
+    padding: 10px;
+
+    h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .Error {
+        color: red;
+        padding: 20px 10px;
+    }
+
+    .PortalApps {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+
+        &>div {
+            width: 100%;
+        }
+
+        &.PortalApps2Columns {
+            &>div {
+                width: calc(50% - 20px);
+            }
+        }
+
+        &.PortalApps3Columns {
+            &>div {
+                width: calc(33% - 20px);
+            }
+        }
+    }
+
+}

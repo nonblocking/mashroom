@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Added a *App Gallery* App that shows all registered Apps with a screenshot (if available), some basic data and link
+   to the *Sandbox* to try it out
  * Svelte Demo App: SSR support added
  * Portal: The server-side rendering bootstrap can now also return some script that needs to be injected into the head, which is useful if you
    want to pass some loaded data to the client-side for hydration. E.g.:

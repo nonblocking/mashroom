@@ -1,0 +1,31 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal App Gallery App",
+            "type": "portal-app2",
+            "clientBootstrap": "startAppGalleryApp",
+            "resources": {
+                "js": ["bundle.js"]
+            },
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "category": "hidden",
+                "title": {
+                    "en": "Mashroom App Gallery",
+                    "de": "Mashroom App Gallerie"
+                },
+                "appConfig": {
+                    "sandboxPath": "/portal/web/sandbox",
+                    "showTitle": true,
+                    "overrideTitle": null,
+                    "showHiddenApps": false,
+                    "showNotPermittedApps": true
+                }
+            }
+        }
+    ]
+}
