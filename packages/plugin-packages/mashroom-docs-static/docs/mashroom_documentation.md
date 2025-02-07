@@ -1366,6 +1366,8 @@ After that you can start to add additional pages.
 
 [mashroom-portal-remote-messaging-app](../../mashroom-portal-remote-messaging-app/README.md) [inc]
 
+[mashroom-portal-app-gallery-app](../../mashroom-portal-app-gallery-app/README.md) [inc]
+
 ## Demo Plugin Documentation
 
 [mashroom-demo-webapp](../../mashroom-demo-webapp/README.md) [inc]

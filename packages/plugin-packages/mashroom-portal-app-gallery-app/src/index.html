@@ -1,0 +1,343 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0" name="viewport"/>
+    <title>Mashroom App Gallery</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.css">
+    <script src="bundle.js"></script>
+</head>
+<body>
+
+    <div id="app-container">
+        Loading...
+    </div>
+
+    <script type="text/javascript">
+        (function () {
+
+            document.addEventListener("DOMContentLoaded", function () {
+                var element = document.getElementById("app-container");
+                var portalAppSetup = {
+                    lang: 'en',
+                    appConfig: {
+                        sandboxPath: "/portal/web/sandbox",
+                        showTitle: true,
+                        overrideTitle: null,
+                        showHiddenApps: false,
+                        showNotPermittedApps: true
+                    }
+                };
+                var portalClientServices = {
+                    portalAppService: {
+                        searchApps() {
+                            return Promise.resolve( [
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Hybrid Rendering Remote App",
+                                    "version": "1.0.0",
+                                    "title": "Demo Hybrid Rendering Remote App",
+                                    "category": "Demo",
+                                    "description": "A SPA that runs on a remote server and supports hybrid rendering (server-side and client-side).",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1736267956074
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Go WASM App",
+                                    "version": "1.0.2",
+                                    "title": "Demo Go WASM App",
+                                    "category": "Demo",
+                                    "description": "Simple Go/WebAssembly based app that integrates into the Mashroom Portal",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [
+                                        "/portal/web/___/apps/Mashroom%20Portal%20Demo%20Go%20WASM%20Appscreenshot.png"
+                                    ],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602694
+                                },
+                                {
+                                    "available": false,
+                                    "name": "Mashroom Portal IFrame App",
+                                    "version": "2.7.1",
+                                    "title": "IFrame App",
+                                    "category": "Content",
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602694
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Tabify App",
+                                    "version": "2.7.1",
+                                    "title": "Tabify App",
+                                    "category": "Layout",
+                                    "description": "An App that automatically organizes all other Apps in the area where it is placed in tabs",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602694
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Demo Plain ES6 Portal App",
+                                    "version": "1.0.0",
+                                    "title": "Demo Plain ES6 App",
+                                    "category": "Demo",
+                                    "description": null,
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602694
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Portal App Enhancement Test App",
+                                    "version": "1.0.0",
+                                    "title": "Portal App Enhancement Test App",
+                                    "category": "Demo",
+                                    "description": null,
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602697
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Demo ReasonReact Portal App",
+                                    "version": "1.0.0",
+                                    "title": "Demo Reason React App",
+                                    "category": "Demo",
+                                    "description": "Simple ReasonML based app that integrates into the Portal",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602702
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo React App",
+                                    "version": "2.7.1",
+                                    "title": "Demo React App",
+                                    "category": "Demo",
+                                    "description": "A simple React SPA",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [
+                                        "/portal/web/___/apps/Mashroom%20Portal%20Demo%20React%20Appscreenshot.png"
+                                    ],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602703
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo WebSocket Proxy App",
+                                    "version": "2.7.1",
+                                    "title": "Demo WebSocket Proxy App",
+                                    "category": "Demo",
+                                    "description": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [
+                                        "Authenticated"
+                                    ],
+                                    "lastReloadTs": 1738914602703
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Svelte App",
+                                    "version": "2.7.1",
+                                    "title": "Demo Svelte App",
+                                    "category": "Demo",
+                                    "description": "A simple Svelte SPA",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602703
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Vue App",
+                                    "version": "2.7.1",
+                                    "title": "Demo Vue.js App",
+                                    "category": "Demo",
+                                    "description": "A simple Vue.js SPA",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602703
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo SolidJS App",
+                                    "version": "2.7.1",
+                                    "title": "Demo SolidJS App",
+                                    "category": "Demo",
+                                    "description": "A simple SolidJS SPA",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602703
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo React App 2",
+                                    "version": "2.7.1",
+                                    "title": "Demo React App 2",
+                                    "category": "Demo",
+                                    "description": "A simple React SPA that supports SSR and brings a custom config editor",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602703
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo React App 2 Config Editor",
+                                    "version": "2.7.1",
+                                    "title": "Edit Demo React App 2 Config",
+                                    "category": "hidden",
+                                    "description": "A simple React based SPA that supports SSR and brings a custom config editor that can be used in the Mashroom Portal",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602704
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Rest Proxy App",
+                                    "version": "2.7.1",
+                                    "title": "Demo REST Proxy App",
+                                    "category": "Demo",
+                                    "description": "A simple SPA that demonstrateds how the Mashroom Portal proxy can be used to connect to a REST API which cannot be reached directly by the client",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602704
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Remote Messaging App",
+                                    "version": "2.7.1",
+                                    "title": "Remote Messaging Test App",
+                                    "category": "Testing",
+                                    "description": "An App that can be used to test the remote messaging capabilities of the Mashroom Portal",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602704
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Sandbox App",
+                                    "version": "2.7.1",
+                                    "title": "Sandbox App",
+                                    "category": "Testing",
+                                    "description": "An App that can be used to load any other Portal App with a specific configuration and to test message bus interaction",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602717
+                                },
+                                {
+                                    "available": false,
+                                    "name": "Mashroom Portal Admin App",
+                                    "version": "2.7.1",
+                                    "title": null,
+                                    "category": "hidden",
+                                    "requiredRoles": [
+                                        "Administrator"
+                                    ],
+                                    "lastReloadTs": 1738914602718,
+                                    "unavailableReason": "forbidden"
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Welcome Portal App",
+                                    "version": "2.7.1",
+                                    "title": "Welcome App",
+                                    "category": "hidden",
+                                    "description": "Mashroom Portal",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914602718
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Angular App",
+                                    "version": "2.7.1",
+                                    "title": "Demo Angular App",
+                                    "category": "Demo",
+                                    "description": "A simple Angular SPA",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914603244
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Composite App",
+                                    "version": "2.7.1",
+                                    "title": "Demo Composite App",
+                                    "category": "Demo",
+                                    "description": "A simple SPA that uses other SPAs (which are registered to the Mashroom Portal) as building blocks",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914603244
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal Demo Load Dynamically App",
+                                    "version": "2.7.1",
+                                    "title": "Demo Load Dynamically",
+                                    "category": "Demo",
+                                    "description": "A simple SPA that demonstrates how to load and unload other registered SPAs on a page with a specific config",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914603244
+                                },
+                                {
+                                    "available": true,
+                                    "name": "Mashroom Portal App Gallery App",
+                                    "version": "1.0.0",
+                                    "title": "Mashroom App Gallery",
+                                    "description": "An App that shows all available Portal Apps with screenshots and some basic information",
+                                    "tags": [],
+                                    "homepage": "https://www.mashroom-server.com",
+                                    "screenshots": [],
+                                    "requiredRoles": [],
+                                    "lastReloadTs": 1738914605449
+                                }
+                            ]);
+                        }
+                    }
+                };
+                window.startAppGalleryApp(element, portalAppSetup, portalClientServices);
+            });
+        })();
+
+    </script>
+</body>
+</html>

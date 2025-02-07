@@ -528,7 +528,7 @@ describe('PortalAppController', () => {
                 'Role1'
             ],
             screenshots: [
-                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+                '/portal/___/apps/Test%20Portal%20App%201/screenshot.png'
             ],
             tags: [],
             title: 'Translated title',
@@ -572,7 +572,7 @@ describe('PortalAppController', () => {
                 'Role1'
             ],
             screenshots: [
-                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+                '/portal/___/apps/Test%20Portal%20App%201/screenshot.png'
             ],
             tags: [],
             title: 'Translated title',
@@ -680,7 +680,7 @@ describe('PortalAppController', () => {
                 'Role1'
             ],
             screenshots: [
-                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+                '/portal/___/apps/Test%20Portal%20App%201/screenshot.png'
             ],
             tags: [],
             title: 'Translated title',
@@ -725,7 +725,7 @@ describe('PortalAppController', () => {
                 'Role1'
             ],
             screenshots: [
-                '/portal/___/apps/Test%20Portal%20App%201screenshot.png'
+                '/portal/___/apps/Test%20Portal%20App%201/screenshot.png'
             ],
             tags: [],
             title: 'Translated title',

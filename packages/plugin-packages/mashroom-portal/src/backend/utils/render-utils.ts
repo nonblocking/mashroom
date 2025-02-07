@@ -104,22 +104,21 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
     };
 
     let resultHtml = hostHtml;
+    const serverSideRenderingInjectHeadScript: Array<string> = [];
     const embeddedPortalPageApps: MashroomPortalPageApps = {};
     for (const appAreaId of appAreas) {
         promises.push(
             Promise.all(
                 portalPageApps[appAreaId].map(async ({pluginName, appSetup}) => {
+                    let appSSRHtml = null;
                     const ssrRenderResult = await renderServerSide(pluginName, appSetup, renderEmbeddedPortalAppsFn, req, logger);
                     if (ssrRenderResult) {
                         (appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
                         if (serverSideRenderedApps.indexOf(pluginName) === -1) {
                             serverSideRenderedApps.push(pluginName);
                         }
-                    }
-
-                    let appSSRHtml = null;
-                    if (ssrRenderResult) {
                         appSSRHtml = ssrRenderResult.html;
+                        serverSideRenderingInjectHeadScript.push(...ssrRenderResult.injectHeadScript);
                         Object.keys(ssrRenderResult.embeddedPortalPageApps).forEach((areaId) => {
                             ssrRenderResult.embeddedPortalPageApps[areaId].forEach((embeddedApp) => {
                                 (embeddedApp.appSetup as { serverSideRendered: boolean; }).serverSideRendered = true;
@@ -170,6 +169,7 @@ export const renderContent = async (hostHtml: string, portalPageApps: MashroomPo
 
     return {
         resultHtml,
+        serverSideRenderingInjectHeadScript,
         serverSideRenderedApps,
         embeddedPortalPageApps,
     };

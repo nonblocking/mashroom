@@ -1,0 +1,48 @@
+
+.PortalApp {
+    box-shadow: 0 0 4px #C49B5E;
+    border-radius: 10px;
+
+    &.NotPermitted {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .Wrapper {
+        box-sizing: border-box;
+        height: 100%;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .Title {
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 20px;
+    }
+
+    .Description {
+        margin: 10px 0;
+        flex-grow: 2;
+    }
+
+    .Details {
+        .Detail {
+            margin: 3px 0;
+
+            .DetailLabel {
+                font-weight: 700;
+                flex: 0 0 135px;
+            }
+
+            @media (min-width: 400px) {
+                display: flex;
+            }
+        }
+    }
+
+    .RequiredRoles {
+        font-style: italic;
+    }
+}

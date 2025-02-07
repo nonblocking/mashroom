@@ -76,6 +76,57 @@ export default class PortalPageRenderController {
     }
 
     /*
+     * Render the whole page
+     */
+    async renderPortalPage(req: Request, res: Response): Promise<void> {
+        const logger = req.pluginContext.loggerFactory('mashroom.portal');
+
+        try {
+            const path = decodeURIComponent(req.path);
+            const sitePath = getSitePath(req);
+
+            logger.debug(`Request for portal page: ${path} on site: ${sitePath}`);
+
+            const {site, pageRef, page} = await getPageData(sitePath, path, req, logger);
+            logger.debug('Site:', site);
+            logger.debug('PageRef:', pageRef);
+            logger.debug('Page:', page);
+
+            if (!site || !pageRef || !page) {
+                logger.warn('Page not found:', path);
+                res.sendStatus(404);
+                return;
+            }
+
+            if (!await isSitePermitted(req, site.siteId) || !await isPagePermitted(req, page.pageId)) {
+                if (isSignedIn(req)) {
+                    const user = getUser(req);
+                    logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access path: ${path}`);
+                    res.sendStatus(403);
+                } else {
+                    await forceAuthentication(path, req, res, logger);
+                }
+                return;
+            }
+
+            const themeName = page.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
+            const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
+            const layoutName = page.layout || site.defaultLayout || context.portalPluginConfig.defaultLayout;
+
+            const portalName = req.pluginContext.serverConfig.name;
+            const devMode = req.pluginContext.serverInfo.devMode;
+
+            const model = await this._createPortalPageModel(req, res, portalName, devMode, sitePath, site, pageRef, page, theme, layoutName, logger);
+
+            await this._renderPage(theme, model, devMode, req, res, logger);
+
+        } catch (e: any) {
+            logger.error(e);
+            res.sendStatus(500);
+        }
+    }
+
+    /*
      * Get the content part of a given page (without header, navigation, theme or page enhancements).
      * This only works properly if also the originalPageId (the page that was fully loaded) is given as query parameter
      */
@@ -151,11 +202,11 @@ export default class PortalPageRenderController {
 
                 const portalPageApps = await this._getPagePortalApps(req, page, user, cdnService);
                 const setupTheme = () => this._setupTheme(theme, devMode, logger);
-                const result = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
-                pageContent = result.resultHtml;
-                Object.keys(result.embeddedPortalPageApps).forEach((appAreaId) => {
+                const {resultHtml, serverSideRenderingInjectHeadScript, embeddedPortalPageApps} = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+                pageContent = resultHtml;
+                Object.keys(embeddedPortalPageApps).forEach((appAreaId) => {
                     portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
-                    portalPageApps[appAreaId].push(...result.embeddedPortalPageApps[appAreaId]);
+                    portalPageApps[appAreaId].push(...embeddedPortalPageApps[appAreaId]);
                 });
 
                 evalScript = `
@@ -168,6 +219,8 @@ export default class PortalPageRenderController {
                     if (metaKeywords) {
                         metaKeywords.setAttribute('content', '${page.keywords || ''}');
                     }
+                    // Add scripts from server side rendering to head
+                    ${this._getSSRHeadScriptsScript(serverSideRenderingInjectHeadScript)}
                     // Update pageId
                     window['${WINDOW_VAR_PORTAL_PAGE_ID}'] = '${pageId}';
                     var portalAppService = ${WINDOW_VAR_PORTAL_SERVICES}.portalAppService;
@@ -178,7 +231,7 @@ export default class PortalPageRenderController {
                       }
                     });
                     // Execute scripts in the new page content (from SSR)
-                    ${this._executeSSRAppContentScripts(portalPageApps)}
+                    ${this._getExecuteSSRAppContentScriptsScript(portalPageApps)}
                     // Load/hydrate all new ones
                     ${await this._getStaticAppStartupScript(portalPageApps, undefined)}
                 `;
@@ -196,57 +249,6 @@ export default class PortalPageRenderController {
             };
 
             res.json(content);
-        } catch (e: any) {
-            logger.error(e);
-            res.sendStatus(500);
-        }
-    }
-
-    /*
-     * Render the whole page
-     */
-    async renderPortalPage(req: Request, res: Response): Promise<void> {
-        const logger = req.pluginContext.loggerFactory('mashroom.portal');
-
-        try {
-            const path = decodeURIComponent(req.path);
-            const sitePath = getSitePath(req);
-
-            logger.debug(`Request for portal page: ${path} on site: ${sitePath}`);
-
-            const {site, pageRef, page} = await getPageData(sitePath, path, req, logger);
-            logger.debug('Site:', site);
-            logger.debug('PageRef:', pageRef);
-            logger.debug('Page:', page);
-
-            if (!site || !pageRef || !page) {
-                logger.warn('Page not found:', path);
-                res.sendStatus(404);
-                return;
-            }
-
-            if (!await isSitePermitted(req, site.siteId) || !await isPagePermitted(req, page.pageId)) {
-                if (isSignedIn(req)) {
-                    const user = getUser(req);
-                    logger.error(`User '${user ? user.username : 'anonymous'}' is not allowed to access path: ${path}`);
-                    res.sendStatus(403);
-                } else {
-                    await forceAuthentication(path, req, res, logger);
-                }
-                return;
-            }
-
-            const themeName = page.theme || site.defaultTheme || context.portalPluginConfig.defaultTheme;
-            const theme = this._pluginRegistry.themes.find((t) => t.name === themeName);
-            const layoutName = page.layout || site.defaultLayout || context.portalPluginConfig.defaultLayout;
-
-            const portalName = req.pluginContext.serverConfig.name;
-            const devMode = req.pluginContext.serverInfo.devMode;
-
-            const model = await this._createPortalPageModel(req, res, portalName, devMode, sitePath, site, pageRef, page, theme, layoutName, logger);
-
-            await this._renderPage(theme, model, devMode, req, res, logger);
-
         } catch (e: any) {
             logger.error(e);
             res.sendStatus(500);
@@ -293,7 +295,7 @@ export default class PortalPageRenderController {
         const appWrapperTemplateHtml = await renderAppWrapperToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
         const appErrorTemplateHtml = await renderAppErrorToClientTemplate(!!theme, setupTheme, messages, req, res, logger);
 
-        const {resultHtml: pageContent, serverSideRenderedApps, embeddedPortalPageApps} = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
+        const {resultHtml: pageContent, serverSideRenderingInjectHeadScript, serverSideRenderedApps, embeddedPortalPageApps} = await renderContent(portalLayout, portalPageApps, !!theme, setupTheme, messages, req, res, logger);
         Object.keys(embeddedPortalPageApps).forEach((appAreaId) => {
             portalPageApps[appAreaId] = portalPageApps[appAreaId] || [];
             portalPageApps[appAreaId].push(...embeddedPortalPageApps[appAreaId]);
@@ -305,7 +307,7 @@ export default class PortalPageRenderController {
         const portalResourcesHeader = await this._resourcesHeader({
             req, siteId: site.siteId, sitePath, pageId: pageRef.pageId, pageFriendlyUrl: pageRef.friendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml,
             appLoadingFailedMsg, checkAuthenticationExpiration, authenticationExpiredMessage, authenticationExpiration: context.portalPluginConfig.authenticationExpiration,
-            messagingConnectPath, privateUserTopic, userAgent, cdnHost: cdnService?.getCDNHost(), inlineStyleHeaderContent, includedAppStyles, devMode });
+            messagingConnectPath, privateUserTopic, userAgent, cdnHost: cdnService?.getCDNHost(), inlineStyleHeaderContent, includedAppStyles, serverSideRenderingInjectHeadScript, devMode });
         const portalResourcesFooter = await this._resourcesFooter({ req, portalPageApps, adminPluginName, sitePath, pageFriendlyUrl: pageRef.friendlyUrl, lang, userAgent });
 
         const siteBasePath = getFrontendSiteBasePath(req);
@@ -457,7 +459,7 @@ export default class PortalPageRenderController {
     private async _resourcesHeader({
         req, siteId, sitePath, pageId, pageFriendlyUrl, lang, appWrapperTemplateHtml, appErrorTemplateHtml, appLoadingFailedMsg,
         checkAuthenticationExpiration, authenticationExpiration, authenticationExpiredMessage, messagingConnectPath, privateUserTopic,
-        userAgent, cdnHost, inlineStyleHeaderContent, includedAppStyles, devMode,
+        userAgent, cdnHost, inlineStyleHeaderContent, includedAppStyles, serverSideRenderingInjectHeadScript, devMode,
     }: MashroomPortalHeaderRenderModel): Promise<string> {
         return `
             <script>
@@ -482,6 +484,7 @@ export default class PortalPageRenderController {
             ${await this._getPageEnhancementHeaderResources(sitePath, pageFriendlyUrl, lang, userAgent, req)}
             <script src="${getFrontendResourcesBasePath(req, cdnHost)}/${PORTAL_JS_FILE}?v=${getPortalVersionHash(devMode)}"></script>
             ${inlineStyleHeaderContent}
+            <script data-mashroom-ssr-head-script="1">${serverSideRenderingInjectHeadScript.join('\n')}</script>
         `;
     }
 
@@ -536,11 +539,11 @@ export default class PortalPageRenderController {
 
         return `
             window['${WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP}'] = ${JSON.stringify(preloadedPortalAppSetup)};
-            ${loadStatementsStr};
+            ${loadStatementsStr}
         `;
     }
 
-    private _executeSSRAppContentScripts(portalPageApps: MashroomPortalPageApps): string {
+    private _getExecuteSSRAppContentScriptsScript(portalPageApps: MashroomPortalPageApps): string {
         const appAreaIds = Object.keys(portalPageApps);
         return `
             ['${appAreaIds.join('\', \'')}'].forEach(function(appAreaId) {
@@ -557,6 +560,23 @@ export default class PortalPageRenderController {
                 }
             });
         `;
+    }
+
+    private _getSSRHeadScriptsScript(serverSideRenderingInjectHeadScript: Array<string>): string {
+        const removeExistingScripts = `
+            var headEl = document.head;
+            var existingScripts = headEl.querySelectorAll('script[data-mashroom-ssr-head-script]');
+            for (var i = 0; i < existingScripts.length; i++) {
+                headEl.removeChild(existingScripts[i]);
+            }
+        `;
+        const addScriptsScript = serverSideRenderingInjectHeadScript.map((script) => `
+            var scriptEl = document.createElement('script');
+            scriptEl.setAttribute('data-mashroom-ssr-head-script', '1');
+            scriptEl.innerText = \`${script}\`;
+            headEl.appendChild(scriptEl);
+        `).join('\n');
+        return `${removeExistingScripts}\n${addScriptsScript}`;
     }
 
     private async _getPagePortalApps(req: Request, page: MashroomPortalPage, mashroomSecurityUser: MashroomSecurityUser | undefined | null, cdnService: MashroomCDNService | undefined | null): Promise<MashroomPortalPageApps> {

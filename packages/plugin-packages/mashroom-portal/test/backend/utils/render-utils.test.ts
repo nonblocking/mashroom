@@ -87,7 +87,7 @@ describe('render-utils', () => {
                             return [
                                 {
                                     name: 'App 1',
-                                    ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
+                                    ssrBootstrap: `${__dirname}/ssr-bootstrap2.js`,
                                 },
                             ];
                         }
@@ -110,11 +110,14 @@ describe('render-utils', () => {
         expect(result.resultHtml).toContain('data-mr-app-id="app1"');
         expect(result.resultHtml).toContain('data-mr-app-id="app2"');
         expect(result.resultHtml).toContain('data-mr-app-id="app3"');
-
+        // server-side rendered
+        expect(result.resultHtml).toContain('<div data-mr-app-content="app" class="mashroom-portal-app-host"><p>server side rendered html</p></div>');
         expect(result.resultHtml.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app1"/) > 0).toBeTruthy();
         expect(result.resultHtml.search(/id="app-area2">[\s\S]*<div data-mr-app-id="app2"/) > 0).toBeTruthy();
+        expect(result.resultHtml.search(/id="app-area1">[\s\S]*<div data-mr-app-id="app3"/) > 0).toBeTruthy();
 
         expect(result.serverSideRenderedApps).toEqual(['App 1']);
+        expect(result.serverSideRenderingInjectHeadScript).toEqual(['alert("foo")']);
         expect(portalApps['app-area1'][0].appSetup.serverSideRendered).toBeTruthy();
         expect(portalApps['app-area1'][1].appSetup.serverSideRendered).toBeFalsy();
     });

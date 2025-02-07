@@ -3,7 +3,7 @@ import path from 'path';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalPageRenderController from '../../../src/backend/controllers/PortalPageRenderController';
-import type {MashroomPortalTheme, MashroomPortalLayout,MashroomPortalPageRenderModel} from '../../../type-definitions';
+import type {MashroomPortalTheme, MashroomPortalLayout, MashroomPortalPageRenderModel, MashroomPortalPageContent} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -24,7 +24,7 @@ setPortalPluginConfig({
     },
     defaultProxyConfig: {},
     ssrConfig: {
-        ssrEnable: false,
+        ssrEnable: true,
         renderTimoutMs: 2000,
         cacheEnable: false,
         cacheTTLSec: 300,
@@ -79,6 +79,7 @@ const pluginRegistry2: any = {
         },
     }, {
         name: 'Mashroom Welcome Portal App 2',
+        ssrBootstrap: `${__dirname}/ssr-bootstrap2.js`,
         defaultAppConfig: {
             firstName: 'Foo',
         },
@@ -254,7 +255,14 @@ const pluginContext: any = {
         portal: {
             service: {
                 getPortalApps() {
-                    return [];
+                    return [{
+                        name: 'Mashroom Welcome Portal App 2',
+                        ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
+                        resourcesRootUri: `file://${__dirname}`,
+                        resources: {
+                            js: ['bundle.js'],
+                        },
+                    }];
                 },
                 findSiteByPath() {
                     return site;
@@ -380,13 +388,15 @@ describe('PortalPageRenderController', () => {
 
         const res: any = {
             type: () => { /* nothing to do */ },
-            render: (template: string, model: MashroomPortalPageRenderModel, cb: (error: any, html: string) => void) => {
+            render: (template: string, model: any, cb: (error: any, html: string) => void) => {
                 if (template === 'portal') {
+                    const portalModel = model as MashroomPortalPageRenderModel;
+
                     expect(engineName).toBe('fooEngine');
                     expect(webappProps.get('view engine')).toBe('fooEngine');
                     expect(webappProps.get('views')).toBe('./views');
 
-                    expect(model.site).toEqual({
+                    expect(portalModel.site).toEqual({
                         siteId: 'default',
                         title: 'Default Site',
                         path: '/web',
@@ -421,18 +431,37 @@ describe('PortalPageRenderController', () => {
                             }
                         ]
                     });
-                    expect(model.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Mashroom Welcome Portal App'}, {instanceId: '3', pluginName: 'Mashroom Welcome Portal App 2'}]}, theme: 'my-theme', title: 'Test Page'});
-                    expect(model.siteBasePath).toBe('/portal/web');
-                    expect(model.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
-                    expect(model.apiBasePath).toBe('/portal/web/___/api');
-                    expect(model.pageContent).toContain('<div class="row"><div id="app-area1"><div class="wrapper" /></div><div id="app-area2"><div class="wrapper" /><div class="wrapper" /></div></div>');
 
+                    expect(portalModel.page).toEqual({pageId: 'test-page', hidden: false, friendlyUrl: '/bar', layout: 'my-layout', portalApps: {'app-area1': [{instanceId: 'ABCDEF', pluginName: 'Mashroom Welcome Portal App'}], 'app-area2': [{instanceId: '2', pluginName: 'Mashroom Welcome Portal App'}, {instanceId: '3', pluginName: 'Mashroom Welcome Portal App 2'}]}, theme: 'my-theme', title: 'Test Page'});
+                    expect(portalModel.siteBasePath).toBe('/portal/web');
+                    expect(portalModel.resourcesBasePath).toBe('/portal/web/___/theme/my-theme');
+                    expect(portalModel.apiBasePath).toBe('/portal/web/___/api');
+
+                    expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalApiPath\'] = \'/portal/web/___/api\'');
+                    expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalSiteUrl\'] = \'/portal/web\'');
+                    expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalPageId\'] = \'test-page\'');
+                    expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalLanguage\'] = \'en\'');
+                    expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalAppWrapperTemplate\'] = \'<div class="wrapper">???</div>\'');
+                    expect(portalModel.portalResourcesHeader).toContain('<script src="/portal/web/___/client.js?v=6d1579cfd3"></script>');
+                    expect(portalModel.portalResourcesHeader).toContain('<script data-mashroom-ssr-head-script="1">alert("foo")</script>');
+
+                    expect(portalModel.portalResourcesFooter).toContain('window[\'MashroomPortalPreloadedAppSetup\'] =');
+                    expect(portalModel.portalResourcesFooter).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null)');
+                    expect(portalModel.portalResourcesFooter).toContain('portalAppService.loadApp(\'app-area2\', \'Mashroom Welcome Portal App\', \'2\', null, null)');
+                    expect(portalModel.portalResourcesFooter).toContain('portalAppService.loadApp(\'app-area2\', \'Mashroom Welcome Portal App 2\', \'3\', null, null)');
+                    expect(portalModel.portalResourcesFooter).toContain('portalAppService.loadApp(\'mashroom-portal-admin-app-container\', \'admin-portal-app\', null, null, null)');
+
+                    expect(portalModel.pageContent).toContain('<div class="row"><div id="app-area1"><div class="wrapper">???</div></div><div id="app-area2"><div class="wrapper">???</div><div class="wrapper"><p>server side rendered html</p></div></div></div>');
+
+                    cb(null, 'RENDERED CONTENT');
+                    return;
                 }
 
-                cb(null, '<div class="wrapper" />');
+                // Templates: appWrapper, appError
+                cb(null, `<div class="wrapper">${model.appSSRHtml ?? '???'}</div>`);
             },
             send: (body: string) => {
-                expect(body).toBe('<div class="wrapper" />');
+                expect(body).toBe('RENDERED CONTENT');
                 done();
             }
         };
@@ -520,10 +549,23 @@ describe('PortalPageRenderController', () => {
         const res: any = {
             type: () => { /* nothing to do */ },
             render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
-            json: (content: any) => {
+            json: (content: MashroomPortalPageContent) => {
                 expect(content).toBeTruthy();
+
                 expect(content.pageContent).toContain('<div id="app-area1">');
                 expect(content.pageContent).toContain('<div data-mr-app-id="ABCDEF" data-mr-app-name="Mashroom Welcome Portal App" class="mashroom-portal-app-wrapper portal-app-mashroom-welcome-portal-app">');
+                expect(content.pageContent).toContain('<div data-mr-app-content="app" class="mashroom-portal-app-host"><p>server side rendered html</p></div>');
+
+                expect(content.evalScript).toContain('var existingScripts = headEl.querySelectorAll(\'script[data-mashroom-ssr-head-script]\')');
+                expect(content.evalScript).toContain('headEl.removeChild(existingScripts[i])');
+                expect(content.evalScript).toContain('scriptEl.setAttribute(\'data-mashroom-ssr-head-script\', \'1\');');
+                expect(content.evalScript).toContain('scriptEl.innerText = `alert("foo")`;');
+                expect(content.evalScript).toContain('portalAppService.unloadApp(app.id)');
+                expect(content.evalScript).toContain('window[\'MashroomPortalPreloadedAppSetup\'] = ');
+                expect(content.evalScript).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null)');
+                expect(content.evalScript).toContain('portalAppService.loadApp(\'app-area2\', \'Mashroom Welcome Portal App\', \'2\', null, null)');
+                expect(content.evalScript).toContain('portalAppService.loadApp(\'app-area2\', \'Mashroom Welcome Portal App 2\', \'3\', null, null)');
+
                 done();
             }
         };
@@ -555,7 +597,7 @@ describe('PortalPageRenderController', () => {
         const res: any = {
             type: () => { /* nothing to do */ },
             render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
-            json: (content: any) => {
+            json: (content: MashroomPortalPageContent) => {
                 expect(content).toBeTruthy();
                 expect(content).toEqual({
                     fullPageLoadRequired: true, pageContent: '', evalScript: '',
@@ -594,7 +636,7 @@ describe('PortalPageRenderController', () => {
         const res: any = {
             type: () => { /* nothing to do */ },
             render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
-            json: (content: any) => {
+            json: (content: MashroomPortalPageContent) => {
                 expect(content).toBeTruthy();
                 expect(content.pageContent).toContain('<div id="app-area1">');
                 done();
@@ -631,7 +673,7 @@ describe('PortalPageRenderController', () => {
         const res: any = {
             type: () => { /* nothing to do */ },
             render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
-            json: (content: any) => {
+            json: (content: MashroomPortalPageContent) => {
                 expect(content).toBeTruthy();
                 expect(content).toEqual({
                     fullPageLoadRequired: true, pageContent: '', evalScript: '',
@@ -670,7 +712,7 @@ describe('PortalPageRenderController', () => {
         const res: any = {
             type: () => { /* nothing to do */ },
             render: (template: string, model: any, cb: (error: any) => void) => cb({message: 'Failed to lookup view XXX'}),
-            json: (content: any) => {
+            json: (content: MashroomPortalPageContent) => {
                 expect(content).toBeTruthy();
                 expect(content.pageContent).toContain('<div id="app-area1">');
                 done();

@@ -25,7 +25,27 @@
        }
      }
      ```
+ * Added a *App Gallery* App that shows all registered Apps with a screenshot (if available), some basic data and link
+   to the *Sandbox* to try it out
  * Svelte Demo App: SSR support added
+ * Portal: The server-side rendering bootstrap can now also return some script that needs to be injected into the head, which is useful if you
+   want to pass some loaded data to the client-side for hydration. E.g.:
+   ```ts
+   const ssrBootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppSetup) => {
+     const {appId} = portalAppSetup;
+
+     // TODO: Load data and render
+     let someLoadedData = {};
+     let html = '';
+
+     return {
+       html,
+       injectHeadScript: `
+         window['__my_data_${appId}'] = ${JSON.stringify(someLoadedData)};
+       `
+      };
+   };
+   ```
  * Portal: Simplified server-side rendering: One the client side you can now check for *portalAppSetup.serverSideRendered* and
    call *hydrate* accordingly. E.g.:
    ```tsx

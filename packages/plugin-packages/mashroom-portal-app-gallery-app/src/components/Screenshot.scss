@@ -1,0 +1,43 @@
+
+@use "../variables" as *;
+
+.Screenshot {
+    height: 200px;
+
+    .NoImage {
+        display: table;
+        margin: 65px auto 0 auto;
+        text-align: center;
+
+        .NoImageIcon {
+            svg {
+                height: 70px;
+            }
+        }
+    }
+
+    .NotPermitted {
+        display: table;
+        margin: 70px auto 0 auto;
+        text-align: center;
+
+        .NotPermittedIcon {
+            &:before {
+                font-family: $FONT_ICON;
+                font-weight: 900;
+                content: '\f05e';
+                font-size: 4em;
+                color: red;
+            }
+        }
+    }
+
+    .Image {
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        background-size: contain;
+        background-position: center center;
+        background-repeat: no-repeat;
+    }
+}
