@@ -1,3 +1,4 @@
+@use "../variables" as *;
 
 .FilterBar {
 
@@ -6,8 +7,8 @@
     }
 
     .SearchFilter {
-        margin-bottom: 20px;
-        margin-right: 20px;
+        margin-bottom: $DEFAULT_SPACING;
+        margin-right: $DEFAULT_SPACING;
 
         input {
             min-width: 120px;
@@ -15,7 +16,7 @@
     }
 
     .CategoryFilter {
-        margin-bottom: 20px;
+        margin-bottom: $DEFAULT_SPACING;
         display: flex;
         align-items: center;
 

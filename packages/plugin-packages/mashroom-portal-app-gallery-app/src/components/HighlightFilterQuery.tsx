@@ -7,7 +7,7 @@ type Props = {
 }
 
 export default ({text, searchFilter}: Props) => {
-    if (!searchFilter || searchFilter.length < 3) {
+    if (!searchFilter || searchFilter.length < 2) {
         return text;
     }
 

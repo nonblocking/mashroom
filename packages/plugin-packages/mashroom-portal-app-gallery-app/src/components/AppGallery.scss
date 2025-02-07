@@ -1,6 +1,8 @@
+@use "../variables" as *;
 
 .AppGallery {
-    padding: 10px;
+    background-color: $COLOR_BACKGROUND;
+    padding: $DEFAULT_SPACING;
 
     h2 {
         font-size: 1.5em;
@@ -8,14 +10,14 @@
     }
 
     .Error {
-        color: red;
-        padding: 20px 10px;
+        color: $COLOR_ERROR;
+        padding: $DEFAULT_SPACING;
     }
 
     .PortalApps {
         display: flex;
         flex-wrap: wrap;
-        gap: 20px;
+        gap: $DEFAULT_SPACING;
 
         &>div {
             width: 100%;
@@ -23,13 +25,13 @@
 
         &.PortalApps2Columns {
             &>div {
-                width: calc(50% - 20px);
+                width: calc(50% - $DEFAULT_SPACING);
             }
         }
 
         &.PortalApps3Columns {
             &>div {
-                width: calc(33% - 20px);
+                width: calc(33% - $DEFAULT_SPACING);
             }
         }
     }
