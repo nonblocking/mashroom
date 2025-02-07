@@ -195,6 +195,7 @@ export default class PortalAppController {
                 if (q) {
                     let titles = '';
                     let descriptions = '';
+                    let tags = '';
                     if (portalApp.title) {
                         if (typeof portalApp.title === 'string') {
                             titles = portalApp.title;
@@ -209,9 +210,13 @@ export default class PortalAppController {
                             descriptions = Object.values(portalApp.description).join(' ');
                         }
                     }
+                    if (Array.isArray(portalApp.tags)) {
+                        tags = portalApp.tags.join(' ');
+                    }
                     return portalApp.name.toLowerCase().indexOf(q.toLowerCase()) !== -1 ||
                         titles.toLowerCase().indexOf(q.toLowerCase()) !== -1 ||
-                        descriptions.toLowerCase().indexOf(q.toLowerCase()) !== -1;
+                        descriptions.toLowerCase().indexOf(q.toLowerCase()) !== -1 ||
+                        tags.toLowerCase().indexOf(q.toLowerCase()) !== -1;
                 }
                 if (updatedSince) {
                     return portalApp.lastReloadTs > updatedSince;
@@ -240,7 +245,7 @@ export default class PortalAppController {
 
                 const encodedPortalAppName = encodeURIComponent(portalApp.name);
                 const resourcesBasePath = `${getFrontendResourcesBasePath(req, cdnService?.getCDNHost())}${PORTAL_APP_RESOURCES_BASE_PATH}/${encodedPortalAppName}`;
-                const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}${path}`);
+                const screenshots = (portalApp.screenshots || []).map((path) => `${resourcesBasePath}/${path}`);
                 return {
                     available: true,
                     name: portalApp.name,
