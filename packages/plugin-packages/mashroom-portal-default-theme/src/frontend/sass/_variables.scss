@@ -3,10 +3,11 @@
 :root {
     --mashroom-portal-font-icon: 'Font Awesome 6 Free';
     --mashroom-portal-font-icon-brands: 'Font Awesome 6 Brands';
-    --mashroom-portal-font-default: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --mashroom-portal-font-default: 'Helvetica Neue', 'Open Sans', Helvetica, Arial, sans-serif;
     --mashroom-portal-font-serif: 'Bitter', 'Lucida Grande', 'Lucida Sans Unicode', serif;
     --mashroom-portal-line-font-size-default: 16px;
     --mashroom-portal-line-height-default: 1.5;
+    --mashroom-portal-border-radius: 8px;
 
     --mashroom-portal-color-primary: #4D487F;
     --mashroom-portal-color-primary-light: #706aab;
@@ -20,19 +21,25 @@
     --mashroom-portal-gutter-width: 16px;
     --mashroom-portal-spacing-default: 16px;
     --mashroom-portal-spacing-small: 8px;
-    --mashroom-portal-padding-input: 8px 12px;
-    --mashroom-portal-padding-button: 10px 16px;
+    --mashroom-portal-padding-input: 16px 16px;
+    --mashroom-portal-padding-button: 16px 16px;
+    --mashroom-portal-padding-tab-button: 8px 16px;
+    --mashroom-portal-padding-nav: 8px 16px;
+
+    --mashroom-portal-input-placeholder-error: #E30000;
+    --mashroom-portal-input-color-error: #8F0000;
+    --mashroom-portal-input-border-error: #E30000;
+    --mashroom-portal-input-background-error: #FBD6D6;
 
     // Light theme
-    --mashroom-portal-light-theme-color-text-default: black;
+    --mashroom-portal-light-theme-color-text-default: black; 
     --mashroom-portal-light-theme-color-text-secondary: #333;
     --mashroom-portal-light-theme-color-disabled: #666;
-    --mashroom-portal-light-theme-color-input-placeholder: #AAA;
-    --mashroom-portal-light-theme-color-input-border: #AAA;
     --mashroom-portal-light-theme-color-navigation: #333;
     --mashroom-portal-light-theme-color-error: red;
-    --mashroom-portal-light-theme-color-button: var(--mashroom-portal-color-primary);
+    --mashroom-portal-light-theme-color-button: #4D487F; //todo var(--mashroom-portal-color-primary);
     --mashroom-portal-light-theme-color-button-hover: var(--mashroom-portal-color-primary-dark);
+    --mashroom-portal-light-theme-color-button-secondary: #2E2B3F;
     --mashroom-portal-light-theme-background-color-default: #F2F2F2;
     --mashroom-portal-light-theme-background-color-app: white;
     --mashroom-portal-light-theme-background-color-app-header: white;
@@ -48,6 +55,43 @@
     --mashroom-portal-light-theme-background-color-admin-app-bar: #111111;
     --mashroom-portal-light-theme-background-color-footer: white;
 
+    --mashroom-portal-light-theme-message-info-background-color: #E2EFFC;
+    --mashroom-portal-light-theme-message-success-background-color: #E2FCE9;
+    --mashroom-portal-light-theme-message-error-background-color: #FBD6D6;
+    --mashroom-portal-light-theme-message-color: #000;
+
+    --mashroom-portal-light-theme-table-header-row-background-color: #D6D6D6;
+    --mashroom-portal-light-theme-table-row-background-color: #FAFAFA;
+    --mashroom-portal-light-theme-table-row-even-background-color: #F0F0F0;
+
+    --mashroom-portal-light-theme-color-input-placeholder: #AAA;
+    --mashroom-portal-light-theme-color-input-color: #000;
+    --mashroom-portal-light-theme-color-input-border: #CCC;
+    --mashroom-portal-light-theme-color-input-background: #fff;
+
+    --mashroom-portal-light-theme-icon-button-color: #4d487f;
+
+
+    --mashroom-portal-light-theme-tab-dialog-button-background: #D6D6D6;
+    --mashroom-portal-light-theme-tab-dialog-button-color: #4D487F;
+    --mashroom-portal-light-theme-tab-dialog-button-background-hover: var(--mashroom-portal-color-primary-dark);
+    --mashroom-portal-light-theme-tab-dialog-button-color-hover: #fff;
+    --mashroom-portal-light-theme-tab-dialog-button-active-background: #242334;
+    --mashroom-portal-light-theme-tab-dialog-button-active-color: #fff;
+    --mashroom-portal-light-theme-tab-dialog-button-active-background-hover: #000;
+    --mashroom-portal-light-theme-tab-dialog-button-active-color-hover: #fff;
+
+    --mashroom-portal-light-theme-nav-background-color: #fafafa;
+    --mashroom-portal-ligth-theme-nav-color: #333;
+    --mashroom-portal-light-theme-nav-background-color-hover: #4D487F;
+    --mashroom-portal-ligth-theme-nav-color-hover: #fff;
+    --mashroom-portal-light-theme-nav-active-background-color: #4D487F;
+    --mashroom-portal-light-theme-nav-active-color: #fff;
+
+
+
+
+
     // Dark theme
     --mashroom-portal-dark-theme-color-text-default: white;
     --mashroom-portal-dark-theme-color-text-secondary: #AAA;
@@ -56,11 +100,13 @@
     --mashroom-portal-dark-theme-color-input-border: #666;
     --mashroom-portal-dark-theme-color-navigation: #AAA;
     --mashroom-portal-dark-theme-color-error: #bf0000;
-    --mashroom-portal-dark-theme-color-button: var(--mashroom-portal-color-primary);
+    --mashroom-portal-dark-theme-color-button: #4D487F; // todo var(--mashroom-portal-color-primary);
     --mashroom-portal-dark-theme-color-button-hover: var(--mashroom-portal-color-primary-light);
+    --mashroom-portal-dark-theme-color-button-secondary: #2E2B3F;
     --mashroom-portal-dark-theme-background-color-default: #100F1A;
-    --mashroom-portal-dark-theme-background-color-app: #181628;;
-    --mashroom-portal-dark-theme-background-color-app-header: #181628;;
+    --mashroom-portal-dark-theme-background-color-app: #1C192E; // #181628;;
+    --mashroom-portal-dark-theme-background-color-app-header: #181628;
+    ;
     --mashroom-portal-dark-theme-background-color-modal: #181628;
     --mashroom-portal-dark-theme-background-color-modal-header: #181628;
     --mashroom-portal-dark-theme-background-color-input: #201D35;
@@ -70,13 +116,50 @@
     --mashroom-portal-dark-theme-background-color-navigation-hover: #322e53;
     --mashroom-portal-dark-theme-background-color-dropdown: #181628;
     --mashroom-portal-dark-theme-background-color-dropdown-hover: #322e53;
-    --mashroom-portal-dark-theme-background-color-admin-app-bar: #111111;
+    --mashroom-portal-dark-theme-background-color-admin-app-bar: #222222; // todo
     --mashroom-portal-dark-theme-background-color-footer: #111111;
 
-    // Admin App variables
+    --mashroom-portal-dark-theme-message-info-background-color: #2A446A;
+    --mashroom-portal-dark-theme-message-success-background-color: #2A5C44;
+    --mashroom-portal-dark-theme-message-error-background-color: #5C111F;
+    --mashroom-portal-dark-theme-message-color: white;
+
+    //todo fine tune the dark colors
+    --mashroom-portal-dark-theme-table-header-row-background-color: #282441;
+    --mashroom-portal-dark-theme-table-row-background-color: #151323;
+    --mashroom-portal-dark-theme-table-row-even-background-color: #110F1C;
+
+    --mashroom-portal-dark-theme-color-input-placeholder: #AAA;
+    --mashroom-portal-dark-theme-color-input-color: #fff;
+    --mashroom-portal-dark-theme-color-input-border: #413E53;
+    --mashroom-portal-dark-theme-color-input-background: #201D35;
+
+    --mashroom-portal-dark-theme-icon-button-color: #fff;
+
+
+    --mashroom-portal-dark-theme-tab-dialog-button-background: #2E2B3F;
+    --mashroom-portal-dark-theme-tab-dialog-button-color: #fff;
+    --mashroom-portal-dark-theme-tab-dialog-button-background-hover: var(--mashroom-portal-color-primary-light);
+    --mashroom-portal-dark-theme-tab-dialog-button-color-hover: #fff;
+    --mashroom-portal-dark-theme-tab-dialog-button-active-background: #fff;
+    --mashroom-portal-dark-theme-tab-dialog-button-active-color: #000;
+    --mashroom-portal-dark-theme-tab-dialog-button-active-background-hover: #fff;
+    --mashroom-portal-dark-theme-tab-dialog-button-active-color-hover: #000;
+
+
+    --mashroom-portal-dark-theme-nav-background-color: #15141F;
+    --mashroom-portal-dark-theme-nav-color: #AAAAAA;
+    --mashroom-portal-dark-theme-nav-background-color-hover: var(--mashroom-portal-light-theme-color-button-hover);
+    --mashroom-portal-dark-theme-nav-color-hover: #fff;
+    --mashroom-portal-dark-theme-nav-active-background-color: #4D487F;
+    --mashroom-portal-dark-theme-nav-active-color: #fff;
+
+    // App variables
 
     --mashroom-admin-app-color-drop-zone: var(--mashroom-portal-color-accent);
     --mashroom-admin-app-font-size: 14px;
+
+    --mashroom-admin-app-menu-background-color: #222222;
 
 
 
@@ -92,6 +175,7 @@
         --mashroom-portal-color-error: var(--mashroom-portal-light-theme-color-error);
         --mashroom-portal-color-button: var(--mashroom-portal-light-theme-color-button);
         --mashroom-portal-color-button-hover: var(--mashroom-portal-light-theme-color-button-hover);
+        --mashroom-portal-color-button-secondary: var(--mashroom-portal-light-theme-color-button-secondary);
         --mashroom-portal-background-color-default: var(--mashroom-portal-light-theme-background-color-default);
         --mashroom-portal-background-color-app: var(--mashroom-portal-light-theme-background-color-app);
         --mashroom-portal-background-color-app-header: var(--mashroom-portal-light-theme-background-color-app-header);
@@ -106,6 +190,39 @@
         --mashroom-portal-background-color-dropdown-hover: var(--mashroom-portal-light-theme-background-color-dropdown-hover);
         --mashroom-portal-background-color-admin-app-bar: var(--mashroom-portal-light-theme-background-color-admin-app-bar);
         --mashroom-portal-background-color-footer: var(--mashroom-portal-light-theme-background-color-footer);
+
+        --mashroom-portal-message-info-background-color: var(--mashroom-portal-light-theme-message-info-background-color);
+        --mashroom-portal-message-success-background-color: var(--mashroom-portal-light-theme-message-success-background-color);
+        --mashroom-portal-message-error-background-color: var(--mashroom-portal-light-theme-message-error-background-color);
+        --mashroom-portal-message-color: var(--mashroom-portal-light-theme-message-color);
+
+        --mashroom-portal-table-header-row-background-color: var(--mashroom-portal-light-theme-table-header-row-background-color);
+        --mashroom-portal-table-row-background-color: var(--mashroom-portal-light-theme-table-row-background-color);
+        --mashroom-portal-table-row-even-background-color: var(--mashroom-portal-light-theme-table-row-even-background-color);
+
+        --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
+        --mashroom-portal-color-input-color: var(--mashroom-portal-light-theme-color-input-color);
+        --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
+        --mashroom-portal-color-input-background: var(--mashroom-portal-light-theme-color-input-background);
+
+        --mashroom-portal-icon-button-color: var(--mashroom-portal-light-theme-icon-button-color);
+
+        --mashroom-portal-tab-dialog-button-background: var(--mashroom-portal-light-theme-tab-dialog-button-background);
+        --mashroom-portal-tab-dialog-button-color: var(--mashroom-portal-light-theme-tab-dialog-button-color);
+        --mashroom-portal-tab-dialog-button-background-hover: var(--mashroom-portal-light-theme-tab-dialog-button-background-hover);
+        --mashroom-portal-tab-dialog-button-color-hover: var(--mashroom-portal-light-theme-tab-dialog-button-color-hover);
+        --mashroom-portal-tab-dialog-button-active-background: var(--mashroom-portal-light-theme-tab-dialog-button-active-background);
+        --mashroom-portal-tab-dialog-button-active-color: var(--mashroom-portal-light-theme-tab-dialog-button-active-color);
+        --mashroom-portal-tab-dialog-button-active-background-hover: var(--mashroom-portal-light-theme-tab-dialog-button-active-background-hover);
+        --mashroom-portal-tab-dialog-button-active-color-hover: var(--mashroom-portal-light-theme-tab-dialog-button-active-color-hover);
+
+
+        --mashroom-portal-nav-background-color: var(--mashroom-portal-light-theme-nav-background-color);
+        --mashroom-portal-nav-color: var(--mashroom-portal-light-theme-nav-color);
+        --mashroom-portal-nav-background-color-hover: var(--mashroom-portal-light-theme-nav-background-color-hover);
+        --mashroom-portal-nav-color-hover: var(--mashroom-portal-light-theme-nav-color-hover);
+        --mashroom-portal-nav-active-background-color: var(--mashroom-portal-light-theme-nav-active-background-color);
+        --mashroom-portal-nav-active-color: var(--mashroom-portal-light-theme-nav-active-color);
     }
 
     &[data-mashroom-theme='dark'] {
@@ -118,6 +235,7 @@
         --mashroom-portal-color-error: var(--mashroom-portal-dark-theme-color-error);
         --mashroom-portal-color-button: var(--mashroom-portal-dark-theme-color-button);
         --mashroom-portal-color-button-hover: var(--mashroom-portal-dark-theme-color-button-hover);
+        --mashroom-portal-color-button-secondary: var(--mashroom-portal-dark-theme-color-button-secondary);
         --mashroom-portal-background-color-default: var(--mashroom-portal-dark-theme-background-color-default);
         --mashroom-portal-background-color-app: var(--mashroom-portal-dark-theme-background-color-app);
         --mashroom-portal-background-color-app-header: var(--mashroom-portal-dark-theme-background-color-app-header);
@@ -132,6 +250,38 @@
         --mashroom-portal-background-color-dropdown-hover: var(--mashroom-portal-dark-theme-background-color-dropdown-hover);
         --mashroom-portal-background-color-admin-app-bar: var(--mashroom-portal-dark-theme-background-color-admin-app-bar);
         --mashroom-portal-background-color-footer: var(--mashroom-portal-dark-theme-background-color-footer);
+
+        --mashroom-portal-message-info-background-color: var(--mashroom-portal-dark-theme-message-info-background-color);
+        --mashroom-portal-message-success-background-color: var(--mashroom-portal-dark-theme-message-success-background-color);
+        --mashroom-portal-message-error-background-color: var(--mashroom-portal-dark-theme-message-error-background-color);
+        --mashroom-portal-message-color: var(--mashroom-portal-dark-theme-message-color);
+
+        --mashroom-portal-table-header-row-background-color: var(--mashroom-portal-dark-theme-table-header-row-background-color);
+        --mashroom-portal-table-row-background-color: var(--mashroom-portal-dark-theme-table-row-background-color);
+        --mashroom-portal-table-row-even-background-color: var(--mashroom-portal-dark-theme-table-row-even-background-color);
+
+        --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
+        --mashroom-portal-color-input-color: var(--mashroom-portal-dark-theme-color-input-color);
+        --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
+        --mashroom-portal-color-input-background: var(--mashroom-portal-dark-theme-color-input-background);
+
+        --mashroom-portal-icon-button-color: var(--mashroom-portal-dark-theme-icon-button-color);
+
+        --mashroom-portal-tab-dialog-button-background: var(--mashroom-portal-dark-theme-tab-dialog-button-background);
+        --mashroom-portal-tab-dialog-button-color: var(--mashroom-portal-dark-theme-tab-dialog-button-color);
+        --mashroom-portal-tab-dialog-button-background-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-background-hover);
+        --mashroom-portal-tab-dialog-button-color-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-color-hover);
+        --mashroom-portal-tab-dialog-button-active-background: var(--mashroom-portal-dark-theme-tab-dialog-button-active-background);
+        --mashroom-portal-tab-dialog-button-active-color: var(--mashroom-portal-dark-theme-tab-dialog-button-active-color);
+        --mashroom-portal-tab-dialog-button-active-background-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-active-background-hover);
+        --mashroom-portal-tab-dialog-button-active-color-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-active-color-hover);
+
+        --mashroom-portal-nav-background-color: var(--mashroom-portal-dark-theme-nav-background-color);
+        --mashroom-portal-nav-color: var(--mashroom-portal-dark-theme-nav-color);
+        --mashroom-portal-nav-background-color-hover: var(--mashroom-portal-dark-theme-nav-background-color-hover);
+        --mashroom-portal-nav-color-hover: var(--mashroom-portal-dark-theme-nav-color-hover);
+        --mashroom-portal-nav-active-background-color: var(--mashroom-portal-dark-theme-nav-active-background-color);
+        --mashroom-portal-nav-active-color: var(--mashroom-portal-dark-theme-nav-active-color);
     }
 
     &[data-mashroom-theme='auto'] {
@@ -145,6 +295,7 @@
             --mashroom-portal-color-error: var(--mashroom-portal-light-theme-color-error);
             --mashroom-portal-color-button: var(--mashroom-portal-light-theme-color-button);
             --mashroom-portal-color-button-hover: var(--mashroom-portal-light-theme-color-button-hover);
+            --mashroom-portal-color-button-secondary: var(--mashroom-portal-light-theme-color-button-secondary);
             --mashroom-portal-background-color-default: var(--mashroom-portal-light-theme-background-color-default);
             --mashroom-portal-background-color-app: var(--mashroom-portal-light-theme-background-color-app);
             --mashroom-portal-background-color-app-header: var(--mashroom-portal-light-theme-background-color-app-header);
@@ -159,7 +310,41 @@
             --mashroom-portal-background-color-dropdown-hover: var(--mashroom-portal-light-theme-background-color-dropdown-hover);
             --mashroom-portal-background-color-admin-app-bar: var(--mashroom-portal-light-theme-background-color-admin-app-bar);
             --mashroom-portal-background-color-footer: var(--mashroom-portal-light-theme-background-color-footer);
-        };
+
+            --mashroom-portal-message-info-background-color: var(--mashroom-portal-light-theme-message-info-background-color);
+            --mashroom-portal-message-success-background-color: var(--mashroom-portal-light-theme-message-success-background-color);
+            --mashroom-portal-message-error-background-color: var(--mashroom-portal-light-theme-message-error-background-color);
+            --mashroom-portal-message-color: var(--mashroom-portal-light-theme-message-color);
+
+            --mashroom-portal-table-header-row-background-color: var(--mashroom-portal-light-theme-table-header-row-background-color);
+            --mashroom-portal-table-row-background-color: var(--mashroom-portal-light-theme-table-row-background-color);
+            --mashroom-portal-table-row-even-background-color: var(--mashroom-portal-light-theme-table-row-even-background-color);
+
+            --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
+            --mashroom-portal-color-input-color: var(--mashroom-portal-light-theme-color-input-color);
+            --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
+            --mashroom-portal-color-input-background: var(--mashroom-portal-light-theme-color-input-background);
+
+            --mashroom-portal-icon-button-color: var(--mashroom-portal-light-theme-icon-button-color);
+
+            --mashroom-portal-tab-dialog-button-background: var(--mashroom-portal-light-theme-tab-dialog-button-background);
+            --mashroom-portal-tab-dialog-button-color: var(--mashroom-portal-light-theme-tab-dialog-button-color);
+            --mashroom-portal-tab-dialog-button-background-hover: var(--mashroom-portal-light-theme-tab-dialog-button-background-hover);
+            --mashroom-portal-tab-dialog-button-color-hover: var(--mashroom-portal-light-theme-tab-dialog-button-color-hover);
+            --mashroom-portal-tab-dialog-button-active-background: var(--mashroom-portal-light-theme-tab-dialog-button-active-background);
+            --mashroom-portal-tab-dialog-button-active-color: var(--mashroom-portal-light-theme-tab-dialog-button-active-color);
+            --mashroom-portal-tab-dialog-button-active-background-hover: var(--mashroom-portal-light-theme-tab-dialog-button-active-background-hover);
+            --mashroom-portal-tab-dialog-button-active-color-hover: var(--mashroom-portal-light-theme-tab-dialog-button-active-color-hover);
+
+            --mashroom-portal-nav-background-color: var(--mashroom-portal-light-theme-nav-background-color);
+            --mashroom-portal-nav-color: var(--mashroom-portal-light-theme-nav-color);
+            --mashroom-portal-nav-background-color-hover: var(--mashroom-portal-light-theme-nav-background-color-hover);
+            --mashroom-portal-nav-color-hover: var(--mashroom-portal-light-theme-nav-color-hover);
+            --mashroom-portal-nav-active-background-color: var(--mashroom-portal-light-theme-nav-active-background-color);
+            --mashroom-portal-nav-active-color: var(--mashroom-portal-light-theme-nav-active-color);
+        }
+
+        ;
 
         @media (prefers-color-scheme: dark) {
             --mashroom-portal-color-text-default: var(--mashroom-portal-dark-theme-color-text-default);
@@ -171,6 +356,7 @@
             --mashroom-portal-color-error: var(--mashroom-portal-dark-theme-color-error);
             --mashroom-portal-color-button: var(--mashroom-portal-dark-theme-color-button);
             --mashroom-portal-color-button-hover: var(--mashroom-portal-dark-theme-color-button-hover);
+            --mashroom-portal-color-button-secondary: var(--mashroom-portal-dark-theme-color-button-secondary);
             --mashroom-portal-background-color-default: var(--mashroom-portal-dark-theme-background-color-default);
             --mashroom-portal-background-color-app: var(--mashroom-portal-dark-theme-background-color-app);
             --mashroom-portal-background-color-app-header: var(--mashroom-portal-dark-theme-background-color-app-header);
@@ -185,7 +371,41 @@
             --mashroom-portal-background-color-dropdown-hover: var(--mashroom-portal-dark-theme-background-color-dropdown-hover);
             --mashroom-portal-background-color-admin-app-bar: var(--mashroom-portal-dark-theme-background-color-admin-app-bar);
             --mashroom-portal-background-color-footer: var(--mashroom-portal-dark-theme-background-color-footer);
-        };
+
+            --mashroom-portal-message-info-background-color: var(--mashroom-portal-dark-theme-message-info-background-color);
+            --mashroom-portal-message-success-background-color: var(--mashroom-portal-dark-theme-message-success-background-color);
+            --mashroom-portal-message-error-background-color: var(--mashroom-portal-dark-theme-message-error-background-color);
+            --mashroom-portal-message-color: var(--mashroom-portal-dark-theme-message-color);
+
+            --mashroom-portal-table-header-row-background-color: var(--mashroom-portal-dark-theme-table-header-row-background-color);
+            --mashroom-portal-table-row-background-color: var(--mashroom-portal-dark-theme-table-row-background-color);
+            --mashroom-portal-table-row-even-background-color: var(--mashroom-portal-dark-theme-table-row-even-background-color);
+
+            --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
+            --mashroom-portal-color-input-color: var(--mashroom-portal-dark-theme-color-input-color);
+            --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
+            --mashroom-portal-color-input-background: var(--mashroom-portal-dark-theme-color-input-background);
+
+            --mashroom-portal-icon-button-color: var(--mashroom-portal-dark-theme-icon-button-color);
+
+            --mashroom-portal-tab-dialog-button-background: var(--mashroom-portal-dark-theme-tab-dialog-button-background);
+            --mashroom-portal-tab-dialog-button-color: var(--mashroom-portal-dark-theme-tab-dialog-button-color);
+            --mashroom-portal-tab-dialog-button-background-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-background-hover);
+            --mashroom-portal-tab-dialog-button-color-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-color-hover);
+            --mashroom-portal-tab-dialog-button-active-background: var(--mashroom-portal-dark-theme-tab-dialog-button-active-background);
+            --mashroom-portal-tab-dialog-button-active-color: var(--mashroom-portal-dark-theme-tab-dialog-button-active-color);
+            --mashroom-portal-tab-dialog-button-active-background-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-active-background-hover);
+            --mashroom-portal-tab-dialog-button-active-color-hover: var(--mashroom-portal-dark-theme-tab-dialog-button-active-color-hover);
+
+            --mashroom-portal-nav-background-color: var(--mashroom-portal-dark-theme-nav-background-color);
+            --mashroom-portal-nav-color: var(--mashroom-portal-dark-theme-nav-color);
+            --mashroom-portal-nav-background-color-hover: var(--mashroom-portal-dark-theme-nav-background-color-hover);
+            --mashroom-portal-nav-color-hover: var(--mashroom-portal-dark-theme-nav-color-hover);
+            --mashroom-portal-nav-active-background-color: var(--mashroom-portal-dark-theme-nav-active-background-color);
+            --mashroom-portal-nav-active-color: var(--mashroom-portal-dark-theme-nav-active-color);
+        }
+
+        ;
     }
 
 }

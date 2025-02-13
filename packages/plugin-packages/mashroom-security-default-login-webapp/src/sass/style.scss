@@ -1,76 +1,114 @@
 
-@use "fonts";
-@use "variables";
-
 $SMALL_DEVICE_MIN: 576px;
 $MEDIUM_DEVICE_MIN: 768px;
 $LARGE_DEVICE_MIN: 992px;
 $X_LARGE_DEVICE_MIN: 1200px;
 
+$COLOR_BLACK: #343633;
+$COLOR_WHITE: white;
+$COLOR_ERROR: #FF0033;
+
+$COLOR_PRIMARY: #504B88;
+$COLOR_PRIMARY_LIGHT: #655fa7;
+$COLOR_PRIMARY_DARK: #3d3967;
+$COLOR_PRIMARY_EXTRA_LIGHT: #f4f3f8;
+
+$COLOR_SECONDARY: #C49B5E;
+$COLOR_SECONDARY_LIGHT: #d2b283;
+$COLOR_SECONDARY_DARK: #af8240;
+$COLOR_SECONDARY_EXTRA_LIGHT: #f4ece1;
+
+$FONT_DEFAULT: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+$FONT_HEADER: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
+
 @mixin hover-animation() {
     transition: color 500ms ease-out, background-color 500ms ease-out;
 }
 
+/* Remove Chrome's input focus border */
+:focus {
+    outline: none !important;
+}
+
 body {
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+    -ms-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    color: var(--mashroom-portal-color-text-default);
-    font-family: var(--mashroom-portal-font-default), sans-serif;
-    font-size: var(--mashroom-portal-line-font-size-default);
-    line-height: var(--mashroom-portal-line-height-default);
+    color: $COLOR_BLACK;
+    font-size: 16px;
+    font-family: $FONT_DEFAULT;
     padding: 0;
     margin: 0;
-    background-color: var(--mashroom-portal-background-color-default);
+    background-color: #f2f2f2;
+}
+
+h1, h2, h3 {
+    // font-family: $FONT_HEADER;
 }
 
 a, a:visited, a:focus {
-    color: var(--mashroom-portal-color-button);
+    color: $COLOR_PRIMARY;
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: var(--mashroom-portal-color-button-hover);
+        color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        color: var(--mashroom-portal-color-button);
+        color: $COLOR_PRIMARY_DARK;
     }
 }
 
 button, input[type="submit"] {
-    background-color: var(--mashroom-portal-color-button);
+    background-color: $COLOR_PRIMARY;
     color: white;
-    border-radius: 5px;
+    border-radius: 8px;
     border: none;
-    padding: var(--mashroom-portal-padding-button);
+    // padding: 8px 16px;
+    padding: 16px 16px;
     cursor: pointer;
-    font-family: var(--mashroom-portal-font-default), sans-serif;
+    outline: none !important;
     font-size: 1em;
     @include hover-animation();
 
     &:hover {
-        background-color: var(--mashroom-portal-color-button-hover);
+        background-color: $COLOR_PRIMARY_DARK;
     }
 
     &:active {
-        background-color: var(--mashroom-portal-color-button);
+        background-color: $COLOR_PRIMARY_DARK;
     }
 }
 
 input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"] {
-    box-sizing: border-box;
-    padding: var(--mashroom-portal-padding-input);
-    border: 1px solid var(--mashroom-portal-color-input-border);
-    border-radius: 3px;
+    // padding: 6px 11px;
+    padding: 16px;
+    border: 1px solid $COLOR_PRIMARY;
+    border: 1px solid #ccc;//todo
+    font-size: 1em;
+    font-size: 18px;
+    line-height: 28px;
+    border-radius: 8px;
     width: 100%;
-    color: var(--mashroom-portal-color-text-default);
-    background-color: var(--mashroom-portal-background-color-input);
+    box-sizing: border-box;
 
     &:focus {
-        outline: 1px solid var(--mashroom-portal-color-input-border);
+        // padding: 5px 10px;
+        // border: 2px solid $COLOR_SECONDARY;
     }
 
     &:invalid {
-        border: 1px solid var(--mashroom-portal-color-error);
+        padding: 5px 10px;
+        border: 2px solid $COLOR_ERROR;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        color: gray !important;
     }
 }
 
@@ -79,12 +117,12 @@ label {
 }
 
 header {
-    background-color: var(--mashroom-portal-background-color-header);
+    background-color: $COLOR_PRIMARY;
     padding-left: 20px;
     display: flex;
     color: white;
     overflow: hidden;
-    border-bottom: 2px solid var(--mashroom-portal-color-secondary-light);
+    border-bottom: 2px solid $COLOR_SECONDARY;
 
     .logo {
         margin-top: 16px;
@@ -111,43 +149,61 @@ main {
 
     .login {
         max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
         margin-top: 20%;
-        margin-left: 20px;
-        margin-right: 20px;
-        background-color: var(--mashroom-portal-background-color-app);
-        border-radius: 10px;
+        border: 1px solid #eee;
+        background-color: rgba(white, 0.9);
+        // box-shadow: 0 0 8px #888;
+        border-radius: 8px; //todo
 
         .login-form-title {
             overflow: hidden;
+            border-bottom: 1px solid #ccc;
 
             h2 {
-                font-size: 1.2em;
-                margin: 20px 18px;
+                font-size: 1.4em;
+                margin: 24px;
             }
         }
 
         .login-error {
-            color: var(--mashroom-portal-color-error);
+            // color: $COLOR_ERROR;
+            color: black;
             margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 8px; //toodo
+            background-color: #FBD6D6;
         }
 
         .login-form {
-            padding: 20px;
+            padding: 24px; //todo
 
             .login-form-row {
-                margin: 10px 0;
+                margin: 24px 0;
+
+                &:first-child {
+                    margin-top: 0;
+                }
+
+                &:last-child {
+                    margin-bottom: 0;
+                }
+
 
                 .login-form-label {
-                    margin-bottom: 5px;
+                    margin-bottom: 8px;
+                    display: block;
                 }
 
                 .login-form-input {
-                    width: 90%;
+                    
+                    // width: 90%;
                 }
             }
 
             .login-form-actions {
-                margin-top: 20px;
+                // margin-top: 20px;
             }
         }
     }
@@ -165,12 +221,10 @@ main {
     main {
         .login {
             margin-top: max(60px, calc(50vh - 250px));
-            margin-left: auto;
-            margin-right: auto;
 
             .login-form {
                 .login-form-row {
-                    display: flex;
+                    // display: flex;
                     align-items: center;
 
                     .login-form-label {
@@ -178,7 +232,7 @@ main {
                     }
 
                     .login-form-input {
-                        width: calc(100% - 150px)
+                        // width: calc(100%)
                     }
                 }
             }
@@ -187,3 +241,7 @@ main {
 
 
 };
+
+@media (min-width: $LARGE_DEVICE_MIN) {
+
+}
