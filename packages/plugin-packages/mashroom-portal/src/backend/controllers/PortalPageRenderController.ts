@@ -570,12 +570,18 @@ export default class PortalPageRenderController {
                 headEl.removeChild(existingScripts[i]);
             }
         `;
-        const addScriptsScript = serverSideRenderingInjectHeadScript.map((script) => `
-            var scriptEl = document.createElement('script');
-            scriptEl.setAttribute('data-mashroom-ssr-head-script', '1');
-            scriptEl.innerText = \`${script}\`;
-            headEl.appendChild(scriptEl);
-        `).join('\n');
+        const addScriptsScript = serverSideRenderingInjectHeadScript.map((script) => {
+            // If the script contains an escape character we must keep it
+            const fixedScript = script
+                .replace(/\\/g, '\\\\')
+                .replace(/`/g, '\\`');
+            return `
+                var scriptEl = document.createElement('script');
+                scriptEl.setAttribute('data-mashroom-ssr-head-script', '1');
+                scriptEl.innerText = \`${fixedScript}\`;
+                headEl.appendChild(scriptEl);
+            `;
+        }).join('\n');
         return `${removeExistingScripts}\n${addScriptsScript}`;
     }
 
