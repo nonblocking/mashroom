@@ -164,7 +164,7 @@ app.get('/', (req: Request, res: Response) => {
                         </div>
                         <div class="mashroom-portal-app-host">
                            <div style="padding: var(--mashroom-portal-spacing-default)">
-                                <p>Here some text with a ruler</p>
+                                <p>Here some text with a <a href="#">link</a> and a ruler</p>
                                 <hr/>
                                 <p>and a blockquote</p>
                                 <blockquote>
