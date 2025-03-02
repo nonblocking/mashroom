@@ -102,13 +102,12 @@ h6 {
 a,
 a:visited,
 a:focus {
-    color: var(--mashroom-portal-color-button); 
     color: var(--mashroom-portal-link-color);
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: var(--mashroom-portal-color-button-hover);
+        color: var(--mashroom-portal-link-color-hover);
     }
 
     &:active {
@@ -142,7 +141,6 @@ input[type="submit"] {
     color: white;
     border-radius: var(--mashroom-portal-border-radius);
     border: none;
-    padding: var(--mashroom-portal-padding-button);
     padding: var(--mashroom-portal-spacing-default);
     min-width: 80px;
     cursor: pointer;
@@ -171,14 +169,13 @@ input[type="submit"] {
 }
 
 button.secondary {
-    background-color: var(--mashroom-portal-color-button-secondary);
-    // border: 1px solid var(--mashroom-portal-color-button);
-    color: var(--mashroom-portal-color-button);
-    color: white;
+    background-color: transparent;
+    border: 1px solid var(--mashroom-portal-color-button-secondary);
+    color: var(--mashroom-portal-color-button-secondary);
 
     &:hover {
-        // color: var(--mashroom-portal-color-button-hover);
-        // border-color: var(--mashroom-portal-color-button-hover);
+        color: var(--mashroom-portal-color-button-hover);
+        border-color: var(--mashroom-portal-color-button-hover);
         color: white;
         background-color: var(--mashroom-portal-color-button-hover);
     }
@@ -297,7 +294,7 @@ textarea {
     font-family: var(--mashroom-portal-font-default), sans-serif;
     font-size: var(--mashroom-portal-line-font-size-default);
     line-height: var(--mashroom-portal-line-height-default);
-    padding: var(--mashroom-portal-spacing-default);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
     color: var(--mashroom-portal-color-text-default);
     background-color: var(--mashroom-portal-background-color-input);
     @include focus-animation();
@@ -324,7 +321,8 @@ select {
     appearance: none;
     font-family: var(--mashroom-portal-font-default), sans-serif;
     width: 100%;
-    padding: var(--mashroom-portal-padding-input);
+    // padding: var(--mashroom-portal-padding-input);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
     border: 1px solid var(--mashroom-portal-color-input-border);
     border-radius: var(--mashroom-portal-border-radius);
     color: var(--mashroom-portal-color-text-default);
@@ -381,8 +379,23 @@ table {
             background-color: var(--mashroom-portal-table-header-row-background-color);
             font-weight: bold;
 
-            td {
+            th {
+                text-align: left;
+                padding: var(--mashroom-portal-spacing-default);
                 font-weight: bold;
+                background-color: var(--mashroom-portal-table-header-row-background-color);
+                
+                &:last-child {
+                    border-right: none;
+                }
+        
+                &:first-of-type {
+                    border-top-left-radius: var(--mashroom-portal-border-radius);
+                }
+        
+                &:last-of-type {
+                    border-top-right-radius: var(--mashroom-portal-border-radius);
+                }
             }
         }
     }
@@ -403,29 +416,9 @@ table {
         tr:last-of-type td:last-of-type {
             border-bottom-right-radius: var(--mashroom-portal-border-radius);
         }
-
-
     }
 
-    th {
-        text-align: left;
-        padding: var(--mashroom-portal-spacing-default);
-        font-weight: normal;
-        
-
-
-        &:last-child {
-            border-right: none;
-        }
-
-        &:first-of-type {
-            border-top-left-radius: var(--mashroom-portal-border-radius);
-        }
-
-        &:last-of-type {
-            border-top-right-radius: var(--mashroom-portal-border-radius);
-        }
-    }
+    
 
     td {
         padding: var(--mashroom-portal-spacing-default);
@@ -759,7 +752,7 @@ main {
             .nav-link {
                 display: block;
                 position: relative;
-                padding: var(--mashroom-portal-padding-nav);
+                padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
                 // padding: 8px 16px;
                 background-color: var(--mashroom-portal-nav-background-color);
                 color: var(--mashroom-portal-nav-color);
@@ -837,9 +830,8 @@ footer {
     select,
     textarea {
         border-color: var(--mashroom-portal-color-error) !important;
-        background-color: var(--mashroom-portal-input-background-error);
-        color: var(--mashroom-portal-input-color-error);
-        border-color: var(--mashroom-portal-input-border-error);
+        color: var(--mashroom-portal-color-error);
+        border-color: var(--mashroom-portal-color-error);
     }
 
     .mashroom-portal-checkbox+label:before,
@@ -939,7 +931,7 @@ footer {
             border-radius: 1000px;
             background-color: var(--mashroom-portal-tab-dialog-button-background);
             color: var(--mashroom-portal-tab-dialog-button-color);
-            padding: var(--mashroom-portal-padding-tab-button);
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
             @include hover-animation();
 
             &:hover {
@@ -994,7 +986,7 @@ footer {
 
 .cm-editor {
     border: 1px solid var(--mashroom-portal-color-input-border);
-    padding: var(--mashroom-portal-padding-input);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
     background-color: var(--mashroom-portal-background-color-input);
     @include focus-animation();
     border-radius: var(--mashroom-portal-border-radius);
