@@ -63,7 +63,7 @@
     text-rendering: optimizeLegibility;
     color: var(--mashroom-portal-color-text-default);
     font-family: var(--mashroom-portal-font-default), sans-serif;
-    font-size: var(--mashroom-portal-line-font-size-default);
+    font-size: var(--mashroom-portal-font-size-default);
     line-height: var(--mashroom-portal-line-height-default);
 
 }
@@ -102,33 +102,17 @@ h6 {
 a,
 a:visited,
 a:focus {
-    color: var(--mashroom-portal-link-color);
+    color: var(--mashroom-portal-color-link);
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: var(--mashroom-portal-link-color-hover);
+        color: var(--mashroom-portal-color-link-hover);
     }
 
     &:active {
         color: var(--mashroom-portal-color-button);
     }
-}
-
-.info {
-    color: var(--mashroom-portal-message-color);
-    background-color: var(--mashroom-portal-message-info-background-color);
-    padding: 16px;
-    padding-left: 40px;
-    border-radius: 8px;
-    position: relative;
-
-    .info-icon {
-        margin-right: 8px;
-        position: absolute;
-        left: 16px;
-    }
-
 }
 
 .admin-menu-bar {
@@ -174,7 +158,6 @@ button.secondary {
     color: var(--mashroom-portal-color-button-secondary);
 
     &:hover {
-        color: var(--mashroom-portal-color-button-hover);
         border-color: var(--mashroom-portal-color-button-hover);
         color: white;
         background-color: var(--mashroom-portal-color-button-hover);
@@ -287,12 +270,11 @@ input[type="tel"],
 input[type="search"],
 textarea {
     box-sizing: border-box;
-    padding: var(--mashroom-portal-padding-input);
     border: 1px solid var(--mashroom-portal-color-input-border);
     border-radius: var(--mashroom-portal-border-radius);
     width: 100%;
     font-family: var(--mashroom-portal-font-default), sans-serif;
-    font-size: var(--mashroom-portal-line-font-size-default);
+    font-size: var(--mashroom-portal-font-size-default);
     line-height: var(--mashroom-portal-line-height-default);
     padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
     color: var(--mashroom-portal-color-text-default);
@@ -327,9 +309,7 @@ select {
     color: var(--mashroom-portal-color-text-default);
     background-color: var(--mashroom-portal-background-color-input);
     @include focus-animation();
-    
-    
-    //TODO fix the icon
+
     &:after {
         content: '\f078';
         font-family: var(--mashroom-portal-font-icon), sans-serif;
@@ -371,36 +351,28 @@ table {
     border-spacing: 0;
     border-radius: var(--mashroom-portal-border-radius);
 
+    th {
+        text-align: left;
+        padding: var(--mashroom-portal-spacing-default);
+        font-weight: bold;
+        background-color: var(--mashroom-portal-background-color-table-header-row);
 
-    thead {
-        tr {
-            background-color: var(--mashroom-portal-table-header-row-background-color);
-            font-weight: bold;
+        &:last-child {
+            border-right: none;
+        }
 
-            th {
-                text-align: left;
-                padding: var(--mashroom-portal-spacing-default);
-                font-weight: bold;
-                background-color: var(--mashroom-portal-table-header-row-background-color);
-                
-                &:last-child {
-                    border-right: none;
-                }
-        
-                &:first-of-type {
-                    border-top-left-radius: var(--mashroom-portal-border-radius);
-                }
-        
-                &:last-of-type {
-                    border-top-right-radius: var(--mashroom-portal-border-radius);
-                }
-            }
+        &:first-of-type {
+            border-top-left-radius: var(--mashroom-portal-border-radius);
+        }
+
+        &:last-of-type {
+            border-top-right-radius: var(--mashroom-portal-border-radius);
         }
     }
 
     tr {
         border-bottom: 1px solid var(--mashroom-portal-color-primary);
-        background-color: var(--mashroom-portal-table-row-background-color);
+        background-color: var(--mashroom-portal-background-color-table-row);
 
         &:last-child {
             border-bottom: none;
@@ -416,8 +388,6 @@ table {
         }
     }
 
-    
-
     td {
         padding: var(--mashroom-portal-spacing-default);
         &:last-child {
@@ -427,7 +397,7 @@ table {
 
     &.table-striped {
         tr:nth-child(even) {
-            background-color: var(--mashroom-portal-table-row-even-background-color);
+            background-color: var(--mashroom-portal-background-color-table-row-even);
         }
     }
 }
@@ -693,7 +663,6 @@ header {
 }
 
 .mashroom-portal-ui-field-label {
-    // display: inline-block;
     color: var(--mashroom-portal-color-text-secondary);
 }
 
@@ -713,7 +682,6 @@ main {
         display: none;
         white-space: nowrap;
         min-width: 200px;
-        // margin-bottom: var(--mashroom-portal-spacing-default);
         margin-top: -15px;
 
         &.show {
@@ -751,25 +719,24 @@ main {
                 display: block;
                 position: relative;
                 padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
-                // padding: 8px 16px;
-                background-color: var(--mashroom-portal-nav-background-color);
+                background-color: var(--mashroom-portal-background-color-nav);
                 color: var(--mashroom-portal-nav-color);
                 text-decoration: none;
                 @include hover-animation();
-                
+
 
                 &:hover {
-                    background-color: var(--mashroom-portal-nav-background-color-hover);
-                    color: var(--mashroom-portal-nav-color-hover);
+                    background-color: var(--mashroom-portal-background-color-nav-hover);
+                    color: var(--mashroom-portal-color-nav-hover);
                 }
 
                 &.active {
                     cursor: default;
-                    color: var(--mashroom-portal-nav-active-color);
-                    background-color: var(--mashroom-portal-nav-active-background-color);
+                    color: var(--mashroom-portal-color-nav-active);
+                    background-color: var(--mashroom-portal-background-color-nav-active);
 
                     &:hover {
-                        color: var(--mashroom-portal-nav-active-color);
+                        color: var(--mashroom-portal-color-nav-active);
                     }
                 }
             }
@@ -829,7 +796,6 @@ footer {
     textarea {
         border-color: var(--mashroom-portal-color-error) !important;
         color: var(--mashroom-portal-color-error);
-        border-color: var(--mashroom-portal-color-error);
     }
 
     .mashroom-portal-checkbox+label:before,
@@ -847,7 +813,6 @@ footer {
 
     .dropdown-menu-content {
         background-color: var(--mashroom-portal-background-color-dropdown);
-        background-color: var(--mashroom-admin-app-menu-background-color);
         border-bottom-left-radius: var(--mashroom-portal-border-radius);
         border-bottom-right-radius: var(--mashroom-portal-border-radius);
         padding: var(--mashroom-portal-spacing-small);
@@ -888,9 +853,9 @@ footer {
     }
 
     .mashroom-portal-ui-modal-header {
-        border-bottom: 1px solid var(--mashroom-portal-background-color-navigation);
         border-top-left-radius: (--mashroom-portal-border-radius);
         border-top-right-radius: (--mashroom-portal-border-radius);
+        border-bottom: 1px solid var(--mashroom-portal-background-color-default);
 
         .close-button {
             &:after {
@@ -913,33 +878,29 @@ footer {
     .tab-dialog-header {
         display: flex;
         flex-wrap: wrap;
-        margin-bottom: var(--mashroom-portal-spacing-small);
-        margin-left: var(--mashroom-portal-spacing-default);
-        margin-right: var(--mashroom-portal-spacing-default);
-        margin-top: var(--mashroom-portal-spacing-small);
+        margin: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
 
         .tab-dialog-button {
             cursor: pointer;
             display: flex;
             align-items: center;
-            margin-left: var(--mashroom-portal-spacing-small);
             margin-left: 0;
             margin-top: var(--mashroom-portal-spacing-small);
             margin-right: var(--mashroom-portal-spacing-small);
             border-radius: 1000px;
-            background-color: var(--mashroom-portal-tab-dialog-button-background);
-            color: var(--mashroom-portal-tab-dialog-button-color);
+            background-color: var(--mashroom-portal-background-color-tab-dialog-button);
+            color: var(--mashroom-portal-color-tab-dialog-button);
             padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
             @include hover-animation();
 
             &:hover {
-                color: var(--mashroom-portal-tab-dialog-button-color-hover);
+                color: var(--mashroom-portal-color-tab-dialog-button-hover);
                 background-color: var(--mashroom-portal-color-button-hover);
             }
 
             &.active {
-                background: var(--mashroom-portal-tab-dialog-button-active-background);
-                color: var(--mashroom-portal-tab-dialog-button-active-color);
+                background: var(--mashroom-portal-background-color-tab-dialog-button-active);
+                color: var(--mashroom-portal-color-tab-dialog-button-active);
                 cursor: default;
 
                 .close-button {
@@ -947,15 +908,9 @@ footer {
                 }
             }
 
-            // .title {
-            //     // padding: 6px 16px;
-            //     // font-size: 0.9em;
-            // }
-
             .close-button {
                 cursor: pointer;
-                color: var(--mashroom-portal-color-button);
-                color: var(--mashroom-portal-icon-button-color);
+                color: var(--mashroom-portal-color-icon-button);
 
                 &:after {
                     content: '\f00d';
@@ -973,11 +928,10 @@ footer {
 }
 
 .mashroom-portal-tabify-app {
-    
+
     .mashroom-portal-ui-tab-dialog {
         .tab-dialog-header {
-            margin: 0;
-            margin-bottom: 16px;
+            margin: 0 0 16px;
         }
     }
 }
@@ -1026,7 +980,7 @@ footer {
         align-items: center;
         width: 100%;
         background-color: var(--mashroom-portal-background-color-app-header);
-        border-bottom: 1px solid var(--mashroom-portal-background-color-navigation);
+        border-bottom: 1px solid var(--mashroom-portal-background-color-default);
         border-top-left-radius: 10px;
         border-top-right-radius: 10px;
 
