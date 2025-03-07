@@ -515,7 +515,7 @@ export interface Plugins {
      */
     spaMode?: boolean;
     /**
-     * Possible values: true, false, "auto" (Default: false)
+     * Possible values: true, false, "auto" (Default: "auto",)
      */
     darkMode?: boolean | string;
     /**
@@ -636,7 +636,7 @@ export interface Plugins {
      */
     loginFormTitle?: string;
     /**
-     * Possible values: true, false, "auto" (Default: false)
+     * Possible values: true, false, "auto" (Default: "auto")
      */
     darkMode?: boolean | string;
     /**

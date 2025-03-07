@@ -295,6 +295,11 @@ textarea {
         border-color: var(--mashroom-portal-color-disabled);
         background-color: var(--mashroom-portal-color-disabled);
     }
+
+    &:-webkit-autofill {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: var(--mashroom-portal-color-text-default);
+    }
 }
 
 select {

@@ -46,7 +46,7 @@
                 "views": "./views",
                 "defaultConfig": {
                     "spaMode": true,
-                    "darkMode": false,
+                    "darkMode": "auto",
                     "styleFile": null,
                     "logoImageUrl": null,
                     "showPortalAppHeaders": true,

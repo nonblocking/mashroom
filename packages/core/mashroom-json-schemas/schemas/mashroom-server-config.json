@@ -745,7 +745,7 @@
                         },
                         "darkMode": {
                             "type": ["boolean", "string"],
-                            "description": "Possible values: true, false, \"auto\" (Default: false)"
+                            "description": "Possible values: true, false, \"auto\" (Default: \"auto\",)"
                         },
                         "styleFile": {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
@@ -913,7 +913,7 @@
                         },
                         "darkMode": {
                             "type": ["boolean", "string"],
-                            "description": "Possible values: true, false, \"auto\" (Default: false)"
+                            "description": "Possible values: true, false, \"auto\" (Default: \"auto\")"
                         },
                         "styleFile":  {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",

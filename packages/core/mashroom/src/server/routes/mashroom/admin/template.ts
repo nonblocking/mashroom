@@ -33,11 +33,11 @@ export default (content: string, req: Request) => {
                     h2 {
                         font-size: 1.2em;
                         font-weight: normal;
-                        margin: 20px 0;
+                        margin: 0 0 16px 0;
                     }
 
                     pre, .json, .console {
-                        font-family:  Consolas, 'Liberation Mono', Courier, monospace;
+                        font-family: Consolas, 'Liberation Mono', Courier, monospace;
                         font-size: 14px;
                         word-break: break-all;
                     }
@@ -87,8 +87,8 @@ export default (content: string, req: Request) => {
 
                     nav ul {
                         padding: 0;
-                        margin: 20px 10px;
-                        border-radius: 10px;
+                        margin: 16px 8px;
+                        border-radius: 8px;
                     }
 
                     .menu-item {
@@ -96,13 +96,13 @@ export default (content: string, req: Request) => {
                         overflow: hidden;
 
                         &:first-child {
-                            border-top-left-radius: 10px;
-                            border-top-right-radius: 10px;
+                            border-top-left-radius: 8px;
+                            border-top-right-radius: 8px;
                         }
 
                         &:last-child {
-                            border-bottom-left-radius: 10px;
-                            border-bottom-right-radius: 10px;
+                            border-bottom-left-radius: 8px;
+                            border-bottom-right-radius: 8px;
                         }
                     }
 
@@ -112,10 +112,9 @@ export default (content: string, req: Request) => {
                         color: black;
                         text-decoration: none;
                         white-space: nowrap;
-                        padding: 7px 25px;
-                        background-color: #E2E2E2;
+                        padding: 7px 21px;
+                        background-color: #fafafa;
                         margin-bottom: 1px;
-
                     }
 
                     .menu-item a:hover {
@@ -130,9 +129,12 @@ export default (content: string, req: Request) => {
                     }
 
                     main {
-                        margin: 5px 20px;
+                        margin: 16px 8px;
+                        padding: 16px;
                         overflow: hidden;
                         width: 100%;
+                        background-color: white;
+                        border-radius: 8px;
                     }
 
                     main ul {
@@ -141,6 +143,10 @@ export default (content: string, req: Request) => {
 
                     main li {
                         padding: 3px 0;
+                    }
+
+                    iframe {
+                        margin: -16px;
                     }
 
                     table, th, td {
@@ -167,7 +173,7 @@ export default (content: string, req: Request) => {
                     }
 
                     tr:nth-child(even) {
-                        background-color: #E2E2E2;
+                        background-color: #FAFAFA;
                     }
 
                     table.overview th {
@@ -202,20 +208,20 @@ export default (content: string, req: Request) => {
                         max-width: 90%;
                         box-shadow: 2px 4px 4px #444;
                         background-color: white;
-                        border-radius: 10px;
+                        border-radius: 8px;
                     }
 
                     #modal .modal-header {
                         position: relative;
                         width: 100%;
-                        border-top-left-radius: 10px;
-                        border-top-right-radius: 10px;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
                     }
 
                     #modal .modal-header .modal-close {
                         position: absolute;
-                        right: 10px;
-                        top: 10px;
+                        right: 16px;
+                        top: 16px;
                         color: #666;
                         cursor: pointer;
                     }
@@ -227,9 +233,9 @@ export default (content: string, req: Request) => {
                     #modal-content {
                         min-width: 250px;
                         min-height: 250px;
-                        padding: 30px;
-                        border-bottom-left-radius: 10px;
-                        border-bottom-right-radius: 10px;
+                        padding: 32px 16px 16px 16px;
+                        border-bottom-left-radius: 8px;
+                        border-bottom-right-radius: 8px;
                     }
                 </style>
 

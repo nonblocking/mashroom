@@ -10,24 +10,30 @@ $X_LARGE_DEVICE_MIN: 1200px;
     transition: color 500ms ease-out, background-color 500ms ease-out;
 }
 
+@mixin focus-animation() {
+    transition: color 500ms ease-out, border-color 500ms ease-out;
+}
+
 body {
     text-rendering: optimizeLegibility;
     color: var(--mashroom-portal-color-text-default);
     font-family: var(--mashroom-portal-font-default), sans-serif;
-    font-size: var(--mashroom-portal-line-font-size-default);
+    font-size: var(--mashroom-portal-font-size-default);
     line-height: var(--mashroom-portal-line-height-default);
     padding: 0;
     margin: 0;
     background-color: var(--mashroom-portal-background-color-default);
 }
 
-a, a:visited, a:focus {
-    color: var(--mashroom-portal-color-button);
+a,
+a:visited,
+a:focus {
+    color: var(--mashroom-portal-color-link);
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: var(--mashroom-portal-color-button-hover);
+        color: var(--mashroom-portal-color-link-hover);
     }
 
     &:active {
@@ -35,12 +41,14 @@ a, a:visited, a:focus {
     }
 }
 
-button, input[type="submit"] {
+button,
+input[type="submit"] {
     background-color: var(--mashroom-portal-color-button);
     color: white;
-    border-radius: 5px;
+    border-radius: var(--mashroom-portal-border-radius);
     border: none;
-    padding: var(--mashroom-portal-padding-button);
+    padding: var(--mashroom-portal-spacing-default);
+    min-width: 80px;
     cursor: pointer;
     font-family: var(--mashroom-portal-font-default), sans-serif;
     font-size: 1em;
@@ -53,16 +61,31 @@ button, input[type="submit"] {
     &:active {
         background-color: var(--mashroom-portal-color-button);
     }
+
+    &[disabled] {
+        cursor: not-allowed;
+        color: var(--mashroom-portal-color-input-placeholder);
+        background-color: var(--mashroom-portal-color-disabled);
+
+        &:hover,
+        &:active {
+            background-color: var(--mashroom-portal-color-disabled);
+        }
+    }
 }
 
 input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"] {
     box-sizing: border-box;
-    padding: var(--mashroom-portal-padding-input);
     border: 1px solid var(--mashroom-portal-color-input-border);
-    border-radius: 3px;
+    border-radius: var(--mashroom-portal-border-radius);
     width: 100%;
+    font-family: var(--mashroom-portal-font-default), sans-serif;
+    font-size: var(--mashroom-portal-font-size-default);
+    line-height: var(--mashroom-portal-line-height-default);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
     color: var(--mashroom-portal-color-text-default);
     background-color: var(--mashroom-portal-background-color-input);
+    @include focus-animation();
 
     &:focus {
         outline: 1px solid var(--mashroom-portal-color-input-border);
@@ -70,6 +93,18 @@ input[type="text"], input[type="number"], input[type="password"], input[type="te
 
     &:invalid {
         border: 1px solid var(--mashroom-portal-color-error);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        color: var(--mashroom-portal-color-input-placeholder);
+        border-color: var(--mashroom-portal-color-disabled);
+        background-color: var(--mashroom-portal-color-disabled);
+    }
+
+    &:-webkit-autofill {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: var(--mashroom-portal-color-text-default);
     }
 }
 
@@ -114,7 +149,7 @@ main {
         margin-left: 20px;
         margin-right: 20px;
         background-color: var(--mashroom-portal-background-color-app);
-        border-radius: 10px;
+        border-radius: var(--mashroom-portal-border-radius);
 
         .login-form-title {
             overflow: hidden;
@@ -146,7 +181,7 @@ main {
             }
 
             .login-form-actions {
-                margin-top: 20px;
+                margin-top: 40px;
             }
         }
     }

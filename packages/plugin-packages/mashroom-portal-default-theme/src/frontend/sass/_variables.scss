@@ -35,7 +35,6 @@
     --mashroom-portal-light-theme-color-input-placeholder: #AAA;
     --mashroom-portal-light-theme-color-input-color: #000;
     --mashroom-portal-light-theme-color-input-border: #CCC;
-    --mashroom-portal-light-theme-color-input-background: #fff;
     --mashroom-portal-light-theme-color-link: var(--mashroom-portal-color-primary);
     --mashroom-portal-light-theme-color-link-hover: var(--mashroom-portal-color-primary-dark);
     --mashroom-portal-light-theme-color-tab-dialog-button: var(--mashroom-portal-color-primary);
@@ -51,7 +50,7 @@
     --mashroom-portal-light-theme-background-color-app-header: white;
     --mashroom-portal-light-theme-background-color-modal: white;
     --mashroom-portal-light-theme-background-color-modal-header: white;
-    --mashroom-portal-light-theme-background-color-input: white;
+    --mashroom-portal-light-theme-background-color-input: #fff;
     --mashroom-portal-light-theme-background-color-alt: #E2E2E2;
     --mashroom-portal-light-theme-background-color-header: var(--mashroom-portal-color-primary);
     --mashroom-portal-light-theme-background-color-dropdown: white;
@@ -82,7 +81,6 @@
     --mashroom-portal-dark-theme-color-input-placeholder: #AAA;
     --mashroom-portal-dark-theme-color-input-color: #fff;
     --mashroom-portal-dark-theme-color-input-border: #413E53;
-    --mashroom-portal-dark-theme-color-input-background: #201D35;
     --mashroom-portal-dark-theme-color-link: white;
     --mashroom-portal-dark-theme-color-link-hover: var(--mashroom-portal-color-primary-extra-light);
     --mashroom-portal-dark-theme-color-tab-dialog-button: #fff;
@@ -138,7 +136,6 @@
         --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
         --mashroom-portal-color-input-color: var(--mashroom-portal-light-theme-color-input-color);
         --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
-        --mashroom-portal-color-input-background: var(--mashroom-portal-light-theme-color-input-background);
         --mashroom-portal-color-link: var(--mashroom-portal-light-theme-color-link);
         --mashroom-portal-color-link-hover: var(--mashroom-portal-light-theme-color-link-hover);
         --mashroom-portal-color-tab-dialog-button: var(--mashroom-portal-light-theme-color-tab-dialog-button);
@@ -186,7 +183,6 @@
         --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
         --mashroom-portal-color-input-color: var(--mashroom-portal-dark-theme-color-input-color);
         --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
-        --mashroom-portal-color-input-background: var(--mashroom-portal-dark-theme-color-input-background);
         --mashroom-portal-color-link: var(--mashroom-portal-dark-theme-color-link);
         --mashroom-portal-color-link-hover: var(--mashroom-portal-dark-theme-color-link-hover);
         --mashroom-portal-color-tab-dialog-button: var(--mashroom-portal-dark-theme-color-tab-dialog-button);
@@ -235,7 +231,6 @@
             --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
             --mashroom-portal-color-input-color: var(--mashroom-portal-light-theme-color-input-color);
             --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
-            --mashroom-portal-color-input-background: var(--mashroom-portal-light-theme-color-input-background);
             --mashroom-portal-color-link: var(--mashroom-portal-light-theme-color-link);
             --mashroom-portal-color-link-hover: var(--mashroom-portal-light-theme-color-link-hover);
             --mashroom-portal-color-tab-dialog-button: var(--mashroom-portal-light-theme-color-tab-dialog-button);
@@ -283,7 +278,6 @@
             --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
             --mashroom-portal-color-input-color: var(--mashroom-portal-dark-theme-color-input-color);
             --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
-            --mashroom-portal-color-input-background: var(--mashroom-portal-dark-theme-color-input-background);
             --mashroom-portal-color-link: var(--mashroom-portal-dark-theme-color-link);
             --mashroom-portal-color-link-hover: var(--mashroom-portal-dark-theme-color-link-hover);
             --mashroom-portal-color-tab-dialog-button: var(--mashroom-portal-dark-theme-color-tab-dialog-button);
