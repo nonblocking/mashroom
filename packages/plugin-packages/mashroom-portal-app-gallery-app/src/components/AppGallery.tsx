@@ -12,12 +12,12 @@ type Props = {
     sandboxPath: string | null;
     showTitle: boolean;
     overrideTitle: string | null;
-    showHiddenApps: boolean;
+    excludeCategories: Array<string> | null;
     showNotPermittedApps: boolean;
     portalAppService: MashroomPortalAppService;
 }
 
-export default ({ lang, sandboxPath, showTitle, overrideTitle, showHiddenApps, showNotPermittedApps, portalAppService }: Props) => {
+export default ({ lang, sandboxPath, showTitle, overrideTitle, excludeCategories, showNotPermittedApps, portalAppService }: Props) => {
     const appWrapperRef = useRef<HTMLDivElement>(null);
     const [portalApps, setPortalApps] = useState<Array<MashroomKnownPortalApp>>([]);
     const [error, setError] = useState(false);
@@ -35,7 +35,7 @@ export default ({ lang, sandboxPath, showTitle, overrideTitle, showHiddenApps, s
         }).then((knownApps) => {
             setPortalApps(knownApps
                 .filter((app) => {
-                    if (!showHiddenApps && app.category && app.category.toLowerCase() === 'hidden') {
+                    if (excludeCategories && app.category && excludeCategories.find((cat) => cat.toLowerCase() === app.category!.toLowerCase())) {
                         return false;
                     }
                     if (categoryFilter) {
@@ -64,7 +64,7 @@ export default ({ lang, sandboxPath, showTitle, overrideTitle, showHiddenApps, s
         }).then((knownApps) => {
             const categories: Array<string> = [];
             knownApps.forEach(({category}) => {
-                if (category && categories.indexOf(category) === -1) {
+                if (category && categories.indexOf(category) === -1 && (!excludeCategories || !excludeCategories.find((cat) => cat.toLowerCase() === category!.toLowerCase()))) {
                     categories.push(category);
                 }
             });

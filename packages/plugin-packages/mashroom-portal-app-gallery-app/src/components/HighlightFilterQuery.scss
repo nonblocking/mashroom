@@ -1,4 +1,5 @@
+@use "../variables" as *;
 
 .Highlight {
-    background-color: yellow;
+    background-color: $COLOR_BACKGROUND_HIGHLIGHTED;
 }

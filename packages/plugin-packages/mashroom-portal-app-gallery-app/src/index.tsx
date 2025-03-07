@@ -4,7 +4,7 @@ import AppGallery from './components/AppGallery';
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElement, portalAppSetup, clientServices) => {
-    const {lang, appConfig: { sandboxPath, showTitle, overrideTitle, showHiddenApps, showNotPermittedApps }} = portalAppSetup;
+    const {lang, appConfig: { sandboxPath, showTitle, overrideTitle, excludeCategories, showNotPermittedApps }} = portalAppSetup;
     const {portalAppService} = clientServices;
 
     const root = createRoot(portalAppHostElement);
@@ -14,7 +14,7 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
             sandboxPath={sandboxPath}
             showTitle={showTitle}
             overrideTitle={overrideTitle}
-            showHiddenApps={showHiddenApps}
+            excludeCategories={excludeCategories}
             showNotPermittedApps={showNotPermittedApps}
             portalAppService={portalAppService}
         />
