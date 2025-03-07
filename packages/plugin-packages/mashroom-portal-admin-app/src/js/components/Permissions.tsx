@@ -31,13 +31,13 @@ export default class Permissions extends PureComponent<Props, State> {
         };
     }
 
-    onRoleChange(enteredRole: string | undefined | null): void {
+    onRoleChange(enteredRole: string | undefined | null) {
         this.setState({
             enteredRole
         });
     }
 
-    onRoleSelected(role: string): void {
+    onRoleSelected(role: string) {
         this.setState({
             enteredRole: role,
         }, () => {
@@ -45,7 +45,7 @@ export default class Permissions extends PureComponent<Props, State> {
         });
     }
 
-    onAddRole(): void {
+    onAddRole() {
         const {enteredRole} = this.state;
         if (enteredRole) {
             this.addRole?.(enteredRole);
@@ -53,11 +53,11 @@ export default class Permissions extends PureComponent<Props, State> {
         }
     }
 
-    onResetRef(resetRef: () => void): void {
+    onResetRef(resetRef: () => void) {
         this.inputReset = resetRef;
     }
 
-    render(): ReactNode {
+    render() {
         const {enteredRole} = this.state;
 
         return (

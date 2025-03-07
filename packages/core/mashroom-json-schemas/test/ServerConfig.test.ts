@@ -4,7 +4,8 @@ import {resolve} from 'path';
 import AJV from 'ajv';
 
 const ajv = new AJV({
-    strict: true
+    strict: true,
+    allowUnionTypes: true,
 });
 ajv.addKeyword('deprecationMessage');
 

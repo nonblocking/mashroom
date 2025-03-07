@@ -2,7 +2,7 @@
 $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 
 .mashroom-demo-websocket-proxy-app {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     .echo {
         .input-form {

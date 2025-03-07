@@ -1,6 +1,6 @@
-{{! Portal page template  }}
+{{! Portal page template }}
 <!doctype html>
-<html lang="{{lang}}" data-bs-theme="light">
+<html lang="{{lang}}" data-mashroom-theme="{{darkMode}}">
 <head>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta charset="utf-8">
@@ -27,6 +27,8 @@
     <meta name="msapplication-square150x150logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-150.png">
     <meta name="msapplication-square310x310logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-310.png">
 
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fonts.css?v={{fontawesomeVersion}}">
+
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/regular.css?v={{fontawesomeVersion}}">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/solid.css?v={{fontawesomeVersion}}">
     <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/brands.css?v={{fontawesomeVersion}}">
@@ -42,6 +44,8 @@
 
     {{{portalResourcesHeader}}}
 
+    {{{themeExtraStyle}}}
+
     {{#if page.extraCss}}
         <style type="text/css">
             {{{page.extraCss}}}
@@ -49,6 +53,12 @@
     {{/if}}
 
     <script type="application/javascript" src="{{resourcesBasePath}}/main.js?v={{themeVersionHash}}"></script>
+
+    <script>
+        const preferDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const mode = document.getElementsByTagName("html")[0].getAttribute('data-mashroom-theme');
+        window.__MASHROOM_PORTAL_DARK_MODE__ = mode === 'dark' || mode === 'auto' && preferDarkMode;
+    </script>
 </head>
 <body>
     {{#if user.admin}}
@@ -60,14 +70,14 @@
     {{/if}}
     <header>
         <div class="logo">
-            {{{ inlineSVG 'logo-white.svg'}}}
+            {{{logoImage}}}
         </div>
         <div class="site-name">
             <h1>{{site.title}}</h1>
         </div>
         {{#ifShowEnvAndVersions}}
             <div class="env-and-versions">
-                <div class="env">Environment: {{env}}</div>
+                <div class="env">Environment: {{env}} </div>
                 <div class="versions">Server version: {{mashroomVersion}}, <a href="javascript:void(0)" onclick="toggleShowAppVersions()">App versions</a></div>
             </div>
         {{/ifShowEnvAndVersions}}

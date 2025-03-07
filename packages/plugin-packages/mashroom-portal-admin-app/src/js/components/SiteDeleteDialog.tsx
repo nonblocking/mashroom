@@ -9,7 +9,6 @@ import {
 } from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_SITE_DELETE} from '../constants';
 
-import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {Sites, SelectedSite} from '../types';
 
@@ -24,15 +23,15 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    onClose(): void {
+    onClose() {
         this.close?.();
     }
 
-    onCloseRef(close: () => void): void {
+    onCloseRef(close: () => void) {
         this.close = close;
     }
 
-    onConfirmDelete(): void {
+    onConfirmDelete() {
         const {selectedSite, portalAdminService, setErrorUpdating} = this.props;
         if (!selectedSite || !selectedSite.siteId) {
             return;
@@ -52,13 +51,13 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError(): ReactNode {
+    renderUpdatingError() {
         return (
             <ErrorMessage messageId='updateFailed' />
         );
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {selectedSite, sites} = this.props;
         if (!selectedSite) {
             return null;
@@ -77,14 +76,14 @@ export default class SiteDeleteDialog extends PureComponent<Props> {
                    <FormattedMessage id='confirmDeleteSite' values={{ siteTitle }}/>
                 </DialogContent>
                 <DialogButtons>
-                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                     <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
+                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                 </DialogButtons>
             </>
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <Modal
                 appWrapperClassName='mashroom-portal-admin-app'

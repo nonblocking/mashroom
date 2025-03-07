@@ -3,6 +3,28 @@
 
 ## [unreleased]
 
+ * Login Web-App: Introduced a dark mode (default: off)
+ * Portal Default Theme: Overhaul:
+   * Introduced tons of CSS variables
+   * Introduced a dark mode (default: off)
+   * Add the possibility to override CSS variables and style with an external file:
+     ```css
+        :root {
+          --mashroom-portal-color-primary: green;
+        }
+     ```
+     Example plugin config:
+     ```json
+     {
+       "Mashroom Portal Default Theme": {
+         "showEnvAndVersions": false,
+         "showPortalAppHeaders": false,
+         "spaMode": true,
+         "darkMode": "auto",
+         "styleFile": "./defaultThemeOverrides.css"
+       }
+     }
+     ```
  * Added a *App Gallery* App that shows all registered Apps with a screenshot (if available), some basic data and link
    to the *Sandbox* to try it out
  * Svelte Demo App: SSR support added

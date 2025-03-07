@@ -32,7 +32,7 @@ const serverOverviewTable = async (req: Request) => {
     const {serverConfig, serverInfo} = req.pluginContext;
     const readyCheckResult = await ready(req);
     return `
-        <table>
+        <table class="overview">
             <tr>
                 <th>Server Name</th>
                 <td>${serverConfig.name}</td>

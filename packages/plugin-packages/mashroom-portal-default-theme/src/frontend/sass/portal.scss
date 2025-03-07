@@ -1,18 +1,17 @@
-
-@use "sass:math";
-@use "sass:meta";
-@use "variables" as *;
-
 // Reset styles
-@use "bootstrap/scss/bootstrap-reboot";
+@use "normalize.css/normalize.css";
 
-// Bootstrap grid
-@use "bootstrap/scss/bootstrap-grid";
+// From Bootstrap we only use the grid
+@use "bootstrap/dist/css/bootstrap-grid";
+
+@use "mixins" as *;
+@use "variables";
 
 @keyframes show-delayed {
     0% {
         opacity: 0;
     }
+
     100% {
         opacity: 1;
     }
@@ -20,30 +19,34 @@
 
 @keyframes dot-flashing {
     0% {
-        background-color: $COLOR_LOADING_DOTS;
+        background-color: var(--mashroom-portal-color-primary);
     }
+
     50%,
     100% {
-        background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+        background-color: var(--mashroom-portal-color-primary-extra-light);
     }
 }
 
 @keyframes progress-bar {
     0% {
-        left:0;
-        right:100%;
-        width:0;
+        left: 0;
+        right: 100%;
+        width: 0;
     }
+
     10% {
         left: 0;
         right: 75%;
         width: 20%;
     }
+
     90% {
         right: 0;
         left: 75%;
         width: 20%;
     }
+
     100% {
         left: 100%;
         right: 0;
@@ -51,121 +54,128 @@
     }
 }
 
-/* Remove Chrome's input focus border */
-:focus {
-    outline: none !important;
-}
-
 ::placeholder {
-    color: $COLOR_GREY_LIGHT;
+    color: var(--mashroom-portal-color-input-placeholder);
 }
 
 :root {
-    -webkit-font-smoothing: antialiased;
-    -moz-font-smoothing: antialiased;
-    -ms-font-smoothing: antialiased;
-    -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
-    color: $COLOR_BLACK;
-    font-family: $FONT_DEFAULT;
-    font-size: 16px;
+    color: var(--mashroom-portal-color-text-default);
+    font-family: var(--mashroom-portal-font-default), sans-serif;
+    font-size: var(--mashroom-portal-font-size-default);
+    line-height: var(--mashroom-portal-line-height-default);
 
-    /* CSS variables */
-    --mashroom-portal-font-icon: #{meta.inspect($FONT_ICON)};
-    --mashroom-portal-font-icon-brands: #{meta.inspect($FONT_ICON_BRANDS)};
-    --mashroom-portal-font-default: #{meta.inspect($FONT_DEFAULT)};
-    --mashroom-portal-font-header: #{meta.inspect($FONT_HEADER)};
-    --mashroom-portal-color-black: #{$COLOR_BLACK};
-    --mashroom-portal-color-grey: #{$COLOR_GREY};
-    --mashroom-portal-color-grey-light: #{$COLOR_GREY_LIGHT};
-    --mashroom-portal-color-error: #{$COLOR_ERROR};
-    --mashroom-portal-color-primary: #{$COLOR_PRIMARY};
-    --mashroom-portal-color-primary-light: #{$COLOR_PRIMARY_LIGHT};
-    --mashroom-portal-color-primary-dark: #{$COLOR_PRIMARY_DARK};
-    --mashroom-portal-color-primary-extra-light: #{$COLOR_PRIMARY_EXTRA_LIGHT};
-    --mashroom-portal-color-secondary: #{$COLOR_SECONDARY};
-    --mashroom-portal-color-secondary-light: #{$COLOR_SECONDARY_LIGHT};
-    --mashroom-portal-color-secondary-dark: #{$COLOR_SECONDARY_DARK};
-    --mashroom-portal-color-secondary-extra-light: #{$COLOR_SECONDARY_EXTRA_LIGHT};
-    --mashroom-portal-color-background: #{$COLOR_BACKGROUND};
 }
 
-h1, h2, h3 {
-    font-family: $FONT_HEADER;
+body {
+    background-color: var(--mashroom-portal-background-color-footer);
+}
+
+.row,
+.container,
+.container-fluid {
+    --bs-gutter-x: var(--mashroom-portal-gutter-width);
+}
+
+.container-fluid {
+    width: auto;
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+    margin-bottom: var(--mashroom-portal-spacing-default);
 }
 
 h4 {
-    font-size: 1.2rem;
+    margin-top: 0;
+    margin-bottom: var(--mashroom-portal-spacing-small);
 }
 
-a, a:visited, a:focus {
-    color: $COLOR_PRIMARY;
+h5,
+h6 {
+    margin: 0;
+}
+
+a,
+a:visited,
+a:focus {
+    color: var(--mashroom-portal-color-link);
     text-decoration: underline;
     @include hover-animation();
 
     &:hover {
-        color: $COLOR_PRIMARY_DARK;
+        color: var(--mashroom-portal-color-link-hover);
     }
 
     &:active {
-        color: $COLOR_PRIMARY_DARK;
+        color: var(--mashroom-portal-color-button);
     }
 }
 
-button, input[type="submit"] {
-    background-color: $COLOR_PRIMARY;
+.admin-menu-bar {
+    background-color: #222;;
+}
+
+button,
+input[type="submit"] {
+    background-color: var(--mashroom-portal-color-button);
     color: white;
-    border-radius: 0;
+    border-radius: var(--mashroom-portal-border-radius);
     border: none;
-    padding: 6px 12px;
+    padding: var(--mashroom-portal-spacing-default);
+    min-width: 80px;
     cursor: pointer;
-    outline: none !important;
-    font-family: $FONT_DEFAULT;
+    font-family: var(--mashroom-portal-font-default), sans-serif;
     font-size: 1em;
     @include hover-animation();
 
     &:hover {
-        background-color: $COLOR_PRIMARY_DARK;
+        background-color: var(--mashroom-portal-color-button-hover);
     }
 
     &:active {
-        background-color: $COLOR_PRIMARY_DARK;
+        background-color: var(--mashroom-portal-color-button);
     }
 
     &[disabled] {
         cursor: not-allowed;
-        background-color: $COLOR_GREY;
+        color: var(--mashroom-portal-color-input-placeholder);
+        background-color: var(--mashroom-portal-color-disabled);
 
-        &:hover, &:active {
-            background-color: $COLOR_GREY;
+        &:hover,
+        &:active {
+            background-color: var(--mashroom-portal-color-disabled);
         }
     }
 }
 
 button.secondary {
     background-color: transparent;
-    border: 1px solid $COLOR_PRIMARY;
-    color: $COLOR_PRIMARY;
+    border: 1px solid var(--mashroom-portal-color-button-secondary);
+    color: var(--mashroom-portal-color-button-secondary);
 
     &:hover {
-        color: $COLOR_PRIMARY_DARK;
-        border-color: $COLOR_PRIMARY_DARK;
+        border-color: var(--mashroom-portal-color-button-hover);
+        color: white;
+        background-color: var(--mashroom-portal-color-button-hover);
     }
 
     &:active {
-        color: $COLOR_PRIMARY_DARK;
-        border-color: $COLOR_PRIMARY_DARK;
+        color: white
     }
 
     &[disabled] {
         background-color: transparent;
-        border-color: $COLOR_GREY;
-        color: $COLOR_GREY;
+        border-color: var(--mashroom-portal-color-disabled);
+        color: var(--mashroom-portal-color-input-placeholder);
 
-        &:hover, &:active {
-            border-color: $COLOR_GREY;
-            color: $COLOR_GREY;
+        &:hover,
+        &:active {
+            border-color: var(--mashroom-portal-color-disabled);
+            color: var(--mashroom-portal-color-input-placeholder);
         }
     }
 }
@@ -174,7 +184,8 @@ button.secondary {
     position: absolute;
     opacity: 0;
 
-    & + label {
+
+    &+label {
         cursor: pointer;
         position: relative;
         padding-left: 23px;
@@ -182,31 +193,31 @@ button.secondary {
         &:before {
             position: absolute;
             left: 2px;
-            top: 0;
-            font-family: $FONT_ICON;
+            top: -2px;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-size: 1.1em;
             content: "\f0c8";
-            color: $COLOR_PRIMARY;
+            color: var(--mashroom-portal-color-input-border);
             @include focus-animation();
         }
     }
 
-    &:checked + label:before {
+    &:checked+label:before {
         content: "\f14a";
     }
 
-    &:focus + label {
+    &:focus+label {
         &:before {
-            color: $COLOR_SECONDARY !important;
+            color: var(--mashroom-portal-color-button-hover);
         }
     }
 
-    &[disabled] + label {
+    &[disabled]+label {
         cursor: not-allowed;
-        color: $COLOR_GREY;
+        color: var(--mashroom-portal-color-disabled);
 
         &:before {
-            color: $COLOR_GREY !important;
+            color: var(--mashroom-portal-color-disabled);
         }
     }
 }
@@ -215,7 +226,7 @@ button.secondary {
     position: absolute;
     opacity: 0;
 
-    & + label {
+    &+label {
         cursor: pointer;
         position: relative;
         padding-left: 23px;
@@ -223,55 +234,71 @@ button.secondary {
         &:before {
             position: absolute;
             left: 1px;
-            top: 0;
-            font-family: $FONT_ICON;
+            top: -2px;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-size: 1.1em;
             content: "\f111";
-            color: $COLOR_PRIMARY;
+            color: var(--mashroom-portal-color-input-border);
             @include focus-animation();
         }
     }
 
-    &:checked + label:before {
+    &:checked+label:before {
         content: "\f192";
     }
 
-    &:focus + label {
+    &:focus+label {
         &:before {
-            color: $COLOR_SECONDARY;
+            color: var(--mashroom-portal-color-button-hover);
         }
     }
 
-    &[disabled] + label {
+    &[disabled]+label {
         cursor: not-allowed;
-        color: $COLOR_GREY;
+        color: var(--mashroom-portal-color-disabled);
 
         &:before {
-            color: $COLOR_GREY !important;
+            color: var(--mashroom-portal-color-disabled);
         }
     }
 }
 
-input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"], textarea {
-    padding: 6px 11px;
-    border: 1px solid $COLOR_PRIMARY;
+input[type="text"],
+input[type="number"],
+input[type="password"],
+input[type="tel"],
+input[type="search"],
+textarea {
+    box-sizing: border-box;
+    border: 1px solid var(--mashroom-portal-color-input-border);
+    border-radius: var(--mashroom-portal-border-radius);
     width: 100%;
-    font-family: $FONT_DEFAULT;
-    font-size: 1em;
+    font-family: var(--mashroom-portal-font-default), sans-serif;
+    font-size: var(--mashroom-portal-font-size-default);
+    line-height: var(--mashroom-portal-line-height-default);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+    color: var(--mashroom-portal-color-text-default);
+    background-color: var(--mashroom-portal-background-color-input);
     @include focus-animation();
 
     &:focus {
-        border: 1px solid $COLOR_SECONDARY;
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 
     &:invalid {
-        border: 1px solid $COLOR_ERROR;
+        border: 1px solid var(--mashroom-portal-color-error);
     }
 
     &:disabled {
         cursor: not-allowed;
-        color: $COLOR_GREY !important;
-        border-color: $COLOR_GREY;
+        color: var(--mashroom-portal-color-input-placeholder);
+        border-color: var(--mashroom-portal-color-disabled);
+        background-color: var(--mashroom-portal-color-disabled);
+    }
+
+    &:-webkit-autofill {
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: var(--mashroom-portal-color-text-default);
     }
 }
 
@@ -279,30 +306,32 @@ select {
     -moz-appearance: none;
     -webkit-appearance: none;
     appearance: none;
-    outline: none;
-    font-family: $FONT_DEFAULT;
-    font-size: 1em;
+    font-family: var(--mashroom-portal-font-default), sans-serif;
     width: 100%;
-    padding: 6px 11px;
-    background-color: white;
-    border: 1px solid $COLOR_PRIMARY;
-    border-radius: 0;
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+    border: 1px solid var(--mashroom-portal-color-input-border);
+    border-radius: var(--mashroom-portal-border-radius);
+    color: var(--mashroom-portal-color-text-default);
+    background-color: var(--mashroom-portal-background-color-input);
     @include focus-animation();
 
+    &:after {
+        content: '\f078';
+        font-family: var(--mashroom-portal-font-icon), sans-serif;
+        font-weight: bold;
+        display: block;
+    }
+
     option {
-        background-color: white;
+        background-color: var(--mashroom-portal-background-color-input);
     }
 
     &:focus {
-        border: 1px solid $COLOR_SECONDARY;
-
-        &::-ms-value {
-            background-color: transparent;
-        }
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 
     &:invalid {
-        border: 1px solid $COLOR_ERROR;
+        border: 1px solid var(--mashroom-portal-color-error);
     }
 
     &::-ms-expand {
@@ -311,44 +340,61 @@ select {
 
     &:disabled {
         cursor: not-allowed;
-        color: $COLOR_GREY !important;
-        border-color: $COLOR_GREY;
+        color: var(--mashroom-portal-color-input-placeholder);
+        border-color: var(--mashroom-portal-color-disabled);
+        background-color: var(--mashroom-portal-color-disabled);
     }
 }
 
-label, form {
+label,
+form {
     margin: 0;
 }
 
 table {
     width: 100%;
     border-spacing: 0;
-    border: 1px solid $COLOR_PRIMARY;
-
-    tr {
-        border-bottom: 1px solid $COLOR_PRIMARY;
-
-        &:last-child {
-            border-bottom: none;
-        }
-    }
+    border-radius: var(--mashroom-portal-border-radius);
 
     th {
         text-align: left;
-        padding: 5px 10px;
-        background-color: $COLOR_PRIMARY;
-        color: white;
-        border-right: 1px solid white;
+        padding: var(--mashroom-portal-spacing-default);
+        font-weight: bold;
+        background-color: var(--mashroom-portal-background-color-table-header-row);
 
         &:last-child {
             border-right: none;
         }
+
+        &:first-of-type {
+            border-top-left-radius: var(--mashroom-portal-border-radius);
+        }
+
+        &:last-of-type {
+            border-top-right-radius: var(--mashroom-portal-border-radius);
+        }
+    }
+
+    tr {
+        border-bottom: 1px solid var(--mashroom-portal-color-primary);
+        background-color: var(--mashroom-portal-background-color-table-row);
+
+        &:last-child {
+            border-bottom: none;
+            border-radius: var(--mashroom-portal-border-radius);
+        }
+
+        &:last-of-type td:first-of-type {
+            border-bottom-left-radius: var(--mashroom-portal-border-radius);
+        }
+
+        tr:last-of-type td:last-of-type {
+            border-bottom-right-radius: var(--mashroom-portal-border-radius);
+        }
     }
 
     td {
-        padding: 4px 10px;
-        border-right: 1px solid $COLOR_PRIMARY;
-
+        padding: var(--mashroom-portal-spacing-default);
         &:last-child {
             border-right: none;
         }
@@ -356,37 +402,44 @@ table {
 
     &.table-striped {
         tr:nth-child(even) {
-            background-color: $COLOR_PRIMARY_EXTRA_LIGHT;
+            background-color: var(--mashroom-portal-background-color-table-row-even);
         }
     }
 }
 
 blockquote {
-    padding: 15px 10px;
-    background-color: #EEE;
-    border-left: 7px solid $COLOR_GREY;
+    margin: 0 var(--mashroom-portal-spacing-default);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+    background-color: var(--mashroom-portal-background-color-default);
+    border-left: 7px solid var(--mashroom-portal-color-disabled);
 }
 
 header {
-    background-color: $COLOR_PRIMARY;
+    background-color: var(--mashroom-portal-background-color-header);
     color: white;
     position: relative;
 
     .logo {
         display: none;
+        width: 40px;
+        height: 30px;
+        margin-left: var(--mashroom-portal-spacing-default);
+
+        img {
+            width: 40px;
+            height: auto;
+        }
 
         svg {
-            display: inline-block;
             width: 40px;
             height: 30px;
-            margin-left: 20px;
         }
     }
 
     .site-name {
         h1 {
             display: inline-block;
-            padding: 16px $GUTTER_WIDTH 0 $GUTTER_WIDTH;
+            padding: var(--mashroom-portal-spacing-default) var(--mashroom-portal-spacing-default) 0 var(--mashroom-portal-spacing-default);
             font-size: 1.4em;
             font-weight: 400;
         }
@@ -395,17 +448,22 @@ header {
     .env-and-versions {
         font-size: 0.8em;
         line-height: 1.3em;
-        margin-left: $GUTTER_WIDTH;
+        margin-left: var(--mashroom-portal-spacing-default);
+        color: #DDD;
         padding: 10px 0;
 
-        a, a:hover, a:active {
-            color: white;
+        a {
+            color: #DDD;
+
+            &:hover {
+                color: white;
+            }
         }
     }
 
     .user {
         padding: 0 20px 10px 20px;
-        margin-left: $GUTTER_WIDTH;
+        margin-left: var(--mashroom-portal-spacing-default);
         display: flex;
         align-items: center;
         position: relative;
@@ -413,10 +471,10 @@ header {
         &:before {
             position: absolute;
             display: inline-block;
-            font-family: $FONT_ICON;
-            font-weight: 900;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-weight: bold;
             content: "\f007";
-            color: $COLOR_WHITE;
+            color: white;
             left: 0;
         }
 
@@ -429,8 +487,12 @@ header {
 
             a {
                 display: block;
-                color: $COLOR_WHITE;
+                color: #DDD;
                 font-size: 0.8em;
+
+                &:hover {
+                    color: white;
+                }
             }
         }
     }
@@ -444,9 +506,9 @@ header {
 
         &:before {
             content: '\f142';
-            font-family: $FONT_ICON;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-size: 1.2em;
-            font-weight: 900;
+            font-weight: bold;
         }
     }
 }
@@ -454,13 +516,13 @@ header {
 .loading-animation {
     width: 100%;
     height: 2px;
-    background-color: $COLOR_SECONDARY;
+    background-color: var(--mashroom-portal-color-secondary-light);
     position: relative;
 
     .loading-animation-progress {
         display: none;
         height: 2px;
-        background-color: $COLOR_PRIMARY_DARK;
+        background-color: var(--mashroom-portal-background-color-header);
         position: absolute;
         top: 0;
         right: 100%;
@@ -469,14 +531,15 @@ header {
         animation: progress-bar 1s linear infinite;
 
         &.show {
-           display: block;
+            display: block;
         }
     }
 }
 
 .mashroom-portal-app-wrapper {
-    margin-bottom: $GUTTER_WIDTH;
-    box-shadow: 0 0 1px $COLOR_PRIMARY;
+    background-color: var(--mashroom-portal-background-color-app);
+    margin-bottom: var(--mashroom-portal-gutter-width);
+    border-radius: 8px;
 
     .mashroom-portal-app-host {
         min-height: 20px;
@@ -498,7 +561,7 @@ header {
             width: 10px;
             height: 10px;
             border-radius: 5px;
-            background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+            background-color: var(--mashroom-portal-color-primary-light);
             animation: dot-flashing 1s infinite linear alternate;
             animation-delay: 1.5s;
             top: 0;
@@ -516,7 +579,7 @@ header {
                 width: 10px;
                 height: 10px;
                 border-radius: 5px;
-                background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+                background-color: var(--mashroom-portal-color-primary-light);
                 animation: dot-flashing 1s infinite alternate;
                 animation-delay: 1s;
             }
@@ -526,7 +589,7 @@ header {
                 width: 10px;
                 height: 10px;
                 border-radius: 5px;
-                background-color: $COLOR_LOADING_DOTS_LIGHTEN;
+                background-color: var(--mashroom-portal-color-primary-light);
                 animation: dot-flashing 1s infinite alternate;
                 animation-delay: 2s;
             }
@@ -534,21 +597,22 @@ header {
     }
 
     .mashroom-portal-app-loading-error {
-        color: $COLOR_ERROR;
-        padding: 10px;
+        color: var(--mashroom-portal-color-error);
+        padding: var(--mashroom-portal-spacing-small);
     }
 
     .mashroom-portal-app-header {
         display: none;
         align-items: center;
-        background-color: $COLOR_PRIMARY;
-        color: white;
+        background-color: var(--mashroom-portal-background-color-app-header);
+        border-bottom: 1px solid var(--mashroom-portal-background-color-default);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
 
         .mashroom-portal-app-header-title {
             flex-grow: 2;
-            padding: 5px 10px;
-            font-size: 0.9em;
-            font-weight: 500;
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+            font-size: 0.8em;
         }
 
         .mashroom-portal-app-header-close {
@@ -556,9 +620,14 @@ header {
 
             &:before {
                 content: '\f00d';
-                font-family: $FONT_ICON;
-                font-weight: 900;
-                padding-right: 10px;
+                font-family: var(--mashroom-portal-font-icon), sans-serif;
+                font-weight: bold;
+                padding-right: var(--mashroom-portal-spacing-default);
+                color: var(--mashroom-portal-color-button);
+            }
+
+            &:hover:before {
+                color: var(--mashroom-portal-color-button-hover);
             }
         }
     }
@@ -586,8 +655,9 @@ header {
     .mashroom-portal-app-info {
         left: 0;
         top: 0;
-        background-color: $COLOR_SECONDARY_EXTRA_LIGHT;
-        border: 2px solid $COLOR_SECONDARY_LIGHT;
+        background-color: var(--mashroom-portal-color-secondary-light);
+        border: 2px solid var(--mashroom-portal-color-secondary);
+        color: black;
         font-size: 0.7em;
         font-weight: bold;
         line-height: 1.2em;
@@ -597,8 +667,13 @@ header {
     }
 }
 
+.mashroom-portal-ui-field-label {
+    color: var(--mashroom-portal-color-text-secondary);
+}
+
 main {
-    margin: 20px 0;
+    background-color: var(--mashroom-portal-background-color-default);
+    padding: var(--mashroom-portal-gutter-width) calc(var(--mashroom-portal-gutter-width) / 2);
 
     &.show-portal-app-headers {
         .mashroom-portal-app-wrapper {
@@ -611,8 +686,7 @@ main {
     nav {
         display: none;
         white-space: nowrap;
-        min-width: 220px;
-        margin-bottom: $GUTTER_WIDTH;
+        min-width: 200px;
         margin-top: -15px;
 
         &.show {
@@ -622,11 +696,12 @@ main {
         .nav {
             list-style: none;
             padding: 0;
+
         }
 
         .nav .nav {
             .nav-item .nav-link {
-                padding-left: 30px;
+                padding-left: 24px;
             }
         }
 
@@ -638,7 +713,7 @@ main {
 
         .nav .nav .nav .nav {
             .nav-item .nav-link {
-                padding-left: 50px;
+                padding-left: 56px;
             }
         }
 
@@ -648,43 +723,25 @@ main {
             .nav-link {
                 display: block;
                 position: relative;
-                padding: 6px 20px;
-                margin-bottom: 2px;
-                color: $COLOR_BLACK;
+                padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+                background-color: var(--mashroom-portal-background-color-nav);
+                color: var(--mashroom-portal-nav-color);
                 text-decoration: none;
-                background-color: $COLOR_PRIMARY_EXTRA_LIGHT;
                 @include hover-animation();
 
+
                 &:hover {
-                    &:before {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 4px;
-                        height: 100%;
-                        content: ' ';
-                        display: block;
-                        background-color: $COLOR_SECONDARY;
-                    }
+                    background-color: var(--mashroom-portal-background-color-nav-hover);
+                    color: var(--mashroom-portal-color-nav-hover);
                 }
 
                 &.active {
                     cursor: default;
-                    font-weight: bold;
-
-                    &:before {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 4px;
-                        height: 100%;
-                        content: ' ';
-                        display: block;
-                        background-color: $COLOR_PRIMARY;
-                    }
+                    color: var(--mashroom-portal-color-nav-active);
+                    background-color: var(--mashroom-portal-background-color-nav-active);
 
                     &:hover {
-                        color: $COLOR_BLACK;
+                        color: var(--mashroom-portal-color-nav-active);
                     }
                 }
             }
@@ -702,10 +759,11 @@ main {
 }
 
 footer {
-    border-top: 1px solid $COLOR_PRIMARY;
-    color: $COLOR_PRIMARY;
-    padding-top: 10px;
+    color: var(--mashroom-portal-color-primary);
+    padding: var(--mashroom-portal-spacing-default) 0;
+    border-top: 1px solid var(--mashroom-portal-color-secondary);
     font-size: 0.8em;
+    width: 100%;
 
     .powered-by {
         text-align: center;
@@ -717,19 +775,17 @@ footer {
 
 }
 
-.mashroom-portal-apps-container {
-
-}
+.mashroom-portal-apps-container {}
 
 .mashroom-portal-ui-error-message {
-    color: $COLOR_ERROR;
+    color: var(--mashroom-portal-color-error);
     font-size: 0.9em;
     padding: 3px 0 3px 12px;
     position: relative;
 
     &:before {
-        font-family: $FONT_ICON;
-        font-weight: 900;
+        font-family: var(--mashroom-portal-font-icon), sans-serif;
+        font-weight: bold;
         content: '\f12a';
         position: absolute;
         left: 2px;
@@ -739,36 +795,87 @@ footer {
 }
 
 .mashroom-portal-ui-input.error {
-    input, select, textarea {
-        border-color: $COLOR_ERROR !important;
+
+    input,
+    select,
+    textarea {
+        border-color: var(--mashroom-portal-color-error) !important;
+        color: var(--mashroom-portal-color-error);
     }
 
-    .mashroom-portal-checkbox + label:before, .mashroom-portal-radio + label:before {
-        color: $COLOR_ERROR !important;
+    .mashroom-portal-checkbox+label:before,
+    .mashroom-portal-radio+label:before {
+        color: var(--mashroom-portal-color-error) !important;
     }
 
     .cm-editor {
-        border-color: $COLOR_ERROR !important;
+        border-color: var(--mashroom-portal-color-error) !important;
+        border-radius: var(--mashroom-portal-border-radius)
+    }
+}
+
+.mashroom-portal-ui-dropdown-menu {
+
+    .dropdown-menu-content {
+        background-color: var(--mashroom-portal-background-color-dropdown);
+        border-bottom-left-radius: var(--mashroom-portal-border-radius);
+        border-bottom-right-radius: var(--mashroom-portal-border-radius);
+        padding: var(--mashroom-portal-spacing-small);
+
+    }
+
+    .mashroom-portal-ui-dropdown-menu-item {
+        min-width: 200px;
+        border-radius: var(--mashroom-portal-border-radius);
+
+        &:hover {
+            background-color: var(--mashroom-portal-background-color-dropdown-hover);
+        }
+
+        &:last-child {
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
     }
 }
 
 .mashroom-portal-autocomplete-field {
     .suggestions-container-open {
-        background-color: $COLOR_WHITE;
+        background-color: var(--mashroom-portal-background-color-dropdown);
+        border: 1px solid var(--mashroom-portal-color-input-border);
+        border-bottom-left-radius: 5px;
+        border-bottom-right-radius: 5px;
+    }
 
-        li:nth-child(even) {
-
-        }
+    .suggestion-highlighted {
+        background-color: var(--mashroom-portal-background-color-dropdown-hover);
     }
 }
 
 .mashroom-portal-ui-modal {
-    .mashroom-portal-ui-modal-header {
-        background-color: $COLOR_PRIMARY;
+    .mashroom-portal-ui-modal-wrapper {
+        border-radius: 8px;
+    }
 
-        .title {
-            font-family: $FONT_HEADER;
+    .mashroom-portal-ui-modal-header {
+        border-top-left-radius: (--mashroom-portal-border-radius);
+        border-top-right-radius: (--mashroom-portal-border-radius);
+        border-bottom: 1px solid var(--mashroom-portal-background-color-default);
+
+        .close-button {
+            &:after {
+                color: var(--mashroom-portal-icon-button-color);
+            }
+
+            &:hover:after {
+                color: var(--mashroom-portal-color-button-hover);
+            }
         }
+    }
+
+    .mashroom-portal-ui-modal-content {
+        border-bottom-left-radius: (--mashroom-portal-border-radius);
+        border-bottom-right-radius: (--mashroom-portal-border-radius);
     }
 }
 
@@ -776,59 +883,73 @@ footer {
     .tab-dialog-header {
         display: flex;
         flex-wrap: wrap;
-        border-bottom: 1px solid $COLOR_PRIMARY;
+        margin: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
 
         .tab-dialog-button {
             cursor: pointer;
             display: flex;
             align-items: center;
-            color: $COLOR_WHITE;
-            background-color: $COLOR_GREY;
-            margin-left: 2px;
-            margin-top: 2px;
-            margin-bottom: 2px;
+            margin-left: 0;
+            margin-top: var(--mashroom-portal-spacing-small);
+            margin-right: var(--mashroom-portal-spacing-small);
+            border-radius: 1000px;
+            background-color: var(--mashroom-portal-background-color-tab-dialog-button);
+            color: var(--mashroom-portal-color-tab-dialog-button);
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
             @include hover-animation();
 
             &:hover {
-                background-color: $COLOR_GREY_LIGHT;
+                color: var(--mashroom-portal-color-tab-dialog-button-hover);
+                background-color: var(--mashroom-portal-color-button-hover);
             }
 
             &.active {
-                background-color: $COLOR_PRIMARY;
-                margin-top: 1px;
-                margin-bottom: 0;
+                background: var(--mashroom-portal-background-color-tab-dialog-button-active);
+                color: var(--mashroom-portal-color-tab-dialog-button-active);
                 cursor: default;
-            }
 
-            .title {
-                padding: 4px 15px;
-                font-size: 0.9em;
-                font-weight: 500;
+                .close-button {
+                    color: white;
+                }
             }
 
             .close-button {
                 cursor: pointer;
+                color: var(--mashroom-portal-color-icon-button);
 
                 &:after {
                     content: '\f00d';
-                    font-family: $FONT_ICON;
-                    font-weight: 900;
+                    font-family: var(--mashroom-portal-font-icon), sans-serif;
+                    font-weight: bold;
                     padding: 2px 15px;
+                }
+
+                &:hover {
+                    color: var(--mashroom-portal-color-button-hover);
                 }
             }
         }
     }
 }
 
-.mashroom-portal-ui-source-code-editor-field {
-    .cm-editor {
-        border: 1px solid $COLOR_PRIMARY;
-        padding: 5px;
-        @include focus-animation();
+.mashroom-portal-tabify-app {
 
-        &.cm-focused {
-            border: 1px solid $COLOR_SECONDARY;
+    .mashroom-portal-ui-tab-dialog {
+        .tab-dialog-header {
+            margin: 0 0 16px;
         }
+    }
+}
+
+.cm-editor {
+    border: 1px solid var(--mashroom-portal-color-input-border);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+    background-color: var(--mashroom-portal-background-color-input);
+    @include focus-animation();
+    border-radius: var(--mashroom-portal-border-radius);
+
+    &.cm-focused {
+        outline: 1px solid var(--mashroom-portal-color-input-border);
     }
 }
 
@@ -842,11 +963,10 @@ footer {
     overflow: auto;
     background-color: rgba(#444, 0.6);
     z-index: 5000;
-    top: -100%;
-    transition: top 0.3s ease-out;
+    display: none;
 
     &.show {
-        top: 0;
+        display: block;
     }
 
     .mashroom-portal-modal-overlay-wrapper {
@@ -864,23 +984,44 @@ footer {
         display: flex;
         align-items: center;
         width: 100%;
-        color: $COLOR_WHITE;
-        background-color: $COLOR_PRIMARY;
+        background-color: var(--mashroom-portal-background-color-app-header);
+        border-bottom: 1px solid var(--mashroom-portal-background-color-default);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
 
         #mashroom-portal-modal-overlay-title {
             flex-grow: 2;
-            padding: 8px 10px;
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+            font-size: 0.8em;
+            font-weight: bold;
+
+            .mashroom-portal-modal-overlay-number {
+                background-color: var(--mashroom-portal-color-text-default);
+                color: var(--mashroom-portal-background-color-app-header);
+                border-radius: 3px;
+                padding: 0 5px;
+                margin-right: var(--mashroom-portal-spacing-small);
+
+                &>span {
+                    display: none;
+                }
+            }
         }
 
         #mashroom-portal-modal-overlay-close {
             cursor: pointer;
             font-size: 16px;
-            padding: 8px 10px;
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
 
             &:after {
                 content: '\f00d';
-                font-family: $FONT_ICON;
-                font-weight: 900;
+                font-family: var(--mashroom-portal-font-icon), sans-serif;
+                font-weight: bold;
+                color: var(--mashroom-portal-color-button);
+            }
+
+            &:hover:after {
+                color: var(--mashroom-portal-color-button-hover);
             }
         }
     }
@@ -888,8 +1029,10 @@ footer {
     .mashroom-portal-modal-overlay-content {
         overflow: hidden;
         height: 100%;
-        background-color: white;
+        background-color: var(--mashroom-portal-background-color-app);
         min-height: 60px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
 
         .mashroom-portal-app-wrapper {
             box-shadow: none;
@@ -911,10 +1054,10 @@ footer {
 
     .mashroom-portal-auth-expires-warning-message {
         position: relative;
-        background-color: white;
+        background-color: var(--mashroom-portal-background-color-default);
         opacity: 0.9;
         padding: 10px 20px 10px 30px;
-        border: 2px solid $COLOR_ERROR;
+        border: 2px solid var(--mashroom-portal-color-error);
         border-top: none;
         font-size: 0.8em;
         font-weight: 500;
@@ -923,10 +1066,10 @@ footer {
             position: absolute;
             left: 10px;
             content: '\f017';
-            font-family: $FONT_ICON;
-            font-weight: 900;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-weight: bold;
             padding-right: 5px;
-            color: $COLOR_ERROR;
+            color: var(--mashroom-portal-color-error);
         }
     }
 }
@@ -944,6 +1087,10 @@ footer {
 
 @include small {
 
+    .container-fluid {
+        width: 100%;
+    }
+
     header {
         display: flex;
         align-items: center;
@@ -957,7 +1104,8 @@ footer {
 
             h1 {
                 font-size: 1.6em;
-                padding: 16px $GUTTER_WIDTH 8px $GUTTER_WIDTH;
+                margin: 0;
+                padding: var(--mashroom-portal-spacing-default);
             }
         }
 
@@ -993,13 +1141,35 @@ footer {
 
     main {
         display: flex;
-        min-height: 70vh;
+        min-height: 75vh;
 
         nav {
-            margin-bottom: 0;
             display: block;
-            margin-right: math.div($GUTTER_WIDTH, 2);
-            margin-top: 0;
+            margin: 0 calc(var(--mashroom-portal-gutter-width) / 2);
+
+            &>ul {
+                margin: 0;
+                background-color: var(--mashroom-portal-background-color-navigation);
+                border-radius: var(--mashroom-portal-border-radius);
+
+                &>li {
+                    border-bottom: 1px solid var(--mashroom-portal-background-color-default);
+
+                    &:first-child {
+                        a {
+                            border-top-right-radius: 8px;
+                            border-top-left-radius: 8px;
+                        }
+                    }
+
+                    &:last-child {
+                        a {
+                            border-bottom-right-radius: 8px;
+                            border-bottom-left-radius: 8px;
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -1016,14 +1186,10 @@ footer {
         .site-name {
 
 
-            h1 {
-
-            }
+            h1 {}
         }
 
-        .user {
-
-        }
+        .user {}
     }
 
 }

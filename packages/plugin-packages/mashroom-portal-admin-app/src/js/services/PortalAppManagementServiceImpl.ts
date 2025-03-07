@@ -26,6 +26,8 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     portalAdminService: MashroomPortalAdminService;
     store: Store;
     controlsVisible: boolean;
+    openContentEditorAppId: string | undefined;
+    closeContentEditorCb: (() => void) | undefined;
     dragRunning: boolean;
 
     constructor(store: Store, portalAppService: MashroomPortalAppService, portalAdminService: MashroomPortalAdminService) {
@@ -298,14 +300,24 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     private _editAppContent(loadedPortalApp: MashroomPortalLoadedPortalApp) {
-        const {id: appId, instanceId, pluginName, appConfig, editorConfig, portalAppWrapperElement, portalAppHostElement} = loadedPortalApp;
+        const {id: appId, instanceId, pluginName, appConfig, editorConfig, portalAppWrapperElement} = loadedPortalApp;
         if (!editorConfig) {
             return;
         }
 
+        if (this.openContentEditorAppId) {
+            // A content editor is already open
+            if (this.openContentEditorAppId === appId) {
+                // Just close and return
+                this._closeAppContentEditor(appId);
+                return;
+            }
+            // Close any other open editor
+            this._closeAppContentEditor(null);
+        }
+
         const {editorPortalApp, position = 'in-place', appConfig: appConfigEditor = {}} = editorConfig;
 
-        let closeEditor = () => { /* dummy */ };
         const editorTarget: MashroomPortalConfigEditorTarget = {
             appId,
             pluginName,
@@ -325,7 +337,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
                 );
             },
             close: () => {
-                closeEditor();
+                this._closeAppContentEditor(appId);
             },
         };
 
@@ -335,11 +347,6 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         editorWrapper.id = editorAreaId;
 
         if (position === 'sidebar') {
-            if (document.querySelector('.mashroom-portal-app-sidebar')) {
-                // Editor already open
-                return;
-            }
-
             // sidebar
             const sidebar = document.createElement('div');
             sidebar.className = 'mashroom-portal-app-sidebar';
@@ -352,15 +359,17 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
                 editorTarget,
             }).then(
                 (loadedEditor) => {
+                    portalAppWrapperElement.parentElement?.classList.add('edit-tool-active');
                     sidebarHost.classList.add('editor-open');
-                    closeEditor = () => {
+                    this.setAppContentEditorCb(appId, () => {
                         sidebarHost.classList.remove('editor-open');
                         setTimeout(() => {
+                            portalAppWrapperElement.parentElement?.classList.remove('edit-tool-active');
                             sidebarHost.classList.remove('mashroom-portal-app-sidebar-host');
                             this.portalAppService.unloadApp(loadedEditor.id);
                             sidebarHost.removeChild(sidebar);
                         }, 500);
-                    };
+                    });
                 },
                 (error) => {
                     console.error(`Loading Config Editor for ${pluginName} failed!`, error);
@@ -369,28 +378,38 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
 
         } else {
             // in-place
-            if (portalAppWrapperElement.querySelector('.mashroom-portal-app-config-editor')) {
-                // Editor already open
-                return;
-            }
-
             portalAppWrapperElement.appendChild(editorWrapper);
             this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
                 ...appConfigEditor,
                 editorTarget,
             }).then(
                 (loadedEditor) => {
+                    portalAppWrapperElement.parentElement?.classList.add('edit-tool-active');
                     portalAppWrapperElement.classList.add('editor-open');
-                    closeEditor = () => {
+                    this.setAppContentEditorCb(appId, () => {
+                        portalAppWrapperElement.parentElement?.classList.remove('edit-tool-active');
                         portalAppWrapperElement.classList.remove('editor-open');
                         this.portalAppService.unloadApp(loadedEditor.id);
                         portalAppWrapperElement.removeChild(editorWrapper);
-                    };
+                    });
                 },
                 (error) => {
                     console.error(`Loading Config Editor for ${pluginName} failed!`, error);
                 }
             );
+        }
+    }
+
+    private setAppContentEditorCb(appId: string, cb: () => void) {
+        this.openContentEditorAppId = appId;
+        this.closeContentEditorCb = cb;
+    }
+
+    private _closeAppContentEditor(appId: string | null) {
+        if (this.closeContentEditorCb && (appId === null || appId == this.openContentEditorAppId)) {
+            this.closeContentEditorCb();
+            this.openContentEditorAppId = undefined;
+            this.closeContentEditorCb = undefined;
         }
     }
 }

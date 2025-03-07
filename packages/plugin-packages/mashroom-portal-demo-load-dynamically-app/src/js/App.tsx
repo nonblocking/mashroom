@@ -111,7 +111,8 @@ export default class App extends PureComponent<Props, State> {
                         <input type='text' value={this.state.messages[pluginName] || ''} onChange={(e) => this.onMessageValueChange(e.target.value, pluginName)}/>
                     </td>
                     <td>
-                        <input type='checkbox' name={`add_close_button_${idx}`} checked={this.state.addCloseButtons[pluginName]} onChange={(e) => this.onAddCloseButtonChange(e.target.checked, pluginName)}/>
+                        <input type='checkbox' className='mashroom-portal-checkbox' id={`add_close_button_${idx}`} name={`add_close_button_${idx}`} checked={this.state.addCloseButtons[pluginName]} onChange={(e) => this.onAddCloseButtonChange(e.target.checked, pluginName)}/>
+                        <label htmlFor={`add_close_button_${idx}`}>&nbsp;</label>
                     </td>
                     <td>
                         <a href="javascript:void(0)" onClick={this.loadApp.bind(this, pluginName)}>Load</a><br/>

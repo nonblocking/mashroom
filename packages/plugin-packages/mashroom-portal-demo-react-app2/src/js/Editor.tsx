@@ -1,7 +1,7 @@
 
 import React, {useState} from 'react';
 import CodeMirror from '@uiw/react-codemirror';
-import {githubLight} from '@uiw/codemirror-theme-github';
+import {githubLight, githubDark} from '@uiw/codemirror-theme-github';
 import {markdown} from '@codemirror/lang-markdown';
 import {EditorView} from '@codemirror/view';
 
@@ -25,12 +25,13 @@ export default ({editorTarget: {appConfig, updateAppConfig, close}}: Props) => {
 
     return (
         <div className='mashroom-demo-react-app-2-config-editor'>
+            <h4>React Demo App Custom Content Editor</h4>
             <div className='form-row'>
                 <label htmlFor="message">Message (Markdown)</label>
                 <CodeMirror
                     value={markdownMessage}
                     height="150px"
-                    theme={githubLight}
+                    theme={(window as any).__MASHROOM_PORTAL_DARK_MODE__ ? githubDark : githubLight}
                     basicSetup={{
                         lineNumbers: false,
                         foldGutter: false,

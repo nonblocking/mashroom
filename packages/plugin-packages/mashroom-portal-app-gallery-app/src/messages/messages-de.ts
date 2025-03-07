@@ -10,6 +10,7 @@ export default {
     noScreenshot: 'Kein Screenshot',
     notPermitted: 'Keine Bereichtigung',
     filter: 'Filter',
+    showAll: 'Alle anzeigen',
     tryOut: 'Ausprobieren',
     errorLoading: 'Fehler beim Laden der Portal Apps'
 };

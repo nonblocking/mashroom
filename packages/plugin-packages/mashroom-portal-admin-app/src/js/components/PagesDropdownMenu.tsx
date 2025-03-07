@@ -3,7 +3,6 @@ import React, {PureComponent} from 'react';
 import {CircularProgress, DropdownMenu, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
 import {DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_PAGE_DELETE} from '../constants';
 
-import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService, MashroomPortalSiteService} from '@mashroom/mashroom-portal/type-definitions';
 import type {DataLoadingService, FlatPage, Pages} from '../types';
 
@@ -28,12 +27,12 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
 
     closeDropDownRef: (() => void) | undefined;
 
-    onOpen(): void {
+    onOpen() {
         const {dataLoadingService} = this.props;
         dataLoadingService.loadPageTree();
     }
 
-    onGoto(page: FlatPage): void {
+    onGoto(page: FlatPage) {
         const {portalSiteService} = this.props;
         const pageUrl = `${portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
         setTimeout(() => {
@@ -41,33 +40,33 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
         }, 0);
     }
 
-    onConfigure(page: FlatPage): void {
+    onConfigure(page: FlatPage) {
         const {initConfigurePage, showModal} = this.props;
         this.closeDropDownRef?.();
         initConfigurePage(page.pageId);
         showModal(DIALOG_NAME_PAGE_CONFIGURE);
     }
 
-    onDelete(page: FlatPage): void {
+    onDelete(page: FlatPage) {
         const {initConfigurePage, showModal} = this.props;
         this.closeDropDownRef?.();
         initConfigurePage(page.pageId);
         showModal(DIALOG_NAME_PAGE_DELETE);
     }
 
-    renderLoading(): ReactNode {
+    renderLoading() {
         return (
             <CircularProgress/>
         );
     }
 
-    renderError(): ReactNode {
+    renderError() {
         return (
             <ErrorMessage messageId='loadingFailed' />
         );
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {pages} = this.props;
         if (pages.loading) {
             return this.renderLoading();
@@ -93,7 +92,7 @@ export default class PagesDropdownMenu extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <DropdownMenu className='pages-dropdown-menu' labelId='pages' onOpen={this.onOpen.bind(this)} closeRef={(ref) => this.closeDropDownRef = ref}>
                 {this.renderContent()}

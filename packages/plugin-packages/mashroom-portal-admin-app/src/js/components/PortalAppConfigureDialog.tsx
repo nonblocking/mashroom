@@ -18,7 +18,6 @@ import {
 import {DIALOG_NAME_PORTAL_APP_CONFIGURE} from '../constants';
 import Permissions from './Permissions';
 
-import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {PortalAppManagementService, SelectedPortalApp} from '../types';
 
@@ -41,7 +40,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    componentDidUpdate(prevProps: Props): void {
+    componentDidUpdate(prevProps: Props) {
         const {selectedPortalApp, portalAdminService, setPermittedRoles, setLoading, setErrorLoading} = this.props;
         if (selectedPortalApp && (!prevProps.selectedPortalApp || selectedPortalApp.selectedTs !== prevProps.selectedPortalApp.selectedTs)) {
            portalAdminService.getAppInstancePermittedRoles(selectedPortalApp.portalAppName, selectedPortalApp.instanceId).then(
@@ -57,7 +56,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         }
     }
 
-    onSubmit(values: FormValues): void {
+    onSubmit(values: FormValues) {
         const {selectedPortalApp, portalAdminService, portalAppManagementService, setErrorUpdating} = this.props;
         if (!selectedPortalApp) {
             return;
@@ -86,11 +85,11 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    onClose(): void {
+    onClose() {
         this.close?.();
     }
 
-    onCloseRef(close: () => void): void {
+    onCloseRef(close: () => void) {
         this.close = close;
     }
 
@@ -106,7 +105,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         return errors;
     }
 
-    getInitialValues(): any {
+    getInitialValues() {
         const {selectedPortalApp, portalAppManagementService} = this.props;
         if (!selectedPortalApp) {
             return null;
@@ -121,13 +120,13 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         };
     }
 
-    renderPageGeneral(): ReactNode {
+    renderPageGeneral() {
         const {selectedPortalApp} = this.props;
 
         let appConfigEditor;
         if (!selectedPortalApp?.customConfigEditor) {
             appConfigEditor = (
-                <SourceCodeEditorField id='appConfig' labelId='appConfig' name='appConfig' language='json' />
+                <SourceCodeEditorField id='appConfig' labelId='appConfig' name='appConfig' language='json' theme='dark' />
             );
         } else {
             appConfigEditor = (
@@ -158,7 +157,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderPagePermissions(): ReactNode {
+    renderPagePermissions() {
         return (
             <DialogContent>
                 <Permissions />
@@ -166,7 +165,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderTabDialog(): ReactNode {
+    renderTabDialog() {
         return (
             <TabDialog name='portal-app-configure' tabs={[
                 {name: 'general', titleId: 'general', content: this.renderPageGeneral()},
@@ -175,24 +174,24 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderActions(): ReactNode {
+    renderActions() {
         return (
             <div className='buttons-panel'>
                 <DialogButtons>
-                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                     <Button id='save' type='submit' labelId='save'/>
+                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                 </DialogButtons>
             </div>
         );
     }
 
-    renderLoading(): ReactNode {
+    renderLoading() {
         return (
             <CircularProgress/>
         );
     }
 
-    renderLoadingError(): ReactNode {
+    renderLoadingError() {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='loadingFailed' />
@@ -200,7 +199,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError(): ReactNode {
+    renderUpdatingError() {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='updateFailed' />
@@ -208,7 +207,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {selectedPortalApp} = this.props;
         if (!selectedPortalApp) {
             return null;
@@ -229,7 +228,7 @@ export default class PortalAppConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <Modal
                 appWrapperClassName='mashroom-portal-admin-app'

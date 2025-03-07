@@ -29,7 +29,7 @@
     }
 
     .suggestion-highlighted {
-        background-color: #EEE;
+        background-color: var(--mashroom-portal-background-color-alt, #EEE);
     }
 
     .suggestions-list {

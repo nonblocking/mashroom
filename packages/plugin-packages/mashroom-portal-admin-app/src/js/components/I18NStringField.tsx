@@ -46,7 +46,7 @@ export default class I18NStringField extends PureComponent<Props> {
         field.onChange(e);
     }
 
-    onBlur(): void {
+    onBlur() {
         const {fieldProps: {field}} = this.props;
         const e = {
             target: {
@@ -56,18 +56,18 @@ export default class I18NStringField extends PureComponent<Props> {
         field.onBlur(e);
     }
 
-    onAddLang(lang: string): void {
+    onAddLang(lang: string) {
         const val = {...this.getValue(), [lang]: ''};
         this.simulateFieldChangeEvent(val);
     }
 
-    onRemoveLang(lang: string): void {
+    onRemoveLang(lang: string) {
         const val = {...this.getValue()};
         delete val[lang];
         this.simulateFieldChangeEvent(val);
     }
 
-    renderInputs(): ReactNode {
+    renderInputs() {
         const {fieldProps: {field}, languages} = this.props;
         const val = this.getValue();
         const inputs = [];
@@ -121,7 +121,7 @@ export default class I18NStringField extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         const {id, labelId, fieldProps: {meta}} = this.props;
         const error = meta.touched && !!meta.error;
 

@@ -4,7 +4,7 @@ $FONT_ICON: var(--mashroom-portal-font-icon, 'Font Awesome 6 Free');
 $LABEL_ROW_WIDTH: 240px;
 
 .mashroom-sandbox-app {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     .portal-app-suggestion {
         .portal-app-suggestion-name {
@@ -61,7 +61,7 @@ $LABEL_ROW_WIDTH: 240px;
 
         pre {
             margin: 0;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
     }
 
@@ -70,7 +70,8 @@ $LABEL_ROW_WIDTH: 240px;
     }
 
     .mashroom-sandbox-app-host-wrapper {
-        box-shadow: 2px 2px 8px #AAA;
+        border: 2px solid var(--mashroom-portal-color-input-border, #AAA);
+        border-radius: 5px;
         margin-bottom: 10px;
         min-height: 60px;
         display: flex;
@@ -135,8 +136,7 @@ $LABEL_ROW_WIDTH: 240px;
             font-family: $FONT_ICON;
             font-weight: 900;
             content: '\f0ea';
-            font-size: 1.2em;
-            color: #888;
+            color: var(--mashroom-portal-color-text-secondary, #888);
         }
     }
 
@@ -144,6 +144,6 @@ $LABEL_ROW_WIDTH: 240px;
         display: inline-block;
         margin-left: 5px;
         font-size: 0.8em;
-        color: #888;
+        color: var(--mashroom-portal-color-text-secondary, #888);
     }
 }

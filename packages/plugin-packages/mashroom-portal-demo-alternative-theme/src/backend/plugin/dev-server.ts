@@ -101,8 +101,10 @@ app.get('/', (req: Request, res: Response) => {
                 <div class="mashroom-portal-app-area col-md-6" id="app-area1">
                     <div class="mashroom-portal-app-wrapper">
                         <div class="mashroom-portal-app-host">
-                            <div style="padding: 10px">
-                                <p>App 1</p>
+                            <div style="padding: var(--mashroom-portal-spacing-default)">
+                                <h2>Header 2</h2>
+                                <h3>Header 3</h3>
+                                <h4>Header 4</h4>
                                 <table class="table-striped">
                                     <tr>
                                         <th>Name</th>
@@ -146,12 +148,27 @@ app.get('/', (req: Request, res: Response) => {
                             <div class="mashroom-portal-app-loading"><span/></div>
                         </div>
                     </div>
+                     <div class="mashroom-portal-app-wrapper">
+                        <div class="mashroom-portal-app-header">
+                            <div class="mashroom-portal-app-header-title">App 5</div>
+                            <div class="mashroom-portal-app-header-close"></div>
+                        </div>
+                        <div class="mashroom-portal-app-host">
+                           <div style="padding: var(--mashroom-portal-spacing-default)">
+                                <p>Here some text with a ruler</p>
+                                <hr/>
+                                <p>and a blockquote</p>
+                                <blockquote>
+                                    The quote
+                                </blockquote>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="mashroom-portal-app-area col-md-6" id="app-area2">
                     <div class="mashroom-portal-app-wrapper">
                         <div class="mashroom-portal-app-host">
-                            <div style="padding: 10px">
-                                <p>App 3</p>
+                            <div style="padding: var(--mashroom-portal-spacing-default)">
                                 <div>
                                     <a href="#">Example Link</a>
                                 </div>

@@ -1,6 +1,6 @@
 
 .mashroom-demo-load-dynamically-app {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     td {
         a {

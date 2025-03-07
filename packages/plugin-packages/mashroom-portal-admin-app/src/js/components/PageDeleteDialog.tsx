@@ -10,7 +10,6 @@ import {
 import {DIALOG_NAME_PAGE_DELETE} from '../constants';
 import {getParentPage, removePageFromTree} from '../services/model-utils';
 
-import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 import type {SelectedPage, Pages} from '../types';
 
@@ -25,15 +24,15 @@ export default class PageDeleteDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    onClose(): void {
+    onClose() {
         this.close?.();
     }
 
-    onCloseRef(close: () => void): void {
+    onCloseRef(close: () => void) {
         this.close = close;
     }
 
-    onConfirmDelete(): void {
+    onConfirmDelete() {
         const {selectedPage, portalAdminService, setErrorUpdating, pages} = this.props;
         if (!selectedPage || !selectedPage.pageId) {
             return;
@@ -71,13 +70,13 @@ export default class PageDeleteDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError(): ReactNode {
+    renderUpdatingError() {
         return (
             <ErrorMessage messageId='updateFailed' />
         );
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {selectedPage, pages} = this.props;
         if (!selectedPage) {
             return null;
@@ -96,14 +95,14 @@ export default class PageDeleteDialog extends PureComponent<Props> {
                    <FormattedMessage id='confirmDeletePage' values={{ pageTitle }}/>
                 </DialogContent>
                 <DialogButtons>
-                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                     <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
+                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                 </DialogButtons>
             </>
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <Modal
                 appWrapperClassName='mashroom-portal-admin-app'

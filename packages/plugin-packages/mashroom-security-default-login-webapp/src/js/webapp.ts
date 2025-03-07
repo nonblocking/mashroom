@@ -4,7 +4,8 @@ import {URL} from 'url';
 import express from 'express';
 import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
-import helpers, {i18n} from './handlebar-helpers';
+import i18n from './i18n';
+import helpers from './handlebar-helpers';
 import context from './context';
 
 import type {Request, Response} from 'express';
@@ -123,9 +124,12 @@ const renderLoginPage = (req: Request, res: Response, i18nService: MashroomI18NS
 
     const query = queryParams.join(('&'));
 
+    const pageTitle = i18nService.getMessageIfExists(context.pageTitle, lang) ?? context.pageTitle;
+    const loginFormTitle = i18nService.getMessageIfExists(context.loginFormTitle, lang) ?? context.loginFormTitle;
+
     res.render('login', {
-        pageTitle: i18nService.getMessage(context.pageTitle, lang),
-        loginFormTitle: i18nService.getMessage(context.loginFormTitle, lang),
+        pageTitle,
+        loginFormTitle,
         baseUrl: (vhostMappingInfo?.frontendPath) || req.baseUrl,
         query,
         error,

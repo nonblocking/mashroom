@@ -3,7 +3,6 @@ import {readFileSync} from 'fs';
 import {resolve} from 'path';
 import themeParams from './theme-params';
 
- 
 const packageJson = require('../package.json');
 
 function equals(this: any, lvalue: any, rvalue: any, options: any): any {
@@ -36,6 +35,16 @@ function ifSpaMode(this: any, options: any): any {
     return options.fn(this);
 }
 
+function darkMode(this: any): 'light' | 'dark' | 'auto' {
+    if (themeParams.darkMode === true || themeParams.darkMode as any === 'true') {
+        return 'dark';
+    }
+    if (themeParams.darkMode === false || themeParams.darkMode as any === 'false') {
+        return 'light';
+    }
+    return 'auto';
+}
+
 function mashroomVersion(): string {
     return themeParams.mashroomVersion;
 }
@@ -52,6 +61,13 @@ function extraMainClasses(): string {
     return classes;
 }
 
+function themeExtraStyle(): string {
+    if (themeParams.styleFile) {
+        return inlineStyle(themeParams.styleFile);
+    }
+    return '';
+}
+
 function inlineStyle(cssFile: string): string {
     try {
         const file = readFileSync(resolve(__dirname, 'public', cssFile));
@@ -61,13 +77,16 @@ function inlineStyle(cssFile: string): string {
     }
 }
 
-function inlineSVG(assetFile: string): string {
-    try {
-        const file = readFileSync(resolve(__dirname, 'public/assets', assetFile));
+function logoImage(): string {
+    if (!themeParams.logoImageUrl) {
+        // Default logo
+        const file = readFileSync(resolve(__dirname, 'public/assets', 'logo-white.svg'));
         return file.toString('utf-8');
-    } catch (e) {
-        return `<!-- Error: SVG file not found: ${assetFile} -->`;
     }
+
+    return `
+        <img src="${themeParams.logoImageUrl}" alt="Logo"/>
+    `;
 }
 
 function ifShowEnvAndVersions(this: any, options: any): any {
@@ -80,12 +99,14 @@ function ifShowEnvAndVersions(this: any, options: any): any {
 export default {
     equals,
     ifSpaMode,
+    darkMode,
     env,
     mashroomVersion,
     fontawesomeVersion,
     extraMainClasses,
+    themeExtraStyle,
     inlineStyle,
-    inlineSVG,
+    logoImage,
     ifShowEnvAndVersions,
     __: i18n,
     defaultPluginErrorMessage,

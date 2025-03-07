@@ -1,0 +1,108 @@
+@use "sass:meta";
+
+:root {
+    --mashroom-portal-font-default: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --mashroom-portal-font-size-default: 16px;
+    --mashroom-portal-line-height-default: 1.5;
+    --mashroom-portal-border-radius: 8px;
+
+    --mashroom-portal-color-primary: #4D487F;
+    --mashroom-portal-color-primary-light: #706aab;
+    --mashroom-portal-color-primary-extra-light: #cfcde3;
+    --mashroom-portal-color-primary-dark: #3a365f;
+    --mashroom-portal-color-secondary: #C49B5E;
+    --mashroom-portal-color-secondary-light: #d3b486;
+    --mashroom-portal-color-secondary-dark: #9f773a;
+
+    --mashroom-portal-spacing-default: 16px;
+    --mashroom-portal-spacing-small: 8px;
+
+    // Light theme
+    --mashroom-portal-light-theme-color-text-default: black;
+    --mashroom-portal-light-theme-color-error: #bf0000;
+    --mashroom-portal-light-theme-color-button: var(--mashroom-portal-color-primary);
+    --mashroom-portal-light-theme-color-button-hover: var(--mashroom-portal-color-primary-dark);
+    --mashroom-portal-light-theme-color-input-placeholder: #AAA;
+    --mashroom-portal-light-theme-color-input-color: #000;
+    --mashroom-portal-light-theme-color-input-border: #CCC;
+
+    --mashroom-portal-light-theme-background-color-default: #F2F2F2;
+    --mashroom-portal-light-theme-background-color-app: white;
+    --mashroom-portal-light-theme-background-color-header: var(--mashroom-portal-color-primary);
+    --mashroom-portal-light-theme-background-color-input: #fff;
+
+    // Dark theme
+    --mashroom-portal-dark-theme-color-text-default: white;
+    --mashroom-portal-dark-theme-color-error: #e60000;
+    --mashroom-portal-dark-theme-color-button: var(--mashroom-portal-color-primary);
+    --mashroom-portal-dark-theme-color-button-hover: var(--mashroom-portal-color-primary-light);
+    --mashroom-portal-dark-theme-color-input-placeholder: #AAA;
+    --mashroom-portal-dark-theme-color-input-color: #fff;
+    --mashroom-portal-dark-theme-color-input-border: #413E53;
+
+    --mashroom-portal-dark-theme-background-color-default: #100F1A;
+    --mashroom-portal-dark-theme-background-color-app: #1C192E;
+    --mashroom-portal-dark-theme-background-color-header: #201D35;
+    --mashroom-portal-dark-theme-background-color-input: #201D35;
+
+    // --- Setting the correct theme. Don't set values directly below this point ---
+
+    &[data-mashroom-theme='light'] {
+        --mashroom-portal-color-text-default: var(--mashroom-portal-light-theme-color-text-default);
+        --mashroom-portal-color-error: var(--mashroom-portal-light-theme-color-error);
+        --mashroom-portal-color-button: var(--mashroom-portal-light-theme-color-button);
+        --mashroom-portal-color-button-hover: var(--mashroom-portal-light-theme-color-button-hover);
+        --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
+        --mashroom-portal-color-input-color: var(--mashroom-portal-light-theme-color-input-color);
+        --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
+        --mashroom-portal-background-color-default: var(--mashroom-portal-light-theme-background-color-default);
+        --mashroom-portal-background-color-app: var(--mashroom-portal-light-theme-background-color-app);
+        --mashroom-portal-background-color-header: var(--mashroom-portal-light-theme-background-color-header);
+        --mashroom-portal-background-color-input: var(--mashroom-portal-light-theme-background-color-input);
+    }
+
+    &[data-mashroom-theme='dark'] {
+        --mashroom-portal-color-text-default: var(--mashroom-portal-dark-theme-color-text-default);
+        --mashroom-portal-color-error: var(--mashroom-portal-dark-theme-color-error);
+        --mashroom-portal-color-button: var(--mashroom-portal-dark-theme-color-button);
+        --mashroom-portal-color-button-hover: var(--mashroom-portal-dark-theme-color-button-hover);
+        --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
+        --mashroom-portal-color-input-color: var(--mashroom-portal-dark-theme-color-input-color);
+        --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
+        --mashroom-portal-background-color-default: var(--mashroom-portal-dark-theme-background-color-default);
+        --mashroom-portal-background-color-app: var(--mashroom-portal-dark-theme-background-color-app);
+        --mashroom-portal-background-color-header: var(--mashroom-portal-dark-theme-background-color-header);
+        --mashroom-portal-background-color-input: var(--mashroom-portal-dark-theme-background-color-input);
+    }
+
+    &[data-mashroom-theme='auto'] {
+        @media (prefers-color-scheme: light) {
+            --mashroom-portal-color-text-default: var(--mashroom-portal-light-theme-color-text-default);
+            --mashroom-portal-color-error: var(--mashroom-portal-light-theme-color-error);
+            --mashroom-portal-color-button: var(--mashroom-portal-light-theme-color-button);
+            --mashroom-portal-color-button-hover: var(--mashroom-portal-light-theme-color-button-hover);
+            --mashroom-portal-color-input-placeholder: var(--mashroom-portal-light-theme-color-input-placeholder);
+            --mashroom-portal-color-input-color: var(--mashroom-portal-light-theme-color-input-color);
+            --mashroom-portal-color-input-border: var(--mashroom-portal-light-theme-color-input-border);
+            --mashroom-portal-background-color-default: var(--mashroom-portal-light-theme-background-color-default);
+            --mashroom-portal-background-color-app: var(--mashroom-portal-light-theme-background-color-app);
+            --mashroom-portal-background-color-header: var(--mashroom-portal-light-theme-background-color-header);
+            --mashroom-portal-background-color-input: var(--mashroom-portal-light-theme-background-color-input);
+        };
+
+        @media (prefers-color-scheme: dark) {
+            --mashroom-portal-color-text-default: var(--mashroom-portal-dark-theme-color-text-default);
+            --mashroom-portal-color-error: var(--mashroom-portal-dark-theme-color-error);
+            --mashroom-portal-color-button: var(--mashroom-portal-dark-theme-color-button);
+            --mashroom-portal-color-button-hover: var(--mashroom-portal-dark-theme-color-button-hover);
+            --mashroom-portal-color-input-placeholder: var(--mashroom-portal-dark-theme-color-input-placeholder);
+            --mashroom-portal-color-input-color: var(--mashroom-portal-dark-theme-color-input-color);
+            --mashroom-portal-color-input-border: var(--mashroom-portal-dark-theme-color-input-border);
+            --mashroom-portal-background-color-default: var(--mashroom-portal-dark-theme-background-color-default);
+            --mashroom-portal-background-color-app: var(--mashroom-portal-dark-theme-background-color-app);
+            --mashroom-portal-background-color-header: var(--mashroom-portal-dark-theme-background-color-header);
+            --mashroom-portal-background-color-input: var(--mashroom-portal-dark-theme-background-color-input);
+        };
+    }
+
+}

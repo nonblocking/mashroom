@@ -5,7 +5,6 @@ import {
     AutocompleteStringArraySuggestionHandler
 } from '@mashroom/mashroom-portal-ui-commons';
 
-import type {ReactNode} from 'react';
 import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
 
 type Props = {
@@ -19,7 +18,7 @@ type Props = {
 
 export default class RoleInput extends PureComponent<Props> {
 
-    componentDidMount(): void {
+    componentDidMount() {
         const {existingRoles, portalAdminService, setExistingRoles} = this.props;
         if (existingRoles.length === 0) {
             portalAdminService.getExistingRoles().then(
@@ -34,21 +33,21 @@ export default class RoleInput extends PureComponent<Props> {
         }
     }
 
-    onRoleChange(role: string | undefined | null): void {
+    onRoleChange(role: string | undefined | null) {
         const {onRoleChange} = this.props;
         if (onRoleChange) {
             onRoleChange(role);
         }
     }
 
-    onRoleSelected(role: string): void {
+    onRoleSelected(role: string) {
         const {onRoleSelected} = this.props;
         if (onRoleSelected) {
             onRoleSelected(role);
         }
     }
 
-    render(): ReactNode {
+    render() {
         const {existingRoles, resetRef} = this.props;
         return (
             <div className='role-input'>

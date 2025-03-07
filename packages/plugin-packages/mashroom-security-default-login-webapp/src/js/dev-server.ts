@@ -36,6 +36,7 @@ wrapperApp.use((req: Request, res: Response, next) => {
                 service: {
                     getLanguage: () => 'en',
                     getMessage: (key: string) => key,
+                    getMessageIfExists: (key: string) => key,
                     translate: (req: any, title: any) => title.de
                 },
             },

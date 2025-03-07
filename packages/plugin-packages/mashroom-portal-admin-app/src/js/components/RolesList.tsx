@@ -21,7 +21,7 @@ export default class RolesList extends PureComponent<Props> {
         }
     }
 
-    onAddRole(role: string): void {
+    onAddRole(role: string) {
         const {roles, addRole} = this.props;
         if (!roles || roles.indexOf(role) === -1) {
             addRole(0, role);
@@ -29,12 +29,12 @@ export default class RolesList extends PureComponent<Props> {
 
     }
 
-    onRemoveRole(index: number): void {
+    onRemoveRole(index: number) {
         const {removeRole} = this.props;
         removeRole(index);
     }
 
-    render(): ReactNode {
+    render() {
         const {roles} = this.props;
         let rows: Array<ReactNode> = [];
 
@@ -53,7 +53,7 @@ export default class RolesList extends PureComponent<Props> {
 
         return (
             <div className='roles-list'>
-                <TableResponsive>
+                <TableResponsive striped>
                     <tbody>
                         {rows}
                     </tbody>

@@ -8,6 +8,7 @@ type Props = {
     categoryFilter: string;
     setCategoryFilter: (categoryFilter: string) => void;
     messages: {
+        showAll: string;
         filter: string;
         category: string;
     }
@@ -19,7 +20,7 @@ export default ({searchFilter, setSearchFilter, allCategories, categoryFilter, s
         <div className={styles.FilterBar}>
             <div className={styles.SearchFilter}>
                 <input
-                    type='text'
+                    type='search'
                     placeholder={messages.filter}
                     value={searchFilter}
                     onChange={(e) => setSearchFilter(e.target.value)}
@@ -30,7 +31,7 @@ export default ({searchFilter, setSearchFilter, allCategories, categoryFilter, s
                     {messages.category}:
                 </label>
                 <select id='categoryFilter' value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-                    <option value=''></option>
+                    <option value=''>&lt;{messages.showAll}&gt;</option>
                     {allCategories.map((category) => (
                         <option key={category} value={category}>{category}</option>
                     ))}

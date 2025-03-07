@@ -18,7 +18,7 @@
 }
 
 .mashroom-welcome-portal-app {
-    padding: 10px;
+    padding: var(--mashroom-portal-spacing-default, 10px);
 
     .welcome-app-content {
         display: flex;

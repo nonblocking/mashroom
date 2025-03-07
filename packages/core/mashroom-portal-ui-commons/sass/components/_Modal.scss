@@ -17,7 +17,7 @@
         min-height: 100px;
         box-shadow: 4px 4px 8px #444;
         transition: opacity 0.2s ease;
-        background-color: white;
+        background-color: var(--mashroom-portal-background-color-modal, white);
         opacity: 0;
 
         &.fade-in {
@@ -32,7 +32,7 @@
     .mashroom-portal-ui-modal-header {
         position: relative;
         width: 100%;
-        background-color: grey;
+        background-color: var(--mashroom-portal-background-color-modal-header, grey);
 
         .title {
             padding: 10px 50px 10px 15px;
@@ -61,6 +61,6 @@
 
     .mashroom-portal-ui-modal-content {
         overflow: hidden;
-        background-color: white;
+        background-color: var(--mashroom-portal-background-color-modal, white);
     }
 }

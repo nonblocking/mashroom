@@ -52,6 +52,7 @@
                     "path": "/login",
                     "pageTitle": null,
                     "loginFormTitle": null,
+                    "darkMode": "auto",
                     "styleFile": null
                 }
             }

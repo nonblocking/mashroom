@@ -19,7 +19,6 @@ import I18NStringField from '../containers/I18NStringField';
 import {DIALOG_NAME_SITE_CONFIGURE} from '../constants';
 import Permissions from './Permissions';
 
-import type {ReactNode} from 'react';
 import type {
     MashroomAvailablePortalLayout,
     MashroomAvailablePortalTheme,
@@ -54,7 +53,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
 
     close: (() => void) | undefined;
 
-    componentDidUpdate(prevProps: Props): void {
+    componentDidUpdate(prevProps: Props) {
         const {selectedSite, dataLoadingService, setSite, portalAdminService, setPermittedRoles,setLoading, setErrorUpdating} = this.props;
         if (selectedSite && (!prevProps.selectedSite || selectedSite.selectedTs !== prevProps.selectedSite.selectedTs)) {
             const siteId = selectedSite.siteId;
@@ -90,15 +89,15 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         }
     }
 
-    onClose(): void {
+    onClose() {
         this.close?.();
     }
 
-    onCloseRef(close: () => void): void {
+    onCloseRef(close: () => void) {
         this.close = close;
     }
 
-    onSubmit(values: FormValues): void {
+    onSubmit(values: FormValues) {
         const {selectedSite, portalAdminService, portalSiteService, setErrorUpdating} = this.props;
         if (!selectedSite) {
             return;
@@ -161,7 +160,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         };
     }
 
-    onChange(values: FormValues, previousValues: FormValues, context: FormContext): void {
+    onChange(values: FormValues, previousValues: FormValues, context: FormContext) {
         const {languages} = this.props;
 
         // Set path automatically based on the title for a new page
@@ -177,7 +176,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         }
     }
 
-    validate(values: FormValues): any {
+    validate(values: FormValues) {
         const {languages, sites, selectedSite} = this.props;
 
         const errors: any = {
@@ -208,7 +207,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         return errors;
     }
 
-    renderPageGeneral(): ReactNode {
+    renderPageGeneral() {
         const {availableThemes, availableLayouts} = this.props;
 
         let availableThemesOptions: SelectFieldOptions = [{
@@ -254,7 +253,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderPagePermissions(): ReactNode {
+    renderPagePermissions() {
         return (
             <DialogContent>
                 <Permissions />
@@ -262,7 +261,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderTabDialog(): ReactNode {
+    renderTabDialog() {
         return (
             <TabDialog name='site-configure' tabs={[
                 {name: 'general', titleId: 'general', content: this.renderPageGeneral()},
@@ -271,22 +270,22 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderActions(): ReactNode {
+    renderActions() {
         return (
             <DialogButtons>
-                <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
                 <Button id='save' type='submit' labelId='save'/>
+                <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
             </DialogButtons>
         );
     }
 
-    renderLoading(): ReactNode {
+    renderLoading() {
         return (
             <CircularProgress/>
         );
     }
 
-    renderLoadingError(): ReactNode {
+    renderLoadingError() {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='loadingFailed' />
@@ -294,7 +293,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderUpdatingError(): ReactNode {
+    renderUpdatingError() {
         return (
             <div className='error-panel'>
                 <ErrorMessage messageId='updateFailed' />
@@ -302,7 +301,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    renderContent(): ReactNode {
+    renderContent() {
         const {selectedSite} = this.props;
         if (!selectedSite) {
             return null;
@@ -327,7 +326,7 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
         );
     }
 
-    render(): ReactNode {
+    render() {
         return (
             <Modal
                 appWrapperClassName='mashroom-portal-admin-app'

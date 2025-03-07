@@ -1,6 +1,8 @@
+@use "../variables" as *;
 
 .PortalApp {
-    box-shadow: 0 0 4px #C49B5E;
+    background-color: $COLOR_PORTAL_APP_BACKGROUND;
+    box-shadow: 0 0 4px $COLOR_PORTAL_APP_BORDER;
     border-radius: 10px;
 
     &.NotPermitted {

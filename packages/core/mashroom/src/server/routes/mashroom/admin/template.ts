@@ -19,35 +19,41 @@ export default (content: string, req: Request) => {
                     body {
                         margin: 0;
                         padding: 0;
+                        text-rendering: optimizeLegibility;
+                        font-size: 16px;
+                        line-height: 1.5;
                         font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+                        background-color: #F2F2F2;
                     }
 
                     h1 {
                         font-size: 1.4em;
-                        font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
                     }
 
                     h2 {
                         font-size: 1.2em;
-                        font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
-                        margin: 20px 0;
+                        font-weight: normal;
+                        margin: 0 0 16px 0;
                     }
 
                     pre, .json, .console {
-                        font-family:  Consolas, 'Liberation Mono', Courier, monospace;
+                        font-family: Consolas, 'Liberation Mono', Courier, monospace;
+                        font-size: 14px;
+                        word-break: break-all;
                     }
 
                     a {
-                        color: #504B88;
+                        color: #4D487F;
                         text-decoration: none;
                     }
 
                     a:hover {
-                        color: #3d3967;
+                        color: #3a365f;
                     }
 
                     header {
-                        background-color: #504B88;
+                        background-color: #4D487F;
+                        border-bottom: 2px solid #d3b486;
                         display: flex;
                     }
 
@@ -81,62 +87,54 @@ export default (content: string, req: Request) => {
 
                     nav ul {
                         padding: 0;
-                        margin: 20px 0;
-                        background-color: #f4f3f8;
+                        margin: 16px 8px;
+                        border-radius: 8px;
                     }
 
                     .menu-item {
-                        position: relative;
                         list-style-type: none;
-                        padding: 7px 25px;
-                        border-top: 1px solid white;
-                        border-bottom: 1px solid white;
+                        overflow: hidden;
+
+                        &:first-child {
+                            border-top-left-radius: 8px;
+                            border-top-right-radius: 8px;
+                        }
+
+                        &:last-child {
+                            border-bottom-left-radius: 8px;
+                            border-bottom-right-radius: 8px;
+                        }
                     }
 
                     .menu-item a {
+                        display: inline-block;
+                        width: 100%;
                         color: black;
                         text-decoration: none;
                         white-space: nowrap;
+                        padding: 7px 21px;
+                        background-color: #fafafa;
+                        margin-bottom: 1px;
                     }
 
-                    .menu-item a:hover:before {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 4px;
-                        height: 100%;
-                        content: ' ';
-                        display: block;
-                        background-color: #C49B5E;
-                    }
-
-                    .menu-item.active:before {
-                        position: absolute;
-                        left: 0;
-                        top: 0;
-                        width: 4px;
-                        height: 100%;
-                        content: ' ';
-                        display: block;
-                        background-color: #504B88;
+                    .menu-item a:hover {
+                        background-color: #cfcde3;
                     }
 
                     .menu-item.active a {
-                        color: black;
-                        font-weight: bold;
+                        background-color: #4D487F;
+                        color: white;
                         text-decoration: none;
                         cursor: default;
                     }
 
-                    .menu-item.external a {
-                        text-decoration: underline;
-                    }
-
                     main {
-                        margin: 0;
-                        padding: 5px 30px;
-                        overflow-x: auto;
+                        margin: 16px 8px;
+                        padding: 16px;
+                        overflow: hidden;
                         width: 100%;
+                        background-color: white;
+                        border-radius: 8px;
                     }
 
                     main ul {
@@ -145,6 +143,10 @@ export default (content: string, req: Request) => {
 
                     main li {
                         padding: 3px 0;
+                    }
+
+                    iframe {
+                        margin: -16px;
                     }
 
                     table, th, td {
@@ -161,9 +163,7 @@ export default (content: string, req: Request) => {
                         text-align: left;
                         vertical-align: top;
                         white-space: nowrap;
-                        font-weight: normal;
-                        font-family: 'Lucida Grande', 'Lucida Sans Unicode', sans-serif;
-                        font-size: 1.05em;
+                        font-weight: 700;
                     }
 
                     td {
@@ -173,7 +173,11 @@ export default (content: string, req: Request) => {
                     }
 
                     tr:nth-child(even) {
-                        background-color: #f4f3f8;
+                        background-color: #FAFAFA;
+                    }
+
+                    table.overview th {
+                        font-weight: normal;
                     }
 
                     .details-link {
@@ -204,25 +208,34 @@ export default (content: string, req: Request) => {
                         max-width: 90%;
                         box-shadow: 2px 4px 4px #444;
                         background-color: white;
+                        border-radius: 8px;
                     }
 
                     #modal .modal-header {
                         position: relative;
                         width: 100%;
+                        border-top-left-radius: 8px;
+                        border-top-right-radius: 8px;
                     }
 
                     #modal .modal-header .modal-close {
                         position: absolute;
-                        right: 10px;
-                        top: 10px;
-                        color: black;
+                        right: 16px;
+                        top: 16px;
+                        color: #666;
                         cursor: pointer;
+                    }
+
+                    #modal .modal-header .modal-close:hover {
+                        color: black;
                     }
 
                     #modal-content {
                         min-width: 250px;
                         min-height: 250px;
-                        padding: 30px;
+                        padding: 32px 16px 16px 16px;
+                        border-bottom-left-radius: 8px;
+                        border-bottom-right-radius: 8px;
                     }
                 </style>
 
@@ -308,7 +321,7 @@ export default (content: string, req: Request) => {
                 <div id="modal" style="display: none">
                     <div class="modal-wrapper">
                         <div class="modal-header">
-                            <div class="modal-close" onclick="closeModal()">x</div>
+                            <div class="modal-close" onclick="closeModal()">&#x2715;</div>
                         </div>
                         <div id="modal-content">
 

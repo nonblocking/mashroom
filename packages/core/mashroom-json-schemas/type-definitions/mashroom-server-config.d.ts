@@ -515,6 +515,18 @@ export interface Plugins {
      */
     spaMode?: boolean;
     /**
+     * Possible values: true, false, "auto" (Default: "auto",)
+     */
+    darkMode?: boolean | string;
+    /**
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)
+     */
+    styleFile?: string;
+    /**
+     * Optional logo image URL (Default: null)
+     */
+    logoImageUrl?: string;
+    /**
      * Show or hide Portal App headers (Default: true)
      */
     showPortalAppHeaders?: boolean;
@@ -623,6 +635,10 @@ export interface Plugins {
      * A custom title for the login form, can be the actual title or a message key (i18n) (Default: login)
      */
     loginFormTitle?: string;
+    /**
+     * Possible values: true, false, "auto" (Default: "auto")
+     */
+    darkMode?: boolean | string;
     /**
      * Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)
      */

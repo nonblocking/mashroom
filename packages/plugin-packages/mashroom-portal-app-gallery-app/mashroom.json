@@ -13,7 +13,6 @@
                 "resourcesRoot": "./dist"
             },
             "defaultConfig": {
-                "category": "hidden",
                 "title": {
                     "en": "Mashroom App Gallery",
                     "de": "Mashroom App Gallerie"

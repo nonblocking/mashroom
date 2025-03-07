@@ -60,7 +60,7 @@ export default class SourceCodeEditorField extends PureComponent<Props> {
                             ref={this.cmRef}
                             value={field.value}
                             height={height ? `${height}px` : 'auto'}
-                            theme={theme === 'light' ? githubLight : githubDark}
+                            theme={theme === 'dark' || (window as any).__MASHROOM_PORTAL_DARK_MODE__ ? githubDark : githubLight}
                             basicSetup={{
                                 lineNumbers: false,
                                 foldGutter: false,
