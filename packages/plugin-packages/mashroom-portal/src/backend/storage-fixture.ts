@@ -105,6 +105,11 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         instanceId: createAppInstanceId(),
     };
 
+    const galleryAppInstance: MashroomPortalAppInstance = {
+        pluginName: 'Mashroom Portal App Gallery App',
+        instanceId: createAppInstanceId(),
+    };
+
     const pageHomeEmpty: MashroomPortalPage = {
         pageId: 'home',
         description: 'Home',
@@ -215,6 +220,18 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         },
     };
 
+    const pageGallery: MashroomPortalPage = {
+        pageId: 'app-gallery',
+        description: 'Mashroom Portal Demo Site Gallery App Page',
+        layout: 'Mashroom Portal Default Layouts 1 Column',
+        portalApps: {
+            'app-area1': [{
+                pluginName: galleryAppInstance.pluginName,
+                instanceId: galleryAppInstance.instanceId,
+            }],
+        },
+    };
+
     const siteMinimal: MashroomPortalSite = {
         siteId: 'default',
         title: portalName,
@@ -234,12 +251,12 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         path: '/web',
         pages: [
             {
-                pageId: 'home',
+                pageId: pageHome.pageId,
                 title: 'Home',
                 friendlyUrl: '/',
             },
             {
-                pageId: 'test1',
+                pageId: pageTest1.pageId,
                 title: {
                     en: 'Test Page 1',
                     de: 'Test Seite 1'
@@ -247,7 +264,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 friendlyUrl: '/test1',
                 subPages: [
                     {
-                        pageId: 'subpage1',
+                        pageId: subPage1.pageId,
                         title: {
                             en: 'Test Subpage',
                             de: 'Test Unterseite'
@@ -255,7 +272,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                         friendlyUrl: '/test1/sub1',
                     },
                     {
-                        pageId: 'subpage2',
+                        pageId: subPage2.pageId,
                         title: {
                             en: 'Test Subpage 2',
                             de: 'Test Unterseite 2'
@@ -265,7 +282,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 ],
             },
             {
-                pageId: 'test2',
+                pageId: pageTest2.pageId,
                 title: {
                     en: 'Test Page 2',
                     de: 'Test Seite 2'
@@ -274,7 +291,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 subPages: [],
             },
             {
-                pageId: 'test3',
+                pageId: pageTest3.pageId,
                 title: {
                     en: 'Test Page 3',
                     de: 'Test Seite 3'
@@ -283,11 +300,20 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
                 subPages: [],
             },
             {
-                pageId: 'sandbox',
+                pageId: pageSandbox.pageId,
                 title: {
                     en: 'Sandbox'
                 },
                 friendlyUrl: '/sandbox',
+                subPages: [],
+            },
+            {
+                pageId: pageGallery.pageId,
+                title: {
+                    en: 'App Gallery',
+                    de: 'App Gallerie'
+                },
+                friendlyUrl: '/app-gallery',
                 subPages: [],
             },
         ],
@@ -306,6 +332,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
              await pagesCollection.insertOne(pageTest2);
              await pagesCollection.insertOne(pageTest3);
              await pagesCollection.insertOne(pageSandbox);
+             await pagesCollection.insertOne(pageGallery);
 
              await portalAppInstancesCollection.insertOne(welcomeAppInstance1);
              await portalAppInstancesCollection.insertOne(reactDemoAppInstance1);
@@ -319,6 +346,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
              await portalAppInstancesCollection.insertOne(tabifyAppInstance1);
              await portalAppInstancesCollection.insertOne(remoteDemoAppInstance1);
              await portalAppInstancesCollection.insertOne(sandboxAppInstance);
+             await portalAppInstancesCollection.insertOne(galleryAppInstance);
          } else {
              await sitesCollection.insertOne(siteMinimal);
              await pagesCollection.insertOne(pageHomeEmpty);

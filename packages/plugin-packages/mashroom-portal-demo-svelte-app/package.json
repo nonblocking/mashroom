@@ -10,9 +10,9 @@
         "public/**"
     ],
     "scripts": {
-        "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production",
         "dev": "webpack serve --config ./webpack.config.client.js --mode development",
-        "type-check": "svelte-check"
+        "type-check": "svelte-check",
+        "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production && cpy ./screenshot.png public"
     },
     "repository": {
         "type": "git",
@@ -41,6 +41,9 @@
                         "style.css"
                     ]
                 },
+                "screenshots": [
+                    "screenshot.png"
+                ],
                 "local": {
                     "resourcesRoot": "./public",
                     "ssrBootstrap": "./public/ssr.js"

@@ -36,7 +36,6 @@ module.exports = {
     },
     resolve: {
         extensions: ['.js', '.ts', '.tsx'],
-        mainFields: ['browser', 'main', 'module'],
     },
     optimization: {
         minimize: true,

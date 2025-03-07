@@ -23,7 +23,7 @@
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development",
-        "build": "webpack --mode production"
+        "build": "webpack --mode production && cpy ./screenshot.png dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -37,6 +37,9 @@
                         "bundle.js"
                     ]
                 },
+                "screenshots": [
+                    "screenshot.png"
+                ],
                 "local": {
                     "resourcesRoot": "./dist"
                 },

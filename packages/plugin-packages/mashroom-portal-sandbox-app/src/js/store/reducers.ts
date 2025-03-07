@@ -5,7 +5,7 @@ import type {
     AddMessagePublishedBySandboxAction,
     SetActivePortalAppAction,
     SetAppLoadingErrorAction,
-    SetAvailablePortalAppsAction,
+    SetKnownPortalAppsAction,
     SetHostWidthAction,
     SetSelectedPortalAppAction,
     SetTopicSubscribedByAppAction
@@ -21,7 +21,7 @@ import type {
     SelectedPortalApp
 } from '../types';
 
-const knownPortalApps: Reducer<Array<MashroomKnownPortalApp>, SetAvailablePortalAppsAction> = (state, action) => {
+const knownPortalApps: Reducer<Array<MashroomKnownPortalApp>, SetKnownPortalAppsAction> = (state, action) => {
     if (typeof (state) === 'undefined') {
         return [];
     }

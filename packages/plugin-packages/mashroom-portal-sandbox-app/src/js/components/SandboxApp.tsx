@@ -12,8 +12,8 @@ import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer
 import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
 import PortalAppStats from '../containers/PortalAppStats';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
-
 import { getQueryParams } from '../utils';
+
 import type {ReactNode} from 'react';
 import type {
     MashroomPortalAppService,
@@ -21,7 +21,6 @@ import type {
     MashroomPortalStateService
 } from '@mashroom/mashroom-portal/type-definitions';
 import type { MessageBusPortalAppUnderTest, PortalAppQueryParams } from '../types';
-
 
 type Props = {
     lang: string;

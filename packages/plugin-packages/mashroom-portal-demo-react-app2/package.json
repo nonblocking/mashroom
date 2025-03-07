@@ -33,6 +33,6 @@
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --config ./webpack.config.app.client.js --mode development",
         "dev:editor": "webpack serve --config ./webpack.config.editor.js --mode development",
-        "build": "webpack --config ./webpack.config.app.client.js --mode production && webpack --config ./webpack.config.app.server.js && webpack --config ./webpack.config.editor.js --mode production"
+        "build": "webpack --config ./webpack.config.app.client.js --mode production && webpack --config ./webpack.config.app.server.js && webpack --config ./webpack.config.editor.js --mode production && cpy ./screenshot.png dist"
     }
 }

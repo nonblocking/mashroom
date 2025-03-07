@@ -61,11 +61,6 @@ module.exports = (env, argv) => {
         },
         resolve: {
             extensions: ['.js', '.ts', '.tsx'],
-            modules: [
-                `${__dirname  }/node_modules`,
-                `${__dirname  }/node_modules/@mashroom/mashroom-portal-ui-commons/node_modules`,
-                `${__dirname  }/../../../node_modules`,
-            ]
         },
         optimization: {
             minimize: true,

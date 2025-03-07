@@ -28,7 +28,7 @@
         "type-check": "vue-tsc --noEmit",
         "copy-assets": "cpy \"src/assets/*\" dist",
         "dev": "webpack serve --config ./webpack.config.client.js --mode development",
-        "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production && npm run copy-assets"
+        "build": "webpack --config ./webpack.config.client.js --mode production && webpack --config ./webpack.config.server.js --mode production && npm run copy-assets  && cpy ./screenshot.png dist"
     },
     "mashroom": {
         "devModeBuildScript": "build",
@@ -45,6 +45,9 @@
                         "style.css"
                     ]
                 },
+                "screenshots": [
+                    "screenshot.png"
+                ],
                 "local": {
                     "resourcesRoot": "./dist",
                     "ssrBootstrap": "./dist/ssr.js"

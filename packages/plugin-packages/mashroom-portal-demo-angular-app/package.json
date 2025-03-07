@@ -28,7 +28,7 @@
     },
     "scripts": {
         "dev": "ng serve",
-        "build": "ng build --configuration production",
+        "build": "ng build --configuration production && cpy ./screenshot.png dist",
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit"
     },
@@ -48,6 +48,9 @@
                         "styles.css"
                     ]
                 },
+                "screenshots": [
+                    "screenshot.png"
+                ],
                 "local": {
                     "resourcesRoot": "./dist"
                 },

@@ -182,6 +182,7 @@ export default (content: string, req: Request) => {
 
                     .details-link {
                         padding: 20px 0;
+                        margin-bottom: 40px;
                     }
 
                     .admin-ui-integration-wrapper {

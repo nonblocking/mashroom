@@ -10,6 +10,9 @@
                 "js": ["app.js"],
                 "css": ["app.css"]
             },
+            "screenshots": [
+                "screenshot.png"
+            ],
             "local": {
                 "resourcesRoot": "./dist",
                 "ssrBootstrap": "./dist/app-ssr.js"

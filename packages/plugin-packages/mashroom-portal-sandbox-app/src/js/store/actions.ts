@@ -2,7 +2,7 @@
 import type {MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 import type {SelectedPortalApp, ActivePortalApp, MessageBusMessage} from '../types';
 
-export type SetAvailablePortalAppsAction = {
+export type SetKnownPortalAppsAction = {
     readonly type: 'SET_AVAILABLE_PORTAL_APPS';
     readonly knownPortalApps: Array<MashroomKnownPortalApp>;
 }
@@ -42,7 +42,7 @@ export type SetTopicSubscribedByAppAction = {
     readonly topics:  Array<string>;
 }
 
-export const setKnownApps = (knownPortalApps: Array<MashroomKnownPortalApp>): SetAvailablePortalAppsAction => {
+export const setKnownApps = (knownPortalApps: Array<MashroomKnownPortalApp>): SetKnownPortalAppsAction => {
     return {
         type: 'SET_AVAILABLE_PORTAL_APPS',
         knownPortalApps,

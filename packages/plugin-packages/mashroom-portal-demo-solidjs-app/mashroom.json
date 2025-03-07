@@ -11,6 +11,9 @@
                     "bundle.js"
                 ]
             },
+            "screenshots": [
+                "screenshot.png"
+            ],
             "local": {
                 "resourcesRoot": "./dist"
             },

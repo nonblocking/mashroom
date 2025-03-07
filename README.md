@@ -21,7 +21,9 @@ Such a plugin could be an *Express* web-app or an *SPA* or more generally all ki
 which is determined by the available plugin loaders.
 Plugin loaders itself are also just plugins, so it is possible to add any type of custom plugin type.
 
-![Mashroom Portal](mashroom_portal_ui.png)
+![Mashroom Portal](screenshot-mashroom-portal.png)
+
+![Mashroom Portal](screenshot-mashroom-portal-dark.png)
 
 ### Key features
 
