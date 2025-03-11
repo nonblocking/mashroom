@@ -31,15 +31,11 @@ $LABEL_ROW_WIDTH: 240px;
         margin: 10px 0;
 
         label {
-            width: $LABEL_ROW_WIDTH;
+            min-width: $LABEL_ROW_WIDTH;
             padding: 0;
             span {
                 vertical-align: top;
             }
-        }
-
-        label + div {
-            width: calc(100% - #{$LABEL_ROW_WIDTH});
         }
     }
 
