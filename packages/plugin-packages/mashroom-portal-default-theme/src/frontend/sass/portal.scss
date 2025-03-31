@@ -283,6 +283,10 @@ textarea {
 
     &:focus {
         outline: 1px solid var(--mashroom-portal-color-input-border);
+
+        &:invalid {
+            outline: 1px solid var(--mashroom-portal-color-error);
+        }
     }
 
     &:invalid {
@@ -328,6 +332,10 @@ select {
 
     &:focus {
         outline: 1px solid var(--mashroom-portal-color-input-border);
+
+        &:invalid {
+            outline: 1px solid var(--mashroom-portal-color-error);
+        }
     }
 
     &:invalid {
@@ -759,7 +767,7 @@ main {
 }
 
 footer {
-    color: var(--mashroom-portal-color-primary);
+    color: var(--mashroom-portal-color-text-secondary);
     padding: var(--mashroom-portal-spacing-default) 0;
     border-top: 1px solid var(--mashroom-portal-color-secondary);
     font-size: 0.8em;
@@ -795,12 +803,15 @@ footer {
 }
 
 .mashroom-portal-ui-input.error {
-
     input,
     select,
     textarea {
         border-color: var(--mashroom-portal-color-error) !important;
         color: var(--mashroom-portal-color-error);
+
+        &:focus {
+            outline: 1px solid var(--mashroom-portal-color-error);
+        }
     }
 
     .mashroom-portal-checkbox+label:before,
@@ -810,7 +821,10 @@ footer {
 
     .cm-editor {
         border-color: var(--mashroom-portal-color-error) !important;
-        border-radius: var(--mashroom-portal-border-radius)
+
+        &.cm-focused {
+            outline-color: var(--mashroom-portal-color-error) !important;
+        }
     }
 }
 
@@ -943,9 +957,9 @@ footer {
 
 .cm-editor {
     border: 1px solid var(--mashroom-portal-color-input-border);
+    margin: 1px;
     padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
     background-color: var(--mashroom-portal-background-color-input);
-    @include focus-animation();
     border-radius: var(--mashroom-portal-border-radius);
 
     &.cm-focused {
