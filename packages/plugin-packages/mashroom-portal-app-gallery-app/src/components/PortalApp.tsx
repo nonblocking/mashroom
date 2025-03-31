@@ -49,7 +49,7 @@ export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: 
                 <div className={styles.Details}>
                     <div className={styles.Detail}>
                         <div className={styles.DetailLabel}>
-                            {messages.category}:
+                            {messages.category}
                         </div>
                         <div className={styles.DetailValue}>
                             {category ?? '-'}
@@ -57,7 +57,7 @@ export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: 
                     </div>
                     <div className={styles.Detail}>
                         <div className={styles.DetailLabel}>
-                            {messages.tags}:
+                            {messages.tags}
                         </div>
                         <div className={styles.DetailValue}>
                             <HighlightFilterQuery searchFilter={searchFilter} text={tags?.map((t) => `#${t}`).join(' ') ?? '-'} />
@@ -65,7 +65,7 @@ export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: 
                     </div>
                     <div className={styles.Detail}>
                         <div className={styles.DetailLabel}>
-                            {messages.homepage}:
+                            {messages.homepage}
                         </div>
                         <div className={styles.DetailValue}>
                             {homepage && <a href={homepage} target='_blank' rel="noreferrer">{homepage}</a>}
@@ -74,7 +74,7 @@ export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: 
                     </div>
                     <div className={styles.Detail}>
                         <div className={styles.DetailLabel}>
-                            {messages.permissions}:
+                            {messages.permissions}
                         </div>
                         <div className={styles.DetailValue}>
                             {requiredRoles.length === 0 && (
@@ -88,7 +88,7 @@ export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: 
                     {sandboxPath && (
                         <div className={styles.Detail}>
                             <div className={styles.DetailLabel}>
-                                {messages.tryOut}:
+                                {messages.tryOut}
                             </div>
                             <div className={styles.DetailValue}>
                                 {app.available && (
