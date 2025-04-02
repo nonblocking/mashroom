@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.7.1",
+    "version": "2.8.0",
     "files": [
         "dist/**",
         "type-definitions/*"
@@ -17,8 +17,8 @@
         "express-session": "^1.18.1"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.7.1",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.7.1",
+        "@mashroom/mashroom": "2.8.0",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.8.0",
         "@types/express": "^4.17.21",
         "@types/express-session": "^1.18.1"
     },
