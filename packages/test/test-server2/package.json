@@ -1,13 +1,13 @@
 {
     "name": "@mashroom/mashroom-test-server2",
-    "version": "2.8.0",
+    "version": "2.8.1",
     "private": true,
     "dependencies": {
         "@opentelemetry/exporter-prometheus": "^0.57.0",
         "pm2": "^5.4.3"
     },
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.8.0"
+        "@mashroom/mashroom-json-schemas": "2.8.1"
     },
     "scripts": {
         "start": "mashroom",

@@ -7,14 +7,14 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.8.0",
+    "version": "2.8.1",
     "sideEffects": false,
     "files": [
         "dist/**",
         "screenshot.png"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "2.8.0",
+        "@mashroom/mashroom-portal": "2.8.1",
         "@types/react": "^18.3.18",
         "@types/react-dom": "^18.3.5",
         "react": "^18.3.1",

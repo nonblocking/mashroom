@@ -4,7 +4,7 @@
     "private": true,
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
-    "version": "2.8.0",
+    "version": "2.8.1",
     "main": "dist",
     "dependencies": {
         "@codemirror/lang-css": "^6.3.1",
