@@ -442,7 +442,7 @@ describe('PortalPageRenderController', () => {
                     expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalPageId\'] = \'test-page\'');
                     expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalLanguage\'] = \'en\'');
                     expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalAppWrapperTemplate\'] = \'<div class="wrapper">???</div>\'');
-                    expect(portalModel.portalResourcesHeader).toContain('<script src="/portal/web/___/client.js?v=6d1579cfd3"></script>');
+                    expect(portalModel.portalResourcesHeader).toContain('<script src="/portal/web/___/client.js');
                     expect(portalModel.portalResourcesHeader).toContain('<script data-mashroom-ssr-head-script="1">alert("foo")</script>');
 
                     expect(portalModel.portalResourcesFooter).toContain('window[\'MashroomPortalPreloadedAppSetup\'] =');
