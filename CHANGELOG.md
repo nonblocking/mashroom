@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+## 2.8.1 (April 2, 2025)
+
+ * Fixed packaging of App Gallery App
 
 ## 2.8.0 (April 2, 2025)
 
