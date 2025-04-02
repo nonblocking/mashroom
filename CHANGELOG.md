@@ -3,11 +3,14 @@
 
 ## [unreleased]
 
- * Login Web-App: Introduced a dark mode (default: off)
+
+## 2.8.0 (April 2, 2025)
+
+ * Login Web-App: Introduced a dark mode (by default enabled if the preferred color scheme of the browser is dark, but can be disabled in the configuration)
  * Portal Default Theme: Overhaul:
    * Introduced tons of CSS variables
-   * Introduced a dark mode (default: off)
-   * Add the possibility to override CSS variables and style with an external file:
+   * Introduced a dark mode (by default enabled if the preferred color scheme of the browser is dark, but can be disabled in the configuration)
+   * Added the possibility to override CSS variables and style with an external file:
      ```css
         :root {
           --mashroom-portal-color-primary: green;
@@ -68,7 +71,7 @@
  * Sandbox App: Show unavailable (no permitted) Apps in the selection (just no one is wondering why an expected App is not there)
  * Portal: Renamed the plugin type *remote-portal-app-registry* to just *portal-app-registry* because the Portal Apps don't need to be remote.
    The old type is still supported for the moment.
- * Portal: The *resourcesRoot* property in *portal-page-enhancement* plugins is no expect to be top level:
+ * Portal: The *resourcesRoot* property in *portal-page-enhancement* plugins is now expect to be top level:
    ```
    // Before
    {
