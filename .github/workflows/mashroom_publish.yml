@@ -16,7 +16,8 @@ jobs:
         node-version: '20.x'
         registry-url: 'https://registry.npmjs.org'
     - run: npm run setup
-    - run: npm run build
+    - run: npm run build:core
+    - run: npm run build:plugins
     - run: lerna exec --bail=false -- npm publish --provenance --access public
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
