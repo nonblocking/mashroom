@@ -2,7 +2,7 @@ import type {MashroomPortalRemoteApps} from '@mashroom/mashroom-json-schemas/typ
 
 const remotePortalApps: MashroomPortalRemoteApps = {
     remotePortalApps: [
-        'http://demo-ssr-remote-app.mashroom-server.com'
+        'https://demo-ssr-remote-app.mashroom-server.com'
     ]
 };
 
