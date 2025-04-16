@@ -239,4 +239,66 @@ describe('PortalUserController', () => {
         expect(redirectUrl).toBe('/foo/bar');
     });
 
+    it('is ignores external urls as redirect parameter', async () => {
+        const controller = new PortalUserController();
+
+        let redirectUrl = null;
+        const mockRevokeAuthentication = jest.fn();
+        const req1: any = {
+            method: 'GET',
+            params: {
+                sitePath: 'web',
+            },
+            headers: {
+                accept: 'text/html'
+            },
+            query: {
+                redirectUrl: 'https://www.example.com',
+            },
+            pluginContext: {
+                loggerFactory: loggingUtils.dummyLoggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            revokeAuthentication: mockRevokeAuthentication,
+                            getUser: () => Promise.resolve({}),
+                        }
+                    }
+                }
+            }
+        };
+        const req2: any = {
+            method: 'GET',
+            params: {
+                sitePath: 'web',
+            },
+            headers: {
+                accept: 'text/html'
+            },
+            query: {
+                redirectUrl: '//www.example.com',
+            },
+            pluginContext: {
+                loggerFactory: loggingUtils.dummyLoggerFactory,
+                services: {
+                    security: {
+                        service: {
+                            revokeAuthentication: mockRevokeAuthentication,
+                            getUser: () => Promise.resolve({}),
+                        }
+                    }
+                }
+            }
+        };
+        const res: any = {
+            redirect: (url: string) => redirectUrl = url,
+        };
+
+        await controller.logout(req1, res);
+        expect(redirectUrl).toBe('/portal/web');
+
+        await controller.logout(req2, res);
+        expect(redirectUrl).toBe('/portal/web');
+    });
+
 });

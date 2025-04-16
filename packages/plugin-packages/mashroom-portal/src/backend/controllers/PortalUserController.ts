@@ -112,7 +112,7 @@ export default class PortalUserController {
                 if (req.query.redirectUrl) {
                     // Use the redirect query param if any
                     const redirectParam = decodeURIComponent(req.query.redirectUrl as string);
-                    if (redirectParam.startsWith('/')) {
+                    if (redirectParam.startsWith('/') && !redirectParam.startsWith('//')) {
                         redirectUrl = redirectParam;
                     }
                 }

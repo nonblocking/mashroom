@@ -152,7 +152,7 @@ const redirect = (req: Request, res: Response) => {
     }
     if (query && query.redirectUrl) {
         const redirectParam = decodeURIComponent(query.redirectUrl);
-        if (redirectParam.startsWith('/')) {
+        if (redirectParam.startsWith('/') && !redirectParam.startsWith('//')) {
             redirectUrl = redirectParam;
         }
     }

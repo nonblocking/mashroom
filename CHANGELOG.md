@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Made sure the *redirectUrl* parameters of the login and logout routes cannot be used to redirect to external hosts
+
 ## 2.8.1 (April 2, 2025)
 
  * Fixed packaging of App Gallery App
