@@ -8,6 +8,7 @@ module.exports = merge(common,  {
         path: `${__dirname  }/dist`,
         filename: 'app.js',
     },
+    devtool: 'source-map',
     optimization: {
         minimize: true,
         minimizer: [

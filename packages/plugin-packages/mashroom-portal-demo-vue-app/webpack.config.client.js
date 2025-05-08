@@ -8,6 +8,7 @@ module.exports = merge(common,  {
         path: `${__dirname  }/dist`,
         filename: 'bundle.js',
     },
+    devtool: 'source-map',
     devServer: {
         host: '0.0.0.0',
         allowedHosts: 'all',

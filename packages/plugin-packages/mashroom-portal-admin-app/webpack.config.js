@@ -21,6 +21,7 @@ module.exports = (env, argv) => {
             filename: 'admin-toolbar.js',
             chunkFilename: 'admin-toolbar.[contenthash].js',
         },
+        devtool: 'source-map',
         module: {
             rules: [
                 {

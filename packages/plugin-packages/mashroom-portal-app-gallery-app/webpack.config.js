@@ -18,6 +18,7 @@ module.exports = (env, argv) => {
             path: `${__dirname  }/dist`,
             filename: 'bundle.js',
         },
+        devtool: 'source-map',
         module: {
             rules: [
                 {

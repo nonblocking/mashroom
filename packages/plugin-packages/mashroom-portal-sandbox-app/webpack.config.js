@@ -22,6 +22,7 @@ module.exports = (env, argv) => {
             filename: '[name].js',
             chunkFilename: 'sandbox.[contenthash].js',
         },
+        devtool: 'source-map',
         module: {
             rules: [
                 {

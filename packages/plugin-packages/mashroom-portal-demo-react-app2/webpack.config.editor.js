@@ -6,6 +6,7 @@ module.exports = {
         path: `${__dirname  }/dist`,
         filename: 'editor.js',
     },
+    devtool: 'source-map',
     module: {
         rules: [
             {
