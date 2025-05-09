@@ -160,7 +160,7 @@ export default class ModalDialog extends PureComponent<Props, State> {
                 <div className={`mashroom-portal-ui-modal ${className || ''}`} onWheel={(e) => e.stopPropagation()}>
                     <div className={`mashroom-portal-ui-modal-wrapper ${fadeIn ? 'fade-in' : ''} ${fadeOut ? 'fade-out' : ''}`}
                          style={{marginTop, width, minHeight}}
-                         ref={(elem) => this.modalWrapperEl = elem}>
+                         ref={(elem) => { this.modalWrapperEl = elem; }}>
                         {header}
                         <div className='mashroom-portal-ui-modal-content'>
                             {children}

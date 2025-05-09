@@ -20,7 +20,7 @@ type Props = {
 
 export default class SourceCodeEditorField extends PureComponent<Props> {
 
-    cmRef: RefObject<ReactCodeMirrorRef>;
+    cmRef: RefObject<ReactCodeMirrorRef | null>;
 
     constructor(props: Props) {
         super(props);

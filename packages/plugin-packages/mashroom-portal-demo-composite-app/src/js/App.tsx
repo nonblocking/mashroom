@@ -49,7 +49,7 @@ const onPing = (activeAppRef: MutableRefObject<ActiveApp | undefined>, dialogEle
 
 export default ({appId, messageBus, portalAppService}: Props) => {
     const dialogHostElementId = getDialogHostElementId(appId);
-    const activeAppRef = useRef<ActiveApp | undefined>();
+    const activeAppRef = useRef<ActiveApp | undefined>(undefined);
 
     useEffect(() => {
         const dialogIdx = 0;

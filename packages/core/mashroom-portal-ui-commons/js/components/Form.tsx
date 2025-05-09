@@ -20,7 +20,7 @@ type Props = {
 
 export default class Form extends PureComponent<Props> {
 
-    formRef: RefObject<HTMLFormElement>;
+    formRef: RefObject<HTMLFormElement | null>;
 
     constructor(props: Props) {
         super(props);

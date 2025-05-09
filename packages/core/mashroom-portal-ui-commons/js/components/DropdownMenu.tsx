@@ -1,7 +1,6 @@
 
 import React, {PureComponent} from 'react';
 import {FormattedMessage} from 'react-intl';
-import enhanceWithClickOutside from 'react-click-outside';
 
 import type {ReactNode} from 'react';
 
@@ -21,6 +20,7 @@ type State = {
 
 class DropdownMenu extends PureComponent<Props, State> {
 
+    ref: HTMLDivElement | null = null;
     boundHandleEscapeKeyPress: (event: KeyboardEvent) => void;
 
     constructor(props: Props) {
@@ -36,6 +36,11 @@ class DropdownMenu extends PureComponent<Props, State> {
         if (closeRef) {
             closeRef(this.hideMenu.bind(this));
         }
+        document.addEventListener('click', this.handleClickOutside.bind(this));
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('click', this.handleClickOutside.bind(this));
     }
 
     openDropDown() {
@@ -52,8 +57,10 @@ class DropdownMenu extends PureComponent<Props, State> {
         });
     }
 
-    handleClickOutside() {
-       this.closeDropDown();
+    handleClickOutside(event: MouseEvent) {
+        if (this.ref && !this.ref.contains(event.target as Node)) {
+            this.closeDropDown();
+        }
     }
 
     handleEscapeKeyPress(event: KeyboardEvent) {
@@ -89,7 +96,7 @@ class DropdownMenu extends PureComponent<Props, State> {
     render() {
         const {className, labelId, label, children} = this.props;
         return (
-            <div className={`mashroom-portal-ui-dropdown-menu ${className || ''}`}>
+            <div className={`mashroom-portal-ui-dropdown-menu ${className || ''}`} ref={(el) => { this.ref = el; }}>
                 <div className='dropdown-menu-button' onClick={this.toggleMenu.bind(this)}>
                     <span className='dropdown-menu-button-label'>{labelId ? <FormattedMessage id={labelId}/> : label}</span>
                 </div>
@@ -105,4 +112,4 @@ class DropdownMenu extends PureComponent<Props, State> {
     }
 }
 
-export default enhanceWithClickOutside(DropdownMenu);
+export default DropdownMenu;

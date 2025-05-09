@@ -76,7 +76,7 @@ export default class AddAppDropdownMenu extends PureComponent<Props, State> {
                            placeholder={filterLabel}
                            value={filter || ''}
                            onChange={(event) => this.onFilterChange(event.target.value)}
-                           ref={(e) => this.inputElem = e}
+                           ref={(e) => { this.inputElem = e; }}
                     />
                     <div className='app-list'>
                         <AvailableAppsPanel
