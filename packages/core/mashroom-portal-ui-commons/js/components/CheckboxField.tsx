@@ -1,35 +1,40 @@
 
-import React, {PureComponent} from 'react';
+import React from 'react';
+import {Field} from 'formik';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
-import type {FieldProps} from 'formik';
+import type { FieldProps} from 'formik';
 
 type Props = {
     id: string;
+    name: string;
     labelId?: string;
-    fieldProps: FieldProps;
 }
 
-export default class CheckboxField extends PureComponent<Props> {
+export default ({id, name, labelId}: Props) => {
 
-    render() {
-        const {id, labelId, fieldProps: {field, meta}} = this.props;
-        const error = meta.touched && !!meta.error;
+    return (
+        <Field name={name}>
+            {({meta, field}: FieldProps) => {
+                const error = meta.touched && !!meta.error;
 
-        const inputProps = {
-            ...field,
-            id,
-            type: 'checkbox',
-            checked: !!field.value
-        };
+                const inputProps = {
+                    ...field,
+                    id,
+                    type: 'checkbox',
+                    checked: !!field.value
+                };
 
-        return (
-            <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <input className='mashroom-portal-checkbox' {...inputProps}/>
-                {labelId ? <FieldLabel htmlFor={id} labelId={labelId}/> : <label htmlFor={id}>&nbsp;</label>}
-                {error && <ErrorMessage messageId={meta.error || ''}/>}
-            </div>
-        );
-    }
+                return  (
+                    <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
+                        <input className='mashroom-portal-checkbox' {...inputProps}/>
+                        {labelId ? <FieldLabel htmlFor={id} labelId={labelId}/> : <label htmlFor={id}>&nbsp;</label>}
+                        {error && <ErrorMessage messageId={meta.error || ''}/>}
+                    </div>
+                );
+            }}
+        </Field>
 
-}
+
+    );
+};

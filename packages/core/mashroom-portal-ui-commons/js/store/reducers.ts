@@ -43,6 +43,7 @@ const tabDialogs: Reducer<TabDialogState, SetActiveTabAction> = (state, action) 
     }
 };
 
+// eslint-disable-next-line import/prefer-default-export
 export const mashroomPortalCommonsCombineReducers = <S>(reducers: ReducersMapObject<S, any>) => {
     const mergedReducers: any = {
         ...reducers,
