@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Formik} from 'formik';
 import Form from './Form';
 
@@ -18,22 +18,22 @@ type Props = {
 
 export default ({formId, initialValues, validator, onSubmit, onChange, children}: Props) => {
 
-    const handleOnSubmit = (values: any, helpers: FormikHelpers<any>) => {
+    const handleOnSubmit = useCallback((values: any, helpers: FormikHelpers<any>) => {
         const {resetForm, setFieldValue} = helpers;
         onSubmit(values, {
             resetForm,
             setFieldValue,
             initialValues,
         });
-    };
+    }, [onSubmit, initialValues]);
 
-    const handleValidate = (values: any) => {
+    const handleValidate = useCallback((values: any) => {
         let errors: ValidationErrors | undefined;
         if (validator) {
             errors = validator(values);
         }
         return errors;
-    };
+    }, [validator]);
 
     return (
         <div className='mashroom-portal-ui-form'>

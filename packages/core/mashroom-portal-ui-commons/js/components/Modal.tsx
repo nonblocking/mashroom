@@ -1,11 +1,11 @@
 
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
 import {FormattedMessage} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {setShowModal} from '../store/actions';
 
-import type {ReactNode} from 'react';
+import type {ReactNode, MouseEvent} from 'react';
 import type {CommonState} from '../../type-definitions';
 
 type Props = {
@@ -31,6 +31,32 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
     const show = useSelector((state: CommonState) => state.modals?.[name]?.show);
     const shown = useRef(show);
     const dispatch = useDispatch();
+
+    const close = () => {
+        dispatch(setShowModal(name, false));
+    };
+
+    const calcMarginTop = (): string | undefined => {
+        if (!modalWrapperElRef.current) {
+            return undefined;
+        }
+
+        return `${Math.max(10, (window.innerHeight - modalWrapperElRef.current.offsetHeight) / 2)}px`;
+    };
+
+    const handleEscapeKeyPress = useCallback((event: KeyboardEvent) => {
+        if (event.target) {
+            const target = event.target as HTMLElement;
+            const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) !== -1;
+            if (!fromInput && event.key === 'Escape') {
+                close();
+            }
+        }
+    }, []);
+
+    const onResize =  useCallback(() => {
+        setMarginTop(calcMarginTop());
+    }, []);
 
     useEffect(() => {
         closeRef?.(() => close());
@@ -59,10 +85,6 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
         }
     }, [show]);
 
-    const close = () => {
-        dispatch(setShowModal(name, false));
-    };
-
     const modalsRoot = useMemo(() => {
         let modalsRoot = document.getElementById(MODALS_ROOT_ID);
         if (!modalsRoot) {
@@ -77,27 +99,7 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
         return modalsRoot;
     }, []);
 
-    const handleEscapeKeyPress = (event: KeyboardEvent) => {
-        if (event.target) {
-            const target = event.target as HTMLElement;
-            const fromInput = ['INPUT', 'TEXTAREA', 'SELECT'].indexOf(target.tagName) !== -1;
-            if (!fromInput && event.key === 'Escape') {
-                close();
-            }
-        }
-    };
-
-    const onResize = () => {
-        setMarginTop(calcMarginTop());
-    };
-
-    const calcMarginTop = (): string | undefined => {
-        if (!modalWrapperElRef.current) {
-            return undefined;
-        }
-
-        return `${Math.max(10, (window.innerHeight - modalWrapperElRef.current.offsetHeight) / 2)}px`;
-    };
+    const stopPropagation = useCallback((event: MouseEvent) => event.stopPropagation(), []);
 
     if (!show && !fadeOut) {
         return null;
@@ -118,7 +120,7 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
     }
 
     return ReactDOM.createPortal((
-        <div className={`mashroom-portal-ui-modal ${className || ''}`} onWheel={(e) => e.stopPropagation()}>
+        <div className={`mashroom-portal-ui-modal ${className || ''}`} onWheel={stopPropagation}>
             <div className={`mashroom-portal-ui-modal-wrapper ${fadeIn ? 'fade-in' : ''} ${fadeOut ? 'fade-out' : ''}`}
                  style={{marginTop, width, minHeight}}
                  ref={modalWrapperElRef}>

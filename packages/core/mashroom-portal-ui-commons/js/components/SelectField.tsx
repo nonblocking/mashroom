@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useCallback} from 'react';
 import {Field} from 'formik';
 import {useIntl} from 'react-intl';
 import ErrorMessage from './ErrorMessage';
@@ -30,7 +30,7 @@ export default ({id, name, labelId, options, emptyOption, placeholder: placehold
                 const error = meta.touched && !!meta.error;
                 const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
 
-                const onChange = (e: ChangeEvent<HTMLSelectElement>) => {
+                const onChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
                     let value: string | null = e.target.value;
                     if (value === NULL_VALUE) {
                         value = null;
@@ -45,7 +45,7 @@ export default ({id, name, labelId, options, emptyOption, placeholder: placehold
                     if (onValueChange) {
                         onValueChange(value);
                     }
-                };
+                }, [field, onValueChange]);
 
                 const inputProps: any = {
                     ...field,

@@ -1,5 +1,5 @@
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {FormattedMessage} from 'react-intl';
 
 import type {ReactNode} from 'react';
@@ -28,29 +28,30 @@ export default ({className, label, labelId, children, onOpen, onClose, closeRef}
         onClose?.();
     };
 
-    const toggleDropDown = () => {
+    const toggleDropDown = useCallback(() => {
         if (open) {
             closeDropDown();
         } else {
             openDropDown();
         }
-    };
+    }, []);
 
-    const handleEscapeKeyPress = (event: KeyboardEvent) => {
+    const handleEscapeKeyPress = useCallback((event: KeyboardEvent) => {
         if (event.code === 'Escape') {
             closeDropDown();
         }
-    };
+    }, []);
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = useCallback((event: MouseEvent) => {
         if (ref.current && !ref.current.contains(event.target as Node)) {
             closeDropDown();
         }
-    };
+    }, []);
 
     useEffect(() => {
         closeRef?.(() => closeDropDown());
     }, []);
+
     useEffect(() => {
         if (open) {
             document.addEventListener('keydown', handleEscapeKeyPress);

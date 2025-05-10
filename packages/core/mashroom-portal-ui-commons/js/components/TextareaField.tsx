@@ -23,7 +23,6 @@ export default ({id, name, labelId, rows, maxLength, placeholder: placeHolderId}
             {({meta, field}: FieldProps) => {
                 const error = meta.touched && !!meta.error;
                 const placeholder = placeHolderId ? intl.formatMessage({ id: placeHolderId }) : null;
-
                 const inputProps: any = {
                     ...field,
                     id,

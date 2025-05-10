@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useMemo} from 'react';
 import {FormattedMessage} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {setActiveTab} from '../store/actions';
@@ -20,7 +20,11 @@ export default ({name, tabs}: Props) => {
     const activeTabName = useSelector((state: CommonState) => state.tabDialogs?.[name]?.active);
     const dispatch = useDispatch();
 
-    const getActiveTabIndex = (): number | null => {
+    const onChangeActiveTab = (newActiveTab: string) => {
+        dispatch(setActiveTab(name, newActiveTab));
+    };
+
+    const activeTabIndex = useMemo((): number | null => {
         const activeTab = tabs.find((t) => t.name === activeTabName);
         if (activeTab) {
             return tabs.indexOf(activeTab);
@@ -30,15 +34,9 @@ export default ({name, tabs}: Props) => {
         }
 
         return null;
-    };
+    }, [tabs, activeTabName]);
 
-    const onChangeActiveTab = (newActiveTab: string) => {
-        dispatch(setActiveTab(name, newActiveTab));
-    };
-
-    const activeTabIndex = getActiveTabIndex();
-
-    const header = () => {
+    const header = useMemo(() => {
         if (activeTabIndex === null) {
             return null;
         }
@@ -52,11 +50,11 @@ export default ({name, tabs}: Props) => {
                 {buttons}
             </div>
         );
-    };
+    }, [tabs, activeTabIndex]);
 
     return (
         <div className='mashroom-portal-ui-tab-dialog'>
-            {header()}
+            {header}
             {activeTabIndex !== null && (
                 <div className='tab-dialog-content-wrapper'>
                     {tabs[activeTabIndex]?.content}

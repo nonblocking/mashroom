@@ -24,7 +24,6 @@ export default ({id, name, labelId, type, maxLength, pattern, autoComplete, plac
             {({meta, field}: FieldProps) => {
                 const error = meta.touched && !!meta.error;
                 const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
-
                 const inputProps: any = {
                     ...field,
                     id,

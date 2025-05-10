@@ -1,5 +1,5 @@
 
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useCallback, useMemo} from 'react';
 import CodeMirror, {type ReactCodeMirrorRef} from '@uiw/react-codemirror';
 import {githubDark, githubLight} from '@uiw/codemirror-theme-github';
 import {json} from '@codemirror/lang-json';
@@ -30,6 +30,21 @@ export default ({id, labelId, language, height, theme, fieldProps: {field, meta}
         }
     }, [field.value]);
 
+    const codeMirrorTheme = useMemo(() => {
+        return theme === 'dark' || (window as any).__MASHROOM_PORTAL_DARK_MODE__ ? githubDark : githubLight;
+    }, [theme]);
+
+    const onChange = useCallback((value: string) => {
+        const e = {
+            target: {
+                name: field.name,
+                value,
+            }
+        };
+        field.onChange(e);
+    }, [field]);
+
+    const error = meta.touched && !!meta.error;
     const extensions = [];
     switch (language) {
     case 'css':
@@ -40,8 +55,6 @@ export default ({id, labelId, language, height, theme, fieldProps: {field, meta}
         break;
     }
 
-    const error = meta.touched && !!meta.error;
-
     return (
         <div id={id} className={`mashroom-portal-ui-source-code-editor-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
             <FieldLabel labelId={labelId}/>
@@ -51,7 +64,7 @@ export default ({id, labelId, language, height, theme, fieldProps: {field, meta}
                         ref={cmRef}
                         value={field.value}
                         height={height ? `${height}px` : 'auto'}
-                        theme={theme === 'dark' || (window as any).__MASHROOM_PORTAL_DARK_MODE__ ? githubDark : githubLight}
+                        theme={codeMirrorTheme}
                         basicSetup={{
                             lineNumbers: false,
                             foldGutter: false,
@@ -62,15 +75,7 @@ export default ({id, labelId, language, height, theme, fieldProps: {field, meta}
                         }}
                         extensions={extensions}
                         onBlur={field.onBlur}
-                        onChange={(value) => {
-                            const e = {
-                                target: {
-                                    name: field.name,
-                                    value,
-                                }
-                            };
-                            field.onChange(e);
-                        }}
+                        onChange={onChange}
                     />
                 </div>
                 {error && <ErrorMessage messageId={meta.error || ''}/>}

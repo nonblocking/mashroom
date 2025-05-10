@@ -12,12 +12,10 @@ type Props = {
 }
 
 export default ({id, name, labelId}: Props) => {
-
     return (
         <Field name={name}>
             {({meta, field}: FieldProps) => {
                 const error = meta.touched && !!meta.error;
-
                 const inputProps = {
                     ...field,
                     id,
@@ -34,7 +32,5 @@ export default ({id, name, labelId}: Props) => {
                 );
             }}
         </Field>
-
-
     );
 };

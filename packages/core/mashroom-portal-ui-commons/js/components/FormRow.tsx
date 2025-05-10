@@ -12,16 +12,17 @@ export default ({children}: Props) => {
 
     let cellClass = '';
     switch (cellCount) {
-    case 1:
-        cellClass = 'one-cell';
-        break;
-    case 2:
-        cellClass = 'two-cells';
-        break;
-    case 3:
-        cellClass = 'three-cells';
-        break;
-    default:
+        case 1:
+            cellClass = 'one-cell';
+            break;
+        case 2:
+            cellClass = 'two-cells';
+            break;
+        case 3:
+            cellClass = 'three-cells';
+            break;
+        default:
+            break;
     }
 
     return (

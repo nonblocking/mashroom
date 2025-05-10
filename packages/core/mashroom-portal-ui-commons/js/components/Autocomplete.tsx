@@ -1,5 +1,5 @@
 
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import AutoSuggest from 'react-autosuggest';
 import {useIntl} from 'react-intl';
 import FieldLabel from './FieldLabel';
@@ -33,57 +33,12 @@ export default ({id, labelId, maxLength, placeholder: placeholderId, minCharacte
     useEffect(() => {
         resetRef?.(() => reset());
     }, []);
+
     useEffect(() => {
         if (field.value !== value) {
             setValue(field.value || '');
         }
     }, [field.value]);
-
-    const onSuggestionsFetchRequested = ({ value }: {value: string}) => {
-        suggestionHandler.getSuggestions(value).then(
-            (suggestions) => {
-                if (suggestions && Array.isArray(suggestions)) {
-                    setSuggestions(suggestions);
-                }
-            }
-        );
-    };
-
-    const onSuggestionsClearRequested = () => {
-        setSuggestions([]);
-    };
-
-    const onSuggestionSelected = (_: any, { suggestion }: {suggestion: any}) => {
-        if (onSuggestionSelect) {
-            onSuggestionSelect(suggestion);
-        }
-
-        const value = suggestionHandler.getSuggestionValue(suggestion);
-        simulateFieldChangeEvent(value);
-        if (onValueChange) {
-            onValueChange(value);
-        }
-    };
-
-    const onChange = (e: ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
-        setValue(value || '');
-
-        if (!mustSelectSuggestion) {
-            simulateFieldChangeEvent(value);
-            if (onValueChange) {
-                onValueChange(value);
-            }
-        }
-    };
-
-    const onBlur = () => {
-        if (mustSelectSuggestion) {
-            setTimeout(() => {
-                setValue(field.value || '');
-            }, 100);
-        }
-    };
 
     const simulateFieldChangeEvent = (value: string | undefined | null) => {
         const syntheticEvent = {
@@ -95,15 +50,58 @@ export default ({id, labelId, maxLength, placeholder: placeholderId, minCharacte
         field.onChange(syntheticEvent);
     };
 
-    const reset = () => {
+    const onSuggestionsFetchRequested = useCallback(async ({ value }: {value: string}) => {
+        const suggestions = await suggestionHandler.getSuggestions(value);
+        if (suggestions && Array.isArray(suggestions)) {
+            setSuggestions(suggestions);
+        }
+    }, [suggestionHandler]);
+
+    const onSuggestionsClearRequested = useCallback(() => {
+        setSuggestions([]);
+    }, []);
+
+    const onSuggestionSelected = useCallback((_: any, { suggestion }: {suggestion: any}) => {
+        if (onSuggestionSelect) {
+            onSuggestionSelect(suggestion);
+        }
+
+        const value = suggestionHandler.getSuggestionValue(suggestion);
+        simulateFieldChangeEvent(value);
+        if (onValueChange) {
+            onValueChange(value);
+        }
+    }, [onSuggestionSelect, suggestionHandler, onValueChange]);
+
+    const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setValue(value || '');
+
+        if (!mustSelectSuggestion) {
+            simulateFieldChangeEvent(value);
+            if (onValueChange) {
+                onValueChange(value);
+            }
+        }
+    }, [mustSelectSuggestion, onValueChange]);
+
+    const onBlur = useCallback(() => {
+        if (mustSelectSuggestion) {
+            setTimeout(() => {
+                setValue(field.value || '');
+            }, 100);
+        }
+    }, [mustSelectSuggestion]);
+
+    const reset = useCallback(() => {
         setValue('');
         simulateFieldChangeEvent('');
         if (onValueChange) {
             onValueChange('');
         }
-    };
+    }, [onValueChange]);
 
-    const shouldRenderSuggestions = (value: string, reason: ShouldRenderReasons) => {
+    const shouldRenderSuggestions = useCallback((value: string, reason: ShouldRenderReasons) => {
         switch (reason) {
         case 'input-focused':
             return minCharactersForSuggestions === 0;
@@ -116,18 +114,18 @@ export default ({id, labelId, maxLength, placeholder: placeholderId, minCharacte
         default:
             return false;
         }
-    };
+    }, []);
 
-    const renderSuggestionsContainer = ({ containerProps, children }: { containerProps: any, children: ReactNode }) => {
+    const renderSuggestionsContainer = useCallback(({ containerProps, children }: { containerProps: any, children: ReactNode }) => {
         const width = inputRef.current ? inputRef.current.clientWidth : 'auto';
         return (
             <div {...containerProps} style={{ width }}>
                 {children}
             </div>
         );
-    };
+    }, []);
 
-    const renderInputComponent = (inputProps: RenderInputComponentProps) => {
+    const renderInputComponent = useCallback((inputProps: RenderInputComponentProps) => {
         const mergedInputProps = {
             ...inputProps,
             onKeyDown(e: KeyboardEvent<any>) {
@@ -150,7 +148,15 @@ export default ({id, labelId, maxLength, placeholder: placeholderId, minCharacte
         return (
             <input {...mergedInputProps} />
         );
-    };
+    }, []);
+
+    const getSuggestionValue = useCallback((suggestion: any) => {
+        return suggestionHandler.getSuggestionValue(suggestion);
+    }, [suggestionHandler]);
+
+    const renderSuggestion = useCallback((suggestion: any, {query, isHighlighted}: {query: string, isHighlighted: boolean}) => {
+        return suggestionHandler.renderSuggestion(suggestion, isHighlighted, query);
+    }, [suggestionHandler]);
 
     const error = meta.touched && !!meta.error;
     const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
@@ -171,9 +177,9 @@ export default ({id, labelId, maxLength, placeholder: placeholderId, minCharacte
                 suggestions={suggestions}
                 onSuggestionsFetchRequested={onSuggestionsFetchRequested}
                 onSuggestionsClearRequested={onSuggestionsClearRequested}
-                getSuggestionValue={(suggestion: any) => suggestionHandler.getSuggestionValue(suggestion)}
-                renderSuggestion={(suggestion: any, {query, isHighlighted}) => suggestionHandler.renderSuggestion(suggestion, isHighlighted, query)}
-                onSuggestionSelected={onSuggestionSelected.bind(this)}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                onSuggestionSelected={onSuggestionSelected}
                 inputProps={inputProps}
                 renderInputComponent={renderInputComponent}
                 renderSuggestionsContainer={renderSuggestionsContainer}
