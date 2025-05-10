@@ -1,8 +1,8 @@
 
 import React, {useMemo} from 'react';
-import {FormattedMessage} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {setActiveTab} from '../store/actions';
+import TabHeader from './TabHeader';
 
 import type {ReactNode} from 'react';
 import type {CommonState} from '../../type-definitions';
@@ -19,10 +19,7 @@ type Props = {
 export default ({name, tabs}: Props) => {
     const activeTabName = useSelector((state: CommonState) => state.tabDialogs?.[name]?.active);
     const dispatch = useDispatch();
-
-    const onChangeActiveTab = (newActiveTab: string) => {
-        dispatch(setActiveTab(name, newActiveTab));
-    };
+    const onChangeActiveTab = (newActiveTab: string) => dispatch(setActiveTab(name, newActiveTab));
 
     const activeTabIndex = useMemo((): number | null => {
         const activeTab = tabs.find((t) => t.name === activeTabName);
@@ -36,25 +33,13 @@ export default ({name, tabs}: Props) => {
         return null;
     }, [tabs, activeTabName]);
 
-    const header = useMemo(() => {
-        if (activeTabIndex === null) {
-            return null;
-        }
-        const buttons = tabs.map((t, idx) => (
-            <div key={t.name} className={`tab-dialog-button ${idx === activeTabIndex ? 'active' : ''}`} onClick={() => onChangeActiveTab(t.name)}>
-                <div className='title'><FormattedMessage id={t.titleId} /></div>
-            </div>
-        ));
-        return (
-            <div className='tab-dialog-header'>
-                {buttons}
-            </div>
-        );
-    }, [tabs, activeTabIndex]);
-
     return (
         <div className='mashroom-portal-ui-tab-dialog'>
-            {header}
+            <TabHeader
+                tabs={tabs}
+                activeTabIndex={activeTabIndex}
+                onChangeActiveTab={onChangeActiveTab}
+            />
             {activeTabIndex !== null && (
                 <div className='tab-dialog-content-wrapper'>
                     {tabs[activeTabIndex]?.content}

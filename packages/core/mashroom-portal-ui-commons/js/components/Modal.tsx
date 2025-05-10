@@ -1,9 +1,9 @@
 
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
-import {FormattedMessage} from 'react-intl';
 import {useDispatch, useSelector} from 'react-redux';
 import {setShowModal} from '../store/actions';
+import ModalDefaultHeader from './ModalDefaultHeader';
 
 import type {ReactNode, MouseEvent} from 'react';
 import type {CommonState} from '../../type-definitions';
@@ -11,7 +11,7 @@ import type {CommonState} from '../../type-definitions';
 type Props = {
     name: string;
     titleId?: string;
-    title?: string | undefined | null;
+    title?: string;
     closeRef?: (close: () => void) => void,
     children: ReactNode;
     appWrapperClassName: string;
@@ -31,16 +31,12 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
     const show = useSelector((state: CommonState) => state.modals?.[name]?.show);
     const shown = useRef(show);
     const dispatch = useDispatch();
-
-    const close = () => {
-        dispatch(setShowModal(name, false));
-    };
+    const close = () => dispatch(setShowModal(name, false));
 
     const calcMarginTop = (): string | undefined => {
         if (!modalWrapperElRef.current) {
             return undefined;
         }
-
         return `${Math.max(10, (window.innerHeight - modalWrapperElRef.current.offsetHeight) / 2)}px`;
     };
 
@@ -109,14 +105,7 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
     if (customHeader) {
         header = customHeader;
     } else {
-        header = (
-            <div className='mashroom-portal-ui-modal-header'>
-                <div className='title'>
-                    {titleId ? <FormattedMessage id={titleId}/> : title}
-                </div>
-                <div className='close-button' onClick={close}/>
-            </div>
-        );
+        header = <ModalDefaultHeader titleId={titleId} title={title} />;
     }
 
     return ReactDOM.createPortal((
