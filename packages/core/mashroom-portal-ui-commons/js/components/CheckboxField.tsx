@@ -1,9 +1,8 @@
 
 import React from 'react';
-import {Field} from 'formik';
+import {useField} from 'formik';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
-import type { FieldProps} from 'formik';
 
 type Props = {
     id: string;
@@ -12,25 +11,21 @@ type Props = {
 }
 
 export default ({id, name, labelId}: Props) => {
-    return (
-        <Field name={name}>
-            {({meta, field}: FieldProps) => {
-                const error = meta.touched && !!meta.error;
-                const inputProps = {
-                    ...field,
-                    id,
-                    type: 'checkbox',
-                    checked: !!field.value
-                };
+    const [field, meta] = useField(name);
 
-                return  (
-                    <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                        <input className='mashroom-portal-checkbox' {...inputProps}/>
-                        {labelId ? <FieldLabel htmlFor={id} labelId={labelId}/> : <label htmlFor={id}>&nbsp;</label>}
-                        {error && <ErrorMessage messageId={meta.error || ''}/>}
-                    </div>
-                );
-            }}
-        </Field>
+    const error = meta.touched && !!meta.error;
+    const inputProps = {
+        ...field,
+        id,
+        type: 'checkbox',
+        checked: !!field.value
+    };
+
+    return  (
+        <div className={`mashroom-portal-ui-checkbox-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
+            <input className='mashroom-portal-checkbox' {...inputProps}/>
+            {labelId ? <FieldLabel htmlFor={id} labelId={labelId}/> : <label htmlFor={id}>&nbsp;</label>}
+            {error && <ErrorMessage messageId={meta.error || ''}/>}
+        </div>
     );
 };
