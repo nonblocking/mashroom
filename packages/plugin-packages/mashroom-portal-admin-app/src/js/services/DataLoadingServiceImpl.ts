@@ -47,71 +47,65 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
         this.portalAdminService = portalAdminService;
     }
 
-    loadSites(force = false) {
+    async loadSites(force = false) {
         if (this.siteLinksLoaded && !force) {
             return Promise.resolve();
         }
 
         this.store.dispatch(setSitesLoading(true));
-        return this.portalSiteService.getSites().then(
-            (sites) => {
-                this.store.dispatch(setSites(sites));
-                this.store.dispatch(setSitesLoading(false));
-            },
-            (error) => {
-                console.error('Loading site links failed', error);
-                this.store.dispatch(setSitesLoading(false));
-                this.store.dispatch(setSitesError(true));
-                return Promise.reject(error);
-            }
-        );
+        try {
+            const sites = await this.portalSiteService.getSites();
+            this.store.dispatch(setSites(sites));
+            this.store.dispatch(setSitesLoading(false));
+        } catch (error) {
+            console.error('Loading site links failed', error);
+            this.store.dispatch(setSitesLoading(false));
+            this.store.dispatch(setSitesError(true));
+            return Promise.reject(error);
+        }
     }
 
-    loadPageTree(force = false) {
+    async loadPageTree(force = false) {
         if (this.pageTreeLoaded && !force) {
             return Promise.resolve();
         }
 
         this.store.dispatch(setPagesLoading(true));
-        return this.portalSiteService.getPageTree(this.portalAdminService.getCurrentSiteId()).then(
-            (pageTree) => {
-                const flattened = flattenPageTree(pageTree);
-                this.store.dispatch(setPages(pageTree));
-                this.store.dispatch(setPagesFlattened(flattened));
-                this.store.dispatch(setPagesLoading(false));
-            },
-            (error) => {
-                console.error('Loading page tree failed', error);
-                this.store.dispatch(setPagesLoading(false));
-                this.store.dispatch(setPagesError(true));
-                return Promise.reject(error);
-            }
-        );
+        try {
+            const pageTree = await this.portalSiteService.getPageTree(this.portalAdminService.getCurrentSiteId());
+            const flattened = flattenPageTree(pageTree);
+            this.store.dispatch(setPages(pageTree));
+            this.store.dispatch(setPagesFlattened(flattened));
+            this.store.dispatch(setPagesLoading(false));
+        } catch (error) {
+            console.error('Loading page tree failed', error);
+            this.store.dispatch(setPagesLoading(false));
+            this.store.dispatch(setPagesError(true));
+            return Promise.reject(error);
+        }
     }
 
-    loadAvailableApps(force?: boolean) {
+    async loadAvailableApps(force?: boolean) {
         if (this.availableAppsLoaded && !force) {
             return Promise.resolve();
         }
 
         this.store.dispatch(setAvailableAppsLoading(true));
-        return this.portalAppService.getAvailableApps().then(
-            (availableApps) => {
-                console.info('Received available local apps:', availableApps);
-                this.store.dispatch(setAvailableAppsLoading(false));
-                this.store.dispatch(setAvailableAppsError(false));
-                this.store.dispatch(setAvailableApps(availableApps));
-            },
-            (error) => {
-                console.error('Loading available local apps failed', error);
-                this.store.dispatch(setAvailableAppsLoading(false));
-                this.store.dispatch(setAvailableAppsError(true));
-                return Promise.reject(error);
-            }
-        );
+        try {
+            const availableApps = await this.portalAppService.getAvailableApps();
+            console.info('Received available local apps:', availableApps);
+            this.store.dispatch(setAvailableAppsLoading(false));
+            this.store.dispatch(setAvailableAppsError(false));
+            this.store.dispatch(setAvailableApps(availableApps));
+        } catch (error) {
+            console.error('Loading available local apps failed', error);
+            this.store.dispatch(setAvailableAppsLoading(false));
+            this.store.dispatch(setAvailableAppsError(true));
+            return Promise.reject(error);
+        }
     }
 
-    loadAvailableLanguages(force = false) {
+    async loadAvailableLanguages(force = false) {
         if (this.availableLanguagesLoaded && !force) {
             return Promise.resolve();
         }
@@ -128,31 +122,25 @@ export default class DataLoadingServiceImpl implements DataLoadingService {
             }
         ));
 
-        return Promise.all(promises) as any;
+        return await Promise.all(promises) as any;
     }
 
-    loadAvailableThemes(force = false) {
+    async loadAvailableThemes(force = false) {
         if (this.availableThemesLoaded && !force) {
-            return Promise.resolve();
+            return;
         }
 
-        return this.portalAdminService.getAvailableThemes().then(
-            (themes) => {
-                store.dispatch(setAvailableThemes(themes));
-            }
-        );
+        const themes = await this.portalAdminService.getAvailableThemes();
+        store.dispatch(setAvailableThemes(themes));
     }
 
-    loadAvailableLayouts(force = false) {
+    async loadAvailableLayouts(force = false) {
         if (this.availableLayoutsLoaded && !force) {
-            return Promise.resolve();
+            return;
         }
 
-        return this.portalAdminService.getAvailableLayouts().then(
-            (layouts) => {
-                store.dispatch(setAvailableLayouts(layouts));
-            }
-        );
+        const layouts = await this.portalAdminService.getAvailableLayouts();
+        store.dispatch(setAvailableLayouts(layouts));
     }
 
 }

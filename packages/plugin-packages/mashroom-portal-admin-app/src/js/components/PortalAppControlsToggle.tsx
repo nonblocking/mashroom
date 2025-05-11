@@ -1,54 +1,54 @@
+import React, {useEffect, useCallback, useContext} from 'react';
+import { FormattedMessage } from 'react-intl';
+import {useDispatch, useSelector} from 'react-redux';
+import { PORTAL_APP_CONTROLS_SETTINGS_KEY } from '../constants';
+import {DependencyContext} from '../DependencyContext';
+import {setShowPortalAppControls} from '../store/actions';
+import type {State} from '../types';
 
-import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
-import {PORTAL_APP_CONTROLS_SETTINGS_KEY} from '../constants';
+export default () => {
+    const {portalAppControls} = useSelector((state: State) => state);
+    const {portalAppManagementService} = useContext(DependencyContext);
+    const dispatch = useDispatch();
+    const setShowControls = (show: boolean) => dispatch(setShowPortalAppControls(show));
 
-import type {PortalAppManagementService} from '../types';
-
-type Props = {
-    portalAppControls: boolean,
-    setShowPortalAppControls: (show: boolean) => void,
-    portalAppManagementService: PortalAppManagementService,
-};
-
-export default class PortalAppControlsToggle extends PureComponent<Props> {
-
-    componentDidMount() {
-        const {portalAppControls} = this.props;
-        if (portalAppControls) {
-            this.showPortalAppControls();
-        }
-    }
-
-    showPortalAppControls() {
-        const {setShowPortalAppControls, portalAppManagementService} = this.props;
-        setShowPortalAppControls(true);
+    const showControls = useCallback(() => {
+        setShowControls(true);
         portalAppManagementService.showPortalAppControls();
-        global.localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'true');
-    }
+        // global.localStorage can usually be replaced by just localStorage in browser environments
+        localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'true');
+    }, []);
 
-    hidePortalAppControls() {
-        const {setShowPortalAppControls, portalAppManagementService} = this.props;
-        setShowPortalAppControls(false);
+    const hideControls = useCallback(() => {
+        setShowControls(false);
         portalAppManagementService.hidePortalAppControls();
-        global.localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'false');
-    }
+        localStorage.setItem(PORTAL_APP_CONTROLS_SETTINGS_KEY, 'false');
+    }, []);
 
-    toggle() {
-        const {portalAppControls} = this.props;
+    useEffect(() => {
         if (portalAppControls) {
-            this.hidePortalAppControls();
-        } else {
-            this.showPortalAppControls();
+            showControls();
         }
-    }
+    }, []);
 
-    render() {
-        const {portalAppControls} = this.props;
-        return (
-           <div className={`portal-apps-control-toggle ${portalAppControls ? 'active' : ''}`} onClick={this.toggle.bind(this)}>
-                <span><FormattedMessage id={portalAppControls ? 'hidePortalAppControls' : 'showPortalAppControls'} /></span>
-           </div>
-        );
-    }
-}
+    const handleToggle = useCallback(() => {
+        if (portalAppControls) {
+            hideControls();
+        } else {
+            showControls();
+        }
+    }, [portalAppControls]);
+
+    return (
+        <div
+            className={`portal-apps-control-toggle ${portalAppControls ? 'active' : ''}`}
+            onClick={handleToggle}
+            role="button"
+            tabIndex={0}
+        >
+            <span>
+                <FormattedMessage id={portalAppControls ? 'hidePortalAppControls' : 'showPortalAppControls'} />
+            </span>
+        </div>
+    );
+};

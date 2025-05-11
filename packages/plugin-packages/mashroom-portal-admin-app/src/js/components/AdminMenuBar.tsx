@@ -1,26 +1,21 @@
 
-import React, {PureComponent} from 'react';
-import SitesDropdownMenu from '../containers/SitesDropdownMenu';
-import PagesDropdownMenu from '../containers/PagesDropdownMenu';
-import ConfigureDropdownMenu from '../containers/ConfigureDropdownMenu';
-import CreateDropdownMenu from '../containers/CreateDropdownMenu';
-import AddAppDropdownMenu from '../containers/AddAppDropdownMenu';
-import PortalAppControlsToggle from '../containers/PortalAppControlsToggle';
+import React from 'react';
+import SitesDropdownMenu from './SitesDropdownMenu';
+import PortalAppControlsToggle from './PortalAppControlsToggle';
+import PagesDropdownMenu from './PagesDropdownMenu';
+import CreateDropdownMenu from './CreateDropdownMenu';
+import AddAppDropdownMenu from './AddAppDropdownMenu';
+import ConfigureDropdownMenu from './ConfigureDropdownMenu';
 
-type Props = Record<string, never>;
-
-export default class AdminMenuBar extends PureComponent<Props> {
-
-    render() {
-        return (
-            <div className='admin-menu-bar'>
-                <SitesDropdownMenu/>
-                <PagesDropdownMenu/>
-                <ConfigureDropdownMenu/>
-                <CreateDropdownMenu/>
-                <AddAppDropdownMenu/>
-                <PortalAppControlsToggle/>
-            </div>
-        );
-    }
-}
+export default () => {
+    return (
+        <div className='admin-menu-bar'>
+            <SitesDropdownMenu/>
+            <PagesDropdownMenu/>
+            <ConfigureDropdownMenu/>
+            <CreateDropdownMenu/>
+            <AddAppDropdownMenu/>
+            <PortalAppControlsToggle/>
+        </div>
+    );
+};

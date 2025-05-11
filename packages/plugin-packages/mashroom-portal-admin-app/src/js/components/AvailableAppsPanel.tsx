@@ -1,11 +1,11 @@
+import React, {useCallback, useMemo} from 'react';
+import { FormattedMessage } from 'react-intl';
+import { CircularProgress, ErrorMessage, escapeForRegExp, escapeForHtml } from '@mashroom/mashroom-portal-ui-commons';
+import {useSelector} from 'react-redux';
 
-import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
-import {CircularProgress, ErrorMessage, escapeForRegExp, escapeForHtml} from '@mashroom/mashroom-portal-ui-commons';
-
-import type {ReactNode, DragEvent} from 'react';
-import type {AvailableApps} from '../types';
-import type {MashroomAvailablePortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {DragEvent} from 'react';
+import type {State} from '../types';
+import type { MashroomAvailablePortalApp } from '@mashroom/mashroom-portal/type-definitions';
 
 type AppsGroupedByCategory = Array<{
     category: string;
@@ -19,7 +19,6 @@ type FilterTokens = {
 }
 
 type Props = {
-    availableApps: AvailableApps;
     onDragStart?: (event: DragEvent, name: string) => void;
     onDragEnd?: (() => void);
     filter?: string | undefined | null;
@@ -28,37 +27,23 @@ type Props = {
 const CATEGORY_NONE = 'ZZZ';
 const CATEGORY_HIDDEN = 'hidden';
 
-export default class AvailableAppsPanel extends PureComponent<Props> {
+export default ({onDragStart, onDragEnd, filter}: Props) => {
+    const availableApps = useSelector((state: State) => state.availableApps);
 
-    renderLoading() {
-        return (
-            <CircularProgress/>
-        );
-    }
-
-    renderError() {
-        return (
-            <ErrorMessage messageId='loadingFailed' />
-        );
-    }
-
-    onDragStart(event: DragEvent, name: string): void {
-        const {onDragStart} = this.props;
+    const handleDragStart = useCallback((event: DragEvent, name: string): void => {
         console.debug('Drag start: ', name);
         if (onDragStart) {
             onDragStart(event, name);
         }
-    }
+    }, [onDragStart]);
 
-    onDragEnd(): void {
-        const {onDragEnd} = this.props;
+    const handleDragEnd = useCallback((): void => {
         if (onDragEnd) {
             onDragEnd();
         }
-    }
+    }, [onDragEnd]);
 
-    getFilterTokens(): FilterTokens {
-        const {filter} = this.props;
+    const filterTokens = useMemo((): FilterTokens => {
         if (!filter) {
             return {
                 tokens: [],
@@ -75,30 +60,28 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
             anyMatch: tokens.map((t) => new RegExp(`(${t})`, 'ig')),
             fullMatch: tokens.map((t) => new RegExp(`^${t}$`, 'ig'))
         };
-    }
+    }, [filter]);
 
-    getAppsFilteredAndGroupedByCategory(tokens: FilterTokens): AppsGroupedByCategory {
-        const {availableApps: availableAppsWrapper} = this.props;
-        const availableApps = availableAppsWrapper.apps;
-        if (!availableApps || !Array.isArray(availableApps)) {
+    const appsFilteredAndGroupedByCategory = useMemo((): AppsGroupedByCategory => {
+        if (!availableApps.apps || !Array.isArray(availableApps.apps )) {
             return [];
         }
 
         const matches = (app: MashroomAvailablePortalApp) => {
-            if (tokens.anyMatch.length === 0) {
+            if (filterTokens.anyMatch.length === 0) {
                 return true;
             }
-            if (tokens.anyMatch.every((matcher) => app.name.match(matcher) || app.title?.match(matcher) || app.description?.match(matcher))) {
+            if (filterTokens.anyMatch.every((matcher) => app.name.match(matcher) || app.title?.match(matcher) || app.description?.match(matcher))) {
                 return true;
             }
-            if (app.tags && tokens.fullMatch.some((matcher) => app.tags.find((tag) => tag.match(matcher)))) {
+            if (app.tags && filterTokens.fullMatch.some((matcher) => app.tags.find((tag) => tag.match(matcher)))) {
                 return true;
             }
             return false;
         };
 
         const filteredAndGroupedByCategory: AppsGroupedByCategory = [];
-        availableApps.forEach((app) => {
+        availableApps.apps.forEach((app) => {
             const category = app.category || CATEGORY_NONE;
             if (category !== CATEGORY_HIDDEN && matches(app)) {
                 const existingGroup = filteredAndGroupedByCategory.find((g) => g.category === category);
@@ -113,73 +96,51 @@ export default class AvailableAppsPanel extends PureComponent<Props> {
             }
         });
 
-        // Sort by category
         filteredAndGroupedByCategory.sort((g1, g2) => g1.category.localeCompare(g2.category));
 
         return filteredAndGroupedByCategory;
-    }
+    }, [availableApps.apps, filterTokens]);
 
-    renderCategoryApps(apps: Array<MashroomAvailablePortalApp>, tokens: FilterTokens) {
-        const filterReplacement = '<span class="filter-match">$1</span>';
+    return (
+        <div className='available-apps-panel'>
+            {availableApps.loading && (
+                <CircularProgress />
+            )}
+            {availableApps.error && (
+                <ErrorMessage messageId='loadingFailed' />
+            )}
+            {!availableApps.error && !availableApps.loading && availableApps.apps && (
+                <div className='available-app-list-wrapper'>
+                    {appsFilteredAndGroupedByCategory.map((group) => {
+                        const { category, apps } = group;
+                        const filterReplacement = '<span class="filter-match">$1</span>';
+                        return (
+                            <div key={category} className='grouped-apps'>
+                                <div className='app-category'>
+                                    {category !== CATEGORY_NONE ? <span>{category}</span> : <FormattedMessage id='uncategorized' />}
+                                </div>
+                                {apps.map((app) => {
+                                    let appName = escapeForHtml(app.title || app.name);
+                                    let description = escapeForHtml(app.description || '');
+                                    if (filterTokens.tokens.length > 0) {
+                                        const replaceExpr = new RegExp(`(${filterTokens.tokens.join('|')})`, 'gi');
+                                        appName = appName.replace(replaceExpr, filterReplacement);
+                                        description = description.replace(replaceExpr, filterReplacement);
+                                    }
 
-        return apps.map((app) => {
-            let appName = escapeForHtml(app.title || app.name);
-            let description = escapeForHtml(app.description || '');
-            if (tokens.tokens.length > 0) {
-                const replaceExpr = new RegExp(`(${tokens.tokens.join('|')})`, 'gi');
-                appName = appName.replace(replaceExpr, filterReplacement);
-                description = description.replace(replaceExpr, filterReplacement);
-            }
-
-            return (
-                <div key={app.name} className='available-app' onDragStart={(e) => this.onDragStart(e, app.name)} onDragEnd={this.onDragEnd.bind(this)} draggable>
-                    <div className='app-name' dangerouslySetInnerHTML={{ __html: appName }}/>
-                    <div className='app-description' dangerouslySetInnerHTML={{ __html: description }}/>
+                                    return (
+                                        <div key={app.name} className='available-app' onDragStart={(e) => handleDragStart(e, app.name)} onDragEnd={handleDragEnd} draggable>
+                                            <div className='app-name' dangerouslySetInnerHTML={{ __html: appName }} />
+                                            <div className='app-description' dangerouslySetInnerHTML={{ __html: description }} />
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        );
+                    })}
                 </div>
-            );
-        });
-    }
+            )}
+        </div>
+    );
+};
 
-    renderAvailableApps() {
-        const tokens = this.getFilterTokens();
-        const filteredAndGroupedByCategory = this.getAppsFilteredAndGroupedByCategory(tokens);
-
-        const groupedApps: Array<ReactNode> = [];
-
-        filteredAndGroupedByCategory.forEach((group) => {
-            const { category, apps } = group;
-            groupedApps.push(
-                <div key={category} className='grouped-apps'>
-                    <div className='app-category'>
-                        {category !== CATEGORY_NONE ? <span>{category}</span> : <FormattedMessage id='uncategorized'/>}
-                    </div>
-                    {this.renderCategoryApps(apps, tokens)}
-                </div>
-            );
-        });
-
-        return (
-            <div className='available-app-list-wrapper'>
-                {groupedApps}
-            </div>
-        );
-    }
-
-    render() {
-        const {availableApps: {loading, error, apps}} = this.props;
-        let content;
-        if (loading) {
-            content = this.renderLoading();
-        } else if (error || !apps) {
-            content = this.renderError();
-        } else {
-            content = this.renderAvailableApps();
-        }
-
-        return (
-           <div className='available-apps-panel'>
-               {content}
-           </div>
-        );
-    }
-}

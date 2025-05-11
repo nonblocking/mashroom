@@ -1,71 +1,71 @@
-
-import React, {PureComponent} from 'react';
+import React, {useEffect, useCallback, useMemo, useContext} from 'react';
 import {
     AutocompleteField,
     AutocompleteStringArraySuggestionHandler
 } from '@mashroom/mashroom-portal-ui-commons';
-
-import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
+import {useDispatch, useSelector} from 'react-redux';
+import {DependencyContext} from '../DependencyContext';
+import {setExistingRoles} from '../store/actions';
+import type {State} from '../types';
 
 type Props = {
-    portalAdminService: MashroomPortalAdminService;
-    existingRoles: Array<string>;
     onRoleChange?: (role: string | undefined | null) => void;
     onRoleSelected?: (role: string) => void;
-    setExistingRoles: (roles: Array<string>) => void;
     resetRef?: (reset: () => void) => void;
 };
 
-export default class RoleInput extends PureComponent<Props> {
+export default ({ onRoleChange, onRoleSelected, resetRef }: Props) => {
+    const {existingRoles} = useSelector((state: State) => state);
+    const {portalAdminService} = useContext(DependencyContext);
+    const dispatch = useDispatch();
+    const setRoles = (roles: Array<string>) => dispatch(setExistingRoles(roles));
 
-    componentDidMount() {
-        const {existingRoles, portalAdminService, setExistingRoles} = this.props;
-        if (existingRoles.length === 0) {
-            portalAdminService.getExistingRoles().then(
-                (existingRoleDefs) => {
-                    const existingRoles = existingRoleDefs.map((r) => r.id);
-                    setExistingRoles(existingRoles);
-                },
-                (error) => {
+    useEffect(() => {
+        const fetchExistingRoles = async () => {
+            if (existingRoles.length === 0) {
+                try {
+                    const existingRoleDefs = await portalAdminService.getExistingRoles();
+                    const roles = existingRoleDefs.map((r) => r.id);
+                    setRoles(roles);
+                } catch (error) {
                     console.error('Fetching existing roles failed', error);
                 }
-            );
-        }
-    }
+            }
+        };
 
-    onRoleChange(role: string | undefined | null) {
-        const {onRoleChange} = this.props;
+        fetchExistingRoles();
+    }, []);
+
+
+    const handleRoleChange = useCallback((role: string | undefined | null) => {
         if (onRoleChange) {
             onRoleChange(role);
         }
-    }
+    }, [onRoleChange]);
 
-    onRoleSelected(role: string) {
-        const {onRoleSelected} = this.props;
+    const handleRoleSelected = useCallback((role: string) => {
         if (onRoleSelected) {
             onRoleSelected(role);
         }
-    }
+    }, [onRoleSelected]);
 
-    render() {
-        const {existingRoles, resetRef} = this.props;
-        return (
-            <div className='role-input'>
-                <AutocompleteField
-                    id='roleToAdd'
-                    name='roleToAdd'
-                    labelId='addRole'
-                    onValueChange={this.onRoleChange.bind(this)}
-                    onSuggestionSelect={this.onRoleSelected.bind(this)}
-                    minCharactersForSuggestions={2}
-                    mustSelectSuggestion={false}
-                    suggestionHandler={
-                        new AutocompleteStringArraySuggestionHandler(existingRoles)
-                    }
-                    resetRef={resetRef} />
-            </div>
+    const suggestionHandler = useMemo(() => {
+        return new AutocompleteStringArraySuggestionHandler(existingRoles);
+    }, [existingRoles]);
 
-        );
-    }
-
-}
+    return (
+        <div className='role-input'>
+            <AutocompleteField
+                id='roleToAdd'
+                name='roleToAdd'
+                labelId='addRole'
+                onValueChange={handleRoleChange}
+                onSuggestionSelect={handleRoleSelected}
+                minCharactersForSuggestions={2}
+                mustSelectSuggestion={false}
+                suggestionHandler={suggestionHandler}
+                resetRef={resetRef}
+            />
+        </div>
+    );
+};

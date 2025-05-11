@@ -1,7 +1,7 @@
 
 export let currentMessages: any = {};
 
-export default (lang: string): Promise<any> => {
+export default async (lang: string) => {
     let promise;
     if (lang === 'de') {
         promise = import('./messages-de');
@@ -9,17 +9,15 @@ export default (lang: string): Promise<any> => {
         promise = import('./messages-en');
     }
 
-    return promise.then(
-        (messagesModule) => {
-            const messages = messagesModule.default;
-            currentMessages = messages;
-            return messages;
-        },
-        (error) => {
-            console.error('Error loading i8n messages', error);
-            return {
-                error: true
-            };
-        }
-    );
+    try {
+        const messagesModule = await promise;
+        const messages = messagesModule.default;
+        currentMessages = messages;
+        return messages;
+    } catch (error) {
+        console.error('Error loading i8n messages', error);
+        return {
+            error: true
+        };
+    };
 };

@@ -1,41 +1,32 @@
+import React, {useCallback, useContext, useRef} from 'react';
+import { DropdownMenu, DropdownMenuItem, setShowModal} from '@mashroom/mashroom-portal-ui-commons';
+import {useDispatch} from 'react-redux';
+import { DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_SITE_CONFIGURE } from '../constants';
+import {setSelectedPage, setSelectedSite} from '../store/actions';
+import {DependencyContext} from '../DependencyContext';
 
-import React, {PureComponent} from 'react';
-import {DropdownMenu, DropdownMenuItem} from '@mashroom/mashroom-portal-ui-commons';
-import {DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_SITE_CONFIGURE} from '../constants';
+export default () => {
+    const dispatch = useDispatch();
+    const {portalAdminService} = useContext(DependencyContext);
+    const closeDropDownRef = useRef<(() => void) | undefined>(undefined);
 
-import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
+    const handleConfigurePage = useCallback(() => {
+        closeDropDownRef.current?.();
+        dispatch(setSelectedPage(portalAdminService.getCurrentPageId()));
+        dispatch(setShowModal(DIALOG_NAME_PAGE_CONFIGURE, true));
+    }, [closeDropDownRef.current]);
 
-type Props = {
-    showModal: (name: string) => void,
-    portalAdminService: MashroomPortalAdminService,
-    initConfigureSite: (siteId: string) => void,
-    initConfigurePage: (pageId: string) => void
+    const handleConfigureSite = useCallback(() => {
+        closeDropDownRef.current?.();
+        dispatch(setSelectedSite(portalAdminService.getCurrentSiteId()));
+        dispatch(setShowModal(DIALOG_NAME_SITE_CONFIGURE, true));
+    }, [closeDropDownRef.current]);
+
+    return (
+        <DropdownMenu className='configure-dropdown-menu' labelId='configure' closeRef={(close) => closeDropDownRef.current = close}>
+            <DropdownMenuItem labelId='configurePage' onClick={handleConfigurePage} />
+            <DropdownMenuItem labelId='configureSite' onClick={handleConfigureSite} />
+        </DropdownMenu>
+    );
 };
 
-export default class ConfigureDropdownMenu extends PureComponent<Props> {
-
-    closeDropDownRef: (() => void) | undefined;
-
-    onConfigurePage() {
-        const {initConfigurePage, portalAdminService, showModal} = this.props;
-        this.closeDropDownRef?.();
-        initConfigurePage(portalAdminService.getCurrentPageId());
-        showModal(DIALOG_NAME_PAGE_CONFIGURE);
-    }
-
-    onConfigureSite() {
-        const {initConfigureSite, portalAdminService, showModal} = this.props;
-        this.closeDropDownRef?.();
-        initConfigureSite(portalAdminService.getCurrentSiteId());
-        showModal(DIALOG_NAME_SITE_CONFIGURE);
-    }
-
-    render() {
-        return (
-            <DropdownMenu className='configure-dropdown-menu' labelId='configure' closeRef={(ref) => this.closeDropDownRef = ref}>
-                <DropdownMenuItem labelId='configurePage' onClick={this.onConfigurePage.bind(this)}/>
-                <DropdownMenuItem labelId='configureSite' onClick={this.onConfigureSite.bind(this)}/>
-            </DropdownMenu>
-        );
-    }
-}
