@@ -82,13 +82,13 @@ export default ({id, initialValues, values, errors, handleSubmit, resetForm, set
         }
     };
 
-    const onSubmit =  useCallback((e: FormEvent<HTMLFormElement>) => {
+    const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         setTimeout(() => {
             setTouched(getTouchedObj(errors));
             focusFirstErroneousField();
         }, 100);
         handleSubmit(e);
-    }, [handleSubmit]);
+    }, [errors, handleSubmit]);
 
     return (
         <div className='mashroom-portal-ui-form'>

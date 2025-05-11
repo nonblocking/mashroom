@@ -16,6 +16,7 @@ export default ({id, name, labelId}: Props) => {
     const error = meta.touched && !!meta.error;
     const inputProps = {
         ...field,
+        value: field.value || false,
         id,
         type: 'checkbox',
         checked: !!field.value

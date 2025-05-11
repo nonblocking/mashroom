@@ -105,7 +105,7 @@ export default ({name, titleId, title, closeRef, children, appWrapperClassName, 
     if (customHeader) {
         header = customHeader;
     } else {
-        header = <ModalDefaultHeader titleId={titleId} title={title} />;
+        header = <ModalDefaultHeader titleId={titleId} title={title} onClose={close} />;
     }
 
     return ReactDOM.createPortal((
