@@ -64,8 +64,8 @@ export default () => {
         closeRef.current?.();
     }, []);
 
-    const handleCloseRef = useCallback((closeFn: () => void) => {
-        closeRef.current = closeFn;
+    const handleCloseRef = useCallback((cb: () => void) => {
+        closeRef.current = cb;
     }, []);
 
     const handleSubmit = useCallback(async (values: FormValues) => {
@@ -75,9 +75,9 @@ export default () => {
             return;
         }
 
-        setErrorUpdating(false); // Reset error state
-        const promises = [];
+        setErrorUpdating(false);
 
+        const promises = [];
         const roles: Array<string> | undefined | null = values.roles;
         promises.push(portalAdminService.updateAppInstancePermittedRoles(selectedPortalApp.portalAppName, selectedPortalApp.instanceId, roles));
 
@@ -107,7 +107,7 @@ export default () => {
         if (selectedPortalApp && !selectedPortalApp.customConfigEditor) {
             try {
                 JSON.parse(values.appConfig);
-            } catch (e) {
+            } catch {
                 errors.appConfig = 'errorInvalidJSON';
             }
         }

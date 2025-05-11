@@ -18,7 +18,7 @@ export const getQueryParams = (portalStateService: MashroomPortalStateService): 
         }
         try {
             return JSON.parse(atob(val));
-        } catch (e) {
+        } catch {
             console.error(`Invalid query parameter: ${key}=${val}`);
             return null;
         }

@@ -1,92 +1,82 @@
 
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {FormattedMessage} from 'react-intl';
+import {useSelector} from 'react-redux';
 
-import type {ReactNode} from 'react';
-import type {
-    ActivePortalApp,
-    MessageBusCommunication,
-    MessageBusMessage
-} from '../types';
+import type {MessageBusMessage, State} from '../types';
 
-type Props = {
-    activePortalApp: ActivePortalApp | undefined | null;
-    messageBusCom: MessageBusCommunication;
-}
-
-export default class MessageBusHistory extends PureComponent<Props> {
-
-    renderMessageTable(id: string, messages: Array<MessageBusMessage>): ReactNode {
-        if (messages.length === 0) {
-            return '-';
-        }
-
-        return (
-            <table className='table-striped' id={id}>
-                <thead>
-                    <tr>
-                        <th>
-                            #
-                        </th>
-                        <th>
-                            <FormattedMessage id='topic' />
-                        </th>
-                        <th>
-                            <FormattedMessage id='message' />
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                {
-                    messages.map((m, idx) => (
-                        <tr key={String(idx)}>
-                            <td>
-                                {String(idx + 1)}
-                            </td>
-                            <td>
-                                <div id={`mashroom-sandbox-app-${id}-${String(idx + 1)}-topic`}>
-                                    {m.topic}
-                                </div>
-                            </td>
-                            <td >
-                                <pre id={`mashroom-sandbox-app-${id}-${String(idx + 1)}-message`}>
-                                    {JSON.stringify(m.data, null, 2)}
-                                </pre>
-                            </td>
-                        </tr>
-                    ))
-                }
-                </tbody>
-            </table>
-        );
+const MessagesTable = ({id, messages}: {id: string, messages: Array<MessageBusMessage>}) => {
+    if (messages.length === 0) {
+        return '-';
     }
 
-    render(): ReactNode {
-        const { activePortalApp, messageBusCom : { publishedByApp, publishedBySandbox } } = this.props;
-        if (!activePortalApp) {
-            return null;
-        }
+    return (
+        <table className='table-striped' id={id}>
+            <thead>
+            <tr>
+                <th>
+                    #
+                </th>
+                <th>
+                    <FormattedMessage id='topic' />
+                </th>
+                <th>
+                    <FormattedMessage id='message' />
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            {
+                messages.map((m, idx) => (
+                    <tr key={String(idx)}>
+                        <td>
+                            {String(idx + 1)}
+                        </td>
+                        <td>
+                            <div id={`mashroom-sandbox-app-${id}-${String(idx + 1)}-topic`}>
+                                {m.topic}
+                            </div>
+                        </td>
+                        <td>
+                            <pre id={`mashroom-sandbox-app-${id}-${String(idx + 1)}-message`}>
+                                {JSON.stringify(m.data, null, 2)}
+                            </pre>
+                        </td>
+                    </tr>
+                ))
+            }
+            </tbody>
+        </table>
+    );
+};
 
-        return (
-            <div className='mashroom-sandbox-app-messagebus-history'>
-                <div className='mashroom-sandbox-app-output-row'>
-                    <div>
-                        <FormattedMessage id='messagesFromApp' />
-                    </div>
-                    <div>
-                        {this.renderMessageTable('published-by-app', publishedByApp)}
-                    </div>
+export default () => {
+    const {activePortalApp, messageBusCom: {publishedByApp, publishedBySandbox}} = useSelector((state: State) => state);
+
+    if (!activePortalApp) {
+        return null;
+    }
+
+    return (
+        <div className='mashroom-sandbox-app-messagebus-history'>
+            <div className='mashroom-sandbox-app-output-row'>
+                <div>
+                    <FormattedMessage id='messagesFromApp' />
                 </div>
-                <div className='mashroom-sandbox-app-output-row'>
-                    <div>
-                        <FormattedMessage id='messagesFromSandbox' />
-                    </div>
-                    <div>
-                        {this.renderMessageTable('published-by-sandbox', publishedBySandbox)}
-                    </div>
+                <div>
+                    <MessagesTable id='published-by-app' messages={publishedByApp} />
                 </div>
             </div>
-        );
-    }
+            <div className='mashroom-sandbox-app-output-row'>
+                <div>
+                    <FormattedMessage id='messagesFromSandbox' />
+                </div>
+                <div>
+                    <MessagesTable id='published-by-sandbox' messages={publishedBySandbox} />
+                </div>
+            </div>
+        </div>
+    );
 
-}
+};
+

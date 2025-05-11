@@ -9,12 +9,12 @@ type Props = {
 }
 
 export default ({availableThemes, availableLayouts}: Props) => {
-    let availableThemesOptions: SelectFieldOptions = [{ value: '', label: '<Site Default>' }]; // Use empty string for default
+    let availableThemesOptions: SelectFieldOptions = [{ value: '', label: '<Site Default>' }];
     availableThemesOptions = availableThemesOptions.concat(availableThemes.map((theme) => ({
         value: theme.name,
         label: theme.name
     })));
-    let availableLayoutsOptions: SelectFieldOptions = [{ value: '', label: '<Site Default>' }]; // Use empty string for default
+    let availableLayoutsOptions: SelectFieldOptions = [{ value: '', label: '<Site Default>' }];
     availableLayoutsOptions = availableLayoutsOptions.concat(availableLayouts.map((layout) => ({
         value: layout.name,
         label: layout.name

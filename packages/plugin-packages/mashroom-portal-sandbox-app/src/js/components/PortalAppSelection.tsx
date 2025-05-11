@@ -1,39 +1,37 @@
+import React, { useMemo } from 'react';
+import { Form, AutocompleteField, ErrorMessage } from '@mashroom/mashroom-portal-ui-commons';
+import {useSelector} from 'react-redux';
 
-import React, {PureComponent} from 'react';
-import {Form, AutocompleteField, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
-
-import type {ReactNode} from 'react';
-import type {SuggestionHandler} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
-import type {MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type { SuggestionHandler } from '@mashroom/mashroom-portal-ui-commons/type-definitions';
+import type { MashroomKnownPortalApp } from '@mashroom/mashroom-portal/type-definitions';
+import type {State} from '../types';
 
 type Props = {
     preselectAppName: string | undefined | null;
-    knownPortalApps: Array<MashroomKnownPortalApp>;
-    appLoadingError: boolean;
     onSelectionChanged: (portalApp: string | undefined | null) => void;
 }
 
-export default class PortalAppSelection extends PureComponent<Props> {
+export default ({preselectAppName, onSelectionChanged}: Props) => {
+    const {knownPortalApps, appLoadingError} = useSelector((state: State) => state);
 
-    getInitialValues(): any {
-        const { preselectAppName } = this.props;
+    const initialValues = useMemo(() => {
         return {
             appName: preselectAppName,
         };
-    }
+    }, [preselectAppName]);
 
-    getSuggestionHandler(): SuggestionHandler<MashroomKnownPortalApp> {
-        const { knownPortalApps } = this.props;
-
+    const suggestionHandler: SuggestionHandler<MashroomKnownPortalApp> = useMemo(() => {
         return {
             getSuggestions(query: string) {
+                // knownPortalApps is stable within this useMemo's scope for each computation
                 return Promise.resolve(knownPortalApps.filter((a) => a.name.toLowerCase().indexOf(query.toLowerCase()) !== -1));
             },
             renderSuggestion(suggestion: MashroomKnownPortalApp, isHighlighted: boolean, query: string) {
                 return (
                     <div
-                        className={`portal-app-suggestion suggestion ${!suggestion.available ? 'not-available': ''} ${isHighlighted ? 'suggestion-highlighted' : ''}`}
-                        onClick={(e) => !suggestion.available ? e.stopPropagation() : undefined}
+                        className={`portal-app-suggestion suggestion ${!suggestion.available ? 'not-available' : ''} ${isHighlighted ? 'suggestion-highlighted' : ''}`}
+                        // Prevent click if not available by stopping propagation, consistent with original logic
+                        onClick={(e) => { if (!suggestion.available) e.stopPropagation(); }}
                     >
                         <div className="portal-app-suggestion-name">
                             {suggestion.name}
@@ -55,33 +53,32 @@ export default class PortalAppSelection extends PureComponent<Props> {
                 return suggestion.name;
             },
         };
-    }
+    }, [knownPortalApps]);
 
-    render(): ReactNode {
-        const { onSelectionChanged, appLoadingError } = this.props;
-
-        return (
-            <div>
-                <Form formId='portal-app-selection' initialValues={this.getInitialValues()} onSubmit={() => { /* nothing to do */ }}>
-                    <div className='mashroom-sandbox-app-form-row'>
-                        <AutocompleteField
-                            id='appName'
-                            name='appName'
-                            labelId='appName'
-                            minCharactersForSuggestions={0}
-                            mustSelectSuggestion
-                            suggestionHandler={this.getSuggestionHandler()}
-                            onValueChange={onSelectionChanged}
-                        />
+    return (
+        <div>
+            <Form
+                formId='portal-app-selection'
+                initialValues={initialValues}
+                onSubmit={() => { /* nothing to do */ }}
+            >
+                <div className='mashroom-sandbox-app-form-row'>
+                    <AutocompleteField
+                        id='appName'
+                        name='appName'
+                        labelId='appName'
+                        minCharactersForSuggestions={0}
+                        mustSelectSuggestion
+                        suggestionHandler={suggestionHandler}
+                        onValueChange={onSelectionChanged}
+                    />
+                </div>
+                {appLoadingError && (
+                    <div className='app-loading-error'>
+                        <ErrorMessage messageId='errorLoadingApp' />
                     </div>
-                    {appLoadingError && (
-                        <div className='app-loading-error'>
-                            <ErrorMessage messageId='errorLoadingApp' />
-                        </div>
-                    )}
-                </Form>
-            </div>
-        );
-    }
-
-}
+                )}
+            </Form>
+        </div>
+    );
+};

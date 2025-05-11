@@ -30,9 +30,7 @@ describe('model-utils.searchPageRef', () => {
         const pageRef = searchPageRef('subpage2', site.pages);
 
         expect(pageRef).toBeTruthy();
-        if (pageRef) {
-            expect(pageRef.pageId).toBe('subpage2');
-        }
+        expect(pageRef?.pageId).toBe('subpage2');
     });
 
     it('returns undefined for a non existing page', () => {

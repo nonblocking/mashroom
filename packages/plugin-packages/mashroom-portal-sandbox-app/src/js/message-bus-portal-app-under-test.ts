@@ -17,25 +17,23 @@ export default (): MessageBusPortalAppUnderTest => {
     const topics: Array<string> = [];
 
     return {
-        subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-            return messageBus.subscribe(topic, callback).then(() => {
-                if (topics.indexOf(topic) === -1) {
-                    topics.push(topic);
-                }
-                if (onTopicsChangedCallback) {
-                    onTopicsChangedCallback(topics);
-                }
-            });
+        async subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
+            await messageBus.subscribe(topic, callback);
+            if (topics.indexOf(topic) === -1) {
+                topics.push(topic);
+            }
+            if (onTopicsChangedCallback) {
+                onTopicsChangedCallback(topics);
+            }
         },
-        subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
-            return messageBus.subscribeOnce(topic, callback).then(() => {
-                if (topics.indexOf(topic) === -1) {
-                    topics.push(topic);
-                }
-                if (onTopicsChangedCallback) {
-                    onTopicsChangedCallback(topics);
-                }
-            });
+        async subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
+            await messageBus.subscribeOnce(topic, callback);
+            if (topics.indexOf(topic) === -1) {
+                topics.push(topic);
+            }
+            if (onTopicsChangedCallback) {
+                onTopicsChangedCallback(topics);
+            }
         },
         unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback) {
             return messageBus.unsubscribe(topic, callback);

@@ -1,28 +1,36 @@
-
-import React, {PureComponent} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import type {ReactNode} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {addReceivedMessage as addReceivedMessageAction, setGlobalNotificationsSubscription as setGlobalNotificationsSubscriptionAction, setPrivateUserTopicsSubscription as setPrivateUserTopicsSubscriptionAction} from '../store/actions';
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
-import type {Subscription, ReceivedMessage} from '../types';
+import type {Subscription, ReceivedMessage, State} from '../types';
 
 type Props = {
-    privateUserTopicsSubscription: Subscription,
-    globalNotificationsSubscription: Subscription,
     messageBus: MashroomPortalMessageBus,
-    setPrivateUserTopicsSubscription: (subscription: Subscription) => void,
-    setGlobalNotificationsSubscription: (subscription: Subscription) => void,
-    addReceivedMessage: (message: ReceivedMessage) => void,
 }
 
-export default class SubscriptionPanel extends PureComponent<Props> {
+export default ({messageBus}: Props) => {
+    const {privateUserTopicsSubscription, globalNotificationsSubscription} = useSelector((state: State) => state);
+    const dispatch = useDispatch();
+    const setPrivateUserTopicsSubscription = (subscription: Subscription) => dispatch(setPrivateUserTopicsSubscriptionAction(subscription));
+    const setGlobalNotificationsSubscription = (subscription: Subscription) => dispatch(setGlobalNotificationsSubscriptionAction(subscription));
+    const addReceivedMessage = (message: ReceivedMessage) => dispatch(addReceivedMessageAction(message));
 
-    componentDidMount(): void {
-        const { messageBus, setPrivateUserTopicsSubscription, setGlobalNotificationsSubscription } = this.props;
+    const onReceiveMessage = useCallback((message: any, topic: string): void => {
+        const receivedMessage: ReceivedMessage = {
+            topic,
+            message,
+            timestamp: Date.now(),
+        };
+        addReceivedMessage(receivedMessage);
+    }, []);
+
+    useEffect(() => {
         const userPrivateTopic = messageBus.getRemoteUserPrivateTopic();
 
         const globalNotificationsTopic = `${messageBus.getRemotePrefix()}global-notifications`;
-        messageBus.subscribe(globalNotificationsTopic, this.onReceiveMessage.bind(this)).then(
+        messageBus.subscribe(globalNotificationsTopic, onReceiveMessage).then(
             () => {
                 setGlobalNotificationsSubscription({
                     topic: globalNotificationsTopic,
@@ -48,7 +56,7 @@ export default class SubscriptionPanel extends PureComponent<Props> {
         }
 
         const allUserPrivateTopics = `${messageBus.getRemotePrefix()}${userPrivateTopic}/#`;
-        messageBus.subscribe(allUserPrivateTopics, this.onReceiveMessage.bind(this)).then(
+        messageBus.subscribe(allUserPrivateTopics, onReceiveMessage).then(
             () => {
                 setPrivateUserTopicsSubscription({
                     topic: allUserPrivateTopics,
@@ -63,54 +71,39 @@ export default class SubscriptionPanel extends PureComponent<Props> {
                 });
             }
         );
-    }
+    }, []);
 
-    onReceiveMessage(message: any, topic: string): void {
-        const { addReceivedMessage} = this.props;
-        const receivedMessage: ReceivedMessage = {
-            topic,
-            message,
-            timestamp: Date.now(),
-        };
-        addReceivedMessage(receivedMessage);
-    }
-
-    render(): ReactNode {
-        const { privateUserTopicsSubscription, globalNotificationsSubscription } = this.props;
-
-        return (
-            <div className='mashroom-remote-messaging-app-subscription-status'>
-                <div className='mashroom-remote-messaging-app-output-row'>
-                    <div>
-                        <FormattedMessage id='subscribeTopics' />
-                    </div>
-                    <div>
-                        <ul>
-                            <li>
-                                <div className='remote-topic'>
-                                    {privateUserTopicsSubscription.topic}
-                                </div>
-                                <div className={`${privateUserTopicsSubscription.status === 'Error' ? 'mashroom-portal-ui-error-message' : ''}`}>
-                                    ({privateUserTopicsSubscription.status}
-                                    &nbsp;
-                                    {privateUserTopicsSubscription.errorMessage ? `(${privateUserTopicsSubscription.errorMessage})` : ''})
-                                </div>
-                            </li>
-                            <li>
-                                <div className='remote-topic'>
-                                    {globalNotificationsSubscription.topic}
-                                </div>
-                                <div className={`${globalNotificationsSubscription.status === 'Error' ? 'mashroom-portal-ui-error-message' : ''}`}>
-                                    ({globalNotificationsSubscription.status}
-                                    &nbsp;
-                                    {globalNotificationsSubscription.errorMessage ? `(${globalNotificationsSubscription.errorMessage})` : ''})
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+    return (
+        <div className='mashroom-remote-messaging-app-subscription-status'>
+            <div className='mashroom-remote-messaging-app-output-row'>
+                <div>
+                    <FormattedMessage id='subscribeTopics' />
+                </div>
+                <div>
+                    <ul>
+                        <li>
+                            <div className='remote-topic'>
+                                {privateUserTopicsSubscription.topic}
+                            </div>
+                            <div className={`${privateUserTopicsSubscription.status === 'Error' ? 'mashroom-portal-ui-error-message' : ''}`}>
+                                ({privateUserTopicsSubscription.status}
+                                &nbsp;
+                                {privateUserTopicsSubscription.errorMessage ? `(${privateUserTopicsSubscription.errorMessage})` : ''})
+                            </div>
+                        </li>
+                        <li>
+                            <div className='remote-topic'>
+                                {globalNotificationsSubscription.topic}
+                            </div>
+                            <div className={`${globalNotificationsSubscription.status === 'Error' ? 'mashroom-portal-ui-error-message' : ''}`}>
+                                ({globalNotificationsSubscription.status}
+                                &nbsp;
+                                {globalNotificationsSubscription.errorMessage ? `(${globalNotificationsSubscription.errorMessage})` : ''})
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        );
-    }
-
-}
+        </div>
+    );
+};

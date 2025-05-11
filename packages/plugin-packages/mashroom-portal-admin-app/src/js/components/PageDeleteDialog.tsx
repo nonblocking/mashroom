@@ -26,8 +26,8 @@ export default () => {
         closeRef.current?.();
     }, []);
 
-    const handleCloseRef = useCallback((closeFn: () => void) => {
-        closeRef.current = closeFn;
+    const handleCloseRef = useCallback((cb: () => void) => {
+        closeRef.current = cb;
     }, []);
 
     const handleConfirmDelete = useCallback(async () => {

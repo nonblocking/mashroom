@@ -1,5 +1,5 @@
 
-import React, {PureComponent} from 'react';
+import React, {useCallback} from 'react';
 import {
     Form,
     SelectField,
@@ -7,11 +7,12 @@ import {
     Button,
     TextareaField
 } from '@mashroom/mashroom-portal-ui-commons';
+import {useDispatch, useSelector} from 'react-redux';
+import {addMessagePublishedBySandbox as addMessagePublishedBySandboxAction} from '../store/actions';
 
-import type {ReactNode} from 'react';
-import type {MashroomPortalMessageBus, MashroomPortalStateService} from '@mashroom/mashroom-portal/type-definitions';
+import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
-import type {ActivePortalApp, MessageBusMessage} from '../types';
+import type {MessageBusMessage, State} from '../types';
 
 type FormData = {
     topic: string;
@@ -20,44 +21,40 @@ type FormData = {
 
 type Props = {
     messageBus: MashroomPortalMessageBus;
-    portalStateService: MashroomPortalStateService;
-    activePortalApp: ActivePortalApp | undefined | null;
-    topicsSubscribedByApp: Array<string>;
-    addMessagePublishedBySandbox: (messageBus: MessageBusMessage) => void;
     sbAutoTest: boolean;
 }
 
-export default class MessageBusSendForm extends PureComponent<Props> {
 
-    getInitialValues(): FormData {
-        return {
-            topic: '',
-            message: `{
+const initialValues: FormData = {
+    topic: '',
+    message: `{
 
 }`
-        };
-    }
+};
 
-    validate(values: FormData): any {
+export default ({ messageBus, sbAutoTest}: Props) => {
+    const {activePortalApp, messageBusCom: {topicsSubscribedByApp}} = useSelector((state: State) => state);
+    const dispatch = useDispatch();
+    const addMessagePublishedBySandbox = (message: MessageBusMessage) => dispatch(addMessagePublishedBySandboxAction(message));
+
+    const validate = useCallback((values: FormData) => {
         const errors: { [k in keyof FormData]?: string } = {};
-        const { topic, message } = values;
+        const {topic, message} = values;
 
         if (!topic || !topic.trim()) {
             errors.topic = 'errorTopicMandatory';
         }
         try {
             JSON.parse(message);
-        } catch (e) {
+        } catch {
             errors.message = 'errorInvalidJSON';
         }
 
         return errors;
-    }
+    }, []);
 
-    onSubmit(values: FormData, context: FormContext): void {
-        const { messageBus, addMessagePublishedBySandbox } = this.props;
-        const { topic, message } = values;
-
+    const onSubmit = useCallback((values: FormData, context: FormContext) => {
+        const {topic, message} = values;
         const data = JSON.parse(message);
 
         messageBus.publish(topic, data);
@@ -66,35 +63,33 @@ export default class MessageBusSendForm extends PureComponent<Props> {
             data
         });
         context.resetForm();
+    }, []);
+
+    if (!activePortalApp) {
+        return null;
     }
 
-    render(): ReactNode {
-        const {sbAutoTest, activePortalApp, topicsSubscribedByApp} = this.props;
-        if (!activePortalApp) {
-            return null;
-        }
+    const topicOptions = topicsSubscribedByApp.map((t) => ({
+        value: t,
+        label: t
+    }));
 
-        const topicOptions = topicsSubscribedByApp.map((t) => ({
-            value: t,
-            label: t
-        }));
-
-        return (
-            <div className='mashroom-sandbox-app-messagebus-publish-form'>
-                <Form formId='mashroom-sandbox-app-publish-message-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
-                    <div className='mashroom-sandbox-app-form-row'>
-                        <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
-                    </div>
-                    <div className='mashroom-sandbox-app-form-row'>
-                        {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light' height={120} />}
-                        {sbAutoTest && <TextareaField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' />}
-                    </div>
-                    <div className='mashroom-sandbox-app-form-button-row'>
-                        <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage'/>
-                    </div>
-                </Form>
-            </div>
-        );
-    }
-
-}
+    return (
+        <div className='mashroom-sandbox-app-messagebus-publish-form'>
+            <Form formId='mashroom-sandbox-app-publish-message-form' initialValues={initialValues} onSubmit={onSubmit} validator={validate}>
+                <div className='mashroom-sandbox-app-form-row'>
+                    <SelectField id='mashroom-sandbox-publish-message-topic' name='topic' labelId='topic' options={topicOptions} emptyOption={true} />
+                </div>
+                <div className='mashroom-sandbox-app-form-row'>
+                    {!sbAutoTest &&
+                        <SourceCodeEditorField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' language='json' theme='light'
+                                               height={120} />}
+                    {sbAutoTest && <TextareaField id='mashroom-sandbox-publish-message-message' name="message" labelId='message' />}
+                </div>
+                <div className='mashroom-sandbox-app-form-button-row'>
+                    <Button id='mashroom-sandbox-publish-message' type='submit' labelId='sendMessage' />
+                </div>
+            </Form>
+        </div>
+    );
+};
