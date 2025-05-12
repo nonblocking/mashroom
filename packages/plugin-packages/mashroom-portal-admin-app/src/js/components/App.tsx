@@ -1,7 +1,7 @@
 // Style
 import '../../sass/style.scss';
 
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useState, useMemo, lazy, useCallback} from 'react';
 import {Provider as ReduxProvider} from 'react-redux';
 import {IntlProvider} from 'react-intl';
 import store from '../store/store';
@@ -11,7 +11,7 @@ import {DependencyContextProvider} from '../DependencyContext';
 import PortalAppManagementServiceImpl from '../services/PortalAppManagementServiceImpl';
 import DataLoadingServiceImpl from '../services/DataLoadingServiceImpl';
 import AdminMenuBar from './AdminMenuBar';
-import Modals from './Modals';
+const Modals = lazy(() => import('./Modals'));
 
 import type {
     MashroomPortalAppService,
@@ -38,11 +38,16 @@ export default ({
     portalAdminService
 }: Props) => {
     const [messages, setMessages] = useState({});
+    const [active, setActive] = useState(false);
 
     useEffect(() => {
         store.dispatch(setUserName(userName || 'Administrator'));
         store.dispatch(setCurrentLanguage(lang));
         loadMessages(lang).then(setMessages);
+    }, []);
+
+    const onToolbarClick = useCallback(() => {
+        setActive(true);
     }, []);
 
     const dependencyContext: DependencyContextType = useMemo(() => {
@@ -65,10 +70,10 @@ export default ({
         <ReduxProvider store={store}>
             <IntlProvider messages={messages} locale={lang}>
                 <DependencyContextProvider deps={dependencyContext}>
-                    <div className='mashroom-portal-admin-app'>
+                    <div className='mashroom-portal-admin-app' onClick={onToolbarClick}>
                         <div className='menu-bar'>
                             <AdminMenuBar />
-                            <Modals />
+                            {active && <Modals />}
                         </div>
                     </div>
                 </DependencyContextProvider>
