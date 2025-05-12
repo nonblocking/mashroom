@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Admin Toolbar: Upgrade to React 19 and modernized
+ * Sandbox App: Upgrade to React 19 and modernized
  * Added source maps to all Apps
  * Made sure the *redirectUrl* parameters of the login and logout routes cannot be used to redirect to external hosts
 

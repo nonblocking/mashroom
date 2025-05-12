@@ -1,78 +1,82 @@
-
-import React, {PureComponent} from 'react';
-import {CircularProgress} from '@mashroom/mashroom-portal-ui-commons';
-
-import type {ReactNode} from 'react';
-import type {ActivePortalApp} from '../types';
+import React, { useRef, useCallback, useEffect } from 'react';
+import { CircularProgress } from '@mashroom/mashroom-portal-ui-commons';
+import {useDispatch, useSelector} from 'react-redux';
+import {setHostWidth as setHostWidthAction} from '../store/actions';
+import type {State} from '../types';
 
 type Props = {
     hostElementId: string;
-    width: string;
-    activePortalApp: ActivePortalApp | undefined | null;
-    setHostWidth: (width: string) => void;
 }
 
-export default class PortalApp extends PureComponent<Props> {
+export default ({hostElementId}: Props) => {
+    const wrapperElemRef = useRef<HTMLDivElement | null>(null);
+    const {activePortalApp, host: {width: hostWidth}} = useSelector((state: State) => state);
+    const dispatch = useDispatch();
+    const setHostWidth = (hostWidth: string) => dispatch(setHostWidthAction(hostWidth));
 
-    wrapperElemRef: { current: null | HTMLDivElement };
-    boundResizerMouseUp: (event: MouseEvent) => void;
-    boundResizerMouseMove: (event: MouseEvent) => void;
-
-    constructor(props: Props) {
-        super(props);
-        this.wrapperElemRef = React.createRef();
-        this.boundResizerMouseUp = this.resizerMouseUp.bind(this);
-        this.boundResizerMouseMove = this.resizerMouseMove.bind(this);
-    }
-
-    resizerMouseDown(): void {
-        global.addEventListener('mousemove', this.boundResizerMouseMove);
-        global.addEventListener('mouseup', this.boundResizerMouseUp);
-    }
-
-    resizerMouseUp(): void {
-        global.removeEventListener('mousemove', this.boundResizerMouseMove);
-        global.removeEventListener('mouseup', this.boundResizerMouseUp);
-    }
-
-    resizerMouseMove(event: MouseEvent): void {
-        if (!this.wrapperElemRef.current) {
+    const resizerMouseMove = useCallback((event: MouseEvent) => {
+        if (!wrapperElemRef.current) {
             return;
         }
-
-        const {setHostWidth} = this.props;
-        const width = Math.trunc(event.pageX - this.wrapperElemRef.current.getBoundingClientRect().left);
-        if (width > 100) {
-            setHostWidth(`${width}px`);
+        // Calculate new width based on mouse position relative to the wrapper element
+        const newWidth = Math.trunc(event.pageX - wrapperElemRef.current.getBoundingClientRect().left);
+        if (newWidth > 100) { // Minimum width constraint
+            setHostWidth(`${newWidth}px`);
         }
+    }, []);
+
+    const resizerMouseUp = useCallback(() => {
+        global.removeEventListener('mousemove', resizerMouseMove);
+        global.removeEventListener('mouseup', resizerMouseUp);
+    }, [resizerMouseMove]);
+
+    const resizerMouseDown = useCallback(() => {
+        global.addEventListener('mousemove', resizerMouseMove);
+        global.addEventListener('mouseup', resizerMouseUp);
+    }, [resizerMouseMove, resizerMouseUp]);
+
+    useEffect(() => {
+        return () => {
+            global.removeEventListener('mousemove', resizerMouseMove);
+            global.removeEventListener('mouseup', resizerMouseUp);
+        };
+    }, [resizerMouseMove, resizerMouseUp]);
+
+    if (!activePortalApp) {
+        return null;
     }
 
-    render(): ReactNode {
-        const {activePortalApp, hostElementId} = this.props;
-        if (!activePortalApp) {
-            return null;
-        }
+    let currentWidth = hostWidth;
+    // Ensure width is in 'px' if it's just a number string
+    if (currentWidth.match(/^\d+$/)) {
+        currentWidth = `${currentWidth}px`;
+    }
 
-        let {width} = this.props;
-        if (width.match(/^\d+$/)) {
-            width = `${width}px`;
-        }
+    const pluginName = activePortalApp.setup.pluginName;
+    const classFromPluginName = pluginName.toLowerCase().replace(/ /g, '-');
 
-        const pluginName = activePortalApp.setup.pluginName;
-        const classFromPluginName = pluginName.toLowerCase().replace(/ /g, '-');
-
-        return (
-            <div className='mashroom-sandbox-app-host-wrapper' style={{width}} ref={this.wrapperElemRef}>
-                <div className='mashroom-sandbox-app-host-width'>
-                    {width}
-                </div>
-                <div id={hostElementId} className={`mashroom-sandbox-app-host-elem portal-app-${classFromPluginName}`}>
-                    <CircularProgress/>
-                </div>
-                <div className='mashroom-sandbox-app-host-resizer' onMouseDown={this.resizerMouseDown.bind(this)}>
-                    <div className='grip'/>
-                </div>
+    return (
+        <div
+            className='mashroom-sandbox-app-host-wrapper'
+            style={{ width: currentWidth }}
+            ref={wrapperElemRef}
+        >
+            <div className='mashroom-sandbox-app-host-width'>
+                {currentWidth}
             </div>
-        );
-    }
-}
+            <div
+                id={hostElementId}
+                className={`mashroom-sandbox-app-host-elem portal-app-${classFromPluginName}`}
+            >
+                <CircularProgress />
+            </div>
+            <div
+                className='mashroom-sandbox-app-host-resizer'
+                onMouseDown={resizerMouseDown} // Use the memoized handler
+            >
+                <div className='grip' />
+            </div>
+        </div>
+    );
+};
+

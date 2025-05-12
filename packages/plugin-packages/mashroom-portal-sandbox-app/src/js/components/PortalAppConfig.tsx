@@ -1,5 +1,4 @@
-
-import React, {PureComponent} from 'react';
+import React, {useCallback, useMemo} from 'react'; // Removed PureComponent
 import {
     Form,
     TextField,
@@ -7,10 +6,10 @@ import {
     Button,
     TextareaField,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {mergeAppConfig} from '../utils';
+import {useSelector} from 'react-redux';
+import { mergeAppConfig } from '../utils';
 
-import type {ReactNode} from 'react';
-import type {SelectedPortalApp} from '../types';
+import type {SelectedPortalApp, State} from '../types';
 
 type FormData = {
     lang: string;
@@ -21,16 +20,13 @@ type FormData = {
 
 type Props = {
     sbAutoTest: boolean;
-    hostWidth: string;
-    selectedPortalApp: SelectedPortalApp | undefined | null;
-    appLoadingError: boolean;
     onConfigSubmit: (app: SelectedPortalApp, width: string) => void,
 }
 
-export default class PortalAppConfig extends PureComponent<Props> {
+export default ({sbAutoTest, onConfigSubmit}: Props) => {
+    const {selectedPortalApp, appLoadingError, host: {width: hostWidth}} = useSelector((state: State) => state);
 
-    getInitialValues(): FormData | null {
-        const { selectedPortalApp, hostWidth: width } = this.props;
+    const initialValues = useMemo((): FormData | null => {
         if (!selectedPortalApp) {
             return null;
         }
@@ -38,37 +34,37 @@ export default class PortalAppConfig extends PureComponent<Props> {
 
         return {
             lang,
-            width,
+            width: hostWidth,
             permissions: JSON.stringify(permissions, null, 2),
             appConfig: JSON.stringify(appConfig, null, 2)
         };
-    }
+    }, [selectedPortalApp]);
 
-    validate(values: FormData): any {
+    const validateForm = useCallback((values: FormData) => {
         const errors: { [k in keyof FormData]?: string } = {};
         const { permissions, appConfig } = values;
 
         try {
             JSON.parse(permissions);
-        } catch (e) {
+        } catch {
             errors.permissions = 'errorInvalidJSON';
         }
         try {
             JSON.parse(appConfig);
-        } catch (e) {
+        } catch {
             errors.appConfig = 'errorInvalidJSON';
         }
 
         return errors;
-    }
+    }, []);
 
-    onSubmit(values: FormData): void {
-        const { selectedPortalApp, onConfigSubmit } = this.props;
+    const handleSubmit = useCallback((values: FormData): void => {
+        // Uses selectedPortalApp and onConfigSubmit from destructured props
         if (!selectedPortalApp) {
             return;
         }
 
-        const { appName }= selectedPortalApp;
+        const { appName } = selectedPortalApp;
         const { lang, permissions: permissionsStr, appConfig: appConfigStr, width } = values;
         const permissions = JSON.parse(permissionsStr);
         const appConfig = JSON.parse(appConfigStr);
@@ -79,36 +75,37 @@ export default class PortalAppConfig extends PureComponent<Props> {
             lang,
             permissions,
             appConfig
-        }),  width);
+        }), width);
+    }, [selectedPortalApp, onConfigSubmit]);
+
+    if (!selectedPortalApp || appLoadingError) {
+        return null;
     }
 
-    render(): ReactNode {
-        const { sbAutoTest, selectedPortalApp, appLoadingError } = this.props;
-        if (!selectedPortalApp || appLoadingError) {
-            return null;
-        }
-
-        return (
-            <Form formId='mashroom-sandbox-app-config-form' initialValues={this.getInitialValues()} onSubmit={this.onSubmit.bind(this)} validator={this.validate.bind(this)}>
-                <div className='mashroom-sandbox-app-form-row'>
-                    <TextField id='mashroom-sandbox-app-config-width' name='width' labelId='width' maxLength={10} />
-                </div>
-                <div className='mashroom-sandbox-app-form-row'>
-                    <TextField id='mashroom-sandbox-app-config-lang' name='lang' labelId='lang' maxLength={2} />
-                </div>
-                <div className='mashroom-sandbox-app-form-row'>
-                    {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions'  name='permissions' labelId='permissions' language='json' theme='light' height={120} />}
-                    {sbAutoTest && <TextareaField id='mashroom-sandbox-app-config-permissions' name="permissions" labelId='permissions' />}
-                </div>
-                <div className='mashroom-sandbox-app-form-row'>
-                    {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config'  name='appConfig' labelId='appConfig' language='json' theme='light' height={120} />}
-                    {sbAutoTest && <TextareaField id='mashroom-sandbox-app-config-app-config' name="appConfig" labelId='appConfig' />}
-                </div>
-                <div>
-                    <Button id='mashroom-sandbox-app-load' type='submit' labelId='load'/>
-                </div>
-            </Form>
-        );
-    }
-
-}
+    return (
+        <Form
+            formId='mashroom-sandbox-app-config-form'
+            initialValues={initialValues}
+            onSubmit={handleSubmit}
+            validator={validateForm}
+        >
+            <div className='mashroom-sandbox-app-form-row'>
+                <TextField id='mashroom-sandbox-app-config-width' name='width' labelId='width' maxLength={10} />
+            </div>
+            <div className='mashroom-sandbox-app-form-row'>
+                <TextField id='mashroom-sandbox-app-config-lang' name='lang' labelId='lang' maxLength={2} />
+            </div>
+            <div className='mashroom-sandbox-app-form-row'>
+                {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-app-config-permissions' name='permissions' labelId='permissions' language='json' theme='light' height={120} />}
+                {sbAutoTest && <TextareaField id='mashroom-sandbox-app-config-permissions' name="permissions" labelId='permissions' />}
+            </div>
+            <div className='mashroom-sandbox-app-form-row'>
+                {!sbAutoTest && <SourceCodeEditorField id='mashroom-sandbox-app-config-app-config' name='appConfig' labelId='appConfig' language='json' theme='light' height={120} />}
+                {sbAutoTest && <TextareaField id='mashroom-sandbox-app-config-app-config' name="appConfig" labelId='appConfig' />}
+            </div>
+            <div>
+                <Button id='mashroom-sandbox-app-load' type='submit' labelId='load' />
+            </div>
+        </Form>
+    );
+};

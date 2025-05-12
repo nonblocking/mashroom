@@ -1,119 +1,106 @@
-
-import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import React, {useRef, useCallback, useContext} from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
     Button,
     DialogButtons,
-    DialogContent, ErrorMessage,
+    DialogContent,
+    ErrorMessage,
     Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {DIALOG_NAME_PAGE_DELETE} from '../constants';
-import {getParentPage, removePageFromTree} from '../services/model-utils';
+import {useDispatch, useSelector} from 'react-redux';
+import { DIALOG_NAME_PAGE_DELETE } from '../constants';
+import { getParentPage, removePageFromTree } from '../services/model-utils';
+import {setSelectedPageUpdatingError} from '../store/actions';
+import {DependencyContext} from '../DependencyContext';
 
-import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
-import type {SelectedPage, Pages} from '../types';
+import type {State} from '../types';
 
-type Props = {
-    pages: Pages;
-    selectedPage: SelectedPage | undefined | null;
-    portalAdminService: MashroomPortalAdminService,
-    setErrorUpdating: (error: boolean) => void
-};
+export default () => {
+    const closeRef = useRef<(() => void) | undefined>(undefined);
+    const {pages, selectedPage} = useSelector((state: State) => state);
+    const dispatch = useDispatch();
+    const setErrorUpdating = (error: boolean) => dispatch(setSelectedPageUpdatingError(error));
+    const {portalAdminService, portalSiteService} = useContext(DependencyContext);
 
-export default class PageDeleteDialog extends PureComponent<Props> {
+    const handleClose = useCallback(() => {
+        closeRef.current?.();
+    }, []);
 
-    close: (() => void) | undefined;
+    const handleCloseRef = useCallback((cb: () => void) => {
+        closeRef.current = cb;
+    }, []);
 
-    onClose() {
-        this.close?.();
-    }
-
-    onCloseRef(close: () => void) {
-        this.close = close;
-    }
-
-    onConfirmDelete() {
-        const {selectedPage, portalAdminService, setErrorUpdating, pages} = this.props;
+    const handleConfirmDelete = useCallback(async () => {
         if (!selectedPage || !selectedPage.pageId) {
             return;
         }
-        const { pageId  } = selectedPage;
+        const { pageId } = selectedPage;
 
-        const promise = portalAdminService.getSite(portalAdminService.getCurrentSiteId()).then(
-            (site) => {
-                const siteClone = {...site, pages: [...site.pages]};
+        setErrorUpdating(false);
 
-                const parentPage = getParentPage(pageId, pages.pagesFlattened);
-                const parentPageId = parentPage ? parentPage.pageId : null;
-                removePageFromTree(pageId, parentPageId, siteClone.pages, true);
+        try {
+            const site = await portalAdminService.getSite(portalAdminService.getCurrentSiteId());
 
-                return Promise.all([
-                    portalAdminService.deletePage(pageId),
-                    portalAdminService.updateSite(siteClone)
-                ]);
+            // Deep clone the pages array to ensure mutations don't affect original state unexpectedly
+            const siteClone = { ...site, pages: JSON.parse(JSON.stringify(site.pages)) };
+
+            const parentPage = getParentPage(pageId, pages.pagesFlattened);
+            const parentPageId = parentPage ? parentPage.pageId : null;
+            removePageFromTree(pageId, parentPageId, siteClone.pages, true);
+
+            await Promise.all([
+                portalAdminService.deletePage(pageId),
+                portalAdminService.updateSite(siteClone),
+            ]);
+
+            handleClose();
+            if (selectedPage.pageId === portalAdminService.getCurrentPageId()) {
+                // If current page is deleted, redirect to a safe default (e.g., homepage)
+                window.location.href = portalSiteService.getCurrentSiteUrl() || '/';
+            } else {
+                // Reload to reflect changes in navigation/site structure
+                window.location.reload();
             }
-        );
-
-        promise.then(
-            () => {
-                this.onClose();
-                if (selectedPage.pageId === portalAdminService.getCurrentPageId()) {
-                    window.location.href = '/';
-                } else {
-                    window.location.reload();
-                }
-            },
-            (error) => {
-                console.error('Error deleting page!', error);
-                setErrorUpdating(true);
-            }
-        );
-    }
-
-    renderUpdatingError() {
-        return (
-            <ErrorMessage messageId='updateFailed' />
-        );
-    }
-
-    renderContent() {
-        const {selectedPage, pages} = this.props;
-        if (!selectedPage) {
-            return null;
+        } catch (error) {
+            console.error('Error deleting page!', error);
+            setErrorUpdating(true);
         }
+    }, [selectedPage?.pageId]);
 
+    let content = null;
+    if (selectedPage) {
         if (selectedPage.errorUpdating) {
-            return this.renderUpdatingError();
+            content = (
+                <ErrorMessage messageId='updateFailed' />
+            );
         }
 
-        const page = pages.pagesFlattened.find((p) => p.pageId === selectedPage.pageId);
-        const pageTitle = page && page.title || '???';
+        const pageToDelete = pages.pagesFlattened.find((p) => p.pageId === selectedPage.pageId);
+        const pageTitle = pageToDelete?.title || '???';
 
-        return (
+        content = (
             <>
                 <DialogContent>
-                   <FormattedMessage id='confirmDeletePage' values={{ pageTitle }}/>
+                    <FormattedMessage id='confirmDeletePage' values={{ pageTitle }}/>
                 </DialogContent>
                 <DialogButtons>
-                    <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
-                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
+                    <Button id='delete' labelId='delete' onClick={handleConfirmDelete}/>
+                    <Button id='cancel' labelId='cancel' secondary onClick={handleClose}/>
                 </DialogButtons>
             </>
         );
     }
 
-    render() {
-        return (
-            <Modal
-                appWrapperClassName='mashroom-portal-admin-app'
-                className='page-delete-dialog'
-                name={DIALOG_NAME_PAGE_DELETE}
-                titleId='deletePage'
-                width={400}
-                closeRef={this.onCloseRef.bind(this)}>
-                {this.renderContent()}
-            </Modal>
-        );
-    }
-
-}
+    return (
+        <Modal
+            appWrapperClassName='mashroom-portal-admin-app'
+            className='page-delete-dialog'
+            name={DIALOG_NAME_PAGE_DELETE}
+            titleId='deletePage'
+            width={400}
+            closeRef={handleCloseRef}
+        >
+            {content}
+        </Modal>
+    );
+};

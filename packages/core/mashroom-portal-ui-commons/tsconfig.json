@@ -9,7 +9,8 @@
         "jsx": "react",
         "moduleResolution": "node",
         "declaration": true,
-        "forceConsistentCasingInFileNames": false
+        "forceConsistentCasingInFileNames": false,
+        "skipLibCheck": true
     },
     "exclude": [
         "dist"

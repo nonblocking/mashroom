@@ -1,100 +1,93 @@
-
-import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import React, {useRef, useCallback, useContext} from 'react';
+import { FormattedMessage } from 'react-intl';
 import {
     Button,
     DialogButtons,
-    DialogContent, ErrorMessage,
+    DialogContent,
+    ErrorMessage,
     Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {DIALOG_NAME_SITE_DELETE} from '../constants';
+import {useDispatch, useSelector} from 'react-redux';
+import { DIALOG_NAME_SITE_DELETE } from '../constants';
+import {DependencyContext} from '../DependencyContext';
+import {setSelectedSiteUpdatingError} from '../store/actions';
+import type {State} from '../types';
 
-import type {MashroomPortalAdminService} from '@mashroom/mashroom-portal/type-definitions';
-import type {Sites, SelectedSite} from '../types';
+export default () => {
+    const closeRef = useRef<(() => void) | undefined>(undefined);
+    const {sites, selectedSite} = useSelector((state: State) => state);
+    const {portalAdminService} = useContext(DependencyContext);
+    const dispatch = useDispatch();
+    const setErrorUpdating = (error: boolean) => dispatch(setSelectedSiteUpdatingError(error));
 
-type Props = {
-    sites: Sites;
-    selectedSite: SelectedSite | undefined | null;
-    portalAdminService: MashroomPortalAdminService;
-    setErrorUpdating: (error: boolean) => void;
-};
+    const handleClose = useCallback(() => {
+        closeRef.current?.();
+    }, []);
 
-export default class SiteDeleteDialog extends PureComponent<Props> {
+    const handleCloseRef = useCallback((cb: () => void) => {
+        closeRef.current = cb;
+    }, []);
 
-    close: (() => void) | undefined;
-
-    onClose() {
-        this.close?.();
-    }
-
-    onCloseRef(close: () => void) {
-        this.close = close;
-    }
-
-    onConfirmDelete() {
-        const {selectedSite, portalAdminService, setErrorUpdating} = this.props;
+    const handleConfirmDelete = useCallback(async () => {
         if (!selectedSite || !selectedSite.siteId) {
             return;
         }
 
-        portalAdminService.deleteSite(selectedSite.siteId).then(
-            () => {
-                this.onClose();
-                if (selectedSite.siteId === portalAdminService.getCurrentSiteId()) {
-                    window.location.href = '/';
-                }
-            },
-            (error) => {
-                console.error('Error deleting site!', error);
-                setErrorUpdating(true);
+        setErrorUpdating(false);
+        try {
+            await portalAdminService.deleteSite(selectedSite.siteId);
+            handleClose();
+            if (selectedSite.siteId === portalAdminService.getCurrentSiteId()) {
+                // If the current site is deleted, redirect to a safe default (e.g., homepage)
+                window.location.href = '/';
             }
-        );
-    }
-
-    renderUpdatingError() {
-        return (
-            <ErrorMessage messageId='updateFailed' />
-        );
-    }
-
-    renderContent() {
-        const {selectedSite, sites} = this.props;
-        if (!selectedSite) {
-            return null;
+        } catch (error) {
+            console.error('Error deleting site!', error);
+            setErrorUpdating(true);
         }
+    }, [selectedSite?.siteId]);
 
-        if (selectedSite.errorUpdating) {
-            return this.renderUpdatingError();
-        }
+    let dialogRenderContent: React.ReactNode;
 
-        const site = sites.sites.find((s) => s.siteId === selectedSite.siteId);
-        const siteTitle = site && site.title || '???';
-
-        return (
+    if (!selectedSite) {
+        dialogRenderContent = null;
+    } else if (selectedSite.errorUpdating) {
+        dialogRenderContent = <ErrorMessage messageId='updateFailed' />;
+    } else {
+        const siteData = sites.sites.find((s) => s.siteId === selectedSite.siteId);
+        const siteTitle = siteData?.title || '???';
+        dialogRenderContent = (
             <>
                 <DialogContent>
-                   <FormattedMessage id='confirmDeleteSite' values={{ siteTitle }}/>
+                    <FormattedMessage id='confirmDeleteSite' values={{ siteTitle }}/>
                 </DialogContent>
                 <DialogButtons>
-                    <Button id='delete' labelId='delete' onClick={this.onConfirmDelete.bind(this)}/>
-                    <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
+                    <Button
+                        id='delete'
+                        labelId='delete'
+                        onClick={handleConfirmDelete}
+                    />
+                    <Button
+                        id='cancel'
+                        labelId='cancel'
+                        secondary
+                        onClick={handleClose}
+                    />
                 </DialogButtons>
             </>
         );
     }
 
-    render() {
-        return (
-            <Modal
-                appWrapperClassName='mashroom-portal-admin-app'
-                className='site-delete-dialog'
-                name={DIALOG_NAME_SITE_DELETE}
-                titleId='deleteSite'
-                width={400}
-                closeRef={this.onCloseRef.bind(this)}>
-                {this.renderContent()}
-            </Modal>
-        );
-    }
-
-}
+    return (
+        <Modal
+            appWrapperClassName='mashroom-portal-admin-app'
+            className='site-delete-dialog'
+            name={DIALOG_NAME_SITE_DELETE}
+            titleId='deleteSite'
+            width={400}
+            closeRef={handleCloseRef}
+        >
+            {dialogRenderContent}
+        </Modal>
+    );
+};

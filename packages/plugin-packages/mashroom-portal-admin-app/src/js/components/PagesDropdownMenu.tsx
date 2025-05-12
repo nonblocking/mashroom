@@ -1,102 +1,109 @@
+import React, {useRef, useCallback, useContext} from 'react';
+import {
+    CircularProgress,
+    DropdownMenu,
+    ErrorMessage,
+    setShowModal,
+} from '@mashroom/mashroom-portal-ui-commons';
+import {useDispatch, useSelector} from 'react-redux';
+import { DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_PAGE_DELETE } from '../constants';
+import {setSelectedPage} from '../store/actions';
+import {DependencyContext} from '../DependencyContext';
 
-import React, {PureComponent} from 'react';
-import {CircularProgress, DropdownMenu, ErrorMessage} from '@mashroom/mashroom-portal-ui-commons';
-import {DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_PAGE_DELETE} from '../constants';
-
-import type {MashroomPortalAdminService, MashroomPortalSiteService} from '@mashroom/mashroom-portal/type-definitions';
-import type {DataLoadingService, FlatPage, Pages} from '../types';
-
-type Props = {
-    pages: Pages;
-    dataLoadingService: DataLoadingService;
-    portalAdminService: MashroomPortalAdminService;
-    portalSiteService: MashroomPortalSiteService;
-    showModal: (name: string) => void;
-    initConfigurePage: (pageId: string) => void;
-};
+import type {FlatPage, State} from '../types';
 
 const padWithSpaces = (nr: number) => {
     const items = [];
     for (let i = 0; i < nr; i++) {
-        items.push(<span key={String(i)}>&nbsp;</span>);
+        items.push(<span key={`space-${i}`}>&nbsp;</span>);
     }
     return items;
 };
 
-export default class PagesDropdownMenu extends PureComponent<Props> {
+export default () => {
+    const closeDropDownRef = useRef<(() => void) | undefined>(undefined);
+    const {pages} = useSelector((state: State) => state);
+    const dispatch = useDispatch();
+    const showModal = (name: string) => dispatch(setShowModal(name, true));
+    const initConfigurePage = (pageId: string) => dispatch(setSelectedPage(pageId));
+    const {dataLoadingService, portalSiteService} = useContext(DependencyContext);
 
-    closeDropDownRef: (() => void) | undefined;
-
-    onOpen() {
-        const {dataLoadingService} = this.props;
+    const handleOpen = useCallback(() => {
         dataLoadingService.loadPageTree();
-    }
+    }, []);
 
-    onGoto(page: FlatPage) {
-        const {portalSiteService} = this.props;
-        const pageUrl = `${portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
-        setTimeout(() => {
-            global.location.href = pageUrl;
-        }, 0);
-    }
-
-    onConfigure(page: FlatPage) {
-        const {initConfigurePage, showModal} = this.props;
-        this.closeDropDownRef?.();
+    const handleConfigure = useCallback((page: FlatPage) => {
+        closeDropDownRef.current?.();
         initConfigurePage(page.pageId);
         showModal(DIALOG_NAME_PAGE_CONFIGURE);
-    }
+    }, []);
 
-    onDelete(page: FlatPage) {
-        const {initConfigurePage, showModal} = this.props;
-        this.closeDropDownRef?.();
-        initConfigurePage(page.pageId);
+    const handleDelete = useCallback((page: FlatPage) => {
+        closeDropDownRef.current?.();
+        initConfigurePage(page.pageId); // To set the context for which page to delete
         showModal(DIALOG_NAME_PAGE_DELETE);
-    }
+    }, []);
 
-    renderLoading() {
-        return (
-            <CircularProgress/>
-        );
-    }
-
-    renderError() {
-        return (
-            <ErrorMessage messageId='loadingFailed' />
-        );
-    }
-
-    renderContent() {
-        const {pages} = this.props;
-        if (pages.loading) {
-            return this.renderLoading();
-        } else if (pages.error || !pages.pages) {
-            return this.renderError();
+    const callOnEnter = (
+        event: React.KeyboardEvent<HTMLDivElement>,
+        action: () => void
+    ) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            action();
         }
+    };
 
-        const items = pages.pagesFlattened.map((page) => (
-            <div key={page.pageId} className='page'>
-                <div className='portal-page-link'>
-                    {padWithSpaces(page.level * 2)}
-                    <a href='javascript:void(0)' onClick={this.onGoto.bind(this, page)}>{page.title}</a>
+    let dropdownContent;
+    if (pages.loading) {
+        dropdownContent = <CircularProgress />;
+    } else if (pages.error || !pages.pagesFlattened) {
+        dropdownContent = <ErrorMessage messageId='loadingFailed' />;
+    } else if (pages.pagesFlattened.length === 0) {
+        dropdownContent = <div className='no-pages-message'>No pages available.</div>;
+    } else {
+        const pageItems = pages.pagesFlattened.map((page) => {
+            const pageUrl = `${portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
+            return  (
+                <div key={page.pageId} className='page'>
+                    <div className='portal-page-link'>
+                        {padWithSpaces(page.level * 2)}
+                        <a href={pageUrl}>
+                            {page.title}
+                        </a>
+                    </div>
+                    <div
+                        className='configure'
+                        onClick={() => handleConfigure(page)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => callOnEnter(e, () => handleConfigure(page))}
+                    >
+                        &nbsp;
+                    </div>
+                    <div
+                        className='delete'
+                        onClick={() => handleDelete(page)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => callOnEnter(e, () => handleDelete(page))}
+                    >
+                        &nbsp;
+                    </div>
                 </div>
-                <div className='configure' onClick={this.onConfigure.bind(this, page)}>&nbsp;</div>
-                <div className='delete' onClick={this.onDelete.bind(this, page)}>&nbsp;</div>
-            </div>
-        ));
-
-        return (
-            <div className='pages'>
-                {items}
-            </div>
-        );
+            );
+        });
+        dropdownContent = <div className='pages'>{pageItems}</div>;
     }
 
-    render() {
-        return (
-            <DropdownMenu className='pages-dropdown-menu' labelId='pages' onOpen={this.onOpen.bind(this)} closeRef={(ref) => this.closeDropDownRef = ref}>
-                {this.renderContent()}
-            </DropdownMenu>
-        );
-    }
-}
+    return (
+        <DropdownMenu
+            className='pages-dropdown-menu'
+            labelId='pages'
+            onOpen={handleOpen}
+            closeRef={(ref) => (closeDropDownRef.current = ref)}
+        >
+            {dropdownContent}
+        </DropdownMenu>
+    );
+};

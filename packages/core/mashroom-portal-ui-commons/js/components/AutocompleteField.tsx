@@ -1,16 +1,17 @@
 
-import React, {PureComponent} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import AutoSuggest from 'react-autosuggest';
+import {useIntl} from 'react-intl';
+import {useField} from 'formik';
 import FieldLabel from './FieldLabel';
 import ErrorMessage from './ErrorMessage';
 
 import type {ReactNode, ChangeEvent, KeyboardEvent} from 'react';
-import type {FieldProps} from 'formik';
 import type {RenderInputComponentProps, ShouldRenderReasons} from 'react-autosuggest';
-import type {IntlShape} from 'react-intl';
 import type {SuggestionHandler} from '../../type-definitions';
 
 type Props = {
+    name: string;
     id: string;
     labelId: string;
     maxLength?: number;
@@ -20,101 +21,27 @@ type Props = {
     suggestionHandler: SuggestionHandler<any>;
     onValueChange?: (value: string | undefined | null) => void;
     onSuggestionSelect?: (suggestion: any) => void;
-    fieldProps: FieldProps;
     resetRef?: (ref: () => void) => void;
-    intl: IntlShape;
 }
 
-type State = {
-    value: string | undefined | null;
-    suggestions: Array<any>;
-}
+export default ({name, id, labelId, maxLength, placeholder: placeholderId, minCharactersForSuggestions = 3, mustSelectSuggestion, suggestionHandler, onValueChange, onSuggestionSelect, resetRef}: Props) => {
+    const [field, meta] = useField(name);
+    const [value, setValue] = useState(field.value || '');
+    const [suggestions, setSuggestions] = useState<Array<any>>([]);
+    const intl = useIntl();
+    const inputRef = useRef<HTMLInputElement | null>(null);
 
-export default class AutocompleteField extends PureComponent<Props, State> {
+    useEffect(() => {
+        resetRef?.(() => reset());
+    }, []);
 
-    inputRef: HTMLInputElement | undefined;
-
-    constructor(props: Props) {
-        super(props);
-        if (props.resetRef) {
-            props.resetRef(() => this.reset());
+    useEffect(() => {
+        if (field.value !== value) {
+            setValue(field.value || '');
         }
-        const {fieldProps: {field}} = props;
-        this.state = {
-            value: field.value || '',
-            suggestions: []
-        };
-    }
+    }, [field.value]);
 
-    componentDidUpdate(prevProps: Readonly<Props>) {
-        const {fieldProps: {field}} = this.props;
-        if (field.value !== prevProps.fieldProps.field.value) {
-            this.setState({
-                value: field.value || '',
-            });
-        }
-    }
-
-    onSuggestionsFetchRequested({ value }: { value: string }) {
-        const {suggestionHandler} = this.props;
-        suggestionHandler.getSuggestions(value).then(
-            (suggestions) => {
-                if (suggestions && Array.isArray(suggestions)) {
-                    this.setState({
-                        suggestions
-                    });
-                }
-            }
-        );
-    }
-
-    onSuggestionsClearRequested() {
-        this.setState({
-            suggestions: []
-        });
-    }
-
-    onSuggestionSelected(event: any, { suggestion }: any) {
-        const {onSuggestionSelect, onValueChange, suggestionHandler} = this.props;
-        if (onSuggestionSelect) {
-            onSuggestionSelect(suggestion);
-        }
-
-        const value = suggestionHandler.getSuggestionValue(suggestion);
-        this.simulateFieldChangeEvent(value);
-        if (onValueChange) {
-            onValueChange(value);
-        }
-    }
-
-    onValueChange(e: ChangeEvent<HTMLInputElement>) {
-        const {mustSelectSuggestion, onValueChange} = this.props;
-        const value = e.target.value;
-        this.setState({
-            value: value || ''
-        });
-
-        if (!mustSelectSuggestion) {
-            this.simulateFieldChangeEvent(value);
-            if (onValueChange) {
-                onValueChange(value);
-            }
-        }
-    }
-
-    onBlur() {
-        const {mustSelectSuggestion, fieldProps: {field}} = this.props;
-        if (mustSelectSuggestion) {
-            setTimeout(() => {
-                this.setState({
-                    value: field.value || ''
-                });
-            }, 100);
-        }
-    }
-
-    simulateFieldChangeEvent(value: string | undefined | null) {
-        const {fieldProps: {field}} = this.props;
+    const simulateFieldChangeEvent = (value: string | undefined | null) => {
         const syntheticEvent = {
             target: {
                 name: field.name,
@@ -122,48 +49,84 @@ export default class AutocompleteField extends PureComponent<Props, State> {
             }
         };
         field.onChange(syntheticEvent);
-    }
+    };
 
-    reset() {
-        const {onValueChange} = this.props;
-        this.setState({
-            value: '',
-        });
-        this.simulateFieldChangeEvent('');
+    const onSuggestionsFetchRequested = useCallback(async ({ value }: {value: string}) => {
+        const suggestions = await suggestionHandler.getSuggestions(value);
+        if (suggestions && Array.isArray(suggestions)) {
+            setSuggestions(suggestions);
+        }
+    }, [suggestionHandler]);
+
+    const onSuggestionsClearRequested = useCallback(() => {
+        setSuggestions([]);
+    }, []);
+
+    const onSuggestionSelected = useCallback((_: any, { suggestion }: {suggestion: any}) => {
+        if (onSuggestionSelect) {
+            onSuggestionSelect(suggestion);
+        }
+
+        const value = suggestionHandler.getSuggestionValue(suggestion);
+        simulateFieldChangeEvent(value);
+        if (onValueChange) {
+            onValueChange(value);
+        }
+    }, [onSuggestionSelect, suggestionHandler, onValueChange]);
+
+    const onChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setValue(value || '');
+
+        if (!mustSelectSuggestion) {
+            simulateFieldChangeEvent(value);
+            if (onValueChange) {
+                onValueChange(value);
+            }
+        }
+    }, [mustSelectSuggestion, onValueChange]);
+
+    const onBlur = useCallback(() => {
+        if (mustSelectSuggestion) {
+            setTimeout(() => {
+                setValue(field.value || '');
+            }, 100);
+        }
+    }, [mustSelectSuggestion]);
+
+    const reset = useCallback(() => {
+        setValue('');
+        simulateFieldChangeEvent('');
         if (onValueChange) {
             onValueChange('');
         }
-    }
+    }, [onValueChange]);
 
-    shouldRenderSuggestions(value: string, reason: ShouldRenderReasons) {
-        const {minCharactersForSuggestions = 3} = this.props;
+    const shouldRenderSuggestions = useCallback((value: string, reason: ShouldRenderReasons) => {
         switch (reason) {
-            case 'input-focused':
-                return minCharactersForSuggestions === 0;
-            case 'input-changed':
-            case 'render':
-                return (value || '').trim().length >= minCharactersForSuggestions;
-            case 'input-blurred':
-            case 'escape-pressed':
-                return true;
-            default:
-                return false;
+        case 'input-focused':
+            return minCharactersForSuggestions === 0;
+        case 'input-changed':
+        case 'render':
+            return (value || '').trim().length >= minCharactersForSuggestions;
+        case 'input-blurred':
+        case 'escape-pressed':
+            return true;
+        default:
+            return false;
         }
-    }
+    }, []);
 
-    renderSuggestionsContainer({ containerProps, children }: { containerProps: any, children: ReactNode }) {
-        const width = this.inputRef ? this.inputRef.clientWidth : 'auto';
-
+    const renderSuggestionsContainer = useCallback(({ containerProps, children }: { containerProps: any, children: ReactNode }) => {
+        const width = inputRef.current ? inputRef.current.clientWidth : 'auto';
         return (
             <div {...containerProps} style={{ width }}>
                 {children}
             </div>
         );
-    }
+    }, []);
 
-    renderInputComponent(inputProps: RenderInputComponentProps) {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        const outerThis = this;
+    const renderInputComponent = useCallback((inputProps: RenderInputComponentProps) => {
         const mergedInputProps = {
             ...inputProps,
             onKeyDown(e: KeyboardEvent<any>) {
@@ -176,60 +139,62 @@ export default class AutocompleteField extends PureComponent<Props, State> {
                 }
             },
             ref(elem: HTMLInputElement) {
-                outerThis.inputRef = elem;
+                inputRef.current = elem;
                 if (inputProps.ref) {
                     // @ts-ignore
                     inputProps.ref(elem);
                 }
             }
         };
-
         return (
             <input {...mergedInputProps} />
         );
-    }
+    }, []);
 
-    render() {
-        const {id, labelId, fieldProps: {field, meta}, maxLength, placeholder: placeholderId, intl, suggestionHandler} = this.props;
-        const {value} = this.state;
-        const error = meta.touched && !!meta.error;
+    const getSuggestionValue = useCallback((suggestion: any) => {
+        return suggestionHandler.getSuggestionValue(suggestion);
+    }, [suggestionHandler]);
 
-        const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
-        const inputProps: any = {
-            ...field,
-            type: 'search',
-            value,
-            onChange: (e: ChangeEvent<HTMLInputElement>) => this.onValueChange(e),
-            onBlur: () => this.onBlur(),
-            placeholder,
-            maxLength
-        };
+    const renderSuggestion = useCallback((suggestion: any, {query, isHighlighted}: {query: string, isHighlighted: boolean}) => {
+        return suggestionHandler.renderSuggestion(suggestion, isHighlighted, query);
+    }, [suggestionHandler]);
 
-        return (
-            <div className={`mashroom-portal-autocomplete-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <FieldLabel htmlFor={id} labelId={labelId}/>
-                <AutoSuggest
-                    suggestions={this.state.suggestions}
-                    onSuggestionsFetchRequested={this.onSuggestionsFetchRequested.bind(this)}
-                    onSuggestionsClearRequested={this.onSuggestionsClearRequested.bind(this)}
-                    getSuggestionValue={(suggestion: any) => suggestionHandler.getSuggestionValue(suggestion)}
-                    renderSuggestion={(suggestion: any, {query, isHighlighted}) => suggestionHandler.renderSuggestion(suggestion, isHighlighted, query)}
-                    onSuggestionSelected={this.onSuggestionSelected.bind(this)}
-                    inputProps={inputProps}
-                    renderInputComponent={this.renderInputComponent.bind(this)}
-                    renderSuggestionsContainer={this.renderSuggestionsContainer.bind(this)}
-                    shouldRenderSuggestions={this.shouldRenderSuggestions.bind(this)}
-                    theme={{
-                        container: 'autocomplete-container',
-                        containerOpen: 'autocomplete-container-open',
-                        suggestionsContainer: 'suggestions-container',
-                        suggestionsContainerOpen: 'suggestions-container-open',
-                        suggestionsList: 'suggestions-list',
-                        suggestion: 'suggestion-list-item',
-                    }}
-                />
-                {error && <ErrorMessage messageId={meta.error || ''}/>}
-            </div>
-        );
-    }
-}
+    const error = meta.touched && !!meta.error;
+    const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
+    const inputProps: any = {
+        ...field,
+        type: 'search',
+        value,
+        onChange,
+        onBlur,
+        placeholder,
+        maxLength
+    };
+
+    return (
+        <div className={`mashroom-portal-autocomplete-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
+            <FieldLabel htmlFor={id} labelId={labelId}/>
+            <AutoSuggest
+                suggestions={suggestions}
+                onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+                onSuggestionsClearRequested={onSuggestionsClearRequested}
+                getSuggestionValue={getSuggestionValue}
+                renderSuggestion={renderSuggestion}
+                onSuggestionSelected={onSuggestionSelected}
+                inputProps={inputProps}
+                renderInputComponent={renderInputComponent}
+                renderSuggestionsContainer={renderSuggestionsContainer}
+                shouldRenderSuggestions={shouldRenderSuggestions}
+                theme={{
+                    container: 'autocomplete-container',
+                    containerOpen: 'autocomplete-container-open',
+                    suggestionsContainer: 'suggestions-container',
+                    suggestionsContainerOpen: 'suggestions-container-open',
+                    suggestionsList: 'suggestions-list',
+                    suggestion: 'suggestion-list-item',
+                }}
+            />
+            {error && <ErrorMessage messageId={meta.error || ''}/>}
+        </div>
+    );
+};

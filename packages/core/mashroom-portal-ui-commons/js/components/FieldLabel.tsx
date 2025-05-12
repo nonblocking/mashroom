@@ -1,5 +1,5 @@
 
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
 type Props = {
@@ -7,14 +7,10 @@ type Props = {
     htmlFor?: string;
 }
 
-export default class FieldLabel extends PureComponent<Props> {
-
-    render() {
-        const {htmlFor, labelId} = this.props;
-        return (
-            <label htmlFor={htmlFor} className='mashroom-portal-ui-field-label'>
-                <FormattedMessage id={labelId}/>
-            </label>
-        );
-    }
-}
+export default ({labelId, htmlFor}: Props) => {
+    return (
+        <label htmlFor={htmlFor} className='mashroom-portal-ui-field-label'>
+            <FormattedMessage id={labelId}/>
+        </label>
+    );
+};

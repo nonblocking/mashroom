@@ -80,10 +80,6 @@
 
         tr {
             border-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHTER !important;
-
-            &:nth-child(odd) {
-                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
-            }
         }
 
         th {
@@ -97,6 +93,12 @@
 
             &:first-child {
                 text-align: left;
+            }
+        }
+
+        &.table-striped {
+            tr:nth-child(even) {
+                background-color: $ADMIN_APP_COLOR_BACKGROUND_LIGHT;
             }
         }
     }

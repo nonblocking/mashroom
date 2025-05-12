@@ -1,93 +1,69 @@
 
-import React, {PureComponent} from 'react';
+import React, {useCallback, useContext, useRef, useState} from 'react';
 import {DropdownMenu} from '@mashroom/mashroom-portal-ui-commons';
-import AvailableAppsPanel from '../containers/AvailableAppsPanel';
+import {useIntl} from 'react-intl';
+import {DependencyContext} from '../DependencyContext';
+import AvailableAppsPanel from './AvailableAppsPanel';
 
 import type {DragEvent} from 'react';
-import type {IntlShape} from 'react-intl';
-import type {PortalAppManagementService, DataLoadingService} from '../types';
 
-type Props = {
-    dataLoadingService: DataLoadingService;
-    portalAppManagementService: PortalAppManagementService;
-    intl: IntlShape;
-};
+export default () => {
+    const [filter, setFilter] = useState<string | undefined | null>(null);
+    const closeRef = useRef <(() => void) | undefined>(undefined);
+    const inputElemRef = useRef<HTMLInputElement | null>(null);
+    const intl = useIntl();
+    const {dataLoadingService, portalAppManagementService} = useContext(DependencyContext);
 
-type State = {
-    filter: string | undefined | null;
-}
-
-export default class AddAppDropdownMenu extends PureComponent<Props, State> {
-
-    close: (() => void) | undefined;
-    inputElem: HTMLInputElement | null | undefined;
-
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            filter: null
-        };
-    }
-
-    onOpen() {
-        const {dataLoadingService} = this.props;
+    const onOpen = useCallback(() => {
         dataLoadingService.loadAvailableApps(true);
-        this.setState({
-            filter: null
-        });
+        setFilter(null);
         setTimeout(() => {
-            if (this.inputElem) {
-                this.inputElem.focus();
-            }
+            inputElemRef.current?.focus();
         }, 0);
+    }, [dataLoadingService]);
 
-    }
+    const onCloseRefCallback = useCallback((close: () => void) => {
+        closeRef.current = close;
+    }, []);
 
-    onCloseRef(close: () => void) {
-        this.close = close;
-    }
-
-    onAppDragStart(event: DragEvent, name: string) {
-        const {portalAppManagementService} = this.props;
+    const onAppDragStart = useCallback((event: DragEvent, name: string) => {
         portalAppManagementService.prepareDrag(event as any, null, name);
-        this.close?.();
-    }
+        closeRef.current?.();
+    }, []);
 
-    onAppDragEnd() {
-        const {portalAppManagementService} = this.props;
+    const onAppDragEnd = useCallback(() => {
         portalAppManagementService.dragEnd();
-    }
+    }, []);
 
-    onFilterChange(filter: string) {
-        this.setState({
-            filter
-        });
-    }
+    const onFilterChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setFilter(event.target.value);
+    }, []);
 
-    render() {
-        const {intl} = this.props;
-        const {filter} = this.state;
-        const filterLabel = intl.formatMessage({ id: 'filter'});
+    const filterLabel = intl.formatMessage({ id: 'filter' });
 
-        return (
-            <DropdownMenu className='add-app-dropdown-menu' labelId='addApp' onOpen={this.onOpen.bind(this)} closeRef={this.onCloseRef.bind(this)}>
-                <div className='add-app-content'>
-                    <input type='search'
-                           placeholder={filterLabel}
-                           value={filter || ''}
-                           onChange={(event) => this.onFilterChange(event.target.value)}
-                           ref={(e) => this.inputElem = e}
+    return (
+        <DropdownMenu
+            className='add-app-dropdown-menu'
+            labelId='addApp'
+            onOpen={onOpen}
+            closeRef={onCloseRefCallback}
+        >
+            <div className='add-app-content'>
+                <input
+                    type='search'
+                    placeholder={filterLabel}
+                    value={filter || ''}
+                    onChange={onFilterChange}
+                    ref={inputElemRef}
+                />
+                <div className='app-list'>
+                    <AvailableAppsPanel
+                        onDragStart={onAppDragStart}
+                        onDragEnd={onAppDragEnd}
+                        filter={filter}
                     />
-                    <div className='app-list'>
-                        <AvailableAppsPanel
-                            onDragStart={this.onAppDragStart.bind(this)}
-                            onDragEnd={this.onAppDragEnd.bind(this)}
-                            filter={filter}/>
-                    </div>
                 </div>
-            </DropdownMenu>
-        );
-    }
-}
-
-
+            </div>
+        </DropdownMenu>
+    );
+};

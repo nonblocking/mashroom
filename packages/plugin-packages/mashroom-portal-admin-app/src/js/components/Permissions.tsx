@@ -1,81 +1,60 @@
+import React, { useState, useCallback, useRef } from 'react';
+import { FormattedMessage } from 'react-intl';
+import { Button } from '@mashroom/mashroom-portal-ui-commons';
+import RoleInput from './RoleInput';
+import RolesListField from './RolesListField';
 
-import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
-import {Button} from '@mashroom/mashroom-portal-ui-commons';
-import RoleInputContainer from '../containers/RoleInput';
-import RolesList from '../containers/RolesList';
+export default () => {
+    const [enteredRole, setEnteredRole] = useState<string | undefined | null>(null);
+    const addRoleToListRef = useRef<((role: string) => void) | undefined>(undefined);
+    const resetRoleInputRef = useRef<(() => void) | undefined>(undefined);
 
-import type {ReactNode} from 'react';
+    const handleRoleInputChange = useCallback((currentInput: string | undefined | null) => {
+        setEnteredRole(currentInput);
+    }, []);
 
-type Props = Record<string, never>;
-
-type State = {
-    enteredRole: string | undefined | null;
-}
-
-export default class Permissions extends PureComponent<Props, State> {
-
-    addRole: ((role: string) => void) | undefined;
-    inputReset: (() => void) | undefined;
-    boundOnResetRef: (resetRef: () => void) => void;
-    boundOnRoleChange: (role: string | undefined | null) => void;
-    boundOnRoleSelected: (role: string) => void;
-
-    constructor(props: Props) {
-        super(props);
-        this.boundOnRoleChange = this.onRoleChange.bind(this);
-        this.boundOnRoleSelected = this.onRoleSelected.bind(this);
-        this.boundOnResetRef = this.onResetRef.bind(this);
-        this.state = {
-            enteredRole: null
-        };
-    }
-
-    onRoleChange(enteredRole: string | undefined | null) {
-        this.setState({
-            enteredRole
-        });
-    }
-
-    onRoleSelected(role: string) {
-        this.setState({
-            enteredRole: role,
-        }, () => {
-            this.onAddRole();
-        });
-    }
-
-    onAddRole() {
-        const {enteredRole} = this.state;
+    const handleAddRoleFromButton = useCallback(() => {
         if (enteredRole) {
-            this.addRole?.(enteredRole);
-            this.inputReset?.();
+            addRoleToListRef.current?.(enteredRole);
+            resetRoleInputRef.current?.();
         }
-    }
+    }, [enteredRole, addRoleToListRef.current, resetRoleInputRef.current]);
 
-    onResetRef(resetRef: () => void) {
-        this.inputReset = resetRef;
-    }
+    const handleRoleSelected = useCallback((selectedRole: string) => {
+        addRoleToListRef.current?.(selectedRole);
+        setTimeout(() => {
+            resetRoleInputRef.current?.();
+        }, 100);
+    }, [addRoleToListRef.current, resetRoleInputRef.current]);
 
-    render() {
-        const {enteredRole} = this.state;
+    const captureInputReset = useCallback((cb: () => void) => {
+        resetRoleInputRef.current = cb;
+    }, []);
 
-        return (
-            <div className='permissions'>
-                <FormattedMessage id='restrictViewPermission'/>
+    const captureAddRole = useCallback((cb: (role: string) => void) => {
+        addRoleToListRef.current = cb;
+    }, []);
 
-                <div className='add-role-panel'>
-                    <RoleInputContainer
-                        onRoleChange={this.boundOnRoleChange}
-                        onRoleSelected={this.boundOnRoleSelected}
-                        resetRef={this.boundOnResetRef}
-                    />
-                    <Button id='addButton' labelId='add' onClick={this.onAddRole.bind(this)} disabled={!enteredRole}/>
-                </div>
-
-                <RolesList name='roles' addRoleRef={(addRole) => { this.addRole = addRole; }}/>
+    return (
+        <div className='permissions'>
+            <FormattedMessage id='restrictViewPermission' />
+            <div className='add-role-panel'>
+                <RoleInput
+                    onRoleChange={handleRoleInputChange}
+                    onRoleSelected={handleRoleSelected}
+                    resetRef={captureInputReset}
+                />
+                <Button
+                    id='addButton'
+                    labelId='add'
+                    onClick={handleAddRoleFromButton}
+                    disabled={!enteredRole}
+                />
             </div>
-        );
-    }
-
-}
+            <RolesListField
+                name='roles'
+                addRoleRef={captureAddRole}
+            />
+        </div>
+    );
+};

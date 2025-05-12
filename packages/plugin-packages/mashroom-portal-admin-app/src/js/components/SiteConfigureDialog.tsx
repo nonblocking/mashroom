@@ -1,63 +1,45 @@
-
-import React, {PureComponent} from 'react';
+import React, {useCallback, useContext, useEffect, useMemo, useRef} from 'react';
 import latinize from 'latinize';
-import {
-    Modal,
-    TabDialog,
-    Form,
-    FormRow,
-    FormCell,
-    DialogContent,
-    DialogButtons,
-    Button,
-    SelectField,
-    TextField,
-    CircularProgress,
-    ErrorMessage
-} from '@mashroom/mashroom-portal-ui-commons';
-import I18NStringField from '../containers/I18NStringField';
+import {Button, CircularProgress, DialogButtons, ErrorMessage, Form, Modal, TabDialog,} from '@mashroom/mashroom-portal-ui-commons';
+import {useDispatch, useSelector} from 'react-redux';
 import {DIALOG_NAME_SITE_CONFIGURE} from '../constants';
-import Permissions from './Permissions';
-
-import type {
-    MashroomAvailablePortalLayout,
-    MashroomAvailablePortalTheme,
-    MashroomPortalAdminService,
-    MashroomPortalSite, MashroomPortalSiteService
-} from '@mashroom/mashroom-portal/type-definitions';
-import type {DataLoadingService, Languages, SelectedSite, Sites} from '../types';
-import type {SelectFieldOptions, FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
-
-type Props = {
-    sites: Sites;
-    selectedSite: SelectedSite | undefined | null;
-    languages: Languages;
-    availableThemes: Array<MashroomAvailablePortalTheme>;
-    availableLayouts: Array<MashroomAvailablePortalLayout>;
-    dataLoadingService: DataLoadingService;
-    portalAdminService: MashroomPortalAdminService;
-    portalSiteService: MashroomPortalSiteService;
-    setLoading: (loading: boolean) => void;
-    setErrorLoading: (error: boolean) => void;
-    setErrorUpdating: (error: boolean) => void;
-    setSite: (site: MashroomPortalSite) => void;
-    setPermittedRoles: (roles: Array<string> | undefined | null) => void;
-};
+import {DependencyContext} from '../DependencyContext';
+import {
+    setSelectedSiteData,
+    setSelectedSiteLoading,
+    setSelectedSiteLoadingError,
+    setSelectedSitePermittedRoles,
+    setSelectedSiteUpdatingError
+} from '../store/actions';
+import SiteConfigureDialogGeneralPage from './SiteConfigureDialogGeneralPage';
+import SiteConfigureDialogPermissionsPage from './SiteConfigureDialogPermissionsPage';
+import type {MashroomPortalSite} from '@mashroom/mashroom-portal/type-definitions';
+import type {State} from '../types';
+import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 
 type FormValues = {
-    site: MashroomPortalSite;
+    site: Partial<MashroomPortalSite>;
     roles: Array<string> | undefined | null;
 }
 
-export default class SiteConfigureDialog extends PureComponent<Props> {
+export default () => {
+    const closeRef = useRef<(() => void) | undefined>(undefined);
+    const {sites, selectedSite, languages, availableThemes, availableLayouts} = useSelector((state: State) => state);
+    const {dataLoadingService, portalAdminService, portalSiteService} = useContext(DependencyContext);
+    const dispatch = useDispatch();
+    const setLoading = (loading: boolean) => dispatch(setSelectedSiteLoading(loading));
+    const setErrorLoading = (error: boolean) => dispatch(setSelectedSiteLoadingError(error));
+    const setErrorUpdating = (error: boolean) => dispatch(setSelectedSiteUpdatingError(error));
+    const setSite = (site: MashroomPortalSite) => dispatch(setSelectedSiteData(site));
+    const setPermittedRoles = (roles: Array<string> | undefined | null) => dispatch(setSelectedSitePermittedRoles(roles));
 
-    close: (() => void) | undefined;
-
-    componentDidUpdate(prevProps: Props) {
-        const {selectedSite, dataLoadingService, setSite, portalAdminService, setPermittedRoles,setLoading, setErrorUpdating} = this.props;
-        if (selectedSite && (!prevProps.selectedSite || selectedSite.selectedTs !== prevProps.selectedSite.selectedTs)) {
+    useEffect(() => {
+        if (selectedSite) {
             const siteId = selectedSite.siteId;
             const promises = [];
+
+            setLoading(true);
+            setErrorLoading(false);
 
             promises.push(dataLoadingService.loadAvailableLanguages());
             promises.push(dataLoadingService.loadAvailableThemes());
@@ -66,8 +48,8 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
 
             if (siteId) {
                 promises.push(portalAdminService.getSite(siteId).then(
-                    (site) => {
-                        setSite(site);
+                    (siteData) => {
+                        setSite(siteData);
                     }
                 ));
                 promises.push(portalAdminService.getSitePermittedRoles(siteId).then(
@@ -82,88 +64,80 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
                     setLoading(false);
                 },
                 (error) => {
-                    console.error(error);
-                    setErrorUpdating(true);
+                    console.error('Error loading site configuration data:', error);
+                    setLoading(false);
+                    setErrorLoading(true);
                 }
             );
         }
-    }
+    }, [selectedSite?.siteId, selectedSite?.selectedTs]);
 
-    onClose() {
-        this.close?.();
-    }
 
-    onCloseRef(close: () => void) {
-        this.close = close;
-    }
+    const handleClose = useCallback(() => {
+        closeRef.current?.();
+    }, []);
 
-    onSubmit(values: FormValues) {
-        const {selectedSite, portalAdminService, portalSiteService, setErrorUpdating} = this.props;
+    const handleCloseRef = useCallback((cb: () => void) => {
+        closeRef.current = cb;
+    }, []);
+
+    const handleSubmit = useCallback(async (values: FormValues) => {
         if (!selectedSite) {
             return;
         }
 
+        const completeSiteData = values.site as MashroomPortalSite;
         const siteId = selectedSite.siteId;
-        let promise;
 
-        if (siteId) {
-            promise = portalAdminService.updateSite(values.site).then(
-                () => {
-                    return portalAdminService.updateSitePermittedRoles(siteId, values.roles);
-                }
-            );
-        } else {
-            promise = portalAdminService.addSite(values.site).then(
-                (newSite) => {
-                    return portalAdminService.updateSitePermittedRoles(newSite.siteId, values.roles);
-                }
-            );
-        }
+        setErrorUpdating(false);
 
-        promise.then(
-            () => {
-                this.onClose();
-                if (siteId === portalAdminService.getCurrentSiteId()) {
-                    if (selectedSite.site && selectedSite.site.path !== values.site.path) {
-                        // Path changed
-                        const url = window.location.href.replace(selectedSite.site.path, values.site.path);
-                        window.location.href = url;
-                    } else {
-                        window.location.reload();
-                    }
-                } else if (!siteId) {
-                    // Goto new site
-                    const pathElements = portalSiteService.getCurrentSiteUrl().split('/');
-                    pathElements.pop();
-                    pathElements.push(values.site.path.substr(1));
-                    const url = pathElements.join('/');
-                    window.location.href = url;
-                }
-
-            },
-            (error) => {
-                console.error('Updating site failed!', error);
-                setErrorUpdating(true);
+        try {
+            let newSite;
+            if (siteId) {
+                const siteToUpdate = { ...completeSiteData, siteId };
+                await portalAdminService.updateSite(siteToUpdate);
+                await portalAdminService.updateSitePermittedRoles(siteId, values.roles);
+            } else {
+                newSite = await portalAdminService.addSite(completeSiteData);
+                await portalAdminService.updateSitePermittedRoles(newSite.siteId, values.roles);
             }
-        );
-    }
 
-    getInitialValues(): FormValues | null {
-        const {selectedSite} = this.props;
+            handleClose();
+
+            if (siteId === portalAdminService.getCurrentSiteId()) {
+                if (selectedSite.site && selectedSite.site.path !== values.site.path) {
+                    // Path changed
+                    window.location.href = window.location.href.replace(selectedSite.site.path, completeSiteData.path);
+                } else {
+                    window.location.reload();
+                }
+            } else if (!siteId) {
+                // Goto new site
+                const pathElements = portalSiteService.getCurrentSiteUrl().split('/');
+                pathElements.pop();
+                pathElements.push(completeSiteData.path.substring(1));
+                window.location.href = pathElements.join('/');
+            }
+        } catch (error) {
+            console.error('Updating site failed!', error);
+            setErrorUpdating(true);
+        }
+    }, [selectedSite]);
+
+    const initialFormValues = useMemo((): FormValues | null => {
         if (!selectedSite) {
             return null;
         }
+        // Ensure a default empty object for site if it's a new site
+        const siteData = selectedSite.siteId ? selectedSite.site : { title: {}, path: '' };
 
         return {
-            site: selectedSite.site || {} as any,
+            site: siteData || { title: {}, path: '' } as Partial<MashroomPortalSite>,
             roles: selectedSite.permittedRoles
         };
-    }
+    }, [selectedSite]);
 
-    onChange(values: FormValues, previousValues: FormValues, context: FormContext) {
-        const {languages} = this.props;
-
-        // Set path automatically based on the title for a new page
+    const handleFormChange = useCallback((values: FormValues, previousValues: FormValues, context: FormContext) => {
         if (values.site && previousValues.site && context.initialValues.site && !context.initialValues.site.path) {
             const title = typeof(values.site.title) === 'object' ? values.site.title[languages.default] : values.site.title;
             const previousTitle: string | undefined | null = typeof(previousValues.site.title) === 'object' ? previousValues.site.title[languages.default] : previousValues.site.title;
@@ -174,170 +148,78 @@ export default class SiteConfigureDialog extends PureComponent<Props> {
                 context.setFieldValue('site.path', path);
             }
         }
-    }
+    }, []);
 
-    validate(values: FormValues) {
-        const {languages, sites, selectedSite} = this.props;
+    const validateForm = useCallback((formValues: FormValues): any => {
+        const errors: any = { site: {} };
+        if (!formValues.site) return errors;
 
-        const errors: any = {
-            site: {}
-        };
-        if (!values.site) {
-            return errors;
-        }
-
-        const title = typeof(values.site.title) === 'object' ? values.site.title[languages.default] : values.site.title;
+        const title = typeof(formValues.site.title) === 'object' ? formValues.site.title[languages.default] : formValues.site.title;
         if (!title || title.trim() === '') {
             errors.site.title = 'required';
         }
-        if (!values.site.path || values.site.path.trim() === '') {
+
+        const path = formValues.site.path;
+        if (!path || path.trim() === '') {
             errors.site.path = 'required';
-        } else if (values.site.path.indexOf('/') !== 0) {
+        } else if (!path.startsWith('/')) {
             errors.site.path = 'mustStartWithSlash';
-        } else if (values.site.path.indexOf('/', 1) !== -1) {
+        } else if (path !== '/' && path.indexOf('/', 1) !== -1) { // allow path to be "/"
             errors.site.path = 'mustContainOnlyOneSlash';
-        } else if (sites.sites.find((site) => (!selectedSite || selectedSite.siteId !== site.siteId) && site.path === values.site.path)) {
+        } else if (sites.sites.find((s) => (selectedSite?.siteId !== s.siteId) && s.path === path)) {
             errors.site.path = 'pathAlreadyExists';
         }
 
         if (Object.keys(errors.site).length === 0) {
             delete errors.site;
         }
+        return Object.keys(errors).length > 0 ? errors : {};
+    }, [languages.default, sites, selectedSite]);
 
-        return errors;
-    }
 
-    renderPageGeneral() {
-        const {availableThemes, availableLayouts} = this.props;
-
-        let availableThemesOptions: SelectFieldOptions = [{
-            value: null,
-            label: '<Server Default>',
-        }];
-        availableThemesOptions = availableThemesOptions.concat(availableThemes.map((theme) => ({
-            value: theme.name,
-            label: theme.name
-        })));
-        let availableLayoutsOptions: SelectFieldOptions = [{
-            value: null,
-            label: '<Server Default>',
-        }];
-        availableLayoutsOptions = availableLayoutsOptions.concat(availableLayouts.map((layout) => ({
-            value: layout.name,
-            label: layout.name
-        })));
-
-        return (
-            <DialogContent>
-                <FormRow>
-                    <FormCell>
-                        <I18NStringField id='title' name='site.title' labelId='title'/>
-                    </FormCell>
-                </FormRow>
-                <FormRow>
-                    <FormCell>
-                        <TextField id='path' name='site.path' labelId='path'/>
-                    </FormCell>
-                </FormRow>
-                <FormRow>
-                    <FormCell>
-                        <SelectField id='defaultTheme' name='site.defaultTheme' labelId='defaultTheme' options={availableThemesOptions}/>
-                    </FormCell>
-                </FormRow>
-                <FormRow>
-                    <FormCell>
-                        <SelectField id='defaultLayout' name='site.defaultLayout' labelId='defaultLayout' options={availableLayoutsOptions}/>
-                    </FormCell>
-                </FormRow>
-            </DialogContent>
+    let modalContent: React.ReactNode;
+    if (!selectedSite) {
+        modalContent = null;
+    } else if (selectedSite.loading) {
+        modalContent = <CircularProgress/>;
+    } else if (selectedSite.errorLoading) {
+        modalContent = <div className='error-panel'><ErrorMessage messageId='loadingFailed' /></div>;
+    } else if (!initialFormValues) {
+        modalContent = <CircularProgress/>;
+    } else {
+        modalContent = (
+            <>
+                {selectedSite.errorUpdating && <div className='error-panel'><ErrorMessage messageId='updateFailed' /></div>}
+                <Form
+                    formId='site-configure'
+                    initialValues={initialFormValues}
+                    validator={validateForm}
+                    onChange={handleFormChange}
+                    onSubmit={handleSubmit}
+                >
+                    <TabDialog name='site-configure' tabs={[
+                        {name: 'general', titleId: 'general', content: <SiteConfigureDialogGeneralPage availableLayouts={availableLayouts} availableThemes={availableThemes} />},
+                        {name: 'permissions', titleId: 'permissions', content: <SiteConfigureDialogPermissionsPage />},
+                    ]}/>
+                    <DialogButtons>
+                        <Button id='save' type='submit' labelId='save'/>
+                        <Button id='cancel' labelId='cancel' secondary onClick={handleClose}/>
+                    </DialogButtons>
+                </Form>
+            </>
         );
     }
 
-    renderPagePermissions() {
-        return (
-            <DialogContent>
-                <Permissions />
-            </DialogContent>
-        );
-    }
-
-    renderTabDialog() {
-        return (
-            <TabDialog name='site-configure' tabs={[
-                {name: 'general', titleId: 'general', content: this.renderPageGeneral()},
-                {name: 'permissions', titleId: 'permissions', content: this.renderPagePermissions()},
-            ]}/>
-        );
-    }
-
-    renderActions() {
-        return (
-            <DialogButtons>
-                <Button id='save' type='submit' labelId='save'/>
-                <Button id='cancel' labelId='cancel' secondary onClick={this.onClose.bind(this)}/>
-            </DialogButtons>
-        );
-    }
-
-    renderLoading() {
-        return (
-            <CircularProgress/>
-        );
-    }
-
-    renderLoadingError() {
-        return (
-            <div className='error-panel'>
-                <ErrorMessage messageId='loadingFailed' />
-            </div>
-        );
-    }
-
-    renderUpdatingError() {
-        return (
-            <div className='error-panel'>
-                <ErrorMessage messageId='updateFailed' />
-            </div>
-        );
-    }
-
-    renderContent() {
-        const {selectedSite} = this.props;
-        if (!selectedSite) {
-            return null;
-        }
-        if (selectedSite.loading) {
-            return this.renderLoading();
-        } else if (selectedSite.errorLoading) {
-            return this.renderLoadingError();
-        } else if (selectedSite.errorUpdating) {
-            return this.renderUpdatingError();
-        }
-
-        return (
-            <Form formId='site-configure'
-                  initialValues={this.getInitialValues()}
-                  validator={this.validate.bind(this)}
-                  onChange={this.onChange.bind(this)}
-                  onSubmit={this.onSubmit.bind(this)}>
-                {this.renderTabDialog()}
-                {this.renderActions()}
-            </Form>
-        );
-    }
-
-    render() {
-        return (
-            <Modal
-                appWrapperClassName='mashroom-portal-admin-app'
-                className='site-configure-dialog'
-                name={DIALOG_NAME_SITE_CONFIGURE}
-                titleId='configureSite'
-                width={500}
-                closeRef={this.onCloseRef.bind(this)}>
-                {this.renderContent()}
-            </Modal>
-        );
-    }
-
-}
+    return (
+        <Modal
+            appWrapperClassName='mashroom-portal-admin-app'
+            className='site-configure-dialog'
+            name={DIALOG_NAME_SITE_CONFIGURE}
+            titleId='configureSite'
+            width={500}
+            closeRef={handleCloseRef}
+        >
+            {modalContent}
+        </Modal>
+    );
+};

@@ -1,7 +1,7 @@
 
 import React, {Suspense} from 'react';
 import CircularProgress from '../components/CircularProgress';
-const SourceCodeEditorField = React.lazy(() => import('../containers/SourceCodeEditorField'));
+const SourceCodeEditorField = React.lazy(() => import('../components/SourceCodeEditorField'));
 
 type Props = {
     id: string;

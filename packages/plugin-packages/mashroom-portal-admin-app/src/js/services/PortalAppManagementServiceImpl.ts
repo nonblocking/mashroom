@@ -133,14 +133,10 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         return loadedApp.appConfig;
     }
 
-    updateAndReloadApp(loadedAppId: string, portalAppName: string, instanceId: string, areaId: string | undefined | null,
+    async updateAndReloadApp(loadedAppId: string, portalAppName: string, instanceId: string, areaId: string | undefined | null,
                        dynamic: boolean | undefined | null, position: number | undefined | null, appConfig: any | undefined | null): Promise<void> {
-        return this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, appConfig).then(
-            () => {
-                this.portalAppService.reloadApp(loadedAppId);
-                return Promise.resolve();
-            }
-        );
+        await this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, appConfig);
+        await this.portalAppService.reloadApp(loadedAppId);
     }
 
     private _onDragOverDropZone(event: DragEvent, dropZone: HTMLElement): void {
@@ -227,25 +223,19 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         return controlsWrapper;
     }
 
-    private _addApp(loadedAppId: string | undefined | null, portalAppName: string, instanceId: string | undefined | null, areaId: string, position: number) {
+    private async _addApp(loadedAppId: string | undefined | null, portalAppName: string, instanceId: string | undefined | null, areaId: string, position: number) {
         if (instanceId) {
             // Move
-            this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, null).then(
-                () => {
-                    if (loadedAppId) {
-                        this.portalAppService.moveApp(loadedAppId, areaId, position);
-                    } else {
-                        this.portalAppService.loadApp(areaId, portalAppName, instanceId, position);
-                    }
-                }
-            );
+            await this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, null);
+            if (loadedAppId) {
+                this.portalAppService.moveApp(loadedAppId, areaId, position);
+            } else {
+                await this.portalAppService.loadApp(areaId, portalAppName, instanceId, position);
+            }
         } else {
             // Add
-            this.portalAdminService.addAppInstance(portalAppName, areaId, position).then(
-                (addedApp) => {
-                    this.portalAppService.loadApp(areaId, portalAppName, addedApp.instanceId, position);
-                }
-            );
+            const addedApp = await this.portalAdminService.addAppInstance(portalAppName, areaId, position);
+            await this.portalAppService.loadApp(areaId, portalAppName, addedApp.instanceId, position);
         }
     }
 
@@ -299,7 +289,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         this.store.dispatch(setShowModal(DIALOG_NAME_PORTAL_APP_CONFIGURE, true));
     }
 
-    private _editAppContent(loadedPortalApp: MashroomPortalLoadedPortalApp) {
+    private async _editAppContent(loadedPortalApp: MashroomPortalLoadedPortalApp) {
         const {id: appId, instanceId, pluginName, appConfig, editorConfig, portalAppWrapperElement} = loadedPortalApp;
         if (!editorConfig) {
             return;
@@ -323,18 +313,15 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
             pluginName,
             appConfig,
             portalAppWrapperElement,
-            updateAppConfig: (appConfig) => {
-                return this.portalAdminService.updateAppInstance(pluginName, instanceId!, null, null, appConfig).then(
-                    () => {
-                        // @ts-ignore
-                        loadedPortalApp.appConfig = appConfig;
-                        if (loadedPortalApp.updateAppConfig) {
-                            loadedPortalApp.updateAppConfig(appConfig);
-                        } else {
-                            this.portalAppService.reloadApp(appId);
-                        }
-                    }
-                );
+            updateAppConfig: async (appConfig) => {
+                await this.portalAdminService.updateAppInstance(pluginName, instanceId!, null, null, appConfig);
+                // @ts-ignore
+                loadedPortalApp.appConfig = appConfig;
+                if (loadedPortalApp.updateAppConfig) {
+                    loadedPortalApp.updateAppConfig(appConfig);
+                } else {
+                    this.portalAppService.reloadApp(appId);
+                }
             },
             close: () => {
                 this._closeAppContentEditor(appId);
@@ -354,49 +341,44 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
             sidebarHost.classList.add('mashroom-portal-app-sidebar-host');
             sidebarHost.appendChild(sidebar);
             sidebar.appendChild(editorWrapper);
-            this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
-                ...appConfigEditor,
-                editorTarget,
-            }).then(
-                (loadedEditor) => {
-                    portalAppWrapperElement.parentElement?.classList.add('edit-tool-active');
-                    sidebarHost.classList.add('editor-open');
-                    this.setAppContentEditorCb(appId, () => {
-                        sidebarHost.classList.remove('editor-open');
-                        setTimeout(() => {
-                            portalAppWrapperElement.parentElement?.classList.remove('edit-tool-active');
-                            sidebarHost.classList.remove('mashroom-portal-app-sidebar-host');
-                            this.portalAppService.unloadApp(loadedEditor.id);
-                            sidebarHost.removeChild(sidebar);
-                        }, 500);
-                    });
-                },
-                (error) => {
-                    console.error(`Loading Config Editor for ${pluginName} failed!`, error);
-                }
-            );
-
+            try {
+                const loadedEditor = await this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
+                    ...appConfigEditor,
+                    editorTarget,
+                });
+                portalAppWrapperElement.parentElement?.classList.add('edit-tool-active');
+                sidebarHost.classList.add('editor-open');
+                this.setAppContentEditorCb(appId, () => {
+                    sidebarHost.classList.remove('editor-open');
+                    setTimeout(() => {
+                        portalAppWrapperElement.parentElement?.classList.remove('edit-tool-active');
+                        sidebarHost.classList.remove('mashroom-portal-app-sidebar-host');
+                        this.portalAppService.unloadApp(loadedEditor.id);
+                        sidebarHost.removeChild(sidebar);
+                    }, 500);
+                });
+            } catch (e) {
+                console.error(`Loading Config Editor for ${pluginName} failed!`, e);
+            }
         } else {
             // in-place
             portalAppWrapperElement.appendChild(editorWrapper);
-            this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
-                ...appConfigEditor,
-                editorTarget,
-            }).then(
-                (loadedEditor) => {
-                    portalAppWrapperElement.parentElement?.classList.add('edit-tool-active');
-                    portalAppWrapperElement.classList.add('editor-open');
-                    this.setAppContentEditorCb(appId, () => {
-                        portalAppWrapperElement.parentElement?.classList.remove('edit-tool-active');
-                        portalAppWrapperElement.classList.remove('editor-open');
-                        this.portalAppService.unloadApp(loadedEditor.id);
-                        portalAppWrapperElement.removeChild(editorWrapper);
-                    });
-                },
-                (error) => {
-                    console.error(`Loading Config Editor for ${pluginName} failed!`, error);
-                }
-            );
+            try {
+                const loadedEditor = await this.portalAppService.loadApp(editorAreaId, editorPortalApp, null, null, {
+                    ...appConfigEditor,
+                    editorTarget,
+                });
+                portalAppWrapperElement.parentElement?.classList.add('edit-tool-active');
+                portalAppWrapperElement.classList.add('editor-open');
+                this.setAppContentEditorCb(appId, () => {
+                    portalAppWrapperElement.parentElement?.classList.remove('edit-tool-active');
+                    portalAppWrapperElement.classList.remove('editor-open');
+                    this.portalAppService.unloadApp(loadedEditor.id);
+                    portalAppWrapperElement.removeChild(editorWrapper);
+                });
+            } catch (e) {
+                console.error(`Loading Config Editor for ${pluginName} failed!`, e);
+            }
         }
     }
 

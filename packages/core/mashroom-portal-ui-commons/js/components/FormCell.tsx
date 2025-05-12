@@ -1,5 +1,5 @@
 
-import React, {PureComponent} from 'react';
+import React from 'react';
 
 import type {ReactNode} from 'react';
 
@@ -7,15 +7,10 @@ type Props = {
     children: ReactNode;
 };
 
-export default class FormCell extends PureComponent<Props> {
-
-    render() {
-        const {children} = this.props;
-        return (
-            <div className='mashroom-portal-ui-form-cell'>
-                {children}
-            </div>
-        );
-    }
-
-}
+export default ({children}: Props) => {
+    return (
+        <div className='mashroom-portal-ui-form-cell'>
+            {children}
+        </div>
+    );
+};

@@ -1,8 +1,11 @@
 
-import React, {PureComponent} from 'react';
-import {FormattedMessage} from 'react-intl';
+import React, {useMemo} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {setActiveTab} from '../store/actions';
+import TabHeader from './TabHeader';
 
 import type {ReactNode} from 'react';
+import type {CommonState} from '../../type-definitions';
 
 type Props = {
     name: string;
@@ -11,16 +14,15 @@ type Props = {
         titleId: string;
         content: ReactNode;
     }>;
-    activeTab?: string;
-    setActiveTab: (name: string) => void;
-    className?: string;
 }
 
-export default class TabDialog extends PureComponent<Props> {
+export default ({name, tabs}: Props) => {
+    const activeTabName = useSelector((state: CommonState) => state.tabDialogs?.[name]?.active);
+    const dispatch = useDispatch();
+    const onChangeActiveTab = (newActiveTab: string) => dispatch(setActiveTab(name, newActiveTab));
 
-    getActiveTabIndex(): number | null {
-        const {tabs} = this.props;
-        const activeTab = tabs.find((t) => t.name === this.props.activeTab);
+    const activeTabIndex = useMemo((): number | null => {
+        const activeTab = tabs.find((t) => t.name === activeTabName);
         if (activeTab) {
             return tabs.indexOf(activeTab);
         }
@@ -29,67 +31,21 @@ export default class TabDialog extends PureComponent<Props> {
         }
 
         return null;
-    }
+    }, [tabs, activeTabName]);
 
-    onChangeActiveTab(name: string) {
-        const {setActiveTab} = this.props;
-        setActiveTab(name);
-    }
-
-    renderHeader() {
-        const {tabs} = this.props;
-        const activeTabIndex = this.getActiveTabIndex();
-        if (activeTabIndex === null) {
-            return null;
-        }
-
-        const buttons = tabs.map((t, idx) => (
-            <div key={t.name} className={`tab-dialog-button ${idx === activeTabIndex ? 'active' : ''}`} onClick={this.onChangeActiveTab.bind(this, t.name)}>
-                <div className='title'><FormattedMessage id={t.titleId} /></div>
-            </div>
-        ));
-
-        return (
-            <div className='tab-dialog-header'>
-                {buttons}
-            </div>
-        );
-    }
-
-    listenErroneousFieldEvents(name: string, element: HTMLDivElement | null) {
-        const {activeTab, setActiveTab} = this.props;
-        if (element) {
-            element.addEventListener('erroneous-field-focused', () => {
-                if (activeTab !== name) {
-                    console.info(`Switching to tab ${name} because an erroneous field was focused there`);
-                    setActiveTab(name);
-                }
-            });
-        }
-    }
-
-    renderContent() {
-        const {tabs} = this.props;
-        const activeTabIndex = this.getActiveTabIndex();
-        if (activeTabIndex === null) {
-            return null;
-        }
-
-        return (
-            <div className='tab-dialog-content-wrapper'>
-                {tabs[activeTabIndex]?.content}
-            </div>
-        );
-    }
-
-    render() {
-        return (
-            <div className='mashroom-portal-ui-tab-dialog'>
-                {this.renderHeader()}
-                {this.renderContent()}
-            </div>
-        );
-    }
-
-}
+    return (
+        <div className='mashroom-portal-ui-tab-dialog'>
+            <TabHeader
+                tabs={tabs}
+                activeTabIndex={activeTabIndex}
+                onChangeActiveTab={onChangeActiveTab}
+            />
+            {activeTabIndex !== null && (
+                <div className='tab-dialog-content-wrapper'>
+                    {tabs[activeTabIndex]?.content}
+                </div>
+            )}
+        </div>
+    );
+};
 

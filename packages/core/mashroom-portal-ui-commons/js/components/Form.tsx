@@ -1,9 +1,41 @@
 
-import React, {PureComponent} from 'react';
+import React, {useCallback, useEffect, useRef} from 'react';
 
-import type {ReactNode, RefObject, FormEvent} from 'react';
+import type {ReactNode, FormEvent} from 'react';
 import type {FormikTouched} from 'formik/';
 import type {ValidationErrors, FormContext} from '../../type-definitions';
+
+const getTouchedObj = (errors: any) => {
+    const touched: FormikTouched<any> = {};
+    Object.keys(errors).map(key => {
+        const errorObj = errors[key];
+        if (Array.isArray(errorObj)) {
+            errorObj.map((val: any, index: any) => {
+                if (index == 0) {
+                    touched[key] = [];
+                }
+                (touched[key] as any).push(getTouchedObj(val));
+            });
+        } else if (typeof (errorObj) === 'string') {
+            touched[key] = true;
+        } else if (errorObj && typeof (errorObj) === 'object') {
+            touched[key] = getTouchedObj(errorObj);
+        }
+    });
+    return touched;
+};
+
+const hasError = (errors: any, path: string): boolean => {
+    const props = path.split('.');
+    let parent: any = errors;
+    for (const prop of props) {
+        parent = parent[prop];
+        if (!parent) {
+            return false;
+        }
+    }
+    return true;
+};
 
 type Props = {
     id: string;
@@ -18,102 +50,51 @@ type Props = {
     children: ReactNode;
 };
 
-export default class Form extends PureComponent<Props> {
+export default ({id, initialValues, values, errors, handleSubmit, resetForm, setTouched, setFieldValue, onChange, children}: Props) => {
+    const formRef = useRef<HTMLFormElement | null>(null);
+    const lastValues = useRef<any>(null);
 
-    formRef: RefObject<HTMLFormElement>;
-
-    constructor(props: Props) {
-        super(props);
-        this.formRef = React.createRef();
-    }
-
-    componentDidUpdate(prevProps: Readonly<Props>) {
-        const {values, initialValues, resetForm, setFieldValue, onChange} = this.props;
-        if (prevProps.values !== values) {
-            if (onChange) {
-                onChange(values, prevProps.values, {
-                    resetForm,
-                    setFieldValue,
-                    initialValues,
-                });
-            }
+    useEffect(() => {
+        if (onChange && lastValues.current) {
+            onChange(values, lastValues.current, {
+                resetForm,
+                setFieldValue,
+                initialValues,
+            });
         }
-    }
+        lastValues.current = values;
+    }, [values]);
 
-    focusFirstErroneousField() {
-        const {errors} = this.props;
+    const focusFirstErroneousField = () => {
         if (Object.keys(errors).length === 0) {
             return;
         }
-        const elements = (this.formRef.current || document).querySelectorAll('input, select, textarea');
-        console.info('');
+        const elements = (formRef.current || document).querySelectorAll('input, select, textarea');
         for (let i = 0; i < elements.length; i++) {
             const elem: any = elements[i];
             if (elem.name) {
-                if (errors && this.errorExists(elem.name)) {
+                if (errors && hasError(errors, elem.name)) {
                     console.info('Focusing erroneous field: ', elem);
                     elem.focus();
-                    // Fire a custom event that is used by the TabDialog to make the tab with the erroneous element visible
-                    const event = document.createEvent('Event');
-                    event.initEvent('erroneous-field-focused', true, true);
-                    elem.dispatchEvent(event);
                     break;
                 }
             }
         }
-    }
+    };
 
-    errorExists(path: string): boolean {
-        const {errors} = this.props;
-        const props = path.split('.');
-        let parent: any = errors;
-        for (const prop of props) {
-            parent = parent[prop];
-            if (!parent) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    getTouchedObj(errors: any) {
-        const touched: FormikTouched<any> = {};
-        Object.keys(errors).map(key => {
-            const errorObj = errors[key];
-            if (Array.isArray(errorObj)) {
-                errorObj.map((val: any, index: any) => {
-                    if (index == 0) {
-                        touched[key] = [];
-                    }
-                    (touched[key] as any).push(this.getTouchedObj(val));
-                });
-            } else if (typeof (errorObj) === 'string') {
-                touched[key] = true;
-            } else if (errorObj && typeof (errorObj) === 'object') {
-                touched[key] = this.getTouchedObj(errorObj);
-            }
-        });
-        return touched;
-    }
-
-    onSubmit(e: FormEvent<HTMLFormElement>) {
-        const {handleSubmit, setTouched, errors} = this.props;
+    const onSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         setTimeout(() => {
-            setTouched(this.getTouchedObj(errors));
-            this.focusFirstErroneousField();
+            setTouched(getTouchedObj(errors));
+            focusFirstErroneousField();
         }, 100);
         handleSubmit(e);
-    }
+    }, [errors, handleSubmit]);
 
-    render() {
-        const {id, children} = this.props;
-        return (
-            <div className='mashroom-portal-ui-form'>
-                <form id={id} onSubmit={this.onSubmit.bind(this)} ref={this.formRef}>
-                    {children}
-                </form>
-            </div>
-        );
-    }
-
-}
+    return (
+        <div className='mashroom-portal-ui-form'>
+            <form id={id} onSubmit={onSubmit} ref={formRef}>
+                {children}
+            </form>
+        </div>
+    );
+};

@@ -5,16 +5,15 @@ import {Provider as ReduxProvider} from 'react-redux';
 import {nanoid} from 'nanoid';
 import store from '../store/store';
 import messages from '../messages/messages';
-import getMessageBusPortalAppUnderTest from '../message_bus_portal_app_under_test';
-import PortalAppHostContainer from '../containers/PortalAppHostContainer';
-import PortalAppContainer from '../containers/PortalAppContainer';
-import MessageBusHistoryContainer from '../containers/MessageBusHistoryContainer';
-import MessageBusSendFormContainer from '../containers/MessageBusSendFormContainer';
-import PortalAppStats from '../containers/PortalAppStats';
+import getMessageBusPortalAppUnderTest from '../message-bus-portal-app-under-test';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 import { getQueryParams } from '../utils';
+import PortalAppHost from './PortalAppHost';
+import PortalApp from './PortalApp';
+import PortalAppStats from './PortalAppStats';
+import MessageBusSendForm from './MessageBusSendForm';
+import MessageBusHistory from './MessageBusHistory';
 
-import type {ReactNode} from 'react';
 import type {
     MashroomPortalAppService,
     MashroomPortalMessageBus,
@@ -51,8 +50,8 @@ export default class SandboxApp extends PureComponent<Props> {
         this.queryParams = getQueryParams(props.portalStateService);
     }
 
-    render(): ReactNode {
-        const { lang, messageBus, portalAppService, portalStateService } = this.props;
+    render() {
+        const { lang, messageBus, portalAppService } = this.props;
         let existingLang = lang;
         if (!messages[existingLang]) {
             existingLang = 'en';
@@ -62,15 +61,14 @@ export default class SandboxApp extends PureComponent<Props> {
             <ReduxProvider store={store}>
                 <IntlProvider messages={messages[existingLang]} locale={existingLang}>
                     <div className='mashroom-sandbox-app'>
-                        <PortalAppHostContainer hostElementId={this.hostElementId} />
+                        <PortalAppHost hostElementId={this.hostElementId} />
                         <PortalAppStats portalAppService={portalAppService} />
-                        <MessageBusSendFormContainer
+                        <MessageBusSendForm
                             messageBus={messageBus}
-                            portalStateService={portalStateService}
                             sbAutoTest={this.queryParams.autoTest}
                         />
-                        <MessageBusHistoryContainer />
-                        <PortalAppContainer
+                        <MessageBusHistory />
+                        <PortalApp
                             hostElementId={this.hostElementId}
                             queryParams={this.queryParams}
                             messageBus={messageBus}

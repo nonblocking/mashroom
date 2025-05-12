@@ -1,139 +1,109 @@
-
-import React, {PureComponent} from 'react';
+import React  from 'react';
 import {ErrorMessage, FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
+import {useField} from 'formik';
+import {useSelector} from 'react-redux';
 
-import type {ReactNode} from 'react';
-import type {FieldProps} from 'formik';
-import type {I18NString} from '@mashroom/mashroom/type-definitions';
-import type {Languages} from '../types';
+import type { I18NString } from '@mashroom/mashroom/type-definitions';
+import type {State} from '../types';
 
 type Props = {
     id: string,
+    name: string;
     labelId: string,
-    languages: Languages,
-    fieldProps: FieldProps
 }
 
-export default class I18NStringField extends PureComponent<Props> {
+export default ({ id, name, labelId}: Props) => {
+    const [field, meta, helpers] = useField(name);
+    const languages = useSelector((state: State) => state.languages);
 
-    getValue(): Record<string, string> {
-        const {fieldProps: {field}, languages} = this.props;
+    const getValue = (): Record<string, string> => {
         let val: I18NString = field.value;
         if (typeof (val) === 'string') {
             val = {
                 [languages.default]: val
             };
         }
-
         return val || {
             [languages.default]: ''
         };
-    }
+    };
 
-    onValueChange(lang: string, value: string | undefined | null): void {
-        const val = {...this.getValue(), [lang]: value};
-        this.simulateFieldChangeEvent(val);
-    }
+    const handleValueChange = (lang: string, value: string | undefined | null): void => {
+        const val = { ...getValue(), [lang]: value };
+        helpers.setValue(val);
+    };
 
-    simulateFieldChangeEvent(value: any) {
-        const {fieldProps: {field}} = this.props;
-        const e = {
-            target: {
-                name: field.name,
-                value,
-            }
-        };
-        field.onChange(e);
-    }
+    const handleBlur = () => {
+        helpers.setTouched(true);
+    };
 
-    onBlur() {
-        const {fieldProps: {field}} = this.props;
-        const e = {
-            target: {
-                name: field.name,
-            }
-        };
-        field.onBlur(e);
-    }
+    const handleAddLang = (lang: string) => {
+        const val = { ...getValue(), [lang]: '' };
+        helpers.setValue(val);
+    };
 
-    onAddLang(lang: string) {
-        const val = {...this.getValue(), [lang]: ''};
-        this.simulateFieldChangeEvent(val);
-    }
-
-    onRemoveLang(lang: string) {
-        const val = {...this.getValue()};
+    const handleRemoveLang = (lang: string) => {
+        const val = { ...getValue() };
         delete val[lang];
-        this.simulateFieldChangeEvent(val);
-    }
+        helpers.setValue(val);
+    };
 
-    renderInputs() {
-        const {fieldProps: {field}, languages} = this.props;
-        const val = this.getValue();
-        const inputs = [];
-        inputs.push(
-            <input key='default-lang' type='text'
-                   name={field.name}
-                   value={val[languages.default]}
-                   onChange={(e) => this.onValueChange(languages.default, e.target.value)}
-                   onBlur={this.onBlur.bind(this)}
-            />
-        );
+    const error = meta.touched && !!meta.error;
+    const val = getValue();
+    let availableLanguages = [...languages.available];
+    availableLanguages = availableLanguages.filter((l) => l !== languages.default);
+    const inputFields = [];
 
-        let availableLanguages = [...languages.available];
-        availableLanguages = availableLanguages.filter((l) => l !== languages.default);
-        for (const lang of languages.available) {
-            if (lang === languages.default) {
-                continue;
-            }
-            if (typeof (val[lang]) !== 'undefined') {
-                inputs.push(
-                    <div key={lang} className='translation'>
-                        <div className='lang'>{lang}:</div>
-                        <input type='text'
-                               name={`${field.name}.${lang}`}
-                               value={val[lang]}
-                               onChange={(e) => this.onValueChange(lang, e.target.value)}
-                               onBlur={this.onBlur.bind(this)}
-                        />
-                        <div className='remove' onClick={this.onRemoveLang.bind(this, lang)}>&nbsp;</div>
-                    </div>
-                );
-                availableLanguages = availableLanguages.filter((l) => l !== lang);
-            }
+    inputFields.push(
+        <input key='default-lang' type='text'
+               name={field.name}
+               value={val[languages.default] ?? ''}
+               onChange={(e) => handleValueChange(languages.default, e.target.value)}
+               onBlur={handleBlur}
+        />
+    );
+    for (const lang of languages.available) {
+        if (lang === languages.default) {
+            continue;
         }
-
-        if (availableLanguages.length >= 0) {
-            inputs.push(
-                <div key='available-languages' className='available-languages'>
-                    {availableLanguages.map((lang) => (
-                        <span key={lang} className='add-language'
-                              onClick={this.onAddLang.bind(this, lang)}>{lang}</span>
-                    ))}
+        if (typeof (val[lang]) !== 'undefined') {
+            inputFields.push(
+                <div key={lang} className='translation'>
+                    <div className='lang'>{lang}:</div>
+                    <input type='text'
+                           name={`${field.name}.${lang}`}
+                           value={val[lang] ?? ''}
+                           onChange={(e) => handleValueChange(lang, e.target.value)}
+                           onBlur={handleBlur}
+                    />
+                    <div className='remove' onClick={() => handleRemoveLang(lang)}>&nbsp;</div>
                 </div>
             );
+            availableLanguages = availableLanguages.filter((l) => l !== lang);
         }
+    }
 
-        return (
-            <div className='i18n-field-inputs'>
-                {inputs}
+    if (availableLanguages.length >= 0) {
+        inputFields.push(
+            <div key='available-languages' className='available-languages'>
+                {availableLanguages.map((lang) => (
+                    <span key={lang} className='add-language' onClick={() => handleAddLang(lang)}>
+                        {lang}
+                    </span>
+                ))}
             </div>
         );
     }
 
-    render() {
-        const {id, labelId, fieldProps: {meta}} = this.props;
-        const error = meta.touched && !!meta.error;
-
-        return (
-            <div className={`i18nstring-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
-                <FieldLabel htmlFor={id} labelId={labelId}/>
-                <div>
-                    {this.renderInputs()}
-                    {error && <ErrorMessage messageId={meta.error || ''}/>}
+    return (
+        <div className={`i18nstring-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
+            <FieldLabel htmlFor={id} labelId={labelId} />
+            <div>
+                <div className='i18n-field-inputs'>
+                    {inputFields}
                 </div>
+                {error && <ErrorMessage messageId={meta.error || ''} />}
             </div>
-        );
-    }
-}
-
+        </div>
+    );
+};

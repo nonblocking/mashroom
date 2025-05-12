@@ -2,17 +2,17 @@
 import React from 'react';
 
 import type {ReactNode} from 'react';
-import type {DependencyContext} from './types';
+import type {DependencyContext as DependencyContextType} from './types';
 
 type ProviderProps = {
-    deps: DependencyContext;
+    deps: DependencyContextType;
     children: ReactNode;
 }
 
 const dummy: any = {};
-const defaultContext: DependencyContext = dummy;
+const defaultContext: DependencyContextType = dummy;
 
-const Context = React.createContext<DependencyContext>(defaultContext);
+const Context = React.createContext<DependencyContextType>(defaultContext);
 
 export const DependencyContextProvider = (props: ProviderProps) => {
     return (
@@ -22,4 +22,4 @@ export const DependencyContextProvider = (props: ProviderProps) => {
     );
 };
 
-export const DependencyContextConsumer = Context.Consumer;
+export const DependencyContext = Context;

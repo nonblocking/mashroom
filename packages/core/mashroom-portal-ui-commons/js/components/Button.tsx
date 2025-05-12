@@ -1,5 +1,5 @@
 
-import React, {PureComponent} from 'react';
+import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
 type Props = {
@@ -11,19 +11,14 @@ type Props = {
     disabled?: boolean;
 };
 
-export default class Button extends PureComponent<Props> {
-
-    render() {
-        const {id, labelId, type, secondary, disabled, onClick} = this.props;
-        return (
-            <button id={id}
-                    className={`mashroom-portal-ui-button ${secondary ? 'secondary' : ''}`}
-                    type={type || 'button'}
-                    onClick={onClick}
-                    disabled={disabled}>
-                <FormattedMessage id={labelId}/>
-            </button>
-        );
-    }
-
-}
+export default ({id, labelId, type, secondary, onClick, disabled}: Props) =>  {
+    return (
+        <button id={id}
+                className={`mashroom-portal-ui-button ${secondary ? 'secondary' : ''}`}
+                type={type || 'button'}
+                onClick={onClick}
+                disabled={disabled}>
+            <FormattedMessage id={labelId}/>
+        </button>
+    );
+};
