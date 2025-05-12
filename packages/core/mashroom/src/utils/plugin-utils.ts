@@ -1,7 +1,7 @@
 
 import {resolve} from 'path';
 import {existsSync} from 'fs';
-import {modelUtils, tsNodeUtils} from '@mashroom/mashroom-utils';
+import {modelUtils} from '@mashroom/mashroom-utils';
 
 import type {MashroomPlugin, MashroomPluginLoader, MashroomPluginContext} from '../../type-definitions';
 
@@ -16,9 +16,7 @@ export const getExternalPluginDefinitionFilePath = (pluginPackagePath: string, e
     externalPluginConfigFileNames.forEach((name) => {
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.json`));
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.js`));
-        if (tsNodeUtils.withinTsNode()) {
-            possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.ts`));
-        }
+        possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.ts`));
     });
     const existingPluginConfigFiles = possiblePluginConfigFiles.filter((path) => existsSync(path));
     if (existingPluginConfigFiles.length === 0) {

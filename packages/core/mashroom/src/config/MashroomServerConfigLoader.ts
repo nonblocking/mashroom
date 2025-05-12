@@ -2,7 +2,7 @@
 import os from 'os';
 import path from 'path';
 import {existsSync} from 'fs';
-import {readonlyUtils, configUtils, modelUtils, tsNodeUtils} from '@mashroom/mashroom-utils';
+import {readonlyUtils, configUtils, modelUtils} from '@mashroom/mashroom-utils';
 import ServerConfigurationError from '../errors/ServerConfigurationError';
 import defaultConfig from './mashroom-default-config';
 
@@ -44,12 +44,8 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             serverRootPath = path.resolve(serverRootPath);
         }
 
-        let possibleConfigFiles = CONFIG_FILES;
-        if (!tsNodeUtils.withinTsNode()) {
-            possibleConfigFiles = possibleConfigFiles.filter((p) => !p.endsWith('.ts'));
-        }
-        this._logger.info('Considering config files (multiple possible):', possibleConfigFiles);
-        const configFiles = possibleConfigFiles.map((name) => `${serverRootPath}/${name}`);
+        this._logger.info('Considering config files (multiple possible):', CONFIG_FILES);
+        const configFiles = CONFIG_FILES.map((name) => `${serverRootPath}/${name}`);
         const existingConfigFiles = configFiles.filter((file) => existsSync(file));
 
         let config = defaultConfig;

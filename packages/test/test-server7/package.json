@@ -10,6 +10,7 @@
     },
     "scripts": {
         "type-check": "tsc --noEmit",
-        "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && ts-node ../../core/mashroom/dist/server.js\""
+        "startTsNode": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && ts-node ../../core/mashroom/dist/server.js\"",
+        "startNode24": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && node ../../core/mashroom/dist/server.js\""
     }
 }

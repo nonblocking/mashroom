@@ -1,9 +1,8 @@
 {
     "compilerOptions": {
-        "target": "esnext",
-        "module": "commonjs",
-        "sourceMap": true,
+        "target": "ESNext",
+        "module": "NodeNext",
         "strict": true,
-        "esModuleInterop": true
+        "allowImportingTsExtensions": true
     }
 }

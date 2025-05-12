@@ -2,7 +2,6 @@
 import os from 'os';
 import {existsSync} from 'fs';
 import log4js from 'log4js';
-import {tsNodeUtils} from '@mashroom/mashroom-utils';
 import defaultConfig from './log4js-default-config';
 
 import type {LogLevel} from '../../../../type-definitions';
@@ -33,22 +32,18 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
 
     async init(serverRootPath: string) {
         try {
-            let possibleConfigFiles = CONFIG_FILES;
-            if (!tsNodeUtils.withinTsNode()) {
-                possibleConfigFiles = possibleConfigFiles.filter((p) => !p.endsWith('.ts'));
-            }
-            const configFiles = possibleConfigFiles.map((name) => `${serverRootPath}/${name}`);
+            const configFiles = CONFIG_FILES.map((name) => `${serverRootPath}/${name}`);
             const configFile = configFiles.find((file) => existsSync(file));
 
             if (configFile) {
                 const logConfigModule = require(configFile);
                 const logConfig = logConfigModule.default ?? logConfigModule;
                 log4js.configure(logConfig);
-                log4js.getLogger().info('Considering log config files (take the first match): ', possibleConfigFiles);
+                log4js.getLogger().info('Considering log config files (take the first match): ', CONFIG_FILES);
                 log4js.getLogger().info(`log4js configured from: ${configFile}`);
             } else {
                 log4js.configure(defaultConfig);
-                log4js.getLogger().info('Considering log config files: ', possibleConfigFiles);
+                log4js.getLogger().info('Considering log config files: ', CONFIG_FILES);
                 log4js.getLogger().warn('No log config files found, using default config');
             }
         } catch (error) {
