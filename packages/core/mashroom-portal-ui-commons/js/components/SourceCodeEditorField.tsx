@@ -62,6 +62,7 @@ export default ({id, name, labelId, language, height, theme}: Props) => {
                 <div style={{ height: height || 200, marginBottom: 3 }}>
                     <CodeMirror
                         ref={cmRef}
+                        id={id}
                         value={field.value}
                         height={height ? `${height}px` : 'auto'}
                         theme={codeMirrorTheme}

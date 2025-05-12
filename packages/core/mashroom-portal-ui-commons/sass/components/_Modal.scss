@@ -60,6 +60,7 @@
     }
 
     .mashroom-portal-ui-modal-content {
+        min-height: 100px;
         overflow: hidden;
         background-color: var(--mashroom-portal-background-color-modal, white);
     }

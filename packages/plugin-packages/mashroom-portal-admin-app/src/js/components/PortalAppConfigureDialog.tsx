@@ -125,12 +125,11 @@ export default () => {
             appConfig = JSON.stringify(appConfigObj, null, 2);
         }
 
-
         return {
             appConfig,
             roles: selectedPortalApp.permittedRoles
         };
-    }, [selectedPortalApp?.portalAppName, selectedPortalApp?.instanceId]);
+    }, [selectedPortalApp?.portalAppName, selectedPortalApp?.instanceId, selectedPortalApp?.permittedRoles]);
 
     return (
         <Modal

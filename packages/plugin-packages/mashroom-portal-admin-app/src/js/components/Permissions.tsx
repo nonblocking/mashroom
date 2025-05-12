@@ -15,21 +15,17 @@ export default () => {
 
     const handleAddRoleFromButton = useCallback(() => {
         if (enteredRole) {
-            if (addRoleToListRef.current) {
-                addRoleToListRef.current(enteredRole);
-            }
-            if (resetRoleInputRef.current) {
-                resetRoleInputRef.current();
-            }
+            addRoleToListRef.current?.(enteredRole);
+            resetRoleInputRef.current?.();
         }
     }, [enteredRole, addRoleToListRef.current, resetRoleInputRef.current]);
 
     const handleRoleSelected = useCallback((selectedRole: string) => {
-        setEnteredRole(selectedRole);
+        addRoleToListRef.current?.(selectedRole);
         setTimeout(() => {
-            handleAddRoleFromButton();
-        }, 0);
-    }, [handleAddRoleFromButton]);
+            resetRoleInputRef.current?.();
+        }, 100);
+    }, [addRoleToListRef.current, resetRoleInputRef.current]);
 
     const captureInputReset = useCallback((cb: () => void) => {
         resetRoleInputRef.current = cb;

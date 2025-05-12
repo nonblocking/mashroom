@@ -1,6 +1,6 @@
 import React  from 'react';
-import { ErrorMessage, FieldLabel } from '@mashroom/mashroom-portal-ui-commons';
-import { useField } from 'formik';
+import {ErrorMessage, FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
+import {useField} from 'formik';
 import {useSelector} from 'react-redux';
 
 import type { I18NString } from '@mashroom/mashroom/type-definitions';
@@ -48,66 +48,60 @@ export default ({ id, name, labelId}: Props) => {
         helpers.setValue(val);
     };
 
-    const renderInputs = () => {
-        const val = getValue();
-        const inputs = [];
-        inputs.push(
-            <input key='default-lang' type='text'
-                   name={field.name}
-                   value={val[languages.default] ?? ''}
-                   onChange={(e) => handleValueChange(languages.default, e.target.value)}
-                   onBlur={handleBlur}
-            />
-        );
+    const error = meta.touched && !!meta.error;
+    const val = getValue();
+    let availableLanguages = [...languages.available];
+    availableLanguages = availableLanguages.filter((l) => l !== languages.default);
+    const inputFields = [];
 
-        let availableLanguages = [...languages.available];
-        availableLanguages = availableLanguages.filter((l) => l !== languages.default);
-        for (const lang of languages.available) {
-            if (lang === languages.default) {
-                continue;
-            }
-            if (typeof (val[lang]) !== 'undefined') {
-                inputs.push(
-                    <div key={lang} className='translation'>
-                        <div className='lang'>{lang}:</div>
-                        <input type='text'
-                               name={`${field.name}.${lang}`}
-                               value={val[lang] ?? ''}
-                               onChange={(e) => handleValueChange(lang, e.target.value)}
-                               onBlur={handleBlur}
-                        />
-                        <div className='remove' onClick={() => handleRemoveLang(lang)}>&nbsp;</div>
-                    </div>
-                );
-                availableLanguages = availableLanguages.filter((l) => l !== lang);
-            }
+    inputFields.push(
+        <input key='default-lang' type='text'
+               name={field.name}
+               value={val[languages.default] ?? ''}
+               onChange={(e) => handleValueChange(languages.default, e.target.value)}
+               onBlur={handleBlur}
+        />
+    );
+    for (const lang of languages.available) {
+        if (lang === languages.default) {
+            continue;
         }
-
-        if (availableLanguages.length >= 0) {
-            inputs.push(
-                <div key='available-languages' className='available-languages'>
-                    {availableLanguages.map((lang) => (
-                        <span key={lang} className='add-language'
-                              onClick={() => handleAddLang(lang)}>{lang}</span>
-                    ))}
+        if (typeof (val[lang]) !== 'undefined') {
+            inputFields.push(
+                <div key={lang} className='translation'>
+                    <div className='lang'>{lang}:</div>
+                    <input type='text'
+                           name={`${field.name}.${lang}`}
+                           value={val[lang] ?? ''}
+                           onChange={(e) => handleValueChange(lang, e.target.value)}
+                           onBlur={handleBlur}
+                    />
+                    <div className='remove' onClick={() => handleRemoveLang(lang)}>&nbsp;</div>
                 </div>
             );
+            availableLanguages = availableLanguages.filter((l) => l !== lang);
         }
+    }
 
-        return (
-            <div className='i18n-field-inputs'>
-                {inputs}
+    if (availableLanguages.length >= 0) {
+        inputFields.push(
+            <div key='available-languages' className='available-languages'>
+                {availableLanguages.map((lang) => (
+                    <span key={lang} className='add-language' onClick={() => handleAddLang(lang)}>
+                        {lang}
+                    </span>
+                ))}
             </div>
         );
-    };
-
-    const error = meta.touched && !!meta.error;
+    }
 
     return (
         <div className={`i18nstring-field mashroom-portal-ui-input ${error ? 'error' : ''}`}>
             <FieldLabel htmlFor={id} labelId={labelId} />
             <div>
-                {renderInputs()}
+                <div className='i18n-field-inputs'>
+                    {inputFields}
+                </div>
                 {error && <ErrorMessage messageId={meta.error || ''} />}
             </div>
         </div>

@@ -19,6 +19,8 @@ const loadJs = async (path: string): Promise<void> => {
     }
     scriptElem.src = path;
 
+    document.head.appendChild(scriptElem);
+
     await new Promise<void>((resolve, reject) => {
         scriptElem.addEventListener('error', (error: any) => {
             console.error('Error loading JS resource: ', path, error);
@@ -26,10 +28,6 @@ const loadJs = async (path: string): Promise<void> => {
         });
         scriptElem.addEventListener('load', () => resolve());
     });
-
-    if (document.head) {
-        document.head.appendChild(scriptElem);
-    }
 
     LOADED_SCRIPTS.push(scriptElem);
 };
