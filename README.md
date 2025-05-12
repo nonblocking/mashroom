@@ -94,9 +94,9 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 ## Development
 
-For development Node.js >= 18 is required.
+For development Node.js >= 20 is required.
 
-After cloning the repository just run
+After cloning the repository run
 
     npm run setup
 

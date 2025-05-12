@@ -6,7 +6,7 @@ export default function (api) {
     [
       '@babel/preset-env', {
         'targets': {
-          'node': '18'
+          'node': '20'
         },
         'exclude': [
             'transform-dynamic-import'

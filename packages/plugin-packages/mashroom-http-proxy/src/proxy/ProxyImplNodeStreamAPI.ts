@@ -418,7 +418,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                 if (!res.headersSent) {
                     res.sendStatus(504);
                 }
-            } else if (req.closed && (error.code === 'ERR_STREAM_PREMATURE_CLOSE' || (!proxyRequest?.closed && error.code === 'ECONNRESET' && error.message === 'aborted'))) {
+            } else if (req.closed && (error.code === 'ERR_STREAM_PREMATURE_CLOSE' || error.code === 'ERR_STREAM_UNABLE_TO_PIPE' || (!proxyRequest?.closed && error.code === 'ECONNRESET' && error.message === 'aborted'))) {
                 logger.info(`Request aborted by client: '${targetUri}'`);
             } else if (!res.headersSent && error.code === 'ECONNRESET') {
                 if (this._retryOnReset && retry < MAX_RETRIES) {

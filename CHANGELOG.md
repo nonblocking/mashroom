@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * Added support for Node.js 24, dropped support for 18.x which reached EOL
  * Admin Toolbar: Upgrade to React 19 and modernized
  * Sandbox App: Upgrade to React 19 and modernized
  * Added source maps to all Apps
