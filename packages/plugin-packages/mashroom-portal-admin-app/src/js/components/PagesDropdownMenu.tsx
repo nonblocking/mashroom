@@ -84,7 +84,6 @@ export default () => {
                     role="button"
                     tabIndex={0}
                     onKeyPress={(e) => callOnEnter(e, () => handleConfigure(page))}
-                    aria-label={`Configure ${page.title}`}
                 >
                     &nbsp;
                 </div>
@@ -94,7 +93,6 @@ export default () => {
                     role="button"
                     tabIndex={0}
                     onKeyPress={(e) => callOnEnter(e, () => handleDelete(page))}
-                    aria-label={`Delete ${page.title}`}
                 >
                     &nbsp;
                 </div>
