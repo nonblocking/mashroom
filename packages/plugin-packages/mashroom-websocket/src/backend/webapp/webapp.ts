@@ -21,8 +21,8 @@ app.get('/test', (req: Request, res: Response) => {
     res.render('test');
 });
 
-app.get('/test_client.js', (req: Request, res: Response) => {
-    res.sendFile(path.resolve(__dirname, '../public/test_client.js'));
+app.get('/test-client.js', (req: Request, res: Response) => {
+    res.sendFile(path.resolve(__dirname, '../public/test-client.js'));
 });
 
 export default app;
