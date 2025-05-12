@@ -32,14 +32,6 @@ export default () => {
         dataLoadingService.loadPageTree();
     }, []);
 
-    const handleGoto = useCallback((page: FlatPage) => {
-        const pageUrl = `${portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
-        // Using setTimeout to allow dropdown to close or other UI updates before navigation
-        setTimeout(() => {
-            global.location.href = pageUrl;
-        }, 0);
-    }, []);
-
     const handleConfigure = useCallback((page: FlatPage) => {
         closeDropDownRef.current?.();
         initConfigurePage(page.pageId);
@@ -70,34 +62,37 @@ export default () => {
     } else if (pages.pagesFlattened.length === 0) {
         dropdownContent = <div className='no-pages-message'>No pages available.</div>;
     } else {
-        const pageItems = pages.pagesFlattened.map((page) => (
-            <div key={page.pageId} className='page'>
-                <div className='portal-page-link'>
-                    {padWithSpaces(page.level * 2)}
-                    <a onClick={() => handleGoto(page)}>
-                        {page.title}
-                    </a>
+        const pageItems = pages.pagesFlattened.map((page) => {
+            const pageUrl = `${portalSiteService.getCurrentSiteUrl()}${page.friendlyUrl}`;
+            return  (
+                <div key={page.pageId} className='page'>
+                    <div className='portal-page-link'>
+                        {padWithSpaces(page.level * 2)}
+                        <a href={pageUrl}>
+                            {page.title}
+                        </a>
+                    </div>
+                    <div
+                        className='configure'
+                        onClick={() => handleConfigure(page)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => callOnEnter(e, () => handleConfigure(page))}
+                    >
+                        &nbsp;
+                    </div>
+                    <div
+                        className='delete'
+                        onClick={() => handleDelete(page)}
+                        role="button"
+                        tabIndex={0}
+                        onKeyPress={(e) => callOnEnter(e, () => handleDelete(page))}
+                    >
+                        &nbsp;
+                    </div>
                 </div>
-                <div
-                    className='configure'
-                    onClick={() => handleConfigure(page)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyPress={(e) => callOnEnter(e, () => handleConfigure(page))}
-                >
-                    &nbsp;
-                </div>
-                <div
-                    className='delete'
-                    onClick={() => handleDelete(page)}
-                    role="button"
-                    tabIndex={0}
-                    onKeyPress={(e) => callOnEnter(e, () => handleDelete(page))}
-                >
-                    &nbsp;
-                </div>
-            </div>
-        ));
+            );
+        });
         dropdownContent = <div className='pages'>{pageItems}</div>;
     }
 
