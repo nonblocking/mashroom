@@ -350,7 +350,8 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         requestStreamTransformers: Array<Transform>;
         retry: number;
     }): Promise<void> {
-        const {startTime, req, res, logger, targetUri,
+        const {
+            startTime, req, res, logger, targetUri,
             fullTargetUri, proxyRequestHttpHeaders, requestStreamTransformers, retry
         } = config;
         let aborted = false;
@@ -366,7 +367,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             // Stream the client request
             await pipeline(
                 req,
-                ...requestStreamTransformers /* help Typescript to understand which signature to use */ as  [Transform],
+                ...requestStreamTransformers /* help TypeScript to understand which signature to use */ as [Transform],
                 proxyRequest
             );
 

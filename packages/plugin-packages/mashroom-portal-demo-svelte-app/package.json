@@ -22,8 +22,8 @@
         "@mashroom/mashroom": "2.8.1",
         "@mashroom/mashroom-portal": "2.8.1",
         "@tsconfig/svelte": "^5.0.4",
-        "svelte": "^5.16.2",
-        "svelte-check": "^4.1.1",
+        "svelte": "^5.28.2",
+        "svelte-check": "^4.1.7",
         "svelte-loader": "^3.2.4"
     },
     "mashroom": {

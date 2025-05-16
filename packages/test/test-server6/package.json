@@ -4,7 +4,7 @@
     "private": true,
     "devDependencies": {
         "@mashroom/mashroom-json-schemas": "2.8.1",
-        "fs-extra": "^11.2.0"
+        "fs-extra": "^11.3.0"
     },
     "scripts": {
         "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && node ../../core/mashroom/dist/server.js\""

@@ -1,5 +1,4 @@
 
-import fetch from 'node-fetch';
 import { generators} from 'openid-client';
 import openIDConnectClient from '../openid-connect-client';
 import saveSession from '../save-session';
@@ -162,7 +161,6 @@ export default class MashroomOpenIDConnectSecurityProvider implements MashroomSe
                 id_token_hint: authData.tokenSet.id_token,
             });
             await fetch(endSessionUrl, {
-                // @ts-ignore
                 signal: abortController.signal,
             });
         } catch (e) {

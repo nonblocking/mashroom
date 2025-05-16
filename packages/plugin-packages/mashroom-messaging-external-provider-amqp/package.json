@@ -13,7 +13,7 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.8.1",
-        "rhea": "^3.0.3"
+        "rhea": "^3.0.4"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.8.1",

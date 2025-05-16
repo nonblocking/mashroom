@@ -12,7 +12,7 @@
         "dist/**"
     ],
     "dependencies": {
-        "ioredis": "^5.4.2"
+        "ioredis": "^5.6.1"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.8.1",

@@ -13,13 +13,13 @@
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.8.1",
-        "mqtt": "^5.10.3"
+        "mqtt": "^5.13.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.8.1",
         "@mashroom/mashroom-messaging": "2.8.1",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.8.1",
-        "@types/ws": "^8.5.13"
+        "@types/ws": "^8.18.1"
     },
     "jest": {
         "testEnvironment": "node",

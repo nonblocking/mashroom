@@ -1,6 +1,5 @@
 
 import {URL} from 'url';
-import fetch, {AbortError} from 'node-fetch';
 import {configUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 
@@ -230,7 +229,6 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
         const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
         try {
             const result = await fetch(`${serviceUrl}/package.json`, {
-                // @ts-ignore
                 signal: controller.signal,
             });
             if (result.ok) {
@@ -238,8 +236,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             } else {
                 this._logger.warn(`Fetching package.json from ${serviceUrl} failed with status code ${result.status}`);
             }
-        } catch (e) {
-            if (e instanceof AbortError) {
+        } catch (e: any) {
+            if (e.message.includes('aborted')) {
                 throw new Error(`Timeout: Connection to ${serviceUrl} timed out after ${this._socketTimeoutSec}sec`);
             }
             throw e;
@@ -255,7 +253,6 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
             const timeout = setTimeout(() => controller.abort(),  this._socketTimeoutSec * 1000);
             try {
                 const result = await fetch(`${serviceUrl}/${name}.json`, {
-                    // @ts-ignore
                     signal: controller.signal,
                 });
                 if (result.ok) {
@@ -265,8 +262,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob implements ScanBackgro
                 } else {
                     this._logger.debug(`Fetching ${name}.json from ${serviceUrl} failed with status code ${result.status}`);
                 }
-            } catch (e) {
-                if (e instanceof AbortError) {
+            } catch (e: any) {
+                if (e.message.includes('aborted')) {
                     throw new Error(`Timeout: Connection to ${serviceUrl} timed out after ${this._socketTimeoutSec}sec`);
                 }
                 throw e;

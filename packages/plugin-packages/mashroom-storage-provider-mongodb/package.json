@@ -12,14 +12,14 @@
         "dist/**"
     ],
     "dependencies": {
-        "mongodb": "^6.12.0"
+        "mongodb": "^6.16.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.8.1",
         "@mashroom/mashroom-monitoring-metrics-collector": "2.8.1",
         "@mashroom/mashroom-storage": "2.8.1",
         "@mashroom/mashroom-utils": "2.8.1",
-        "@shelf/jest-mongodb": "^4.3.2"
+        "@shelf/jest-mongodb": "^5.1.0"
     },
     "jest": {
         "testEnvironment": "node",

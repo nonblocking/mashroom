@@ -1,6 +1,5 @@
 
 import {createHash} from 'crypto';
-import fetch from 'node-fetch';
 import context from '../context/global-portal-context';
 import {SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX} from '../constants';
 import {getUser, isAppPermitted} from './security-utils';
@@ -134,7 +133,8 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
             const result = await fetch(ssrInitialHtmlUri, {
                 method: 'POST',
                 body: JSON.stringify(request),
-                headers: {'Content-Type': 'application/json'}
+                headers: {'Content-Type': 'application/json'},
+                signal: abortController.signal,
             });
             if (result.ok) {
                 const contentType = result.headers.get('Content-Type');

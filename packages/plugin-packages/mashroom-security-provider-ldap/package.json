@@ -13,7 +13,7 @@
     ],
     "dependencies": {
         "express": "^4.21.2",
-        "ldapts": "^7.3.0"
+        "ldapts": "^7.4.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.8.1",

@@ -31,8 +31,6 @@ const createFileStream = async (filePath: string, options: GetResourceOptions): 
         const {size, mtime} = await stat(filePath);
         const stream = createReadStream(filePath, {
             autoClose: true,
-            // signal was added in Node.js 20
-            // @ts-expect-error
             signal: options.abortSignal || undefined,
         });
         return {
