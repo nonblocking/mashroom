@@ -1,21 +1,22 @@
-
 import {nanoid} from 'nanoid';
 import {
+    SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
     WINDOW_VAR_PORTAL_API_PATH,
+    WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
+    WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
     WINDOW_VAR_PORTAL_CUSTOM_CLIENT_SERVICES,
     WINDOW_VAR_PORTAL_DEV_MODE,
     WINDOW_VAR_PORTAL_PAGE_ID,
     WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP,
     WINDOW_VAR_PORTAL_SERVICES,
-    WINDOW_VAR_PORTAL_APP_WRAPPER_TEMPLATE,
-    WINDOW_VAR_PORTAL_APP_ERROR_TEMPLATE,
-    SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX,
 } from '../../../backend/constants';
 import {HEADER_DO_NOT_EXTEND_SESSION} from './headers';
 
 import type {
-    MashroomPortalLoadedPortalAppStats,
+    AppSearchFilter,
     MashroomAvailablePortalApp,
+    MashroomKnownPortalApp,
+    MashroomPortalAppConfigEditor,
     MashroomPortalAppLifecycleHooks,
     MashroomPortalAppLoadListener,
     MashroomPortalAppPluginBootstrapFunction,
@@ -23,16 +24,14 @@ import type {
     MashroomPortalAppSetup,
     MashroomPortalClientServices,
     MashroomPortalLoadedPortalApp,
+    MashroomPortalLoadedPortalAppStats,
     MashroomPortalMasterMessageBus,
     MashroomPortalMasterStateService,
     MashroomPortalMessageBus,
+    MashroomPortalRemoteLogger,
     MashroomPortalStateService,
     MasterMashroomPortalRemoteLogger,
     ModalAppCloseCallback,
-    MashroomPortalRemoteLogger,
-    MashroomPortalAppConfigEditor,
-    MashroomKnownPortalApp,
-    AppSearchFilter,
 } from '../../../../type-definitions';
 import type {MashroomPortalPluginType, MashroomRestService} from '../../../../type-definitions/internal';
 import type ResourceManager from './ResourceManager';
@@ -117,62 +116,56 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return this._restService.get(path);
     }
 
-    loadApp(hostElementId: string, pluginName: string, instanceId: string | undefined | null, position?: number | undefined | null,
-            overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
+    async loadApp(hostElementId: string, pluginName: string, instanceId: string | undefined | null, position?: number | undefined | null,
+                  overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
         if (instanceId && this._findLoadedPortalApps(pluginName, instanceId).length > 0) {
-            return Promise.reject(`App ${pluginName}' with instance id ${instanceId} is already loaded!`);
+            throw new Error(`App ${pluginName}' with instance id ${instanceId} is already loaded!`);
         }
 
         console.info(`Loading App '${pluginName}' with instance id: ${instanceId || '<undefined>'}`);
 
-        return this._internalLoadApp(hostElementId, pluginName, instanceId, false, position, overrideAppConfig).then(
-            (loadedApp) => {
-                if (this._watch) {
-                    this._devModeStartCheckForAppUpdates(loadedApp);
-                }
-                return this._toLoadedApp(loadedApp);
-            }
-        );
+        const loadedApp = await this._internalLoadApp(hostElementId, pluginName, instanceId, false, position, overrideAppConfig);
+        if (this._watch) {
+            this._devModeStartCheckForAppUpdates(loadedApp);
+        }
+        return this._toLoadedApp(loadedApp);
     }
 
-    loadAppModal(pluginName: string, title?: string | undefined | null, overrideAppConfig?: any | undefined | null,
-                 onClose?: ModalAppCloseCallback | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
+    async loadAppModal(pluginName: string, title?: string | undefined | null, overrideAppConfig?: any | undefined | null,
+                       onClose?: ModalAppCloseCallback | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
         console.info(`Loading App '${pluginName}' modal`);
-
-        return this._internalLoadApp(HOST_ELEMENT_MODAL_OVERLAY, pluginName, null, true, null, overrideAppConfig).then(
-            (loadedApp) => {
-                if (this._watch) {
-                    this._devModeStartCheckForAppUpdates(loadedApp);
-                }
-
-                const internalOnClose = () => {
-                    if (this._watch) {
-                        this._devModeStopCheckForAppUpdates(loadedApp);
-                    }
-                    onClose?.();
-                };
-
-                this._showModalOverlay(loadedApp, title, internalOnClose);
-
-                return this._toLoadedApp(loadedApp);
+        const loadedApp = await this._internalLoadApp(HOST_ELEMENT_MODAL_OVERLAY, pluginName, null, true, null, overrideAppConfig);
+        if (this._watch) {
+            this._devModeStartCheckForAppUpdates(loadedApp);
+        }
+        const internalOnClose = () => {
+            if (this._watch) {
+                this._devModeStopCheckForAppUpdates(loadedApp);
             }
-        );
+            onClose?.();
+        };
+        this._showModalOverlay(loadedApp, title, internalOnClose);
+        return this._toLoadedApp(loadedApp);
     }
 
-    reloadApp(id: string, overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
+    async reloadApp(id: string, overrideAppConfig?: any | undefined | null): Promise<MashroomPortalLoadedPortalApp> {
         const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
-            return Promise.reject(`Cannot reload App because id not found: ${id}`);
+            throw new Error(`Cannot reload App because id not found: ${id}`);
         }
 
         console.info(`Reloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
-        return this._executeWillBeRemovedCallback(loadedAppInternal).then(() => {
+        try {
+            await this._executeWillBeRemovedCallback(loadedAppInternal);
             this._resourceManager.unloadAppResources(loadedAppInternal);
 
-            const {portalAppWrapperElement, portalAppHostElement, portalAppTitleElement} =
-                this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.title);
+            const {
+                portalAppWrapperElement,
+                portalAppHostElement,
+                portalAppTitleElement
+            } = this._createAppWrapper(loadedAppInternal.id, loadedAppInternal.pluginName, loadedAppInternal.title);
             const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
             if (parent) {
                 parent.replaceChild(portalAppWrapperElement, loadedAppInternal.portalAppWrapperElement);
@@ -183,44 +176,32 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             loadedAppInternal.loadedTs = Date.now();
 
             const pageId = this._getPageId();
+            let appSetup = await this._internalLoadAppSetup(pageId, loadedAppInternal.pluginName, loadedAppInternal.instanceId);
+            // Keep existing appConfig for dynamically loaded Apps (e.g. during hot reload)
+            const existingAppConfig = !loadedAppInternal.instanceId && loadedAppInternal.appSetup?.appConfig || {};
+            appSetup = {
+                ...appSetup,
+                appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig || {}}
+            };
+            loadedAppInternal.appSetup = appSetup;
+            loadedAppInternal.instanceId = appSetup.instanceId;
+            loadedAppInternal.title = appSetup.title;
 
-            return this._internalLoadAppSetup(pageId, loadedAppInternal.pluginName, loadedAppInternal.instanceId).then(
-                (appSetup: MashroomPortalAppSetup) => {
-                    // Keep existing appConfig for dynamically loaded Apps (e.g. during hot reload)
-                    const existingAppConfig = !loadedAppInternal.instanceId && loadedAppInternal.appSetup?.appConfig || {};
-                    appSetup = {
-                        ...appSetup,
-                        appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig || {}}
-                    };
-                    loadedAppInternal.appSetup = appSetup;
-                    loadedAppInternal.instanceId = appSetup.instanceId;
-                    loadedAppInternal.title = appSetup.title;
-
-                    this._fireLoadEvent(loadedAppInternal);
-
-                    return this._loadResources(loadedAppInternal).then(
-                        () => {
-                            console.info(`Reloading App '${loadedAppInternal.pluginName}' with setup:`, appSetup);
-                            return this._startApp(loadedAppInternal.id, loadedAppInternal.portalAppHostElement, appSetup, loadedAppInternal.pluginName).then(
-                                (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
-                                    loadedAppInternal.lifecycleHooks = lifecycleHooks;
-                                    return this._toLoadedApp(loadedAppInternal);
-                                }
-                            );
-                        }
-                    );
-                });
-            }
-        ).catch((error) => {
+            this._fireLoadEvent(loadedAppInternal);
+            await this._loadResources(loadedAppInternal);
+            console.info(`Reloading App '${loadedAppInternal.pluginName}' with setup:`, appSetup);
+            loadedAppInternal.lifecycleHooks = await this._startApp(loadedAppInternal.id, loadedAppInternal.portalAppHostElement, appSetup, loadedAppInternal.pluginName);
+            return this._toLoadedApp(loadedAppInternal);
+        } catch (error) {
             this._showLoadingError(loadedAppInternal);
             console.error(`Reloading App '${loadedAppInternal.pluginName}' failed!`, error);
             loadedAppInternal.error = true;
             this._fireLoadEvent(loadedAppInternal);
             return this._toLoadedApp(loadedAppInternal);
-        });
+        }
     }
 
-    unloadApp(id: string): void {
+   async unloadApp(id: string): Promise<void> {
         const loadedAppInternal = this._findLoadedApp(id);
         if (!loadedAppInternal) {
             console.error(`Cannot unload App because id not found: ${id}`);
@@ -230,13 +211,14 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         console.info(`Unloading App '${loadedAppInternal.pluginName}' with id: ${id}`);
         this._fireAboutToUnloadEvent(loadedAppInternal);
 
-        this._executeWillBeRemovedCallback(loadedAppInternal).then(() => {
+        try {
+            await this._executeWillBeRemovedCallback(loadedAppInternal);
             const parent = loadedAppInternal.portalAppWrapperElement.parentElement;
             if (parent) {
                 parent.removeChild(loadedAppInternal.portalAppWrapperElement);
             }
 
-            this._unsubscribeFromMessageBus(loadedAppInternal);
+            await this._unsubscribeFromMessageBus(loadedAppInternal);
             this._devModeStopCheckForAppUpdates(loadedAppInternal);
             this._resourceManager.unloadAppResources(loadedAppInternal);
 
@@ -247,7 +229,9 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 _openModalApps = _openModalApps.filter((ma) => ma.loadedApp.id !== loadedAppInternal.id);
                 this._updateModalState();
             }
-        });
+        } catch (error) {
+            console.error(`Unloading App '${loadedAppInternal.pluginName}' failed!`, error);
+        }
     }
 
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void {
@@ -361,83 +345,72 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         };
     }
 
-    checkLoadedPortalAppsUpdated(): Promise<Array<string>> {
+    async checkLoadedPortalAppsUpdated(): Promise<Array<string>> {
         /* if we are not in dev mode _lastUpdatedCheckTs is the page load time */
-        return this._getUpdatedAppsSince(this._lastUpdatedCheckTs)
-            .then((updatedApps) => {
-                const updatedAppsWithNewVersion: Array<string> = [];
-                updatedApps.forEach((ua) => {
-                    const isNewVersion = loadedPortalAppsInternal.find(({ pluginName, appSetup }) => ua.name === pluginName && ua.version !== appSetup?.version);
-                    if (isNewVersion && updatedAppsWithNewVersion.indexOf(ua.name) === -1) {
-                        updatedAppsWithNewVersion.push(ua.name);
-                    }
-                });
-                return updatedAppsWithNewVersion;
-            })
-            .catch((e) => {
-                console.warn('Check for updated Apps failed!', e);
-                return [];
+        try {
+            const updatedApps = await this._getUpdatedAppsSince(this._lastUpdatedCheckTs);
+            const updatedAppsWithNewVersion: Array<string> = [];
+            updatedApps.forEach((ua) => {
+                const isNewVersion = loadedPortalAppsInternal.find(({pluginName, appSetup}) => ua.name === pluginName && ua.version !== appSetup?.version);
+                if (isNewVersion && updatedAppsWithNewVersion.indexOf(ua.name) === -1) {
+                    updatedAppsWithNewVersion.push(ua.name);
+                }
             });
+            return updatedAppsWithNewVersion;
+        } catch (e) {
+            console.warn('Check for updated Apps failed!', e);
+            return [];
+        }
     }
 
-    prefetchResources(pluginName: string): Promise<void> {
+    async prefetchResources(pluginName: string): Promise<void> {
         const pageId = this._getPageId();
-        return this._internalLoadAppSetup(pageId, pluginName, null).then(
-            (appSetup) => {
-                // We just add a prefetch link for all resources (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Link_prefetching_FAQ)
-                if (appSetup.sharedResources?.js) {
-                    appSetup.sharedResources.js.forEach((jsResource) => this._getSharedJSResourceUrl(jsResource, appSetup));
-                }
-                if (appSetup.resources.js) {
-                    appSetup.resources.js.forEach((jsResource) => this._addPrefetchLink(this._getJSResourceUrl(jsResource, appSetup)));
-                }
-                if (appSetup.sharedResources?.css) {
-                    appSetup.sharedResources.css.forEach((jsResource) => this._addPrefetchLink(this._getSharedCSSResourceUrl(jsResource, appSetup)));
-                }
-                if (appSetup.resources.css) {
-                    appSetup.resources.css.forEach((jsResource) => this._addPrefetchLink(this._getCSSResourceUrl(jsResource, appSetup)));
-                }
-            }
-        );
+        const appSetup = await this._internalLoadAppSetup(pageId, pluginName, null);
+        // We just add a prefetch link for all resources (see https://developer.mozilla.org/en-US/docs/Web/HTTP/Link_prefetching_FAQ)
+        if (appSetup.sharedResources?.js) {
+            appSetup.sharedResources.js.forEach((jsResource) => this._getSharedJSResourceUrl(jsResource, appSetup));
+        }
+        if (appSetup.resources.js) {
+            appSetup.resources.js.forEach((jsResource_2) => this._addPrefetchLink(this._getJSResourceUrl(jsResource_2, appSetup)));
+        }
+        if (appSetup.sharedResources?.css) {
+            appSetup.sharedResources.css.forEach((jsResource_4) => this._addPrefetchLink(this._getSharedCSSResourceUrl(jsResource_4, appSetup)));
+        }
+        if (appSetup.resources.css) {
+            appSetup.resources.css.forEach((jsResource_5) => this._addPrefetchLink(this._getCSSResourceUrl(jsResource_5, appSetup)));
+        }
     }
 
     get loadedPortalApps(): Array<MashroomPortalLoadedPortalApp> {
         return loadedPortalAppsInternal.map((loadedAppInternal) => this._toLoadedApp(loadedAppInternal));
     }
 
-    private _internalLoadApp(portalAppAreaId: string, pluginName: string, instanceId: string | undefined | null, modal: boolean,
-             position?: number | undefined | null, overrideAppConfig?: any | undefined | null): Promise<LoadedPortalAppInternal> {
+    private async _internalLoadApp(portalAppAreaId: string, pluginName: string, instanceId: string | undefined | null, modal: boolean,
+                                   position?: number | undefined | null, overrideAppConfig?: any | undefined | null): Promise<LoadedPortalAppInternal> {
 
         const pageId = this._getPageId();
         let loadedAppInternal: LoadedPortalAppInternal | undefined;
 
-        return this._internalLoadAppSetup(pageId, pluginName, instanceId).then(
-            (appSetup: MashroomPortalAppSetup) => {
-                if (overrideAppConfig) {
-                    const existingAppConfig = appSetup?.appConfig || {};
-                    appSetup = {
-                        ...appSetup,
-                        appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig}
-                    };
-                }
-
-                loadedAppInternal = this._createNewAppInstance(appSetup, pluginName, instanceId, portalAppAreaId, position, modal);
-
-                this._fireLoadEvent(loadedAppInternal);
-
-                return this._loadResources(loadedAppInternal).then(
-                    () => {
-                        console.info(`Starting portal App '${pluginName}' with setup:`, appSetup);
-                        return this._startApp(loadedAppInternal!.id, loadedAppInternal!.portalAppHostElement, appSetup, pluginName).then(
-                            (lifecycleHooks: MashroomPortalAppLifecycleHooks | void) => {
-                                loadedAppInternal!.lifecycleHooks = lifecycleHooks;
-                                return loadedAppInternal!;
-                            }
-                        );
-                    }
-                );
+        try {
+            let appSetup = await this._internalLoadAppSetup(pageId, pluginName, instanceId);
+            if (overrideAppConfig) {
+                const existingAppConfig = appSetup?.appConfig || {};
+                appSetup = {
+                    ...(appSetup),
+                    appConfig: {...appSetup.appConfig, ...existingAppConfig, ...overrideAppConfig}
+                };
             }
-        ).catch((error) => {
+
+            loadedAppInternal = this._createNewAppInstance(appSetup, pluginName, instanceId, portalAppAreaId, position, modal);
+
+            this._fireLoadEvent(loadedAppInternal);
+            await this._loadResources(loadedAppInternal);
+            console.info(`Starting portal App '${pluginName}' with setup:`, appSetup);
+            loadedAppInternal!.lifecycleHooks = await this._startApp(loadedAppInternal!.id, loadedAppInternal!.portalAppHostElement, appSetup, pluginName);
+            return loadedAppInternal!;
+
+
+        } catch (error) {
             if (!loadedAppInternal) {
                 loadedAppInternal = this._createNewAppInstance(undefined, pluginName, instanceId, portalAppAreaId, position, modal);
             }
@@ -446,10 +419,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             loadedAppInternal.error = true;
             this._fireLoadEvent(loadedAppInternal);
             return loadedAppInternal;
-        });
+        }
     }
 
-    private _internalLoadAppSetup(pageId: string, pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
+    private async _internalLoadAppSetup(pageId: string, pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
         if (instanceId) {
             const preloadedAppSetup = (global as any)[WINDOW_VAR_PORTAL_PRELOADED_APP_SETUP] || {};
             if (instanceId in preloadedAppSetup) {
@@ -457,7 +430,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
                 const appSetup = preloadedAppSetup[instanceId];
                 // Use only once at the start and not on reload
                 delete preloadedAppSetup[instanceId];
-                return Promise.resolve(appSetup);
+                return appSetup;
             }
         }
 
@@ -465,15 +438,15 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return this._restService.get(path);
     }
 
-    private _loadResources(loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
+    private async _loadResources(loadedPortalApp: LoadedPortalAppInternal): Promise<void> {
         const appSetup = loadedPortalApp.appSetup;
         if (!appSetup) {
-            return Promise.reject('appSetup not loaded');
+            throw new Error('appSetup not loaded');
         }
 
         // JavaScript
         // Load the script sequentially, first the shared ones
-        let loadJsPromise: Promise<void> =  Promise.resolve();
+        let loadJsPromise: Promise<void> = Promise.resolve();
         if (appSetup.sharedResources?.js) {
             loadJsPromise = appSetup.sharedResources.js.reduce(
                 (promise, jsResource) => promise.then(() =>
@@ -501,7 +474,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return loadJsPromise;
     }
 
-    private _startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<MashroomPortalAppLifecycleHooks | void> {
+    private async _startApp(appId: string, wrapper: HTMLElement, appSetup: MashroomPortalAppSetup, pluginName: string): Promise<MashroomPortalAppLifecycleHooks | void> {
         const handleError = (error: Error) => {
             console.error(`Error in bootstrap of App '${pluginName}'`, error);
         };
@@ -509,12 +482,12 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         if (appSetup.pluginMissing) {
             const error = new Error(`Plugin does not exist: ${pluginName}`);
             handleError(error);
-            return Promise.reject(error);
+            throw error;
         }
 
         const bootstrap: MashroomPortalAppPluginBootstrapFunction = (global as any)[appSetup.globalLaunchFunction];
         if (!bootstrap) {
-            return Promise.reject(`App bootstrap function not found: ${appSetup.globalLaunchFunction}`);
+            throw new Error(`App bootstrap function not found: ${appSetup.globalLaunchFunction}`);
         }
 
         const clientServices = this._getClientServicesForApp(appId, appSetup, pluginName);
@@ -524,31 +497,27 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             bootstrapRetVal = bootstrap(wrapper, appSetup, clientServices) as any;
         } catch (error: any) {
             handleError(error);
-            return Promise.reject(error);
+            throw error;
         }
 
         if (bootstrapRetVal) {
             if (typeof (bootstrapRetVal.then) === 'function') {
                 const promise = bootstrapRetVal as Promise<void | MashroomPortalAppLifecycleHooks>;
-                return promise.then(
-                    (lifecycleMethods) => {
-                        console.info(`App successfully loaded: ${pluginName}`);
-                        return lifecycleMethods;
-                    }
-                ).catch((error) => {
+                try {
+                    const lifecycleMethods = await promise;
+                    console.info(`App successfully loaded: ${pluginName}`);
+                    return lifecycleMethods;
+                } catch (error: any) {
                     handleError(error);
-                    return Promise.reject(error);
-                });
+                    throw error;
+                }
             } else {
                 console.info(`App successfully loaded: ${pluginName}`);
-                const lifecycleHooks = bootstrapRetVal as MashroomPortalAppLifecycleHooks;
-                return Promise.resolve(lifecycleHooks);
+                return bootstrapRetVal as MashroomPortalAppLifecycleHooks;
             }
         } else {
             console.info(`App successfully loaded: ${pluginName}`);
         }
-
-        return Promise.resolve();
     }
 
     private _showModalOverlay(loadedApp: LoadedPortalAppInternal, title?: string | undefined | null, onClose?: ModalAppCloseCallback | undefined | null) {
@@ -606,11 +575,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         if (!_modalInitialized) {
             _modalInitialized = true;
-            const closeEventListener = () => {
+            const closeEventListener = async () => {
                 const currentApp = _openModalApps.pop();
                 if (currentApp) {
                     // This will automatically call _updateModalState();
-                    this.unloadApp(currentApp.loadedApp.id);
+                    await this.unloadApp(currentApp.loadedApp.id);
                     currentApp.onClose?.();
                 }
             };
@@ -782,10 +751,10 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return mrl.getAppInstance(pluginName);
     }
 
-    private _unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal): void {
+    private async _unsubscribeFromMessageBus(loadedAppInternal: LoadedPortalAppInternal) {
         const clientServices: MashroomPortalClientServices = (global as any)[WINDOW_VAR_PORTAL_SERVICES];
         const mmb = clientServices.messageBus as MashroomPortalMasterMessageBus;
-        mmb.unsubscribeEverythingFromApp(loadedAppInternal.id);
+        await mmb.unsubscribeEverythingFromApp(loadedAppInternal.id);
     }
 
     private _getPageId() {
@@ -827,28 +796,27 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         return Promise.all(promises);
     }
 
-    private _executeWillBeRemovedCallback(loadedAppInternal: LoadedPortalAppInternal): Promise<void> {
+    private async _executeWillBeRemovedCallback(loadedAppInternal: LoadedPortalAppInternal): Promise<void> {
         const handleError = (error: Error) => {
             console.warn(`Calling willBeRemoved callback of App '${loadedAppInternal.pluginName}' failed`, error);
-            return Promise.resolve();
         };
 
         if (loadedAppInternal.lifecycleHooks?.willBeRemoved) {
             try {
                 const promise = loadedAppInternal.lifecycleHooks.willBeRemoved();
                 if (promise?.then) {
-                    return promise.then(() => { /* nothing to do */ }).catch((error) => {
+                    try {
+                        await promise;
+                    } catch (error: any) {
                         return handleError(error);
-                    });
+                    }
                 } else {
-                    return Promise.resolve();
+                    return;
                 }
             } catch (error: any) {
                 return handleError(error);
             }
         }
-
-        return Promise.resolve();
     }
 
     private _fireLoadEvent(loadedAppInternal: LoadedPortalAppInternal) {
@@ -936,32 +904,27 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         }
     }
 
-    private _devModeCheckForAppUpdates() {
-        // console.info('Checking for App updates since: ', this._lastUpdatedCheckTs);
+    private async _devModeCheckForAppUpdates() {
+        try {
+            const updatedApps = await this._getUpdatedAppsSince(this._lastUpdatedCheckTs);
 
-        this._getUpdatedAppsSince(this._lastUpdatedCheckTs).then(
-            (updatedApps: Array<MashroomAvailablePortalApp>) => {
-                if (Array.isArray(updatedApps) && updatedApps.length > 0) {
-                    console.info('Updated apps found:', updatedApps);
-                    let promise = Promise.resolve();
-                    updatedApps
-                        .filter((app) => this._watchedApps.find((watchedApp) => watchedApp.pluginName === app.name))
-                        .forEach((app) => {
-                            promise = promise.then(() => this._updateApp(app));
-                        });
-                    if (promise) {
-                        promise.then(
-                            () => {
-                                // Nothing to do
-                            },
-                            (error) => {
-                                console.warn('Failed to update some apps', error);
-                            }
-                        );
+            if (Array.isArray(updatedApps) && updatedApps.length > 0) {
+                console.info('Updated apps found:', updatedApps);
+
+                // Filter and update apps sequentially
+                for (const app of updatedApps.filter(app =>
+                    this._watchedApps.find(watchedApp => watchedApp.pluginName === app.name)
+                )) {
+                    try {
+                        await this._updateApp(app);
+                    } catch (error) {
+                        console.warn('Failed to update app:', app.name, error);
                     }
                 }
             }
-        );
+        } catch (error) {
+            console.warn('Failed to check for app updates:', error);
+        }
 
         this._lastUpdatedCheckTs = Date.now();
     }

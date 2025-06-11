@@ -571,7 +571,7 @@ export default class PortalPageRenderController {
             }
         `;
         const addScriptsScript = serverSideRenderingInjectHeadScript.map((script) => {
-            // If the script contains an escape character we must keep it
+            // If the script contains an escape character, we must keep it
             const fixedScript = script
                 .replace(/\\/g, '\\\\')
                 .replace(/`/g, '\\`');

@@ -49,32 +49,26 @@ export default class RemoteMessagingClient {
         });
     }
 
-    subscribe(topic: string): Promise<void> {
+    async subscribe(topic: string): Promise<void> {
         const subscribeRequest: MashroomMessagingWebSocketSubscribeRequest = {
             messageId: this._createId(),
             command: 'subscribe',
             topic,
         };
-        return this._webSocketSend(subscribeRequest).then(
-            () => {
-                if (this._subscribedTopics.indexOf(topic) === -1) {
-                    this._subscribedTopics.push(topic);
-                }
-            }
-        );
+        await this._webSocketSend(subscribeRequest);
+        if (this._subscribedTopics.indexOf(topic) === -1) {
+            this._subscribedTopics.push(topic);
+        }
     }
 
-    unsubscribe(topic: string): Promise<void> {
+    async unsubscribe(topic: string): Promise<void> {
         const subscribeRequest: MashroomMessagingWebSocketUnsubscribeRequest = {
             messageId: this._createId(),
             command: 'unsubscribe',
             topic,
         };
-        return this._webSocketSend(subscribeRequest).then(
-            () => {
-                this._subscribedTopics = this._subscribedTopics.filter((t) => t !== topic);
-            }
-        );
+        await this._webSocketSend(subscribeRequest);
+        this._subscribedTopics = this._subscribedTopics.filter((t) => t !== topic);
     }
 
     publish(topic: string, message: any): Promise<void> {

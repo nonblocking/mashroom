@@ -45,7 +45,7 @@ export default class MashroomPortalUserInactivityHandler {
         setTimeout(() => this._checkExpirationTime(), timoutSec * 1000);
     }
 
-    private _checkExpirationTime() {
+    private async _checkExpirationTime(): Promise<void> {
         const timeLeft = this._getTimeLeftSec();
         if (timeLeft <= warnBeforeAuthenticationExpirationSec && timeLeft > 5 && timeLeft % 5 !== 0) {
             // Limit the server requests to max once per 5sec
@@ -54,17 +54,15 @@ export default class MashroomPortalUserInactivityHandler {
             return;
         }
 
-        this._portalUserService.getTimeToAuthenticationExpiration().then(
-            (timeToExpiration) => {
-                if (timeToExpiration !== null) {
-                    this._timeToAuthenticationExpirationMs = timeToExpiration;
-                } else {
-                    // Just assume the user have a couple of minutes left and check again in 60sec (in _handleExpirationTimeUpdate())
-                    this._timeToAuthenticationExpirationMs = (warnBeforeAuthenticationExpirationSec + 300) * 1000;
-                }
-                this._handleExpirationTimeUpdate();
-            }
-        );
+        const timeToExpiration = await this._portalUserService.getTimeToAuthenticationExpiration();
+
+        if (timeToExpiration !== null) {
+            this._timeToAuthenticationExpirationMs = timeToExpiration;
+        } else {
+            // Assume the user has a couple of minutes left and check again in 60 sec (in _handleExpirationTimeUpdate())
+            this._timeToAuthenticationExpirationMs = (warnBeforeAuthenticationExpirationSec + 300) * 1000;
+        }
+        this._handleExpirationTimeUpdate();
     }
 
     private _extendAuthentication() {

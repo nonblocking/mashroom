@@ -45,21 +45,19 @@ export default class MashroomPortalPageServiceImpl implements MashroomPortalPage
         return friendlyUrl;
     }
 
-    getPageId(pageUrl: string): Promise<string | undefined> {
+    async getPageId(pageUrl: string): Promise<string | undefined> {
         const friendlyUrl = this.getPageFriendlyUrl(pageUrl);
         if (this._pageTree) {
             return Promise.resolve(this._findPageIdInTree(friendlyUrl, this._pageTree));
         }
 
-        return this._getPageTree().then(
-            (pageTree) => {
-                this._pageTree = pageTree;
-                return this._findPageIdInTree(friendlyUrl, this._pageTree);
-            }
-        ).catch((e) => {
+        try {
+            this._pageTree = await this._getPageTree();
+            return this._findPageIdInTree(friendlyUrl, this._pageTree);
+        } catch (e) {
             console.error('Loading page tree failed', e);
-            return Promise.resolve(undefined);
-        });
+            return undefined;
+        }
     }
 
     getPageContent(pageId: string): Promise<MashroomPortalPageContent> {

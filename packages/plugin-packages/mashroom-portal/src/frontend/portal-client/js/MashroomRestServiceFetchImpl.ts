@@ -39,64 +39,60 @@ export default class RestServiceFetchImpl implements MashroomRestService {
         return new RestServiceFetchImpl(apiBasePath);
     }
 
-    private _fetch(path: string, method: HttpMethod = 'GET', jsonData: any | undefined | null, extraHeaders?: Record<string, string> | undefined): Promise<any> {
-        return new Promise((resolve, reject) => {
+    private async _fetch(path: string, method: HttpMethod = 'GET', jsonData: any | undefined | null, extraHeaders?: Record<string, string> | undefined): Promise<any> {
+        const headers: any = {
+            ...extraHeaders || {},
+            Accept: 'application/json',
+        };
 
-            const headers: any = {
-                ...extraHeaders || {},
-                Accept: 'application/json',
-            };
+        if (CSRF_TOKEN) {
+            headers['X-CSRF-Token'] = CSRF_TOKEN;
+        }
 
-            if (CSRF_TOKEN) {
-                headers['X-CSRF-Token'] = CSRF_TOKEN;
-            }
+        const config: any = {
+            method,
+            headers,
+            credentials: 'same-origin',
+        };
 
-            const config: any = {
-                method,
-                headers,
-                credentials: 'same-origin',
-            };
+        if (jsonData && method !== 'GET') {
+            headers['Content-Type'] = 'application/json';
+            config['body'] = JSON.stringify(jsonData);
+        }
 
-            if (jsonData && method !== 'GET') {
-                headers['Content-Type'] = 'application/json';
-                config['body'] = JSON.stringify(jsonData);
-            }
-
+        try {
             const fetchUrl = `${this.apiBasePath}${path}`;
-            fetch(fetchUrl, config)
-                .then((response: Response) => {
-                    response.text()
-                        .then((responseText) => {
-                            let responseBody = null;
+            const response = await fetch(fetchUrl, config);
+            const responseText = await response.text();
 
-                            try {
-                                responseBody = JSON.parse(responseText);
-                            } catch (e) {
-                                // JSON response is optional
-                                responseBody = responseText;
-                            }
+            let responseBody = null;
+            try {
+                responseBody = JSON.parse(responseText);
+            } catch {
+                // JSON response is optional
+                responseBody = responseText;
+            }
 
-                            const locationHeader = response.headers.get('Location');
+            const locationHeader = response.headers.get('Location');
 
-                            if (response.status === 201 && locationHeader) {
-                                const createdResponse: CreatedResponse = {
-                                    location: locationHeader,
-                                };
-                                resolve(createdResponse);
-                            } else if (response.ok) {
-                                resolve(responseBody);
-                            } else {
-                                reject(this._createError(response.status, response.statusText));
-                            }
-                        })
-                        .catch((error) => {
-                            reject(this._createError(400, error.message, error.stack));
-                        });
-                })
-                .catch((error) => {
-                    reject(this._createError(0, error.message, error.stack));
-                });
-        });
+            if (response.status === 201 && locationHeader) {
+                return {
+                    location: locationHeader,
+                } as CreatedResponse;
+            }
+
+            if (response.ok) {
+                return responseBody;
+            }
+
+            throw this._createError(response.status, response.statusText);
+        } catch (error: any) {
+            if (error.status) {
+                throw error; // Re-throw our custom error
+            }
+            // Handle fetch errors
+            throw this._createError(0, error.message, error.stack);
+        }
     }
 
     _createError(status: number, message: string, stack?: string): Error {

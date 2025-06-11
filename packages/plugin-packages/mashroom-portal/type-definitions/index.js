@@ -731,68 +731,69 @@ export interface MashroomPortalAppService {
     searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
-     * Load portal app to given host element at given position (or at the end if position is not set)
+     * Load a Portal App into given host element at given position (or at the end if position is not set)
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadApp(appAreaId: string, pluginName: string, instanceId: ?string, position?: ?number, overrideAppConfig?: ?Object): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Load portal app into a modal overlay.
+     * Load a Portal App into a modal overlay.
      *
      * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadAppModal(pluginName: string, title?: ?string, overrideAppConfig?: ?Object, onClose?: ?ModalAppCloseCallback): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Reload given portal app
+     * Reload given Portal App.
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always resolve!
+     * If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
      */
     reloadApp(id: string, overrideAppConfig?: ?Object): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Unload given portal app
+     * Unload given Portal App.
      */
-    unloadApp(id: string): void;
+    unloadApp(id: string): Promise<void>;
 
     /**
-     * Move a loaded app to another area (to another host element within the DOM)
+     * Move a loaded App to another area (to another host element within the DOM)
      */
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void;
 
     /**
-     * Show the name and version for all currently loaded apps in a overlay (for debug purposes)
+     * Show the name and version for all currently loaded App in an overlay (for debug purposes)
      */
     showAppInfos(customize?: (portalApp: MashroomPortalLoadedPortalApp, overlay: HTMLDivElement) => void): void;
 
     /**
-     * Hide all app info overlays
+     * Hide all App info overlays
      */
     hideAppInfos(): void;
 
     /**
-     * Add listener for load events (fired after an app has been loaded an attached to the page)
+     * Add a listener for load events (fired after an App has been loaded and attached to the page)
      */
     registerAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Remove listener for load events
+     * Remove a listener for load events
      */
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Add listener for unload events (fired before an app will be detached from the page)
+     * Add a listener for unload events (fired before an App will be detached from the page)
      */
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Remove listener for unload events
+     * Remove a listener for unload events
      */
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Load the setup for given app/plugin name on the current page
+     * Load the setup for given App/plugin name on the current page
      */
     loadAppSetup(pluginName: string, instanceId: ?string): Promise<MashroomPortalAppSetup>;
 
@@ -810,7 +811,7 @@ export interface MashroomPortalAppService {
     checkLoadedPortalAppsUpdated(): Promise<Array<string>>;
 
     /**
-     * Prefetch resources of given app/plugin. This is useful if you know which apps you will have to load
+     * Prefetch resources of given App/plugin. This is useful if you know which apps you will have to load
      * in the future and want to minimize the loading time.
      */
     prefetchResources(pluginName: string): Promise<void>;
@@ -1075,15 +1076,15 @@ export interface MashroomPortalMessageBus {
 
 export interface MashroomPortalMasterMessageBus extends MashroomPortalMessageBus {
     /**
-     * Get an app specific instance.
+     * Get an App specific instance.
      * The returned instance will set the senderId on the MashroomPortalMessageBusSubscriberCallback to the given id.
      */
     getAppInstance(appId: string): MashroomPortalMessageBus;
 
     /**
-     * Unsubscribe/Unregister everything from given app (for cleanup after unload)
+     * Unsubscribe/Unregister everything from a given App (for cleanup after unload)
      */
-    unsubscribeEverythingFromApp(appId: string): void;
+    unsubscribeEverythingFromApp(appId: string): Promise<void>;
 }
 
 export interface MashroomPortalStateService {

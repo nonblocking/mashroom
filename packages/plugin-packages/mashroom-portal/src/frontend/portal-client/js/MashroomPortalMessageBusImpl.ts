@@ -129,22 +129,19 @@ export default class MashroomPortalMessageBusImpl implements MashroomPortalMaste
         };
     }
 
-    unsubscribeEverythingFromApp(appId: string): void {
+    async unsubscribeEverythingFromApp(appId: string): Promise<void> {
         console.debug('Unregistering all MessageBus handlers from app:', appId);
 
         for (const topic in this._subscriptionMap) {
-            this._subscriptionMap[topic].forEach((subscription) => {
+            for (const subscription of this._subscriptionMap[topic]) {
                 if (subscription.appId === appId) {
-                    this._unsubscribe(topic, subscription.callback).then(
-                        () => {
-                            // Nothing to do
-                        },
-                        (error) => {
-                            console.error(`Unsubscribing app ${appId} from topic ${topic} failed`, error);
-                        }
-                    );
+                    try {
+                        await this._unsubscribe(topic, subscription.callback);
+                    } catch (error) {
+                        console.error(`Unsubscribing app ${appId} from topic ${topic} failed`, error);
+                    }
                 }
-            });
+            }
         }
 
         this._interceptors.forEach((wrapper) => {

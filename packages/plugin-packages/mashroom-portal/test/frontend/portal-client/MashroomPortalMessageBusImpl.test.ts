@@ -267,7 +267,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         expect(match).toBeTruthy();
     });
 
-    it('should unsubscribe after app unload', () => {
+    it('should unsubscribe after app unload', async () => {
         const messageBus = new MashroomPortalMessageBusImpl();
         const messageBusApp1 = messageBus.getAppInstance('app1');
         const messageBusApp2 = messageBus.getAppInstance('app2');
@@ -281,7 +281,7 @@ describe('MashroomPortalMessageBusImpl', () => {
         // @ts-ignore
         expect(messageBus._interceptors.length).toBe(1);
 
-        messageBus.unsubscribeEverythingFromApp('app1');
+        await messageBus.unsubscribeEverythingFromApp('app1');
 
         // @ts-ignore
         expect(messageBus._subscriptionMap['foo'].length).toBe(1);
