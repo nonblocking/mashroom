@@ -28,7 +28,8 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (portalAppHostElemen
 
     return {
         willBeRemoved: () => {
-            unmount(app);
+            console.info('Unmounting Svelte Demo App');
+            return unmount(app);
         }
     };
 };
