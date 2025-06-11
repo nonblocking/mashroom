@@ -393,6 +393,17 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         try {
             let appSetup = await this._internalLoadAppSetup(pageId, pluginName, instanceId);
+
+            // Check if the launch function name in appSetup would cause a conflict
+            const conflictingApp = loadedPortalAppsInternal.find((la) => la.appSetup?.globalLaunchFunction === appSetup.globalLaunchFunction);
+            if (conflictingApp) {
+                throw new Error(`Cannot load App '${pluginName}' because the bootstrap function name '${appSetup.globalLaunchFunction}' conflicts with an already loaded App: ${conflictingApp.pluginName}`);
+            }
+            // Check if the launch function already exists in the window object
+            if ((window as any)[appSetup.globalLaunchFunction]) {
+                throw new Error(`Cannot load App '${pluginName}' because the bootstrap function name '${appSetup.globalLaunchFunction}' conflicts with an existing property in the window object`);
+            }
+
             if (overrideAppConfig) {
                 const existingAppConfig = appSetup?.appConfig || {};
                 appSetup = {

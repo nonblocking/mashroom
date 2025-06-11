@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Portal: The Portal throws an error now if an App has a boostrap function name that is already used by another one
+   (this prevents Apps from overriding each other)
  * Replaced node-fetch by native (Node.js) fetch implementation
  * Added support for using TypeScript config files with Node.js 24 (see *packages/test/test-server7* for a demo)
  * Added support for Node.js 24, dropped support for 18.x which reached EOL
