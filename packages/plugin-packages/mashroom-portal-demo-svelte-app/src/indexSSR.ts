@@ -11,10 +11,21 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
         }
     });
 
+    let injectHeadScript: string | undefined;
+
+    // Not sure what result.head would contain, but it is emtpy is this specfic case.
+    // If it would contain some markup we could do the following:
+    /*
+    injectHeadScript = `
+        const tpl = document.createElement('template');
+        tpl.innerHTML = '${result.head}';
+        document.head.appendChild(tpl.content);
+    `;
+     */
+
     return {
         html: result.body,
-        // It seems result.head is empty in this case. Also, not sure if it would actually contain a script
-        // injectHeadScript: result.head,
+        injectHeadScript,
     };
 };
 
