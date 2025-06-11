@@ -11,6 +11,7 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
         }
     });
 
+    const html = result.body;
     let injectHeadScript: string | undefined;
 
     // Not sure what result.head would contain, but it is emtpy is this specfic case.
@@ -24,7 +25,7 @@ const bootstrap: MashroomPortalAppPluginSSRBootstrapFunction = async (portalAppS
      */
 
     return {
-        html: result.body,
+        html,
         injectHeadScript,
     };
 };
