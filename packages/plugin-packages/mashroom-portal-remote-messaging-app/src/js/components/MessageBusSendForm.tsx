@@ -28,7 +28,7 @@ const initialValues: FormData = {
     topic: '',
     message: `{
 
-    }`
+}`
 };
 
 export default ({messageBus}: Props) => {
