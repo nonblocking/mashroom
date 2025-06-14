@@ -12,6 +12,7 @@ module.exports = merge(common(true),  {
             type: 'commonjs',
         },
     },
+    devtool: false,
     externals: [nodeExternals({
         additionalModuleDirs: [`${__dirname }/../../../node_modules`],
     })],

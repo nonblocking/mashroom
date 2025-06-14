@@ -17,6 +17,7 @@ module.exports = merge(common(false),  {
         filename: '[name].js',
         chunkFilename: '[name].[id].js'
     },
+    devtool: 'source-map',
     optimization: {
         minimize: true,
         minimizer: [

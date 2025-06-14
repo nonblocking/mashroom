@@ -1,6 +1,5 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const mode = process.env.NODE_ENV || 'development';
-const prod = mode === 'production';
 
 module.exports =  (server) => ({
     resolve: {
@@ -48,7 +47,6 @@ module.exports =  (server) => ({
         ]
     },
     mode,
-    devtool: prod ? false : 'source-map',
     plugins: [
         new MiniCssExtractPlugin({
             filename: 'style.css'
