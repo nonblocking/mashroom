@@ -1,5 +1,8 @@
 # Mashroom Server
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![GitHub CI](https://github.com/nonblocking/mashroom/actions/workflows/mashroom_ci_build.yml/badge.svg)
+
 ## About ##
 
 *Mashroom Server* is a *Node.js* based **Microfrontend Integration Platform**. It supports the integration of *Express* web-apps on the
