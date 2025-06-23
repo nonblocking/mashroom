@@ -7,13 +7,13 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.8.1",
+    "version": "2.9.0",
     "files": [
         "dist/**",
         "default-robots.txt"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "2.8.1"
+        "@mashroom/mashroom": "2.9.0"
     },
     "jest": {
         "testEnvironment": "node",
