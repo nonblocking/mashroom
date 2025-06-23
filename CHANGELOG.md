@@ -3,6 +3,9 @@
 
 ## [unreleased]
 
+
+## 2.9.0 (June 23, 2025)
+
  * Portal: The Portal throws an error now if an App has a boostrap function name that is already used by another one
    (this prevents Apps from overriding each other)
  * Replaced node-fetch by native (Node.js) fetch implementation
