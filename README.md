@@ -33,7 +33,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 #### Portal
 
   * Registration of Single Page Applications written with any frontend framework
-    (basically you just need to implement a startup function and provide some metadata)
+    (basically, you just need to implement a startup function and provide some metadata)
   * Automatic registration of SPAs (**Remote Apps**) on remote servers or Kubernetes clusters
     (this allows independent life cycles and teams per SPA)
   * Create static pages with registered SPAs (Portal Apps) as building blocks
@@ -61,17 +61,17 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
 #### Core
 
   * Shared middlewares and services
-  * **Service abstractions** for security, internationalization, messaging, HTTP proxying, memory cache and storage
+  * **Service abstractions** for security, internationalization, messaging, HTTP proxying, memory cache, and storage
   * Existing provider plugins for security (OpenID Connect, LDAP), storage (File, MongoDB), messaging (MQTT, AMQP) and caching (Redis)
   * Integration of (existing) _Express_ web-apps
   * Integration of (existing) _Express_ (REST) APIs
-  * Role and IP based **access control** for URLs
+  * Role- and IP-based **access control** for URLs
   * Definition of access restrictions for arbitrary resources (such as Sites, Pages, App instances)
   * Single configuration file to override plugin defaults
   * Support for **custom plugin types**
   * Extensive **monitoring** and export in Prometheus format
-  * Hot deploy, undeploy and reload of all kind of plugins
-  * No compile or runtime dependencies to the server
+  * Hot deploy, undeploy, and reload of all kind of plugins
+  * No compile-time or runtime dependencies to the server
   * Fast and lightweight
 
 ## Quick Start
@@ -94,23 +94,6 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 ## Youtube Channel
 
 [https://www.youtube.com/@mashroomserver](https://www.youtube.com/@mashroomserver)
-
-## Development
-
-For development Node.js >= 20 is required.
-
-After cloning the repository run
-
-    npm run setup
-
-to install all dependencies and build the core packages.
-
-To start the test server:
-
-    cd packages/test/test-server1
-    npm start
-
-The test server will be available at http://localhost:5050
 
 ## Development Resources
 
@@ -135,3 +118,21 @@ The test server will be available at http://localhost:5050
 
 [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
 
+## Contributing
+
+If you are interested in making *Mashroom Server* better, just submit a pull request.
+
+To setup a development environment Node.js >= 20 is required.
+
+After cloning the repository run
+
+    npm run setup
+
+to install all dependencies and build the core packages.
+
+And check out one of the test servers in *packages/test* as a starting point:
+
+    cd packages/test/test-server1
+    npm start
+
+The test server will be available at http://localhost:5050
