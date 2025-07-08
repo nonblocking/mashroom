@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * K8S Remote App Registry: Fixed displaying plugin definition if some string properties contain single quotes (')
 
 ## 2.9.0 (June 23, 2025)
 
