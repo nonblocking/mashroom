@@ -166,7 +166,7 @@ export type MashroomPortalAppSetup = {
     +serverSideRendered: boolean;
     +versionHash: string,
     +proxyPaths: MashroomPortalProxyPaths,
-    // @deprecated Use proxyPaths (will be removed in Mashroom v3)
+    // @deprecated Use proxyPaths
     +restProxyPaths: MashroomPortalProxyPaths,
     +sharedResourcesBasePath: string,
     +sharedResources: ?MashroomPortalAppResources,

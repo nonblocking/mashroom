@@ -170,7 +170,9 @@ export type MashroomPortalAppSetup = {
     readonly serverSideRendered: boolean;
     readonly versionHash: string;
     readonly proxyPaths: MashroomPortalProxyPaths;
-    // @deprecated Use proxyPaths (will be removed in Mashroom v3)
+    /**
+     * @deprecated Use proxyPaths
+     */
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly sharedResourcesBasePath: string;
     readonly sharedResources: MashroomPortalAppResources | null | undefined;
@@ -236,7 +238,9 @@ export type MashroomPortalPageRenderModel = {
     readonly portalResourcesHeader: string;
     readonly portalResourcesFooter: string;
     readonly pageContent: string;
-    // @Deprecated, use pageContent; will be removed in 3.0
+    /**
+     *  @deprecated, use pageContent
+     */
     readonly portalLayout: string;
     readonly lang: string;
     readonly availableLanguages: Readonly<Array<string>>;
