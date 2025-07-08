@@ -56,7 +56,7 @@
                     "type": "array",
                     "items": {
                         "type": "string",
-                        "pattern": "^[^/].*\\.js$"
+                        "pattern": "^[^/].*\\.(m?)js$"
                     },
                     "description": "JavaScript resources. Relative to resourcesRoot"
                 },
