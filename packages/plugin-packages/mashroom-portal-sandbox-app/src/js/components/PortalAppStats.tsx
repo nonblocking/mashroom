@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 import memoryUsage from '../memory-usage';
 import type {MashroomPortalAppService} from '@mashroom/mashroom-portal/type-definitions';
@@ -10,6 +10,7 @@ type Props = {
 }
 
 export default ({portalAppService}: Props) => {
+    const {t} = useTranslation();
     const [appStats, setAppStats] = useState('');
     const [memoryStats, setMemoryStats] = useState('');
     const {activePortalApp} = useSelector((state: State) => state);
@@ -42,13 +43,13 @@ export default ({portalAppService}: Props) => {
 
     return (
         <div className='mashroom-sandbox-app-stats'>
-            <FormattedMessage id='loadedResources' />
+            {t('loadedResources')}
             {': '}
             {appStats}
             {memoryStats && (
                 <>
                     <span className='spacer' />
-                    <FormattedMessage id='pageMemoryUsage' />
+                    {t('pageMemoryUsage')}
                     {': '}
                     {memoryStats}
                 </>

@@ -1,6 +1,6 @@
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 import type {ReactNode} from 'react';
 
@@ -15,6 +15,7 @@ type Props = {
 };
 
 export default ({className, label, labelId, children, onOpen, onClose, closeRef}: Props) => {
+    const {t} = useTranslation();
     const ref = useRef<HTMLDivElement | null>(null);
     const [open, setOpen] = useState(false);
 
@@ -66,7 +67,7 @@ export default ({className, label, labelId, children, onOpen, onClose, closeRef}
     return (
         <div className={`mashroom-portal-ui-dropdown-menu ${className || ''}`} ref={ref}>
             <div className='dropdown-menu-button' onClick={toggleDropDown}>
-                <span className='dropdown-menu-button-label'>{labelId ? <FormattedMessage id={labelId}/> : label}</span>
+                <span className='dropdown-menu-button-label'>{labelId ? t(labelId) : label}</span>
             </div>
             <div className='dropdown-menu-dropdown'>
                 <div className={`dropdown-menu-content-wrapper ${open ? 'show' : ''}`}>

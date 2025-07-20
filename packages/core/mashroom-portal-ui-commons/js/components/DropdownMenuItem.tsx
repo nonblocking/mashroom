@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 type Props = {
     labelId?: string;
@@ -9,9 +9,10 @@ type Props = {
 };
 
 export default ({labelId, label, onClick}: Props) => {
+    const {t} = useTranslation();
     return (
         <div className='mashroom-portal-ui-dropdown-menu-item' onClick={onClick}>
-            <span className='dropdown-menu-item-label'>{labelId ? <FormattedMessage id={labelId}/> : label}</span>
+            <span className='dropdown-menu-item-label'>{labelId ? t(labelId) : label}</span>
         </div>
     );
 };

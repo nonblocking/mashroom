@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {Trans} from 'react-i18next';
 
 type Props = {
     messageId: string;
@@ -16,7 +16,7 @@ export default ({messageId}: Props) => {
     });
     return (
         <div className='mashroom-portal-ui-error-message'>
-            <FormattedMessage id={id} values={valuesObject} />
+            <Trans i18nKey={id} values={valuesObject} />
         </div>
     );
 };

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { FormattedMessage } from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import {useDispatch, useSelector} from 'react-redux';
 import loadPortalApp from '../load-portal-app';
 import { mergeAppConfig } from '../utils';
@@ -36,6 +36,7 @@ type Props = {
 }
 
 export default ({hostElementId, queryParams, portalAppService, messageBus, messageBusPortalAppUnderTest}: Props) => {
+    const {t} = useTranslation();
     const [permalinkCopiedToClipboard, setPermalinkCopiedToClipboard] = useState<boolean>(false);
     const {activePortalApp, host: {width: currentHostWidth}} = useSelector((state: State) => state);
     const dispatch = useDispatch();
@@ -134,23 +135,23 @@ export default ({hostElementId, queryParams, portalAppService, messageBus, messa
             <>
                 <div className='mashroom-sandbox-app-output-row'>
                     <div>
-                        <FormattedMessage id='sandboxPermalink' />
+                        {t('sandboxPermalink')}
                     </div>
                     <div>
                         <a href={permalink} target='_blank' rel="noreferrer">
-                            <FormattedMessage id='link' />
+                            {t('link')}
                         </a>
                         <div className='mashroom-sandbox-copy-permalink' onClick={() => copyToClipboard(permalink)}></div>
                         {permalinkCopiedToClipboard && (
                             <div className='mashroom-sandbox-permalink-copied'>
-                                <FormattedMessage id='copiedToClipboard' />
+                                {t('copiedToClipboard')}
                             </div>
                         )}
                     </div>
                 </div>
                 <div className='mashroom-sandbox-app-output-row'>
                     <div>
-                        <FormattedMessage id='appName' />
+                        {t('appName')}
                     </div>
                     <div>
                         <strong id='mashroom-sandbox-app-name'>{activePortalApp.appName}</strong>
@@ -158,7 +159,7 @@ export default ({hostElementId, queryParams, portalAppService, messageBus, messa
                 </div>
                 <div className='mashroom-sandbox-app-output-row'>
                     <div>
-                        <FormattedMessage id='appSetup' />
+                        {t('appSetup')}
                     </div>
                     <div>
                         <pre id='mashroom-sandbox-app-setup'>{JSON.stringify(activePortalApp.setup, null, 2)}</pre>

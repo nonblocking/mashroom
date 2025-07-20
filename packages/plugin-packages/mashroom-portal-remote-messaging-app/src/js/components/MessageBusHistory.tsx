@@ -1,30 +1,31 @@
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 import type {State} from '../types';
 
 export default () => {
+    const {t} = useTranslation();
     const {publishedMessages, receivedMessages} = useSelector((state: State) => state);
 
     return (
         <div className='mashroom-remote-messaging-app-history'>
             <div className='mashroom-remote-messaging-app-output-row'>
                 <div>
-                    <FormattedMessage id='sentRemoteMessages' />
+                    {t('sentRemoteMessages')}
                 </div>
                 <div>
                     <table className='table-striped'>
                         <thead>
                         <tr>
                             <th>
-                                <FormattedMessage id='topic' />
+                                {t('topic')}
                             </th>
                             <th>
-                                <FormattedMessage id='message' />
+                                {t('message')}
                             </th>
                             <th>
-                                <FormattedMessage id='status' />
+                                {t('status')}
                             </th>
                         </tr>
                         </thead>
@@ -56,20 +57,20 @@ export default () => {
             </div>
             <div className='mashroom-remote-messaging-app-output-row'>
                 <div>
-                    <FormattedMessage id='receivedRemoteMessages' />
+                    {t('receivedRemoteMessages')}
                 </div>
                 <div>
                     <table>
                         <thead>
                         <tr>
                             <th>
-                                <FormattedMessage id='topic' />
+                                {t('topic')}
                             </th>
                             <th>
-                                <FormattedMessage id='message' />
+                                {t('message')}
                             </th>
                             <th>
-                                <FormattedMessage id='timestamp' />
+                                {t('timestamp')}
                             </th>
                         </tr>
                         </thead>

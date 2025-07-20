@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 type Props = {
     labelId: string;
@@ -8,9 +8,11 @@ type Props = {
 }
 
 export default ({labelId, htmlFor}: Props) => {
+    const {t} = useTranslation();
+
     return (
         <label htmlFor={htmlFor} className='mashroom-portal-ui-field-label'>
-            <FormattedMessage id={labelId}/>
+            {t(labelId)}
         </label>
     );
 };

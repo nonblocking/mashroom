@@ -1,11 +1,13 @@
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import {useSelector} from 'react-redux';
 
 import type {MessageBusMessage, State} from '../types';
 
 const MessagesTable = ({id, messages}: {id: string, messages: Array<MessageBusMessage>}) => {
+    const {t} = useTranslation();
+
     if (messages.length === 0) {
         return '-';
     }
@@ -18,10 +20,10 @@ const MessagesTable = ({id, messages}: {id: string, messages: Array<MessageBusMe
                     #
                 </th>
                 <th>
-                    <FormattedMessage id='topic' />
+                    {t('topic')}
                 </th>
                 <th>
-                    <FormattedMessage id='message' />
+                    {t('message')}
                 </th>
             </tr>
             </thead>
@@ -51,6 +53,7 @@ const MessagesTable = ({id, messages}: {id: string, messages: Array<MessageBusMe
 };
 
 export default () => {
+    const {t} = useTranslation();
     const {activePortalApp, messageBusCom: {publishedByApp, publishedBySandbox}} = useSelector((state: State) => state);
 
     if (!activePortalApp) {
@@ -61,7 +64,7 @@ export default () => {
         <div className='mashroom-sandbox-app-messagebus-history'>
             <div className='mashroom-sandbox-app-output-row'>
                 <div>
-                    <FormattedMessage id='messagesFromApp' />
+                    {t('messagesFromApp')}
                 </div>
                 <div>
                     <MessagesTable id='published-by-app' messages={publishedByApp} />
@@ -69,7 +72,7 @@ export default () => {
             </div>
             <div className='mashroom-sandbox-app-output-row'>
                 <div>
-                    <FormattedMessage id='messagesFromSandbox' />
+                    {t('messagesFromSandbox')}
                 </div>
                 <div>
                     <MessagesTable id='published-by-sandbox' messages={publishedBySandbox} />

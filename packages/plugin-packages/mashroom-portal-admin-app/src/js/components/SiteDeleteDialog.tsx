@@ -1,5 +1,5 @@
 import React, {useRef, useCallback, useContext} from 'react';
-import { FormattedMessage } from 'react-intl';
+import {Trans} from 'react-i18next';
 import {
     Button,
     DialogButtons,
@@ -59,7 +59,7 @@ export default () => {
         dialogRenderContent = (
             <>
                 <DialogContent>
-                    <FormattedMessage id='confirmDeleteSite' values={{ siteTitle }}/>
+                    <Trans i18nKey='confirmDeleteSite' values={{ siteTitle }}/>
                 </DialogContent>
                 <DialogButtons>
                     <Button

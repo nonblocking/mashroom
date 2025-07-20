@@ -1,12 +1,11 @@
 // Style
 import '../../sass/style.scss';
 
-import React, {useEffect, useState, useMemo} from 'react';
+import React, {useEffect, useMemo} from 'react';
 import {Provider as ReduxProvider} from 'react-redux';
-import {IntlProvider} from 'react-intl';
 import store from '../store/store';
 import {setUserName, setCurrentLanguage} from '../store/actions';
-import loadMessages from '../messages';
+import MessagesProvider from '../messages/MessagesProvider';
 import {DependencyContextProvider} from '../DependencyContext';
 import PortalAppManagementServiceImpl from '../services/PortalAppManagementServiceImpl';
 import DataLoadingServiceImpl from '../services/DataLoadingServiceImpl';
@@ -37,12 +36,9 @@ export default ({
     portalAppService,
     portalAdminService
 }: Props) => {
-    const [messages, setMessages] = useState({});
-
     useEffect(() => {
         store.dispatch(setUserName(userName || 'Administrator'));
         store.dispatch(setCurrentLanguage(lang));
-        loadMessages(lang).then(setMessages);
     }, []);
 
     const dependencyContext: DependencyContextType = useMemo(() => {
@@ -57,13 +53,9 @@ export default ({
         };
     }, []);
 
-    if (Object.keys(messages).length === 0) {
-        return null;
-    }
-
     return (
         <ReduxProvider store={store}>
-            <IntlProvider messages={messages} locale={lang}>
+            <MessagesProvider lang={lang}>
                 <DependencyContextProvider deps={dependencyContext}>
                     <div className='mashroom-portal-admin-app'>
                         <div className='menu-bar'>
@@ -72,7 +64,7 @@ export default ({
                         </div>
                     </div>
                 </DependencyContextProvider>
-            </IntlProvider>
+            </MessagesProvider>
         </ReduxProvider>
     );
 };

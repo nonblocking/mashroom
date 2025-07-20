@@ -1,6 +1,6 @@
 
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 type Props = {
     id: string;
@@ -12,13 +12,14 @@ type Props = {
 };
 
 export default ({id, labelId, type, secondary, onClick, disabled}: Props) =>  {
+    const {t} = useTranslation();
     return (
         <button id={id}
                 className={`mashroom-portal-ui-button ${secondary ? 'secondary' : ''}`}
                 type={type || 'button'}
                 onClick={onClick}
                 disabled={disabled}>
-            <FormattedMessage id={labelId}/>
+            {t(labelId)}
         </button>
     );
 };

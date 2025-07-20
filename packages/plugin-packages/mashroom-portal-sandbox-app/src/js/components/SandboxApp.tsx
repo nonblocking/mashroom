@@ -1,10 +1,9 @@
 
 import React, {PureComponent} from 'react';
-import {IntlProvider} from 'react-intl';
 import {Provider as ReduxProvider} from 'react-redux';
 import {nanoid} from 'nanoid';
 import store from '../store/store';
-import messages from '../messages/messages';
+import MessagesProvider from '../messages/MessagesProvider';
 import getMessageBusPortalAppUnderTest from '../message-bus-portal-app-under-test';
 import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 import { getQueryParams } from '../utils';
@@ -52,14 +51,9 @@ export default class SandboxApp extends PureComponent<Props> {
 
     render() {
         const { lang, messageBus, portalAppService } = this.props;
-        let existingLang = lang;
-        if (!messages[existingLang]) {
-            existingLang = 'en';
-        }
-
         return (
             <ReduxProvider store={store}>
-                <IntlProvider messages={messages[existingLang]} locale={existingLang}>
+                <MessagesProvider lang={lang}>
                     <div className='mashroom-sandbox-app'>
                         <PortalAppHost hostElementId={this.hostElementId} />
                         <PortalAppStats portalAppService={portalAppService} />
@@ -76,7 +70,7 @@ export default class SandboxApp extends PureComponent<Props> {
                             portalAppService={portalAppService}
                         />
                     </div>
-                </IntlProvider>
+                </MessagesProvider>
             </ReduxProvider>
         );
     }

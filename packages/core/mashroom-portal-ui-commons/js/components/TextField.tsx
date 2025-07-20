@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {useField} from 'formik';
-import {useIntl} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
@@ -18,10 +18,10 @@ type Props = {
 
 export default ({id, name, labelId, type, maxLength, pattern, autoComplete, placeholder: placeholderId}: Props) => {
     const [field, meta] = useField(name);
-    const intl = useIntl();
+    const {t} = useTranslation();
 
     const error = meta.touched && !!meta.error;
-    const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
+    const placeholder = placeholderId ? t(placeholderId) : null;
     const inputProps: any = {
         ...field,
         id,

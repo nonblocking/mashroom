@@ -1,10 +1,11 @@
 import React, { useState, useCallback, useRef } from 'react';
-import { FormattedMessage } from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import { Button } from '@mashroom/mashroom-portal-ui-commons';
 import RoleInput from './RoleInput';
 import RolesListField from './RolesListField';
 
 export default () => {
+    const {t} = useTranslation();
     const [enteredRole, setEnteredRole] = useState<string | undefined | null>(null);
     const addRoleToListRef = useRef<((role: string) => void) | undefined>(undefined);
     const resetRoleInputRef = useRef<(() => void) | undefined>(undefined);
@@ -37,7 +38,7 @@ export default () => {
 
     return (
         <div className='permissions'>
-            <FormattedMessage id='restrictViewPermission' />
+            {t('restrictViewPermission')}
             <div className='add-role-panel'>
                 <RoleInput
                     onRoleChange={handleRoleInputChange}

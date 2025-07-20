@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import fetchData from './fetch-data';
 import type {RocketLaunchDotLiveLaunches} from './types';
 
@@ -8,6 +8,8 @@ type Props = {
 }
 
 const Launches = ({launches}: { launches: RocketLaunchDotLiveLaunches }) => {
+    const {t} = useTranslation();
+
     const rows = launches.map(({name, provider, vehicle, pad, t0}) => (
         <tr key={name}>
             <td>{provider.name}</td>
@@ -23,19 +25,19 @@ const Launches = ({launches}: { launches: RocketLaunchDotLiveLaunches }) => {
             <thead>
             <tr>
                 <th>
-                    <FormattedMessage id='provider'/>
+                    {t('provider')}
                 </th>
                 <th>
-                    <FormattedMessage id='missionName'/>
+                    {t('missionName')}
                 </th>
                 <th>
-                    <FormattedMessage id='rocketName'/>
+                    {t('rocketName')}
                 </th>
                 <th>
-                    <FormattedMessage id='launchPad'/>
+                    {t('launchPad')}
                 </th>
                 <th>
-                    <FormattedMessage id='launchDate'/>
+                    {t('launchDate')}
                 </th>
             </tr>
             </thead>
@@ -47,6 +49,7 @@ const Launches = ({launches}: { launches: RocketLaunchDotLiveLaunches }) => {
 };
 
 export default ({rocketLaunchApi}: Props) => {
+    const {t} = useTranslation();
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(false);
     const [launches, setLaunches] = useState<RocketLaunchDotLiveLaunches | null>(null);
@@ -70,13 +73,13 @@ export default ({rocketLaunchApi}: Props) => {
     if (loading) {
         content = (
             <div className='loading'>
-                <FormattedMessage id='loading'/>
+                {t('loading')}
             </div>
         );
     } else if (error) {
         content = (
             <div className='error'>
-                <FormattedMessage id='errorLoading'/>
+                {t('errorLoading')}
             </div>
         );
     } else if (!launches) {
@@ -88,12 +91,14 @@ export default ({rocketLaunchApi}: Props) => {
     return (
         <div className='spacex-launches'>
             <div className='header'>
-                <h4><FormattedMessage id='rocketLaunches'/></h4>
+                <h4>
+                    {t('rocketLaunches')}
+                </h4>
             </div>
 
             <div className="info">
                 <span className="info-icon"/>
-                <FormattedMessage id='info'/>
+                {t('info')}
             </div>
 
             {content}

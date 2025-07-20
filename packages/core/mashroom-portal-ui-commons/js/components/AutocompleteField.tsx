@@ -1,7 +1,7 @@
 
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import AutoSuggest from 'react-autosuggest';
-import {useIntl} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import {useField} from 'formik';
 import FieldLabel from './FieldLabel';
 import ErrorMessage from './ErrorMessage';
@@ -28,7 +28,7 @@ export default ({name, id, labelId, maxLength, placeholder: placeholderId, minCh
     const [field, meta] = useField(name);
     const [value, setValue] = useState(field.value || '');
     const [suggestions, setSuggestions] = useState<Array<any>>([]);
-    const intl = useIntl();
+    const {t} = useTranslation();
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     useEffect(() => {
@@ -160,7 +160,7 @@ export default ({name, id, labelId, maxLength, placeholder: placeholderId, minCh
     }, [suggestionHandler]);
 
     const error = meta.touched && !!meta.error;
-    const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
+    const placeholder = placeholderId ? t(placeholderId) : null;
     const inputProps: any = {
         ...field,
         type: 'search',

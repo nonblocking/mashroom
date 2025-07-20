@@ -1,7 +1,7 @@
 
 import React, {useCallback, useContext, useRef, useState} from 'react';
 import {DropdownMenu} from '@mashroom/mashroom-portal-ui-commons';
-import {useIntl} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import {DependencyContext} from '../DependencyContext';
 import AvailableAppsPanel from './AvailableAppsPanel';
 
@@ -11,7 +11,7 @@ export default () => {
     const [filter, setFilter] = useState<string | undefined | null>(null);
     const closeRef = useRef <(() => void) | undefined>(undefined);
     const inputElemRef = useRef<HTMLInputElement | null>(null);
-    const intl = useIntl();
+    const {t} = useTranslation();
     const {dataLoadingService, portalAppManagementService} = useContext(DependencyContext);
 
     const onOpen = useCallback(() => {
@@ -39,7 +39,7 @@ export default () => {
         setFilter(event.target.value);
     }, []);
 
-    const filterLabel = intl.formatMessage({ id: 'filter' });
+    const filterLabel = t('filter');
 
     return (
         <DropdownMenu

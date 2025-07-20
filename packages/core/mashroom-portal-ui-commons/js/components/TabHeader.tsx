@@ -1,5 +1,5 @@
 import React from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 type Props = {
     tabs: Array<{
@@ -11,12 +11,16 @@ type Props = {
 };
 
 export default ({tabs, activeTabIndex, onChangeActiveTab}: Props) => {
+    const {t} = useTranslation();
+
     if (activeTabIndex === null) {
         return null;
     }
-    const buttons = tabs.map((t, idx) => (
-        <div key={t.name} className={`tab-dialog-button ${idx === activeTabIndex ? 'active' : ''}`} onClick={() => onChangeActiveTab(t.name)}>
-            <div className='title'><FormattedMessage id={t.titleId} /></div>
+    const buttons = tabs.map((tab, idx) => (
+        <div key={tab.name} className={`tab-dialog-button ${idx === activeTabIndex ? 'active' : ''}`} onClick={() => onChangeActiveTab(tab.name)}>
+            <div className='title'>
+                {t(tab.titleId)}
+            </div>
         </div>
     ));
     return (

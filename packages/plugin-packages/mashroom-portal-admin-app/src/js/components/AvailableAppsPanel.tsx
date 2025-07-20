@@ -1,5 +1,5 @@
 import React, {useCallback, useMemo} from 'react';
-import { FormattedMessage } from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import { CircularProgress, ErrorMessage, escapeForRegExp, escapeForHtml } from '@mashroom/mashroom-portal-ui-commons';
 import {useSelector} from 'react-redux';
 
@@ -28,6 +28,7 @@ const CATEGORY_NONE = 'ZZZ';
 const CATEGORY_HIDDEN = 'hidden';
 
 export default ({onDragStart, onDragEnd, filter}: Props) => {
+    const {t} = useTranslation();
     const availableApps = useSelector((state: State) => state.availableApps);
 
     const handleDragStart = useCallback((event: DragEvent, name: string): void => {
@@ -117,7 +118,7 @@ export default ({onDragStart, onDragEnd, filter}: Props) => {
                         return (
                             <div key={category} className='grouped-apps'>
                                 <div className='app-category'>
-                                    {category !== CATEGORY_NONE ? <span>{category}</span> : <FormattedMessage id='uncategorized' />}
+                                    {category !== CATEGORY_NONE ? <span>{category}</span> : <span>{t('uncategorized')}</span>}
                                 </div>
                                 {apps.map((app) => {
                                     let appName = escapeForHtml(app.title || app.name);

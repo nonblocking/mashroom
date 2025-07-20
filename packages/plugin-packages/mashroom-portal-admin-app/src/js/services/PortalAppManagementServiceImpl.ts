@@ -8,7 +8,6 @@ import {
     CSS_CLASS_APP_DROP_ZONE,
     DIALOG_NAME_PORTAL_APP_CONFIGURE,
 } from '../constants';
-import {currentMessages} from '../messages';
 
 import type {
     MashroomPortalAppService,
@@ -29,6 +28,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     openContentEditorAppId: string | undefined;
     closeContentEditorCb: (() => void) | undefined;
     dragRunning: boolean;
+    trans: (key: string) => string = (key) => key;
 
     constructor(store: Store, portalAppService: MashroomPortalAppService, portalAdminService: MashroomPortalAdminService) {
         this.store = store;
@@ -139,6 +139,10 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         await this.portalAppService.reloadApp(loadedAppId);
     }
 
+    setTrans(t: (key: string) => string) {
+        this.trans = t;
+    }
+
     private _onDragOverDropZone(event: DragEvent, dropZone: HTMLElement): void {
         event.preventDefault();
 
@@ -183,22 +187,22 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
         controlsWrapper.className = CSS_CLASS_APP_CONTROLS;
         const removeButton = document.createElement('div');
         removeButton.className = 'tool-button remove-button';
-        removeButton.title = currentMessages.toolRemoveApp;
+        removeButton.title = this.trans('toolRemoveApp');
         const moveButton = document.createElement('div');
         moveButton.className = 'tool-button move-button';
         moveButton.draggable = true;
-        moveButton.title = currentMessages.toolMoveApp;
+        moveButton.title = this.trans('toolMoveApp');
         let configureButton;
         if (!errorPluginMissing) {
             configureButton = document.createElement('div');
             configureButton.className = 'tool-button configure-button';
-            configureButton.title = currentMessages.toolConfigureApp;
+            configureButton.title = this.trans('toolConfigureApp');
         }
         let editButton;
         if (editorConfig) {
             editButton = document.createElement('div');
             editButton.className = 'tool-button edit-button';
-            editButton.title = currentMessages.toolEditApp;
+            editButton.title = this.trans('toolEditApp');
         }
 
         controlsWrapper.appendChild(removeButton);

@@ -1,5 +1,5 @@
 import React, {useRef, useCallback, useContext} from 'react';
-import { FormattedMessage } from 'react-intl';
+import {Trans} from 'react-i18next';
 import {
     Button,
     DialogButtons,
@@ -81,7 +81,7 @@ export default () => {
         content = (
             <>
                 <DialogContent>
-                    <FormattedMessage id='confirmDeletePage' values={{ pageTitle }}/>
+                    <Trans i18nKey='confirmDeletePage' values={{ pageTitle }}/>
                 </DialogContent>
                 <DialogButtons>
                     <Button id='delete' labelId='delete' onClick={handleConfirmDelete}/>

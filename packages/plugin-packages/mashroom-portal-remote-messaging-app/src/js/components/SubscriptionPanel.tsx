@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import {FormattedMessage} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 
 import {useDispatch, useSelector} from 'react-redux';
 import {addReceivedMessage as addReceivedMessageAction, setGlobalNotificationsSubscription as setGlobalNotificationsSubscriptionAction, setPrivateUserTopicsSubscription as setPrivateUserTopicsSubscriptionAction} from '../store/actions';
@@ -11,6 +11,7 @@ type Props = {
 }
 
 export default ({messageBus}: Props) => {
+    const {t} = useTranslation();
     const {privateUserTopicsSubscription, globalNotificationsSubscription} = useSelector((state: State) => state);
     const dispatch = useDispatch();
     const setPrivateUserTopicsSubscription = (subscription: Subscription) => dispatch(setPrivateUserTopicsSubscriptionAction(subscription));
@@ -77,7 +78,7 @@ export default ({messageBus}: Props) => {
         <div className='mashroom-remote-messaging-app-subscription-status'>
             <div className='mashroom-remote-messaging-app-output-row'>
                 <div>
-                    <FormattedMessage id='subscribeTopics' />
+                    {t('subscribeTopics')}
                 </div>
                 <div>
                     <ul>

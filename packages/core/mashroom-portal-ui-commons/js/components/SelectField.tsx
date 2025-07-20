@@ -1,7 +1,7 @@
 
 import React, {useCallback} from 'react';
 import {useField} from 'formik';
-import {useIntl} from 'react-intl';
+import {useTranslation} from 'react-i18next';
 import ErrorMessage from './ErrorMessage';
 import FieldLabel from './FieldLabel';
 
@@ -22,10 +22,10 @@ export const NULL_VALUE = '__null__';
 
 export default ({id, name, labelId, options, emptyOption, placeholder: placeholderId, onValueChange}: Props) => {
     const [field, meta] = useField(name);
-    const intl = useIntl();
+    const {t} = useTranslation();
 
     const error = meta.touched && !!meta.error;
-    const placeholder = placeholderId ? intl.formatMessage({ id: placeholderId }) : null;
+    const placeholder = placeholderId ? t(placeholderId) : null;
 
     const onChange = useCallback((e: ChangeEvent<HTMLSelectElement>) => {
         let value: string | null = e.target.value;

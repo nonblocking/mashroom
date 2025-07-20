@@ -127,6 +127,7 @@ export interface PortalAppManagementService {
     getAppConfigForLoadedApp(portalAppName: string, instanceId: string| undefined | null): any | undefined | null;
     updateAndReloadApp(loadedAppId: string, portalAppName: string, instanceId: string, areaId: string| undefined | null,
                        dynamic: boolean| undefined | null, position: number| undefined | null, appConfig: any| undefined | null): Promise<void>;
+    setTrans(t: (key: string) => string): void;
 }
 
 export interface DataLoadingService {
