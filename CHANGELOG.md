@@ -3,9 +3,12 @@
 
 ## [unreleased]
 
- * Replaced *react-intl* by *react-i18next* because it is not really suitable for Microfrontends where you potentially
+## 2.9.1 (July 22, 2025)
+
+ * Replaced *react-intl* by *react-i18next* because it is not really suitable for Microfrontends, where you potentially
    have multiple React versions on the same page. See this issue: https://github.com/formatjs/formatjs/issues/4507
  * K8S Remote App Registry: Fixed displaying plugin definition if some string properties contain single quotes (')
+ * JSON Schemas: Allow *mjs* extension for JS resources
 
 ## 2.9.0 (June 23, 2025)
 
