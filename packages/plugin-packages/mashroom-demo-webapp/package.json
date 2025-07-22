@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.0",
+    "version": "2.9.1",
     "files": [
         "dist/**"
     ],
@@ -15,7 +15,7 @@
         "express": "^4.21.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.0",
+        "@mashroom/mashroom": "2.9.1",
         "@types/express": "^4.17.21"
     },
     "scripts": {
