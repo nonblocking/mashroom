@@ -147,7 +147,7 @@ export default class App extends PureComponent<Props, State> {
 
             setTimeout(() => {
                 this.focusFirstInputOnActiveTab();
-            },50);
+            }, 50);
 
             this.props.portalAppService.registerAppLoadedListener(this._boundOnAppLoaded);
             this.props.portalAppService.registerAppAboutToUnloadListener(this._boundOnAppUnload);
@@ -220,13 +220,13 @@ export default class App extends PureComponent<Props, State> {
 
                 this.setState({
                     tabs
+                }, () => {
+                    // The added app could be the first or could have the same index as the currently active,
+                    // to simplify things, just switch to the newly added app
+                    setTimeout(() => {
+                        this.onChangeActiveTab(tabIdx);
+                    }, 0);
                 });
-
-                // The added app could be the first or could have the same index as the currently active,
-                // to simplify things, just switch to the newly added app
-                setTimeout(() => {
-                    this.onChangeActiveTab(tabIdx);
-                }, 0);
             }
         }
     }

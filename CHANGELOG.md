@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * Tabify App: Fixed a timing problem when adding a new App dynamically, which made it invisible until clicking on the tab header
+
 ## 2.9.1 (July 22, 2025)
 
  * Replaced *react-intl* by *react-i18next* because it is not really suitable for Microfrontends, where you potentially
