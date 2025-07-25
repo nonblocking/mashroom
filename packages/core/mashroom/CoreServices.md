@@ -74,7 +74,7 @@ Interface:
 
 ```ts
 /**
- * A services to add and remove HTTP/1 upgrade listeners
+ * A service to add and remove HTTP/1 upgrade listeners
  */
 export interface MashroomHttpUpgradeService {
     /**
@@ -95,7 +95,7 @@ If a probe fails the server state goes to unready.
 
 ```ts
 /**
- * A services to obtain all available health probes
+ * A service to obtain all available health probes
  */
 export interface MashroomHealthProbeService {
     /**

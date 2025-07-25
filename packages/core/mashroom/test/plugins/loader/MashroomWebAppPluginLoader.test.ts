@@ -39,10 +39,6 @@ const pluginContextHolderMock = {
     }
 };
 
-const RegistryConnectorMock: any = jest.fn(() => ({
-    on: () => { /* nothing to do */ },
-}));
-
 describe('MashroomWebAppPluginLoader', () => {
 
     beforeEach(() => {
@@ -71,7 +67,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => (req, res, next) => req.test = 1;
@@ -110,7 +106,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => (req, res, next) => req.test = 3;
@@ -160,7 +156,7 @@ describe('MashroomWebAppPluginLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
         const requestHandlerWrapper: any = {};
 
         expressStack = [
@@ -199,8 +195,7 @@ describe('MashroomWebAppPluginLoader', () => {
         const pluginPackage: any = {
             pluginPackagePath,
         };
-
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => ({

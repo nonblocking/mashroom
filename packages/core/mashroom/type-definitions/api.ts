@@ -3,6 +3,7 @@ import type {Request, Response, Application, RequestHandler, Router} from 'expre
 import type {IncomingMessage} from 'http';
 import type {Socket} from 'net';
 import type {TlsOptions} from 'tls';
+import type {URL} from 'url';
 
 // Extend Express Request
 declare global {
@@ -75,21 +76,11 @@ export type PluginPackageFolder = {
     readonly devMode?: boolean;
 };
 
-export type MashroomPluginPackageEventName = 'ready' | 'error' | 'removed';
-export type MashroomPluginPackageEvent = {
-    readonly pluginsAdded?: Array<MashroomPluginDefinition>;
-    readonly pluginsUpdated?: Array<MashroomPluginDefinition>;
-    readonly pluginsRemoved?: Array<MashroomPluginDefinition>;
-    readonly errorMessage?: string;
-    readonly pluginPackage: MashroomPluginPackage;
-};
-
 export type MashroomPluginPackageStatus =
     | 'pending'
     | 'building'
     | 'ready'
     | 'error';
-export type MashroomPluginPackagePath = string;
 
 /**
  * Plugin package definition within package.json
@@ -107,22 +98,31 @@ export type MashroomPluginPackageDefinition = {
 };
 
 /**
+ * Metadata regarding a plugin package.
+ * Typically, the stuff found in package.json
+ */
+export type MashroomPluginPackageMeta = {
+    readonly name: string | undefined | null;
+    readonly description: string | undefined | null;
+    readonly version: string;
+    readonly homepage: string | undefined | null;
+    readonly author: string | undefined | null;
+    readonly license: string | undefined | null;
+}
+
+/**
  * A Mashroom plugin package
  */
-export interface MashroomPluginPackage
-    extends MashroomEventEmitter<
-        MashroomPluginPackageEventName,
-        MashroomPluginPackageEvent
-        > {
+export interface MashroomPluginPackage {
     /**
-     * The package name (npm package name)
+     * The package name (e.g., npm package name)
      */
-    readonly name: string;
+    readonly name: string | null | undefined;
 
     /**
-     * The package description (npm package description)
+     * The package description (e.g., npm package description)
      */
-    readonly description: string;
+    readonly description: string | null | undefined;
 
     /**
      * The package version
@@ -145,9 +145,14 @@ export interface MashroomPluginPackage
     readonly license: string | null | undefined;
 
     /**
-     * The absolute path of the package
+     * Package URL
      */
-    readonly pluginPackagePath: MashroomPluginPackagePath;
+    readonly pluginPackageURL: URL;
+
+    /**
+     * @deprecated This will be empty for URLs not pointing to the local file system, use pluginPackageURL
+     */
+    readonly pluginPackagePath: string;
 
     /**
      * The script name (within the package.json script section) that shall be used to build the package in dev mode
@@ -292,6 +297,35 @@ export type MashroomPluginConfig = {
     [key: string]: any;
 };
 
+export type MashroomPluginScannerCallback = {
+    addOrUpdatePackageURL(url: URL): void;
+    removePackageURL(url: URL): void;
+}
+
+/**
+ * Plugin scanner interface.
+ * A plugin scanner reports new/updated plugin package URLs.
+ */
+export interface MashroomPluginPackageScanner {
+    setCallback(callback: MashroomPluginScannerCallback): void;
+    start(): void;
+    stop(): void;
+}
+
+export type MashroomPluginPackageDefinitionAndMeta = {
+    readonly definition: MashroomPluginPackageDefinition;
+    readonly meta: MashroomPluginPackageMeta;
+}
+
+/**
+ * Plugin definition builder.
+ * Tries to build a MashroomPluginPackageDefinition based on URL.
+ * If it is not possible, it must return null (and not throw an error).
+ */
+export interface MashroomPluginPackageDefinitionBuilder {
+    buildDefinition(url: URL): Promise<MashroomPluginPackageDefinitionAndMeta | null>;
+}
+
 /**
  * Plugin loader interface
  */
@@ -430,7 +464,7 @@ export type MashroomHttpUpgradeHandler = (
 ) => void;
 
 /**
- * A services to add and remove HTTP/1 upgrade listeners
+ * A service to add and remove HTTP/1 upgrade listeners
  */
 export interface MashroomHttpUpgradeService {
     /**
@@ -444,7 +478,7 @@ export interface MashroomHttpUpgradeService {
 }
 
 /**
- * A services to obtain all available health probes
+ * A service to obtain all available health probes
  */
 export interface MashroomHealthProbeService {
     /**

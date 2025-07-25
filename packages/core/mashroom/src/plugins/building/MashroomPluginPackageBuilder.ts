@@ -7,7 +7,7 @@ import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
 import {stripAnsiColors} from '../../utils/log-utils';
-import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
+import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomLocalFileSystemPluginPackageScanner';
 import NpmUtils from './NpmUtils';
 import NxUtils from './NxUtils';
 
@@ -28,7 +28,7 @@ const RETRY_RUNNING_BUILD_AFTER_MS = 10 * 1000;
 type BuildQueueEntry = {
     readonly pluginPackageName: string;
     readonly pluginPackagePath: string;
-    readonly buildScript: string | undefined | null;
+    readonly buildScript: string;
     readonly lastSourceUpdateTimestamp: number;
 }
 
@@ -75,9 +75,13 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._processingAllowed = true;
     }
 
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string | undefined | null, lastSourceUpdateTimestamp = Date.now()): void {
+    addToBuildQueue(pluginPackageName: string | undefined | null, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp = Date.now()): void {
         if (!this._processingAllowed) {
             return;
+        }
+
+        if (!pluginPackageName) {
+            pluginPackageName = pluginPackagePath;
         }
 
         this.removeFromBuildQueue(pluginPackageName);
@@ -250,13 +254,12 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
 
         const buildScript = queueEntry.buildScript;
-        if (buildScript) {
-            this._logger.debug(`Running build script '${buildScript}': ${queueEntry.pluginPackageName}`);
-            if (!this._devModeDisableNxSupport && await this._nxUtils.isNxAvailable(queueEntry.pluginPackagePath)) {
-                await this._nxUtils.runScript(queueEntry.pluginPackagePath, buildScript);
-            } else {
-                await this._npmUtils.runScript(queueEntry.pluginPackagePath, buildScript);
-            }
+
+        this._logger.debug(`Running build script '${buildScript}': ${queueEntry.pluginPackageName}`);
+        if (!this._devModeDisableNxSupport && await this._nxUtils.isNxAvailable(queueEntry.pluginPackagePath)) {
+            await this._nxUtils.runScript(queueEntry.pluginPackagePath, buildScript);
+        } else {
+            await this._npmUtils.runScript(queueEntry.pluginPackagePath, buildScript);
         }
     }
 

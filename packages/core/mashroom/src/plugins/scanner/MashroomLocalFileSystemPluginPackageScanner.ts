@@ -1,18 +1,24 @@
 
 import {resolve, sep} from 'path';
-import {readFileSync, existsSync} from 'fs';
+import {pathToFileURL} from 'url';
+import {existsSync} from 'fs';
 import {readdir} from 'fs/promises';
-import {EventEmitter} from 'events';
 import chokidar from 'chokidar';
-import {readonlyUtils} from '@mashroom/mashroom-utils';
-import {getExternalPluginDefinitionFilePath} from '../../utils/plugin-utils';
+import type {
+    MashroomLogger,
+    MashroomLoggerFactory,
+    MashroomPluginScannerCallback,
+    MashroomServerConfig,
+    PluginPackageFolder,
+    MashroomPluginPackageScanner as MashroomPluginPackageScannerType,
+} from '../../../type-definitions';
 import type {FSWatcher} from 'chokidar';
-import type {MashroomLogger, MashroomLoggerFactory, MashroomServerConfig, MashroomPluginPackagePath, PluginPackageFolder} from '../../../type-definitions';
-import type {MashroomPluginPackageScanner as MashroomPluginPackageScannerType, MashroomPluginPackageScannerEventName} from '../../../type-definitions/internal';
 
 type DeferredUpdatesTimestamps = {
     [path: string]: number;
 };
+
+type FsEvent = 'added' | 'updated' | 'removed';
 
 // Anymatch patterns
 export const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
@@ -20,25 +26,22 @@ export const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**', '**
 export const DEFAULT_DEFER_UPDATE_MS = 2000;
 
 /**
- * The plugin scanner.
- * There should only be one per cluster - the other nodes will get the events per IPC.
+ * The default plugin scanner
  */
-export default class MashroomPluginPackageScanner implements MashroomPluginPackageScannerType {
+export default class MashroomLocalFileSystemPluginPackageScanner implements MashroomPluginPackageScannerType {
 
     private readonly _logger: MashroomLogger;
-    private readonly _eventEmitter: EventEmitter;
     private readonly _deferUpdateMillis: number;
-    private readonly _externalPluginConfigFileNames: Array<string>;
     private readonly _pluginPackageFolders: Array<PluginPackageFolder>;
     private readonly _foldersToWatch: Array<string>;
-    private readonly _pluginPackagePaths: Array<MashroomPluginPackagePath>;
+    private readonly _pluginPackagePaths: Array<string>;
     private _watcher: FSWatcher | undefined;
     private _deferredUpdatesTimestamps: DeferredUpdatesTimestamps;
     private _deferredUpdatesTimer: NodeJS.Timeout | undefined;
+    private _callback: MashroomPluginScannerCallback | undefined;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.scanner');
-        this._externalPluginConfigFileNames = config.externalPluginConfigFileNames;
         this._pluginPackageFolders = config.pluginPackageFolders.filter((folder) => {
            if (!existsSync(folder.path)) {
                 this._logger.error(`Ignoring plugin package folder because it doesn't exist: ${folder.path}`);
@@ -49,9 +52,11 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         this._foldersToWatch = this._pluginPackageFolders.filter((f) => f.watch).map((f) => f.path);
         this._deferUpdateMillis = DEFAULT_DEFER_UPDATE_MS;
         this._deferredUpdatesTimestamps = {};
-        this._eventEmitter = new EventEmitter();
-        this._eventEmitter.setMaxListeners(0);
         this._pluginPackagePaths = [];
+    }
+
+    setCallback(callback: MashroomPluginScannerCallback) {
+        this._callback = callback;
     }
 
     async start() {
@@ -104,50 +109,39 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         }
     }
 
-    on(eventName: MashroomPluginPackageScannerEventName, listener: (event: string) => void) {
-        this._eventEmitter.on(eventName, listener);
-    }
-
-    removeListener(eventName: MashroomPluginPackageScannerEventName, listener: (event: string) => void): void {
-        this._eventEmitter.removeListener(eventName, listener);
-    }
-
-    get pluginPackageFolders(): Readonly<Array<string>> {
-        return readonlyUtils.cloneAndFreezeArray(this._pluginPackageFolders.map((f) => f.path));
-    }
-
-    get pluginPackagePaths(): Readonly<Array<MashroomPluginPackagePath>> {
-        return readonlyUtils.cloneAndFreezeArray(this._pluginPackagePaths);
-    }
-
     private _processChange(pluginPackagePath: string) {
         this._logger.debug(`Change in plugin package folder: ${pluginPackagePath}`);
 
-        let eventName: MashroomPluginPackageScannerEventName | null = null;
-        const exists = this._pluginPackagePaths.indexOf(pluginPackagePath) !== -1;
-        const mashroomPluginPackage = this._isMashroomPluginPackage(pluginPackagePath);
+        let eventName: FsEvent | undefined;
+        const alreadyKnown = this._pluginPackagePaths.indexOf(pluginPackagePath) !== -1;
+        const exists = existsSync(pluginPackagePath);
         if (exists) {
-            eventName = !mashroomPluginPackage ? 'packageRemoved' : 'packageUpdated';
-        } else if (mashroomPluginPackage) {
-            eventName = 'packageAdded';
+            if (alreadyKnown) {
+                eventName = 'updated';
+            } else  {
+                eventName = 'added';
+            }
+        } else {
+            eventName = 'removed';
         }
+
         if (!eventName) {
             return;
         }
 
         switch (eventName) {
-            case 'packageAdded': {
+            case 'added': {
                 this._pluginPackagePaths.push(pluginPackagePath);
                 this._fireEvent(eventName, pluginPackagePath);
                 break;
             }
-            case 'packageRemoved': {
+            case 'removed': {
                 const packageIndex = this._pluginPackagePaths.indexOf(pluginPackagePath);
                 this._pluginPackagePaths.splice(packageIndex, 1);
                 this._fireEvent(eventName, pluginPackagePath);
                 break;
             }
-            case 'packageUpdated': {
+            case 'updated': {
                 if (this._deferUpdateMillis > 0) {
                     this._deferredUpdatesTimestamps[pluginPackagePath] = Date.now() + this._deferUpdateMillis;
                 } else {
@@ -158,9 +152,15 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
         }
     }
 
-    private _fireEvent(eventName: MashroomPluginPackageScannerEventName, pluginPackagePath: string) {
+    private _fireEvent(eventName: FsEvent, pluginPackagePath: string) {
         this._logger.info(`Event: ${eventName}: ${pluginPackagePath}`);
-        this._eventEmitter.emit(eventName, pluginPackagePath);
+        if (this._callback) {
+            if (eventName === 'updated' || eventName === 'added') {
+                this._callback.addOrUpdatePackageURL(pathToFileURL(pluginPackagePath));
+            } else {
+                this._callback.removePackageURL(pathToFileURL(pluginPackagePath));
+            }
+        }
     }
 
     private _deferredUpdates() {
@@ -169,7 +169,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
                 const timestamp = this._deferredUpdatesTimestamps[path];
                 if (timestamp < Date.now()) {
                     delete this._deferredUpdatesTimestamps[path];
-                    this._fireEvent('packageUpdated', path);
+                    this._fireEvent('updated', path);
                 }
             }
         }
@@ -182,7 +182,7 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
 
         const rootFolder = this._pluginPackageFolders.find((f) => changePath.startsWith(f.path));
         if (rootFolder) {
-            const pathWithinRootFolder = changePath.substr(rootFolder.path.length + 1);
+            const pathWithinRootFolder = changePath.substring(rootFolder.path.length + 1);
             if (existsSync(resolve(rootFolder.path, 'package.json'))) {
                 // This package folder contains a single package
                 this._processChange(rootFolder.path);
@@ -210,24 +210,5 @@ export default class MashroomPluginPackageScanner implements MashroomPluginPacka
                 });
             }
         }));
-    }
-
-    private _isMashroomPluginPackage(pluginPackagePath: string): boolean {
-        const externalPluginConfigFile = getExternalPluginDefinitionFilePath(pluginPackagePath, this._externalPluginConfigFileNames);
-        if (externalPluginConfigFile) {
-            return true;
-        }
-
-        const packageFile = resolve(pluginPackagePath, 'package.json');
-        if (existsSync(packageFile)) {
-            try {
-                const packageJson = JSON.parse(readFileSync(packageFile).toString());
-                return 'mashroom' in packageJson;
-            } catch (e) {
-                this._logger.error('Error loading package.json', e);
-            }
-        }
-
-        return false;
     }
 }

@@ -29,10 +29,6 @@ const PluginRegistryMock: any = jest.fn(() => ({
     unregisterPluginLoader: unregisterPluginLoaderMock,
 }));
 
-const RegistryConnectorMock: any = jest.fn(() => ({
-    on: () => { /* nothing to do */ },
-}));
-
 describe('MashroomPluginLoaderLoader', () => {
 
     beforeEach(() => {
@@ -61,7 +57,7 @@ describe('MashroomPluginLoaderLoader', () => {
             pluginPackagePath,
         };
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
         fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             let loadCalled = false;
@@ -106,7 +102,7 @@ describe('MashroomPluginLoaderLoader', () => {
 
         const pluginPackage: any = {};
 
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, new RegistryConnectorMock(), loggingUtils.dummyLoggerFactory);
+        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
         const loader = new MashroomPluginLoaderLoader(new PluginRegistryMock(), loggingUtils.dummyLoggerFactory);
         const loadedPlugin: any = {};

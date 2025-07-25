@@ -8,7 +8,7 @@ import createLoggerFactory from '../logging/create-logger-factory';
 import MashroomServerConfigLoader from '../config/MashroomServerConfigLoader';
 import MashroomPluginPackage from '../plugins/MashroomPluginPackage';
 import MashroomPlugin from '../plugins/MashroomPlugin';
-import MashroomPluginPackageScanner from '../plugins/scanner/MashroomPluginPackageScanner';
+import MashroomLocalFileSystemPluginPackageScanner from '../plugins/scanner/MashroomLocalFileSystemPluginPackageScanner';
 import MashroomPluginPackageBuilder from '../plugins/building/MashroomPluginPackageBuilder';
 import MashroomPluginRegistry from '../plugins/registry/MashroomPluginRegistry';
 import MashroomPluginLoaderLoader from '../plugins/loader/MashroomPluginLoaderLoader';
@@ -72,7 +72,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const devMode: boolean = isDevMode(serverConfig, logger);
     const isPackageInDevMode = (path: string) => devMode && serverConfig.pluginPackageFolders.some((ppf) => path.indexOf(ppf.path) === 0 && !!ppf.devMode);
 
-    const scanner = new MashroomPluginPackageScanner(serverConfig, loggerFactory);
+    const scanner = new MashroomLocalFileSystemPluginPackageScanner(serverConfig, loggerFactory);
     const builder = devMode ? createBuilder(serverConfig, loggerFactory) : null;
     const pluginPackageFactory = (path: string, connector: MashroomPluginPackageRegistryConnector) =>
         new MashroomPluginPackage(path, serverConfig.ignorePlugins, serverConfig.externalPluginConfigFileNames,
