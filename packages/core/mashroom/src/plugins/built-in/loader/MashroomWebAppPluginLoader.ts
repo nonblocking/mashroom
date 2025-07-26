@@ -10,7 +10,7 @@ import type {
     MashroomHttpUpgradeHandler,
     MashroomHttpUpgradeService,
     ExpressApplicationWithUpgradeHandler,
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 import type {RequestHandler, Application} from 'express';
 
 export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBasePluginLoader {

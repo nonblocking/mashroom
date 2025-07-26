@@ -4,7 +4,7 @@ import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig,
     MashroomPluginContextHolder, MashroomLoggerFactory, MashroomLogger
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 
 export default class MashroomAdminUIIntegrationLoader implements MashroomPluginLoader {
 

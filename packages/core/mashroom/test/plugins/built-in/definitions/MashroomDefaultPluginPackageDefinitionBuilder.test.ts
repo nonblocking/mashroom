@@ -3,10 +3,10 @@ import {resolve} from 'path';
 import {pathToFileURL} from 'url';
 import {ensureDirSync, emptyDirSync, writeJsonSync, writeFileSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import MashroomDefaultPluginPackageDefinitionBuilder from '../../../src/plugins/definitions/MashroomDefaultPluginPackageDefinitionBuilder';
+import MashroomDefaultPluginPackageDefinitionBuilder from '../../../../src/plugins/built-in/definitions/MashroomDefaultPluginPackageDefinitionBuilder';
 
 const getPluginPackagesFolder = () => {
-    const pluginsFolder = resolve(__dirname, '../../../test-data/plugins12');
+    const pluginsFolder = resolve(__dirname, '../../../../test-data/plugins2');
     emptyDirSync(pluginsFolder);
 
     const plugin1Folder = resolve(pluginsFolder, 'test1');

@@ -1,14 +1,14 @@
 import {fileURLToPath} from 'url';
 import {readFile} from 'fs/promises';
 import {resolve} from 'path';
-import {getExternalPluginDefinitionFilePath} from '../../utils/plugin-utils';
+import {getExternalPluginDefinitionFilePath} from '../../../utils/plugin-utils';
 import type {
     MashroomLogger,
     MashroomLoggerFactory, MashroomPluginPackageDefinition,
     MashroomPluginPackageDefinitionAndMeta,
     MashroomPluginPackageDefinitionBuilder, MashroomPluginPackageMeta,
     MashroomServerConfig
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 import type {URL} from 'url';
 
 export default class MashroomDefaultPluginPackageDefinitionBuilder implements MashroomPluginPackageDefinitionBuilder {
@@ -19,6 +19,10 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins.definition.builder');
         this._externalPluginConfigFileNames = config.externalPluginConfigFileNames;
+    }
+
+    get name() {
+        return 'Default local file system definition builder based on package.json and external plugin defintions';
     }
 
     async buildDefinition(url: URL): Promise<MashroomPluginPackageDefinitionAndMeta | null> {

@@ -3,22 +3,18 @@ import {readonlyUtils} from '@mashroom/mashroom-utils';
 import type {URL} from 'url';
 import type {
     MashroomPluginPackage as MashroomPluginPackageType,
-    MashroomLoggerFactory,
-    MashroomLogger,
     MashroomPluginPackageStatus,
-    MashroomPluginPackageDefinition, MashroomPluginPackageMeta,
+    MashroomPluginPackageDefinition,
+    MashroomPluginPackageMeta,
 } from '../../type-definitions';
 
 export default class MashroomPackagePlugin implements MashroomPluginPackageType {
 
-    private readonly _logger: MashroomLogger;
     private _status: MashroomPluginPackageStatus;
     private _errorMessage: string | undefined | null;
 
     constructor(private _pluginPackageURL: URL, private _pluginPackageDefinition: MashroomPluginPackageDefinition,
-                private _pluginPackageMeta: MashroomPluginPackageMeta,
-                loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.plugins');
+                private _pluginPackageMeta: MashroomPluginPackageMeta) {
         this._status = 'pending';
         this._errorMessage = null;
     }

@@ -2,12 +2,12 @@
 import path from 'path';
 import fsExtra from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import defaultConfig from '../../../src/config/mashroom-default-config';
-import MashroomLocalFileSystemPluginPackageScanner from '../../../src/plugins/scanner/MashroomLocalFileSystemPluginPackageScanner';
+import defaultConfig from '../../../../src/config/mashroom-default-config';
+import MashroomLocalFileSystemPluginPackageScanner from '../../../../src/plugins/built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
 import type {URL} from 'url';
 
 const getPluginPackagesFolder = () => {
-    const pluginsFolder = path.resolve(__dirname, '../../../test-data/plugins1');
+    const pluginsFolder = path.resolve(__dirname, '../../../../test-data/plugins1');
     fsExtra.emptyDirSync(pluginsFolder);
 
     const plugin1Folder = path.resolve(pluginsFolder, 'test1');
@@ -16,16 +16,8 @@ const getPluginPackagesFolder = () => {
     fsExtra.ensureDirSync(plugin2Folder);
     const plugin3Folder = path.resolve(pluginsFolder, '.test3');
     fsExtra.ensureDirSync(plugin3Folder);
-    fsExtra.writeJsonSync(path.resolve(plugin1Folder, 'package.json'), {
-        name: 'test1',
-        mashroom: {},
-    });
     fsExtra.writeJsonSync(path.resolve(plugin2Folder, 'package.json'), {
         name: 'test2',
-        mashroom: {},
-    });
-    fsExtra.writeJsonSync(path.resolve(plugin3Folder, 'package.json'), {
-        name: 'test3',
         mashroom: {},
     });
     return pluginsFolder;

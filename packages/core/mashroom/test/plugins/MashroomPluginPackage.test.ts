@@ -1,7 +1,7 @@
 
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginPackage from '../../src/plugins/MashroomPluginPackage';
-import type {MashroomPluginPackageDefinition, MashroomPluginPackageMeta} from "../../type-definitions";
+import type {MashroomPluginPackageDefinition, MashroomPluginPackageMeta} from '../../type-definitions';
 
 describe('MashroomPluginPackage', () => {
 
@@ -20,7 +20,7 @@ describe('MashroomPluginPackage', () => {
         };
 
         const pluginPackage = new MashroomPluginPackage(
-            new URL('file:///test'), packageDefinition, packageMeta, loggingUtils.dummyLoggerFactory);
+            new URL('file:///test'), packageDefinition, packageMeta);
 
         expect(pluginPackage.name).toBe('@mashroom/test-plugin');
         expect(pluginPackage.description).toBe('this is the description');

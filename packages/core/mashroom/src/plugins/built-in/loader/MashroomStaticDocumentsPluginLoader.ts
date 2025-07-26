@@ -5,7 +5,7 @@ import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
 
 import type {RequestHandler, Application} from 'express';
-import type {MashroomPluginContextHolder, MashroomPluginConfig, MashroomPlugin} from '../../../type-definitions';
+import type {MashroomPluginContextHolder, MashroomPluginConfig, MashroomPlugin} from '../../../../type-definitions';
 
 export default class MashroomStaticDocumentsPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 

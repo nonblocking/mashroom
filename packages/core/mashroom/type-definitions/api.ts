@@ -102,9 +102,9 @@ export type MashroomPluginPackageDefinition = {
  * Typically, the stuff found in package.json
  */
 export type MashroomPluginPackageMeta = {
-    readonly name: string | undefined | null;
-    readonly description: string | undefined | null;
+    readonly name: string;
     readonly version: string;
+    readonly description: string | undefined | null;
     readonly homepage: string | undefined | null;
     readonly author: string | undefined | null;
     readonly license: string | undefined | null;
@@ -117,17 +117,18 @@ export interface MashroomPluginPackage {
     /**
      * The package name (e.g., npm package name)
      */
-    readonly name: string | null | undefined;
+    readonly name: string;
+
+    /**
+     * The package version
+     * Mandatory because this can be used for cache busting in the frontend.
+     */
+    readonly version: string;
 
     /**
      * The package description (e.g., npm package description)
      */
     readonly description: string | null | undefined;
-
-    /**
-     * The package version
-     */
-    readonly version: string;
 
     /**
      * Homepage (npm package homepage)
@@ -307,9 +308,23 @@ export type MashroomPluginScannerCallback = {
  * A plugin scanner reports new/updated plugin package URLs.
  */
 export interface MashroomPluginPackageScanner {
+    /**
+     * Name of this scanner
+     */
+    readonly name: string;
+    /**
+     * Set the callback.
+     * This will be called after loading the plugin and before calling start().
+     */
     setCallback(callback: MashroomPluginScannerCallback): void;
-    start(): void;
-    stop(): void;
+    /**
+     * Start the scanner, will be called automatically after loading
+     */
+    start(): Promise<void>;
+    /**
+     * Stop the scanner, will be called on unload and when the server stops
+     */
+    stop():  Promise<void>;
 }
 
 export type MashroomPluginPackageDefinitionAndMeta = {
@@ -323,6 +338,14 @@ export type MashroomPluginPackageDefinitionAndMeta = {
  * If it is not possible, it must return null (and not throw an error).
  */
 export interface MashroomPluginPackageDefinitionBuilder {
+    /**
+     * Name of this scanner
+     */
+    readonly name: string;
+    /**
+     * Build the definition based on given URL.
+     * Must return null if no definition can be built (and not throw an exception).
+     */
     buildDefinition(url: URL): Promise<MashroomPluginPackageDefinitionAndMeta | null>;
 }
 

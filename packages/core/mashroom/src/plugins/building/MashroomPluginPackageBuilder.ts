@@ -7,7 +7,7 @@ import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
 import {stripAnsiColors} from '../../utils/log-utils';
-import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomLocalFileSystemPluginPackageScanner';
+import {IGNORE_CHANGES_IN_PATHS} from '../built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
 import NpmUtils from './NpmUtils';
 import NxUtils from './NxUtils';
 

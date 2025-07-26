@@ -6,18 +6,17 @@ import express from 'express';
 import createLoggerDelegate from '../logging/delegates/create-logger-delegate';
 import createLoggerFactory from '../logging/create-logger-factory';
 import MashroomServerConfigLoader from '../config/MashroomServerConfigLoader';
-import MashroomPluginPackage from '../plugins/MashroomPluginPackage';
-import MashroomPlugin from '../plugins/MashroomPlugin';
-import MashroomLocalFileSystemPluginPackageScanner from '../plugins/scanner/MashroomLocalFileSystemPluginPackageScanner';
 import MashroomPluginPackageBuilder from '../plugins/building/MashroomPluginPackageBuilder';
-import MashroomPluginRegistry from '../plugins/registry/MashroomPluginRegistry';
-import MashroomPluginLoaderLoader from '../plugins/loader/MashroomPluginLoaderLoader';
-import MashroomWebAppPluginLoader from '../plugins/loader/MashroomWebAppPluginLoader';
-import MashroomApiPluginLoader from '../plugins/loader/MashroomApiPluginLoader';
-import MashroomMiddlewarePluginLoader from '../plugins/loader/MashroomMiddlewarePluginLoader';
-import MashroomStaticDocumentsPluginLoader from '../plugins/loader/MashroomStaticDocumentsPluginLoader';
-import MashroomAdminUIIntegrationLoader from '../plugins/loader/MashroomAdminUIIntegrationLoader';
-import MashroomServicesLoader from '../plugins/loader/MashroomServicesLoader';
+import MashroomPluginManager from '../plugins/MashroomPluginManager';
+import MashroomPluginLoaderLoader from '../plugins/built-in/loader/MashroomPluginLoaderLoader';
+import MashroomWebAppPluginLoader from '../plugins/built-in/loader/MashroomWebAppPluginLoader';
+import MashroomApiPluginLoader from '../plugins/built-in/loader/MashroomApiPluginLoader';
+import MashroomMiddlewarePluginLoader from '../plugins/built-in/loader/MashroomMiddlewarePluginLoader';
+import MashroomStaticDocumentsPluginLoader from '../plugins/built-in/loader/MashroomStaticDocumentsPluginLoader';
+import MashroomAdminUIIntegrationLoader from '../plugins/built-in/loader/MashroomAdminUIIntegrationLoader';
+import MashroomServicesLoader from '../plugins/built-in/loader/MashroomServicesLoader';
+import MashroomLocalFileSystemPluginPackageScanner from '../plugins/built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
+import MashroomDefaultPluginPackageDefinitionBuilder from '../plugins/built-in/definitions/MashroomDefaultPluginPackageDefinitionBuilder';
 import MashroomServiceRegistry from '../plugins/MashroomServiceRegistry';
 import MashroomPluginService from '../services/MashroomPluginService';
 import GlobalNodeErrorHandler from '../server/GlobalNodeErrorHandler';
@@ -36,20 +35,16 @@ import type {
     MashroomLoggerFactory,
     MashroomLogger,
     MashroomServerConfig,
-    MashroomPluginDefinition,
-    MashroomPluginPackage as MashroomPluginPackageType,
     MashroomServerInfo,
     MashroomCoreServices,
     MashroomPluginContextHolder as MashroomPluginContextHolderType,
 } from '../../type-definitions';
 import type {
     MashroomServerContextFactory,
-    MashroomPluginPackageRegistryConnector,
     MashroomPluginRegistry as MashroomPluginRegistryType,
     MashroomServerContext,
     MashroomServiceRegistry as MashroomServiceRegistryType,
     MiddlewarePluginDelegate as MiddlewarePluginDelegateType,
-    MashroomPluginRegistryConnector,
     InternalMashroomHttpUpgradeService,
 } from '../../type-definitions/internal';
 
@@ -70,21 +65,14 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const serverConfig = serverConfigHolder.getConfig();
 
     const devMode: boolean = isDevMode(serverConfig, logger);
-    const isPackageInDevMode = (path: string) => devMode && serverConfig.pluginPackageFolders.some((ppf) => path.indexOf(ppf.path) === 0 && !!ppf.devMode);
 
     const scanner = new MashroomLocalFileSystemPluginPackageScanner(serverConfig, loggerFactory);
     const builder = devMode ? createBuilder(serverConfig, loggerFactory) : null;
-    const pluginPackageFactory = (path: string, connector: MashroomPluginPackageRegistryConnector) =>
-        new MashroomPluginPackage(path, serverConfig.ignorePlugins, serverConfig.externalPluginConfigFileNames,
-            connector, isPackageInDevMode(path) ? builder : null, loggerFactory);
-    const pluginFactory = (pluginDefinition: MashroomPluginDefinition, pluginPackage: MashroomPluginPackageType, connector: MashroomPluginRegistryConnector) =>
-        new MashroomPlugin(pluginDefinition, pluginPackage, connector, loggerFactory);
-
     const serverContextHolder = createServerContextHolder();
     const pluginContextHolder = new MashroomPluginContextHolder(serverContextHolder);
 
     const serviceRegistry = new MashroomServiceRegistry();
-    const pluginRegistry = new MashroomPluginRegistry(scanner, pluginPackageFactory, pluginFactory, pluginContextHolder, loggerFactory);
+    const pluginManager = new MashroomPluginManager(pluginContextHolder, builder);
 
     const expressApp = express();
     setExpressConfig(expressApp, devMode, logger);
@@ -92,12 +80,12 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const middlewarePluginDelegate = new MiddlewarePluginDelegate();
     addDefaultMiddleware(expressApp, pluginContextHolder, middlewarePluginDelegate);
 
-    addDefaultPluginLoaders(pluginRegistry, expressApp, serviceRegistry, middlewarePluginDelegate, loggerFactory, pluginContextHolder);
-    const {httpUpgradeService} = addCoreServices(serviceRegistry, pluginRegistry, middlewarePluginDelegate, loggerFactory, pluginContextHolder);
+    addBuiltInPlugins(pluginManager, expressApp, serviceRegistry, middlewarePluginDelegate, pluginContextHolder);
+    const {httpUpgradeService} = addCoreServices(serviceRegistry, pluginManager, middlewarePluginDelegate, loggerFactory, pluginContextHolder);
 
     const serverInfo = createServerInfo(devMode);
     const globalNodeErrorHandler = new GlobalNodeErrorHandler(loggerFactory);
-    const server = new MashroomServer(expressApp, serverInfo, serverConfig, scanner, globalNodeErrorHandler, httpUpgradeService as InternalMashroomHttpUpgradeService, loggerFactory);
+    const server = new MashroomServer(expressApp, serverInfo, serverConfig, pluginManager, globalNodeErrorHandler, httpUpgradeService as InternalMashroomHttpUpgradeService, loggerFactory);
 
     const serverContext: MashroomServerContext = {
         serverInfo,
@@ -105,7 +93,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
         loggerFactory,
         scanner,
         builder,
-        pluginRegistry,
+        pluginRegistry: pluginManager,
         serviceRegistry,
         pluginContextHolder,
         server,
@@ -138,9 +126,11 @@ const createBuilder = (config: MashroomServerConfig, loggerFactory: MashroomLogg
     return new MashroomPluginPackageBuilder(config, loggerFactory);
 };
 
-const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, expressApplication: Application,
+const addBuiltInPlugins = (pluginRegistry: MashroomPluginRegistryType, expressApplication: Application,
                                  serviceRegistry: MashroomServiceRegistryType, middlewarePluginDelegate: MiddlewarePluginDelegateType,
-                                 loggerFactory: MashroomLoggerFactory, pluginContextHolder: MashroomPluginContextHolderType) => {
+                                 pluginContextHolder: MashroomPluginContextHolderType) => {
+    const {serverConfig, loggerFactory} = pluginContextHolder.getPluginContext();
+
     pluginRegistry.registerPluginLoader('plugin-loader', new MashroomPluginLoaderLoader(pluginRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('api', new MashroomApiPluginLoader(expressApplication, loggerFactory));
     pluginRegistry.registerPluginLoader('web-app', new MashroomWebAppPluginLoader(expressApplication, loggerFactory, pluginContextHolder));
@@ -148,6 +138,10 @@ const addDefaultPluginLoaders = (pluginRegistry: MashroomPluginRegistryType, exp
     pluginRegistry.registerPluginLoader('middleware', new MashroomMiddlewarePluginLoader(middlewarePluginDelegate, loggerFactory));
     pluginRegistry.registerPluginLoader('services', new MashroomServicesLoader(serviceRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('admin-ui-integration', new MashroomAdminUIIntegrationLoader(loggerFactory));
+
+    pluginRegistry.registerPluginDefinitionBuilder(0, new MashroomDefaultPluginPackageDefinitionBuilder(serverConfig, loggerFactory));
+
+    pluginRegistry.registerPluginScanner(new MashroomLocalFileSystemPluginPackageScanner(serverConfig, loggerFactory));
 };
 
 const addCoreServices = (serviceNamespacesRegistry: MashroomServiceRegistryType, pluginRegistry: MashroomPluginRegistryType,

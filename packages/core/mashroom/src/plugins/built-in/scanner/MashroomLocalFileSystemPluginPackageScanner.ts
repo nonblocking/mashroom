@@ -11,7 +11,7 @@ import type {
     MashroomServerConfig,
     PluginPackageFolder,
     MashroomPluginPackageScanner as MashroomPluginPackageScannerType,
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 import type {FSWatcher} from 'chokidar';
 
 type DeferredUpdatesTimestamps = {
@@ -53,6 +53,10 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
         this._deferUpdateMillis = DEFAULT_DEFER_UPDATE_MS;
         this._deferredUpdatesTimestamps = {};
         this._pluginPackagePaths = [];
+    }
+
+    get name() {
+        return 'Default local file system scanner that watches for changes in dev mode';
     }
 
     setCallback(callback: MashroomPluginScannerCallback) {

@@ -9,10 +9,10 @@ import type {
     MashroomLoggerFactory,
     MashroomLogger,
     MashroomServicesPluginBootstrapFunction
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 import type {
     MashroomServiceRegistry,
-} from '../../../type-definitions/internal';
+} from '../../../../type-definitions/internal';
 
 export default class MashroomServicesLoader implements MashroomPluginLoader {
 

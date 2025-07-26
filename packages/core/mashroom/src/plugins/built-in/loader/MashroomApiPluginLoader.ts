@@ -5,7 +5,7 @@ import type {Router, Application} from 'express';
 import type {
     MashroomPluginContextHolder, MashroomPluginConfig,
     MashroomPlugin, MashroomApiPluginBootstrapFunction,
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 
 export default class MashroomApiPluginLoader extends ExpressRequestHandlerBasePluginLoader {
 

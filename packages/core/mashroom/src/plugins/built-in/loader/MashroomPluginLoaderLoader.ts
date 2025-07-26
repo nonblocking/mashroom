@@ -1,14 +1,14 @@
 
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
-import builtInLoaders from './built-in-loaders';
+import builtInLoaders from '../built-in-loaders';
 
 import type {
     MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomLoggerFactory,
     MashroomPluginContextHolder, MashroomLogger, MashroomPluginType, MashroomPluginLoaderPluginBootstrapFunction,
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 import type {
     MashroomPluginRegistry,
-} from '../../../type-definitions/internal';
+} from '../../../../type-definitions/internal';
 
 export default class MashroomPluginLoaderLoader implements MashroomPluginLoader {
 

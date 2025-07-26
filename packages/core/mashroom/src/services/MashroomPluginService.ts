@@ -43,7 +43,7 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
                 });
             }
         });
-        pluginRegistry.on('unload', (event) => {
+        pluginRegistry.on('unloaded', (event) => {
             const listeners = this._unloadListeners[event.pluginName];
             delete this._unloadListeners[event.pluginName];
             if (listeners) {

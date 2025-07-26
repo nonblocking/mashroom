@@ -3,11 +3,11 @@ import path from 'path';
 import fs from 'fs';
 import fsExtra from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import MashroomPluginLoaderLoader from '../../../src/plugins/loader/MashroomPluginLoaderLoader';
-import MashroomPlugin from '../../../src/plugins/MashroomPlugin';
+import MashroomPluginLoaderLoader from '../../../../src/plugins/built-in/loader/MashroomPluginLoaderLoader';
+import MashroomPlugin from '../../../../src/plugins/MashroomPlugin';
 
 const getPluginPackageFolder = () => {
-    const packageFolder = path.resolve(__dirname, '../../../test-data/loader2/test-package');
+    const packageFolder = path.resolve(__dirname, '../../../../test-data/loader2/test-package');
     fsExtra.emptyDirSync(packageFolder);
     return packageFolder;
 };

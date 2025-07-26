@@ -1,5 +1,5 @@
 
-import {removeFromExpressStack} from '../../utils/reload-utils';
+import {removeFromExpressStack} from '../../../utils/reload-utils';
 import ExpressRequestHandlerWrapper from './ExpressRequestHandlerWrapper';
 
 import type {RequestHandler, Application} from 'express';
@@ -10,7 +10,7 @@ import type {
     MashroomPluginConfig,
     MashroomPluginContextHolder,
     MashroomPluginLoader,
-} from '../../../type-definitions';
+} from '../../../../type-definitions';
 
 type LoadedPlugin = {
     readonly path: string,
