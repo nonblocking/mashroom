@@ -17,7 +17,8 @@ import type {
 import type {
     MashroomServer as MashroomServerType,
     GlobalNodeErrorHandler,
-    InternalMashroomHttpUpgradeService, MashroomPluginRegistry,
+    InternalMashroomHttpUpgradeService,
+    MashroomPluginManager,
 } from '../../type-definitions/internal';
 
 export default class MashroomServer implements MashroomServerType {
@@ -27,7 +28,7 @@ export default class MashroomServer implements MashroomServerType {
     private readonly _logger: MashroomLogger;
 
     constructor(private _expressApp: Application, private _serverInfo: MashroomServerInfo, private _config: MashroomServerConfig,
-                private _registry: MashroomPluginRegistry, private _errorHandler: GlobalNodeErrorHandler,
+                private _pluginManager: MashroomPluginManager, private _errorHandler: GlobalNodeErrorHandler,
                 private _httpUpgradeService: InternalMashroomHttpUpgradeService, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.server');
         this._addServerRoutes();
@@ -52,13 +53,7 @@ Starting
         this._logger.info('Stopping Mashroom server...');
 
         this._errorHandler.uninstall();
-        for (let scanner of this._registry.pluginPackageScanners) {
-            try {
-                await scanner.stop();
-            } catch (e) {
-                this._logger.warn(`Scanner '${scanner.name}' threw an error on stop`, e);
-            }
-        }
+        await this._pluginManager.stop();
 
         await Promise.all([
             this._stopHttpServer(),

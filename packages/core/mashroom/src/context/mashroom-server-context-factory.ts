@@ -72,7 +72,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const pluginContextHolder = new MashroomPluginContextHolder(serverContextHolder);
 
     const serviceRegistry = new MashroomServiceRegistry();
-    const pluginManager = new MashroomPluginManager(pluginContextHolder, builder);
+    const pluginManager = new MashroomPluginManager(pluginContextHolder, loggerFactory, builder);
 
     const expressApp = express();
     setExpressConfig(expressApp, devMode, logger);
@@ -80,7 +80,8 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const middlewarePluginDelegate = new MiddlewarePluginDelegate();
     addDefaultMiddleware(expressApp, pluginContextHolder, middlewarePluginDelegate);
 
-    addBuiltInPlugins(pluginManager, expressApp, serviceRegistry, middlewarePluginDelegate, pluginContextHolder);
+    addBuiltInPlugins(pluginManager, expressApp, serviceRegistry, middlewarePluginDelegate,
+        serverConfig, loggerFactory, pluginContextHolder);
     const {httpUpgradeService} = addCoreServices(serviceRegistry, pluginManager, middlewarePluginDelegate, loggerFactory, pluginContextHolder);
 
     const serverInfo = createServerInfo(devMode);
@@ -102,6 +103,8 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     };
 
     serverContextHolder.setServerContext(serverContext);
+
+    await pluginManager.start();
 
     return serverContext;
 };
@@ -127,9 +130,9 @@ const createBuilder = (config: MashroomServerConfig, loggerFactory: MashroomLogg
 };
 
 const addBuiltInPlugins = (pluginRegistry: MashroomPluginRegistryType, expressApplication: Application,
-                                 serviceRegistry: MashroomServiceRegistryType, middlewarePluginDelegate: MiddlewarePluginDelegateType,
-                                 pluginContextHolder: MashroomPluginContextHolderType) => {
-    const {serverConfig, loggerFactory} = pluginContextHolder.getPluginContext();
+                           serviceRegistry: MashroomServiceRegistryType, middlewarePluginDelegate: MiddlewarePluginDelegateType,
+                           serverConfig: MashroomServerConfig, loggerFactory: MashroomLoggerFactory,
+                           pluginContextHolder: MashroomPluginContextHolderType) => {
 
     pluginRegistry.registerPluginLoader('plugin-loader', new MashroomPluginLoaderLoader(pluginRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('api', new MashroomApiPluginLoader(expressApplication, loggerFactory));

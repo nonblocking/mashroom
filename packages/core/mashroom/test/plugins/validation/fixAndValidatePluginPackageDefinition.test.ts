@@ -10,7 +10,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
         } as any, {
             version: '1.0.0',
         } as any,
-            loggingUtils.dummyLoggerFactory())).toThrow('Invalid package file:///foo/bar: No name property!');
+            loggingUtils.dummyLoggerFactory())).toThrow('Invalid package definition: No name property!');
     });
 
     it('fails with a missing package version', async () => {
@@ -18,7 +18,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
             } as any, {
                 name: 'test',
             } as any,
-            loggingUtils.dummyLoggerFactory())).toThrow('Invalid package \'test\': No version property!');
+            loggingUtils.dummyLoggerFactory())).toThrow('Invalid package definition: No version property!');
     });
 
     it('fails with a plugin definition without a name', async () => {
@@ -30,7 +30,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
                 name: 'test',
                 version: '1.0.0',
             } as any,
-            loggingUtils.dummyLoggerFactory())).toThrow('Invalid plugin definition in package \'test\': No name property!');
+            loggingUtils.dummyLoggerFactory())).toThrow('Plugin without a name property found!');
     });
 
     it('fails with a plugin definition with an invalid name', async () => {
@@ -42,7 +42,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
                 name: 'test',
                 version: '1.0.0',
             } as any,
-            loggingUtils.dummyLoggerFactory())).toThrow('Invalid plugin definition in package \'test\': Plugin \'plugin?\' has invalid characters (/,?)!');
+            loggingUtils.dummyLoggerFactory())).toThrow('Plugin name \'plugin?\' has invalid characters (/,?)!');
     });
 
     it('fails with a plugin definition without a type', async () => {
@@ -55,7 +55,26 @@ describe('fixAndValidatePluginPackageDefinition', () => {
                 name: 'test',
                 version: '1.0.0',
             } as any,
-            loggingUtils.dummyLoggerFactory())).toThrow('Invalid plugin definition in package \'test\': Plugin \'test\' has no type property!');
+            loggingUtils.dummyLoggerFactory())).toThrow('Plugin \'test\' has no type property!');
+    });
+
+    it('fails with duplicate plugin names', async () => {
+        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+                plugins: [{
+                    name: 'test1',
+                    type: 'test',
+                }, {
+                    name: 'test2',
+                    type: 'test',
+                }, {
+                    name: 'test1',
+                    type: 'test',
+                }]
+            } as any, {
+                name: 'test',
+                version: '1.0.0',
+            } as any,
+            loggingUtils.dummyLoggerFactory())).toThrow('Duplicate plugin \'test1\' found!');
     });
 
     it('fixes the description field of plugins', async () => {

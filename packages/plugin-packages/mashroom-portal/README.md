@@ -463,7 +463,7 @@ export type MashroomPortalAppSetup = {
     readonly appId: string;
     readonly title: string | null | undefined;
     readonly proxyPaths: MashroomPortalProxyPaths;
-    // Legacy, will be removed in Mashroom v3
+    // Legacy, will be removed
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly resourcesBasePath: string;
     readonly globalLaunchFunction: string;

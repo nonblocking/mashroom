@@ -11,21 +11,28 @@ export default (packageURL: URL, def: MashroomPluginPackageDefinition, meta: Mas
     };
 
     if (!meta.name) {
-        throw new Error(`Invalid package ${packageURL}: No name property!`);
+        throw new Error(`Invalid package definition: No name property!`);
     }
     if (!meta.version) {
-        throw new Error(`Invalid package '${meta.name}': No version property!`);
+        throw new Error(`Invalid package definition: No version property!`);
     }
 
+    const pluginNames: Array<string> = [];
+
     for (const plugin of fixedDef.plugins) {
+        if (pluginNames.indexOf(plugin.name) !== -1) {
+            throw new Error(`Duplicate plugin '${plugin.name}' found!`);
+        }
+        pluginNames.push(plugin.name);
+
         if (!plugin.name) {
-            throw new Error(`Invalid plugin definition in package '${meta.name}': No name property!`);
+            throw new Error(`Plugin without a name property found!`);
         }
         if (plugin.name.match(configUtils.INVALID_PLUGIN_NAME_CHARACTERS)) {
-            throw new Error(`Invalid plugin definition in package '${meta.name}': Plugin '${plugin.name}' has invalid characters (/,?)!`);
+            throw new Error(`Plugin name '${plugin.name}' has invalid characters (/,?)!`);
         }
         if (!plugin.type) {
-            throw new Error(`Invalid plugin definition in package '${meta.name}': Plugin '${plugin.name}' has no type property!`);
+            throw new Error(`Plugin '${plugin.name}' has no type property!`);
         }
 
         // Fix description

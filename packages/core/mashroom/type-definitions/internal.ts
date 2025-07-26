@@ -44,7 +44,7 @@ export interface MashroomLoggerDelegate {
 
 export type MashroomPluginPackageBuilderEventName = 'build-finished';
 export type MashroomPluginPackageBuilderEvent = {
-    readonly pluginPackagePath: string;
+    readonly pluginPackageName: string;
     readonly success: boolean;
     readonly errorMessage?: string;
 }
@@ -57,7 +57,7 @@ export interface MashroomPluginPackageBuilder extends MashroomEventEmitter<Mashr
     /**
      * Add given plugin package to build queue
      */
-    addToBuildQueue(pluginPackageName: string | undefined | null, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp?: number): void;
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp?: number): void;
 
     /**
      * Remove from the build queue (if present)
@@ -136,8 +136,12 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
 
 
 /**
- * Mashroom plugin service
+ * Mashroom plugin manager
  */
+export interface MashroomPluginManager {
+    start(): Promise<void>;
+    stop(): Promise<void>;
+}
 
 /**
  * Mashroom server

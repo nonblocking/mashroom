@@ -35,6 +35,10 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         const version = plugin.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${plugin.name}: ${version}`);
 
+        if (version === 1) {
+            this._logger.warn(`Plugin ${plugin.name} is using the legacy 'portal-app' type. Please convert to type 'portal-app2'.`);
+        }
+
         const clientBootstrap = version == 2 ? plugin.pluginDefinition.clientBootstrap : plugin.pluginDefinition.bootstrap;
         if (!clientBootstrap) {
             if (version === 2) {

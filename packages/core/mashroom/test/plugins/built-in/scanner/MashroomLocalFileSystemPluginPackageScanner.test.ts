@@ -111,32 +111,6 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
         expect((removedURL as any).pathname).toContain('test-data/plugins1/test2');
     });
 
-    it('doesnt scan subfolders if the package folder contains a package.json', async () => {
-        const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
-
-        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}] };
-
-        const foundURLs: Array<URL> = [];
-
-        const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
-        pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
-                foundURLs.push(url);
-            },
-            removePackageURL(url: URL) {
-            }
-        });
-
-        await pluginPackageScanner.start();
-
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        await pluginPackageScanner.stop();
-
-        expect(foundURLs.length).toBe(1);
-        expect(foundURLs[0].pathname.endsWith('test-data/plugins1/test2')).toBeTruthy();
-    });
-
     it('reports an update if a file changes in a package folder that contains a package.json', async () => {
         const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
 
@@ -168,5 +142,33 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         expect((updatedURL as any).pathname).toContain('test-data/plugins1/test2');
     });
+
+    it('doesnt scan subfolders if the package folder contains a package.json', async () => {
+        const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
+
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}] };
+
+        const foundURLs: Array<URL> = [];
+
+        const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
+        pluginPackageScanner.setCallback({
+            addOrUpdatePackageURL(url: URL) {
+                foundURLs.push(url);
+            },
+            removePackageURL(url: URL) {
+            }
+        });
+
+        await pluginPackageScanner.start();
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        await pluginPackageScanner.stop();
+
+        expect(foundURLs.length).toBe(1);
+        expect(foundURLs[0].pathname.endsWith('test-data/plugins1/test2')).toBeTruthy();
+    });
+
+
 });
 

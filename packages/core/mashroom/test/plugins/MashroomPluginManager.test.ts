@@ -1,8 +1,8 @@
 import {pathToFileURL} from 'url';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginManager from '../../src/plugins/MashroomPluginManager';
-import type { URL} from 'url';
-import type {MashroomPluginPackageDefinitionAndMeta, MashroomPluginScannerCallback} from '../../type-definitions';
+import type {URL} from 'url';
+import type {MashroomPluginScannerCallback} from '../../type-definitions';
 
 const testPackageJson1 = {
     name: 'test1',
@@ -211,7 +211,6 @@ const BuilderMock: any = jest.fn(() => ({
 }));
 
 const mockPluginContext: any = {
-    loggerFactory: loggingUtils.dummyLoggerFactory,
     serverConfig: {
         ignorePlugins: [],
         pluginPackageFolders: [{
@@ -225,7 +224,6 @@ const mockPluginContextHolder = {
 };
 
 const mockPluginContext2: any = {
-    loggerFactory: loggingUtils.dummyLoggerFactory,
     serverConfig: {
         ignorePlugins: ['Plugin 1'],
         pluginPackageFolders: [{
@@ -286,18 +284,18 @@ describe('MashroomPluginManager', () => {
                 if (buildFinishedCallback) {
                     // Other build
                     buildFinishedCallback({
-                        pluginPackagePath: 'foooo',
+                        pluginPackageName: 'foooo',
                         success: false,
                     });
                     buildFinishedCallback({
-                        pluginPackagePath,
+                        pluginPackageName: 'test1',
                         success: true,
                     });
                 }
             }, 200);
         });
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, new BuilderMock());
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, new BuilderMock());
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -362,7 +360,7 @@ describe('MashroomPluginManager', () => {
             setTimeout(() => {
                 if (buildFinishedCallback) {
                     buildFinishedCallback({
-                        pluginPackagePath,
+                        pluginPackageName: 'test1',
                         success: false,
                         errorMessage: 'build errror!',
                     });
@@ -370,7 +368,7 @@ describe('MashroomPluginManager', () => {
             }, 200);
         });
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, new BuilderMock());
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, new BuilderMock());
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -402,7 +400,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder2, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder2, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -440,19 +438,25 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
 
+        let lowPriorityDefinitionBuilderCalled = false;
+
         // Add definition builders
-        pluginManager.registerPluginDefinitionBuilder(10, /* dummy */ {} as any);
+        pluginManager.registerPluginDefinitionBuilder(10, /* dummy */ {
+            name: 'dummx',
+            async buildDefinition(url: URL) {
+                lowPriorityDefinitionBuilderCalled = true;
+                return null;
+            }
+        });
         pluginManager.registerPluginDefinitionBuilder(11, testPackageJsonDefinitionBuilder1);
 
         // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
-
-        expect(scannerCallback).toBeTruthy();
 
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
@@ -460,6 +464,7 @@ describe('MashroomPluginManager', () => {
         // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
+        expect(lowPriorityDefinitionBuilderCalled).toBeFalsy();
         expect(pluginManager.pluginPackages.length).toBe(1);
         expect(pluginManager.plugins.length).toBe(3);
     });
@@ -468,7 +473,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -511,7 +516,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -547,7 +552,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -583,7 +588,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -621,7 +626,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackage2URL = pathToFileURL('/foo/test2');
         const pluginPackage3URL = pathToFileURL('/foo/test3');
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -695,7 +700,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -739,7 +744,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
@@ -770,7 +775,7 @@ describe('MashroomPluginManager', () => {
         const pluginPackagePath = '/foo/bar';
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
-        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, null);
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
         // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);

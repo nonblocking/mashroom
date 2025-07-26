@@ -75,13 +75,9 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._processingAllowed = true;
     }
 
-    addToBuildQueue(pluginPackageName: string | undefined | null, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp = Date.now()): void {
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp = Date.now()): void {
         if (!this._processingAllowed) {
             return;
-        }
-
-        if (!pluginPackageName) {
-            pluginPackageName = pluginPackagePath;
         }
 
         this.removeFromBuildQueue(pluginPackageName);
