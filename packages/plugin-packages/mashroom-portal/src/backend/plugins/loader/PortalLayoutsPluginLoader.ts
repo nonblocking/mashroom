@@ -1,10 +1,12 @@
 
-import path from 'path';
+import {resolve} from 'path';
+import {fileURLToPath} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalLayout} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
+
 
 export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
 
@@ -27,14 +29,19 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const layouts = plugin.pluginDefinition.layouts;
         if (!layouts) {
-            throw new PluginConfigurationError(`Invalid configuration of layouts plugin ${plugin.name}: No layouts property defined`);
+            throw new PluginConfigurationError(`Layouts plugin ${plugin.name}: Missing property 'layouts'!`);
         }
+        if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+            throw new PluginConfigurationError(`Layouts plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
+        }
+
+        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
 
         for (const layoutId in layouts) {
             if (layoutId in layouts) {
                 let layoutPath = layouts[layoutId];
                 if (!layoutPath.startsWith('/')) {
-                    layoutPath = path.resolve(plugin.pluginPackage.pluginPackagePath, layoutPath);
+                    layoutPath = resolve(pluginPackagePath, layoutPath);
                 }
 
                 const name = `${plugin.name} ${layoutId}`;

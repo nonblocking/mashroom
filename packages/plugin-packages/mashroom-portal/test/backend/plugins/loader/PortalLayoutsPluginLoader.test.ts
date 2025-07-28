@@ -1,5 +1,6 @@
 
 import {parse} from 'path';
+import {pathToFileURL} from 'url';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import PortalLayoutsPluginLoader from '../../../../src/backend/plugins/loader/PortalLayoutsPluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
@@ -11,14 +12,14 @@ describe('PortalLayoutsPluginLoader', () => {
     it('loads and registers layouts', () => {
 
         const pluginPackage: any = {
-            pluginPackagePath: '/opt/mashroom/packages/test',
+            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
         };
         const layoutsPlugin: MashroomPlugin = {
             pluginPackage,
             name: 'Portal Layouts 1',
             description: null,
             tags: [],
-            type: 'portal-app',
+            type: 'portal-layouts',
             errorMessage: null,
             lastReloadTs: Date.now(),
             requireBootstrap: () => { /* nothing to do */ },
@@ -28,7 +29,7 @@ describe('PortalLayoutsPluginLoader', () => {
                 name: 'Portal Layouts 1',
                 description: null,
                 requires: null,
-                type: 'portal-app',
+                type: 'portal-layouts',
                 bootstrap: null,
                 layouts: {
                     '2_columns_50_50': './layouts/2_columns_50_50.html',
@@ -66,14 +67,14 @@ describe('PortalLayoutsPluginLoader', () => {
     it('unregisters all layouts of a plugin', () => {
 
         const pluginPackage: any = {
-            pluginPackagePath: '/opt/mashroom/packages/test',
+            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
         };
         const layoutsPlugin: MashroomPlugin = {
             pluginPackage,
             name: 'Portal Layouts 1',
             description: null,
             tags: [],
-            type: 'portal-app',
+            type: 'portal-layouts',
             errorMessage: null,
             lastReloadTs: Date.now(),
             requireBootstrap: () => { /* nothing to do */ },
@@ -83,7 +84,7 @@ describe('PortalLayoutsPluginLoader', () => {
                 name: 'Portal Layouts 1',
                 description: null,
                 requires: null,
-                type: 'portal-app',
+                type: 'portal-layouts',
                 bootstrap: null,
                 layouts: {
                     '2_columns_50_50': './layouts/2_columns_50_50.html',

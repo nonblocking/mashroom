@@ -1,5 +1,6 @@
 
-import path from 'path';
+import {resolve} from 'path';
+import {fileURLToPath} from 'url';
 import express from 'express';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
@@ -16,10 +17,14 @@ export default class MashroomStaticDocumentsPluginLoader extends ExpressRequestH
     async createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
         const documentRoot: string | undefined | null = plugin.pluginDefinition.documentRoot;
         if (!documentRoot) {
-            throw new PluginConfigurationError(`Static plugin ${plugin.name} is missing property 'documentRoot'!`);
+            throw new PluginConfigurationError(`Static plugin ${plugin.name}: Missing property 'documentRoot'!`);
+        }
+        if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+            throw new PluginConfigurationError(`Static plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
         }
 
-        const fullDocumentRoot = path.resolve(plugin.pluginPackage.pluginPackagePath, documentRoot);
+        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
+        const fullDocumentRoot = resolve(pluginPackagePath, documentRoot);
         return express.static(fullDocumentRoot);
     }
 

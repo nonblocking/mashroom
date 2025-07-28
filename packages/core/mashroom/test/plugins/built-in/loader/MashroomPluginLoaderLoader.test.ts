@@ -1,14 +1,16 @@
 
-import path from 'path';
-import fs from 'fs';
-import fsExtra from 'fs-extra';
+import {resolve} from 'path';
+import {writeFileSync} from 'fs';
+import {pathToFileURL} from 'url';
+import {emptyDirSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginLoaderLoader from '../../../../src/plugins/built-in/loader/MashroomPluginLoaderLoader';
 import MashroomPlugin from '../../../../src/plugins/MashroomPlugin';
 
+
 const getPluginPackageFolder = () => {
-    const packageFolder = path.resolve(__dirname, '../../../../test-data/loader2/test-package');
-    fsExtra.emptyDirSync(packageFolder);
+    const packageFolder = resolve(__dirname, '../../../../test-data/loader2/test-package');
+    emptyDirSync(packageFolder);
     return packageFolder;
 };
 
@@ -54,12 +56,12 @@ describe('MashroomPluginLoaderLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackagePath,
+            pluginPackageURL: pathToFileURL(pluginPackagePath),
         };
 
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
-        fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
+        writeFileSync(resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             let loadCalled = false;
             module.exports = () => ({ name: 'the test loader', generateMinimumConfig: () => {}, load: (plugin, config) => { console.info('Loading: ', plugin, config); loadCalled = true }, loadCalled: () => loadCalled });
         `);

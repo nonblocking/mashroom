@@ -7,7 +7,7 @@ import type {MashroomPlugin} from '@mashroom/mashroom/type-definitions';
 
 describe('PortalAppPluginLoader', () => {
 
-    it('loads and registers a portal app v2', () => {
+    it('loads and registers a Portal App v2', () => {
 
         const pluginPackage: any = {
             pluginPackagePath: '/foo/bar'
@@ -130,7 +130,7 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
-    it('loads and registers a portal app v2 without SSR capability', () => {
+    it('loads and registers a Portal App v2 without SSR capability', () => {
 
         const pluginPackage: any = {
             pluginPackagePath: '/foo/bar'
@@ -213,7 +213,7 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
-    it('loads and registers a portal app v1', () => {
+    it('loads and registers a Portal App v1', () => {
 
         const pluginPackage: any = {
             pluginPackagePath: '/foo/bar'

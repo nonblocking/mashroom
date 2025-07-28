@@ -191,7 +191,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
                 return;
             } else if (buildInfo.buildStatus === 'running') {
                 if (this._getBuildInfoLastUpdateTst(queueEntry.pluginPackageName) > Date.now() - RETRY_RUNNING_BUILD_AFTER_MS) {
-                    this._logger.debug(`The package ${queueEntry.pluginPackageName} is already built by another Mashroom instance. Re-checking later.`);
+                    this._logger.debug(`The package ${queueEntry.pluginPackageName} is already built. Checking again later.`);
                     setTimeout(() => {
                         this._buildQueue.push(queueEntry);
                     }, RETRY_RUNNING_BUILD_AFTER_MS);

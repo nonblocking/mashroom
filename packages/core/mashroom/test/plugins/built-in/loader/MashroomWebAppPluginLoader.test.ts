@@ -1,14 +1,15 @@
 
-import path from 'path';
-import fs from 'fs';
-import fsExtra from 'fs-extra';
+import {resolve} from 'path';
+import {writeFileSync} from 'fs';
+import {pathToFileURL} from 'url';
+import {emptyDirSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomWebAppPluginLoader from '../../../../src/plugins/built-in/loader/MashroomWebAppPluginLoader';
 import MashroomPlugin from '../../../../src/plugins/MashroomPlugin';
 
 const getPluginPackageFolder = () => {
-    const packageFolder = path.resolve(__dirname, '../../../../test-data/loader1/test-package');
-    fsExtra.emptyDirSync(packageFolder);
+    const packageFolder = resolve(__dirname, '../../../../test-data/loader1/test-package');
+    emptyDirSync(packageFolder);
     return packageFolder;
 };
 
@@ -64,12 +65,12 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackagePath,
+            pluginPackageURL: pathToFileURL(pluginPackagePath),
         };
 
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
-        fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
+        writeFileSync(resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => (req, res, next) => req.test = 1;
         `);
 
@@ -103,12 +104,12 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackagePath,
+            pluginPackageURL: pathToFileURL(pluginPackagePath),
         };
 
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
-        fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
+        writeFileSync(resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => (req, res, next) => req.test = 3;
         `);
 
@@ -153,7 +154,7 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackagePath,
+            pluginPackageURL: pathToFileURL(pluginPackagePath),
         };
 
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
@@ -193,11 +194,11 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackagePath,
+            pluginPackageURL: pathToFileURL(pluginPackagePath),
         };
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 
-        fs.writeFileSync(path.resolve(pluginPackagePath, pluginDefinition.bootstrap), `
+        writeFileSync(resolve(pluginPackagePath, pluginDefinition.bootstrap), `
             module.exports = () => ({
                 expressApp: (req, res, next) => req.test = 1,
                 upgradeHandler: (req, socket, head) => socket.test = 2,

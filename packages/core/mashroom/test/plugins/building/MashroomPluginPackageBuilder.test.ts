@@ -102,7 +102,7 @@ describe('MashroomPluginPackageBuilderClusterSingleton', () => {
         builder.addToBuildQueue('test3', pluginPackagePath, 'build');
     });
 
-    it('doesnt build if the buildStatus is already running', (done) => {
+    it('does not build if the buildStatus is already running', (done) => {
         const pluginPackagePath = getPluginPackageFolder();
         const builder = new MashroomPluginPackageBuilder(({name: '', tmpFolder: getTmpFolder()} as any), loggingUtils.dummyLoggerFactory);
 

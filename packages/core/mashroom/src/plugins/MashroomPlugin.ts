@@ -1,4 +1,5 @@
 import {resolve} from 'path';
+import {fileURLToPath} from 'url';
 import {readonlyUtils, PluginBootstrapError} from '@mashroom/mashroom-utils';
 import type {
     MashroomPlugin as MashroomPluginType,
@@ -26,16 +27,16 @@ export default class MashroomPlugin implements MashroomPluginType {
     requireBootstrap<T>(): T {
         const bootstrapFullPath = this._getBootstrapFullPath();
         if (!bootstrapFullPath) {
-            throw new PluginBootstrapError(`No bootstrap defined for plugin ${this.name}`);
+            throw new PluginBootstrapError(`No bootstrap defined for plugin: ${this.name}`);
         }
 
-        this._logger.info(`Loading bootstrap for plugin ${this.name}: ${bootstrapFullPath}`);
+        this._logger.info(`Loading bootstrap for plugin '${this.name}': ${bootstrapFullPath}`);
         let bootstrap = null;
         try {
             bootstrap = require(bootstrapFullPath);
         } catch (e) {
-            this._logger.error(`Loading bootstrap of plugin ${this.name} failed`, e);
-            throw new PluginBootstrapError(`Loading bootstrap of plugin ${this.name} failed: ${e}`);
+            this._logger.error(`Loading bootstrap of plugin '${this.name}' failed`, e);
+            throw new PluginBootstrapError(`Loading bootstrap of plugin '${this.name}' failed: ${e}`);
         }
 
         if (typeof (bootstrap) === 'function') {
@@ -45,14 +46,18 @@ export default class MashroomPlugin implements MashroomPluginType {
             return bootstrap.default;
         }
 
-        throw new PluginBootstrapError(`Loading bootstrap of plugin ${this.name} failed: Default export is no function!`);
+        throw new PluginBootstrapError(`Loading bootstrap of plugin '${this.name}' failed: Default export is no function!`);
     }
 
     _getBootstrapFullPath() {
         if (!this._pluginDefinition.bootstrap) {
             return null;
         }
-        return resolve(this.pluginPackage.pluginPackagePath, this._pluginDefinition.bootstrap);
+        // At the moment we can only load bootstraps form the local file system
+        if (this.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+            throw new Error(`Cannot load bootstrap module from ${this.pluginPackage.pluginPackageURL} because it is not a local file system URL`);
+        }
+        return resolve(fileURLToPath(this.pluginPackage.pluginPackageURL), this._pluginDefinition.bootstrap);
     }
 
     get name() {

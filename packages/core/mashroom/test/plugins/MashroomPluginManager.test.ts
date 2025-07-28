@@ -1,5 +1,7 @@
 import {pathToFileURL} from 'url';
+import {resolve} from 'path';
 import {loggingUtils} from '@mashroom/mashroom-utils';
+import {emptyDirSync} from 'fs-extra';
 import MashroomPluginManager from '../../src/plugins/MashroomPluginManager';
 import type {URL} from 'url';
 import type {MashroomPluginScannerCallback} from '../../type-definitions';
@@ -16,7 +18,7 @@ const testPackageJson1 = {
             {
                 name: 'Plugin 1',
                 type: 'web-app',
-                bootstrap: './dist/mashroom-bootstrap.js',
+                bootstrap: './dist/mashroom-bootstrap1.js',
                 defaultConfig: {
                     foo: 'bar',
                 },
@@ -24,7 +26,7 @@ const testPackageJson1 = {
             {
                 name: 'Plugin 2',
                 type: 'plugin-loader',
-                bootstrap: './dist/mashroom-bootstrap2.js',
+                bootstrap: './dist/mashroom-bootstrap22.js',
                 dependencies: ['foo-services'],
             },
             {
@@ -44,7 +46,7 @@ const testPackageJson2 = {
             {
                 name: 'Plugin 1',
                 type: 'web-app',
-                bootstrap: './dist/mashroom-bootstrap.js',
+                bootstrap: './dist/mashroom-bootstrap1.js',
                 defaultConfig: {
                     foo: 'bar',
                 },
@@ -194,13 +196,29 @@ const testPackageJsonDefinitionBuilder3 = {
 };
 
 const testPackageJsonDefinitionBuilder4 = {
-    name: 'Definition Builder 1',
+    name: 'Definition Builder 4',
     buildDefinition: async (url: URL) => {
         return {
             definition: testPackageJson6.mashroom as any,
             meta: testPackageJson6 as any,
         };
     }
+};
+
+const testPackageJsonDefinitionBuilder5 = {
+    name: 'Definition Builder 5',
+    buildDefinition: async (url: URL) => {
+        return {
+            definition: testPackageJson4.mashroom as any,
+            meta: testPackageJson4 as any,
+        };
+    }
+};
+
+const getPluginPackageFolder = () => {
+    const packageFolder = resolve(__dirname, '../../test-data/plugins3/test4');
+    emptyDirSync(packageFolder);
+    return packageFolder;
 };
 
 const builderOnMock = jest.fn();
@@ -796,6 +814,7 @@ describe('MashroomPluginManager', () => {
 
         expect(pluginManager.pluginPackages.length).toBe(1);
         expect(pluginManager.pluginPackages[0].status).toBe('error');
-        expect(pluginManager.pluginPackages[0].errorMessage).toBe('Invalid plugin definition in package \'test1\': Plugin \'Plugin 4\' has no type property!');
+        expect(pluginManager.pluginPackages[0].errorMessage).toBe('Plugin \'Plugin 4\' has no type property!');
     });
+
 });
