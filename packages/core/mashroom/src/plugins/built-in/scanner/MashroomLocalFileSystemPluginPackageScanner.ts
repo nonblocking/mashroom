@@ -4,6 +4,7 @@ import {pathToFileURL} from 'url';
 import {existsSync} from 'fs';
 import {readdir} from 'fs/promises';
 import chokidar from 'chokidar';
+import anymatch from 'anymatch';
 import type {
     MashroomLogger,
     MashroomLoggerFactory,
@@ -21,9 +22,15 @@ type DeferredUpdatesTimestamps = {
 type FsEvent = 'added' | 'updated' | 'removed';
 
 // Anymatch patterns
-export const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**', '**/dist/**', '**/build/**', '**/public/**'];
-
-export const DEFAULT_DEFER_UPDATE_MS = 2000;
+const IGNORE_CHANGES_IN_PATHS: Array<string> = [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/build/**',
+    '**/temp/**',
+    '**/tmp/**',
+    '**/out/**',
+    '**/public/**'
+];
 
 /**
  * The default plugin scanner
@@ -31,7 +38,6 @@ export const DEFAULT_DEFER_UPDATE_MS = 2000;
 export default class MashroomLocalFileSystemPluginPackageScanner implements MashroomPluginPackageScannerType {
 
     private readonly _logger: MashroomLogger;
-    private readonly _deferUpdateMillis: number;
     private readonly _pluginPackageFolders: Array<PluginPackageFolder>;
     private readonly _foldersToWatch: Array<string>;
     private readonly _pluginPackagePaths: Array<string>;
@@ -41,7 +47,7 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
     private _callback: MashroomPluginScannerCallback | undefined;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.plugins.scanner');
+        this._logger = loggerFactory('mashroom.plugins.scanner.fs');
         this._pluginPackageFolders = config.pluginPackageFolders.filter((folder) => {
            if (!existsSync(folder.path)) {
                 this._logger.error(`Ignoring plugin package folder because it doesn't exist: ${folder.path}`);
@@ -50,13 +56,12 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
            return true;
         });
         this._foldersToWatch = this._pluginPackageFolders.filter((f) => f.watch).map((f) => f.path);
-        this._deferUpdateMillis = DEFAULT_DEFER_UPDATE_MS;
         this._deferredUpdatesTimestamps = {};
         this._pluginPackagePaths = [];
     }
 
     get name() {
-        return 'Default local file system scanner that watches for changes in dev mode';
+        return 'Default local file system scanner';
     }
 
     setCallback(callback: MashroomPluginScannerCallback) {
@@ -76,7 +81,12 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
                 usePolling: true,
                 interval: 1000,
                 binaryInterval: 1000,
-                ignored: [/(^|[/\\])\../, ...IGNORE_CHANGES_IN_PATHS],
+                ignored: (path) => {
+                    if (path.includes(`${sep}.`)) {
+                        return true;
+                    }
+                   return anymatch(IGNORE_CHANGES_IN_PATHS, path);
+                },
                 persistent: true,
                 ignoreInitial: true,
                 followSymlinks: false,
@@ -113,8 +123,8 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
         }
     }
 
-    private _processChange(pluginPackagePath: string) {
-        this._logger.debug(`Change in plugin package folder: ${pluginPackagePath}`);
+    private _processChange(pluginPackagePath: string, changePath: string) {
+        this._logger.debug(`Change in plugin package folder: ${pluginPackagePath}. File: ${changePath}`);
 
         let eventName: FsEvent | undefined;
         const alreadyKnown = this._pluginPackagePaths.indexOf(pluginPackagePath) !== -1;
@@ -146,18 +156,13 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
                 break;
             }
             case 'updated': {
-                if (this._deferUpdateMillis > 0) {
-                    this._deferredUpdatesTimestamps[pluginPackagePath] = Date.now() + this._deferUpdateMillis;
-                } else {
-                    this._fireEvent(eventName, pluginPackagePath);
-                }
+                this._fireEvent(eventName, pluginPackagePath);
                 break;
             }
         }
     }
 
     private _fireEvent(eventName: FsEvent, pluginPackagePath: string) {
-        this._logger.info(`Event: ${eventName}: ${pluginPackagePath}`);
         if (this._callback) {
             if (eventName === 'updated' || eventName === 'added') {
                 this._callback.addOrUpdatePackageURL(pathToFileURL(pluginPackagePath));
@@ -189,12 +194,12 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
             const pathWithinRootFolder = changePath.substring(rootFolder.path.length + 1);
             if (existsSync(resolve(rootFolder.path, 'package.json'))) {
                 // This package folder contains a single package
-                this._processChange(rootFolder.path);
+                this._processChange(rootFolder.path, changePath);
             } else {
                 // Resolve the actual package that contains the changed file
                 const pluginPackageName = pathWithinRootFolder.split(sep)[0];
                 const pluginPackagePath = resolve(rootFolder.path, pluginPackageName);
-                this._processChange(pluginPackagePath);
+                this._processChange(pluginPackagePath, changePath);
             }
         }
     }
@@ -203,13 +208,13 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
         await Promise.all(this._pluginPackageFolders.map(async (pluginPackagesFolder) => {
             if (existsSync(resolve(pluginPackagesFolder.path, 'package.json'))) {
                 // This package folder contains a single package
-                this._processChange(pluginPackagesFolder.path);
+                this._processChange(pluginPackagesFolder.path, '.');
             } else {
                 const folders = await readdir(pluginPackagesFolder.path);
                 folders.forEach((folder) => {
                     if (!folder.startsWith('.')) {
                         const pluginPackagePath = resolve(pluginPackagesFolder.path, folder);
-                        this._processChange(pluginPackagePath);
+                        this._processChange(pluginPackagePath, '.');
                     }
                 });
             }

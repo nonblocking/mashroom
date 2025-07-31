@@ -7,7 +7,6 @@ import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
 import {stripAnsiColors} from '../../utils/log-utils';
-import {IGNORE_CHANGES_IN_PATHS} from '../built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
 import NpmUtils from './NpmUtils';
 import NxUtils from './NxUtils';
 
@@ -41,6 +40,9 @@ type BuildInfo = {
     buildPackageChecksum?: string;
     lastDependenciesUpdate?: number | undefined | null;
 };
+
+// Anymatch patterns
+const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**'];
 
 /**
  * Build service for plugin packages.

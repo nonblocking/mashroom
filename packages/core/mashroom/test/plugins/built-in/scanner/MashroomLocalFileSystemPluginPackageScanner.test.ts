@@ -1,22 +1,24 @@
 
-import path from 'path';
-import fsExtra from 'fs-extra';
+import {resolve} from 'path';
+import {ensureDirSync, emptyDirSync, writeJsonSync, removeSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import defaultConfig from '../../../../src/config/mashroom-default-config';
 import MashroomLocalFileSystemPluginPackageScanner from '../../../../src/plugins/built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
 import type {URL} from 'url';
 
-const getPluginPackagesFolder = () => {
-    const pluginsFolder = path.resolve(__dirname, '../../../../test-data/plugins1');
-    fsExtra.emptyDirSync(pluginsFolder);
+jest.setTimeout(10000);
 
-    const plugin1Folder = path.resolve(pluginsFolder, 'test1');
-    fsExtra.ensureDirSync(plugin1Folder);
-    const plugin2Folder = path.resolve(pluginsFolder, 'test2');
-    fsExtra.ensureDirSync(plugin2Folder);
-    const plugin3Folder = path.resolve(pluginsFolder, '.test3');
-    fsExtra.ensureDirSync(plugin3Folder);
-    fsExtra.writeJsonSync(path.resolve(plugin2Folder, 'package.json'), {
+const getPluginPackagesFolder = () => {
+    const pluginsFolder = resolve(__dirname, '../../../../test-data/plugins1');
+    emptyDirSync(pluginsFolder);
+
+    const plugin1Folder = resolve(pluginsFolder, 'test1');
+    ensureDirSync(plugin1Folder);
+    const plugin2Folder = resolve(pluginsFolder, 'test2');
+    ensureDirSync(plugin2Folder);
+    const plugin3Folder = resolve(pluginsFolder, '.test3');
+    ensureDirSync(plugin3Folder);
+    writeJsonSync(resolve(plugin2Folder, 'package.json'), {
         name: 'test2',
         mashroom: {},
     });
@@ -48,15 +50,12 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
         expect(foundURLs.length).toBe(2);
     });
 
-    it('reports an updated if an file changes', async () => {
+    it('reports an update if an file changes', async () => {
         const pluginPackagesFolder = getPluginPackagesFolder();
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
 
         const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
-
-        // @ts-ignore
-        pluginPackageScanner._deferUpdateMillis = 100;
 
         let updatedURL: URL | undefined;
         pluginPackageScanner.setCallback({
@@ -72,14 +71,45 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         updatedURL = undefined;
 
-        fsExtra.writeJsonSync(`${pluginPackagesFolder}/.test3/foo.json`, {foo: 2});
-        fsExtra.writeJsonSync(`${pluginPackagesFolder}/test2/bar.json`, {bar: 1});
+        writeJsonSync(`${pluginPackagesFolder}/.test3/foo.json`, {foo: 2});
+        writeJsonSync(`${pluginPackagesFolder}/test2/bar.json`, {bar: 1});
 
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
         await pluginPackageScanner.stop();
 
         expect((updatedURL as any).pathname).toContain('test-data/plugins1/test2');
+    });
+
+    it('does not report an update if a file in an ignored folder changes', async () => {
+        const pluginPackagesFolder = getPluginPackagesFolder();
+
+        const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}] };
+
+        const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
+
+        let updatedURL: URL | undefined;
+        pluginPackageScanner.setCallback({
+            addOrUpdatePackageURL(url: URL) {
+                updatedURL = url;
+            },
+            removePackageURL(url: URL) {
+            }
+        });
+
+        await pluginPackageScanner.start();
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        updatedURL = undefined;
+
+        ensureDirSync(`${pluginPackagesFolder}/test2/dist`);
+        writeJsonSync(`${pluginPackagesFolder}/test2/dist/bar.json`, {bar: 1});
+
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+
+        await pluginPackageScanner.stop();
+
+        expect(updatedURL).toBeFalsy();
     });
 
     it('reports folder removal', async () => {
@@ -102,7 +132,7 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
-        fsExtra.removeSync(`${pluginPackagesFolder  }/test2`);
+        removeSync(`${pluginPackagesFolder  }/test2`);
 
         await new Promise((resolve) => setTimeout(resolve, 3000));
 
@@ -112,13 +142,11 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
     });
 
     it('reports an update if a file changes in a package folder that contains a package.json', async () => {
-        const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
+        const pluginPackagesFolder = resolve(getPluginPackagesFolder(), 'test2');
 
         const config = {...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: true}]};
 
         const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
-        // @ts-ignore
-        pluginPackageScanner._deferUpdateMillis = 500;
 
         let updatedURL: URL | undefined;
         pluginPackageScanner.setCallback({
@@ -134,9 +162,9 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
         updatedURL = undefined;
 
-        fsExtra.writeJsonSync(`${pluginPackagesFolder}/foo.json`, {foo: 2});
+        writeJsonSync(`${pluginPackagesFolder}/foo.json`, {foo: 2});
 
-        await new Promise((resolve) => setTimeout(resolve, 3000));
+        await new Promise((resolve) => setTimeout(resolve, 5000));
 
         await pluginPackageScanner.stop();
 
@@ -144,7 +172,7 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
     });
 
     it('doesnt scan subfolders if the package folder contains a package.json', async () => {
-        const pluginPackagesFolder = path.resolve(getPluginPackagesFolder(), 'test2');
+        const pluginPackagesFolder = resolve(getPluginPackagesFolder(), 'test2');
 
         const config = { ...defaultConfig, pluginPackageFolders: [{path: pluginPackagesFolder, watch: false}] };
 
@@ -168,7 +196,6 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
         expect(foundURLs.length).toBe(1);
         expect(foundURLs[0].pathname.endsWith('test-data/plugins1/test2')).toBeTruthy();
     });
-
 
 });
 

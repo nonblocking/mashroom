@@ -298,8 +298,18 @@ export type MashroomPluginConfig = {
     [key: string]: any;
 };
 
+export type MashroomPluginScannerHints = {
+    readonly packageName?: string;
+    readonly packageVersion?: string;
+    readonly [key: string]: any;
+}
+
 export type MashroomPluginScannerCallback = {
-    addOrUpdatePackageURL(url: URL): void;
+    /**
+     * Add or update a new package location.
+     * It is possible to pass arbitrary hints to MashroomPluginPackageDefinitionBuilder plugins
+     */
+    addOrUpdatePackageURL(url: URL, hints?: MashroomPluginScannerHints): void;
     removePackageURL(url: URL): void;
 }
 
@@ -328,6 +338,7 @@ export interface MashroomPluginPackageScanner {
 }
 
 export type MashroomPluginPackageDefinitionAndMeta = {
+    readonly packageURL: URL;
     readonly definition: MashroomPluginPackageDefinition;
     readonly meta: MashroomPluginPackageMeta;
 }
@@ -344,9 +355,12 @@ export interface MashroomPluginPackageDefinitionBuilder {
     readonly name: string;
     /**
      * Build the definition based on given URL.
-     * Must return null if no definition can be built (and not throw an exception).
+     * Might return multiple package definitions with an updated package URL in case of a location with submodules or a remote registry.
+     *
+     * If reading the definition fails, this should throw an error instead of just returning null.
+     * (If you return null, existing plugins might be unregistered).
      */
-    buildDefinition(url: URL): Promise<MashroomPluginPackageDefinitionAndMeta | null>;
+    buildDefinition(packageURL: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null>;
 }
 
 /**

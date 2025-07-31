@@ -17,20 +17,20 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
     private readonly _externalPluginConfigFileNames: Array<string>;
 
     constructor(config: MashroomServerConfig, loggerFactory: MashroomLoggerFactory) {
-        this._logger = loggerFactory('mashroom.plugins.definition.builder');
+        this._logger = loggerFactory('mashroom.plugins.defbuilder.default');
         this._externalPluginConfigFileNames = config.externalPluginConfigFileNames;
     }
 
     get name() {
-        return 'Default local file system definition builder based on package.json and external plugin defintions';
+        return 'Default definition builder based on package.json and external plugin definition files';
     }
 
-    async buildDefinition(url: URL): Promise<MashroomPluginPackageDefinitionAndMeta | null> {
-        if (url.protocol !== 'file:') {
+    async buildDefinition(packageURL: URL): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
+        if (packageURL.protocol !== 'file:') {
             return null;
         }
 
-        const pluginPackagePath = fileURLToPath(url);
+        const pluginPackagePath = fileURLToPath(packageURL);
 
         let packageJson = null;
         try {
@@ -63,10 +63,11 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             return null;
         }
 
-        return {
+        return [{
+            packageURL,
             definition,
             meta,
-        };
+        }];
     }
 
     private async _readPackageJson(pluginPackagePath: string): Promise<any> {

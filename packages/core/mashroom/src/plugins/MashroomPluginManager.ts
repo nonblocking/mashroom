@@ -6,20 +6,21 @@ import {removePackageModulesFromNodeCache} from '../utils/reload-utils';
 import fixAndValidatePluginPackageDefinition from './validation/fixAndValidatePluginPackageDefinition';
 import MashroomPluginPackageImpl from './MashroomPluginPackage';
 import MashroomPluginImpl from './MashroomPlugin';
-import type {URL} from 'url';
 import type {
     MashroomLogger,
     MashroomPluginContextHolder,
     MashroomPluginPackageDefinitionBuilder,
     MashroomPluginLoader,
     MashroomPluginLoaderMap,
-    MashroomPluginPackageDefinition,
     MashroomPluginPackageScanner,
     MashroomPluginPackage,
     MashroomPlugin,
     MashroomPluginPackageDefinitionAndMeta,
-    MashroomPluginType, MashroomLoggerFactory,
+    MashroomPluginType,
+    MashroomLoggerFactory,
+    MashroomPluginScannerHints,
 } from '../../type-definitions';
+import type {URL} from 'url';
 import type {
     MashroomPluginPackageBuilder,
     MashroomPluginPackageBuilderEvent,
@@ -27,21 +28,24 @@ import type {
     MashroomPluginRegistry,
     MashroomPluginManager as MashroomPluginManagerType,
     MashroomPluginRegistryEvent,
-    MashroomPluginRegistryEventName
+    MashroomPluginRegistryEventName, MashroomPotentialPluginPackage
 } from '../../type-definitions/internal';
 
-type PotentialPackage = {
+type InternalPotentialPackage = {
     readonly url: URL;
     readonly scannerName: string;
-    pluginPackageDefinition: MashroomPluginPackageDefinition | null;
-    pluginPackage: MashroomPluginPackageImpl | null;
+    status: 'processing' | 'processed';
+    lastUpdate: number;
+    updateError: boolean;
+    scannerHints: MashroomPluginScannerHints;
+    pluginPackages: Array<MashroomPluginPackageImpl> | null;
     plugins: Array<MashroomPluginImpl> | null;
 }
 
 export default class MashroomPluginManager implements MashroomPluginManagerType, MashroomPluginRegistry {
 
     private _started = false;
-    private _potentialPackages: Array<PotentialPackage>;
+    private _potentialPackages: Array<InternalPotentialPackage>;
     private readonly _pluginLoaders: MashroomPluginLoaderMap;
     private _pluginScanners: Array<MashroomPluginPackageScanner>;
     private _pluginDefinitionBuilders: Array<MashroomPluginPackageDefinitionBuilderWithWeight>;
@@ -90,13 +94,21 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    get pluginPackageURLs(): Readonly<Array<URL>> {
-        return readonlyUtils.cloneAndFreezeArray(this._potentialPackages.map((p) => p.url));
+    get potentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>> {
+        return readonlyUtils.cloneAndFreezeArray(this._potentialPackages
+            .map(({url, status, lastUpdate, updateError, plugins}) => ({
+                url,
+                status,
+                lastUpdate,
+                updateError,
+                foundPlugins: plugins?.map((p) => p.name) ?? null,
+            }))
+        );
     }
 
     get pluginPackages(): Readonly<Array<MashroomPluginPackage>> {
         return readonlyUtils.cloneAndFreezeArray(this._potentialPackages
-            .map((p) => p.pluginPackage).filter((p) => !!p));
+            .flatMap((p) => p.pluginPackages).filter((p) => !!p));
     }
 
     get plugins(): Readonly<Array<MashroomPlugin>> {
@@ -127,8 +139,10 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
     registerPluginLoader(type: MashroomPluginType, loader: MashroomPluginLoader) {
         this._pluginLoaders[type] = loader;
         // If a loader was reloaded, re-register all plugins
-        this._reRegisterLoadedPlugins(type);
-        this._checkPluginsNoLoader();
+        (async () => {
+            await this._reRegisterLoadedPlugins(type);
+            await this._checkPluginsNoLoader();
+        })();
     }
 
     unregisterPluginLoader(type: MashroomPluginType, loader: MashroomPluginLoader) {
@@ -141,8 +155,8 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         this.unregisterPluginScanner(scanner);
         this._pluginScanners.push(scanner);
         scanner.setCallback({
-            addOrUpdatePackageURL: (url) => this._addOrUpdatePackageURL(scanner.name, url),
-            removePackageURL: (url) => this._removePackageURL(scanner.name, url),
+            addOrUpdatePackageURL: (url, hints) => this._addOrUpdatePackageURL(scanner.name, url, hints),
+            removePackageURL: (url) => this._removePackageURL(url),
         });
         if (this._started) {
             (async () => {
@@ -177,15 +191,28 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         this._pluginDefinitionBuilders = this._pluginDefinitionBuilders.filter((b) => b.definitionBuilder !== definitionBuilder);
     }
 
-    private async _addOrUpdatePackageURL(scannerName: string, url: URL) {
+    private async _addOrUpdatePackageURL(scannerName: string, url: URL, scannerHints: Record<string, any> = {}) {
         let potentialPackage = this._potentialPackages.find(pu => pu.url.toString() === url.toString());
-        if (!potentialPackage) {
-            this._logger.debug(`Adding potential package URL: ${url}`);
+        if (potentialPackage?.status === 'processing') {
+            // Already processing, ignore this updated
+            return;
+        }
+
+        if (potentialPackage) {
+            this._logger.debug(`Updating potential package URL: ${url}`);
+            potentialPackage.lastUpdate = Date.now();
+            potentialPackage.updateError = false;
+            potentialPackage.status = 'processing';
+        } else {
+            this._logger.debug(`Adding new potential package URL: ${url}`);
             potentialPackage = {
                 url,
                 scannerName,
-                pluginPackageDefinition: null,
-                pluginPackage: null,
+                lastUpdate: Date.now(),
+                status: 'processing',
+                updateError: false,
+                scannerHints,
+                pluginPackages: null,
                 plugins: null,
             };
             this._potentialPackages.push(potentialPackage);
@@ -196,41 +223,68 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             removePackageModulesFromNodeCache(fileURLToPath(url));
         }
 
-        const packageDefinitionAndMeta = await this._buildPackageDefinition(url);
-        if (!packageDefinitionAndMeta) {
+        let packageDefinitionAndMetas;
+        try {
+            packageDefinitionAndMetas = await this._buildPackageDefinition(url, potentialPackage.scannerHints);
+        } catch (e: any) {
+            // Building the package definition failed, this might be a temporary problem; we just keep all plugins
+            potentialPackage.updateError = true;
+            potentialPackage.status = 'processed';
+            this._logger.error(e);
+            return;
+        }
+
+        if (!packageDefinitionAndMetas) {
             this._logger.debug(`No plugin package definition found for URL: ${url}`);
             if (potentialPackage.plugins) {
                 potentialPackage.plugins.forEach((plugin) => this._unloadPlugin(potentialPackage, plugin));
             }
-            potentialPackage.pluginPackageDefinition = null;
-            potentialPackage.pluginPackage = null;
+            potentialPackage.status = 'processed';
+            potentialPackage.pluginPackages = null;
             potentialPackage.plugins = null;
             return;
         }
 
-        // Create plugin package
-        let fixedPluginDefinition = packageDefinitionAndMeta.definition;
-        let error: string | undefined;
-        try {
-            fixedPluginDefinition = fixAndValidatePluginPackageDefinition(url, fixedPluginDefinition, packageDefinitionAndMeta.meta, this._logger);
-        } catch (e: any) {
-            this._logger.error(`Plugin package definition validation failed for ${url}. Error: ${e.message}`, e);
-            error = e.message;
+        // Process all found packages
+        const currentPluginPackages = potentialPackage.pluginPackages;
+        potentialPackage.pluginPackages = [];
+        for (const packageDefinitionAndMeta of packageDefinitionAndMetas) {
+            // If this is a remote package and the version didn't change, do nothing (optimization)
+            if (packageDefinitionAndMeta.packageURL.protocol !== 'file:') {
+                const currentPluginPackage = currentPluginPackages?.find(({ name, pluginPackageURL }) =>
+                    name === packageDefinitionAndMeta.meta.name && pluginPackageURL.toString() === packageDefinitionAndMeta.packageURL.toString());
+                if (currentPluginPackage?.version === packageDefinitionAndMeta.meta.version) {
+                    this._logger.debug(`Ignoring update of package ${packageDefinitionAndMeta.packageURL}, because version didn't change.`);
+                    potentialPackage.pluginPackages.push(currentPluginPackage);
+                    continue;
+                }
+            }
+
+            let fixedPluginDefinition = packageDefinitionAndMeta.definition;
+            let error: string | undefined;
+            try {
+                fixedPluginDefinition = fixAndValidatePluginPackageDefinition(url, fixedPluginDefinition, packageDefinitionAndMeta.meta, this._logger);
+            } catch (e: any) {
+                this._logger.error(`Plugin package definition validation failed for ${url}. Error: ${e.message}`, e);
+                error = e.message;
+            }
+
+            const pluginPackage = new MashroomPluginPackageImpl(packageDefinitionAndMeta.packageURL ?? url, fixedPluginDefinition, packageDefinitionAndMeta.meta);
+            potentialPackage.pluginPackages.push(pluginPackage);
+
+            if (error) {
+                pluginPackage.setStatus('error');
+                pluginPackage.setErrorMessage(error);
+                continue;
+            }
+
+            await this._buildPackage(pluginPackage);
         }
 
-        const pluginPackage = new MashroomPluginPackageImpl(url, fixedPluginDefinition, packageDefinitionAndMeta.meta);
-        potentialPackage.pluginPackage = pluginPackage;
-
-        if (error) {
-            pluginPackage.setStatus('error');
-            pluginPackage.setErrorMessage(error);
-            return;
-        }
-
-        await this._buildPackage(pluginPackage);
+        this._isPotentialPackageProcessed(potentialPackage);
     }
 
-    private _removePackageURL(scannerName: string, url: URL) {
+    private _removePackageURL(url: URL) {
         const potentialPackage = this._potentialPackages.find((pp) => pp.url.toString() === url.toString());
         if (!potentialPackage) {
             return;
@@ -246,26 +300,31 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    private async _buildPackageDefinition(url: URL): Promise<MashroomPluginPackageDefinitionAndMeta | null> {
+    private async _buildPackageDefinition(url: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
         const sortedBuilders = this._pluginDefinitionBuilders
             .sort((a, b) => b.weight - a.weight)
             .map((b) => b.definitionBuilder);
+        const errors: Array<string> = [];
         for (let builder of sortedBuilders) {
             try {
-                const defAndMeta = await builder.buildDefinition(url);
-                if (defAndMeta) {
-                    return defAndMeta;
+                const defAndMetas = await builder.buildDefinition(url, scannerHints);
+                if (defAndMetas) {
+                    return defAndMetas;
                 }
-            } catch (e) {
-                this._logger.error(`Package definition builder '${builder.name}' threw an error!`, e);
+            } catch (e: any) {
+                errors.push(e.message);
+                this._logger.warn(`Package definition builder '${builder.name}' threw an error!`, e);
             }
+        }
+        if (errors.length > 0) {
+            throw new Error(`Package definition building failed for ${url}. Errors: ${errors.join(', ')}`);
         }
         return null;
     }
 
     private async _buildPackage(pluginPackage: MashroomPluginPackageImpl) {
-        const pluginPackagePath = fileURLToPath(pluginPackage.pluginPackageURL);
         if (this._builder && pluginPackage.devModeBuildScript && this._isPackageInDevMode(pluginPackage.pluginPackageURL)) {
+            const pluginPackagePath = fileURLToPath(pluginPackage.pluginPackageURL);
             pluginPackage.setStatus('building');
             pluginPackage.setErrorMessage(null);
             this._builder.addToBuildQueue(pluginPackage.name, pluginPackagePath, pluginPackage.devModeBuildScript);
@@ -278,16 +337,17 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
     }
 
     private async _onBuildPackageFinished(event: MashroomPluginPackageBuilderEvent) {
-        const potentialPackage = this._potentialPackages.find((pp) => pp.pluginPackage?.name === event.pluginPackageName);
+        const potentialPackage = this._potentialPackages.find((pp) => pp.pluginPackages?.find(({name}) => name === event.pluginPackageName));
         if (!potentialPackage) {
             this._logger.warn(`Plugin package build finished for unknown package: ${event.pluginPackageName}`);
             return;
         }
-        const pluginPackage = potentialPackage.pluginPackage as MashroomPluginPackageImpl;
+        const pluginPackage = potentialPackage.pluginPackages!.find(({name}) => name === event.pluginPackageName) as MashroomPluginPackageImpl;
         if (!event.success) {
             this._logger.error(`Plugin package build failed: ${event.pluginPackageName}. Error: ${event.errorMessage}`);
             pluginPackage.setStatus('error');
             pluginPackage.setErrorMessage(event.errorMessage ?? 'Build failed');
+            this._isPotentialPackageProcessed(potentialPackage);
             return;
         }
 
@@ -314,9 +374,11 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         for (const plugin of plugins) {
             await this._loadPlugin(potentialPackage, plugin);
         }
+
+        this._isPotentialPackageProcessed(potentialPackage);
     }
 
-    private async _loadPlugin(potentialPackage: PotentialPackage, plugin: MashroomPluginImpl) {
+    private async _loadPlugin(potentialPackage: InternalPotentialPackage, plugin: MashroomPluginImpl) {
         const existing = this._findPlugin(plugin.name);
         if (existing) {
             const [existingPluginPackage, existingPlugin] = existing;
@@ -393,7 +455,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    private async _unloadPlugin(potentialPackage: PotentialPackage, plugin: MashroomPlugin) {
+    private async _unloadPlugin(potentialPackage: InternalPotentialPackage, plugin: MashroomPlugin) {
         if (plugin.status !== 'loaded') {
             return;
         }
@@ -417,7 +479,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    private _findPlugin(name: string): [PotentialPackage, MashroomPluginImpl] | null {
+    private _findPlugin(name: string): [InternalPotentialPackage, MashroomPluginImpl] | null {
         const potentialPackage = this._potentialPackages.find((pp) => pp.plugins?.find((p) => p.name === name));
         if (!potentialPackage) {
             return null;
@@ -490,6 +552,15 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         const idx = this._pluginsMissingRequirements.indexOf(plugin);
         if (idx !== -1) {
             this._pluginsMissingRequirements.splice(idx, 1);
+        }
+    }
+
+    private _isPotentialPackageProcessed(potentialPackage: InternalPotentialPackage) {
+        if (potentialPackage.status === 'processing') {
+            const stillProcessing = potentialPackage.pluginPackages?.some((pp) => pp.status === 'pending' || pp.status === 'building');
+            if (!stillProcessing) {
+                potentialPackage.status = 'processed';
+            }
         }
     }
 

@@ -76,37 +76,37 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             externalPluginConfigFileNames: ['mashroom']
         } as any, loggingUtils.dummyLoggerFactory);
 
-        const pluginPackageDefinition = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder1));
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder1));
 
-        expect(pluginPackageDefinition).toEqual({
-            definition: {
-                devModeBuildScript: 'builddd',
-                plugins: [
-                    {
-                        bootstrap: './dist/mashroom-bootstrap.js',
-                        defaultConfig: {
-                            foo: 'bar'
-                        },
-                        name: 'Plugin 1',
-                        type: 'web-app'
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].definition).toEqual({
+            devModeBuildScript: 'builddd',
+            plugins: [
+                {
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                    defaultConfig: {
+                        foo: 'bar'
                     },
-                    {
-                        bootstrap: './dist/mashroom-bootstrap2.js',
-                        dependencies: [
-                            'foo-services'
-                        ],
-                        name: 'Plugin 2',
-                        type: 'plugin-loader'
-                    },
-                ]
-            },
-            meta: {
-                author: 'Jürgen Kofler <juergen.kofler@nonblocking.at>',
-                description: 'description test3',
-                license: 'BSD-3-Clause',
-                name: 'test1',
-                version: '1.1.3'
-            }
+                    name: 'Plugin 1',
+                    type: 'web-app'
+                },
+                {
+                    bootstrap: './dist/mashroom-bootstrap2.js',
+                    dependencies: [
+                        'foo-services'
+                    ],
+                    name: 'Plugin 2',
+                    type: 'plugin-loader'
+                },
+            ]
+        });
+        expect(pluginPackageDefinitions![0].meta).toEqual({
+            author: 'Jürgen Kofler <juergen.kofler@nonblocking.at>',
+            description: 'description test3',
+            license: 'BSD-3-Clause',
+            name: 'test1',
+            version: '1.1.3'
         });
     });
 
@@ -117,34 +117,34 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             externalPluginConfigFileNames: ['mashroom']
         } as any, loggingUtils.dummyLoggerFactory);
 
-        const pluginPackageDefinition = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder2));
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder2));
 
-        expect(pluginPackageDefinition).toEqual({
-            definition: {
-                devModeBuildScript: 'builddd',
-                plugins: [
-                    {
-                        bootstrap: './dist/mashroom-bootstrap.js',
-                        defaultConfig: {
-                            foo: 'bar'
-                        },
-                        name: 'Plugin 1',
-                        type: 'web-app'
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].definition).toEqual( {
+            devModeBuildScript: 'builddd',
+            plugins: [
+                {
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                    defaultConfig: {
+                        foo: 'bar'
                     },
-                    {
-                        bootstrap: './dist/mashroom-bootstrap2.js',
-                        dependencies: [
-                            'foo-services'
-                        ],
-                        name: 'Plugin 2',
-                        type: 'plugin-loader'
-                    },
-                ]
-            },
-            meta: {
-                name: 'test2',
-                version: '2.1.1'
-            }
+                    name: 'Plugin 1',
+                    type: 'web-app'
+                },
+                {
+                    bootstrap: './dist/mashroom-bootstrap2.js',
+                    dependencies: [
+                        'foo-services'
+                    ],
+                    name: 'Plugin 2',
+                    type: 'plugin-loader'
+                },
+            ]
+        });
+        expect(pluginPackageDefinitions![0].meta).toEqual({
+            name: 'test2',
+            version: '2.1.1'
         });
     });
 });

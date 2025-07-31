@@ -1,9 +1,6 @@
-import {pathToFileURL} from 'url';
-import {resolve} from 'path';
+import {pathToFileURL, URL} from 'url';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import {emptyDirSync} from 'fs-extra';
 import MashroomPluginManager from '../../src/plugins/MashroomPluginManager';
-import type {URL} from 'url';
 import type {MashroomPluginScannerCallback} from '../../type-definitions';
 
 const testPackageJson1 = {
@@ -150,28 +147,31 @@ const testPackageJson6 = {
 
 const testPackageJsonDefinitionBuilder1 = {
     name: 'Definition Builder 1',
-    buildDefinition: async (url: URL) => {
-        return {
+    buildDefinition: async (packageURL: URL) => {
+        return [{
+            packageURL,
             definition: testPackageJson1.mashroom as any,
             meta: testPackageJson1 as any,
-        };
+        }];
     }
 };
 
 const testPackageJsonDefinitionBuilder2 = {
     name: 'Definition Builder 2',
-    buildDefinition: async (url: URL) => {
-        if (url.toString().includes('test2')) {
-            return {
+    buildDefinition: async (packageURL: URL) => {
+        if (packageURL.toString().includes('test2')) {
+            return [{
+                packageURL,
                 definition: testPackageJson2.mashroom as any,
                 meta: testPackageJson2 as any,
-            };
+            }];
         }
-        if (url.toString().includes('test3')) {
-            return {
+        if (packageURL.toString().includes('test3')) {
+            return [{
+                packageURL,
                 definition: testPackageJson3.mashroom as any,
                 meta: testPackageJson3 as any,
-            };
+            }];
         }
         return null;
     }
@@ -180,45 +180,47 @@ const testPackageJsonDefinitionBuilder2 = {
 let testPackageJsonDefinitionBuilder3Calls = 0;
 const testPackageJsonDefinitionBuilder3 = {
     name: 'Definition Builder 3',
-    buildDefinition: async (url: URL) => {
+    buildDefinition: async (packageURL: URL) => {
         if (testPackageJsonDefinitionBuilder3Calls === 0) {
             testPackageJsonDefinitionBuilder3Calls ++ ;
-            return {
+            return [{
+                packageURL,
                 definition: testPackageJson4.mashroom as any,
                 meta: testPackageJson4 as any,
-            };
+            }];
         }
-        return {
+        return [{
+            packageURL,
             definition: testPackageJson5.mashroom as any,
             meta: testPackageJson5 as any,
-        };
+        }];
     }
 };
 
 const testPackageJsonDefinitionBuilder4 = {
     name: 'Definition Builder 4',
-    buildDefinition: async (url: URL) => {
-        return {
+    buildDefinition: async (packageURL: URL) => {
+        return [{
+            packageURL,
             definition: testPackageJson6.mashroom as any,
             meta: testPackageJson6 as any,
-        };
+        }];
     }
 };
 
 const testPackageJsonDefinitionBuilder5 = {
     name: 'Definition Builder 5',
-    buildDefinition: async (url: URL) => {
-        return {
+    buildDefinition: async (packageURL: URL) => {
+        return [{
+            packageURL: new URL('http://foo.bar/1'),
             definition: testPackageJson4.mashroom as any,
             meta: testPackageJson4 as any,
-        };
+        }, {
+            packageURL: new URL('http://foo.bar/2'),
+            definition: testPackageJson5.mashroom as any,
+            meta: testPackageJson5 as any,
+        }];
     }
-};
-
-const getPluginPackageFolder = () => {
-    const packageFolder = resolve(__dirname, '../../test-data/plugins3/test4');
-    emptyDirSync(packageFolder);
-    return packageFolder;
 };
 
 const builderOnMock = jest.fn();
@@ -315,13 +317,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, new BuilderMock());
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -330,8 +327,13 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const potentialPluginPackages = pluginManager.potentialPluginPackages;
+        expect(potentialPluginPackages.length).toBe(1);
+        expect(potentialPluginPackages[0].status).toBe('processed');
+        expect(potentialPluginPackages[0].lastUpdate).toBeTruthy();
+        expect(potentialPluginPackages[0].updateError).toBeFalsy();
 
         const pluginPackages = pluginManager.pluginPackages;
         expect(pluginPackages.length).toBe(1);
@@ -388,13 +390,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, new BuilderMock());
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -403,8 +400,11 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const potentialPluginPackages = pluginManager.potentialPluginPackages;
+        expect(potentialPluginPackages.length).toBe(1);
+        expect(potentialPluginPackages[0].status).toBe('processed');
 
         const pluginPackages = pluginManager.pluginPackages;
         expect(pluginPackages[0].status).toBe('error');
@@ -420,13 +420,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder2, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -434,8 +429,11 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const potentialPluginPackages = pluginManager.potentialPluginPackages;
+        expect(potentialPluginPackages.length).toBe(1);
+        expect(potentialPluginPackages[0].status).toBe('processed');
 
         const pluginPackages = pluginManager.pluginPackages;
         expect(pluginPackages.length).toBe(1);
@@ -458,12 +456,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
         let lowPriorityDefinitionBuilderCalled = false;
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(10, /* dummy */ {
             name: 'dummx',
             async buildDefinition(url: URL) {
@@ -472,14 +466,11 @@ describe('MashroomPluginManager', () => {
             }
         });
         pluginManager.registerPluginDefinitionBuilder(11, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(lowPriorityDefinitionBuilderCalled).toBeFalsy();
@@ -493,13 +484,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         let loadEvents = 0;
@@ -512,14 +498,16 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Update
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
+
+        const potentialPluginPackages = pluginManager.potentialPluginPackages;
+        expect(potentialPluginPackages.length).toBe(1);
+        expect(potentialPluginPackages[0].status).toBe('processed');
 
         expect(pluginManager.pluginPackages.length).toBe(1);
         expect(pluginManager.plugins.length).toBe(3);
@@ -536,13 +524,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -550,13 +533,11 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Update the loader
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(pluginManager.pluginPackages.length).toBe(1);
@@ -572,13 +553,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -586,13 +562,11 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Remove the package
         scannerCallback!.removePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(pluginManager.pluginPackages.length).toBe(0);
@@ -608,13 +582,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -622,17 +591,15 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         // Remove the definition builder and update
         pluginManager.unregisterPluginDefinitionBuilder(testPackageJsonDefinitionBuilder1);
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        expect(pluginManager.pluginPackageURLs.length).toBe(1);
+        expect(pluginManager.potentialPluginPackages.length).toBe(1);
         expect(pluginManager.pluginPackages.length).toBe(0);
         expect(pluginManager.plugins.length).toBe(0);
 
@@ -646,13 +613,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder2);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -660,7 +622,6 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackage2URL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const pluginPackages = pluginManager.pluginPackages;
@@ -679,7 +640,6 @@ describe('MashroomPluginManager', () => {
         // Add a second package
         scannerCallback!.addOrUpdatePackageURL(pluginPackage3URL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const plugins2 = pluginManager.plugins;
@@ -698,7 +658,6 @@ describe('MashroomPluginManager', () => {
         // Now, add the missing loader for Plugin 2
         pluginManager.registerPluginLoader('foo', mockPluginLoader);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const plugins3 = pluginManager.plugins;
@@ -720,14 +679,9 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
         pluginManager.registerPluginLoader('web-app2', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder3);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -735,7 +689,6 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const plugins = pluginManager.plugins;
@@ -746,7 +699,6 @@ describe('MashroomPluginManager', () => {
         // Update
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         const plugins2 = pluginManager.plugins;
@@ -764,18 +716,13 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, {
             name: 'dummy',
             async buildDefinition(url: URL) {
                 return null;
             }
         });
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -783,7 +730,6 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(pluginManager.pluginPackages.length).toBe(0);
@@ -795,13 +741,8 @@ describe('MashroomPluginManager', () => {
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
 
-        // Add loaders
         pluginManager.registerPluginLoader('web-app', mockPluginLoader);
-
-        // Add definition builders
         pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder4);
-
-        // Add scanner
         pluginManager.registerPluginScanner(mockScanner);
 
         expect(scannerCallback).toBeTruthy();
@@ -809,7 +750,6 @@ describe('MashroomPluginManager', () => {
         // Start
         scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
 
-        // Wait
         await new Promise((resolve) => setTimeout(resolve, 500));
 
         expect(pluginManager.pluginPackages.length).toBe(1);
@@ -817,4 +757,139 @@ describe('MashroomPluginManager', () => {
         expect(pluginManager.pluginPackages[0].errorMessage).toBe('Plugin \'Plugin 4\' has no type property!');
     });
 
+    it('handles multiple package definition for a potential package', async () => {
+        const pluginPackagePath = '/foo/bar';
+        const pluginPackageURL = pathToFileURL(pluginPackagePath);
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder5);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        // Start
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.pluginPackages.length).toBe(2);
+        expect(pluginManager.pluginPackages[0].pluginPackageURL.toString()).toBe('http://foo.bar/1');
+        expect(pluginManager.pluginPackages[0].status).toBe('ready');
+        expect(pluginManager.pluginPackages[1].pluginPackageURL.toString()).toBe('http://foo.bar/2');
+        expect(pluginManager.pluginPackages[1].status).toBe('ready');
+    });
+
+    it('reloads plugins for remote packages only if the version changes', async () => {
+        const pluginPackageURL = new URL('http://foo.bar/1');
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        expect(scannerCallback).toBeTruthy();
+
+        // Start
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Update
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.pluginPackages.length).toBe(1);
+        expect(pluginManager.plugins.length).toBe(3);
+
+        expect(mockPluginLoad).toHaveBeenCalledTimes(1);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(0);
+    });
+
+    it('keeps existing plugins if the plugin package definition cannot be built (temporary)', async () => {
+        const pluginPackagePath = '/foo/bar';
+        const pluginPackageURL = pathToFileURL(pluginPackagePath);
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        // Start
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        // Add invalid definition builder
+        pluginManager.unregisterPluginDefinitionBuilder(testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginDefinitionBuilder(0, {
+            name: 'test',
+            buildDefinition: async () => { throw new Error('booooom'); },
+        });
+
+        // Update
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.pluginPackages.length).toBe(1);
+        expect(pluginManager.plugins.length).toBe(3);
+
+        expect(mockPluginLoad).toHaveBeenCalledTimes(1);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(0);
+    });
+
+    it('ignores package updates from scanners if it is currently processed', async () => {
+        const pluginPackagePath = '/foo/bar';
+        const pluginPackageURL = pathToFileURL(pluginPackagePath);
+        let buildFinishedCallback: any = null;
+
+        builderOnMock.mockImplementation((event, callback) => {
+            if (event === 'build-finished') {
+                buildFinishedCallback = callback;
+            }
+        });
+
+        builderAddToBuildQueueMock.mockImplementation((pluginPackageName, _pluginPackagePath, buildScript) => {
+            setTimeout(() => {
+                if (buildFinishedCallback) {
+                    buildFinishedCallback({
+                        pluginPackageName: 'test1',
+                        success: true,
+                    });
+                }
+            }, 1000);
+        });
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, new BuilderMock());
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        // Start
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        // Send some updates
+        await new Promise((resolve) => setTimeout(() => {
+            scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+            resolve(null);
+        }, 200));
+        await new Promise((resolve) => setTimeout(() => {
+            scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+            resolve(null);
+        }, 200));
+
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+
+        const potentialPluginPackages = pluginManager.potentialPluginPackages;
+        expect(potentialPluginPackages.length).toBe(1);
+        expect(potentialPluginPackages[0].status).toBe('processed');
+
+        expect(builderAddToBuildQueueMock).toHaveBeenCalledTimes(1);
+        expect(mockPluginLoad).toHaveBeenCalledTimes(1);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(0);
+    });
 });

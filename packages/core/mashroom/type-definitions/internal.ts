@@ -75,6 +75,14 @@ export type MashroomPluginRegistryEvent = {
     readonly pluginName: string;
 }
 
+export type MashroomPotentialPluginPackage = {
+    readonly url: URL;
+    readonly lastUpdate: number;
+    readonly status: 'processing' | 'processed';
+    readonly updateError: boolean;
+    readonly foundPlugins: Array<string> | null;
+}
+
 export type MashroomPluginPackageDefinitionBuilderWithWeight = {
     readonly definitionBuilder: MashroomPluginPackageDefinitionBuilder;
     readonly weight: number;
@@ -87,7 +95,7 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
     /**
      * All known (potential) plugin package URLs
      */
-    readonly pluginPackageURLs: Readonly<Array<URL>>;
+    readonly potentialPluginPackages: Readonly<Array<MashroomPotentialPluginPackage>>;
     /**
      * The currently known plugin packages
      */
