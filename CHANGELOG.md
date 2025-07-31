@@ -1,7 +1,17 @@
 
 # Change Log
 
-## [unreleased]
+## [unreleased v3]
+
+ * Plugin System Rework:
+   * Added two new plugin types that can be used to extend the plugin system with new source URLs and with custom plugin descriptors.
+     This means plugins could load from all kinds of URLs (e.g., http) and the plugin definition could be built from some custom information.
+   * Added support for *remote* (http(s)) packages to the core
+   * Improved change detection of the file system plugin scanner (reports only relevant changes now)
+   * Made sure plugins are only loaded once during startup
+   * Fixed the problem that plugins were not rebuild after removing the dist/output folder
+
+## [unreleased v2]
 
  * Tabify App: Fixed a timing problem when adding a new App dynamically, which made it invisible until clicking on the tab header
 
