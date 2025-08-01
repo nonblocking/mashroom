@@ -1,4 +1,4 @@
-
+import {pathToFileURL} from 'url';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import PortalAppPluginLoader from '../../../../src/backend/plugins/loader/PortalAppPluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
@@ -10,7 +10,7 @@ describe('PortalAppPluginLoader', () => {
     it('loads and registers a Portal App v2', () => {
 
         const pluginPackage: any = {
-            pluginPackagePath: '/foo/bar'
+            pluginPackageURL: pathToFileURL('/foo/bar'),
         };
         const appPlugin: MashroomPlugin = {
             pluginPackage,
@@ -133,7 +133,7 @@ describe('PortalAppPluginLoader', () => {
     it('loads and registers a Portal App v2 without SSR capability', () => {
 
         const pluginPackage: any = {
-            pluginPackagePath: '/foo/bar'
+            pluginPackageURL: pathToFileURL('/foo/bar'),
         };
         const appPlugin: MashroomPlugin = {
             pluginPackage,
@@ -216,7 +216,7 @@ describe('PortalAppPluginLoader', () => {
     it('loads and registers a Portal App v1', () => {
 
         const pluginPackage: any = {
-            pluginPackagePath: '/foo/bar'
+            pluginPackageURL: pathToFileURL('/foo/bar'),
         };
         const appPlugin: MashroomPlugin = {
             pluginPackage,
@@ -303,4 +303,123 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
+    it('loads and registers a remote Portal App correctly', () => {
+
+        const pluginPackage: any = {
+            pluginPackageURL: new URL('https://my-microfrontend.com/one'),
+        };
+        const appPlugin: MashroomPlugin = {
+            pluginPackage,
+            name: 'Portal App 1',
+            description: 'description from package',
+            tags: ['tag1', 'tag2'],
+            type: 'portal-app2',
+            errorMessage: null,
+            lastReloadTs: Date.now(),
+            requireBootstrap: () => { /* nothing to do */ },
+            status: 'loaded',
+            config: null,
+            pluginDefinition: {
+                name: 'Portal App 1',
+                type: 'portal-app2',
+                requires: null,
+                clientBootstrap: 'startApp',
+                resources: {
+                    js: [
+                        'bundle.js',
+                    ],
+                    css: [
+                        'style.css'
+                    ],
+                },
+                sharedResources: {
+                    js: [
+                        'globalLib.js'
+                    ]
+                },
+                screenshots: [
+                    'screenshot1.png'
+                ],
+                local: {
+                    resourcesRoot: './dist',
+                    ssrBootstrap: './dist/renderToString.js'
+                },
+                remote: {
+                    resourcesRoot: '/public',
+                    ssrInitialHtmlPath: '/ssr'
+                },
+                defaultConfig: {
+                    title: {
+                        en: 'Portal App 1',
+                        de: 'Portal App 1',
+                    },
+                    category: 'Test',
+                    tags: ['tag1', 'tag2'],
+                    description: {
+                        en: 'my description',
+                        de: 'my description',
+                    },
+                    metaInfo: {
+                        capabilities: ['foo']
+                    },
+                    caching: {
+                        ssrHtml: 'same-config-and-user'
+                    },
+                    editor: {
+                        editorPortalApp: 'Demo Config Editor',
+                        position: 'in-place',
+                        appConfig: {
+                        }
+                    },
+                    defaultRestrictViewToRoles: ['Role1'],
+                    rolePermissions: {
+                        doSomethingSpecial: ['Role2', 'Role3']
+                    },
+                    proxies: {
+                        whatever: {
+                            targetUri: '/api',
+                            restrictToRoles: ['Role1']
+                        }
+                    },
+                    appConfig: {
+                        firstName: 'John',
+                    },
+                },
+            },
+        };
+
+        const registry = new MashroomPortalPluginRegistry();
+        const loader = new PortalAppPluginLoader(registry, loggingUtils.dummyLoggerFactory);
+
+        const context: any = {};
+        const config = {
+            ...appPlugin.pluginDefinition.defaultConfig
+        };
+        loader.load(appPlugin, config, context);
+
+        expect(registry.portalApps.length).toBe(1);
+        expect(registry.portalApps[0].resourcesRootUri).toBe('https://my-microfrontend.com/one/public');
+        expect(registry.portalApps[0].description).toEqual({
+            en: 'my description',
+            de: 'my description',
+        });
+        expect(registry.portalApps[0].title).toEqual({
+            en: 'Portal App 1',
+            de: 'Portal App 1',
+        });
+        expect(registry.portalApps[0].tags).toEqual(['tag1', 'tag2']);
+        expect(registry.portalApps[0].category).toEqual('Test');
+        expect(registry.portalApps[0].resources).toEqual({js: ['bundle.js'], css: ['style.css']});
+        expect(registry.portalApps[0].sharedResources).toEqual({js: ['globalLib.js']});
+        expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
+        expect(registry.portalApps[0].ssrBootstrap).toBeFalsy();
+        expect(registry.portalApps[0].ssrInitialHtmlUri).toEqual('https://my-microfrontend.com/one/ssr');
+        expect(registry.portalApps[0].cachingConfig).toEqual({ ssrHtml: 'same-config-and-user' });
+        expect(registry.portalApps[0].editorConfig).toEqual({ editorPortalApp: 'Demo Config Editor', position: 'in-place', appConfig: {} });
+        expect(registry.portalApps[0].screenshots).toEqual(['screenshot1.png']);
+        expect(registry.portalApps[0].proxies).toBeTruthy();
+        expect(registry.portalApps[0].proxies!['whatever'].targetUri).toBe('https://my-microfrontend.com/one/api');
+        expect(registry.portalApps[0].metaInfo).toEqual({ capabilities: ['foo'] });
+        expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
+    });
 });
