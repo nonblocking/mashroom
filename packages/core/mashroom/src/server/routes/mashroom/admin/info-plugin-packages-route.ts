@@ -26,7 +26,6 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
     pluginPackages.sort((p1, p2) => p1.name.localeCompare(p2.name));
 
     pluginPackages.forEach((pp) => {
-        const homepageLink = pp.homepage ? `<a target='_blank' href="${pp.homepage}">${pp.homepage}</a>` : '';
         let statusStyle = '';
         let rowBackgroundStyle = '';
         if (pp.status === 'ready') {
@@ -39,7 +38,7 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         pluginPackagesRows.push(`
             <tr style="${rowBackgroundStyle}">
                 <td>${htmlUtils.escapeHtml(pp.name)}</td>
-                <td>${homepageLink}</td>
+                <td><a target='_blank' href="${pp.pluginPackageURL}">${pp.pluginPackageURL}</a></td>
                 <td>${htmlUtils.escapeHtml(pp.author || '')}</td>
                 <td>${pp.license || ''}</td>
                 <td>${pp.version}</td>
@@ -52,7 +51,7 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         <table>
             <tr>
                 <th>Name</th>
-                <th>Homepage</th>
+                <th>Location</th>
                 <th>Author</th>
                 <th>License</th>
                 <th>Version</th>

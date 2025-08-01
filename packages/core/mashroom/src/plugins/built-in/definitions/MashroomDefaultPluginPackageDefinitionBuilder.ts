@@ -1,4 +1,5 @@
-import {fileURLToPath} from 'url';
+import {fileURLToPath, URL} from 'url';
+import {existsSync} from 'fs';
 import {readFile} from 'fs/promises';
 import {resolve} from 'path';
 import {getExternalPluginDefinitionFilePath} from '../../../utils/plugin-utils';
@@ -9,7 +10,8 @@ import type {
     MashroomPluginPackageDefinitionBuilder, MashroomPluginPackageMeta,
     MashroomServerConfig
 } from '../../../../type-definitions';
-import type {URL} from 'url';
+
+const REMOTE_DEFAULT_SOCKET_TIMEOUT_MS = 5 * 1000;
 
 export default class MashroomDefaultPluginPackageDefinitionBuilder implements MashroomPluginPackageDefinitionBuilder {
 
@@ -26,17 +28,12 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
     }
 
     async buildDefinition(packageURL: URL): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
-        if (packageURL.protocol !== 'file:') {
+        if (!['file:', 'http:', 'https:'].includes(packageURL.protocol)) {
             return null;
         }
 
-        const pluginPackagePath = fileURLToPath(packageURL);
-
-        let packageJson = null;
-        try {
-            packageJson = await this._readPackageJson(pluginPackagePath);
-        } catch (err) {
-            this._logger.error(`Error reading package.json in: ${pluginPackagePath}`, err);
+        const packageJson = await this._readPackageJson(packageURL);
+        if (!packageJson) {
             return null;
         }
 
@@ -49,17 +46,17 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             license: packageJson.license,
         };
 
-        let definition = this._readExternalPluginConfigFile(pluginPackagePath);
+        let definition = await this._readExternalPluginConfigFile(packageURL);
         if (!definition && packageJson.mashroom) {
             definition = packageJson.mashroom;
         }
 
         if (!definition) {
-            this._logger.error(`No plugin definition found in: ${pluginPackagePath}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist.`);
+            this._logger.error(`No plugin definition found in: ${packageURL}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist.`);
             return null;
         }
         if (!definition.plugins || !Array.isArray(definition.plugins)) {
-            this._logger.error(`Error processing plugin definition in: ${pluginPackagePath}: "plugins" is either not defined or no array!`);
+            this._logger.error(`Error processing plugin definition in: ${packageURL}: "plugins" is either not defined or no array!`);
             return null;
         }
 
@@ -70,26 +67,81 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         }];
     }
 
-    private async _readPackageJson(pluginPackagePath: string): Promise<any> {
-        const fileData = await readFile(resolve(pluginPackagePath, 'package.json'), 'utf-8');
-        return JSON.parse(fileData.toString());
-    }
+    private async _readPackageJson(url: URL): Promise<Record<string, any> | null> {
+        if (url.protocol === 'file:') {
+            const pluginPackagePath = fileURLToPath(url);
+            if (!existsSync(pluginPackagePath)) {
+                return null;
+            }
 
-    private _readExternalPluginConfigFile(pluginPackagePath: string): MashroomPluginPackageDefinition | undefined {
-        const externalPluginConfigFile = getExternalPluginDefinitionFilePath(pluginPackagePath, this._externalPluginConfigFileNames);
-        if (!externalPluginConfigFile) {
-            return;
+            const fileData = await readFile(resolve(pluginPackagePath, 'package.json'), 'utf-8');
+            return JSON.parse(fileData.toString());
         }
 
-        this._logger.debug('Loading plugin config file:', externalPluginConfigFile);
+        const packageJSON = await this._fetchRemoteJSON(new URL('package.json', url));
+        if (packageJSON.mashroom) {
+            delete packageJSON.mashroom.devModeBuildScript;
+        }
 
-        // Reload
-        delete require.cache[externalPluginConfigFile];
-        try {
+        return packageJSON;
+    }
+
+    private async _readExternalPluginConfigFile(url: URL): Promise<MashroomPluginPackageDefinition | null> {
+        if (url.protocol === 'file:') {
+            const pluginPackagePath = fileURLToPath(url);
+
+            const externalPluginConfigFile = getExternalPluginDefinitionFilePath(pluginPackagePath, this._externalPluginConfigFileNames);
+            if (!externalPluginConfigFile) {
+                return null;
+            }
+
+            this._logger.debug('Loading plugin config file:', externalPluginConfigFile);
+
+            // Reload
+            delete require.cache[externalPluginConfigFile];
+
             const pluginConfigModule = require(externalPluginConfigFile);
             return pluginConfigModule.default ?? pluginConfigModule;
-        } catch (e) {
-            this._logger.error(`Error processing plugin definition in: ${externalPluginConfigFile}: File exists but is not readable!`, e);
+        }
+
+        for (const externalPluginConfigFileName of this._externalPluginConfigFileNames) {
+            try {
+                const pluginDefinition = await this._fetchRemoteJSON(new URL(`${externalPluginConfigFileName}.json`, url));
+                if (pluginDefinition) {
+                    delete pluginDefinition.devModeBuildScript;
+                    return pluginDefinition;
+                }
+            } catch (e) {
+                this._logger.warn(`Fetching external plugin config file ${externalPluginConfigFileName}.json from ${url} failed!`, e);
+            }
+        }
+
+        return null;
+    }
+
+    private async _fetchRemoteJSON(url: URL): Promise<any> {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(),  REMOTE_DEFAULT_SOCKET_TIMEOUT_MS);
+        try {
+            const result = await fetch(url.toString(), {
+                signal: controller.signal,
+            });
+            if (result.ok) {
+                return await result.json();
+            } else if (result.status === 404) {
+                this._logger.debug(`File not found: ${url}`);
+                return null;
+            } else {
+                throw new Error(`Status code ${result.status}`);
+            }
+        } catch (e: any) {
+            if (e.message.includes('aborted')) {
+                throw new Error(`Timeout: Connection to ${url} timed out after ${REMOTE_DEFAULT_SOCKET_TIMEOUT_MS}sec`);
+            }
+            this._logger.error(`Fetching package.json from ${url} failed!`, e);
+            throw e;
+        } finally {
+            clearTimeout(timeout);
         }
     }
 
