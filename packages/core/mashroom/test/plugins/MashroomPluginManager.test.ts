@@ -332,8 +332,11 @@ describe('MashroomPluginManager', () => {
         const potentialPluginPackages = pluginManager.potentialPluginPackages;
         expect(potentialPluginPackages.length).toBe(1);
         expect(potentialPluginPackages[0].status).toBe('processed');
+        expect(potentialPluginPackages[0].processedOnce).toBeTruthy();
         expect(potentialPluginPackages[0].lastUpdate).toBeTruthy();
         expect(potentialPluginPackages[0].updateError).toBeFalsy();
+        expect(potentialPluginPackages[0].scannerName).toBe('Scanner 1');
+        expect(potentialPluginPackages[0].definitionBuilderName).toBe('Definition Builder 1');
 
         const pluginPackages = pluginManager.pluginPackages;
         expect(pluginPackages.length).toBe(1);

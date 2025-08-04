@@ -1,6 +1,5 @@
 
 import type {Server} from 'net';
-import type {URL} from 'url';
 import type {RequestHandler, Application} from 'express';
 import type {
     LogLevel,
@@ -19,6 +18,7 @@ import type {
     MashroomServicePluginServices,
     MashroomPluginPackageScanner,
     MashroomPluginPackageDefinitionBuilder,
+    MashroomPotentialPluginPackage,
 } from './api';
 
 export interface GlobalNodeErrorHandler {
@@ -75,13 +75,6 @@ export type MashroomPluginRegistryEvent = {
     readonly pluginName: string;
 }
 
-export type MashroomPotentialPluginPackage = {
-    readonly url: URL;
-    readonly lastUpdate: number;
-    readonly status: 'processing' | 'processed';
-    readonly updateError: boolean;
-    readonly foundPlugins: Array<string> | null;
-}
 
 export type MashroomPluginPackageDefinitionBuilderWithWeight = {
     readonly definitionBuilder: MashroomPluginPackageDefinitionBuilder;
@@ -113,7 +106,7 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
      */
     readonly pluginPackageScanners: Readonly<Array<MashroomPluginPackageScanner>>;
     /**
-     * Known plugin package defintion builders
+     * Known plugin package definition builders
      */
     readonly pluginPackageDefinitionBuilders: Readonly<Array<MashroomPluginPackageDefinitionBuilderWithWeight>>;
     /**

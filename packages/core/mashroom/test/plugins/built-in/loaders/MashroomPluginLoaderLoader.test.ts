@@ -4,7 +4,7 @@ import {writeFileSync} from 'fs';
 import {pathToFileURL} from 'url';
 import {emptyDirSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import MashroomPluginLoaderLoader from '../../../../src/plugins/built-in/loader/MashroomPluginLoaderLoader';
+import MashroomPluginLoaderLoader from '../../../../src/plugins/built-in/loaders/MashroomPluginLoaderLoader';
 import MashroomPlugin from '../../../../src/plugins/MashroomPlugin';
 
 

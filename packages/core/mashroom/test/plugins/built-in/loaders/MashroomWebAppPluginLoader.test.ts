@@ -4,7 +4,7 @@ import {writeFileSync} from 'fs';
 import {pathToFileURL} from 'url';
 import {emptyDirSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
-import MashroomWebAppPluginLoader from '../../../../src/plugins/built-in/loader/MashroomWebAppPluginLoader';
+import MashroomWebAppPluginLoader from '../../../../src/plugins/built-in/loaders/MashroomWebAppPluginLoader';
 import MashroomPlugin from '../../../../src/plugins/MashroomPlugin';
 
 const getPluginPackageFolder = () => {

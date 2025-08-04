@@ -265,6 +265,91 @@
             ],
             "additionalProperties": false
         },
+        "MashroomPluginPackageScannerPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "plugin-package-scanner"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
+            "additionalProperties": false
+        },
+        "MashroomPluginPackageDefinitionBuilderPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "'plugin-package-definition-builder"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Script that exports MashroomPluginLoaderPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "weight": {
+                            "type": "number"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
+            ],
+            "additionalProperties": false
+        },
         "MashroomWebAppPluginDefinition": {
             "type": "object",
             "properties": {
@@ -1115,52 +1200,6 @@
             ],
             "additionalProperties": false
         },
-        "MashroomPortalAppRegistryPluginDefinition": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "tags": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
-                "requires": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    },
-                    "description": "Required plugins"
-                },
-                "type": {
-                    "const": "portal-app-registry"
-                },
-                "bootstrap": {
-                    "$ref": "#/definitions/PackageRelativePath",
-                    "description": "Script that exports MashroomPortalAppRegistryBootstrapFunction"
-                },
-                "defaultConfig": {
-                    "type": "object",
-                    "properties": {
-                        "priority": {
-                            "type": "integer",
-                            "description": "Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)"
-                        }
-                    }
-                }
-            },
-            "required": [
-                "name",
-                "type",
-                "bootstrap"
-            ],
-            "additionalProperties": false
-        },
         "MashroomPortalPageEnhancementPluginDefinition": {
             "type": "object",
             "properties": {
@@ -1391,7 +1430,7 @@
                 "properties": {
                     "type": {
                         "type": "string",
-                        "pattern": "(plugin-loader|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|portal-app-registry|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
+                        "pattern": "(plugin-loader|plugin-package-scanner|plugin-package-definition-builder|web-app|api|middleware|static|services|admin-ui-integration|background-job|external-messaging-provider|http-proxy-interceptor|memory-cache-provider|portal-app|portal-app2|portal-theme|portal-layouts|portal-page-enhancement|portal-app-enhancement|security-provider|session-store-provider|storage-provider)"
                     }
                 }
             },
@@ -1439,6 +1478,12 @@
                     "$ref": "#/definitions/MashroomPluginLoaderPluginDefinition"
                 },
                 {
+                    "$ref": "#/definitions/MashroomPluginPackageScannerPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPluginPackageDefinitionBuilderPluginDefinition"
+                },
+                {
                     "$ref": "#/definitions/MashroomWebAppPluginDefinition"
                 },
                 {
@@ -1479,9 +1524,6 @@
                 },
                 {
                     "$ref": "#/definitions/MashroomPortalLayoutsPluginDefinition"
-                },
-                {
-                    "$ref": "#/definitions/MashroomPortalAppRegistryPluginDefinition"
                 },
                 {
                     "$ref": "#/definitions/MashroomPortalPageEnhancementPluginDefinition"

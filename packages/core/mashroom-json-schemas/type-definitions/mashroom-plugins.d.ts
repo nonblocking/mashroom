@@ -7,6 +7,8 @@
 
 export type MashroomPlugins1 =
   | MashroomPluginLoaderPluginDefinition
+  | MashroomPluginPackageScannerPluginDefinition
+  | MashroomPluginPackageDefinitionBuilderPluginDefinition
   | MashroomWebAppPluginDefinition
   | MashroomApiPluginDefinition
   | MashroomMiddlewarePluginDefinition
@@ -21,7 +23,6 @@ export type MashroomPlugins1 =
   | MashroomPortalAppV2PluginDefinition
   | MashroomPortalThemePluginDefinition
   | MashroomPortalLayoutsPluginDefinition
-  | MashroomPortalAppRegistryPluginDefinition
   | MashroomPortalPageEnhancementPluginDefinition
   | MashroomPortalAppEnhancementPluginDefinition
   | MashroomSecurityProviderPluginDefinition
@@ -62,6 +63,38 @@ export interface MashroomPluginLoaderPluginDefinition {
    */
   bootstrap: string;
   defaultConfig?: {};
+}
+export interface MashroomPluginPackageScannerPluginDefinition {
+  name: string;
+  description?: string;
+  tags?: string[];
+  /**
+   * Required plugins
+   */
+  requires?: string[];
+  type: "plugin-package-scanner";
+  /**
+   * Script that exports MashroomPluginLoaderPluginBootstrapFunction
+   */
+  bootstrap: string;
+  defaultConfig?: {};
+}
+export interface MashroomPluginPackageDefinitionBuilderPluginDefinition {
+  name: string;
+  description?: string;
+  tags?: string[];
+  /**
+   * Required plugins
+   */
+  requires?: string[];
+  type: "'plugin-package-definition-builder";
+  /**
+   * Script that exports MashroomPluginLoaderPluginBootstrapFunction
+   */
+  bootstrap: string;
+  defaultConfig?: {
+    weight?: number;
+  };
 }
 export interface MashroomWebAppPluginDefinition {
   name: string;
@@ -590,26 +623,6 @@ export interface MashroomPortalLayoutsPluginDefinition {
    */
   layouts: {
     [k: string]: PackageRelativeOrSystemPath;
-  };
-}
-export interface MashroomPortalAppRegistryPluginDefinition {
-  name: string;
-  description?: string;
-  tags?: string[];
-  /**
-   * Required plugins
-   */
-  requires?: string[];
-  type: "portal-app-registry";
-  /**
-   * Script that exports MashroomPortalAppRegistryBootstrapFunction
-   */
-  bootstrap: string;
-  defaultConfig?: {
-    /**
-     * Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)
-     */
-    priority?: number;
   };
 }
 export interface MashroomPortalPageEnhancementPluginDefinition {

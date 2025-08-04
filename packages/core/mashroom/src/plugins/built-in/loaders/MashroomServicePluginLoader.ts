@@ -14,7 +14,7 @@ import type {
     MashroomServiceRegistry,
 } from '../../../../type-definitions/internal';
 
-export default class MashroomServicesLoader implements MashroomPluginLoader {
+export default class MashroomServicePluginLoader implements MashroomPluginLoader {
 
     private readonly _logger: MashroomLogger;
 

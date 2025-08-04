@@ -19,27 +19,35 @@ import type {
     MashroomPluginType,
     MashroomLoggerFactory,
     MashroomPluginScannerHints,
+    MashroomPotentialPluginPackage,
 } from '../../type-definitions';
 import type {URL} from 'url';
 import type {
     MashroomPluginPackageBuilder,
     MashroomPluginPackageBuilderEvent,
-    MashroomPluginPackageDefinitionBuilderWithWeight,
     MashroomPluginRegistry,
     MashroomPluginManager as MashroomPluginManagerType,
     MashroomPluginRegistryEvent,
-    MashroomPluginRegistryEventName, MashroomPotentialPluginPackage
+    MashroomPluginRegistryEventName,
+    MashroomPluginPackageDefinitionBuilderWithWeight,
 } from '../../type-definitions/internal';
 
 type InternalPotentialPackage = {
     readonly url: URL;
     readonly scannerName: string;
+    definitionBuilderName: string | null;
+    processedOnce: boolean;
     status: 'processing' | 'processed';
     lastUpdate: number;
     updateError: boolean;
     scannerHints: MashroomPluginScannerHints;
     pluginPackages: Array<MashroomPluginPackageImpl> | null;
     plugins: Array<MashroomPluginImpl> | null;
+}
+
+type InternalPluginPackageDefinitionAndMeta = {
+    readonly definitionBuilderName: string;
+    readonly defAndMetas: Array<MashroomPluginPackageDefinitionAndMeta>;
 }
 
 export default class MashroomPluginManager implements MashroomPluginManagerType, MashroomPluginRegistry {
@@ -96,8 +104,11 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
 
     get potentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>> {
         return readonlyUtils.cloneAndFreezeArray(this._potentialPackages
-            .map(({url, status, lastUpdate, updateError, plugins}) => ({
+            .map(({url, scannerName, definitionBuilderName, processedOnce, status, lastUpdate, updateError, plugins}) => ({
                 url,
+                scannerName,
+                definitionBuilderName,
+                processedOnce,
                 status,
                 lastUpdate,
                 updateError,
@@ -208,7 +219,9 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             potentialPackage = {
                 url,
                 scannerName,
+                definitionBuilderName: null,
                 lastUpdate: Date.now(),
+                processedOnce: false,
                 status: 'processing',
                 updateError: false,
                 scannerHints,
@@ -223,32 +236,37 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             removePackageModulesFromNodeCache(fileURLToPath(url));
         }
 
-        let packageDefinitionAndMetas;
+        let buildPackageDefinitionResult;
         try {
-            packageDefinitionAndMetas = await this._buildPackageDefinition(url, potentialPackage.scannerHints);
+            buildPackageDefinitionResult = await this._buildPackageDefinition(url, potentialPackage.scannerHints);
         } catch (e: any) {
             // Building the package definition failed, this might be a temporary problem; we just keep all plugins
             potentialPackage.updateError = true;
             potentialPackage.status = 'processed';
+            potentialPackage.processedOnce = true;
             this._logger.error(e);
             return;
         }
 
-        if (!packageDefinitionAndMetas) {
+        if (!buildPackageDefinitionResult) {
             this._logger.debug(`No plugin package definition found for URL: ${url}`);
             if (potentialPackage.plugins) {
                 potentialPackage.plugins.forEach((plugin) => this._unloadPlugin(potentialPackage, plugin));
             }
             potentialPackage.status = 'processed';
+            potentialPackage.processedOnce = true;
+            potentialPackage.definitionBuilderName = null;
             potentialPackage.pluginPackages = null;
             potentialPackage.plugins = null;
             return;
         }
 
+        potentialPackage.definitionBuilderName = buildPackageDefinitionResult.definitionBuilderName;
+
         // Process all found packages
         const currentPluginPackages = potentialPackage.pluginPackages;
         potentialPackage.pluginPackages = [];
-        for (const packageDefinitionAndMeta of packageDefinitionAndMetas) {
+        for (const packageDefinitionAndMeta of buildPackageDefinitionResult.defAndMetas) {
             // If this is a remote package and the version didn't change, do nothing (optimization)
             if (packageDefinitionAndMeta.packageURL.protocol !== 'file:') {
                 const currentPluginPackage = currentPluginPackages?.find(({ name, pluginPackageURL }) =>
@@ -300,7 +318,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    private async _buildPackageDefinition(url: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
+    private async _buildPackageDefinition(url: URL, scannerHints: MashroomPluginScannerHints): Promise<InternalPluginPackageDefinitionAndMeta | null> {
         const sortedBuilders = this._pluginDefinitionBuilders
             .sort((a, b) => b.weight - a.weight)
             .map((b) => b.definitionBuilder);
@@ -309,7 +327,11 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             try {
                 const defAndMetas = await builder.buildDefinition(url, scannerHints);
                 if (defAndMetas) {
-                    return defAndMetas;
+                    this._logger.debug(`Package definition builder '${builder.name}' found ${defAndMetas.length} packages for ${url}`);
+                    return {
+                        definitionBuilderName: builder.name,
+                        defAndMetas,
+                    };
                 }
             } catch (e: any) {
                 errors.push(e.message);
@@ -560,6 +582,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             const stillProcessing = potentialPackage.pluginPackages?.some((pp) => pp.status === 'pending' || pp.status === 'building');
             if (!stillProcessing) {
                 potentialPackage.status = 'processed';
+                potentialPackage.processedOnce = true;
             }
         }
     }

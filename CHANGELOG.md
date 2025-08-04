@@ -10,6 +10,7 @@
    * Improved change detection of the file system plugin scanner (reports only relevant changes now)
    * Made sure plugins are only loaded once during startup
    * Fixed the problem that plugins were not rebuild after removing the dist/output folder
+   * Ready probe returns HTTP 200 as soon as all local plugin packages are processed (even if some plugins could not be loaded)
 
 ## [unreleased v2]
 

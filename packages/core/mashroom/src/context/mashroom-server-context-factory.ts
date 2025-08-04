@@ -8,14 +8,16 @@ import createLoggerFactory from '../logging/create-logger-factory';
 import MashroomServerConfigLoader from '../config/MashroomServerConfigLoader';
 import MashroomPluginPackageBuilder from '../plugins/building/MashroomPluginPackageBuilder';
 import MashroomPluginManager from '../plugins/MashroomPluginManager';
-import MashroomPluginLoaderLoader from '../plugins/built-in/loader/MashroomPluginLoaderLoader';
-import MashroomWebAppPluginLoader from '../plugins/built-in/loader/MashroomWebAppPluginLoader';
-import MashroomApiPluginLoader from '../plugins/built-in/loader/MashroomApiPluginLoader';
-import MashroomMiddlewarePluginLoader from '../plugins/built-in/loader/MashroomMiddlewarePluginLoader';
-import MashroomStaticDocumentsPluginLoader from '../plugins/built-in/loader/MashroomStaticDocumentsPluginLoader';
-import MashroomAdminUIIntegrationLoader from '../plugins/built-in/loader/MashroomAdminUIIntegrationLoader';
-import MashroomServicesLoader from '../plugins/built-in/loader/MashroomServicesLoader';
-import MashroomLocalFileSystemPluginPackageScanner from '../plugins/built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
+import MashroomPluginLoaderLoader from '../plugins/built-in/loaders/MashroomPluginLoaderLoader';
+import MashroomPluginPackageScannerPluginLoader from '../plugins/built-in/loaders/MashroomPluginPackageScannerPluginLoader';
+import MashroomPluginPackageDefinitionBuilderPluginLoader from '../plugins/built-in/loaders/MashroomPluginPackageDefinitionBuilderPluginLoader';
+import MashroomWebAppPluginLoader from '../plugins/built-in/loaders/MashroomWebAppPluginLoader';
+import MashroomApiPluginLoader from '../plugins/built-in/loaders/MashroomApiPluginLoader';
+import MashroomMiddlewarePluginLoader from '../plugins/built-in/loaders/MashroomMiddlewarePluginLoader';
+import MashroomStaticDocumentsPluginLoader from '../plugins/built-in/loaders/MashroomStaticDocumentsPluginLoader';
+import MashroomAdminUIIntegrationLoader from '../plugins/built-in/loaders/MashroomAdminUIIntegrationLoader';
+import MashroomServicePluginLoader from '../plugins/built-in/loaders/MashroomServicePluginLoader';
+import MashroomLocalFileSystemPluginPackageScanner from '../plugins/built-in/scanners/MashroomLocalFileSystemPluginPackageScanner';
 import MashroomDefaultPluginPackageDefinitionBuilder from '../plugins/built-in/definitions/MashroomDefaultPluginPackageDefinitionBuilder';
 import MashroomServiceRegistry from '../plugins/MashroomServiceRegistry';
 import MashroomPluginService from '../services/MashroomPluginService';
@@ -135,11 +137,13 @@ const addBuiltInPlugins = (pluginRegistry: MashroomPluginRegistryType, expressAp
                            pluginContextHolder: MashroomPluginContextHolderType) => {
 
     pluginRegistry.registerPluginLoader('plugin-loader', new MashroomPluginLoaderLoader(pluginRegistry, loggerFactory));
+    pluginRegistry.registerPluginLoader('plugin-package-scanner', new MashroomPluginPackageScannerPluginLoader(pluginRegistry, loggerFactory));
+    pluginRegistry.registerPluginLoader('plugin-package-definition-builder', new MashroomPluginPackageDefinitionBuilderPluginLoader(pluginRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('api', new MashroomApiPluginLoader(expressApplication, loggerFactory));
     pluginRegistry.registerPluginLoader('web-app', new MashroomWebAppPluginLoader(expressApplication, loggerFactory, pluginContextHolder));
     pluginRegistry.registerPluginLoader('static', new MashroomStaticDocumentsPluginLoader(expressApplication, loggerFactory));
     pluginRegistry.registerPluginLoader('middleware', new MashroomMiddlewarePluginLoader(middlewarePluginDelegate, loggerFactory));
-    pluginRegistry.registerPluginLoader('services', new MashroomServicesLoader(serviceRegistry, loggerFactory));
+    pluginRegistry.registerPluginLoader('services', new MashroomServicePluginLoader(serviceRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('admin-ui-integration', new MashroomAdminUIIntegrationLoader(loggerFactory));
 
     pluginRegistry.registerPluginDefinitionBuilder(0, new MashroomDefaultPluginPackageDefinitionBuilder(serverConfig, loggerFactory));

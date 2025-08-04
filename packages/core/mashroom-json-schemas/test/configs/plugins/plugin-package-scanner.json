@@ -3,12 +3,11 @@
     "devModeBuildScript": "build",
     "plugins": [
         {
-            "name": "My Remote Portal App Registry",
-            "type": "portal-app-registry",
+            "name": "My Plugin Package Scanner",
+            "type": "plugin-package-scanner",
             "bootstrap": "./dist/bootstrap.js",
             "defaultConfig": {
-                "priority": 100,
-                "myProperty": "foo"
+
             }
         }
     ]

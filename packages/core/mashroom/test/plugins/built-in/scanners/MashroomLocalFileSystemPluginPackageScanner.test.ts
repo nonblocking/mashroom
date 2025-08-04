@@ -3,7 +3,7 @@ import {resolve} from 'path';
 import {ensureDirSync, emptyDirSync, writeJsonSync, removeSync} from 'fs-extra';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import defaultConfig from '../../../../src/config/mashroom-default-config';
-import MashroomLocalFileSystemPluginPackageScanner from '../../../../src/plugins/built-in/scanner/MashroomLocalFileSystemPluginPackageScanner';
+import MashroomLocalFileSystemPluginPackageScanner from '../../../../src/plugins/built-in/scanners/MashroomLocalFileSystemPluginPackageScanner';
 import type {URL} from 'url';
 
 jest.setTimeout(10000);

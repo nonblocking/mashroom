@@ -19,11 +19,6 @@ export type IncomingMessageWithContext = IncomingMessage & {
     session?: any;
 }
 
-export type ExpressRequestWithContext = Request & {
-    pluginContext: MashroomPluginContext;
-    session?: any;
-};
-
 export type I18NString =
     | string
     | { [lang: string]: string;
@@ -298,6 +293,17 @@ export type MashroomPluginConfig = {
     [key: string]: any;
 };
 
+export type MashroomPotentialPluginPackage = {
+    readonly url: URL;
+    readonly scannerName: string;
+    readonly definitionBuilderName: string | null;
+    readonly lastUpdate: number;
+    readonly processedOnce: boolean;
+    readonly status: 'processing' | 'processed';
+    readonly updateError: boolean;
+    readonly foundPlugins: Array<string> | null;
+}
+
 export type MashroomPluginScannerHints = {
     readonly packageName?: string;
     readonly packageVersion?: string;
@@ -441,11 +447,6 @@ export type MashroomPluginLoaderMap = {
 
 export interface MashroomPluginService {
     /**
-     * The currently known plugin loaders
-     */
-    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
-
-    /**
      * Get all currently known plugins
      */
     getPlugins(): Readonly<Array<MashroomPlugin>>;
@@ -454,6 +455,16 @@ export interface MashroomPluginService {
      * Get all currently known plugin packages
      */
     getPluginPackages(): Readonly<Array<MashroomPluginPackage>>;
+
+    /**
+     * All potential plugin package URLs reported by plugin package scanners.
+     */
+    getPotentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
+     * The currently known plugin loaders
+     */
+    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
 
     /**
      * Register for the next loaded event of given plugin (fired AFTER the plugin has been loaded).
@@ -566,7 +577,7 @@ export type MashroomHealthProbe = {
 };
 
 /**
- * Bootstrap method definition for plugin-loader plugins
+ * Bootstrap method for plugin-loader plugins
  */
 export type MashroomPluginLoaderPluginBootstrapFunction = (
     pluginName: string,
@@ -575,7 +586,25 @@ export type MashroomPluginLoaderPluginBootstrapFunction = (
 ) => Promise<MashroomPluginLoader>;
 
 /**
- * Bootstrap method definition for web-app plugins
+ * Bootstrap method for plugin-package-scanner plugins
+ */
+export type MashroomPluginPackageScannerPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder,
+) => Promise<MashroomPluginPackageScanner>;
+
+/**
+ * Bootstrap method for plugin-package-definition-builder plugins
+ */
+export type MashroomPluginPackageDefinitionBuilderPluginBootstrapFunction = (
+    pluginName: string,
+    pluginConfig: MashroomPluginConfig,
+    contextHolder: MashroomPluginContextHolder,
+) => Promise<MashroomPluginPackageDefinitionBuilder>;
+
+/**
+ * Bootstrap method for web-app plugins
  */
 export type MashroomWebAppPluginBootstrapFunction = (
     pluginName: string,
@@ -584,7 +613,7 @@ export type MashroomWebAppPluginBootstrapFunction = (
 ) => Promise<Application | ExpressApplicationWithUpgradeHandler>;
 
 /**
- * Bootstrap method definition for API plugins
+ * Bootstrap method for API plugins
  */
 export type MashroomApiPluginBootstrapFunction = (
     pluginName: string,
@@ -593,7 +622,7 @@ export type MashroomApiPluginBootstrapFunction = (
 ) => Promise<Router>;
 
 /**
- * Bootstrap method definition for middleware plugins
+ * Bootstrap method for middleware plugins
  */
 export type MashroomMiddlewarePluginBootstrapFunction = (
     pluginName: string,
@@ -602,7 +631,7 @@ export type MashroomMiddlewarePluginBootstrapFunction = (
 ) => Promise<RequestHandler>;
 
 /**
- * Bootstrap method definition for services plugins
+ * Bootstrap method for services plugins
  */
 export type MashroomServicesPluginBootstrapFunction = (
     pluginName: string,

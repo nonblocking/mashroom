@@ -181,14 +181,6 @@ describe('plugin config validation', () => {
         expect(valid).toBeTruthy();
     });
 
-    it('succeeds at a valid portal-app-registry config', () => {
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'portal-app-registry.json')).toString("utf-8"));
-        const validate = ajv.compile(schema);
-        const valid = validate(config);
-
-        expect(valid).toBeTruthy();
-    });
-
     it('succeeds at a valid security-provider config', () => {
         const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'plugins', 'security-provider.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
