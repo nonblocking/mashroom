@@ -100,11 +100,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob {
 
                             if (service) {
                                 if (headlessService) {
-                                    service = {
-                                        ...service,
-                                        error: 'Headless Service',
-                                    };
+                                    service.error = 'Headless Service';
                                 } else {
+                                    service.error = null;
                                     if (existingService && existingService.url.toString() !== service.url.toString()) {
                                         context.scannerCallback?.removePackageURL(existingService.url);
                                     }

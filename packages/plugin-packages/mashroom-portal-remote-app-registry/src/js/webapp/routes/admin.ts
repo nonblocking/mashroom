@@ -28,8 +28,8 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
                     status = 'Processing';
                     statusClass = 'processing';
                 } else {
-                    status = 'Registered';
-                    statusClass = 'registered';
+                    status = 'Processed';
+                    statusClass = 'processed';
                 }
             }
             return {

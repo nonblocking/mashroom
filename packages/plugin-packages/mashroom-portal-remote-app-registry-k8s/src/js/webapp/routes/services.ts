@@ -37,8 +37,8 @@ export default (request: Request, response: Response) => {
                     status = 'Processing';
                     statusClass = 'processing';
                 } else if (pluginPackage?.status === 'processed') {
-                    status = 'Registered';
-                    statusClass = 'registered';
+                    status = 'Processed';
+                    statusClass = 'processed';
                 }
                 return {
                     name: service.name,

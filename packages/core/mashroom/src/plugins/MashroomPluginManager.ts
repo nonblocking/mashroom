@@ -362,7 +362,12 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
                     };
                 }
             } catch (e: any) {
-                errors.push(e.message);
+                if (typeof e.cause === 'object') {
+                    // eslint-disable-next-line no-ex-assign
+                    e = e.cause;
+                }
+                let errorMessage = e.message;
+                errors.push(errorMessage);
                 this._logger.warn(`Package definition builder '${builder.name}' threw an error!`, e);
             }
         }

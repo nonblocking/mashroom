@@ -5,9 +5,12 @@ import {resolve} from 'path';
 import {getExternalPluginDefinitionFilePath} from '../../../utils/plugin-utils';
 import type {
     MashroomLogger,
-    MashroomLoggerFactory, MashroomPluginPackageDefinition,
+    MashroomLoggerFactory,
+    MashroomPluginPackageDefinition,
     MashroomPluginPackageDefinitionAndMeta,
-    MashroomPluginPackageDefinitionBuilder, MashroomPluginPackageMeta,
+    MashroomPluginPackageDefinitionBuilder,
+    MashroomPluginPackageMeta,
+    MashroomPluginScannerHints,
     MashroomServerConfig
 } from '../../../../type-definitions';
 
@@ -27,27 +30,46 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         return 'Default definition builder based on package.json and external plugin definition files';
     }
 
-    async buildDefinition(packageURL: URL): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
+    async buildDefinition(packageURL: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
         if (!['file:', 'http:', 'https:'].includes(packageURL.protocol)) {
             return null;
         }
 
+        const remotePackage = packageURL.protocol !== ':file';
+
         const packageJson = await this._readPackageJson(packageURL);
-        if (!packageJson) {
+
+        if (!remotePackage && !packageJson) {
+            // A local package requires a package.json
             return null;
         }
 
-        const meta: MashroomPluginPackageMeta = {
-            name: packageJson.name,
-            description: packageJson.description,
-            version: packageJson.version,
-            homepage: packageJson.homepage,
-            author: this._authorToString(packageJson.author),
-            license: packageJson.license,
-        };
+        let meta: MashroomPluginPackageMeta;
+        if (packageJson) {
+            meta = {
+                name: packageJson.name,
+                version: packageJson.version,
+                description: packageJson.description,
+                homepage: packageJson.homepage,
+                author: this._authorToString(packageJson.author),
+                license: packageJson.license,
+            };
+        } else {
+            if (!scannerHints.packageVersion) {
+                this._logger.warn(`Couldn't determine package version of ${packageURL} because no package.json was found! This will impact caching of assets. You should fix this.`);
+            }
+            meta = {
+              name: scannerHints.packageName ?? packageURL.hostname,
+              version: scannerHints.packageVersion ?? String(Date.now()),
+                description: null,
+                homepage: null,
+                author: null,
+                license: null,
+            };
+        }
 
         let definition = await this._readExternalPluginConfigFile(packageURL);
-        if (!definition && packageJson.mashroom) {
+        if (!definition && packageJson?.mashroom) {
             definition = packageJson.mashroom;
         }
 
@@ -79,6 +101,10 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         }
 
         const packageJSON = await this._fetchRemoteJSON(new URL('package.json', url));
+        if (!packageJSON) {
+            return null;
+        }
+
         if (packageJSON.mashroom) {
             delete packageJSON.mashroom.devModeBuildScript;
         }

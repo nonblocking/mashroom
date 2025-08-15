@@ -63,7 +63,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             externalPluginConfigFileNames: ['mashroom']
         } as any, loggingUtils.dummyLoggerFactory);
 
-        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder1));
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder1), {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
         expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
@@ -104,7 +104,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             externalPluginConfigFileNames: ['mashroom']
         } as any, loggingUtils.dummyLoggerFactory);
 
-        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder2));
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder2), {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
         expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
@@ -149,7 +149,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             externalPluginConfigFileNames: ['mashroom']
         } as any, loggingUtils.dummyLoggerFactory);
 
-        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost);
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
         expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
@@ -199,7 +199,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             externalPluginConfigFileNames: ['mashroom']
         } as any, loggingUtils.dummyLoggerFactory);
 
-        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost);
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
         expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
@@ -227,6 +227,99 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             name: 'test2',
             version: '2.1.1'
         });
+    });
+
+    it('uses the scannerHints if no package.json can be found on a remote host', async () => {
+        const remoteHost = new URL('http://my-remote-app.io:6068');
+
+        nock(remoteHost.toString())
+            .get('/package.json')
+            .reply(404);
+        nock(remoteHost.toString())
+            .get('/mashroom.json')
+            .reply(200, pluginsDefinition);
+
+        const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
+            externalPluginConfigFileNames: ['mashroom']
+        } as any, loggingUtils.dummyLoggerFactory);
+
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {
+            packageName: 'test3',
+            packageVersion: '3.1.1',
+        });
+
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].definition).toEqual({
+            plugins: [
+                {
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                    defaultConfig: {
+                        foo: 'bar'
+                    },
+                    name: 'Plugin 1',
+                    type: 'web-app'
+                },
+                {
+                    bootstrap: './dist/mashroom-bootstrap2.js',
+                    dependencies: [
+                        'foo-services'
+                    ],
+                    name: 'Plugin 2',
+                    type: 'plugin-loader'
+                },
+            ]
+        });
+        expect(pluginPackageDefinitions![0].meta).toEqual({
+            name: 'test3',
+            version: '3.1.1',
+            author: null,
+            description: null,
+            homepage: null,
+            license: null,
+        });
+    });
+
+    it('accepts no package.json for a remote host', async () => {
+        const remoteHost = new URL('http://my-remote-app.io:6068');
+
+        nock(remoteHost.toString())
+            .get('/package.json')
+            .reply(404);
+        nock(remoteHost.toString())
+            .get('/mashroom.json')
+            .reply(200, pluginsDefinition);
+
+        const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
+            externalPluginConfigFileNames: ['mashroom']
+        } as any, loggingUtils.dummyLoggerFactory);
+
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
+
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].definition).toEqual({
+            plugins: [
+                {
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                    defaultConfig: {
+                        foo: 'bar'
+                    },
+                    name: 'Plugin 1',
+                    type: 'web-app'
+                },
+                {
+                    bootstrap: './dist/mashroom-bootstrap2.js',
+                    dependencies: [
+                        'foo-services'
+                    ],
+                    name: 'Plugin 2',
+                    type: 'plugin-loader'
+                },
+            ]
+        });
+        expect(pluginPackageDefinitions![0].meta.name).toBe('my-remote-app.io');
+        expect(pluginPackageDefinitions![0].meta.version).toBeTruthy();
     });
 });
 
