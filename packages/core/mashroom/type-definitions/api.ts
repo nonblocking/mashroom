@@ -300,7 +300,7 @@ export type MashroomPotentialPluginPackage = {
     readonly lastUpdate: number;
     readonly processedOnce: boolean;
     readonly status: 'processing' | 'processed';
-    readonly updateError: boolean;
+    readonly updateErrors: Array<string> | null;
     readonly foundPlugins: Array<string> | null;
 }
 
@@ -460,6 +460,11 @@ export interface MashroomPluginService {
      * All potential plugin package URLs reported by plugin package scanners.
      */
     getPotentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
+     * All potential plugin package URLs reported by a specific plugin package scanner.
+     */
+    getPotentialPluginPackagesByScanner(scannerName: string): Readonly<Array<MashroomPotentialPluginPackage>>;
 
     /**
      * The currently known plugin loaders

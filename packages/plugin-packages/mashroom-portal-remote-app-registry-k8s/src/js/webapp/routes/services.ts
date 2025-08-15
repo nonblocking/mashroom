@@ -1,48 +1,17 @@
 
-import {htmlUtils} from '@mashroom/mashroom-utils';
 import context from '../../context';
+import {SCANNER_NAME} from '../../scanner/KubernetesRemotePortalAppsPluginScanner';
 
 import type {Request, Response} from 'express';
-import type {KubernetesServiceStatus, ServicesRenderModel} from '../../../../type-definitions';
+import type {ServicesRenderModel} from '../../../../type-definitions';
 
 const formatDate = (ts: number): string => {
     return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 };
 
-const getRowClass = (status: KubernetesServiceStatus): string => {
-    switch (status) {
-        case 'Error':
-            return 'row-error';
-        case 'Headless Service':
-        case 'No Descriptor':
-            return 'row-ignored';
-        default:
-            return '';
-    }
-};
-
-const getStatusClass = (status: KubernetesServiceStatus): string => {
-    switch (status) {
-        case 'Error':
-            return 'error';
-        case 'Checking':
-            return 'checking';
-        default:
-            return '';
-    }
-};
-
-const getStatusWeight = (status: KubernetesServiceStatus): number => {
-    if (status === 'Error') {
-        return 2;
-    }
-    if (status === 'Checking') {
-        return 1;
-    }
-    return 0;
-};
-
 export default (request: Request, response: Response) => {
+    const pluginService = request.pluginContext.services.core.pluginService;
+    const pluginPackages = pluginService.getPotentialPluginPackagesByScanner(SCANNER_NAME);
 
     const model: ServicesRenderModel = {
         baseUrl: request.baseUrl,
@@ -52,30 +21,37 @@ export default (request: Request, response: Response) => {
         namespaces: context.namespaces.join(', '),
         serviceLabelSelector: context.serviceLabelSelector,
         serviceNameFilter: context.serviceNameFilter,
-        services: [...context.registry.services]
-            .sort((s1, s2) => {
-                const status1 = getStatusWeight(s1.status);
-                const status2 = getStatusWeight(s2.status);
-                if (status1 == status2) {
-                    return s1.name.localeCompare(s2.name);
+        services: context.services
+            .map((service) => {
+                const pluginPackage = pluginPackages.find((p) => p.url.toString() === service.url.toString());
+                const errors = service.error ?? pluginPackage?.updateErrors?.join(', ');
+                let status = 'Unknown';
+                if (pluginPackage) {
+                    status = pluginPackage.processedOnce ? pluginPackage.status : 'pending';
                 }
-                return status2 - status1;
+                let statusClass = 'pending';
+                if (errors) {
+                    status ='Error';
+                    statusClass = 'error';
+                } else if (pluginPackage?.status === 'processing') {
+                    status = 'Processing';
+                    statusClass = 'processing';
+                } else if (pluginPackage?.status === 'processed') {
+                    status = 'Registered';
+                    statusClass = 'registered';
+                }
+                return {
+                    name: service.name,
+                    namespace: service.namespace,
+                    url: service.url.toString(),
+                    status,
+                    statusClass,
+                    lastCheck: formatDate(service.lastCheck),
+                    rowClass: errors ? 'row-error' : '',
+                    errors,
+                    portalApps: pluginPackage?.foundPlugins,
+                };
             })
-            .map((service) => ({
-                name: service.name,
-                namespace: service.namespace,
-                url: service.url,
-                status: service.status !== 'Error' ? service.status : `Error: ${service.error}`,
-                lastCheck: formatDate(service.lastCheck),
-                rowClass: getRowClass(service.status),
-                statusClass: getStatusClass(service.status),
-                portalApps: service.foundPortalApps.map((app) => ({
-                    name: app.name,
-                    version: app.version,
-                    pluginDef: htmlUtils.jsonToHtml(app),
-                })),
-                invalidPortalApps: service.invalidPortalApps,
-            }))
     };
 
     response.render('services', model);

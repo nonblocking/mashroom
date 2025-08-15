@@ -1,65 +1,33 @@
 
-import type {MashroomPluginPackageDefinition} from '@mashroom/mashroom/type-definitions';
-import type {MashroomPortalApp, MashroomPortalAppRegistry} from '@mashroom/mashroom-portal/type-definitions';
+import type {URL} from 'url';
 import type {V1NamespaceList, V1ServiceList} from '@kubernetes/client-node';
-
-export type RemoteAppPackageJson = {
-    readonly name: string;
-    readonly version: string;
-    readonly description?: string;
-    readonly author?: string;
-    readonly homepage?: string;
-    readonly license?: string;
-    readonly mashroom?: MashroomPluginPackageDefinition;
-}
-
-export interface ScanBackgroundJob {
-    run(): Promise<void>;
-}
+import type {MashroomPluginScannerCallback} from '@mashroom/mashroom/type-definitions';
 
 export interface KubernetesConnector {
     getNamespacesByLabel(labelSelector: string): Promise<V1NamespaceList>;
     getNamespaceServices(namespace: string, labelSelector?: string | undefined): Promise<V1ServiceList>;
 }
 
-export type KubernetesServiceStatus = 'Checking' | 'Valid' | 'Headless Service' | 'No Descriptor' | 'Error';
-
-export type KubernetesServiceInvalidPortalApp = {
-    readonly name: string;
-    readonly error: string;
-}
-
 export type KubernetesService = {
     readonly name: string;
     readonly namespace: string;
-    readonly priority: number;
     readonly ip: string | undefined;
     readonly port: number | undefined;
-    readonly url: string;
+    readonly url: URL;
     readonly firstSeen: number;
     lastCheck: number;
-    status: KubernetesServiceStatus;
     error: string | null;
-    retries: number;
-    foundPortalApps: Array<MashroomPortalApp>;
-    invalidPortalApps: Array<KubernetesServiceInvalidPortalApp>;
-}
-
-export interface KubernetesServiceRegistry extends MashroomPortalAppRegistry {
-    getService(namespace: string, name: string): KubernetesService | undefined;
-    addOrUpdateService(service: KubernetesService): void;
-    removeService(namespace: string, name: string): void;
-    readonly services: readonly KubernetesService[];
 }
 
 export type Context = {
-    readonly registry: KubernetesServiceRegistry;
     namespaces: Array<string>;
     serviceLabelSelector: string | null;
     serviceNameFilter: string;
-    lastScan: number;
     errors: Array<string>;
-    oneFullScanDone: boolean;
+    services: Array<KubernetesService>;
+    scannerCallback: MashroomPluginScannerCallback | null;
+    lastScan: number;
+    initialScanDone: boolean;
 }
 
 export type ServicesRenderModel = {
@@ -78,10 +46,6 @@ export type ServicesRenderModel = {
         lastCheck: string;
         rowClass: string;
         statusClass: string;
-        portalApps: Array<{
-            name: string;
-            version: string;
-            pluginDef: string;
-        }>;
+        portalApps: Array<string> | undefined | null;
     }>
 }

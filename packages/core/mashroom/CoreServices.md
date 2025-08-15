@@ -25,6 +25,11 @@ export interface MashroomPluginService {
     getPotentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>>;
 
     /**
+     * All potential plugin package URLs reported by a specific plugin package scanner.
+     */
+    getPotentialPluginPackagesByScanner(scannerName: string): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
      * The currently known plugin loaders
      */
     getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;

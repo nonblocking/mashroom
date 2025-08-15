@@ -1,20 +1,73 @@
 
-import express from 'express';
+import {URL} from 'url';
+import express, {type Request, type Response} from 'express';
 import bootstrap from '../jobs/mashroom-bootstrap-background-job';
+import {SCANNER_NAME} from '../scanner/KubernetesRemotePortalAppsPluginScanner';
+import context from '../context';
 import app from './webapp';
-
-// @ts-ignore
-process.env.DUMMY_K8S_CONNECTOR = true;
+import type {KubernetesService} from '../../../type-definitions';
+import type {MashroomPotentialPluginPackage} from '@mashroom/mashroom/type-definitions';
 
 const pluginConfig = {
     k8sNamespacesLabelSelector: 'environment=development',
     k8sNamespaces: ['default'],
     k8sServiceLabelSelector: 'foo!=bar',
     serviceNameFilter: '.*',
-    socketTimeoutSec: 2,
     refreshIntervalSec: 120,
     accessViaClusterIP: true,
 };
+
+const testServices: Array<KubernetesService> = [{
+    name: 'Service 1',
+    namespace: 'namespace1',
+    url: new URL('http://service1.namespace1:8080'),
+    ip: undefined,
+    port: undefined,
+    firstSeen: Date.now(),
+    lastCheck: Date.now(),
+    error: null,
+}, {
+    name: 'Service 2',
+    namespace: 'namespace1',
+    url: new URL('http://service2.namespace1:8080'),
+    ip: undefined,
+    port: undefined,
+    firstSeen: Date.now(),
+    lastCheck: Date.now(),
+    error: null,
+}, {
+    name: 'Service 3',
+    namespace: 'namespace2',
+    url: new URL('http://foo'),
+    ip: undefined,
+    port: undefined,
+    firstSeen: Date.now(),
+    lastCheck: Date.now(),
+    error: 'Headless Service',
+}];
+
+context.services = testServices;
+
+const testPackages: Array<MashroomPotentialPluginPackage> = [{
+    url: new URL('http://service1.namespace1:8080'),
+    scannerName: SCANNER_NAME,
+    definitionBuilderName: '',
+    processedOnce: false,
+    status: 'processing',
+    lastUpdate: Date.now(),
+    updateErrors: null,
+    foundPlugins: null,
+}, {
+    url: new URL('http://service2.namespace1:8080'),
+    scannerName: SCANNER_NAME,
+    definitionBuilderName: '',
+    processedOnce: true,
+    status: 'processed',
+    lastUpdate: Date.now(),
+    updateErrors: null,
+    foundPlugins: ['App1', 'App2'],
+}];
+
 const contextHolder: any = {
     getPluginContext: () => ({
         loggerFactory: () => console,
@@ -24,6 +77,9 @@ const contextHolder: any = {
         services: {
             core: {
                 pluginService: {
+                    getPotentialPluginPackagesByScanner() {
+                        return testPackages;
+                    },
                     onUnloadOnce: () => {
                         // no implementation required
                     },
@@ -36,6 +92,11 @@ const contextHolder: any = {
 bootstrap('Mashroom Portal Remote App Registry Kubernetes', pluginConfig, contextHolder);
 
 const wrapperApp = express();
+
+wrapperApp.use((req: Request, res: Response, next) => {
+    req.pluginContext = contextHolder.getPluginContext();
+    next();
+});
 
 wrapperApp.get('/', (req, res) => {
     res.redirect('/portal-remote-app-registry-kubernetes');

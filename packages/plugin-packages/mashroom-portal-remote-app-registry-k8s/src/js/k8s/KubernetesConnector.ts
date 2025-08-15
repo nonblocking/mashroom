@@ -7,7 +7,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
 
     private _k8sApi?: CoreV1Api;
 
-    constructor(private test?: boolean) {
+    constructor(private localConfig?: boolean) {
     }
 
     async getNamespacesByLabel(labelSelector: string): Promise<V1NamespaceList> {
@@ -39,7 +39,7 @@ export default class KubernetesConnector implements KubernetesConnectorType {
         // '@kubernetes/client-node' is an ESM only module
         const {KubeConfig, CoreV1Api} = await import('@kubernetes/client-node');
         const k8sClient = new KubeConfig();
-        if (!this.test) {
+        if (!this.localConfig) {
             // This only works if the Portal runs within a Kubernetes Pod with a valid service account attached
             k8sClient.loadFromCluster();
         } else {

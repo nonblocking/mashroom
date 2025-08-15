@@ -7,15 +7,25 @@ import type {MashroomPluginContext} from '../../../../../type-definitions';
 
 const pluginsRoute = (req: Request, res: Response) => {
     res.type('text/html');
-    res.send(infoTemplate(plugins(req.pluginContext), req));
+    res.send(infoTemplate(plugins(req.query.q as string | undefined, req.pluginContext), req));
 };
 
 export default pluginsRoute;
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const plugins = (pluginContext: MashroomPluginContext) => `
+const plugins = (filter: string | undefined, pluginContext: MashroomPluginContext) => `
     <h2>Plugins</h2>
+    <div class="table-filter">
+        <input type="search" id="tableFilter" placeholder="Filter" value="${filter ?? ''}" oninput="filterTable('plugins-table', 'table-filter-result', this.value)" />
+        <script>
+            if ('${filter ?? ''}') {
+                addEventListener("DOMContentLoaded", (event) => {
+                    filterTable('plugins-table', 'table-filter-result', '${filter}');
+                });
+            }
+       </script>
+    </div>
     ${pluginTable(pluginContext)}
 `;
 
@@ -43,7 +53,11 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
                 <td>${htmlUtils.escapeHtml(plugin.name)}</td>
                 <td>${htmlUtils.escapeHtml(plugin.description || '')}</td>
                 <td>${plugin.type}</td>
-                <td>${htmlUtils.escapeHtml(plugin.pluginPackage.name)}</td>
+                <td><a href="plugin-packages?q=${encodeURIComponent(plugin.pluginPackage.name)}">${htmlUtils.escapeHtml(plugin.pluginPackage.name)}</a></td>
+                <td>
+                    <span>${plugin.pluginPackage.pluginPackageURL.protocol !== 'file:' ? '&check;' : ''}</span>
+                    <span class="hidden">${plugin.pluginPackage.pluginPackageURL.protocol !== 'file:' ? 'remote' : ''}</span>
+                </td>
                 <td style="${statusStyle}">${capitalize(plugin.status)}</td>
                 <td>${htmlUtils.escapeHtml(plugin.errorMessage || '')}</td>
                 <td>${lastReload}</td>
@@ -63,12 +77,13 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
     });
 
     return `
-        <table>
+        <table id="plugins-table">
             <tr>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Type</th>
                 <th>Package</th>
+                <th>Remote</th>
                 <th>Status</th>
                 <th>Error</th>
                 <th>Last Reload</th>
@@ -76,6 +91,8 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
             </tr>
             ${pluginRows.join('')}
         </table>
+        <div id="table-filter-result">
+        </div>
     `;
 };
 

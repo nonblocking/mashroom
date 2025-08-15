@@ -34,49 +34,6 @@ describe('MashroomPortalPluginRegistry', () => {
         expect(registry.portalApps.length).toBe(0);
     });
 
-    it('merges portal apps from an app registry correctly', () => {
-        const portalApp: any = {name: 'app1', source: 'local'};
-        const portalApp2: any = {name: 'app2', source: 'local'};
-        const remotePortalApp1: any = {name: 'app2', source: 'remote1'};
-        const remotePortalApp2: any = {name: 'app2', source: 'remote2'};
-        const remotePortalApp3: any = {name: 'app2', source: 'remote3'};
-        const remotePortalApp4: any = {name: 'app1', source: 'remote3'};
-
-        const registry = new MashroomPortalPluginRegistry();
-        registry.registerPortalApp(portalApp);
-        registry.registerPortalApp(portalApp2);
-
-        registry.registerPortalAppRegistry({
-            name: 'remote1',
-            priority: 1,
-            registry: {
-                portalApps: [remotePortalApp1]
-            }
-        });
-        registry.registerPortalAppRegistry({
-            name: 'remote2',
-            priority: 100,
-            registry: {
-                portalApps: [remotePortalApp2]
-            }
-        });
-        registry.registerPortalAppRegistry({
-            name: 'remote3',
-            priority: -1,
-            registry: {
-                portalApps: [remotePortalApp3, remotePortalApp4]
-            }
-        });
-
-        expect(registry.portalApps.length).toBe(2);
-        const app1: any = registry.portalApps.find((app) => app.name === 'app1');
-        expect(app1).toBeTruthy();
-        expect(app1.source).toBe('local');
-        const app2: any = registry.portalApps.find((app) => app.name === 'app2');
-        expect(app2).toBeTruthy();
-        expect(app2.source).toBe('remote2');
-    });
-
     it('registers a theme', () => {
         const theme: any = {name: 'theme'};
 

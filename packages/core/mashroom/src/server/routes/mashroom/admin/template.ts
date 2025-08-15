@@ -51,6 +51,30 @@ export default (content: string, req: Request) => {
                         color: #3a365f;
                     }
 
+                    a.long {
+                        word-break: break-all;
+                    }
+
+                    input[type="text"], input[type="number"], input[type="password"], input[type="tel"], input[type="search"] {
+                        padding: 8px 12px;
+                        border: 1px solid #AAA;
+                        font-size: 1em;
+                        width: 100%;
+
+                        &:focus {
+                            outline: 1px solid #AAA;
+                        }
+
+                        &:invalid {
+                            border: 1px solid red;
+                        }
+
+                        &:disabled {
+                            cursor: not-allowed;
+                            color: gray !important;
+                        }
+                    }
+
                     header {
                         background-color: #4D487F;
                         border-bottom: 2px solid #d3b486;
@@ -189,6 +213,20 @@ export default (content: string, req: Request) => {
                         width: 100%;
                     }
 
+                    .table-filter {
+                        max-width: 450px;
+                        margin-bottom: 5px;
+                    }
+
+                    #table-filter-result {
+                        margin-top: 10px;
+                        font-style: italic;
+                    }
+
+                    .hidden {
+                        display: none;
+                    }
+
                     #modal {
                         position: fixed;
                         left: 0;
@@ -241,7 +279,7 @@ export default (content: string, req: Request) => {
                 </style>
 
                 <script type="text/javascript">
-                    var refreshEnabled = document.cookie.split('; ').find(function(keyValue) {
+                    const refreshEnabled = document.cookie.split('; ').find(function(keyValue) {
                         return keyValue === 'mashroomAdminUIAutoRefresh=1';
                     });
 
@@ -258,6 +296,31 @@ export default (content: string, req: Request) => {
                             document.cookie = 'mashroomAdminUIAutoRefresh=1; path=/; max-age=2592000;';
                         }
                         window.location.reload();
+                    }
+
+                    function filterTable(tableElemId, filterResultElemId, filterValue) {
+                        const table = document.getElementById(tableElemId);
+                        const tableRows = table.getElementsByTagName('tr');
+                        const filterResult = document.getElementById(filterResultElemId);
+                        let matches = 0;
+
+                        for (let i = 1; i < tableRows.length; i++) {
+                            const row = tableRows[i];
+                            if (!filterValue || filterValue.length < 3 || row.innerHTML.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
+                                matches ++;
+                                row.style.display = 'table-row';
+                            } else {
+                                row.style.display = 'none';
+                            }
+                        }
+
+                        if (tableRows.length < 2) {
+                            filterResult.innerHTML = '';
+                        } else if (!matches) {
+                            filterResult.innerHTML = 'No matches found';
+                        } else {
+                            filterResult.innerHTML = 'Showing ' +  matches + ' matches (out of ' + tableRows.length + ')';
+                        }
                     }
 
                     function openModal(content) {

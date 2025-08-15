@@ -8,14 +8,9 @@
     <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
 
     <script type="application/javascript">
-         function openModal(content) {
-             document.getElementById('modal-content').innerHTML = content;
-             document.getElementById('modal').style.display = 'block';
-         }
-
-         function closeModal() {
-             document.getElementById('modal').style.display = 'none';
-         }
+        function openPlugin(pluginName) {
+            window.top.location.href = `/mashroom/admin/plugins?q=${encodeURIComponent(pluginName)}`;
+        }
 
          var lastContentHeight = null;
          function sendHeight() {
@@ -50,7 +45,7 @@
     {{/if}}
 
     <div class="services">
-        <table border="1" cellspacing="0" cellpadding="10">
+        <table>
             <tr>
                 <th>Name</th><th>Namespace</th><th>URL</th><th>Last Check</th><th>Status</th><th>Portal Apps</th>
             </tr>
@@ -63,17 +58,16 @@
                     <td class="{{this.statusClass}}">{{this.status}}</td>
                     <td>
                         <ul class="portal-apps">
-                            {{#each this.portalApps}}
-                                <li class="portal-app">
-                                    {{this.name}}&nbsp;({{this.version}})
-                                    <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
-                                </li>
-                            {{/each}}
-                            {{#each this.invalidPortalApps}}
-                                <li class="invalid-portal-app">
-                                    {{this.name}}&nbsp;<span class="error">({{this.error}})</span>
-                                </li>
-                            {{/each}}
+                            {{#if this.portalApps}}
+                                <div>
+                                    {{#each this.portalApps}}
+                                        {{#if @index}}, {{/if}}<a href="javascript:void(0)" onclick="openPlugin('{{this}}')">{{this}}</a>
+                                    {{/each}}
+                                </div>
+                            {{/if}}
+                            {{#if this.errors}}
+                                <div class="error">{{this.errors}}</div>
+                            {{/if}}
                         </ul>
                     </td>
                 </tr>
@@ -91,17 +85,6 @@
         <strong>Service name filter:</strong> {{serviceNameFilter}}
         <br/>
         <strong>Last scan:</strong> {{lastScan}}
-    </div>
-
-    <div id="modal" style="display: none">
-        <div class="modal-wrapper">
-            <div class="modal-header">
-                <div class="modal-close" onclick="closeModal()">&#x2715;</div>
-            </div>
-            <div id="modal-content">
-
-            </div>
-        </div>
     </div>
 
 </body>

@@ -1,0 +1,55 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Remote App Background Job",
+            "type": "background-job",
+            "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
+            "requires": [
+                "Mashroom Background Jobs Services",
+                "Mashroom Portal Remote App Registry"
+            ],
+            "defaultConfig": {
+                "cronSchedule": "0/1 * * * *",
+                "registrationRefreshIntervalSec": 600
+            }
+        },
+        {
+            "name": "Mashroom Portal Remote App Registry",
+            "type": "plugin-package-scanner",
+            "bootstrap": "./dist/scanner/mashroom-bootstrap-plugin-package-scanner.js",
+            "requires": [
+                "Mashroom Storage Services"
+            ],
+            "defaultConfig": {
+                "priority": 100,
+                "remotePortalAppUrls": "./remotePortalApps.json"
+            }
+        },
+        {
+            "name": "Mashroom Portal Remote App Registry Admin Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+            "requires": [
+                "Mashroom Storage Services"
+            ],
+            "defaultConfig": {
+                "path": "/portal-remote-app-registry",
+                "showAddRemoteAppForm": true
+            }
+        },
+        {
+            "name": "Mashroom Portal Remote App Registry Admin Webapp Integration",
+            "type": "admin-ui-integration",
+            "requires": [
+                "Mashroom Portal Remote App Registry Admin Webapp"
+            ],
+            "target": "Mashroom Portal Remote App Registry Admin Webapp",
+            "defaultConfig": {
+                "menuTitle": "Remote Portal Apps",
+                "path": "/remote-portal-apps"
+            }
+        }
+    ]
+}

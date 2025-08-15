@@ -8,21 +8,24 @@ import type {MashroomBackgroundJobPluginBootstrapFunction} from '@mashroom/mashr
 const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, pluginConfig, pluginContextHolder) => {
     const pluginContext = pluginContextHolder.getPluginContext();
     const {
-        k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter, socketTimeoutSec,
-        refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP, serviceProcessingBatchSize,
+        k8sNamespacesLabelSelector, k8sNamespaces, k8sServiceLabelSelector, serviceNameFilter,
+        refreshIntervalSec, accessViaClusterIP,
     } = pluginConfig;
 
     context.namespaces = [...k8sNamespaces || []];
     context.serviceLabelSelector = k8sServiceLabelSelector;
     context.serviceNameFilter = serviceNameFilter;
 
-    const kubernetesConnector = process.env.DUMMY_K8S_CONNECTOR ? new DummyKubernetesConnector() : new KubernetesConnector();
+    const kubernetesConnector = process.env.K8S_CONNECTOR_DUMMY ?
+        new DummyKubernetesConnector() :
+        process.env.K8S_CONNECTOR_LOCAL_CONFIG ?
+            new KubernetesConnector(true) :
+            new KubernetesConnector();
 
     const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(
         k8sNamespacesLabelSelector, k8sNamespaces,
         k8sServiceLabelSelector,serviceNameFilter,
-        socketTimeoutSec, refreshIntervalSec, unregisterAppsAfterScanErrors, accessViaClusterIP, serviceProcessingBatchSize,
-        pluginContext.serverConfig.externalPluginConfigFileNames,
+        refreshIntervalSec, accessViaClusterIP,
         kubernetesConnector, pluginContext.loggerFactory);
 
     return backgroundJob.run.bind(backgroundJob);

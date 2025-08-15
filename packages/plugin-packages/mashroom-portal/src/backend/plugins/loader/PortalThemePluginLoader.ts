@@ -7,8 +7,6 @@ import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, Mashroo
 import type {MashroomPortalTheme, MashroomPortalThemePluginBootstrapFunction} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
-
-
 export default class PortalThemePluginLoader implements MashroomPluginLoader {
 
     private _logger: MashroomLogger;

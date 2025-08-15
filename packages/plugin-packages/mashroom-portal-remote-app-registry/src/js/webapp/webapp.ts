@@ -5,7 +5,6 @@ import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
 import index from './routes';
 import {adminIndex, adminUpdate} from './routes/admin';
-import {getRemotePortalApps, addRemotePortalAppUrl, deleteRemotePortalAppUrl} from './routes/api';
 
 const app = express();
 
@@ -27,10 +26,6 @@ admin.post('/', adminUpdate);
 
 const api = Router();
 api.use(bodyParser.json());
-
-api.get('/', getRemotePortalApps);
-api.post('/', addRemotePortalAppUrl);
-api.delete('/:url', deleteRemotePortalAppUrl);
 
 app.use('/admin', admin);
 app.use('/api', api);

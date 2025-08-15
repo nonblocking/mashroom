@@ -7,7 +7,6 @@ import type {
     MashroomPortalLayout,
     MashroomPortalPageEnhancement,
     MashroomPortalTheme,
-    MashroomPortalAppRegistry,
     MashroomPortalAppSetup,
     UserAgent,
 } from './api';
@@ -26,12 +25,6 @@ export interface MashroomRestService {
     delete(path: string, extraHeaders?: Record<string, string>): Promise<void>;
 
     withBasePath(apiBasePath: string): MashroomRestService;
-}
-
-export interface MashroomPortalAppRegistryHolder {
-    readonly name: string;
-    readonly priority: number;
-    readonly registry: MashroomPortalAppRegistry;
 }
 
 export interface MashroomPortalPluginRegistry {
@@ -57,10 +50,6 @@ export interface MashroomPortalPluginRegistry {
 
     unregisterLayout(layoutName: string): void;
 
-    registerPortalAppRegistry(registry: MashroomPortalAppRegistryHolder): void;
-
-    unregisterPortalAppRegistry(name: string): void;
-
     registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement): void;
 
     unregisterPortalPageEnhancement(name: string): void;
@@ -74,9 +63,9 @@ export interface MashroomPortalPluginRegistry {
     removeRegisterListener(listener: MashroomPortalRegisterListener): void;
 }
 
-export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'registry' | 'app-enhancement' | 'page-enhancement';
+export type MashroomPortalPluginType = 'app' | 'theme' | 'layout' | 'app-enhancement' | 'page-enhancement';
 
-export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginType, listener: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomPortalAppRegistryHolder | MashroomPortalPageEnhancement | MashroomPortalAppEnhancement) => void;
+export type MashroomPortalRegisterListener = (pluginType: MashroomPortalPluginType, listener: MashroomPortalApp | MashroomPortalLayout | MashroomPortalTheme | MashroomPortalPageEnhancement | MashroomPortalAppEnhancement) => void;
 
 export type MashroomPortalOnAuthenticationExpirationStrategies = {
     readonly strategy: 'stayOnPage';

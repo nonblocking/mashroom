@@ -7,7 +7,7 @@ import type {MashroomPlugin} from '@mashroom/mashroom/type-definitions';
 
 describe('PortalAppPluginLoader', () => {
 
-    it('loads and registers a Portal App v2', () => {
+    it('loads and registers a Portal App v2', async () => {
 
         const pluginPackage: any = {
             pluginPackageURL: pathToFileURL('/foo/bar'),
@@ -100,7 +100,7 @@ describe('PortalAppPluginLoader', () => {
         const config = {
             ...appPlugin.pluginDefinition.defaultConfig
         };
-        loader.load(appPlugin, config, context);
+        await loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform !== 'win32') {
@@ -130,7 +130,7 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
-    it('loads and registers a Portal App v2 without SSR capability', () => {
+    it('loads and registers a Portal App v2 without SSR capability', async () => {
 
         const pluginPackage: any = {
             pluginPackageURL: pathToFileURL('/foo/bar'),
@@ -194,7 +194,7 @@ describe('PortalAppPluginLoader', () => {
         const config = {
             ...appPlugin.pluginDefinition.defaultConfig
         };
-        loader.load(appPlugin, config, context);
+        await loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform !== 'win32') {
@@ -213,7 +213,7 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
-    it('loads and registers a Portal App v1', () => {
+    it('loads and registers a Portal App v1', async () => {
 
         const pluginPackage: any = {
             pluginPackageURL: pathToFileURL('/foo/bar'),
@@ -284,7 +284,7 @@ describe('PortalAppPluginLoader', () => {
         const config = {
             ...appPlugin.pluginDefinition.defaultConfig
         };
-        loader.load(appPlugin, config, context);
+        await loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform !== 'win32') {
@@ -303,10 +303,11 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
-    it('loads and registers a remote Portal App correctly', () => {
 
+
+    it('processed remote Portal Apps in the root path', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: new URL('https://my-microfrontend.com/one'),
+            pluginPackageURL: new URL('https://my-microfrontend.com'),
         };
         const appPlugin: MashroomPlugin = {
             pluginPackage,
@@ -395,10 +396,10 @@ describe('PortalAppPluginLoader', () => {
         const config = {
             ...appPlugin.pluginDefinition.defaultConfig
         };
-        loader.load(appPlugin, config, context);
+        await loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
-        expect(registry.portalApps[0].resourcesRootUri).toBe('https://my-microfrontend.com/one/public');
+        expect(registry.portalApps[0].resourcesRootUri).toBe('https://my-microfrontend.com/public');
         expect(registry.portalApps[0].description).toEqual({
             en: 'my description',
             de: 'my description',
@@ -413,12 +414,12 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].sharedResources).toEqual({js: ['globalLib.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
         expect(registry.portalApps[0].ssrBootstrap).toBeFalsy();
-        expect(registry.portalApps[0].ssrInitialHtmlUri).toEqual('https://my-microfrontend.com/one/ssr');
+        expect(registry.portalApps[0].ssrInitialHtmlUri).toEqual('https://my-microfrontend.com/ssr');
         expect(registry.portalApps[0].cachingConfig).toEqual({ ssrHtml: 'same-config-and-user' });
         expect(registry.portalApps[0].editorConfig).toEqual({ editorPortalApp: 'Demo Config Editor', position: 'in-place', appConfig: {} });
         expect(registry.portalApps[0].screenshots).toEqual(['screenshot1.png']);
         expect(registry.portalApps[0].proxies).toBeTruthy();
-        expect(registry.portalApps[0].proxies!['whatever'].targetUri).toBe('https://my-microfrontend.com/one/api');
+        expect(registry.portalApps[0].proxies!['whatever'].targetUri).toBe('https://my-microfrontend.com/api');
         expect(registry.portalApps[0].metaInfo).toEqual({ capabilities: ['foo'] });
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });

@@ -3,6 +3,14 @@
 
 ## [unreleased v3]
 
+ * Kubernetes Remote Plugin Scanner: New plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*
+ * Remote Plugin Scanner: New plugin to register *remote plugins*, replaces *Remote App Registry*
+ * Admin UI: Added filtering for plugins and plugin packages
+ * K8S Remote App Registry: **BREAKING CHANGE**: Is legacy now and should no longer be used (use the new generic *Kubernetes Remote Plugin Scanner* plugin instead)
+ * Remote App Registry: **BREAKING CHANGE** Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner* plugin instead)
+ * Portal: Plugin Rework
+   * **BREAKING CHANGE**: Removed plugin type *portal-app-registry*
+   * Added direct *remote plugin* support for Portal Apps, Portal Page Enhancements and Portal Layouts
  * Plugin System Rework:
    * Added two new plugin types that can be used to extend the plugin system with new source URLs and with custom plugin descriptors.
      This means plugins could load from all kinds of URLs (e.g., http) and the plugin definition could be built from some custom information.
@@ -11,6 +19,7 @@
    * Made sure plugins are only loaded once during startup
    * Fixed the problem that plugins were not rebuild after removing the dist/output folder
    * Ready probe returns HTTP 200 as soon as all local plugin packages are processed (even if some plugins could not be loaded)
+   * *MashroomPluginPackage.pluginPackagePath* is legacy now and only works for local plugins. Use *MashroomPluginPackage.pluginPackageURL*
 
 ## [unreleased v2]
 

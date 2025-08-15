@@ -7,6 +7,9 @@ import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, Mashroo
 import type {MashroomPortalLayout} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
 
 export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
 
@@ -31,17 +34,19 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
         if (!layouts) {
             throw new PluginConfigurationError(`Layouts plugin ${plugin.name}: Missing property 'layouts'!`);
         }
-        if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
-            throw new PluginConfigurationError(`Layouts plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
-        }
-
-        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
 
         for (const layoutId in layouts) {
             if (layoutId in layouts) {
                 let layoutPath = layouts[layoutId];
                 if (!layoutPath.startsWith('/')) {
-                    layoutPath = resolve(pluginPackagePath, layoutPath);
+                    if (layoutPath.startsWith('./')) {
+                        layoutPath = layoutPath.slice(2);
+                    }
+                    if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
+                        layoutPath = resolve(fileURLToPath(plugin.pluginPackage.pluginPackageURL), layoutPath);
+                    } else {
+                        layoutPath = `${removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString())}/${layoutPath}`;
+                    }
                 }
 
                 const name = `${plugin.name} ${layoutId}`;

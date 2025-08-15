@@ -1,52 +1,46 @@
-
-import {htmlUtils} from '@mashroom/mashroom-utils';
 import context from '../../context';
-
+import getRemotePortalAppEndpointStore from '../../store/getRemotePortalAppEndpointStore';
+import {SCANNER_NAME} from '../../scanner/RemotePortalAppsPluginScanner';
 import type {Request, Response} from 'express';
 import type {MashroomCSRFService} from '@mashroom/mashroom-csrf-protection/type-definitions';
-import type {MashroomPortalRemoteAppEndpointService, RemotePortalAppEndpoint} from '../../../../type-definitions';
-
-const formatDate = (ts: number): string => {
-    return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
-};
-
-const getStatusWeight = (e: RemotePortalAppEndpoint): number => {
-    if (e.lastError) {
-        return 2;
-    }
-    if (!e.registrationTimestamp) {
-        return 1;
-    }
-    return 0;
-};
 
 const renderAdminPage = async (req: Request, res: Response, errorMessage?: string) => {
+    const pluginService = req.pluginContext.services.core.pluginService;
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint!.service;
-    const remoteAppEndpoints = await portalRemoteAppEndpointService.findAll();
+    const store = await getRemotePortalAppEndpointStore(req.pluginContext);
+    const {result: remoteAppEndpoints} = await store.find();
+    const pluginPackages = pluginService.getPotentialPluginPackagesByScanner(SCANNER_NAME);
 
     const endpoints = [...remoteAppEndpoints]
         .sort((e1, e2) => {
-            const status1 = getStatusWeight(e1);
-            const status2 = getStatusWeight(e2);
-            if (status1 == status2) {
-                return e1.url.localeCompare(e2.url);
-            }
-            return status2 - status1;
+            return e1.url.localeCompare(e2.url);
         })
-        .map((endpoint) => ({
-            url: endpoint.url,
-            sessionOnly: endpoint.sessionOnly ? 'Yes' : '',
-            status: status(endpoint),
-            statusClass: endpoint.lastError ? 'error' : (endpoint.registrationTimestamp ? 'registered' : 'pending'),
-            rowClass: endpoint.lastError ? 'row-error' : '',
-            portalApps: endpoint.portalApps.map((app) => ({
-                name: app.name,
-                version: app.version,
-                pluginDef: htmlUtils.jsonToHtml(app),
-            })),
-            invalidPortalApps: endpoint.invalidPortalApps ?? [],
-        }));
+        .map((endpoint) => {
+            const pluginPackage = pluginPackages.find((p) => p.url.toString() === new URL(endpoint.url).toString());
+            let status = 'Unknown';
+            let statusClass = 'pending';
+            if (pluginPackage) {
+                status = pluginPackage.processedOnce ? pluginPackage.status : 'pending';
+                if (pluginPackage.updateErrors) {
+                    status ='Error';
+                    statusClass = 'error';
+                } else if (pluginPackage.status === 'processing') {
+                    status = 'Processing';
+                    statusClass = 'processing';
+                } else {
+                    status = 'Registered';
+                    statusClass = 'registered';
+                }
+            }
+            return {
+                url: endpoint.url,
+                status,
+                statusClass,
+                rowClass: pluginPackage?.updateErrors ? 'row-error' : '',
+                portalApps: pluginPackage?.foundPlugins,
+                errors: pluginPackage?.updateErrors ? pluginPackage.updateErrors.join(', ') : '',
+            };
+        });
 
     res.render('admin', {
         baseUrl: req.baseUrl,
@@ -57,42 +51,31 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
     });
 };
 
-const status = (endpoint: RemotePortalAppEndpoint) => {
-    if (endpoint.lastError) {
-        return `Error: ${endpoint.lastError}`;
-    }
-    if (endpoint.registrationTimestamp) {
-        return `Registered at ${formatDate(endpoint.registrationTimestamp)}`;
-    }
-    return 'Pending...';
-};
-
 export const adminIndex = async (req: Request, res: Response) => {
     await renderAdminPage(req, res);
 };
 
 export const adminUpdate = async (req: Request, res: Response) => {
     const logger = req.pluginContext.loggerFactory('mashroom.portal.remoteAppRegistry');
-    const portalRemoteAppEndpointService: MashroomPortalRemoteAppEndpointService = req.pluginContext.services.remotePortalAppEndpoint!.service;
+    const store = await getRemotePortalAppEndpointStore(req.pluginContext);
 
     const action = req.body._action || 'add';
     const url = req.body._url;
-    const sessionOnly = !!req.body._sessionOnly;
+    const existingEndpoint = url && await store.findOne({ url });
 
     if (action === 'add') {
         if (!url || url === '') {
             const errorMessage = 'Error: Invalid URL';
             await renderAdminPage(req, res, errorMessage);
             return;
-        } else {
+        } else if (!existingEndpoint) {
+            logger.info(`Adding portal app endpoint: ${url}`);
             try {
-                if (sessionOnly) {
-                    logger.info(`Adding portal app endpoint for session: ${url}`);
-                    await portalRemoteAppEndpointService.synchronousRegisterRemoteAppUrlInSession(url, req);
-                } else {
-                    logger.info(`Adding portal app endpoint: ${url}`);
-                    await portalRemoteAppEndpointService.registerRemoteAppUrl(url);
-                }
+                await store.insertOne({
+                    url,
+                    lastRefreshTimestamp: Date.now(),
+                });
+                context.scannerCallback?.addOrUpdatePackageURL(new URL(url));
             } catch (error: any) {
                 logger.error('Adding endpoint failed', error);
                 const errorMessage = `Error: Adding endpoint failed: ${error.message}`;
@@ -101,17 +84,23 @@ export const adminUpdate = async (req: Request, res: Response) => {
             }
         }
     } else if (action === 'refresh') {
-        if (url) {
+        if (existingEndpoint) {
             logger.info(`Refreshing portal app endpoint: ${url}`);
-            const endpoint = await portalRemoteAppEndpointService.findRemotePortalAppByUrl(url);
-            if (endpoint) {
-                await portalRemoteAppEndpointService.refreshEndpointRegistration(endpoint);
+            try {
+                context.scannerCallback?.addOrUpdatePackageURL(new URL(url));
+            } catch (error: any) {
+                logger.error('Refreshing endpoint failed', error);
             }
         }
     } else if (action === 'delete') {
-        if (url) {
+        if (existingEndpoint) {
             logger.info(`Removing portal app endpoint: ${url}`);
-            await portalRemoteAppEndpointService.unregisterRemoteAppUrl(url);
+            try {
+                context.scannerCallback?.removePackageURL(new URL(url));
+                await store.deleteOne({_id: existingEndpoint._id});
+            } catch (error: any) {
+                logger.error('Deleting endpoint failed', error);
+            }
         }
     }
 

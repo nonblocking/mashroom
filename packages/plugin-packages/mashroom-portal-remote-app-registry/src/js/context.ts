@@ -1,37 +1,17 @@
 
-import RemotePortalAppRegistry from './registry/RemotePortalAppRegistry';
+import type {Context} from '../../type-definitions';
+import type {MashroomPluginScannerCallback} from '@mashroom/mashroom/type-definitions';
 
-import type {Request} from 'express';
-import type {GlobalRequestHolder, RegisterPortalRemoteAppsBackgroundJob, Context} from '../../type-definitions/internal';
-
-let _currentRequest: Request | undefined | null = null;
-let _registerBackgroundJob: RegisterPortalRemoteAppsBackgroundJob | null = null;
+let _scannerCallback: MashroomPluginScannerCallback | null = null;
 let _webUIShowAddRemoteAppForm = true;
-let _oneFullScanDone = false;
-
-export const globalRequestHolder: GlobalRequestHolder = {
-
-    get request() {
-        return _currentRequest;
-    },
-
-    set request(request: Request | undefined | null) {
-        _currentRequest = request;
-    }
-
-};
-
-const registry = new RemotePortalAppRegistry(globalRequestHolder);
+let _initialScanDone = false;
 
 const context: Context = {
-    get registry() {
-        return registry;
+    get scannerCallback() {
+      return _scannerCallback;
     },
-    get backgroundJob(): RegisterPortalRemoteAppsBackgroundJob | null {
-        return _registerBackgroundJob;
-    },
-    set backgroundJob(job: RegisterPortalRemoteAppsBackgroundJob) {
-        _registerBackgroundJob = job;
+    set scannerCallback(scannerCallback: MashroomPluginScannerCallback | null) {
+        _scannerCallback = scannerCallback;
     },
     get webUIShowAddRemoteAppForm() {
         return _webUIShowAddRemoteAppForm;
@@ -39,12 +19,12 @@ const context: Context = {
     set webUIShowAddRemoteAppForm(show: boolean) {
         _webUIShowAddRemoteAppForm = show;
     },
-    get oneFullScanDone() {
-        return _oneFullScanDone;
+    get initialScanDone() {
+        return _initialScanDone;
     },
-    set oneFullScanDone(done: boolean) {
-        _oneFullScanDone = done;
-    }
+    set initialScanDone(done: boolean) {
+        _initialScanDone = done;
+    },
 };
 
 export default context;

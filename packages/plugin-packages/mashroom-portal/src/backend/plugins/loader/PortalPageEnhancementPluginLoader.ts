@@ -1,6 +1,6 @@
 
 import {resolve, isAbsolute} from 'path';
-import {URL, fileURLToPath} from 'url';
+import {fileURLToPath} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {
@@ -18,6 +18,10 @@ import type {
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
 const DEFAULT_ORDER = 1000;
+
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
 
 export default class PortalPageEnhancementPluginLoader implements MashroomPluginLoader {
 
@@ -42,6 +46,9 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
         let resourcesRootUri = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
 
         if (resourcesRootUri.indexOf('://') === -1) {
+            if (resourcesRootUri.startsWith('./')) {
+                resourcesRootUri = resourcesRootUri.slice(2);
+            }
             if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
                 if (!isAbsolute(resourcesRootUri)) {
                     const packageBasePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
@@ -49,7 +56,9 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
                 }
                 resourcesRootUri = `file://${resourcesRootUri}`;
             } else {
-                resourcesRootUri = new URL(resourcesRootUri, plugin.pluginPackage.pluginPackageURL).toString();
+                let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+                resourcesRootUri = `${packageURL}/${resourcesRootUri || ''}`;
+                resourcesRootUri = removeTrailingSlash(resourcesRootUri);
             }
         }
 

@@ -33,13 +33,8 @@
             form.submit();
         }
 
-        function openModal(content) {
-            document.getElementById('modal-content').innerHTML = content;
-            document.getElementById('modal').style.display = 'block';
-        }
-
-        function closeModal() {
-            document.getElementById('modal').style.display = 'none';
+        function openPlugin(pluginName) {
+            window.top.location.href = `/mashroom/admin/plugins?q=${encodeURIComponent(pluginName)}`;
         }
 
         var lastContentHeight = null;
@@ -76,12 +71,6 @@
                     <input type="text" name="_url" id="url"/>
                 </div>
             </div>
-            <div class="form-row">
-                <div>
-                    <input type="checkbox" name="_sessionOnly" id="sessionOnly">
-                    <label for="sessionOnly">Only for the current session</label>
-                </div>
-            </div>
             <div class="form-row form-actions">
                 <input type="submit" value="Add"/>
             </div>
@@ -96,10 +85,9 @@
 <div class="endpoints">
     <h3>Remote Portal Apps</h3>
 
-    <table border="1" cellspacing="0" cellpadding="10">
+    <table>
         <tr>
             <th>URL</th>
-            <th>Session</th>
             <th>Status</th>
             <th>Portal Apps</th>
             <th>&nbsp;</th>
@@ -107,28 +95,21 @@
         {{#each endpoints}}
             <tr class="{{this.rowClass}}">
                 <td><a href="{{this.url}}" target="_blank">{{this.url}}</a></td>
-                <td>{{this.sessionOnly}}</td>
                 <td class="{{this.statusClass}}">{{this.status}}</td>
                 <td>
-                    <ul class="portal-apps">
-                        {{#each this.portalApps}}
-                            <li class="portal-app">
-                                {{this.name}}&nbsp;({{this.version}})
-                                <a href="javascript:void(0)" onclick="openModal('{{this.pluginDef}}')">Plugin&nbsp;Definition</a>
-                            </li>
-                        {{/each}}
-                        {{#each this.invalidPortalApps}}
-                            <li class="invalid-portal-app">
-                                {{this.name}}&nbsp;<span class="error">({{this.error}})</span>
-                            </li>
-                        {{/each}}
-                    </ul>
+                    {{#if this.portalApps}}
+                        <div>
+                            {{#each this.portalApps}}
+                                {{#if @index}}, {{/if}}<a href="javascript:void(0)" onclick="openPlugin('{{this}}')">{{this}}</a>
+                            {{/each}}
+                        </div>
+                    {{/if}}
+                    {{#if this.errors}}
+                        <div class="error">{{this.errors}}</div>
+                    {{/if}}
                 </td>
                 <td>
-                    {{#unless this.sessionOnly}}
-                        <a href="javascript:void(0)" onclick="refreshEndpoint('{{this.url}}')">Refresh</a>
-                        &nbsp;
-                    {{/unless}}
+                    <a href="javascript:void(0)" onclick="refreshEndpoint('{{this.url}}')">Refresh</a>
                     <a href="javascript:void(0)" onclick="removeEndpoint('{{this.url}}')">Remove</a>
                 </td>
             </tr>
@@ -136,15 +117,5 @@
     </table>
 </div>
 
-<div id="modal" style="display: none">
-    <div class="modal-wrapper">
-        <div class="modal-header">
-            <div class="modal-close" onclick="closeModal()">&#x2715;</div>
-        </div>
-        <div id="modal-content">
-
-        </div>
-    </div>
-</div>
 </body>
 </html>

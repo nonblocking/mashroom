@@ -1,15 +1,13 @@
 
-import context from '../context';
-import RegisterPortalRemoteAppsBackgroundJob from './RegisterPortalRemoteAppsBackgroundJob';
+import RefreshPortalRemoteAppsBackgroundJob from './RefreshPortalRemoteAppsBackgroundJob';
 import type {MashroomBackgroundJobPluginBootstrapFunction} from '@mashroom/mashroom-background-jobs/type-definitions';
 
 const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = (pluginName, pluginConfig, pluginContextHolder) => {
-    const { socketTimeoutSec, registrationRefreshIntervalSec, unregisterAppsAfterScanErrors } = pluginConfig;
+    const { registrationRefreshIntervalSec } = pluginConfig;
 
-    const registerBackgroundJob = new RegisterPortalRemoteAppsBackgroundJob(socketTimeoutSec, registrationRefreshIntervalSec, unregisterAppsAfterScanErrors, pluginContextHolder);
-    context.backgroundJob = registerBackgroundJob;
+    const refreshBackgroundJob = new RefreshPortalRemoteAppsBackgroundJob( registrationRefreshIntervalSec,  pluginContextHolder);
 
-    return registerBackgroundJob.run.bind(registerBackgroundJob);
+    return refreshBackgroundJob.run.bind(refreshBackgroundJob);
 };
 
 export default bootstrap;

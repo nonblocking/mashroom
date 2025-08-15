@@ -9,8 +9,7 @@ import type {MashroomPlugin} from '@mashroom/mashroom/type-definitions';
 
 describe('PortalPageEnhancementPluginLoader', () => {
 
-    it('loads and registers page enhancements with a relative local resource root', () => {
-
+    it('loads and registers page enhancements with a relative local resource root', async () => {
         const pluginPackage: any = {
             pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
         };
@@ -54,7 +53,7 @@ describe('PortalPageEnhancementPluginLoader', () => {
         const loader = new PortalPageEnhancementPluginLoader(registry, loggingUtils.dummyLoggerFactory);
 
         const context: any = {};
-        loader.load(pageEnhancementPlugin, {}, context);
+        await loader.load(pageEnhancementPlugin, {}, context);
 
         expect(registry.portalPageEnhancements.length).toBe(1);
         expect(registry.portalPageEnhancements[0].pageResources).toEqual({
@@ -84,7 +83,7 @@ describe('PortalPageEnhancementPluginLoader', () => {
         }
     });
 
-    it('loads and registers page enhancements with an absolute local resource root', () => {
+    it('loads and registers page enhancements with an absolute local resource root', async () => {
 
         const pluginPackage: any = {
             pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
@@ -128,7 +127,7 @@ describe('PortalPageEnhancementPluginLoader', () => {
         const loader = new PortalPageEnhancementPluginLoader(registry, loggingUtils.dummyLoggerFactory);
 
         const context: any = {};
-        loader.load(pageEnhancementPlugin, {}, context);
+        await loader.load(pageEnhancementPlugin, {}, context);
 
         expect(registry.portalPageEnhancements.length).toBe(1);
 
@@ -140,8 +139,7 @@ describe('PortalPageEnhancementPluginLoader', () => {
         }
     });
 
-    it('loads and registers page enhancements with a relative remote resource root', () => {
-
+    it('loads and registers page enhancements with a relative remote resource root', async () => {
         const pluginPackage: any = {
             pluginPackageURL: new URL('https://my.server/foo'),
         };
@@ -184,9 +182,9 @@ describe('PortalPageEnhancementPluginLoader', () => {
         const loader = new PortalPageEnhancementPluginLoader(registry, loggingUtils.dummyLoggerFactory);
 
         const context: any = {};
-        loader.load(pageEnhancementPlugin, {}, context);
+        await loader.load(pageEnhancementPlugin, {}, context);
 
         expect(registry.portalPageEnhancements.length).toBe(1);
-        expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('https://my.server/dist/page-enhancements');
+        expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('https://my.server/foo/dist/page-enhancements');
     });
 });

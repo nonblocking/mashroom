@@ -14,6 +14,10 @@ import type {
 import type {MashroomPortalApp} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
+
 export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
     private _logger: MashroomLogger;
@@ -91,13 +95,12 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             }
         } else {
             // Remote
+            let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
             if (version === 2) {
-                resourcesRootUri = `${plugin.pluginPackage.pluginPackageURL.toString()}${plugin.pluginDefinition.remote?.resourcesRoot || ''}`;
-                if (resourcesRootUri.endsWith('/')) {
-                    resourcesRootUri = resourcesRootUri.slice(0, -1);
-                }
+                resourcesRootUri = `${packageURL}${plugin.pluginDefinition.remote?.resourcesRoot || ''}`;
+                resourcesRootUri = removeTrailingSlash(resourcesRootUri);
             } else {
-                resourcesRootUri = plugin.pluginPackage.pluginPackageURL.toString();
+                resourcesRootUri = packageURL;
             }
         }
 
@@ -117,13 +120,14 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
                     }
                     // For remote Apps the targetUri might be relative to the host where it is running on
                     if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+                        let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
                         if (targetUri.startsWith('/')) {
-                            targetUri = plugin.pluginPackage.pluginPackageURL + targetUri;
+                            targetUri = packageURL + targetUri;
                         }
                         try {
                             const parsedUri = new URL(targetUri);
                             if (parsedUri.hostname === 'localhost') {
-                                targetUri = plugin.pluginPackage.pluginPackageURL + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                                targetUri = packageURL + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
                             }
                         } catch (e) {
                             // Ignore
@@ -152,7 +156,8 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
                 const relativeSSRBootstrap = plugin.pluginDefinition.local.ssrBootstrap;
                 ssrBootstrap = relativeSSRBootstrap && resolve(pluginPackagePath, relativeSSRBootstrap);
             } else if (plugin.pluginDefinition.remote?.ssrInitialHtmlPath) {
-                ssrInitialHtmlUri = `${plugin.pluginPackage.pluginPackageURL.toString()}${plugin.pluginDefinition.remote.ssrInitialHtmlPath}`;
+                let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+                ssrInitialHtmlUri = `${packageURL}${plugin.pluginDefinition.remote.ssrInitialHtmlPath}`;
                 if (ssrInitialHtmlUri.endsWith('/')) {
                     ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
                 }

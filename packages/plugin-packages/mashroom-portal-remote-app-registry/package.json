@@ -12,7 +12,7 @@
         "dist/**",
         "public/**",
         "views/**",
-        "type-definitions/*"
+        "mashroom.json"
     ],
     "dependencies": {
         "body-parser": "^2.2.0",
@@ -53,79 +53,5 @@
         "test": "jest",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev-server.js\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Remote App Background Job",
-                "type": "background-job",
-                "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
-                "requires": [
-                    "Mashroom Background Jobs Services",
-                    "Mashroom Portal Remote App Endpoint Services",
-                    "Mashroom Portal Remote App Registry"
-                ],
-                "defaultConfig": {
-                    "cronSchedule": "0/1 * * * *",
-                    "invokeImmediately": true,
-                    "socketTimeoutSec": 3,
-                    "registrationRefreshIntervalSec": 600,
-                    "unregisterAppsAfterScanErrors": -1
-                }
-            },
-            {
-                "name": "Mashroom Portal Remote App Registry",
-                "type": "portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap-portal-app-registry.js",
-                "requires": [
-                    "Mashroom Portal Remote App Endpoint Services"
-                ],
-                "defaultConfig": {
-                    "priority": 100,
-                    "remotePortalAppUrls": "./remotePortalApps.json"
-                }
-            },
-            {
-                "name": "Mashroom Portal Remote App Registry Admin Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
-                "requires": [
-                    "Mashroom Portal Remote App Endpoint Services"
-                ],
-                "defaultConfig": {
-                    "path": "/portal-remote-app-registry",
-                    "showAddRemoteAppForm": true
-                }
-            },
-            {
-                "name": "Mashroom Portal Remote App Registry Admin Webapp Integration",
-                "type": "admin-ui-integration",
-                "requires": [
-                    "Mashroom Portal Remote App Registry Admin Webapp"
-                ],
-                "target": "Mashroom Portal Remote App Registry Admin Webapp",
-                "defaultConfig": {
-                    "menuTitle": "Remote Portal Apps",
-                    "path": "/remote-portal-apps"
-                }
-            },
-            {
-                "name": "Mashroom Portal Remote App Endpoint Services",
-                "type": "services",
-                "namespace": "remotePortalAppEndpoint",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
-                "requires": [
-                    "Mashroom Portal Services",
-                    "Mashroom Session Middleware",
-                    "Mashroom Storage Services"
-                ]
-            },
-            {
-                "name": "Mashroom Portal Remote App Registry Request Context Middleware",
-                "type": "middleware",
-                "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js"
-            }
-        ]
     }
 }

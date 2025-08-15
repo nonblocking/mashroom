@@ -11,7 +11,6 @@ import type {
 import type {
     MashroomPortalPluginRegistry as MashroomPortalPluginRegistryType,
     MashroomPortalRegisterListener,
-    MashroomPortalAppRegistryHolder
 } from '../../../type-definitions/internal';
 
 export default class MashroomPortalPluginRegistry implements MashroomPortalPluginRegistryType {
@@ -19,7 +18,6 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     private _portalApps: Array<MashroomPortalApp>;
     private _themes: Array<MashroomPortalTheme>;
     private _layouts: Array<MashroomPortalLayout>;
-    private _portalAppRegistries: Array<MashroomPortalAppRegistryHolder>;
     private _portalPageEnhancements: Array<MashroomPortalPageEnhancement>;
     private _portalAppEnhancements: Array<MashroomPortalAppEnhancement>;
     private _registerListeners: Array<MashroomPortalRegisterListener>;
@@ -28,7 +26,6 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         this._portalApps = [];
         this._themes = [];
         this._layouts = [];
-        this._portalAppRegistries = [];
         this._portalPageEnhancements = [];
         this._portalAppEnhancements = [];
         this._registerListeners = [];
@@ -73,19 +70,6 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
         }
     }
 
-    registerPortalAppRegistry(registry: MashroomPortalAppRegistryHolder): void {
-        this.unregisterPortalAppRegistry(registry.name);
-        this._portalAppRegistries.push(registry);
-        this._registerListeners.forEach(listener => listener('registry', registry));
-    }
-
-    unregisterPortalAppRegistry(name: string): void {
-        const idx = this._portalAppRegistries.findIndex((holder) => holder.name === name);
-        if (idx !== -1) {
-            this._portalAppRegistries.splice(idx, 1);
-        }
-    }
-
     registerPortalPageEnhancement(enhancement: MashroomPortalPageEnhancement): void {
         this.unregisterPortalPageEnhancement(enhancement.name);
         this._portalPageEnhancements.push(enhancement);
@@ -121,23 +105,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     }
 
     get portalApps(): Readonly<Array<MashroomPortalApp>> {
-        const registryHolders = [...this._portalAppRegistries, { registry: { portalApps: this._portalApps }, priority: 0 }];
-        registryHolders.sort((a, b) => b.priority - a.priority);
-        let apps: Array<MashroomPortalApp> = [];
-        for (const registryHolder of registryHolders) {
-            const portalApps = registryHolder.registry.portalApps;
-            if (apps.length === 0) {
-                apps = [...portalApps];
-            } else {
-                for (const app of portalApps) {
-                    if (apps.findIndex((a) => a.name === app.name) === -1) {
-                        apps.push(app);
-                    }
-                }
-            }
-        }
-
-        return Object.freeze(apps);
+        return Object.freeze(this._portalApps);
     }
 
     get themes(): Readonly<Array<MashroomPortalTheme>> {

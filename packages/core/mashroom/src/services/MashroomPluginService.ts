@@ -63,6 +63,10 @@ export default class MashroomPluginService implements MashroomPluginServiceType 
         return this.pluginRegistry.potentialPluginPackages;
     }
 
+    getPotentialPluginPackagesByScanner(scannerName: string) {
+        return this.pluginRegistry.potentialPluginPackages.filter((pp) => pp.scannerName === scannerName);
+    }
+
     getPluginLoaders() {
         return this.pluginRegistry.pluginLoaders;
     }
