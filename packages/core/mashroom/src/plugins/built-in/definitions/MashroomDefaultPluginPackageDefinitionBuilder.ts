@@ -41,6 +41,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
 
         if (!remotePackage && !packageJson) {
             // A local package requires a package.json
+            this._logger.debug(`Ignoring path ${packageURL} because it does not contain a package.json`);
             return null;
         }
 
@@ -92,7 +93,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
     private async _readPackageJson(url: URL): Promise<Record<string, any> | null> {
         if (url.protocol === 'file:') {
             const pluginPackagePath = fileURLToPath(url);
-            if (!existsSync(pluginPackagePath)) {
+            if (!existsSync(pluginPackagePath) || !existsSync(resolve(pluginPackagePath, 'package.json'))) {
                 return null;
             }
 

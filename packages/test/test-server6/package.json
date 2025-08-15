@@ -7,6 +7,6 @@
         "fs-extra": "^11.3.0"
     },
     "scripts": {
-        "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && node ../../core/mashroom/dist/server.js\""
+        "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && K8S_CONNECTOR_LOCAL_CONFIG=true node ../../core/mashroom/dist/server.js\""
     }
 }
