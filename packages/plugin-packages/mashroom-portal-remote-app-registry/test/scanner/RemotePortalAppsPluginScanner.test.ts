@@ -1,13 +1,18 @@
 
 import {dummyLoggerFactory} from '@mashroom/mashroom-utils/lib/logging-utils';
 import RemotePortalAppsPluginScanner from '../../src/js/scanner/RemotePortalAppsPluginScanner';
+import context from '../../src/js/context';
 
 describe('RemotePortalAppsPluginScanner', () => {
 
     it('performs an initial scan at startup', async () => {
         const mockUpdateOne = jest.fn();
         const mockInsertOne = jest.fn();
-        const mockAddOrUpdatePackageURL = jest.fn();
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
+        };
+        context.scannerCallback = scannerCallback;
 
         const pluginContext: any = {
             loggerFactory: dummyLoggerFactory,
@@ -40,18 +45,14 @@ describe('RemotePortalAppsPluginScanner', () => {
         mockInsertOne.mockImplementation((endpoint) => Promise.resolve(endpoint));
 
         const scanner = new RemotePortalAppsPluginScanner('dummyConfig.json', __dirname, pluginContextHolder);
-        scanner.setCallback({
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: () => {},
-        });
         await scanner.start();
 
         expect(mockInsertOne).toHaveBeenCalledTimes(1);
         expect(mockUpdateOne).toHaveBeenCalledTimes(1);
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(3);
-        expect(mockAddOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
-        expect(mockAddOrUpdatePackageURL.mock.calls[1][0].toString()).toBe('https://microfrontend55.myserver.com/');
-        expect(mockAddOrUpdatePackageURL.mock.calls[2][0].toString()).toBe('https://microfrontend2.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(3);
+        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[1][0].toString()).toBe('https://microfrontend55.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[2][0].toString()).toBe('https://microfrontend2.myserver.com/');
     });
 
 });

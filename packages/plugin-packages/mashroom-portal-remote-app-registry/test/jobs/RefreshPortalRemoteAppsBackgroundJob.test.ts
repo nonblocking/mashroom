@@ -7,7 +7,11 @@ describe('RefreshPortalRemoteAppsBackgroundJob', () => {
 
     it('refreshes endpoints correctly', async () => {
         const mockUpdateOne = jest.fn();
-        const mockAddOrUpdatePackageURL = jest.fn();
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
+        };
+        context.scannerCallback = scannerCallback;
 
         const pluginContext: any = {
             loggerFactory: dummyLoggerFactory,
@@ -36,17 +40,12 @@ describe('RefreshPortalRemoteAppsBackgroundJob', () => {
             getPluginContext: () => pluginContext,
         };
 
-        context.scannerCallback = {
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: () => {},
-        };
-
         const backgroundJob = new RefreshPortalRemoteAppsBackgroundJob(10, pluginContextHolder);
         await backgroundJob.run();
 
         expect(mockUpdateOne).toHaveBeenCalledTimes(1);
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(mockAddOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
     });
 
 });

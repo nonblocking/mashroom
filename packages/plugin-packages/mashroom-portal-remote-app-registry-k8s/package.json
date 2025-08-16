@@ -12,7 +12,8 @@
     "files": [
         "dist/**",
         "public/**",
-        "views/**"
+        "views/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "@kubernetes/client-node": "^1.0.0",

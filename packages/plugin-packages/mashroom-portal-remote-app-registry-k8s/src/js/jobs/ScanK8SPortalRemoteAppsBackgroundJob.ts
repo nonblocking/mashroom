@@ -47,13 +47,13 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob {
         this._logger.info('Start scanning Kubernetes namespaces: ', namespaces);
         const foundServices: Array<{ name: string, namespace: string }> = [];
 
-        for await (const namespace of namespaces) {
+        await Promise.all(namespaces.map(async (namespace) => {
             let labelSelectors: Array<string | undefined> = [undefined];
             if (this._k8sServiceLabelSelector) {
                 labelSelectors = Array.isArray(this._k8sServiceLabelSelector) ? this._k8sServiceLabelSelector : [this._k8sServiceLabelSelector];
             }
 
-            for await (const labelSelector of labelSelectors) {
+            await Promise.all(labelSelectors.map(async (labelSelector) => {
                 try {
                     const res = await this._kubernetesConnector.getNamespaceServices(namespace, labelSelector);
                     const serviceItems = res.items;
@@ -116,8 +116,8 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob {
                     context.errors.push(`Error scanning services in namespace ${namespace} with label selector ${labelSelector}: ${error.message}`);
                     this._logger.error(`Error scanning services in namespace ${namespace} with label selector ${labelSelector}`, error);
                 }
-            }
-        }
+            }));
+        }));
 
         // Step 3: Remove services that no longer exist, but only if the K8S API calls didn't fail
         const missingServices = context.services.filter(({name, namespace}) => !foundServices.find((s) => s.namespace === namespace && s.name === name));

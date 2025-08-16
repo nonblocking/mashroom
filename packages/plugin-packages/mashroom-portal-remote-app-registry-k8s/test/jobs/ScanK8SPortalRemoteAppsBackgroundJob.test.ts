@@ -1,6 +1,5 @@
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
-import DummyKubernetesConnector from '../../src/js/k8s/DummyKubernetesConnector';
 import context from '../../src/js/context';
 
 describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
@@ -10,17 +9,41 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         context.scannerCallback = null;
     });
 
-    it('scans for services', async () => {
-        const mockAddOrUpdatePackageURL = jest.fn();
+    it('scans for services in a given list of namespaces', async () => {
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
+        };
+        context.scannerCallback = scannerCallback;
 
-        context.scannerCallback = {
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: () => {
-            },
+        const mockKubernetesConnector = {
+            getNamespacesByLabel: jest.fn(),
+            getNamespaceServices: jest.fn(),
         };
 
+        mockKubernetesConnector.getNamespaceServices.mockImplementation(async () => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace2',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6066
+                                }
+                            ]
+                        }
+                    },
+                ]
+            };
+        });
+
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
-            false, new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
+            false, mockKubernetesConnector, loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -31,20 +54,74 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.name).toBe('my-remote-app');
         expect(service.error).toBeFalsy();
 
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespacesByLabel).toHaveBeenCalledTimes(0);
+        expect(mockKubernetesConnector.getNamespaceServices).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespaceServices.mock.calls[0][0]).toBe('dev-namespace2');
     });
 
-    it('scans a remote service in a namespace found via labelSelector', async () => {
-        const mockAddOrUpdatePackageURL = jest.fn();
+    it('scans for services in namespaces found via labelSelector', async () => {
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
+        };
+        context.scannerCallback = scannerCallback;
 
-        context.scannerCallback = {
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: () => {
-            },
+        const mockKubernetesConnector = {
+            getNamespacesByLabel: jest.fn(),
+            getNamespaceServices: jest.fn(),
         };
 
+        mockKubernetesConnector.getNamespacesByLabel.mockImplementation(async () => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'dev-namespace1',
+                            labels: {
+                                environment: 'development'
+                            },
+                        },
+                    },
+                    {
+                        metadata: {
+                            name: 'dev-namespace2',
+                            labels: {
+                                environment: 'development'
+                            },
+                        },
+                    },
+                ]
+            };
+        });
+        mockKubernetesConnector.getNamespaceServices.mockImplementation(async (ns) => {
+            if (ns === 'dev-namespace2') {
+                return {
+                    items: [
+                        {
+                            metadata: {
+                                name: 'my-remote-app',
+                                namespace: 'dev-namespace2',
+                            },
+                            spec: {
+                                clusterIP: '127.0.0.1',
+                                ports: [
+                                    {
+                                        port: 6066
+                                    }
+                                ]
+                            }
+                        },
+                    ]
+                };
+            }
+            return {
+                items: [],
+            };
+        });
+
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(['environment=development'], null, undefined, '.*', 3,
-            false, new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
+            false, mockKubernetesConnector, loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -54,40 +131,112 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.namespace).toBe('dev-namespace2');
         expect(service.name).toBe('my-remote-app');
 
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespacesByLabel).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespacesByLabel.mock.calls[0][0]).toBe('environment=development');
+        expect(mockKubernetesConnector.getNamespaceServices).toHaveBeenCalledTimes(2);
+        expect(mockKubernetesConnector.getNamespaceServices.mock.calls[0][0]).toBe('dev-namespace1');
+        expect(mockKubernetesConnector.getNamespaceServices.mock.calls[1][0]).toBe('dev-namespace2');
     });
 
-    it('scans a remote service found via labelSelector', async () => {
-        const mockAddOrUpdatePackageURL = jest.fn();
+    it('scans for services via labelSelector', async () => {
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
+        };
+        context.scannerCallback = scannerCallback;
 
-        context.scannerCallback = {
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: () => {
-            },
+        const mockKubernetesConnector = {
+            getNamespacesByLabel: jest.fn(),
+            getNamespaceServices: jest.fn(),
         };
 
+        mockKubernetesConnector.getNamespacesByLabel.mockImplementation(async () => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'dev-namespace1',
+                            labels: {
+                                environment: 'development'
+                            },
+                        },
+                    },
+                ]
+            };
+        });
+        mockKubernetesConnector.getNamespaceServices.mockImplementation(async (ns) => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace1',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6066
+                                }
+                            ]
+                        }
+                    },
+                ]
+            };
+        });
+
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob('foo=bar', null, ['environment=dev'], undefined, 3,
-            false, new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
+            false, mockKubernetesConnector, loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
         expect(context.services.length).toBe(1);
 
         const service = context.services[0];
-        expect(service.namespace).toBe('whata-namespace');
+        expect(service.namespace).toBe('dev-namespace1');
         expect(service.name).toBe('my-remote-app');
 
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespacesByLabel).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespacesByLabel.mock.calls[0][0]).toBe('foo=bar');
+        expect(mockKubernetesConnector.getNamespaceServices).toHaveBeenCalledTimes(1);
+        expect(mockKubernetesConnector.getNamespaceServices.mock.calls[0][0]).toBe('dev-namespace1');
+        expect(mockKubernetesConnector.getNamespaceServices.mock.calls[0][1]).toBe('environment=dev');
     });
 
     it('removes services that no longer exist', async () => {
-        const mockAddOrUpdatePackageURL = jest.fn();
-        const mockRemovePackageURL = jest.fn();
-
-        context.scannerCallback = {
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: mockRemovePackageURL,
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
         };
+        context.scannerCallback = scannerCallback;
+
+        const mockKubernetesConnector = {
+            getNamespacesByLabel: jest.fn(),
+            getNamespaceServices: jest.fn(),
+        };
+
+        mockKubernetesConnector.getNamespaceServices.mockImplementation(async (ns) => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace1',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6066
+                                }
+                            ]
+                        }
+                    },
+                ]
+            };
+        });
 
         context.services.push({
             name: 'existing-service',
@@ -101,7 +250,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         });
 
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
-            false, new DummyKubernetesConnector(), loggingUtils.dummyLoggerFactory);
+            false, mockKubernetesConnector, loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -110,22 +259,46 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.namespace).toBe('dev-namespace2');
         expect(service.name).toBe('my-remote-app');
 
-        expect(mockRemovePackageURL).toHaveBeenCalledTimes(1);
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://foo.bar/');
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
     });
 
     it('replaces service when its port changes', async () => {
-        const mockAddOrUpdatePackageURL = jest.fn();
-        const mockRemovePackageURL = jest.fn();
+        const scannerCallback = {
+            addOrUpdatePackageURL: jest.fn(),
+            removePackageURL: jest.fn()
+        };
+        context.scannerCallback = scannerCallback;
 
-        context.scannerCallback = {
-            addOrUpdatePackageURL: mockAddOrUpdatePackageURL,
-            removePackageURL: mockRemovePackageURL,
+        const mockKubernetesConnector = {
+            getNamespacesByLabel: jest.fn(),
+            getNamespaceServices: jest.fn(),
         };
 
-        const dummyNamespaceConnector = new DummyKubernetesConnector();
+        mockKubernetesConnector.getNamespaceServices.mockImplementation(async () => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace2',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6066
+                                }
+                            ]
+                        }
+                    },
+                ]
+            };
+        });
+
         const backgroundJob = new ScanK8SPortalRemoteAppsBackgroundJob(null, ['dev-namespace2'], undefined, '.*', 3,
-            false, dummyNamespaceConnector, loggingUtils.dummyLoggerFactory);
+            false, mockKubernetesConnector, loggingUtils.dummyLoggerFactory);
 
         await backgroundJob._scanKubernetesServices();
 
@@ -133,22 +306,26 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(context.services[0].port).toBe(6066);
         expect(context.services[0].url.toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
 
-        const origServiceInfo = await dummyNamespaceConnector.getNamespaceServices('dev-namespace2');
-        const patchedServiceInfo = {
-            items: [
-                {
-                    ...origServiceInfo.items[0],
-                    spec: {
-                        ...origServiceInfo.items[0].spec,
-                        ports: [{
-                            port: 6067,
-                        }]
+        mockKubernetesConnector.getNamespaceServices.mockImplementation(async () => {
+            return {
+                items: [
+                    {
+                        metadata: {
+                            name: 'my-remote-app',
+                            namespace: 'dev-namespace2',
+                        },
+                        spec: {
+                            clusterIP: '127.0.0.1',
+                            ports: [
+                                {
+                                    port: 6067
+                                }
+                            ]
+                        }
                     },
-                },
-            ]
-        };
-
-        dummyNamespaceConnector.getNamespaceServices = jest.fn(() => Promise.resolve(patchedServiceInfo));
+                ]
+            };
+        });
 
         await backgroundJob._scanKubernetesServices();
 
@@ -156,8 +333,9 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(context.services[0].port).toBe(6067);
         expect(context.services[0].url.toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
 
-        expect(mockRemovePackageURL).toHaveBeenCalledTimes(1);
-        expect(mockAddOrUpdatePackageURL).toHaveBeenCalledTimes(2);
+        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
+        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(2);
     });
 
 });
