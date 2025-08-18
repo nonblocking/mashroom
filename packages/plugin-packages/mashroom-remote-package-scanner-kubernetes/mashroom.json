@@ -1,0 +1,38 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Remote Package Scanner Kubernetes",
+            "type": "plugin-package-scanner",
+            "bootstrap": "./dist/scanner/mashroom-bootstrap-plugin-package-scanner.js",
+            "defaultConfig": {
+                "priority": 50,
+                "k8sNamespacesLabelSelector": "microfrontends=true",
+                "k8sNamespaces": null,
+                "k8sServiceLabelSelector": "microfrontends=true",
+                "serviceNameFilter": ".*"
+            }
+        },
+        {
+            "name": "Mashroom Remote Package Scanner Kubernetes Admin Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+            "defaultConfig": {
+                "path": "/remote-plugin-packages-kubernetes"
+            }
+        },
+        {
+            "name": "Mashroom Remote Package Scanner Kubernetes Admin Webapp Integration",
+            "type": "admin-ui-integration",
+            "requires": [
+                "Mashroom Remote Package Scanner Kubernetes Admin Webapp"
+            ],
+            "target": "Mashroom Portal Remote App Kubernetes Admin Webapp",
+            "defaultConfig": {
+                "menuTitle": "Remote Plugin Packages K8S",
+                "path": "/remote-plugin-packages-kubernetes"
+            }
+        }
+    ]
+}

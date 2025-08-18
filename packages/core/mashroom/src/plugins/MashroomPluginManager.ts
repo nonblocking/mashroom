@@ -366,7 +366,12 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
                     // eslint-disable-next-line no-ex-assign
                     e = e.cause;
                 }
-                let errorMessage = e.message;
+                let errorMessage;
+                if (e.code) {
+                    errorMessage = e.code;
+                } else {
+                    errorMessage = e.message;
+                }
                 errors.push(errorMessage);
                 this._logger.warn(`Package definition builder '${builder.name}' threw an error!`, e);
             }

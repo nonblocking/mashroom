@@ -4,13 +4,14 @@
     "properties": {
         "$schema": {
         },
-        "remotePortalApps": {
+        "remotePackageUrls": {
             "type": "array",
             "items": {
-                "type": "string"
+                "type": "string",
+                "pattern": "^(\\./|\\../|/|http://|https://).*$"
             }
         }
     },
-    "required": ["remotePortalApps"],
+    "required": ["remotePackageUrls"],
     "additionalProperties": false
 }

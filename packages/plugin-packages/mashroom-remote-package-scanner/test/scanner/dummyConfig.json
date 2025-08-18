@@ -1,0 +1,6 @@
+{
+    "remotePackageUrls": [
+        "https://microfrontend1.myserver.com",
+        "https://microfrontend2.myserver.com"
+    ]
+}

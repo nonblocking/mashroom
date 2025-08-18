@@ -3,10 +3,25 @@
 
 ## [unreleased v3]
 
- * Kubernetes Remote Plugin Scanner: New plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*
- * Remote Plugin Scanner: New plugin to register *remote plugins*, replaces *Remote App Registry*
  * Admin UI: Added filtering for plugins and plugin packages
- * K8S Remote App Registry: **BREAKING CHANGE**: Is legacy now and should no longer be used (use the new generic *Kubernetes Remote Plugin Scanner* plugin instead)
+ * Remote Plugin Scanner Kubernetes: Added new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*
+   TODO
+   * Remote Plugin Scanner: Added new plugin to register *remote plugins*, replaces *Remote App Registry*. Configuration is very similar:
+     ```json
+      "Mashroom Remote Package Scanner": {
+        "remotePackageUrls": "./remotePackageUrls.json"
+      },
+     ```
+     And *remotePackageUrls.json* looks like this:
+     ```Json
+     {
+       "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-remote-package-scanner.json",
+       "remotePackageUrls": [
+       "https://demo-ssr-remote-app.mashroom-server.com"
+       ]
+     }
+     ```
+ * K8S Remote App Registry: **BREAKING CHANGE**: Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner Kubernetes* plugin instead)
  * Remote App Registry: **BREAKING CHANGE** Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner* plugin instead)
  * Portal: Plugin Rework
    * **BREAKING CHANGE**: Removed plugin type *portal-app-registry*
