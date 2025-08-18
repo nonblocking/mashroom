@@ -1,6 +1,6 @@
 
 import path from 'path';
-import express, {Router} from 'express';
+import express from 'express';
 import {engine} from 'express-handlebars';
 import bodyParser from 'body-parser';
 import index from './routes';
@@ -24,11 +24,7 @@ admin.use(express.static(path.resolve(__dirname, '../../public')));
 admin.get('/', adminIndex);
 admin.post('/', adminUpdate);
 
-const api = Router();
-api.use(bodyParser.json());
-
 app.use('/admin', admin);
-app.use('/api', api);
 app.get('/', index);
 
 export default app;
