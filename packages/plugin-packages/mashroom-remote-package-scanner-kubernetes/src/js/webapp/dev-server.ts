@@ -1,39 +1,48 @@
 
 import {URL} from 'url';
 import express, {type Request, type Response} from 'express';
-import {SCANNER_NAME} from '../scanner/KubernetesRemotePortalAppsPluginScanner';
+import {SCANNER_NAME} from '../scanner/KubernetesRemotePluginPackagesScanner';
 import context from '../context';
 import app from './webapp';
-import type {KubernetesService} from '../../../type-definitions';
+import type {KubernetesService} from '../types';
 import type {MashroomPotentialPluginPackage} from '@mashroom/mashroom/type-definitions';
 
 const testServices: Array<KubernetesService> = [{
+    uid: '1',
     name: 'Service 1',
     namespace: 'namespace1',
+    targetPort: '1234',
     url: new URL('http://service1.namespace1:8080'),
-    ip: undefined,
-    port: undefined,
+    selector: {},
     firstSeen: Date.now(),
-    lastCheck: Date.now(),
+    lastModified: Date.now(),
     error: null,
+    imageVersion: undefined,
+    runningPods: 1,
 }, {
+    uid: '2',
     name: 'Service 2',
     namespace: 'namespace1',
+    targetPort: '1234',
     url: new URL('http://service2.namespace1:8080'),
-    ip: undefined,
-    port: undefined,
+    selector: {},
     firstSeen: Date.now(),
-    lastCheck: Date.now(),
+    lastModified: Date.now(),
     error: null,
+    imageVersion: '1.0.1',
+    runningPods: 1,
 }, {
+    uid: '3',
     name: 'Service 3',
     namespace: 'namespace2',
-    url: new URL('http://foo'),
-    ip: undefined,
-    port: undefined,
+    targetPort: '1234',
+    url: undefined,
+    selector: undefined,
     firstSeen: Date.now(),
-    lastCheck: Date.now(),
+    lastModified: Date.now(),
     error: 'Headless Service',
+    imageVersion: undefined,
+    runningPods: 0,
 }];
 
 context.services = testServices;
@@ -87,10 +96,10 @@ wrapperApp.use((req: Request, res: Response, next) => {
 });
 
 wrapperApp.get('/', (req, res) => {
-    res.redirect('/portal-remote-app-registry-kubernetes');
+    res.redirect('/remote-plugin-packages-kubernetes');
 });
 
-wrapperApp.use('/portal-remote-app-registry-kubernetes', app);
+wrapperApp.use('/remote-plugin-packages-kubernetes', app);
 
 wrapperApp.listen(8083, () => {
     console.log('Listening on 8083');

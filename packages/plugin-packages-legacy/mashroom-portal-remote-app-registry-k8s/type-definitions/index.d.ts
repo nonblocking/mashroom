@@ -46,6 +46,7 @@ export type ServicesRenderModel = {
         lastCheck: string;
         rowClass: string;
         statusClass: string;
-        portalApps: Array<string> | undefined | null;
+        portalApps: Array<string> | undefined;
+        errors: string | undefined;
     }>
 }

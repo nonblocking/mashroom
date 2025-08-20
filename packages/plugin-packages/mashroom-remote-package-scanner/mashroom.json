@@ -36,7 +36,7 @@
             ],
             "defaultConfig": {
                 "path": "/remote-plugin-packages",
-                "showAddRemoteAppForm": true
+                "showAddRemotePluginPackageForm": true
             }
         },
         {

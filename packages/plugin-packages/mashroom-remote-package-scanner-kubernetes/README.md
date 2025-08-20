@@ -6,6 +6,11 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin scans for remote plugin packages in a Kubernetes cluster.
 It *watches* Kubernetes namespaces and services with given labels which will be checked for plugins.
 
+It also watches Pods for new image versions and removes plugin packages if no running Pod can be found.
+
+> [!IMPORTANT]
+> A remote plugin package **must** expose a */mashroom.json* file and/or a */package.json* file containing the plugin description.
+
 Currently, only the following plugin types are known to be supported:
 
 * portal-app
@@ -24,9 +29,9 @@ You can override the default config in your Mashroom server config like this:
 {
   "plugins": {
       "Mashroom Remote Package Scanner Kubernetes": {
-          "k8sNamespacesLabelSelector": "microfrontends=true",
+          "k8sNamespacesLabelSelector": ["microfrontends=true"],
           "k8sNamespaces": null,
-          "k8sServiceLabelSelector": "microfrontends=true",
+          "k8sServiceLabelSelector": ["microfrontends=true"],
           "serviceNameFilter": ".*"
         }
     }
@@ -59,7 +64,7 @@ This plugin uses the Kubernetes API and requires the following permissions:
 
  * **watch** for namespaces cluster-wide
  * **watch** for services in all namespaces with plugins (or cluster-wide)
- * **watch** for deployments in all namespaces with plugins (or cluster-wide)
+ * **watch** for pods in all namespaces with plugins (or cluster-wide)
 
 To allow this plugin to use the Kubernetes API you need to attach a Kubernetes **Service Account** with the correct permissions to the deployment.
 
@@ -75,7 +80,7 @@ rules:
       - ""
     resources:
       - services
-      - deployments
+      - pods
       - namespaces
     verbs:
       - watch

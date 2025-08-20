@@ -8,10 +8,10 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
     const pluginService = req.pluginContext.services.core.pluginService;
     const csrfService: MashroomCSRFService = req.pluginContext.services.csrf?.service;
     const store = await getRemotePluginPackageEndpointStore(req.pluginContext);
-    const {result: remoteAppEndpoints} = await store.find();
+    const {result: remotePackageEndpoints} = await store.find();
     const pluginPackages = pluginService.getPotentialPluginPackagesByScanner(SCANNER_NAME);
 
-    const endpoints = [...remoteAppEndpoints]
+    const endpoints = [...remotePackageEndpoints]
         .sort((e1, e2) => {
             return e1.url.localeCompare(e2.url);
         })
@@ -44,7 +44,7 @@ const renderAdminPage = async (req: Request, res: Response, errorMessage?: strin
 
     res.render('admin', {
         baseUrl: req.baseUrl,
-        showAddRemoteAppForm: context.webUIShowAddRemoteAppForm,
+        showAddRemotePluginPackageForm: context.showAddRemotePluginPackageForm,
         endpoints,
         errorMessage,
         csrfToken: csrfService ? csrfService.getCSRFToken(req) : null

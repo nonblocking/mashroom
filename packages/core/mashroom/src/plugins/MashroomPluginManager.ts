@@ -640,7 +640,6 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
     private async _retryPotentialPackagesWithErrors() {
         for (const potentialPackage of this._potentialPackages) {
             if (potentialPackage.updateErrors && potentialPackage.updateRetries < this._maxRetries) {
-                console.info('!!!!', potentialPackage);
                 this._logger.info(`Retrying building definition for package ${potentialPackage.url} - attempt #${potentialPackage.updateRetries + 1}`);
                 await this._updatePackage(potentialPackage);
             }

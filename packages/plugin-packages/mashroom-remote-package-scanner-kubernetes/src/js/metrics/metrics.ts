@@ -1,21 +1,20 @@
 
-import getRemotePluginPackageEndpointStore from '../store/getRemotePluginPackageEndpointStore';
+import context from '../context';
+
 import type {MashroomPluginContextHolder} from '@mashroom/mashroom/type-definitions';
 import type {MashroomMonitoringMetricsCollectorService, MashroomMonitoringMetricsObservableCallbackRef} from '@mashroom/mashroom-monitoring-metrics-collector/type-definitions';
 
 let callbackRef: MashroomMonitoringMetricsObservableCallbackRef | undefined;
 
-export const registerRemotePluginPackagesMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
+export const registerKubernetesRemotePluginPackagesMetrics = (pluginContextHolder: MashroomPluginContextHolder) => {
     const register = async () => {
         const pluginContext = pluginContextHolder.getPluginContext();
         const collectorService: MashroomMonitoringMetricsCollectorService | undefined = pluginContext.services.metrics?.service;
         if (collectorService) {
-            callbackRef = await collectorService.addObservableCallback(async (asyncCollectorService) => {
-                const store = await getRemotePluginPackageEndpointStore(pluginContextHolder.getPluginContext());
-                const {result: endpoints} = await store.find();
-                const endpointsTotal = endpoints.length;
-
-                asyncCollectorService.gauge('mashroom_remote_plugin_packages_total', 'Mashroom Remote Plugin Packages Total').set(endpointsTotal);
+            callbackRef = await collectorService.addObservableCallback((asyncCollectorService) => {
+                const services = context.services;
+                const servicesTotal = services.length;
+                asyncCollectorService.gauge('mashroom_k8s_remote_plugin_packages_total', 'Mashroom Kubernetes Remote Plugin Packages Total').set(servicesTotal);
             });
         }
     };
@@ -23,7 +22,7 @@ export const registerRemotePluginPackagesMetrics = (pluginContextHolder: Mashroo
     setTimeout(register, 5000);
 };
 
-export const unregisterRemotePluginPackagesMetrics = () => {
+export const unregisterKubernetesRemotePluginPackagesMetrics = () => {
     if (callbackRef) {
         callbackRef.removeCallback();
         callbackRef = undefined;

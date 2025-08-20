@@ -2,24 +2,28 @@ import {loggingUtils} from '@mashroom/mashroom-utils';
 import ScanK8SPortalRemoteAppsBackgroundJob from '../../src/js/jobs/ScanK8SPortalRemoteAppsBackgroundJob';
 import context from '../../src/js/context';
 
+const scannerCallback = {
+    addOrUpdatePackageURL: jest.fn(),
+    removePackageURL: jest.fn()
+};
+context.scannerCallback = scannerCallback;
+
+const mockKubernetesConnector = {
+    getNamespacesByLabel: jest.fn(),
+    getNamespaceServices: jest.fn(),
+};
+
 describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     beforeEach(() => {
         context.services = [];
-        context.scannerCallback = null;
+        scannerCallback.addOrUpdatePackageURL.mockReset();
+        scannerCallback.removePackageURL.mockReset();
+        mockKubernetesConnector.getNamespacesByLabel.mockReset();
+        mockKubernetesConnector.getNamespaceServices.mockReset();
     });
 
     it('scans for services in a given list of namespaces', async () => {
-        const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
-        };
-        context.scannerCallback = scannerCallback;
-
-        const mockKubernetesConnector = {
-            getNamespacesByLabel: jest.fn(),
-            getNamespaceServices: jest.fn(),
-        };
 
         mockKubernetesConnector.getNamespaceServices.mockImplementation(async () => {
             return {
@@ -61,16 +65,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('scans for services in namespaces found via labelSelector', async () => {
-        const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
-        };
-        context.scannerCallback = scannerCallback;
-
-        const mockKubernetesConnector = {
-            getNamespacesByLabel: jest.fn(),
-            getNamespaceServices: jest.fn(),
-        };
 
         mockKubernetesConnector.getNamespacesByLabel.mockImplementation(async () => {
             return {
@@ -140,16 +134,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('scans for services via labelSelector', async () => {
-        const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
-        };
-        context.scannerCallback = scannerCallback;
-
-        const mockKubernetesConnector = {
-            getNamespacesByLabel: jest.fn(),
-            getNamespaceServices: jest.fn(),
-        };
 
         mockKubernetesConnector.getNamespacesByLabel.mockImplementation(async () => {
             return {
@@ -206,16 +190,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('removes services that no longer exist', async () => {
-        const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
-        };
-        context.scannerCallback = scannerCallback;
-
-        const mockKubernetesConnector = {
-            getNamespacesByLabel: jest.fn(),
-            getNamespaceServices: jest.fn(),
-        };
 
         mockKubernetesConnector.getNamespaceServices.mockImplementation(async (ns) => {
             return {
@@ -265,16 +239,6 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
     });
 
     it('replaces service when its port changes', async () => {
-        const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
-        };
-        context.scannerCallback = scannerCallback;
-
-        const mockKubernetesConnector = {
-            getNamespacesByLabel: jest.fn(),
-            getNamespaceServices: jest.fn(),
-        };
 
         mockKubernetesConnector.getNamespaceServices.mockImplementation(async () => {
             return {

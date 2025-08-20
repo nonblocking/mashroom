@@ -1,9 +1,9 @@
 
 import context from '../../context';
-import {SCANNER_NAME} from '../../scanner/KubernetesRemotePortalAppsPluginScanner';
+import {SCANNER_NAME} from '../../scanner/KubernetesRemotePluginPackagesScanner';
 
 import type {Request, Response} from 'express';
-import type {ServicesRenderModel} from '../../../../type-definitions';
+import type {ServicesRenderModel} from '../../types';
 
 const formatDate = (ts: number): string => {
     return new Date(ts).toISOString().replace(/T/, ' ').replace(/\..+/, '');
@@ -17,13 +17,13 @@ export default (request: Request, response: Response) => {
         baseUrl: request.baseUrl,
         hasErrors: context.errors.length > 0,
         errors: context.errors,
-        lastScan: formatDate(context.lastScan),
-        namespaces: context.namespaces.join(', '),
+        namespaceLabelSelector: context.namespaceLabelSelector,
+        watchedNamespaces: context.watchedNamespaces.map(({ name }) => name).join(', '),
         serviceLabelSelector: context.serviceLabelSelector,
         serviceNameFilter: context.serviceNameFilter,
         services: context.services
             .map((service) => {
-                const pluginPackage = pluginPackages.find((p) => p.url.toString() === service.url.toString());
+                const pluginPackage = pluginPackages.find((p) => service.url && p.url.toString() === service.url.toString());
                 const errors = service.error ?? pluginPackage?.updateErrors?.join(', ');
                 let status = 'Unknown';
                 if (pluginPackage) {
@@ -42,14 +42,16 @@ export default (request: Request, response: Response) => {
                 }
                 return {
                     name: service.name,
-                    namespace: service.namespace,
-                    url: service.url.toString(),
+                    namespace: service.namespace ?? '',
+                    url: service.url ? service.url.toString() : '',
+                    runningPods: service.runningPods,
+                    imageVersion: service.imageVersion,
                     status,
                     statusClass,
-                    lastCheck: formatDate(service.lastCheck),
+                    lastModified: formatDate(service.lastModified),
                     rowClass: errors ? 'row-error' : '',
-                    errors,
                     portalApps: pluginPackage?.foundPlugins ?? undefined,
+                    errors,
                 };
             })
     };

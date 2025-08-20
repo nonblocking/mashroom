@@ -555,21 +555,21 @@ export interface Plugins {
     /**
      * Show the 'Add a new Remote Package URL' form in the Admin UI
      */
-    showAddRemoteAppForm?: boolean;
+    showAddRemotePluginPackageForm?: boolean;
   };
   "Mashroom Remote Package Scanner Kubernetes"?: {
     /**
      * Label selector(s) for namespaces, can be a single string or an array, can also be null (Default: microfrontends=true)
      */
-    k8sNamespacesLabelSelector?: string | string[];
+    namespaceLabelSelector?: string | string[];
     /**
      * A distinct list of Kubernetes namespaces to check, can be null if _k8sNamespacesLabelSelector_ is set (Default: null)
      */
-    k8sNamespaces?: string[] | null;
+    namespaces?: string[] | null;
     /**
      * Label selector(s) for services, can be a single string or an array, can be null (Default: microfrontends=true)
      */
-    k8sServiceLabelSelector?: string | string[];
+    serviceLabelSelector?: string | string[];
     /**
      * A regular expression for services that should be checked (case-insensitive). (Default: ".*")
      */

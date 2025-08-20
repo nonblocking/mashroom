@@ -6,7 +6,7 @@ const KubernetesConnector = require('../dist/k8s/KubernetesConnector').default;
 async function testListNamespaces() {
     const connector = new KubernetesConnector(true);
 
-    const namespaces = await connector.getNamespacesByLabel('environment=development,tier=frontend');
+    const namespaces = await connector.getNamespacesByLabel('env=development,microfrontends=true');
 
     console.info('Found namespaces:');
     namespaces.items.forEach((ns) => {
@@ -17,8 +17,7 @@ async function testListNamespaces() {
 async function testListServices() {
     const connector = new KubernetesConnector(true);
 
-    const labelSelector = 'exclude=me';
-    const services = await connector.getNamespaceServices('mashroom', labelSelector);
+    const services = await connector.getNamespaceServices('test1', 'microfrontends=true');
 
     console.info('Found services:');
     services.items.forEach((service) => {
@@ -27,4 +26,4 @@ async function testListServices() {
 }
 
 testListNamespaces();
-// testListServices();
+testListServices();

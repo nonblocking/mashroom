@@ -5,7 +5,7 @@ metadata:
     namespace: test1
     labels:
         app: mashroom-demo-ssr-remote-portal-app
-        microfrontend: 'true'
+        microfrontends: 'true'
 spec:
     selector:
         app: mashroom-demo-ssr-remote-portal-app

@@ -7,8 +7,8 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 
 const bootstrap: MashroomWebAppPluginBootstrapFunction = async (pluginName, pluginConfig) => {
-    const { showAddRemoteAppForm } = pluginConfig;
-    context.webUIShowAddRemoteAppForm = showAddRemoteAppForm;
+    const { showAddRemotePluginPackageForm } = pluginConfig;
+    context.showAddRemotePluginPackageForm = showAddRemotePluginPackageForm;
 
     return webapp;
 };

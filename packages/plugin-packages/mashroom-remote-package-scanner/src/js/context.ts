@@ -3,7 +3,7 @@ import type {Context} from './types';
 import type {MashroomPluginScannerCallback} from '@mashroom/mashroom/type-definitions';
 
 let _scannerCallback: MashroomPluginScannerCallback | null = null;
-let _webUIShowAddRemoteAppForm = true;
+let _showAddRemotePluginPackageForm = true;
 let _initialScanDone = false;
 
 const context: Context = {
@@ -13,11 +13,11 @@ const context: Context = {
     set scannerCallback(scannerCallback: MashroomPluginScannerCallback | null) {
         _scannerCallback = scannerCallback;
     },
-    get webUIShowAddRemoteAppForm() {
-        return _webUIShowAddRemoteAppForm;
+    get showAddRemotePluginPackageForm() {
+        return _showAddRemotePluginPackageForm;
     },
-    set webUIShowAddRemoteAppForm(show: boolean) {
-        _webUIShowAddRemoteAppForm = show;
+    set showAddRemotePluginPackageForm(show: boolean) {
+        _showAddRemotePluginPackageForm = show;
     },
     get initialScanDone() {
         return _initialScanDone;

@@ -72,9 +72,8 @@
             "spaMode": true
         },
         "Mashroom Remote Package Scanner Kubernetes": {
-            "k8sNamespacesLabelSelector": ["test=true,env=test2", "test=true,env=test1"],
-            "k8sNamespaces": null,
-            "k8sServiceLabelSelector": "microfrontend=true",
+            "namespaceLabelSelector": ["env=development", "microfrontends=true"],
+            "serviceLabelSelector": "microfrontends=true",
             "serviceNameFilter": ".*"
         }
     }

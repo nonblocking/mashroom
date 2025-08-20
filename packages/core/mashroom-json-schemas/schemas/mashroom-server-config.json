@@ -792,7 +792,7 @@
                 "Mashroom Remote Package Scanner Admin Webapp": {
                     "type": "object",
                     "properties": {
-                        "showAddRemoteAppForm": {
+                        "showAddRemotePluginPackageForm": {
                             "type": "boolean",
                             "description": "Show the 'Add a new Remote Package URL' form in the Admin UI"
                         }
@@ -801,7 +801,7 @@
                 "Mashroom Remote Package Scanner Kubernetes": {
                     "type": "object",
                     "properties": {
-                        "k8sNamespacesLabelSelector": {
+                        "namespaceLabelSelector": {
                             "anyOf": [
                                 {
                                     "type": "string"
@@ -815,14 +815,14 @@
                             ],
                             "description": "Label selector(s) for namespaces, can be a single string or an array, can also be null (Default: microfrontends=true)"
                         },
-                        "k8sNamespaces": {
+                        "namespaces": {
                             "type": ["array", "null"],
                             "items": {
                                 "type": "string"
                             },
                             "description": "A distinct list of Kubernetes namespaces to check, can be null if _k8sNamespacesLabelSelector_ is set (Default: null)"
                         },
-                        "k8sServiceLabelSelector": {
+                        "serviceLabelSelector": {
                             "anyOf": [
                                 {
                                     "type": "string"

@@ -16,7 +16,7 @@ export default class RefreshRemotePluginPackagesBackgroundJob {
     }
 
     async run() {
-        this._logger.info('Start refreshing remote plugin package endpoints');
+        this._logger.info('Start refreshing remote plugin packages');
 
         const store = await getRemotePluginPackageEndpointStore(this._pluginContextHolder.getPluginContext());
         const {result: endpoints} = await store.find();

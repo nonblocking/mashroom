@@ -7,7 +7,7 @@ export type RemotePluginPackageEndpoint = {
 };
 
 export type Context = {
-    webUIShowAddRemoteAppForm: boolean;
+    showAddRemotePluginPackageForm: boolean;
     scannerCallback: MashroomPluginScannerCallback | null;
     initialScanDone: boolean;
 }
