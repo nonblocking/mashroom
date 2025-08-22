@@ -130,13 +130,7 @@ describe('PortalPageEnhancementPluginLoader', () => {
         await loader.load(pageEnhancementPlugin, {}, context);
 
         expect(registry.portalPageEnhancements.length).toBe(1);
-
-        if (process.platform === 'win32') {
-            const {root} = parse(__dirname);
-            expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe(`file://${root}opt\\mashroom\\page-enhancements`);
-        } else {
-            expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('file:///opt/mashroom/page-enhancements');
-        }
+        expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('file:///opt/mashroom/page-enhancements');
     });
 
     it('loads and registers page enhancements with a relative remote resource root', async () => {
