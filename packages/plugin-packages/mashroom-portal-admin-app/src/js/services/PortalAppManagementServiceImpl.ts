@@ -136,7 +136,7 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     async updateAndReloadApp(loadedAppId: string, portalAppName: string, instanceId: string, areaId: string | undefined | null,
                        dynamic: boolean | undefined | null, position: number | undefined | null, appConfig: any | undefined | null): Promise<void> {
         await this.portalAdminService.updateAppInstance(portalAppName, instanceId, areaId, position, appConfig);
-        await this.portalAppService.reloadApp(loadedAppId);
+        await this.portalAppService.reloadApp(loadedAppId, appConfig);
     }
 
     setTrans(t: (key: string) => string) {

@@ -83,7 +83,8 @@ export default () => {
 
         try {
             const newAppConfig = JSON.parse(values.appConfig);
-            if (!selectedPortalApp.customConfigEditor) { // Only update if not using custom editor, where appConfig would be a stringified JSON
+            if (!selectedPortalApp.customConfigEditor) {
+                // Only update if not using a custom editor, where appConfig would be a stringified JSON
                 promises.push(portalAppManagementService.updateAndReloadApp(
                     selectedPortalApp.loadedAppId, selectedPortalApp.portalAppName, selectedPortalApp.instanceId,
                     null, null, null, newAppConfig
