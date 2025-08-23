@@ -191,7 +191,7 @@
         "Mashroom Remote Package Scanner Background Job": {
         },
         "Mashroom Remote Package Scanner Admin Webapp": {
-            "showAddRemoteAppForm": true
+            "showAddRemotePluginPackageForm": true
         }
     }
 }

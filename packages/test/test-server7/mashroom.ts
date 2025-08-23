@@ -124,7 +124,7 @@ const serverConfig: MashroomServerConfig = {
             remotePackageUrls: './remotePackageUrls.ts'
         },
         'Mashroom Remote Package Scanner Admin Webapp': {
-            showAddRemoteAppForm: true
+            showAddRemotePluginPackageForm: true
         }
     }
 };
