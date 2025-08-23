@@ -119,21 +119,3 @@ Open http://localhost:5050 in your browser. Users: john/john, admin/admin
 
 [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
 
-## Contributing
-
-If you are interested in making *Mashroom Server* better, just submit a pull request.
-
-To setup a development environment Node.js >= 20 is required.
-
-After cloning the repository run
-
-    npm run setup
-
-to install all dependencies and build the core packages.
-
-And check out one of the test servers in *packages/test* as a starting point:
-
-    cd packages/test/test-server1
-    npm start
-
-The test server will be available at http://localhost:5050
