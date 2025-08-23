@@ -4,7 +4,7 @@
 ## [unreleased v3]
 
  * Admin UI: Added filtering for plugins and plugin packages
- * Remote Plugin Scanner Kubernetes: Added new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*.
+ * Remote Plugin Scanner Kubernetes: Added a new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*.
    The configuration is very similar:
    ```json
    "Mashroom Remote Package Scanner Kubernetes": {
@@ -16,11 +16,11 @@
    It comes with a lot of improvements compared to *K8S Remote App Registry*:
    * It uses *watch* instead of *list* for Namespaces and Services
    * It also watches Pods and ignores Services without any running ones
-   * It immediately updates plugin packages if the container image version change (prevents caching problems)
+   * It immediately updates plugin packages if the container image version changes (prevents caching problems)
    * It can handle plugin packages in the default namespace
    * It uses the image version as cache busting, so exposing */package.json* is no longer necessary
- * Remote Plugin Scanner: Added new plugin to register *remote plugins*, replaces *Remote App Registry*.
-   Configuration is very similar:
+ * Remote Plugin Scanner: Added a new plugin to register *remote plugins*, replaces *Remote App Registry*.
+   The configuration is very similar:
    ```json
     "Mashroom Remote Package Scanner": {
     "remotePackageUrls": "./remotePackageUrls.json"
