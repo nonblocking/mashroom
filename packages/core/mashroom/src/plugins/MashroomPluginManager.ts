@@ -389,7 +389,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             pluginPackage.setErrorMessage(null);
             this._builder.addToBuildQueue(pluginPackage.name, pluginPackagePath, pluginPackage.devModeBuildScript);
         } else {
-           this._onBuildPackageFinished({
+           await this._onBuildPackageFinished({
                pluginPackageName: pluginPackage.name,
                success: true,
            });
