@@ -1,5 +1,5 @@
 
-import {resolve} from 'path';
+import {isAbsolute, resolve} from 'path';
 import {fileURLToPath, URL} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
@@ -84,15 +84,14 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             // Local
             const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
             resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
-            if (!resourcesRootUri.startsWith('/')) {
+            if (!isAbsolute(resourcesRootUri)) {
                 // Process relative file path
                 resourcesRootUri = resolve(pluginPackagePath, resourcesRootUri);
-            }
-            if (resourcesRootUri.startsWith('/')) {
-                resourcesRootUri = `file://${resourcesRootUri}`;
             } else {
-                resourcesRootUri = `file:///${resourcesRootUri}`;
+                // Required for windows, don't remove
+                resourcesRootUri = resolve(resourcesRootUri);
             }
+            resourcesRootUri = `file://${resourcesRootUri}`;
         } else {
             // Remote
             let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());

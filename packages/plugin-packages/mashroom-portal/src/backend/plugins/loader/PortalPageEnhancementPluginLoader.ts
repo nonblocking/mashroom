@@ -53,6 +53,9 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
                 if (!isAbsolute(resourcesRootUri)) {
                     const packageBasePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
                     resourcesRootUri = resolve(packageBasePath, resourcesRootUri);
+                } else {
+                    // Required for windows, don't remove
+                    resourcesRootUri = resolve(resourcesRootUri);
                 }
                 resourcesRootUri = `file://${resourcesRootUri}`;
             } else {

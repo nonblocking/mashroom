@@ -1,5 +1,5 @@
 
-import {resolve} from 'path';
+import {isAbsolute, resolve} from 'path';
 import {fileURLToPath} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
@@ -37,8 +37,11 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
         if (!resourcesRootPath) {
             resourcesRootPath = './dist';
         }
-        if (resourcesRootPath.startsWith('.')) {
+        if (!isAbsolute(resourcesRootPath)) {
             resourcesRootPath = resolve(pluginPackagePath, resourcesRootPath);
+        } else {
+            // Required for windows, don't remove
+            resourcesRootPath = resolve(resourcesRootPath);
         }
 
         let viewsPath = plugin.pluginDefinition.views;
