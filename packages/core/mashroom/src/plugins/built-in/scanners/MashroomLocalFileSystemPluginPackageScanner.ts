@@ -82,7 +82,7 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
                 interval: 1000,
                 binaryInterval: 1000,
                 ignored: (path) => {
-                    if (path.includes(`${sep}.`)) {
+                    if (path.includes('/.') || path.includes(`\\.`)) {
                         return true;
                     }
                    return anymatch(IGNORE_CHANGES_IN_PATHS, path);
