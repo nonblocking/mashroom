@@ -17,9 +17,9 @@ import type {
 import type {
     MashroomServer as MashroomServerType,
     GlobalNodeErrorHandler,
-    MashroomPluginPackageScanner,
     InternalMashroomHttpUpgradeService,
-} from  '../../type-definitions/internal';
+    MashroomPluginManager,
+} from '../../type-definitions/internal';
 
 export default class MashroomServer implements MashroomServerType {
 
@@ -28,7 +28,7 @@ export default class MashroomServer implements MashroomServerType {
     private readonly _logger: MashroomLogger;
 
     constructor(private _expressApp: Application, private _serverInfo: MashroomServerInfo, private _config: MashroomServerConfig,
-                private _scanner: MashroomPluginPackageScanner, private _errorHandler: GlobalNodeErrorHandler,
+                private _pluginManager: MashroomPluginManager, private _errorHandler: GlobalNodeErrorHandler,
                 private _httpUpgradeService: InternalMashroomHttpUpgradeService, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.server');
         this._addServerRoutes();
@@ -53,7 +53,7 @@ Starting
         this._logger.info('Stopping Mashroom server...');
 
         this._errorHandler.uninstall();
-        await this._scanner.stop();
+        await this._pluginManager.stop();
 
         await Promise.all([
             this._stopHttpServer(),
@@ -73,7 +73,6 @@ Starting
             const httpServer = http.createServer(this._expressApp);
             httpServer.listen(this._config.port, () => {
                 this._logger.info(`Mashroom HTTP server available at http://localhost:${this._config.port}`);
-                this._scanner.start();
                 this._errorHandler.install();
                 this._httpServer = httpServer;
                 this._httpUpgradeService.addServer(httpServer);
@@ -123,7 +122,6 @@ Starting
             }
             httpsServer.listen(this._config.httpsPort, () => {
                 this._logger.info(`Mashroom HTTPS server available at https://localhost:${this._config.httpsPort}`);
-                this._scanner.start();
                 this._errorHandler.install();
                 this._httpsServer = httpsServer;
                 this._httpUpgradeService.addServer(httpsServer);

@@ -7,7 +7,6 @@ import {ensureDirSync} from 'fs-extra';
 import digestDirectory from 'lucy-dirsum';
 import anymatch from 'anymatch';
 import {stripAnsiColors} from '../../utils/log-utils';
-import {IGNORE_CHANGES_IN_PATHS} from '../scanner/MashroomPluginPackageScanner';
 import NpmUtils from './NpmUtils';
 import NxUtils from './NxUtils';
 
@@ -28,7 +27,7 @@ const RETRY_RUNNING_BUILD_AFTER_MS = 10 * 1000;
 type BuildQueueEntry = {
     readonly pluginPackageName: string;
     readonly pluginPackagePath: string;
-    readonly buildScript: string | undefined | null;
+    readonly buildScript: string;
     readonly lastSourceUpdateTimestamp: number;
 }
 
@@ -41,6 +40,9 @@ type BuildInfo = {
     buildPackageChecksum?: string;
     lastDependenciesUpdate?: number | undefined | null;
 };
+
+// Anymatch patterns
+const IGNORE_CHANGES_IN_PATHS: Array<string> = ['**/node_modules/**'];
 
 /**
  * Build service for plugin packages.
@@ -75,7 +77,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         this._processingAllowed = true;
     }
 
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string | undefined | null, lastSourceUpdateTimestamp = Date.now()): void {
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp = Date.now()): void {
         if (!this._processingAllowed) {
             return;
         }
@@ -191,7 +193,7 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
                 return;
             } else if (buildInfo.buildStatus === 'running') {
                 if (this._getBuildInfoLastUpdateTst(queueEntry.pluginPackageName) > Date.now() - RETRY_RUNNING_BUILD_AFTER_MS) {
-                    this._logger.debug(`The package ${queueEntry.pluginPackageName} is already built by another Mashroom instance. Re-checking later.`);
+                    this._logger.debug(`The package ${queueEntry.pluginPackageName} is already built. Checking again later.`);
                     setTimeout(() => {
                         this._buildQueue.push(queueEntry);
                     }, RETRY_RUNNING_BUILD_AFTER_MS);
@@ -250,13 +252,12 @@ export default class MashroomPluginPackageBuilder implements MashroomPluginPacka
         }
 
         const buildScript = queueEntry.buildScript;
-        if (buildScript) {
-            this._logger.debug(`Running build script '${buildScript}': ${queueEntry.pluginPackageName}`);
-            if (!this._devModeDisableNxSupport && await this._nxUtils.isNxAvailable(queueEntry.pluginPackagePath)) {
-                await this._nxUtils.runScript(queueEntry.pluginPackagePath, buildScript);
-            } else {
-                await this._npmUtils.runScript(queueEntry.pluginPackagePath, buildScript);
-            }
+
+        this._logger.debug(`Running build script '${buildScript}': ${queueEntry.pluginPackageName}`);
+        if (!this._devModeDisableNxSupport && await this._nxUtils.isNxAvailable(queueEntry.pluginPackagePath)) {
+            await this._nxUtils.runScript(queueEntry.pluginPackagePath, buildScript);
+        } else {
+            await this._npmUtils.runScript(queueEntry.pluginPackagePath, buildScript);
         }
     }
 

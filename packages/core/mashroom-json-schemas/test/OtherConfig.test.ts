@@ -27,9 +27,9 @@ describe('other config validation', () => {
         expect(valid).toBeTruthy();
     });
 
-    it('succeeds at a valid remote app config', () => {
-        const schema = JSON.parse(readFileSync(resolve(__dirname, '..', 'schemas', 'mashroom-portal-remote-apps.json')).toString("utf-8"));
-        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'other', 'remotePortalApps.json')).toString("utf-8"));
+    it('succeeds at a valid remote plugin packages config', () => {
+        const schema = JSON.parse(readFileSync(resolve(__dirname, '..', 'schemas', 'mashroom-remote-package-scanner.json')).toString("utf-8"));
+        const config = JSON.parse(readFileSync(resolve(__dirname, 'configs', 'other', 'remotePackageUrls.json')).toString("utf-8"));
         const validate = ajv.compile(schema);
         const valid = validate(config);
 

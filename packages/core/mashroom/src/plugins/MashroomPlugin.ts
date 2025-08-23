@@ -1,14 +1,15 @@
-
 import {resolve} from 'path';
+import {fileURLToPath} from 'url';
 import {readonlyUtils, PluginBootstrapError} from '@mashroom/mashroom-utils';
-
 import type {
-    MashroomPlugin as MashroomPluginType, MashroomPluginType as MashroomPluginTypeType, MashroomPluginDefinition, MashroomPluginConfig,
-    MashroomPluginStatus, MashroomPluginPackage, MashroomLoggerFactory, MashroomLogger,
+    MashroomPlugin as MashroomPluginType,
+    MashroomPluginDefinition,
+    MashroomPluginConfig,
+    MashroomPluginStatus,
+    MashroomPluginPackage,
+    MashroomLoggerFactory,
+    MashroomLogger,
 } from '../../type-definitions';
-import type {
-    MashroomPluginRegistryConnector, MashroomPluginRegistryConnectorEvent,
-} from '../../type-definitions/internal';
 
 export default class MashroomPlugin implements MashroomPluginType {
 
@@ -18,28 +19,24 @@ export default class MashroomPlugin implements MashroomPluginType {
     private _errorMessage: string | undefined | null;
     private _status: MashroomPluginStatus;
 
-    constructor(private _pluginDefinition: MashroomPluginDefinition, private _pluginPackage: MashroomPluginPackage, registryConnector: MashroomPluginRegistryConnector, loggerFactory: MashroomLoggerFactory) {
+    constructor(private _pluginDefinition: MashroomPluginDefinition, private _pluginPackage: MashroomPluginPackage, loggerFactory: MashroomLoggerFactory) {
         this._logger = loggerFactory('mashroom.plugins');
         this._status = 'pending';
-
-        registryConnector.on('loaded', this._loaded.bind(this));
-        registryConnector.on('updated', this._updated.bind(this));
-        registryConnector.on('error', this._error.bind(this));
     }
 
     requireBootstrap<T>(): T {
         const bootstrapFullPath = this._getBootstrapFullPath();
         if (!bootstrapFullPath) {
-            throw new PluginBootstrapError(`No bootstrap defined for plugin ${this.name}`);
+            throw new PluginBootstrapError(`No bootstrap defined for plugin: ${this.name}`);
         }
 
-        this._logger.info(`Loading bootstrap for plugin ${this.name}: ${bootstrapFullPath}`);
+        this._logger.info(`Loading bootstrap for plugin '${this.name}': ${bootstrapFullPath}`);
         let bootstrap = null;
         try {
             bootstrap = require(bootstrapFullPath);
         } catch (e) {
-            this._logger.error(`Loading bootstrap of plugin ${this.name} failed`, e);
-            throw new PluginBootstrapError(`Loading bootstrap of plugin ${this.name} failed: ${e}`);
+            this._logger.error(`Loading bootstrap of plugin '${this.name}' failed`, e);
+            throw new PluginBootstrapError(`Loading bootstrap of plugin '${this.name}' failed: ${e}`);
         }
 
         if (typeof (bootstrap) === 'function') {
@@ -49,73 +46,73 @@ export default class MashroomPlugin implements MashroomPluginType {
             return bootstrap.default;
         }
 
-        throw new PluginBootstrapError(`Loading bootstrap of plugin ${this.name} failed: Default export is no function!`);
+        throw new PluginBootstrapError(`Loading bootstrap of plugin '${this.name}' failed: Default export is no function!`);
     }
 
     _getBootstrapFullPath() {
         if (!this._pluginDefinition.bootstrap) {
             return null;
         }
-        return resolve(this.pluginPackage.pluginPackagePath, this._pluginDefinition.bootstrap);
-    }
-
-    _loaded(event: MashroomPluginRegistryConnectorEvent) {
-        this._config = event.pluginConfig;
-        this._lastReloadTs = Date.now();
-        this._status = 'loaded';
-        this._errorMessage = null;
-    }
-
-    _updated(event: MashroomPluginRegistryConnectorEvent) {
-        if (event.updatedPluginDefinition) {
-            this._pluginDefinition = event.updatedPluginDefinition;
+        // At the moment we can only load bootstraps form the local file system
+        if (this.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+            throw new Error(`Cannot load bootstrap module from ${this.pluginPackage.pluginPackageURL} because it is not a local file system URL`);
         }
+        return resolve(fileURLToPath(this.pluginPackage.pluginPackageURL), this._pluginDefinition.bootstrap);
     }
 
-    _error(event: MashroomPluginRegistryConnectorEvent) {
-        this._config = null;
-        this._lastReloadTs = null;
-        this._status = 'error';
-        this._errorMessage = event.errorMessage;
-    }
-
-    get name(): string {
+    get name() {
         return this._pluginDefinition.name;
     }
 
-    get description(): string | undefined | null {
+    get description() {
         return this._pluginDefinition.description;
     }
 
-    get tags(): Array<string> {
+    get tags() {
         return this._pluginDefinition.tags || [];
     }
 
-    get type(): MashroomPluginTypeType {
+    get type() {
         return this._pluginDefinition.type;
     }
 
-    get status(): MashroomPluginStatus {
+    get status() {
         return this._status;
     }
 
-    get lastReloadTs(): number | undefined | null {
+    get lastReloadTs() {
         return this._lastReloadTs;
     }
 
-    get errorMessage(): string | undefined | null {
+    get errorMessage() {
         return this._errorMessage;
     }
 
-    get pluginDefinition(): MashroomPluginDefinition {
+    get pluginDefinition() {
         return readonlyUtils.cloneAndFreezeObject(this._pluginDefinition);
     }
 
-    get config(): MashroomPluginConfig | undefined | null {
+    get config() {
         return this._config;
     }
 
-    get pluginPackage(): MashroomPluginPackage {
+    get pluginPackage() {
         return this._pluginPackage;
+    }
+
+    setConfig(config: MashroomPluginConfig | undefined | null) {
+        this._config = config;
+    }
+
+    setLastReloadTs(lastReloadTs: number) {
+        this._lastReloadTs = lastReloadTs;
+    }
+
+    setStatus(status: MashroomPluginStatus) {
+        this._status = status;
+    }
+
+    setErrorMessage(errorMessage: string | null) {
+        this._errorMessage = errorMessage;
     }
 }

@@ -1,5 +1,6 @@
 
 import {parse} from 'path';
+import {pathToFileURL} from 'url';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import PortalThemePluginLoader from '../../../../src/backend/plugins/loader/PortalThemePluginLoader';
 import MashroomPortalPluginRegistry from '../../../../src/backend/plugins/MashroomPortalPluginRegistry';
@@ -11,8 +12,9 @@ describe('PortalThemePluginLoader', () => {
     it('loads and registers a theme', async () => {
 
         const pluginPackage: any = {
-            pluginPackagePath: '/opt/mashroom/packages/test',
+            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
         };
+
         const themePlugin: MashroomPlugin = {
             pluginPackage,
             name: 'Portal Theme 1',

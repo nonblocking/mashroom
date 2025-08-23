@@ -27,10 +27,9 @@ const serverConfig: MashroomServerConfig = {
         'Mashroom Session Redis Provider',
         'Mashroom Session Filestore Provider',
         'Mashroom Memory Cache Redis Provider',
-        'Mashroom Portal Remote App Kubernetes Background Job',
-        'Mashroom Portal Remote App Kubernetes Registry',
-        'Mashroom Portal Remote App Kubernetes Admin Webapp',
-        'Mashroom Portal Remote App Kubernetes Admin Webapp Integration',
+        "Mashroom Remote Package Scanner Kubernetes",
+        "Mashroom Remote Package Scanner Kubernetes Admin Webapp",
+        "Mashroom Remote Package Scanner Kubernetes Admin Webapp Integration",
         'Mashroom Monitoring PM2 Exporter',
         'Mashroom Http Proxy Add User Headers Interceptor',
         'Mashroom Http Proxy Add Access Token Interceptor',
@@ -121,10 +120,10 @@ const serverConfig: MashroomServerConfig = {
             showEnvAndVersions: true,
             spaMode: true
         },
-        'Mashroom Portal Remote App Registry': {
-            remotePortalAppUrls: './remotePortalApps.ts'
+        'Mashroom Remote Package Scanner': {
+            remotePackageUrls: './remotePackageUrls.ts'
         },
-        'Mashroom Portal Remote App Registry Admin Webapp': {
+        'Mashroom Remote Package Scanner Admin Webapp': {
             showAddRemoteAppForm: true
         }
     }

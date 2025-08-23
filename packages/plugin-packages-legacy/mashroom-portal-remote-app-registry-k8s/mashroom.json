@@ -1,0 +1,58 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Remote App Kubernetes Background Job",
+            "type": "background-job",
+            "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
+            "requires": [
+                "Mashroom Portal Remote App Kubernetes Registry",
+                "Mashroom Background Jobs Services"
+            ],
+            "defaultConfig": {
+                "cronSchedule": "0/1 * * * *",
+                "invokeImmediately": true,
+                "k8sNamespacesLabelSelector": null,
+                "k8sNamespaces": [
+                    "default"
+                ],
+                "k8sServiceLabelSelector": null,
+                "serviceNameFilter": ".*",
+                "refreshIntervalSec": 600,
+                "accessViaClusterIP": false
+            }
+        },
+        {
+            "name": "Mashroom Portal Remote App Kubernetes Registry",
+            "type": "plugin-package-scanner",
+            "bootstrap": "./dist/scanner/mashroom-bootstrap-plugin-package-scanner.js",
+            "defaultConfig": {
+                "priority": 50
+            }
+        },
+        {
+            "name": "Mashroom Portal Remote App Kubernetes Admin Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+            "requires": [
+                "Mashroom Portal Remote App Kubernetes Background Job"
+            ],
+            "defaultConfig": {
+                "path": "/portal-remote-app-registry-kubernetes"
+            }
+        },
+        {
+            "name": "Mashroom Portal Remote App Kubernetes Admin Webapp Integration",
+            "type": "admin-ui-integration",
+            "requires": [
+                "Mashroom Portal Remote App Kubernetes Admin Webapp"
+            ],
+            "target": "Mashroom Portal Remote App Kubernetes Admin Webapp",
+            "defaultConfig": {
+                "menuTitle": "Remote Portal Apps (K8S)",
+                "path": "/remote-portal-apps-k8s"
+            }
+        }
+    ]
+}

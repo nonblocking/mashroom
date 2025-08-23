@@ -24,7 +24,7 @@ Predefined users: john/john, admin/admin
  * Namespace test2 must have the labels test=true and env=test2
  * Set the docker registry you want to use in kubernetes/set-env.sh
 
-Alternatively install [K3D](https://k3d.io) and run
+Alternatively, install [K3D](https://k3d.io) and run
 
     cd kubernetes/common
     ./setup-k3d-cluster.sh
@@ -36,7 +36,7 @@ to set up and configure a new cluster locally.
     cd kubernetes/portal
     ./build-and-deploy.sh
 
-Then you have to create an ingress for the *mashroom-portal* Service in the *portal* Namespace.
+Then you have to create an Ingress for the *mashroom-portal* Service in the *portal* Namespace.
 
 If you have used the *setup-k3d-cluster.sh* the Portal will be available at http://localhost:8085
 

@@ -463,7 +463,7 @@ export type MashroomPortalAppSetup = {
     readonly appId: string;
     readonly title: string | null | undefined;
     readonly proxyPaths: MashroomPortalProxyPaths;
-    // Legacy, will be removed in Mashroom v3
+    // Legacy, will be removed
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly resourcesBasePath: string;
     readonly globalLaunchFunction: string;
@@ -1137,56 +1137,6 @@ A layout looks like this:
 ```
 
 Important is the class **mashroom-portal-app-area** and a unique id element.
-
-### portal-app-registry
-
-This plugin type adds a registry for portal-apps to the Portal. Can be used to integrate Portal Apps in some customized way.
-
-To register a new portal-app-registry plugin add this to _package.json_:
-
-```json
-{
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Custom App Registry",
-                "type": "portal-app-registry",
-                "bootstrap": "./dist/registry/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "priority": 100
-                }
-            }
-        ]
-     }
-}
-```
-
- * _defaultConfig.priority_: Priority of this registry if a portal-app with the same name is registered multiple times (Default: 1)
-
-And the bootstrap must return an implementation of _MashroomPortalAppRegistry_:
-
- ```ts
-import {MyRegistry} from './MyRegistry';
-
-import type {MashroomPortalAppRegistryBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
-
-const bootstrap: MashroomPortalAppRegistryBootstrapFunction = async (pluginName, pluginConfig, pluginContext) => {
-    return new MyRegistry();
-};
-
-export default bootstrap;
-
- ```
-
-The plugin must implement the following interface:
-
-```ts
-export interface MashroomPortalAppRegistry {
-    readonly portalApps: Readonly<Array<MashroomPortalApp>>;
-}
-```
-
-h3.
 
 ### portal-page-enhancement
 

@@ -766,54 +766,42 @@
                     },
                     "additionalProperties": false
                 },
-                "Mashroom Portal Remote App Background Job": {
+                "Mashroom Remote Package Scanner": {
+                    "type": "object",
+                    "properties": {
+                        "remotePackageUrls": {
+                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
+                            "description": "Location of the config file with the remote URLs, relative to the server config (Default: ./remotePackageUrls.json)"
+                        }
+                    }
+                },
+                "Mashroom Remote Package Scanner Background Job": {
                     "type": "object",
                     "properties": {
                         "cronSchedule": {
                             "type": "string",
-                            "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
-                        },
-                        "socketTimeoutSec": {
-                            "type": "integer",
-                            "description": "Socket timeout when trying to reach the remote app (Default: 3)"
+                            "description": "The cron schedule for the background job that scans for packages (Default: every minute)"
                         },
                         "registrationRefreshIntervalSec": {
                             "type": "integer",
-                            "description": "Interval for refreshing known endpoints (Default: 600)"
-                        },
-                        "unregisterAppsAfterScanErrors": {
-                            "type": "integer",
-                            "description": "Remove registered Apps of an endpoint if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)"
+                            "description": "Interval for refreshing known packages (Default: 600)"
                         }
                     },
                     "additionalProperties": false
                 },
-                "Mashroom Portal Remote App Registry": {
+                "Mashroom Remote Package Scanner Admin Webapp": {
                     "type": "object",
                     "properties": {
-                        "remotePortalAppUrls": {
-                            "$ref": "#/definitions/PackagerRelativeOrSystemPath",
-                            "description": "Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)"
-                        }
-                    }
-                },
-                "Mashroom Portal Remote App Registry Admin Webapp": {
-                    "type": "object",
-                    "properties": {
-                        "showAddRemoteAppForm": {
+                        "showAddRemotePluginPackageForm": {
                             "type": "boolean",
-                            "description": " Show the 'Add a new Remote Portal App Endpoint' form in the Admin UI"
+                            "description": "Show the 'Add a new Remote Package URL' form in the Admin UI"
                         }
                     }
                 },
-                "Mashroom Portal Remote App Kubernetes Background Job": {
+                "Mashroom Remote Package Scanner Kubernetes": {
                     "type": "object",
                     "properties": {
-                        "cronSchedule": {
-                            "type": "string",
-                            "description": "The cron schedule for the background job that scans for new apps (Default: every minute)"
-                        },
-                        "k8sNamespacesLabelSelector": {
+                        "namespaceLabelSelector": {
                             "anyOf": [
                                 {
                                     "type": "string"
@@ -825,16 +813,16 @@
                                     }
                                 }
                             ],
-                            "description": "Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)"
+                            "description": "Label selector(s) for namespaces, can be a single string or an array, can also be null (Default: microfrontends=true)"
                         },
-                        "k8sNamespaces": {
+                        "namespaces": {
                             "type": ["array", "null"],
                             "items": {
                                 "type": "string"
                             },
-                            "description": "A distinct list of Kubernetes namespaces to scan; can be null if k8sNamespacesLabelSelector is set (Default: [\"default\"])"
+                            "description": "A distinct list of Kubernetes namespaces to check, can be null if _k8sNamespacesLabelSelector_ is set (Default: null)"
                         },
-                        "k8sServiceLabelSelector": {
+                        "serviceLabelSelector": {
                             "anyOf": [
                                 {
                                     "type": "string"
@@ -846,31 +834,11 @@
                                     }
                                 }
                             ],
-                            "description": "Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (e.g. microfrontend=true) (Default: null)"
+                            "description": "Label selector(s) for services, can be a single string or an array, can be null (Default: microfrontends=true)"
                         },
                         "serviceNameFilter": {
                             "type": "string",
                             "description": "A regular expression for services that should be checked (case-insensitive). (Default: \".*\")"
-                        },
-                        "socketTimeoutSec": {
-                            "type": "integer",
-                            "description": "Socket timeout when trying to the Kubernetes service (Default: 3)"
-                        },
-                        "refreshIntervalSec": {
-                            "type": "integer",
-                            "description": "The time in seconds after that a registered services show be re-checked (Default: 600)"
-                        },
-                        "unregisterAppsAfterScanErrors": {
-                            "type": "integer",
-                            "description": "Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)"
-                        },
-                        "accessViaClusterIP": {
-                            "type": "boolean",
-                            "description": "Access services via IP address and not via <name>.<namespace> (Default: false)"
-                        },
-                        "serviceProcessingBatchSize": {
-                            "type": "number",
-                            "description": "Number of services that should be processed in parallel at a time (Default: 20)"
                         }
                     },
                     "additionalProperties": false

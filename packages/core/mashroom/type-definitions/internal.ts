@@ -4,12 +4,9 @@ import type {RequestHandler, Application} from 'express';
 import type {
     LogLevel,
     MashroomServerConfig,
-    MashroomPluginPackagePath,
     MashroomEventEmitter,
-    MashroomPluginDefinition,
     MashroomPlugin,
     MashroomPluginPackage,
-    MashroomPluginConfig,
     MashroomPluginType,
     MashroomPluginLoader,
     MashroomPluginLoaderMap,
@@ -19,6 +16,9 @@ import type {
     MashroomCoreServices,
     MashroomHttpUpgradeService,
     MashroomServicePluginServices,
+    MashroomPluginPackageScanner,
+    MashroomPluginPackageDefinitionBuilder,
+    MashroomPotentialPluginPackage,
 } from './api';
 
 export interface GlobalNodeErrorHandler {
@@ -42,31 +42,6 @@ export interface MashroomLoggerDelegate {
     log(category: string, level: LogLevel, context: any | undefined | null, message: string, args: any[] | undefined | null): void;
 }
 
-export type MashroomPluginPackageScannerEventName = 'packageAdded' | 'packageUpdated' | 'packageRemoved';
-export type MashroomPluginPackageScannerEvent = MashroomPluginPackagePath;
-
-/**
- * Mashroom plugin package scanner interface
- */
-export interface MashroomPluginPackageScanner extends MashroomEventEmitter<MashroomPluginPackageScannerEventName, MashroomPluginPackageScannerEvent> {
-    /**
-     * Plugin root folders
-     */
-    readonly pluginPackageFolders: Readonly<Array<string>>;
-    /**
-     * The currently valid plugin package paths
-     */
-    readonly pluginPackagePaths: Readonly<Array<MashroomPluginPackagePath>>;
-    /**
-     * Start scan
-     */
-    start(): Promise<void>;
-    /**
-     * Stop scan
-     */
-    stop(): Promise<void>;
-}
-
 export type MashroomPluginPackageBuilderEventName = 'build-finished';
 export type MashroomPluginPackageBuilderEvent = {
     readonly pluginPackageName: string;
@@ -81,39 +56,39 @@ export interface MashroomPluginPackageBuilder extends MashroomEventEmitter<Mashr
 
     /**
      * Add given plugin package to build queue
-     *
-     * @param pluginPackageName
-     * @param pluginPackagePath
-     * @param buildScript
-     * @param lastSourceUpdateTimestamp
      */
-    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string | undefined | null, lastSourceUpdateTimestamp?: number): void;
+    addToBuildQueue(pluginPackageName: string, pluginPackagePath: string, buildScript: string, lastSourceUpdateTimestamp?: number): void;
 
     /**
-     * Remove from build queue (if present)
-     *
-     * @param pluginPackageName
+     * Remove from the build queue (if present)
      */
     removeFromBuildQueue(pluginPackageName: string): void;
 
     /**
-     * Stop processing build queue
+     * Stop processing the build queue
      */
     stopProcessing(): void;
 }
 
-export type MashroomPluginPackageFactory = (pluginPackagePath: MashroomPluginPackagePath, connector: MashroomPluginPackageRegistryConnector) => MashroomPluginPackage;
-export type MashroomPluginFactory = (definition: MashroomPluginDefinition, pluginPackage: MashroomPluginPackage, connector: MashroomPluginRegistryConnector) => MashroomPlugin;
-
-export type MashroomPluginRegistryEventName = 'loaded' | 'unload';
+export type MashroomPluginRegistryEventName = 'loaded' | 'unloaded';
 export type MashroomPluginRegistryEvent = {
     readonly pluginName: string;
+}
+
+
+export type MashroomPluginPackageDefinitionBuilderWithWeight = {
+    readonly definitionBuilder: MashroomPluginPackageDefinitionBuilder;
+    readonly weight: number;
 }
 
 /**
  * Mashroom plugin registry
  */
 export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPluginRegistryEventName, MashroomPluginRegistryEvent> {
+    /**
+     * All known (potential) plugin package URLs
+     */
+    readonly potentialPluginPackages: Readonly<Array<MashroomPotentialPluginPackage>>;
     /**
      * The currently known plugin packages
      */
@@ -123,11 +98,35 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
      */
     readonly plugins: Readonly<Array<MashroomPlugin>>;
     /**
-     * The currently known plugin loaders
+     * Known plugin loaders
      */
     readonly pluginLoaders: Readonly<MashroomPluginLoaderMap>;
     /**
-     * Register (or overwrite existing) plugin loader for given type
+     * Known plugin package scanners
+     */
+    readonly pluginPackageScanners: Readonly<Array<MashroomPluginPackageScanner>>;
+    /**
+     * Known plugin package definition builders
+     */
+    readonly pluginPackageDefinitionBuilders: Readonly<Array<MashroomPluginPackageDefinitionBuilderWithWeight>>;
+    /**
+     * Register (or overwrite existing) a plugin scanner
+     */
+    registerPluginScanner(scanner: MashroomPluginPackageScanner): void;
+    /**
+     * Unregister a plugin scanner
+     */
+    unregisterPluginScanner(scanner: MashroomPluginPackageScanner): void;
+    /**
+     * Register (or overwrite existing) a plugin definition builder
+     */
+    registerPluginDefinitionBuilder(weight: number, definitionBuilder: MashroomPluginPackageDefinitionBuilder): void;
+    /**
+     * Unregister a plugin definition scanner
+     */
+    unregisterPluginDefinitionBuilder(definitionBuilder: MashroomPluginPackageDefinitionBuilder): void;
+    /**
+     * Register (or overwrite existing) plugin loader for a given type
      */
     registerPluginLoader(type: MashroomPluginType, loader: MashroomPluginLoader): void;
     /**
@@ -136,28 +135,14 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
     unregisterPluginLoader(type: MashroomPluginType, loader: MashroomPluginLoader): void;
 }
 
-export type MashroomPluginPackageRegistryConnectorEventName = 'updated' | 'removed';
-export interface MashroomPluginPackageRegistryConnector extends MashroomEventEmitter<MashroomPluginPackageRegistryConnectorEventName, void> {
-    emitUpdated(): void;
-    emitRemoved(): void;
-}
-
-export type MashroomPluginRegistryConnectorEventName = 'loaded' | 'updated' | 'error';
-export type MashroomPluginRegistryConnectorEvent = {
-    readonly errorMessage?: string;
-    readonly pluginConfig?: MashroomPluginConfig;
-    readonly updatedPluginDefinition?: MashroomPluginDefinition;
-}
-
-export interface MashroomPluginRegistryConnector extends MashroomEventEmitter<MashroomPluginRegistryConnectorEventName, MashroomPluginRegistryConnectorEvent> {
-    emitLoaded(event: MashroomPluginRegistryConnectorEvent): void;
-    emitError(event: MashroomPluginRegistryConnectorEvent): void;
-    emitUpdated(event: MashroomPluginRegistryConnectorEvent): void;
-}
 
 /**
- * Mashroom plugin service
+ * Mashroom plugin manager
  */
+export interface MashroomPluginManager {
+    start(): Promise<void>;
+    stop(): Promise<void>;
+}
 
 /**
  * Mashroom server
@@ -172,7 +157,6 @@ export interface MashroomServer {
      */
     stop(): Promise<void>;
 }
-
 
 export type MashroomServiceNamespaces = {
     readonly core: MashroomCoreServices;

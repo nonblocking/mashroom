@@ -71,16 +71,10 @@
             "showEnvAndVersions": true,
             "spaMode": true
         },
-        "Mashroom Portal Remote App Kubernetes Background Job": {
-            "cronSchedule": "0/1 * * * *",
-            "k8sNamespacesLabelSelector": ["test=true,env=test2", "test=true,env=test1"],
-            "k8sNamespaces": null,
-            "k8sServiceLabelSelector": "microfrontend=true",
-            "serviceNameFilter": ".*",
-            "socketTimeoutSec": 3,
-            "refreshIntervalSec": 600,
-            "unregisterAppsAfterScanErrors": 3,
-            "accessViaClusterIP": false
+        "Mashroom Remote Package Scanner Kubernetes": {
+            "namespaceLabelSelector": ["env=development", "microfrontends=true"],
+            "serviceLabelSelector": "microfrontends=true",
+            "serviceNameFilter": ".*"
         }
     }
 }

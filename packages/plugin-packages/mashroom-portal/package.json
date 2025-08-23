@@ -143,7 +143,7 @@
                 }
             },
             {
-                "name": "Mashroom Portal App Plugin Loader",
+                "name": "Legacy Mashroom Portal App Plugin Loader",
                 "type": "plugin-loader",
                 "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-plugin-loader.js",
                 "loads": "portal-app"
@@ -177,18 +177,6 @@
                 "type": "plugin-loader",
                 "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-page-enhancement-plugin-loader.js",
                 "loads": "portal-page-enhancement"
-            },
-            {
-                "name": "(Legacy) Mashroom Portal App Registry Plugin Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-registry-plugin-loader.js",
-                "loads": "remote-portal-app-registry"
-            },
-            {
-                "name": "Mashroom Portal App Registry Plugin Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-registry-plugin-loader.js",
-                "loads": "portal-app-registry"
             }
         ]
     }

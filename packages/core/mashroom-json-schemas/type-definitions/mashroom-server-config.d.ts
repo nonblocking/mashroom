@@ -535,77 +535,45 @@ export interface Plugins {
      */
     showEnvAndVersions?: boolean;
   };
-  "Mashroom Portal Remote App Background Job"?: {
+  "Mashroom Remote Package Scanner"?: {
     /**
-     * The cron schedule for the background job that scans for new apps (Default: every minute)
+     * Location of the config file with the remote URLs, relative to the server config (Default: ./remotePackageUrls.json)
+     */
+    remotePackageUrls?: string;
+  };
+  "Mashroom Remote Package Scanner Background Job"?: {
+    /**
+     * The cron schedule for the background job that scans for packages (Default: every minute)
      */
     cronSchedule?: string;
     /**
-     * Socket timeout when trying to reach the remote app (Default: 3)
-     */
-    socketTimeoutSec?: number;
-    /**
-     * Interval for refreshing known endpoints (Default: 600)
+     * Interval for refreshing known packages (Default: 600)
      */
     registrationRefreshIntervalSec?: number;
-    /**
-     * Remove registered Apps of an endpoint if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
-     */
-    unregisterAppsAfterScanErrors?: number;
   };
-  "Mashroom Portal Remote App Registry"?: {
+  "Mashroom Remote Package Scanner Admin Webapp"?: {
     /**
-     * Location of the config file with the remote URLs, relative to the server config (Default: ./remotePortalApps.json)
+     * Show the 'Add a new Remote Package URL' form in the Admin UI
      */
-    remotePortalAppUrls?: string;
+    showAddRemotePluginPackageForm?: boolean;
   };
-  "Mashroom Portal Remote App Registry Admin Webapp"?: {
+  "Mashroom Remote Package Scanner Kubernetes"?: {
     /**
-     *  Show the 'Add a new Remote Portal App Endpoint' form in the Admin UI
+     * Label selector(s) for namespaces, can be a single string or an array, can also be null (Default: microfrontends=true)
      */
-    showAddRemoteAppForm?: boolean;
-  };
-  "Mashroom Portal Remote App Kubernetes Background Job"?: {
+    namespaceLabelSelector?: string | string[];
     /**
-     * The cron schedule for the background job that scans for new apps (Default: every minute)
+     * A distinct list of Kubernetes namespaces to check, can be null if _k8sNamespacesLabelSelector_ is set (Default: null)
      */
-    cronSchedule?: string;
+    namespaces?: string[] | null;
     /**
-     * Label selector(s) for namespaces, can be a single string or an array (e.g. environment=development,tier=frontend) (Default: null)
+     * Label selector(s) for services, can be a single string or an array, can be null (Default: microfrontends=true)
      */
-    k8sNamespacesLabelSelector?: string | string[];
-    /**
-     * A distinct list of Kubernetes namespaces to scan; can be null if k8sNamespacesLabelSelector is set (Default: ["default"])
-     */
-    k8sNamespaces?: string[] | null;
-    /**
-     * Label selector(s) for services, can be a single string or an array (e.g. microfrontend=true) (e.g. microfrontend=true) (Default: null)
-     */
-    k8sServiceLabelSelector?: string | string[];
+    serviceLabelSelector?: string | string[];
     /**
      * A regular expression for services that should be checked (case-insensitive). (Default: ".*")
      */
     serviceNameFilter?: string;
-    /**
-     * Socket timeout when trying to the Kubernetes service (Default: 3)
-     */
-    socketTimeoutSec?: number;
-    /**
-     * The time in seconds after that a registered services show be re-checked (Default: 600)
-     */
-    refreshIntervalSec?: number;
-    /**
-     * Remove registered Apps of a service if it cannot be reached for a number of scan intervals (Default: -1 which means: never remove)
-     */
-    unregisterAppsAfterScanErrors?: number;
-    /**
-     * Access services via IP address and not via <name>.<namespace> (Default: false)
-     */
-    accessViaClusterIP?: boolean;
-    /**
-     * Number of services that should be processed in parallel at a time (Default: 20)
-     */
-    serviceProcessingBatchSize?: number;
   };
   "Mashroom Security Services"?: {
     /**

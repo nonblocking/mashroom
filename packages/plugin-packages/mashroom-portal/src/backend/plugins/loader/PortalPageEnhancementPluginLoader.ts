@@ -1,5 +1,6 @@
 
-import path from 'path';
+import {resolve, isAbsolute} from 'path';
+import {fileURLToPath} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {
@@ -17,6 +18,10 @@ import type {
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
 
 const DEFAULT_ORDER = 1000;
+
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
 
 export default class PortalPageEnhancementPluginLoader implements MashroomPluginLoader {
 
@@ -39,15 +44,24 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         let resourcesRootUri = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
-        if (resourcesRootUri.indexOf('://') === -1 && !resourcesRootUri.startsWith('/')) {
-            // Process relative file path
-            resourcesRootUri = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
-        }
+
         if (resourcesRootUri.indexOf('://') === -1) {
-            if (resourcesRootUri.startsWith('/')) {
+            if (resourcesRootUri.startsWith('./')) {
+                resourcesRootUri = resourcesRootUri.slice(2);
+            }
+            if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
+                if (!isAbsolute(resourcesRootUri)) {
+                    const packageBasePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
+                    resourcesRootUri = resolve(packageBasePath, resourcesRootUri);
+                } else {
+                    // Required for windows, don't remove
+                    resourcesRootUri = resolve(resourcesRootUri);
+                }
                 resourcesRootUri = `file://${resourcesRootUri}`;
             } else {
-                resourcesRootUri = `file:///${resourcesRootUri}`;
+                let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+                resourcesRootUri = `${packageURL}/${resourcesRootUri || ''}`;
+                resourcesRootUri = removeTrailingSlash(resourcesRootUri);
             }
         }
 
@@ -55,19 +69,19 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
 
         const pageResources = plugin.pluginDefinition.pageResources;
         if (!pageResources) {
-            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No pageResources defined`);
+            throw new PluginConfigurationError(`Page Enhancement plugin ${plugin.name}: No pageResources defined`);
         }
         if (Array.isArray(pageResources.js)) {
             pageResources.js.forEach((res: any) => {
                 if (!res.dynamicResource && (!res.path || res.path.startsWith('/'))) {
-                    throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name} pageResources.js: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
+                    throw new PluginConfigurationError(`Page Enhancement plugin ${plugin.name} pageResources.js: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
                 }
             });
         }
         if (Array.isArray(pageResources.css)) {
             pageResources.css.forEach((res: any) => {
                 if (!res.dynamicResource && (!res.path || res.path.startsWith('/'))) {
-                    throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name} pageResources.css: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
+                    throw new PluginConfigurationError(`Page Enhancement plugin ${plugin.name} pageResources.css: One of 'dynamicResource' or 'path' must exist and the 'path' property must not start with a slash`);
                 }
             });
         }

@@ -1,0 +1,55 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Remote Package Scanner",
+            "type": "plugin-package-scanner",
+            "bootstrap": "./dist/scanner/mashroom-bootstrap-plugin-package-scanner.js",
+            "requires": [
+                "Mashroom Storage Services"
+            ],
+            "defaultConfig": {
+                "priority": 100,
+                "remotePackageUrls": "./remotePackageUrls.json"
+            }
+        },
+        {
+            "name": "Mashroom Remote Package Scanner Background Job",
+            "type": "background-job",
+            "bootstrap": "./dist/jobs/mashroom-bootstrap-background-job.js",
+            "requires": [
+                "Mashroom Background Jobs Services",
+                "Mashroom Remote Package Scanner"
+            ],
+            "defaultConfig": {
+                "cronSchedule": "0/1 * * * *",
+                "registrationRefreshIntervalSec": 600
+            }
+        },
+        {
+            "name": "Mashroom Remote Package Scanner Admin Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+            "requires": [
+                "Mashroom Storage Services"
+            ],
+            "defaultConfig": {
+                "path": "/remote-plugin-packages",
+                "showAddRemotePluginPackageForm": true
+            }
+        },
+        {
+            "name": "Mashroom Remote Package Scanner Admin Webapp Integration",
+            "type": "admin-ui-integration",
+            "requires": [
+                "Mashroom Remote Package Scanner Admin Webapp"
+            ],
+            "target": "Mashroom Remote Package Scanner Admin Webapp",
+            "defaultConfig": {
+                "menuTitle": "Remote Plugin Packages",
+                "path": "/remote-plugin-packages"
+            }
+        }
+    ]
+}

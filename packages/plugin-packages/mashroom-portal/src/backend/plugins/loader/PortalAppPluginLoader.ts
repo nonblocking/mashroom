@@ -1,5 +1,6 @@
 
-import {resolve} from 'path';
+import {isAbsolute, resolve} from 'path';
+import {fileURLToPath, URL} from 'url';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {
@@ -12,6 +13,10 @@ import type {
 } from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalApp} from '../../../../type-definitions';
 import type {MashroomPortalPluginRegistry} from '../../../../type-definitions/internal';
+
+const removeTrailingSlash = (str: string) => {
+    return str.endsWith('/') ? str.slice(0, -1) : str;
+};
 
 export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
@@ -34,6 +39,10 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         const version = plugin.type === 'portal-app2' ? 2 : 1;
         this._logger.debug(`Detected plugin config version for portal-app ${plugin.name}: ${version}`);
+
+        if (version === 1) {
+            this._logger.warn(`Plugin ${plugin.name} is using the legacy 'portal-app' type. Please convert to type 'portal-app2'.`);
+        }
 
         const clientBootstrap = version == 2 ? plugin.pluginDefinition.clientBootstrap : plugin.pluginDefinition.bootstrap;
         if (!clientBootstrap) {
@@ -69,17 +78,28 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
 
         const screenshots = plugin.pluginDefinition.screenshots;
 
-        // We consider only local resources
-        let resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
-        if (!resourcesRootUri.startsWith('/')) {
-            // Process relative file path
-            resourcesRootUri = resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootUri);
-        }
-        if (resourcesRootUri.indexOf('://') === -1) {
-            if (resourcesRootUri.startsWith('/')) {
-                resourcesRootUri = `file://${resourcesRootUri}`;
+        // Find out where the resources are
+        let resourcesRootUri;
+        if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
+            // Local
+            const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
+            resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
+            if (!isAbsolute(resourcesRootUri)) {
+                // Process relative file path
+                resourcesRootUri = resolve(pluginPackagePath, resourcesRootUri);
             } else {
-                resourcesRootUri = `file:///${resourcesRootUri}`;
+                // Required for windows, don't remove
+                resourcesRootUri = resolve(resourcesRootUri);
+            }
+            resourcesRootUri = `file://${resourcesRootUri}`;
+        } else {
+            // Remote
+            let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+            if (version === 2) {
+                resourcesRootUri = `${packageURL}${plugin.pluginDefinition.remote?.resourcesRoot || ''}`;
+                resourcesRootUri = removeTrailingSlash(resourcesRootUri);
+            } else {
+                resourcesRootUri = packageURL;
             }
         }
 
@@ -89,6 +109,33 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         const description = config.description || plugin.description;
 
         const proxies = version === 2 ? config.proxies : config.restProxies;
+        // Check and fix proxies
+        if (proxies) {
+            for (const proxyName in proxies) {
+                if (proxyName in proxies) {
+                    let targetUri = proxies[proxyName].targetUri;
+                    if (!targetUri) {
+                        throw new Error(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}.`);
+                    }
+                    // For remote Apps the targetUri might be relative to the host where it is running on
+                    if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+                        let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+                        if (targetUri.startsWith('/')) {
+                            targetUri = packageURL + targetUri;
+                        }
+                        try {
+                            const parsedUri = new URL(targetUri);
+                            if (parsedUri.hostname === 'localhost') {
+                                targetUri = packageURL + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                            }
+                        } catch (e) {
+                            // Ignore
+                        }
+                        proxies[proxyName] = {...proxies[proxyName], targetUri};
+                    }
+                }
+            }
+        }
 
         const defaultAppConfig = {...plugin.pluginDefinition.defaultConfig?.appConfig || {}, ...config.appConfig || {}};
 
@@ -99,11 +146,21 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         }
 
         let ssrBootstrap;
+        let ssrInitialHtmlUri;
         let cachingConfig;
         let editorConfig;
         if (version === 2) {
-            const relativeSSRBootstrap = plugin.pluginDefinition.local?.ssrBootstrap;
-            ssrBootstrap = relativeSSRBootstrap && resolve(plugin.pluginPackage.pluginPackagePath, relativeSSRBootstrap);
+            if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:' && plugin.pluginDefinition.local?.ssrBootstrap) {
+                const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
+                const relativeSSRBootstrap = plugin.pluginDefinition.local.ssrBootstrap;
+                ssrBootstrap = relativeSSRBootstrap && resolve(pluginPackagePath, relativeSSRBootstrap);
+            } else if (plugin.pluginDefinition.remote?.ssrInitialHtmlPath) {
+                let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+                ssrInitialHtmlUri = `${packageURL}${plugin.pluginDefinition.remote.ssrInitialHtmlPath}`;
+                if (ssrInitialHtmlUri.endsWith('/')) {
+                    ssrInitialHtmlUri = ssrInitialHtmlUri.slice(0, -1);
+                }
+            }
             cachingConfig = config.caching;
             editorConfig = config.editor;
         }
@@ -124,7 +181,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             clientBootstrap,
             screenshots,
             ssrBootstrap,
-            ssrInitialHtmlUri: undefined,
+            ssrInitialHtmlUri,
             resourcesRootUri,
             cachingConfig,
             editorConfig,

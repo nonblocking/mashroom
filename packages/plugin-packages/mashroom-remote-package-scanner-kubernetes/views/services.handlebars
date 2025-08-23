@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" type="text/css" href="{{baseUrl}}/style.css">
+
+    <script type="application/javascript">
+        function openPlugin(pluginName) {
+            window.top.location.href = `/mashroom/admin/plugins?q=${encodeURIComponent(pluginName)}`;
+        }
+
+         var lastContentHeight = null;
+         function sendHeight() {
+             var contentHeight = document.body.offsetHeight;
+             if (lastContentHeight !== contentHeight) {
+                 parent.postMessage({
+                     height: contentHeight + 20
+                 }, "*");
+                 lastContentHeight = contentHeight;
+             }
+         }
+
+         if (parent !== window) {
+             setInterval(sendHeight, 1000);
+         }
+    </script>
+
+    <title>Mashroom Kubernetes Remote Packages</title>
+</head>
+<body>
+    <h2>Kubernetes Remote Packages</h2>
+
+    {{#if hasErrors}}
+        <div class="errors">
+            <div class="errors-header">Scan Errors:</div>
+            <ul>
+                {{#each errors}}
+                   <li>{{this}}</li>
+                {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+
+    <div class="services">
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Namespace</th>
+                <th>URL</th>
+                <th>Pods</th>
+                <th>Image Version</th>
+                <th>Last Modified</th>
+                <th>Status</th>
+                <th>Portal Apps</th>
+            </tr>
+            {{#each services}}
+                <tr class="{{this.rowClass}}">
+                    <td>{{this.name}}</td>
+                    <td>{{this.namespace}}</td>
+                    <td>{{this.url}}</td>
+                    <td>{{this.runningPods}}</td>
+                    <td>{{this.imageVersion}}</td>
+                    <td>{{this.lastModified}}</td>
+                    <td class="{{this.statusClass}}">{{this.status}}</td>
+                    <td>
+                        <ul class="portal-apps">
+                            {{#if this.portalApps}}
+                                <div>
+                                    {{#each this.portalApps}}
+                                        {{#if @index}}, {{/if}}<a href="javascript:void(0)" onclick="openPlugin('{{this}}')">{{this}}</a>
+                                    {{/each}}
+                                </div>
+                            {{/if}}
+                            {{#if this.errors}}
+                                <div class="error">{{this.errors}}</div>
+                            {{/if}}
+                        </ul>
+                    </td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+
+    <div class="footnotes">
+        {{#if namespaceLabelSelector}}
+            <strong>Namespace label selector:</strong> {{namespaceLabelSelector}}
+            <br/>
+        {{/if}}
+        <strong>Watched Namespaces:</strong> {{watchedNamespaces}}
+        <br/>
+        {{#if serviceLabelSelector}}
+            <strong>Service label selector:</strong> {{serviceLabelSelector}}
+            <br/>
+        {{/if}}
+        <strong>Service name filter:</strong> {{serviceNameFilter}}
+    </div>
+
+</body>
+</html>

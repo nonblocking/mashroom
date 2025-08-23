@@ -10,11 +10,6 @@ Interface:
 ```ts
 export interface MashroomPluginService {
     /**
-     * The currently known plugin loaders
-     */
-    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
-
-    /**
      * Get all currently known plugins
      */
     getPlugins(): Readonly<Array<MashroomPlugin>>;
@@ -23,6 +18,21 @@ export interface MashroomPluginService {
      * Get all currently known plugin packages
      */
     getPluginPackages(): Readonly<Array<MashroomPluginPackage>>;
+
+    /**
+     * All potential plugin package URLs reported by plugin package scanners.
+     */
+    getPotentialPluginPackages(): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
+     * All potential plugin package URLs reported by a specific plugin package scanner.
+     */
+    getPotentialPluginPackagesByScanner(scannerName: string): Readonly<Array<MashroomPotentialPluginPackage>>;
+
+    /**
+     * The currently known plugin loaders
+     */
+    getPluginLoaders(): Readonly<MashroomPluginLoaderMap>;
 
     /**
      * Register for the next loaded event of given plugin (fired AFTER the plugin has been loaded).
@@ -74,7 +84,7 @@ Interface:
 
 ```ts
 /**
- * A services to add and remove HTTP/1 upgrade listeners
+ * A service to add and remove HTTP/1 upgrade listeners
  */
 export interface MashroomHttpUpgradeService {
     /**
@@ -95,7 +105,7 @@ If a probe fails the server state goes to unready.
 
 ```ts
 /**
- * A services to obtain all available health probes
+ * A service to obtain all available health probes
  */
 export interface MashroomHealthProbeService {
     /**
@@ -131,27 +141,262 @@ const bootstrap: MashroomStoragePluginBootstrapFunction = async (pluginName, plu
 
 ## Plugin Types
 
+### web-app
+
+Registers an *Express* webapp that will be available at a given path.
+
+To register a web-app plugin, add this to _mashroom.json_:
+
+```json
+{
+    "plugins": [
+        {
+            "name": "My Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "path": "/my/webapp",
+                "myProperty": "foo"
+            }
+        }
+    ]
+}
+```
+
+* _defaultConfig.path_: The default path where the webapp will be available
+
+And the bootstrap just returns the *Express* webapp:
+
+```ts
+import webapp from './webapp';
+
+import type {MashroomWebAppPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+
+const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
+    return webapp;
+};
+
+export default bootstrap;
+```
+
+*Additional handlers*
+
+It is also possible to return handlers in the bootstrap. Currently there is only one:
+* _upgradeHandler_: Handle HTTP Upgrades (e.g., upgrade to WebSocket). Alternatively you could use *MashroomWebsocketUpgradeService* directly
+
+Example:
+
+```ts
+const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
+    return {
+        expressApp: webapp,
+        upgradeHandler: (request: IncomingMessageWithContext, socket: Socket, head: Buffer) => {
+            // TODO
+        },
+    };
+};
+
+```
+
+### api
+
+Registers an *Express* _Router_ (a REST API) and makes it available at a given path.
+
+To register an API plugin, add this to _mashroom.json_:
+
+```json
+{
+    "plugins": [
+        {
+            "name": "My REST API",
+            "type": "api",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "path": "/my/api",
+                "myProperty": "foo"
+            }
+        }
+    ]
+}
+```
+
+* _defaultConfig.path_: The default path where the api will be available
+
+And the bootstrap just returns the *Express* router:
+
+```ts
+const express = require('express');
+const router = express.Router();
+
+router.get('/', (req, res) => {
+  // ...
+});
+
+import type {MashroomApiPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+
+const bootstrap: MashroomApiPluginBootstrapFunction = async () => {
+    return router;
+};
+
+export default bootstrap;
+
+```
+
+### middleware
+
+Registers an *Express* middleware and adds it to the global middleware stack.
+
+To register a middleware plugin, add this to mashroom.json:
+
+```json
+{
+    "plugins": [{
+        "name": "My Middleware",
+        "type": "middleware",
+        "bootstrap": "./dist/mashroom-bootstrap.js",
+        "defaultConfig": {
+            "order": 500,
+            "myProperty": "foo"
+        }
+    }]
+}
+```
+
+* _defaultConfig.order_: The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
+
+And the bootstrap just returns the *Express* middleware:
+
+```ts
+import MyMiddleware from './MyMiddleware';
+
+import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+
+const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+    const pluginContext = pluginContextHolder.getPluginContext();
+    const middleware = new MyMiddleware(pluginConfig.myProperty, pluginContext.loggerFactory);
+    return middleware.middleware();
+};
+
+export default bootstrap;
+```
+
+### static
+
+Registers some static resources and exposes it at a given path (via *Express* static).
+
+To register a static plugin, add this to _mashroom.json_:
+
+```json
+{
+    "plugins": [{
+        "name": "My Documents",
+        "type": "static",
+        "documentRoot": "./my-documents",
+        "defaultConfig": {
+            "path": "/my/docs"
+        }
+    }]
+}
+```
+
+* _documentRoot_: Defines the local root path of the documents
+* _defaultConfig.path_: The default path where the documents will be available
+
+### services
+
+Used to load arbitrary shared code that can be loaded via _pluginContext_.
+
+To register a service plugin, add this to _mashroom.json_:
+
+```json
+{
+    "plugins": [{
+        "name": "My Services",
+        "type": "services",
+        "namespace": "myNamespace",
+        "bootstrap": "./dist/mashroom-bootstrap.js",
+        "defaultConfig": {
+        }
+    }]
+}
+```
+
+* _namespace_: Defines the path to the services. In this case _MyService_ will be accessible through _pluginContext.services.myNamespace.service_
+
+The bootstrap will just return an object with a bunch of services:
+
+```ts
+import MyService from './MyService';
+
+import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+
+const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
+    const pluginContext = pluginContextHolder.getPluginContext();
+    const service = new MyService(pluginContext.loggerFactory);
+
+    return {
+        service,
+    };
+};
+
+export default bootstrap;
+```
+
+### admin-ui-integration
+
+A simple plugin to register an arbitrary *web-app* or *static* plugin as a panel in the Admin UI.
+
+To register an admin-ui-integration plugin, add this to _mashroom.json_:
+
+```json
+ {
+    "plugins": [{
+        "name": "My Admin Panel Integration",
+        "type": "admin-ui-integration",
+        "requires": [
+            "My Admin Panel"
+        ],
+        "target": "My Admin Panel",
+        "defaultConfig": {
+            "menuTitle": "My Admin Panel",
+            "path": "/my-admin-panel",
+            "height": "80vh",
+            "weight": 10000
+        }
+    }]
+}
+```
+
+* _target_: The actual web-app or static plugin that should be integrated
+* _defaultConfig.menuTitle_: The name that should be appear in the Admin UI menu
+* _defaultConfig.path_: The path in the Admin UI (full path will be /mashroom/admin/ext/\<your path>)
+* _defaultConfig.height_: The height of the iframe that will contain the target webapp (Default: 80vh)
+  If you want that the iframe has the full height of the webapp you have to post the height periodically to
+  the parent, like so
+  ```js
+    parent.postMessage({ height: contentHeight + 20 }, "*");
+  ```
+* _defaultConfig.weight_: The weight of the menu entry, the higher the number, the lower will be menu entry be (Default: 100)
+
 ### plugin-loader
 
 A _plugin-loader_ plugin adds support for a custom plugin type.
 
-To register a new plugin-loader add this to _package.json_:
+To register a new _plugin-loader_ add this to your _mashroom.json_:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Custom Plugin Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/mashroom-bootstrap",
-                "loads": "my-custom-type",
-                "defaultConfig": {
-                   "myProperty": "foo"
-                }
+    "plugins": [
+        {
+            "name": "My Custom Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/mashroom-bootstrap",
+            "loads": "my-custom-type",
+            "defaultConfig": {
+                "myProperty": "foo"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 
@@ -191,251 +436,112 @@ const myPluginLoaderPlugin: MashroomPluginLoaderPluginBootstrapFunction = (plugi
 export default myPluginLoaderPlugin;
 ```
 
-### web-app
+### plugin-package-scanner
 
-Registers a *Express* webapp that will be available at a given path.
+A _plugin-package-scanner_ plugin delivers potential plugin package URLs.
 
-To register a web-app plugin add this to _package.json_:
-
-```json
-{
-     "mashroom": {
-        "plugins": [
-            {
-                "name": "My Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "path": "/my/webapp",
-                    "myProperty": "foo"
-                }
-            }
-        ]
-     }
-}
-```
-
-* _defaultConfig.path_: The default path where the webapp will be available
-
-And the bootstrap just returns the *Express* webapp:
-
-```ts
-import webapp from './webapp';
-
-import type {MashroomWebAppPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
-
-const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
-    return webapp;
-};
-
-export default bootstrap;
-```
-
-*Additional handlers*
-
-It is also possible to return handlers in the bootstrap. Currently there is only one:
-* _upgradeHandler_: Handle HTTP Upgrades (e.g. upgrade to WebSocket). Alternatively you could use *MashroomWebsocketUpgradeService* directly
-
-Example:
-
-```ts
-const bootstrap: MashroomWebAppPluginBootstrapFunction = async () => {
-    return {
-        expressApp: webapp,
-        upgradeHandler: (request: IncomingMessageWithContext, socket: Socket, head: Buffer) => {
-            // TODO
-        },
-    };
-};
-
-```
-
-### api
-
-Registers a *Express* _Router_ (a REST API) and makes it available at a given path.
-
-To register a API plugin add this to _package.json_:
+To register a new _plugin-package-scanner_ add this to your _mashroom.json_:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-            {
-                "name": "My REST API",
-                "type": "api",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "path": "/my/api",
-                    "myProperty": "foo"
-                }
-            }
-        ]
-    }
-}
-```
-
-* _defaultConfig.path_: The default path where the api will be available
-
-And the bootstrap just returns the *Express* router:
-
-```ts
-const express = require('express');
-const router = express.Router();
-
-router.get('/', (req, res) => {
-  // ...
-});
-
-import type {MashroomApiPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
-
-const bootstrap: MashroomApiPluginBootstrapFunction = async () => {
-    return router;
-};
-
-export default bootstrap;
-
-```
-
-### middleware
-
-Registers a *Express* middleware and adds it to the global middleware stack.
-
-To register a middleware plugin add this to package.json:
-
-```json
-{
-    "mashroom": {
-        "plugins": [{
-            "name": "My Middleware",
-            "type": "middleware",
-            "bootstrap": "./dist/mashroom-bootstrap.js",
+    "plugins": [
+        {
+            "name": "My Custom Plugin Package Scanner",
+            "type": "plugin-package-scanner",
+            "bootstrap": "./dist/mashroom-bootstrap",
             "defaultConfig": {
-                "order": 500,
                 "myProperty": "foo"
             }
-        }]
-    }
+        }
+    ]
 }
 ```
 
-* _defaultConfig.order_: The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
-
-And the bootstrap just returns the *Express* middleware:
+The bootstrap script would look like this:
 
 ```ts
-import MyMiddleware from './MyMiddleware';
+import type {
+    MashroomPluginPackageScanner, MashroomPluginScannerCallback,
+    MashroomPluginPackageScannerPluginBootstrapFunction
+} from 'mashroom/type-definitions';
 
-import type {MashroomMiddlewarePluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+class MyPLuginPackageScanner implements MashroomPluginPackageScanner {
 
-const bootstrap: MashroomMiddlewarePluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const pluginContext = pluginContextHolder.getPluginContext();
-    const middleware = new MyMiddleware(pluginConfig.myProperty, pluginContext.loggerFactory);
-    return middleware.middleware();
+    callback: MashroomPluginScannerCallback | undefined;
+
+    get name(): string {
+        return 'My Plugin Package Scanner';
+    }
+
+    setCallback(callback: MashroomPluginScannerCallback) {
+        this.callback = callback;
+    }
+
+    start() {
+        // Start the scanner
+        // ...
+        this.callback.addOrUpdatePackageURL(foundURL);
+    }
+
+    stop() {
+        // Stop the scanner
+    }
+}
+
+const myPluginPackageScannerPlugin: MashroomPluginPackageScannerPluginBootstrapFunction = (pluginName, pluginConfig, pluginContextHolder) => {
+    return new MyPLuginPackageScanner();
 };
 
-export default bootstrap;
+export default myPluginPackageScannerPlugin;
 ```
 
-### static
+### plugin-package-definition-builder
 
-Registers some static resources and exposes it at a given path (via *Express* static).
+A _plugin-package-definition-builder_ plugin generates plugin definitions for URLs.
+URLs found by a plugin package scanner are passed to this plugin to get a _MashroomPluginPackageDefinition_ and some meta information.
 
-To register a static plugin add this to package.json:
+To register a new _lugin-package-definition-builder_ add this to your _mashroom.json_:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [{
-            "name": "My Documents",
-            "type": "static",
-            "documentRoot": "./my-documents",
+    "plugins": [
+        {
+            "name": "My Custom Plugin Package Definition Builder",
+            "type": "plugin-package-definition-builder",
+            "bootstrap": "./dist/mashroom-bootstrap",
             "defaultConfig": {
-                "path": "/my/docs"
+                "weight": 100
             }
-        }]
-    }
+        }
+    ]
 }
 ```
 
-* _documentRoot_: Defines the local root path of the documents
-* _defaultConfig.path_: The default path where the documents will be available
+* _weight_: Defines the sort order in which such plugins are called. A higher value means a higher priority.
 
-### services
-
-Used to load arbitrary shared code that can be loaded via _pluginContext_.
-
-To register a service plugin add this to package.json:
-
-```json
-{
-    "mashroom": {
-        "plugins": [{
-            "name": "My Services",
-            "type": "services",
-            "namespace": "myNamespace",
-            "bootstrap": "./dist/mashroom-bootstrap.js",
-            "defaultConfig": {
-            }
-        }]
-    }
-}
-```
-
-* _namespace_: Defines the path to the services. In this case _MyService_ will be accessible through _pluginContext.services.myNamespace.service_
-
-The bootstrap will just return an object with a bunch of services:
+The bootstrap script would look like this:
 
 ```ts
-import MyService from './MyService';
+import type {
+    MashroomPluginPackageDefinitionBuilder,
+    MashroomPluginPackageDefinitionBuilderPluginBootstrapFunction
+} from 'mashroom/type-definitions';
 
-import type {MashroomServicesPluginBootstrapFunction} from '@mashroom/mashroom/type-definitions';
+class MyPLuginPackageDefinitionBuilder implements MashroomPluginPackageDefinitionBuilder {
 
-const bootstrap: MashroomServicesPluginBootstrapFunction = async (pluginName, pluginConfig, pluginContextHolder) => {
-    const pluginContext = pluginContextHolder.getPluginContext();
-    const service = new MyService(pluginContext.loggerFactory);
+    get name(): string {
+        return 'My Plugin Package Definition Builder';
+    }
 
-    return {
-        service,
-    };
-};
-
-export default bootstrap;
-```
-
-### admin-ui-integration
-
-A simple plugin to register an arbitrary *web-app* or *static* plugin as panel in the Admin UI.
-
-To register an admin-ui-integration plugin add this to package.json:
-
-```json
-{
-    "mashroom": {
-        "plugins": [{
-            "name": "My Admin Panel Integration",
-            "type": "admin-ui-integration",
-            "requires": [
-                "My Admin Panel"
-            ],
-            "target": "My Admin Panel",
-            "defaultConfig": {
-                "menuTitle": "My Admin Panel",
-                "path": "/my-admin-panel",
-                "height": "80vh",
-                "weight": 10000
-            }
-        }]
+    async buildDefinition(packageURL: URL, scannerHints: MashroomPluginScannerHints) {
+        // TODO
+        return null;
     }
 }
-```
 
-* _target_: The actual web-app or static plugin that should be integrated
-* _defaultConfig.menuTitle_: The name that should be appear in the Admin UI menu
-* _defaultConfig.path_: The path in the Admin UI (full path will be /mashroom/admin/ext/\<your path>)
-* _defaultConfig.height_: The height of the iframe that will contain the target webapp (Default: 80vh)
-  If you want that the iframe has the full height of the webapp you have to post the height periodically to
-  the parent, like so
-  ```js
-    parent.postMessage({ height: contentHeight + 20 }, "*");
-  ```
-* _defaultConfig.weight_: The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)
+const myPluginPackageDefinitionBuilderPlugin: MashroomPluginPackageDefinitionBuilderPluginBootstrapFunction = (pluginName, pluginConfig, pluginContextHolder) => {
+    return new MyPLuginPackageDefinitionBuilder();
+};
+
+export default myPluginPackageDefinitionBuilderPlugin;
+```

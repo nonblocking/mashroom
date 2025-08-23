@@ -24,12 +24,12 @@ export const ready = async (request: Request): Promise<CheckResult> => {
     let ok = true;
     const errors = [];
 
-    // All plugins loaded and ready
-    const allPluginPackagesBuild = pluginService.getPluginPackages().every((pluginPackage) => pluginPackage.status === 'ready');
-    const allPluginsLoaded = pluginService.getPlugins().every((plugin) => plugin.status === 'loaded');
-    if (!allPluginPackagesBuild || !allPluginsLoaded) {
+    const allLocalPluginsProcessedOnce = pluginService.getPotentialPluginPackages()
+        .filter((pp) => pp.url.protocol === 'file:')
+        .every((pp) => pp.processedOnce);
+    if (!allLocalPluginsProcessedOnce) {
         ok = false;
-        errors.push('Not all plugins loaded');
+        errors.push('Not all local plugins processed');
     }
 
     // Check health probes
@@ -62,7 +62,7 @@ export const ready = async (request: Request): Promise<CheckResult> => {
 };
 
 export const healthy = async (request: Request): Promise<CheckResult> => {
-    // If the healthy route is used as liveness probe on K8S, return false here will kill the Pod
+    // If the healthy route is used as a liveness probe on K8S, return false here will kill the Pod
     const healthy = !hasUncaughtExceptions();
     if (!healthy) {
         return {

@@ -1,5 +1,7 @@
 
-import path from 'path';
+import {isAbsolute, resolve} from 'path';
+import {fileURLToPath} from 'url';
+import {PluginConfigurationError} from '@mashroom/mashroom-utils';
 
 import type {MashroomPluginLoader, MashroomPlugin, MashroomPluginConfig, MashroomPluginContextHolder, MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomPortalTheme, MashroomPortalThemePluginBootstrapFunction} from '../../../../type-definitions';
@@ -22,16 +24,24 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
+        if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
+            throw new PluginConfigurationError(`Portal Theme plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
+        }
 
         const themeBootstrap: MashroomPortalThemePluginBootstrapFunction = plugin.requireBootstrap();
         const {engineName, engineFactory} = await themeBootstrap(plugin.name, config, contextHolder);
+
+        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
 
         let resourcesRootPath = plugin.pluginDefinition.resourcesRoot;
         if (!resourcesRootPath) {
             resourcesRootPath = './dist';
         }
-        if (resourcesRootPath.startsWith('.')) {
-            resourcesRootPath = path.resolve(plugin.pluginPackage.pluginPackagePath, resourcesRootPath);
+        if (!isAbsolute(resourcesRootPath)) {
+            resourcesRootPath = resolve(pluginPackagePath, resourcesRootPath);
+        } else {
+            // Required for windows, don't remove
+            resourcesRootPath = resolve(resourcesRootPath);
         }
 
         let viewsPath = plugin.pluginDefinition.views;
@@ -39,7 +49,7 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
             viewsPath = './views';
         }
         if (viewsPath.startsWith('.')) {
-            viewsPath = path.resolve(plugin.pluginPackage.pluginPackagePath, viewsPath);
+            viewsPath = resolve(pluginPackagePath, viewsPath);
         }
 
         const theme: MashroomPortalTheme = {

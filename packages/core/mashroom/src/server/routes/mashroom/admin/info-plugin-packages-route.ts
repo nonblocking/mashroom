@@ -7,15 +7,25 @@ import type {MashroomPluginContext} from '../../../../../type-definitions';
 
 const pluginsRoute = (req: Request, res: Response) => {
     res.type('text/html');
-    res.send(infoTemplate(plugins(req.pluginContext), req));
+    res.send(infoTemplate(plugins(req.query.q as string | undefined, req.pluginContext), req));
 };
 
 export default pluginsRoute;
 
 const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-const plugins = (pluginContext: MashroomPluginContext) => `
+const plugins = (filter: string | undefined, pluginContext: MashroomPluginContext) => `
     <h2>Plugin Packages</h2>
+    <div class="table-filter">
+        <input type="search" id="tableFilter" placeholder="Filter" value="${filter ?? ''}" oninput="filterTable('plugin-packages-table', 'table-filter-result', this.value)" />
+        <script>
+            if ('${filter ?? ''}') {
+                addEventListener("DOMContentLoaded", (event) => {
+                    filterTable('plugin-packages-table', 'table-filter-result', '${filter}');
+                });
+            }
+        </script>
+    </div>
     ${pluginPackagesTable(pluginContext)}
 `;
 
@@ -26,7 +36,6 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
     pluginPackages.sort((p1, p2) => p1.name.localeCompare(p2.name));
 
     pluginPackages.forEach((pp) => {
-        const homepageLink = pp.homepage ? `<a target='_blank' href="${pp.homepage}">${pp.homepage}</a>` : '';
         let statusStyle = '';
         let rowBackgroundStyle = '';
         if (pp.status === 'ready') {
@@ -39,27 +48,28 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         pluginPackagesRows.push(`
             <tr style="${rowBackgroundStyle}">
                 <td>${htmlUtils.escapeHtml(pp.name)}</td>
-                <td>${homepageLink}</td>
-                <td>${htmlUtils.escapeHtml(pp.author || '')}</td>
-                <td>${pp.license || ''}</td>
-                <td>${pp.version}</td>
+                <td><a target='_blank' href="${pp.pluginPackageURL}" class="long">${pp.pluginPackageURL}</a></td>
+                <td>
+                    <span>${pp.pluginPackageURL.protocol !== 'file:' ? '&check;' : ''}</span>
+                   <span class="hidden">${pp.pluginPackageURL.protocol !== 'file:' ? 'remote' : ''}</span>
+                </td>
                 <td style="${statusStyle}">${capitalize(pp.status)}</td>
                 <td>${htmlUtils.escapeHtml(pp.errorMessage || '')}</td>
             </tr>`);
     });
 
     return `
-        <table>
+        <table id="plugin-packages-table">
             <tr>
                 <th>Name</th>
-                <th>Homepage</th>
-                <th>Author</th>
-                <th>License</th>
-                <th>Version</th>
+                <th>Location</th>
+                <th>Remote</th>
                 <th>Status</th>
                 <th>Error</th>
             </tr>
             ${pluginPackagesRows.join('')}
         </table>
+        <div id="table-filter-result">
+        </div>
     `;
 };

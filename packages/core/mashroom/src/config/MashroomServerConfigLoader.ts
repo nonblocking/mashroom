@@ -1,6 +1,6 @@
 
-import os from 'os';
-import path from 'path';
+import {hostname} from 'os';
+import {resolve, isAbsolute} from 'path';
 import {existsSync} from 'fs';
 import {readonlyUtils, configUtils, modelUtils} from '@mashroom/mashroom-utils';
 import ServerConfigurationError from '../errors/ServerConfigurationError';
@@ -13,7 +13,7 @@ import type {
 } from '../../type-definitions/internal';
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
-const HOSTNAME = os.hostname() || 'localhost';
+const HOSTNAME = hostname() || 'localhost';
 
 const CONFIG_FILES = [
     'mashroom.json',
@@ -39,10 +39,8 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
     }
 
     load(serverRootPath: string): MashroomServerConfigHolder {
-        // Make serverRootPath absolute
-        if (!path.isAbsolute(serverRootPath)) {
-            serverRootPath = path.resolve(serverRootPath);
-        }
+        // Make serverRootPath absolute and fix it under windows
+        serverRootPath = resolve(serverRootPath);
 
         this._logger.info('Considering config files (multiple possible):', CONFIG_FILES);
         const configFiles = CONFIG_FILES.map((name) => `${serverRootPath}/${name}`);
@@ -70,8 +68,11 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
         // Fix plugin package folder config
         const pluginPackageFolders = config.pluginPackageFolders.map((ppf) => {
             let absolutePath = ppf.path;
-            if (!path.isAbsolute(ppf.path)) {
-                absolutePath = path.resolve(serverRootPath, ppf.path);
+            if (!isAbsolute(ppf.path)) {
+                absolutePath = resolve(serverRootPath, ppf.path);
+            } else {
+                // For windows, don't remove
+                absolutePath = resolve(absolutePath);
             }
             return {
                 path: absolutePath,

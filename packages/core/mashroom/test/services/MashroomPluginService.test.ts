@@ -37,7 +37,7 @@ describe('MashroomPluginService', () => {
         let unloadHandler: any = null;
         const pluginRegistry: any = {
             on(eventName: string, handler: any) {
-                if (eventName === 'unload') {
+                if (eventName === 'unloaded') {
                     unloadHandler = handler;
                 }
             }

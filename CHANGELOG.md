@@ -1,7 +1,56 @@
 
 # Change Log
 
-## [unreleased]
+## [unreleased v3]
+
+ * Admin UI: Added filtering for plugins and plugin packages
+ * Remote Plugin Scanner Kubernetes: Added a new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*.
+   The configuration is very similar:
+   ```json
+   "Mashroom Remote Package Scanner Kubernetes": {
+     "namespaceLabelSelector": ["env=development", "microfrontends=true"],
+     "serviceLabelSelector": "microfrontends=true",
+     "serviceNameFilter": ".*"
+   }
+   ```
+   It comes with a lot of improvements compared to *K8S Remote App Registry*:
+   * It uses *watch* instead of *list* for Namespaces and Services
+   * It also watches Pods and ignores Services without any running ones
+   * It immediately updates plugin packages if the container image version changes (prevents caching problems)
+   * It can handle plugin packages in the default namespace
+   * It uses the image version as cache busting, so exposing */package.json* is no longer necessary
+ * Remote Plugin Scanner: Added a new plugin to register *remote plugins*, replaces *Remote App Registry*.
+   The configuration is very similar:
+   ```json
+    "Mashroom Remote Package Scanner": {
+    "remotePackageUrls": "./remotePackageUrls.json"
+   },
+   ```
+   And *remotePackageUrls.json* looks like this:
+   ```Json
+   {
+     "$schema": "./node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-remote-package-scanner.json",
+     "remotePackageUrls": [
+     "https://demo-ssr-remote-app.mashroom-server.com"
+     ]
+   }
+   ```
+ * K8S Remote App Registry: **BREAKING CHANGE**: Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner Kubernetes* plugin instead)
+ * Remote App Registry: **BREAKING CHANGE** Is legacy now and should no longer be used (use the new generic *Remote Plugin Scanner* plugin instead)
+ * Portal: Plugin Rework
+   * **BREAKING CHANGE**: Removed plugin type *portal-app-registry*
+   * Added direct *remote plugin* support for Portal Apps, Portal Page Enhancements and Portal Layouts
+ * Plugin System Rework:
+   * Added two new plugin types that can be used to extend the plugin system with new source URLs and with custom plugin descriptors.
+     This means plugins could load from all kinds of URLs (e.g., http) and the plugin definition could be built from some custom information.
+   * Added support for *remote* (http(s)) packages to the core
+   * Improved change detection of the file system plugin scanner (reports only relevant changes now)
+   * Made sure plugins are only loaded once during startup
+   * Fixed the problem that plugins were not rebuild after removing the dist/output folder
+   * Ready probe returns HTTP 200 as soon as all local plugin packages are processed (even if some plugins could not be loaded)
+   * *MashroomPluginPackage.pluginPackagePath* is legacy now and only works for local plugins. Use *MashroomPluginPackage.pluginPackageURL*
+
+## [unreleased v2]
 
  * Tabify App: Fixed a timing problem when adding a new App dynamically, which made it invisible until clicking on the tab header
 

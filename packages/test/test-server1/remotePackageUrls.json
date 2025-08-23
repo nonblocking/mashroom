@@ -1,0 +1,6 @@
+{
+    "$schema": "../../core/mashroom-json-schemas/schemas/mashroom-remote-package-scanner.json",
+    "remotePackageUrls": [
+        "https://demo-ssr-remote-app.mashroom-server.com"
+    ]
+}
