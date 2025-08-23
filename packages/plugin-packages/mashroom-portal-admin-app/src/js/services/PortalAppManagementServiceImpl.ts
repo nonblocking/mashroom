@@ -264,6 +264,10 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     private _removeApp({id, pluginName, instanceId}: MashroomPortalLoadedPortalApp) {
+        // Close editor first
+        if (id === this.openContentEditorAppId) {
+            this._closeAppContentEditor(id);
+        }
         this.portalAppService.unloadApp(id);
         this.portalAdminService.removeAppInstance(pluginName, instanceId!);
     }
