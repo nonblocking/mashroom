@@ -1,3 +1,4 @@
+import {resolve} from 'path';
 import {pathToFileURL, URL} from 'url';
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import MashroomPluginManager from '../../src/plugins/MashroomPluginManager';
@@ -234,7 +235,7 @@ const mockPluginContext: any = {
     serverConfig: {
         ignorePlugins: [],
         pluginPackageFolders: [{
-            path: '/foo',
+            path: resolve('/foo'),
             devMode: true,
         }],
     }
@@ -247,7 +248,7 @@ const mockPluginContext2: any = {
     serverConfig: {
         ignorePlugins: ['Plugin 1'],
         pluginPackageFolders: [{
-            path: '/foo',
+            path: resolve('/foo'),
             devMode: false,
         }],
     }
@@ -286,7 +287,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('reads a new package builds it and loads the plugins', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
         let buildFinishedCallback: any = null;
 
@@ -370,7 +371,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('does not load any plugins if a package build error occurs', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
         let buildFinishedCallback: any = null;
 
@@ -419,7 +420,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('respects the plugin ignore list', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder2, loggingUtils.dummyLoggerFactory, null);
@@ -455,7 +456,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('respects the build definition builder weight', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -483,7 +484,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('reloads plugins if the package gets updated', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -523,7 +524,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('reloads plugins if the loader gets updated', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -552,7 +553,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('plugins are unloaded if package is removed', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -581,7 +582,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('plugins are unloaded if package definition is removed', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -678,7 +679,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('handles package updates where the plugin type changes', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -715,7 +716,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('ignores potential packages without an definition', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -762,7 +763,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('handles multiple package definition for a potential package', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -812,7 +813,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('keeps existing plugins if the plugin package definition cannot be built (temporary)', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
@@ -850,7 +851,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('ignores package updates from scanners if it is currently processed', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
         let buildFinishedCallback: any = null;
 
@@ -902,7 +903,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('retries building plugin package definition if an error occurs', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder,
@@ -945,7 +946,7 @@ describe('MashroomPluginManager', () => {
     });
 
     it('retries building plugin package definition only until max retries is reached', async () => {
-        const pluginPackagePath = '/foo/bar';
+        const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
 
         const pluginManager = new MashroomPluginManager(mockPluginContextHolder,
