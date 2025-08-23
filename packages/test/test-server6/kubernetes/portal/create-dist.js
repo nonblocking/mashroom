@@ -18,7 +18,7 @@ const distFolder = resolve(__dirname, 'tmp');
            if (src.endsWith('/packages/test')) {
                return true;
            }
-           if (['/src', '/node_modules', '/flow-typed', '/.flowconfig', '/.nx', '/.github', '/.idea', '/test', '/test-data', '/test-reports',
+           if (['/src', '/node_modules', '/.nx', '/.github', '/.idea', '/test', '/test-data', '/test-reports',
                '/log', '/tmp', '/logos','/type-definitions', '.md', '.editorconfig', '.gitignore',
                '/test-server1', '/test-server2', '/test-server3', '/test-server4', '/test-server5', '/test-server6/kubernetes',
                '/test-server7', '/test-server8'].some(p => src.endsWith(p))) {

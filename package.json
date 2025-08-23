@@ -37,7 +37,6 @@
         "eslint-plugin-jest": "^28.11.0",
         "eslint-plugin-react": "^7.37.5",
         "globals": "^16.1.0",
-        "flow-bin": "0.259.1",
         "jest": "^29.7.0",
         "jest-junit": "^16.0.0",
         "ts-jest": "^29.3.2",
@@ -64,7 +63,7 @@
     },
     "scripts": {
         "setup": "npm install && allow-scripts && lerna exec -- allow-scripts && npm run build:core",
-        "type-check": "lerna run type-check && flow check",
+        "type-check": "lerna run type-check",
         "lint": "lerna run lint",
         "test": "lerna run test",
         "build:core": "nx build @mashroom/mashroom-utils && nx build @mashroom/mashroom && nx build @mashroom/mashroom-json-schemas && nx build @mashroom/mashroom-portal-ui-commons",

@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * **BREAKING CHANGE**: Removed support for the [flow](https://flow.org) type system
  * Admin UI: Added filtering for plugins and plugin packages
  * Remote Plugin Scanner Kubernetes: Added a new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*.
    The configuration is very similar:
