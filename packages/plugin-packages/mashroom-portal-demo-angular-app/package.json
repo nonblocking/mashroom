@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.1",
+    "version": "2.9.2",
     "files": [
         "dist/**"
     ],
@@ -24,7 +24,7 @@
         "@angular/language-service": "^19.2.10",
         "@angular/platform-browser": "^19.2.10",
         "@angular/platform-browser-dynamic": "^19.2.10",
-        "@mashroom/mashroom-portal": "2.9.1"
+        "@mashroom/mashroom-portal": "2.9.2"
     },
     "scripts": {
         "dev": "ng serve",

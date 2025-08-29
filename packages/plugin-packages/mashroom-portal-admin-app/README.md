@@ -14,7 +14,7 @@ To enable it add the following to the _Mashroom Portal_ config:
 ```json
 {
   "plugins": {
-        "Plugin: Mashroom Portal WebApp": {
+        "Mashroom Portal WebApp": {
             "adminApp": "Mashroom Portal Admin App"
         }
     }

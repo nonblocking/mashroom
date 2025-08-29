@@ -53,6 +53,9 @@
 
 ## [unreleased v2]
 
+## 2.9.2 (August 29, 2025)
+
+ * Admin App: Fixed the problem that the old App config was shown after re-opening the App config dialog
  * Tabify App: Fixed a timing problem when adding a new App dynamically, which made it invisible until clicking on the tab header
 
 ## 2.9.1 (July 22, 2025)
