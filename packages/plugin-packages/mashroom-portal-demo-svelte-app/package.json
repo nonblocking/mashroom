@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-svelte-app",
-    "version": "2.9.1",
+    "version": "2.9.2",
     "description": "A simple Svelte based SPA that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "license": "MIT",
@@ -19,8 +19,8 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.1",
-        "@mashroom/mashroom-portal": "2.9.1",
+        "@mashroom/mashroom": "2.9.2",
+        "@mashroom/mashroom-portal": "2.9.2",
         "@tsconfig/svelte": "^5.0.4",
         "svelte": "^5.28.2",
         "svelte-check": "^4.1.7",

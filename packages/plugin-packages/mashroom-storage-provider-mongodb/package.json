@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.1",
+    "version": "2.9.2",
     "files": [
         "dist/**"
     ],
@@ -15,10 +15,10 @@
         "mongodb": "^6.16.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.1",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.1",
-        "@mashroom/mashroom-storage": "2.9.1",
-        "@mashroom/mashroom-utils": "2.9.1",
+        "@mashroom/mashroom": "2.9.2",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.2",
+        "@mashroom/mashroom-storage": "2.9.2",
+        "@mashroom/mashroom-utils": "2.9.2",
         "@shelf/jest-mongodb": "^5.1.0"
     },
     "jest": {
