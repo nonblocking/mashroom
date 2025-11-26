@@ -55,7 +55,7 @@
                     ],
                     "proxies": {
                         "echo": {
-                            "targetUri": "ws://ws.ifelse.io/",
+                            "targetUri": "wss://ws.ifelse.io/",
                             "restrictToRoles": [
                                 "Authenticated"
                             ]
