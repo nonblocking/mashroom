@@ -293,8 +293,8 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
 
     private _createProxyRequest(uri: string, method: string, headers: HttpHeaders): ClientRequest {
         const isWebsocket = uri.startsWith('ws');
-        const [mod, agent] = uri.startsWith('https://') ? [https, !isWebsocket && getHttpsPool()] : [http, !isWebsocket && getHttpPool()];
         const httpUri = isWebsocket ? `http${uri.substring(2)}` : uri;
+        const [mod, agent] = httpUri.startsWith('https://') ? [https, !isWebsocket ? getHttpsPool() : undefined] : [http, !isWebsocket ? getHttpPool() : undefined];
         return mod.request(httpUri, {
             method,
             headers,

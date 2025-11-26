@@ -369,7 +369,7 @@ describe('ProxyImplNodeHttpProxy', () => {
                         loggerFactory: loggingUtils.dummyLoggerFactory,
                         services: {}
                     } as any;
-                    httpProxy.forwardWs(req, socket, head, 'ws://ws.ifelse.io/', {
+                    httpProxy.forwardWs(req, socket, head, 'wss://ws.ifelse.io/', {
 
                     });
                 });

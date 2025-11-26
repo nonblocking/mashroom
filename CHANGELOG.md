@@ -3,6 +3,7 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Fixed forwarding secure WebSocket connections (wss://) in the default proxy implementation
  * HTTP Proxy: Fixed error response error handling if *targetUri* is not a valid URL but was rewritten by an interceptor plugin to be one
 
 ## 2.9.2 (August 29, 2025)
