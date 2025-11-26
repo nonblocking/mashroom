@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "default-robots.txt"
+        "default-robots.txt",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2"
@@ -37,19 +38,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Robots Middleware",
-                "type": "middleware",
-                "bootstrap": "./dist/mashroom-bootstrap-middleware.js",
-                "defaultConfig": {
-                    "order": 300,
-                    "robots.txt": null
-                }
-            }
-        ]
     }
 }

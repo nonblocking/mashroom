@@ -376,6 +376,7 @@ export default (content: string, req: Request) => {
                             ${extraMenuEntry.map(({menuTitle, path}) => `
                                   <li class="menu-item ${req.path === `/ext${path}` ? 'active' : ''}"><a href="/mashroom/admin/ext${path}">${menuTitle}</a></li>
                             `).join('')}
+                            <li class="menu-item"><a href="https://docs.mashroom-server.com" target="_blank">Documentation</a></li>
                         </ul>
                     </nav>
                     <main>

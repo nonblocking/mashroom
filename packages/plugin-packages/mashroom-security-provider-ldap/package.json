@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.21.2",
@@ -43,36 +44,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src --extensions \".ts\" -d dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom LDAP Security Provider",
-                "type": "security-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Session Middleware",
-                    "Mashroom Security Services"
-                ],
-                "defaultConfig": {
-                    "loginPage": "/login",
-                    "serverUrl": "ldap://my-ldap-server:636",
-                    "ldapConnectTimeout": 3000,
-                    "ldapTimeout": 5000,
-                    "tlsOptions": null,
-                    "bindDN": "uid=mashroom,dc=nonblocking,dc=at",
-                    "bindCredentials": "secret",
-                    "baseDN": "ou=users,dc=nonblocking,dc=at",
-                    "userSearchFilter": "(&(objectClass=person)(uid=@username@))",
-                    "groupSearchFilter": "(objectClass=group)",
-                    "extraDataMapping": null,
-                    "secretsMapping": null,
-                    "groupToRoleMapping": "./groupToRoleMapping.json",
-                    "userToRoleMapping": "./userToRoleMapping.json",
-                    "authenticationTimeoutSec": 1200
-                }
-            }
-        ]
     }
 }

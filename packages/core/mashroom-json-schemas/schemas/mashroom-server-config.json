@@ -749,7 +749,7 @@
                         },
                         "styleFile": {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
-                            "description": "Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)"
+                            "description": "Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)"
                         },
                         "logoImageUrl": {
                             "$ref": "#/definitions/HttpUrl",
@@ -885,7 +885,7 @@
                         },
                         "styleFile":  {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
-                            "description": "Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)"
+                            "description": "Custom CSS that will be loaded instead of the built-in style (relative to the server config file, default: null)"
                         }
                     },
                     "additionalProperties": false
@@ -1224,7 +1224,7 @@
                     "properties": {
                         "dataFolder": {
                             "$ref": "#/definitions/PackagerRelativeOrSystemPath",
-                            "description": "Folder to store the data files. The base for relative paths is the Mashroom config file (Default: ./data/storage)"
+                            "description": "Folder to store the data files. The base for relative paths is the server config file (Default: ./data/storage)"
                         },
                         "checkExternalChangePeriodMs": {
                             "type": "integer",

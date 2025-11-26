@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.2",
@@ -42,32 +43,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Messaging External Provider Redis",
-                "type": "external-messaging-provider",
-                "bootstrap": "./dist/provider/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Messaging Services"
-                ],
-                "defaultConfig": {
-                    "internalTopic": "mashroom",
-                    "client": {
-                        "redisOptions": {
-                            "host": "localhost",
-                            "port": "6379",
-                            "maxRetriesPerRequest": 3,
-                            "enableOfflineQueue": false
-                        },
-                        "cluster": false,
-                        "clusterNodes": null,
-                        "clusterOptions": null
-                    }
-                }
-            }
-        ]
     }
 }

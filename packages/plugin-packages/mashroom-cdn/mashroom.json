@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom CDN Services",
+            "type": "services",
+            "namespace": "cdn",
+            "bootstrap": "./dist/mashroom-bootstrap-services.js",
+            "defaultConfig": {
+                "cdnHosts": []
+            }
+        }
+    ]
+}

@@ -1,0 +1,42 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo Composite App",
+            "type": "portal-app2",
+            "clientBootstrap": "startCompositeDemoApp",
+            "requires": [
+                "Mashroom Portal Demo Angular App",
+                "Mashroom Portal Demo Vue App",
+                "Mashroom Portal Demo Svelte App"
+            ],
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ],
+                "css": [
+                    "bundle.css"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist",
+                "ssrBootstrap": "./dist/app-ssr.js"
+            },
+            "caching": {
+                "ssrHtml": "same-config"
+            },
+            "defaultConfig": {
+                "title": "Demo Composite App",
+                "description": {
+                    "en": "A simple SPA that uses other SPAs (which are registered to the Mashroom Portal) as building blocks",
+                    "de": "Ein einfacher SPA der andere SPAs (die im Mashroom Portal registriert sind) als Komponenten benutzt"
+                },
+                "category": "Demo"
+            }
+        }
+    ]
+}

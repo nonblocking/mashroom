@@ -7,7 +7,7 @@ This plugin adds a service for internationalization. It determines the language 
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-i18n** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-i18n** as *dependency*.
 
 After that you can use the service like this:
 
@@ -25,7 +25,7 @@ export default (req: Request, res: Response) => {
 }
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -40,7 +40,7 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _availableLanguages_: A list of available languages (Default: ["en"])
- * _defaultLanguage_: The default language if it can not be determined from the request (Default: en)
+ * _defaultLanguage_: The default language if it cannot be determined from the request (Default: en)
  * _messages_: The folder with custom i18n messages (Default: ./messages). There are default messages
    in the *messages* folder of this package.
 
@@ -59,7 +59,7 @@ And a messages file (e.g. _messages.de.json_) looks like this:
 }
 ```
 
-## Services
+## Provided Services
 
 ### MashroomI18NService
 

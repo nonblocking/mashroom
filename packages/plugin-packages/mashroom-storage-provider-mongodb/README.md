@@ -3,13 +3,13 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a [MongoDB](https://www.mongodb.com/) based storage provider.
+This plugin adds a [MongoDB](https://www.mongodb.com/) based provider for [Mashroom Storage](../mashroom-storage).
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-storage-provider-mongodb** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-storage-provider-mongodb** as *dependency*.
 
-To activate this provider, configure the _Mashroom Security_ plugin like this:
+To activate this provider, configure the [Mashroom Storage](../mashroom-storage) plugin like this:
 
 ```json
 {
@@ -21,7 +21,7 @@ To activate this provider, configure the _Mashroom Security_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {

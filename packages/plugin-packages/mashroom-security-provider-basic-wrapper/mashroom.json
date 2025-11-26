@@ -1,0 +1,16 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Basic Wrapper Security Provider",
+            "type": "security-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "targetSecurityProvider": "Mashroom Security Simple Provider",
+                "onlyPreemptive": true,
+                "realm": "mashroom"
+            }
+        }
+    ]
+}

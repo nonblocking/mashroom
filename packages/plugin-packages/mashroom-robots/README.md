@@ -7,9 +7,9 @@ This plugin adds a middleware that exposes a robots.txt file for search engines.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-robots** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-robots** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {

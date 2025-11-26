@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.21.2"
@@ -23,18 +24,5 @@
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\"",
         "dev": "nodemon --watch src --exec \"npm run build && node dist/dev-server.js\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Demo Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "path": "/demo/webapp"
-                }
-            }
-        ]
     }
 }

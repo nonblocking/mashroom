@@ -1,0 +1,14 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Demo Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "path": "/demo/webapp"
+            }
+        }
+    ]
+}

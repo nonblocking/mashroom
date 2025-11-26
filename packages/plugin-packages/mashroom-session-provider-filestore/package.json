@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.19.2",
@@ -26,18 +27,5 @@
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Session Filestore Provider",
-                "type": "session-store-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "path": "./data/sessions"
-                }
-            }
-        ]
     }
 }

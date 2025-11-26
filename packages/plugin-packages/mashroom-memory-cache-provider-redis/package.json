@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "ioredis": "^5.6.1"
@@ -41,27 +42,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Memory Cache Redis Provider",
-                "type": "memory-cache-provider",
-                "bootstrap": "./dist/provider/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "redisOptions": {
-                        "host": "localhost",
-                        "port": "6379",
-                        "keyPrefix": "mashroom:cache:",
-                        "maxRetriesPerRequest": 3,
-                        "enableOfflineQueue": false
-                    },
-                    "cluster": false,
-                    "clusterNodes": null,
-                    "clusterOptions": null
-                }
-            }
-        ]
     }
 }

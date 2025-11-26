@@ -4,14 +4,14 @@
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
 This plugin adds server side messaging support to _Mashroom Server_.
-If an external provider plugin (e.g. MQTT) is configured the messages can also be sent across multiple nodes (cluster support!)
-and to 3rd party systems.
+If an external provider plugin (e.g., [MQTT](../mashroom-messaging-external-provider-mqtt)) is configured, the messages can also be sent across multiple nodes (cluster support!)
+and to third party systems.
 
-Optionally it supports sending and receiving messages via WebSocket (Requires _mashroom-websocket_).
+Optionally, it supports sending and receiving messages via WebSocket (Requires [mashroom-websocket](../mashroom-websocket)).
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-messaging** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-messaging** as *dependency*.
 
 And you can use the messaging service like this:
 
@@ -36,7 +36,7 @@ export default async (req: Request, res: Response) => {
 }
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -52,16 +52,16 @@ You can override the default config in your Mashroom config file like this:
 }
 ```
 
- * _externalProvider_: A plugin that connects to an external messaging system. Allows to receive messages from other systems
-    and to send messages "out" (Default: null)
- * _externalTopics_: A list of topic roots that should be considered as external. E.g. if the list contains _other-system_
+ * _externalProvider_: A plugin that connects to an external messaging system. Allows receiving messages from other systems
+    and to sending messages "out" (Default: null)
+ * _externalTopics_: A list of topic roots that should be considered as external. E.g., if the list contains _other-system_
     topics published to _other-system/foo_ or _other-system/bar_ would be sent via _externalProvider_. (Default: [])
  * _userPrivateBaseTopic_: The base for private user topics. If the prefix is _something/user_ the user _john_ would only be able
     to subscribe to _user/john/something_ and not to _something/user/thomas/weather-update_ (Default: user).
  * _enableWebSockets_: Enable WebSocket support when _mashroom-websocket_ is present (Default: true)
  * _topicACL_: Access control list to restrict the use of certain topic patterns to specific roles (Default: ./topicACL.json)
 
-With a config like that you can place a file _topic_acl.json_ in your server config  with a content like this:
+With a config like that you can place a file _topic_acl.json_ in your server config with a content like this:
 
 ```json
 {
@@ -92,7 +92,7 @@ You can use here _+_ or _*_ as a wildcard for a single level and _#_ for multipl
 If _enableWebSockets_ is true you can connect to the messaging system on _<websocket_base_path>/messaging_ which is by default
 **/websocket/messaging**. The server expects and sends serialized JSON.
 
-After a successful connection you can use the following commands:
+After a successful connection, you can use the following commands:
 
 **Subscribe**
 
@@ -161,7 +161,7 @@ And the server will push the following **if a message for a subscribed topic arr
 }
 ```
 
-## Services
+## Provided Services
 
 ### MashroomMessagingService
 
@@ -209,14 +209,14 @@ export interface MashroomMessagingService {
 }
 ```
 
-## Plugin Types
+## Provided Plugin Types
 
 ### external-messaging-provider
 
 This plugin type connects the messaging system to an external message broker.
 It also adds cluster support to the messaging system.
 
-To register your custom external-messaging-provider plugin add this to _package.json_:
+To register your custom external-messaging-provider plugin, add this to _package.json_:
 
 ```json
 {

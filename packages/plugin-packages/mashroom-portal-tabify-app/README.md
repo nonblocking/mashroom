@@ -3,15 +3,15 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This _Mashroom Portal_ App turns any app area where it is placed automatically into a tabbed container.
+This [Mashroom Portal](../mashroom-portal) App turns any App area where it is placed automatically into a tabbed container.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-tabify-app** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-tabify-app** as *dependency*.
 
-After placing it on a page use the Portal Admin Toolbar to set the following properties:
+After placing it on a page, use the *Portal Admin Toolbar* to set the following properties:
 
- * _addCloseButtons_: Defines if a close button will be added to remove a portal app displayed as tab
+ * _addCloseButtons_: Defines if a close button is added to remove a Portal App displayed as tab
  * _appNameTitleMapping_: A map to override the displayed title in the tab (Portal App Name -> Title to display)
  * _fixedTabTitles_: A list of fixed tab titles per position (null means not fixed). E.g.: [null, 'the second tag']
 

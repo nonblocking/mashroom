@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-json-schemas",
-    "description": "JSON schemas for Mashroom config files",
+    "description": "JSON schemas for Mashroom Server config files",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",

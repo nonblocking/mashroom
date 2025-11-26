@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.2",
@@ -42,27 +43,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Messaging External Provider AMQP",
-                "type": "external-messaging-provider",
-                "bootstrap": "./dist/provider/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Messaging Services"
-                ],
-                "defaultConfig": {
-                    "internalRoutingKey": "mashroom",
-                    "brokerTopicExchangePrefix": "/topic/",
-                    "brokerTopicMatchAny": "#",
-                    "brokerHost": "localhost",
-                    "brokerPort": 5672,
-                    "brokerUsername": null,
-                    "brokerPassword": null
-                }
-            }
-        ]
     }
 }

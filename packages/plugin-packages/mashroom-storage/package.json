@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.2"
@@ -41,31 +42,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Storage Services",
-                "type": "services",
-                "namespace": "storage",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
-                "defaultConfig": {
-                    "provider": "Mashroom Storage Filestore Provider",
-                    "memoryCache": {
-                        "enabled": false,
-                        "ttlSec": 120,
-                        "invalidateOnUpdate": true,
-                        "collections": {}
-                    }
-                }
-            },
-            {
-                "name": "Mashroom Storage Provider Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
-                "loads": "storage-provider"
-            }
-        ]
     }
 }

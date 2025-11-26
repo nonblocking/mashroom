@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -50,30 +51,5 @@
         "test": "jest",
         "dev": "webpack serve --hot --mode development",
         "build": "webpack --mode production"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Admin App",
-                "type": "portal-app2",
-                "clientBootstrap": "startPortalAdminApp",
-                "resources": {
-                    "js": [
-                        "admin-toolbar.js"
-                    ]
-                },
-                "local": {
-                    "resourcesRoot": "./dist"
-                },
-                "defaultConfig": {
-                    "category": "hidden",
-                    "defaultRestrictViewToRoles": [
-                        "Administrator"
-                    ],
-                    "appConfig": {}
-                }
-            }
-        ]
     }
 }

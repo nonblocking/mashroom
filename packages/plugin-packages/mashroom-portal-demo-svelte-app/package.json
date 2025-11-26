@@ -7,7 +7,8 @@
     "main": "index.js",
     "sideEffects": false,
     "files": [
-        "public/**"
+        "public/**",
+        "mashroom.json"
     ],
     "scripts": {
         "dev": "webpack serve --config ./webpack.config.client.js --mode development",
@@ -25,43 +26,6 @@
         "svelte": "^5.28.2",
         "svelte-check": "^4.1.7",
         "svelte-loader": "^3.2.4"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Demo Svelte App",
-                "type": "portal-app2",
-                "clientBootstrap": "startSvelteDemoApp",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ],
-                    "css": [
-                        "style.css"
-                    ]
-                },
-                "screenshots": [
-                    "screenshot.png"
-                ],
-                "local": {
-                    "resourcesRoot": "./public",
-                    "ssrBootstrap": "./public/ssr.js"
-                },
-                "defaultConfig": {
-                    "title": "Demo Svelte App",
-                    "description": {
-                        "en": "A simple Svelte SPA",
-                        "de": "Ein einfacher Svelte SPA"
-                    },
-                    "category": "Demo",
-                    "appConfig": {
-                        "message": "This is simple Svelte based SPA that communicates with other Apps on the page via message bus",
-                        "pingButtonLabel": "Send Ping"
-                    }
-                }
-            }
-        ]
     },
     "lavamoat": {
         "allowScripts": {

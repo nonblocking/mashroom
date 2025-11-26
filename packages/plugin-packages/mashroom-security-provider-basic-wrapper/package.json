@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.21.2"
@@ -42,20 +43,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src --extensions \".ts\" -d dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Basic Wrapper Security Provider",
-                "type": "security-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "targetSecurityProvider": "Mashroom Security Simple Provider",
-                    "onlyPreemptive": true,
-                    "realm": "mashroom"
-                }
-            }
-        ]
     }
 }

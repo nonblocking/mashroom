@@ -1,0 +1,16 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Storage Filestore Provider",
+            "type": "storage-provider",
+            "bootstrap": "./dist/storage/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "dataFolder": "./data/storage",
+                "checkExternalChangePeriodMs": 100,
+                "prettyPrintJson": true
+            }
+        }
+    ]
+}

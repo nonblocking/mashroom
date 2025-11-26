@@ -1,0 +1,11 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Enhancement User ExtraData",
+            "type": "portal-app-enhancement",
+            "bootstrap": "./dist/mashroom-bootstrap.js"
+        }
+    ]
+}

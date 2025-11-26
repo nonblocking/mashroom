@@ -1,0 +1,23 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Memory Cache Redis Provider",
+            "type": "memory-cache-provider",
+            "bootstrap": "./dist/provider/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "redisOptions": {
+                    "host": "localhost",
+                    "port": "6379",
+                    "keyPrefix": "mashroom:cache:",
+                    "maxRetriesPerRequest": 3,
+                    "enableOfflineQueue": false
+                },
+                "cluster": false,
+                "clusterNodes": null,
+                "clusterOptions": null
+            }
+        }
+    ]
+}

@@ -3,18 +3,18 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a general purpose memory cache service. Some other plugins will automatically use
-it if present, for example *mashroom-storage*.
+This plugin adds a general-purpose memory cache service. Some other plugins will automatically use
+it if present, for example, [mashroom-storage](../mashroom-storage).
 
 The cache service provides multiple _regions_ with the possibility to clear single regions.
 It comes with a built-in provider that uses the local Node.js memory, which is not ideal for clusters.
-But it can also be configured to use another provider, e.g. an implementation based on *Redis*.
+But it can also be configured to use another provider, e.g., an implementation based on *Redis*.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-memory-cache** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-memory-cache** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -30,7 +30,7 @@ You can override the default config in your Mashroom config file like this:
  * _provider_: The name of the provider. Default is *local* which uses the local Node.js memory.
  * _defaultTTLSec_: The default TTL in seconds (Default: 300)
 
-## Services
+## Provided Services
 
 ### MashroomMemoryCacheService
 
@@ -64,13 +64,13 @@ export interface MashroomMemoryCacheService {
     getEntryCount(region: string): Promise<number | undefined>;
 }
 ```
-## Plugin Types
+## Provided Plugin Types
 
 ### memory-cache-provider
 
 This plugin type adds a memory cache provider that can be used by this plugin.
 
-To register a custom memory-cache-provider plugin add this to _package.json_:
+To register a custom memory-cache-provider plugin, add this to _package.json_:
 
 ```json
 {

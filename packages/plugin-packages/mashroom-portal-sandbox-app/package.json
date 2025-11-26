@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -30,34 +31,5 @@
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development",
         "build": "webpack --mode production && cpy ./screenshot.png dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Sandbox App",
-                "type": "portal-app2",
-                "clientBootstrap": "startSandboxApp",
-                "resources": {
-                    "js": [
-                        "sandbox.js"
-                    ]
-                },
-                "screenshots": [
-                    "screenshot.png"
-                ],
-                "local": {
-                    "resourcesRoot": "./dist"
-                },
-                "defaultConfig": {
-                    "title": "Sandbox App",
-                    "description": {
-                        "en": "An App that can be used to load any other Portal App with a specific configuration and to test message bus interaction",
-                        "de": "Eine App mit der man jede andere Portal App laden kann mit einer spezifischen Konfiguration und mit der man Message Bus Interaktionen testen kann"
-                    },
-                    "category": "Testing"
-                }
-            }
-        ]
     }
 }

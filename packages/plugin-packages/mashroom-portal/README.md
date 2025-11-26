@@ -3,27 +3,32 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a Portal component which allows composing pages from Single Page Applications (SPAs).
+This plugin adds a Portal component which allows composing pages from SPA Microfrontends, we call Portal Apps.
 
-Registered SPAs (Portal Apps) can be placed on arbitrary pages via Drag'n'Drop. Each *instance* receives a **config object** during startup and
-a bunch of **client services**, which for example allow access to the message bus. The config is basically an arbitrary JSON object, which can be edited via Admin Toolbar.
-A Portal App can also bring its own config editor App, which again is just a simple SPA.
+> [!NOTE]
+> The Mashroom Portal supports the type of Microfrontends which is commonly associated with the term, basically some frontend written in SPA technology.
+> Since Mashroom supports different types of Microfrontends, we call them here **Portal Apps**.
 
-One of the provided client services allow Portal Apps to load any *other* App (known by name) into any existing DOM node. This can be used to:
+Registered Microfrontends (Portal Apps) can be placed on arbitrary pages via Drag'n'Drop. Each *instance* receives a **config object** during startup and
+a bunch of **client services**, which, for example, allow access to the message bus. The config is basically an arbitrary JSON object, which can be edited via Admin Toolbar.
+A Portal App can also bring its own config editor App, which again is a Portal App.
+
+One of the provided client services allows Portal Apps to load any *other* Portal App (known by name) into any existing DOM node. This can be used to:
+
  * Create **dynamic cockpits** where Apps are loaded dynamically based on some user input or search result
  * Create **Composite Apps** that consist of other Apps (which again could be used within other Apps again)
 
-The Portal supports **hybrid rendering** for both the Portal pages and SPAs. So, if an SPA supports server side rendering the initial HTML can be incorporated
-into the initial HTML page. Navigating to another page dynamically replaces the SPAs in the content area via client side rendering (needs to be supported by the Theme).
+The Portal supports **hybrid rendering** for both the Portal pages and Portal Apps. So, if the Portal App supports server-side rendering, the initial HTML can be incorporated
+into the HTML page. Navigating to another page dynamically replaces the Portal App in the content area via client side rendering (needs to be supported by the Theme).
 
 The Portal also supports **i18n**, **theming**, **role based security**, a client-side message bus which can be connected to a server-side broker and
 a registry for **Portal Apps** on a separate server or container.
 
 ## Usage
 
-Since this plugin requires a lot of other plugins the easiest way to use it is to clone this quickstart repository: [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
+Since this plugin requires a lot of other plugins, the easiest way to use it is to clone this quickstart repository: [mashroom-portal-quickstart](https://github.com/nonblocking/mashroom-portal-quickstart)
 
-You can find a full documentation of _Mashroom Server_ and this portal plugin with a setup and configuration guide here: [https://www.mashroom-server.com/documentation](https://www.mashroom-server.com/documentation)
+You can find full documentation of _Mashroom Server_ and this portal plugin with a setup and configuration guide here: [https://docs.mashroom-server.com](https://www.mashroom-server.com/documentation)
 
 The plugin allows the following configuration properties:
 
@@ -92,11 +97,7 @@ The plugin allows the following configuration properties:
    * _inlineStyles_: Inline the App's CSS to avoid sudden layout shifts after loading the initial HTML (Default: true)
  * _addDemoPages_: Add some demo pages if the configuration storage is empty (Default: true)
 
-## Browser support
-
-The Portal supports only modern Browsers and requires ES6.
-
-## Services
+## Provided Services
 
 ### MashroomPortalService
 
@@ -213,7 +214,7 @@ export interface MashroomPortalService {
 }
 ```
 
-## Plugin Types
+## Provided Plugin Types
 
 ### portal-app
 
@@ -221,7 +222,7 @@ export interface MashroomPortalService {
 
 ### portal-app2
 
-This plugin type makes a Single Page Application (SPA) available in the Portal.
+This plugin type makes a Microfrontend (Portal App) available in the Portal.
 
 To register a new portal-app plugin add this to _package.json_:
 
@@ -230,9 +231,9 @@ To register a new portal-app plugin add this to _package.json_:
     "mashroom": {
         "plugins": [
             {
-                "name": "My Single Page App",
+                "name": "My First Microfrontend",
                 "type": "portal-app2",
-                "clientBootstrap": "startMyApp",
+                "clientBootstrap": "startMyMicrofrontend",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -260,9 +261,9 @@ A full config with all optional properties would look like this:
     "mashroom": {
         "plugins": [
             {
-                "name": "My Single Page App",
+                "name": "My First Microfrontend",
                 "type": "portal-app2",
-                "clientBootstrap": "startMyApp",
+                "clientBootstrap": "startMyMicrofrontend",
                 "resources": {
                     "js": [
                         "bundle.js"
@@ -341,7 +342,7 @@ A full config with all optional properties would look like this:
    * _ssrInitialHtmlPath_: The optional path to a route that renders the initial HTML.
      The Portal will send a POST to this route with a JSON body of type *MashroomPortalAppSSRRemoteRequest*
      and expects a plain *text/html* response or an *application/json* response that satisfies *MashroomPortalAppSSRResult*.
- * _defaultConfig_: The default config that can be overwritten in the Mashroom config file
+ * _defaultConfig_: The default config that can be overwritten in the server config file
     * _title_: Optional human-readable title of the App. Can be a string or an object with translations.
     * _category_: An optional category to group the Apps in the Admin App
     * _tags_: An optional list of tags that can also be used in the search (in the Admin App)
@@ -368,29 +369,31 @@ A full config with all optional properties would look like this:
 
 The _clientBootstrap_ is in this case a global function that starts the App within the given host element. Here for example a React app:
 
-```ts
+```tsx
 import React from 'react';
-import {render, hydrate, unmountComponentAtNode} from 'react-dom';
+import {createRoot, hydrateRoot, type Root} from 'react-dom/client';
 import App from './App';
 
 import type {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 
 const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppSetup, clientServices) => {
-    const {appConfig, restProxyPaths, lang} = portalAppSetup;
+    const {serverSideRendered, appConfig, restProxyPaths, lang} = portalAppSetup;
     const {messageBus} = clientServices;
 
-    // Check if the Apps has been rendered in the server-side, if this is a Hybrid App and a ssrBootstrap is configured
-    //const ssrHost = element.querySelector('[data-ssr-host="true"]');
-    //if (ssrHost) {
-    //    hydrate(<App appConfig={appConfig} messageBus={messageBus}/>, ssrHost);
+    let root: Root;
+
+    //if (serverSideRendered) {
+    //   root = hydrateRoot(element, <App appConfig={appConfig} messageBus={messageBus}/>);
     //} else {
         // CSR
-        render(<App appConfig={appConfig} messageBus={messageBus}/>, element);
+        root = createRoot(element);
+        root.render(<App appConfig={appConfig} messageBus={messageBus}/>);
+
     //}
 
     return {
         willBeRemoved: () => {
-            unmountComponentAtNode(portalAppHostElement);
+            root.unmount();
         },
         updateAppConfig: (appConfig) => {
             // Implement if dynamic app config should be possible
@@ -398,12 +401,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (element, portalAppS
     };
 };
 
-global.startMyApp = bootstrap;
+global.startMyMicrofrontend = bootstrap;
 ```
 
 And for an Angular app:
 
-```ts
+```tsx
 import {platformBrowserDynamic} from '@angular/platform-browser-dynamic';
 import {MashroomPortalAppPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
 import {AppModule} from './app/app.module';
@@ -426,12 +429,12 @@ const bootstrap: MashroomPortalAppPluginBootstrapFunction = (hostElement, portal
     );
 };
 
-global.startAngularDemoApp = bootstrap;
+global.startMyMicrofrontend = bootstrap;
 ```
 
-In case of a Hybrid App which supports Server Side Rendering (SSR) the server side bootstrap would look like this:
+In the case of a Hybrid App which supports Server Side Rendering (SSR) the server side bootstrap would look like this:
 
-```ts
+```tsx
 import React from 'react';
 import {renderToString} from 'react-dom/server';
 import App from './App';
@@ -984,12 +987,11 @@ export default bootstrap;
 
 ```
 
-<span class="panel-info">
-**NOTE**: Even if Express.js could automatically load the template engine (like for Pug) you have to provide the *engineFactory* here, otherwise plugin local
-modules can not be loaded. In that case define the engineFactory like this:
-<br/>
-*engineFactory: () => require('pug').__express*
-</span>
+> [!NOTE]
+> Even if Express.js could automatically load the template engine (like for Pug) you have to provide the *engineFactory* here;
+> otherwise plugin local modules cannot be loaded. In that case define the engineFactory like this:
+>
+> *engineFactory: () => require('pug').__express*
 
 The theme can contain the following views:
 
@@ -1099,7 +1101,7 @@ export type MashroomPortalPageRenderModel = {
 
 ### portal-layouts
 
-This plugin type adds portal layouts to the portal. A layout defines a areas where portal-apps can be placed.
+This plugin type adds portal layouts to the portal. A layout defines areas where portal-apps can be placed.
 
 To register a new portal-layouts plugin add this to _package.json_:
 
@@ -1177,7 +1179,7 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
 
  * _bootstrap_: Path to the script that contains the bootstrap for the plugin (optional)
  * _resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
- * _pageResources_: A list of JavaScript and CSS resourced that should be added to all portal pages.
+ * _pageResources_: A list of JavaScript and CSS resources that should be added to all portal pages.
    They can be static or dynamically generated. And they can be added to the header or footer (location)
    and also be inlined. The (optional) rule property refers to a rule in the instantiated plugin (bootstrap), see below.
  * _defaultConfig.order_: The weight of the resources - the higher it is the **later** they will be added to the page (Default: 1000)
@@ -1202,7 +1204,7 @@ const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = () => {
 export default bootstrap;
 ```
 
-The JavaScript or CSS resource can also be generated dynamically by the plugin. In that case it will always be inlined.
+The plugin can also generate the JavaScript or CSS resource dynamically. In that case it will always be inlined.
 To use this state a _dynamicResource_ name instead of a _path_ and include the function that actually generates
 the content to the object returned by the bootstrap:
 

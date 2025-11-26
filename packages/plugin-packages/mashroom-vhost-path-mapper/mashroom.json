@@ -1,0 +1,24 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom VHost Path Mapper Middleware",
+            "type": "middleware",
+            "bootstrap": "./dist/middleware/mashroom-bootstrap-middleware.js",
+            "defaultConfig": {
+                "order": -1000,
+                "considerHttpHeaders": [
+                    "x-forwarded-host"
+                ],
+                "hosts": {}
+            }
+        },
+        {
+            "name": "Mashroom VHost Path Mapper Service",
+            "type": "services",
+            "namespace": "vhostPathMapper",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js"
+        }
+    ]
+}

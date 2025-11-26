@@ -1,0 +1,118 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal WebApp",
+            "type": "web-app",
+            "bootstrap": "./dist/backend/mashroom-bootstrap-webapp.js",
+            "requires": [
+                "Mashroom Storage Services",
+                "Mashroom Security Services",
+                "Mashroom Internationalization Services",
+                "Mashroom Http Proxy Services"
+            ],
+            "defaultConfig": {
+                "path": "/portal",
+                "adminApp": "Mashroom Portal Admin App",
+                "defaultTheme": "Mashroom Portal Default Theme",
+                "defaultLayout": "Mashroom Portal Default Layouts 1 Column",
+                "authenticationExpiration": {
+                    "warnBeforeExpirationSec": 60,
+                    "autoExtend": false,
+                    "onExpiration": {
+                        "strategy": "reload"
+                    }
+                },
+                "ignoreMissingAppsOnPages": false,
+                "versionHashSalt": null,
+                "resourceFetchConfig": {
+                    "fetchTimeoutMs": 3000,
+                    "httpMaxSocketsPerHost": 3,
+                    "httpRejectUnauthorized": true
+                },
+                "defaultProxyConfig": {
+                    "sendPermissionsHeader": false,
+                    "restrictToRoles": null
+                },
+                "ssrConfig": {
+                    "ssrEnable": true,
+                    "renderTimoutMs": 2000,
+                    "cacheEnable": true,
+                    "cacheTTLSec": 300,
+                    "inlineStyles": true
+                },
+                "addDemoPages": true
+            }
+        },
+        {
+            "name": "Mashroom Portal Services",
+            "type": "services",
+            "bootstrap": "./dist/backend/services/mashroom-bootstrap-services.js",
+            "namespace": "portal"
+        },
+        {
+            "name": "Mashroom Welcome Portal App",
+            "type": "portal-app2",
+            "clientBootstrap": "startWelcomeApp",
+            "resources": {
+                "js": [
+                    "welcome-app.js"
+                ],
+                "css": [
+                    "welcome-app.css"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist/frontend",
+                "ssrBootstrap": "./dist/frontend/welcome-app/js/indexSSR.js"
+            },
+            "defaultConfig": {
+                "title": {
+                    "en": "Welcome App",
+                    "de": "Willkommen App"
+                },
+                "category": "hidden",
+                "caching": {
+                    "ssrHtml": "same-config"
+                }
+            }
+        },
+        {
+            "name": "Legacy Mashroom Portal App Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-plugin-loader.js",
+            "loads": "portal-app"
+        },
+        {
+            "name": "Mashroom Portal App Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-plugin-loader.js",
+            "loads": "portal-app2"
+        },
+        {
+            "name": "Mashroom Portal Theme Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-theme-plugin-loader.js",
+            "loads": "portal-theme"
+        },
+        {
+            "name": "Mashroom Portal Layouts Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-layouts-plugin-loader.js",
+            "loads": "portal-layouts"
+        },
+        {
+            "name": "Mashroom Portal App Enhancement Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-app-enhancement-plugin-loader.js",
+            "loads": "portal-app-enhancement"
+        },
+        {
+            "name": "Mashroom Portal Page Enhancement Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/backend/plugins/loader/mashroom-bootstrap-portal-page-enhancement-plugin-loader.js",
+            "loads": "portal-page-enhancement"
+        }
+    ]
+}

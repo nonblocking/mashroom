@@ -1,0 +1,32 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom WebSocket Webapp",
+            "type": "web-app",
+            "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
+            "requires": [
+                "Mashroom Security Services"
+            ],
+            "defaultConfig": {
+                "path": "/websocket",
+                "reconnectMessageBufferFolder": null,
+                "reconnectTimeoutSec": 5,
+                "restrictToRoles": null,
+                "enableKeepAlive": true,
+                "keepAliveIntervalSec": 15,
+                "maxConnections": 2000
+            }
+        },
+        {
+            "name": "Mashroom WebSocket Services",
+            "type": "services",
+            "namespace": "websocket",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+            "requires": [
+                "Mashroom WebSocket Webapp"
+            ]
+        }
+    ]
+}

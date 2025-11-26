@@ -1,0 +1,28 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Messaging Services",
+            "type": "services",
+            "namespace": "messaging",
+            "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
+            "requires": [
+                "Mashroom Security Services"
+            ],
+            "defaultConfig": {
+                "externalProvider": null,
+                "externalTopics": [],
+                "userPrivateBaseTopic": "user",
+                "enableWebSockets": true,
+                "topicACL": "./topicACL.json"
+            }
+        },
+        {
+            "name": "Mashroom External Messaging Provider Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-messaging-provider-plugin-loader.js",
+            "loads": "external-messaging-provider"
+        }
+    ]
+}

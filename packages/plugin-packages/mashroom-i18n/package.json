@@ -11,7 +11,8 @@
     "files": [
         "dist/**",
         "messages/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "dependencies": {
         "accept-language-parser": "^1.5.0"
@@ -44,26 +45,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Internationalization Services",
-                "type": "services",
-                "namespace": "i18n",
-                "bootstrap": "./dist/mashroom-bootstrap-services.js",
-                "requires": [
-                    "Mashroom Session Middleware"
-                ],
-                "defaultConfig": {
-                    "availableLanguages": [
-                        "en"
-                    ],
-                    "defaultLanguage": "en",
-                    "messages": "./messages"
-                }
-            }
-        ]
     }
 }

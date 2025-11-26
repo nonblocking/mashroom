@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -30,34 +31,5 @@
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development",
         "build": "webpack --mode production && cpy ./screenshot.png dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Remote Messaging App",
-                "type": "portal-app2",
-                "clientBootstrap": "startRemoteMessagingApp",
-                "resources": {
-                    "js": [
-                        "remote-messaging.js"
-                    ]
-                },
-                "screenshots": [
-                    "screenshot.png"
-                ],
-                "local": {
-                    "resourcesRoot": "./dist"
-                },
-                "defaultConfig": {
-                    "title": "Remote Messaging Test App",
-                    "description": {
-                        "en": "An App that can be used to test the remote messaging capabilities of the Mashroom Portal",
-                        "de": "Eine App um die Remote Messaging Fähigkeiten des Mashroom Portals zu testen"
-                    },
-                    "category": "Testing"
-                }
-            }
-        ]
     }
 }

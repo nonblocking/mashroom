@@ -11,9 +11,9 @@ And it exports *Mashroom* plugin metrics like session count, memory cache stats,
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-monitoring-pm2-exporter** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-monitoring-pm2-exporter** as *dependency*.
 
-You can change the default configuration in your Mashroom config file like this:
+You can change the default configuration in your server config file like this:
 
 ```json
      "plugins": {
@@ -56,12 +56,11 @@ You can change the default configuration in your Mashroom config file like this:
  * _pmxMetrics_: Will be passed as *metrics* to the [pm2/io configuration](https://github.com/keymetrics/pm2-io-apm/tree/master#configuration)
  * _mashroomMetrics_: A list of Mashroom plugin metrics that should be exposed.
 
-<span class="panel-info">
-**NOTE**: Currently only *counter* and *gauge* metrics can be exported!
-For a full list install the *mashroom-monitoring-prometheus-exporter* and check the output of /metrics
-</span>
+> [!INFO]
+> Currently only *counter* and *gauge* metrics can be exported!
+> Use the [mashroom-monitoring-prometheus-exporter](../mashroom-monitoring-prometheus-exporter) to export all available metrics!
 
-After starting the server with pm2 you can see the metrics in the "Custom metrics" pane when you start:
+After starting the server with *pm2* you can see the metrics in the "Custom metrics" pane when you start:
 
     pm2 monit
 
@@ -71,7 +70,7 @@ Or you can get it as JSON (*axm_monitor* property) if you execute
 
 ### Fetching all metrics via inter-process communication
 
-If you want to gather all metrics in OpenTelemetry format you can use inter-process communication. 
+If you want to gather all metrics in OpenTelemetry format, you can use inter-process communication.
 
 Here as an example how to export the metrics for each worker and make it available in Prometheus format:
 

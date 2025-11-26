@@ -3,14 +3,14 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a file based session store that can be used by _Mashroom Session_.
-Actually this is just a wrapper for the [session-file-store](https://github.com/valery-barysok/session-file-store) package.
+This plugin adds a file-based session store that can be used by [Mashroom Session](../mashroom-session).
+Actually, this is just a wrapper for the [session-file-store](https://github.com/valery-barysok/session-file-store) package.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session-provider-filestore** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-session-provider-filestore** as *dependency*.
 
-Activate this session provider in your Mashroom config file like this:
+Activate this session provider in your Mashroom Server config file like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ Activate this session provider in your Mashroom config file like this:
 }
 ```
 
-And to change the default config of this plugin add:
+And to change the default config of this plugin, add:
 
 ```json
 {
@@ -34,9 +34,8 @@ And to change the default config of this plugin add:
 }
 ```
 
-<span class="panel-info">
-**NOTE**: The base for relative paths is the Mashroom config file.
-</span>
+> [!NOTE]
+> The base for relative paths is the Mashroom Server config file.
 
 All config options are passed to the _session-file-store_. See [session-file-store](https://github.com/valery-barysok/session-file-store) for available options.
 

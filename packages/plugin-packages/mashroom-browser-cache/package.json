@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -40,20 +41,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Browser Cache Services",
-                "type": "services",
-                "namespace": "browserCache",
-                "bootstrap": "./dist/mashroom-bootstrap-services.js",
-                "defaultConfig": {
-                    "disabled": false,
-                    "maxAgeSec": 31536000
-                }
-            }
-        ]
     }
 }

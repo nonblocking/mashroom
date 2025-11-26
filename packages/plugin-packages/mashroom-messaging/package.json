@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -41,32 +42,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Messaging Services",
-                "type": "services",
-                "namespace": "messaging",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
-                "requires": [
-                    "Mashroom Security Services"
-                ],
-                "defaultConfig": {
-                    "externalProvider": null,
-                    "externalTopics": [],
-                    "userPrivateBaseTopic": "user",
-                    "enableWebSockets": true,
-                    "topicACL": "./topicACL.json"
-                }
-            },
-            {
-                "name": "Mashroom External Messaging Provider Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-messaging-provider-plugin-loader.js",
-                "loads": "external-messaging-provider"
-            }
-        ]
     }
 }

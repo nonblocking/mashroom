@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "sideEffects": false,
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.9.2",
@@ -24,41 +25,5 @@
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --mode development --hot",
         "build": "webpack --mode production"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Tabify App",
-                "type": "portal-app2",
-                "clientBootstrap": "startPortalTabifyApp",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
-                },
-                "local": {
-                    "resourcesRoot": "./dist"
-                },
-                "defaultConfig": {
-                    "title": {
-                        "en": "Tabify App",
-                        "de": "Reiterisierung App"
-                    },
-                    "description": {
-                        "en": "An App that automatically organizes all other Apps in the area where it is placed in tabs",
-                        "de": "Eine App die alle anderen Apps den Bereich auf dem sie platziert wird automatisch in Reitern organisiert"
-                    },
-                    "category": "Layout",
-                    "appConfig": {
-                        "addCloseButtons": false,
-                        "pluginNameTitleMapping": {
-                            "My App": "The title to display"
-                        },
-                        "fixedTabTitles": []
-                    }
-                }
-            }
-        ]
     }
 }

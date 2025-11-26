@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -39,19 +40,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom CDN Services",
-                "type": "services",
-                "namespace": "cdn",
-                "bootstrap": "./dist/mashroom-bootstrap-services.js",
-                "defaultConfig": {
-                    "cdnHosts": []
-                }
-            }
-        ]
     }
 }

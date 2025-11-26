@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.21.2",
@@ -35,18 +36,6 @@
         "build:style": "sass --style compressed --no-source-map --load-path=./node_modules --load-path=../../../node_modules src/frontend/sass/portal.scss:dist/public/portal.css src/frontend/sass/admin.scss:dist/public/admin.css",
         "build:copy-assets": "cpy \"assets/*\" dist/public/assets && cpy \"../../../node_modules/@fortawesome/fontawesome-free/**\" dist/public/fontawesome",
         "build": "npm run build:backend && npm run build:frontend && npm run build:style && npm run build:copy-assets"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Demo Alternative Theme",
-                "type": "portal-theme",
-                "bootstrap": "./dist/plugin/mashroom-bootstrap.js",
-                "resourcesRoot": "./dist/public",
-                "views": "./dist/views"
-            }
-        ]
     },
     "lavamoat": {
         "allowScripts": {

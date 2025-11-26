@@ -1,0 +1,38 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo Angular App",
+            "type": "portal-app2",
+            "clientBootstrap": "startAngularDemoApp",
+            "resources": {
+                "js": [
+                    "runtime.js",
+                    "main.js"
+                ],
+                "css": [
+                    "styles.css"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Demo Angular App",
+                "description": {
+                    "en": "A simple Angular SPA",
+                    "de": "Ein einfacher Angular SPA"
+                },
+                "category": "Demo",
+                "appConfig": {
+                    "message": "This is simple Angular based SPA that communicates with other Apps on the page via message bus",
+                    "pingButtonLabel": "Send Ping"
+                }
+            }
+        }
+    ]
+}

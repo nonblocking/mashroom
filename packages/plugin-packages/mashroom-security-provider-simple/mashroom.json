@@ -1,0 +1,20 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Security Simple Provider",
+            "type": "security-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Session Middleware",
+                "Mashroom Security Services"
+            ],
+            "defaultConfig": {
+                "users": "./users.json",
+                "loginPage": "/login",
+                "authenticationTimeoutSec": 1200
+            }
+        }
+    ]
+}

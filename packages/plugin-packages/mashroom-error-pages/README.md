@@ -8,9 +8,9 @@ It delivers error pages only if the request accept header contains text/html. So
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-error-pages** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-error-pages** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -29,7 +29,7 @@ You can override the default config in your Mashroom config file like this:
 ```
 
  * _mapping_: Maps status codes to error pages. The target files can be file paths or HTTP/S urls.
-   If the file path is not absolute the plugin will expect it to be relative to the plugin folder or the Mashroom server config file.
+   If the file path is not absolute, the plugin will expect it to be relative to the plugin folder or the Mashroom server config file.
    If a status code is not defined in the mapping or no default exists, no error page will be shown.
 
 ### HTML Files

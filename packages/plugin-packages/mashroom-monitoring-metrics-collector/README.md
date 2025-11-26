@@ -3,16 +3,16 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin provides a service to add metrics to the monitoring system that can be used by plugins.
+This plugin provides a service to add metrics to the monitoring system that plugins can use.
 It also adds a middleware that collects request metrics like duration and HTTP status.
 
 It uses internally the [OpenTelemetry SDK](https://opentelemetry.io/docs/specs/otel/metrics/).
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-monitoring-stats-collector** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-monitoring-stats-collector** as *dependency*.
 
-You can change the default configuration in your Mashroom config file like this:
+You can change the default configuration in your server config file like this:
 
 ```json
 {
@@ -30,7 +30,7 @@ You can change the default configuration in your Mashroom config file like this:
 
  * _disableMetrics_: A list of metrics that should be disabled
  * _defaultHistogramBuckets_: Default buckets for histogram metrics
-   * _customHistogramBucketConfig_: Override the bucket configuration for histogram metrics
+ * _customHistogramBucketConfig_: Override the bucket configuration for histogram metrics
 
 ### Synchronous example:
 
@@ -75,14 +75,14 @@ and this:
     const observableGauge = meter.createObservableGauge('http_request_counter', {
         description: 'HTTP Request Counter',
     });
-    
+
     meter.addBatchObservableCallback((observableResult) => {
         // ... somehow get the value to measure
         observableResult.observe(observableGauge, theValue);
     }, [observableGauge]);
 ```
 
-## Services
+## Provided Services
 
 ### MashroomMonitoringMetricsCollectorService
 
@@ -125,6 +125,5 @@ export interface MashroomMonitoringMetricsCollectorService {
 }
 ```
 
-<span class="panel-warning">
-**NOTE**: Don't keep a global reference to the returned metric objects.
-</span>
+> [!WARNING]
+> Don't keep a global reference to the returned metric objects.

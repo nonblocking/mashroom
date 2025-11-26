@@ -19,7 +19,6 @@ export type MashroomPlugins1 =
   | MashroomExternalMessagingProviderPluginDefinition
   | MashroomHttpProxyInterceptorPluginDefinition
   | MashroomMemoryCacheProviderPluginDefinition
-  | MashroomPortalAppV1PluginDefinition
   | MashroomPortalAppV2PluginDefinition
   | MashroomPortalThemePluginDefinition
   | MashroomPortalLayoutsPluginDefinition
@@ -297,119 +296,6 @@ export interface MashroomMemoryCacheProviderPluginDefinition {
   bootstrap: string;
   defaultConfig?: {};
 }
-export interface MashroomPortalAppV1PluginDefinition {
-  name: string;
-  description?: string;
-  /**
-   * Required plugins
-   */
-  requires?: string[];
-  type: "portal-app";
-  /**
-   * Optional human readable title of the App. Can be a string or an object with translations.
-   */
-  title?:
-    | string
-    | {
-        /**
-         * This interface was referenced by `undefined`'s JSON-Schema definition
-         * via the `patternProperty` "^[a-z]{2}$".
-         */
-        [k: string]: string;
-      };
-  /**
-   * An optional category to group the Apps in the Admin App
-   */
-  category?: string;
-  /**
-   * A list of tags that can also be used in the search (in the Admin App)
-   */
-  tags?: string[];
-  resources: PortalAppResources;
-  sharedResources?: PortalAppResources1;
-  /**
-   * Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot
-   */
-  screenshots?: string[];
-  /**
-   * A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element
-   */
-  bootstrap: string;
-  defaultConfig: {
-    /**
-     * The root path for APP resources such as JavaScript files and images.
-     */
-    resourcesRoot: string;
-    /**
-     * Optional default list of roles that have the VIEW permission if not set via Admin App.
-     */
-    defaultRestrictViewToRoles?: string[];
-    /**
-     * Optional mapping between App specific permissions and roles. This corresponds to the permission object passed with the user information to the App
-     */
-    rolePermissions?: {
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` "^[a-zA-Z_]\w+$".
-       */
-      [k: string]: string[];
-    };
-    restProxies?: {
-      /**
-       * This interface was referenced by `undefined`'s JSON-Schema definition
-       * via the `patternProperty` "^[a-zA-Z_]\w+$".
-       */
-      [k: string]: {
-        /**
-         *  The API target URI (HTTP, HTTPS or WebSocket)
-         */
-        targetUri: string;
-        /**
-         * Optional. Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
-         */
-        sendPermissionsHeader?: boolean;
-        /**
-         * Optional list of roles that are permitted to access the proxy
-         */
-        restrictToRoles?: string[];
-      };
-    };
-    /**
-     * Optional meta info that could be used to lookup for Apps with specific features or capabilities
-     */
-    metaInfo?: {};
-    /**
-     * The default configuration that will be passed to the App. Can be adapted in the Admin App
-     */
-    appConfig?: {};
-  };
-}
-/**
- * Javascript and CSS resources that must be loaded before the bootstrap method is invoked.
- */
-export interface PortalAppResources {
-  /**
-   * JavaScript resources. Relative to resourcesRoot
-   */
-  js: string[];
-  /**
-   * CSS resources. Relative to resourcesRoot
-   */
-  css?: string[];
-}
-/**
- * Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
- */
-export interface PortalAppResources1 {
-  /**
-   * JavaScript resources. Relative to resourcesRoot
-   */
-  js: string[];
-  /**
-   * CSS resources. Relative to resourcesRoot
-   */
-  css?: string[];
-}
 export interface MashroomPortalAppV2PluginDefinition {
   name: string;
   /**
@@ -421,8 +307,8 @@ export interface MashroomPortalAppV2PluginDefinition {
    * A global function that implements MashroomPortalAppPluginBootstrapFunction and starts the App within the given host element
    */
   clientBootstrap: string;
-  resources: PortalAppResources2;
-  sharedResources?: PortalAppResources3;
+  resources: PortalAppResources;
+  sharedResources?: PortalAppResources1;
   /**
    * Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot
    */
@@ -511,7 +397,7 @@ export interface MashroomPortalAppV2PluginDefinition {
 /**
  * Javascript and CSS resources that must be loaded before the bootstrap method is invoked.
  */
-export interface PortalAppResources2 {
+export interface PortalAppResources {
   /**
    * JavaScript resources. Relative to resourcesRoot
    */
@@ -524,7 +410,7 @@ export interface PortalAppResources2 {
 /**
  * Optional. Same as resources but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
  */
-export interface PortalAppResources3 {
+export interface PortalAppResources1 {
   /**
    * JavaScript resources. Relative to resourcesRoot
    */

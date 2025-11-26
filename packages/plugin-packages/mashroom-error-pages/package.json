@@ -10,7 +10,8 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "pages/**"
+        "pages/**",
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
@@ -40,23 +41,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Error Pages Middleware",
-                "type": "middleware",
-                "bootstrap": "./dist/mashroom-bootstrap-middleware.js",
-                "defaultConfig": {
-                    "order": -20,
-                    "mapping": {
-                        "403": "./pages/403.html",
-                        "404": "./pages/404.html",
-                        "default": "./pages/default.html"
-                    }
-                }
-            }
-        ]
     }
 }

@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "helmet": "^8.1.0"
@@ -21,46 +22,5 @@
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Helmet Middleware",
-                "type": "middleware",
-                "bootstrap": "./dist/mashroom-bootstrap-middleware.js",
-                "defaultConfig": {
-                    "order": -50,
-                    "helmet": {
-                        "contentSecurityPolicy": false,
-                        "crossOriginEmbedderPolicy": false,
-                        "crossOriginOpenerPolicy": {
-                            "policy": "same-origin"
-                        },
-                        "crossOriginResourcePolicy": {
-                            "policy": "same-site"
-                        },
-                        "expectCt": false,
-                        "referrerPolicy": false,
-                        "hsts": {
-                            "maxAge": 31536000
-                        },
-                        "noSniff": true,
-                        "originAgentCluster": false,
-                        "dnsPrefetchControl": {
-                            "allow": false
-                        },
-                        "frameguard": {
-                            "action": "sameorigin"
-                        },
-                        "permittedCrossDomainPolicies": {
-                            "permittedPolicies": "none"
-                        },
-                        "hidePoweredBy": false,
-                        "xssFilter": true
-                    }
-                }
-            }
-        ]
     }
 }

@@ -12,7 +12,8 @@
         "dist/**",
         "public/**",
         "views/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.21.2",
@@ -49,49 +50,5 @@
         "test": "jest",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed src/sass/style.scss public/style.css",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/webapp/dev-server.js\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Background Jobs Services",
-                "type": "services",
-                "namespace": "backgroundJobs",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
-                "defaultConfig": {}
-            },
-            {
-                "name": "Mashroom Background Jobs Admin Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
-                "requires": [
-                    "Mashroom Background Jobs Services"
-                ],
-                "defaultConfig": {
-                    "path": "/background-jobs"
-                }
-            },
-            {
-                "name": "Mashroom Background Jobs Admin Webapp Integration",
-                "type": "admin-ui-integration",
-                "requires": [
-                    "Mashroom Background Jobs Admin Webapp"
-                ],
-                "target": "Mashroom Background Jobs Admin Webapp",
-                "defaultConfig": {
-                    "menuTitle": "Background Jobs",
-                    "path": "/background-jobs"
-                }
-            },
-            {
-                "name": "Mashroom Background Job Plugin Loader",
-                "type": "plugin-loader",
-                "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
-                "loads": "background-job",
-                "requires": [
-                    "Mashroom Background Jobs Services"
-                ]
-            }
-        ]
     }
 }

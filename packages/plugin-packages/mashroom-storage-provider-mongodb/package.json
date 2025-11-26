@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "mongodb": "^6.16.0"
@@ -44,23 +45,6 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Storage MongoDB Provider",
-                "type": "storage-provider",
-                "bootstrap": "./dist/storage/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "uri": "mongodb://localhost:27017/mashroom_storage_db",
-                    "connectionOptions": {
-                        "minPoolSize": 5,
-                        "serverSelectionTimeoutMS": 3000
-                    }
-                }
-            }
-        ]
     },
     "lavamoat": {
         "allowScripts": {

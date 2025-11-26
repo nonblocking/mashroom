@@ -3,13 +3,13 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a *Redis* based provider for the *mashroom-memory-cache*.
+This plugin adds a *Redis* based provider for the [mashroom-memory-cache](../mashroom-memory-cache).
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-memory-cache-provider-redis** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-memory-cache-provider-redis** as *dependency*.
 
-To activate this provider configure the _Mashroom Memory Cache_ plugin like this:
+To activate this provider configure the [mashroom-memory-cache](../mashroom-memory-cache) plugin like this:
 
 ```json
 {
@@ -22,7 +22,7 @@ To activate this provider configure the _Mashroom Memory Cache_ plugin like this
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -40,11 +40,11 @@ And configure this plugin like this in the Mashroom config file:
 
 * *redisOptions*: Passed to the *Redis* constructor of [ioredis](https://github.com/luin/ioredis)
 
-Checkout out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+Check out the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
 ### Usage with Sentinel
 
-For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel) the configuration would look like this:
+For a high-availability cluster with [Sentinel](https://redis.io/topics/sentinel) the configuration would look like this:
 
 ```json
 {
@@ -66,7 +66,7 @@ For a high availability cluster with [Sentinel](https://redis.io/topics/sentinel
 * *sentinels*: List of sentinel nodes to connect to
 * *name*: Identifies a group of Redis instances composed of a master and one or more slaves
 
-Checkout out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+Check out the *Sentinel* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
 
 ### Usage with a cluster
 
@@ -100,7 +100,7 @@ For a [sharding cluster](https://redis.io/topics/cluster-spec) configure the plu
 
 * *cluster*: Enables cluster support, must be true
 * *clusterNodes*: Cluster start nodes
-* *clusterOptions*: Passed as second argument of the *Redis.Cluster* constructor of *ioredis*
+* *clusterOptions*: Passed as the second argument of the *Redis.Cluster* constructor of *ioredis*
 * *redisOptions*: Passed as *redisOptions* in the *clusterOptions*
 
-Checkout out the *Cluster* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.
+Check out the *Cluster* section of the [ioredis](https://github.com/luin/ioredis) documentation for all available options.

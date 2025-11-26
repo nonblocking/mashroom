@@ -23,9 +23,9 @@ Should work with (among others):
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-ldap** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-security-provider-openid-connect** as *dependency*.
 
-To activate this provider, configure the _Mashroom Security_ plugin like this:
+To activate this provider, configure the [Mashroom Security](../mashroom-security) plugin like this:
 
 ```json
 {
@@ -37,7 +37,7 @@ To activate this provider, configure the _Mashroom Security_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -89,18 +89,18 @@ And configure this plugin like this in the Mashroom config file:
 
 ### Roles
 
-Since the authorization mechanism relies on user roles it is necessary to configure your identity provider to map the user
+Since the authorization mechanism relies on user roles, it is necessary to configure your identity provider to map the user
 roles to a scope (which means we can get it as claim). See Example Configurations below.
 
 ### Secrets
 
-The plugin maps the ID/JWT Token to _user.secrets.idToken_ so it can for example be used in a Http Proxy Interceptor to set
+The plugin maps the ID/JWT Token to _user.secrets.idToken_ so it can, for example, be used in a Http Proxy Interceptor to set
 the Bearer for backend calls.
 
 ### Authentication Expiration
 
 The implementation automatically extends the authentication via refresh token every view seconds (as long as the user is active).
-So, if the authentication session gets revoked in the identity provider the user is signed out almost immediately.
+So, if the authentication session gets revoked in the identity provider, the user is signed out almost immediately.
 
 The expiration time of the access token defines after which time the user is automatically signed out due to inactivity.
 And the expiration time of the refresh token defines how long the user can work without signing in again.
@@ -113,7 +113,7 @@ Setup:
 
  * Create a new client in your realm (e.g. *mashroom*)
  * In the *Settings* tab set Access Type *confidential*
- * Make sure the *Valid Redirect URIs* contain your redirect URL (e.g. http://localhost:5050/*)
+ * Make sure the *Valid Redirect URIs* contain your redirect URL (e.g., http://localhost:5050/*)
  * In the *Credentials* tab you'll find the client secret
  * To map the roles to a scope/claim goto *Mappers*, click *Add Builtin* and add a *realm roles* mapper.
    In the field *Token Claim Name* enter *roles*. Also check *Add to ID token*.
@@ -145,14 +145,14 @@ If your Keycloak runs on localhost, the Realm name is *test* amd the client name
 Setup:
 
  * Create a new Realm (e.g. *Test*)
- * Create a new OIDC configuration: OAuth provider -> Configure OpenID Connect -> Create from the Dashboard)
- * Create a new Agent (e.g. *mashroom*): Applications -> OAuth 2.0 -> Agent from the Dashboard)
+ * Create a new OIDC configuration: OAuth provider → Configure OpenID Connect → Create from the Dashboard)
+ * Create a new Agent (e.g. *mashroom*): Applications → OAuth 2.0 → Agent from the Dashboard)
  * Make sure the agent has at least the scopes *openid email profile* and the *ID Token Signing Algorithm* is set to *RS256*
  * Follow [this KB article](https://backstage.forgerock.com/knowledge/kb/article/a15751293) to add the OpenAM groups as roles claim
 
 You'll find more details about the configuration here: [https://backstage.forgerock.com/docs/openam/13.5/admin-guide](https://backstage.forgerock.com/docs/openam/13.5/admin-guide/#chap-openid-connect)
 
-If your OpenAM server runs on localhost, the Realm name is *Test* amd the client name *mashroom*, then the config would look like this:
+If your OpenAM server runs on localhost, the Realm name is *Test* and the client name *mashroom*, then the config would look like this:
 
 ```json
 {
@@ -211,7 +211,7 @@ Setup:
 
  * Go to: [https://github.com/settings/developers](https://github.com/settings/developers)
  * Click on "New OAuth App"
- * Enter the application name and correct callback URL (e.g. http://localhost:5050/openid-connect-cb)
+ * Enter the application name and correct callback URL (e.g., http://localhost:5050/openid-connect-cb)
 
 Possible config:
 

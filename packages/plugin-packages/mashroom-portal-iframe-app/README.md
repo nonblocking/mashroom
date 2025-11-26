@@ -3,13 +3,13 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds a (responsive) iFrame Portal App to the _Mashroom Portal_.
+Adds a (responsive) iFrame Portal App to the [Mashroom Portal](../mashroom-portal).
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-portal-iframe-app** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-iframe-app** as *dependency*.
 
-After placing it on a page use the Portal Admin Toolbar to set the following properties:
+After placing it on a page, use the *Portal Admin Toolbar* to set the following properties:
 
  * _url_: The URL of the page to show in the iframe
  * _width_: The iframe width (Default 100%)

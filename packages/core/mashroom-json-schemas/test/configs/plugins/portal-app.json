@@ -4,14 +4,8 @@
     "plugins": [
         {
             "name": "My Single Page App",
-            "title": {
-                "en": "My Single Page App",
-                "de": "Meine Single Page App"
-            },
-            "category": "My Category",
-            "tags": ["my", "stuff"],
-            "type": "portal-app",
-            "bootstrap": "startMyApp",
+            "type": "portal-app2",
+            "clientBootstrap": "startMyApp",
             "resources": {
                 "js": [
                     "bundle.js"
@@ -28,13 +22,42 @@
             "screenshots": [
                 "screenshot1.png"
             ],
-            "defaultConfig": {
+            "local": {
                 "resourcesRoot": "./dist",
+                "ssrBootstrap": "./dist/renderToString.js"
+            },
+            "remote": {
+                "resourcesRoot": "/public",
+                "ssrInitialHtmlPath": "/ssr"
+            },
+            "defaultConfig": {
+                "title": {
+                    "en": "My Single Page App",
+                    "de": "Meine Single Page App"
+                },
+                "category": "My Category",
+                "tags": ["my", "stuff"],
+                "description": {
+                    "en": "Here the english description",
+                    "de": "Hier die deutsche Beschreibung"
+                },
+                "metaInfo": {
+                    "capabilities": ["foo"]
+                },
                 "defaultRestrictViewToRoles": ["Role1"],
                 "rolePermissions": {
                     "doSomethingSpecial": ["Role2", "Role3"]
                 },
-                "restProxies": {
+                "caching": {
+                    "ssrHtml": "same-config-and-user"
+                },
+                "editor": {
+                    "editorPortalApp": "Demo Config Editor",
+                    "position": "in-place",
+                    "appConfig": {
+                    }
+                },
+                "proxies": {
                     "spaceXApi": {
                         "targetUri": "https://api.spacexdata.com/v3",
                         "sendPermissionsHeader": false,
@@ -43,9 +66,6 @@
                     "tracer": {
                         "targetUri": "${env.TRACER_URL}"
                     }
-                },
-                "metaInfo": {
-                    "capabilities": ["foo"]
                 },
                 "appConfig": {
                     "myProperty": "foo"

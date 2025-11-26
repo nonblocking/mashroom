@@ -3,25 +3,24 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds the possibility to map external paths to internal ones based on virtual host.
+This plugin adds the possibility to map external paths to internal ones based on virtual hosts.
 This is required for web-apps that need to know the actual "base path" to generate URLs (in that case rewriting via reverse proxy won't work).
 
-For example *Mashroom Portal* can use this to move *Sites* to different paths but keep the ability to generate
+For example, [Mashroom Portal](../mashroom-portal) can use this to move *Sites* to different paths but keep the ability to generate
 absolute paths for resources and API calls. Which is useful if you want to expose specific *Sites* via a virtual host.
 
-<span class="panel-warning">
-**NOTE**: All other plugins will only deal with the rewritten paths, keep that in mind especially when defining ACLs.
-</span>
+> [!IMPORTANT]
+> All other plugins will only deal with the rewritten paths, keep that in mind, especially when defining ACLs.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-vhost-path-mapper** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-vhost-path-mapper** as *dependency*.
 
-To map for example a portal site to *www.my-company.com/web* configure the reverse proxy like this:
+To map, for example, a portal site to *www.my-company.com/web* configure the reverse proxy like this:
 
     www.my-company.com/web -> <portal-host>:<portal-port>/
 
-and the plugin like this:
+and the plugin is like this:
 
 ```json
 {
@@ -52,7 +51,7 @@ the path */portal/public-site/test*.
 
 It also works the other way round. If the server redirects to */login* it would be changed to */web/login* (in this example).
 
-Port based virtual hosts (like localhost:8080) are also possible but only if the request still contains the original *host* header
+Port-based virtual hosts (like localhost:8080) are also possible but only if the request still contains the original *host* header
 (and no *X-Forwarded-Host* different from the *host* header).
 
 The mapping rules do not support regular expressions.
@@ -62,7 +61,7 @@ The *frontendBasePath* is optional and */* by default.
 The *considerHttpHeaders* property is also optional and can be used to detect the host based on some custom header.
 The first header that is present will be used (so the order in the list specifies the priority).
 
-## Services
+## Provided Services
 
 ### MashroomVHostPathMapperService
 

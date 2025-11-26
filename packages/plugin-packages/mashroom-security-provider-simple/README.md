@@ -3,13 +3,13 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds a simple, JSON file based security provider.
+This plugin adds a simple, JSON file-based security provider.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security-provider-simple** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-security-provider-simple** as *dependency*.
 
-To activate this provider configure the _Mashroom Security_ plugin like this:
+To activate this provider configure the [Mashroom Security](../mashroom-security) plugin like this:
 
 ```json
 {
@@ -21,7 +21,7 @@ To activate this provider configure the _Mashroom Security_ plugin like this:
 }
 ```
 
-And configure this plugin like this in the Mashroom config file:
+And configure this plugin like this in the server config file:
 
 ```json
 {
@@ -37,7 +37,7 @@ And configure this plugin like this in the Mashroom config file:
 
  * _users_: The path to the JSON file with user and role definitions (Default: ./users.json)
  * _loginPage_: The path to redirect to if a restricted resource is requested but the user not logged in yet (Default: /login)
- * _authenticationTimeoutSec_: The inactivity time after that the authentication expires. Since this plugin uses the session to store make sure the session _cookie.maxAge_ is greater than this value (Default: 1200)
+ * _authenticationTimeoutSec_: The inactivity time that the authentication expires after. Since this plugin uses the session to store the timestamp, make sure the session _cookie.maxAge_ is greater than this value (Default: 1200)
 
  The content of the JSON file might look like this.
 

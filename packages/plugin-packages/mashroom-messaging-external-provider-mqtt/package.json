@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "package.json"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.2",
@@ -43,27 +44,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Messaging External Provider MQTT",
-                "type": "external-messaging-provider",
-                "bootstrap": "./dist/provider/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Messaging Services"
-                ],
-                "defaultConfig": {
-                    "internalTopic": "mashroom",
-                    "mqttConnectUrl": "mqtt://localhost:1883",
-                    "mqttProtocolVersion": 4,
-                    "mqttQoS": 1,
-                    "mqttUser": null,
-                    "mqttPassword": null,
-                    "rejectUnauthorized": true
-                }
-            }
-        ]
     }
 }

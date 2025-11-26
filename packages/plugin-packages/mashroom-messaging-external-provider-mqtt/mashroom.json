@@ -1,0 +1,23 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Messaging External Provider MQTT",
+            "type": "external-messaging-provider",
+            "bootstrap": "./dist/provider/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Messaging Services"
+            ],
+            "defaultConfig": {
+                "internalTopic": "mashroom",
+                "mqttConnectUrl": "mqtt://localhost:1883",
+                "mqttProtocolVersion": 4,
+                "mqttQoS": 1,
+                "mqttUser": null,
+                "mqttPassword": null,
+                "rejectUnauthorized": true
+            }
+        }
+    ]
+}

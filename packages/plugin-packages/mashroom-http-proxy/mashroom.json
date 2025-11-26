@@ -1,0 +1,53 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Http Proxy Services",
+            "type": "services",
+            "namespace": "proxy",
+            "bootstrap": "./dist/proxy/mashroom-bootstrap-services.js",
+            "defaultConfig": {
+                "forwardMethods": [
+                    "GET",
+                    "POST",
+                    "PUT",
+                    "DELETE"
+                ],
+                "forwardHeaders": [
+                    "accept",
+                    "accept-*",
+                    "range",
+                    "expires",
+                    "cache-control",
+                    "last-modified",
+                    "content-*",
+                    "jaeger-*",
+                    "uber-trace-id",
+                    "uberctx-*",
+                    "b3",
+                    "x-b3-*",
+                    "trace*",
+                    "sec-websocket-*"
+                ],
+                "rejectUnauthorized": true,
+                "poolMaxTotalSockets": null,
+                "poolMaxSocketsPerHost": 10,
+                "poolMaxWaitingRequestsPerHost": null,
+                "socketTimeoutMs": 30000,
+                "keepAlive": true,
+                "retryOnReset": true,
+                "wsMaxConnectionsTotal": 2000,
+                "wsMaxConnectionsPerHost": null,
+                "createForwardedForHeaders": false,
+                "proxyImpl": "default"
+            }
+        },
+        {
+            "name": "Mashroom Http Proxy Interceptor Plugin Loader",
+            "type": "plugin-loader",
+            "bootstrap": "./dist/plugins/loader/mashroom-bootstrap-plugin-loader.js",
+            "loads": "http-proxy-interceptor"
+        }
+    ]
+}

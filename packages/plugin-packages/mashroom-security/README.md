@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This plugin adds role based security to the _Mashroom Server_.
+This plugin adds role-based security to the _Mashroom Server_.
 
 It comes with the following mechanisms:
 
@@ -15,9 +15,9 @@ It comes with the following mechanisms:
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-security** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-security** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -34,7 +34,7 @@ You can override the default config in your Mashroom config file like this:
  * _provider_: The plugin that actually does the authentication and knows how to retrieve the user roles (Default: Mashroom Security Simple Provider)
  * _forwardQueryHintsToProvider_: A list of query parameters that should be forwarded during the authentication.
    (will be added to the login or authorization URL).
- * _acl_: The ACL for path based security restrictions (see below) (Default: ./acl.json)
+ * _acl_: The ACL for path-based security restrictions (see below) (Default: ./acl.json)
 
 ### ACL
 
@@ -72,9 +72,9 @@ The general structure is:
     }
 ```
 
- * The path can contain the wildcard "\*" for single segments and  "\*\*" for multiple segments
+ * The path can contain the wildcard "\*" for single segments and "\*\*" for multiple segments
  * "any" includes anonymous users
- * IP addresses can also contain wildcards: "?" for s single digit, "\*" for single segments and  "\*\*" for multiple segments
+ * IP addresses can also contain wildcards: "?" for a single digit, "\*" for single segments and "\*\*" for multiple segments
 
 Example: Allow all users except the ones that come from an IP address starting with 12:
 
@@ -114,7 +114,7 @@ Example: Restrict the Portal to authenticated users but make a specific site pub
 
 ### Security Service
 
-Adding and checking a resource permission (e.g. for a Page) works like this:
+Adding and checking a resource permission (e.g., for a Page) works like this:
 
 ```ts
 import type {MashroomSecurityService} from '@mashroom/mashroom-security/type-definitions';
@@ -139,7 +139,7 @@ export default async (req: Request, res: Response) => {
 }
 ```
 
-## Services
+## Provided Services
 
 ### MashroomSecurityService
 
@@ -241,7 +241,7 @@ export interface MashroomSecurityService {
 }
 ```
 
-## Plugin Types
+## Provided Plugin Types
 
 ### security-provider
 

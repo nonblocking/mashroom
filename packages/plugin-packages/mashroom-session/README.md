@@ -7,9 +7,9 @@ This plugin adds [Express session](https://www.npmjs.com/package/express-session
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-session** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-session** as *dependency*.
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -42,7 +42,7 @@ You can override the default config in your Mashroom config file like this:
   * Change the default _secret_
   * You should consider setting _cookie.sameSite_ to either "lax" or "strict" (CSRF protection).
 
-## Plugin Types
+## Provided Plugin Types
 
 ### session-store-provider
 
@@ -67,7 +67,7 @@ To register a custom session-store-provider plugin add this to _package.json_:
 }
 ```
 
-The bootstrap returns the express session store (here for example the file store):
+The bootstrap returns the express session store (here, for example, the file store):
 
 ```ts
 import sessionFileStore from 'session-file-store';

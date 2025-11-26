@@ -1,0 +1,37 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo Rest Proxy App",
+            "type": "portal-app2",
+            "clientBootstrap": "startRestProxyDemoApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Demo REST Proxy App",
+                "description": {
+                    "en": "A simple SPA that demonstrateds how the Mashroom Portal proxy can be used to connect to a REST API which cannot be reached directly by the client",
+                    "de": "Ein einfacher SPA der demonstriert wie man den Mashroom Portal Proxy verwenden kann für eine REST API die nicht direkt vom Client erreichbar ist"
+                },
+                "category": "Demo",
+                "defaultRestrictViewToRoles": [],
+                "proxies": {
+                    "rocketLaunchApi": {
+                        "targetUri": "https://fdo.rocketlaunch.live/json",
+                        "restrictToRoles": []
+                    }
+                }
+            }
+        }
+    ]
+}

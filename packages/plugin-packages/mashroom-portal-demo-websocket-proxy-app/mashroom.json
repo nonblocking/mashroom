@@ -1,0 +1,41 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo WebSocket Proxy App",
+            "type": "portal-app2",
+            "clientBootstrap": "startWebSocketProxyDemoApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": "Demo WebSocket Proxy App",
+                "description": {
+                    "en": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
+                    "de": "Ein einfacher SPA der demonstriert wie man den Mashroom Portal Proxy verwenden kann um einen WebSocket Server anzusprechen, der nicht direkt vom Client erreichbar ist"
+                },
+                "category": "Demo",
+                "defaultRestrictViewToRoles": [
+                    "Authenticated"
+                ],
+                "proxies": {
+                    "echo": {
+                        "targetUri": "ws://ws.ifelse.io/",
+                        "restrictToRoles": [
+                            "Authenticated"
+                        ]
+                    }
+                }
+            }
+        }
+    ]
+}

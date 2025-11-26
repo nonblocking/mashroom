@@ -1,0 +1,15 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Robots Middleware",
+            "type": "middleware",
+            "bootstrap": "./dist/mashroom-bootstrap-middleware.js",
+            "defaultConfig": {
+                "order": 300,
+                "robots.txt": null
+            }
+        }
+    ]
+}

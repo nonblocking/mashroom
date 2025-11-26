@@ -11,7 +11,8 @@
     "files": [
         "dist/**",
         "views/**",
-        "type-definitions/*"
+        "type-definitions/*",
+        "mashroom.json"
     ],
     "dependencies": {
         "express": "^4.21.2",
@@ -55,36 +56,5 @@
         "build:frontend": "webpack --mode production",
         "build": "npm run build:backend && npm run build:frontend",
         "dev": "nodemon --watch src -e ts --exec \"npm run build && node dist/webapp/dev-server.js\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom WebSocket Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/webapp/mashroom-bootstrap-webapp.js",
-                "requires": [
-                    "Mashroom Security Services"
-                ],
-                "defaultConfig": {
-                    "path": "/websocket",
-                    "reconnectMessageBufferFolder": null,
-                    "reconnectTimeoutSec": 5,
-                    "restrictToRoles": null,
-                    "enableKeepAlive": true,
-                    "keepAliveIntervalSec": 15,
-                    "maxConnections": 2000
-                }
-            },
-            {
-                "name": "Mashroom WebSocket Services",
-                "type": "services",
-                "namespace": "websocket",
-                "bootstrap": "./dist/services/mashroom-bootstrap-services.js",
-                "requires": [
-                    "Mashroom WebSocket Webapp"
-                ]
-            }
-        ]
     }
 }

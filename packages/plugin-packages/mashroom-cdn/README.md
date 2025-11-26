@@ -6,14 +6,13 @@ Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend
 This plugin adds a Service to manage CDN hosts.
 It basically just returns a host from a configurable list, which can be used to access an asset via CDN.
 
-<span class="panel-info">
-**NOTE**: The *mashroom-cdn* plugin requires a CDN that works like a transparent proxy, which forwards an identical request to
-the *origin* (in this case Mashroom) if does not exist yet.
-</span>
+> [!NOTE]
+> The *mashroom-cdn* plugin requires a CDN that works like a transparent proxy, which forwards an identical request to
+> the *origin* (in this case Mashroom) if it does not exist yet.
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-cdn** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-cdn** as *dependency*.
 
 After that you can use the service like this:
 
@@ -31,7 +30,7 @@ export default async (req: Request, res: Response) => {
 };
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your server config file like this:
 
 ```json
 {
@@ -47,7 +46,7 @@ You can override the default config in your Mashroom config file like this:
 ```
  * _cdnHosts_: A list of CDN hosts (default: [])
 
-## Services
+## Provided Services
 
 ### MashroomCDNService
 

@@ -7,7 +7,7 @@ This plugin adds a storage service abstraction that delegates to a provider plug
 
 ## Usage
 
-If *node_modules/@mashroom* is configured as plugin path just add **@mashroom/mashroom-storage** as *dependency*.
+If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-storage** as *dependency*.
 
 Then use the storage service like this:
 
@@ -26,7 +26,7 @@ export default async (req: Request, res: ExpressResponse) => {
 }
 ```
 
-You can override the default config in your Mashroom config file like this:
+You can override the default config in your Mashroom Server config file like this:
 
 ```json
 {
@@ -54,11 +54,11 @@ You can override the default config in your Mashroom config file like this:
      * _enabled_: Enable cache (of all) collections. The preferred way is to set this to false and enable caching per collection (Default: false)
      * _ttlSec_: The default TTL in seconds. Can be overwritten per collection (Default: 120)
      + _invalidateOnUpdate_: Clear the cache for the whole collection if an entry gets updated (Default: true).
-       This might be an expensive operation on some memory cache implementations (e.g. based on Redis). So use this only
+       This might be an expensive operation on some memory cache implementations (e.g., based on Redis). So use this only
        if updates don't happen frequently.
      * _collections_: A map of collections specific settings. You can overwrite here _enabled_, _ttlSec_ and _invalidateOnUpdate_.
 
-## Services
+## Provided Services
 
 ### MashroomStorageService
 
@@ -117,7 +117,7 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
 }
 ```
 
-## Plugin type
+## Provided Plugin Types
 
 ### storage-provider
 

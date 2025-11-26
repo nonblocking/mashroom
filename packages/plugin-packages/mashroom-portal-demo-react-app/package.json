@@ -11,7 +11,8 @@
     "sideEffects": false,
     "files": [
         "dist/**",
-        "screenshot.png"
+        "screenshot.png",
+        "package.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.9.2",
@@ -25,38 +26,5 @@
         "type-check": "tsc --noEmit",
         "dev": "webpack serve --hot --mode development",
         "build": "webpack --mode production && cpy ./screenshot.png dist"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Portal Demo React App",
-                "type": "portal-app2",
-                "clientBootstrap": "startReactDemoApp",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
-                },
-                "screenshots": [
-                    "screenshot.png"
-                ],
-                "local": {
-                    "resourcesRoot": "./dist"
-                },
-                "defaultConfig": {
-                    "title": "Demo React App",
-                    "description": {
-                        "en": "A simple React SPA",
-                        "de": "Ein einfacher React SPA"
-                    },
-                    "category": "Demo",
-                    "appConfig": {
-                        "message": "This is simple React based SPA that communicates with other Apps on the page via message bus",
-                        "pingButtonLabel": "Send Ping"
-                    }
-                }
-            }
-        ]
     }
 }

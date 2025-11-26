@@ -519,7 +519,7 @@ export interface Plugins {
      */
     darkMode?: boolean | string;
     /**
-     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to Mashroom config file, default: null)
+     * Custom CSS that can be used to overwrite CSS variables and to customize the theme (relative to the server config file, default: null)
      */
     styleFile?: string;
     /**
@@ -608,7 +608,7 @@ export interface Plugins {
      */
     darkMode?: boolean | string;
     /**
-     * Custom CSS that will be loaded instead of the built-in style (relative to Mashroom config file, default: null)
+     * Custom CSS that will be loaded instead of the built-in style (relative to the server config file, default: null)
      */
     styleFile?: string;
   };
@@ -885,7 +885,7 @@ export interface Plugins {
   };
   "Mashroom Storage Filestore Provider"?: {
     /**
-     * Folder to store the data files. The base for relative paths is the Mashroom config file (Default: ./data/storage)
+     * Folder to store the data files. The base for relative paths is the server config file (Default: ./data/storage)
      */
     dataFolder?: string;
     /**

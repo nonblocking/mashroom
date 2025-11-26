@@ -1,0 +1,38 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo Vue App",
+            "type": "portal-app2",
+            "clientBootstrap": "startVueDemoApp",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ],
+                "css": [
+                    "style.css"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist",
+                "ssrBootstrap": "./dist/ssr.js"
+            },
+            "defaultConfig": {
+                "title": "Demo Vue.js App",
+                "description": {
+                    "en": "A simple Vue.js SPA",
+                    "de": "Ein einfacher Vue.js SPA"
+                },
+                "category": "Demo",
+                "appConfig": {
+                    "message": "This is simple Vue based SPA that communicates with other Apps on the page via message bus",
+                    "pingButtonLabel": "Send Ping"
+                }
+            }
+        }
+    ]
+}

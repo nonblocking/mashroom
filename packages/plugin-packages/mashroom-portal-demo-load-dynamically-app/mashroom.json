@@ -1,0 +1,38 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Demo Load Dynamically App",
+            "type": "portal-app2",
+            "clientBootstrap": "startLoadDynamicallyDemoApp",
+            "requires": [
+                "Mashroom Portal Demo React App",
+                "Mashroom Portal Demo Angular App"
+            ],
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "screenshots": [
+                "screenshot.png"
+            ],
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "title": {
+                    "en": "Demo Load Dynamically",
+                    "de": "Demo Dynamisches Laden App"
+                },
+                "description": {
+                    "en": "A simple SPA that demonstrates how to load and unload other registered SPAs on a page with a specific config",
+                    "de": "Ein einfacher SPA der demonstriert wie man andere, registrierte SPAs auf einer Seite laden und entfernen kann mit einer bestimmten Konfiguration"
+                },
+                "category": "Demo",
+                "appConfig": {}
+            }
+        }
+    ]
+}

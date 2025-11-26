@@ -303,8 +303,6 @@ describe('PortalAppPluginLoader', () => {
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
 
-
-
     it('processed remote Portal Apps in the root path', async () => {
         const pluginPackage: any = {
             pluginPackageURL: new URL('https://my-microfrontend.com'),

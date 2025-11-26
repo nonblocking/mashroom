@@ -9,7 +9,8 @@
     "license": "MIT",
     "version": "2.9.2",
     "files": [
-        "dist/**"
+        "dist/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "@opentelemetry/api": "^1.9.0",
@@ -44,21 +45,5 @@
         "type-check": "tsc --noEmit",
         "test": "jest --passWithNoTests",
         "build": "babel src -d dist --extensions \".ts\""
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Monitoring Prometheus Exporter Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/mashroom-bootstrap-webapp.js",
-                "requires": [
-                    "Mashroom Monitoring Metrics Collector Services"
-                ],
-                "defaultConfig": {
-                    "path": "/metrics"
-                }
-            }
-        ]
     }
 }

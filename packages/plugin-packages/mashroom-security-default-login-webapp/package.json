@@ -11,7 +11,8 @@
     "files": [
         "dist/**",
         "assets/**",
-        "views/**"
+        "views/**",
+        "mashroom.json"
     ],
     "dependencies": {
         "body-parser": "^2.2.0",
@@ -34,27 +35,5 @@
         "type-check": "tsc --noEmit",
         "dev": "nodemon --watch src -e ts,scss --exec \"npm run build && node dist/dev-server.js\"",
         "build": "babel src/js --extensions \".ts\" -d dist && sass --style compressed --no-source-map src/sass/style.scss dist/style.css"
-    },
-    "mashroom": {
-        "devModeBuildScript": "build",
-        "plugins": [
-            {
-                "name": "Mashroom Security Default Login Webapp",
-                "type": "web-app",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "requires": [
-                    "Mashroom Security Services",
-                    "Mashroom Internationalization Services",
-                    "Mashroom Browser Cache Services"
-                ],
-                "defaultConfig": {
-                    "path": "/login",
-                    "pageTitle": null,
-                    "loginFormTitle": null,
-                    "darkMode": "auto",
-                    "styleFile": null
-                }
-            }
-        ]
     }
 }

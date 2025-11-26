@@ -1,0 +1,26 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom Portal Admin App",
+            "type": "portal-app2",
+            "clientBootstrap": "startPortalAdminApp",
+            "resources": {
+                "js": [
+                    "admin-toolbar.js"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist"
+            },
+            "defaultConfig": {
+                "category": "hidden",
+                "defaultRestrictViewToRoles": [
+                    "Administrator"
+                ],
+                "appConfig": {}
+            }
+        }
+    ]
+}

@@ -1,0 +1,41 @@
+{
+    "$schema": "../../../node_modules/@mashroom/mashroom-json-schemas/schemas/mashroom-plugins.json",
+    "devModeBuildScript": "build",
+    "plugins": [
+        {
+            "name": "Mashroom OpenID Connect Security Provider",
+            "type": "security-provider",
+            "bootstrap": "./dist/security-provider/mashroom-bootstrap.js",
+            "requires": [
+                "Mashroom Session Middleware"
+            ],
+            "defaultConfig": {
+                "mode": "OIDC",
+                "issuerDiscoveryUrl": null,
+                "issuerMetadata": null,
+                "scope": "openid email profile",
+                "clientId": "mashroom",
+                "clientSecret": "your-client-secret",
+                "redirectUrl": "http://localhost:5050/openid-connect-cb",
+                "responseType": "code",
+                "usePKCE": "false",
+                "extraAuthParams": {},
+                "extraDataMapping": null,
+                "rolesClaimName": "roles",
+                "adminRoles": [
+                    "mashroom-admin"
+                ],
+                "httpRequestTimeoutMs": 3500
+            }
+        },
+        {
+            "name": "Mashroom OpenID Connect Security Provider Callback",
+            "type": "api",
+            "bootstrap": "./dist/callback/mashroom-bootstrap.js",
+            "requires": [],
+            "defaultConfig": {
+                "path": "/openid-connect-cb"
+            }
+        }
+    ]
+}
