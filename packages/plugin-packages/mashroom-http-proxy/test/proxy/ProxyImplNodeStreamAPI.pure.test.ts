@@ -437,7 +437,9 @@ describe('ProxyImplNodeStreamAPI', () => {
         req.headers.upgrade = 'whatever';
         const head = Buffer.from('');
 
-        const pluginRegistry: any = {};
+        const pluginRegistry: any = {
+            interceptors: [],
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter([]);
         const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);

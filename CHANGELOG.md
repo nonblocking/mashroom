@@ -3,6 +3,8 @@
 
 ## [unreleased]
 
+ * HTTP Proxy: Fixed error response error handling if *targetUri* is not a valid URL but was rewritten by an interceptor plugin to be one
+
 ## 2.9.2 (August 29, 2025)
 
  * Admin App: Fixed the problem that the old App config was shown after re-opening the App config dialog

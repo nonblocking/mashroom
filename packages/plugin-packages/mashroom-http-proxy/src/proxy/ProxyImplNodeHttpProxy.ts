@@ -202,20 +202,23 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
         const securityService: MashroomSecurityService | undefined = req.pluginContext.services.security?.service;
 
-        const {protocol, host} = new URL(targetUri);
+        // Process interceptors
+        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequestInterceptors(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
+
+        const {protocol, host} = new URL(effectiveTargetUri);
         if (protocol !== 'ws:' && protocol !== 'wss:') {
-            logger.error(`Cannot forward to ${targetUri} because the protocol is not supported`);
+            logger.error(`Cannot forward to ${effectiveTargetUri} because the protocol is not supported`);
             socket.end('HTTP/1.1 400 Bad Request\r\n\r\n', 'ascii');
             return;
         }
 
         if (typeof this._wsMaxConnectionsTotal === 'number' && this._wsConnectionMetrics.activeConnections >= this._wsMaxConnectionsTotal) {
-            logger.error(`Cannot forward to ${targetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
+            logger.error(`Cannot forward to ${effectiveTargetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
             return;
         }
-        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveWSConnectionsToHost(targetUri) >= this._wsMaxConnectionsPerHost) {
-            logger.error(`Cannot forward to ${targetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
+        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveWSConnectionsToHost(effectiveTargetUri) >= this._wsMaxConnectionsPerHost) {
+            logger.error(`Cannot forward to ${effectiveTargetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
             return;
         }
@@ -231,9 +234,6 @@ export default class ProxyImplNodeHttpProxy implements Proxy {
             this._requestMetrics.wsRequestTargetCount[target] = 0;
         }
         this._requestMetrics.wsRequestTargetCount[target] ++;
-
-        // Process interceptors
-        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequestInterceptors(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
         let forwardedForHeaders = {};
         if (this._createForwardedForHeaders) {

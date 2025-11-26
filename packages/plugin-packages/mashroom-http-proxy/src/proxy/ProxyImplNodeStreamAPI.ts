@@ -149,20 +149,23 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
     async forwardWs(req: IncomingMessageWithContext, socket: Socket, head: Buffer, targetUri: string, additionalHeaders: HttpHeaders = {}): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.httpProxy');
 
-        const {protocol, host} = new URL(targetUri);
+        // Process interceptors
+        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequestInterceptors(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
+
+        const {protocol, host} = new URL(effectiveTargetUri);
         if (protocol !== 'ws:' && protocol !== 'wss:') {
-            logger.error(`Cannot forward to ${targetUri} because the protocol is not supported`);
+            logger.error(`Cannot forward to ${effectiveTargetUri} because the protocol is not supported`);
             socket.end('HTTP/1.1 400 Bad Request\r\n\r\n', 'ascii');
             return;
         }
 
         if (typeof this._wsMaxConnectionsTotal === 'number' && this._wsConnectionMetrics.activeConnections >= this._wsMaxConnectionsTotal) {
-            logger.error(`Cannot forward to ${targetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
+            logger.error(`Cannot forward to ${effectiveTargetUri} because max total connections reached (${this._wsMaxConnectionsTotal})`);
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
             return;
         }
-        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveWSConnectionsToHost(targetUri) >= this._wsMaxConnectionsPerHost) {
-            logger.error(`Cannot forward to ${targetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
+        if (typeof this._wsMaxConnectionsPerHost === 'number' && this.getActiveWSConnectionsToHost(effectiveTargetUri) >= this._wsMaxConnectionsPerHost) {
+            logger.error(`Cannot forward to ${effectiveTargetUri} because max total connections per host reached (${this._wsMaxConnectionsPerHost})`);
             socket.end('HTTP/1.1 429 Too Many Requests\r\n\r\n', 'ascii');
             return;
         }
@@ -178,9 +181,6 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
         if (req.headers.upgrade !== 'websocket') {
             throw new Error(`Upgrade not supported: ${req.headers.upgrade}`);
         }
-
-        // Process interceptors
-        const {effectiveTargetUri, effectiveAdditionalHeaders} = await processWsRequestInterceptors(req, targetUri, additionalHeaders, this._interceptorHandler, logger);
 
         let forwardedForHeaders = {};
         if (this._createForwardedForHeaders) {
@@ -198,7 +198,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             upgrade: 'websocket',
         };
 
-        logger.info(`Forwarding WebSocket request to: ${targetUri}`);
+        logger.info(`Forwarding WebSocket request to: ${effectiveTargetUri}`);
 
         let aborted = false;
 
@@ -220,7 +220,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             socket.setKeepAlive(true);
             proxySocket.setKeepAlive(true);
 
-            logger.info(`WebSocket connection for ${targetUri} established:`, proxySocket.address());
+            logger.info(`WebSocket connection for ${effectiveTargetUri} established:`, proxySocket.address());
             this._wsConnectionMetrics.activeConnections ++;
             if (!this._wsConnectionMetrics.activeConnectionsTargetCount[target]) {
                 this._wsConnectionMetrics.activeConnectionsTargetCount[target] = 0;
@@ -234,14 +234,14 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                 proxySocket,
             );
 
-            logger.info(`WebSocket connection for ${targetUri} closed`);
+            logger.info(`WebSocket connection for ${effectiveTargetUri} closed`);
 
         } catch (error: any) {
             if (error.code === 'ERR_STREAM_PREMATURE_CLOSE') {
                 // "Normal" close by the client
-                logger.info(`WebSocket connection for ${targetUri} closed`);
+                logger.info(`WebSocket connection for ${effectiveTargetUri} closed`);
             } else {
-                logger.error(`Forwarding WebSocket request to '${targetUri}' failed!`, error);
+                logger.error(`Forwarding WebSocket request to '${effectiveTargetUri}' failed!`, error);
                 if (aborted) {
                     socket.end('HTTP/1.1 504 Gateway Timeout\r\n\r\n', 'ascii');
                 } else {
@@ -375,7 +375,7 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             const proxyResponse = await this._createProxyResponse(proxyRequest);
 
             const headersEndTime = process.hrtime(startTime);
-            logger.info(`Response headers received from ${targetUri} received in ${headersEndTime[0]}s ${headersEndTime[1] / 1000000}ms with status ${proxyResponse.statusCode}`);
+            logger.info(`Response headers received from ${fullTargetUri} received in ${headersEndTime[0]}s ${headersEndTime[1] / 1000000}ms with status ${proxyResponse.statusCode}`);
 
             // Process interceptors
             // Pause the stream flow until the async op is finished
@@ -404,13 +404,13 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
             );
 
             const responseEndTime = process.hrtime(startTime);
-            logger.info(`Response from ${targetUri} sent to client in ${responseEndTime[0]}s ${responseEndTime[1] / 1000000}ms`);
+            logger.info(`Response from ${fullTargetUri} sent to client in ${responseEndTime[0]}s ${responseEndTime[1] / 1000000}ms`);
 
         } catch (error: any) {
-            const target = this._getProtocolAndHost(targetUri);
+            const target = this._getProtocolAndHost(fullTargetUri);
             let trackConnectionError = false;
             if (aborted || error.code === 'ETIMEDOUT' || error.code === 'ESOCKETTIMEDOUT') {
-                logger.error(`Target endpoint '${targetUri}' did not send a response within ${this._socketTimeoutMs}ms!`);
+                logger.error(`Target endpoint '${fullTargetUri}' did not send a response within ${this._socketTimeoutMs}ms!`);
                 this._requestMetrics.httpTimeoutCountTotal++;
                 if (!this._requestMetrics.httpTimeoutTargetCount[target]) {
                     this._requestMetrics.httpTimeoutTargetCount[target] = 0;
@@ -420,23 +420,23 @@ export default class ProxyImplNodeStreamAPI implements Proxy {
                     res.sendStatus(504);
                 }
             } else if (req.closed && (error.code === 'ERR_STREAM_PREMATURE_CLOSE' || error.code === 'ERR_STREAM_UNABLE_TO_PIPE' || (!proxyRequest?.closed && error.code === 'ECONNRESET' && error.message === 'aborted'))) {
-                logger.info(`Request aborted by client: '${targetUri}'`);
+                logger.info(`Request aborted by client: '${fullTargetUri}'`);
             } else if (!res.headersSent && error.code === 'ECONNRESET') {
                 if (this._retryOnReset && retry < MAX_RETRIES) {
-                    logger.warn(`Retrying HTTP request to '${targetUri}' because target did not accept or drop the connection (retry #${retry + 1})`);
+                    logger.warn(`Retrying HTTP request to '${fullTargetUri}' because target did not accept or drop the connection (retry #${retry + 1})`);
                     return this._repeatableForwardHttpRequest({
                         ...config,
                         retry: retry + 1,
                     });
                 } else {
-                    logger.error(`Forwarding HTTP request to '${targetUri}' failed! Target did not accept the connection after ${retry + 1} attempt(s)`, error);
+                    logger.error(`Forwarding HTTP request to '${fullTargetUri}' failed! Target did not accept the connection after ${retry + 1} attempt(s)`, error);
                     trackConnectionError = true;
                     if (!res.headersSent) {
                         res.sendStatus(502);
                     }
                 }
             } else {
-                logger.error(`Forwarding to '${targetUri}' failed!`, error);
+                logger.error(`Forwarding to '${fullTargetUri}' failed!`, error);
                 trackConnectionError = true;
                 if (!res.headersSent) {
                     res.sendStatus(502);

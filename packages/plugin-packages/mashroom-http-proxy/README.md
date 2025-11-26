@@ -163,7 +163,7 @@ interface MashroomHttpProxyInterceptor {
      * The existingHeaders contain the original request headers, headers added by the MashroomHttpProxyService client and the ones already added by other interceptors.
      * The existingQueryParams contain query parameters from the request and the ones already added by other interceptors.
      *
-     * clientRequest is the request that shall be forwarded. DO NOT MANIPULATE IT. Just use it to access "method" and "pluginContext".
+     * clientRequest is the request that shall be forwarded. DO NOT MANIPULATE IT. Use it to access "method" and "pluginContext".
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
@@ -184,10 +184,10 @@ interface MashroomHttpProxyInterceptor {
         Promise<MashroomWsProxyRequestInterceptorResult | undefined | null>;
 
     /**
-     * Intercept response from given targetUri.
+     * Intercept response from a given targetUri.
      *
      * The existingHeaders contain the original request header and the ones already added by other interceptors.
-     * targetResponse is the response that shall be forwarded to the client. DO NOT MANIPULATE IT. Just use it to access "statusCode" an such.
+     * targetResponse is the response that shall be forwarded to the client. DO NOT MANIPULATE IT. Use it to access "statusCode" an such.
      *
      * Return null or undefined if you don't want to interfere with a call.
      */
@@ -286,7 +286,7 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
             };
         }
     }
-    
+
     async interceptResponse(targetUri, existingHeaders) {
         if (targetUri.startsWith('https://my-backend-server.com') && existingHeaders['content-encoding'] === 'gzip') {
             return {
@@ -318,7 +318,7 @@ export default class MyInterceptor implements MashroomHttpProxyInterceptor {
             };
         }
     }
-    
+
     async interceptResponse(targetUri, existingHeaders) {
         if (targetUri.startsWith('https://my-backend-server.com')) {
             return {
