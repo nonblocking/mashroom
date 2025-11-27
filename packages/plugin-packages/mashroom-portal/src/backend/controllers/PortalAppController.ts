@@ -109,7 +109,8 @@ export default class PortalAppController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         const pluginName = req.params.pluginName;
-        const resourcePath = req.params['0'];
+        const resourcePathSegments = req.params.resourcePath as unknown as Array<string>;
+        const resourcePath = resourcePathSegments.join('/');
 
         const portalApp = this._getPortalApp(pluginName);
         if (!portalApp) {
@@ -126,16 +127,16 @@ export default class PortalAppController {
     async getSharedPortalAppResource(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
-        const typeAndResourcePath = req.params['0'];
-        const parts = typeAndResourcePath.split('/');
-        if (parts.length < 2 || ['js', 'css'].indexOf(parts[0]) === -1) {
-            logger.error('Invalid shared resource: ', typeAndResourcePath);
+        const typeAndResourcePathSegments = req.params.typeAndResourcePath as unknown as Array<string>;
+
+        if (typeAndResourcePathSegments.length < 2 || ['js', 'css'].indexOf(typeAndResourcePathSegments[0]) === -1) {
+            logger.error('Invalid shared resource: ', typeAndResourcePathSegments.join('/'));
             res.sendStatus(404);
             return;
         }
 
-        const resourceType = parts[0] as 'css' | 'js';
-        const resourcePath = parts.slice(1).join('/');
+        const resourceType = typeAndResourcePathSegments[0] as 'css' | 'js';
+        const resourcePath = typeAndResourcePathSegments.slice(1).join('/');
 
         // Find Portal Apps that provide the shared resource
         const portalApps = this._pluginRegistry.portalApps.filter((portalApp) => {

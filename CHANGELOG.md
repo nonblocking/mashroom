@@ -3,6 +3,8 @@
 
 ## [unreleased v3]
 
+ * **BREAKING CHANGE**: Migrated to Express 5.
+   Check all your *webapp*, *middleware* and *api* plugins if they need to be updated, according to: https://expressjs.com/en/guide/migrating-5.html
  * Documentation (mashroom-docs-static plugin) moved to a separate repo
  * **BREAKING CHANGE**: Removed support for the [flow](https://flow.org) type system
  * Admin UI: Added filtering for plugins and plugin packages

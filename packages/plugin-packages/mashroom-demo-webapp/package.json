@@ -13,11 +13,11 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "express": "^4.21.2"
+        "express": "^5.1.0"
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
-        "@types/express": "^4.17.21"
+        "@types/express": "^5.0.5"
     },
     "scripts": {
         "lint": "eslint --fix",

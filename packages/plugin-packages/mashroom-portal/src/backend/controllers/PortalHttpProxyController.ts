@@ -32,10 +32,11 @@ export default class PortalHttpProxyController {
                 return;
             }
 
-            const decodedPath = req.params['0'];
-            const pathParts = decodedPath.split('/');
+            const pathParts = req.params.path as unknown as Array<string>;
+            const path = pathParts.join('/');
+
             if (pathParts.length < 2) {
-                logger.warn(`Invalid rest proxy path: ${decodedPath}`);
+                logger.warn(`Invalid rest proxy path: ${path}`);
                 res.sendStatus(400);
                 return;
             }
@@ -52,7 +53,7 @@ export default class PortalHttpProxyController {
             logger.addContext(portalAppContext(portalApp));
 
             if (!portalApp.proxies) {
-                logger.warn(`Invalid rest proxy path: ${decodedPath}`);
+                logger.warn(`Invalid rest proxy path: ${path}`);
                 res.sendStatus(400);
                 return;
             }
@@ -60,7 +61,7 @@ export default class PortalHttpProxyController {
             const restProxyDef: MashroomPortalProxyDefinition = portalApp.proxies[restApiId];
 
             if (!restProxyDef || !restProxyDef.targetUri) {
-                logger.warn(`Invalid rest proxy path: ${decodedPath}`);
+                logger.warn(`Invalid rest proxy path: ${path}`);
                 res.sendStatus(400);
                 return;
             }
@@ -84,7 +85,7 @@ export default class PortalHttpProxyController {
                 }
             }
 
-            logger.info(`Forwarding Rest API call: ${req.method} /${decodedPath} --> ${fullTargetUri}`);
+            logger.info(`Forwarding Rest API call: ${req.method} /${path} --> ${fullTargetUri}`);
             await httpProxyService.forward(req, res, fullTargetUri, headers);
 
         } catch (e: any) {

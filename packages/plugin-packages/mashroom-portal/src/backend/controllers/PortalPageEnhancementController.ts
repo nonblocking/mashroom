@@ -14,7 +14,8 @@ export default class PortalPageEnhancementController {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
 
         const pluginName = req.params.pluginName;
-        const resourcePath = req.params['0'];
+        const resourcePathSegments = req.params.resourcePath as unknown as Array<string>;
+        const resourcePath = resourcePathSegments.join('/');
 
         const plugin = this._pluginRegistry.portalPageEnhancements.find((plugin) => plugin.name === pluginName);
         if (!plugin) {

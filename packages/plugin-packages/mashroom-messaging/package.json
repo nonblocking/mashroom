@@ -17,8 +17,7 @@
         "@mashroom/mashroom": "2.9.2",
         "@mashroom/mashroom-security": "2.9.2",
         "@mashroom/mashroom-utils": "2.9.2",
-        "@mashroom/mashroom-websocket": "2.9.2",
-        "@types/express": "^4.17.21"
+        "@mashroom/mashroom-websocket": "2.9.2"
     },
     "jest": {
         "testEnvironment": "node",

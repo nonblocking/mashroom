@@ -13,7 +13,6 @@
         "mashroom.json"
     ],
     "dependencies": {
-        "express": "^4.21.2",
         "react": "^19.1.0",
         "react-dom": "^19.1.0"
     },
@@ -21,7 +20,6 @@
         "@fortawesome/fontawesome-free": "^6.7.2",
         "@mashroom/mashroom": "2.9.2",
         "@mashroom/mashroom-portal": "2.9.2",
-        "@types/express": "^4.17.21",
         "@types/react": "^19.1.3",
         "@types/react-dom": "^19.1.4",
         "bootstrap": "^5.3.6",

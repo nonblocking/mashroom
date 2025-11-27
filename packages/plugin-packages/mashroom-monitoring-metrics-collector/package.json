@@ -24,7 +24,6 @@
     },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
-        "@types/express": "^4.17.21",
         "@types/response-time": "^2.3.8"
     },
     "jest": {

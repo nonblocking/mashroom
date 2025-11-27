@@ -231,7 +231,7 @@ describe('PortalPageController', () => {
         const req: any = {
             originalUrl: '/portal/web/___/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
             params: {
-                0: 'Test Portal App 1/my-proxy/foo/bar',
+                path: ['Test Portal App 1', 'my-proxy', 'foo', 'bar'],
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -261,7 +261,7 @@ describe('PortalPageController', () => {
         const req: any = {
             originalUrl: '/portal/web/___/proxy/Test Portal App 2/my-proxy?x=2&y=aa%2Bbb',
             params: {
-                0: 'Test Portal App 2/my-proxy',
+                path: ['Test Portal App 2', 'my-proxy'],
             },
             connection: {
                 remoteAddress: '127.0.0.1'
@@ -293,7 +293,7 @@ describe('PortalPageController', () => {
 
         const req: any = {
             params: {
-                0: 'Test Portal App 3/my-proxy/foo',
+                path: ['Test Portal App 3', 'my-proxy', 'foo'],
             },
             connection: {
                 remoteAddress: '127.0.0.1'

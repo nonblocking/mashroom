@@ -443,7 +443,7 @@ describe('PortalAppController', () => {
             },
             params: {
                 pluginName: 'Test Portal App 1',
-                0: '/PortalAppController.test.ts',
+                resourcePath: ['PortalAppController.test.ts'],
             },
             pluginContext,
             query: {},
@@ -475,7 +475,7 @@ describe('PortalAppController', () => {
         const req: any = {
             params: {
                 pluginName: 'Test Remote App',
-                0: 'api/customers',
+                resourcePath: ['api', 'customers'],
             },
             pluginContext,
             query: {},

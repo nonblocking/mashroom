@@ -15,8 +15,7 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
         "@mashroom/mashroom-portal": "2.9.2",
-        "@mashroom/mashroom-security": "2.9.2",
-        "@types/express": "^4.17.21"
+        "@mashroom/mashroom-security": "2.9.2"
     },
     "scripts": {
         "lint": "eslint --fix",

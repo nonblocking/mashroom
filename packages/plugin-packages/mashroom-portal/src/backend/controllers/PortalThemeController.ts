@@ -17,7 +17,8 @@ export default class PortalThemeController {
 
         try {
             const themeName = req.params.themeName;
-            const resourcePath = req.params['0'];
+            const resourcePathSegments = req.params.resourcePath as unknown as Array<string>;
+            const resourcePath = resourcePathSegments.join('/');
 
             const theme = this._getPortalTheme(themeName);
             if (!theme) {

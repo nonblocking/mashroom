@@ -12,14 +12,10 @@
         "dist/**",
         "mashroom.json"
     ],
-    "dependencies": {
-        "express": "^4.21.2"
-    },
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
         "@mashroom/mashroom-security": "2.9.2",
-        "@mashroom/mashroom-utils": "2.9.2",
-        "@types/express": "^4.17.21"
+        "@mashroom/mashroom-utils": "2.9.2"
     },
     "jest": {
         "testEnvironment": "node",
