@@ -8,7 +8,6 @@ const config: MashroomServerConfig = {
     port: 5050,
     httpsPort: null,
     tlsOptions: null,
-    enableHttp2: false,
     xPowerByHeader: 'Mashroom Server',
     serverRootFolder: '.',
     tmpFolder: os.tmpdir(),

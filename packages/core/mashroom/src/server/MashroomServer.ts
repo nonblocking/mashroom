@@ -98,28 +98,9 @@ Starting
         this._logger.debug('Using TLS options: ', fixedTlsOptions);
 
         return new Promise<void>((resolve, reject) => {
-            let httpsServer: HttpsServer;
-            if (this._config.enableHttp2) {
-                // FIXME: spdy is no longer maintained and stopped working with Node.js 15
-                this._logger.warn('HTTP/2 support only works properly with Node.js <= 14 at the moment!');
-                let spdy;
-                try {
-                    spdy = require('spdy');
-                } catch (e) {
-                    this._logger.error('For HTTP/2 you need to install spdy as peer dependency!', e);
-                    process.exit(1);
-                }
-                httpsServer = spdy.createServer({
-                    ...fixedTlsOptions,
-                    spdy: {
-                        protocols: ['h2', 'http/1.1'],
-                    }
-                }, this._expressApp);
-            } else {
-                httpsServer = https.createServer({
-                    ...fixedTlsOptions,
-                }, this._expressApp);
-            }
+            const httpsServer = https.createServer({
+                ...fixedTlsOptions,
+            }, this._expressApp);
             httpsServer.listen(this._config.httpsPort, () => {
                 this._logger.info(`Mashroom HTTPS server available at https://localhost:${this._config.httpsPort}`);
                 this._errorHandler.install();

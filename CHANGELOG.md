@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Removed HTTP/2 support. This is typically something that should be done by a reverse proxy.
  * **BREAKING CHANGE**: Migrated to Express 5.
    Check all your *webapp*, *middleware* and *api* plugins if they need to be updated, according to: https://expressjs.com/en/guide/migrating-5.html
  * Documentation (mashroom-docs-static plugin) moved to a separate repo

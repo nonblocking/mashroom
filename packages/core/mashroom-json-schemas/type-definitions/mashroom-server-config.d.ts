@@ -27,10 +27,6 @@ export interface MashroomServerConfig {
    */
   tlsOptions?: {} | null;
   /**
-   * Enable HTTP/2 for the HTTPS server. If you enable this WebSockets will no longer work (Default: false)
-   */
-  enableHttp2?: boolean;
-  /**
    * The start page
    */
   indexPage?: string;

@@ -7,7 +7,6 @@
         "key": "./certs/key.pem",
         "cert": "./certs/cert.pem"
     },
-    "enableHttp2": false,
     "externalPluginConfigFileNames": ["mashroom"],
     "pluginPackageFolders": [
         {

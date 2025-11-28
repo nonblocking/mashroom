@@ -106,7 +106,9 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
 
     serverContextHolder.setServerContext(serverContext);
 
-    await pluginManager.start();
+    setImmediate(async () => {
+        await pluginManager.start();
+    });
 
     return serverContext;
 };

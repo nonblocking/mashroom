@@ -30,18 +30,8 @@
         "lucy-dirsum": "^0.1.1",
         "minimist": "^1.2.8"
     },
-    "peerDependencies": {
-        "spdy": "^4.0.2"
-    },
-    "peerDependenciesMeta": {
-        "spdy": {
-            "optional": true
-        }
-    },
     "devDependencies": {
-        "@types/fs-extra": "^11.0.4",
-        "@types/spdy": "^3.4.9",
-        "spdy": "^4.0.2"
+        "@types/fs-extra": "^11.0.4"
     },
     "jest": {
         "testEnvironment": "node",
