@@ -8,8 +8,8 @@ import {
     Button
 } from '@mashroom/mashroom-portal-ui-commons';
 import {containsWildcard} from '@mashroom/mashroom-utils/lib/messaging-utils';
-import {useDispatch} from 'react-redux';
 import {addPublishedMessage, updatePublishedMessageStatus as updatePublishedMessageStatusAction} from '../store/actions';
+import useStore from '../store/useStore';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
@@ -32,7 +32,7 @@ const initialValues: FormData = {
 };
 
 export default ({messageBus}: Props) => {
-    const dispatch = useDispatch();
+    const dispatch = useStore((state) => state.dispatch);
     const addMessage = (message: PublishedMessage) => dispatch(addPublishedMessage(message));
     const updatePublishedMessageStatus = (messageId: string, status: PublishedMessageStatus, errorMessage?: string) => dispatch(updatePublishedMessageStatusAction(messageId, status, errorMessage));
 

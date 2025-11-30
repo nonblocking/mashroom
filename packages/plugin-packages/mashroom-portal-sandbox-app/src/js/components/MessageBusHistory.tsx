@@ -1,9 +1,9 @@
 
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
+import useStore from '../store/useStore';
 
-import type {MessageBusMessage, State} from '../types';
+import type {MessageBusMessage} from '../types';
 
 const MessagesTable = ({id, messages}: {id: string, messages: Array<MessageBusMessage>}) => {
     const {t} = useTranslation();
@@ -54,7 +54,8 @@ const MessagesTable = ({id, messages}: {id: string, messages: Array<MessageBusMe
 
 export default () => {
     const {t} = useTranslation();
-    const {activePortalApp, messageBusCom: {publishedByApp, publishedBySandbox}} = useSelector((state: State) => state);
+    const activePortalApp = useStore((state) => state.activePortalApp);
+    const {publishedByApp, publishedBySandbox} = useStore((state) => state.messageBusCom);
 
     if (!activePortalApp) {
         return null;

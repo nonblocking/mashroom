@@ -7,12 +7,12 @@ import {
     Button,
     TextareaField
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
 import {addMessagePublishedBySandbox as addMessagePublishedBySandboxAction} from '../store/actions';
+import useStore from '../store/useStore';
 
 import type {MashroomPortalMessageBus} from '@mashroom/mashroom-portal/type-definitions';
 import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
-import type {MessageBusMessage, State} from '../types';
+import type {MessageBusMessage} from '../types';
 
 type FormData = {
     topic: string;
@@ -33,8 +33,9 @@ const initialValues: FormData = {
 };
 
 export default ({ messageBus, sbAutoTest}: Props) => {
-    const {activePortalApp, messageBusCom: {topicsSubscribedByApp}} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const activePortalApp = useStore((state) => state.activePortalApp);
+    const {topicsSubscribedByApp} = useStore((state) => state.messageBusCom);
+    const dispatch = useStore((state) => state.dispatch);
     const addMessagePublishedBySandbox = (message: MessageBusMessage) => dispatch(addMessagePublishedBySandboxAction(message));
 
     const validate = useCallback((values: FormData) => {

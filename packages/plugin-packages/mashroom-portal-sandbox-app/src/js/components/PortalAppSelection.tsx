@@ -1,10 +1,9 @@
 import React, { useMemo } from 'react';
 import { Form, AutocompleteField, ErrorMessage } from '@mashroom/mashroom-portal-ui-commons';
-import {useSelector} from 'react-redux';
+import useStore from '../store/useStore';
 
 import type { SuggestionHandler } from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 import type { MashroomKnownPortalApp } from '@mashroom/mashroom-portal/type-definitions';
-import type {State} from '../types';
 
 type Props = {
     preselectAppName: string | undefined | null;
@@ -12,7 +11,8 @@ type Props = {
 }
 
 export default ({preselectAppName, onSelectionChanged}: Props) => {
-    const {knownPortalApps, appLoadingError} = useSelector((state: State) => state);
+    const knownPortalApps = useStore((state) => state.knownPortalApps);
+    const appLoadingError = useStore((state) => state.appLoadingError);
 
     const initialValues = useMemo(() => {
         return {

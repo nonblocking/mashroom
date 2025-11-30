@@ -1,15 +1,13 @@
 
 import React, {useCallback, useEffect, useMemo, useRef, useState} from 'react';
 import ReactDOM from 'react-dom';
-import {useDispatch, useSelector} from 'react-redux';
-import {setShowModal} from '../store/actions';
 import ModalDefaultHeader from './ModalDefaultHeader';
 
 import type {ReactNode, MouseEvent} from 'react';
-import type {CommonState} from '../../type-definitions';
 
 type Props = {
-    name: string;
+    show: boolean;
+    close: () => void;
     titleId?: string;
     title?: string;
     closeRef?: (close: () => void) => void,
@@ -23,15 +21,12 @@ type Props = {
 
 const MODALS_ROOT_ID = 'mashroom-portal-ui-modals-root';
 
-export default ({name, titleId, title, closeRef, children, appWrapperClassName, className, customHeader, width, minHeight}: Props) => {
+export default ({show, close, titleId, title, closeRef, children, appWrapperClassName, className, customHeader, width, minHeight}: Props) => {
     const [fadeIn, setFadeIn] = useState(false);
     const [fadeOut, setFadeOut] = useState(false);
     const [marginTop, setMarginTop] = useState<string | undefined>(undefined);
     const modalWrapperElRef = useRef<HTMLDivElement | null>(null);
-    const show = useSelector((state: CommonState) => state.modals?.[name]?.show);
     const shown = useRef(show);
-    const dispatch = useDispatch();
-    const close = () => dispatch(setShowModal(name, false));
 
     const calcMarginTop = (): string | undefined => {
         if (!modalWrapperElRef.current) {

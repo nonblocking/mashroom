@@ -1,7 +1,6 @@
 
 import {nanoid} from 'nanoid';
-import {setShowModal} from '@mashroom/mashroom-portal-ui-commons';
-import {setSelectedPortalApp} from '../store/actions';
+import {setSelectedPortalApp, setShowModal} from '../store/actions';
 import {
     CSS_CLASS_MASHROOM_PORTAL_APP_AREA,
     CSS_CLASS_APP_CONTROLS,
@@ -9,29 +8,28 @@ import {
     DIALOG_NAME_PORTAL_APP_CONFIGURE,
 } from '../constants';
 
+import type {Dispatch} from '../store/useStore';
 import type {
     MashroomPortalAppService,
     MashroomPortalAdminService,
     MashroomPortalLoadedPortalApp,
     MashroomPortalConfigEditorTarget,
 } from '@mashroom/mashroom-portal/type-definitions';
-import type {
-    Store, PortalAppManagementService,
-} from '../types';
+import type {PortalAppManagementService} from '../types';
 
 export default class PortalAppManagementServiceImpl implements PortalAppManagementService {
 
     portalAppService: MashroomPortalAppService;
     portalAdminService: MashroomPortalAdminService;
-    store: Store;
     controlsVisible: boolean;
     openContentEditorAppId: string | undefined;
     closeContentEditorCb: (() => void) | undefined;
     dragRunning: boolean;
     trans: (key: string) => string = (key) => key;
+    dispatch: Dispatch;
 
-    constructor(store: Store, portalAppService: MashroomPortalAppService, portalAdminService: MashroomPortalAdminService) {
-        this.store = store;
+    constructor(dispatch: Dispatch, portalAppService: MashroomPortalAppService, portalAdminService: MashroomPortalAdminService) {
+        this.dispatch = dispatch;
         this.portalAppService = portalAppService;
         this.portalAdminService = portalAdminService;
         this.controlsVisible = false;
@@ -293,8 +291,8 @@ export default class PortalAppManagementServiceImpl implements PortalAppManageme
     }
 
     private _configureApp({id, pluginName, instanceId, editorConfig}: MashroomPortalLoadedPortalApp) {
-        this.store.dispatch(setSelectedPortalApp(id, pluginName, instanceId!, !!editorConfig?.editorPortalApp));
-        this.store.dispatch(setShowModal(DIALOG_NAME_PORTAL_APP_CONFIGURE, true));
+        this.dispatch(setSelectedPortalApp(id, pluginName, instanceId!, !!editorConfig?.editorPortalApp));
+        this.dispatch(setShowModal(DIALOG_NAME_PORTAL_APP_CONFIGURE, true));
     }
 
     private async _editAppContent(loadedPortalApp: MashroomPortalLoadedPortalApp) {

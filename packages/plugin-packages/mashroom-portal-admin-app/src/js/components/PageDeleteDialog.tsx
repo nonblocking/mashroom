@@ -7,20 +7,21 @@ import {
     ErrorMessage,
     Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
-import { DIALOG_NAME_PAGE_DELETE } from '../constants';
 import { getParentPage, removePageFromTree } from '../services/model-utils';
-import {setSelectedPageUpdatingError} from '../store/actions';
+import {setSelectedPageUpdatingError, setShowModal} from '../store/actions';
 import {DependencyContext} from '../DependencyContext';
-
-import type {State} from '../types';
+import useStore from '../store/useStore';
+import {DIALOG_NAME_PAGE_DELETE} from '../constants';
 
 export default () => {
     const closeRef = useRef<(() => void) | undefined>(undefined);
-    const {pages, selectedPage} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const pages = useStore((state) => state.pages);
+    const selectedPage = useStore((state) => state.selectedPage);
+    const showModal = useStore((state) => !!state.modals[DIALOG_NAME_PAGE_DELETE]?.show);
+    const dispatch = useStore((state) => state.dispatch);
     const setErrorUpdating = (error: boolean) => dispatch(setSelectedPageUpdatingError(error));
     const {portalAdminService, portalSiteService} = useContext(DependencyContext);
+    const closeModal = () => dispatch(setShowModal(DIALOG_NAME_PAGE_DELETE, false));
 
     const handleClose = useCallback(() => {
         closeRef.current?.();
@@ -95,7 +96,8 @@ export default () => {
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
             className='page-delete-dialog'
-            name={DIALOG_NAME_PAGE_DELETE}
+            show={showModal}
+            close={closeModal}
             titleId='deletePage'
             width={400}
             closeRef={handleCloseRef}

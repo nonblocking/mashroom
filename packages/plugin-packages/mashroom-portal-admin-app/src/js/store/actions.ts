@@ -200,6 +200,28 @@ export type SetSelectedSitePermittedRolesAction = {
     readonly roles: Array<string> | undefined | null;
 }
 
+export type ShowModalAction = {
+    readonly type: 'SET_SHOW_MODAL';
+    readonly dialogName: string;
+    readonly show: boolean;
+}
+
+export type SetActiveTabAction = {
+    readonly type: 'SET_ACTIVE_TAB';
+    readonly dialogName: string;
+    readonly active: string;
+}
+
+export type AnyAction = SetUserNameAction | SetShowPortalAppControls | SetAvailableAppsLoadingAction | SetAvailableAppsErrorAction
+    | SetAvailableAppsAction | SetSitesLoadingAction | SetSitesErrorAction | SetSitesAction | SetExistingRolesAction | SetAvailableThemesAction
+    | SetAvailableLayoutsAction | SetCurrentLanguageAction | SetDefaultLanguageAction | SetAvailableLanguagesAction | SetSelectedPortalAppAction
+    | SetSelectedPortalAppLoadingAction | SetSelectedPortalAppLoadingErrorAction | SetSelectedPortalAppUpdatingErrorAction
+    | SetSelectedPortalAppPermittedRolesAction | SetSelectedPageAction | SetSelectedPageNewAction | SetSelectdPageLoadingAction
+    | SetSelectedPageLoadingErrorAction | SetSelectedPageUpdatingErrorAction | SetSelectedPageDataAction | SetSelectedPageRefDataAction
+    | SetPagesLoadingAction | SetPagesErrorAction | SetPagesAction | SetPagesFlattenedAction | SetSelectedPagePermittedRolesAction
+    | SetSelectedSiteAction | SetSelectedSiteNewAction | SetSelectedSiteLoadingAction | SetSelectedSiteLoadingErrorAction
+    | SetSelectedSiteUpdatingErrorAction | SetSelectedSiteDataAction | SetSelectedSitePermittedRolesAction | ShowModalAction | SetActiveTabAction;
+
 export const setUserName = (userName: string): SetUserNameAction => {
     return {
         type: 'SET_USER_NAME',
@@ -468,3 +490,18 @@ export const setSelectedSitePermittedRoles = (roles: Array<string> | undefined |
     };
 };
 
+export const setShowModal = (dialogName: string, show: boolean): ShowModalAction => {
+    return {
+        type: 'SET_SHOW_MODAL',
+        dialogName,
+        show,
+    };
+};
+
+export const setActiveTab = (dialogName: string, active: string): SetActiveTabAction => {
+    return {
+        type: 'SET_ACTIVE_TAB',
+        dialogName,
+        active,
+    };
+};

@@ -9,9 +9,7 @@
     "peerDependencies": {
         "react": "^19",
         "react-dom": "^19",
-        "react-i18next": "^15",
-        "react-redux": "^9",
-        "redux": "^5"
+        "react-i18next": "^15"
     },
     "dependencies": {
         "@codemirror/lang-css": "^6.3.1",
@@ -28,9 +26,7 @@
         "@types/react-dom": "^19.1.4",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "react-i18next": "^15.6.0",
-        "react-redux": "^9.2.0",
-        "redux": "^5.0.1"
+        "react-i18next": "^15.6.0"
     },
     "scripts": {
         "build": "babel js -d dist --copy-files --extensions .ts,.tsx & npm run type-gen",

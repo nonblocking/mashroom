@@ -1,16 +1,15 @@
 import React, {useEffect, useCallback, useContext} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
 import { PORTAL_APP_CONTROLS_SETTINGS_KEY } from '../constants';
 import {DependencyContext} from '../DependencyContext';
 import {setShowPortalAppControls} from '../store/actions';
-import type {State} from '../types';
+import useStore from '../store/useStore';
 
 export default () => {
     const {t} = useTranslation();
-    const {portalAppControls} = useSelector((state: State) => state);
+    const portalAppControls = useStore((state) => state.portalAppControls);
+    const dispatch = useStore((state) => state.dispatch);
     const {portalAppManagementService} = useContext(DependencyContext);
-    const dispatch = useDispatch();
     const setShowControls = (show: boolean) => dispatch(setShowPortalAppControls(show));
 
     const showControls = useCallback(() => {

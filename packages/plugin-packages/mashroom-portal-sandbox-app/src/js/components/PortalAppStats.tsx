@@ -1,9 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
 import memoryUsage from '../memory-usage';
+import useStore from '../store/useStore';
+
 import type {MashroomPortalAppService} from '@mashroom/mashroom-portal/type-definitions';
-import type {State} from '../types';
 
 type Props = {
     portalAppService: MashroomPortalAppService;
@@ -13,7 +13,7 @@ export default ({portalAppService}: Props) => {
     const {t} = useTranslation();
     const [appStats, setAppStats] = useState('');
     const [memoryStats, setMemoryStats] = useState('');
-    const {activePortalApp} = useSelector((state: State) => state);
+    const activePortalApp = useStore((state) => state.activePortalApp);
 
     const updateStats = useCallback(() => {
         if (activePortalApp) {

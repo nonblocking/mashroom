@@ -1,21 +1,24 @@
 import React, {useCallback, useContext, useEffect, useMemo, useRef} from 'react';
 import latinize from 'latinize';
 import {Button, CircularProgress, DialogButtons, ErrorMessage, Form, Modal, TabDialog,} from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
-import {DIALOG_NAME_SITE_CONFIGURE} from '../constants';
 import {DependencyContext} from '../DependencyContext';
 import {
+    setActiveTab,
     setSelectedSiteData,
     setSelectedSiteLoading,
     setSelectedSiteLoadingError,
     setSelectedSitePermittedRoles,
-    setSelectedSiteUpdatingError
+    setSelectedSiteUpdatingError, setShowModal
 } from '../store/actions';
+import useStore from '../store/useStore';
+import {DIALOG_NAME_SITE_CONFIGURE} from '../constants';
 import SiteConfigureDialogGeneralPage from './SiteConfigureDialogGeneralPage';
 import SiteConfigureDialogPermissionsPage from './SiteConfigureDialogPermissionsPage';
+
 import type {MashroomPortalSite} from '@mashroom/mashroom-portal/type-definitions';
-import type {State} from '../types';
 import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
+
+const TAB_DIALOG_ID = 'site-configure';
 
 type FormValues = {
     site: Partial<MashroomPortalSite>;
@@ -24,14 +27,22 @@ type FormValues = {
 
 export default () => {
     const closeRef = useRef<(() => void) | undefined>(undefined);
-    const {sites, selectedSite, languages, availableThemes, availableLayouts} = useSelector((state: State) => state);
+    const sites = useStore((state) => state.sites);
+    const selectedSite = useStore((state) => state.selectedSite);
+    const languages = useStore((state) => state.languages);
+    const availableThemes = useStore((state) => state.availableThemes);
+    const availableLayouts = useStore((state) => state.availableLayouts);
+    const showModal = useStore((state) => !!state.modals[DIALOG_NAME_SITE_CONFIGURE]?.show);
+    const activeTabName = useStore((state) => state.tabDialogs[TAB_DIALOG_ID]?.active);
+    const dispatch = useStore((state) => state.dispatch);
     const {dataLoadingService, portalAdminService, portalSiteService} = useContext(DependencyContext);
-    const dispatch = useDispatch();
     const setLoading = (loading: boolean) => dispatch(setSelectedSiteLoading(loading));
     const setErrorLoading = (error: boolean) => dispatch(setSelectedSiteLoadingError(error));
     const setErrorUpdating = (error: boolean) => dispatch(setSelectedSiteUpdatingError(error));
     const setSite = (site: MashroomPortalSite) => dispatch(setSelectedSiteData(site));
     const setPermittedRoles = (roles: Array<string> | undefined | null) => dispatch(setSelectedSitePermittedRoles(roles));
+    const closeModal = () => dispatch(setShowModal(DIALOG_NAME_SITE_CONFIGURE, false));
+    const setActiveTabName = (tabName: string) => dispatch(setActiveTab(TAB_DIALOG_ID, tabName));
 
     useEffect(() => {
         if (selectedSite) {
@@ -197,7 +208,7 @@ export default () => {
                     onChange={handleFormChange}
                     onSubmit={handleSubmit}
                 >
-                    <TabDialog name='site-configure' tabs={[
+                    <TabDialog activeTabName={activeTabName} setActiveTabName={setActiveTabName} tabs={[
                         {name: 'general', titleId: 'general', content: <SiteConfigureDialogGeneralPage availableLayouts={availableLayouts} availableThemes={availableThemes} />},
                         {name: 'permissions', titleId: 'permissions', content: <SiteConfigureDialogPermissionsPage />},
                     ]}/>
@@ -214,7 +225,8 @@ export default () => {
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
             className='site-configure-dialog'
-            name={DIALOG_NAME_SITE_CONFIGURE}
+            show={showModal}
+            close={closeModal}
             titleId='configureSite'
             width={500}
             closeRef={handleCloseRef}

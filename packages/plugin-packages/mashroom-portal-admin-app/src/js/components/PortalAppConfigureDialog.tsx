@@ -8,19 +8,20 @@ import {
     CircularProgress,
     ErrorMessage
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
-import { DIALOG_NAME_PORTAL_APP_CONFIGURE } from '../constants';
 import {DependencyContext} from '../DependencyContext';
 import {
+    setActiveTab,
     setSelectedPortalAppLoading,
     setSelectedPortalAppLoadingError,
     setSelectedPortalAppPermittedRoles,
-    setSelectedPortalAppUpdatingError
+    setSelectedPortalAppUpdatingError, setShowModal
 } from '../store/actions';
+import useStore from '../store/useStore';
+import {DIALOG_NAME_PORTAL_APP_CONFIGURE} from '../constants';
 import PortalAppConfigureDialogGeneralPage from './PortalAppConfigureDialogGeneralPage';
 import PortalAppConfigureDialogPermissionsPage from './PortalAppConfigureDialogPermissionsPage';
 
-import type {State} from '../types';
+const TAB_DIALOG_ID = 'portal-app-configure';
 
 type FormValues = {
     roles: Array<string> | undefined | null;
@@ -29,13 +30,17 @@ type FormValues = {
 
 export default () => {
     const closeRef = useRef<(() => void) | undefined>(undefined);
-    const {selectedPortalApp} = useSelector((state: State) => state);
+    const selectedPortalApp = useStore((state) => state.selectedPortalApp);
+    const showModal = useStore((state) => !!state.modals[DIALOG_NAME_PORTAL_APP_CONFIGURE]?.show);
+    const activeTabName = useStore((state) => state.tabDialogs[TAB_DIALOG_ID]?.active);
+    const dispatch = useStore((state) => state.dispatch);
     const {portalAdminService, portalAppManagementService} = useContext(DependencyContext);
-    const dispatch = useDispatch();
     const setLoading = (loading: boolean) => dispatch(setSelectedPortalAppLoading(loading));
     const setErrorLoading = (error: boolean) => dispatch(setSelectedPortalAppLoadingError(error));
     const setErrorUpdating = (error: boolean) => dispatch(setSelectedPortalAppUpdatingError(error));
     const setPermittedRoles = (roles: Array<string> | undefined | null) => dispatch(setSelectedPortalAppPermittedRoles(roles));
+    const closeModal = () => dispatch(setShowModal(DIALOG_NAME_PORTAL_APP_CONFIGURE, false));
+    const setActiveTabName = (tabName: string) => dispatch(setActiveTab(TAB_DIALOG_ID, tabName));
 
     useEffect(() => {
         const fetchPermittedRoles = async () => {
@@ -136,7 +141,8 @@ export default () => {
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
             className='portal-app-configure-dialog'
-            name={DIALOG_NAME_PORTAL_APP_CONFIGURE}
+            show={showModal}
+            close={closeModal}
             titleId='configureApp'
             width={550}
             closeRef={handleCloseRef}
@@ -158,7 +164,7 @@ export default () => {
                         onSubmit={handleSubmit}
                         validator={validateForm}
                     >
-                        <TabDialog name='portal-app-configure' tabs={[
+                        <TabDialog activeTabName={activeTabName} setActiveTabName={setActiveTabName} tabs={[
                             {name: 'general', titleId: 'general', content: <PortalAppConfigureDialogGeneralPage selectedPortalApp={selectedPortalApp} />},
                             {name: 'permissions', titleId: 'permissions', content: <PortalAppConfigureDialogPermissionsPage />},
                         ]}/>

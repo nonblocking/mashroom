@@ -1,14 +1,12 @@
 
 import React, {useMemo} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {setActiveTab} from '../store/actions';
 import TabHeader from './TabHeader';
 
 import type {ReactNode} from 'react';
-import type {CommonState} from '../../type-definitions';
 
 type Props = {
-    name: string;
+    activeTabName: string;
+    setActiveTabName: (name: string) => void;
     tabs: Array<{
         name: string;
         titleId: string;
@@ -16,11 +14,7 @@ type Props = {
     }>;
 }
 
-export default ({name, tabs}: Props) => {
-    const activeTabName = useSelector((state: CommonState) => state.tabDialogs?.[name]?.active);
-    const dispatch = useDispatch();
-    const onChangeActiveTab = (newActiveTab: string) => dispatch(setActiveTab(name, newActiveTab));
-
+export default ({activeTabName, setActiveTabName, tabs}: Props) => {
     const activeTabIndex = useMemo((): number | null => {
         const activeTab = tabs.find((t) => t.name === activeTabName);
         if (activeTab) {
@@ -38,7 +32,7 @@ export default ({name, tabs}: Props) => {
             <TabHeader
                 tabs={tabs}
                 activeTabIndex={activeTabIndex}
-                onChangeActiveTab={onChangeActiveTab}
+                onChangeActiveTab={setActiveTabName}
             />
             {activeTabIndex !== null && (
                 <div className='tab-dialog-content-wrapper'>

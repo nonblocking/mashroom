@@ -1,8 +1,7 @@
 import React, { useRef, useCallback, useEffect } from 'react';
 import { CircularProgress } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
 import {setHostWidth as setHostWidthAction} from '../store/actions';
-import type {State} from '../types';
+import useStore from '../store/useStore';
 
 type Props = {
     hostElementId: string;
@@ -10,8 +9,9 @@ type Props = {
 
 export default ({hostElementId}: Props) => {
     const wrapperElemRef = useRef<HTMLDivElement | null>(null);
-    const {activePortalApp, host: {width: hostWidth}} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const activePortalApp = useStore((state) => state.activePortalApp);
+    const {width: hostWidth} = useStore((state) => state.host);
+    const dispatch = useStore((state) => state.dispatch);
     const setHostWidth = (hostWidth: string) => dispatch(setHostWidthAction(hostWidth));
 
     const resizerMouseMove = useCallback((event: MouseEvent) => {

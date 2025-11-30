@@ -1,12 +1,12 @@
 import React, {useCallback, useContext, useRef} from 'react';
-import { DropdownMenu, DropdownMenuItem, setShowModal} from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch} from 'react-redux';
+import { DropdownMenu, DropdownMenuItem} from '@mashroom/mashroom-portal-ui-commons';
 import { DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_SITE_CONFIGURE } from '../constants';
-import {setSelectedPage, setSelectedSite} from '../store/actions';
+import {setSelectedPage, setSelectedSite, setShowModal} from '../store/actions';
 import {DependencyContext} from '../DependencyContext';
+import useStore from '../store/useStore';
 
 export default () => {
-    const dispatch = useDispatch();
+    const dispatch = useStore((state) => state.dispatch);
     const {portalAdminService} = useContext(DependencyContext);
     const closeDropDownRef = useRef<(() => void) | undefined>(undefined);
 

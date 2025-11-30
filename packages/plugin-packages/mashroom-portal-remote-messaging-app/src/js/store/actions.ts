@@ -33,6 +33,8 @@ export type AddReceivedMessageAction = {
     readonly message: ReceivedMessage;
 }
 
+export type AnyAction = SetPrivateUserTopicsSubscriptionAction | SetGlobalNotificationsSubscriptionAction | AddPublishedMessageAction | UpdatedPublishedMessageStatusAction | AddReceivedMessageAction;
+
 export const setPrivateUserTopicsSubscription = (subscription: Subscription): SetPrivateUserTopicsSubscriptionAction => {
     return {
         type: 'SET_PRIVATE_USER_TOPICS_SUBSCRIPTION',

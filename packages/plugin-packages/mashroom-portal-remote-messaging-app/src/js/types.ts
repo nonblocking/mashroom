@@ -1,18 +1,10 @@
 
-import type {Store as ReduxStore, Dispatch as ReduxDispatch, AnyAction} from 'redux';
-
 export type State = {
     readonly privateUserTopicsSubscription: Subscription;
     readonly globalNotificationsSubscription: Subscription;
     readonly publishedMessages: PublishedMessages;
     readonly receivedMessages: ReceivedMessages;
 }
-
-export type Action = AnyAction;
-
-export type Dispatch = ReduxDispatch<Action>;
-
-export type Store = ReduxStore<State, Action>;
 
 export type Subscription = {
     readonly topic: string;

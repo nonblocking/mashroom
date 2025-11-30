@@ -1,12 +1,12 @@
 
 import React from 'react';
 import {useTranslation} from 'react-i18next';
-import {useSelector} from 'react-redux';
-import type {State} from '../types';
+import useStore from '../store/useStore';
 
 export default () => {
     const {t} = useTranslation();
-    const {publishedMessages, receivedMessages} = useSelector((state: State) => state);
+    const publishedMessages = useStore((state) => state.publishedMessages);
+    const receivedMessages = useStore((state) => state.receivedMessages);
 
     return (
         <div className='mashroom-remote-messaging-app-history'>

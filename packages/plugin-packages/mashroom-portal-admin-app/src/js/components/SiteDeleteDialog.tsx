@@ -7,18 +7,20 @@ import {
     ErrorMessage,
     Modal,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
-import { DIALOG_NAME_SITE_DELETE } from '../constants';
 import {DependencyContext} from '../DependencyContext';
-import {setSelectedSiteUpdatingError} from '../store/actions';
-import type {State} from '../types';
+import {setSelectedSiteUpdatingError, setShowModal} from '../store/actions';
+import useStore from '../store/useStore';
+import {DIALOG_NAME_SITE_DELETE} from '../constants';
 
 export default () => {
     const closeRef = useRef<(() => void) | undefined>(undefined);
-    const {sites, selectedSite} = useSelector((state: State) => state);
+    const sites = useStore((state) => state.sites);
+    const selectedSite = useStore((state) => state.selectedSite);
+    const showModal = useStore((state) => !!state.modals[DIALOG_NAME_SITE_DELETE]?.show);
+    const dispatch = useStore((state) => state.dispatch);
     const {portalAdminService} = useContext(DependencyContext);
-    const dispatch = useDispatch();
     const setErrorUpdating = (error: boolean) => dispatch(setSelectedSiteUpdatingError(error));
+    const closeModal = () => dispatch(setShowModal(DIALOG_NAME_SITE_DELETE, false));
 
     const handleClose = useCallback(() => {
         closeRef.current?.();
@@ -82,7 +84,8 @@ export default () => {
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
             className='site-delete-dialog'
-            name={DIALOG_NAME_SITE_DELETE}
+            show={showModal}
+            close={closeModal}
             titleId='deleteSite'
             width={400}
             closeRef={handleCloseRef}

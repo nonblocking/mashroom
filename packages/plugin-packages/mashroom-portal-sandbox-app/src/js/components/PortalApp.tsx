@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import {useTranslation} from 'react-i18next';
-import {useDispatch, useSelector} from 'react-redux';
 import loadPortalApp from '../load-portal-app';
 import { mergeAppConfig } from '../utils';
 import {
@@ -17,10 +16,11 @@ import {
     setKnownApps as setKnownAppsAction,
     setSelectedPortalApp as setSelectedPortalAppAction,
 } from '../store/actions';
+import useStore from '../store/useStore';
 import PortalAppSelection from './PortalAppSelection';
 import PortalAppConfig from './PortalAppConfig';
 
-import type {PortalAppQueryParams, ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest, State} from '../types';
+import type {PortalAppQueryParams, ActivePortalApp, SelectedPortalApp, MessageBusPortalAppUnderTest} from '../types';
 import type {
     MashroomKnownPortalApp,
     MashroomPortalAppService,
@@ -38,8 +38,9 @@ type Props = {
 export default ({hostElementId, queryParams, portalAppService, messageBus, messageBusPortalAppUnderTest}: Props) => {
     const {t} = useTranslation();
     const [permalinkCopiedToClipboard, setPermalinkCopiedToClipboard] = useState<boolean>(false);
-    const {activePortalApp, host: {width: currentHostWidth}} = useSelector((state: State) => state);
-    const dispatch = useDispatch();
+    const activePortalApp = useStore((state) => state.activePortalApp);
+    const {width: currentHostWidth} = useStore((state) => state.host);
+    const dispatch = useStore((state) => state.dispatch);
     const setKnownApps = (availableApps: Array<MashroomKnownPortalApp>) => dispatch(setKnownAppsAction(availableApps));
     const setSelectedPortalApp = (app: SelectedPortalApp | undefined | null) => dispatch(setSelectedPortalAppAction(app));
     const setActivePortalApp = (app: ActivePortalApp | undefined | null) => dispatch(setActivePortalAppAction(app));

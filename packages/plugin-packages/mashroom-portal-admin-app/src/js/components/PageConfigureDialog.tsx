@@ -9,24 +9,25 @@ import {
     Modal,
     TabDialog,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
-import {DIALOG_NAME_PAGE_CONFIGURE} from '../constants';
 import {getPagePosition, getParentPage, insertOrUpdatePageAtPosition, searchPageRef} from '../services/model-utils';
 import {DependencyContext} from '../DependencyContext';
 import {
+    setActiveTab,
     setSelectedPageData,
     setSelectedPageLoading,
     setSelectedPageLoadingError,
     setSelectedPagePermittedRoles,
     setSelectedPageRefData,
-    setSelectedPageUpdatingError
+    setSelectedPageUpdatingError, setShowModal
 } from '../store/actions';
+import useStore from '../store/useStore';
+import {DIALOG_NAME_PAGE_CONFIGURE} from '../constants';
 import PageConfigureDialogGeneralPage from './PageConfigureDialogGeneralPage';
 import PageConfigureDialogAppearancePage from './PageConfigureDialogAppearancePage';
 import PageConfigureDialogSEOPage from './PageConfigureDialogSEOPage';
 import PageConfigureDialogPermissionsPage from './PageConfigureDialogPermissionsPage';
 
-import type {PagePosition, State} from '../types';
+import type {PagePosition} from '../types';
 import type {FormContext} from '@mashroom/mashroom-portal-ui-commons/type-definitions';
 import type {
     MashroomPortalPage,
@@ -42,17 +43,27 @@ type FormValues = {
 // RFC 3986
 const VALID_PATH = /^[a-zA-Z0-9.\-_~!$&'()*+,;=:@/]+$/;
 
+const TAB_DIALOG_ID = 'page-configure';
+
 export default () => {
     const closeRef = useRef<(() => void) | undefined>(undefined);
-    const {languages, pages, availableThemes, availableLayouts, selectedPage} = useSelector((state: State) => state);
+    const languages = useStore((state) => state.languages);
+    const pages = useStore((state) => state.pages);
+    const availableThemes = useStore((state) => state.availableThemes);
+    const availableLayouts = useStore((state) => state.availableLayouts);
+    const selectedPage = useStore((state) => state.selectedPage);
+    const showModal = useStore((state) => !!state.modals[DIALOG_NAME_PAGE_CONFIGURE]?.show);
+    const activeTabName = useStore((state) => state.tabDialogs[TAB_DIALOG_ID]?.active);
+    const dispatch = useStore((state) => state.dispatch);
     const {dataLoadingService, portalAdminService, portalSiteService} = useContext(DependencyContext);
-    const dispatch = useDispatch();
     const setLoading = (loading: boolean) => dispatch(setSelectedPageLoading(loading));
     const setErrorLoading = (error: boolean) => dispatch(setSelectedPageLoadingError(error));
     const setErrorUpdating = (error: boolean) => dispatch(setSelectedPageUpdatingError(error));
     const setPage = (page: MashroomPortalPage) => dispatch(setSelectedPageData(page));
     const setPageRef = (pageRef: MashroomPortalPageRef | undefined | null) => dispatch(setSelectedPageRefData(pageRef));
     const setPermittedRoles = (roles: Array<string> | undefined | null) => dispatch(setSelectedPagePermittedRoles(roles));
+    const closeModal = () => dispatch(setShowModal(DIALOG_NAME_PAGE_CONFIGURE, false));
+    const setActiveTabName = (tabName: string) => dispatch(setActiveTab(TAB_DIALOG_ID, tabName));
 
     useEffect(() => {
         if (selectedPage) {
@@ -305,7 +316,8 @@ export default () => {
         <Modal
             appWrapperClassName='mashroom-portal-admin-app'
             className='page-configure-dialog'
-            name={DIALOG_NAME_PAGE_CONFIGURE}
+            show={showModal}
+            close={closeModal}
             titleId='configurePage'
             width={500}
             closeRef={handleCloseRef}>
@@ -325,7 +337,7 @@ export default () => {
                           validator={validateForm}
                           onChange={handleFormChange}
                           onSubmit={handleSubmit}>
-                        <TabDialog name='page-configure' tabs={[
+                        <TabDialog activeTabName={activeTabName} setActiveTabName={setActiveTabName} tabs={[
                             {name: 'general', titleId: 'general', content: <PageConfigureDialogGeneralPage selectedPage={selectedPage} pages={pages}/>},
                             {name: 'appearance', titleId: 'appearance', content: <PageConfigureDialogAppearancePage availableThemes={availableThemes} availableLayouts={availableLayouts} />},
                             {name: 'SEO', titleId: 'SEO', content: <PageConfigureDialogSEOPage />},

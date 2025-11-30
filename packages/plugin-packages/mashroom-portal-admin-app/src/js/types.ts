@@ -1,7 +1,8 @@
 
-import type {Store as ReduxStore, Dispatch as ReduxDispatch, AnyAction} from 'redux';
 import type {
-    MashroomAvailablePortalApp, MashroomAvailablePortalLayout, MashroomAvailablePortalTheme,
+    MashroomAvailablePortalApp,
+    MashroomAvailablePortalLayout,
+    MashroomAvailablePortalTheme,
     MashroomPortalAdminService,
     MashroomPortalPage,
     MashroomPortalPageRef, MashroomPortalPageRefLocalized,
@@ -28,13 +29,9 @@ export type State = {
     readonly selectedPortalApp: SelectedPortalApp | undefined | null;
     readonly selectedPage: SelectedPage | undefined | null;
     readonly selectedSite: SelectedSite | undefined | null;
+    readonly modals: ModalState;
+    readonly tabDialogs: TabDialogState;
 }
-
-export type Action = AnyAction;
-
-export type Dispatch = ReduxDispatch<Action>;
-
-export type Store = ReduxStore<State, Action>;
 
 export type Languages = {
     readonly current: string;
@@ -151,3 +148,15 @@ export type PagePosition = {
     parentPageId: string | undefined | null;
     insertAfterPageId: string | undefined | null;
 }
+
+export type ModalState = {
+    [name: string]: {
+        show: boolean
+    }
+};
+
+export type TabDialogState = {
+    [name: string]: {
+        active: string;
+    }
+};

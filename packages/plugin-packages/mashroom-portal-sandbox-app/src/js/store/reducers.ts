@@ -1,5 +1,4 @@
 
-import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 import type {
     AddMessagePublishedByAppAction,
     AddMessagePublishedBySandboxAction,
@@ -10,8 +9,6 @@ import type {
     SetSelectedPortalAppAction,
     SetTopicSubscribedByAppAction
 } from './actions';
-
-import type {Reducer} from 'redux';
 import type {MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
 import type {
     State,
@@ -21,7 +18,7 @@ import type {
     SelectedPortalApp
 } from '../types';
 
-const knownPortalApps: Reducer<Array<MashroomKnownPortalApp>, SetKnownPortalAppsAction> = (state, action) => {
+const knownPortalApps = (state: Array<MashroomKnownPortalApp>, action: SetKnownPortalAppsAction) => {
     if (typeof (state) === 'undefined') {
         return [];
     }
@@ -35,7 +32,7 @@ const knownPortalApps: Reducer<Array<MashroomKnownPortalApp>, SetKnownPortalApps
     }
 };
 
-const appLoadingError: Reducer<boolean, SetAppLoadingErrorAction> = (state, action) => {
+const appLoadingError = (state: boolean, action: SetAppLoadingErrorAction) => {
     if (typeof (state) === 'undefined') {
         return false;
     }
@@ -49,7 +46,7 @@ const appLoadingError: Reducer<boolean, SetAppLoadingErrorAction> = (state, acti
     }
 };
 
-const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null, SetSelectedPortalAppAction> = (state, action) => {
+const selectedPortalApp = (state: SelectedPortalApp | undefined | null, action: SetSelectedPortalAppAction) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -63,7 +60,7 @@ const selectedPortalApp: Reducer<SelectedPortalApp | undefined | null, SetSelect
     }
 };
 
-const activePortalApp: Reducer<ActivePortalApp | undefined | null, SetActivePortalAppAction> = (state, action) => {
+const activePortalApp = (state: ActivePortalApp | undefined | null, action: SetActivePortalAppAction) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -77,7 +74,7 @@ const activePortalApp: Reducer<ActivePortalApp | undefined | null, SetActivePort
     }
 };
 
-const messageBusCom: Reducer<MessageBusCommunication, SetTopicSubscribedByAppAction | AddMessagePublishedByAppAction | AddMessagePublishedBySandboxAction> = (state, action) => {
+const messageBusCom = (state: MessageBusCommunication, action: SetTopicSubscribedByAppAction | AddMessagePublishedByAppAction | AddMessagePublishedBySandboxAction) => {
     if (typeof (state) === 'undefined') {
         return {
             topicsSubscribedByApp: [],
@@ -101,7 +98,7 @@ const messageBusCom: Reducer<MessageBusCommunication, SetTopicSubscribedByAppAct
     }
 };
 
-const host: Reducer<PortalAppHost, SetHostWidthAction> = (state, action) => {
+const host = (state: PortalAppHost, action: SetHostWidthAction) => {
     if (typeof (state) === 'undefined') {
         return {
             width: '100%'
@@ -117,11 +114,13 @@ const host: Reducer<PortalAppHost, SetHostWidthAction> = (state, action) => {
     }
 };
 
-export default mashroomPortalCommonsCombineReducers<State>({
-    knownPortalApps,
-    selectedPortalApp,
-    appLoadingError,
-    activePortalApp,
-    messageBusCom,
-    host
-});
+export default (state: State, action: any): State => {
+    return {
+        knownPortalApps: knownPortalApps(state.knownPortalApps, action),
+        selectedPortalApp: selectedPortalApp(state.selectedPortalApp, action),
+        appLoadingError: appLoadingError(state.appLoadingError, action),
+        activePortalApp: activePortalApp(state.activePortalApp, action),
+        messageBusCom: messageBusCom(state.messageBusCom, action),
+        host: host(state.host, action),
+    };
+};

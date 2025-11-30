@@ -1,9 +1,12 @@
 
-import {legacy_createStore} from 'redux';
+import {devtools, redux} from 'zustand/middleware';
+import {create} from 'zustand/react';
 import {PORTAL_APP_CONTROLS_SETTINGS_KEY} from '../constants';
 import reducers from './reducers';
 
-import type {State, Store} from '../types';
+import type {AnyAction} from './actions';
+import type {State} from '../types';
+import type {StateCreator} from 'zustand/vanilla';
 
 const initialState: State = {
     user: {
@@ -36,14 +39,27 @@ const initialState: State = {
     portalAppControls: window.localStorage.getItem(PORTAL_APP_CONTROLS_SETTINGS_KEY) ? window.localStorage.getItem(PORTAL_APP_CONTROLS_SETTINGS_KEY) === 'true' : true,
     selectedPortalApp: null,
     selectedPage: null,
-    selectedSite: null
+    selectedSite: null,
+    modals: {},
+    tabDialogs: {},
 };
 
-let storeEnhancer = undefined;
+export type Dispatch = (action: AnyAction) => AnyAction;
+
+type StateWithDispatch = State & {
+    dispatch: Dispatch;
+};
+
+let init: StateCreator<any, any, any> = redux(reducers, initialState);
+
 if (process.env.NODE_ENV !== 'production') {
-    storeEnhancer = (global as any).__REDUX_DEVTOOLS_EXTENSION__ && (global as any).__REDUX_DEVTOOLS_EXTENSION__();
+    init = devtools(init, {
+        name: 'Mashroom Portal Admin App',
+    });
 }
 
-const store: Store = legacy_createStore(reducers, initialState, storeEnhancer);
+const useStore = create<StateWithDispatch>()(
+    init,
+);
 
-export default store;
+export default useStore;

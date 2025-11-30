@@ -1,10 +1,9 @@
 import React  from 'react';
 import {ErrorMessage, FieldLabel} from '@mashroom/mashroom-portal-ui-commons';
 import {useField} from 'formik';
-import {useSelector} from 'react-redux';
+import useStore from '../store/useStore';
 
 import type { I18NString } from '@mashroom/mashroom/type-definitions';
-import type {State} from '../types';
 
 type Props = {
     id: string,
@@ -14,7 +13,7 @@ type Props = {
 
 export default ({ id, name, labelId}: Props) => {
     const [field, meta, helpers] = useField(name);
-    const languages = useSelector((state: State) => state.languages);
+    const languages = useStore((state) => state.languages);
 
     const getValue = (): Record<string, string> => {
         let val: I18NString = field.value;

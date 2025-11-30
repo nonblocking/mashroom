@@ -1,11 +1,11 @@
 import React, {useCallback, useRef} from 'react';
-import { DropdownMenu, DropdownMenuItem, setShowModal } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch} from 'react-redux';
+import { DropdownMenu, DropdownMenuItem } from '@mashroom/mashroom-portal-ui-commons';
 import { DIALOG_NAME_PAGE_CONFIGURE, DIALOG_NAME_SITE_CONFIGURE } from '../constants';
-import {setSelectedPageNew, setSelectedSiteNew} from '../store/actions';
+import {setSelectedPageNew, setSelectedSiteNew, setShowModal} from '../store/actions';
+import useStore from '../store/useStore';
 
 export default() => {
-    const dispatch = useDispatch();
+    const dispatch = useStore((state) => state.dispatch);
     const closeDropDownRef = useRef<(() => void) | undefined>(undefined);
 
     const handleCreatePage = useCallback(() => {

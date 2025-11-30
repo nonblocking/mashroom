@@ -3,10 +3,9 @@ import {
     AutocompleteField,
     AutocompleteStringArraySuggestionHandler
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useDispatch, useSelector} from 'react-redux';
 import {DependencyContext} from '../DependencyContext';
 import {setExistingRoles} from '../store/actions';
-import type {State} from '../types';
+import useStore from '../store/useStore';
 
 type Props = {
     onRoleChange?: (role: string | undefined | null) => void;
@@ -15,9 +14,9 @@ type Props = {
 };
 
 export default ({ onRoleChange, onRoleSelected, resetRef }: Props) => {
-    const {existingRoles} = useSelector((state: State) => state);
+    const existingRoles = useStore((state) => state.existingRoles);
+    const dispatch = useStore((state) => state.dispatch);
     const {portalAdminService} = useContext(DependencyContext);
-    const dispatch = useDispatch();
     const setRoles = (roles: Array<string>) => dispatch(setExistingRoles(roles));
 
     useEffect(() => {

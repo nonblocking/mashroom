@@ -1,7 +1,5 @@
 
-import {mashroomPortalCommonsCombineReducers} from '@mashroom/mashroom-portal-ui-commons';
 
-import type {Reducer} from 'redux';
 import type {
     MashroomAvailablePortalLayout,
     MashroomAvailablePortalTheme
@@ -15,9 +13,10 @@ import type {
     SelectedPortalApp,
     SelectedSite,
     Sites,
-    User
+    User, ModalState, TabDialogState
 } from '../types';
 import type {
+    SetActiveTabAction,
     SetAvailableAppsAction,
     SetAvailableAppsErrorAction,
     SetAvailableAppsLoadingAction,
@@ -55,10 +54,10 @@ import type {
     SetSitesAction,
     SetSitesErrorAction,
     SetSitesLoadingAction,
-    SetUserNameAction
+    SetUserNameAction, ShowModalAction
 } from './actions';
 
-const user: Reducer<User, SetUserNameAction> = (state, action) => {
+const user = (state: User, action: SetUserNameAction) => {
     if (!state) {
         return {
             userName: null,
@@ -74,7 +73,7 @@ const user: Reducer<User, SetUserNameAction> = (state, action) => {
     }
 };
 
-const languages: Reducer<Languages,SetCurrentLanguageAction | SetDefaultLanguageAction | SetAvailableLanguagesAction> = (state, action) => {
+const languages = (state: Languages, action: SetCurrentLanguageAction | SetDefaultLanguageAction | SetAvailableLanguagesAction) => {
     if (!state) {
         return {
             current: 'en',
@@ -95,7 +94,7 @@ const languages: Reducer<Languages,SetCurrentLanguageAction | SetDefaultLanguage
     }
 };
 
-const existingRoles: Reducer<Array<string>, SetExistingRolesAction> = (state, action) => {
+const existingRoles = (state: Array<string>, action: SetExistingRolesAction) => {
     if (!state) {
         return [];
     }
@@ -108,7 +107,7 @@ const existingRoles: Reducer<Array<string>, SetExistingRolesAction> = (state, ac
     }
 };
 
-const availableThemes: Reducer<Array<MashroomAvailablePortalTheme>, SetAvailableThemesAction> = (state, action) => {
+const availableThemes = (state: Array<MashroomAvailablePortalTheme>, action: SetAvailableThemesAction) => {
     if (!state) {
         return [];
     }
@@ -121,7 +120,7 @@ const availableThemes: Reducer<Array<MashroomAvailablePortalTheme>, SetAvailable
     }
 };
 
-const availableLayouts: Reducer<Array<MashroomAvailablePortalLayout>, SetAvailableLayoutsAction> = (state, action) => {
+const availableLayouts = (state: Array<MashroomAvailablePortalLayout>, action: SetAvailableLayoutsAction) => {
     if (!state) {
         return [];
     }
@@ -134,7 +133,7 @@ const availableLayouts: Reducer<Array<MashroomAvailablePortalLayout>, SetAvailab
     }
 };
 
-const sites: Reducer<Sites, SetSitesAction | SetSitesLoadingAction | SetSitesErrorAction> = (state, action) => {
+const sites = (state: Sites, action: SetSitesAction | SetSitesLoadingAction | SetSitesErrorAction) => {
     if (!state) {
         return {
             loading: false,
@@ -155,7 +154,7 @@ const sites: Reducer<Sites, SetSitesAction | SetSitesLoadingAction | SetSitesErr
     }
 };
 
-const pages: Reducer<Pages, SetPagesAction | SetPagesFlattenedAction | SetPagesLoadingAction | SetPagesErrorAction> = (state, action) => {
+const pages = (state: Pages, action: SetPagesAction | SetPagesFlattenedAction | SetPagesLoadingAction | SetPagesErrorAction) => {
     if (!state) {
         return {
             loading: false,
@@ -179,7 +178,7 @@ const pages: Reducer<Pages, SetPagesAction | SetPagesFlattenedAction | SetPagesL
     }
 };
 
-const portalAppControls: Reducer<boolean, SetShowPortalAppControls> = (state, action) => {
+const portalAppControls = (state: boolean, action: SetShowPortalAppControls) => {
     if (typeof (state) === 'undefined') {
         return true;
     }
@@ -193,7 +192,7 @@ const portalAppControls: Reducer<boolean, SetShowPortalAppControls> = (state, ac
     }
 };
 
-const availableApps: Reducer<AvailableApps, SetAvailableAppsLoadingAction | SetAvailableAppsErrorAction | SetAvailableAppsAction> = (state, action) => {
+const availableApps = (state: AvailableApps, action: SetAvailableAppsLoadingAction | SetAvailableAppsErrorAction | SetAvailableAppsAction) => {
     if (!state) {
         return {
             loading: false,
@@ -217,10 +216,7 @@ const availableApps: Reducer<AvailableApps, SetAvailableAppsLoadingAction | SetA
     }
 };
 
-const selectedPortalApp: Reducer<
-    SelectedPortalApp | undefined | null,
-    SetSelectedPortalAppAction | SetSelectedPortalAppLoadingAction | SetSelectedPortalAppLoadingErrorAction | SetSelectedPortalAppUpdatingErrorAction | SetSelectedPortalAppPermittedRolesAction
-> = (state, action) => {
+const selectedPortalApp = (state: SelectedPortalApp | undefined | null, action: SetSelectedPortalAppAction | SetSelectedPortalAppLoadingAction | SetSelectedPortalAppLoadingErrorAction | SetSelectedPortalAppUpdatingErrorAction | SetSelectedPortalAppPermittedRolesAction) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -270,11 +266,9 @@ const selectedPortalApp: Reducer<
     }
 };
 
-const selectedPage: Reducer<
-    SelectedPage | undefined | null,
-    SetSelectedPageAction | SetSelectedPageNewAction | SetSelectdPageLoadingAction | SetSelectedPageLoadingErrorAction | SetSelectedPageUpdatingErrorAction
-    | SetSelectedPageRefDataAction | SetSelectedPageDataAction | SetSelectedPagePermittedRolesAction
-> = (state, action) => {
+const selectedPage = (state: SelectedPage | undefined | null, action: SetSelectedPageAction | SetSelectedPageNewAction | SetSelectdPageLoadingAction
+    | SetSelectedPageLoadingErrorAction | SetSelectedPageUpdatingErrorAction
+    | SetSelectedPageRefDataAction | SetSelectedPageDataAction | SetSelectedPagePermittedRolesAction) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -350,11 +344,8 @@ const selectedPage: Reducer<
     }
 };
 
-const selectedSite: Reducer<
-    SelectedSite | undefined | null,
-    SetSelectedSiteAction | SetSelectedSiteNewAction | SetSelectedSiteLoadingAction | SetSelectedSiteLoadingErrorAction | SetSelectedSiteUpdatingErrorAction
-    | SetSelectedSiteDataAction | SetSelectedSitePermittedRolesAction
-> = (state, action) => {
+const selectedSite = (state: SelectedSite | undefined | null, action: SetSelectedSiteAction | SetSelectedSiteNewAction | SetSelectedSiteLoadingAction
+    | SetSelectedSiteLoadingErrorAction | SetSelectedSiteUpdatingErrorAction | SetSelectedSiteDataAction | SetSelectedSitePermittedRolesAction) => {
     if (typeof (state) === 'undefined') {
         return null;
     }
@@ -417,19 +408,60 @@ const selectedSite: Reducer<
     }
 };
 
-const combinedReducers = mashroomPortalCommonsCombineReducers<State>({
-    user,
-    languages,
-    sites,
-    pages,
-    availableApps,
-    portalAppControls,
-    existingRoles,
-    availableThemes,
-    availableLayouts,
-    selectedPortalApp,
-    selectedPage,
-    selectedSite
-});
+const modals = (state: ModalState, action: ShowModalAction) => {
+    if (typeof (state) === 'undefined') {
+        return {};
+    }
 
-export default combinedReducers;
+    switch (action.type) {
+    case 'SET_SHOW_MODAL': {
+        return {
+            ...state,
+            [action.dialogName]: {
+                show: action.show,
+            },
+        };
+    }
+    default:
+        return state;
+    }
+};
+
+const tabDialogs = (state: TabDialogState, action: SetActiveTabAction) => {
+    if (typeof (state) === 'undefined') {
+        return {};
+    }
+
+    switch (action.type) {
+    case 'SET_ACTIVE_TAB': {
+        return {
+            ...state,
+            [action.dialogName]: {
+                active: action.active,
+            },
+        };
+    }
+    default:
+        return state;
+    }
+};
+
+export default (state: State, action: any): State => {
+    return {
+        user: user(state.user, action),
+        languages: languages(state.languages, action),
+        sites: sites(state.sites, action),
+        pages: pages(state.pages, action),
+        availableApps: availableApps(state.availableApps, action),
+        portalAppControls: portalAppControls(state.portalAppControls, action),
+        existingRoles: existingRoles(state.existingRoles, action),
+        availableThemes: availableThemes(state.availableThemes, action),
+        availableLayouts: availableLayouts(state.availableLayouts, action),
+        selectedPortalApp: selectedPortalApp(state.selectedPortalApp, action),
+        selectedPage: selectedPage(state.selectedPage, action),
+        selectedSite: selectedSite(state.selectedSite, action),
+        modals: modals(state.modals, action),
+        tabDialogs: tabDialogs(state.tabDialogs, action),
+    };
+};
+

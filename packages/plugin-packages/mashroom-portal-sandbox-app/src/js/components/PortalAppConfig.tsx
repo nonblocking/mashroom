@@ -6,10 +6,10 @@ import {
     Button,
     TextareaField,
 } from '@mashroom/mashroom-portal-ui-commons';
-import {useSelector} from 'react-redux';
 import { mergeAppConfig } from '../utils';
+import useStore from '../store/useStore';
 
-import type {SelectedPortalApp, State} from '../types';
+import type {SelectedPortalApp} from '../types';
 
 type FormData = {
     lang: string;
@@ -24,7 +24,9 @@ type Props = {
 }
 
 export default ({sbAutoTest, onConfigSubmit}: Props) => {
-    const {selectedPortalApp, appLoadingError, host: {width: hostWidth}} = useSelector((state: State) => state);
+    const selectedPortalApp = useStore((state) => state.selectedPortalApp);
+    const {width: hostWidth} = useStore((state) => state.host);
+    const appLoadingError = useStore((state) => state.appLoadingError);
 
     const initialValues = useMemo((): FormData | null => {
         if (!selectedPortalApp) {
