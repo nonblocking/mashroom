@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This is a simple Portal App that demonstrates how an App registered to the [Mashroom Portal](../mashroom-portal) can load and unload other Portal Apps
+This is a simple Microfrontend that demonstrates how an App registered to the [Mashroom Portal](../mashroom-portal) can load and unload other Microfrontends (Portal Apps)
 on a page with a specific config.
 
 ## Usage

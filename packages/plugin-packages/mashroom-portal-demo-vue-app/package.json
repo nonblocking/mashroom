@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-vue-app",
-    "description": "A simple Vue.js based SPA that can be used in the Mashroom Portal",
+    "description": "A simple Vue.js based Microfrontend that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",

@@ -20,12 +20,12 @@
             "defaultConfig": {
                 "title": "Demo React App",
                 "description": {
-                    "en": "A simple React SPA",
-                    "de": "Ein einfacher React SPA"
+                    "en": "A simple React Microfrontend",
+                    "de": "Ein einfaches React Microfrontend"
                 },
                 "category": "Demo",
                 "appConfig": {
-                    "message": "This is simple React based SPA that communicates with other Apps on the page via message bus",
+                    "message": "This is simple React based Microfrontend that communicates with other Apps on the page via message bus",
                     "pingButtonLabel": "Send Ping"
                 }
             }

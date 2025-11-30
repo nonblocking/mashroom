@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This Portal App can be used to test remote messaging in the [Mashroom Portal](../mashroom-portal).
+This Microfrontend can be used to test remote messaging in the [Mashroom Portal](../mashroom-portal).
 This App requires the [mashroom-messaging](../mashroom-messaging) and [mashroom-websocket](../mashroom-websocket) plugins to be installed.
 
 ## Usage

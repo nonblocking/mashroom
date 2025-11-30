@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-react-app",
-    "description": "A simple React based SPA that can be used in the Mashroom Portal",
+    "description": "A simple React based Microfrontend that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",
@@ -12,7 +12,7 @@
     "files": [
         "dist/**",
         "screenshot.png",
-        "package.json"
+        "mashroom.json"
     ],
     "devDependencies": {
         "@mashroom/mashroom-portal": "2.9.2",

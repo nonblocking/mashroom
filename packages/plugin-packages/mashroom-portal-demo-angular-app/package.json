@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-angular-app",
-    "description": "A simple Angular based SPA that can be used in the Mashroom Portal",
+    "description": "A simple Angular based Microfrontend that can be used in the Mashroom Portal",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",

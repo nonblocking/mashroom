@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This is a simple Portal App that demonstrates how the [Mashroom Portal](../mashroom-portal) proxy can be used to connect to a
+This is a simple Microfrontend that demonstrates how the [Mashroom Portal](../mashroom-portal) proxy can be used to connect to a
 REST API that cannot be reached directly by the client.
 
 It fetches data *rocketlaunch.live*, but connects through the Portal. So the actual endpoint will not be visible

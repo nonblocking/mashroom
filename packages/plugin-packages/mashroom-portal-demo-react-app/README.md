@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This is a simple [React](https://reactjs.org) based Portal App that can be developed and run standalone, but can also
+This is a simple [React](https://reactjs.org) based Microfrontend that can be developed and run standalone, but can also
 act as a building block in the [Mashroom Portal](../mashroom-portal).
 
 ## Usage

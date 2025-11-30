@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This [Mashroom Portal](../mashroom-portal) App can be used to load and **test any Portal App** with a specific configuration and to interact with the App via Message Bus.
+This [Mashroom Portal](../mashroom-portal) App can be used to load and **test any Microfrontend/Portal App** with a specific configuration and to interact with the App via Message Bus.
 It can also be used for end-2-end testing with tools such as Selenium.
 
 ## Usage

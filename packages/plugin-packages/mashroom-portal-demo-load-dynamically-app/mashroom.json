@@ -27,8 +27,8 @@
                     "de": "Demo Dynamisches Laden App"
                 },
                 "description": {
-                    "en": "A simple SPA that demonstrates how to load and unload other registered SPAs on a page with a specific config",
-                    "de": "Ein einfacher SPA der demonstriert wie man andere, registrierte SPAs auf einer Seite laden und entfernen kann mit einer bestimmten Konfiguration"
+                    "en": "A simple Microfrontend that demonstrates how to load and unload other registered Microfrontends on a page with a specific config",
+                    "de": "Ein einfaches Microfrontend das demonstriert wie man andere, registrierte Microfrontends auf einer Seite laden und entfernen kann mit einer bestimmten Konfiguration"
                 },
                 "category": "Demo",
                 "appConfig": {}

@@ -44,7 +44,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            message: 'This simple React based SPA was launched with a different...',
+            message: 'This simple React based Microfrontend was launched with a different...',
         },
     };
 
@@ -52,7 +52,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            message: '...configuration than this instance of the same SPA',
+            message: '...configuration than this instance of the same Microfrontend',
         },
     };
 
@@ -60,7 +60,7 @@ export default async (portalName: string, addDemoPages: boolean, storageService:
         pluginName: 'Mashroom Portal Demo React App',
         instanceId: createAppInstanceId(),
         appConfig: {
-            message: 'This React SPA is part of a tabbed container formed by the Mashroom Portal Tabify App',
+            message: 'This React Microfrontend is part of a tabbed container formed by the Mashroom Portal Tabify App',
         },
     };
 

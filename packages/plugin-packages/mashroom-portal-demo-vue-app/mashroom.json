@@ -24,12 +24,12 @@
             "defaultConfig": {
                 "title": "Demo Vue.js App",
                 "description": {
-                    "en": "A simple Vue.js SPA",
-                    "de": "Ein einfacher Vue.js SPA"
+                    "en": "A simple Vue.js Microfrontend",
+                    "de": "Ein einfaches Vue.js Microfrontend"
                 },
                 "category": "Demo",
                 "appConfig": {
-                    "message": "This is simple Vue based SPA that communicates with other Apps on the page via message bus",
+                    "message": "This is simple Vue based Microfrontend that communicates with other Apps on the page via message bus",
                     "pingButtonLabel": "Send Ping"
                 }
             }

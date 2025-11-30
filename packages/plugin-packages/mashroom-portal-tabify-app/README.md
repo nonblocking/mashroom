@@ -11,8 +11,8 @@ If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mash
 
 After placing it on a page, use the *Portal Admin Toolbar* to set the following properties:
 
- * _addCloseButtons_: Defines if a close button is added to remove a Portal App displayed as tab
- * _appNameTitleMapping_: A map to override the displayed title in the tab (Portal App Name -> Title to display)
+ * _addCloseButtons_: Defines if a close button is added to remove a Microfrontend displayed as a tab
+ * _appNameTitleMapping_: A map to override the displayed title in the tab (Microfrontend/Portal App Name -> Title to display)
  * _fixedTabTitles_: A list of fixed tab titles per position (null means not fixed). E.g.: [null, 'the second tag']
 
 **Updates via MessageBus**

@@ -10,7 +10,7 @@
     "version": "2.9.2",
     "files": [
         "dist/**",
-        "package.json"
+        "mashroom.json"
     ],
     "dependencies": {
         "@mashroom/mashroom-utils": "2.9.2",

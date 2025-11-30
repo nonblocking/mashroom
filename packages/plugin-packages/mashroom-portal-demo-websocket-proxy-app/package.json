@@ -1,6 +1,6 @@
 {
     "name": "@mashroom/mashroom-portal-demo-websocket-proxy-app",
-    "description": "A simple SPA that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
+    "description": "A simple Microfrontend that demonstrates how the Mashroom Portal proxy can be used to connect to a WebSocket server which cannot be reached directly by the client",
     "homepage": "https://www.mashroom-server.com",
     "repository": {
         "type": "git",

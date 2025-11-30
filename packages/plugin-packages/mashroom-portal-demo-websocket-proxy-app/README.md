@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-This is a simple Portal App that demonstrates how the [Mashroom Portal](../mashroom-portal) proxy can be used to connect to a
+This is a simple Microfrontend that demonstrates how the [Mashroom Portal](../mashroom-portal) proxy can be used to connect to a
 WebSocket server that cannot be reached directly by the client.
 
 By default, it connects to an echo server on ws://ws.ifelse.io/, but that server might go down any time.

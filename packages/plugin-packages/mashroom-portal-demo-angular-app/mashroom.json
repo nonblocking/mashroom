@@ -24,12 +24,12 @@
             "defaultConfig": {
                 "title": "Demo Angular App",
                 "description": {
-                    "en": "A simple Angular SPA",
-                    "de": "Ein einfacher Angular SPA"
+                    "en": "A simple Angular Microfrontend",
+                    "de": "Ein einfaches Angular Microfrontend"
                 },
                 "category": "Demo",
                 "appConfig": {
-                    "message": "This is simple Angular based SPA that communicates with other Apps on the page via message bus",
+                    "message": "This is simple Angular based Microfrontend that communicates with other Microfrontends on the page via message bus",
                     "pingButtonLabel": "Send Ping"
                 }
             }

@@ -3,7 +3,7 @@
 
 Plugin for [Mashroom Server](https://www.mashroom-server.com), a **Microfrontend Integration Platform**.
 
-Adds a (responsive) iFrame Portal App to the [Mashroom Portal](../mashroom-portal).
+Adds a (responsive) iFrame Microfrontend to the [Mashroom Portal](../mashroom-portal).
 
 ## Usage
 

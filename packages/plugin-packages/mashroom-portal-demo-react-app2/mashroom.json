@@ -20,8 +20,8 @@
             "defaultConfig": {
                 "title": "Demo React App 2",
                 "description": {
-                    "en": "A simple React SPA that supports SSR and brings a custom config editor",
-                    "de": "Ein einfacher React SPA mit SSR Unterstützung und einem eigenen Config Editor"
+                    "en": "A simple React Microfrontend that supports SSR and brings a custom config editor",
+                    "de": "Ein einfaches React Microfrontend mit SSR Unterstützung und einem eigenen Config Editor"
                 },
                 "category": "Demo",
                 "editor": {
@@ -32,7 +32,7 @@
                     "ssrHtml": "same-config"
                 },
                 "appConfig": {
-                    "markdownMessage": "This is simple React *SPA* that supports **SSR** and brings a custom config editor",
+                    "markdownMessage": "This is simple React *Microfrontend* that supports **SSR** and brings a custom config editor",
                     "pingButtonLabel": "Send Ping"
                 }
             }
