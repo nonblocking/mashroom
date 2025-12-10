@@ -1,9 +1,9 @@
 {
     "name": "@mashroom/mashroom-test-server8",
-    "version": "2.9.2",
+    "version": "2.9.3",
     "private": true,
     "devDependencies": {
-        "@mashroom/mashroom-json-schemas": "2.9.2"
+        "@mashroom/mashroom-json-schemas": "2.9.3"
     },
     "scripts": {
         "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && node ../../core/mashroom/dist/server.js\""
