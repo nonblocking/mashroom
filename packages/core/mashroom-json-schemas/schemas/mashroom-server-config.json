@@ -1407,6 +1407,10 @@
             "type": "boolean",
             "description": "Enable HTTP/2 for the HTTPS server. If you enable this WebSockets will no longer work (Default: false)"
         },
+        "trustProxy": {
+            "type": ["boolean", "number", "string"],
+            "description": "Configure if reverse proxies should be trusted (e.g., with secure cookies). See https://expressjs.com/en/guide/behind-proxies.html for details (Default: 1)"
+        },
         "indexPage": {
             "type": "string",
             "description": "The start page"

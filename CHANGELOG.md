@@ -3,6 +3,10 @@
 
 ## [unreleased]
 
+ * Core: Added a server config property *trustProxy* which is forwarded to [Express](https://expressjs.com/en/5x/api.html#trust.proxy.options.table).
+   The default value is *1*, which means the actual client must only be one *hop* away.
+   This setting is useful if you want to set *secure: true* on the session cookie but *Mashroom Server* is behind a reverse proxy.
+   In that case the reverse proxy has to set the *X-Forwarded-Proto* header to *https*.
  * HTTP Proxy: Fixed forwarding secure WebSocket connections (wss://) in the default proxy implementation
  * HTTP Proxy: Fixed error response error handling if *targetUri* is not a valid URL but was rewritten by an interceptor plugin to be one
 

@@ -87,7 +87,7 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const pluginRegistry = new MashroomPluginRegistry(scanner, pluginPackageFactory, pluginFactory, pluginContextHolder, loggerFactory);
 
     const expressApp = express();
-    setExpressConfig(expressApp, devMode, logger);
+    setExpressConfig(expressApp, serverConfig.trustProxy, devMode, logger);
 
     const middlewarePluginDelegate = new MiddlewarePluginDelegate();
     addDefaultMiddleware(expressApp, pluginContextHolder, middlewarePluginDelegate);
@@ -180,13 +180,15 @@ const addDefaultMiddleware = (expressApp: Application, pluginContextHolder: Mash
     // Middleware plugins
     expressApp.use(middlewarePluginDelegate.middleware());
 
-    // X-Powered-By
-    expressApp.disable('x-powered-by');
     const xPoweredByHeaderMiddleware = new XPoweredByHeaderMiddleware(pluginContextHolder);
     expressApp.use(xPoweredByHeaderMiddleware.middleware());
 };
 
-const setExpressConfig = (expressApp: Application, devMode: boolean, logger: MashroomLogger) => {
+const setExpressConfig = (expressApp: Application, trustProxy: boolean | number | string, devMode: boolean, logger: MashroomLogger) => {
+    expressApp.disable('x-powered-by');
+
+    expressApp.set('trust proxy', trustProxy);
+
     if (!devMode) {
         logger.info('Enabling express template cache');
         expressApp.enable('view cache');

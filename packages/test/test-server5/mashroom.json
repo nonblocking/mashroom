@@ -51,6 +51,15 @@
                         "/websocket": "/websocket",
                         "/": "/portal/web"
                     }
+                },
+                "localhost:6063": {
+                    "frontendBasePath": "/",
+                    "mapping": {
+                        "/mashroom": "/mashroom",
+                        "/login": "/login",
+                        "/websocket": "/websocket",
+                        "/": "/portal/web"
+                    }
                 }
             }
         },
@@ -58,6 +67,8 @@
             "provider": "memory",
             "session": {
                 "cookie": {
+                    "httpOnly": true,
+                    "sameSite": "strict"
                 }
             }
         },

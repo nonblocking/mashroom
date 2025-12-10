@@ -276,6 +276,7 @@ export type MashroomServerConfig = {
     +httpsPort: ?number;
     +tlsOptions: ?any;
     +enableHttp2: boolean;
+    +trustProxy: boolean | number | string;
     +xPowerByHeader: ?string,
     +serverRootFolder: string,
     +tmpFolder: string,
