@@ -18,7 +18,7 @@ const expressUseMock = jest.fn();
 const registerUpgradeHandlerMock = jest.fn();
 const ExpressApplicationMock: any = jest.fn(() => ({
     use: expressUseMock,
-    _router: {
+    router: {
         stack: expressStack,
     },
 }));
@@ -141,7 +141,7 @@ describe('MashroomWebAppPluginLoader', () => {
         }
     });
 
-    it('removes a web-app', () => {
+    it('removes a web-app', async () => {
         const pluginPackagePath = getPluginPackageFolder();
 
         const pluginDefinition: any = {
@@ -161,9 +161,9 @@ describe('MashroomWebAppPluginLoader', () => {
         const requestHandlerWrapper: any = {};
 
         expressStack = [
-            {name: 'foo'},
-            {name: 'Test3'},
-            {name: 'bar'},
+            { handle: {name: 'foo'} },
+            { handle: {}, route: { stack: [{ handle: {name: 'Test3'} }] } },
+            { handle: {name: 'bar'} },
         ];
 
         const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggingUtils.dummyLoggerFactory, pluginContextHolderMock);
@@ -173,7 +173,7 @@ describe('MashroomWebAppPluginLoader', () => {
             requestHandlerWrapper,
         });
 
-        loader.unload(plugin);
+        await loader.unload(plugin);
 
         // @ts-ignore
         expect(loader._loadedPlugins.size).toBe(0);

@@ -72,6 +72,7 @@ Plugin loaders itself are also just plugins, so it is possible to add any type o
   * Support for **custom plugin types**
   * Extensive **monitoring** and export in Prometheus format
   * Hot deploy, undeploy, and reload of all kind of plugins
+  * Native TypeScript support (all config files and plugins can be written in TypeScript)
   * No compile-time or runtime dependencies to the server
   * Fast and lightweight
 

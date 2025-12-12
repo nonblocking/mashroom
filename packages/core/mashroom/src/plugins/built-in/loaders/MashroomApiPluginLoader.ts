@@ -14,7 +14,7 @@ export default class MashroomApiPluginLoader extends ExpressRequestHandlerBasePl
     }
 
     async createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
-        const apiBootstrap: MashroomApiPluginBootstrapFunction = plugin.requireBootstrap();
+        const apiBootstrap: MashroomApiPluginBootstrapFunction = await plugin.loadBootstrap();
         return apiBootstrap(plugin.name, pluginConfig, contextHolder);
     }
 

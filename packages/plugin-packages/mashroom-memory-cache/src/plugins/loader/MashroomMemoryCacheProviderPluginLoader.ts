@@ -33,7 +33,7 @@ export default class MashroomMemoryCacheProviderPluginLoader implements Mashroom
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
-        const bootstrap: MashroomMemoryCacheProviderPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomMemoryCacheProviderPluginBootstrapFunction = await plugin.loadBootstrap();
         const provider: MashroomMemoryCacheProvider = await bootstrap(plugin.name, config, contextHolder);
         this._logger.info(`Registering memory cache provider plugin: ${plugin.name}`);
         this._registry.register(plugin.name, provider);

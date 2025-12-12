@@ -21,7 +21,8 @@ describe('PortalLayoutsPluginLoader', () => {
             type: 'portal-layouts',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -75,7 +76,8 @@ describe('PortalLayoutsPluginLoader', () => {
             type: 'portal-layouts',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -114,7 +116,8 @@ describe('PortalLayoutsPluginLoader', () => {
             type: 'portal-layouts',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {

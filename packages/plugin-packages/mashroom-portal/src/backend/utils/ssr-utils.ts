@@ -1,5 +1,6 @@
 
 import {createHash} from 'crypto';
+import {moduleUtils} from '@mashroom/mashroom-utils';
 import context from '../context/global-portal-context';
 import {SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX} from '../constants';
 import {getUser, isAppPermitted} from './security-utils';
@@ -107,13 +108,7 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     if (ssrBootstrapPath) {
         // Local App
         try {
-            let ssrBootstrap: MashroomPortalAppPluginSSRBootstrapFunction;
-            const bootstrap = require(ssrBootstrapPath);
-            if (typeof (bootstrap) === 'function') {
-                ssrBootstrap = bootstrap;
-            } else {
-                ssrBootstrap = bootstrap.default;
-            }
+            const ssrBootstrap: MashroomPortalAppPluginSSRBootstrapFunction = await moduleUtils.loadModule(ssrBootstrapPath);
             htmlOrSSRRenderResult = await ssrBootstrap(portalAppSetup, req);
         } catch (e) {
             logger.error(`Loading or executing local SSR bootstrap '${ssrBootstrapPath}' for app '${pluginName}' failed!`, e);

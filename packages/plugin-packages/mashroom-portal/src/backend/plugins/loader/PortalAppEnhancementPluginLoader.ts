@@ -32,7 +32,7 @@ export default class PortalAppEnhancementPluginLoader implements MashroomPluginL
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
         let enhancementPlugin;
         if (plugin.pluginDefinition.bootstrap) {
-            const bootstrap: MashroomPortalAppEnhancementPluginBootstrapFunction = plugin.requireBootstrap();
+            const bootstrap: MashroomPortalAppEnhancementPluginBootstrapFunction = await plugin.loadBootstrap();
             enhancementPlugin = bootstrap && await bootstrap(plugin.name, config, contextHolder);
         }
 

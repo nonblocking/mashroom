@@ -1,7 +1,9 @@
 import {existsSync} from 'fs';
 import {resolve, isAbsolute} from 'path';
+import {configFileUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 import getRemotePluginPackageEndpointStore from '../store/getRemotePluginPackageEndpointStore';
+
 import type {
     MashroomLogger,
     MashroomPluginContextHolder,
@@ -94,8 +96,7 @@ export default class RemotePluginPackagesScanner implements MashroomPluginPackag
         if (existsSync(this._configFilePath)) {
             this._logger.info(`Loading remote plugin package URLs from: ${this._configFilePath}`);
 
-            const remotePluginPackagesUrlsModule = require(this._configFilePath);
-            const remotePluginPackagesUrlsData = remotePluginPackagesUrlsModule.default ?? remotePluginPackagesUrlsModule;
+            const remotePluginPackagesUrlsData = await configFileUtils.loadConfigFile(this._configFilePath);
             return Array.isArray(remotePluginPackagesUrlsData) ? remotePluginPackagesUrlsData : (remotePluginPackagesUrlsData.remotePackageUrls || []);
         } else {
             this._logger.warn(`Remote plugin package URLs config file not found: ${this._configFilePath}`);

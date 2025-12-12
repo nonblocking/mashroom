@@ -135,7 +135,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         });
     });
 
-    it('reads the plugin definition from /package.json on a remote host', async () => {
+    it('reads the plugin definition from /package.json from a remote host', async () => {
         const remoteHost = new URL('http://my-remote-app.io:6066');
 
         nock(remoteHost.toString())
@@ -182,7 +182,57 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         });
     });
 
-    it('reads the plugin definition from /mashroom.json on a remote host', async () => {
+    it('reads the plugin definition from /mashroom.json from a remote host', async () => {
+        const remoteHost = new URL('http://my-remote-app.io:6068');
+
+        nock(remoteHost.toString())
+            .get('/package.json')
+            .reply(200, {
+                name: 'test2',
+                version: '2.1.1',
+            });
+        nock(remoteHost.toString())
+            .get('/mashroom.json')
+            .reply(404);
+        nock(remoteHost.toString())
+            .get('/mashroom.yaml')
+            .replyWithFile(200, resolve(__dirname, '../../../data/mashroom.yaml'));
+
+        const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
+            externalPluginConfigFileNames: ['mashroom']
+        } as any, loggingUtils.dummyLoggerFactory);
+
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
+
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].definition).toEqual({
+            plugins: [
+                {
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                    defaultConfig: {
+                        foo: 'bar'
+                    },
+                    name: 'Plugin 1',
+                    type: 'web-app'
+                },
+                {
+                    bootstrap: './dist/mashroom-bootstrap2.js',
+                    dependencies: [
+                        'foo-services'
+                    ],
+                    name: 'Plugin 2',
+                    type: 'plugin-loader'
+                },
+            ]
+        });
+        expect(pluginPackageDefinitions![0].meta).toEqual({
+            name: 'test2',
+            version: '2.1.1'
+        });
+    });
+
+    it('reads the plugin definition from /mashroom.yaml from a remote host', async () => {
         const remoteHost = new URL('http://my-remote-app.io:6068');
 
         nock(remoteHost.toString())

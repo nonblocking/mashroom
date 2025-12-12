@@ -1,6 +1,6 @@
 import {resolve} from 'path';
 import {fileURLToPath} from 'url';
-import {readonlyUtils, PluginBootstrapError} from '@mashroom/mashroom-utils';
+import {readonlyUtils, moduleUtils, PluginBootstrapError} from '@mashroom/mashroom-utils';
 import type {
     MashroomPlugin as MashroomPluginType,
     MashroomPluginDefinition,
@@ -24,7 +24,30 @@ export default class MashroomPlugin implements MashroomPluginType {
         this._status = 'pending';
     }
 
-    requireBootstrap<T>(): T {
+    async loadBootstrap(): Promise<any> {
+        const bootstrapFullPath = this._getBootstrapFullPath();
+        if (!bootstrapFullPath) {
+            throw new PluginBootstrapError(`No bootstrap defined for plugin: ${this.name}`);
+        }
+
+        this._logger.info(`Loading bootstrap for plugin '${this.name}': ${bootstrapFullPath}`);
+
+        let bootstrap = null;
+        try {
+            bootstrap = await moduleUtils.loadModule(bootstrapFullPath);
+        } catch (e) {
+            this._logger.error(`Loading bootstrap of plugin '${this.name}' failed`, e);
+            throw new PluginBootstrapError(`Loading bootstrap of plugin '${this.name}' failed: ${e}`);
+        }
+
+        if (typeof (bootstrap) === 'function') {
+            return bootstrap;
+        }
+
+        throw new PluginBootstrapError(`Loading bootstrap of plugin '${this.name}' failed: Default export is no function!`);
+    }
+
+    requireBootstrap(): any {
         const bootstrapFullPath = this._getBootstrapFullPath();
         if (!bootstrapFullPath) {
             throw new PluginBootstrapError(`No bootstrap defined for plugin: ${this.name}`);

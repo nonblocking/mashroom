@@ -30,6 +30,7 @@ import MashroomHealthProbeService from '../services/MashroomHealthProbeService';
 import XPoweredByHeaderMiddleware from '../server/XPoweredByHeaderMiddleware';
 import MashroomServer from '../server/MashroomServer';
 import InitializationError from '../errors/InitializationError';
+import {installHotESModuleReloadingHook} from '../utils/reload-utils';
 import MashroomPluginContextHolder from './MashroomPluginContextHolder';
 
 import type {Application} from 'express';
@@ -50,6 +51,7 @@ import type {
     InternalMashroomHttpUpgradeService,
 } from '../../type-definitions/internal';
 
+
 /**
  * Server context factory
  *
@@ -63,10 +65,13 @@ const contextFactory: MashroomServerContextFactory = async (serverRootPath: stri
     const logger = loggerFactory('mashroom');
 
     const configLoader = new MashroomServerConfigLoader(loggerFactory);
-    const serverConfigHolder = configLoader.load(serverRootPath);
+    const serverConfigHolder = await configLoader.load(serverRootPath);
     const serverConfig = serverConfigHolder.getConfig();
 
     const devMode: boolean = isDevMode(serverConfig, logger);
+    if (devMode) {
+        await installHotESModuleReloadingHook(logger);
+    }
 
     const scanner = new MashroomLocalFileSystemPluginPackageScanner(serverConfig, loggerFactory);
     const builder = devMode ? createBuilder(serverConfig, loggerFactory) : null;

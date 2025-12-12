@@ -20,7 +20,8 @@ describe('PortalAppPluginLoader', () => {
             type: 'portal-app2',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -143,7 +144,8 @@ describe('PortalAppPluginLoader', () => {
             type: 'portal-app2',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -226,7 +228,8 @@ describe('PortalAppPluginLoader', () => {
             type: 'portal-app',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -315,7 +318,8 @@ describe('PortalAppPluginLoader', () => {
             type: 'portal-app2',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {

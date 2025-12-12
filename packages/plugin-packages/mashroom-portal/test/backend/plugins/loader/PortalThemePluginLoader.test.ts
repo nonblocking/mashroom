@@ -23,10 +23,11 @@ describe('PortalThemePluginLoader', () => {
             type: 'portal-theme',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => () => ({
-              engineName: 'test',
-              engineFactory: () => { /* nothing to do */ },
+            loadBootstrap: async () => () => ({
+                engineName: 'test',
+                engineFactory: () => { /* nothing to do */ },
             }),
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {

@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {ipUtils} from '@mashroom/mashroom-utils';
+import {ipUtils, configFileUtils} from '@mashroom/mashroom-utils';
 
 import type {Request} from 'express';
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
@@ -46,7 +46,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
 
         logger.debug(`ACL check: url: ${path}, method: ${method}, clientIP: ${clientIP},  user: ${username}`);
 
-        const pathRuleList = this._getPathRuleList(logger);
+        const pathRuleList = await this._getPathRuleList(logger);
         const matchingRule = pathRuleList.find((r) => !!effectivePath.match(r.regexp));
 
         if (matchingRule) {
@@ -95,7 +95,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         return false;
     }
 
-    private _getPathRuleList(logger: MashroomLogger): Array<ACLPathRuleRegexp> {
+    private async _getPathRuleList(logger: MashroomLogger): Promise<Array<ACLPathRuleRegexp>> {
         if (this._pathRuleList) {
             return this._pathRuleList;
         }
@@ -103,8 +103,7 @@ export default class MashroomSecurityACLChecker implements MashroomSecurityACLCh
         if (fs.existsSync(this._aclPath)) {
             const pathRuleList = [];
 
-            const aclModule = require(this._aclPath);
-            const acl = aclModule.default ?? aclModule;
+            const acl = await configFileUtils.loadConfigFile(this._aclPath);
             for (const pathPattern in acl) {
                 if (pathPattern in acl && !pathPattern.startsWith('$')) {
                     const pathRule = acl[pathPattern];

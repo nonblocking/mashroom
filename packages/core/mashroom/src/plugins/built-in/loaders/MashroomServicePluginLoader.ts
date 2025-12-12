@@ -31,7 +31,7 @@ export default class MashroomServicePluginLoader implements MashroomPluginLoader
         if (!namespace) {
             throw new PluginConfigurationError(`Cannot register services in ${plugin.name} because the 'namespace' attribute is missing!`);
         }
-        const bootstrap: MashroomServicesPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomServicesPluginBootstrapFunction = await plugin.loadBootstrap();
         const services = await bootstrap(plugin.name, config, contextHolder);
 
         this._logger.info('Registering services:', namespace);

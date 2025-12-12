@@ -30,7 +30,7 @@ export default class MashroomBackgroundJobPluginLoader implements MashroomPlugin
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomBackgroundJobPluginBootstrapFunction = await plugin.loadBootstrap();
         const jobCallback: MashroomBackgroundJobCallback = bootstrap(plugin.name, config, contextHolder);
         const cronSchedule = config.cronSchedule;
         this._logger.info(`Registering background job plugin: ${plugin.name} with schedule: ${cronSchedule}`);

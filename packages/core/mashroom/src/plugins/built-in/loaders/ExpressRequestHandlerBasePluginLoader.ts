@@ -92,7 +92,7 @@ export default abstract class ExpressRequestHandlerBasePluginLoader implements M
 
     abstract createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<RequestHandler>;
 
-    abstract  isMiddleware(): boolean;
+    abstract isMiddleware(): boolean;
 
     beforeUnload(plugin: MashroomPlugin) {
         // Empty hook

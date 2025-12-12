@@ -13,6 +13,10 @@ const serverConfig: MashroomServerConfig = {
             path: 'test-plugin1',
             devMode: true
         },
+        {
+            path: 'test-plugin2',
+            devMode: true
+        },
     ],
     indexPage: '/',
     ignorePlugins: [

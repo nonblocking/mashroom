@@ -1,7 +1,9 @@
 import {existsSync} from 'fs';
 import {resolve, isAbsolute} from 'path';
+import {configFileUtils} from '@mashroom/mashroom-utils';
 import context from '../context';
 import getRemotePortalAppEndpointStore from '../store/getRemotePortalAppEndpointStore';
+
 import type {
     MashroomLogger,
     MashroomPluginContextHolder,
@@ -79,8 +81,7 @@ export default class RemotePortalAppsPluginScanner implements MashroomPluginPack
         if (existsSync(this._configFilePath)) {
             this._logger.info(`Loading remote Portal App URLs from: ${this._configFilePath}`);
 
-            const remotePortalAppModule = require(this._configFilePath);
-            const remotePortalAppData = remotePortalAppModule.default ?? remotePortalAppModule;
+            const remotePortalAppData = await configFileUtils.loadConfigFile(this._configFilePath);
             return Array.isArray(remotePortalAppData) ? remotePortalAppData : (remotePortalAppData.remotePortalApps || []);
         } else {
             this._logger.warn(`Remote Portal App URLs config file not found: ${this._configFilePath}`);

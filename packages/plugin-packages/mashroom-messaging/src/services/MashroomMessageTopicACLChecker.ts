@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import path from 'path';
-import {messagingUtils} from '@mashroom/mashroom-utils';
+import {messagingUtils, configFileUtils} from '@mashroom/mashroom-utils';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '@mashroom/mashroom/type-definitions';
 import type {MashroomSecurityRoles, MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
@@ -30,8 +30,8 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
         this._logger.info(`Configured Topic ACL definition: ${this._aclPath}`);
     }
 
-    allowed(topic: string, user: MashroomSecurityUser | null | undefined): boolean {
-        const rules = this._getRuleList();
+    async allowed(topic: string, user: MashroomSecurityUser | null | undefined): Promise<boolean> {
+        const rules = await this._getRuleList();
         const matchingRule = rules.find((r) => messagingUtils.topicMatcher(r.topic, topic));
         if (matchingRule) {
             const allowMatch = this._checkRulesMatch(user, matchingRule.allow);
@@ -56,7 +56,7 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
         return false;
     }
 
-    private _getRuleList(): Rules {
+    private async _getRuleList(): Promise<Rules> {
         if (this._rules) {
             return this._rules;
         }
@@ -64,8 +64,7 @@ export default class MashroomMessageTopicACLChecker implements MashroomMessageTo
         if (fs.existsSync(this._aclPath)) {
             const rules: Rules = [];
 
-            const aclDataModule = require(this._aclPath);
-            const aclData: MashroomMessagingACLTopicRules = aclDataModule.default ?? aclDataModule;
+            const aclData = await configFileUtils.loadConfigFile(this._aclPath);
             for (const topic in aclData) {
                 if (topic in aclData && !topic.startsWith('$')) {
                     try {

@@ -2,31 +2,38 @@
 import {hostname} from 'os';
 import {resolve, isAbsolute} from 'path';
 import {existsSync} from 'fs';
-import {readonlyUtils, configUtils, modelUtils} from '@mashroom/mashroom-utils';
+import {readonlyUtils, configUtils, configFileUtils, modelUtils} from '@mashroom/mashroom-utils';
 import ServerConfigurationError from '../errors/ServerConfigurationError';
 import defaultConfig from './mashroom-default-config';
 
 import type {MashroomLogger, MashroomLoggerFactory} from '../../type-definitions';
-import type {
-    MashroomServerConfigHolder,
-    MashroomServerConfigLoader as MashroomServerConfigLoaderType
-} from '../../type-definitions/internal';
+import type {MashroomServerConfigLoader as MashroomServerConfigLoaderType} from '../../type-definitions/internal';
 
 const ENVIRONMENT = process.env.NODE_ENV || 'development';
 const HOSTNAME = hostname() || 'localhost';
 
 const CONFIG_FILES = [
     'mashroom.json',
+    'mashroom.yaml',
     'mashroom.js',
     'mashroom.ts',
     `mashroom.${ENVIRONMENT}.json`,
+    `mashroom.${ENVIRONMENT}.yaml`,
     `mashroom.${ENVIRONMENT}.js`,
+    `mashroom.${ENVIRONMENT}.cjs`,
+    `mashroom.${ENVIRONMENT}.mjs`,
     `mashroom.${ENVIRONMENT}.ts`,
     `mashroom.${HOSTNAME}.json`,
+    `mashroom.${HOSTNAME}.yaml`,
     `mashroom.${HOSTNAME}.js`,
+    `mashroom.${HOSTNAME}.cjs`,
+    `mashroom.${HOSTNAME}.mjs`,
     `mashroom.${HOSTNAME}.ts`,
     `mashroom.${HOSTNAME}.${ENVIRONMENT}.json`,
+    `mashroom.${HOSTNAME}.${ENVIRONMENT}.yaml`,
     `mashroom.${HOSTNAME}.${ENVIRONMENT}.js`,
+    `mashroom.${HOSTNAME}.${ENVIRONMENT}.cjs`,
+    `mashroom.${HOSTNAME}.${ENVIRONMENT}.mjs`,
     `mashroom.${HOSTNAME}.${ENVIRONMENT}.ts`
 ];
 
@@ -38,7 +45,7 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
         this._logger = loggerFactory('mashroom.config');
     }
 
-    load(serverRootPath: string): MashroomServerConfigHolder {
+    async load(serverRootPath: string) {
         // Make serverRootPath absolute and fix it under windows
         serverRootPath = resolve(serverRootPath);
 
@@ -51,8 +58,7 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             for (const configFile of existingConfigFiles) {
                 this._logger.info(`Using config file: ${configFile}`);
                 try {
-                    const externalConfigModule = require(configFile);
-                    const externalConfig = externalConfigModule.default ?? externalConfigModule;
+                    const externalConfig = await configFileUtils.loadConfigFile(configFile);
                     config = modelUtils.deepAssign({}, config, externalConfig);
                 } catch (e) {
                     this._logger.error(`Loading config file failed: ${configFile}`, e);

@@ -295,16 +295,16 @@ describe('MashroomMessagingInternalService', () => {
                 test: 1,
             });
             done();
+        }).then(() => {
+            if (onExternalMessageHandler) {
+                onExternalMessageHandler('foo/bar/1', {
+                    test: 1,
+                });
+            }
         });
-
-        if (onExternalMessageHandler) {
-            onExternalMessageHandler('foo/bar/1', {
-                test: 1,
-            });
-        }
     });
 
-    it('forwards messages to an external messaging provider', () => {
+    it('forwards messages to an external messaging provider', async () => {
         const user1: any = {
             username: 'mel'
         };
@@ -313,7 +313,7 @@ describe('MashroomMessagingInternalService', () => {
             ['external1', 'external2/foo'],
             'user', false, mockAclChecker, mockPluginService, loggingUtils.dummyLoggerFactory);
 
-        service.publish(user1, 'external2/foo/bar', {
+        await service.publish(user1, 'external2/foo/bar', {
             test2: true
         });
 

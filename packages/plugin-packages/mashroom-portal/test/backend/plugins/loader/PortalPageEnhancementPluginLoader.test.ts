@@ -22,7 +22,8 @@ describe('PortalPageEnhancementPluginLoader', () => {
             type: 'portal-page-enhancement',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -97,7 +98,8 @@ describe('PortalPageEnhancementPluginLoader', () => {
             type: 'portal-page-enhancement',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {
@@ -152,7 +154,8 @@ describe('PortalPageEnhancementPluginLoader', () => {
             type: 'portal-page-enhancement',
             errorMessage: null,
             lastReloadTs: Date.now(),
-            requireBootstrap: () => { /* nothing to do */ },
+            loadBootstrap: async () => { throw new Error('not implemented'); },
+            requireBootstrap: () => { throw new Error('not implemented'); },
             status: 'loaded',
             config: null,
             pluginDefinition: {

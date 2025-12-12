@@ -28,7 +28,7 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
             throw new PluginConfigurationError(`Portal Theme plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
         }
 
-        const themeBootstrap: MashroomPortalThemePluginBootstrapFunction = plugin.requireBootstrap();
+        const themeBootstrap: MashroomPortalThemePluginBootstrapFunction = await plugin.loadBootstrap();
         const {engineName, engineFactory} = await themeBootstrap(plugin.name, config, contextHolder);
 
         const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);

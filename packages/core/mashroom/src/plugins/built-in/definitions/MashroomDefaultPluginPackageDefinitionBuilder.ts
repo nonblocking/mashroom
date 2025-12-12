@@ -2,6 +2,7 @@ import {fileURLToPath, URL} from 'url';
 import {existsSync} from 'fs';
 import {readFile} from 'fs/promises';
 import {resolve} from 'path';
+import {configFileUtils} from '@mashroom/mashroom-utils';
 import {getExternalPluginDefinitionFilePath} from '../../../utils/plugin-utils';
 import type {
     MashroomLogger,
@@ -127,13 +128,19 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             // Reload
             delete require.cache[externalPluginConfigFile];
 
-            const pluginConfigModule = require(externalPluginConfigFile);
-            return pluginConfigModule.default ?? pluginConfigModule;
+            return await configFileUtils.loadConfigFile(externalPluginConfigFile);
         }
 
         for (const externalPluginConfigFileName of this._externalPluginConfigFileNames) {
             try {
-                const pluginDefinition = await this._fetchRemoteJSON(new URL(`${externalPluginConfigFileName}.json`, url));
+                let pluginDefinition = await this._fetchRemoteJSON(new URL(`${externalPluginConfigFileName}.json`, url));
+                if (!pluginDefinition) {
+                    // Try YAML
+                    const config = await this._fetchRemoteConfig(new URL(`${externalPluginConfigFileName}.yaml`, url));
+                    if (config) {
+                        pluginDefinition = configFileUtils.fromYaml(config);
+                    }
+                }
                 if (pluginDefinition) {
                     delete pluginDefinition.devModeBuildScript;
                     return pluginDefinition;
@@ -147,6 +154,18 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
     }
 
     private async _fetchRemoteJSON(url: URL): Promise<any> {
+        const config = await this._fetchRemoteConfig(url);;
+        if (!config) {
+            return null;
+        }
+        try {
+            return JSON.parse(config);
+        } catch (e) {
+            this._logger.error(`Error parsing config JSON from: ${url}:`, e);
+        }
+    }
+
+    private async _fetchRemoteConfig(url: URL): Promise<string | null> {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(),  REMOTE_DEFAULT_SOCKET_TIMEOUT_MS);
         try {
@@ -154,7 +173,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
                 signal: controller.signal,
             });
             if (result.ok) {
-                return await result.json();
+                return await result.text();
             } else if (result.status === 404) {
                 this._logger.debug(`File not found: ${url}`);
                 return null;

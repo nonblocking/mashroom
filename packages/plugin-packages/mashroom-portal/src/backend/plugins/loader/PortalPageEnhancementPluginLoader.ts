@@ -88,7 +88,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
 
         let enhancementPlugin: MashroomPortalPageEnhancementPlugin | undefined = undefined;
         if (plugin.pluginDefinition.bootstrap) {
-            const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = plugin.requireBootstrap();
+            const bootstrap: MashroomPortalPageEnhancementPluginBootstrapFunction = await plugin.loadBootstrap();
             enhancementPlugin = await bootstrap(plugin.name, config, contextHolder);
         }
 

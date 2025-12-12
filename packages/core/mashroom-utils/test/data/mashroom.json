@@ -1,0 +1,40 @@
+{
+    "$schema": "../../../mashroom-json-schemas/schemas/mashroom-server-config.json",
+    "name": "Mashroom Test Server 1",
+    "port": 5050,
+    "pluginPackageFolders": [
+        {
+            "path": "../../plugin-packages",
+            "devMode": true
+        }
+    ],
+    "indexPage": "/",
+    "plugins": {
+        "Mashroom Helmet Middleware": {
+        },
+        "Mashroom Portal WebApp": {
+            "adminApp": "Mashroom Portal Admin App",
+            "defaultTheme": "Mashroom Portal Default Theme",
+            "authenticationExpiration": {
+                "warnBeforeExpirationSec": 60,
+                "autoExtend": false,
+                "onExpiration": {
+                    "strategy": "stayOnPage"
+                }
+            },
+            "ignoreMissingAppsOnPages": false,
+            "versionHashSalt": "abcdefghijk",
+            "resourceFetchConfig": {
+                "fetchTimeoutMs": 3000,
+                "httpMaxSocketsPerHost": 10,
+                "httpRejectUnauthorized": true
+            },
+            "ssrConfig": {
+                "ssrEnable": true,
+                "renderTimoutMs": 2000,
+                "cacheEnable": false,
+                "cacheTTLSec": 300
+            }
+        }
+    }
+}

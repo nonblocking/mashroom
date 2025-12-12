@@ -32,7 +32,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
     }
 
     async createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
-        const webAppBootstrap: MashroomWebAppPluginBootstrapFunction = plugin.requireBootstrap();
+        const webAppBootstrap: MashroomWebAppPluginBootstrapFunction = await plugin.loadBootstrap();
         const bootstrapResult = await webAppBootstrap(plugin.name, pluginConfig, contextHolder);
         const webapp: Application = (bootstrapResult as ExpressApplicationWithUpgradeHandler).expressApp || bootstrapResult;
         const upgradeHandler: MashroomHttpUpgradeHandler | undefined | null = (bootstrapResult as ExpressApplicationWithUpgradeHandler).upgradeHandler || null;

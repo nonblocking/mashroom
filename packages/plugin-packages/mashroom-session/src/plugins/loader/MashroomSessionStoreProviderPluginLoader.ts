@@ -34,7 +34,7 @@ export default class MashroomSessionStoreProviderPluginLoader implements Mashroo
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
-        const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomSessionStoreProviderPluginBootstrapFunction = await plugin.loadBootstrap();
         const provider: MashroomSessionStoreProvider = await bootstrap(plugin.name, config, contextHolder, session);
         this._logger.info(`Registering session store provider plugin: ${plugin.name}`);
         this._registry.register(plugin.name, provider);

@@ -1,0 +1,12 @@
+devModeBuildScript: 'builddd'
+plugins:
+-   name: 'Plugin 1'
+    type: 'web-app'
+    bootstrap: './dist/mashroom-bootstrap.js'
+    defaultConfig:
+        foo: 'bar'
+-   name: 'Plugin 2'
+    type: 'plugin-loader'
+    bootstrap: './dist/mashroom-bootstrap2.js'
+    dependencies:
+    - foo-services

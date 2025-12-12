@@ -11,7 +11,6 @@ describe('cluster-utils.isNodeCluster', () => {
 
 });
 
-
 describe('cluster-utils.getAllWorkerPids', () => {
 
     it('returns a single pid when no cluster active', async () => {
@@ -25,5 +24,3 @@ describe('cluster-utils.getAllWorkerPids', () => {
     });
 
 });
-
-

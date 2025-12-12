@@ -8,6 +8,7 @@
 
 import path from 'path';
 import minimist from 'minimist';
+import {installTsBlankSpaceIfNecssary} from './utils/ts-utils';
 import {mashroomServerContextFactory} from './index';
 
 import type {MashroomLogger} from '../type-definitions';
@@ -27,6 +28,7 @@ let stopping = false;
 startServer();
 
 async function startServer() {
+    await installTsBlankSpaceIfNecssary();
 
     const {server, loggerFactory} = await mashroomServerContextFactory(serverRootPath);
     const logger: MashroomLogger = loggerFactory('server');

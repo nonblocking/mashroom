@@ -5,12 +5,10 @@
     "devDependencies": {
         "@mashroom/mashroom": "2.9.2",
         "@mashroom/mashroom-json-schemas": "2.9.2",
-        "log4js": "^6.9.1",
-        "ts-node": "^10.9.2"
+        "log4js": "^6.9.1"
     },
     "scripts": {
         "type-check": "tsc --noEmit",
-        "startTsNode": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && ts-node ../../core/mashroom/dist/server.js\"",
-        "startNode24": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && node ../../core/mashroom/dist/server.js\""
+        "start": "nodemon --watch ../../core/mashroom/src -e .js,.ts,.json --exec \"nx build @mashroom/mashroom && node ../../core/mashroom/dist/server.js\""
     }
 }

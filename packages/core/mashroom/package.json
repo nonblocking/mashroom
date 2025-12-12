@@ -28,7 +28,8 @@
         "fs-extra": "^11.3.0",
         "log4js": "^6.9.1",
         "lucy-dirsum": "^0.1.1",
-        "minimist": "^1.2.8"
+        "minimist": "^1.2.8",
+        "ts-blank-space": "^0.6.2"
     },
     "devDependencies": {
         "@types/fs-extra": "^11.0.4"
@@ -54,7 +55,7 @@
         "lint": "eslint --fix",
         "type-check": "tsc --noEmit",
         "test": "jest --maxWorkers=1 --detectOpenHandles",
-        "build": "babel src -d dist --extensions \".ts\"",
+        "build": "babel src -d dist --extensions \".ts\" && cpy ./src/hooks dist/hooks --flat",
         "dev": "npm run build && node dist/server.js"
     }
 }

@@ -81,7 +81,7 @@ export default class MashroomPluginLoaderLoader implements MashroomPluginLoader 
     }
 
     private async _createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
-        const pluginLoaderBootstrap: MashroomPluginLoaderPluginBootstrapFunction = plugin.requireBootstrap();
+        const pluginLoaderBootstrap: MashroomPluginLoaderPluginBootstrapFunction = await plugin.loadBootstrap();
         return pluginLoaderBootstrap(plugin.name, pluginConfig, contextHolder);
     }
 

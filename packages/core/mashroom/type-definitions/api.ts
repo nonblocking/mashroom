@@ -259,7 +259,14 @@ export interface MashroomPlugin {
     readonly pluginDefinition: MashroomPluginDefinition;
 
     /**
-     * Returns the bootstrap required from file system (after clearing the module cache).
+     * Loads the bootstrap
+     */
+    loadBootstrap(): Promise<any>;
+
+    /**
+     * Loads the bootstrap via require()
+     *
+     * @deprecated Use loadBootstrap instead, since it also supports load ES modules
      */
     requireBootstrap(): any;
 
@@ -379,7 +386,7 @@ export interface MashroomPluginLoader {
     readonly name: string;
 
     /**
-     * Generate a minimum configuration for given plugin (can be empty)
+     * Generate a minimum configuration for a given plugin (can be empty)
      */
     generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig;
 

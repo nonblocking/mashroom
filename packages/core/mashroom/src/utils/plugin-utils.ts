@@ -15,7 +15,10 @@ export const getExternalPluginDefinitionFilePath = (pluginPackagePath: string, e
     const possiblePluginConfigFiles: Array<string> = [];
     externalPluginConfigFileNames.forEach((name) => {
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.json`));
+        possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.yaml`));
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.js`));
+        possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.cjs`));
+        possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.mjs`));
         possiblePluginConfigFiles.push(resolve(pluginPackagePath, `${name}.ts`));
     });
     const existingPluginConfigFiles = possiblePluginConfigFiles.filter((path) => existsSync(path));

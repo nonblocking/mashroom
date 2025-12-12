@@ -28,7 +28,7 @@ export default class MashroomServicePluginLoader implements MashroomPluginLoader
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
-        const bootstrap: MashroomPluginPackageScannerPluginBootstrapFunction = plugin.requireBootstrap();
+        const bootstrap: MashroomPluginPackageScannerPluginBootstrapFunction = await plugin.loadBootstrap();
         const pluginPackageScanner = await bootstrap(plugin.name, config, contextHolder);
 
         this._logger.info('Loading plugin package scanner:', pluginPackageScanner.name);

@@ -1,0 +1,6 @@
+{
+  "name": "test-plugin2",
+    "version": "1.0.0",
+    "type": "module",
+    "description": "Test Webapp Plugin written in ES6 with YAML config"
+}

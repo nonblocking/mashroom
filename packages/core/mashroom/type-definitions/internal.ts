@@ -34,7 +34,7 @@ export interface MashroomServerConfigHolder {
  * Mashroom server config loader inteface
  */
 export interface MashroomServerConfigLoader {
-    load(path: string): MashroomServerConfigHolder
+    load(path: string): Promise<MashroomServerConfigHolder>
 }
 
 export interface MashroomLoggerDelegate {

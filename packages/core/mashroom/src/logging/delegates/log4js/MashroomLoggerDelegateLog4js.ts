@@ -2,6 +2,7 @@
 import os from 'os';
 import {existsSync} from 'fs';
 import log4js from 'log4js';
+import {configFileUtils} from '@mashroom/mashroom-utils';
 import defaultConfig from './log4js-default-config';
 
 import type {LogLevel} from '../../../../type-definitions';
@@ -12,16 +13,27 @@ const HOSTNAME = os.hostname() || 'localhost';
 
 const CONFIG_FILES = [
     `log4js.${HOSTNAME}.${ENVIRONMENT}.ts`,
+    `log4js.${HOSTNAME}.${ENVIRONMENT}.mjs`,
+    `log4js.${HOSTNAME}.${ENVIRONMENT}.cjs`,
     `log4js.${HOSTNAME}.${ENVIRONMENT}.js`,
+    `log4js.${HOSTNAME}.${ENVIRONMENT}.yaml`,
     `log4js.${HOSTNAME}.${ENVIRONMENT}.json`,
     `log4js.${HOSTNAME}.ts`,
+    `log4js.${HOSTNAME}.mjs`,
+    `log4js.${HOSTNAME}.cjs`,
     `log4js.${HOSTNAME}.js`,
     `log4js.${HOSTNAME}.json`,
     `log4js.${ENVIRONMENT}.ts`,
+    `log4js.${ENVIRONMENT}.mjs`,
+    `log4js.${ENVIRONMENT}.cjs`,
     `log4js.${ENVIRONMENT}.js`,
+    `log4js.${ENVIRONMENT}.yaml`,
     `log4js.${ENVIRONMENT}.json`,
     'log4js.ts',
+    'log4js.mjs',
+    'log4js.cjs',
     'log4js.js',
+    'log4js.yaml',
     'log4js.json',
 ];
 
@@ -36,8 +48,7 @@ export default class MashroomLoggerDelegateLog4js implements MashroomLoggerDeleg
             const configFile = configFiles.find((file) => existsSync(file));
 
             if (configFile) {
-                const logConfigModule = require(configFile);
-                const logConfig = logConfigModule.default ?? logConfigModule;
+                const logConfig = await configFileUtils.loadConfigFile(configFile);
                 log4js.configure(logConfig);
                 log4js.getLogger().info('Considering log config files (take the first match): ', CONFIG_FILES);
                 log4js.getLogger().info(`log4js configured from: ${configFile}`);

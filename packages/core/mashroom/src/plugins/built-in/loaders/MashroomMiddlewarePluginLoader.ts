@@ -25,7 +25,7 @@ export default class MashroomMiddlewarePluginLoader implements MashroomPluginLoa
 
     async load(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
         const order = pluginConfig.order;
-        const middlewareBootstrap: MashroomMiddlewarePluginBootstrapFunction = plugin.requireBootstrap();
+        const middlewareBootstrap: MashroomMiddlewarePluginBootstrapFunction = await plugin.loadBootstrap();
         const middleware = await middlewareBootstrap(plugin.name, pluginConfig, contextHolder);
         this._logger.info(`Inserting middleware '${plugin.name}' with order: ${order}`);
         this._middlewarePluginDelegate.insertOrReplaceMiddleware(plugin.name, order, middleware);

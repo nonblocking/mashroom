@@ -3,6 +3,11 @@
 
 ## [unreleased v3]
 
+ * Added support for hot reload of TypeScript files and ES modules
+ * Added support for TypeScript with Node.js < 24. With the same [limitations](https://github.com/bloomberg/ts-blank-space/blob/main/docs/unsupported_syntax.md) as for Node.js >= 24.
+   All config files and plugin sources can be written in TypeScript now
+ * Added support for ESM packages. JavaScript files in packages with `"type": "module"` are now correctly loaded.
+ * Added support for YAML config files
  * Removed HTTP/2 support. This is typically something that should be done by a reverse proxy.
  * **BREAKING CHANGE**: Migrated to Express 5.
    Check all your *webapp*, *middleware* and *api* plugins if they need to be updated, according to: https://expressjs.com/en/guide/migrating-5.html
