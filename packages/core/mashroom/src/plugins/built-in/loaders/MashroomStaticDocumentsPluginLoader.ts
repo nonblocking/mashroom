@@ -3,18 +3,40 @@ import {resolve} from 'path';
 import {fileURLToPath} from 'url';
 import express from 'express';
 import {PluginConfigurationError} from '@mashroom/mashroom-utils';
-import ExpressRequestHandlerBasePluginLoader from './ExpressRequestHandlerBasePluginLoader';
+import {removeFromExpressStack} from '../../../utils/reload-utils';
+import ExpressRequestHandlerWrapper from './ExpressRequestHandlerWrapper';
 
-import type {RequestHandler, Application} from 'express';
-import type {MashroomPluginContextHolder, MashroomPluginConfig, MashroomPlugin} from '../../../../type-definitions';
+import type {Application} from 'express';
+import type {
+    MashroomPluginContextHolder,
+    MashroomPluginConfig,
+    MashroomPlugin,
+    MashroomPluginLoader,
+    MashroomLogger,
+    MashroomLoggerFactory
+} from '../../../../type-definitions';
 
-export default class MashroomStaticDocumentsPluginLoader extends ExpressRequestHandlerBasePluginLoader {
+export default class MashroomStaticDocumentsPluginLoader implements MashroomPluginLoader {
 
-    addPluginInstance(expressApplication: Application, pluginInstance: RequestHandler, pluginConfig: MashroomPluginConfig) {
-        expressApplication.use(pluginConfig.path, pluginInstance);
+    private readonly _logger: MashroomLogger;
+    private readonly _loadedPlugins: Map<string, string>;
+
+    constructor(private _expressApplication: Application, loggerFactory: MashroomLoggerFactory) {
+        this._logger = loggerFactory('mashroom.plugins.loader');
+        this._loadedPlugins = new Map();
     }
 
-    async createPluginInstance(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+    generateMinimumConfig(plugin: MashroomPlugin) {
+        return {
+            path: `/${plugin.name}`,
+        };
+    }
+
+    async load(plugin: MashroomPlugin, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder) {
+        if (!pluginConfig.path.startsWith('/')) {
+            pluginConfig.path = `/${pluginConfig.path}`;
+        }
+
         const documentRoot: string | undefined | null = plugin.pluginDefinition.documentRoot;
         if (!documentRoot) {
             throw new PluginConfigurationError(`Static plugin ${plugin.name}: Missing property 'documentRoot'!`);
@@ -25,11 +47,22 @@ export default class MashroomStaticDocumentsPluginLoader extends ExpressRequestH
 
         const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
         const fullDocumentRoot = resolve(pluginPackagePath, documentRoot);
-        return express.static(fullDocumentRoot);
+        const staticPlugin = express.static(fullDocumentRoot);
+        const wrapper = new ExpressRequestHandlerWrapper(plugin.name, staticPlugin);
+
+        this._logger.info(`Adding ${plugin.type} Express plugin ${plugin.name} to path: ${pluginConfig.path}`);
+        this._expressApplication.use(pluginConfig.path, wrapper.handler());
+
+        this._loadedPlugins.set(plugin.name, pluginConfig.path);
     }
 
-    isMiddleware() {
-        return false;
+    async unload(plugin: MashroomPlugin) {
+        const loadedPluginPath = this._loadedPlugins.get(plugin.name);
+        if (loadedPluginPath) {
+            this._logger.info(`Removing ${plugin.type} express plugin ${plugin.name} from path: ${loadedPluginPath}`);
+            removeFromExpressStack(this._expressApplication, plugin);
+            this._loadedPlugins.delete(plugin.name);
+        }
     }
 
     get name(): string {

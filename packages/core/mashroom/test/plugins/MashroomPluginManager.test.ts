@@ -157,6 +157,44 @@ const testPackageJsonDefinitionBuilder1 = {
     }
 };
 
+const testPackageJsonDefinitionBuilder1FirstPluginRemoved = {
+    name: 'Definition Builder 1',
+    buildDefinition: async (packageURL: URL) => {
+        return [{
+            packageURL,
+            definition: {
+                plugins: [
+                    testPackageJson1.mashroom.plugins[1],
+                    testPackageJson1.mashroom.plugins[2],
+                ],
+            },
+            meta: testPackageJson1 as any,
+        }];
+    }
+};
+
+const testPackageJsonDefinitionBuilder1WithPluginAdded = {
+    name: 'Definition Builder 1',
+    buildDefinition: async (packageURL: URL) => {
+        return [{
+            packageURL,
+            definition: {
+                plugins: [
+                    ...testPackageJson1.mashroom.plugins,
+                    {
+                        name: 'Plugin 1111',
+                        type: 'web-app',
+                        bootstrap: './dist/mashroom-bootstrap1111.js',
+                        defaultConfig: {
+                        },
+                    },
+                ],
+            },
+            meta: testPackageJson1 as any,
+        }];
+    }
+};
+
 const testPackageJsonDefinitionBuilder2 = {
     name: 'Definition Builder 2',
     buildDefinition: async (packageURL: URL) => {
@@ -523,6 +561,48 @@ describe('MashroomPluginManager', () => {
         expect(unloadEvents).toBe(1);
     });
 
+    it('loads a plugin in error state if the package gets updated', async () => {
+        const pluginPackagePath = resolve('/foo/bar');
+        const pluginPackageURL = pathToFileURL(pluginPackagePath);
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        let loadEvents = 0;
+        let unloadEvents = 0;
+        pluginManager.on('loaded', () => loadEvents ++);
+        pluginManager.on('unloaded', () => unloadEvents ++);
+
+        expect(scannerCallback).toBeTruthy();
+
+        // Start
+        mockPluginLoad.mockImplementation(() => { throw new Error('Booom'); });
+
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.plugins[0].name).toBe('Plugin 1');
+        expect(pluginManager.plugins[0].status).toBe('error');
+        expect(mockPluginLoad).toHaveBeenCalledTimes(1);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(0);
+
+        // Update
+        mockPluginLoad.mockImplementation(() => ({ }));
+
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.plugins[0].name).toBe('Plugin 1');
+        expect(pluginManager.plugins[0].status).toBe('loaded');
+        expect(mockPluginLoad).toHaveBeenCalledTimes(2);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(0);
+    });
+
     it('reloads plugins if the loader gets updated', async () => {
         const pluginPackagePath = resolve('/foo/bar');
         const pluginPackageURL = pathToFileURL(pluginPackagePath);
@@ -609,6 +689,68 @@ describe('MashroomPluginManager', () => {
         expect(pluginManager.plugins.length).toBe(0);
 
         expect(mockPluginLoad).toHaveBeenCalledTimes(1);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(1);
+    });
+
+    it('plugins are unloaded if removed from the package definition', async () => {
+        const pluginPackagePath = resolve('/foo/bar');
+        const pluginPackageURL = pathToFileURL(pluginPackagePath);
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        expect(scannerCallback).toBeTruthy();
+
+        // Start
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        pluginManager.unregisterPluginDefinitionBuilder(testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1FirstPluginRemoved);
+
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.potentialPluginPackages.length).toBe(1);
+        expect(pluginManager.plugins.length).toBe(2);
+
+        expect(mockPluginLoad).toHaveBeenCalledTimes(1);
+        expect(mockPluginUnload).toHaveBeenCalledTimes(1);
+    });
+
+    it('plugins are loaded if added to the package definition', async () => {
+        const pluginPackagePath = resolve('/foo/bar');
+        const pluginPackageURL = pathToFileURL(pluginPackagePath);
+
+        const pluginManager = new MashroomPluginManager(mockPluginContextHolder, loggingUtils.dummyLoggerFactory, null);
+
+        pluginManager.registerPluginLoader('web-app', mockPluginLoader);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginScanner(mockScanner);
+
+        expect(scannerCallback).toBeTruthy();
+
+        // Start
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        pluginManager.unregisterPluginDefinitionBuilder(testPackageJsonDefinitionBuilder1);
+        pluginManager.registerPluginDefinitionBuilder(0, testPackageJsonDefinitionBuilder1WithPluginAdded);
+
+        scannerCallback!.addOrUpdatePackageURL(pluginPackageURL);
+
+        await new Promise((resolve) => setTimeout(resolve, 500));
+
+        expect(pluginManager.potentialPluginPackages.length).toBe(1);
+        expect(pluginManager.plugins.length).toBe(4);
+
+        expect(mockPluginLoad).toHaveBeenCalledTimes(3);
         expect(mockPluginUnload).toHaveBeenCalledTimes(1);
     });
 

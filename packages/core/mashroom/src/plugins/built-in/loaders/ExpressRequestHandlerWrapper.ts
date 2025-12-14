@@ -8,7 +8,8 @@ export default class ExpressRequestHandlerWrapper {
 
     private _requestHandler: RequestHandler | undefined;
 
-    constructor(private _pluginName: string) {
+    constructor(private _pluginName: string, requestHandler: RequestHandler) {
+        this._requestHandler = requestHandler;
     }
 
     handler(): RequestHandler {
@@ -30,7 +31,4 @@ export default class ExpressRequestHandlerWrapper {
         return handlers[this._pluginName];
     }
 
-    updateRequestHandler(requestHandler: RequestHandler): void {
-        this._requestHandler = requestHandler;
-    }
 }

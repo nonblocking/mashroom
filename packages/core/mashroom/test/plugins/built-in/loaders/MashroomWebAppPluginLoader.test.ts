@@ -90,57 +90,6 @@ describe('MashroomWebAppPluginLoader', () => {
         }
     });
 
-    it('reloads a web-app', async () => {
-        const pluginPackagePath = getPluginPackageFolder();
-        let reloadedWebapp: any = null;
-
-        const pluginDefinition: any = {
-            bootstrap: 'bootstrap2.js',
-            name: 'Test2',
-            type: 'web-app',
-            defaultConfig: {
-                path: '/foo',
-            },
-        };
-
-        const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL(pluginPackagePath),
-        };
-
-        const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
-
-        writeFileSync(resolve(pluginPackagePath, pluginDefinition.bootstrap), `
-            module.exports = () => (req, res, next) => req.test = 3;
-        `);
-
-        const requestHandlerWrapper: any = {
-            updateRequestHandler(webapp: any) {
-                reloadedWebapp = webapp;
-            },
-        };
-
-        const context: any = {};
-
-        const loader = new MashroomWebAppPluginLoader(new ExpressApplicationMock(), loggingUtils.dummyLoggerFactory, pluginContextHolderMock);
-        // @ts-ignore
-        loader._loadedPlugins.set('Test2', {
-            path: '/foo',
-            requestHandlerWrapper,
-        });
-
-        await loader.load(plugin, {path: '/foo'}, context);
-
-        // @ts-ignore
-        expect(loader._loadedPlugins.size).toBe(1);
-
-        expect(reloadedWebapp).toBeTruthy();
-        if (reloadedWebapp) {
-            const req: any = {};
-            reloadedWebapp(req);
-            expect(req.test).toBe(3);
-        }
-    });
-
     it('removes a web-app', async () => {
         const pluginPackagePath = getPluginPackageFolder();
 

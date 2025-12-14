@@ -330,6 +330,15 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
                 error = e.message;
             }
 
+            // Remove no longer existing plugins
+            if (potentialPackage.plugins) {
+                potentialPackage.plugins.forEach((plugin) => {
+                    if (!fixedPluginDefinition.plugins.find((p) => p.name === plugin.name)) {
+                        this._unloadPlugin(potentialPackage, plugin);
+                    }
+                });
+            }
+
             const pluginPackage = new MashroomPluginPackageImpl(packageDefinitionAndMeta.packageURL ?? potentialPackage.url,
                 fixedPluginDefinition, packageDefinitionAndMeta.meta);
             potentialPackage.pluginPackages.push(pluginPackage);
@@ -506,7 +515,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
                 pluginName: plugin.name,
             });
 
-            // After loading this plugin we might be able to load other Plugins with missing requirements
+            // After loading this plugin, we might be able to load other Plugins with missing requirements
             await this._checkPluginsMissingRequirements();
 
         } catch (error: any) {
@@ -517,6 +526,9 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
     }
 
     private async _unloadPlugin(potentialPackage: InternalPotentialPackage, plugin: MashroomPlugin) {
+        this._logger.debug(`Removing plugin: ${plugin.name}, type: ${plugin.type}`);
+        potentialPackage.plugins = potentialPackage.plugins!.filter((p) => p.name !== plugin.name);
+
         if (plugin.status !== 'loaded') {
             return;
         }
@@ -526,8 +538,6 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             this._logger.info(`No loader found for plugin: ${plugin.name}, type: ${plugin.type}. Cannot unload!`);
             return;
         }
-
-        potentialPackage.plugins = potentialPackage.plugins!.filter((p) => p.name !== plugin.name);
 
         try {
             this._logger.debug(`Unloading plugin: ${plugin.name}, type: ${plugin.type}`);

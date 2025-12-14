@@ -10,9 +10,8 @@ describe('reload-utils.removeFromExpressStack', () => {
             name: 'my-webapp'
         };
 
-        const wrapper = new ExpressRequestHandlerWrapper('my-webapp');
-
-        wrapper.updateRequestHandler((req, res) => res.send('Hello World!'));
+        const wrapper = new ExpressRequestHandlerWrapper('my-webapp',
+            (req, res) => res.send('Hello World!'));
 
         app.get('/', wrapper.handler());
         app.use('/foo', () => {});
