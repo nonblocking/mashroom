@@ -305,6 +305,15 @@ export default (content: string, req: Request) => {
                         const filterResult = document.getElementById(filterResultElemId);
                         let matches = 0;
 
+                        // Update query
+                        const url = new URL(window.location);
+                        if (filterValue) {
+                             url.searchParams.set('q', filterValue);
+                        } else {
+                            url.searchParams.delete('q');
+                        }
+                        history.pushState(null, '', url);
+
                         for (let i = 1; i < tableRows.length; i++) {
                             const row = tableRows[i];
                             if (!filterValue || filterValue.length < 3 || row.innerHTML.toLowerCase().indexOf(filterValue.toLowerCase()) !== -1) {
@@ -315,7 +324,7 @@ export default (content: string, req: Request) => {
                             }
                         }
 
-                        if (tableRows.length < 2) {
+                        if (!query || tableRows.length < 2) {
                             filterResult.innerHTML = '';
                         } else if (!matches) {
                             filterResult.innerHTML = 'No matches found';
