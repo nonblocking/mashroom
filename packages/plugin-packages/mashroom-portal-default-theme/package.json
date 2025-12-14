@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.2",
+    "version": "2.9.3",
     "files": [
         "dist/**",
         "views/**",
@@ -19,8 +19,8 @@
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^6.7.2",
-        "@mashroom/mashroom": "2.9.2",
-        "@mashroom/mashroom-portal": "2.9.2",
+        "@mashroom/mashroom": "2.9.3",
+        "@mashroom/mashroom-portal": "2.9.3",
         "bootstrap": "^5.3.6",
         "normalize.css": "^8.0.1"
     },

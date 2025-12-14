@@ -417,6 +417,7 @@ export type MashroomServerConfig = {
     readonly port: number;
     readonly httpsPort: number | null | undefined;
     readonly tlsOptions: TlsOptions | null | undefined;
+    readonly trustProxy: boolean | number | string;
     readonly xPowerByHeader: string | null | undefined;
     readonly serverRootFolder: string;
     readonly tmpFolder: string;

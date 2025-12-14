@@ -370,7 +370,7 @@ describe('ProxyImplNodeStreamAPI', () => {
                         loggerFactory: loggingUtils.dummyLoggerFactory,
                         services: {}
                     } as any;
-                    httpProxy.forwardWs(req, socket, head, 'ws://ws.ifelse.io/', {
+                    httpProxy.forwardWs(req, socket, head, 'wss://ws.ifelse.io/', {
 
                     });
                 });
@@ -437,7 +437,9 @@ describe('ProxyImplNodeStreamAPI', () => {
         req.headers.upgrade = 'whatever';
         const head = Buffer.from('');
 
-        const pluginRegistry: any = {};
+        const pluginRegistry: any = {
+            interceptors: [],
+        };
         const interceptorHandler = new InterceptorHandler(pluginRegistry);
         const headerFilter = new HttpHeaderFilter([]);
         const httpProxy = new ProxyImplNodeStreamAPI(2000, false, interceptorHandler, headerFilter, false, null, null, null, false, loggingUtils.dummyLoggerFactory);

@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.2",
+    "version": "2.9.3",
     "files": [
         "dist/**",
         "mashroom.json"
@@ -16,8 +16,8 @@
         "session-file-store": "^1.5.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.2",
-        "@mashroom/mashroom-session": "2.9.2",
+        "@mashroom/mashroom": "2.9.3",
+        "@mashroom/mashroom-session": "2.9.3",
         "@types/express-session": "^1.18.1",
         "@types/session-file-store": "^1.2.5"
     },

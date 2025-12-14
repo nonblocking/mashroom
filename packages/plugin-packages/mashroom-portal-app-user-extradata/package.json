@@ -7,15 +7,15 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.2",
+    "version": "2.9.3",
     "files": [
         "dist/**",
         "mashroom.json"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.2",
-        "@mashroom/mashroom-portal": "2.9.2",
-        "@mashroom/mashroom-security": "2.9.2"
+        "@mashroom/mashroom": "2.9.3",
+        "@mashroom/mashroom-portal": "2.9.3",
+        "@mashroom/mashroom-security": "2.9.3"
     },
     "scripts": {
         "lint": "eslint --fix",

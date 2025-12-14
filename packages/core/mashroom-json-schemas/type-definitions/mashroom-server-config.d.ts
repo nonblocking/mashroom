@@ -27,6 +27,10 @@ export interface MashroomServerConfig {
    */
   tlsOptions?: {} | null;
   /**
+   * Configure if reverse proxies should be trusted (e.g., with secure cookies). See https://expressjs.com/en/guide/behind-proxies.html for details (Default: 1)
+   */
+  trustProxy?: boolean | number | string;
+  /**
    * The start page
    */
   indexPage?: string;

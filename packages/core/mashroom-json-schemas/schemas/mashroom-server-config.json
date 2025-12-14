@@ -1371,6 +1371,10 @@
             "type": ["object", "null"],
             "description": "TLS options if you want to enable HTTPS. The options are passed to https://nodejs.org/api/tls.html but the file paths (e.g. for \"cert\") are resolved relatively to the server config"
         },
+        "trustProxy": {
+            "type": ["boolean", "number", "string"],
+            "description": "Configure if reverse proxies should be trusted (e.g., with secure cookies). See https://expressjs.com/en/guide/behind-proxies.html for details (Default: 1)"
+        },
         "indexPage": {
             "type": "string",
             "description": "The start page"
