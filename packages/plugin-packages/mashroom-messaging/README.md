@@ -216,22 +216,20 @@ export interface MashroomMessagingService {
 This plugin type connects the messaging system to an external message broker.
 It also adds cluster support to the messaging system.
 
-To register your custom external-messaging-provider plugin, add this to _package.json_:
+To register your custom external-messaging-provider plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Custom External Messaging Provider",
-                "type": "external-messaging-provider",
-                "bootstrap": "./dist/mashroom-bootstrap",
-                "defaultConfig": {
-                   "myProperty": "foo"
-                }
+    "plugins": [
+        {
+            "name": "My Custom External Messaging Provider",
+            "type": "external-messaging-provider",
+            "bootstrap": "./dist/mashroom-bootstrap",
+            "defaultConfig": {
+                "myProperty": "foo"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

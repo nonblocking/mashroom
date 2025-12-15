@@ -68,24 +68,22 @@ export interface MashroomBackgroundJobService {
 
 This plugin type allows it to schedule a background job.
 
-To register your custom background-job plugin, add this to _package.json_:
+To register your custom background-job plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My background job",
-                "type": "background-job",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                   "cronSchedule": "0/1 * * * *",
-                   "invokeImmediately": false,
-                   "yourConfigProp": "whatever"
-                }
+    "plugins": [
+        {
+            "name": "My background job",
+            "type": "background-job",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "cronSchedule": "0/1 * * * *",
+                "invokeImmediately": false,
+                "yourConfigProp": "whatever"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

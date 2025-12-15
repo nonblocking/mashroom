@@ -116,23 +116,21 @@ export interface MashroomHttpProxyService {
 
 This plugin type can be used to intercept http proxy calls and to add, for example, authentication headers to backend calls.
 
-To register your custom http-proxy-interceptor plugin add this to _package.json_:
+To register your custom http-proxy-interceptor plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
-```json
+```json title="mashroom.json"
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Custom Http Proxy Interceptor",
-                "type": "http-proxy-interceptor",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "order": 500,
-                    "myProperty": "foo"
-                }
+    "plugins": [
+        {
+            "name": "My Custom Http Proxy Interceptor",
+            "type": "http-proxy-interceptor",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "order": 500,
+                "myProperty": "foo"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

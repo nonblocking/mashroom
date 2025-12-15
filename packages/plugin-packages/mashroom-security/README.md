@@ -247,22 +247,20 @@ export interface MashroomSecurityService {
 
 This plugin type is responsible for the actual authentication and for creating a user object with a list of roles.
 
-To register your custom security-provider plugin add this to _package.json_:
+To register your custom security-provider plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Custom Security Provider",
-                "type": "security-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                   "myProperty": "foo"
-                }
+    "plugins": [
+        {
+            "name": "My Custom Security Provider",
+            "type": "security-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "foo"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

@@ -123,22 +123,20 @@ export interface MashroomStorageCollection<T extends MashroomStorageRecord> {
 
 This plugin type adds a a new storage implementation that can be used by this plugin.
 
-To register a new storage-provider plugin add this to _package.json_:
+To register a new storage-provider plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Storage Provider",
-                "type": "storage-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "myProperty": "test"
-                }
+    "plugins": [
+        {
+            "name": "My Storage Provider",
+            "type": "storage-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "test"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

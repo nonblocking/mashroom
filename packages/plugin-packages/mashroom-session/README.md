@@ -48,22 +48,20 @@ You can override the default config in your server config file like this:
 
 This plugin type adds a session store that can be used by this plugin.
 
-To register a custom session-store-provider plugin add this to _package.json_:
+To register a custom session-store-provider plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Session Provider",
-                "type": "session-store-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "myProperty": "test"
-                }
+    "plugins": [
+        {
+            "name": "My Session Provider",
+            "type": "session-store-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "test"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

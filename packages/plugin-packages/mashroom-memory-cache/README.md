@@ -70,22 +70,20 @@ export interface MashroomMemoryCacheService {
 
 This plugin type adds a memory cache provider that can be used by this plugin.
 
-To register a custom memory-cache-provider plugin, add this to _package.json_:
+To register a custom memory-cache-provider plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My Cache Store Provider",
-                "type": "memory-cache-provider",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "defaultConfig": {
-                    "myProperty": "test"
-                }
+    "plugins": [
+        {
+            "name": "My Cache Store Provider",
+            "type": "memory-cache-provider",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+                "myProperty": "test"
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 

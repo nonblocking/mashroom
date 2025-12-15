@@ -224,33 +224,31 @@ export interface MashroomPortalService {
 
 This plugin type makes a Microfrontend (Portal App) available in the Portal.
 
-To register a new portal-app plugin add this to _package.json_:
+To register a new portal-app plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-    "mashroom": {
-        "plugins": [
-            {
-                "name": "My First Microfrontend",
-                "type": "portal-app2",
-                "clientBootstrap": "startMyMicrofrontend",
-                "resources": {
-                    "js": [
-                        "bundle.js"
-                    ]
-                },
-                "local": {
-                    "resourcesRoot": "./dist",
-                    "ssrBootstrap": "./dist/renderToString.js"
-                },
-                "defaultConfig": {
-                    "appConfig": {
-                        "myProperty": "foo"
-                    }
+    "plugins": [
+        {
+            "name": "My First Microfrontend",
+            "type": "portal-app2",
+            "clientBootstrap": "startMyMicrofrontend",
+            "resources": {
+                "js": [
+                    "bundle.js"
+                ]
+            },
+            "local": {
+                "resourcesRoot": "./dist",
+                "ssrBootstrap": "./dist/renderToString.js"
+            },
+            "defaultConfig": {
+                "appConfig": {
+                    "myProperty": "foo"
                 }
             }
-        ]
-    }
+        }
+    ]
 }
 ```
 
@@ -939,24 +937,22 @@ export interface MashroomPortalAdminService {
 
 This plugin types adds a theme to the Portal.
 
-To register a new portal-theme plugin add this to _package.json_:
+To register a new portal-theme plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Theme",
-                "type": "portal-theme",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-                "resourcesRoot": "./dist",
-                "views": "./views",
-                "defaultConfig": {
-                    "param1": true
-                 }
+    "plugins": [
+        {
+            "name": "My Theme",
+            "type": "portal-theme",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "resourcesRoot": "./dist",
+            "views": "./views",
+            "defaultConfig": {
+                "param1": true
             }
-        ]
-     }
+        }
+    ]
 }
 ```
 
@@ -1103,24 +1099,22 @@ export type MashroomPortalPageRenderModel = {
 
 This plugin type adds portal layouts to the portal. A layout defines areas where portal-apps can be placed.
 
-To register a new portal-layouts plugin add this to _package.json_:
+To register a new portal-layouts plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Layouts",
-                "type": "portal-layouts",
-                "layouts": {
-                    "1 Column": "./layouts/1column.html",
-                    "2 Columns": "./layouts/2columns.html",
-                    "2 Columns 70/30": "./layouts/2columns_70_30.html",
-                    "2 Columns with 1 Column Header": "./layouts/2columnsWith1columnHeader.html"
-                }
+    "plugins": [
+        {
+            "name": "My Layouts",
+            "type": "portal-layouts",
+            "layouts": {
+                "1 Column": "./layouts/1column.html",
+                "2 Columns": "./layouts/2columns.html",
+                "2 Columns 70/30": "./layouts/2columns_70_30.html",
+                "2 Columns with 1 Column Header": "./layouts/2columnsWith1columnHeader.html"
             }
-        ]
-     }
+        }
+    ]
 }
 ```
  * _layouts_: A map with the layout html files (on the local file system)
@@ -1149,31 +1143,29 @@ To register a new portal-page-enhancement plugin add this to _package.json_:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-                "name": "My Portal Page Enhancement",
-                "type": "portal-page-enhancement",
-                "bootstrap": "./dist/mashroom-bootstrap.js",
-               "resourcesRoot": "./dist/public",
-                "pageResources": {
-                    "js": [{
-                        "path": "my-extra-scripts.js",
-                        "rule": "includeExtraScript",
-                        "location": "header",
-                        "inline": false
-                    }, {
-                        "dynamicResource": "myScript",
-                        "location": "header"
-                    }],
-                    "css": []
-                },
-                "defaultConfig": {
-                    "order": 100
-                }
+    "plugins": [
+        {
+            "name": "My Portal Page Enhancement",
+            "type": "portal-page-enhancement",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "resourcesRoot": "./dist/public",
+            "pageResources": {
+                "js": [{
+                    "path": "my-extra-scripts.js",
+                    "rule": "includeExtraScript",
+                    "location": "header",
+                    "inline": false
+                }, {
+                    "dynamicResource": "myScript",
+                    "location": "header"
+                }],
+                "css": []
+            },
+            "defaultConfig": {
+                "order": 100
             }
-        ]
-     }
+        }
+    ]
 }
 ```
 
@@ -1249,22 +1241,20 @@ This plugin type allows it to update or rewrite the _portalAppSetup_ that is pas
 This can be used to add extra config or user properties from a context.
 Additionally, this plugin allows it to pass extra _clientServices_ to Portal Apps or replace one of the default ones.
 
-To register a new portal-app-enhancement plugin add this to _package.json_:
+To register a new portal-app-enhancement plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
-     "mashroom": {
-        "plugins": [
-           {
-              "name": "My Portal App Enhancement",
-              "type": "portal-app-enhancement",
-              "bootstrap": "./dist/mashroom-bootstrap.js",
-              "portalCustomClientServices": {
-                  "customService": "MY_CUSTOM_SERVICE"
-              }
-           }
-        ]
-     }
+    "plugins": [
+        {
+            "name": "My Portal App Enhancement",
+            "type": "portal-app-enhancement",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "portalCustomClientServices": {
+                "customService": "MY_CUSTOM_SERVICE"
+            }
+        }
+    ]
 }
 ```
 
