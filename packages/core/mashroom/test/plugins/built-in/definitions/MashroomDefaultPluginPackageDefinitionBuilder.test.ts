@@ -26,6 +26,27 @@ const pluginsDefinition = {
     ],
 };
 
+const pluginsDefinitionWithBuildManifest = {
+    devModeBuildScript: 'build',
+    buildManifestPath: '/buildManifest.json',
+    plugins: [
+        {
+            name: 'Plugin 1',
+            type: 'web-app',
+            bootstrap: './dist/mashroom-bootstrap.js',
+            defaultConfig: {
+                foo: 'bar',
+            },
+        },
+        {
+            name: 'Plugin 2',
+            type: 'plugin-loader',
+            bootstrap: './dist/mashroom-bootstrap2.js',
+            dependencies: ['foo-services'],
+        },
+    ],
+};
+
 const packageJsonWithPlugins = {
     name: 'test1',
     description: 'description test3',
@@ -193,10 +214,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             });
         nock(remoteHost.toString())
             .get('/mashroom.json')
-            .reply(404);
-        nock(remoteHost.toString())
-            .get('/mashroom.yaml')
-            .replyWithFile(200, resolve(__dirname, '../../../data/mashroom.yaml'));
+            .reply(200, pluginsDefinition);
 
         const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
             externalPluginConfigFileNames: ['mashroom']
@@ -232,6 +250,38 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         });
     });
 
+    it('reads the version from the build manifest on a remote host', async () => {
+        const remoteHost = new URL('http://my-remote-app2.io:6068');
+
+        nock(remoteHost.toString())
+            .get('/package.json')
+            .reply(404);
+        nock(remoteHost.toString())
+            .get('/buildManifest.json')
+            .reply(200, {
+                version: '5.2.2',
+            });
+        nock(remoteHost.toString())
+            .get('/mashroom.json')
+            .reply(200, pluginsDefinitionWithBuildManifest);
+
+        const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
+            externalPluginConfigFileNames: ['mashroom']
+        } as any, loggingUtils.dummyLoggerFactory);
+
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
+
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].meta).toEqual({
+            name: 'my-remote-app2.io',
+            version: '5.2.2',
+            author: null,
+            description: null,
+            homepage: null,
+            license: null,
+        });
+    });
+
     it('reads the plugin definition from /mashroom.yaml from a remote host', async () => {
         const remoteHost = new URL('http://my-remote-app.io:6068');
 
@@ -243,7 +293,10 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
             });
         nock(remoteHost.toString())
             .get('/mashroom.json')
-            .reply(200, pluginsDefinition);
+            .reply(404);
+        nock(remoteHost.toString())
+            .get('/mashroom.yaml')
+            .replyWithFile(200, resolve(__dirname, '../../../data/mashroom.yaml'));
 
         const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
             externalPluginConfigFileNames: ['mashroom']

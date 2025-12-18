@@ -22,9 +22,10 @@ import {
     PORTAL_APP_RESOURCES_SHARED_PATH,
     PORTAL_APP_REST_PROXY_BASE_PATH,
     PORTAL_JS_FILE,
+    SYSTEMJS_JS_FILE,
     PORTAL_INTERNAL_PATH,
     PORTAL_THEME_RESOURCES_BASE_PATH,
-    PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH
+    PORTAL_PAGE_ENHANCEMENT_RESOURCES_BASE_PATH,
 } from './constants';
 import {getPortalPushPluginUpdatesRoute} from './push-plugin-updates';
 
@@ -116,6 +117,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     // Client API resources
 
     internalRoutes.get(`/${PORTAL_JS_FILE}`, portalResourcesController.getPortalClient.bind(portalResourcesController));
+    internalRoutes.get(`/${SYSTEMJS_JS_FILE}`, portalResourcesController.getSystemJS.bind(portalResourcesController));
 
     // Portal theme resources
 

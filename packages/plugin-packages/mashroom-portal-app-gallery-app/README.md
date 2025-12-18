@@ -9,4 +9,4 @@ This plugin provides a [Mashroom Portal](../mashroom-portal) App that shows all 
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-app-gallery-app** as *dependency*.
 
-Then you can place it on any page via the *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal App Gallery App* on any page via the *Portal Admin Toolbar*.

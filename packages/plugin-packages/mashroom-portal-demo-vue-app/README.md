@@ -12,4 +12,4 @@ It also demonstrates how SSR support can be added.
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-demo-vue-app** as *dependency*.
 
-Then you can place it on any page via *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal Demo Vue App* on any page via *Portal Admin Toolbar*.

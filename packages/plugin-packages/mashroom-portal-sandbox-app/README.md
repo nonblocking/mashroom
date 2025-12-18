@@ -9,7 +9,7 @@ It can also be used for end-2-end testing with tools such as Selenium.
 ## Usage
 
  * If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-sandbox-app** as *dependency*
- * Add the _Mashroom Sandbox App_ on an empty page
+ * Add the *Mashroom Sandbox App* on an empty page
  * Select the app you want to run within the sandbox
 
 The app supports the following query parameters:

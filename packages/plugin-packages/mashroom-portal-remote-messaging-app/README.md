@@ -10,6 +10,6 @@ This App requires the [mashroom-messaging](../mashroom-messaging) and [mashroom-
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-demo-remote-messaging** as *dependency*.
 
-After adding the App to a page, you can send a message to another user (or another browser tab)
+After adding *Mashroom Portal Remote Messaging App* to a page, you can send a message to another user (or another browser tab)
 by using the (remote) topic _user/&lt;other-username&gt;/<something>_.
 And the app will automatically subscribe the topic _user/<your_username>/#_ to receive all user messages.

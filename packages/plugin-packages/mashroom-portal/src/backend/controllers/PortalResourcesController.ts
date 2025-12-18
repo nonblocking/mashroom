@@ -19,4 +19,17 @@ export default class PortalResourcesController {
         res.sendFile(portalClientBundle);
     }
 
+    async getSystemJS(req: Request, res: Response): Promise<void> {
+        const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
+
+        const portalClientBundle = path.resolve(__dirname, '../../frontend/systemjs.js');
+        res.type('text/javascript');
+
+        if (cacheControlService) {
+            cacheControlService.addCacheControlHeader('SHARED', req, res);
+        }
+
+        res.sendFile(portalClientBundle);
+    }
+
 }

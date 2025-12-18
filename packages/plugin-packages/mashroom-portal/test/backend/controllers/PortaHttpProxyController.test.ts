@@ -57,6 +57,7 @@ const portalApp1: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },
@@ -98,6 +99,7 @@ const portalApp2: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },
@@ -140,6 +142,7 @@ const portalApp3: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },

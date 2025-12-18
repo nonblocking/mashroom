@@ -10,4 +10,4 @@ on a page with a specific config.
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-demo-load-dynamically-app** as *dependency*.
 
-Then you can place it on any page via *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal Demo Load Dynamically App* on any page via *Portal Admin Toolbar*.

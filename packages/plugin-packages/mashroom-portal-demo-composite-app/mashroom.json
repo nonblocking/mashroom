@@ -26,16 +26,16 @@
                 "resourcesRoot": "./dist",
                 "ssrBootstrap": "./dist/app-ssr.js"
             },
-            "caching": {
-                "ssrHtml": "same-config"
-            },
             "defaultConfig": {
                 "title": "Demo Composite App",
                 "description": {
                     "en": "A simple Microfrontend that uses other Microfrontends (which are registered to the Mashroom Portal) as building blocks",
                     "de": "Ein einfaches Microfrontend das andere Microfrontends (die im Mashroom Portal registriert sind) als Komponenten benutzt"
                 },
-                "category": "Demo"
+                "category": "Demo",
+                "caching": {
+                    "ssrHtml": "same-config"
+                }
             }
         }
     ]

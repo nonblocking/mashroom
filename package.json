@@ -44,6 +44,7 @@
         "mini-css-extract-plugin": "^2.9.2",
         "nock": "^14.0.4",
         "nodemon": "^3.1.10",
+        "http-server": "^14.1.1",
         "null-loader": "^4.0.1",
         "rimraf": "^6.0.1",
         "sass": "^1.88.0",

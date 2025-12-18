@@ -52,6 +52,28 @@
         "PortalAppResources": {
             "type": "object",
             "properties": {
+                "moduleSystem": {
+                    "type": "string",
+                    "enum": [
+                        "none",
+                        "ESM",
+                        "SystemJS"
+                    ],
+                    "description": "The module system the JS resources are using (Default: none)"
+                },
+                "importMap": {
+                    "type": "object",
+                    "description": "An optional import map that will be used to resolve imports. Currently ONLY supported for moduleSystem SystemJS!",
+                    "properties": {
+                        "imports": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "required": ["imports"]
+                },
                 "js": {
                     "type": "array",
                     "items": {
@@ -79,7 +101,7 @@
             "properties": {
                 "resourcesRoot": {
                     "$ref": "#/definitions/PackageRelativePath",
-                    "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package."
+                    "description": "The root path for APP resources such as JavaScript files and images. Needs to be relative within the package. (Default: ./dist)"
                 },
                 "ssrBootstrap": {
                     "$ref": "#/definitions/PackageRelativePath",
@@ -96,7 +118,7 @@
             "properties": {
                 "resourcesRoot": {
                     "$ref": "#/definitions/WebAppPathOrRoot",
-                    "description": "The root path for App resources such as JavaScript files and images"
+                    "description": "The root path for App resources such as JavaScript files and images (Default: /)"
                 },
                 "ssrInitialHtmlPath": {
                     "$ref": "#/definitions/WebAppPath",
@@ -867,11 +889,11 @@
                 },
                 "local": {
                     "$ref": "#/definitions/PortalAppLocalConfig",
-                    "description": "Basic configuration if the App is deployed locally."
+                    "description": "Configuration if the App is deployed locally."
                 },
                 "remote": {
                     "$ref": "#/definitions/PortalAppRemoteConfig",
-                    "description": "Optional configuration if the App is accessed remotely."
+                    "description": "Configuration if the App is accessed remotely."
                 },
                 "defaultConfig": {
                     "type": "object",
@@ -927,28 +949,53 @@
                             "type": "object",
                             "patternProperties": {
                                 "^[a-zA-Z_]\\w+$": {
-                                    "type": "object",
-                                    "properties": {
-                                        "targetUri": {
-                                            "$ref": "#/definitions/HttpOrWebSocketUrl",
-                                            "description": " The API target URI (HTTP, HTTPS or WebSocket)"
-                                        },
-                                        "sendPermissionsHeader": {
-                                            "type": "boolean",
-                                            "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
-                                        },
-                                        "restrictToRoles": {
-                                            "type": "array",
-                                            "items": {
-                                                "type": "string"
+                                    "oneOf": [{
+                                        "type": "object",
+                                        "properties": {
+                                            "targetUri": {
+                                                "$ref": "#/definitions/HttpOrWebSocketUrl",
+                                                "description": " The API target URI (HTTP, HTTPS or WebSocket)"
                                             },
-                                            "description": "Optional list of roles that are permitted to access the proxy"
-                                        }
-                                    },
-                                    "additionalProperties": false,
-                                    "required": [
-                                        "targetUri"
-                                    ]
+                                            "sendPermissionsHeader": {
+                                                "type": "boolean",
+                                                "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
+                                            },
+                                            "restrictToRoles": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "description": "Optional list of roles that are permitted to access the proxy"
+                                            }
+                                        },
+                                        "additionalProperties": false,
+                                        "required": [
+                                            "targetUri"
+                                        ]
+                                    }, {
+                                        "type": "object",
+                                        "properties": {
+                                            "targetPath": {
+                                                "$ref": "#/definitions/WebAppPath",
+                                                "description": "Path to an API that runs on the remote server that hosts this plugin (BFF)"
+                                            },
+                                            "sendPermissionsHeader": {
+                                                "type": "boolean",
+                                                "description": "Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)"
+                                            },
+                                            "restrictToRoles": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "description": "Optional list of roles that are permitted to access the proxy"
+                                            }
+                                        },
+                                        "additionalProperties": false,
+                                        "required": [
+                                            "targetPath"
+                                        ]
+                                    }]
                                 }
                             }
                         },
@@ -968,8 +1015,7 @@
                 "name",
                 "type",
                 "resources",
-                "clientBootstrap",
-                "local"
+                "clientBootstrap"
             ],
             "additionalProperties": false
         },
@@ -1413,6 +1459,11 @@
     "properties": {
         "devModeBuildScript": {
             "type": "string"
+        },
+        "buildManifestPath": {
+            "type": "string",
+            "pattern": "^/[a-zA-Z0-9-_/]*\\.json$",
+            "description": "An optional path to a build manifest that contains a 'version' or 'timestamp' property. Only for remote packages."
         },
         "plugins": {
             "type": "array",

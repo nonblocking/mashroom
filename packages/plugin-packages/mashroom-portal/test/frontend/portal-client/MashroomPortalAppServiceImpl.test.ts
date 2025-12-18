@@ -18,6 +18,9 @@ describe('MashroomPortalAppServiceImpl', () => {
             return Promise.resolve();
         }
     };
+    const mockImportManager: any = {
+        addImportMap: jest.fn(),
+    };
 
     beforeEach(() => {
         loadedScripts = [];
@@ -26,7 +29,7 @@ describe('MashroomPortalAppServiceImpl', () => {
 
     it('loads the Portal App resources in the correct order', async () => {
 
-        const portalAppService = new MashroomPortalAppServiceImpl(mockRestService, mockResourceManager);
+        const portalAppService = new MashroomPortalAppServiceImpl(mockRestService, mockResourceManager, mockImportManager);
 
         const portalApp = {
             appSetup: {
@@ -37,6 +40,7 @@ describe('MashroomPortalAppServiceImpl', () => {
                 },
                 resourcesBasePath: 'http://localhost:5050/app1',
                 resources: {
+                    moduleSystem: 'none',
                     js: ['bundle1.js', 'bundle2.js'],
                     css: ['style.css'],
                 },

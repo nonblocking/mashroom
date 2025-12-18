@@ -45,7 +45,7 @@ export const safeEvaluateStringTemplate = (templateStr: string, context: any): s
 };
 
 export const evaluateTemplatesInConfigObject = (config: any, logger: Logger): void => {
-    // Currently only environment variables can be used in templates
+    // Currently, only environment variables can be used in templates
     const context = {
         env: {...process.env},
     };

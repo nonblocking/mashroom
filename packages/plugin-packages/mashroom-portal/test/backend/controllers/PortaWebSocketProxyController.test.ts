@@ -57,6 +57,7 @@ const portalApp1: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },

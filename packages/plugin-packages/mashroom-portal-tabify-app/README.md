@@ -9,7 +9,7 @@ This [Mashroom Portal](../mashroom-portal) App turns any App area where it is pl
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-tabify-app** as *dependency*.
 
-After placing it on a page, use the *Portal Admin Toolbar* to set the following properties:
+After placing *Mashroom Portal Tabify App* on a page, use the *Portal Admin Toolbar* to set the following properties:
 
  * _addCloseButtons_: Defines if a close button is added to remove a Microfrontend displayed as a tab
  * _appNameTitleMapping_: A map to override the displayed title in the tab (Microfrontend/Portal App Name -> Title to display)

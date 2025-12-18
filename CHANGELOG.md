@@ -3,16 +3,57 @@
 
 ## [unreleased v3]
 
- * Added support for hot reload of TypeScript files and ES modules
- * Added support for TypeScript with Node.js < 24. With the same [limitations](https://github.com/bloomberg/ts-blank-space/blob/main/docs/unsupported_syntax.md) as for Node.js >= 24.
+ * Portal: Added support for **import maps**. This is a **new way to share vendor libraries** amongst Microfrontends.
+   Currently, this is only supported for *modulesSystem* *SystemJS* because some major browsers do not support dynamically
+   changing import maps yet, see [here](https://bugzilla.mozilla.org/show_bug.cgi?id=1916277).
+   Example:
+   ```json
+   {
+     "resources": {
+       "moduleSystem": "SystemJS",
+       "importMap": {
+         "imports": {
+           "react": "https://ga.system.jspm.io/npm:react@19.1.1/index.js",
+           "react-dom": "https://ga.system.jspm.io/npm:react-dom@19.1.1/index.js",
+           "react-dom/client": "https://ga.system.jspm.io/npm:react-dom@19.1.1/client.js"
+        },
+       "js": [
+         "index.js"
+       ]
+     }
+   }
+   ```
+ * Portal: Added support for Portal Apps (Microfrontends) bundled to ES or SystemJS modules:
+   ```json
+   {
+     "resources": {
+       "moduleSystem": "ESM", // or: "SystemJS"
+       "js": [
+         "index.js"
+       ]
+     }
+   }
+   ```
+   If you are using modules, the client bootstrap can be exported rather than added a global variable!
+ * Core: Added the possibility to define a *buildManifestPath* in the plugin definition of a remote package to determine the actual version:
+   ```json
+   {
+      "buildManifestPath": "/buildManifest.json",
+      "plugins": [
+      ]
+   ```
+   The build manifest must be a JSON file and contain a *version* or *timestamp* property.
+   The default is */package.json* (which is the same as before)
+ * Core: Added support for hot reload of TypeScript files and ES modules
+ * Core: Added support for TypeScript with Node.js < 24. With the same [limitations](https://github.com/bloomberg/ts-blank-space/blob/main/docs/unsupported_syntax.md) as for Node.js >= 24.
    All config files and plugin sources can be written in TypeScript now
- * Added support for ESM packages. JavaScript files in packages with `"type": "module"` are now correctly loaded.
- * Added support for YAML config files
- * Removed HTTP/2 support. This is typically something that should be done by a reverse proxy.
- * **BREAKING CHANGE**: Migrated to Express 5.
+ * Core: Added support for ESM packages. JavaScript files in packages with `"type": "module"` are now correctly loaded.
+ * Core: Added support for YAML config files
+ * Core: Removed HTTP/2 support. This is typically something that should be done by a reverse proxy.
+ * **BREAKING CHANGE**: Core: Migrated to Express 5.
    Check all your *webapp*, *middleware* and *api* plugins if they need to be updated, according to: https://expressjs.com/en/guide/migrating-5.html
- * Documentation (mashroom-docs-static plugin) moved to a separate repo
- * **BREAKING CHANGE**: Removed support for the [flow](https://flow.org) type system
+ * Documentation (mashroom-docs-static plugin): moved to a separate repo
+ * **BREAKING CHANGE**: Core: Removed support for the [flow](https://flow.org) type system
  * Admin UI: Added filtering for plugins and plugin packages
  * Remote Plugin Scanner Kubernetes: Added a new plugin to register *remote plugins* on a Kubernetes platform, replaces *K8S Remote App Registry*.
    The configuration is very similar:

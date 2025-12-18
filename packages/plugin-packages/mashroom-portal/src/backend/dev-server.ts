@@ -75,6 +75,7 @@ const welcomeApp: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['welcome-app.js'],
         css: ['welcome-app.css'],
     },

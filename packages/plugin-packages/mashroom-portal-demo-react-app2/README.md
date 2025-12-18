@@ -13,4 +13,4 @@ for the Microfrontend configuration (instead of the default JSON editor).
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-demo-react-app2** as *dependency*.
 
-Then you can place it on any page via *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal Demo React App 2* on any page via *Portal Admin Toolbar*.

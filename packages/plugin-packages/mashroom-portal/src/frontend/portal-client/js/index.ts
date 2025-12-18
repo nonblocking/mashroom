@@ -13,14 +13,15 @@ import BrowserErrorHandler from './BrowserErrorHandler';
 import AuthenticationExpirationChecker from './AuthenticationExpirationChecker';
 import MashroomPortalRemoteLoggerImpl from './MashroomPortalRemoteLoggerImpl';
 import ResourceManager from './ResourceManager';
-
+import ImportMapManager from './ImportMapManager';
 
 import type {MashroomPortalClientServices} from '../../../../type-definitions';
 
 const restService = new MashroomRestServiceFetchImpl();
 const remoteLogger = new MashroomPortalRemoteLoggerImpl(restService);
 const resourceManager = new ResourceManager(remoteLogger);
-const portalAppService = new MashroomPortalAppServiceImpl(restService, resourceManager);
+const importMapManager = new ImportMapManager();
+const portalAppService = new MashroomPortalAppServiceImpl(restService, resourceManager, importMapManager);
 const portalAdminService = new MashroomPortalAdminServiceImpl(restService);
 const messageBus = new MashroomPortalMessageBusImpl();
 const stateService = new MashroomPortalStateServiceImpl();

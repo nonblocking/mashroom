@@ -14,4 +14,4 @@ and change the *targetUri* in *package.json* accordingly.
 
 If *node_modules/@mashroom* is configured as a plugin path, add **mashroom-portal-demo-rest-proxy-app** as *dependency*.
 
-Then you can place it on any page via *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal Demo WebSocket Proxy App* on any page via *Portal Admin Toolbar*.

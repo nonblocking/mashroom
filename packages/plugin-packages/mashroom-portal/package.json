@@ -31,7 +31,8 @@
         "@mashroom/mashroom-monitoring-metrics-collector": "2.9.3",
         "@mashroom/mashroom-security": "2.9.3",
         "@mashroom/mashroom-storage": "2.9.3",
-        "@mashroom/mashroom-vhost-path-mapper": "2.9.3"
+        "@mashroom/mashroom-vhost-path-mapper": "2.9.3",
+        "systemjs": "^6.15.1"
     },
     "jest": {
         "testEnvironment": "node",

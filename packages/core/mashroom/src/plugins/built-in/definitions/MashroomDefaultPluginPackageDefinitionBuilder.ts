@@ -36,7 +36,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             return null;
         }
 
-        const remotePackage = packageURL.protocol !== ':file';
+        const remotePackage = packageURL.protocol !== 'file:';
 
         const packageJson = await this._readPackageJson(packageURL);
 
@@ -44,30 +44,6 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             // A local package requires a package.json
             this._logger.debug(`Ignoring path ${packageURL} because it does not contain a package.json`);
             return null;
-        }
-
-        let meta: MashroomPluginPackageMeta;
-        if (packageJson) {
-            meta = {
-                name: packageJson.name,
-                version: packageJson.version,
-                description: packageJson.description,
-                homepage: packageJson.homepage,
-                author: this._authorToString(packageJson.author),
-                license: packageJson.license,
-            };
-        } else {
-            if (!scannerHints.packageVersion) {
-                this._logger.warn(`Couldn't determine package version of ${packageURL} because no package.json was found! This will impact caching of assets. You should fix this.`);
-            }
-            meta = {
-              name: scannerHints.packageName ?? packageURL.hostname,
-              version: scannerHints.packageVersion ?? String(Date.now()),
-                description: null,
-                homepage: null,
-                author: null,
-                license: null,
-            };
         }
 
         let definition = await this._readExternalPluginConfigFile(packageURL);
@@ -82,6 +58,44 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         if (!definition.plugins || !Array.isArray(definition.plugins)) {
             this._logger.error(`Error processing plugin definition in: ${packageURL}: "plugins" is either not defined or no array!`);
             return null;
+        }
+
+        // Check the build manifest for version info
+        let buildManifestVersion: string | undefined;
+        if (remotePackage && definition.buildManifestPath) {
+            const buildManifest = await this._fetchRemoteJSON(new URL(definition.buildManifestPath, packageURL));
+            if (buildManifest) {
+                buildManifestVersion = buildManifest.version || buildManifest.timestamp;
+                if (!buildManifestVersion) {
+                    this._logger.warn(`The build manifest at ${definition.buildManifestPath} in ${packageURL} does not contain a version or timestamp!`);
+                }
+            } else {
+                this._logger.warn(`Couldn't load build manifest ${definition.buildManifestPath} from ${packageURL}.`);
+            }
+        }
+
+        let meta: MashroomPluginPackageMeta;
+        if (packageJson) {
+            meta = {
+                name: packageJson.name,
+                version: buildManifestVersion ?? packageJson.version,
+                description: packageJson.description,
+                homepage: packageJson.homepage,
+                author: this._authorToString(packageJson.author),
+                license: packageJson.license,
+            };
+        } else {
+            if (!buildManifestVersion && !scannerHints.packageVersion) {
+                this._logger.warn(`Couldn't determine package version of ${packageURL} because no package.json was found! This will impact caching of assets. You should fix this.`);
+            }
+            meta = {
+                name: scannerHints.packageName ?? packageURL.hostname,
+                version: buildManifestVersion ?? scannerHints.packageVersion ?? String(Date.now()),
+                description: null,
+                homepage: null,
+                author: null,
+                license: null,
+            };
         }
 
         return [{
@@ -154,7 +168,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
     }
 
     private async _fetchRemoteJSON(url: URL): Promise<any> {
-        const config = await this._fetchRemoteConfig(url);;
+        const config = await this._fetchRemoteConfig(url);
         if (!config) {
             return null;
         }

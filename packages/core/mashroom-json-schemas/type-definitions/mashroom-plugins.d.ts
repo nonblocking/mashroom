@@ -41,6 +41,10 @@ export type JavaScriptIdentifier = string;
 
 export interface MashroomPlugins {
   devModeBuildScript?: string;
+  /**
+   * An optional path to a build manifest that contains a 'version' or 'timestamp' property. Only for remote packages.
+   */
+  buildManifestPath?: string;
   plugins: MashroomPlugins1[];
   $schema?: any;
 }
@@ -313,7 +317,7 @@ export interface MashroomPortalAppV2PluginDefinition {
    * Optional some screenshots of the App. The screenshots paths are relative to resourcesRoot
    */
   screenshots?: string[];
-  local: PortalAppLocalConfig;
+  local?: PortalAppLocalConfig;
   remote?: PortalAppRemoteConfig;
   defaultConfig?: {
     /**
@@ -369,20 +373,35 @@ export interface MashroomPortalAppV2PluginDefinition {
        * This interface was referenced by `undefined`'s JSON-Schema definition
        * via the `patternProperty` "^[a-zA-Z_]\w+$".
        */
-      [k: string]: {
-        /**
-         *  The API target URI (HTTP, HTTPS or WebSocket)
-         */
-        targetUri: string;
-        /**
-         * Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
-         */
-        sendPermissionsHeader?: boolean;
-        /**
-         * Optional list of roles that are permitted to access the proxy
-         */
-        restrictToRoles?: string[];
-      };
+      [k: string]:
+        | {
+            /**
+             *  The API target URI (HTTP, HTTPS or WebSocket)
+             */
+            targetUri: string;
+            /**
+             * Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
+             */
+            sendPermissionsHeader?: boolean;
+            /**
+             * Optional list of roles that are permitted to access the proxy
+             */
+            restrictToRoles?: string[];
+          }
+        | {
+            /**
+             * Path to an API that runs on the remote server that hosts this plugin (BFF)
+             */
+            targetPath: string;
+            /**
+             * Add the header X-USER-PERMISSIONS with a comma separated list of permissions calculated from rolePermissions (Default: false)
+             */
+            sendPermissionsHeader?: boolean;
+            /**
+             * Optional list of roles that are permitted to access the proxy
+             */
+            restrictToRoles?: string[];
+          };
     };
     /**
      * Optional meta info that could be used to lookup for Apps with specific features or capabilities
@@ -399,6 +418,18 @@ export interface MashroomPortalAppV2PluginDefinition {
  */
 export interface PortalAppResources {
   /**
+   * The module system the JS resources are using (Default: none)
+   */
+  moduleSystem?: "none" | "ESM" | "SystemJS";
+  /**
+   * An optional import map that will be used to resolve imports. Currently ONLY supported for moduleSystem SystemJS!
+   */
+  importMap?: {
+    imports: {
+      [k: string]: string | undefined;
+    };
+  };
+  /**
    * JavaScript resources. Relative to resourcesRoot
    */
   js: string[];
@@ -412,6 +443,18 @@ export interface PortalAppResources {
  */
 export interface PortalAppResources1 {
   /**
+   * The module system the JS resources are using (Default: none)
+   */
+  moduleSystem?: "none" | "ESM" | "SystemJS";
+  /**
+   * An optional import map that will be used to resolve imports. Currently ONLY supported for moduleSystem SystemJS!
+   */
+  importMap?: {
+    imports: {
+      [k: string]: string | undefined;
+    };
+  };
+  /**
    * JavaScript resources. Relative to resourcesRoot
    */
   js: string[];
@@ -421,11 +464,11 @@ export interface PortalAppResources1 {
   css?: string[];
 }
 /**
- * Basic configuration if the App is deployed locally.
+ * Configuration if the App is deployed locally.
  */
 export interface PortalAppLocalConfig {
   /**
-   * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package.
+   * The root path for APP resources such as JavaScript files and images. Needs to be relative within the package. (Default: ./dist)
    */
   resourcesRoot: string;
   /**
@@ -434,11 +477,11 @@ export interface PortalAppLocalConfig {
   ssrBootstrap?: string;
 }
 /**
- * Optional configuration if the App is accessed remotely.
+ * Configuration if the App is accessed remotely.
  */
 export interface PortalAppRemoteConfig {
   /**
-   * The root path for App resources such as JavaScript files and images
+   * The root path for App resources such as JavaScript files and images (Default: /)
    */
   resourcesRoot: string;
   /**

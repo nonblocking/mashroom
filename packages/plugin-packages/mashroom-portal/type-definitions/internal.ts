@@ -180,3 +180,13 @@ export type SSRRenderResult = {
     readonly injectHeadScript: Array<string>;
     readonly embeddedPortalPageApps: MashroomPortalPageApps;
 }
+
+export type ImportMap = {
+    readonly imports: Record<string, string>;
+    readonly scopes: Record<string, Record<string, string>>;
+};
+
+export type MashroomImportMapConnector = {
+    addImportMap(importMap: ImportMap): void;
+    getImportMap(): ImportMap | undefined;
+}

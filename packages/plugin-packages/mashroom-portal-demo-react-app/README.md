@@ -10,4 +10,4 @@ act as a building block in the [Mashroom Portal](../mashroom-portal).
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-demo-react-app** as *dependency*.
 
-Then you can place it on any page via *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal Demo React App* on any page via *Portal Admin Toolbar*.

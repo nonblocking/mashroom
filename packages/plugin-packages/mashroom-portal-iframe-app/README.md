@@ -9,7 +9,7 @@ Adds a (responsive) iFrame Microfrontend to the [Mashroom Portal](../mashroom-po
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-iframe-app** as *dependency*.
 
-After placing it on a page, use the *Portal Admin Toolbar* to set the following properties:
+After placing *Mashroom Portal IFrame App* on a page, use the *Portal Admin Toolbar* to set the following properties:
 
  * _url_: The URL of the page to show in the iframe
  * _width_: The iframe width (Default 100%)

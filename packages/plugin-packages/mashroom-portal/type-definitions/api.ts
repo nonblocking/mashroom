@@ -175,10 +175,10 @@ export type MashroomPortalAppSetup = {
      */
     readonly restProxyPaths: MashroomPortalProxyPaths;
     readonly sharedResourcesBasePath: string;
-    readonly sharedResources: MashroomPortalAppResources | null | undefined;
+    readonly sharedResources: MashroomPortalAppSharedResources | null | undefined;
     readonly resourcesBasePath: string;
     readonly resources: MashroomPortalAppResources;
-    readonly globalLaunchFunction: string;
+    readonly clientBootstrapName: string;
     readonly lang: string;
     readonly user: MashroomPortalAppUser;
     readonly appConfig: MashroomPluginConfig;
@@ -366,6 +366,15 @@ export type MashroomPortalProxyDefinitions = {
 };
 
 export type MashroomPortalAppResources = {
+    readonly moduleSystem: 'none' | 'ESM' | 'SystemJS';
+    readonly importMap?: {
+        readonly imports: Record<string, string>;
+    };
+    readonly js: Array<string>;
+    readonly css?: Array<string>;
+};
+
+export type MashroomPortalAppSharedResources = {
     readonly js: Array<string>;
     readonly css?: Array<string>;
 };
@@ -396,7 +405,7 @@ export type MashroomPortalApp = {
     readonly tags: Array<string>;
 
     /**
-     * Any kind of optional meta information
+     * Any kind of optional meta-information
      */
     readonly metaInfo: any | null | undefined;
 
@@ -448,7 +457,7 @@ export type MashroomPortalApp = {
     /**
      * Shared JS libraries (only loaded once on a page)
      */
-    readonly sharedResources: MashroomPortalAppResources | null | undefined;
+    readonly sharedResources: MashroomPortalAppSharedResources | null | undefined;
 
     /**
      * An optional list of screenshots (relative to resourcesRootUri)
@@ -498,12 +507,12 @@ export type MashroomPortalApp = {
 
     /**
      * If no role restrictions were defined via Admin App in the UI only these roles can view the app.
-     * If not set every user can load the app.
+     * If not set, every user can load the app.
      */
     readonly defaultRestrictViewToRoles: Array<string> | null | undefined;
 
     /**
-     * A mapping between app specific permissions and existing roles
+     * A mapping between app-specific permissions and existing roles
      */
     readonly rolePermissions: MashroomPortalRolePermissions | null | undefined;
 

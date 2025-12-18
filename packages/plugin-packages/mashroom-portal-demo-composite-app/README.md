@@ -13,4 +13,4 @@ It is capable of server-side rendering, which includes the *embedded* Apps.
 
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-portal-demo-composite-app** as *dependency*.
 
-Then you can place it on any page via *Portal Admin Toolbar*.
+Then you can place *Mashroom Portal Demo Composite App* on any page via *Portal Admin Toolbar*.

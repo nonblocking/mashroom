@@ -84,17 +84,23 @@ export type MashroomPluginPackageDefinition = {
     /**
      * The build script name for dev mode
      */
-    devModeBuildScript?: string;
+    readonly devModeBuildScript?: string;
+
+    /**
+     * An optional path to a build manifest that contains a 'version' or 'timestamp' property.
+     * Only for remote packages.
+     */
+    readonly buildManifestPath?: string;
 
     /**
      * The plugins in the package
      */
-    plugins: Array<MashroomPluginDefinition>;
+    readonly plugins: Array<MashroomPluginDefinition>;
 };
 
 /**
  * Metadata regarding a plugin package.
- * Typically, the stuff found in package.json
+ * Typically, the stuff which is found in package.json
  */
 export type MashroomPluginPackageMeta = {
     readonly name: string;

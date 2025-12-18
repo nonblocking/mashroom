@@ -58,7 +58,22 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
             throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No resources defined`);
         }
 
+        if (resourcesDef.moduleSystem && !['node' ,'ESM', 'SystemJS'].includes(resourcesDef.moduleSystem)) {
+            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: Invalid moduleSystem: ${resourcesDef.moduleSystem}`);
+        }
+        if (resourcesDef.importMap && resourcesDef.moduleSystem !== 'SystemJS') {
+            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: importMap only supported for moduleSystem SystemJS`);
+        }
+
+        let moduleSystem = resourcesDef.moduleSystem ?? 'none';
+        if (resourcesDef.js.find((res: string) => res.endsWith('.mjs'))) {
+            moduleSystem = 'ESM';
+        }
         const resources = {
+            moduleSystem,
+            importMap: resourcesDef.importMap ? {
+                imports: resourcesDef.importMap.imports ?? [],
+            } : undefined,
             js: resourcesDef.js,
             css: resourcesDef.css,
         };
@@ -83,7 +98,7 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
             // Local
             const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
-            resourcesRootUri = version == 2 ? plugin.pluginDefinition.local?.resourcesRoot : config.resourcesRoot;
+            resourcesRootUri = version == 2 ? (plugin.pluginDefinition.local?.resourcesRoot ?? './dist') : config.resourcesRoot;
             if (!isAbsolute(resourcesRootUri)) {
                 // Process relative file path
                 resourcesRootUri = resolve(pluginPackagePath, resourcesRootUri);
@@ -113,25 +128,43 @@ export default class PortalAppPluginLoader implements MashroomPluginLoader {
         if (proxies) {
             for (const proxyName in proxies) {
                 if (proxyName in proxies) {
-                    let targetUri = proxies[proxyName].targetUri;
-                    if (!targetUri) {
-                        throw new Error(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}.`);
-                    }
-                    // For remote Apps the targetUri might be relative to the host where it is running on
-                    if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
-                        let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
-                        if (targetUri.startsWith('/')) {
-                            targetUri = packageURL + targetUri;
-                        }
-                        try {
-                            const parsedUri = new URL(targetUri);
-                            if (parsedUri.hostname === 'localhost') {
-                                targetUri = packageURL + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                    const {targetUri, targetPath, ...otherProps} = proxies[proxyName];
+                    let fixedTargetUri = targetUri;
+                    if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
+                        if (!fixedTargetUri) {
+                            if (targetPath) {
+                                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}. And targetPath can only be used for remote plugins!`);
+                            } else {
+                                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}`);
                             }
-                        } catch (e) {
-                            // Ignore
                         }
-                        proxies[proxyName] = {...proxies[proxyName], targetUri};
+                    } else {
+                        // For remote Apps targetPath might be set, or the targetUri could be relative, or the targetUri could be localhost (which can be interpreted as relative as well)
+                        let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
+                        if (targetPath) {
+                            if (!targetPath.startsWith('/')) {
+                                throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: targetPath must start with a slash!`);
+                            }
+                            fixedTargetUri = packageURL + targetPath;
+                        } else if (targetUri.startsWith('/')) {
+                            fixedTargetUri = packageURL + targetUri;
+                        } else {
+                            try {
+                                const parsedUri = new URL(targetUri);
+                                if (parsedUri.hostname === 'localhost') {
+                                    fixedTargetUri = packageURL + (parsedUri.pathname && parsedUri.pathname !== '/' ? parsedUri.pathname : '');
+                                }
+                            } catch (e) {
+                                // Ignore
+                            }
+                        }
+                        if (!fixedTargetUri) {
+                            throw new PluginConfigurationError(`Invalid configuration of plugin ${plugin.name}: No targetUri defined for proxy ${proxyName}`);
+                        }
+                        proxies[proxyName] = {
+                            targetUri: fixedTargetUri,
+                            ...otherProps,
+                        };
                     }
                 }
             }

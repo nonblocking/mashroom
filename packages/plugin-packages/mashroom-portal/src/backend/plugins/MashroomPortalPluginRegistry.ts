@@ -105,7 +105,7 @@ export default class MashroomPortalPluginRegistry implements MashroomPortalPlugi
     }
 
     get portalApps(): Readonly<Array<MashroomPortalApp>> {
-        return Object.freeze(this._portalApps);
+        return readonlyUtils.cloneAndFreezeArray(this._portalApps);
     }
 
     get themes(): Readonly<Array<MashroomPortalTheme>> {

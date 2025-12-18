@@ -49,7 +49,7 @@ const loadStyle = (path: string) => {
 
 export default async (appName: string, hostElementId: string, setup: MashroomPortalAppSetup, messageBusPortalAppUnderTest: MessageBusPortalAppUnderTest): Promise<void> => {
     try {
-        const {sharedResources, resources, resourcesBasePath, globalLaunchFunction, lastReloadTs} = setup;
+        const {sharedResources, resources, resourcesBasePath, clientBootstrapName, lastReloadTs} = setup;
 
         // Load shared JS resources first if they exist
         if (sharedResources?.js?.length) {
@@ -65,9 +65,9 @@ export default async (appName: string, hostElementId: string, setup: MashroomPor
         sharedResources?.css?.forEach(css => loadStyle(`${resourcesBasePath}/${css}?v=${lastReloadTs}`));
         resources?.css?.forEach(css => loadStyle(`${resourcesBasePath}/${css}?v=${lastReloadTs}`));
 
-        const bootstrapFn = (global as any)[globalLaunchFunction];
+        const bootstrapFn = (global as any)[clientBootstrapName];
         if (typeof bootstrapFn !== 'function') {
-            throw new Error(`Invalid bootstrap function: ${globalLaunchFunction}`);
+            throw new Error(`Invalid bootstrap function: ${clientBootstrapName}`);
         }
 
         const wrapperElem = document.getElementById(hostElementId);

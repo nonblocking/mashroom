@@ -61,6 +61,7 @@ const portalApp1: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },
@@ -105,6 +106,7 @@ const portalApp2: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },
@@ -139,6 +141,7 @@ const portalApp3: MashroomPortalApp = {
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
+        moduleSystem: 'none',
         js: ['bundle.js'],
         css: [],
     },
@@ -314,8 +317,8 @@ describe('PortalAppController', () => {
                 js: [],
                 css: [],
             },
-            resources: {css: [], js: ['bundle.js']},
-            globalLaunchFunction: 'foo',
+            resources: {moduleSystem: 'none', css: [], js: ['bundle.js']},
+            clientBootstrapName: 'foo',
             lang: 'en',
             user: {
                 guest: false,
@@ -383,12 +386,9 @@ describe('PortalAppController', () => {
             },
             resourcesBasePath: '/portal/web/___/apps/Test%20Portal%20App%201',
             sharedResourcesBasePath: '/portal/web/___/apps/___shared___',
-            sharedResources: {
-                js: [],
-                css: [],
-            },
-            resources: {css: [], js: ['bundle.js']},
-            globalLaunchFunction: 'foo',
+            sharedResources: {js: [], css: []},
+            resources: {moduleSystem: 'none', css: [], js: ['bundle.js']},
+            clientBootstrapName: 'foo',
             lang: 'en',
             user: {
                 guest: false,
