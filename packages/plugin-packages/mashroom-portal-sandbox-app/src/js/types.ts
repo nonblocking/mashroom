@@ -1,5 +1,10 @@
 
-import type {MashroomPortalMessageBus, MashroomPortalAppSetup, MashroomKnownPortalApp} from '@mashroom/mashroom-portal/type-definitions';
+import type {
+    MashroomPortalMessageBus,
+    MashroomPortalAppSetup,
+    MashroomKnownPortalApp,
+    MashroomPortalAppLifecycleHooks
+} from '@mashroom/mashroom-portal/type-definitions';
 
 export type State = {
     readonly knownPortalApps: Array<MashroomKnownPortalApp>;
@@ -11,13 +16,18 @@ export type State = {
 }
 
 export type SelectedPortalApp = {
-    readonly appName: string,
-    readonly setup: MashroomPortalAppSetup,
+    readonly appName: string;
+    readonly setup: MashroomPortalAppSetup;
 }
 
+export type LoadedPortalApp = {
+    readonly instanceId: string;
+    readonly lifecycleHooks: MashroomPortalAppLifecycleHooks | null;
+};
+
 export type ActivePortalApp = {
-    readonly appName: string,
-    readonly setup: MashroomPortalAppSetup,
+    readonly appName: string;
+    readonly setup: MashroomPortalAppSetup;
 }
 
 export interface MessageBusPortalAppUnderTest extends MashroomPortalMessageBus {

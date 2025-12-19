@@ -18,6 +18,7 @@ export default {
     link: 'Link',
     sandboxPermalink: 'Sandbox Permalink',
     copiedToClipboard: 'Copied to clipboard',
+    closeActiveApp: 'Close',
     errorLoadingApp: 'Could not load App (not found or no permission)',
     errorTopicMandatory: 'Please select topic',
     errorInvalidJSON: 'Error: Invalid JSON',

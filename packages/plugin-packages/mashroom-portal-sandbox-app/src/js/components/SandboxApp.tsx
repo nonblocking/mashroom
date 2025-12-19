@@ -1,16 +1,13 @@
 
-import React, {useEffect, useMemo} from 'react';
-import {nanoid} from 'nanoid';
+import React, {useMemo} from 'react';
 import MessagesProvider from '../messages/MessagesProvider';
-import getMessageBusPortalAppUnderTest from '../message-bus-portal-app-under-test';
-import {addMessagePublishedByApp, setTopicsSubscribedByApp} from '../store/actions';
 import { getQueryParams } from '../utils';
-import useStore from '../store/useStore';
-import PortalAppHost from './PortalAppHost';
+import ActivePortalAppHost from './ActivePortalAppHost';
 import PortalApp from './PortalApp';
-import PortalAppStats from './PortalAppStats';
-import MessageBusSendForm from './MessageBusSendForm';
-import MessageBusHistory from './MessageBusHistory';
+import ActivePortalAppStats from './ActivePortalAppStats';
+import ActivePortalAppMessageBusSendForm from './ActivePortalAppMessageBusSendForm';
+import ActivePortalAppMessageBusHistory from './ActivePortalAppMessageBusHistory';
+import ActivePortalAppClose from './ActivePortalAppClose';
 
 import type {
     MashroomPortalAppService,
@@ -26,38 +23,23 @@ type Props = {
 }
 
 export default ({lang, messageBus, portalAppService, portalStateService}: Props) => {
-    const hostElementId = useMemo(() => `mashroom-sandbox-app-host-elem_${nanoid(8)}`, []);
     const queryParams = useMemo(() => getQueryParams(portalStateService), []);
-    const messageBusPortalAppUnderTest = useMemo(() => getMessageBusPortalAppUnderTest(), []);
-    const dispatch = useStore((state) => state.dispatch);
-
-    useEffect(() => {
-        messageBusPortalAppUnderTest.onMessageSent((topic, data) => {
-            dispatch(addMessagePublishedByApp({
-                topic,
-                data
-            }));
-        });
-        messageBusPortalAppUnderTest.onTopicsChanged((topics) => {
-            dispatch(setTopicsSubscribedByApp(topics));
-        });
-    }, []);
+    console.info('Sandbox App started with query params: ', queryParams);
 
     return (
         <MessagesProvider lang={lang}>
             <div className='mashroom-sandbox-app'>
-                <PortalAppHost hostElementId={hostElementId} />
-                <PortalAppStats portalAppService={portalAppService} />
-                <MessageBusSendForm
+                <ActivePortalAppHost />
+                <ActivePortalAppStats portalAppService={portalAppService} />
+                <ActivePortalAppClose />
+                <ActivePortalAppMessageBusSendForm
                     messageBus={messageBus}
                     sbAutoTest={queryParams.autoTest}
                 />
-                <MessageBusHistory />
+                <ActivePortalAppMessageBusHistory />
                 <PortalApp
-                    hostElementId={hostElementId}
                     queryParams={queryParams}
                     messageBus={messageBus}
-                    messageBusPortalAppUnderTest={messageBusPortalAppUnderTest}
                     portalAppService={portalAppService}
                 />
             </div>

@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Sandbox App: Added the possibility to close the loaded App and to start over
  * Portal: Added support for **import maps**. This is a **new way to share vendor libraries** amongst Microfrontends.
    Currently, this is only supported for *modulesSystem* *SystemJS* because some major browsers do not support dynamically
    changing import maps yet, see [here](https://bugzilla.mozilla.org/show_bug.cgi?id=1916277).

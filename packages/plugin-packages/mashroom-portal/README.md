@@ -21,7 +21,7 @@ One of the provided client services allows Portal Apps to load any *other* Porta
 The Portal supports **hybrid rendering** for both the Portal pages and Portal Apps. So, if the Portal App supports server-side rendering, the initial HTML can be incorporated
 into the HTML page. Navigating to another page dynamically replaces the Portal App in the content area via client side rendering (needs to be supported by the Theme).
 
-The Portal also supports **i18n**, **theming**, **role based security**, a client-side message bus which can be connected to a server-side broker and
+The Portal also supports **i18n**, **theming**, **role-based security**, a client-side message bus which can be connected to a server-side broker and
 a registry for **Portal Apps** on a separate server or container.
 
 ## Usage
@@ -143,7 +143,7 @@ export interface MashroomPortalService {
     getSite(siteId: string): Promise<MashroomPortalSite | null | undefined>;
 
     /**
-     * Find the site with given path
+     * Find the site with the given path
      */
     findSiteByPath(path: string): Promise<MashroomPortalSite | null | undefined>;
 
@@ -168,7 +168,7 @@ export interface MashroomPortalService {
     getPage(pageId: string): Promise<MashroomPortalPage | null | undefined>;
 
     /**
-     * Find the page ref within a site with given friendly URL
+     * Find the page ref within a site with a given friendly URL
      */
     findPageRefByFriendlyUrl(site: MashroomPortalSite, friendlyUrl: string): Promise<MashroomPortalPageRef | null | undefined>;
 
@@ -178,7 +178,7 @@ export interface MashroomPortalService {
     findPageRefByPageId(site: MashroomPortalSite, pageId: string): Promise<MashroomPortalPageRef | null | undefined>;
 
     /**
-     * Insert new page
+     * Insert a new page
      */
     insertPage(page: MashroomPortalPage): Promise<void>;
 
@@ -188,12 +188,12 @@ export interface MashroomPortalService {
     updatePage(page: MashroomPortalPage): Promise<void>;
 
     /**
-     * Insert new page
+     * Insert a new page
      */
     deletePage(req: Request, pageId: string): Promise<void>;
 
     /**
-     * GetPortal App instance
+     * Get a Portal App instance
      */
     getPortalAppInstance(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppInstance | null | undefined>;
 
@@ -327,11 +327,11 @@ A full config with all optional properties would look like this:
 ```
 
  * _clientBootstrap_: The global function exposed on the client side to launch the App (see below for an example)
- * _resources_: Javascript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
+ * _resources_: JavaScript and CSS resources that must be loaded before the bootstrap method is invoked. All resource paths are relative to *resourcesRoot*.
  * _sharedResources_: Optional. Same as _resources_ but a shared resource with a given name is only loaded once, even if multiple Portal Apps declare it.
     This is useful if apps want to share vendor libraries or styles or such.
     Here you can find a demo how to use the *Webpack* *DllPlugin* together with this feature: [Mashroom Demo Shared DLL](https://github.com/nonblocking/mashroom-demo-shared-dll)
- * _screenshots_: Optional some screenshots of the App. The screenshots paths are relative to *resourcesRoot*.
+ * _screenshots_: Optional some screenshots of the App. The screenshot paths are relative to *resourcesRoot*.
  * _local_: Basic configuration if the App is deployed locally
    * _resourcesRoot_: The root path for APP resources such as JavaScript files and images. Needs to be relative within the package
    * _ssrBootstrap_: An optional local SSR bootstrap that returns an initial HTML for the App, relative within the package (see below for an example)
@@ -513,7 +513,7 @@ _MashroomPortalMessageBus_
 ```ts
 export interface MashroomPortalMessageBus {
     /**
-     * Subscribe to given topic.
+     * Subscribe to a given topic.
      * Topics starting with getRemotePrefix() will be subscribed server side via WebSocket (if available).
      * Remote topics can also contain wildcards: # for multiple levels and + or * for a single level
      * (e.g. remote:/foo/+/bar)
@@ -521,19 +521,19 @@ export interface MashroomPortalMessageBus {
     subscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Subscribe once to given topic. The handler will be removed after the first message has been received.
+     * Subscribe once to the given topic. The handler will be removed after the first message has been received.
      * Remote topics are accepted.
      */
     subscribeOnce(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Unsubscribe from given topic.
+     * Unsubscribe from the given topic.
      * Remote topics are accepted.
      */
     unsubscribe(topic: string, callback: MashroomPortalMessageBusSubscriberCallback): Promise<void>;
 
     /**
-     * Publish to given topic.
+     * Publish to the given topic.
      * Remote topics are accepted.
      */
     publish(topic: string, data: any): Promise<void>;
@@ -552,7 +552,7 @@ export interface MashroomPortalMessageBus {
     /**
      * Register a message interceptor.
      * An interceptor can be useful for debugging or to manipulate the messages.
-     * It can change the data of an event by return a different value or block messages
+     * It can change the data of an event by returning a different value or block messages
      * by calling cancelMessage() from the interceptor arguments.
      */
     registerMessageInterceptor(interceptor: MashroomPortalMessageBusInterceptor): void;
@@ -569,23 +569,23 @@ _MashroomPortalStateService_
 ```ts
 export interface MashroomPortalStateService {
     /**
-     * Get a property from state.
+     * Get a property from the state.
      * It will be looked up in the URL (query param or encoded) and in the local and session storage
      */
     getStateProperty(key: string): any | null | undefined;
 
     /**
-     * Add given key value pair into the URL (encoded)
+     * Add the given key value pair into the URL (encoded)
      */
     setUrlStateProperty(key: string, value: any | null | undefined): void;
 
     /**
-     * Add given key value pair to the session storage
+     * Add the given key value pair to the session storage
      */
     setSessionStateProperty(key: string, value: any): void;
 
     /**
-     * Add given key value pair to the local storage
+     * Add the given key value pair to the local storage
      */
     setLocalStoreStateProperty(key: string, value: any): void;
 }
@@ -606,24 +606,24 @@ export interface MashroomPortalAppService {
     searchApps(filter?: AppSearchFilter): Promise<Array<MashroomKnownPortalApp>>;
 
     /**
-     * Load a Portal App into given host element at given position (or at the end if position is not set)
+     * Load a Portal App into a given host element at a given position (or at the end if the position is not set)
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved! If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadApp(appAreaId: string, pluginName: string, instanceId: string | null | undefined, position?: number | null | undefined, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
      * Load a Portal App into a modal overlay.
      *
-     * The returned promise will always resolve! If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved! If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     loadAppModal(pluginName: string, title?: string | null | undefined, overrideAppConfig?: any | null | undefined, onClose?: ModalAppCloseCallback | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
     /**
-     * Reload given Portal App.
+     * Reload the given Portal App.
      *
-     * The returned promise will always resolve!
-     * If there was a loading error the MashroomPortalLoadedPortalApp.error property will be true.
+     * The returned promise will always be resolved!
+     * If there was a loading error, the MashroomPortalLoadedPortalApp.error property will be true.
      */
     reloadApp(id: string, overrideAppConfig?: any | null | undefined): Promise<MashroomPortalLoadedPortalApp>;
 
@@ -636,6 +636,14 @@ export interface MashroomPortalAppService {
      * Move a loaded App to another area (to another host element within the DOM)
      */
     moveApp(id: string, newAppAreaId: string, newPosition?: number): void;
+
+    /**
+     * Loads the Portal App without starting it and returns a reference to the client bootstrap.
+     *
+     * ONLY use this if you exactly know what you are doing!
+     * If you start the Portal App, you have to take care of calling the lifecycle methods yourself.
+     */
+    loadAppClientBootstrap(pluginName: string): Promise<ClientBootstrapReference>;
 
     /**
      * Show the name and version for all currently loaded App in an overlay (for debug purposes)
@@ -658,7 +666,7 @@ export interface MashroomPortalAppService {
     unregisterAppLoadedListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Add a listener for unload events (fired before an App will be detached from the page)
+     * Add a listener for unloaded events (fired before an App will be detached from the page)
      */
     registerAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
@@ -668,7 +676,7 @@ export interface MashroomPortalAppService {
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
-     * Load the setup for given App/plugin name on the current page
+     * Load the setup for a given App / plugin name on the current page
      */
     loadAppSetup(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppSetup>;
 
@@ -686,7 +694,7 @@ export interface MashroomPortalAppService {
     checkLoadedPortalAppsUpdated(): Promise<Array<string>>;
 
     /**
-     * Prefetch resources of given App/plugin. This is useful if you know which apps you will have to load
+     * Prefetch resources of a given App / plugin. This is useful if you know which apps you will have to load
      * in the future and want to minimize the loading time.
      */
     prefetchResources(pluginName: string): Promise<void>;
@@ -742,7 +750,6 @@ export interface MashroomPortalUserService {
      */
     getDefaultLanguage(): Promise<string>;
 }
-
 ```
 
 _MashroomPortalSiteService_
@@ -752,17 +759,17 @@ export interface MashroomPortalSiteService {
     /**
      * Get the base url for the current site
      */
-        getCurrentSiteUrl(): string;
+    getCurrentSiteUrl(): string;
 
     /**
      * Get a list with all sites
      */
-        getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
+    getSites(): Promise<Array<MashroomPortalSiteLinkLocalized>>;
 
     /**
-     * Get the page tree for given site
+     * Get the page tree for a given site
      */
-        getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
+    getPageTree(siteId: string): Promise<Array<MashroomPortalPageRefLocalized>>;
 }
 ```
 
@@ -775,7 +782,7 @@ export interface MashroomPortalPageService {
      */
     getCurrentPageId(): string;
     /**
-     * Get the page friendlyUrl from given URL (e.g. /portal/web/test?x=1 -> /test)
+     * Get the page friendlyUrl from the given URL (e.g., /portal/web/test?x=1 -> /test)
      */
     getPageFriendlyUrl(pageUrl: string): string;
     /**
@@ -783,9 +790,9 @@ export interface MashroomPortalPageService {
      */
     getPageId(pageUrl: string): Promise<string | undefined>;
     /**
-     * Get the content for given pageId.
+     * Get the content for the given pageId.
      * It also calculates if the correct theme and all necessary page enhancements for the requested page
-     * are already loaded. Otherwise fullPageLoadRequired is going to be true and no content returned.
+     * are already loaded. Otherwise, fullPageLoadRequired is going to be true and no content returned.
      */
     getPageContent(pageId: string): Promise<MashroomPortalPageContent>;
 }
@@ -832,7 +839,7 @@ export interface MashroomPortalAdminService {
     getExistingRoles(): Promise<Array<RoleDefinition>>;
 
     /**
-     * Get all app instances on current page
+     * Get all app instances on the current page
      */
     getAppInstances(): Promise<Array<MashroomPagePortalAppInstance>>;
 
@@ -872,7 +879,7 @@ export interface MashroomPortalAdminService {
     getPage(pageId: string): Promise<MashroomPortalPage>;
 
     /**
-     * Add new page
+     * Add a new page
      */
     addPage(page: MashroomPortalPage): Promise<MashroomPortalPage>;
 
@@ -907,7 +914,7 @@ export interface MashroomPortalAdminService {
     getSite(siteId: string): Promise<MashroomPortalSite>;
 
     /**
-     * Add new site
+     * Add a new site
      */
     addSite(site: MashroomPortalSite): Promise<MashroomPortalSite>;
 
@@ -935,7 +942,7 @@ export interface MashroomPortalAdminService {
 
 ### portal-theme
 
-This plugin types adds a theme to the Portal.
+This plugin type adds a theme to the Portal.
 
 To register a new portal-theme plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
@@ -959,7 +966,7 @@ To register a new portal-theme plugin, create a plugin definition (mashroom.\[js
  * _resourcesRoot_: Folder that contains assets (can be accessed in the theme via *resourcesBasePath*)
  * _views_: The folder with the views. There must exist a view **portal** which renders a portal page
 
-Since *Mashroom Portal* uses the *Express* render mechanism all Template Engines supported by *Express* can be used to define the template.
+Since *Mashroom Portal* uses the *Express* render mechanism, all Template Engines supported by *Express* can be used to define the template.
 The bootstrap returns the template engine and the engine name like so:
 
 ```ts
@@ -1069,7 +1076,7 @@ A typical *portal* view with *Handlebars* might look like this:
 
 The _pageContent_ variable contains the actual content with the Portal layout (see below) and the Apps.
 
-Here all available variables:
+Here are all available variables:
 
 ```ts
 export type MashroomPortalPageRenderModel = {
@@ -1139,7 +1146,7 @@ Important is the class **mashroom-portal-app-area** and a unique id element.
 This plugin type allows it to add extra resources (JavaScript and CSS) to a Portal page based on some (optional) rules.
 This can be used to add polyfills or some analytics stuff without the need to change a theme.
 
-To register a new portal-page-enhancement plugin add this to _package.json_:
+To register a new portal-page-enhancement plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
 ```json
 {
@@ -1258,7 +1265,7 @@ To register a new portal-app-enhancement plugin, create a plugin definition (mas
 }
 ```
 
- * _bootstrap_: Path to the script that contains the bootstrap for the plugin (could be omitted, if portalCustomClientServices is used)
+ * _bootstrap_: Path to the script that contains the bootstrap for the plugin (could be omitted if portalCustomClientServices is used)
  * _portalCustomClientServices_: A map of client services that should be injected in the _clientServices_ object the
   Portal Apps receive. The value (in this example MY_CUSTOM_SERVICE) needs to be an existing global variable on the page (in _window_).
 

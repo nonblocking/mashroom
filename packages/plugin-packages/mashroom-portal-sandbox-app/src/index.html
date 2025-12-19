@@ -63,6 +63,20 @@
                                 { available: false, name: 'Portal App 4', unavailableReason: 'forbidden' }
                             ]);
                         },
+                        loadAppClientBootstrap: function (pluginName) {
+                            const load = new Promise((resolve) => {
+                                const script = document.createElement('script');
+                                script.src = '/dummyAppBundle.js';
+                                script.onload = () => resolve();
+                                document.head.appendChild(script);
+                            });
+                            return load.then(() => {
+                                return {
+                                    instanceId: '1234',
+                                    clientBootstrap: window.startFoo,
+                                };
+                            });
+                        },
                         loadAppSetup: function(pluginName) {
                             if (pluginName === 'Portal App 3') {
                                 return Promise.reject('Not permitted');
@@ -138,6 +152,7 @@
                     },
                     messageBus: masterMessageBus,
                 };
+                window.MashroomPortalServices = portalClientServices;
                 window.startSandboxApp(element, portalAppSetup, portalClientServices);
             });
         })();
