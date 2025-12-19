@@ -3,6 +3,7 @@ import type {MashroomServerConfig} from '@mashroom/mashroom-json-schemas/type-de
 const serverConfig: MashroomServerConfig = {
     name: 'Mashroom Test Server 7',
     port: 5050,
+    xPoweredByHeader: null,
     externalPluginConfigFileNames: ['mashroom'],
     pluginPackageFolders: [
         {

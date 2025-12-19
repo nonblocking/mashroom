@@ -35,9 +35,9 @@ export interface MashroomServerConfig {
    */
   indexPage?: string;
   /**
-   * The x-powered-by to send; null disables the header
+   * The X-Powered-By header to send; null disables the header
    */
-  xPowerByHeader?: string;
+  xPoweredByHeader?: string | null;
   /**
    * The tmp folder for plugin builds and so on
    */

@@ -87,6 +87,15 @@ export default class MashroomServerConfigLoader implements MashroomServerConfigL
             };
         });
 
+        // Consider deprecated "xPowerByHeader" config for backwards compatibility
+        if (config.xPoweredByHeader === defaultConfig.xPoweredByHeader && config.xPowerByHeader) {
+            this._logger.warn('The "xPowerByHeader" config is deprecated, use "xPoweredByHeader" instead');
+            config = {
+                ...config,
+                xPoweredByHeader: config.xPowerByHeader,
+            };
+        }
+
         config = {
             ...config,
             serverRootFolder,

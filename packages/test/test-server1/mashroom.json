@@ -1,6 +1,7 @@
 {
     "$schema": "../../core/mashroom-json-schemas/schemas/mashroom-server-config.json",
     "name": "Mashroom Test Server 1",
+    "xPoweredByHeader": "Mashroom Test Server 1",
     "port": 5050,
     "httpsPort": 5443,
     "tlsOptions": {

@@ -3,6 +3,7 @@
 
 ## [unreleased v3]
 
+ * Core: Renamed server config property *xPowerByHeader* to *xPoweredByHeader* (the deprecated one is still supported for backward-compatibility)
  * Sandbox App: Added the possibility to close the loaded App and to start over
  * Portal: Added support for **import maps**. This is a **new way to share vendor libraries** amongst Microfrontends.
    Currently, this is only supported for *modulesSystem* *SystemJS* because some major browsers do not support dynamically

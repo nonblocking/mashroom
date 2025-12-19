@@ -1379,9 +1379,9 @@
             "type": "string",
             "description": "The start page"
         },
-        "xPowerByHeader": {
-            "type": "string",
-            "description": "The x-powered-by to send; null disables the header"
+        "xPoweredByHeader": {
+            "type": ["string", "null"],
+            "description": "The X-Powered-By header to send; null disables the header"
         },
         "tmpFolder": {
             "type": "string",

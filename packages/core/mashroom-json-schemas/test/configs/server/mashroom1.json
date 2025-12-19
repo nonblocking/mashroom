@@ -2,6 +2,8 @@
     "$schema": "../../../schemas/mashroom-server-config.json",
     "name": "Mashroom Test Server 1",
     "port": 5050,
+    "xPoweredByHeader": "My Server",
+    "trustProxy": true,
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages",

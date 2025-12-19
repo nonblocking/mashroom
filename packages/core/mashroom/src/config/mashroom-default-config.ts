@@ -9,7 +9,7 @@ const config: MashroomServerConfig = {
     httpsPort: null,
     tlsOptions: null,
     trustProxy: 1,
-    xPowerByHeader: 'Mashroom Server',
+    xPoweredByHeader: 'Mashroom Server',
     serverRootFolder: '.',
     tmpFolder: os.tmpdir(),
     externalPluginConfigFileNames: ['mashroom'],

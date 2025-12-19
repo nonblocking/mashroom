@@ -13,8 +13,8 @@ export default class XPoweredByHeaderMiddleware {
     middleware(): RequestHandler {
         return (req, res, next) => {
             const serverConfig = this._pluginContextHolder.getPluginContext().serverConfig;
-            if (serverConfig.xPowerByHeader) {
-                res.setHeader('X-Powered-By', serverConfig.xPowerByHeader);
+            if (serverConfig.xPoweredByHeader) {
+                res.setHeader('X-Powered-By', serverConfig.xPoweredByHeader);
             }
 
             next();
