@@ -60,9 +60,9 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             return null;
         }
 
-        // Check the build manifest for version info
+        // Check the build manifest for version info (only if no scannerHints.packageVersion is set, which probably the docker image version and has precedence)
         let buildManifestVersion: string | undefined;
-        if (remotePackage && definition.buildManifestPath) {
+        if (!scannerHints.packageVersion && remotePackage && definition.buildManifestPath) {
             const buildManifest = await this._fetchRemoteJSON(new URL(definition.buildManifestPath, packageURL));
             if (buildManifest) {
                 buildManifestVersion = buildManifest.version || buildManifest.timestamp;
@@ -90,7 +90,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             }
             meta = {
                 name: scannerHints.packageName ?? packageURL.hostname,
-                version: buildManifestVersion ?? scannerHints.packageVersion ?? String(Date.now()),
+                version: scannerHints.packageVersion ?? buildManifestVersion ?? String(Date.now()),
                 description: null,
                 homepage: null,
                 author: null,
