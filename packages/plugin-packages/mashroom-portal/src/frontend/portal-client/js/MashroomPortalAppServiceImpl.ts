@@ -550,6 +550,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
         const handleError = (error: Error) => {
             console.error(`Error in bootstrap of App '${pluginName}'`, error);
+            this._showLoadingError(loadedApp);
         };
 
         if (!appSetup || appSetup.pluginMissing) {
