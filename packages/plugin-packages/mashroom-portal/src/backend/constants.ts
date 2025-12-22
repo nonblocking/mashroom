@@ -16,7 +16,7 @@ export const PORTAL_APP_RESOURCES_BASE_PATH = '/apps';
 export const PORTAL_APP_RESOURCES_SHARED_PATH = '/___shared___';
 export const PORTAL_APP_REST_PROXY_BASE_PATH = '/proxy';
 
-export const PORTAL_JS_FILE = 'client.js';
+export const PORTAL_JS_FILE = 'portal-client.js';
 export const SYSTEMJS_JS_FILE = 'systemjs.js';
 
 export const DEFAULT_SITE_ID = 'default';

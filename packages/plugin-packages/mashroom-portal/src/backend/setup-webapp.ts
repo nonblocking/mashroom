@@ -117,6 +117,7 @@ export default (pluginRegistry: MashroomPortalPluginRegistryType) => {
     // Client API resources
 
     internalRoutes.get(`/${PORTAL_JS_FILE}`, portalResourcesController.getPortalClient.bind(portalResourcesController));
+    internalRoutes.get(`/${PORTAL_JS_FILE}.map`, portalResourcesController.getPortalClientMap.bind(portalResourcesController));
     internalRoutes.get(`/${SYSTEMJS_JS_FILE}`, portalResourcesController.getSystemJS.bind(portalResourcesController));
 
     // Portal theme resources

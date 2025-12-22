@@ -19,6 +19,11 @@ export default class PortalResourcesController {
         res.sendFile(portalClientBundle);
     }
 
+    async getPortalClientMap(req: Request, res: Response): Promise<void> {
+        const portalClientBundle = path.resolve(__dirname, '../../frontend/portal-client.js.map');
+        res.sendFile(portalClientBundle);
+    }
+
     async getSystemJS(req: Request, res: Response): Promise<void> {
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
 
