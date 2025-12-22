@@ -207,6 +207,10 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
             weight,
             definitionBuilder,
         });
+        // This definition builder might now be able to build definitions of plugin packages
+        (async () => {
+            await this._checkPluginPackagesNoDefinitionBuilderFound();
+        })();
     }
 
     unregisterPluginDefinitionBuilder(definitionBuilder: MashroomPluginPackageDefinitionBuilder) {
@@ -594,7 +598,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         const unloadedPlugins = [...this._pluginsMissingRequirements];
         for (const unloadedPlugin of unloadedPlugins) {
             if (this._pluginsMissingRequirements.indexOf(unloadedPlugin) === -1) {
-                // If the reload of a plugin takes a long time another call of
+                // If the reload of a plugin takes a long time, another call of
                 // __checkPluginsMissingRequirements() could have loaded this already
                 continue;
             }
@@ -645,6 +649,15 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         const packagePath = fileURLToPath(packageURL);
         return this._pluginContextHolder.getPluginContext().serverConfig
             .pluginPackageFolders.some((ppf) => packagePath.indexOf(ppf.path) === 0 && !!ppf.devMode);
+    }
+
+    private async _checkPluginPackagesNoDefinitionBuilderFound() {
+        const potentialPackagesNotDefinition = this._potentialPackages.filter((pp) =>
+            pp.processedOnce && !pp.definitionBuilderName && !pp.plugins);
+        for (const potentialPackage of potentialPackagesNotDefinition) {
+            this._logger.info(`Retrying building definition for package ${potentialPackage.url}`);
+            await this._updatePackage(potentialPackage);
+        }
     }
 
     private async _retryPotentialPackagesWithErrors() {

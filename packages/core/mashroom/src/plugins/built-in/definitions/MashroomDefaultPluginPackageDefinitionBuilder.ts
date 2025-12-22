@@ -52,7 +52,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         }
 
         if (!definition) {
-            this._logger.error(`No plugin definition found in: ${packageURL}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist.`);
+            this._logger.warn(`No default plugin definition found in: ${packageURL}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist. This could be an error our an additional "plugin-package-definition-builder" plugin is required.`);
             return null;
         }
         if (!definition.plugins || !Array.isArray(definition.plugins)) {
@@ -189,7 +189,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             if (result.ok) {
                 return await result.text();
             } else if (result.status === 404) {
-                this._logger.debug(`File not found: ${url}`);
+                this._logger.debug(`Not found: ${url}`);
                 return null;
             } else {
                 throw new Error(`Status code ${result.status}`);
@@ -198,7 +198,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             if (e.message.includes('aborted')) {
                 throw new Error(`Timeout: Connection to ${url} timed out after ${REMOTE_DEFAULT_SOCKET_TIMEOUT_MS}sec`);
             }
-            this._logger.error(`Fetching package.json from ${url} failed!`, e);
+            this._logger.error(`Fetching from ${url} failed!`, e);
             throw e;
         } finally {
             clearTimeout(timeout);

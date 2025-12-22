@@ -90,7 +90,7 @@ export interface MashroomPluginPackageDefinitionBuilderPluginDefinition {
    * Required plugins
    */
   requires?: string[];
-  type: "'plugin-package-definition-builder";
+  type: "plugin-package-definition-builder";
   /**
    * Script that exports MashroomPluginLoaderPluginBootstrapFunction
    */

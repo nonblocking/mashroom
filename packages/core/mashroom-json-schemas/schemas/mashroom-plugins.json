@@ -350,7 +350,7 @@
                     "description": "Required plugins"
                 },
                 "type": {
-                    "const": "'plugin-package-definition-builder"
+                    "const": "plugin-package-definition-builder"
                 },
                 "bootstrap": {
                     "$ref": "#/definitions/PackageRelativePath",

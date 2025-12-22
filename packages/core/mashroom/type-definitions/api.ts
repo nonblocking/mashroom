@@ -320,6 +320,8 @@ export type MashroomPotentialPluginPackage = {
 export type MashroomPluginScannerHints = {
     readonly packageName?: string;
     readonly packageVersion?: string;
+    // The path to the plugin definition (e.g., mashroom.json) if it deviates from the commonly known ones
+    readonly pluginDefinitionPath?: string;
     readonly [key: string]: any;
 }
 
