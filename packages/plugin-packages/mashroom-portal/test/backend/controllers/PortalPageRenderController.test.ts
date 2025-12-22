@@ -350,7 +350,7 @@ describe('PortalPageRenderController', () => {
                 expect(body).toBeTruthy();
                 expect(body).toContain('<title>Server - Default Site - Test Page</title>');
                 expect(body).toContain('window[\'MashroomPortalApiPath\'] = \'/portal/web/___/api\';');
-                expect(body).toContain('<script src="/portal/web/___/client.js?');
+                expect(body).toContain('<script src="/portal/web/___/portal-client.js?');
                 expect(body).toContain('var portalAppService = MashroomPortalServices.portalAppService;');
                 expect(body).toContain('portalAppService.loadApp(\'app-area1\', \'Mashroom Welcome Portal App\', \'ABCDEF\', null, null);');
                 expect(body).toContain('portalAppService.loadApp(\'mashroom-portal-admin-app-container\', \'admin-portal-app\', null, null, null);');
@@ -442,7 +442,7 @@ describe('PortalPageRenderController', () => {
                     expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalPageId\'] = \'test-page\'');
                     expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalLanguage\'] = \'en\'');
                     expect(portalModel.portalResourcesHeader).toContain('window[\'MashroomPortalAppWrapperTemplate\'] = \'<div class="wrapper">???</div>\'');
-                    expect(portalModel.portalResourcesHeader).toContain('<script src="/portal/web/___/client.js');
+                    expect(portalModel.portalResourcesHeader).toContain('<script src="/portal/web/___/portal-client.js');
                     expect(portalModel.portalResourcesHeader).toContain('<script data-mashroom-ssr-head-script="1">alert("foo")</script>');
 
                     expect(portalModel.portalResourcesFooter).toContain('window[\'MashroomPortalPreloadedAppSetup\'] =');
