@@ -46,7 +46,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             return null;
         }
 
-        let definition = await this._readExternalPluginConfigFile(packageURL);
+        let definition = await this._readExternalPluginConfigFile(packageURL, scannerHints);
         if (!definition && packageJson?.mashroom) {
             definition = packageJson.mashroom;
         }
@@ -128,7 +128,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         return packageJSON;
     }
 
-    private async _readExternalPluginConfigFile(url: URL): Promise<MashroomPluginPackageDefinition | null> {
+    private async _readExternalPluginConfigFile(url: URL, scannerHints: MashroomPluginScannerHints): Promise<MashroomPluginPackageDefinition | null> {
         if (url.protocol === 'file:') {
             const pluginPackagePath = fileURLToPath(url);
 
@@ -145,22 +145,36 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             return await configFileUtils.loadConfigFile(externalPluginConfigFile);
         }
 
-        for (const externalPluginConfigFileName of this._externalPluginConfigFileNames) {
+        const knownExternalPluginConfigPaths = [];
+
+        // For remote app there might be a hint where to look for the external plugin config file
+        const externalPluginConfigPatHint = scannerHints['mashroom-server.com/remote-plugins-definition-path'];
+        if (externalPluginConfigPatHint) {
+            knownExternalPluginConfigPaths.push(externalPluginConfigPatHint);
+        }
+
+        this._externalPluginConfigFileNames.forEach((cfn) => {
+            knownExternalPluginConfigPaths.push(`/${cfn}.json`);
+            knownExternalPluginConfigPaths.push(`/${cfn}.yaml`);
+        });
+
+        this._logger.info(`Config file path candidates for ${url}: ${knownExternalPluginConfigPaths.join(', ')}`);
+
+        for (const externalPluginConfigPath of knownExternalPluginConfigPaths) {
             try {
-                let pluginDefinition = await this._fetchRemoteJSON(new URL(`${externalPluginConfigFileName}.json`, url));
-                if (!pluginDefinition) {
-                    // Try YAML
-                    const config = await this._fetchRemoteConfig(new URL(`${externalPluginConfigFileName}.yaml`, url));
-                    if (config) {
-                        pluginDefinition = configFileUtils.fromYaml(config);
+                let pluginDefinitionStr = await this._fetchRemoteConfig(new URL(externalPluginConfigPath, url));
+                if (pluginDefinitionStr) {
+                    let pluginDefinition;
+                    if (externalPluginConfigPath.endsWith('.yaml')) {
+                        pluginDefinition = configFileUtils.fromYaml(pluginDefinitionStr);
+                    } else {
+                        pluginDefinition = JSON.parse(pluginDefinitionStr);
                     }
-                }
-                if (pluginDefinition) {
                     delete pluginDefinition.devModeBuildScript;
                     return pluginDefinition;
                 }
             } catch (e) {
-                this._logger.warn(`Fetching external plugin config file ${externalPluginConfigFileName}.json from ${url} failed!`, e);
+                this._logger.warn(`Fetching external plugin config file ${externalPluginConfigPath}.json from ${url} failed!`, e);
             }
         }
 

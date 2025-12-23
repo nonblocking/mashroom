@@ -250,6 +250,55 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         });
     });
 
+    it('reads the plugin definition from a custom file name from a remote host', async () => {
+        const remoteHost = new URL('http://my-remote-app.io:6068');
+
+        nock(remoteHost.toString())
+            .get('/package.json')
+            .reply(200, {
+                name: 'test2',
+                version: '2.1.1',
+            });
+        nock(remoteHost.toString())
+            .get('/my-custom-plugin-definition-file-name.json')
+            .reply(200, pluginsDefinition);
+
+        const pluginDefinitionBuilder = new MashroomDefaultPluginPackageDefinitionBuilder({
+            externalPluginConfigFileNames: ['mashroom']
+        } as any, loggingUtils.dummyLoggerFactory);
+
+        const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {
+            'mashroom-server.com/remote-plugins-definition-path': '/my-custom-plugin-definition-file-name.json'
+        });
+
+        expect(pluginPackageDefinitions?.length).toBe(1);
+        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].definition).toEqual({
+            plugins: [
+                {
+                    bootstrap: './dist/mashroom-bootstrap.js',
+                    defaultConfig: {
+                        foo: 'bar'
+                    },
+                    name: 'Plugin 1',
+                    type: 'web-app'
+                },
+                {
+                    bootstrap: './dist/mashroom-bootstrap2.js',
+                    dependencies: [
+                        'foo-services'
+                    ],
+                    name: 'Plugin 2',
+                    type: 'plugin-loader'
+                },
+            ]
+        });
+        expect(pluginPackageDefinitions![0].meta).toEqual({
+            name: 'test2',
+            version: '2.1.1'
+        });
+    });
+
     it('reads the version from the build manifest on a remote host', async () => {
         const remoteHost = new URL('http://my-remote-app2.io:6068');
 
