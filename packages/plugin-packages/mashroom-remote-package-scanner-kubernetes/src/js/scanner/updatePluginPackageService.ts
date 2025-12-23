@@ -52,6 +52,7 @@ export default (service: KubernetesService, previousUrl: URL | undefined, logger
             context.scannerCallback?.addOrUpdatePackageURL(service.url, {
                 packageName: service.name,
                 packageVersion: highestImageVersion,
+                ...service.annotations,
             });
             service.lastModified = Date.now();
         }

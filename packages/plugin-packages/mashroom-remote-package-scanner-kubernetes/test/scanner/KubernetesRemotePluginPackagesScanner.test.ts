@@ -18,8 +18,15 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
     beforeEach(() => {
         context.watchedNamespaces = [];
-        context.services = [];
-        context.runningPods = [];
+        context.services = [{
+            name: 'existing-service',
+            uid: '1212323',
+        } as any];
+        context.runningPods = [{
+            name: 'existing-pod',
+            uid: '222222',
+            labels: [],
+        } as any];
         scannerCallback.addOrUpdatePackageURL.mockReset();
         scannerCallback.removePackageURL.mockReset();
         mockKubernetesConnector.watchNamespaces.mockReset();
@@ -35,6 +42,10 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
                     uid: '1',
                     name: 'my-remote-app',
                     namespace: 'dev-namespace2',
+                    annotations: {
+                        'mashroom-server.com/remote-plugins': 'true',
+                        'mashroom-server.com/remote-plugins-definition-path': '/mashroom.json'
+                    }
                 },
                 spec: {
                     selector: {
@@ -80,9 +91,9 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await scanner.start();
 
-        expect(context.services.length).toBe(1);
+        expect(context.services.length).toBe(2);
 
-        const service = context.services[0];
+        const service = context.services[1];
         expect(service.namespace).toBe('dev-namespace2');
         expect(service.name).toBe('my-remote-app');
         expect(service.error).toBeFalsy();
@@ -92,6 +103,8 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
         expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][1]).toEqual({
             packageName: 'my-remote-app',
             packageVersion: '1.0.0',
+            'mashroom-server.com/remote-plugins': 'true',
+            'mashroom-server.com/remote-plugins-definition-path': '/mashroom.json'
         });
         expect(mockKubernetesConnector.watchNamespaces).toHaveBeenCalledTimes(0);
         expect(mockKubernetesConnector.watchServices).toHaveBeenCalledTimes(1);
@@ -173,9 +186,9 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await scanner.start();
 
-        expect(context.services.length).toBe(1);
+        expect(context.services.length).toBe(2);
 
-        const service = context.services[0];
+        const service = context.services[1];
         expect(service.namespace).toBe('dev-namespace2');
         expect(service.name).toBe('my-remote-app');
         expect(service.error).toBeFalsy();
@@ -253,9 +266,9 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await scanner.start();
 
-        expect(context.services.length).toBe(1);
+        expect(context.services.length).toBe(2);
 
-        const service = context.services[0];
+        const service = context.services[1];
         expect(service.namespace).toBe('dev-namespace1');
         expect(service.name).toBe('my-remote-app');
 
@@ -295,6 +308,7 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
             uid: '1',
             name: 'my-remote-app',
             namespace: 'dev-namespace1',
+            annotations: {},
             targetPort: '8088',
             url: new URL('http://my-remote-app.dev-namespace1:6066'),
             selector: {},
@@ -310,7 +324,7 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await scanner.start();
 
-        expect(context.services.length).toBe(0);
+        expect(context.services.length).toBe(1);
 
         expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
         expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace1:6066/');
@@ -348,6 +362,7 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
             uid: '1',
             name: 'my-remote-app',
             namespace: 'dev-namespace1',
+            annotations: {},
             targetPort: '8088',
             url: new URL('http://my-remote-app.dev-namespace1:6066'),
             selector: {
@@ -375,7 +390,7 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await scanner.start();
 
-        expect(context.services.length).toBe(1);
+        expect(context.services.length).toBe(2);
 
         expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
         expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace1:6066/');
@@ -437,8 +452,8 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await scanner.start();
 
-        expect(context.services.length).toBe(1);
-        expect(context.services[0].url?.toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
+        expect(context.services.length).toBe(2);
+        expect(context.services[1].url?.toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
 
         watchCb!('MODIFIED', {
             metadata: {
@@ -462,8 +477,8 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         await new Promise((resolve) => setTimeout(resolve, 500));
 
-        expect(context.services.length).toBe(1);
-        expect(context.services[0].url?.toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
+        expect(context.services.length).toBe(2);
+        expect(context.services[1].url?.toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
 
         expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
         expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');

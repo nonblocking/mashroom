@@ -22,6 +22,7 @@ describe('updatePluginPackageService', () => {
             uid: '123',
             name: 'service1',
             namespace: 'namespace1',
+            annotations: {},
             targetPort: '1234',
             url: new URL('http://service1.namespace1:8080'),
             selector: {
@@ -49,6 +50,7 @@ describe('updatePluginPackageService', () => {
             uid: '123',
             name: 'service1',
             namespace: 'namespace1',
+            annotations: {},
             targetPort: '1234',
             url: new URL('http://service1.namespace1:8080'),
             selector: {
@@ -77,6 +79,7 @@ describe('updatePluginPackageService', () => {
             uid: '123',
             name: 'service1',
             namespace: 'namespace1',
+            annotations: {},
             targetPort: '1234',
             url: new URL('http://service1.namespace1:8080'),
             selector: {
@@ -118,6 +121,7 @@ describe('updatePluginPackageService', () => {
             uid: '123',
             name: 'service1',
             namespace: 'namespace1',
+            annotations: {},
             targetPort: '1234',
             url: new URL('http://service1.namespace1:8080'),
             selector: {
@@ -173,6 +177,7 @@ describe('updatePluginPackageService', () => {
             uid: '123',
             name: 'service1',
             namespace: 'namespace1',
+            annotations: {},
             targetPort: '1234',
             url: new URL('http://service1.namespace1:8080'),
             selector: {

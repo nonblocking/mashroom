@@ -14,17 +14,18 @@ export default (serviceNameFilter: RegExp, logger: MashroomLogger): KubernetesWa
         return;
     }
 
-    const {name, namespace} = service.metadata;
+    const {name, namespace, annotations = {}} = service.metadata;
 
     if (event === 'ADDED' || event === 'MODIFIED') {
         logger.debug(`Kubernetes Service added or modified: ${service.metadata.name}, namespace: ${namespace}`);
 
-        let kubernetesService = context.services.find((service) => service.uid === service.uid);
+        let kubernetesService = context.services.find((existingService) => existingService.uid === service.metadata?.uid);
         if (!kubernetesService) {
             kubernetesService = {
                 uid: service.metadata.uid ?? service.metadata.name,
                 name,
                 namespace,
+                annotations,
                 firstSeen: Date.now(),
                 targetPort: undefined,
                 url: undefined,
@@ -68,7 +69,7 @@ export default (serviceNameFilter: RegExp, logger: MashroomLogger): KubernetesWa
     } else if (event === 'DELETED') {
         logger.debug(`Kubernetes Service removed: ${service.metadata.name}, namespace: ${namespace}`);
 
-        const kubernetesService = context.services.find((service) => service.uid === service.uid);
+        const kubernetesService = context.services.find((existingService) => existingService.uid === service.metadata?.uid);
         if (kubernetesService) {
             removePluginPackageService(kubernetesService, logger);
         }

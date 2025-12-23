@@ -17,7 +17,7 @@ export default (logger: MashroomLogger): KubernetesWatchCallback<V1Pod> => (even
     if (event === 'ADDED' || event === 'MODIFIED') {
         logger.debug(`Kubernetes Pod added or modified: ${pod.metadata.name}, namespace: ${pod.metadata.namespace}`);
 
-        let kubernetesPod = context.runningPods.find((pod) => pod.uid === pod.uid);
+        let kubernetesPod = context.runningPods.find((existingPod) => existingPod.uid === pod.metadata?.uid);
         if (!kubernetesPod) {
             const containers: Array<KubernetesContainer> = [];
             if (pod.spec?.containers) {
@@ -53,7 +53,7 @@ export default (logger: MashroomLogger): KubernetesWatchCallback<V1Pod> => (even
     } else if (event === 'DELETED') {
         logger.debug(`Kubernetes Pod removed: ${pod.metadata.name}, namespace: ${pod.metadata.namespace}`);
 
-        const kubernetesPod = context.runningPods.find((pod) => pod.uid === pod.uid);
+        const kubernetesPod = context.runningPods.find((existingPid) => existingPid.uid === pod.metadata?.uid);
         if (kubernetesPod) {
             context.runningPods = context.runningPods.filter((p) => p.uid !== kubernetesPod.uid);
 

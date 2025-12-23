@@ -26,6 +26,7 @@ export type KubernetesService = {
     readonly uid: string;
     readonly name: string;
     readonly namespace: string | undefined;
+    readonly annotations: Record<string, string>;
     readonly firstSeen: number;
     targetPort: string | undefined;
     url: URL | undefined;

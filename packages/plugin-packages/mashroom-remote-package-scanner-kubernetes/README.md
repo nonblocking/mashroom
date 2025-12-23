@@ -9,7 +9,8 @@ It *watches* Kubernetes namespaces and services with given labels which will be 
 It also watches Pods for new image versions and removes plugin packages if no running Pod can be found.
 
 > [!IMPORTANT]
-> A remote plugin package **must** expose a */mashroom.json* file and/or a */package.json* file containing the plugin description.
+> A remote plugin package **must** expose a definition file, typically */mashroom.json*.
+> You can use a *mashroom-server.com/remote-plugins-definition-path* annotation on the K8S service to tell Mashroom where to find it.
 
 Currently, only the following plugin types are known to be supported:
 
@@ -23,7 +24,6 @@ Currently, only the following plugin types are known to be supported:
 If *node_modules/@mashroom* is configured as a plugin path, add **@mashroom/mashroom-remote-package-scanner-kubernetes** as *dependency*.
 
 You can override the default config in your Mashroom server config like this:
-
 
 ```json
 {
@@ -57,6 +57,16 @@ Select all services with the label *microfrontend=true* and not label *channel=a
     }
 }
 ```
+
+## Annotations
+
+You can use annotations on Kubernetes services to help Mashroom to understand the setup:
+
+| Annotation                                         | Description                                                                                                                                                           | Default                        |
+|----------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------|
+| mashroom-server.com/remote-plugins-definition-path | The path of the plugins definition                                                                                                                                    | /mashroom.json, /mashroom.yaml |
+| open-microfrontends.org/microfrontends             | The server actually contains OpenMicrofrontend compliant Apps, requires [mashroom-portal-open-microfrontends-support](../mashroom-portal-open-microfrontends-support) |                                |
+| open-microfrontends.org/description-path           | The path of the OpenMicrofrontends description                                                                                                                        | /microfrontends.yaml           |
 
 ## Setup Kubernetes access
 
