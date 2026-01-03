@@ -49,7 +49,7 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
             }
         }
 
-        if (webapp) {
+        if (webapp && process.env.NODE_ENV !== 'test') {
             // Express sets some defaults on webapps that override the parent ones,
             // see https://github.com/expressjs/express/issues/2552
             webapp.disable('x-powered-by');
