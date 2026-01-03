@@ -49,9 +49,13 @@ export default class MashroomWebAppPluginLoader extends ExpressRequestHandlerBas
             }
         }
 
-        if (webapp && typeof (webapp.disable) === 'function') {
+        if (webapp) {
+            // Express sets some defaults on webapps that override the parent ones,
+            // see https://github.com/expressjs/express/issues/2552
             webapp.disable('x-powered-by');
+            webapp.set('trust proxy', contextHolder.getPluginContext().serverConfig.trustProxy);
         }
+
         return webapp;
     }
 
