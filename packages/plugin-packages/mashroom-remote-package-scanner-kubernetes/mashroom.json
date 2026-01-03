@@ -30,6 +30,7 @@
             ],
             "target": "Mashroom Remote Package Scanner Kubernetes Admin Webapp",
             "defaultConfig": {
+                "order": 100,
                 "menuTitle": "Remote Plugin Packages K8S",
                 "path": "/remote-plugin-packages-kubernetes"
             }

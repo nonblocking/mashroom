@@ -1,0 +1,11 @@
+{
+    "name": "minimal-remote-portal-app",
+    "version": "1.0.0",
+    "private": true,
+    "dependencies": {
+        "http-server": "^14.1.1"
+    },
+    "scripts": {
+        "start": "http-server public -p 8008"
+    }
+}

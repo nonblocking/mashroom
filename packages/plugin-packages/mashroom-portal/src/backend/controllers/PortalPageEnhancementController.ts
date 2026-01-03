@@ -24,32 +24,28 @@ export default class PortalPageEnhancementController {
             return;
         }
 
-        const resourceJs = plugin.pageResources && plugin.pageResources.js && plugin.pageResources.js.find((res) => res.path === resourcePath);
-        const resourceCss = plugin.pageResources && plugin.pageResources.css && plugin.pageResources.css.find((res) => res.path === resourcePath);
+        const resourceJs = plugin.pageResources && plugin.pageResources.js && plugin.pageResources.js.find(
+            (res) => res.path === resourcePath || `${res.path}.map` === resourcePath);
+        const resourceCss = plugin.pageResources && plugin.pageResources.css && plugin.pageResources.css.find(
+            (res) => res.path === resourcePath || `${res.path}.map` === resourcePath);
         if (!resourceJs && !resourceCss) {
             logger.error(`Request for unknown resource '${resourcePath}' of page enhancement plugin: ${pluginName}`);
             res.sendStatus(404);
             return;
         }
 
-        await this._sendResource(resourceJs || resourceCss, plugin, req, res);
+        await this._sendResource(resourcePath, plugin, req, res);
     }
 
-    private async _sendResource(resource: MashroomPortalPageEnhancementResource | undefined,
-                               plugin: MashroomPortalPageEnhancement, req: Request, res: Response) {
+    private async _sendResource(resourcePath: string, plugin: MashroomPortalPageEnhancement, req: Request, res: Response) {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
-
-        if (!resource || !resource.path) {
-            res.sendStatus(404);
-            return;
-        }
 
         if (cacheControlService) {
             cacheControlService.addCacheControlHeader('SHARED', req, res);
         }
 
-        const resourceUri = `${plugin.resourcesRootUri}/${resource.path}`;
+        const resourceUri = `${plugin.resourcesRootUrl}/${resourcePath}`;
         logger.debug(`Sending page enhancement resource: ${resourceUri}`);
 
         try {

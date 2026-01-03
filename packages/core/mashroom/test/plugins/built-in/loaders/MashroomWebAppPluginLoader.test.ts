@@ -65,7 +65,7 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL(pluginPackagePath),
+            pluginPackageUrl: pathToFileURL(pluginPackagePath),
         };
 
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
@@ -103,7 +103,7 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL(pluginPackagePath),
+            pluginPackageUrl: pathToFileURL(pluginPackagePath),
         };
 
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
@@ -143,7 +143,7 @@ describe('MashroomWebAppPluginLoader', () => {
         };
 
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL(pluginPackagePath),
+            pluginPackageUrl: pathToFileURL(pluginPackagePath),
         };
         const plugin = new MashroomPlugin(pluginDefinition, pluginPackage, loggingUtils.dummyLoggerFactory);
 

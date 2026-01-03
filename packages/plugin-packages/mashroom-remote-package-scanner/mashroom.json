@@ -47,6 +47,7 @@
             ],
             "target": "Mashroom Remote Package Scanner Admin Webapp",
             "defaultConfig": {
+                "order": 1000,
                 "menuTitle": "Remote Plugin Packages",
                 "path": "/remote-plugin-packages"
             }

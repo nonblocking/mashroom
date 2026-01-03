@@ -76,7 +76,7 @@ export default ({sbAutoTest, onConfigSubmit}: Props) => {
             width,
             lang,
             permissions,
-            appConfig
+            appConfig,
         }), width);
     }, [selectedPortalApp, onConfigSubmit]);
 

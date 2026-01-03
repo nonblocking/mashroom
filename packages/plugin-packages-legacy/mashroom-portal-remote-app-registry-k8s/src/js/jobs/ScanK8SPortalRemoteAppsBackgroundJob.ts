@@ -104,9 +104,9 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob {
                                 } else {
                                     service.error = null;
                                     if (existingService && existingService.url.toString() !== service.url.toString()) {
-                                        context.scannerCallback?.removePackageURL(existingService.url);
+                                        context.scannerCallback?.removePackageUrl(existingService.url);
                                     }
-                                    context.scannerCallback?.addOrUpdatePackageURL(service.url);
+                                    context.scannerCallback?.addOrUpdatePackageUrl(service.url);
                                 }
                             }
                         }
@@ -126,7 +126,7 @@ export default class ScanK8SPortalRemoteAppsBackgroundJob {
             const serviceRemoved = namespaceServiceScanFailures.indexOf(service.namespace) === -1;
             if (serviceNamespaceRemoved || serviceRemoved) {
                 context.services.splice(context.services.indexOf(service), 1);
-                context.scannerCallback?.removePackageURL(service.url);
+                context.scannerCallback?.removePackageUrl(service.url);
             }
         });
 

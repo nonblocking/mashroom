@@ -8,8 +8,8 @@ describe('RefreshPortalRemoteAppsBackgroundJob', () => {
     it('refreshes endpoints correctly', async () => {
         const mockUpdateOne = jest.fn();
         const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
+            addOrUpdatePackageUrl: jest.fn(),
+            removePackageUrl: jest.fn()
         };
         context.scannerCallback = scannerCallback;
 
@@ -44,8 +44,8 @@ describe('RefreshPortalRemoteAppsBackgroundJob', () => {
         await backgroundJob.run();
 
         expect(mockUpdateOne).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
     });
 
 });

@@ -3,6 +3,35 @@
 
 ## [unreleased v3]
 
+ * Portal: Added new plugin type *portal-app-config*.
+   This plugin can be used to (re-)configure one or many Portal Apps and to adapt:
+   * The proxy target URL
+   * The headers for proxy requests (e.g., to add some API key)
+   * The headers for SSR requests
+   * The actual user permissions (if they are not simply role-based but derived from some other source)
+   * The *importMap* of Portal Apps, which can be used to make sure all Apps share the same vendor libraries
+   Example:
+   ```ts
+   const plugin1: MashroomPortalAppConfigPlugin = {
+     applyTo(portalAppName: string) {
+       return portalAppName === 'My Microfrontend with a BFF that requires an API Key';
+     },
+     addProxyRequestHeaders(portalApp, proxyId) {
+       if (proxyId === 'bff') {
+         return {
+           'x-api-key': '123456',
+         };
+       }
+     },
+   }
+   ```
+ * Portal: Added native support for [OpenMicrofrontends](https://open-microfrontends.org) compliant remote Portal Apps.
+   This means Mashroom Portal can now register any Microfrontends that expose an *OpenMicrofrontends* description, and you can add it to any page.
+   To try it out:
+    * Run *packages/test/test-server1*
+    * Start any of the *Microfrontends* [here](https://github.com/Open-Microfrontends/open-microfrontends-examples)
+    * Open http://localhost:5050/mashroom/admin/ext/remote-plugin-packages and paste the server URL of the Microfrontend into the form
+    * Add the OpenMicrofrontends example to any Portal page
  * Core: Renamed server config property *xPowerByHeader* to *xPoweredByHeader* (the deprecated one is still supported for backward-compatibility)
  * Sandbox App: Added the possibility to close the loaded App and to start over
  * Portal: Added support for **import maps**. This is a **new way to share vendor libraries** amongst Microfrontends.

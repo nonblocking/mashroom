@@ -50,6 +50,7 @@
             ],
             "target": "Mashroom Portal Remote App Kubernetes Admin Webapp",
             "defaultConfig": {
+                "order": 100,
                 "menuTitle": "Remote Portal Apps (K8S)",
                 "path": "/remote-portal-apps-k8s"
             }

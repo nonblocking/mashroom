@@ -10,7 +10,7 @@ describe('PortalAppPluginLoader', () => {
 
     it('loads and registers a Portal App v2', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/foo/bar'),
+            pluginPackageUrl: pathToFileURL('/foo/bar'),
         };
         const pluginDefinition: MashroomPlugins['plugins'][0] = {
             name: 'Portal App 1',
@@ -106,7 +106,7 @@ describe('PortalAppPluginLoader', () => {
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform !== 'win32') {
-            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+            expect(registry.portalApps[0].resourcesRootUrl).toBe('file:///foo/bar/dist');
         }
         expect(registry.portalApps[0].description).toEqual({
             en: 'my description',
@@ -134,7 +134,7 @@ describe('PortalAppPluginLoader', () => {
 
     it('loads and registers a minimal Portal App v2', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/foo/bar'),
+            pluginPackageUrl: pathToFileURL('/foo/bar'),
         };
         const pluginDefinition: MashroomPlugins['plugins'][0] = {
             name: 'Portal App 1',
@@ -174,7 +174,7 @@ describe('PortalAppPluginLoader', () => {
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform !== 'win32') {
-            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+            expect(registry.portalApps[0].resourcesRootUrl).toBe('file:///foo/bar/dist');
         }
         expect(registry.portalApps[0].resources).toEqual({moduleSystem: 'none', js: ['bundle.js']});
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
@@ -184,7 +184,7 @@ describe('PortalAppPluginLoader', () => {
 
     it('loads and registers a Portal App v2 with a BFF proxy', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: 'http://my-microfrontend.my-company.com', // A BFF makes only sense for a remote plugin
+            pluginPackageUrl: 'http://my-microfrontend.my-company.com', // A BFF makes only sense for a remote plugin
         };
         const pluginDefinition: MashroomPlugins['plugins'][0] = {
             name: 'Portal App 1',
@@ -240,7 +240,7 @@ describe('PortalAppPluginLoader', () => {
 
     it('loads and registers a Portal App v2 with an import map', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/foo/bar'),
+            pluginPackageUrl: pathToFileURL('/foo/bar'),
         };
         const pluginDefinition: MashroomPlugins['plugins'][0] = {
             name: 'Portal App 1',
@@ -303,7 +303,7 @@ describe('PortalAppPluginLoader', () => {
 
     it('auto-detects the moduleSystem if the js resource extension is mjs', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/foo/bar'),
+            pluginPackageUrl: pathToFileURL('/foo/bar'),
         };
         const pluginDefinition: MashroomPlugins['plugins'][0] = {
             name: 'Portal App 1',
@@ -355,7 +355,7 @@ describe('PortalAppPluginLoader', () => {
 
     it('processed remote Portal Apps in the root path', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: new URL('https://my-microfrontend.com'),
+            pluginPackageUrl: new URL('https://my-microfrontend.com'),
         };
         const pluginDefinition: MashroomPlugins['plugins'][0] = {
             name: 'Portal App 1',
@@ -404,7 +404,7 @@ describe('PortalAppPluginLoader', () => {
         await loader.load(appPlugin, config, context);
 
         expect(registry.portalApps.length).toBe(1);
-        expect(registry.portalApps[0].resourcesRootUri).toBe('https://my-microfrontend.com/public');
+        expect(registry.portalApps[0].resourcesRootUrl).toBe('https://my-microfrontend.com/public');
         expect(registry.portalApps[0].clientBootstrap).toEqual('startApp');
         expect(registry.portalApps[0].defaultAppConfig).toEqual({firstName: 'John'});
     });
@@ -412,7 +412,7 @@ describe('PortalAppPluginLoader', () => {
     // Only for backward compatibility
     it('loads and registers a Portal App v1', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/foo/bar'),
+            pluginPackageUrl: pathToFileURL('/foo/bar'),
         };
         const pluginDefinition = {
             name: 'Portal App 1',
@@ -486,7 +486,7 @@ describe('PortalAppPluginLoader', () => {
 
         expect(registry.portalApps.length).toBe(1);
         if (process.platform !== 'win32') {
-            expect(registry.portalApps[0].resourcesRootUri).toBe('file:///foo/bar/dist');
+            expect(registry.portalApps[0].resourcesRootUrl).toBe('file:///foo/bar/dist');
         }
         expect(registry.portalApps[0].description).toBe('my description');
         expect(registry.portalApps[0].title).toEqual('Portal App 1');

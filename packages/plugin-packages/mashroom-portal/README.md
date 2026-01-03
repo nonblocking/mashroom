@@ -133,6 +133,11 @@ export interface MashroomPortalService {
     getPortalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>>;
 
     /**
+     * Get all registered portal app config plugins
+     */
+    getPortalAppConfigs(): Readonly<Array<MashroomPortalAppConfig>>;
+
+    /**
      * Get all sites
      */
     getSites(limit?: number): Promise<Array<MashroomPortalSite>>;
@@ -676,6 +681,17 @@ export interface MashroomPortalAppService {
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
 
     /**
+     * Register a bootstrap adapter.
+     * This can be used to start Apps with non-compliant client bootstraps.
+     */
+    registerClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
+     * Unregister a bootstrap adapter.
+     */
+    unregisterClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
      * Load the setup for a given App / plugin name on the current page
      */
     loadAppSetup(pluginName: string, instanceId: string | null | undefined): Promise<MashroomPortalAppSetup>;
@@ -1179,9 +1195,9 @@ To register a new portal-page-enhancement plugin, create a plugin definition (ma
  * _bootstrap_: Path to the script that contains the bootstrap for the plugin (optional)
  * _resourcesRoot_: The root for all resources (can be a local path or an HTTP url)
  * _pageResources_: A list of JavaScript and CSS resources that should be added to all portal pages.
-   They can be static or dynamically generated. And they can be added to the header or footer (location)
+   They can be statically or dynamically generated. And they can be added to the header or footer (location)
    and also be inlined. The (optional) rule property refers to a rule in the instantiated plugin (bootstrap), see below.
- * _defaultConfig.order_: The weight of the resources - the higher it is the **later** they will be added to the page (Default: 1000)
+ * _defaultConfig.order_: The order of the resources - the higher it is, the **later** they will be added to the page (Default: 1000)
 
 The bootstrap returns a map of rules and could look like this:
 
@@ -1246,7 +1262,7 @@ export default bootstrap;
 
 This plugin type allows it to update or rewrite the _portalAppSetup_ that is passed to Portal Apps at startup.
 This can be used to add extra config or user properties from a context.
-Additionally, this plugin allows it to pass extra _clientServices_ to Portal Apps or replace one of the default ones.
+Additionally, this plugin allows it passing extra _clientServices_ to Portal Apps or replace one of the default ones.
 
 To register a new portal-app-enhancement plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
 
@@ -1290,5 +1306,77 @@ export interface MashroomPortalAppEnhancementPlugin {
      * Enhance the portalAppSetup object passed as the first argument (if necessary)
      */
     enhancePortalAppSetup: (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, request: Request) => Promise<MashroomPortalAppSetup>;
+}
+```
+
+### portal-app-config
+
+This plugin type allows it to adapt the Portal App configuration in particular how the communication with its backends.
+
+To register a new portal-app-config plugin, create a plugin definition (mashroom.\[json,ts,js,yaml\]) like this:
+
+```json
+{
+    "plugins": [
+        {
+            "name": "My Portal App Config",
+            "type": "portal-app-config",
+            "bootstrap": "./dist/mashroom-bootstrap.js",
+            "defaultConfig": {
+            }
+        }
+    ]
+}
+```
+
+* _bootstrap_: Path to the script that contains the bootstrap for the plugin
+* _defaultConfig.order_: The order of the plugin - the higher it is the less likely it will be considered (Default: 1000)
+
+The bootstrap returns the actual config plugin:
+
+```ts
+import type {MashroomPortalAppConfigPluginBootstrapFunction} from '@mashroom/mashroom-portal/type-definitions';
+
+const bootstrap: MashroomPortalAppConfigPluginBootstrapFunction = () => {
+    return new MyPortalAppConfigPlugin();
+};
+
+export default bootstrap;
+```
+
+The plugin has to implement the following interface:
+
+```ts
+export interface MashroomPortalAppConfigPlugin {
+    /**
+     * Return true if the config should be applied to the given Portal App
+     */
+    applyTo(portalAppName: string): boolean;
+    /**
+     * Overwrite the targetUrl for a given proxyId.
+     * Returning undefined keeps the original.
+     */
+    overwriteProxyTargetUrl?(portalApp: MashroomPortalApp, proxyId: string, request: Request): string | undefined;
+
+    /**
+     * Add (security) headers to outgoing proxy requests.
+     */
+    addProxyRequestHeaders?(portalApp: MashroomPortalApp, proxyId: string, request: Request): Record<string, string> | undefined;
+
+    /**
+     * Add (security) headers to SSR route requests.
+     */
+    addSSRRouteRequestHeaders?(portalApp: MashroomPortalApp, request: Request): Record<string, string>;
+
+    /**
+     * Determine the actual rolePermissions for the Portal App.
+     */
+    determineRolePermissions?(portalApp: MashroomPortalApp, user: MashroomSecurityUser  | null, request: Request): Promise<Record<string, boolean> | undefined>;
+
+    /**
+     * Rewrite Portal App import map.
+     * This can be used to make sure all Portal Apps use the same vendor library or change the location of vendor libraries.
+     */
+    rewriteImportMap?(portalApp: MashroomPortalApp, request: Request): MashroomPortalAppResources['importMap'];
 }
 ```

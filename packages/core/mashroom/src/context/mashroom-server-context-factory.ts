@@ -153,7 +153,7 @@ const addBuiltInPlugins = (pluginRegistry: MashroomPluginRegistryType, expressAp
     pluginRegistry.registerPluginLoader('services', new MashroomServicePluginLoader(serviceRegistry, loggerFactory));
     pluginRegistry.registerPluginLoader('admin-ui-integration', new MashroomAdminUIIntegrationLoader(loggerFactory));
 
-    pluginRegistry.registerPluginDefinitionBuilder(0, new MashroomDefaultPluginPackageDefinitionBuilder(serverConfig, loggerFactory));
+    pluginRegistry.registerPluginDefinitionBuilder(1000, new MashroomDefaultPluginPackageDefinitionBuilder(serverConfig, loggerFactory));
 
     pluginRegistry.registerPluginScanner(new MashroomLocalFileSystemPluginPackageScanner(serverConfig, loggerFactory));
 };

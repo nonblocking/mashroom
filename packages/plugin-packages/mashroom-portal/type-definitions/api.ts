@@ -5,6 +5,7 @@ import type {
     MashroomPluginConfig,
     MashroomPluginContextHolder
 } from '@mashroom/mashroom/type-definitions';
+import type {MashroomSecurityUser} from '@mashroom/mashroom-security/type-definitions';
 
 /* Model */
 
@@ -450,6 +451,11 @@ export type MashroomPortalApp = {
     readonly lastReloadTs: number;
 
     /**
+     * The URL of the plugin package this plugin is part of
+     */
+    readonly packageUrl: URL;
+
+    /**
      * Resource to load
      */
     readonly resources: MashroomPortalAppResources;
@@ -460,7 +466,7 @@ export type MashroomPortalApp = {
     readonly sharedResources: MashroomPortalAppSharedResources | null | undefined;
 
     /**
-     * An optional list of screenshots (relative to resourcesRootUri)
+     * An optional list of screenshots (relative to resourcesRootUrl)
      */
     readonly screenshots: Array<string> | null | undefined;
 
@@ -487,12 +493,12 @@ export type MashroomPortalApp = {
      * The route will receive a POST with a JSON body with a "portalAppSetup" property.
      * This will only be used if remoteApp is true.
      */
-    readonly ssrInitialHtmlUri: string | null | undefined;
+    readonly ssrInitialHtmlUrl: string | null | undefined;
 
     /**
-     * Resources root URI (local path if remoteApp false, otherwise an HTTP or HTTPS url)
+     * Resources root URL (local path if remoteApp false, otherwise an HTTP or HTTPS url)
      */
-    readonly resourcesRootUri: string;
+    readonly resourcesRootUrl: string;
 
     /**
      * Optional caching information
@@ -575,15 +581,15 @@ export type MashroomPortalPageEnhancement = {
      */
     readonly lastReloadTs: number;
     /**
-     * Resources root URI (can be a file, http or https)
+     * Resources root URL (can be a file, http or https)
      */
-    readonly resourcesRootUri: string;
+    readonly resourcesRootUrl: string;
     /**
      * Resources that should be added to portal pages
      */
     readonly pageResources: MashroomPortalPageEnhancementResources;
     /**
-     * The "weight" of this plugin, the higher it es the later the resources are added to the page
+     * The order of this plugin, the higher it es the later the resources are added to the page
      */
     readonly order: number;
     /**
@@ -634,7 +640,7 @@ export type MashroomPortalAppEnhancement = {
     /**
      * The actual plugin
      */
-    plugin: MashroomPortalAppEnhancementPlugin | undefined;
+    readonly plugin: MashroomPortalAppEnhancementPlugin | undefined;
 }
 
 export interface MashroomPortalAppEnhancementPlugin {
@@ -642,6 +648,58 @@ export interface MashroomPortalAppEnhancementPlugin {
      * Enhance the portalAppSetup object passed as the first argument (if necessary)
      */
     enhancePortalAppSetup: (portalAppSetup: MashroomPortalAppSetup, portalApp: MashroomPortalApp, request: Request) => Promise<MashroomPortalAppSetup>;
+}
+
+export type MashroomPortalAppConfig = {
+    /**
+     * Config plugin name
+     */
+    readonly name: string;
+    /**
+     * Config plugin description
+     */
+    readonly description: string | undefined | null;
+    /**
+     * The order of this plugin, the higher it es the later the resources are added to the page
+     */
+    readonly order: number;
+    /**
+     * The actual plugin
+     */
+    readonly plugin: MashroomPortalAppConfigPlugin;
+}
+
+export interface MashroomPortalAppConfigPlugin {
+    /**
+     * Return true if the config should be applied to the given Portal App
+     */
+    applyTo(portalAppName: string): boolean;
+    /**
+     * Overwrite the targetUrl for a given proxyId.
+     * Returning undefined keeps the original.
+     */
+    overwriteProxyTargetUrl?(portalApp: MashroomPortalApp, proxyId: string, request: Request): string | undefined;
+
+    /**
+     * Add (security) headers to outgoing proxy requests.
+     */
+    addProxyRequestHeaders?(portalApp: MashroomPortalApp, proxyId: string, request: Request): Record<string, string> | undefined;
+
+    /**
+     * Add (security) headers to SSR route requests.
+     */
+    addSSRRouteRequestHeaders?(portalApp: MashroomPortalApp, request: Request): Record<string, string>;
+
+    /**
+     * Determine the actual rolePermissions for the Portal App.
+     */
+    determineRolePermissions?(portalApp: MashroomPortalApp, user: MashroomSecurityUser  | null, request: Request): Promise<Record<string, boolean> | undefined>;
+
+    /**
+     * Rewrite Portal App import map.
+     * This can be used to make sure all Portal Apps use the same vendor library or change the location of vendor libraries.
+     */
+    rewriteImportMap?(portalApp: MashroomPortalApp, request: Request): MashroomPortalAppResources['importMap'];
 }
 
 /* Backend services */
@@ -671,6 +729,11 @@ export interface MashroomPortalService {
      * Get all registered app enhancement plugins
      */
     getPortalAppEnhancements(): Readonly<Array<MashroomPortalAppEnhancement>>;
+
+    /**
+     * Get all registered portal app config plugins
+     */
+    getPortalAppConfigs(): Readonly<Array<MashroomPortalAppConfig>>;
 
     /**
      * Get all sites
@@ -769,6 +832,12 @@ export type ClientBootstrapReference = {
     clientBootstrap: MashroomPortalAppPluginBootstrapFunction;
 }
 
+export interface MashroomPortalAppClientBootstrapAdapter {
+    readonly name: string;
+    shouldAdapt(portalAppSetup: MashroomPortalAppSetup): boolean;
+    adapt(originalBootstrap: MashroomPortalAppPluginBootstrapFunction): MashroomPortalAppPluginBootstrapFunction;
+}
+
 export interface MashroomPortalAppService {
     /**
      * Get all Portal Apps available to the user
@@ -849,6 +918,17 @@ export interface MashroomPortalAppService {
      * Remove a listener for unload events
      */
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener): void;
+
+    /**
+     * Register a bootstrap adapter.
+     * This can be used to start Apps with non-compliant client bootstraps.
+     */
+    registerClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
+
+    /**
+     * Unregister a bootstrap adapter.
+     */
+    unregisterClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter): void;
 
     /**
      * Load the setup for a given App / plugin name on the current page
@@ -1310,3 +1390,7 @@ export type MashroomPortalPageEnhancementPluginBootstrapFunction = (pluginName: 
 
 export type MashroomPortalAppEnhancementPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
     => MashroomPortalAppEnhancementPlugin;
+
+// portal-app-config
+export type MashroomPortalAppConfigPluginBootstrapFunction = (pluginName: string, pluginConfig: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder)
+    => MashroomPortalAppConfigPlugin;

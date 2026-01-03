@@ -359,8 +359,9 @@
                 "defaultConfig": {
                     "type": "object",
                     "properties": {
-                        "weight": {
-                            "type": "number"
+                        "order": {
+                            "type": "integer",
+                            "description": "The order of the builder plugin - the higher it is the later it will be executed (Default: 1000)"
                         }
                     }
                 }
@@ -505,8 +506,8 @@
                     "type": "object",
                     "properties": {
                         "order": {
-                            "type": "number",
-                            "description": "The weight of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)"
+                            "type": "integer",
+                            "description": "The order of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)"
                         }
                     }
                 }
@@ -658,9 +659,9 @@
                             "type": "string",
                             "description": "The height of the iframe that will contain the target webapp (Default: 80vh)"
                         },
-                        "weight": {
+                        "order": {
                             "type": "integer",
-                            "description": "The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)"
+                            "description": "The order of the menu entry, the higher the number the lower the menu entry will be (Default: 1000)"
                         }
                     },
                     "required": [
@@ -798,7 +799,7 @@
                     "properties": {
                         "order": {
                             "type": "integer",
-                            "description": "The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)"
+                            "description": "The order of the proxy interceptor plugin - the higher it is the **later** it will be executed (Default: 1000)"
                         }
                     }
                 }
@@ -1152,9 +1153,9 @@
                 "defaultConfig": {
                     "type": "object",
                     "properties": {
-                        "priority": {
+                        "order": {
                             "type": "integer",
-                            "description": "The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)"
+                            "description": "The order of the resources - the higher it is the **later** they will be added to the page (Default: 1000)"
                         }
                     }
                 }
@@ -1163,8 +1164,7 @@
                 "name",
                 "type",
                 "resourcesRoot",
-                "pageResources",
-                "defaultConfig"
+                "pageResources"
             ],
             "additionalProperties": false
         },
@@ -1214,6 +1214,52 @@
             "required": [
                 "name",
                 "type"
+            ],
+            "additionalProperties": false
+        },
+        "MashroomPortalAppConfigPluginDefinition": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "requires": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Required plugins"
+                },
+                "type": {
+                    "const": "portal-app-config"
+                },
+                "bootstrap": {
+                    "$ref": "#/definitions/PackageRelativePath",
+                    "description": "Optional script that exports MashroomPortalAppConfigPluginBootstrapFunction"
+                },
+                "defaultConfig": {
+                    "type": "object",
+                    "properties": {
+                        "order": {
+                            "type": "integer",
+                            "description": "The order of the config plugin - the higher the less likely it will considered (Default: 1000)"
+                        }
+                    }
+                }
+            },
+            "required": [
+                "name",
+                "type",
+                "bootstrap"
             ],
             "additionalProperties": false
         },
@@ -1439,6 +1485,9 @@
                 },
                 {
                     "$ref": "#/definitions/MashroomPortalAppEnhancementPluginDefinition"
+                },
+                {
+                    "$ref": "#/definitions/MashroomPortalAppConfigPluginDefinition"
                 },
                 {
                     "$ref": "#/definitions/MashroomSecurityProviderPluginDefinition"

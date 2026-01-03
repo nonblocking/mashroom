@@ -55,8 +55,8 @@ const pluginTable = (pluginContext: MashroomPluginContext) => {
                 <td>${plugin.type}</td>
                 <td><a href="plugin-packages?q=${encodeURIComponent(plugin.pluginPackage.name)}">${htmlUtils.escapeHtml(plugin.pluginPackage.name)}</a></td>
                 <td>
-                    <span>${plugin.pluginPackage.pluginPackageURL.protocol !== 'file:' ? '&check;' : ''}</span>
-                    <span class="hidden">${plugin.pluginPackage.pluginPackageURL.protocol !== 'file:' ? 'remote' : ''}</span>
+                    <span>${plugin.pluginPackage.pluginPackageUrl.protocol !== 'file:' ? '&check;' : ''}</span>
+                    <span class="hidden">${plugin.pluginPackage.pluginPackageUrl.protocol !== 'file:' ? 'remote' : ''}</span>
                 </td>
                 <td style="${statusStyle}">${capitalize(plugin.status)}</td>
                 <td>${htmlUtils.escapeHtml(plugin.errorMessage || '')}</td>

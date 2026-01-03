@@ -41,11 +41,11 @@ export default class MashroomStaticDocumentsPluginLoader implements MashroomPlug
         if (!documentRoot) {
             throw new PluginConfigurationError(`Static plugin ${plugin.name}: Missing property 'documentRoot'!`);
         }
-        if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
-            throw new PluginConfigurationError(`Static plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
+        if (plugin.pluginPackage.pluginPackageUrl.protocol !== 'file:') {
+            throw new PluginConfigurationError(`Static plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageUrl.protocol} not supported'!`);
         }
 
-        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
+        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageUrl);
         const fullDocumentRoot = resolve(pluginPackagePath, documentRoot);
         const staticPlugin = express.static(fullDocumentRoot);
         const wrapper = new ExpressRequestHandlerWrapper(plugin.name, staticPlugin);

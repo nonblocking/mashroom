@@ -9,8 +9,8 @@ describe('RemotePluginPackagesScanner', () => {
         const mockUpdateOne = jest.fn();
         const mockInsertOne = jest.fn();
         const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
+            addOrUpdatePackageUrl: jest.fn(),
+            removePackageUrl: jest.fn()
         };
         context.scannerCallback = scannerCallback;
 
@@ -49,18 +49,18 @@ describe('RemotePluginPackagesScanner', () => {
 
         expect(mockInsertOne).toHaveBeenCalledTimes(1);
         expect(mockUpdateOne).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(3);
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[1][0].toString()).toBe('https://microfrontend55.myserver.com/');
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[2][0].toString()).toBe('https://microfrontend2.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(3);
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[1][0].toString()).toBe('https://microfrontend55.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[2][0].toString()).toBe('https://microfrontend2.myserver.com/');
     });
 
     it('ignores invalid URLs', async () => {
         const mockUpdateOne = jest.fn();
         const mockInsertOne = jest.fn();
         const scannerCallback = {
-            addOrUpdatePackageURL: jest.fn(),
-            removePackageURL: jest.fn()
+            addOrUpdatePackageUrl: jest.fn(),
+            removePackageUrl: jest.fn()
         };
         context.scannerCallback = scannerCallback;
 
@@ -93,8 +93,8 @@ describe('RemotePluginPackagesScanner', () => {
 
         expect(mockInsertOne).toHaveBeenCalledTimes(1);
         expect(mockUpdateOne).toHaveBeenCalledTimes(0);
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[0][0].toString()).toBe('https://microfrontend1.myserver.com/');
     });
 
 });

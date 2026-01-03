@@ -2,7 +2,7 @@
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import {setPortalPluginConfig} from '../../../src/backend/context/global-portal-context';
 import PortalHttpProxyController from '../../../src/backend/controllers/PortalHttpProxyController';
-import type {MashroomPortalApp} from '../../../type-definitions';
+import type {MashroomPortalApp, MashroomPortalAppConfig} from '../../../type-definitions';
 
 setPortalPluginConfig({
     path: '/portal',
@@ -49,11 +49,12 @@ const portalApp1: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
+    packageUrl: new URL(`file://${__dirname}`),
     clientBootstrap: 'foo',
-    resourcesRootUri: `file://${__dirname}`,
+    resourcesRootUrl: `file://${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlUri: undefined,
+    ssrInitialHtmlUrl: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -91,11 +92,12 @@ const portalApp2: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
+    packageUrl: new URL(`file://${__dirname}`),
     clientBootstrap: 'foo',
-    resourcesRootUri: `file://${__dirname}`,
+    resourcesRootUrl: `file://${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlUri: undefined,
+    ssrInitialHtmlUrl: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -134,11 +136,12 @@ const portalApp3: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 222222222,
+    packageUrl: new URL(`file://${__dirname}`),
     clientBootstrap: 'foo',
-    resourcesRootUri: `file://${__dirname}`,
+    resourcesRootUrl: `file://${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlUri: undefined,
+    ssrInitialHtmlUrl: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -159,8 +162,33 @@ const portalApp3: MashroomPortalApp = {
     defaultAppConfig: {},
 };
 
+let applyPortalAppConfigToPortalApp: string | undefined;
+const portalAppConfig1: MashroomPortalAppConfig = {
+    name: 'Test Portal App Config',
+    description: null,
+    order: 1000,
+    plugin: {
+        applyTo(portalAppName) {
+            return portalAppName === applyPortalAppConfigToPortalApp;
+        },
+        overwriteProxyTargetUrl(portalApp, proxyId) {
+            if (proxyId === 'my-proxy') {
+                return 'https://www.mashroom-server.com/api22';
+            }
+        },
+        addProxyRequestHeaders(portalApp, proxyId) {
+            if (proxyId === 'my-proxy') {
+                return {
+                    'x-api-key': '123132323',
+                };
+            }
+        }
+    },
+};
+
 const pluginRegistry: any = {
     portalApps: [portalApp1, portalApp2, portalApp3],
+    portalAppConfigs: [portalAppConfig1],
 };
 
 const pluginContext: any = {
@@ -217,7 +245,7 @@ const pluginContext: any = {
                             }]
                         }
                     };
-                }
+                },
             }
         }
     },
@@ -293,7 +321,6 @@ describe('PortalPageController', () => {
     });
 
     it('does not forwards calls if the user has not on of the restrictToRoles', async () => {
-
         const req: any = {
             params: {
                 path: ['Test Portal App 3', 'my-proxy', 'foo'],
@@ -317,6 +344,40 @@ describe('PortalPageController', () => {
         await controller.forward(req, res);
 
         expect(status).toBe(403);
+    });
+
+    it('considers Portal App Config plugins when forwarding proxy calls', async () => {
+        const req: any = {
+            originalUrl: '/portal/web/___/proxy/Test%20Portal%20App%201/my-proxy/foo/bar?x=1',
+            params: {
+                path: ['Test Portal App 1', 'my-proxy', 'foo', 'bar'],
+            },
+            connection: {
+                remoteAddress: '127.0.0.1'
+            },
+            headers: {
+                'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36'
+            },
+            pluginContext,
+        };
+
+        let status = null;
+        const res: any = {
+            sendStatus: (s: number) => status = s,
+        };
+
+        applyPortalAppConfigToPortalApp = 'Test Portal App 1';
+
+        const controller = new PortalHttpProxyController(pluginRegistry);
+
+        await controller.forward(req, res);
+
+        expect(status).toBeNull();
+        expect(httpProxyServiceForwardMock.mock.calls.length).toBe(1);
+        expect(httpProxyServiceForwardMock.mock.calls[0][2]).toBe('https://www.mashroom-server.com/api22/foo/bar');
+        expect(httpProxyServiceForwardMock.mock.calls[0][3]).toEqual({
+            'x-api-key': '123132323',
+        });
     });
 
 });

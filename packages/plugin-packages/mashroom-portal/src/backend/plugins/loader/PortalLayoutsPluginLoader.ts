@@ -42,10 +42,10 @@ export default class PortalLayoutsPluginLoader implements MashroomPluginLoader {
                     if (layoutPath.startsWith('./')) {
                         layoutPath = layoutPath.slice(2);
                     }
-                    if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
-                        layoutPath = resolve(fileURLToPath(plugin.pluginPackage.pluginPackageURL), layoutPath);
+                    if (plugin.pluginPackage.pluginPackageUrl.protocol === 'file:') {
+                        layoutPath = resolve(fileURLToPath(plugin.pluginPackage.pluginPackageUrl), layoutPath);
                     } else {
-                        layoutPath = `${removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString())}/${layoutPath}`;
+                        layoutPath = `${removeTrailingSlash(plugin.pluginPackage.pluginPackageUrl.toString())}/${layoutPath}`;
                     }
                 }
 

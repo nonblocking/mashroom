@@ -48,10 +48,10 @@ const pluginPackagesTable = (pluginContext: MashroomPluginContext) => {
         pluginPackagesRows.push(`
             <tr style="${rowBackgroundStyle}">
                 <td>${htmlUtils.escapeHtml(pp.name)}</td>
-                <td><a target='_blank' href="${pp.pluginPackageURL}" class="long">${pp.pluginPackageURL}</a></td>
+                <td><a target='_blank' href="${pp.pluginPackageUrl}" class="long">${pp.pluginPackageUrl}</a></td>
                 <td>
-                    <span>${pp.pluginPackageURL.protocol !== 'file:' ? '&check;' : ''}</span>
-                   <span class="hidden">${pp.pluginPackageURL.protocol !== 'file:' ? 'remote' : ''}</span>
+                    <span>${pp.pluginPackageUrl.protocol !== 'file:' ? '&check;' : ''}</span>
+                   <span class="hidden">${pp.pluginPackageUrl.protocol !== 'file:' ? 'remote' : ''}</span>
                 </td>
                 <td style="${statusStyle}">${capitalize(pp.status)}</td>
                 <td>${htmlUtils.escapeHtml(pp.errorMessage || '')}</td>

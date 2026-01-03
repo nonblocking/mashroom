@@ -5,6 +5,9 @@
     "pluginPackageFolders": [
         {
             "path": "../../plugin-packages"
+        },
+        {
+            "path": "./plugins"
         }
     ],
     "indexPage": "/",
@@ -73,8 +76,7 @@
         },
         "Mashroom Remote Package Scanner Kubernetes": {
             "namespaceLabelSelector": ["env=development", "microfrontends=true"],
-            "serviceLabelSelector": "microfrontends=true",
-            "serviceNameFilter": ".*"
+            "serviceLabelSelector": "microfrontends=true"
         }
     }
 }

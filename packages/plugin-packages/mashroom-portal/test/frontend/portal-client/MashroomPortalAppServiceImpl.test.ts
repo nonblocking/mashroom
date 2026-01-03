@@ -28,7 +28,6 @@ describe('MashroomPortalAppServiceImpl', () => {
     });
 
     it('loads the Portal App resources in the correct order', async () => {
-
         const portalAppService = new MashroomPortalAppServiceImpl(mockRestService, mockResourceManager, mockImportManager);
 
         const portalApp = {

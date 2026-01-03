@@ -63,7 +63,7 @@ export default class RemotePortalAppsPluginScanner implements MashroomPluginPack
         // Register all URLs
         for (const endpoint of allEndpoints) {
             this._logger.info(`Registering remote Portal App endpoint: ${endpoint.url}`);
-            context.scannerCallback?.addOrUpdatePackageURL(new URL(endpoint.url));
+            context.scannerCallback?.addOrUpdatePackageUrl(new URL(endpoint.url));
         }
 
         context.initialScanDone = true;

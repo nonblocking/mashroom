@@ -23,7 +23,7 @@ export default class RefreshPortalRemoteAppsBackgroundJob {
 
         for (const remotePortalAppEndpoint of endpoints) {
             if (Date.now() - remotePortalAppEndpoint.lastRefreshTimestamp > this._registrationRefreshIntervalSec * 1000) {
-                context.scannerCallback?.addOrUpdatePackageURL(new URL(remotePortalAppEndpoint.url));
+                context.scannerCallback?.addOrUpdatePackageUrl(new URL(remotePortalAppEndpoint.url));
                 const updatedRemotePortalAppEndpoint = {
                     ...remotePortalAppEndpoint,
                     lastRefreshTimestamp: Date.now(),

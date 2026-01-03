@@ -134,7 +134,7 @@ To register your custom http-proxy-interceptor plugin, create a plugin definitio
 }
 ```
 
-* _defaultConfig.order_: The weight of the middleware in the stack—the higher it is, the **later** it will be executed (Default: 1000)
+* _defaultConfig.order_: The order of the middleware in the stack—the higher it is, the **later** it will be executed (Default: 1000)
 
 The bootstrap returns the interceptor:
 

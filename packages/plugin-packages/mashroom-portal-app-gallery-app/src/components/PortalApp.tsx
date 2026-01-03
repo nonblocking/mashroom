@@ -24,12 +24,13 @@ type Props = {
 
 export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: Props) => {
     const {name, title, category, requiredRoles} = app;
-    let description, screenshots, homepage, tags;
+    let description, screenshots, homepage, tags, metaInfo;
     if (app.available) {
         description = app.description;
         screenshots = app.screenshots;
         homepage = app.homepage;
         tags = app.tags;
+        metaInfo = app.metaInfo;
     }
 
     return (
@@ -42,6 +43,7 @@ export default ({app, sandboxPath, searchFilter, showImageInOverlay, messages}: 
                     srcs={screenshots}
                     forbidden={!app.available}
                     showImageInOverlay={showImageInOverlay}
+                    openMicrofrontends={metaInfo?.openMicrofrontends}
                 />
                 <div className={styles.Description}>
                     <HighlightFilterQuery searchFilter={searchFilter} text={description ?? ' '} />

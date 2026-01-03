@@ -6,8 +6,8 @@ import {SERVER_SIDE_RENDERED_EMBEDDED_APP_INSTANCE_ID_PREFIX} from '../constants
 import {getUser, isAppPermitted} from './security-utils';
 import {getResourceAsString} from './resource-utils';
 import {createPortalAppSetup} from './create-portal-app-setup';
+import {getConfigPluginWithAddSSRRouteRequestHeaders} from './config-plugin-utils';
 
-import type {MashroomCDNService} from '@mashroom/mashroom-cdn/type-definitions';
 import type {MashroomLogger} from '@mashroom/mashroom/type-definitions';
 import type {Request} from 'express';
 import type {MashroomMemoryCacheService} from '@mashroom/mashroom-memory-cache/type-definitions';
@@ -24,7 +24,7 @@ import type {
 import type {
     MashroomPortalIncludeStyleServerSideRenderedAppsResult,
     SSRRenderResult,
-    MashroomPortalPageApps, MashroomPortalContentRenderResult,
+    MashroomPortalPageApps, MashroomPortalContentRenderResult, MashroomPortalPluginRegistry,
 } from '../../../type-definitions/internal';
 
 type RenderEmbeddedPortalAppsFn = (hostHtml: string, portalPageApps: MashroomPortalPageApps) => Promise<MashroomPortalContentRenderResult>;
@@ -47,7 +47,6 @@ const getCacheKey = async (pluginName: string, portalAppSetup: MashroomPortalApp
 
 const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: MashroomPortalAppSSRResultEmbeddedApps, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<SSRRenderResult> => {
     const pluginRegistry = context.pluginRegistry;
-    const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
     const mashroomSecurityUser = getUser(req);
 
     const embeddedPortalPageApps: MashroomPortalPageApps = {};
@@ -65,7 +64,7 @@ const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: 
             continue;
         }
 
-        const appSetup = await createPortalAppSetup(portalApp, null, appConfig, mashroomSecurityUser, cdnService, pluginRegistry, req);
+        const appSetup = await createPortalAppSetup(portalApp, null, appConfig, mashroomSecurityUser, pluginRegistry, req);
 
         embeddedPortalPageApps[appAreaId] = embeddedPortalPageApps[appAreaId] || [];
         embeddedPortalPageApps[appAreaId].push({
@@ -88,11 +87,14 @@ const recursivelyRenderEmbeddedApps = async (rootAppHtml: string, embeddedApps: 
     };
 };
 
-const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, renderTimeoutMs: number, req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
+const renderServerSideWithCache = async (pluginName: string, portalApp: MashroomPortalApp, portalAppSetup: MashroomPortalAppSetup,
+                                         renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, renderTimeoutMs: number,
+                                         pluginRegistry: MashroomPortalPluginRegistry,
+                                         req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
     const {cacheEnable, cacheTTLSec} = context.portalPluginConfig.ssrConfig;
     const devMode = req.pluginContext.serverInfo.devMode;
     const cacheService: MashroomMemoryCacheService = req.pluginContext.services.memorycache?.service;
-    const {ssrBootstrap: ssrBootstrapPath, ssrInitialHtmlUri, cachingConfig} = portalApp;
+    const {ssrBootstrap: ssrBootstrapPath, ssrInitialHtmlUrl, cachingConfig} = portalApp;
 
     const cacheKey = !devMode && cacheEnable && cacheService ? await getCacheKey(pluginName, portalAppSetup, cachingConfig, req) : null;
 
@@ -113,8 +115,21 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
         } catch (e) {
             logger.error(`Loading or executing local SSR bootstrap '${ssrBootstrapPath}' for app '${pluginName}' failed!`, e);
         }
-    } else if (ssrInitialHtmlUri) {
+    } else if (ssrInitialHtmlUrl) {
         // Remote App
+        const headers: Record<string, string> = {
+            'Content-Type': 'application/json'
+        };
+
+        const configPluginWithAddSSRRouteRequestHeaders = getConfigPluginWithAddSSRRouteRequestHeaders(portalApp.name, pluginRegistry);
+        if (configPluginWithAddSSRRouteRequestHeaders) {
+            const additionalHeaders = configPluginWithAddSSRRouteRequestHeaders.plugin.addSSRRouteRequestHeaders!(portalApp, req);
+            if (additionalHeaders) {
+                logger.debug(`Additional headers to SSR request to ${ssrInitialHtmlUrl} for Portal App ${portalApp.name} added by config plugin ${configPluginWithAddSSRRouteRequestHeaders.name}:`, additionalHeaders);
+                Object.assign(headers, additionalHeaders);
+            }
+        }
+
         const abortController = new AbortController();
         const abortTimeout = setTimeout(() => abortController.abort(), renderTimeoutMs);
         try {
@@ -123,12 +138,14 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
                     path: req.path,
                     queryParameters: req.query,
                 },
-                portalAppSetup
+                portalAppSetup,
+                // Also add the portalAppSetup on the top level because some SSR routes (e.g., OpenMicrofrontends expect it like this)
+                ...portalAppSetup,
             };
-            const result = await fetch(ssrInitialHtmlUri, {
+            const result = await fetch(ssrInitialHtmlUrl, {
                 method: 'POST',
                 body: JSON.stringify(request),
-                headers: {'Content-Type': 'application/json'},
+                headers,
                 signal: abortController.signal,
             });
             if (result.ok) {
@@ -139,10 +156,10 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
                     htmlOrSSRRenderResult = await result.text();
                 }
             } else {
-                logger.error(`Fetching HTML from remote SSR route '${ssrInitialHtmlUri}' for app '${pluginName} failed! HTTP status: ${result.status}`);
+                logger.error(`Fetching HTML from remote SSR route '${ssrInitialHtmlUrl}' for app '${pluginName} failed! HTTP status: ${result.status}`);
             }
         } catch (e) {
-            logger.error(`Fetching HTML from remote SSR route '${ssrInitialHtmlUri}' for app '${pluginName}' failed!`, e);
+            logger.error(`Fetching HTML from remote SSR route '${ssrInitialHtmlUrl}' for app '${pluginName}' failed!`, e);
         } finally {
             clearTimeout(abortTimeout);
         }
@@ -188,7 +205,9 @@ const renderServerSideWithCache = async (pluginName: string, portalApp: Mashroom
     return ssrRenderResult;
 };
 
-export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn, req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
+export const renderServerSide = async (pluginName: string, portalAppSetup: MashroomPortalAppSetup, renderEmbeddedPortalAppsFn: RenderEmbeddedPortalAppsFn,
+                                       pluginRegistry: MashroomPortalPluginRegistry,
+                                       req: Request, logger: MashroomLogger): Promise<SSRRenderResult | null> => {
     const ssrConfig = context.portalPluginConfig.ssrConfig;
     if (!ssrConfig.ssrEnable) {
         return null;
@@ -196,13 +215,14 @@ export const renderServerSide = async (pluginName: string, portalAppSetup: Mashr
 
     const portalService: MashroomPortalService = req.pluginContext.services.portal!.service;
     const portalApp = portalService.getPortalApps().find(({name}) => name === pluginName);
-    if (!portalApp || (!portalApp.ssrBootstrap && !portalApp.ssrInitialHtmlUri)) {
+    if (!portalApp || (!portalApp.ssrBootstrap && !portalApp.ssrInitialHtmlUrl)) {
         return null;
     }
 
     let timeout: any;
     return Promise.race([
-        renderServerSideWithCache(pluginName, portalApp, portalAppSetup, renderEmbeddedPortalAppsFn, ssrConfig.renderTimoutMs, req, logger),
+        renderServerSideWithCache(pluginName, portalApp, portalAppSetup, renderEmbeddedPortalAppsFn,
+            ssrConfig.renderTimoutMs, pluginRegistry, req, logger),
         new Promise<null>((resolve) => timeout = setTimeout(() => resolve(null), ssrConfig.renderTimoutMs)),
     ]).then((result) => {
         clearTimeout(timeout);
@@ -241,7 +261,7 @@ export const renderInlineStyleForServerSideRenderedApps = async (serverSideRende
             }
 
             const portalAppStyleResourcePromises = portalAppStyleResources.map((resourcePath) => {
-                const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
+                const resourceUri = `${portalApp.resourcesRootUrl}/${resourcePath}`;
                 return getResourceAsString(resourceUri, logger)
                     .catch((e) => {
                         logger.error(`Could not inline style '${resourceUri}'`, e);

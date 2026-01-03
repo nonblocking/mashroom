@@ -31,5 +31,4 @@ const distFolder = resolve(__dirname, 'tmp');
 
     console.info('Copying files to dist folder: ', distFolder);
     copySync(tmpDistFolder, distFolder)
-
 })();

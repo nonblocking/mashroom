@@ -15,6 +15,10 @@
             "devMode": true
         },
         {
+            "path": "./plugins",
+            "devMode": true
+        },
+        {
             "path": "../../../../mashroom-plugin-demos/packages",
             "devMode": true
         },

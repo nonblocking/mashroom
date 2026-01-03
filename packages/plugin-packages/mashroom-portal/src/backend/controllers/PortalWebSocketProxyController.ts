@@ -108,7 +108,7 @@ export default class PortalRestProxyController {
             const headers: Record<string, string> = {};
             if (user) {
                 if ((restProxyDef.sendPermissionsHeader || defaultProxyConfig.sendPermissionsHeader) && portalApp.rolePermissions) {
-                    const permissions: MashroomPortalAppUserPermissions = calculatePermissions(portalApp.rolePermissions, user);
+                    const permissions: MashroomPortalAppUserPermissions = await calculatePermissions(portalApp, this._pluginRegistry, user, req);
                     headers[HTTP_HEADER_REST_PROXY_PERMISSIONS] = Object.keys(permissions).filter((p) => permissions[p]).join(',');
                 }
             }

@@ -11,7 +11,7 @@ describe('PortalLayoutsPluginLoader', () => {
 
     it('loads and registers layouts', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
+            pluginPackageUrl: pathToFileURL('/opt/mashroom/packages/test'),
         };
         const layoutsPlugin: MashroomPlugin = {
             pluginPackage,
@@ -66,7 +66,7 @@ describe('PortalLayoutsPluginLoader', () => {
 
     it('unregisters all layouts of a plugin', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
+            pluginPackageUrl: pathToFileURL('/opt/mashroom/packages/test'),
         };
         const layoutsPlugin: MashroomPlugin = {
             pluginPackage,
@@ -106,7 +106,7 @@ describe('PortalLayoutsPluginLoader', () => {
 
     it('loads and registers layouts from a remote location', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: new URL('https://my.server/foo'),
+            pluginPackageUrl: new URL('https://my.server/foo'),
         };
         const layoutsPlugin: MashroomPlugin = {
             pluginPackage,

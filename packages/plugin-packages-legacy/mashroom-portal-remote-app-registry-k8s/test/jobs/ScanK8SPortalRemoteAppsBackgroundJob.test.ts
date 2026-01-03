@@ -3,8 +3,8 @@ import ScanK8SPortalRemoteAppsBackgroundJob from '../../src/js/jobs/ScanK8SPorta
 import context from '../../src/js/context';
 
 const scannerCallback = {
-    addOrUpdatePackageURL: jest.fn(),
-    removePackageURL: jest.fn()
+    addOrUpdatePackageUrl: jest.fn(),
+    removePackageUrl: jest.fn()
 };
 context.scannerCallback = scannerCallback;
 
@@ -17,8 +17,8 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
 
     beforeEach(() => {
         context.services = [];
-        scannerCallback.addOrUpdatePackageURL.mockReset();
-        scannerCallback.removePackageURL.mockReset();
+        scannerCallback.addOrUpdatePackageUrl.mockReset();
+        scannerCallback.removePackageUrl.mockReset();
         mockKubernetesConnector.getNamespacesByLabel.mockReset();
         mockKubernetesConnector.getNamespaceServices.mockReset();
     });
@@ -58,7 +58,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.name).toBe('my-remote-app');
         expect(service.error).toBeFalsy();
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.getNamespacesByLabel).toHaveBeenCalledTimes(0);
         expect(mockKubernetesConnector.getNamespaceServices).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.getNamespaceServices.mock.calls[0][0]).toBe('dev-namespace2');
@@ -125,7 +125,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.namespace).toBe('dev-namespace2');
         expect(service.name).toBe('my-remote-app');
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.getNamespacesByLabel).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.getNamespacesByLabel.mock.calls[0][0]).toBe('environment=development');
         expect(mockKubernetesConnector.getNamespaceServices).toHaveBeenCalledTimes(2);
@@ -181,7 +181,7 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.namespace).toBe('dev-namespace1');
         expect(service.name).toBe('my-remote-app');
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.getNamespacesByLabel).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.getNamespacesByLabel.mock.calls[0][0]).toBe('foo=bar');
         expect(mockKubernetesConnector.getNamespaceServices).toHaveBeenCalledTimes(1);
@@ -233,9 +233,9 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(service.namespace).toBe('dev-namespace2');
         expect(service.name).toBe('my-remote-app');
 
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://foo.bar/');
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl.mock.calls[0][0].toString()).toBe('http://foo.bar/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
     });
 
     it('replaces service when its port changes', async () => {
@@ -297,9 +297,9 @@ describe('ScanK8SPortalRemoteAppsBackgroundJob', () => {
         expect(context.services[0].port).toBe(6067);
         expect(context.services[0].url.toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
 
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(2);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(2);
     });
 
 });

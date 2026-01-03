@@ -12,7 +12,7 @@ describe('PortalThemePluginLoader', () => {
     it('loads and registers a theme', async () => {
 
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
+            pluginPackageUrl: pathToFileURL('/opt/mashroom/packages/test'),
         };
 
         const themePlugin: MashroomPlugin = {

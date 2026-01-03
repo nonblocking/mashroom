@@ -11,7 +11,7 @@ describe('PortalPageEnhancementPluginLoader', () => {
 
     it('loads and registers page enhancements with a relative local resource root', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
+            pluginPackageUrl: pathToFileURL('/opt/mashroom/packages/test'),
         };
 
         const pageEnhancementPlugin: MashroomPlugin = {
@@ -78,16 +78,16 @@ describe('PortalPageEnhancementPluginLoader', () => {
 
         if (process.platform === 'win32') {
             const {root} = parse(__dirname);
-            expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe(`file://${root}opt\\mashroom\\packages\\test\\dist\\page-enhancements`);
+            expect(registry.portalPageEnhancements[0].resourcesRootUrl).toBe(`file://${root}opt\\mashroom\\packages\\test\\dist\\page-enhancements`);
         } else {
-            expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('file:///opt/mashroom/packages/test/dist/page-enhancements');
+            expect(registry.portalPageEnhancements[0].resourcesRootUrl).toBe('file:///opt/mashroom/packages/test/dist/page-enhancements');
         }
     });
 
     it('loads and registers page enhancements with an absolute local resource root', async () => {
 
         const pluginPackage: any = {
-            pluginPackageURL: pathToFileURL('/opt/mashroom/packages/test'),
+            pluginPackageUrl: pathToFileURL('/opt/mashroom/packages/test'),
         };
 
         const pageEnhancementPlugin: MashroomPlugin = {
@@ -135,15 +135,15 @@ describe('PortalPageEnhancementPluginLoader', () => {
 
         if (process.platform === 'win32') {
             const {root} = parse(__dirname);
-            expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe(`file://${root}opt\\mashroom\\page-enhancements`);
+            expect(registry.portalPageEnhancements[0].resourcesRootUrl).toBe(`file://${root}opt\\mashroom\\page-enhancements`);
         } else {
-            expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('file:///opt/mashroom/page-enhancements');
+            expect(registry.portalPageEnhancements[0].resourcesRootUrl).toBe('file:///opt/mashroom/page-enhancements');
         }
     });
 
     it('loads and registers page enhancements with a relative remote resource root', async () => {
         const pluginPackage: any = {
-            pluginPackageURL: new URL('https://my.server/foo'),
+            pluginPackageUrl: new URL('https://my.server/foo'),
         };
 
         const pageEnhancementPlugin: MashroomPlugin = {
@@ -188,6 +188,6 @@ describe('PortalPageEnhancementPluginLoader', () => {
         await loader.load(pageEnhancementPlugin, {}, context);
 
         expect(registry.portalPageEnhancements.length).toBe(1);
-        expect(registry.portalPageEnhancements[0].resourcesRootUri).toBe('https://my.server/foo/dist/page-enhancements');
+        expect(registry.portalPageEnhancements[0].resourcesRootUrl).toBe('https://my.server/foo/dist/page-enhancements');
     });
 });

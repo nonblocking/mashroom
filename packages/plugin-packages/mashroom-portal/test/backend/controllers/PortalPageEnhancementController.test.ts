@@ -38,7 +38,7 @@ const portalPageEnhancement: MashroomPortalPageEnhancement = {
     version: '1.0.1',
     lastReloadTs: Date.now(),
     order: 1000,
-    resourcesRootUri: `file:///${__dirname}`,
+    resourcesRootUrl: `file:///${__dirname}`,
     pageResources: {
         js: [{
             path: 'test-script1.js',

@@ -30,7 +30,7 @@ import type {
     MashroomPluginManager as MashroomPluginManagerType,
     MashroomPluginRegistryEvent,
     MashroomPluginRegistryEventName,
-    MashroomPluginPackageDefinitionBuilderWithWeight,
+    MashroomPluginPackageDefinitionBuilderWithOrder,
 } from '../../type-definitions/internal';
 
 type InternalPotentialPackage = {
@@ -58,7 +58,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
     private _potentialPackages: Array<InternalPotentialPackage>;
     private readonly _pluginLoaders: MashroomPluginLoaderMap;
     private _pluginScanners: Array<MashroomPluginPackageScanner>;
-    private _pluginDefinitionBuilders: Array<MashroomPluginPackageDefinitionBuilderWithWeight>;
+    private _pluginDefinitionBuilders: Array<MashroomPluginPackageDefinitionBuilderWithOrder>;
     private readonly _pluginsNoLoader: Array<MashroomPlugin>;
     private readonly _pluginsMissingRequirements: Array<MashroomPlugin>;
     private readonly _eventEmitter: EventEmitter;
@@ -177,8 +177,8 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         this.unregisterPluginScanner(scanner);
         this._pluginScanners.push(scanner);
         scanner.setCallback({
-            addOrUpdatePackageURL: (url, hints) => this._addOrUpdatePackageURL(scanner.name, url, hints),
-            removePackageURL: (url) => this._removePackageURL(url),
+            addOrUpdatePackageUrl: (url, hints) => this._addOrUpdatePackageUrl(scanner.name, url, hints),
+            removePackageUrl: (url) => this._removePackageUrl(url),
         });
         if (this._started) {
             (async () => {
@@ -201,10 +201,10 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    registerPluginDefinitionBuilder(weight: number, definitionBuilder: MashroomPluginPackageDefinitionBuilder) {
+    registerPluginDefinitionBuilder(order: number, definitionBuilder: MashroomPluginPackageDefinitionBuilder) {
         this.unregisterPluginDefinitionBuilder(definitionBuilder);
         this._pluginDefinitionBuilders.push({
-            weight,
+            order,
             definitionBuilder,
         });
         // This definition builder might now be able to build definitions of plugin packages
@@ -217,7 +217,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         this._pluginDefinitionBuilders = this._pluginDefinitionBuilders.filter((b) => b.definitionBuilder !== definitionBuilder);
     }
 
-    private async _addOrUpdatePackageURL(scannerName: string, url: URL, scannerHints: Record<string, any> = {}) {
+    private async _addOrUpdatePackageUrl(scannerName: string, url: URL, scannerHints: Record<string, any> = {}) {
         let potentialPackage = this._potentialPackages.find(pu => pu.url.toString() === url.toString());
         if (potentialPackage?.status === 'processing') {
             // Already processing, ignore this updated
@@ -247,7 +247,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         await this._updatePackage(potentialPackage);
     }
 
-    private _removePackageURL(url: URL) {
+    private _removePackageUrl(url: URL) {
         const potentialPackage = this._potentialPackages.find((pp) => pp.url.toString() === url.toString());
         if (!potentialPackage) {
             return;
@@ -315,11 +315,11 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         potentialPackage.pluginPackages = [];
         for (const packageDefinitionAndMeta of buildPackageDefinitionResult.defAndMetas) {
             // If this is a remote package and the version didn't change, do nothing (optimization)
-            if (packageDefinitionAndMeta.packageURL.protocol !== 'file:') {
-                const currentPluginPackage = currentPluginPackages?.find(({ name, pluginPackageURL }) =>
-                    name === packageDefinitionAndMeta.meta.name && pluginPackageURL.toString() === packageDefinitionAndMeta.packageURL.toString());
+            if (packageDefinitionAndMeta.packageUrl.protocol !== 'file:') {
+                const currentPluginPackage = currentPluginPackages?.find(({ name, pluginPackageUrl }) =>
+                    name === packageDefinitionAndMeta.meta.name && pluginPackageUrl.toString() === packageDefinitionAndMeta.packageUrl.toString());
                 if (currentPluginPackage?.version === packageDefinitionAndMeta.meta.version) {
-                    this._logger.debug(`Ignoring update of package ${packageDefinitionAndMeta.packageURL}, because version didn't change.`);
+                    this._logger.debug(`Ignoring update of package ${packageDefinitionAndMeta.packageUrl}, because version didn't change.`);
                     potentialPackage.pluginPackages.push(currentPluginPackage);
                     continue;
                 }
@@ -343,7 +343,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
                 });
             }
 
-            const pluginPackage = new MashroomPluginPackageImpl(packageDefinitionAndMeta.packageURL ?? potentialPackage.url,
+            const pluginPackage = new MashroomPluginPackageImpl(packageDefinitionAndMeta.packageUrl ?? potentialPackage.url,
                 fixedPluginDefinition, packageDefinitionAndMeta.meta);
             potentialPackage.pluginPackages.push(pluginPackage);
 
@@ -361,7 +361,7 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
 
     private async _buildPackageDefinition(url: URL, scannerHints: MashroomPluginScannerHints): Promise<InternalPluginPackageDefinitionAndMeta | null> {
         const sortedBuilders = this._pluginDefinitionBuilders
-            .sort((a, b) => b.weight - a.weight)
+            .sort((a, b) => b.order - a.order)
             .map((b) => b.definitionBuilder);
         const errors: Array<string> = [];
         for (let builder of sortedBuilders) {
@@ -396,8 +396,8 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
     }
 
     private async _buildPackage(pluginPackage: MashroomPluginPackageImpl) {
-        if (this._builder && pluginPackage.devModeBuildScript && this._isPackageInDevMode(pluginPackage.pluginPackageURL)) {
-            const pluginPackagePath = fileURLToPath(pluginPackage.pluginPackageURL);
+        if (this._builder && pluginPackage.devModeBuildScript && this._isPackageInDevMode(pluginPackage.pluginPackageUrl)) {
+            const pluginPackagePath = fileURLToPath(pluginPackage.pluginPackageUrl);
             pluginPackage.setStatus('building');
             pluginPackage.setErrorMessage(null);
             this._builder.addToBuildQueue(pluginPackage.name, pluginPackagePath, pluginPackage.devModeBuildScript);
@@ -455,9 +455,9 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         const existing = this._findPlugin(plugin.name);
         if (existing) {
             const [existingPluginPackage, existingPlugin] = existing;
-            if (existingPluginPackage.url.toString() !== plugin.pluginPackage.pluginPackageURL.toString()) {
+            if (existingPluginPackage.url.toString() !== plugin.pluginPackage.pluginPackageUrl.toString()) {
                 plugin.setStatus('error');
-                plugin.setErrorMessage(`Duplicate plugin name. A plugin with name '${plugin.name}' also exists in ${existingPlugin.pluginPackage.pluginPackageURL}`);
+                plugin.setErrorMessage(`Duplicate plugin name. A plugin with name '${plugin.name}' also exists in ${existingPlugin.pluginPackage.pluginPackageUrl}`);
                 return;
             }
 
@@ -642,11 +642,11 @@ export default class MashroomPluginManager implements MashroomPluginManagerType,
         }
     }
 
-    private _isPackageInDevMode(packageURL: URL): boolean {
-        if (packageURL.protocol !== 'file:') {
+    private _isPackageInDevMode(packageUrl: URL): boolean {
+        if (packageUrl.protocol !== 'file:') {
             return false;
         }
-        const packagePath = fileURLToPath(packageURL);
+        const packagePath = fileURLToPath(packageUrl);
         return this._pluginContextHolder.getPluginContext().serverConfig
             .pluginPackageFolders.some((ppf) => packagePath.indexOf(ppf.path) === 0 && !!ppf.devMode);
     }

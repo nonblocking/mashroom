@@ -34,10 +34,10 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
         pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
+            addOrUpdatePackageUrl(url: URL) {
                 foundURLs.push(url);
             },
-            removePackageURL(url: URL) {
+            removePackageUrl(url: URL) {
             }
         });
 
@@ -59,10 +59,10 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         let updatedURL: URL | undefined;
         pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
+            addOrUpdatePackageUrl(url: URL) {
                 updatedURL = url;
             },
-            removePackageURL(url: URL) {
+            removePackageUrl(url: URL) {
             }
         });
 
@@ -90,10 +90,10 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         let updatedURL: URL | undefined;
         pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
+            addOrUpdatePackageUrl(url: URL) {
                 updatedURL = url;
             },
-            removePackageURL(url: URL) {
+            removePackageUrl(url: URL) {
             }
         });
 
@@ -121,9 +121,9 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         let removedURL: URL | undefined;
         pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
+            addOrUpdatePackageUrl(url: URL) {
             },
-            removePackageURL(url: URL) {
+            removePackageUrl(url: URL) {
                 removedURL= url;
             }
         });
@@ -150,10 +150,10 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         let updatedURL: URL | undefined;
         pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
+            addOrUpdatePackageUrl(url: URL) {
                 updatedURL = url;
             },
-            removePackageURL(url: URL) {
+            removePackageUrl(url: URL) {
             }
         });
 
@@ -180,10 +180,10 @@ describe('MashroomLocalFileSystemPluginPackageScanner', () => {
 
         const pluginPackageScanner = new MashroomLocalFileSystemPluginPackageScanner(config, loggingUtils.dummyLoggerFactory);
         pluginPackageScanner.setCallback({
-            addOrUpdatePackageURL(url: URL) {
+            addOrUpdatePackageUrl(url: URL) {
                 foundURLs.push(url);
             },
-            removePackageURL(url: URL) {
+            removePackageUrl(url: URL) {
             }
         });
 

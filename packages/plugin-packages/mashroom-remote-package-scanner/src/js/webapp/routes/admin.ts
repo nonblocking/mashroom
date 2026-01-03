@@ -93,7 +93,7 @@ export const adminUpdate = async (req: Request, res: Response) => {
                     url,
                     lastRefreshTimestamp: Date.now(),
                 });
-                context.scannerCallback?.addOrUpdatePackageURL(new URL(url));
+                context.scannerCallback?.addOrUpdatePackageUrl(new URL(url));
             } catch (error: any) {
                 logger.error('Adding endpoint failed', error);
                 const errorMessage = `Error: Adding endpoint failed: ${error.message}`;
@@ -105,7 +105,7 @@ export const adminUpdate = async (req: Request, res: Response) => {
         if (existingEndpoint) {
             logger.info(`Refreshing plugin package endpoint: ${url}`);
             try {
-                context.scannerCallback?.addOrUpdatePackageURL(new URL(url));
+                context.scannerCallback?.addOrUpdatePackageUrl(new URL(url));
             } catch (error: any) {
                 logger.error('Refreshing endpoint failed', error);
             }
@@ -114,7 +114,7 @@ export const adminUpdate = async (req: Request, res: Response) => {
         if (existingEndpoint) {
             logger.info(`Removing plugin package endpoint: ${url}`);
             try {
-                context.scannerCallback?.removePackageURL(new URL(url));
+                context.scannerCallback?.removePackageUrl(new URL(url));
                 await store.deleteOne({_id: existingEndpoint._id});
             } catch (error: any) {
                 logger.error('Deleting endpoint failed', error);

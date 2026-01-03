@@ -1,4 +1,4 @@
-FROM node:24.2.0-slim
+FROM node:24.12.0-slim
 WORKDIR /opt/app
 COPY tmp ./
 RUN npm ci --omit=dev

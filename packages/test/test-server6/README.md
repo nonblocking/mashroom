@@ -45,7 +45,13 @@ If you have used the *setup-k3d-cluster.sh* the Portal will be available at http
 Any Microfrontend deployed in namespace *test1* or *test2* will automatically be registered if the Service
 has additionally the label *microfrontend=true*.
 
-You can deploy the *mashroom-demo-ssr-remote-portal-app* Microfrontend on *test1* with:
+Available Microfrontends:
 
-    cd kubernetes/mashroom-demo-ssr-remote-portal-app
+ * mashroom-demo-ssr-remote-portal-app
+ * open-microfrontends-demo
+ * minimal-remote-portal-app
+
+To deploy a Microfrontenc:
+
+    cd kubernetes/<microfrontend-name>
     ./build-and-deploy.sh

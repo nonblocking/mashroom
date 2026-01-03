@@ -34,7 +34,7 @@ export default class PortalAppController {
     async getPortalAppSetup(req: Request, res: Response): Promise<void> {
         const logger = req.pluginContext.loggerFactory('mashroom.portal');
         const cacheControlService: MashroomCacheControlService = req.pluginContext.services.browserCache?.cacheControl;
-        const cdnService: MashroomCDNService | undefined = req.pluginContext.services.cdn?.service;
+
 
         try {
             const sitePath = getSitePath(req);
@@ -88,7 +88,7 @@ export default class PortalAppController {
                 return;
             }
 
-            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, null, mashroomSecurityUser, cdnService, this._pluginRegistry, req);
+            const portalAppSetup = await createPortalAppSetup(portalApp, portalAppInstance, null, mashroomSecurityUser, this._pluginRegistry, req);
 
             logger.debug(`Sending Portal App setup for: ${portalApp.name}`, portalAppSetup);
 
@@ -314,7 +314,7 @@ export default class PortalAppController {
             }
         }
 
-        const resourceUri = `${portalApp.resourcesRootUri}/${resourcePath}`;
+        const resourceUri = `${portalApp.resourcesRootUrl}/${resourcePath}`;
 
         // Security check: A proxy target could be a sub path of the resource base URL,
         // so, make sure this route is not misused to access an API endpoint

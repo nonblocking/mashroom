@@ -2,8 +2,8 @@ import context from '../../src/js/context';
 import updatePluginPackageService from '../../src/js/scanner/updatePluginPackageService';
 
 const scannerCallback = {
-    addOrUpdatePackageURL: jest.fn(),
-    removePackageURL: jest.fn()
+    addOrUpdatePackageUrl: jest.fn(),
+    removePackageUrl: jest.fn()
 };
 context.scannerCallback = scannerCallback;
 
@@ -13,8 +13,8 @@ describe('updatePluginPackageService', () => {
         context.watchedNamespaces = [];
         context.services = [];
         context.runningPods = [];
-        scannerCallback.addOrUpdatePackageURL.mockReset();
-        scannerCallback.removePackageURL.mockReset();
+        scannerCallback.addOrUpdatePackageUrl.mockReset();
+        scannerCallback.removePackageUrl.mockReset();
     });
 
     it('does not register a plugin package if no running pod available', () => {
@@ -41,8 +41,8 @@ describe('updatePluginPackageService', () => {
         expect(service.runningPods).toBe(0);
         expect(service.error).toBe('No running Pods');
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(0);
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(0);
     });
 
     it('unregisters a plugin package if no running pod anymore available', () => {
@@ -70,8 +70,8 @@ describe('updatePluginPackageService', () => {
         expect(service.error).toBe('No running Pods');
         expect(service.imageVersion).toBeFalsy();
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(0);
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
     });
 
     it('registers a services as a plugin package if a running pod appears', () => {
@@ -112,8 +112,8 @@ describe('updatePluginPackageService', () => {
         expect(service.runningPods).toBe(1);
         expect(service.error).toBeFalsy();
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(0);
     });
 
     it('updates a plugin package if the image version changes', () => {
@@ -168,8 +168,8 @@ describe('updatePluginPackageService', () => {
         expect(service.error).toBeFalsy();
         expect(service.imageVersion).toBe('1.0.2');
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(0);
     });
 
     it('removes a plugin package if the service URL changes', () => {
@@ -210,7 +210,7 @@ describe('updatePluginPackageService', () => {
         expect(service.runningPods).toBe(1);
         expect(service.error).toBeFalsy();
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
     });
 });

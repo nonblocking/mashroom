@@ -24,14 +24,14 @@ export default class PortalThemePluginLoader implements MashroomPluginLoader {
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        if (plugin.pluginPackage.pluginPackageURL.protocol !== 'file:') {
-            throw new PluginConfigurationError(`Portal Theme plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageURL.protocol} not supported'!`);
+        if (plugin.pluginPackage.pluginPackageUrl.protocol !== 'file:') {
+            throw new PluginConfigurationError(`Portal Theme plugin ${plugin.name}: Protocol ${plugin.pluginPackage.pluginPackageUrl.protocol} not supported'!`);
         }
 
         const themeBootstrap: MashroomPortalThemePluginBootstrapFunction = await plugin.loadBootstrap();
         const {engineName, engineFactory} = await themeBootstrap(plugin.name, config, contextHolder);
 
-        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
+        const pluginPackagePath = fileURLToPath(plugin.pluginPackage.pluginPackageUrl);
 
         let resourcesRootPath = plugin.pluginDefinition.resourcesRoot;
         if (!resourcesRootPath) {

@@ -24,6 +24,7 @@ export type MashroomPlugins1 =
   | MashroomPortalLayoutsPluginDefinition
   | MashroomPortalPageEnhancementPluginDefinition
   | MashroomPortalAppEnhancementPluginDefinition
+  | MashroomPortalAppConfigPluginDefinition
   | MashroomSecurityProviderPluginDefinition
   | MashroomSessionStoreProviderPluginDefinition
   | MashroomStorageProviderPluginDefinition
@@ -96,7 +97,10 @@ export interface MashroomPluginPackageDefinitionBuilderPluginDefinition {
    */
   bootstrap: string;
   defaultConfig?: {
-    weight?: number;
+    /**
+     * The order of the builder plugin - the higher it is the later it will be executed (Default: 1000)
+     */
+    order?: number;
   };
 }
 export interface MashroomWebAppPluginDefinition {
@@ -154,7 +158,7 @@ export interface MashroomMiddlewarePluginDefinition {
   bootstrap: string;
   defaultConfig: {
     /**
-     * The weight of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)
+     * The order of the middleware in the stack - the higher it is the later it will be executed (Default: 1000)
      */
     order?: number;
   };
@@ -225,9 +229,9 @@ export interface MashroomAdminUiIntegrationPluginDefinition {
      */
     height?: string;
     /**
-     * The weight of the menu entry, the higher the number the lower will be menu entry be (Default: 100)
+     * The order of the menu entry, the higher the number the lower the menu entry will be (Default: 1000)
      */
-    weight?: number;
+    order?: number;
   };
 }
 export interface MashroomBackgroundJobPluginDefinition {
@@ -280,7 +284,7 @@ export interface MashroomHttpProxyInterceptorPluginDefinition {
   bootstrap: string;
   defaultConfig: {
     /**
-     * The weight of the middleware in the stack - the higher it is the **later** it will be executed (Default: 1000)
+     * The order of the proxy interceptor plugin - the higher it is the **later** it will be executed (Default: 1000)
      */
     order?: number;
   };
@@ -572,11 +576,11 @@ export interface MashroomPortalPageEnhancementPluginDefinition {
    * Optional script that exports MashroomPortalPageEnhancementPluginBootstrapFunction
    */
   bootstrap?: string;
-  defaultConfig: {
+  defaultConfig?: {
     /**
-     * The weight of the resources- the higher it is the **later** they will be added to the page (Default: 1000)
+     * The order of the resources - the higher it is the **later** they will be added to the page (Default: 1000)
      */
-    priority?: number;
+    order?: number;
   };
 }
 /**
@@ -642,6 +646,26 @@ export interface MashroomPortalAppEnhancementPluginDefinition {
     [k: string]: JavaScriptIdentifier;
   };
   defaultConfig?: {};
+}
+export interface MashroomPortalAppConfigPluginDefinition {
+  name: string;
+  description?: string;
+  tags?: string[];
+  /**
+   * Required plugins
+   */
+  requires?: string[];
+  type: "portal-app-config";
+  /**
+   * Optional script that exports MashroomPortalAppConfigPluginBootstrapFunction
+   */
+  bootstrap: string;
+  defaultConfig?: {
+    /**
+     * The order of the config plugin - the higher the less likely it will considered (Default: 1000)
+     */
+    order?: number;
+  };
 }
 export interface MashroomSecurityProviderPluginDefinition {
   name: string;

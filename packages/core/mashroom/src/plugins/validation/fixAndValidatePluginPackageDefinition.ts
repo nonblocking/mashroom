@@ -2,7 +2,7 @@ import {configUtils} from '@mashroom/mashroom-utils';
 import type {URL} from 'url';
 import type {MashroomLogger, MashroomPluginPackageDefinition, MashroomPluginPackageMeta} from '../../../type-definitions';
 
-export default (packageURL: URL, def: MashroomPluginPackageDefinition, meta: MashroomPluginPackageMeta, logger: MashroomLogger): MashroomPluginPackageDefinition => {
+export default (packageUrl: URL, def: MashroomPluginPackageDefinition, meta: MashroomPluginPackageMeta, logger: MashroomLogger): MashroomPluginPackageDefinition => {
     const fixedDef = {
         devModeBuildScript: def.devModeBuildScript,
         plugins: (def.plugins || []).map((plugin) => ({

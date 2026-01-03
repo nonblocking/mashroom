@@ -47,6 +47,7 @@
             ],
             "target": "Mashroom Portal Remote App Registry Admin Webapp",
             "defaultConfig": {
+                "order": 1000,
                 "menuTitle": "Remote Portal Apps",
                 "path": "/remote-portal-apps"
             }

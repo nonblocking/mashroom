@@ -32,7 +32,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
     }
 
     get name(): string {
-        return 'Portal App Enhancement Plugin Loader';
+        return 'Portal Page Enhancement Plugin Loader';
     }
 
     generateMinimumConfig(plugin: MashroomPlugin): MashroomPluginConfig {
@@ -43,25 +43,25 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
     }
 
     async load(plugin: MashroomPlugin, config: MashroomPluginConfig, contextHolder: MashroomPluginContextHolder): Promise<void> {
-        let resourcesRootUri = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
+        let resourcesRootUrl = plugin.pluginDefinition.resourcesRoot || config.resourcesRoot || '.';
 
-        if (resourcesRootUri.indexOf('://') === -1) {
-            if (resourcesRootUri.startsWith('./')) {
-                resourcesRootUri = resourcesRootUri.slice(2);
+        if (resourcesRootUrl.indexOf('://') === -1) {
+            if (resourcesRootUrl.startsWith('./')) {
+                resourcesRootUrl = resourcesRootUrl.slice(2);
             }
-            if (plugin.pluginPackage.pluginPackageURL.protocol === 'file:') {
-                if (!isAbsolute(resourcesRootUri)) {
-                    const packageBasePath = fileURLToPath(plugin.pluginPackage.pluginPackageURL);
-                    resourcesRootUri = resolve(packageBasePath, resourcesRootUri);
+            if (plugin.pluginPackage.pluginPackageUrl.protocol === 'file:') {
+                if (!isAbsolute(resourcesRootUrl)) {
+                    const packageBasePath = fileURLToPath(plugin.pluginPackage.pluginPackageUrl);
+                    resourcesRootUrl = resolve(packageBasePath, resourcesRootUrl);
                 } else {
                     // Required for windows, don't remove
-                    resourcesRootUri = resolve(resourcesRootUri);
+                    resourcesRootUrl = resolve(resourcesRootUrl);
                 }
-                resourcesRootUri = `file://${resourcesRootUri}`;
+                resourcesRootUrl = `file://${resourcesRootUrl}`;
             } else {
-                let packageURL = removeTrailingSlash(plugin.pluginPackage.pluginPackageURL.toString());
-                resourcesRootUri = `${packageURL}/${resourcesRootUri || ''}`;
-                resourcesRootUri = removeTrailingSlash(resourcesRootUri);
+                let packageUrl = removeTrailingSlash(plugin.pluginPackage.pluginPackageUrl.toString());
+                resourcesRootUrl = `${packageUrl}/${resourcesRootUrl || ''}`;
+                resourcesRootUrl = removeTrailingSlash(resourcesRootUrl);
             }
         }
 
@@ -98,7 +98,7 @@ export default class PortalPageEnhancementPluginLoader implements MashroomPlugin
             version: plugin.pluginPackage.version,
             lastReloadTs: plugin.lastReloadTs || Date.now(),
             order,
-            resourcesRootUri,
+            resourcesRootUrl,
             pageResources,
             plugin: enhancementPlugin,
         };

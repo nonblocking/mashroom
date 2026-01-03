@@ -165,9 +165,9 @@ export default class MashroomLocalFileSystemPluginPackageScanner implements Mash
     private _fireEvent(eventName: FsEvent, pluginPackagePath: string) {
         if (this._callback) {
             if (eventName === 'updated' || eventName === 'added') {
-                this._callback.addOrUpdatePackageURL(pathToFileURL(pluginPackagePath));
+                this._callback.addOrUpdatePackageUrl(pathToFileURL(pluginPackagePath));
             } else {
-                this._callback.removePackageURL(pathToFileURL(pluginPackagePath));
+                this._callback.removePackageUrl(pathToFileURL(pluginPackagePath));
             }
         }
     }

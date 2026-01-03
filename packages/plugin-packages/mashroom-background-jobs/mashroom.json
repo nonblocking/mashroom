@@ -28,6 +28,7 @@
             ],
             "target": "Mashroom Background Jobs Admin Webapp",
             "defaultConfig": {
+                "order": 2000,
                 "menuTitle": "Background Jobs",
                 "path": "/background-jobs"
             }

@@ -87,7 +87,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder1), {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             devModeBuildScript: 'builddd',
             plugins: [
@@ -128,7 +128,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(pathToFileURL(pluginPackagesFolder2), {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual( {
             devModeBuildScript: 'builddd',
             plugins: [
@@ -173,7 +173,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             plugins: [
                 {
@@ -223,7 +223,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             plugins: [
                 {
@@ -272,7 +272,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         });
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             plugins: [
                 {
@@ -354,7 +354,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             plugins: [
                 {
@@ -401,7 +401,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         });
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             plugins: [
                 {
@@ -449,7 +449,7 @@ describe('MashroomDefaultPluginPackageDefinitionBuilder', () => {
         const pluginPackageDefinitions = await pluginDefinitionBuilder.buildDefinition(remoteHost, {});
 
         expect(pluginPackageDefinitions?.length).toBe(1);
-        expect(pluginPackageDefinitions![0].packageURL).toBeTruthy();
+        expect(pluginPackageDefinitions![0].packageUrl).toBeTruthy();
         expect(pluginPackageDefinitions![0].definition).toEqual({
             plugins: [
                 {

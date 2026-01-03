@@ -19,6 +19,7 @@ import type {
     ClientBootstrapReference,
     MashroomAvailablePortalApp,
     MashroomKnownPortalApp,
+    MashroomPortalAppClientBootstrapAdapter,
     MashroomPortalAppConfigEditor,
     MashroomPortalAppLifecycleHooks,
     MashroomPortalAppLoadListener,
@@ -86,6 +87,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
     private _restService: MashroomRestService;
     private _loadListeners: Array<MashroomPortalAppLoadListener>;
     private _aboutToUnloadListeners: Array<MashroomPortalAppLoadListener>;
+    private _bootstrapAdapters: Array<MashroomPortalAppClientBootstrapAdapter>;
     private _watch: boolean;
     private _watchedApps: Array<LoadedPortalAppInternal>;
     private _watchTimer: any | undefined | null;
@@ -98,6 +100,7 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
         this._restService = restService.withBasePath(this._apiPath);
         this._loadListeners = [];
         this._aboutToUnloadListeners = [];
+        this._bootstrapAdapters = [];
         this._watch = !!(global as any)[WINDOW_VAR_PORTAL_DEV_MODE];
         this._watchedApps = [];
         this._watchTimer = null;
@@ -268,7 +271,11 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             throw new Error(`Plugin not found: ${pluginName}`);
         }
 
-        const clientBootstrap = this._determineClientBootstrap(loadedApp);
+        let clientBootstrap = this._determineClientBootstrap(loadedApp);
+        const boostrapAdapter = this._bootstrapAdapters.find((adapter) => adapter.shouldAdapt(loadedApp.appSetup!));
+        if (boostrapAdapter) {
+            clientBootstrap = boostrapAdapter.adapt(clientBootstrap);
+        }
 
         return {
             pluginName,
@@ -328,6 +335,15 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
 
     unregisterAppAboutToUnloadListener(listener: MashroomPortalAppLoadListener) {
         this._aboutToUnloadListeners = this._aboutToUnloadListeners.filter((l) => l !== listener);
+    }
+
+    registerClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter) {
+        this.unregisterClientBootstrapAdapter(adapter);
+        this._bootstrapAdapters.push(adapter);
+    }
+
+    unregisterClientBootstrapAdapter(adapter: MashroomPortalAppClientBootstrapAdapter) {
+        this._bootstrapAdapters = this._bootstrapAdapters.filter((a) => a.name !== adapter.name);
     }
 
     loadAppSetup(pluginName: string, instanceId: string | undefined | null): Promise<MashroomPortalAppSetup> {
@@ -559,20 +575,23 @@ export default class MashroomPortalAppServiceImpl implements MashroomPortalAppSe
             throw error;
         }
 
-        const clientBootstrap = this._determineClientBootstrap(loadedApp);
-
         const clientServices = this._getClientServicesForApp(id, appSetup, pluginName);
+        let clientBootstrap = this._determineClientBootstrap(loadedApp);
+        const boostrapAdapter = this._bootstrapAdapters.find((adapter) => adapter.shouldAdapt(appSetup));
+        if (boostrapAdapter) {
+            clientBootstrap = boostrapAdapter.adapt(clientBootstrap);
+        }
 
-        let bootstrapRetVal = null;
+        let bootstrapRetVal;
         try {
-            bootstrapRetVal = clientBootstrap(portalAppHostElement, appSetup, clientServices) as any;
+            bootstrapRetVal = clientBootstrap(portalAppHostElement, appSetup, clientServices);
         } catch (error: any) {
             handleError(error);
             throw error;
         }
 
         if (bootstrapRetVal) {
-            if (typeof (bootstrapRetVal.then) === 'function') {
+            if ('then' in bootstrapRetVal && typeof (bootstrapRetVal.then) === 'function') {
                 const promise = bootstrapRetVal as Promise<void | MashroomPortalAppLifecycleHooks>;
                 try {
                     const lifecycleMethods = await promise;

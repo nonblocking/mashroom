@@ -13,7 +13,7 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
     private _status: MashroomPluginPackageStatus;
     private _errorMessage: string | undefined | null;
 
-    constructor(private _pluginPackageURL: URL, private _pluginPackageDefinition: MashroomPluginPackageDefinition,
+    constructor(private _pluginPackageUrl: URL, private _pluginPackageDefinition: MashroomPluginPackageDefinition,
                 private _pluginPackageMeta: MashroomPluginPackageMeta) {
         this._status = 'pending';
         this._errorMessage = null;
@@ -43,13 +43,13 @@ export default class MashroomPackagePlugin implements MashroomPluginPackageType 
         return this._pluginPackageMeta.license;
     }
 
-    get pluginPackageURL() {
-        return this._pluginPackageURL;
+    get pluginPackageUrl() {
+        return this._pluginPackageUrl;
     }
 
     get pluginPackagePath() {
-        if (this._pluginPackageURL.protocol === 'file:') {
-            return fileURLToPath(this._pluginPackageURL);
+        if (this._pluginPackageUrl.protocol === 'file:') {
+            return fileURLToPath(this._pluginPackageUrl);
         }
         return '';
     }

@@ -78,7 +78,7 @@ export default class RemotePluginPackagesScanner implements MashroomPluginPackag
         // Register all URLs
         for (const endpoint of allEndpoints) {
             this._logger.info(`Registering remote plugin package: ${endpoint.url}`);
-            context.scannerCallback?.addOrUpdatePackageURL(new URL(endpoint.url));
+            context.scannerCallback?.addOrUpdatePackageUrl(new URL(endpoint.url));
         }
 
         context.initialScanDone = true;

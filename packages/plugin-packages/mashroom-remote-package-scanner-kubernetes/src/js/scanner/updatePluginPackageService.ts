@@ -22,7 +22,7 @@ export default (service: KubernetesService, previousUrl: URL | undefined, logger
     if (pods.length === 0) {
         // No running pods found
         if (service.runningPods > 0) {
-            context.scannerCallback?.removePackageURL(service.url);
+            context.scannerCallback?.removePackageUrl(service.url);
             logger.info(`Remote plugin package removed because not running Pods found for Kubernetes Service: ${service.name}`);
         }
 
@@ -47,9 +47,9 @@ export default (service: KubernetesService, previousUrl: URL | undefined, logger
 
         if (updatePluginPackage) {
             if (urlChange) {
-                context.scannerCallback?.removePackageURL(previousUrl);
+                context.scannerCallback?.removePackageUrl(previousUrl);
             }
-            context.scannerCallback?.addOrUpdatePackageURL(service.url, {
+            context.scannerCallback?.addOrUpdatePackageUrl(service.url, {
                 packageName: service.name,
                 packageVersion: highestImageVersion,
                 ...service.annotations,

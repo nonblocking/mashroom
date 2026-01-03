@@ -1,12 +1,12 @@
 import {loggingUtils} from '@mashroom/mashroom-utils';
 import fixAndValidatePluginPackageDefinition from '../../../src/plugins/validation/fixAndValidatePluginPackageDefinition';
 
-const packageURL = new URL('file:///foo/bar');
+const packageUrl = new URL('file:///foo/bar');
 
 describe('fixAndValidatePluginPackageDefinition', () => {
 
     it('fails with a missing package name', async () => {
-        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+        expect(() => fixAndValidatePluginPackageDefinition(packageUrl, {
         } as any, {
             version: '1.0.0',
         } as any,
@@ -14,7 +14,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     });
 
     it('fails with a missing package version', async () => {
-        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+        expect(() => fixAndValidatePluginPackageDefinition(packageUrl, {
             } as any, {
                 name: 'test',
             } as any,
@@ -22,7 +22,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     });
 
     it('fails with a plugin definition without a name', async () => {
-        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+        expect(() => fixAndValidatePluginPackageDefinition(packageUrl, {
                 plugins: [{
 
                 }]
@@ -34,7 +34,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     });
 
     it('fails with a plugin definition with an invalid name', async () => {
-        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+        expect(() => fixAndValidatePluginPackageDefinition(packageUrl, {
                 plugins: [{
                     name: 'plugin?',
                 }]
@@ -46,7 +46,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     });
 
     it('fails with a plugin definition without a type', async () => {
-        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+        expect(() => fixAndValidatePluginPackageDefinition(packageUrl, {
                 plugins: [{
                     name: 'test',
                     description: 'test',
@@ -59,7 +59,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     });
 
     it('fails with duplicate plugin names', async () => {
-        expect(() => fixAndValidatePluginPackageDefinition(packageURL, {
+        expect(() => fixAndValidatePluginPackageDefinition(packageUrl, {
                 plugins: [{
                     name: 'test1',
                     type: 'test',
@@ -78,7 +78,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     });
 
     it('fixes the description field of plugins', async () => {
-        const fixed = fixAndValidatePluginPackageDefinition(packageURL, {
+        const fixed = fixAndValidatePluginPackageDefinition(packageUrl, {
                 plugins: [{
                     name: 'test',
                     type: 'foo',
@@ -96,7 +96,7 @@ describe('fixAndValidatePluginPackageDefinition', () => {
     it('evaluates templates in the config object', async () => {
         process.env.SERVER_NAME = 'The Server';
 
-        const fixed = fixAndValidatePluginPackageDefinition(packageURL, {
+        const fixed = fixAndValidatePluginPackageDefinition(packageUrl, {
                 plugins: [{
                     name: 'test',
                     type: 'foo',

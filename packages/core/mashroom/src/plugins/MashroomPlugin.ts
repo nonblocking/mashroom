@@ -76,11 +76,11 @@ export default class MashroomPlugin implements MashroomPluginType {
         if (!this._pluginDefinition.bootstrap) {
             return null;
         }
-        // At the moment we can only load bootstraps form the local file system
-        if (this.pluginPackage.pluginPackageURL.protocol !== 'file:') {
-            throw new Error(`Cannot load bootstrap module from ${this.pluginPackage.pluginPackageURL} because it is not a local file system URL`);
+        // At the moment we can only load bootstraps from the local file system
+        if (this.pluginPackage.pluginPackageUrl.protocol !== 'file:') {
+            throw new Error(`Cannot load bootstrap module from ${this.pluginPackage.pluginPackageUrl} because it is not a local file system URL`);
         }
-        return resolve(fileURLToPath(this.pluginPackage.pluginPackageURL), this._pluginDefinition.bootstrap);
+        return resolve(fileURLToPath(this.pluginPackage.pluginPackageUrl), this._pluginDefinition.bootstrap);
     }
 
     get name() {

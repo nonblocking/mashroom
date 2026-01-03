@@ -17,7 +17,7 @@ export default class MashroomAdminUIIntegrationLoader implements MashroomPluginL
     generateMinimumConfig(plugin: MashroomPlugin) {
         return {
             height: '80vh',
-            weight: 100,
+            order: 1000,
         };
     }
 

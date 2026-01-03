@@ -7,5 +7,5 @@
  * Test Server 4: Uses OpenLDAP for authentication and RabbitMQ (AMQP) as an external messaging broker
  * Test Server 5: Demonstrates a public website with a reverse proxy, virtual host mapping and a CDN
  * Test Server 6: Server to test Kubernetes integration
- * Test Server 7: Server with all config files are in TypeScript
- * Test Server 8: Uses Redis as an external messaging broker and MongoDB as session store
+ * Test Server 7: Server with all config files is in TypeScript
+ * Test Server 8: Uses Redis as an external messaging broker and MongoDB as a session store

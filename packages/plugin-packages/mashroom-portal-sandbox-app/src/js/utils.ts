@@ -39,7 +39,7 @@ export const mergeAppConfig = (selectedPortalApp: SelectedPortalApp, params: Por
     const {appName, setup} = selectedPortalApp;
     const {lang, permissions, appConfig} = params;
 
-    return {
+    const merged = {
         appName,
         setup: {
             ...setup, lang: lang || '100%',
@@ -47,4 +47,11 @@ export const mergeAppConfig = (selectedPortalApp: SelectedPortalApp, params: Por
             appConfig: appConfig || setup.appConfig,
         }
     };
+
+    // OpenMicrofrontends support
+    if ('hostContext' in setup && (setup as any).hostContext.openMicrofrontends) {
+        (merged.setup as any).config = merged.setup.appConfig;
+    }
+
+    return merged;
 };

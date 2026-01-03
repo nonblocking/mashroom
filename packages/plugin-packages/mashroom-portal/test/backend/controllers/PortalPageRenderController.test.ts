@@ -56,17 +56,20 @@ const pluginRegistry1: any = {
     layouts: [],
     portalApps: [{
         name: 'Mashroom Welcome Portal App',
+        resources: {},
         defaultAppConfig: {
             firstName: 'John',
         },
     }, {
         name: 'Mashroom Welcome Portal App 2',
+        resources: {},
         defaultAppConfig: {
             firstName: 'Foo',
         },
     }],
     portalAppEnhancements: [],
     portalPageEnhancements: [],
+    portalAppConfigs: [],
 };
 
 const pluginRegistry2: any = {
@@ -74,11 +77,13 @@ const pluginRegistry2: any = {
     layouts: [layout],
     portalApps: [{
         name: 'Mashroom Welcome Portal App',
+        resources: {},
         defaultAppConfig: {
             firstName: 'John',
         },
     }, {
         name: 'Mashroom Welcome Portal App 2',
+        resources: {},
         ssrBootstrap: `${__dirname}/ssr-bootstrap2.js`,
         defaultAppConfig: {
             firstName: 'Foo',
@@ -86,6 +91,7 @@ const pluginRegistry2: any = {
     }],
     portalAppEnhancements: [],
     portalPageEnhancements: [],
+    portalAppConfigs: [],
 };
 
 const pluginRegistry3: any = {
@@ -93,11 +99,13 @@ const pluginRegistry3: any = {
     layouts: [layout],
     portalApps: [{
         name: 'Mashroom Welcome Portal App',
+        resources: {},
         defaultAppConfig: {
             firstName: 'John',
         },
     }, {
         name: 'Mashroom Welcome Portal App 2',
+        resources: {},
         defaultAppConfig: {
             firstName: 'Foo',
         },
@@ -112,7 +120,7 @@ const pluginRegistry3: any = {
     }],
     portalPageEnhancements: [{
         name: 'Test Page Enhancement',
-        resourcesRootUri: `file:///${__dirname}`,
+        resourcesRootUrl: `file:///${__dirname}`,
         order: 500,
         lastReloadTs: 2000,
         pageResources: {
@@ -157,7 +165,7 @@ const pluginRegistry3: any = {
         }
     }, {
         name: 'Test Page Enhancement 2',
-        resourcesRootUri: `file://${__dirname}`,
+        resourcesRootUrl: `file://${__dirname}`,
         order: 0,
         pageResources: {
             js: [{
@@ -165,7 +173,8 @@ const pluginRegistry3: any = {
                 location: 'header',
             }]
         },
-    }]
+    }],
+    portalAppConfigs: [],
 };
 
 const site: any = {
@@ -258,7 +267,7 @@ const pluginContext: any = {
                     return [{
                         name: 'Mashroom Welcome Portal App 2',
                         ssrBootstrap: `${__dirname}/ssr-bootstrap.js`,
-                        resourcesRootUri: `file://${__dirname}`,
+                        resourcesRootUrl: `file://${__dirname}`,
                         resources: {
                             js: ['bundle.js'],
                         },

@@ -23,7 +23,7 @@ export default class RefreshRemotePluginPackagesBackgroundJob {
 
         for (const endpoint of endpoints) {
             if (Date.now() - endpoint.lastRefreshTimestamp > this._registrationRefreshIntervalSec * 1000) {
-                context.scannerCallback?.addOrUpdatePackageURL(new URL(endpoint.url));
+                context.scannerCallback?.addOrUpdatePackageUrl(new URL(endpoint.url));
                 const updatedEndpoint = {
                     ...endpoint,
                     lastRefreshTimestamp: Date.now(),

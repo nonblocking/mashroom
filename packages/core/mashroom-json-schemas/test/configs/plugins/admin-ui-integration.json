@@ -13,7 +13,7 @@
                 "menuTitle": "My Admin Panel",
                 "path": "/my-admin-panel",
                 "height": "80vh",
-                "weight": 10000
+                "order": 10000
             }
         }
     ]

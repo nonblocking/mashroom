@@ -25,7 +25,7 @@ export default class MashroomServicePluginLoader implements MashroomPluginLoader
 
     generateMinimumConfig(plugin: MashroomPlugin) {
         return {
-            weight: 100,
+            order: 1000,
         };
     }
 
@@ -34,7 +34,7 @@ export default class MashroomServicePluginLoader implements MashroomPluginLoader
         const pluginPackageDefinitionBuilder = await bootstrap(plugin.name, config, contextHolder);
 
         this._logger.info('Loading plugin package definition builder:', pluginPackageDefinitionBuilder.name);
-        this._pluginRegistry.registerPluginDefinitionBuilder(config.weight, pluginPackageDefinitionBuilder);
+        this._pluginRegistry.registerPluginDefinitionBuilder(config.order, pluginPackageDefinitionBuilder);
         this._loadedPlugins.set(plugin.name, pluginPackageDefinitionBuilder);
     }
 

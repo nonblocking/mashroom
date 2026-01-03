@@ -3,7 +3,7 @@ import type {Request} from 'express';
 
 export default (content: string, req: Request) => {
     const adminIntegrationPlugins = [...req.pluginContext.services.core.pluginService.getPlugins().filter((p) => p.type === 'admin-ui-integration' && !!p.config?.menuTitle)];
-    adminIntegrationPlugins.sort((p1, p2) => p1.config?.weight - p2.config?.weight);
+    adminIntegrationPlugins.sort((p1, p2) => p1.config?.order - p2.config?.order);
 
     const extraMenuEntry = adminIntegrationPlugins.map(({config}) => ({
         menuTitle: config?.menuTitle || '???',

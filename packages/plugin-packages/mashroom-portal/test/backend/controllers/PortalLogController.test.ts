@@ -55,7 +55,7 @@ describe('PortalLogController', () => {
         const pluginRegistry: any = {
             portalApps: [
                 {name: 'App1', version: '1.0.1'},
-                {name: 'App2', version: '2.2.4', remoteApp: true, resourcesRootUri: 'http://my-remote-app.at:5050/test'},
+                {name: 'App2', version: '2.2.4', remoteApp: true, packageUrl: new URL('http://my-remote-app.at:5050/test')},
             ]
         };
 

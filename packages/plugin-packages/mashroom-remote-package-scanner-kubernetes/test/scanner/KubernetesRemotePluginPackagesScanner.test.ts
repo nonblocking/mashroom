@@ -3,8 +3,8 @@ import KubernetesRemotePluginPackagesScanner from '../../src/js/scanner/Kubernet
 import context from '../../src/js/context';
 
 const scannerCallback = {
-    addOrUpdatePackageURL: jest.fn(),
-    removePackageURL: jest.fn()
+    addOrUpdatePackageUrl: jest.fn(),
+    removePackageUrl: jest.fn()
 };
 context.scannerCallback = scannerCallback;
 
@@ -27,8 +27,8 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
             uid: '222222',
             labels: [],
         } as any];
-        scannerCallback.addOrUpdatePackageURL.mockReset();
-        scannerCallback.removePackageURL.mockReset();
+        scannerCallback.addOrUpdatePackageUrl.mockReset();
+        scannerCallback.removePackageUrl.mockReset();
         mockKubernetesConnector.watchNamespaces.mockReset();
         mockKubernetesConnector.watchServices.mockReset();
         mockKubernetesConnector.watchPods.mockReset();
@@ -98,9 +98,9 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
         expect(service.name).toBe('my-remote-app');
         expect(service.error).toBeFalsy();
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][1]).toEqual({
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[0][1]).toEqual({
             packageName: 'my-remote-app',
             packageVersion: '1.0.0',
             'mashroom-server.com/remote-plugins': 'true',
@@ -193,8 +193,8 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
         expect(service.name).toBe('my-remote-app');
         expect(service.error).toBeFalsy();
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
         expect(mockKubernetesConnector.watchNamespaces).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.watchNamespaces.mock.calls[0][0]).toBe('environment=development');
         expect(mockKubernetesConnector.watchServices).toHaveBeenCalledTimes(2);
@@ -272,7 +272,7 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
         expect(service.namespace).toBe('dev-namespace1');
         expect(service.name).toBe('my-remote-app');
 
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.watchNamespaces).toHaveBeenCalledTimes(1);
         expect(mockKubernetesConnector.watchNamespaces.mock.calls[0][0]).toBe('foo=bar');
         expect(mockKubernetesConnector.watchServices).toHaveBeenCalledTimes(1);
@@ -326,9 +326,9 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         expect(context.services.length).toBe(1);
 
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace1:6066/');
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace1:6066/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(0);
     });
 
     it('removes the plugin package if no pod running', async () => {
@@ -392,9 +392,9 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
 
         expect(context.services.length).toBe(2);
 
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace1:6066/');
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(0);
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace1:6066/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(0);
     });
 
     it('replaces service and re-creates the plugin package when its port changes', async () => {
@@ -480,11 +480,11 @@ describe('KubernetesRemotePluginPackagesScanner', () => {
         expect(context.services.length).toBe(2);
         expect(context.services[1].url?.toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
 
-        expect(scannerCallback.removePackageURL).toHaveBeenCalledTimes(1);
-        expect(scannerCallback.removePackageURL.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
-        expect(scannerCallback.addOrUpdatePackageURL).toHaveBeenCalledTimes(2);
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[1][0].toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
-        expect(scannerCallback.addOrUpdatePackageURL.mock.calls[1][1]).toEqual({
+        expect(scannerCallback.removePackageUrl).toHaveBeenCalledTimes(1);
+        expect(scannerCallback.removePackageUrl.mock.calls[0][0].toString()).toBe('http://my-remote-app.dev-namespace2:6066/');
+        expect(scannerCallback.addOrUpdatePackageUrl).toHaveBeenCalledTimes(2);
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[1][0].toString()).toBe('http://my-remote-app.dev-namespace2:6067/');
+        expect(scannerCallback.addOrUpdatePackageUrl.mock.calls[1][1]).toEqual({
             packageName: 'my-remote-app',
             packageVersion: '1.0.0',
         });

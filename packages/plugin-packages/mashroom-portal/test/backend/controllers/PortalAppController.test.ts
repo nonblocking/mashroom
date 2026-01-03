@@ -53,11 +53,12 @@ const portalApp1: MashroomPortalApp = {
     category: 'demo',
     metaInfo: null,
     lastReloadTs: 2222,
+    packageUrl: new URL(`file://${__dirname}`),
     clientBootstrap: 'foo',
-    resourcesRootUri: `file://${__dirname}`,
+    resourcesRootUrl: `file://${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlUri: undefined,
+    ssrInitialHtmlUrl: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -98,11 +99,12 @@ const portalApp2: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 1111,
+    packageUrl: new URL(`file://${__dirname}`),
     clientBootstrap: 'foo',
-    resourcesRootUri: `file:/${__dirname}`,
+    resourcesRootUrl: `file:/${__dirname}`,
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlUri: undefined,
+    ssrInitialHtmlUrl: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -133,11 +135,12 @@ const portalApp3: MashroomPortalApp = {
     category: null,
     metaInfo: null,
     lastReloadTs: 4444,
+    packageUrl: new URL('http://my.host.com'),
     clientBootstrap: 'foo',
-    resourcesRootUri: `http://my.host.com`,
+    resourcesRootUrl: 'http://my.host.com',
     remoteApp: false,
     ssrBootstrap: undefined,
-    ssrInitialHtmlUri: undefined,
+    ssrInitialHtmlUrl: undefined,
     cachingConfig: undefined,
     editorConfig: undefined,
     resources: {
@@ -212,6 +215,7 @@ const portalAppEnhancement2: MashroomPortalAppEnhancement = {
 const pluginRegistry: any = {
     portalApps: [portalApp1, portalApp2, portalApp3],
     portalAppEnhancements: [portalAppEnhancement1, portalAppEnhancement2],
+    portalAppConfigs: [],
 };
 
 const pluginContext: any = {

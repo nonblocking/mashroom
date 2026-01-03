@@ -120,7 +120,7 @@ const getPageEnhancementResource = async (type: 'js' | 'css', enhancement: Mashr
     } else {
         let resourceAsString;
         if (resourcePath) {
-            const resourceUri = `${enhancement.resourcesRootUri}/${resourcePath}`;
+            const resourceUri = `${enhancement.resourcesRootUrl}/${resourcePath}`;
             try {
                 resourceAsString = await getResourceAsString(resourceUri, logger);
             } catch (e) {

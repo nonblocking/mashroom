@@ -149,10 +149,10 @@ export interface MashroomPluginPackage {
     /**
      * Package URL
      */
-    readonly pluginPackageURL: URL;
+    readonly pluginPackageUrl: URL;
 
     /**
-     * @deprecated This will be empty for URLs not pointing to the local file system, use pluginPackageURL
+     * @deprecated This will be empty for URLs not pointing to the local file system, use pluginPackageUrl
      */
     readonly pluginPackagePath: string;
 
@@ -320,8 +320,7 @@ export type MashroomPotentialPluginPackage = {
 export type MashroomPluginScannerHints = {
     readonly packageName?: string;
     readonly packageVersion?: string;
-    // The path to the plugin definition (e.g., mashroom.json) if it deviates from the commonly known ones
-    readonly pluginDefinitionPath?: string;
+    // Other annotations, in the case of K8S all Service annotations
     readonly [key: string]: any;
 }
 
@@ -330,8 +329,8 @@ export type MashroomPluginScannerCallback = {
      * Add or update a new package location.
      * It is possible to pass arbitrary hints to MashroomPluginPackageDefinitionBuilder plugins
      */
-    addOrUpdatePackageURL(url: URL, hints?: MashroomPluginScannerHints): void;
-    removePackageURL(url: URL): void;
+    addOrUpdatePackageUrl(url: URL, hints?: MashroomPluginScannerHints): void;
+    removePackageUrl(url: URL): void;
 }
 
 /**
@@ -359,7 +358,7 @@ export interface MashroomPluginPackageScanner {
 }
 
 export type MashroomPluginPackageDefinitionAndMeta = {
-    readonly packageURL: URL;
+    readonly packageUrl: URL;
     readonly definition: MashroomPluginPackageDefinition;
     readonly meta: MashroomPluginPackageMeta;
 }
@@ -381,7 +380,7 @@ export interface MashroomPluginPackageDefinitionBuilder {
      * If reading the definition fails, this should throw an error instead of just returning null.
      * (If you return null, existing plugins might be unregistered).
      */
-    buildDefinition(packageURL: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null>;
+    buildDefinition(packageUrl: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null>;
 }
 
 /**
@@ -508,7 +507,7 @@ export interface MashroomMiddlewareStackService {
 
     /**
      * Execute the given middleware.
-     * Throws an exception if it doesn't exists
+     * Throws an exception if it doesn't exist
      */
     apply(
         pluginName: string,

@@ -31,46 +31,46 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         return 'Default definition builder based on package.json and external plugin definition files';
     }
 
-    async buildDefinition(packageURL: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
-        if (!['file:', 'http:', 'https:'].includes(packageURL.protocol)) {
+    async buildDefinition(packageUrl: URL, scannerHints: MashroomPluginScannerHints): Promise<Array<MashroomPluginPackageDefinitionAndMeta> | null> {
+        if (!['file:', 'http:', 'https:'].includes(packageUrl.protocol)) {
             return null;
         }
 
-        const remotePackage = packageURL.protocol !== 'file:';
+        const remotePackage = packageUrl.protocol !== 'file:';
 
-        const packageJson = await this._readPackageJson(packageURL);
+        const packageJson = await this._readPackageJson(packageUrl);
 
         if (!remotePackage && !packageJson) {
             // A local package requires a package.json
-            this._logger.debug(`Ignoring path ${packageURL} because it does not contain a package.json`);
+            this._logger.debug(`Ignoring path ${packageUrl} because it does not contain a package.json`);
             return null;
         }
 
-        let definition = await this._readExternalPluginConfigFile(packageURL, scannerHints);
+        let definition = await this._readExternalPluginConfigFile(packageUrl, scannerHints);
         if (!definition && packageJson?.mashroom) {
             definition = packageJson.mashroom;
         }
 
         if (!definition) {
-            this._logger.warn(`No default plugin definition found in: ${packageURL}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist. This could be an error our an additional "plugin-package-definition-builder" plugin is required.`);
+            this._logger.warn(`No default plugin definition found in: ${packageUrl}. Neither does package.json contain a "mashroom" property nor does an external plugin definition file exist. This could be an error our an additional "plugin-package-definition-builder" plugin is required.`);
             return null;
         }
         if (!definition.plugins || !Array.isArray(definition.plugins)) {
-            this._logger.error(`Error processing plugin definition in: ${packageURL}: "plugins" is either not defined or no array!`);
+            this._logger.error(`Error processing plugin definition in: ${packageUrl}: "plugins" is either not defined or no array!`);
             return null;
         }
 
         // Check the build manifest for version info (only if no scannerHints.packageVersion is set, which probably the docker image version and has precedence)
         let buildManifestVersion: string | undefined;
         if (!scannerHints.packageVersion && remotePackage && definition.buildManifestPath) {
-            const buildManifest = await this._fetchRemoteJSON(new URL(definition.buildManifestPath, packageURL));
+            const buildManifest = await this._fetchRemoteJSON(new URL(definition.buildManifestPath, packageUrl));
             if (buildManifest) {
                 buildManifestVersion = buildManifest.version || buildManifest.timestamp;
                 if (!buildManifestVersion) {
-                    this._logger.warn(`The build manifest at ${definition.buildManifestPath} in ${packageURL} does not contain a version or timestamp!`);
+                    this._logger.warn(`The build manifest at ${definition.buildManifestPath} in ${packageUrl} does not contain a version or timestamp!`);
                 }
             } else {
-                this._logger.warn(`Couldn't load build manifest ${definition.buildManifestPath} from ${packageURL}.`);
+                this._logger.warn(`Couldn't load build manifest ${definition.buildManifestPath} from ${packageUrl}.`);
             }
         }
 
@@ -86,10 +86,10 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
             };
         } else {
             if (!buildManifestVersion && !scannerHints.packageVersion) {
-                this._logger.warn(`Couldn't determine package version of ${packageURL} because no package.json was found! This will impact caching of assets. You should fix this.`);
+                this._logger.warn(`Couldn't determine package version of ${packageUrl} because no package.json was found! This will impact caching of assets. You should fix this.`);
             }
             meta = {
-                name: scannerHints.packageName ?? packageURL.hostname,
+                name: scannerHints.packageName ?? packageUrl.hostname,
                 version: scannerHints.packageVersion ?? buildManifestVersion ?? String(Date.now()),
                 description: null,
                 homepage: null,
@@ -99,7 +99,7 @@ export default class MashroomDefaultPluginPackageDefinitionBuilder implements Ma
         }
 
         return [{
-            packageURL,
+            packageUrl,
             definition,
             meta,
         }];

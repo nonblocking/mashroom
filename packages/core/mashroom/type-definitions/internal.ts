@@ -76,9 +76,9 @@ export type MashroomPluginRegistryEvent = {
 }
 
 
-export type MashroomPluginPackageDefinitionBuilderWithWeight = {
+export type MashroomPluginPackageDefinitionBuilderWithOrder = {
     readonly definitionBuilder: MashroomPluginPackageDefinitionBuilder;
-    readonly weight: number;
+    readonly order: number;
 }
 
 /**
@@ -108,7 +108,7 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
     /**
      * Known plugin package definition builders
      */
-    readonly pluginPackageDefinitionBuilders: Readonly<Array<MashroomPluginPackageDefinitionBuilderWithWeight>>;
+    readonly pluginPackageDefinitionBuilders: Readonly<Array<MashroomPluginPackageDefinitionBuilderWithOrder>>;
     /**
      * Register (or overwrite existing) a plugin scanner
      */
@@ -120,7 +120,7 @@ export interface MashroomPluginRegistry extends MashroomEventEmitter<MashroomPlu
     /**
      * Register (or overwrite existing) a plugin definition builder
      */
-    registerPluginDefinitionBuilder(weight: number, definitionBuilder: MashroomPluginPackageDefinitionBuilder): void;
+    registerPluginDefinitionBuilder(order: number, definitionBuilder: MashroomPluginPackageDefinitionBuilder): void;
     /**
      * Unregister a plugin definition scanner
      */
