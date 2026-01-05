@@ -17,8 +17,8 @@
         "node-cache": "^5.1.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@types/express": "^4.17.21"
     },
     "jest": {

@@ -12,13 +12,13 @@
         "dist/**"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "2.9.3",
+        "@mashroom/mashroom-utils": "2.9.4",
         "mqtt": "^5.13.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-messaging": "^2.9.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-messaging": "2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
         "@types/ws": "^8.18.1"
     },
     "jest": {

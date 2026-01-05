@@ -13,7 +13,7 @@
         "default-robots.txt"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4"
+        "@mashroom/mashroom": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",

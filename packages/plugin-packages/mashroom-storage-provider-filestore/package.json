@@ -18,9 +18,9 @@
         "proper-lockfile": "^4.1.2"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-storage": "^2.9.4",
-        "@mashroom/mashroom-utils": "2.9.3",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-storage": "2.9.4",
+        "@mashroom/mashroom-utils": "2.9.4",
         "@types/fs-extra": "^11.0.4",
         "@types/proper-lockfile": "^4.1.4"
     },

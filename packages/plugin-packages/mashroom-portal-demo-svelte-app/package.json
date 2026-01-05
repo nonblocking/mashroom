@@ -19,8 +19,8 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-portal": "^2.9.4",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-portal": "2.9.4",
         "@tsconfig/svelte": "^5.0.4",
         "svelte": "^5.28.2",
         "svelte-check": "^4.1.7",

@@ -13,11 +13,11 @@
         "type-definitions/*"
     ],
     "dependencies": {
-        "@mashroom/mashroom-utils": "2.9.3"
+        "@mashroom/mashroom-utils": "2.9.4"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-memory-cache": "^2.9.4"
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-memory-cache": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",

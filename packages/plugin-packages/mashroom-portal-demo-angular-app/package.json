@@ -24,7 +24,7 @@
         "@angular/language-service": "^19.2.10",
         "@angular/platform-browser": "^19.2.10",
         "@angular/platform-browser-dynamic": "^19.2.10",
-        "@mashroom/mashroom-portal": "^2.9.4"
+        "@mashroom/mashroom-portal": "2.9.4"
     },
     "scripts": {
         "dev": "ng serve",

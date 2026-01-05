@@ -15,9 +15,9 @@
         "ioredis": "^5.6.1"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-memory-cache": "^2.9.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4"
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-memory-cache": "2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",

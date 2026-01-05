@@ -15,10 +15,10 @@
         "mongodb": "^6.16.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4",
-        "@mashroom/mashroom-storage": "^2.9.4",
-        "@mashroom/mashroom-utils": "2.9.3",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.4",
+        "@mashroom/mashroom-storage": "2.9.4",
+        "@mashroom/mashroom-utils": "2.9.4",
         "@shelf/jest-mongodb": "^5.1.0"
     },
     "jest": {

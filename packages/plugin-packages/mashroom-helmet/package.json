@@ -15,7 +15,7 @@
         "helmet": "^8.1.0"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4"
+        "@mashroom/mashroom": "2.9.4"
     },
     "scripts": {
         "lint": "eslint --fix",

@@ -13,7 +13,7 @@
         "dist/**"
     ],
     "devDependencies": {
-        "@mashroom/mashroom-portal": "^2.9.4"
+        "@mashroom/mashroom-portal": "2.9.4"
     },
     "jest": {
         "testEnvironment": "node",

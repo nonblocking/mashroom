@@ -13,8 +13,8 @@
         "type-definitions/*"
     ],
     "devDependencies": {
-        "@mashroom/mashroom": "^2.9.4",
-        "@mashroom/mashroom-utils": "2.9.3",
+        "@mashroom/mashroom": "2.9.4",
+        "@mashroom/mashroom-utils": "2.9.4",
         "@types/express": "^4.17.21"
     },
     "jest": {
