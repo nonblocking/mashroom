@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.3",
+    "version": "2.9.4",
     "files": [
         "dist/**",
         "type-definitions/*"
@@ -20,18 +20,18 @@
         "nanoid": "^3.3.11"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.3",
-        "@mashroom/mashroom-browser-cache": "2.9.3",
-        "@mashroom/mashroom-cdn": "2.9.3",
-        "@mashroom/mashroom-csrf-protection": "2.9.3",
-        "@mashroom/mashroom-http-proxy": "2.9.3",
-        "@mashroom/mashroom-i18n": "2.9.3",
-        "@mashroom/mashroom-memory-cache": "2.9.3",
-        "@mashroom/mashroom-messaging": "2.9.3",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.3",
-        "@mashroom/mashroom-security": "2.9.3",
-        "@mashroom/mashroom-storage": "2.9.3",
-        "@mashroom/mashroom-vhost-path-mapper": "2.9.3",
+        "@mashroom/mashroom": "^2.9.4",
+        "@mashroom/mashroom-browser-cache": "^2.9.4",
+        "@mashroom/mashroom-cdn": "^2.9.4",
+        "@mashroom/mashroom-csrf-protection": "^2.9.4",
+        "@mashroom/mashroom-http-proxy": "^2.9.4",
+        "@mashroom/mashroom-i18n": "^2.9.4",
+        "@mashroom/mashroom-memory-cache": "^2.9.4",
+        "@mashroom/mashroom-messaging": "^2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4",
+        "@mashroom/mashroom-security": "^2.9.4",
+        "@mashroom/mashroom-storage": "^2.9.4",
+        "@mashroom/mashroom-vhost-path-mapper": "^2.9.4",
         "@types/express": "^4.17.21"
     },
     "jest": {

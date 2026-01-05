@@ -7,7 +7,7 @@
         "url": "git+https://github.com/nonblocking/mashroom.git"
     },
     "license": "MIT",
-    "version": "2.9.3",
+    "version": "2.9.4",
     "files": [
         "dist/**"
     ],
@@ -16,9 +16,9 @@
         "rhea": "^3.0.4"
     },
     "devDependencies": {
-        "@mashroom/mashroom": "2.9.3",
-        "@mashroom/mashroom-messaging": "2.9.3",
-        "@mashroom/mashroom-monitoring-metrics-collector": "2.9.3"
+        "@mashroom/mashroom": "^2.9.4",
+        "@mashroom/mashroom-messaging": "^2.9.4",
+        "@mashroom/mashroom-monitoring-metrics-collector": "^2.9.4"
     },
     "jest": {
         "testEnvironment": "node",
