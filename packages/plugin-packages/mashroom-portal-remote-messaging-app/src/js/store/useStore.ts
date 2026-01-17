@@ -1,11 +1,12 @@
-
-import { create } from 'zustand/react';
-import {devtools, redux} from 'zustand/middleware';
+import {createContext, useContext, useRef, createElement} from 'react';
+import {create, useStore} from 'zustand/react';
+import { redux, devtools } from 'zustand/middleware';
 import reducers from './reducers';
 
+import type { ReactNode} from 'react';
 import type {State} from '../types';
 import type {AnyAction} from './actions';
-import type {StateCreator} from 'zustand/vanilla';
+import type {StateCreator, StoreApi} from 'zustand/vanilla';
 
 const initialState: State = {
     privateUserTopicsSubscription: {
@@ -32,8 +33,27 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
-const useStore = create<StateWithDispatch>()(
-  init
-);
+// In a Microfrontend we shouldn't use a "global" state shared by all instances,
+// therefore, we attach it to the context
 
-export default useStore;
+const StoreContext = createContext<StoreApi<StateWithDispatch> | undefined>(undefined);
+
+export const StoreProvider = ({ children }: { children: ReactNode }) => {
+    const storeRef = useRef<StoreApi<StateWithDispatch>>(undefined);
+    if (!storeRef.current) {
+        storeRef.current = create<StateWithDispatch>()(
+            init,
+        );
+    }
+    return createElement(StoreContext.Provider, { value: storeRef.current! }, children);
+};
+
+const useStoreInContext = <S>(selector: (state: StateWithDispatch) => S) => {
+    const store = useContext(StoreContext);
+    if (!store) {
+        throw new Error('Missing StoreProvider');
+    }
+    return useStore(store, selector);
+};
+
+export default useStoreInContext;

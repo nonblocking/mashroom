@@ -2,6 +2,7 @@
 import React, {useMemo} from 'react';
 import MessagesProvider from '../messages/MessagesProvider';
 import { getQueryParams } from '../utils';
+import {StoreProvider} from '../store/useStore';
 import ActivePortalAppHost from './ActivePortalAppHost';
 import PortalApp from './PortalApp';
 import ActivePortalAppStats from './ActivePortalAppStats';
@@ -27,22 +28,24 @@ export default ({lang, messageBus, portalAppService, portalStateService}: Props)
     console.info('Sandbox App started with query params: ', queryParams);
 
     return (
-        <MessagesProvider lang={lang}>
-            <div className='mashroom-sandbox-app'>
-                <ActivePortalAppHost />
-                <ActivePortalAppStats portalAppService={portalAppService} />
-                <ActivePortalAppClose />
-                <ActivePortalAppMessageBusSendForm
-                    messageBus={messageBus}
-                    sbAutoTest={queryParams.autoTest}
-                />
-                <ActivePortalAppMessageBusHistory />
-                <PortalApp
-                    queryParams={queryParams}
-                    messageBus={messageBus}
-                    portalAppService={portalAppService}
-                />
-            </div>
-        </MessagesProvider>
+        <StoreProvider>
+            <MessagesProvider lang={lang}>
+                <div className='mashroom-sandbox-app'>
+                    <ActivePortalAppHost />
+                    <ActivePortalAppStats portalAppService={portalAppService} />
+                    <ActivePortalAppClose />
+                    <ActivePortalAppMessageBusSendForm
+                        messageBus={messageBus}
+                        sbAutoTest={queryParams.autoTest}
+                    />
+                    <ActivePortalAppMessageBusHistory />
+                    <PortalApp
+                        queryParams={queryParams}
+                        messageBus={messageBus}
+                        portalAppService={portalAppService}
+                    />
+                </div>
+            </MessagesProvider>
+        </StoreProvider>
     );
 };

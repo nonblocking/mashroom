@@ -17,7 +17,7 @@ hence they can be used as building blocks for *Composite Apps* or as part of a *
 
 The *Mashroom Portal* plugin, which is responsible for rendering *Portal Apps* is fully capable of *Hybrid Rendering*.
 It renders the initial page requested by the user completely on the server-side (if all *Portal Apps* on the page also support SSR)
-and exchanges dynamically the content on the client-side for subsequent pages.
+and dynamically exchanges the content on the client-side for subsequent pages.
 
 From a technical point of view, the core of *Mashroom Server* is a plugin loader that scans npm packages for
 plugin definitions (package.json, mashroom.json) and loads them at runtime.
