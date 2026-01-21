@@ -1,0 +1,60 @@
+// Base element styles
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+    margin-bottom: var(--mashroom-portal-spacing-default);
+}
+
+h4 {
+    margin-top: 0;
+    margin-bottom: var(--mashroom-portal-spacing-default);
+    font-size: 1.2em;
+}
+
+h5,
+h6 {
+    margin: 0;
+}
+
+blockquote {
+    margin: 0 var(--mashroom-portal-spacing-default);
+    padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+    background-color: var(--bs-body-bg);
+    border-left: 7px solid var(--bs-gray-500);
+}
+
+// Apply default styles to elements without Bootstrap classes
+
+input[type="text"]:not(.form-control),
+input[type="number"]:not(.form-control),
+input[type="password"]:not(.form-control),
+input[type="tel"]:not(.form-control),
+input[type="search"]:not(.form-control),
+textarea:not(.form-control),
+select:not(.form-control) {
+    @extend .form-control;
+}
+
+%button-primary {
+    @extend .btn;
+    @extend .btn-primary;
+}
+
+%button-secondary {
+    @extend .btn;
+    @extend .btn-outline-primary;
+}
+
+button:not(.btn, .secondary) {
+    @extend %button-primary;
+}
+
+button.secondary:not(.btn) {
+    @extend %button-secondary;
+}
+
+table:not(.table) {
+    @extend .table;
+}

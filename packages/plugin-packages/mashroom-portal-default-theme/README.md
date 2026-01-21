@@ -26,7 +26,7 @@ You can override the default config in your server config file like this:
 }
 ```
 
- * _spaMode_: The theme will try to operate like an SPA and loads new page content via AJAX and replaces the DOM.
+ * _spaMode_: The theme will try to operate like an SPA and loads new page content via fetch and replaces the DOM.
    This only works until the user does not navigate on a page with a different theme or different page enhancements,
    in that case a full page load is triggered (Default: true)
  * _darkMode_: Possible values: *true*, *false*, *"auto"* (Default: "auto")

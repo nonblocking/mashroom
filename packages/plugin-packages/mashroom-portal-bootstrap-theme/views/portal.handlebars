@@ -1,0 +1,136 @@
+{{! Portal page template }}
+<!doctype html>
+<html lang="{{lang}}" data-bs-theme={{darkMode}}>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <meta name="description" content="{{page.description}}">
+    <meta name="keywords" content="{{page.keywords}}">
+    {{#if csrfToken}}
+        <meta name="csrf-token" content="{{csrfToken}}">
+    {{/if}}
+
+    <title>{{site.title}} - {{page.title}}</title>
+
+    <link rel="icon" type="image/png" href="{{resourcesBasePath}}/assets/logo-primary-196.png" sizes="196x196">
+    <link rel="icon" type="image/png" href="{{resourcesBasePath}}/assets/logo-primary-32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="{{resourcesBasePath}}/assets/logo-primary-16.png">
+    <link sizes="16x16 32x32" type="image/x-icon" rel="icon" href="{{resourcesBasePath}}/assets/logo-primary.ico">
+
+    <link rel="apple-touch-icon" href="{{resourcesBasePath}}/assets/logo-badge-primary-white-180.png">
+    <link rel="apple-touch-icon" href="{{resourcesBasePath}}/assets/logo-badge-primary-white-167.png" sizes="167x167">
+    <link rel="apple-touch-icon" href="{{resourcesBasePath}}/assets/logo-badge-primary-white-152.png" sizes="152x152">
+
+    <meta name="msapplication-square70x70logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-70.png">
+    <meta name="msapplication-square150x150logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-150.png">
+    <meta name="msapplication-square310x310logo" content="{{resourcesBasePath}}/assets/logo-badge-primary-white-310.png">
+
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fonts.css?v={{fontawesomeVersion}}">
+
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/regular.css?v={{fontawesomeVersion}}">
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/solid.css?v={{fontawesomeVersion}}">
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/fontawesome/css/brands.css?v={{fontawesomeVersion}}">
+
+    <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/portal.css?v={{themeVersionHash}}">
+    {{#if user.admin}}
+        <link rel="stylesheet" type="text/css" href="{{resourcesBasePath}}/admin.css?v={{themeVersionHash}}">
+    {{/if}}
+
+    {{{portalResourcesHeader}}}
+
+    {{{themeExtraStyle}}}
+
+    {{#if page.extraCss}}
+        <style type="text/css">
+            {{{page.extraCss}}}
+        </style>
+    {{/if}}
+
+    <script type="application/javascript" src="{{resourcesBasePath}}/main.js?v={{themeVersionHash}}"></script>
+
+    <script>
+        const preferDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const mode = document.getElementsByTagName("html")[0].getAttribute('data-bs-theme');
+        if (mode === 'auto') {
+            document.getElementsByTagName("html")[0].setAttribute('data-bs-theme', preferDarkMode ? 'dark' : 'light')
+        }
+    </script>
+</head>
+<body>
+    {{#if user.admin}}
+        {{#if adminApp}}
+            <div id="mashroom-portal-admin-app-container" data-bs-theme="dark">
+                <!-- Admin app goes here -->
+            </div>
+        {{/if}}
+    {{/if}}
+    <header>
+        <div class="logo">
+            {{{logoImage}}}
+        </div>
+        <div class="site-name">
+            <h1>{{site.title}}</h1>
+        </div>
+        {{#ifShowEnvAndVersions}}
+            <div class="env-and-versions">
+                <div class="env">Environment: {{env}} </div>
+                <div class="versions">Server version: {{mashroomVersion}}, <a href="javascript:void(0)" onclick="toggleShowAppVersions()">App versions</a></div>
+            </div>
+        {{/ifShowEnvAndVersions}}
+        {{#if user.guest}}
+        {{else}}
+            <div class="user">
+                <div class="user-name">
+                    {{user.displayName}}
+                </div>
+                <div class="logout">
+                    <a href="{{apiBasePath}}/logout">{{__ messages "logout"}}</a>
+                </div>
+            </div>
+        {{/if}}
+        <div class="menu-open" onclick="toggleMenu()"></div>
+    </header>
+
+    <div class="loading-animation">
+        <div id="page-loading-progress" class="loading-animation-progress"></div>
+    </div>
+
+    <main class="{{extraMainClasses}}">
+        {{> navigation}}
+
+        <div id="portal-page-content" class="mashroom-portal-apps-container container-fluid">
+            {{{pageContent}}}
+        </div>
+    </main>
+
+    <div id="mashroom-portal-modal-overlay">
+        <div class="mashroom-portal-modal-overlay-wrapper">
+            <div class="mashroom-portal-modal-overlay-header">
+                <div id="mashroom-portal-modal-overlay-title">Title</div>
+                <div id="mashroom-portal-modal-overlay-close" class="close-button"></div>
+            </div>
+            <div class="mashroom-portal-modal-overlay-content">
+                <div id="mashroom-portal-modal-overlay-app">
+                    <!-- Modal apps go here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mashroom-portal-auth-expires-warning">
+        <div class="mashroom-portal-auth-expires-warning-message">
+            {{{__ messages "authenticationExpiresWarning"}}}
+        </div>
+    </div>
+
+    <footer>
+        <div class="powered-by">
+            Powered by <a href="https://www.mashroom-server.com" rel="noopener" target="_blank">Mashroom Portal Server</a>
+        </div>
+    </footer>
+
+    {{{portalResourcesFooter}}}
+</body>
+</html>

@@ -1,0 +1,54 @@
+@keyframes show-delayed {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes dot-flashing {
+    0% {
+        background-color: var(--bs-primary);
+    }
+
+    50%,
+    100% {
+        background-color: tint-color($primary, 80%);
+    }
+}
+
+@keyframes progress-bar {
+    0% {
+        left: 0;
+        right: 100%;
+        width: 0;
+    }
+
+    10% {
+        left: 0;
+        right: 75%;
+        width: 20%;
+    }
+
+    90% {
+        right: 0;
+        left: 75%;
+        width: 20%;
+    }
+
+    100% {
+        left: 100%;
+        right: 0;
+        width: 0;
+    }
+}
+
+@mixin hover-animation() {
+    transition: color 500ms ease-out, background-color 500ms ease-out;
+}
+
+@mixin focus-animation() {
+    transition: color 500ms ease-out, border-color 500ms ease-out;
+}

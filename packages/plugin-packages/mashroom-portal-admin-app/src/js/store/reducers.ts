@@ -17,6 +17,7 @@ import type {
 } from '../types';
 import type {
     SetActiveTabAction,
+    SetAppWrapperDataAttributesAction,
     SetAvailableAppsAction,
     SetAvailableAppsErrorAction,
     SetAvailableAppsLoadingAction,
@@ -427,6 +428,20 @@ const modals = (state: ModalState, action: ShowModalAction) => {
     }
 };
 
+const appWrapperDataAttributes = (state: Record<string, string>, action: SetAppWrapperDataAttributesAction) => {
+    if (typeof (state) === 'undefined') {
+        return {};
+    }
+
+    switch (action.type) {
+        case 'SET_APP_WRAPPER_DATA_ATTRIBUTES': {
+            return action.dataAttributes;
+        }
+        default:
+            return state;
+    }
+};
+
 const tabDialogs = (state: TabDialogState, action: SetActiveTabAction) => {
     if (typeof (state) === 'undefined') {
         return {};
@@ -461,6 +476,7 @@ export default (state: State, action: any): State => {
         selectedPage: selectedPage(state.selectedPage, action),
         selectedSite: selectedSite(state.selectedSite, action),
         modals: modals(state.modals, action),
+        appWrapperDataAttributes: appWrapperDataAttributes(state.appWrapperDataAttributes, action),
         tabDialogs: tabDialogs(state.tabDialogs, action),
     };
 };

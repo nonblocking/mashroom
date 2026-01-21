@@ -41,6 +41,7 @@ const initialState: State = {
     selectedPage: null,
     selectedSite: null,
     modals: {},
+    appWrapperDataAttributes: {},
     tabDialogs: {},
 };
 

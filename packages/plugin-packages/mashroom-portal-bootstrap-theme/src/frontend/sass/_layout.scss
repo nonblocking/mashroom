@@ -1,0 +1,580 @@
+@import 'variables';
+@import 'mixins';
+
+header {
+    background-color: var(--mashroom-portal-background-color-header);
+    color: white;
+    position: relative;
+
+    .logo {
+        display: none;
+        width: 40px;
+        height: 30px;
+        margin-left: var(--mashroom-portal-spacing-default);
+
+        img {
+            width: 40px;
+            height: auto;
+        }
+
+        svg {
+            width: 40px;
+            height: 30px;
+        }
+    }
+
+    .site-name {
+        h1 {
+            display: inline-block;
+            padding: var(--mashroom-portal-spacing-default) var(--mashroom-portal-spacing-default) 0 var(--mashroom-portal-spacing-default);
+            font-size: 1.4em;
+            font-weight: 400;
+        }
+    }
+
+    .env-and-versions {
+        font-size: 0.8em;
+        line-height: 1.3em;
+        margin-left: var(--mashroom-portal-spacing-default);
+        color: #DDD;
+        padding: 10px 0;
+
+        a {
+            color: #DDD;
+
+            &:hover {
+                color: white;
+            }
+        }
+    }
+
+    .user {
+        padding: 0 20px 10px 20px;
+        margin-left: var(--mashroom-portal-spacing-default);
+        display: flex;
+        align-items: center;
+        position: relative;
+
+        &:before {
+            position: absolute;
+            display: inline-block;
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-weight: bold;
+            content: "\f007";
+            color: white;
+            left: 0;
+        }
+
+        .user-name {
+            padding-left: 5px;
+        }
+
+        .logout {
+            padding-left: 10px;
+
+            a {
+                display: block;
+                color: #DDD;
+                font-size: 0.8em;
+
+                &:hover {
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .menu-open {
+        cursor: pointer;
+        position: absolute;
+        bottom: 5px;
+        right: 10px;
+        padding: 2px 5px;
+
+        &:before {
+            content: '\f142';
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+    }
+}
+
+
+.loading-animation {
+    width: 100%;
+    height: 2px;
+    background-color: var(--bs-secondary);
+    position: relative;
+
+    .loading-animation-progress {
+        display: none;
+        height: 2px;
+        background-color: var(--mashroom-portal-background-color-header);
+        position: absolute;
+        top: 0;
+        right: 100%;
+        bottom: 0;
+        left: 0;
+        animation: progress-bar 1s linear infinite;
+
+        &.show {
+            display: block;
+        }
+    }
+}
+
+.mashroom-portal-app-wrapper {
+    background-color: var(--mashroom-portal-background-color-app);
+    margin-bottom: $grid-gutter-width;
+    border-radius: 8px;
+
+    .mashroom-portal-app-host {
+        min-height: 20px;
+    }
+
+    .mashroom-portal-app-loading {
+        min-height: 100px;
+        overflow: hidden;
+        opacity: 0;
+        animation: show-delayed 0.1s;
+        animation-delay: 1s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+
+        span {
+            display: table;
+            margin: 15px auto;
+            position: relative;
+            width: 10px;
+            height: 10px;
+            border-radius: 5px;
+            background-color: var(--bs-primary-light);
+            animation: dot-flashing 1s infinite linear alternate;
+            animation-delay: 1.5s;
+            top: 0;
+
+            &:before,
+            &:after {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                top: 0;
+            }
+
+            &:before {
+                left: -15px;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: var(--bs-primary-light);
+                animation: dot-flashing 1s infinite alternate;
+                animation-delay: 1s;
+            }
+
+            &:after {
+                left: 15px;
+                width: 10px;
+                height: 10px;
+                border-radius: 5px;
+                background-color: var(--bs-primary-light);
+                animation: dot-flashing 1s infinite alternate;
+                animation-delay: 2s;
+            }
+        }
+    }
+
+    .mashroom-portal-app-loading-error {
+        color: var(--bs-danger);
+        padding: var(--mashroom-portal-spacing-small);
+    }
+
+    .mashroom-portal-app-header {
+        display: none;
+        align-items: center;
+        background-color: var(--mashroom-portal-background-color-app-header);
+        border-bottom: 1px solid var(--bs-body-bg);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+        .mashroom-portal-app-header-title {
+            flex-grow: 2;
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+            font-size: 0.8em;
+        }
+
+        .mashroom-portal-app-header-close {
+            cursor: pointer;
+
+            &:before {
+                content: '\f00d';
+                font-family: var(--mashroom-portal-font-icon), sans-serif;
+                font-weight: bold;
+                padding-right: var(--mashroom-portal-spacing-default);
+                color: var(--bs-link-color);
+            }
+
+            &:hover:before {
+                color: var(--bs-link-hover-color);
+            }
+        }
+    }
+
+    &.no-border {
+        box-shadow: none;
+    }
+
+    &.no-margin {
+        margin-bottom: 0;
+    }
+
+    &.show-header {
+        .mashroom-portal-app-header {
+            display: flex !important;
+        }
+    }
+
+    &.hide-header {
+        .mashroom-portal-app-header {
+            display: none !important;
+        }
+    }
+
+    .mashroom-portal-app-info {
+        left: 0;
+        top: 0;
+        background-color: var(--bs-secondary-bg-subtle);
+        border: 2px solid var(--bs-secondary);
+        font-size: 0.7em;
+        font-weight: bold;
+        line-height: 1.2em;
+        padding: 4px;
+        opacity: 0.9;
+        z-index: 20000;
+    }
+}
+
+
+main {
+    background-color: var(--bs-body-bg);
+    padding: $grid-gutter-width calc($grid-gutter-width / 2);
+
+    &.show-portal-app-headers {
+        .mashroom-portal-app-wrapper {
+            .mashroom-portal-app-header {
+                display: flex;
+            }
+        }
+    }
+
+    nav {
+        display: none;
+        white-space: nowrap;
+        min-width: 200px;
+        margin-top: -15px;
+
+        &.show {
+            display: block;
+        }
+
+        .nav {
+            list-style: none;
+            padding: 0;
+
+        }
+
+        .nav .nav {
+            .nav-item .nav-link {
+                padding-left: 24px;
+            }
+        }
+
+        .nav .nav .nav {
+            .nav-item .nav-link {
+                padding-left: 40px;
+            }
+        }
+
+        .nav .nav .nav .nav {
+            .nav-item .nav-link {
+                padding-left: 56px;
+            }
+        }
+
+        .nav-item {
+            display: block;
+
+            .nav-link {
+                display: block;
+                position: relative;
+                padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+                background-color: var(--mashroom-portal-background-color-nav);
+                color: var(--mashroom-portal-nav-color);
+                text-decoration: none;
+                @include hover-animation();
+
+
+                &:hover {
+                    background-color: var(--mashroom-portal-background-color-nav-hover);
+                    color: var(--mashroom-portal-color-nav-hover);
+                }
+
+                &.active {
+                    cursor: default;
+                    color: var(--mashroom-portal-color-nav-active);
+                    background-color: var(--mashroom-portal-background-color-nav-active);
+
+                    &:hover {
+                        color: var(--mashroom-portal-color-nav-active);
+                    }
+                }
+            }
+        }
+    }
+
+    #portal-page-content {
+        transition: filter 0.1s;
+
+        &.transition {
+            // Comment this in for some fancy page transition animation
+            // filter: blur(2px);
+        }
+    }
+}
+
+footer {
+    color: var(--bs-secondary-color);
+    padding: var(--mashroom-portal-spacing-default) 0;
+    border-top: 1px solid $secondary;
+    font-size: 0.8em;
+    width: 100%;
+
+    .powered-by {
+        text-align: center;
+    }
+
+    .copyright {
+        text-align: center;
+    }
+
+}
+
+.mashroom-portal-apps-container {}
+
+#mashroom-portal-modal-overlay {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(#444, 0.6);
+    z-index: 5000;
+    display: none;
+
+    &.show {
+        display: block;
+    }
+
+    .mashroom-portal-modal-overlay-wrapper {
+        position: relative;
+        display: table;
+        margin: 10% auto;
+        min-width: 250px;
+        max-width: 90%;
+        box-shadow: 4px 4px 8px #444;
+        transition: opacity 0.3s ease;
+    }
+
+    .mashroom-portal-modal-overlay-header {
+        position: relative;
+        display: flex;
+        align-items: center;
+        width: 100%;
+        background-color: var(--mashroom-portal-background-color-modal-header);
+        border-bottom: 1px solid var(--bs-body-bg);
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+
+        #mashroom-portal-modal-overlay-title {
+            flex-grow: 2;
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+            font-size: 0.8em;
+            font-weight: bold;
+
+            .mashroom-portal-modal-overlay-number {
+                background-color: var(--bs-body-color);
+                color: var(--mashroom-portal-background-color-modal-header);
+                border-radius: 3px;
+                padding: 0 5px;
+                margin-right: var(--mashroom-portal-spacing-small);
+
+                &>span {
+                    display: none;
+                }
+            }
+        }
+
+        #mashroom-portal-modal-overlay-close {
+            cursor: pointer;
+            font-size: 16px;
+            padding: var(--mashroom-portal-spacing-small) var(--mashroom-portal-spacing-default);
+
+            &:after {
+                content: '\f00d';
+                font-family: var(--mashroom-portal-font-icon), sans-serif;
+                font-weight: bold;
+                color: var(--bs-link-color);
+            }
+
+            &:hover:after {
+                color: var(--bs-link-hover-color);
+            }
+        }
+    }
+
+    .mashroom-portal-modal-overlay-content {
+        overflow: hidden;
+        height: 100%;
+        background-color: var(--mashroom-portal-background-color-modal);
+        min-height: 60px;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+
+        .mashroom-portal-app-wrapper {
+            box-shadow: none;
+        }
+    }
+}
+
+#mashroom-portal-auth-expires-warning {
+    position: fixed;
+    top: -100px;
+    left: calc(50% - 170px);
+    width: 320px;
+    transition: top 1s ease-out;
+    z-index: 20000;
+
+    &.show {
+        top: 0;
+    }
+
+    .mashroom-portal-auth-expires-warning-message {
+        position: relative;
+        background-color: var(--bs-body-bg);
+        opacity: 0.9;
+        padding: 10px 20px 10px 30px;
+        border: 2px solid var(--bs-danger);
+        border-top: none;
+        font-size: 0.8em;
+        font-weight: 500;
+
+        &:before {
+            position: absolute;
+            left: 10px;
+            content: '\f017';
+            font-family: var(--mashroom-portal-font-icon), sans-serif;
+            font-weight: bold;
+            padding-right: 5px;
+            color: var(--bs-danger);
+        }
+    }
+}
+
+
+@include media-breakpoint-up(sm) {
+
+    .container-fluid {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    header {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+
+        .logo {
+            display: block;
+        }
+
+        .site-name {
+            flex-grow: 2;
+
+            h1 {
+                font-size: 1.6em;
+                margin: 0;
+                padding: var(--mashroom-portal-spacing-default);
+            }
+        }
+
+        .env-and-versions {
+            padding: 0 20px;
+            margin: 0;
+        }
+
+        .user {
+            display: block;
+            padding-top: 8px;
+            padding-left: 34px;
+
+            &:before {
+                font-size: 1.6em;
+                top: 12px;
+            }
+
+            .user-name {
+                text-align: right;
+            }
+
+            .logout {
+                text-align: right;
+                margin-top: -3px;
+            }
+        }
+
+        .menu-open {
+            display: none;
+        }
+    }
+
+    main {
+        display: flex;
+        min-height: 75vh;
+
+        nav {
+            display: block;
+            margin: 0 calc($grid-gutter-width / 2);
+
+            &>ul {
+                margin: 0;
+                background-color: var(--mashroom-portal-background-color-navigation);
+                border-radius: var(--bs-border-radius);
+
+                &>li {
+                    border-bottom: 1px solid var(--bs-body-bg);
+
+                    &:first-child {
+                        a {
+                            border-top-right-radius: 8px;
+                            border-top-left-radius: 8px;
+                        }
+                    }
+
+                    &:last-child {
+                        a {
+                            border-bottom-right-radius: 8px;
+                            border-bottom-left-radius: 8px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    #mashroom-portal-auth-expires-warning {
+        left: calc(50% - 240px);
+        width: 480px;
+    }
+}

@@ -189,6 +189,12 @@
             "darkMode": false,
             "styleFile": "./defaultThemeOverrides.css"
         },
+        "Mashroom Portal Bootstrap Theme": {
+            "showEnvAndVersions": true,
+            "showPortalAppHeaders": false,
+            "spaMode": true,
+            "darkMode": true
+        },
         "Mashroom Remote Package Scanner": {
             "remotePackageUrls": "./remotePackageUrls.json"
         },

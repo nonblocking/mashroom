@@ -13,6 +13,7 @@ type Props = {
     closeRef?: (close: () => void) => void,
     children: ReactNode;
     appWrapperClassName: string;
+    appWrapperDataAttributes?: Record<string, string>;
     className?: string;
     customHeader?: ReactNode;
     width?: number;
@@ -21,7 +22,7 @@ type Props = {
 
 const MODALS_ROOT_ID = 'mashroom-portal-ui-modals-root';
 
-export default ({show, close, titleId, title, closeRef, children, appWrapperClassName, className, customHeader, width, minHeight}: Props) => {
+export default ({show, close, titleId, title, closeRef, children, appWrapperClassName, appWrapperDataAttributes, className, customHeader, width, minHeight}: Props) => {
     const [fadeIn, setFadeIn] = useState(false);
     const [fadeOut, setFadeOut] = useState(false);
     const [marginTop, setMarginTop] = useState<string | undefined>(undefined);
@@ -82,6 +83,11 @@ export default ({show, close, titleId, title, closeRef, children, appWrapperClas
             modalsRoot = document.createElement('div');
             modalsRoot.id = MODALS_ROOT_ID;
             modalsRoot.className = appWrapperClassName;
+            if (appWrapperDataAttributes) {
+                Object.keys(appWrapperDataAttributes).forEach((attrName) => {
+                    modalsRoot!.setAttribute(attrName, appWrapperDataAttributes[attrName]);
+                });
+            }
             modalsRoot.style.height = '0';
             if (document.body) {
                 document.body.appendChild(modalsRoot);
