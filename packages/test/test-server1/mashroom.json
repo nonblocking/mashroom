@@ -193,7 +193,7 @@
             "showEnvAndVersions": true,
             "showPortalAppHeaders": false,
             "spaMode": true,
-            "darkMode": true
+            "darkMode": false
         },
         "Mashroom Remote Package Scanner": {
             "remotePackageUrls": "./remotePackageUrls.json"

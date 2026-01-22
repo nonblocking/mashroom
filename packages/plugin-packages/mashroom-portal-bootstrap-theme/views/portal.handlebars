@@ -52,10 +52,12 @@
 
     <script>
         const preferDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const mode = document.getElementsByTagName("html")[0].getAttribute('data-bs-theme');
+        let mode = document.getElementsByTagName("html")[0].getAttribute('data-bs-theme');
         if (mode === 'auto') {
-            document.getElementsByTagName("html")[0].setAttribute('data-bs-theme', preferDarkMode ? 'dark' : 'light')
+            mode = preferDarkMode ? 'dark' : 'light';
+            document.getElementsByTagName("html")[0].setAttribute('data-bs-theme', )
         }
+        window.__MASHROOM_PORTAL_DARK_MODE__ = mode === 'dark';
     </script>
 </head>
 <body>

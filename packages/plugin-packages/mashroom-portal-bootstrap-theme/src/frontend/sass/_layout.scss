@@ -465,7 +465,8 @@ footer {
         background-color: var(--bs-body-bg);
         opacity: 0.9;
         padding: 10px 20px 10px 30px;
-        border: 2px solid var(--bs-danger);
+        border: 2px solid var(--bs-warning);
+        outline: 3px solid rgba(var(--bs-body-bg-rgb), 0.5);
         border-top: none;
         font-size: 0.8em;
         font-weight: 500;
@@ -477,7 +478,7 @@ footer {
             font-family: var(--mashroom-portal-font-icon), sans-serif;
             font-weight: bold;
             padding-right: 5px;
-            color: var(--bs-danger);
+            color: var(--bs-warning);
         }
     }
 }
